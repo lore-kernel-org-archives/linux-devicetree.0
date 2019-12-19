@@ -2,97 +2,89 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB00C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0295C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7522467B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:41:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXcQVrIG"
+	by mail.kernel.org (Postfix) with ESMTP id 779182467B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576791850;
+	bh=7OR/fxBKk3LqkbTxLOE2Rib4himomDe17dwvM+k1/EY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vIxlFvE7WJnSaADLA0hL6I3ZFbEskujpETeNp55Yy9iwnxdKkkB/hxp9OLgapbUF0
+	 3U/J3jpzd08hvO6ZkAbNADf46M7Cn7vYJqWh6xzpIrGJKaBf0pwD0s4gUYokccx+oz
+	 VAmP5wFL5UxPkBKnKCiPTuPGvlEwzbXCUAE55KvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfLSVle (ORCPT
+        id S1727179AbfLSVoK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:41:34 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41288 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbfLSVlc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 16:41:32 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so7825708ljc.8
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 13:41:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ASudMKT9RvM8+uOEJ+om2HEpPLO01yunBeLwD2PFAJc=;
-        b=UXcQVrIGeuZxPW+wBt70BmOeFM34wTHIaDD0QSufDB+hpWy60xAnbwPJzGMxZPXXTh
-         Bvo8xVwa12ZkQ98lNPHyUhNhqkyPhh0MIfsaBBppOcWPWZTk2unZdTF49txMzJY3pHCD
-         YxHDMEoyLpEkPOpdFmf/K3MonB5D7tmCbAN8kHT74gEBRwDcUB8IFxHMaMXJw7WUtcz3
-         +XHy8aT9jY6xESdx5KtiAOTv1zlbyPbECB2s9vvieBjnb2sKKBAWjoVIOiF0jHW9D+FO
-         hbJU/6H/5NVBmZHwpJjIPmmCajp+Vkm1VSI5ttRddK13sa9OsU5HRyIcUFtY30Eo5+Tf
-         ZKSA==
+        Thu, 19 Dec 2019 16:44:10 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40152 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfLSVoK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 16:44:10 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c77so3325476oib.7;
+        Thu, 19 Dec 2019 13:44:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ASudMKT9RvM8+uOEJ+om2HEpPLO01yunBeLwD2PFAJc=;
-        b=QGZC12u/1/aDDMUBrEpe4DkrL3XxLZ7+BHubKtHMZmSAlLCH+b6ToaxOMB++0HSMiZ
-         iU2rcNjCSNg+eYAV+0Dg1KeOVuHdtScOpps/oTtyWeA4Qm94qAvqBrnZxee10pOKB4FT
-         ZQwIRVoqjuxZWJTegwVmlkXYf5FQSmIh6nwxKo0zInqZEAwCEgxwB0BDjP8FxYBfvx0a
-         cdqhVm4RN1XC7L4pduuLxxlZuOld+mBE8ydVKYkip+UqjnjxONv50vTdsTEdPNCy1iMk
-         xJcsq3V39uH5vFgDwkqe7DKgNGtFWT45KT4TmotLDMlogGSpEYkbMmhfNyoCzF6gAMjS
-         nNGg==
-X-Gm-Message-State: APjAAAVYGopev6mm1JmbUPimLa2An24ZQJ+b+j1KiqOL8EMpIn5kkEZM
-        qqBBMD8+GEKumsj4Y6/dHRhGRLH9JPl5R2b6Y3edBA==
-X-Google-Smtp-Source: APXvYqy9XFc6i9Ei1l8/pgiZ7fRlyEwn/IPd/gtw9jl+Fsj13MvpzMQ1Czzx4p0iNxwBYpWYIGIEHFQfXkyLyoBw2Kg=
-X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr7762896ljk.77.1576791690711;
- Thu, 19 Dec 2019 13:41:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-4-dan@dlrobertson.com>
- <CAHp75VeU07TsV2NC5Myvmi7Q6tARbmt9=wQDRnXFqaX2G2Luiw@mail.gmail.com>
-In-Reply-To: <CAHp75VeU07TsV2NC5Myvmi7Q6tARbmt9=wQDRnXFqaX2G2Luiw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 19 Dec 2019 22:41:19 +0100
-Message-ID: <CACRpkdbTissSRyJ5uh8X6RFTM+VSSML-JmtOC_i8_UY0VTVRAA@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] iio: (bma400) basic regulator support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Dan Robertson <dan@dlrobertson.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=FMElxYGUaSvjFXl0P6MMWBQdNOBXnhJem0sijB1jNlQ=;
+        b=YeOBMyFfZwHVBwJpyWwJSSjB8OGUcHXt1F1L427P37yvA1YaRfuTTW6Bv9hxV+2UJd
+         nR9FMSU9plfaIJrO8jk3j97y/53PDyHDQJtqXOvR53EVaF84by2VEL1mfAiW33HspL5n
+         kh8kPnDt5TfD8+pptuGEOymTzFzVNFYiGKOBBfE33cbYf7vH+CkwbZU+k4UvgAMu+Ur2
+         UToV6iuKHi0B07a1U2oNf74DcLEf1fj2ie2iL8qVpke+U2+I1kp7ay0DV7spxcmusy+W
+         mkbSEAIQI1VWqPgdH2Dx+l07lJ4kf+6ogLlxsMs4E2nrgXlnUCLhcuIEATn91mgiz0lq
+         kRRg==
+X-Gm-Message-State: APjAAAWgsaywsUlyuQYisDbQGmm0ltXUSE614P7Nld5+VxAQurzN2Pql
+        SU0w4vNTtI5Vf0txeM3Kdg==
+X-Google-Smtp-Source: APXvYqxt7sKze7DVN1FPvYYBCO0UXzM6SctbxwLjFwHk62Irq/zGTuZRo/iDgFuvxqEUzX864s353g==
+X-Received: by 2002:aca:b1d4:: with SMTP id a203mr3084869oif.150.1576791848821;
+        Thu, 19 Dec 2019 13:44:08 -0800 (PST)
+Received: from localhost ([2607:fb90:1cd2:8a0d:3549:d84c:9720:edb4])
+        by smtp.gmail.com with ESMTPSA id p24sm2563558oth.28.2019.12.19.13.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 13:44:08 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:43:59 -0800
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Scott Liu <scott.liu@emc.com.tw>
+Subject: Re: [PATCH v2 9/9] dt-bindings: input: elants-i2c: Document eKTF3624
+Message-ID: <20191219214254.GA25646@bogus>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <882916345a8aa2dc545a1bd2ca150cf913371d1a.1576079249.git.mirq-linux@rere.qmqm.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <882916345a8aa2dc545a1bd2ca150cf913371d1a.1576079249.git.mirq-linux@rere.qmqm.pl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:06 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Dec 19, 2019 at 6:28 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> >
-> > Add support for the VDD and VDDIO regulators using the regulator
-> > framework.
-> ...
->
-> > +       data->vdd_supply = devm_regulator_get(data->dev, "vdd");
->
-> > +       data->vddio_supply = devm_regulator_get(data->dev, "vddio");
->
-> devm_regulator_bulk_get() ?
+On Wed, 11 Dec 2019 17:03:26 +0100, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= wrote:
+> From: Dmitry Osipenko <digetx@gmail.com>
+> 
+> The eKTF3624 hardware is similar to eKTH3500.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  Documentation/devicetree/bindings/input/elants_i2c.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-I always thought to use regulator_bulk* maybe 3 regulators and
-definitely for more that 4 as it also clouds the view bit and is not
-as straightforward to read as the single functions, but I suppose
-it is a bit subjective :)
-
-Linus Walleij
+Acked-by: Rob Herring <robh@kernel.org>
