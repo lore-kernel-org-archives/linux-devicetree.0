@@ -6,83 +6,90 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22454C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B2FC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD692465E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F8321927
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576799488;
-	bh=E/dR2DXPyEXvCjaI9mqPsmTm85nHzbVqGIlzrcmHM3s=;
+	s=default; t=1576799778;
+	bh=X9Gvfcz5XvPk5AqQjQn2AwvYGipNuWHe0Phe+pHxP+M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IxtsstF2BCmwY/V3sLErqxqcD+xZM/aKZk8QRICmeH8P2dCheWcSM2watk/lxrsA9
-	 N92p4muG4x3U++9wyECp6Qk5bAyuLE9xlriAym9vHtww2WlPlxX7z9tQJYY9ElIpob
-	 xhdUw0cMghCDQUzRL/RDTl/qr2ZckP2gg+nvokXE=
+	b=VQJ/eNmv2yr49+cGwZHni/tGtX/E6DAameqo60sGD9AgKOITKSV040YtikawQRvIl
+	 7KF7ve3h6tfBM6+5PO0GxMzbSkajR1a4UBBSQgo6lxuPwrwXR01j0WEVCVWzmjzQtp
+	 xgJgcU5uJGAnTnfgUxz52Br0wKDme7txzmj67DTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfLSXv1 (ORCPT
+        id S1726952AbfLSX4S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:51:27 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39399 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfLSXv1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:51:27 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 77so9369465oty.6;
-        Thu, 19 Dec 2019 15:51:26 -0800 (PST)
+        Thu, 19 Dec 2019 18:56:18 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:41101 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfLSX4S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:56:18 -0500
+Received: by mail-yw1-f68.google.com with SMTP id l22so2888679ywc.8;
+        Thu, 19 Dec 2019 15:56:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OjXAZ2TKobv9yoEqrbBdYh7biWU4O3QAfvZyc2J4dWM=;
-        b=d7c0+FpNKokOaqdyyz1TEhYS+0n3crcbv5S/9WszL7V5byNQ3oOJhOingMhovakWSa
-         v5xQ78IhZV8+5/0z+w/GhqJVbQudh6sPb20+2yJ0KEE40Yfa1t2xb+dMwN5OA7zMvGOY
-         0JpMFfaTTsGVdaIPrNrhUsF2uSfO/78mNiEOPdrGBbyJOmG0RD3JqQDhKF/en29NXDpE
-         ca73LQaUzQWyrhNjEhiYABFkdkT5dVK7jeLwI5uWCqtdD752JZUsL+g7RIF7Lna6LgKn
-         AykDhuDaRBezN8EfzIitBAzw5cYgW9Eg0JD+B5rDsSA/zhZRxY1yIDaBn7/dyZVqBX0+
-         gbIA==
-X-Gm-Message-State: APjAAAW6pPBVlzbaT0Awqi3sY+OXI5SyG6FVoDqhlwKX1zT06gb0m8/W
-        1dKXQPlcj0nuwP+q4/JVvA==
-X-Google-Smtp-Source: APXvYqzaPjmepv4a279sIAA5ICFmA0B7tF34IOFNH9fz0KHDHD1DOST2PYO1ecY606VakqN6h26qsA==
-X-Received: by 2002:a9d:20e4:: with SMTP id x91mr11381091ota.335.1576799486409;
-        Thu, 19 Dec 2019 15:51:26 -0800 (PST)
+        bh=ARCZQqxf+0FzEB5iVazPT6aK74bYUEn3HXg9HU6qLcQ=;
+        b=ft4CGVGj9P3ADcFH2s0rWIZqKgjcZUAA3MNbf05NPZY1mM00zhiVvN3jLvPpb0R6pt
+         x0dfNuNC1ocn2NFfsusOGDrZZndPGS7VHWjI5p/bW5Omi+gW+m66YyjHihnPnaeA3MAo
+         eqjYbQp6cN6r8NFjkL2Pp57Q1/tKYIoW6cX0drdwMONW8en25UwQOedK8uyxp/7K5RLP
+         qUUkVTsHmHUImGghHFxgc10q0VPKZbygYyXYinLRUatc+UgiWQ4DOt0MqOiYG+fvN6E/
+         5LsNC9J5zmRNIqjeVoPXxmSZmRzb7LC5Zcgp0BXYjj06cgtPm2Xofwg94E6nEK7qNTDV
+         g4cg==
+X-Gm-Message-State: APjAAAXlE5zB2Inxl/qOD11wKhG4NmYG0ATeotWUo+1Ud98tdeJ/CtJq
+        bPlosmROMD1xgSJ2gIHjYzSd/Rg=
+X-Google-Smtp-Source: APXvYqywBAQDOyS21IT+zvRVl4XolNmnzFYexAWz8fo5ibiktWXARwDGoYAPr7Xhqa1RU911jzX1Pg==
+X-Received: by 2002:a9d:5885:: with SMTP id x5mr11347193otg.132.1576799776295;
+        Thu, 19 Dec 2019 15:56:16 -0800 (PST)
 Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id y24sm2577643oix.31.2019.12.19.15.51.25
+        by smtp.gmail.com with ESMTPSA id z12sm2730992oti.22.2019.12.19.15.56.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:51:25 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:51:24 -0600
+        Thu, 19 Dec 2019 15:56:15 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:56:13 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add vendor prefix for Satoz
-Message-ID: <20191219235124.GA2960@bogus>
-References: <20191213182325.27030-1-miquel.raynal@bootlin.com>
+        Chen-Yu Tsai <wens@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 01/14] dt-bindings: media: sun4i-csi: Add compatible for
+ CSI1 on A10/A20
+Message-ID: <20191219235613.GA9523@bogus>
+References: <20191215165924.28314-1-wens@kernel.org>
+ <20191215165924.28314-2-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213182325.27030-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20191215165924.28314-2-wens@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Dec 2019 19:23:24 +0100, Miquel Raynal wrote:
-> Satoz is a Chinese TFT manufacturer.
-> Website: http://www.sat-sz.com/English/index.html
+On Mon, 16 Dec 2019 00:59:11 +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> The CSI1 block has the same structure and layout as the CSI0 block.
+> Differences include:
+> 
+>   - Only one channel in BT.656 instead of four in CSI0
+>   - 10-bit raw data input vs 8-bit in CSI0
+>   - 24-bit RGB888/YUV444 input vs 16-bit RGB565/YUV422 in CSI0
+>   - No ISP hardware
+> 
+> The hardware found in the A20 is the same as in the A10.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../bindings/media/allwinner,sun4i-a10-csi.yaml       | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
