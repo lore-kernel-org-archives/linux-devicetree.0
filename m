@@ -2,91 +2,174 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321BFC2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AAFC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0642467B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:49:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576792154;
-	bh=L8mrM3lA1V9ZQh2cHIKtpAyFPrZudmpsb9+qcZ57g/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j7t9eSgFt3YHNP7YM8JMDJvuFpMAgVrMQF48Gahr4pKB2JNhxjAVh74jCc2GFhM7p
-	 pMvqQyeKSMFOeMAV30GPF7RzHTAGWXwnPxWd6LAdV8xjvJdXl7E14/W//EPI7hkxcE
-	 y936dt1TLVhiyzDuPHFig4Gr53kAO/U4oq5uXVpM=
+	by mail.kernel.org (Postfix) with ESMTP id EC70024672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 21:49:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="sInF7qsm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLSVtN (ORCPT
+        id S1726963AbfLSVth (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 16:49:13 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34467 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfLSVtN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 16:49:13 -0500
-Received: by mail-ot1-f67.google.com with SMTP id a15so9037188otf.1;
-        Thu, 19 Dec 2019 13:49:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bKIao3Hx9jJKwqQP/RXgQCvGLhPT1+X7pm/hu0NpBV8=;
-        b=TL7jZlXyHGuZNYSFt9vAc+hiWVGQEPCAz0EwmKN2ce6riU9QEFKNJkVkuYc/HSaAso
-         mRcA0IBr4QqXk4iKqoj1tsNIpstyyKo9GtcAqHv0K+RTw0wfTdc59VUdWONDwDreZyYc
-         O8Eeo1YbduqXyqvEgwSmC5+3Ti1Umsukjs40emwq0k1oddWn9ScGEu5eqPVr/BgKF9Yj
-         IojCXAWVMePLTcLrVU1UjEUF/18FtOEilBXZsEWwMF7OB/Q4ysJc8BaMc1dLPZOWgwZa
-         X6EBv6d/wamZDP0ahFlEWM2QKTEFg+QGp8/gPT6dv/kUQ1tb0dK6dV+gbapUV1+GLKnG
-         shpQ==
-X-Gm-Message-State: APjAAAWCf5ZS3OLj4vw6WQnIh7blPtiWFZmH2qFUYfYzhgtYg5pML5fg
-        ujbq28hqLb4wOf4uudQ5+Q==
-X-Google-Smtp-Source: APXvYqz2gW/XlSmYj6ZEO5sdTV3J4iZniHY0zC80aaRxAOIj5Wdn4HTj/NCzv0ZF1vY74TPSXk6Zfw==
-X-Received: by 2002:a9d:24c1:: with SMTP id z59mr10708739ota.207.1576792152312;
-        Thu, 19 Dec 2019 13:49:12 -0800 (PST)
-Received: from localhost ([2607:fb90:1cd2:8a0d:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id e9sm2461049oia.10.2019.12.19.13.49.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 13:49:11 -0800 (PST)
-Date:   Thu, 19 Dec 2019 15:49:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/4] iio: accel: bma180: BMA254 support
-Message-ID: <20191219214904.GA1592@bogus>
-References: <20191211213819.14024-1-linus.walleij@linaro.org>
- <20191211213819.14024-4-linus.walleij@linaro.org>
+        Thu, 19 Dec 2019 16:49:37 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40270 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfLSVth (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 16:49:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AYRcRglwcP5lo6E4Zn08sq4uQ/tRp+N1/Lj/8ULBHuo=; b=sInF7qsmdiLReNyXRT7V8wbck
+        MJKkGXTEe/cg36RETU4RMYa4IIiXV/MFte/uJgpwt+/vA+X9ToXVY7re2GLS8sUpa0mh7tl4bhTe0
+        Zga6ZEfAByCt8xHuiIMDWUKlHfURgmr4zwn24e4jSxwKL8jWn1ko+H9ZRaDbBmUgwek7+VyjDmtE6
+        WWhaN6XUfpZf6/GK74JMePirCJUOjx2pbZbRbV9V1wzIMQuXsWZ5WUeU01OhZaxJCxwYGztSTyALr
+        nSfG1nWGJo0qjwpiwpmVUCw/YJXeoGyT5wzeSny3x1IEGNfN9zhB56fj1VTtW1yqJSowzJdueVRPm
+        N2F+K+YuA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43588)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ii3fo-0004xw-LX; Thu, 19 Dec 2019 21:49:32 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ii3fm-0005ha-Eo; Thu, 19 Dec 2019 21:49:30 +0000
+Date:   Thu, 19 Dec 2019 21:49:30 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191219214930.GG25745@shell.armlinux.org.uk>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219190308.GE25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211213819.14024-4-linus.walleij@linaro.org>
+In-Reply-To: <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 11 Dec 2019 22:38:19 +0100, Linus Walleij wrote:
-> This adds support for the BMA254 variant of this
-> accelerometer. The only difference for the simple IIO
-> driver is that values are 12 bit and the temperature
-> offset differs by 1 degree.
+On Thu, Dec 19, 2019 at 09:34:57PM +0000, Madalin Bucur (OSS) wrote:
+> > -----Original Message-----
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Sent: Thursday, December 19, 2019 9:03 PM
+> > To: Madalin Bucur <madalin.bucur@nxp.com>
+> > Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
+> > f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
+> > devicetree@vger.kernel.org
+> > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+> > 
+> > On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
+> > > > -----Original Message-----
+> > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > > > Sent: Thursday, December 19, 2019 7:29 PM
+> > > > To: Madalin Bucur <madalin.bucur@nxp.com>
+> > > > Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
+> > > > f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
+> > > > devicetree@vger.kernel.org
+> > > > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+> > > >
+> > > > On Thu, Dec 19, 2019 at 05:21:16PM +0200, Madalin Bucur wrote:
+> > > > > From: Madalin Bucur <madalin.bucur@nxp.com>
+> > > > >
+> > > > > Add explicit entries for XFI, SFI to make sure the device
+> > > > > tree entries for phy-connection-type "xfi" or "sfi" are
+> > > > > properly parsed and differentiated against the existing
+> > > > > backplane 10GBASE-KR mode.
+> > > >
+> > > > 10GBASE-KR is actually used for XFI and SFI (due to a slight mistake
+> > on
+> > > > my part, it should've been just 10GBASE-R).
+> > > >
+> > > > Please explain exactly what the difference is between XFI, SFI and
+> > > > 10GBASE-R. I have not been able to find definitive definitions for
+> > > > XFI and SFI anywhere, and they appear to be precisely identical to
+> > > > 10GBASE-R. It seems that it's just a terminology thing, with
+> > > > different groups wanting to "own" what is essentially exactly the
+> > > > same interface type.
+> > >
+> > > Hi Russell,
+> > >
+> > > 10GBase-R could be used as a common nominator but just as well 10G and
+> > > remove the rest while we're at it. There are/may be differences in
+> > > features, differences in the way the HW is configured (the most
+> > > important aspect) and one should be able to determine what interface
+> > > type is in use to properly configure the HW. SFI does not have the CDR
+> > > function in the PMD, relying on the PMA signal conditioning vs the XFI
+> > > that requires this in the PMD. We kept the xgmii compatible for so long
+> > > without much issues until someone started cleaning up the PHY supported
+> > > modes. Since we're doing that, let's be rigorous. The 10GBase-KR is
+> > > important too, we have some backplane code in preparation and having it
+> > > there could pave the way for a simpler integration.
+> > 
+> > The problem we currently have is:
+> > 
+> > $ grep '10gbase-kr' arch/*/boot/dts -r
+> > 
+> > virtually none of those are actually backplane. For the mcbin matches,
+> > these are either to a 88x3310 PHY for the doubleshot, which dynamically
+> > operates between XFI, 5GBASE-R, 2500BASE-X, or SGMII according to the
+> > datasheet.
 > 
-> Cc: Peter Meerwald <pmeerw@pmeerw.net>
-> Cc: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../devicetree/bindings/iio/accel/bma180.txt  |   7 +-
->  drivers/iio/accel/Kconfig                     |   4 +-
->  drivers/iio/accel/bma180.c                    | 108 +++++++++++++++---
->  3 files changed, 100 insertions(+), 19 deletions(-)
+> Yes, I've seen it's used already in several places:
 > 
+> $ grep PHY_INTERFACE_MODE_10GKR drivers/net -nr
+> drivers/net/phy/marvell10g.c:219:       if (iface != PHY_INTERFACE_MODE_10GKR) {
+> drivers/net/phy/marvell10g.c:307:           phydev->interface != PHY_INTERFACE_MODE_10GKR)
+> drivers/net/phy/marvell10g.c:389:            phydev->interface == PHY_INTERFACE_MODE_10GKR) && phydev->link) {
+> drivers/net/phy/marvell10g.c:398:                       phydev->interface = PHY_INTERFACE_MODE_10GKR;
+> drivers/net/phy/phylink.c:296:          case PHY_INTERFACE_MODE_10GKR:
+> drivers/net/phy/aquantia_main.c:361:            phydev->interface = PHY_INTERFACE_MODE_10GKR;
+> drivers/net/phy/aquantia_main.c:499:        phydev->interface != PHY_INTERFACE_MODE_10GKR)
+> drivers/net/phy/sfp-bus.c:340:          return PHY_INTERFACE_MODE_10GKR;
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1117:   return interface == PHY_INTERFACE_MODE_10GKR ||
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1203:   case PHY_INTERFACE_MODE_10GKR:
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1652:   case PHY_INTERFACE_MODE_10GKR:
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4761:   case PHY_INTERFACE_MODE_10GKR:
+> drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4783:   case PHY_INTERFACE_MODE_10GKR:
+> 
+> We should fix this, if it's incorrect.
+> 
+> > If we add something else, then the problem becomes what to do about
+> > that lot - one of the problems is, it seems we're going to be breaking
+> > DT compatibility by redefining 10gbase-kr to be correct.
+> 
+> We need the committer/maintainer to update that to a correct value.
 
-Acked-by: Rob Herring <robh@kernel.org>
+The general principle is, we don't break existing DT - in that, we
+expect DT files from current kernels to work with future kernels. So,
+we're kind of stuck with "10gbase-kr" being used for this at least in
+the medium term.
+
+By all means introduce "xfi" and "sfi" if you think that there is a
+need to discriminate between the two, but I've seen no hardware which
+that treats them any differently from 10gbase-r.
+
+If we want to support real 10gbase-kr, then I think we need to consider
+how to do that without affecting compatibility with what we already
+have.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
