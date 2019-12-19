@@ -7,153 +7,217 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E30C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C6FC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A64227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81C124676
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3M3HqwW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wUlqPM9O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbfLSHHD (ORCPT
+        id S1726536AbfLSHUg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 02:07:03 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39984 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbfLSHHC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 02:07:02 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so2612978pgt.7
-        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 23:07:02 -0800 (PST)
+        Thu, 19 Dec 2019 02:20:36 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35713 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfLSHUf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 02:20:35 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so2147623plt.2
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 23:20:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Fm+w6iomcjuXCL8fauWtHgK7waEj6ZumdluEW3weLEo=;
-        b=r3M3HqwWGDHXJkn+/B3N+HIx9K4alkicLq5wXf4pwfxInFuBgNoIrLLzH8GU+7rifv
-         ExT6eL7+5mQnp7eqwVEenErdKk2oI+kR4wv/UhIpVSWND3R7u/RHcy6QOcMxJ0EBAgcf
-         FQ4APK7Gb7mzk2wNVT/BhU+5cW5vm0CDW91MWBRAWspq2jGlfrwNpP/xh31AfzV7pnKo
-         kQ868nBQiwwk3dx4ZC1mwOMXLN8u8aRs3P4q/hrR7URj1Sl976Mm+k0lQNW9+HBb+oqZ
-         rNPYfrJkwd/vsPNFmrIinL3izYGRmGXPv7wI4Aj0+9wXSDXOd1lLZsnEfK2r7M3OJ6k3
-         dOpA==
+        bh=kscgx3K8f9rm17CyfQ9LRYgvhZGZDTucQRqu6s3cXY8=;
+        b=wUlqPM9OwvDSBUIguTphIAJetJoP7jzTbb4OIqI84eMHS3lsLy9/5tzHTOqCO7QIBw
+         pJrS4iyWynSx5Lp6ccLVem+BqrD+MswvsMg3CoCWPsAo3Yu1MYcq4AOiYJmSYjzndq27
+         EG+ib26O/X9xpIikIHi8G8mpEGH4B/tgc8M5+/u+wlWdqZZDwPgd/fVxwmw5G/1Rz5lh
+         G4rXxgcmbAF4OVt44n+PpRTdze8k8ywufIRjdT5XJwifVPC1Zsp4Z2ZmBQsbaf0kIFj/
+         nCJDLd5WCeDxqpRrB0ZlG/AJsmk+VA2atptI2W8+sXubVQiLg7pK2rQHCDq/P/TR6TMK
+         nP6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fm+w6iomcjuXCL8fauWtHgK7waEj6ZumdluEW3weLEo=;
-        b=KP+ecLCOdwK/gP5F+LKh4Z5FRRlFT/7yMqIUysbZn7L6OpnWlGzA8nZge2/B2u1O0w
-         r8lxo1LKyS5N5lgqCkHTk54LKMUbMVkNpph6Zlr372VIN3oizM9HxgyWvHisYsidV5tx
-         NaWEJqC+fSCQ5xziN5Ye7PcwNsUMFO9Z5pfUlDIPauoc3sM9w4XKeje3s+7efXsmGokO
-         wo5/TeYTAJitIXZGsv6xDihlHmLyRlKlzTfqdkUxI41aV/CKN65qRh1SLzhaU3QGIPBs
-         QyjogUfU/7KJSC2uir8gcsWNi7Teozmp3/M2M8rm8XI+a8QZ/Yb+TxD9ZY5ZSs7x8RkJ
-         EwDw==
-X-Gm-Message-State: APjAAAUopEhQXkeQFn9hNGzudM30L59kibXOsi6K97l+/ETziUGMqsk6
-        ucpwKOrL1q93WxMHm0q2gzEIhw==
-X-Google-Smtp-Source: APXvYqxUxu7IoSGnaMb1R6YodG3fNsxk/So/wu5Hx35rfBLQvcUPgZkuAWdrltM/xiI4H0ih+4erTQ==
-X-Received: by 2002:a65:5608:: with SMTP id l8mr7727226pgs.210.1576739221708;
-        Wed, 18 Dec 2019 23:07:01 -0800 (PST)
+        bh=kscgx3K8f9rm17CyfQ9LRYgvhZGZDTucQRqu6s3cXY8=;
+        b=q6xZ0Ioirv8GhvypMPOjsbxs5Mpb9IaU4rIEac962Hit1Be30l2uRNbuILvBGDyXiY
+         ASoGgfNeEHzappcFMmDBvLjQudanAZuNK1BIQM71ttjsWFq1orJPE8JTtRvRKYP4fJYk
+         hH1S20e9GjCR/ra8ZyZs/Cb8VGso/VF9FzaWCId3uGgxDDDgjB5QCfquxSA0isbTC+ih
+         A1ONamwuFrJJN0SWSMLLiy8LUrI/eu3tqYRRixxLtcbV2qsdnV1sBPOwot6kV6D6SJMT
+         TnoTFfASILqstSPx/yVbWrgQzL9N/Vo5bs/YQy/44nlFV4MG8AddS4AoQi5/SaYEVC2Q
+         1hAg==
+X-Gm-Message-State: APjAAAWqsEvZCjKEgPSWDOMwoK05Ai7cFF3tz1OtraphBDJforHjQTjt
+        uZmekJ0yMuhjJAPVzF45y1+29A==
+X-Google-Smtp-Source: APXvYqwZDaVVbLJc92e8Bk8x6mCLD0JaErRln4COlsW6/zlSXZ0qymPWOOzXN9QDcgGQYfvmGi86Nw==
+X-Received: by 2002:a17:902:7d84:: with SMTP id a4mr7303034plm.97.1576740034787;
+        Wed, 18 Dec 2019 23:20:34 -0800 (PST)
 Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r30sm2812990pfl.162.2019.12.18.23.07.00
+        by smtp.gmail.com with ESMTPSA id q6sm6515119pfh.127.2019.12.18.23.20.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Dec 2019 23:07:01 -0800 (PST)
-Date:   Wed, 18 Dec 2019 23:06:58 -0800
+        Wed, 18 Dec 2019 23:20:34 -0800 (PST)
+Date:   Wed, 18 Dec 2019 23:20:31 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] phy: qcom-qmp: Add MSM8996 UFS QMP support
-Message-ID: <20191219070658.GG448416@yoga>
-References: <20191207202147.2314248-1-bjorn.andersson@linaro.org>
- <20191207202147.2314248-2-bjorn.andersson@linaro.org>
- <20191219042047.GT2536@vkoul-mobl>
+To:     pillair@codeaurora.org
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device
+ node
+Message-ID: <20191219072031.GH448416@yoga>
+References: <0101016ed018cde9-da3dc3e0-de6e-4b18-9add-bc6f88511ab2-000000@us-west-2.amazonses.com>
+ <20191211072053.GH3143381@builder>
+ <000b01d5b631$30ae26f0$920a74d0$@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219042047.GT2536@vkoul-mobl>
+In-Reply-To: <000b01d5b631$30ae26f0$920a74d0$@codeaurora.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 18 Dec 20:20 PST 2019, Vinod Koul wrote:
+On Wed 18 Dec 21:57 PST 2019, pillair@codeaurora.org wrote:
 
-> On 07-12-19, 12:21, Bjorn Andersson wrote:
-> > The support for the 14nm MSM8996 UFS PHY is currently handled by the
-> > UFS-specific 14nm QMP driver, due to the earlier need for additional
-> > operations beyond the standard PHY API.
-> > 
-> > Add support for this PHY to the common QMP driver, to allow us to remove
-> > the old driver.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   5 +
-> >  drivers/phy/qualcomm/phy-qcom-qmp.c           | 106 ++++++++++++++++++
-> >  2 files changed, 111 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> > index eac9ad3cbbc8..5b99cf081817 100644
-> > --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> > +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> > @@ -8,6 +8,7 @@ Required properties:
-> >   - compatible: compatible list, contains:
-> >  	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
-> >  	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
-> > +	       "qcom,msm8996-qmp-ufs-phy" for 14nm UFS phy on msm8996,
-> >  	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
-> >  	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
-> >  	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
-> > @@ -44,6 +45,8 @@ Required properties:
-> >  		For "qcom,ipq8074-qmp-pcie-phy": no clocks are listed.
-> >  		For "qcom,msm8996-qmp-pcie-phy" must contain:
-> >  			"aux", "cfg_ahb", "ref".
-> > +		For "qcom,msm8996-qmp-ufs-phy" must contain:
-> > +			"ref".
-> >  		For "qcom,msm8996-qmp-usb3-phy" must contain:
-> >  			"aux", "cfg_ahb", "ref".
-> >  		For "qcom,msm8998-qmp-usb3-phy" must contain:
-> > @@ -72,6 +75,8 @@ Required properties:
-> >  			"phy", "common".
-> >  		For "qcom,msm8996-qmp-pcie-phy" must contain:
-> >  			"phy", "common", "cfg".
-> > +		For "qcom,msm8996-qmp-ufs-phy": must contain:
-> > +			"ufsphy".
-> >  		For "qcom,msm8996-qmp-usb3-phy" must contain
-> >  			"phy", "common".
-> >  		For "qcom,msm8998-qmp-usb3-phy" must contain
-> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > index a6b8fc5798e2..d81516c4d747 100644
-> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> > @@ -121,6 +121,11 @@ enum qphy_reg_layout {
-> >  	QPHY_PCS_LFPS_RXTERM_IRQ_STATUS,
-> >  };
-> >  
-> > +static const unsigned int msm8996_ufsphy_regs_layout[] = {
-> > +	[QPHY_START_CTRL]		= 0x00,
-> > +	[QPHY_PCS_READY_STATUS]		= 0x168,
-> > +};
-> > +
-> >  static const unsigned int pciephy_regs_layout[] = {
-> >  	[QPHY_COM_SW_RESET]		= 0x400,
-> >  	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x404,
-> > @@ -330,6 +335,75 @@ static const struct qmp_phy_init_tbl msm8998_pcie_pcs_tbl[] = {
-> >  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_SIGDET_CNTRL, 0x03),
-> >  };
-> >  
-> > +static const struct qmp_phy_init_tbl msm8996_ufs_serdes_tbl[] = {
-> > +	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
+> I will raise the next patchset with the comments addressed.
 > 
-> Can you check this after adding the reset for ufs, I suspect you might
-> run into same issue as I am seeing on 8150, power down here does not
-> seem correct.
+> > -----Original Message-----
+> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Sent: Wednesday, December 11, 2019 12:51 PM
+> > To: Rakesh Pillai <pillair@codeaurora.org>
+> > Cc: devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> > Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
+> > device node
+> > 
+> > On Wed 04 Dec 00:48 PST 2019, Rakesh Pillai wrote:
+> > 
+> > > Add device node for the ath10k SNOC platform driver probe
+> > > and add resources required for WCN3990 on sc7180 soc.
+> > >
+> > > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> > > ---
+> > > This change is dependent on the below set of changes
+> > > arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+> > (https://lore.kernel.org/patchwork/patch/1150367/)
+> > 
+> > Why?
+> 
+> The mentioned series of patchset brings the DTSI for sc7180.
+> Hence the addition of wifi node is dependent on this series
+> https://lore.kernel.org/patchwork/patch/1150367/
 > 
 
-I'm not sure why we need to tickle POWER_DOWN here, but it's documented
-as such, done in the old driver and without it the PHY does not come up.
+I see, this should all be settled now. Looking forward to v2.
 
-Regards,
+Thanks,
 Bjorn
+
+> 
+> > 
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  4 ++++
+> > >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27
+> > +++++++++++++++++++++++++++
+> > >  2 files changed, 31 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > index 189254f..8a6a760 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > > @@ -248,6 +248,10 @@
+> > >  	status = "okay";
+> > >  };
+> > >
+> > > +&wifi {
+> > > +	status = "okay";
+> > 
+> > Please conclude on the representation of the "skip-hyp-mem-assign" and
+> > add it here, rather than in a subsequent patch - which implies that this
+> > patch doesn't work on its own.
+> 
+> 
+> Sure, I will update the next patchset.
+> 
+> 
+> > 
+> > > +};
+> > > +
+> > >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> > >
+> > >  &qup_i2c2_default {
+> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > index 666e9b9..40c9971 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > > @@ -42,6 +42,12 @@
+> > >  			compatible = "qcom,cmd-db";
+> > >  			no-map;
+> > >  		};
+> > > +
+> > > +		wlan_fw_mem: wlan_fw_region@93900000 {
+> > 
+> > wlan_fw_mem: memory@93900000 {
+> > 
+> > > +			compatible = "removed-dma-pool";
+> > > +			no-map;
+> > > +			reg = <0 0x93900000 0 0x200000>;
+> > > +		};
+> > >  	};
+> > >
+> > >  	cpus {
+> > > @@ -1119,6 +1125,27 @@
+> > >  				#clock-cells = <1>;
+> > >  			};
+> > >  		};
+> > > +
+> > > +		wifi: wifi@18800000 {
+> > > +			status = "disabled";
+> > > +			compatible = "qcom,wcn3990-wifi";
+> > > +			reg = <0 0x18800000 0 0x800000>;
+> > > +			reg-names = "membase";
+> > > +			interrupts =
+> > > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0
+> > */ >,
+> > > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1
+> > */ >,
+> > > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2
+> > */ >,
+> > > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3
+> > */ >,
+> > > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4
+> > */ >,
+> > > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5
+> > */ >,
+> > > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6
+> > */ >,
+> > > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7
+> > */ >,
+> > > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8
+> > */ >,
+> > > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9
+> > */ >,
+> > > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10
+> > */>,
+> > > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11
+> > */>;
+> > > +			memory-region = <&wlan_fw_mem>;
+> > 
+> > No iommus in sc7180?
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> > > +		};
+> > >  	};
+> > >
+> > >  	timer {
+> > > --
+> > > 2.7.4
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
