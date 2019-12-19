@@ -2,244 +2,125 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26EEC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A7DC2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C86424676
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576773147;
-	bh=rn47R6IvO6EmAAUhCrgRqhoSznMNBK9nhnALCSAkwoE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=T0VsHjb5ZqMh2kMfHvKPuBzs0BLwPmZQKV55Dwf/9JmnMjTf/fbHRy8ggejucRKy2
-	 xsgRCp4KM0qO0UHPd2OTV0R6lZCwFIlM47athjT+hfjzf8Ns+sVSROwUpNY9cYh6Q3
-	 Tw2yXcpuCl5f2NywSeMyGIJ1g2h4MZMHz2vjO6LE=
+	by mail.kernel.org (Postfix) with ESMTP id 16DFA2467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="QqABxJRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726895AbfLSQc0 (ORCPT
+        id S1726952AbfLSQct (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:32:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726855AbfLSQc0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:32:26 -0500
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2BA324650;
-        Thu, 19 Dec 2019 16:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576773145;
-        bh=rn47R6IvO6EmAAUhCrgRqhoSznMNBK9nhnALCSAkwoE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TmCUZc8HC4MsZMytQqpP6YcX2OvrwtIdtdZ6YvP+pdbVGfUu12j+4TI5oBr+en0UT
-         m/aJbFqmFebwpo9kyvgy5coWrQWisx3CZz+QjTTgSZdYFahKknGcHO/eomevXqiCw4
-         mjN5tcZn7GUMZSZ3eeuKMm1iNWfsp2D4VKOEXeJI=
-Received: by mail-qt1-f170.google.com with SMTP id w47so5552286qtk.4;
-        Thu, 19 Dec 2019 08:32:25 -0800 (PST)
-X-Gm-Message-State: APjAAAVCRj5LYzaqIfyBAYUy2XxbdPdTMhHZt2qKOzvarlBf/U6VTAMz
-        6wut6gj4UikkayqCwQuzKV3qLsfOjMEdG928/w==
-X-Google-Smtp-Source: APXvYqwZYa0h1s/HCI711yjy0PxWMFYhBrYLpz14TQY1Z//PXZAz3O5cSE1pEV1yX1YSasjOZatClg+LA3n1RvqJ8fA=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr7762290qtp.224.1576773144784;
- Thu, 19 Dec 2019 08:32:24 -0800 (PST)
+        Thu, 19 Dec 2019 11:32:49 -0500
+Received: from mail-eopbgr1410092.outbound.protection.outlook.com ([40.107.141.92]:37204
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726855AbfLSQct (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 11:32:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JUOeryutKHXDDSpiW0KzlKxiR1SBY58ws+y5gfXucbORuuMdJgbYCl5bI6luO0ZIhHGj9Vabyye4aCgS49yZjxDpoBXGix/vOYl0l5bJ72utXtmCdp3oHTi4OzLCBWftvm//zkvHdl2QdX/FEYGXAnKFn47rYJj8O5DikEs7y6DDH+ju0JLdlc+n9S5VcPcy3Ak7gZ959iZftniEbZEq54piMAw4HfjpjLED8T51tymLxWVE9PQWXvih/SggC08XGAREwNC0NM30/SlGjwqqRBKW5tBjGy80rD+olXAIla/a5pfrufb+goBTb/zMlEhtl9lfTd7+j2MhxOKUJRsFCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xsDsGDCxFAcxH7fBRpH8TDjVByJIH9m0oOhlBMBddzs=;
+ b=fRu5lpYuHOww82L05ec3/H9vT+qM2himmkCfgeJ3ZynlbVnsI89ePrDT2KSIW6PNfdOECFipDmu0OvsArHc14bvLGQkIbgjgpX6XiRGb7Km/uhO8XF1+y18nxhbnzhAvrW0W4p78CvyYA4n+Bh+3R6n6ElLKuzhLy+WaAgFZQBYR/v4AJXDSCQ7UOHkCZ3H6UOI2WQG85ZatPqB2XjlYexAbOUFYpHC9FAR8kV6ntL0Yl+PbxpHO7Dc3KnSmTzcPFRHeHPPsmYsIQD95X/ltEeTvzlEaMlquzuiSRRPnsb+HmW77KD0lLO9/8z/BS1rOcljif/FXYOVnOMgDdB6pHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xsDsGDCxFAcxH7fBRpH8TDjVByJIH9m0oOhlBMBddzs=;
+ b=QqABxJRAaVJ08OMrBZ5fzW0RHoeY/A4audzX+p0nb6x5sH8xlc5PLvmzZGJQ7sNTIZ95ib5vmdyUgN3ZbLjAAj9WjVRdMjB1nr3zc3T0ua2Wt4O2HRJvsyPDoYMe/Bu+6rCjNnVm8A0hSkhP3++SYIrWAXQcttQZS0WEdFs2ebs=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1563.jpnprd01.prod.outlook.com (52.133.160.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.20; Thu, 19 Dec 2019 16:32:45 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2538.019; Thu, 19 Dec 2019
+ 16:32:45 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+CC:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        Boris Brezillon <bbrezillon@kernel.org>
+Subject: RE: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Topic: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+Thread-Index: AQHVrDsFo/XrCnZmIE+HK5Vec6rH7qevIW6AgAK0x/CAA35sAIABOkowgAa4UICAAYUHAIAA0FQAgAIeaDA=
+Date:   Thu, 19 Dec 2019 16:32:45 +0000
+Message-ID: <TY1PR01MB1562B2779EAB8CEA09F7B18E8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+        <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
+        <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+        <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
+        <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+        <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
+        <90164352-6b74-ff78-261c-374f51f83330@cogentembedded.com>
+ <20191218090952.4c9f02a1@collabora.com>
+In-Reply-To: <20191218090952.4c9f02a1@collabora.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMmRlODEyMGQtMjI3ZC0xMWVhLWFhNTgtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDJkZTgxMjBmLTIyN2QtMTFlYS1hYTU4LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMzMzIiB0PSIxMzIyMTI0Njc2MzQ5MjExNzgiIGg9IkVSOGp0aEtra1NNSjM1SWJMMi9YYWR3WVVJWT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fe6fd247-4598-4209-d7ab-08d784a113ef
+x-ms-traffictypediagnostic: TY1PR01MB1563:
+x-microsoft-antispam-prvs: <TY1PR01MB1563DA4B1C3622F72E7A1BDC8A520@TY1PR01MB1563.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0256C18696
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39850400004)(346002)(376002)(366004)(136003)(189003)(199004)(7696005)(81166006)(81156014)(71200400001)(26005)(2906002)(86362001)(186003)(6506007)(9686003)(52536014)(64756008)(558084003)(5660300002)(33656002)(66556008)(7416002)(66476007)(54906003)(110136005)(66946007)(76116006)(316002)(8936002)(66446008)(478600001)(4326008)(55016002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1563;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lHSq5ZrLGL/E1U9YEnWMzinUO2v3AcyP3U6Xn/vRfc9mye4Bx6lvPhxyjikJDrQkDBcTI3tkkPMG8Q0dBs4xTi6/KryMaqUybrAQc9KAfw9d4NiRRvA/ZCsWVMVdPCCMFdZQmbhjoT1zX6QFro2pMRaurE+SIpawCV/EjS/Y2GulE5U1nYcBJ1ctAEzB4h6G6SCYUm3Cym8pXK+bqhO8DCtMKCYpckKeWRuJv4ig/JmUv9mLJslLAklLsGxq6g8mT5z/kf4pnAFrSxeJCn7X3dq48oDeVxQ7ca3tWxR1U9GSlMCOhkswf2eNEhNYgSE7gL9HxeOdX5JyjUfi3SBqrL3sytsCjk5bQAVIBDKaZD+R2wD4WSYCckmN6pIsTiSrPILXg8Z9BOVnX2gw1/V2XyBkOVDUb2PpyfFKbzt8ptgEnvR3FtJ5Hydk/kyp4EEM
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <cover.1575860791.git.eswara.kota@linux.intel.com> <a276c1107d40917901a4265d4d8622dee060e4f5.1575860791.git.eswara.kota@linux.intel.com>
-In-Reply-To: <a276c1107d40917901a4265d4d8622dee060e4f5.1575860791.git.eswara.kota@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 19 Dec 2019 10:32:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJE=7P3z8AzWUfWu1PCV4EVC1PBJ+ZAu3vmAcq5G5D34g@mail.gmail.com>
-Message-ID: <CAL_JsqJE=7P3z8AzWUfWu1PCV4EVC1PBJ+ZAu3vmAcq5G5D34g@mail.gmail.com>
-Subject: Re: [PATCH v11 1/3] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe6fd247-4598-4209-d7ab-08d784a113ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 16:32:45.4101
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2VS3Uvj6pysGM3xLuBPM/04wCv4Im9CHGr7vvQPryOeefF/kQeIMOl2rf/ANwfvSjqKLGvhyJ4jCSyaX0UgUUUlvSAVlW1lZhzhJS5g2i0k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1563
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 8, 2019 at 9:20 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
->
-> Add YAML schemas for PCIe RC controller on Intel Gateway SoCs
-> which is Synopsys DesignWare based PCIe core.
->
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/pci/intel-gw-pcie.yaml     | 138 +++++++++++++++++++++
->  1 file changed, 138 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> new file mode 100644
-> index 000000000000..db605d8a387d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> @@ -0,0 +1,138 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/intel-gw-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: PCIe RC controller on Intel Gateway SoCs
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: intel,lgm-pcie
-> +      - const: snps,dw-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe configuration registers.
-> +      - description: Controller application registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: app
-> +
-> +  ranges:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pcie
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  linux,pci-domain: true
-> +
-> +  num-lanes:
-> +    maximum: 2
-> +    description: Number of lanes to use for this port.
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  max-link-speed:
-> +    description: Specify PCI Gen for link capability.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - enum: [ 1, 2, 3, 4 ]
-> +      - default: 1
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  reset-assert-ms:
-> +    description: |
-> +      Delay after asserting reset to the PCIe device.
-> +    maximum: 500
-> +    default: 100
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - '#interrupt-cells'
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/clock/intel,lgm-clk.h>
+On Wed, Dec 18, 2019, Boris Brezillon wrote:
+> The dirmap API has not been designed with XIP in mind (though we could
+> theoretically extend it to support XIP). The main reason we added this
+[snip]
 
-I guess this is applied now as the example fails to build in
-linux-next as this header is missing.
+Boris,
 
-At this point I'd settle for just 'make dt_binding_check' passing on
-linux-next even though it should pass on maintainer trees too.
-However, it doesn't appear the clock driver with this header is close
-to being merged. The binding was sent on Aug 28 and not to the DT list
-so I hadn't seen it. Given that, I'd suggest a follow-up patch to
-remove the header dependency here. Just change LGM_GCLK_PCIE10 to the
-value.
+Thank you for explaining.
 
-> +    pcie10: pcie@d0e00000 {
-> +      compatible = "intel,lgm-pcie", "snps,dw-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <0xd0e00000 0x1000>,
-> +            <0xd2000000 0x800000>,
-> +            <0xd0a41000 0x1000>;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-> +      resets = <&rcu0 0x50 0>;
-> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-> +      phys = <&cb0phy0>;
-> +      phy-names = "pcie";
-> +      reset-assert-ms = <500>;
-> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-> +      num-lanes = <2>;
-> +    };
-> --
-> 2.11.0
->
+Chris
