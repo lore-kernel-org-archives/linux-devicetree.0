@@ -2,94 +2,128 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339FCC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228BEC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DA2227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQL19xGM"
+	by mail.kernel.org (Postfix) with ESMTP id E8181227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576759446;
+	bh=6JFwR0saeGyANg1nIHBFlGxnXWgDuEBwv3HadSj8sKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sVoUEeAhU3crAUGDkmBBh4JG3jEVn0xFnXg1gr7AKL+gjHUN/xKAZh17hDQ+fZGQh
+	 SwQfz7j/yt74LOjowfK5VFClmTjOT8Uclsp7nNfZXx4o1ORLv06sCWjfuorUI00woe
+	 UFs4zXANWAqtvyeNFB8jPYKTJJGR4Io/yRQkZGCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfLSMUF (ORCPT
+        id S1726708AbfLSMoF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:20:05 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45619 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726768AbfLSMUE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 07:20:04 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so5734060wrj.12;
-        Thu, 19 Dec 2019 04:20:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=aNzr7uADzXwgMWgQOC3rwaap/EsCtVbWxu1DV9lbYTI=;
-        b=AQL19xGMDNf8Su966j6w9GZkLDtN0SklpROZhSdWqJfzPIyEYM2Ay5BVpI/Bb7SxFc
-         HoEofmHrKU9MxPo+feUmp3iulC6Fz2Kevlg4GEt1lUjpF1VZvnLx9stP6WC8tEEm5WTK
-         AWfpIRnMZt50mCdM4J2DSNL7P9vD+6tImOat8RkpHJcaC1Ad4FU1DhR7/+KZd6c8aasA
-         LPmYguFz/URpNAOL3AC0Z4oaUZrbSv5os/aXWmxlLhWxOOAQ5tIZg8obquNKuDm8mACJ
-         kzlMVrBInvbEevv+j0/Q9q0YQVXbGBPiX+SIBbKpF5Hm7wfXvkus4Ap/2Imx1ySA0XrA
-         d9NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aNzr7uADzXwgMWgQOC3rwaap/EsCtVbWxu1DV9lbYTI=;
-        b=L87q68KXlXy2t1kOR3/VIvPGmmO+yx1pMJERpU7jboZ/QhydJpJjnGyKraFURmjOT8
-         KN0XAINJZ76aXBz18WgqXuakRDej1xtxX3VaOJUOix8F322B/2c3bXyezUHhs2vOB0xU
-         1RyvSVFxtEG2MjJzPxeQwwx7CjdVCREl/i0KMVf+a8S/Hm2JyTutEsb+E82vo+z5F4vd
-         DbhRGFX2RXi4FinRLjAoCPSvlF5fL+Ys7SYkI82xBASNKDqQXkdz1LTfC4EPs8HuxWjP
-         DxyN7aSrRme3IQZGEYym3shqHRz6wrYr0cRJuKwZhMba7dL9wVUJU5N0061X/7u+Sa+Q
-         UNcw==
-X-Gm-Message-State: APjAAAWIYkwxyT6rJkYGu27yr58XXWv0s4u69f/pJurxH3FLjcGdec5f
-        QLQP1MssxRI2u9+1h7YEuWE=
-X-Google-Smtp-Source: APXvYqyM3rObdh2zrtMyax+r4jGia6vz+7rratVPDgZ7CSMUV9HDNGUZ1rDlGNQBSxwCcM7wyW8/zw==
-X-Received: by 2002:adf:ef0b:: with SMTP id e11mr9111224wro.128.1576758002289;
-        Thu, 19 Dec 2019 04:20:02 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id t8sm6237738wrp.69.2019.12.19.04.20.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 04:20:01 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: remove disable-wp from rk3308-roc-cc emmc node
-Date:   Thu, 19 Dec 2019 13:19:54 +0100
-Message-Id: <20191219121954.2450-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 19 Dec 2019 07:44:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:38402 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726701AbfLSMoF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:44:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CD4831B;
+        Thu, 19 Dec 2019 04:44:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6E7D3F719;
+        Thu, 19 Dec 2019 04:44:03 -0800 (PST)
+Date:   Thu, 19 Dec 2019 12:44:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, heiko@sntech.de, shawnguo@kernel.org,
+        laurent.pinchart@ideasonboard.com, icenowy@aosc.io,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 3/4] regulator: mpq7920: add mpq7920 regulator driver
+Message-ID: <20191219124402.GC5047@sirena.org.uk>
+References: <20191219103721.10935-1-sravanhome@gmail.com>
+ <20191219103721.10935-4-sravanhome@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="69pVuxX8awAiJ7fD"
+Content-Disposition: inline
+In-Reply-To: <20191219103721.10935-4-sravanhome@gmail.com>
+X-Cookie: I smell a RANCID CORN DOG!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The mmc-controller.yaml didn't explicitly say disable-wp is
-for SD card slot only, but that is what it was designed for
-in the first place.
-Remove all disable-wp from emmc or sdio controllers.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts | 1 -
- 1 file changed, 1 deletion(-)
+--69pVuxX8awAiJ7fD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-index aa256350b..23527daa7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-@@ -125,7 +125,6 @@
- &emmc {
- 	bus-width = <8>;
- 	cap-mmc-highspeed;
--	disable-wp;
- 	mmc-hs200-1_8v;
- 	non-removable;
- 	status = "okay";
--- 
-2.11.0
+On Thu, Dec 19, 2019 at 11:37:20AM +0100, Saravanan Sekar wrote:
 
+This looks pretty good, a few small issues below:
+
+> @@ -0,0 +1,376 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * mpq7920.c  -  mps mpq7920
+> + *
+> + * Copyright 2019 Monolithic Power Systems, Inc
+
+Please keep the entire comment a C++ one so things look more
+intentional.
+
+> +static int mpq7920_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
+> +{
+> +	unsigned int ramp_val = (ramp_delay <= 4000) ? 3 : 2;
+> +
+> +	return regmap_update_bits(rdev->regmap, MPQ7920_REG_CTL0,
+> +				  MPQ7920_MASK_DVS_SLEWRATE, ramp_val << 6);
+> +}
+
+This should validate the input.  Please also avoid abusing the ternery
+operator like this, just write normal logic statements to make the code
+more readable.
+
+> +	struct regulator_desc *rdesc;
+> +	struct regulator_ops *ops;
+> +
+> +	for (i = 0; i < MPQ7920_MAX_REGULATORS; i++) {
+> +		rdesc = &info->rdesc[i];
+> +		ops = rdesc->ops;
+> +		if (rdesc->curr_table) {
+> +			ops->get_current_limit =
+> +				regulator_get_current_limit_regmap;
+> +			ops->set_current_limit =
+> +				regulator_set_current_limit_regmap;
+> +		}
+
+It would be better to make these constant at build time rather than
+patching at runtime, that lets things like static checkers do their
+thing more easily.
+
+> +	ret = mpq7920_regulator_register(info, &config);
+> +	if (ret < 0)
+> +		dev_err(dev, "Failed to register regulator!\n");
+
+This function has one caller, just inline it.
+
+--69pVuxX8awAiJ7fD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl37cJEACgkQJNaLcl1U
+h9COSQf9GWksfSDSmlysjJw328uMbqlUK49mwwu2bV7mGwykv739G6zQK0UilW9J
+4pxv5qLozLEyQKbF8JZRsE1geGiUqO3a6Svpdh5Uyfa/8xxWLDFlEPC6LMHulgLw
+X1VTS/S92lSCzANbm8EQLGJwz/t5llKlqInigyZqTTIVrI500xoCzFUkwW/wSreJ
+aIDttUebnyI2BvjFAP+ehG4/a2/2uK3oT18GieBpvGfIizybdu0P1wAQU/dbI+JN
+QEKl2dWLE/sUyFBllzdBh+Sd2O6C/g15y4R4FRU/m43CxFp5WXqzknPOUo+J+RA8
+JwaqnL6x9JKbK5P7S71QMGtHLDRMAQ==
+=jSsg
+-----END PGP SIGNATURE-----
+
+--69pVuxX8awAiJ7fD--
