@@ -2,104 +2,128 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D21C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 09:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC44C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4B424672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 09:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9135224650
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:12:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="IuUMWbuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfLSJ65 (ORCPT
+        id S1726708AbfLSKMC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 04:58:57 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45744 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfLSJ65 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 04:58:57 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-4e-5dfb49dfc7dc
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id BE.74.08102.FD94BFD5; Thu, 19 Dec 2019 10:58:55 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Thu, 19 Dec 2019 10:58:50 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Topic: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828
- bindings
-Thread-Index: AQHVtlEjPJdYWhzff0OqIDcPrX4s7KfBKG6A
-Date:   Thu, 19 Dec 2019 09:58:47 +0000
-Message-ID: <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-         <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [84.253.217.17]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B6C67A5C16966941A778612C207EB21C@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Dec 2019 05:12:02 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34746 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfLSKMC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 05:12:02 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f4so6656389wmj.1
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 02:12:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s2vukPTY6TMIDnDN5oMJx3TVhD6ZcioJVJfMMNPJQ1g=;
+        b=IuUMWbuIj8EKKGMPBmldpeqYAhBnnwPMu0MkViF4+qedXpY4EI4FLAAjCpRB2gR+HY
+         hx7By2u7A/KZC/awj3zXgQ03nJx2J13BVSZGngujEu5HvOCHhL+5bY7JBSGFBkkizK8u
+         XLXM5+mzEFZjq/WXIbjV3ig7hLy/W46nGM9RXdx4dq4zj1CGrS6+uVwpWZBtfSF0CU51
+         nnza2fJaxy5+1MgVyZFJm1yAbpob58J70QpBR1Miy5pFNBwu6k8nOfIJWuHcLu/CLgyl
+         uSrLB34wy+jQv/EeMb/By1k27+5W/qccfyZ5IPYKaPpFhuT5JDQi/RXr29mmztXBudCo
+         ePOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=s2vukPTY6TMIDnDN5oMJx3TVhD6ZcioJVJfMMNPJQ1g=;
+        b=XLL/bpL3k4F1IGyjPbvuVOezeduFCOwu1Q63p3X9X47rKqWigTkJGDvePpmIqkGyMN
+         9Uhg7iWodMuHSEVWOiLvOgT14Y/l/tYcuRi2dSpKdJD7N4e2Cax7gREFOE3ItTFkKZCO
+         TR+W/SiaJizCGBpGAAkEooUHXUf8tayvPTu1zXx+U+KyhPjWBLgIVZltofjHBkaatsLx
+         /XPvTsIMaTpvDETO+OSHY/Q0sd1Lkx2TDozleaa8CuOLEg7Vjz+lX0JhUQZleYfVBBf4
+         YIY4dokARDT+lKX20pcWY6mUnIY9dLoZzbTAk/o9QhV4mfpY2Gwgq5j1cesSyLuVDwc7
+         rxsA==
+X-Gm-Message-State: APjAAAU7DBfLXlNPpjB6oOU4JalYESs6ShmuNIl1AZHzMd6qLOxIKoCO
+        4BDZsD0lr3m2Z1odwXHT+jxxfA==
+X-Google-Smtp-Source: APXvYqwisIuwmRbJpVaj6J4WVHhyVjB3ZoBC8TtfIYr9jR+zDOH8/LORXB6QMRAWv3TZZwRgwUuLEw==
+X-Received: by 2002:a05:600c:24ca:: with SMTP id 10mr8728096wmu.4.1576750319558;
+        Thu, 19 Dec 2019 02:11:59 -0800 (PST)
+Received: from bender.baylibre.local (lfbn-nic-1-505-157.w90-116.abo.wanadoo.fr. [90.116.92.157])
+        by smtp.gmail.com with ESMTPSA id o4sm5750059wrx.25.2019.12.19.02.11.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 02:11:59 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH v5 0/4] drm: Add support for bus-format negotiation
+Date:   Thu, 19 Dec 2019 11:11:47 +0100
+Message-Id: <20191219101151.28039-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTVxzHPfd5QK+eVhjH+gqNBl/TsZjsaJwhKvFqssXJP2iseBlXipSW
-        3Jb5wGVsSsSqEaPGWCk+ywglaqv4LMZhrdoZlYDVRZyrz2gUVHRGYbh7vSr8c87n/L7n+/ue
-        P34H0sYHnAkW2F2yYpdsZi6ROVvbFfjyzpwuy1drOoaQA83XebKuvYYnr7xRhmyP3+fI7vAV
-        lmz48yhLbjUcZsid1+cB+be1giLbun+nyIuNf7PkyO5uQFpOVXGk4elBQCL+Vo74bjRTpMp3
-        kSHN0UxyO3qeI+WNYZ70xAJMRrJYX10PxI6b5bxYXV8qnvTc5sVg3XpObIuFOPHCzeOUuKP6
-        LSXW+t/wYmdwxLzEhf2n5Uqun7IK8u2Tpi/pb41VeKnid3DF5YiXLQNt0A0gxGgy7g596waJ
-        0IiuA9ywsZPTDxcBPr3zNaNd4tA07P6L1zAJTcGBZoMbJEAaVUHcU7FK48FoHo5dizMaJ6Ef
-        cLxuK9D5a7x5TSWlMYNG4+qjLziNBfQ9ru98+jFqP8C7/mn/cCkBWXFZxPeBARqO15fpdRql
-        4ODDN6zGGCF8IHSV1jkZP77X87Geivf6g6z2ThqNxYdOTdKtGfjwwxpe51S8bUOc199gwJd2
-        3mcqwReePgmeXrenj9vTx+3p494D2DqAi6QCW77kktMnKnLJRMVhLVK3Hx1FQaAPzKsT4H3T
-        nCZAQdAEhkDKnCzkTe2yGAfmOvJWWiWnNUcpscnOJoAhbU4SblW8tRiFPGnlKllxfJKGQsac
-        IqTFt1iMSMsqlOViWfmkDoPQjAW/qDY1KHK+vGJpgc3VK1MwQWueaEpyyvY8WZFKXNYcbTpy
-        nOp4aNIANXexZhecxVKRWtWtUZAOKx9799Ew7PWp642ORh9tZOwOu2xKEdbOVg1IM1hL7J/j
-        noAUCMyDhXKt3QD173zu9kQNotQgOPadFuSSeiVTGfhj1r3vvjEUHqLbJtwNLEqL/vooNiia
-        Ptt+uvhZ8uQ9GZaRhT8r/42vyWSfN87vrBVKZ/wSjtzdf2amI9JS2N7vuK0lPnr45ewFyw/+
-        9t49LJ/NepT9MkRnPTCVtkbTxtDc8kHn4qFMccvczFGrN2Xnzg8YZnVPrQNt/pebY6lp4WPL
-        zIzTKqWPoxWn9D/9jQrW+AMAAA==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gTWFyaywgTGVlLCBSb2INCg0KSSBqdXN0IG5vdGljZWQgd2UgaGF2ZSBhIGRlcGVuZGVu
-Y3kgaGVyZS4gVGhpcyBiaW5kaW5nIGlzIHJlZmVycmluZyB0bw0KcmVndWxhdG9yIGJpbmRpbmcg
-LSB3aGljaCB3YXMgYXBwbGllZCBieSBNYXJrIGFuZCBpcyB0aHVzIG1pc3NpbmcgZnJvbQ0KdGhl
-IHNlcmllcy4gV2hhdCdzIHRoZSBiZXN0IHdheSBmb3J3YXJkPw0KDQpPbiBUaHUsIDIwMTktMTIt
-MTkgYXQgMTE6NDYgKzAyMDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gUk9ITSBCRDcxODI4
-IFBvd2VyIG1hbmFnZW1lbnQgSUMgaW50ZWdyYXRlcyA3IGJ1Y2sgY29udmVydGVycywgNw0KPiBM
-RE9zLA0KPiBhIHJlYWwtdGltZSBjbG9jayAoUlRDKSwgMyBHUE8vcmVndWxhdG9yIGNvbnRyb2wg
-cGlucywgSEFMTCBpbnB1dA0KPiBhbmQgYSAzMi43Njgga0h6IGNsb2NrIGdhdGUuDQo+IA0KPiBE
-b2N1bWVudCB0aGUgZHQgYmluZGluZ3MgZHJpdmVycyBhcmUgdXNpbmcuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNv
-bT4NCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+IC0tLQ0K
-PiANCj4gTm8gY2hhbmdlcyBzaW5jZSB2Ng0KDQovL3NuaXANCg0KPiArICByZWd1bGF0b3JzOg0K
-PiArICAgICRyZWY6IC4uL3JlZ3VsYXRvci9yb2htLGJkNzE4MjgtcmVndWxhdG9yLnlhbWwNCg0K
-VGhpcyBmaWxlIGlzIG1pc3NpbmcgZnJvbSB0aGUgc2VyaWVzIGFuZCBpcyBhcHBsaWVkIHRvIE1h
-cmsncyB0cmVlLg0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg0K
+This patch series aims at adding support for runtime bus-format
+negotiation between all elements of the
+'encoder -> bridges -> connector/display' section of the pipeline.
+
+In order to support that, we need drm bridges to fully take part in the
+atomic state validation process, which requires adding a
+drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
+Once those basic building blocks are in place, we can add new hooks to
+allow bus format negotiation (those are called just before
+->atomic_check()). The bus format selection is done at runtime by
+testing all possible combinations across the whole bridge chain until
+one is reported to work.
+
+Already applied patch from v4 were removed.
+No Major changes in this v5, I addressed the slight changed requested
+by Laurent on the patch 1. Note that this version only contains core changes.
+Once those changes are merged I'll send the imx/panel/lvds-codec specific bits.
+
+A more detailed changelog is provided in each patch.
+
+This patch series is also available here [1].
+
+Thanks,
+
+~Boris~ Neil
+
+[1] https://github.com/superna9999/linux/commits/drm-bridge-busfmt-v5
+
+Boris Brezillon (4):
+  drm/bridge: Add a drm_bridge_state object
+  drm/bridge: Patch atomic hooks to take a drm_bridge_state
+  drm/bridge: Add an ->atomic_check() hook
+  drm/bridge: Add the necessary bits to support bus format negotiation
+
+ .../drm/bridge/analogix/analogix_dp_core.c    |  41 +-
+ drivers/gpu/drm/drm_atomic.c                  |  39 ++
+ drivers/gpu/drm/drm_atomic_helper.c           |  32 +-
+ drivers/gpu/drm/drm_bridge.c                  | 557 +++++++++++++++++-
+ include/drm/drm_atomic.h                      |   3 +
+ include/drm/drm_bridge.h                      | 281 ++++++++-
+ 6 files changed, 907 insertions(+), 46 deletions(-)
+
+-- 
+2.22.0
+
