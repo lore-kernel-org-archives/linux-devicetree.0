@@ -2,92 +2,104 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69923C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0342C2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2B02467E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576786424;
-	bh=71MW+VSyG7Xukp6U+TvDjG3AJdQqfYOPz/fAClsc5r4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hAR7pDX0byTY6peI++vkjuA64NStwqqA6+1AvkJlQsFKnP6TgfhVbaKJpa3AkJWbr
-	 ny1LGaKPmwtP9HeidaikRc+s8oDohjN7T1MCLKNdMZCjekJACp23J7K0ygpoxg9ESc
-	 XQ6VQ2cizQTA1GcKhjIDWJz3BCPWl5BU9aUWL3+Y=
+	by mail.kernel.org (Postfix) with ESMTP id BDBFA2465E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLSUNn (ORCPT
+        id S1726930AbfLSUQs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:13:43 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41431 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfLSUNn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:13:43 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so8669765otc.8;
-        Thu, 19 Dec 2019 12:13:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=2exayYeaNZtgQGFmqcZGnZK76NHNb4vFc7u1qrZvIf0=;
-        b=foye8m9XT5sO78sJFHXrswUnaxQaBBlBM422IdpUvWoGig8JFYupTSqwNwKOu7DlaO
-         vQUlMbcoxv/d1izIVXAl7mz0JHZ706+mUptVgUV3tNj1Iy2oLJotNmlFapeF50JM6DKi
-         W8Z/Rqy9yu9rRsYu52Ap4/5AsxNUaY8XPZaxMUMVHH/5m/Wy847JojP4p5+KVcI1pQgv
-         LvZKSFtSitTLjiF16/Vct85Rpob108gmnvD8HrJ/pg/1zUUYOjTCA23uWap3cFJLmD/E
-         k42DAe1v3kX7v8mZE3mpV2tOodP1bPjUmffTgMd1rk4pz4L5ui544sv94q0AXCu3KWbI
-         3e4w==
-X-Gm-Message-State: APjAAAWTGAam7B8ep4W/50fICMNuJjctqftaXcuFXZwSY3l1CVlef5m9
-        oFuWk1KRecQ4PhiZ1UkhoA==
-X-Google-Smtp-Source: APXvYqyIbNokEdgRSN9icS+W0eFCaLPDJrnwYXGGXJ6e0m0OSnKfrq3BWkt8qxc48c3/cbtWC3B/Fw==
-X-Received: by 2002:a05:6830:18f1:: with SMTP id d17mr5567978otf.298.1576786422699;
-        Thu, 19 Dec 2019 12:13:42 -0800 (PST)
-Received: from localhost (ip-184-205-110-29.ftwttx.spcsdns.net. [184.205.110.29])
-        by smtp.gmail.com with ESMTPSA id r17sm2381229otq.70.2019.12.19.12.13.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 12:13:42 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:13:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Schrempf Frieder <frieder.schrempf@kontron.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mm: Add missing mux options for UART1
- and  UART2 signals
-Message-ID: <20191219201340.GA13183@bogus>
-References: <20191210141516.6983-1-frieder.schrempf@kontron.de>
+        Thu, 19 Dec 2019 15:16:48 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:40957 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfLSUQs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:16:48 -0500
+Received: from mail-qk1-f181.google.com ([209.85.222.181]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MdeSt-1i8QQO3hSb-00ZiSy; Thu, 19 Dec 2019 21:16:46 +0100
+Received: by mail-qk1-f181.google.com with SMTP id w127so5692441qkb.11;
+        Thu, 19 Dec 2019 12:16:45 -0800 (PST)
+X-Gm-Message-State: APjAAAVCBWOJvWlZtkw28DNSJs06TRbVIHoF6jld9B1uW+oaib0WpWba
+        A4IlWJLPMB2SRLa7A/gjzeKYiteZRLGHxKvgUQo=
+X-Google-Smtp-Source: APXvYqxXxzC0hmoU51YHNIOMNlYs2rxhRdB48aYkaWwyXmxmNUKJ8I9t0XWDc0Xh+upH6sOTUc/n5M9fOKJDVFAtE4c=
+X-Received: by 2002:a37:a8d4:: with SMTP id r203mr10148528qke.394.1576786604484;
+ Thu, 19 Dec 2019 12:16:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210141516.6983-1-frieder.schrempf@kontron.de>
-Content-Language: en-US
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191209092147.22901-1-kishon@ti.com> <20191209092147.22901-6-kishon@ti.com>
+ <20191216144932.GY24359@e119886-lin.cambridge.arm.com> <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
+ <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com> <9b40e71a-c18c-a958-84fe-c5a126fe8272@ti.com>
+In-Reply-To: <9b40e71a-c18c-a958-84fe-c5a126fe8272@ti.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 19 Dec 2019 21:16:28 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1pGiUco9DcBSOWbck4_qLTUcO5awPe1+sM9Jun17xsOw@mail.gmail.com>
+Message-ID: <CAK8P3a1pGiUco9DcBSOWbck4_qLTUcO5awPe1+sM9Jun17xsOw@mail.gmail.com>
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:GIAkECSiaFGSI5aitAY0nGTi3sD4Yf2xuK1wqRbdEktsae1yNSY
+ rmxrTd/569KOel7SISKKcDVSvy0oyYExf5hfCKr5EL5R+7VQwX3hlqUMylke9vl0T5h3Hh4
+ /jtPr3nAlRrklfTDAy1coJ9HSjQdduqbxZk3O4V6tXX39+rDyo8UKWalhybe3hd7h/EUP0g
+ wxTxGuQMP/3RwJSxQjUHA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ceLdhuaFHOQ=:kxE9+xvSYkvzX26JRUrEcr
+ /j6iqFzhfGP+V7QuPHILK2D6GTNsOU7ELEPhT7SX082sWmcKzt83MN+Y9OmHR4JL0+J496P2o
+ KVXx3+SumCL2jfvx2eMOE7cOlPoTlTtaXE6v9PPNtpBgNG1K4vrATvbSR4pWOFsQHhUo0vkTK
+ bfcIeOYGYISV43EUfy/ijuZ51M8a44oCYhUHX0d9DgWlJqSyDasIdYANHy4vR5FhC2f2aeUmX
+ LW0KkwqXzNB8mziAbL9p01pYoDcyH9WtuMdH5rBcQ0uECmiC5/Mdj3YN7uBCwbdUoY1amXQq7
+ R+r++vSSyLILp5GKVdXVaE3I2zr4qwyuLLoOECnOkLUfJkI4lGyjLn7Bh2IZhVSXZ8+o6dlUi
+ DU46/fa02a58Qm/UGZcYuomd63/DNd4JIvAy0xFfGnhvpzu4Sr3NmHxWd5iNbOhMnWEUl1p0b
+ 8Za7sf0NM31ges/PJvFBCk8qA+kebQ/dAm5dSpSbLq+vqpHZzGKj+WffpJd+YKbIQ4cqqPVi4
+ 2utrnKQs+Cz3iAwmzofjOqq2nAxYvFL4xU0D9jQ/VotcB2PYie83YUr/RRhcNnoo2Q+oeeSvl
+ Jw2aMYXNn6PXXaPfk+RN8yCTqZkLJoqH+tdUjmR1T+syjCM/Pqaw9Qzi7Sm6/ZiP2IiZffL1/
+ rRwDaWY7tu1h9FYWfKhN8VN/rGMla95KTCXIdcLlq118H+3kNQDz5CsLAvEt04uTO/hlapkw8
+ j+Xin9eS6aW3eE0xLdpKVIaz7/36tmEyyzwNC63+PYB1K1XV1fEaZhghg0rfNotaX3OVEh/8S
+ fIN91vcIuSFQ8YzWzE8DSNRKvMcAxlXlcpvMPXQW09r9Kh8AOLaMfQaoLsQ2+ExTqb7aOwzuJ
+ Y2Q5jCCxhBwEGRAsPYIg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 10 Dec 2019 14:15:17 +0000, Schrempf Frieder wrote:
-> From: Frieder Schrempf <frieder.schrempf@kontron.de>
-> 
-> According to the reference manual and the "Pins Tool" from NXP, the
-> signals for UART1 and UART2 can be muxed to the SAI2 and SAI3 pads
-> respectively. Let's add the missing options.
-> 
-> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
+On Thu, Dec 19, 2019 at 2:17 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> On 19/12/19 5:33 pm, Arnd Bergmann wrote:
+> > On Thu, Dec 19, 2019 at 12:54 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> Hi Andrew,
+> >>
+> >> On 16/12/19 8:19 pm, Andrew Murray wrote:
+> >>> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+> >>>> Certain platforms like TI's J721E allow only 32-bit register accesses.
+> >>>
+> >>> When I first read this I thought you meant only 32-bit accesses are allowed
+> >>> and not other sizes (such as 64-bit). However the limitation you address
+> >>> here is that the J721E allows only 32-bit *aligned* register accesses.
+> >>
+> >> It's both, it allows only 32-bit aligned accesses and the size should be
+> >> only 32 bits. That's why I always use "readl" in the APIs below.
+> >
+> > In that case, can't you use the pci_generic_config_read32/write32
+> > functions with a cadence specific .map_bus() function?
+>
+> pci_generic_config_read32() is for reading configuration space registers
+> only. The accessors I added here are for the controller IP configuration.
+>
+> For the configuration space access I use
+> pci_generic_config_read32/write32()([PATCH 11/13] PCI: j721e: Add TI
+> J721E PCIe driver).
 
-Acked-by: Rob Herring <robh@kernel.org>
+Got it, thanks for the clarification.
+
+       Arnd
