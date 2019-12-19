@@ -2,242 +2,264 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA54C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B27BC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 739F921D7D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F28227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:42:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M9Etg41/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pR1vaYqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726744AbfLSKhg (ORCPT
+        id S1726867AbfLSKm6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:37:36 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39206 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfLSKhf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 05:37:35 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 20so4947922wmj.4;
-        Thu, 19 Dec 2019 02:37:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HTOvBssqTqxtZmGGIc8RqHJ2OODrmOCdLMv1BNyEoI4=;
-        b=M9Etg41/5NvZhTya2jX8mqCOhWXFTr90PGxhoMEgZWqJbk9VQa2AF3D8wleSnDg2zF
-         jyt+pTWWS23yHnCnidS/upUxzEU6y5lVysOg6Rhd0Yt5K31aIiiz9wnHDMekyyI5MQK5
-         LYmuIphhpSP1IaEduZWnlg7xYbeBPHgFoIhqLVOdkQkZbZSnZPU6OuUsxywEBxXHGA6y
-         OfcQYyg5kBYYni6v3PiVVS4yivDdWbbv5Ivdli4uETDY7EF4oyBTvLaUeb8Ac1pWGNYq
-         ynRWatwyl/EasbX5hRjDmlS0KORP2mL7oqBC8E2J+0yvCzO3DI6ZDC1s4JUMwLoqD/Ra
-         JLDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HTOvBssqTqxtZmGGIc8RqHJ2OODrmOCdLMv1BNyEoI4=;
-        b=PVoop8qz4sTGsA0OfvnAl1zTYMd4fyMhZ+W9AEAue4JtNCgEg2g3PVHxmUdK3DFvQB
-         EhvNl4hmpM/OBVpLNvu+ShSkauzde7mJf2no6x6uKox5/IEMqgOG8aqA5hlwKrUxFI8b
-         6dfBLOjSAcZDaikANr6h9PRBAanCSOmgc9xRE1TPIxn8bk2m5PG9miXZy+zdSDLz07/F
-         LpETtpqvdsljMtnclWQJ/Z5GuTiwVaoQXqjZeObT8EHkyHSQ+zrI0Kmo2q7qWxziMZXR
-         S88lVbyumqhtVqVTu79+wMhtTwt3WJhGn7aZdIALus54c4VLP80YaAgigl3hARe26IJp
-         5F6w==
-X-Gm-Message-State: APjAAAUhu4QAmik7srFNKMej+5+AHaWDrUqTmYeyRKr1I6p1oqJ6NHzr
-        gDkWyxMmVF+HXBbqm0arnVvz7rgVSN4=
-X-Google-Smtp-Source: APXvYqzdIZml7rQ4gzmVnEHNW0+KtXGNpGbnllQcyt3WRcujOtHyQpE2skXnVLxXTNjxDyg8odzXuw==
-X-Received: by 2002:a1c:1bc3:: with SMTP id b186mr9190522wmb.79.1576751852761;
-        Thu, 19 Dec 2019 02:37:32 -0800 (PST)
-Received: from localhost.localdomain (p5B3F677C.dip0.t-ipconnect.de. [91.63.103.124])
-        by smtp.gmail.com with ESMTPSA id c68sm5735147wme.13.2019.12.19.02.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 02:37:32 -0800 (PST)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        heiko@sntech.de, shawnguo@kernel.org,
-        laurent.pinchart@ideasonboard.com, icenowy@aosc.io,
-        mchehab+samsung@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH 2/4] dt-bindings: regulator: add document bindings for mpq7920
-Date:   Thu, 19 Dec 2019 11:37:19 +0100
-Message-Id: <20191219103721.10935-3-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191219103721.10935-1-sravanhome@gmail.com>
-References: <20191219103721.10935-1-sravanhome@gmail.com>
+        Thu, 19 Dec 2019 05:42:58 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:14644 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726770AbfLSKmx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 05:42:53 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576752172; h=References: In-Reply-To: Message-Id: Date:
+ Subject: To: From: Sender;
+ bh=6DacnwmMWPUD4nOv69Iq6uGJwHw/xzXzAqbMl6vb/Tk=; b=pR1vaYqwlEnkocOZ9bW1cNy4OFoyKNDX6yx92P3WzphxbrokaafxvR4ofnUj4VSemxmv/Da/
+ 7CSrNBeSwwM+oW90bFvOCLJiItLnV5TG5MHPDE+Z7grl7Mov7XD1bSjWjExzq7oMCw4Bf5gC
+ qH7vqUW7kR+syuKLfn7HMW7zvow=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfb542c.7f8b255617d8-smtp-out-n02;
+ Thu, 19 Dec 2019 10:42:52 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C8171C53805; Thu, 19 Dec 2019 10:42:51 +0000 (UTC)
+Received: from srichara-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BC234C53803;
+        Thu, 19 Dec 2019 10:42:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BC234C53803
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     sricharan@codeaurora.org, agross@kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
+        sivaprak@codeaurora.org
+Subject: [PATCH V2 1/7] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl bindings
+Date:   Thu, 19 Dec 2019 16:11:43 +0530
+Message-Id: <1576752109-24497-2-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1576752109-24497-1-git-send-email-sricharan@codeaurora.org>
+References: <1576752109-24497-1-git-send-email-sricharan@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for mpq7920 regulator driver.
-Example bindings for mpq7920 are added.
+Add device tree binding Documentation details for ipq6018
+pinctrl driver.
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 ---
- .../bindings/regulator/mpq7920.yaml           | 149 ++++++++++++++++++
- 1 file changed, 149 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
 
-diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+[V2] Splitted dt bindings and driver into different patches. Added missing bindings,
+     and some style changes.
+
+ .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 172 +++++++++++++++++++++
+ 1 file changed, 172 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
 new file mode 100644
-index 000000000000..79000b745cfd
+index 0000000..745a11e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
-@@ -0,0 +1,149 @@
-+# SPDX-License-Identifier: GPL-2.0
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+@@ -0,0 +1,172 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
++$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Monolithic Power System MPQ7920 PMIC
++title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
 +
 +maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
++  - Sricharan R <sricharan@codeaurora.org>
++
++description: |
++  This binding describes the Top Level Mode Multiplexer block found in the
++  IPQ6018 platform.
 +
 +properties:
-+  $nodename:
-+    pattern: "mpq@[0-9a-f]{1,2}"
 +  compatible:
-+    enum:
-+	- mps,mpq7920
-+
++    const: qcom,ipq6018-pinctrl
 +  reg:
 +    maxItems: 1
++  interrupts:
++    Description: Specifies the TLMM summary IRQ
++    maxItems: 1
++  interrupt-controller: true
++  '#interrupt-cells':
++    Description:
++      Specifies the PIN numbers and Flags, as defined in defined in
++      include/dt-bindings/interrupt-controller/irq.h
++    const: 2
++  gpio-controller: true
++  '#gpio-cells':
++    Description: Specifying the pin number and flags, as defined in
++      include/dt-bindings/gpio/gpio.h
++    const: 2
++  gpio-ranges:
++    Description: Documentation/devicetree/bindings/gpio/gpio.txt
++    maxItems: 1
 +
-+  regulators:
-+    type: string
-+    description: |
-+      list of regulators provided by this controller, must be named
-+      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
-+      The valid names for regulators are
-+      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
++#PIN CONFIGURATION NODES
++patternProperties:
++  '-pins$':
++    type: object
++    Description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
 +
-+    properties:
-+       mps,time-slot:
-+         - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-+       description: |
-+         power on/off sequence time slot/interval must be one of following values
-+         With:
-+          * 0: 0.5ms
-+          * 1: 2ms
-+          * 2: 8ms
-+          * 3: 16ms
-+          Defaults to 0.5ms if not specified.
++    Properties:
++      pins:
++        allOf:
++          $ref: /schemas/types.yaml#/definitions/string
++          enum:
++            gpio0-gpio80
++            sdc1_clk
++            sdc1_cmd
++            sdc1_data
++            sdc2_clk
++            sdc2_cmd
++            sdc2_data
++            qdsd_cmd
++            qdsd_data0
++            qdsd_data1
++            qdsd_data2
++            qdsd_data3
++        Description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
 +
-+    properties:
-+       mps,fixed-on-time:
-+          - $ref: "/schemas/types.yaml#/definitions/boolean"
-+       description: |
-+           select power on sequence with fixed time interval mentioned in
-+           time-slot reg for all the regulators.
++      function:
++        allOf:
++          $ref: /schemas/types.yaml#/definitions/string
++          enum:
++            adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
++            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
++            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
++            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
++            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
++            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
++            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
++            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
++            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
++            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
++            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
++            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
++            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
++            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
++            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
++            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
++            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
++            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
++            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
++            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
++            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
++            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
++            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
++            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
++            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
++            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst
++        Description:
++          Specify the alternative function to be configured for the specified
++          pins.
++      bias-disable:
++        type: boolean
++        Description:
++          The specified pins should be configured as no pull.
++      bias-pull-down:
++        type: boolean
++        Description:
++          The specified pins should be configured as pull down.
++      bias-pull-up:
++        type: boolean
++        Description:
++          The specified pins should be configured as pull up.
++      output-high:
++        type: boolean
++        Description:
++          The specified pins are configured in output mode, driven high.
++          This option is not available for sdc pins.
++      output-low:
++        type: boolean
++        Description:
++          The specified pins are configured in output mode, driven low.
++          This option is not available for sdc pins.
++      drive-strength:
++        allOf:
++          $ref: /schemas/types.yaml#/definitions/uint32
++          enum: [2, 4, 6, 8, 10, 12, 14, 16]
++        Description:
++          elects the drive strength for the specified pins, in mA.
 +
-+    properties:
-+       mps,fixed-off-time:
-+          - $ref: "/schemas/types.yaml#/definitions/boolean"
-+       description: |
-+          select power off sequence with fixed time interval mentioned in
-+          time-slot reg for all the regulators.
++    required:
++      - pins
++      - function
 +
-+    properties:
-+       mps,inc-off-time:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-+       description: |
-+          An array of 8, linearly increase power off sequence time
-+          slot/interval for each regulator must be one of following values
-+         * 0 to 15
-+    properties:
-+       mps,inc-on-time:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-+       description: |
-+          An array of 8, linearly increase power on sequence time
-+          slot/interval for each regulator must be one of following values
-+          * 0 to 15
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - '#interrupt-cells'
++  - gpio-controller
++  - '#gpio-cells'
++  - gpio-ranges
 +
-+    properties:
-+       mps,switch-freq:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8"
-+       description: |
-+          switching frequency must be one of following values
-+          * 0 : 1.1MHz
-+          * 1 : 1.65MHz
-+          * 2 : 2.2MHz
-+          * 3 : 2.75MHz
-+          Defaults to 2.2 MHz if not specified.
++example:
++        tlmm: pinctrl@1000000 {
++                compatible = "qcom,ipq6018-pinctrl";
++                reg = <0x1000000 0x300000>;
++                interrupts = <0 208 0>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
 +
-+    properties:
-+       mps,buck-softstart:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-+       description: |
-+          An array of 4 contains soft start time of each buck, must be one of
-+          following values
-+          * 0 : 150us
-+          * 1 : 300us
-+          * 2 : 610us
-+          * 3 : 920us
-+          Defaults to 300us if not specified.
++                uart_pins: uart_pins {
++                        mux {
++                                pins = "gpio4", "gpio5";
++                                function = "blsp_uart2";
++                        };
 +
-+    properties:
-+       mps,buck-ovp:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-+       description: |
-+           An array of 4 contains over voltage protection of each buck, must be
-+           one of following values
-+           * 0 : disabled
-+           * 1 : enabled
-+           Defaults is enabled if not specified.
++                        tx {
++                                pins = "gpio4";
++                                drive-strength = <4>;
++                                bias-disable;
++                        };
 +
-+    properties:
-+        mps,buck-phase-delay:
-+          - $ref: "/schemas/types.yaml#/definitions/uint8-array"
-+       description: |
-+           An array of 4 contains each buck phase delay must be one of following
-+           values
-+           * 0: 0deg
-+           * 1: 90deg
-+           * 2: 180deg
-+           * 3: 270deg
-+           Defaults to 0deg for buck1 & buck2, 90deg for buck3 & buck4 if not
-+           specified.
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        mpq7920@69 {
-+	  compatible = "mps,mpq7920";
-+          reg = <0x69>;
-+
-+          mps,switch-freq = <1>;
-+          mps,buck-softstart = /bits/ 8 <1 2 1 3>;
-+          mps,buck-ovp = /bits/ 8 <1 0 1 1>;
-+
-+          regulators {
-+            buck1 {
-+             regulator-name = "buck1";
-+             regulator-min-microvolt = <400000>;
-+             regulator-max-microvolt = <3587500>;
-+             regulator-min-microamp  = <460000>;
-+             regulator-max-microamp  = <7600000>;
-+             regulator-boot-on;
-+           };
-+
-+           ldo2 {
-+             regulator-name = "ldo2";
-+             regulator-min-microvolt = <650000>;
-+             regulator-max-microvolt = <3587500>;
-+           };
-+         };
-+       };
-+     };
-+...
++                        rx {
++                                pins = "gpio5";
++                                drive-strength = <2>;
++                                bias-pull-up;
++                        };
++                };
++        };
 -- 
-2.17.1
-
+1.9.1
