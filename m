@@ -2,129 +2,102 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B54C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921B1C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD87227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="HJKmIxFx"
+	by mail.kernel.org (Postfix) with ESMTP id 6C91124672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576776767;
+	bh=k50cd5B88xhBvXY5ZkbJXqjGZEzoE+Hb2bzMFriQpZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JcwG0qfpSH7rcRSKBmtlQYhqRF2Qro0y0o4HmF9eYfJO1dai2pIZUhUqwLtgoRAjV
+	 9I8QfjUW4UUMvXwWha2I1P2ypkKyBQBGACHrNKfEtvVxVmq3JyvQizMSyUxipeUWcz
+	 wth/q9AJDWF2SswWuvvSb/nXt8lkGsRk4S9zdP/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfLSRaX (ORCPT
+        id S1726869AbfLSRcn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:30:23 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37186 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSRaX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 12:30:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=joiIL60i33gQwU7JNxW0f8NaOlF7POfgRUGaP64zU60=; b=HJKmIxFxgR1VFLr/8cqtc/no6
-        CgTOKTDq07ieyqGWpEpxV8UH8XHAmuFDsBz88OLmYeU9UREfooy9Ffxwevk7pCLeHHuIi7DkUCdL/
-        TAKrHCZdXh1uimmJ3onDz+U803HzhhOo+KzkivAObHX6e58ffMpMkLVJKaXXUxG1DyBCYaxx7wFKA
-        a+5AXduyVqo9kDPNfTwerL0H9vDfBXnIK/DRA3ui8EmMxBqa0EalR6yIlQU5RYdYDSCiiAN1RFhjh
-        VeM+D1cvUkrn9aU78A4HhmVkqHoKXsD8eS7AxmLhox61ghZoNVbG6CYw34xAvqzcn96fHnPzVsALl
-        hDBR8RI5A==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43512)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ihzcw-0003qu-2f; Thu, 19 Dec 2019 17:30:18 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ihzcu-0005XU-Hm; Thu, 19 Dec 2019 17:30:16 +0000
-Date:   Thu, 19 Dec 2019 17:30:16 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     madalin.bucur@nxp.com
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, shawnguo@kernel.org,
-        devicetree@vger.kernel.org,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>
-Subject: Re: [PATCH 5/6] net: fsl/fman: add support for PHY_INTERFACE_MODE_SFI
-Message-ID: <20191219173016.GD25745@shell.armlinux.org.uk>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-6-git-send-email-madalin.bucur@oss.nxp.com>
+        Thu, 19 Dec 2019 12:32:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726818AbfLSRcm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 12:32:42 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FF221655;
+        Thu, 19 Dec 2019 17:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576776761;
+        bh=k50cd5B88xhBvXY5ZkbJXqjGZEzoE+Hb2bzMFriQpZ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l+pkf4mWOw9JhNDQ7HH184KSQ2rLXHpRDxLiDMXneBjcfNPsiqN9pwBDqncxUqp3y
+         02V9/Hy5Xt7Ba71s2LypscPsGoMfVn7kl28ZVRnwLrByw9Peto+nA532n1Y8Fgg0hZ
+         gS09GGMTJWITcGexVVTd9FY8vVCbldDv++OTw5tQ=
+Date:   Thu, 19 Dec 2019 18:32:38 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/7] dt-bindings: thermal: add YAML schema for
+ sun8i-thermal driver bindings
+Message-ID: <20191219173238.zfcpfac46bs2gejk@gilmour.lan>
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219172823.1652600-3-anarsoul@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qvpkkhg37mvl6gwe"
 Content-Disposition: inline
-In-Reply-To: <1576768881-24971-6-git-send-email-madalin.bucur@oss.nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191219172823.1652600-3-anarsoul@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:21:20PM +0200, Madalin Bucur wrote:
-> Add support for the SFI PHY interface mode.
-> 
-> Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-> ---
->  drivers/net/ethernet/freescale/fman/fman_memac.c | 2 ++
->  drivers/net/ethernet/freescale/fman/mac.c        | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
-> index d0b12efadd6c..09fdec935bf2 100644
-> --- a/drivers/net/ethernet/freescale/fman/fman_memac.c
-> +++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
-> @@ -440,6 +440,7 @@ static int init(struct memac_regs __iomem *regs, struct memac_cfg *cfg,
->  	tmp = 0;
->  	switch (phy_if) {
->  	case PHY_INTERFACE_MODE_XFI:
-> +	case PHY_INTERFACE_MODE_SFI:
 
-No difference between these two.
+--qvpkkhg37mvl6gwe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  	case PHY_INTERFACE_MODE_XGMII:
->  		tmp |= IF_MODE_10G;
->  		break;
-> @@ -456,6 +457,7 @@ static int init(struct memac_regs __iomem *regs, struct memac_cfg *cfg,
->  	/* TX_FIFO_SECTIONS */
->  	tmp = 0;
->  	if (phy_if == PHY_INTERFACE_MODE_XFI ||
-> +	    phy_if == PHY_INTERFACE_MODE_SFI ||
+On Thu, Dec 19, 2019 at 09:28:18AM -0800, Vasily Khoruzhick wrote:
+> From: Yangtao Li <tiny.windzz@gmail.com>
+>
+> sun8i-thermal driver supports thermal sensor in wide range of Allwinner
+> SoCs. Add YAML schema for its bindings.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-Again, no difference between these two.
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
->  	    phy_if == PHY_INTERFACE_MODE_XGMII) {
->  		if (slow_10g_if) {
->  			tmp |= (TX_FIFO_SECTIONS_TX_AVAIL_SLOW_10G |
-> diff --git a/drivers/net/ethernet/freescale/fman/mac.c b/drivers/net/ethernet/freescale/fman/mac.c
-> index 2944188c19b3..5e6317742c38 100644
-> --- a/drivers/net/ethernet/freescale/fman/mac.c
-> +++ b/drivers/net/ethernet/freescale/fman/mac.c
-> @@ -542,6 +542,7 @@ static const u16 phy2speed[] = {
->  	[PHY_INTERFACE_MODE_QSGMII]		= SPEED_1000,
->  	[PHY_INTERFACE_MODE_XGMII]		= SPEED_10000,
->  	[PHY_INTERFACE_MODE_XFI]		= SPEED_10000,
-> +	[PHY_INTERFACE_MODE_SFI]		= SPEED_10000,
+Thanks!
+Maxime
 
-Again, no difference between these two.
+--qvpkkhg37mvl6gwe
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  };
->  
->  static struct platform_device *dpaa_eth_add_device(int fman_id,
-> @@ -800,6 +801,7 @@ static int mac_probe(struct platform_device *_of_dev)
->  
->  	/* The 10G interface only supports one mode */
->  	if (mac_dev->phy_if == PHY_INTERFACE_MODE_XFI ||
-> +	    mac_dev->phy_if == PHY_INTERFACE_MODE_SFI ||
+-----BEGIN PGP SIGNATURE-----
 
-Again, no difference between these two.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfu0NgAKCRDj7w1vZxhR
+xTsHAP4pjKvGwYzFATi3ZRZ9Icy+5en/9wH9EXDxgCLFt/7Z2gD/WbLkhcAZQUIg
+h4Q76OJzfvYCKvCdvc/BVGFPYmKwQwU=
+=TiK5
+-----END PGP SIGNATURE-----
 
-I just don't see the point of perpetuating the XFI and SFI names for
-something that is just plain 10GBASE-R.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+--qvpkkhg37mvl6gwe--
