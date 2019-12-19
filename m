@@ -2,211 +2,342 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C17C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85077C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB51624650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 00:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514AA227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 00:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iEIhRWsX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jytmpAem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfLSASR (ORCPT
+        id S1726641AbfLSAlI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 19:18:17 -0500
-Received: from mail-eopbgr60062.outbound.protection.outlook.com ([40.107.6.62]:30083
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726463AbfLSASR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 18 Dec 2019 19:18:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZKEPA6sl7LbqDzKXkAhQxSlW/JzjAy3jaZsxHZdZFMfKIvOPoJyMogsFryHZYrOqhGk6Mrbw17I1Bs8kJcWdtqUzcAuWP42qJGzAO8ifjCD2aDLA7sYF5tSDASA06rkNv3+bkDlyT8wJaNJLpRfvSkY8fOH3VBnxfvLepmKk6VYTLuAuAa9kotqKqBhU2N8qwIoJdrFFrIHbkrT00mWBb18Rf2irGXY8STrvcJW8WoZSNv3NBEiivb4mHI+hkGj1Jma9jceW/jW84zaaEWDUpT6lFhPmCD8/5MHO7hNCdeARqqUs5WU9n+Lbw4OkEu/lHNMumZll2qQyJo2BoTbIWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XrnGVkzKvzUrsrZNlKOfhRsHgu+SgOG192yoHPWcIZs=;
- b=Q/yVDbSKc2uHuMshHwGw264CtOnC3R+OiRJ0KUheRVRQY4kDvI0vpNnRaekucTq1TjUzIuJJ7CJ1T6INnHVoNDYAMdosgyS5NthvnmSuaPQkzIi8P2px/0TyXGFp3X4VBCL7XpFO55Kte2/jCkmO6Vj4SoIWQz8YN3Yb14RID72uGEyAau5SOk47ZCBehxyAwGKtXup7u2iHXjFd4zsh+163zUq8bFQbwr90sBFuSEQLmyX245rqhQvzproGTd/deR2siN+mvEKBGLfLTHjq0JLvyhPRDWymRSF/FhDWZEHJR781zJewTz+Mdo2N8fWhsAJHjfhFqBKCzy2Y3JNeNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XrnGVkzKvzUrsrZNlKOfhRsHgu+SgOG192yoHPWcIZs=;
- b=iEIhRWsXHVu3tIWXpHeRT+z7QOWYBTTQpxBMixhYNOVJaFnGR6QXxit1BwIfVq6oWo4h4U0A3tMbjPvU0Y9LPG5uQSgI0GlT1bbr+S6zGgqvSKrwm+M1H7iPlpN2/dLFAjrKkhn9uP/MExI0yex7lslLchiHqV8LwR2A3W0HRzM=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB5216.eurprd04.prod.outlook.com (20.177.51.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.13; Thu, 19 Dec 2019 00:18:10 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::2c49:44c8:2c02:68b1%5]) with mapi id 15.20.2559.015; Thu, 19 Dec 2019
- 00:18:10 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacky Bai <ping.bai@nxp.com>
-CC:     =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH RFC v6 4/9] interconnect: Add imx core driver
-Thread-Topic: [PATCH RFC v6 4/9] interconnect: Add imx core driver
-Thread-Index: AQHVmyeaK7vaeB5iSEWDg4w8jXcbxw==
-Date:   Thu, 19 Dec 2019 00:18:10 +0000
-Message-ID: <VI1PR04MB702379A8A2A2B2F981EDB9BEEE520@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1573761527.git.leonard.crestez@nxp.com>
- <ddfa004340787f8b138c54d89af486d9232dfff9.1573761527.git.leonard.crestez@nxp.com>
- <48136159-21ba-c3b7-52c9-1d9d711644f7@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [2a04:241e:500:9200:180b:59ec:7e1f:6ab4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1332c512-28b0-4e06-d42f-08d78418ee0d
-x-ms-traffictypediagnostic: VI1PR04MB5216:|VI1PR04MB5216:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB521655D3CA2FB703A5857A72EE520@VI1PR04MB5216.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0256C18696
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(376002)(136003)(346002)(199004)(189003)(33656002)(186003)(7696005)(6506007)(53546011)(91956017)(6636002)(76116006)(7416002)(66476007)(64756008)(66556008)(66446008)(71200400001)(66946007)(4326008)(52536014)(5660300002)(86362001)(110136005)(54906003)(44832011)(8936002)(9686003)(55016002)(81166006)(81156014)(2906002)(478600001)(316002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5216;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: z32RROcGqPP9xYnyTYJvffkbeshGM1iMntHX4s+kqbChkQc9V1M/iKlHa2X+sZI64cnvgtnRyVQ/y/I/hL3AWWm6FlOxa/SUtPx6isuEqWTEojgmzthOAgSWHZjXnPb6DKmHOcXY+5BwSqkCIdV587PmPFICgfX99AZOIMyYo1X2KlDmL0YVjpsK3/5ODfgjGi/4CGnfXBo4d6eGBpOhdaq8p0KzMUubr613mrExwljJx2ayWG2h8CV3PTjt8FG8I9pxwAvmMKMSmsTr9TZLwvcnJzCd6dF7QZzxUWiWyVFaUNTMHF5jtFLI4XJJgjAZ0AtsHzKMWOeiCd+qxoqx4QZHTvpbXcEwcFAamwDBiRX1CqYW/Vgh2VF6iboEK3d6SAqsJzh3VsZA8wSjM+Jcfm8fMpDffvGHVMf6FAvbhW0pTKqeLBSiyz53pncgKqyF
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Dec 2019 19:41:08 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5037 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfLSAlI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 19:41:08 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfac7190000>; Wed, 18 Dec 2019 16:40:57 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 18 Dec 2019 16:41:07 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 18 Dec 2019 16:41:07 -0800
+Received: from [10.2.164.84] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 19 Dec
+ 2019 00:41:05 +0000
+Subject: Re: [PATCH v4 06/19] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-7-git-send-email-skomatineni@nvidia.com>
+ <87b2b266-e4a9-9a7a-2336-6ec57d7c4d1d@gmail.com>
+ <55a56c3d-3fac-cc77-46ae-acf5de77d262@gmail.com>
+ <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <c5bb3c25-1fae-3ca9-6bf3-c3d66be20e19@nvidia.com>
+Date:   Wed, 18 Dec 2019 16:41:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1332c512-28b0-4e06-d42f-08d78418ee0d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 00:18:10.1720
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0ud55QVHI4YJ+ytbbh29pssh655Iym6sptpoLP0/aPo6dEQ/jOZVSWDkuSlxEiznt5RJKJynDWrz+lsC7xSb5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5216
+In-Reply-To: <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576716057; bh=FOmuU/3uHYuRnI+/RGSno7P4BhpLQ674aEV/2xhwncE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=jytmpAem3/m9oewetwsDpI+M/UWc7vMrsg0ya1r20hq5gAlvyg49ury2pjidJ8onB
+         i1uImLCe4t3qxHF3V/V7psSkVfg7YNrvfhSvudIOLkw5ftVWzf7aaUbNyR8a5j+uF5
+         mHCnSE0KcImsCmXAGr4beMhMtyApfjPUqQGe/uxFtduN+R3dBeVkkLz1CPnEdp276g
+         ZmtOtDe2u4ejLNeAc8prRVrHsRWYq4wzInGD4S7E2yyMBkokPztk2p2Y2+nqLO7GSw
+         D6y+3f9b1x3CgdLpvG5kq3bO9SZLBgGB8xP3KL6johFQAOAqu9XajCtN2dmzT/X5cx
+         Dao94jHZHiUEQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12.12.2019 09:29, Georgi Djakov wrote:=0A=
-> Hi Leonard,=0A=
-> =0A=
-> Thank you for your continuous work on the patches and sorry for not revie=
-wing=0A=
-> this earlier.=0A=
-> On 11/14/19 22:09, Leonard Crestez wrote:=0A=
->> This adds support for i.MX SoC family to interconnect framework.=0A=
->>=0A=
->> Platform drivers can describe the interconnect graph and several=0A=
->> adjustment knobs where icc node bandwidth is converted to a=0A=
->> DEV_PM_QOS_MIN_FREQUENCY request.=0A=
->>=0A=
->> The interconnect provider is probed through the main NOC device and=0A=
->> other adjustable nodes on the same graph are found from a=0A=
->> fsl,scalable-nodes phandle array property.=0A=
->>=0A=
->> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>=0A=
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
-=0A=
->> +static int imx_icc_node_init_qos(struct icc_provider *provider,=0A=
->> +				 struct icc_node *node)=0A=
->> +{=0A=
->> +	struct imx_icc_node *node_data =3D node->data;=0A=
->> +	struct device *dev =3D provider->dev;=0A=
->> +	struct device_node *dn =3D NULL;=0A=
->> +	struct platform_device *pdev;=0A=
->> +	int i, count;=0A=
->> +	u32 node_id;=0A=
->> +	int ret;=0A=
->> +=0A=
->> +	count =3D of_property_count_u32_elems(dev->of_node,=0A=
->> +					    "fsl,scalable-node-ids");=0A=
->> +	if (count < 0) {=0A=
->> +		dev_err(dev, "Failed to parse fsl,scalable-node-ids: %d\n",=0A=
->> +			count);=0A=
->> +		return count;=0A=
->> +	}=0A=
->> +=0A=
->> +	for (i =3D 0; i < count; i++) {=0A=
->> +		ret =3D of_property_read_u32_index(dev->of_node,=0A=
->> +						 "fsl,scalable-node-ids",=0A=
->> +						 i, &node_id);=0A=
->> +=0A=
->> +		if (ret < 0) {=0A=
->> +			dev_err(dev, "Failed to parse fsl,scalable-node-ids[%d]: %d\n",=0A=
->> +				i, ret);=0A=
->> +			return ret;=0A=
->> +		}=0A=
->> +		if (node_id !=3D node->id)=0A=
->> +			continue;=0A=
->> +=0A=
->> +		dn =3D of_parse_phandle(dev->of_node, "fsl,scalable-nodes", i);=0A=
-> =0A=
-> Why is this needed? I would expect that the interconnect provider driver =
-already=0A=
-> knows which nodes are scalable based on the platform compatible string.=
-=0A=
-> Then maybe this driver should create devfreq devices for each node that i=
-s scalable?=0A=
-=0A=
-The scalable nodes are independent devfreq instances which are probed =0A=
-through their own DT compat strings. It's even possible to reload =0A=
-imx8m-ddrc (the driver scaling the dram controller) at runtime.=0A=
-=0A=
-The most common solution to fetch other devices on DT systems is via =0A=
-phandles and fsl,scalable-nodes is a phandle array. Since the provider =0A=
-is platform-specific and knows the topology of the soc it could even use =
-=0A=
-of_find_node_by_path but that seems very messy. It's also quite brittle, =
-=0A=
-I've seen several bugs caused by DT node renaming.=0A=
-=0A=
-This support for arbitrary "scalable nodes" might be excessively generic =
-=0A=
-and strict DT compatibility might be difficult to maintain if too much =0A=
-is exposed. Changing per-soc driver data is otherwise easy.=0A=
-=0A=
-In vendor tree we only ever scale the main NOC and DDRC anyway so =0A=
-equivalent functionality could be achieved with a single "fsl,ddrc" =0A=
-phandle property on the noc.=0A=
-=0A=
-Support for scaling peripheral buses could be implemented by adding =0A=
-additional properties like "fsl,display-nic". Such a feature would need =0A=
-careful measurement on real hardware anyway.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+
+On 12/18/19 1:44 PM, Dmitry Osipenko wrote:
+> 18.12.2019 11:35, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 18.12.2019 11:30, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> 17.12.2019 23:03, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and currently
+>>>> these PMC clocks are registered by Tegra clock driver with each clock =
+as
+>>>> separate mux and gate clocks using clk_register_mux and clk_register_g=
+ate
+>>>> by passing PMC base address and register offsets and PMC programming f=
+or
+>>>> these clocks happens through direct PMC access by the clock driver.
+>>>>
+>>>> With this, when PMC is in secure mode any direct PMC access from the
+>>>> non-secure world does not go through and these clocks will not be
+>>>> functional.
+>>>>
+>>>> This patch adds these PMC clocks registration to pmc driver with PMC a=
+s
+>>>> a clock provider and registers each clock as single clock.
+>>>>
+>>>> clk_ops callback implementations for these clocks uses tegra_pmc_readl=
+ and
+>>>> tegra_pmc_writel which supports PMC programming in both secure mode an=
+d
+>>>> non-secure mode.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/soc/tegra/pmc.c | 248 ++++++++++++++++++++++++++++++++++++++=
+++++++++++
+>>>>   1 file changed, 248 insertions(+)
+>>>>
+>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>> index ea0e11a09c12..6d65194a6e71 100644
+>>>> --- a/drivers/soc/tegra/pmc.c
+>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>> @@ -13,6 +13,9 @@
+>>>>  =20
+>>>>   #include <linux/arm-smccc.h>
+>>>>   #include <linux/clk.h>
+>>>> +#include <linux/clk-provider.h>
+>>>> +#include <linux/clkdev.h>
+>>>> +#include <linux/clk/clk-conf.h>
+>>>>   #include <linux/clk/tegra.h>
+>>>>   #include <linux/debugfs.h>
+>>>>   #include <linux/delay.h>
+>>>> @@ -48,6 +51,7 @@
+>>>>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>>>>   #include <dt-bindings/gpio/tegra186-gpio.h>
+>>>>   #include <dt-bindings/gpio/tegra194-gpio.h>
+>>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>>>  =20
+>>>>   #define PMC_CNTRL			0x0
+>>>>   #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
+>>>> @@ -100,6 +104,7 @@
+>>>>   #define PMC_WAKE2_STATUS		0x168
+>>>>   #define PMC_SW_WAKE2_STATUS		0x16c
+>>>>  =20
+>>>> +#define PMC_CLK_OUT_CNTRL		0x1a8
+>>>>   #define PMC_SENSOR_CTRL			0x1b0
+>>>>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>>>>   #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+>>>> @@ -155,6 +160,64 @@
+>>>>   #define  TEGRA_SMC_PMC_READ	0xaa
+>>>>   #define  TEGRA_SMC_PMC_WRITE	0xbb
+>>>>  =20
+>>>> +struct pmc_clk {
+>>>> +	struct clk_hw	hw;
+>>>> +	unsigned long	offs;
+>>>> +	u32		mux_mask;
+>>>> +	u32		mux_shift;
+>>>> +	u32		gate_shift;
+>>>> +};
+>>>> +
+>>>> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
+>>>> +
+>>>> +struct pmc_clk_init_data {
+>>>> +	char *name;
+>>>> +	const char *const *parents;
+>>>> +	int num_parents;
+>>>> +	int clk_id;
+>>>> +	u8 mux_shift;
+>>>> +	u8 gate_shift;
+>>>> +};
+>>>> +
+>>>> +static const char * const clk_out1_parents[] =3D { "osc", "osc_div2",
+>>>> +	"osc_div4", "extern1",
+>>>> +};
+>>>> +
+>>>> +static const char * const clk_out2_parents[] =3D { "osc", "osc_div2",
+>>>> +	"osc_div4", "extern2",
+>>>> +};
+>>>> +
+>>>> +static const char * const clk_out3_parents[] =3D { "osc", "osc_div2",
+>>>> +	"osc_div4", "extern3",
+>>>> +};
+>>>> +
+>>>> +static const struct pmc_clk_init_data tegra_pmc_clks_data[] =3D {
+>>>> +	{
+>>>> +		.name =3D "clk_out_1",
+>>>> +		.parents =3D clk_out1_parents,
+>>>> +		.num_parents =3D ARRAY_SIZE(clk_out1_parents),
+>>>> +		.clk_id =3D TEGRA_PMC_CLK_OUT_1,
+>>>> +		.mux_shift =3D 6,
+>>>> +		.gate_shift =3D 2,
+>>> I'd replace these with a single .shift, given that mux_shift =3D
+>>> gate_shift + 4 for all clocks.
+>>>
+>>>> +	},
+>>>> +	{
+>>>> +		.name =3D "clk_out_2",
+>>>> +		.parents =3D clk_out2_parents,
+>>>> +		.num_parents =3D ARRAY_SIZE(clk_out2_parents),
+>>>> +		.clk_id =3D TEGRA_PMC_CLK_OUT_2,
+>>>> +		.mux_shift =3D 14,
+>>>> +		.gate_shift =3D 10,
+>>>> +	},
+>>>> +	{
+>>>> +		.name =3D "clk_out_3",
+>>>> +		.parents =3D clk_out3_parents,
+>>>> +		.num_parents =3D ARRAY_SIZE(clk_out3_parents),
+>>>> +		.clk_id =3D TEGRA_PMC_CLK_OUT_3,
+>>>> +		.mux_shift =3D 22,
+>>>> +		.gate_shift =3D 18,
+>>>> +	},
+>>>> +};
+>>>> +
+>>>>   struct tegra_powergate {
+>>>>   	struct generic_pm_domain genpd;
+>>>>   	struct tegra_pmc *pmc;
+>>>> @@ -254,6 +317,9 @@ struct tegra_pmc_soc {
+>>>>   	 */
+>>>>   	const struct tegra_wake_event *wake_events;
+>>>>   	unsigned int num_wake_events;
+>>>> +
+>>>> +	const struct pmc_clk_init_data *pmc_clks_data;
+>>>> +	unsigned int num_pmc_clks;
+>>>>   };
+>>>>  =20
+>>>>   static const char * const tegra186_reset_sources[] =3D {
+>>>> @@ -2163,6 +2229,173 @@ static int tegra_pmc_clk_notify_cb(struct noti=
+fier_block *nb,
+>>>>   	return NOTIFY_OK;
+>>>>   }
+>>>>  =20
+>>>> +static void pmc_clk_fence_udelay(u32 offset)
+>>>> +{
+>>>> +	tegra_pmc_readl(pmc, offset);
+>>>> +	/* pmc clk propagation delay 2 us */
+>>>> +	udelay(2);
+>>>> +}
+>>>> +
+>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
+>>>> +{
+>>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>> +	u32 val;
+>>>> +
+>>>> +	val =3D tegra_pmc_readl(pmc, clk->offs) >> clk->mux_shift;
+>>>> +	val &=3D clk->mux_mask;
+>>>> +
+>>>> +	return val;
+>>>> +}
+>>>> +
+>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>>>> +{
+>>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>> +	u32 val;
+>>>> +
+>>>> +	val =3D tegra_pmc_readl(pmc, clk->offs);
+>>>> +	val &=3D ~(clk->mux_mask << clk->mux_shift);
+>>>> +	val |=3D index << clk->mux_shift;
+>>>> +	tegra_pmc_writel(pmc, val, clk->offs);
+>>>> +	pmc_clk_fence_udelay(clk->offs);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
+>>>> +{
+>>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>> +
+>>>> +	return tegra_pmc_readl(pmc, clk->offs) & BIT(clk->gate_shift) ? 1 : =
+0;
+>>>> +}
+>>>> +
+>>>> +static void pmc_clk_set_state(unsigned long offs, u32 shift, int stat=
+e)
+>>>> +{
+>>>> +	u32 val;
+>>>> +
+>>>> +	val =3D tegra_pmc_readl(pmc, offs);
+>>>> +	val =3D state ? (val | BIT(shift)) : (val & ~BIT(shift));
+>>>> +	tegra_pmc_writel(pmc, val, offs);
+>>>> +	pmc_clk_fence_udelay(offs);
+>>>> +}
+>>>> +
+>>>> +static int pmc_clk_enable(struct clk_hw *hw)
+>>>> +{
+>>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>> +
+>>>> +	pmc_clk_set_state(clk->offs, clk->gate_shift, 1);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static void pmc_clk_disable(struct clk_hw *hw)
+>>>> +{
+>>>> +	struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>> +
+>>>> +	pmc_clk_set_state(clk->offs, clk->gate_shift, 0);
+>>>> +}
+>>>> +
+>>>> +static const struct clk_ops pmc_clk_ops =3D {
+>>>> +	.get_parent =3D pmc_clk_mux_get_parent,
+>>>> +	.set_parent =3D pmc_clk_mux_set_parent,
+>>>> +	.determine_rate =3D __clk_mux_determine_rate,
+>>>> +	.is_enabled =3D pmc_clk_is_enabled,
+>>>> +	.enable =3D pmc_clk_enable,
+>>>> +	.disable =3D pmc_clk_disable,
+>>>> +};
+>>>> +
+>>>> +static struct clk *
+>>>> +tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
+>>>> +			   unsigned long offset)
+>>>> +{
+>>>> +	struct clk_init_data init;
+>>>> +	struct pmc_clk *pmc_clk;
+>>>> +
+>>>> +	pmc_clk =3D kzalloc(sizeof(*pmc_clk), GFP_KERNEL);
+>>>> +	if (!pmc_clk)
+>>>> +		return ERR_PTR(-ENOMEM);
+>>>> +
+>>>> +	init.name =3D data->name;
+>>>> +	init.ops =3D &pmc_clk_ops;
+>>>> +	init.parent_names =3D data->parents;
+>>>> +	init.num_parents =3D data->num_parents;
+>>>> +	init.flags =3D CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT |
+>>>> +		     CLK_SET_PARENT_GATE;
+>>>> +
+>>>> +	pmc_clk->hw.init =3D &init;
+>>>> +	pmc_clk->offs =3D offset;
+>>>> +	pmc_clk->mux_mask =3D 3;
+>>> If mux_mask is a constant value, perhaps will be better to replace the
+>>> variable with a literal?
+>>>
+>>> #define PMC_CLK_OUT_MUX_MASK	GENMASK(1, 0)
+>> Maybe even:
+>>
+>> #define PMC_CLK_OUT_MUX_MASK(c)	GENMASK(c->shift + 1, c->shift)
+
+MUX Mask is used only here for PMC clock out and is same for all clk_out=20
+mux so will use
+
+#define PMC_CLK_OUT_MUX_MASK	GENMASK(1, 0)
+
+> I want to point out that may be a separated gate/mux shifts is a fine
+> variant, you should try and see whether another variants produce more
+> concise result.
+>
+> [snip]
