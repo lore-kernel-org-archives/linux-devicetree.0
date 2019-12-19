@@ -2,338 +2,158 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF83C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E30C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55B9227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A64227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 07:07:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BPS/9j/H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r3M3HqwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfLSHBB (ORCPT
+        id S1726303AbfLSHHD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 02:01:01 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:47283 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfLSHBA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 02:01:00 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191219070055epoutp03d6c93f9592ebdb4d83011faaed947f27~hs6KVvlUM2490324903epoutp03H
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 07:00:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191219070055epoutp03d6c93f9592ebdb4d83011faaed947f27~hs6KVvlUM2490324903epoutp03H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576738855;
-        bh=HIx0u+GLXonWEc/D1pKl4F+ZxaTvHjTPdoJKv96bCa0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=BPS/9j/HJon1aa4ru6/FSaroYr5q/IEuZ6AKRoCkxak5HGGurhHx/+dq5FeOE9men
-         cicJIeeD72EJxzq5SC5HWl7KE3hzsRQJJhhwEldyWneV6M5U4BgaNTAAVOpJb0Ba+w
-         Lee4CXIhXMj7vavI2M2wtbhaIuYdqUCzOwUNljK4=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191219070054epcas1p23f66ba706d4aa80676379cd0a2d68bc4~hs6JYCQdI1363413634epcas1p2_;
-        Thu, 19 Dec 2019 07:00:54 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.155]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47djSx14r2zMqYks; Thu, 19 Dec
-        2019 07:00:49 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CC.00.51241.1202BFD5; Thu, 19 Dec 2019 16:00:49 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191219070048epcas1p264460bc8c34f18a5e262e0fb8db6eae4~hs6D_DLAk1363813638epcas1p2k;
-        Thu, 19 Dec 2019 07:00:48 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191219070048epsmtrp1e3820584949126728b0e537e67473b23~hs6DsA3WJ1429414294epsmtrp1f;
-        Thu, 19 Dec 2019 07:00:48 +0000 (GMT)
-X-AuditID: b6c32a39-14bff7000001c829-e8-5dfb20217743
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3D.F1.10238.0202BFD5; Thu, 19 Dec 2019 16:00:48 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191219070047epsmtip146a9180cc7de48b98459108ec9e81f3e~hs6DKp8pg0831108311epsmtip1O;
-        Thu, 19 Dec 2019 07:00:47 +0000 (GMT)
-Subject: Re: [PATCH RFC v6 3/9] PM / devfreq: imx: Register interconnect
- device
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Chanwoo Choi <chanwoo@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Bailon <abailon@baylibre.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Saravana Kannan <saravanak@google.com>,
+        Thu, 19 Dec 2019 02:07:03 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39984 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbfLSHHC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 02:07:02 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k25so2612978pgt.7
+        for <devicetree@vger.kernel.org>; Wed, 18 Dec 2019 23:07:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Fm+w6iomcjuXCL8fauWtHgK7waEj6ZumdluEW3weLEo=;
+        b=r3M3HqwWGDHXJkn+/B3N+HIx9K4alkicLq5wXf4pwfxInFuBgNoIrLLzH8GU+7rifv
+         ExT6eL7+5mQnp7eqwVEenErdKk2oI+kR4wv/UhIpVSWND3R7u/RHcy6QOcMxJ0EBAgcf
+         FQ4APK7Gb7mzk2wNVT/BhU+5cW5vm0CDW91MWBRAWspq2jGlfrwNpP/xh31AfzV7pnKo
+         kQ868nBQiwwk3dx4ZC1mwOMXLN8u8aRs3P4q/hrR7URj1Sl976Mm+k0lQNW9+HBb+oqZ
+         rNPYfrJkwd/vsPNFmrIinL3izYGRmGXPv7wI4Aj0+9wXSDXOd1lLZsnEfK2r7M3OJ6k3
+         dOpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Fm+w6iomcjuXCL8fauWtHgK7waEj6ZumdluEW3weLEo=;
+        b=KP+ecLCOdwK/gP5F+LKh4Z5FRRlFT/7yMqIUysbZn7L6OpnWlGzA8nZge2/B2u1O0w
+         r8lxo1LKyS5N5lgqCkHTk54LKMUbMVkNpph6Zlr372VIN3oizM9HxgyWvHisYsidV5tx
+         NaWEJqC+fSCQ5xziN5Ye7PcwNsUMFO9Z5pfUlDIPauoc3sM9w4XKeje3s+7efXsmGokO
+         wo5/TeYTAJitIXZGsv6xDihlHmLyRlKlzTfqdkUxI41aV/CKN65qRh1SLzhaU3QGIPBs
+         QyjogUfU/7KJSC2uir8gcsWNi7Teozmp3/M2M8rm8XI+a8QZ/Yb+TxD9ZY5ZSs7x8RkJ
+         EwDw==
+X-Gm-Message-State: APjAAAUopEhQXkeQFn9hNGzudM30L59kibXOsi6K97l+/ETziUGMqsk6
+        ucpwKOrL1q93WxMHm0q2gzEIhw==
+X-Google-Smtp-Source: APXvYqxUxu7IoSGnaMb1R6YodG3fNsxk/So/wu5Hx35rfBLQvcUPgZkuAWdrltM/xiI4H0ih+4erTQ==
+X-Received: by 2002:a65:5608:: with SMTP id l8mr7727226pgs.210.1576739221708;
+        Wed, 18 Dec 2019 23:07:01 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id r30sm2812990pfl.162.2019.12.18.23.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Dec 2019 23:07:01 -0800 (PST)
+Date:   Wed, 18 Dec 2019 23:06:58 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Angus Ainslie <angus@akkea.ca>,
-        Martin Kepplinger <martink@posteo.de>,
-        Silvano Di Ninno <silvano.dininno@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <80e1f031-b48e-c8e4-336f-1e4a643e2ff3@samsung.com>
-Date:   Thu, 19 Dec 2019 16:07:20 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] phy: qcom-qmp: Add MSM8996 UFS QMP support
+Message-ID: <20191219070658.GG448416@yoga>
+References: <20191207202147.2314248-1-bjorn.andersson@linaro.org>
+ <20191207202147.2314248-2-bjorn.andersson@linaro.org>
+ <20191219042047.GT2536@vkoul-mobl>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB7023B782510853FE0FDDEFEEEE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="euc-kr"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wbZRjHfXvX6zGtnGXIa6OzPbMlI2Frx4ovCxDNGLlszWQadWqa7lJO
-        yugve2URNRF/bEDVTWLIWBFHtqGlEm1LBSZgHRQpU6kwKbBuatKBUxam8kPsnLHlWMJ/n+d5
-        vs/PNy+JyTolcrLC4uDsFtZEExvwrsGtOTlKxS2danpGjJa+vQjQx+NDAC02fomh+M8xgLpP
-        GVDD1I84Oh0aFSNfZwxHJ/v9BPI0nsdRJOKVoO/fvCFB7qt/ipE/HhUjZ6IdQwvvhQBqmxwT
-        oai7QYwWvHGAxi7uQbE33AT6dPQCgVoWGzF0tD8kQc6B2wT6L+rD0fVAFmo7G8WQb4l57CGm
-        0ekGTMdHHYC5OXVUwjTXjOFMq7+K8XvqCeZKtI9gOs+9zvjme0TMidsqJjGYyRwPeACz4N9U
-        Kn2+ssDIsWWcXcFZDNayCkt5Ib3vKf1uvSZPpc5R56NHaYWFNXOFdLG2NKekwpQ8Cq04wpqq
-        kq5Slufp7UUFdmuVg1MYrbyjkOZsZSZbvm0bz5r5Kkv5NoPVvEutUu3QJIWHKo2Tn3XjtksF
-        Lwedk6AGhLc7QRoJqZ2wKfIh4QQbSBnVA6D3j6/XjL8ATITHRYKxDOBEVwC7k9IZOQOEQD+A
-        w65aTDBuAhjuHZekVBnUARipH0oySW6kXoPhz19KuTHqOxL2zlhTTFDZMHh9ikhxOqWEEytx
-        kGIpVQS95xJYKhWnNsMbsdW+mdQzcKTr7TXJfXDk1DU8xWmUDjbVDIqF8tlwceUrQuAsePna
-        aZHAD8O3vmheHRNSfSR0ti6vjgapYtgyv3aKDPj7cEAisBz+duLYGr8K20dChJBbB2Ag+INY
-        COTCYNsHIoGV8PytFiA0uxfOL70rFupLYd0xmSB5BF765eqa/AF4traeeB/QrnXruNat4Fq3
-        gmvdCq0A94D7ORtvLud4tU2z/rX9YPXDZOf3gG9GtQOAIgF9j3RlT0InE7NH+GrzAIAkRm+U
-        xur+0cmkZWz1K5zdqrdXmTh+AGiS127A5JkGa/L7WRx6tWZHbm4u2qnO06jVdJaUXBnTyahy
-        1sFVcpyNs9/JE5Fp8hrQpwtJvKGsXu38Ju3C4f3eg5G7DjqkvX8/eDjmnv33p1+fiOdpdzGu
-        vXubdzcMTRRNKx5f9lcPL9YxmVsM+tLnaoOXPyGnZ7bOzvmalvZ1779SHO5+sced8aR8i1F9
-        d/jCC+kelaSjPuP4yTkltlmqI01MybPpyrlDxbPvlJfgT7fTOG9k1dmYnWf/B2BNrNRGBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRiA+XbOzs600WkaflYuG0Ul5Y2ML7KowDiEXX9UBsuGHVRyc+yo
-        ZUSu1MyVtx9WTnJWWrYi3DQvmYi7ZBo5b01p3WiaWiu1KZli1hyB/x7e93l4/7wkJizjriAT
-        5SmMUi5NEhNeeJ1JLNocGDgrCa37wENTrzoAut9jAWiy+BmGHB/tANWXxKGigT4cac2dXKSv
-        sePoZrOBQLriRhxZrdU89Pqyk4eq3k9wkcFh4yL1zEMMufLMAFX2d3OQraqIi1zVDoC6O6KQ
-        /VIVgR51thLo9mQxhrKbzTykNs4R6I9Nj6ORWj9Uec+GIf0UvSuALlZXAfpx2WNAjw1k8+hS
-        VTdOlxtSaYMul6Df2Z4TdE1FBq3/0cChC+ZC6RnTcjq/Vgdol0F0SHDCK/I0k5SYxihDdp7y
-        Suh/Uo8reiPPtaj7gQq8DFEDPgmpLbDGeheogRcppJoAbB+pJTwLf3ij24KpAfmPfaDJxHqc
-        7wCqGoY5bseHOgytuRaem32pC9CpGyXcEkZ1kbBL4+J5iutcOP4gE7gtggqCLSMDCxeWUmvg
-        m2nHwlxA7YTVFTML13BqHXTaMfd4OXUUNlY4OB5lGWwvGcTdzKck8JbKxHUzRm2AI6oswsN+
-        8O2gluPh1TDzaSlWCHw0i3LNokSzKNEsSsoBrgP+jIKVxcvYMEWYnDkbzEplbKo8PjguWWYA
-        C18TtLEB9FbEGgFFAvESwXTUjETIlaax6TIjgCQm9hXYr/6WCAWnpennGWVyrDI1iWGNYCWJ
-        i/0EQ/IXMUIqXprCnGEYBaP8v+WQ/BUqsO3A6NqhVsXXCWd+uGi6Tlf6EMenwpPGIkLCQ+ZE
-        fZZCvt+OnIzjItnFhHmL+EjOLNlibirQCg5KTjo728Z9OZIrvyyDxujPYF/sp56IzlWVkUsS
-        rNs7tIpved4x41+1+5uubV2pT88Y/Hlnd691z6Zjw/Nf2gKivRP7/NfvdWWJcTZBGhaEKVnp
-        Xz/ESN8xAwAA
-X-CMS-MailID: 20191219070048epcas1p264460bc8c34f18a5e262e0fb8db6eae4
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191114201049epcas5p370853a1d78584bf00d8493ce20320bf9
-References: <cover.1573761527.git.leonard.crestez@nxp.com>
-        <CGME20191114201049epcas5p370853a1d78584bf00d8493ce20320bf9@epcas5p3.samsung.com>
-        <e0e6a1685ccdad95c9d0c922801afdda8adb9f05.1573761527.git.leonard.crestez@nxp.com>
-        <4d45cd39-24df-1714-0a27-5019c1367063@samsung.com>
-        <VI1PR04MB7023F511BAE7D1EDF971CC48EE510@VI1PR04MB7023.eurprd04.prod.outlook.com>
-        <60fe19c6-6e73-4133-ed7e-a13a875589c0@samsung.com>
-        <VI1PR04MB7023DAC69C8B4B7CF144F29EEE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
-        <CAGTfZH1omr9jqRv9JX+X253YardFx_B26Hm-cT8UNF2J7eC_og@mail.gmail.com>
-        <VI1PR04MB7023B782510853FE0FDDEFEEEE530@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219042047.GT2536@vkoul-mobl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/19/19 2:13 AM, Leonard Crestez wrote:
-> On 18.12.2019 13:06, Chanwoo Choi wrote:
->> 2019년 12월 18일 (수) 오후 7:14, Leonard Crestez <leonard.crestez@nxp.com>님이 작성:
->>> On 17.12.2019 02:55, Chanwoo Choi wrote:
->>>> On 12/17/19 12:00 AM, Leonard Crestez wrote:
->>>>> On 13.12.2019 06:22, Chanwoo Choi wrote:
->>>>>> On 11/15/19 5:09 AM, Leonard Crestez wrote:
->>>>>>> There is no single device which can represent the imx interconnect.
->>>>>>> Instead of adding a virtual one just make the main &noc act as the
->>>>>>> global interconnect provider.
->>>>>>>
->>>>>>> The imx interconnect provider driver will scale the NOC and DDRC based
->>>>>>> on bandwidth request. More scalable nodes can be added in the future,
->>>>>>> for example for audio/display/vpu/gpu NICs.
->>>>>>>
->>>>>>> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
->>>>>>> ---
->>>>>>>     drivers/devfreq/imx-devfreq.c | 37 +++++++++++++++++++++++++++++++++++
->>>>>>>     1 file changed, 37 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/devfreq/imx-devfreq.c b/drivers/devfreq/imx-devfreq.c
->>>>>>> index 620b344e87aa..585d340c0f6e 100644
->>>>>>> --- a/drivers/devfreq/imx-devfreq.c
->>>>>>> +++ b/drivers/devfreq/imx-devfreq.c
->>>>>>> @@ -15,10 +15,11 @@
->>>>>>>     struct imx_devfreq {
->>>>>>>             struct devfreq_dev_profile profile;
->>>>>>>             struct devfreq *devfreq;
->>>>>>>             struct clk *clk;
->>>>>>>             struct devfreq_passive_data passive_data;
->>>>>>> +  struct platform_device *icc_pdev;
->>>>>>>     };
->>>>>>>
->>>>>>>     static int imx_devfreq_target(struct device *dev,
->>>>>>>                                   unsigned long *freq, u32 flags)
->>>>>>>     {
->>>>>>> @@ -60,11 +61,40 @@ static int imx_devfreq_get_dev_status(struct device *dev,
->>>>>>>             return 0;
->>>>>>>     }
->>>>>>>
->>>>>>>     static void imx_devfreq_exit(struct device *dev)
->>>>>>>     {
->>>>>>> +  struct imx_devfreq *priv = dev_get_drvdata(dev);
->>>>>>> +
->>>>>>>             dev_pm_opp_of_remove_table(dev);
->>>>>>> +  platform_device_unregister(priv->icc_pdev);
->>>>>>> +}
->>>>>>> +
->>>>>>> +/* imx_devfreq_init_icc() - register matching icc provider if required */
->>>>>>> +static int imx_devfreq_init_icc(struct device *dev)
->>>>>>> +{
->>>>>>> +  struct imx_devfreq *priv = dev_get_drvdata(dev);
->>>>>>> +  const char *icc_driver_name;
->>>>>>> +
->>>>>>> +  if (!IS_ENABLED(CONFIG_INTERCONNECT_IMX))
->>>>>>> +          return 0;
->>>>>>
->>>>>> It is not proper to check the enable state of CONFIG_INTERCONNECT_IMX configuration
->>>>>> on device driver. Why don't you add the 'select CONFIG_INTERCONNECT_IMX' on Kconfig?
->>>>>
->>>>> Because it's optional.
->>>>>
->>>>> You can disable interconnect support and just tweak frequencies using
->>>>> the devfreq sysfs API. But indeed would only really be useful for debugging.
->>>>
->>>> Even if it's optional, I don't prefer to use 'IS_ENABLED' macro.
->>>>
->>>> Generally, add or delete the property or value at DT file
->>>> to either enable or disable the some feature provided by device driver
->>>> instead of checking the configuration.
->>>>
->>>> If user adds the property/value related to interconnect
->>>> and imx-bus.c configuration is enabled, the behavior
->>>> related to interconnect on imx-bus.c doesn't work. It make some confusion.
->>>
->>> Maybe I could print a warning if #interconnect-cells is present but
->>> CONFIG_INTERCONNECT_IMX is off?
->>
->> Actually, user might think that if imx-bus.c is enabled
->> , CONFIG_INTERCONNECT_MIX is enabled.
->> Because, the dt binding document of imx-bus.c will
->> contain the property for interconnect.
->>
->> If device driver support the various feature,
->> the device driver have to enable all configuration
->> in order to support the features for user.
-> 
-> 
->>> An explicit select in Kconfig seems like a pointless limitation but in
->>> practice it would almost never be useful to build one without the other.
->>
->> This patch is for the some CONFIG_INTERCONNECT_IMX driver.
->> I don't understand why is not meaningful to select CONFIG_INTERCONNECT_IMX
->> in Kconfig?
-> 
-> One issue is that the interconnect graph is described per-soc and there 
-> are per-soc config options while imx-bus applies to all. So the "if" 
-> condition is not sufficient either; if the per-soc interconnect driver 
-> is omitted then the platform device will be added but no driver will be 
-> ever be found.
-> 
-> There are ways around this: for example all of imx interconnect could be 
-> built as a single module. But I think it's reasonable for devices to be 
-> partially functional if some config options are missing and heavy config 
-> customization sometimes requires a bit of debugging.
-> 
-> There are various issues when building the current series as "m" but I 
-> can solve them and post a final patch which sets all the relevant 
-> options on "m" in arm64 defconfig. The it will all "just work" out of 
-> the box.
+On Wed 18 Dec 20:20 PST 2019, Vinod Koul wrote:
 
-Sorry. Actually, I don't understand the relationship perfectly
-between imx-bus and imx-interconnect. As you mentioned, I'll
-expect the your solution on next version.
-
+> On 07-12-19, 12:21, Bjorn Andersson wrote:
+> > The support for the 14nm MSM8996 UFS PHY is currently handled by the
+> > UFS-specific 14nm QMP driver, due to the earlier need for additional
+> > operations beyond the standard PHY API.
+> > 
+> > Add support for this PHY to the common QMP driver, to allow us to remove
+> > the old driver.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   5 +
+> >  drivers/phy/qualcomm/phy-qcom-qmp.c           | 106 ++++++++++++++++++
+> >  2 files changed, 111 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> > index eac9ad3cbbc8..5b99cf081817 100644
+> > --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> > +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> > @@ -8,6 +8,7 @@ Required properties:
+> >   - compatible: compatible list, contains:
+> >  	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+> >  	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+> > +	       "qcom,msm8996-qmp-ufs-phy" for 14nm UFS phy on msm8996,
+> >  	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+> >  	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
+> >  	       "qcom,msm8998-qmp-ufs-phy" for UFS QMP phy on msm8998,
+> > @@ -44,6 +45,8 @@ Required properties:
+> >  		For "qcom,ipq8074-qmp-pcie-phy": no clocks are listed.
+> >  		For "qcom,msm8996-qmp-pcie-phy" must contain:
+> >  			"aux", "cfg_ahb", "ref".
+> > +		For "qcom,msm8996-qmp-ufs-phy" must contain:
+> > +			"ref".
+> >  		For "qcom,msm8996-qmp-usb3-phy" must contain:
+> >  			"aux", "cfg_ahb", "ref".
+> >  		For "qcom,msm8998-qmp-usb3-phy" must contain:
+> > @@ -72,6 +75,8 @@ Required properties:
+> >  			"phy", "common".
+> >  		For "qcom,msm8996-qmp-pcie-phy" must contain:
+> >  			"phy", "common", "cfg".
+> > +		For "qcom,msm8996-qmp-ufs-phy": must contain:
+> > +			"ufsphy".
+> >  		For "qcom,msm8996-qmp-usb3-phy" must contain
+> >  			"phy", "common".
+> >  		For "qcom,msm8998-qmp-usb3-phy" must contain
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > index a6b8fc5798e2..d81516c4d747 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> > @@ -121,6 +121,11 @@ enum qphy_reg_layout {
+> >  	QPHY_PCS_LFPS_RXTERM_IRQ_STATUS,
+> >  };
+> >  
+> > +static const unsigned int msm8996_ufsphy_regs_layout[] = {
+> > +	[QPHY_START_CTRL]		= 0x00,
+> > +	[QPHY_PCS_READY_STATUS]		= 0x168,
+> > +};
+> > +
+> >  static const unsigned int pciephy_regs_layout[] = {
+> >  	[QPHY_COM_SW_RESET]		= 0x400,
+> >  	[QPHY_COM_POWER_DOWN_CONTROL]	= 0x404,
+> > @@ -330,6 +335,75 @@ static const struct qmp_phy_init_tbl msm8998_pcie_pcs_tbl[] = {
+> >  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_SIGDET_CNTRL, 0x03),
+> >  };
+> >  
+> > +static const struct qmp_phy_init_tbl msm8996_ufs_serdes_tbl[] = {
+> > +	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
 > 
->>>> The imx-bus.c have to add the 'select CONFIG_INTERCONNECT_IMX'
->>>> and hand over the right which use the interconnect feature or not, to user.
->>>>
->>>> If there are any requirement to add the additional property
->>>> to check whether interconnect feature will be used or not,
->>>> you can add the extra property. But, I think that it is enough
->>>> to check the '#interconnect-cells'.
->>>>
->>>> In result, I think that it is right to decide the usage of feature
->>>> of device driver by user on Devicetree.
->>>>
->>>>>
->>>>>>> +  if (!of_get_property(dev->of_node, "#interconnect-cells", 0))
->>>>>>> +          return 0;
->>>>>>> +
->>>>>>> +  icc_driver_name = of_device_get_match_data(dev);
->>>>>>> +  if (!icc_driver_name)
->>>>>>> +          return 0;
->>>>>>> +
->>>>>>> +  priv->icc_pdev = platform_device_register_data(
->>>>>>> +                  dev, icc_driver_name, 0, NULL, 0);
->>>>>>> +  if (IS_ERR(priv->icc_pdev)) {
->>>>>>> +          dev_err(dev, "failed to register icc provider %s: %ld\n",
->>>>>>> +                          icc_driver_name, PTR_ERR(priv->devfreq));
->>>>>>> +          return PTR_ERR(priv->devfreq);
->>>>>>> +  }
->>>>>>> +
->>>>>>> +  return 0;
->>>>>>>     }
->>>>>>>
->>>>>>>     static int imx_devfreq_probe(struct platform_device *pdev)
->>>>>>>     {
->>>>>>>             struct device *dev = &pdev->dev;
->>>>>>> @@ -120,18 +150,25 @@ static int imx_devfreq_probe(struct platform_device *pdev)
->>>>>>>                     ret = PTR_ERR(priv->devfreq);
->>>>>>>                     dev_err(dev, "failed to add devfreq device: %d\n", ret);
->>>>>>>                     goto err;
->>>>>>>             }
->>>>>>>
->>>>>>> +  ret = imx_devfreq_init_icc(dev);
->>>>>>> +  if (ret)
->>>>>>> +          goto err;
->>>>>>> +
->>>>>>>             return 0;
->>>>>>>
->>>>>>>     err:
->>>>>>>             dev_pm_opp_of_remove_table(dev);
->>>>>>>             return ret;
->>>>>>>     }
->>>>>>>
->>>>>>>     static const struct of_device_id imx_devfreq_of_match[] = {
->>>>>>> +  { .compatible = "fsl,imx8mq-noc", .data = "imx8mq-interconnect", },
->>>>>>> +  { .compatible = "fsl,imx8mm-noc", .data = "imx8mm-interconnect", },
->>>>>>> +  { .compatible = "fsl,imx8mn-noc", .data = "imx8mn-interconnect", },
->>>>>>>             { .compatible = "fsl,imx8m-noc", },
->>>>>>>             { .compatible = "fsl,imx8m-nic", },
->>>>>>>             { /* sentinel */ },
->>>>>>>     };
->>>>>>>     MODULE_DEVICE_TABLE(of, imx_devfreq_of_match);
+> Can you check this after adding the reset for ufs, I suspect you might
+> run into same issue as I am seeing on 8150, power down here does not
+> seem correct.
+> 
 
+I'm not sure why we need to tickle POWER_DOWN here, but it's documented
+as such, done in the old driver and without it the PHY does not come up.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Regards,
+Bjorn
