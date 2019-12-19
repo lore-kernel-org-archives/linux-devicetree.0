@@ -2,187 +2,424 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A481C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 15:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00867C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 15:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64EAC206EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 15:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45B42146E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 15:51:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+eXG3JS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfLSPtF (ORCPT
+        id S1726778AbfLSPv0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 10:49:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60084 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726789AbfLSPtE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 10:49:04 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJFljJv132736;
-        Thu, 19 Dec 2019 10:48:47 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2x0a9npec1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Dec 2019 10:48:46 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBJFlulW009200;
-        Thu, 19 Dec 2019 15:48:46 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04dal.us.ibm.com with ESMTP id 2wvqc7be7g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Dec 2019 15:48:46 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBJFmirc55050534
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 19 Dec 2019 15:48:44 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87DF8BE053;
-        Thu, 19 Dec 2019 15:48:44 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1860DBE04F;
-        Thu, 19 Dec 2019 15:48:43 +0000 (GMT)
-Received: from [9.211.143.195] (unknown [9.211.143.195])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 19 Dec 2019 15:48:43 +0000 (GMT)
-Subject: Re: [PATCH v3 05/12] dt-bindings: soc: Add Aspeed XDMA Engine
-To:     Andrew Jeffery <andrew@aj.id.au>, linux-aspeed@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de,
-        Joel Stanley <joel@jms.id.au>
-References: <1576681778-18737-1-git-send-email-eajames@linux.ibm.com>
- <1576681778-18737-6-git-send-email-eajames@linux.ibm.com>
- <73cbffea-89f1-4212-99af-10c32968cf15@www.fastmail.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <45cabf88-063d-aea1-6c2b-fa8cc0d8cbd3@linux.ibm.com>
-Date:   Thu, 19 Dec 2019 09:48:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 19 Dec 2019 10:51:26 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46790 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726759AbfLSPvZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 10:51:25 -0500
+Received: by mail-yb1-f194.google.com with SMTP id v15so2330103ybp.13;
+        Thu, 19 Dec 2019 07:51:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y04k/X8P1HevYByohJ8MsRDsBGn7Xg9/YVO/qGFZjfE=;
+        b=K+eXG3JSpCfqKt1P34atDQFSa+e/OzWnbYeLnxaRUag57oE+E82sgOzwOl1JbBp9mu
+         jVhybPb51oaeRnDiYM+tXrgGaFYALXgfoX/8R8mcBdmgn/9erXMoTt2h70zsHOcg2ExG
+         TSl93Cd8RhKcbK6NYABFIOyFitqUy1lnYGdNnnYmbbnXvoouxwHmIzvIyUHMT+2wQ4l4
+         4JByCCwM/4tLkLXeCxfsfnpKDBrOdcl4z/6LGc14YfD703BrR309PZaC+z7EJUSpoaa+
+         /D+vOUAuGz8vLzjwgZc+hU4M2DojiVKD8zcJuPKmjSS5QBBkSC+ev93ZGJzErzjCnQ4R
+         1SCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y04k/X8P1HevYByohJ8MsRDsBGn7Xg9/YVO/qGFZjfE=;
+        b=tm8/e8AQPG7wcX/MHc+UbGPqHmZ43ibzIvQpYga0T5uNiScbScXZG0xguIeBWKhVZi
+         N2Qa2Q0pWpOnQNBp31mcDYqhVVOcOZWARxsk83PowTD138sSG6pPGxnejiPUUyoPq8Gt
+         KetYBmHuy176RCZ2s1ii2j2I378jGio6jUz1dpGhRbNWyruRa3LpmAnvrAVeLFfhAkWS
+         8ltHiVu5trqyRMkY6Yl2fUldirCTRJHkMifznuO86d1CX3RwvBW/yiXI1roEGcKvbQxO
+         CxZDziLSR9OMagxp9UhKIAOtM4dvXGgcvM6znp5uQZuZGl+jiY+XHgK5ihLQc3YZOmRc
+         flzw==
+X-Gm-Message-State: APjAAAVagr48FNfHiZBvs7FEKM61+pnErSpU1ghv7lr4L9JlZvoH7Wxj
+        LmN3eYfTKk1nWbpfKxgkDb0=
+X-Google-Smtp-Source: APXvYqwsgJqThuZiCb5UcLws3EtwPqcad+PySJRsZqmpnxq3ohfufM16nbgRNM+jCI7T62dE/Pq+XA==
+X-Received: by 2002:a25:3c87:: with SMTP id j129mr6331397yba.400.1576770684650;
+        Thu, 19 Dec 2019 07:51:24 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id w74sm2651146ywa.71.2019.12.19.07.51.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 19 Dec 2019 07:51:24 -0800 (PST)
+Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+References: <20191211232345.24810-1-robh@kernel.org>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <fbeb2d11-9a6a-9f56-8a78-231136f349a7@gmail.com>
+Date:   Thu, 19 Dec 2019 09:51:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <73cbffea-89f1-4212-99af-10c32968cf15@www.fastmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191211232345.24810-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-19_04:2019-12-17,2019-12-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- phishscore=0 spamscore=0 suspectscore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912190131
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 12/11/19 5:23 PM, Rob Herring wrote:
+> The phandle cache was added to speed up of_find_node_by_phandle() by
+> avoiding walking the whole DT to find a matching phandle. The
+> implementation has several shortcomings:
+> 
+>   - The cache is designed to work on a linear set of phandle values.
+>     This is true for dtc generated DTs, but not for other cases such as
+>     Power.
+>   - The cache isn't enabled until of_core_init() and a typical system
+>     may see hundreds of calls to of_find_node_by_phandle() before that
+>     point.
+>   - The cache is freed and re-allocated when the number of phandles
+>     changes.
+>   - It takes a raw spinlock around a memory allocation which breaks on
+>     RT.
+> 
+> Change the implementation to a fixed size and use hash_32() as the
+> cache index. This greatly simplifies the implementation. It avoids
+> the need for any re-alloc of the cache and taking a reference on nodes
+> in the cache. We only have a single source of removing cache entries
+> which is of_detach_node().
+> 
+> Using hash_32() removes any assumption on phandle values improving
+> the hit rate for non-linear phandle values. The effect on linear values
+> using hash_32() is about a 10% collision. The chances of thrashing on
+> colliding values seems to be low.
+> 
+> To compare performance, I used a RK3399 board which is a pretty typical
+> system. I found that just measuring boot time as done previously is
+> noisy and may be impacted by other things. Also bringing up secondary
+> cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
+> With no caching, calls to of_find_node_by_phandle() take about 20124 us
+> for 1248 calls. There's an additional 288 calls before time keeping is
+> up. Using the average time per hit/miss with the cache, we can calculate
+> these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
+> and 13319 us with no cache or an uninitialized cache.
+> 
+> Comparing the 3 implementations the time spent in
+> of_find_node_by_phandle() is:
+> 
+> no cache:        20124 us (+ 13319 us)
+> 128 entry cache:  5134 us (+ 690 us)
+> current cache:     819 us (+ 13319 us)
+> 
+> We could move the allocation of the cache earlier to improve the
+> current cache, but that just further complicates the situation as it
+> needs to be after slab is up, so we can't do it when unflattening (which
+> uses memblock).
 
-On 12/18/19 5:12 PM, Andrew Jeffery wrote:
->
-> On Thu, 19 Dec 2019, at 01:39, Eddie James wrote:
->> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> ---
->> Changes since v2:
->>   - Remove 'sdmc', rename 'vga-mem' to 'memory'
->>
->>   .../devicetree/bindings/soc/aspeed/xdma.txt   | 40 +++++++++++++++++++
->>   MAINTAINERS                                   |  6 +++
->>   2 files changed, 46 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->> b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->> new file mode 100644
->> index 000000000000..58253ea1587b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->> @@ -0,0 +1,40 @@
->> +Aspeed AST25XX and AST26XX XDMA Engine
->> +
->> +The XDMA Engine embedded in the AST2500 and AST2600 SOCs can perform
->> automatic
->> +DMA operations over PCI between the SOC (acting as a BMC) and a host
->> processor.
->> +
->> +Required properties:
->> + - compatible		: must be "aspeed,ast2500-xdma" or
->> +			  "aspeed,ast2600-xdma"
->> + - reg			: contains the address and size of the memory region
->> +			  associated with the XDMA engine registers
->> + - clocks		: clock specifier for the clock associated with the
->> +			  XDMA engine
->> + - resets		: reset specifier for the syscon reset associated with
->> +			  the XDMA engine
->> + - interrupts-extended	: two interrupt cells; the first specifies the
->> global
->> +			  interrupt for the XDMA engine and the second
->> +			  specifies the PCI-E reset or PERST interrupt.
->> + - scu			: a phandle to the syscon node for the system control
->> +			  unit of the SOC
-> I think this should be aspeed,scu.
+The patch changes phandle_cache to be a statically declared object, not
+a dynamically allocated object, so I don't see why the cache populating
+could not be moved earlier.  Not a big deal though.
+
+On another note...
+I am not happy that no one has bothered to check the performance impact
+on the system that was the justification for finally implementing the
+phandle cache.  I added the person who reported the performance problem
+(Chintan Pandya) to the distribution list for the patch, but that address
+bounced and no one else from Qualcomm has commented in this thread or
+the related thread that led to this patch.  I am not unhappy enough
+to delay this patch.
+
+> 
+> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/of/base.c       | 133 ++++++++--------------------------------
+>  drivers/of/dynamic.c    |   2 +-
+>  drivers/of/of_private.h |   4 +-
+>  drivers/of/overlay.c    |  10 ---
+>  4 files changed, 28 insertions(+), 121 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index db7fbc0c0893..f7da162f126d 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -135,115 +135,38 @@ int __weak of_node_to_nid(struct device_node *np)
+>  }
+>  #endif
+>  
+> -/*
+> - * Assumptions behind phandle_cache implementation:
+> - *   - phandle property values are in a contiguous range of 1..n
+> - *
+> - * If the assumptions do not hold, then
+> - *   - the phandle lookup overhead reduction provided by the cache
+> - *     will likely be less
+> - */
+> +#define OF_PHANDLE_CACHE_BITS	7
+> +#define OF_PHANDLE_CACHE_SZ	BIT(OF_PHANDLE_CACHE_BITS)
+>  
+> -static struct device_node **phandle_cache;
+> -static u32 phandle_cache_mask;
+> +static struct device_node *phandle_cache[OF_PHANDLE_CACHE_SZ];
+>  
+> -/*
+> - * Caller must hold devtree_lock.
+> - */
+> -static void __of_free_phandle_cache(void)
+> +static u32 of_phandle_cache_hash(phandle handle)
+>  {
+> -	u32 cache_entries = phandle_cache_mask + 1;
+> -	u32 k;
+> -
+> -	if (!phandle_cache)
+> -		return;
+> -
+> -	for (k = 0; k < cache_entries; k++)
+> -		of_node_put(phandle_cache[k]);
+> -
+> -	kfree(phandle_cache);
+> -	phandle_cache = NULL;
+> +	return hash_32(handle, OF_PHANDLE_CACHE_BITS);
+>  }
+>  
+> -int of_free_phandle_cache(void)
+> -{
+> -	unsigned long flags;
+> -
+> -	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -
+> -	__of_free_phandle_cache();
+> -
+> -	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> -
+> -	return 0;
+> -}
+> -#if !defined(CONFIG_MODULES)
+> -late_initcall_sync(of_free_phandle_cache);
+> -#endif
+> -
+>  /*
+>   * Caller must hold devtree_lock.
+>   */
+> -void __of_free_phandle_cache_entry(phandle handle)
+> +void __of_phandle_cache_inv_entry(phandle handle)
+>  {
+> -	phandle masked_handle;
+> +	u32 handle_hash;
+>  	struct device_node *np;
+>  
+>  	if (!handle)
+>  		return;
+>  
+> -	masked_handle = handle & phandle_cache_mask;
+> +	handle_hash = of_phandle_cache_hash(handle);
+>  
+> -	if (phandle_cache) {
+> -		np = phandle_cache[masked_handle];
+> -		if (np && handle == np->phandle) {
+> -			of_node_put(np);
+> -			phandle_cache[masked_handle] = NULL;
+> -		}
+> -	}
+> -}
+> -
+> -void of_populate_phandle_cache(void)
+> -{
+> -	unsigned long flags;
+> -	u32 cache_entries;
+> -	struct device_node *np;
+> -	u32 phandles = 0;
+> -
+> -	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -
+> -	__of_free_phandle_cache();
+> -
+> -	for_each_of_allnodes(np)
+> -		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+> -			phandles++;
+> -
+> -	if (!phandles)
+> -		goto out;
+> -
+> -	cache_entries = roundup_pow_of_two(phandles);
+> -	phandle_cache_mask = cache_entries - 1;
+> -
+> -	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
+> -				GFP_ATOMIC);
+> -	if (!phandle_cache)
+> -		goto out;
+> -
+> -	for_each_of_allnodes(np)
+> -		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
+> -			of_node_get(np);
+> -			phandle_cache[np->phandle & phandle_cache_mask] = np;
+> -		}
+> -
+> -out:
+> -	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	np = phandle_cache[handle_hash];
+> +	if (np && handle == np->phandle)
+> +		phandle_cache[handle_hash] = NULL;
+>  }
+>  
+>  void __init of_core_init(void)
+>  {
+>  	struct device_node *np;
+>  
+> -	of_populate_phandle_cache();
+>  
+>  	/* Create the kset, and register existing nodes */
+>  	mutex_lock(&of_mutex);
+> @@ -253,8 +176,11 @@ void __init of_core_init(void)
+>  		pr_err("failed to register existing nodes\n");
+>  		return;
+>  	}
+> -	for_each_of_allnodes(np)
+> +	for_each_of_allnodes(np) {
+>  		__of_attach_node_sysfs(np);
+> +		if (np->phandle && !phandle_cache[of_phandle_cache_hash(np->phandle)])
+> +			phandle_cache[of_phandle_cache_hash(np->phandle)] = np;
+> +	}
+>  	mutex_unlock(&of_mutex);
+>  
+>  	/* Symlink in /proc as required by userspace ABI */
+> @@ -1235,36 +1161,29 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+>  {
+>  	struct device_node *np = NULL;
+>  	unsigned long flags;
+> -	phandle masked_handle;
+> +	u32 handle_hash;
+>  
+>  	if (!handle)
+>  		return NULL;
+>  
+> +	handle_hash = of_phandle_cache_hash(handle);
+> +
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  
+> -	masked_handle = handle & phandle_cache_mask;
+> -
+> -	if (phandle_cache) {
+> -		if (phandle_cache[masked_handle] &&
+> -		    handle == phandle_cache[masked_handle]->phandle)
+> -			np = phandle_cache[masked_handle];
+> -		if (np && of_node_check_flag(np, OF_DETACHED)) {
+> -			WARN_ON(1); /* did not uncache np on node removal */
+> -			of_node_put(np);
+> -			phandle_cache[masked_handle] = NULL;
+> -			np = NULL;
+> -		}
+> +	if (phandle_cache[handle_hash] &&
+> +	    handle == phandle_cache[handle_hash]->phandle)
+> +		np = phandle_cache[handle_hash];
+> +	if (np && of_node_check_flag(np, OF_DETACHED)) {
+> +		WARN_ON(1); /* did not uncache np on node removal */
+> +		phandle_cache[handle_hash] = NULL;
+> +		np = NULL;
+>  	}
+>  
+>  	if (!np) {
+>  		for_each_of_allnodes(np)
+>  			if (np->phandle == handle &&
+>  			    !of_node_check_flag(np, OF_DETACHED)) {
+> -				if (phandle_cache) {
+> -					/* will put when removed from cache */
+> -					of_node_get(np);
+> -					phandle_cache[masked_handle] = np;
+> -				}
+> +				phandle_cache[handle_hash] = np;
+>  				break;
+>  			}
+>  	}
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index 49b16f76d78e..08fd823edac9 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -276,7 +276,7 @@ void __of_detach_node(struct device_node *np)
+>  	of_node_set_flag(np, OF_DETACHED);
+>  
+>  	/* race with of_find_node_by_phandle() prevented by devtree_lock */
+> -	__of_free_phandle_cache_entry(np->phandle);
+> +	__of_phandle_cache_inv_entry(np->phandle);
+>  }
+>  
+>  /**
+> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> index 66294d29942a..582844c158ae 100644
+> --- a/drivers/of/of_private.h
+> +++ b/drivers/of/of_private.h
+> @@ -85,14 +85,12 @@ int of_resolve_phandles(struct device_node *tree);
+>  #endif
+>  
+>  #if defined(CONFIG_OF_DYNAMIC)
+> -void __of_free_phandle_cache_entry(phandle handle);
+> +void __of_phandle_cache_inv_entry(phandle handle);
+>  #endif
+
+This results in gcc and sparse warnings for drivers/of/base.c when
+CONFIG_OF_DYNAMIC is not defined because base.c does not wrap the
+function with the same "#if defined(".
+
+Should the "# if defined(" be removed from of_private.h?  Or
+added to base.c?
 
 
-Sure.
+>  
+>  #if defined(CONFIG_OF_OVERLAY)
+>  void of_overlay_mutex_lock(void);
+>  void of_overlay_mutex_unlock(void);
+> -int of_free_phandle_cache(void);
+> -void of_populate_phandle_cache(void);
+>  #else
+>  static inline void of_overlay_mutex_lock(void) {};
+>  static inline void of_overlay_mutex_unlock(void) {};
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 9617b7df7c4d..97fe92c1f1d2 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -974,8 +974,6 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
+>  		goto err_free_overlay_changeset;
+>  	}
+>  
+> -	of_populate_phandle_cache();
+> -
+>  	ret = __of_changeset_apply_notify(&ovcs->cset);
+>  	if (ret)
+>  		pr_err("overlay apply changeset entry notify error %d\n", ret);
+> @@ -1218,17 +1216,9 @@ int of_overlay_remove(int *ovcs_id)
+>  
+>  	list_del(&ovcs->ovcs_list);
+>  
+> -	/*
+> -	 * Disable phandle cache.  Avoids race condition that would arise
+> -	 * from removing cache entry when the associated node is deleted.
+> -	 */
+> -	of_free_phandle_cache();
+> -
+>  	ret_apply = 0;
+>  	ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
+>  
+> -	of_populate_phandle_cache();
+> -
+>  	if (ret) {
+>  		if (ret_apply)
+>  			devicetree_state_flags |= DTSF_REVERT_FAIL;
+> 
 
-
->
->> + - memory		: contains the address and size of the memory area to
->> +			  be used by the XDMA engine for DMA operations
-> Hmm, I was thinking more like a phandle to a reserved memory region,
-> like we have in the aspeed-lpc-ctrl binding.
-
-
-I think I mentioned before, but that doesn't work with the VGA memory. 
-Linux can't reserve it. I haven't quite understood what happens in the 
-memory system but I've tried it and it didn't work.
-
-
->
->> +
->> +Optional properties:
->> + - pcie-device		: should be either "bmc" or "vga", corresponding to
->> +			  which device should be used by the XDMA engine for
->> +			  DMA operations. If this property is not set, the XDMA
->> +			  engine will use the BMC PCI-E device.
->> +
->> +Example:
->> +
->> +    xdma@1e6e7000 {
->> +        compatible = "aspeed,ast2500-xdma";
->> +        reg = <0x1e6e7000 0x100>;
->> +        clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
->> +        resets = <&syscon ASPEED_RESET_XDMA>;
->> +        interrupts-extended = <&vic 6>, <&scu_ic
->> ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI>;
->> +        scu = <&syscon>;
->> +        pcie-device = "bmc";
->> +        memory = <0x9f000000 0x01000000>;
->> +    };
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index ac9c120d192b..8a14d4268bdc 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -2708,6 +2708,12 @@ S:	Maintained
->>   F:	drivers/media/platform/aspeed-video.c
->>   F:	Documentation/devicetree/bindings/media/aspeed-video.txt
->>   
->> +ASPEED XDMA ENGINE DRIVER
->> +M:	Eddie James <eajames@linux.ibm.com>
->> +L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/soc/aspeed/xdma.txt
->> +
->>   ASUS NOTEBOOKS AND EEEPC ACPI/WMI EXTRAS DRIVERS
->>   M:	Corentin Chary <corentin.chary@gmail.com>
->>   L:	acpi4asus-user@lists.sourceforge.net
->> -- 
->> 2.24.0
->>
->>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
+Tested-by: Frank Rowand <frowand.list@gmail.com>
