@@ -2,59 +2,59 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836FBC2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04158C2D0DB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4489124679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C92AA206EC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FPvMouB/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dgEdguI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfLSQbc (ORCPT
+        id S1726992AbfLSQbh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:31:32 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53901 "EHLO
+        Thu, 19 Dec 2019 11:31:37 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34276 "EHLO
         mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfLSQbc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 11:31:32 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m24so6070516wmc.3
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 08:31:29 -0800 (PST)
+        with ESMTP id S1726984AbfLSQbg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 11:31:36 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f4so7418196wmj.1
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 08:31:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cMiD9xXHdCOYK/OOYrbVJk2Cu2WyO2IEe8IasRD6J+o=;
-        b=FPvMouB/TrdUiuIAV7DSjFF+ArgJA3nMc+sPptqaksrCtPKvhekrfhySNLDRrwXdeK
-         x3nKhxCQy1SwZnv7ZwxwqaDWSh/HQ7xNm1sA6bTUktrxE39E/ZlC+GlAJugeJXFULrHi
-         6qQ6wk18yd1iwjHq0wlmGL3zSYAWo8fd1AGIz6R88CxCCVUNltH/hZGvsHPyYWcyzUFH
-         rSupMLC0O+c7f1E/R+G9/BLXjQlABsbgmoiSiveqwrDumrpci4PdF3MN29LWdw3h7ZUj
-         70W7C2XLh5j4O7QzpTKQyWVBIIICXFYVIFav+/tPl8Q69UeodBBp1mvOLsXE+MpuYpAC
-         ZPeA==
+        bh=en1Diu3sI6Wm13W9qcASbGXcjcSPf5WXodRzGlHYYvg=;
+        b=dgEdguI1vFCV7YNVUg0oEi5hoedAB5SCo0EHqrgrYN2fDZQP1jM0e2gVFmXjAsarm9
+         sE3jEiVBfo9bIxoraETghmWio/hExZaK0G2MlaAUWWPlH/s/lgj8y2aPluLIJwIiWDO5
+         nPCsL9EFTnWUXXPdeHMf2mqD8ncvbLtOVcjLDDmK20sqR/zY19gWGF0iPqJMOqrpBHzU
+         P5l5nDoT+24rRDoL/bDgoMasOpqDS3TpLXI4nHsZ6shxvb0a59G2E8TD5mPZoPT7AZm0
+         TE/nR/n+4AfO7nup111L94qgV7A8exhXah9vnGXYO9tpJuoHYa73upM3pfuz8aU4XUjD
+         EyRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cMiD9xXHdCOYK/OOYrbVJk2Cu2WyO2IEe8IasRD6J+o=;
-        b=eQ1dbihF6uI47HNyl0VnMzaIKwcWrHbwvuY891lsW1Mfu0D67jfECXdkYtXhMFhw27
-         S6awvT4RWEUYDDUCd8EcQu2t9WLywVc7Rw6bOn3Th3zpb0bFFhpzqtq9dfW5sGvyL3Lr
-         LVtdpOxiOeER1cZzyOYNCavDi+0poWGXQEKmONsuXjZVrkUXPL/kK4pMx8x+X4L8boaR
-         haDSe7z9VVx9G6DPo7vw0dxFoST7F3GxpBqyrpZ6SjiikFnMc4QxoHyf3P6hzfJs3n9g
-         9aSx4kjdXQ/CwlkMDkRIb2MMK2ODSg5ZR4Xosy03Z+gmMypU/H8XlnJhNYN3tV8Ks3Hz
-         9mTg==
-X-Gm-Message-State: APjAAAWHV9YSrersOSuVgl+HPyJPRA0Qc2dj/iqNwQXgzmucunb5aKcB
-        VXppqBmH/9znaZ7SnRjGxcGp6g==
-X-Google-Smtp-Source: APXvYqxkhfkKHCIZistBx+HgNUzgL6uQ9lVaOUTpbw8krnJkbL7yD1NBUbm5NGWNR2gxYscf8p+wbA==
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr10470564wmg.95.1576773088302;
-        Thu, 19 Dec 2019 08:31:28 -0800 (PST)
+        bh=en1Diu3sI6Wm13W9qcASbGXcjcSPf5WXodRzGlHYYvg=;
+        b=fCJEXaFt22dGIGpL4cv2/lqYTjIbebTVRgfREupREnq+hRsCGZ9/oQAo1wAzMED5AB
+         quBo85UAckhTx9bd5S5TGKWCTaYNSKaHjeZhUtS6wCwQE+YVtRVdvLWbzDr/nNbVyGgM
+         mCOWwpV64CmHFfRcoRTu1dhGZbjfCmeCUYuLR1iCbEUd2cqQFPQIwJZ60C/EYYzpihN0
+         gKXhvRoU8H/Nc7QB8uOsVC1AcEDP7wTFu1NTkmgDwzZ5pIKOI3QgwRWfvX+dWIP8NIZc
+         nhfg4u33AIjUmB+sAuf5lDvSd4tgqeQ4NBcX1pRYF+Fn6fzlGDnIZGF5r73HcGK/yxC3
+         bmYg==
+X-Gm-Message-State: APjAAAVtOc4wUhop6wtkhUfKVXak3760QrnEOXJ9M/7fqV2xo15NHn0o
+        K96cROOfT/agL0qrsUSmlfhd0g==
+X-Google-Smtp-Source: APXvYqz7aYfTKLRMIc9dIpZKfGpZT6KS6fOh8tdIld2RBmduglCWax9u24T9mQN4/gn+82GrDikg0g==
+X-Received: by 2002:a1c:7d93:: with SMTP id y141mr11448751wmc.111.1576773093503;
+        Thu, 19 Dec 2019 08:31:33 -0800 (PST)
 Received: from localhost.localdomain (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
-        by smtp.gmail.com with ESMTPSA id u22sm7092068wru.30.2019.12.19.08.31.27
+        by smtp.gmail.com with ESMTPSA id u22sm7092068wru.30.2019.12.19.08.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 08:31:27 -0800 (PST)
+        Thu, 19 Dec 2019 08:31:33 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
@@ -65,9 +65,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
         eric.auger@redhat.com, jonathan.cameron@huawei.com,
         zhangfei.gao@linaro.org
-Subject: [PATCH v4 07/13] iommu/arm-smmu-v3: Add support for Substream IDs
-Date:   Thu, 19 Dec 2019 17:30:27 +0100
-Message-Id: <20191219163033.2608177-8-jean-philippe@linaro.org>
+Subject: [PATCH v4 11/13] iommu/arm-smmu-v3: Improve add_device() error handling
+Date:   Thu, 19 Dec 2019 17:30:31 +0100
+Message-Id: <20191219163033.2608177-12-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219163033.2608177-1-jean-philippe@linaro.org>
 References: <20191219163033.2608177-1-jean-philippe@linaro.org>
@@ -78,255 +78,75 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-At the moment, the SMMUv3 driver implements only one stage-1 or stage-2
-page directory per device. However SMMUv3 allows more than one address
-space for some devices, by providing multiple stage-1 page directories. In
-addition to the Stream ID (SID), that identifies a device, we can now have
-Substream IDs (SSID) identifying an address space. In PCIe, SID is called
-Requester ID (RID) and SSID is called Process Address-Space ID (PASID).
-A complete stage-1 walk goes through the context descriptor table:
+Let add_device() clean up after itself. The iommu_bus_init() function
+does call remove_device() on error, but other sites (e.g. of_iommu) do
+not.
 
-      Stream tables       Ctx. Desc. tables       Page tables
-        +--------+   ,------->+-------+   ,------->+-------+
-        :        :   |        :       :   |        :       :
-        +--------+   |        +-------+   |        +-------+
-   SID->|  STE   |---'  SSID->|  CD   |---'  IOVA->|  PTE  |--> IPA
-        +--------+            +-------+            +-------+
-        :        :            :       :            :       :
-        +--------+            +-------+            +-------+
+Don't free level-2 stream tables because we'd have to track if we
+allocated each of them or if they are used by other endpoints. It's not
+worth the hassle since they are managed resources.
 
-Rewrite arm_smmu_write_ctx_desc() to modify context descriptor table
-entries. To keep things simple we only implement one level of context
-descriptor tables here, but as with stream and page tables, an SSID can
-be split to index multiple levels of tables.
-
-Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 125 +++++++++++++++++++++++++++++-------
- 1 file changed, 102 insertions(+), 23 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 43d6a7ded6e4..e1bec7e552b9 100644
+index bf106a7b53eb..e62ca80f2f76 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -227,6 +227,11 @@
- #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
- #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
+@@ -2837,14 +2837,16 @@ static int arm_smmu_add_device(struct device *dev)
+ 	for (i = 0; i < master->num_sids; i++) {
+ 		u32 sid = master->sids[i];
  
-+#define STRTAB_STE_1_S1DSS		GENMASK_ULL(1, 0)
-+#define STRTAB_STE_1_S1DSS_TERMINATE	0x0
-+#define STRTAB_STE_1_S1DSS_BYPASS	0x1
-+#define STRTAB_STE_1_S1DSS_SSID0	0x2
-+
- #define STRTAB_STE_1_S1C_CACHE_NC	0UL
- #define STRTAB_STE_1_S1C_CACHE_WBRA	1UL
- #define STRTAB_STE_1_S1C_CACHE_WT	2UL
-@@ -329,6 +334,7 @@
- #define CMDQ_PREFETCH_1_SIZE		GENMASK_ULL(4, 0)
- #define CMDQ_PREFETCH_1_ADDR_MASK	GENMASK_ULL(63, 12)
- 
-+#define CMDQ_CFGI_0_SSID		GENMASK_ULL(31, 12)
- #define CMDQ_CFGI_0_SID			GENMASK_ULL(63, 32)
- #define CMDQ_CFGI_1_LEAF		(1UL << 0)
- #define CMDQ_CFGI_1_RANGE		GENMASK_ULL(4, 0)
-@@ -446,8 +452,11 @@ struct arm_smmu_cmdq_ent {
- 
- 		#define CMDQ_OP_CFGI_STE	0x3
- 		#define CMDQ_OP_CFGI_ALL	0x4
-+		#define CMDQ_OP_CFGI_CD		0x5
-+		#define CMDQ_OP_CFGI_CD_ALL	0x6
- 		struct {
- 			u32			sid;
-+			u32			ssid;
- 			union {
- 				bool		leaf;
- 				u8		span;
-@@ -568,6 +577,7 @@ struct arm_smmu_cd_table {
- struct arm_smmu_s1_cfg {
- 	struct arm_smmu_cd_table	table;
- 	struct arm_smmu_ctx_desc	cd;
-+	u8				s1fmt;
- 	u8				s1cdmax;
- };
- 
-@@ -860,10 +870,16 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
- 		cmd[1] |= FIELD_PREP(CMDQ_PREFETCH_1_SIZE, ent->prefetch.size);
- 		cmd[1] |= ent->prefetch.addr & CMDQ_PREFETCH_1_ADDR_MASK;
- 		break;
-+	case CMDQ_OP_CFGI_CD:
-+		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SSID, ent->cfgi.ssid);
-+		/* Fallthrough */
- 	case CMDQ_OP_CFGI_STE:
- 		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SID, ent->cfgi.sid);
- 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_LEAF, ent->cfgi.leaf);
- 		break;
-+	case CMDQ_OP_CFGI_CD_ALL:
-+		cmd[0] |= FIELD_PREP(CMDQ_CFGI_0_SID, ent->cfgi.sid);
-+		break;
- 	case CMDQ_OP_CFGI_ALL:
- 		/* Cover the entire SID range */
- 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
-@@ -1456,6 +1472,33 @@ static int arm_smmu_cmdq_issue_sync(struct arm_smmu_device *smmu)
- }
- 
- /* Context descriptor manipulation functions */
-+static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
-+			     int ssid, bool leaf)
-+{
-+	size_t i;
-+	unsigned long flags;
-+	struct arm_smmu_master *master;
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	struct arm_smmu_cmdq_ent cmd = {
-+		.opcode	= CMDQ_OP_CFGI_CD,
-+		.cfgi	= {
-+			.ssid	= ssid,
-+			.leaf	= leaf,
-+		},
-+	};
-+
-+	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
-+	list_for_each_entry(master, &smmu_domain->devices, domain_head) {
-+		for (i = 0; i < master->num_sids; i++) {
-+			cmd.cfgi.sid = master->sids[i];
-+			arm_smmu_cmdq_issue_cmd(smmu, &cmd);
+-		if (!arm_smmu_sid_in_range(smmu, sid))
+-			return -ERANGE;
++		if (!arm_smmu_sid_in_range(smmu, sid)) {
++			ret = -ERANGE;
++			goto err_free_master;
 +		}
-+	}
-+	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
-+
-+	arm_smmu_cmdq_issue_sync(smmu);
-+}
-+
- static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
- 					struct arm_smmu_cd_table *table,
- 					size_t num_entries)
-@@ -1498,34 +1541,65 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
- 	return val;
- }
  
--static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
--				    struct arm_smmu_s1_cfg *cfg)
-+static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
-+				   int ssid, struct arm_smmu_ctx_desc *cd)
- {
--	u64 val;
--	__le64 *cdptr = cfg->table.ptr;
--
- 	/*
--	 * We don't need to issue any invalidation here, as we'll invalidate
--	 * the STE when installing the new entry anyway.
-+	 * This function handles the following cases:
-+	 *
-+	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
-+	 * (2) Install a secondary CD, for SID+SSID traffic.
-+	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
-+	 *     CD, then invalidate the old entry and mappings.
-+	 * (4) Remove a secondary CD.
- 	 */
--	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
--#ifdef __BIG_ENDIAN
--	      CTXDESC_CD_0_ENDI |
--#endif
--	      CTXDESC_CD_0_R | CTXDESC_CD_0_A | CTXDESC_CD_0_ASET |
--	      CTXDESC_CD_0_AA64 | FIELD_PREP(CTXDESC_CD_0_ASID, cfg->cd.asid) |
--	      CTXDESC_CD_0_V;
-+	u64 val;
-+	bool cd_live;
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	__le64 *cdptr = smmu_domain->s1_cfg.table.ptr + ssid *
-+			CTXDESC_CD_DWORDS;
- 
--	/* STALL_MODEL==0b10 && CD.S==0 is ILLEGAL */
--	if (smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
--		val |= CTXDESC_CD_0_S;
-+	val = le64_to_cpu(cdptr[0]);
-+	cd_live = !!(val & CTXDESC_CD_0_V);
- 
--	cdptr[0] = cpu_to_le64(val);
-+	if (!cd) { /* (4) */
-+		val = 0;
-+	} else if (cd_live) { /* (3) */
-+		val &= ~CTXDESC_CD_0_ASID;
-+		val |= FIELD_PREP(CTXDESC_CD_0_ASID, cd->asid);
-+		/*
-+		 * Until CD+TLB invalidation, both ASIDs may be used for tagging
-+		 * this substream's traffic
-+		 */
-+	} else { /* (1) and (2) */
-+		cdptr[1] = cpu_to_le64(cd->ttbr & CTXDESC_CD_1_TTB0_MASK);
-+		cdptr[2] = 0;
-+		cdptr[3] = cpu_to_le64(cd->mair);
-+
-+		/*
-+		 * STE is live, and the SMMU might read dwords of this CD in any
-+		 * order. Ensure that it observes valid values before reading
-+		 * V=1.
-+		 */
-+		arm_smmu_sync_cd(smmu_domain, ssid, true);
- 
--	val = cfg->cd.ttbr & CTXDESC_CD_1_TTB0_MASK;
--	cdptr[1] = cpu_to_le64(val);
-+		val = arm_smmu_cpu_tcr_to_cd(cd->tcr) |
-+#ifdef __BIG_ENDIAN
-+			CTXDESC_CD_0_ENDI |
-+#endif
-+			CTXDESC_CD_0_R | CTXDESC_CD_0_A | CTXDESC_CD_0_ASET |
-+			CTXDESC_CD_0_AA64 |
-+			FIELD_PREP(CTXDESC_CD_0_ASID, cd->asid) |
-+			CTXDESC_CD_0_V;
- 
--	cdptr[3] = cpu_to_le64(cfg->cd.mair);
-+		/* STALL_MODEL==0b10 && CD.S==0 is ILLEGAL */
-+		if (smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
-+			val |= CTXDESC_CD_0_S;
-+	}
-+
-+	WRITE_ONCE(cdptr[0], cpu_to_le64(val));
-+	arm_smmu_sync_cd(smmu_domain, ssid, true);
-+	return 0;
- }
- 
- static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
-@@ -1533,6 +1607,7 @@ static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
- 
-+	cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
- 	return arm_smmu_alloc_cd_leaf_table(smmu, &cfg->table,
- 					    1 << cfg->s1cdmax);
- }
-@@ -1664,6 +1739,7 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
- 	if (s1_cfg) {
- 		BUG_ON(ste_live);
- 		dst[1] = cpu_to_le64(
-+			 FIELD_PREP(STRTAB_STE_1_S1DSS, STRTAB_STE_1_S1DSS_SSID0) |
- 			 FIELD_PREP(STRTAB_STE_1_S1CIR, STRTAB_STE_1_S1C_CACHE_WBRA) |
- 			 FIELD_PREP(STRTAB_STE_1_S1COR, STRTAB_STE_1_S1C_CACHE_WBRA) |
- 			 FIELD_PREP(STRTAB_STE_1_S1CSH, ARM_SMMU_SH_ISH) |
-@@ -1674,7 +1750,9 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
- 			dst[1] |= cpu_to_le64(STRTAB_STE_1_S1STALLD);
- 
- 		val |= (s1_cfg->table.ptr_dma & STRTAB_STE_0_S1CTXPTR_MASK) |
--			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS);
-+			FIELD_PREP(STRTAB_STE_0_CFG, STRTAB_STE_0_CFG_S1_TRANS) |
-+			FIELD_PREP(STRTAB_STE_0_S1CDMAX, s1_cfg->s1cdmax) |
-+			FIELD_PREP(STRTAB_STE_0_S1FMT, s1_cfg->s1fmt);
+ 		/* Ensure l2 strtab is initialised */
+ 		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
+ 			ret = arm_smmu_init_l2_strtab(smmu, sid);
+ 			if (ret)
+-				return ret;
++				goto err_free_master;
+ 		}
  	}
  
- 	if (s2_cfg) {
-@@ -2479,7 +2557,8 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 		master->ats_enabled = arm_smmu_ats_supported(master);
+@@ -2854,13 +2856,25 @@ static int arm_smmu_add_device(struct device *dev)
+ 		master->ssid_bits = min_t(u8, master->ssid_bits,
+ 					  CTXDESC_LINEAR_CDMAX);
  
- 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1)
--		arm_smmu_write_ctx_desc(smmu, &smmu_domain->s1_cfg);
-+		arm_smmu_write_ctx_desc(smmu_domain, 0,
-+					&smmu_domain->s1_cfg.cd);
++	ret = iommu_device_link(&smmu->iommu, dev);
++	if (ret)
++		goto err_free_master;
++
+ 	group = iommu_group_get_for_dev(dev);
+-	if (!IS_ERR(group)) {
+-		iommu_group_put(group);
+-		iommu_device_link(&smmu->iommu, dev);
++	if (IS_ERR(group)) {
++		ret = PTR_ERR(group);
++		goto err_unlink;
+ 	}
  
- 	arm_smmu_install_ste_for_dev(master);
+-	return PTR_ERR_OR_ZERO(group);
++	iommu_group_put(group);
++	return 0;
++
++err_unlink:
++	iommu_device_unlink(&smmu->iommu, dev);
++err_free_master:
++	kfree(master);
++	fwspec->iommu_priv = NULL;
++	return ret;
+ }
  
+ static void arm_smmu_remove_device(struct device *dev)
 -- 
 2.24.1
 
