@@ -2,93 +2,80 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C76C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EBFC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67704222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:49:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qgBErW+I"
+	by mail.kernel.org (Postfix) with ESMTP id 9A33B21D7D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLSNtq (ORCPT
+        id S1726793AbfLSN5j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:49:46 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:22549 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726834AbfLSNtp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 08:49:45 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576763385; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=9RnoUeGfktZIeoc4N0o7RN8cowShMV+lAkk7GEI3L6Q=; b=qgBErW+Io1UFT06mWcQ8l7ZaeIWmGTucoweMBFPvhBxWU4Ri+U3KNxTBy/LArNgJqnrSLHDb
- aFABlW9hm/n5iR+kdlHRPWrKIFd2RrmwRbhHn0gOtQebr7XajdzPR8zD/WVCl5zSa17yC0vL
- YY1tcE8xg525diXEneLg8GbW2do=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfb7ff7.7f7ef0e35a08-smtp-out-n01;
- Thu, 19 Dec 2019 13:49:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B1FBFC447B6; Thu, 19 Dec 2019 13:49:43 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E098DC447A6;
-        Thu, 19 Dec 2019 13:49:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E098DC447A6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     John Crispin <john@phrozen.org>
+        Thu, 19 Dec 2019 08:57:39 -0500
+Received: from nbd.name ([46.4.11.11]:36214 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726712AbfLSN5i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 08:57:38 -0500
+Received: from pd95fd34f.dip0.t-ipconnect.de ([217.95.211.79] helo=[192.168.45.104])
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <john@phrozen.org>)
+        id 1ihwJ7-0000kB-At; Thu, 19 Dec 2019 14:57:37 +0100
+Subject: Re: [PATCH 1/2] dt: bindings: net: ath11k: add qcom,board_id
+ definition
+To:     Kalle Valo <kvalo@codeaurora.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-wireless@vger.kernel.org, ath11k@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt: bindings: net: ath11k: add qcom,board_id definition
 References: <20191217164329.4151-1-john@phrozen.org>
-Date:   Thu, 19 Dec 2019 15:49:39 +0200
-In-Reply-To: <20191217164329.4151-1-john@phrozen.org> (John Crispin's message
-        of "Tue, 17 Dec 2019 17:43:28 +0100")
-Message-ID: <871rt077d8.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+ <871rt077d8.fsf@kamboji.qca.qualcomm.com>
+From:   John Crispin <john@phrozen.org>
+Message-ID: <7052d9eb-412e-e802-52ed-2e1d63a65fe5@phrozen.org>
+Date:   Thu, 19 Dec 2019 14:57:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <871rt077d8.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-John Crispin <john@phrozen.org> writes:
+On 19/12/2019 14:49, Kalle Valo wrote:
+> John Crispin <john@phrozen.org> writes:
+> 
+>> We need to be able to define what id the board has allowing us to load the
+>> correct definition data. This patch adds the description of the required
+>> property.
+>>
+>> Signed-off-by: John Crispin <john@phrozen.org>
+>> ---
+>>   .../devicetree/bindings/net/wireless/qcom,ath11k.yaml        | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+>> index a1717db36dba..c68daf6ad424 100644
+>> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+>> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
+>> @@ -142,6 +142,11 @@ properties:
+>>           * reg
+>>           * reg-names
+>>   
+>> +  qcom,board_id:
+>> +      $ref: /schemas/types.yaml#/definitions/uint32
+>> +      description:
+>> +        The board id defining what board definition should be loaded
+> 
+> I think this needs more discussion. This is very tricky to get right, as
+> it needs to be extensible and what not. With ath10k we have learned that
+> a simple integer is not enough.
+> 
 
-> We need to be able to define what id the board has allowing us to load the
-> correct definition data. This patch adds the description of the required
-> property.
->
-> Signed-off-by: John Crispin <john@phrozen.org>
-> ---
->  .../devicetree/bindings/net/wireless/qcom,ath11k.yaml        | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> index a1717db36dba..c68daf6ad424 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.yaml
-> @@ -142,6 +142,11 @@ properties:
->          * reg
->          * reg-names
->  
-> +  qcom,board_id:
-> +      $ref: /schemas/types.yaml#/definitions/uint32
-> +      description:
-> +        The board id defining what board definition should be loaded
-
-I think this needs more discussion. This is very tricky to get right, as
-it needs to be extensible and what not. With ath10k we have learned that
-a simple integer is not enough.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+I was expecting this, there seems to be an option to add ranges and/or 
+enums. I did however fail to find any docs on the schemeas.
+	John
