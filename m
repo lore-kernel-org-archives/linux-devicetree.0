@@ -7,147 +7,100 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFD0C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2A2C2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF59F222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BF524672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782435;
-	bh=EgbNXCKO32bDznwIxG/zUcXXSse1WyN1wD/XW0tsgKs=;
+	s=default; t=1576782527;
+	bh=Js6X5SsOeLFUHYBHfVY7eqsoo3cTgYSsN8i1+gkkdKE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JS7eA9kC3I5A5BKWIAnN1TsZUdApllrc0PCEhO4AvEhP9AIK6v0AcmnTYUTnlU5Vl
-	 FWjhwuT8KQX8sGs0TtbxOEhBLadx5oueWydugG0ujuMWn+RTWRxZgJ/i8Wgkl2aMWc
-	 9Hd0eMiNN0a/dNWZsRQhtYfCsKAAoj4Q/Z16XybU=
+	b=Btnv73CMQ9VVEEtRG4VlO6khknMm4yN9KbOKaBWCA+z10swR7xLGPI8bQZKymJ9Sm
+	 Y8riniWvOb8FYi3usDJfAIg0zt9uYE2WF4cOI2DZLb7GiSY4HLKNfMDP3WgwwSKPwJ
+	 +9TZn1SVjfxR4ic30YCcV4T09hiGMYlw97X/A+Dk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbfLSTHL (ORCPT
+        id S1728486AbfLSTIh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:07:11 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41860 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbfLSSnX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 13:43:23 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so8339997otc.8;
-        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
+        Thu, 19 Dec 2019 14:08:37 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45785 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727209AbfLSTIg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 14:08:36 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 59so8429083otp.12;
+        Thu, 19 Dec 2019 11:08:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ATCr26B2OQVBaMy930gvC8+YwzqQLoxjbV1kq1l7KCk=;
-        b=CjcHXC7bZXk5AsbMcdwa+6cfASsiCGVz+wR56vMtBUcxd5jDPbYMhnK4oYaexzOTug
-         u4tPYpYd/NxUejUhl6V7DD2j/rnc9CjQfNcFAWc4DBZdm9V3DWI+h0I3aHq1myFSFS+Q
-         8ybcBFLJBnTCDB+UTlzxm7b+10RKjTQ1PgQnXPLnPITiKn2/zZkuYp1hnOOVWKzCah2B
-         ssY7r1rMqo+YB98MYw6hQF8ir91mb6C92kPJbgAwLQ8LkUtqYirtdsiJVI8v97ZB2Cny
-         OdpTnwj6ZdsRbOc19lj+G07GCvVQ711SdE7AjTqev9emjZquJkqr6Q5ZVug8Hxeogqma
-         sUoA==
-X-Gm-Message-State: APjAAAXB2965kvh0ogAd3ywbMTXMzOc2chjy2Dto3hLAktctn5Mx8Cop
-        ycUUAzUva8gjldq+f1tmWbD5vYRMlQ==
-X-Google-Smtp-Source: APXvYqzHVHy4Y8bxjQIOFjcCok4NiCDbPD19EFZ7LpJjtchr7wNNUALhEQj3m9Oz59bjfHKnScEnxw==
-X-Received: by 2002:a9d:6d06:: with SMTP id o6mr10381223otp.239.1576781002486;
-        Thu, 19 Dec 2019 10:43:22 -0800 (PST)
+        bh=QsMq4tK6Zqo8Cpzm50yk74qQajXSjQqRrWgVIrvvuts=;
+        b=Xk2P4fp4Ski6KcDfQzGm5eFD3wPRRBveSrwLC3srh3QUtbuP4Lx1YfIplB3Nkn86gH
+         3DtlbmCEt0sa4JboTQGfgh8Ubs2K5NarzZLIsvtRALPFOmt8bYX9AUPk6yqkuAsVdue5
+         8tSTldj1a4+BIyIymz8BK38WfUfQIPMrPD76+8RphkPIwIl1Em6Uwb1lpiJ8inuKshhV
+         GqpCxZsrSY8TPHQ9gioUg/hm9GNLfjp9/+FVSLW+XAKmnIqR1TxYeLOwPtauR/bxL/zL
+         JiiC+8vHoGvzeH1lw74SRn0GnaWYn6rqaXjMInRy8llXO+Li6P5aIdyQ5IUmcWy8YUfB
+         ujdg==
+X-Gm-Message-State: APjAAAWTmf4Mk7JvDsmQ6liPAIjNOQhUl73bmSV/JD6hYshLShlgR7nS
+        eKLYsDejM1NxtqpkQ0NlKw==
+X-Google-Smtp-Source: APXvYqyA+C+YR9NLQNTQeygvAYER9H4Q3aJ5eWPMrh0WmckliHnJZQZLoczFwSIXApPVNHBCdP46/A==
+X-Received: by 2002:a9d:4d99:: with SMTP id u25mr9960611otk.56.1576782516136;
+        Thu, 19 Dec 2019 11:08:36 -0800 (PST)
 Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id r205sm2279361oih.54.2019.12.19.10.43.20
+        by smtp.gmail.com with ESMTPSA id f3sm2403895oto.57.2019.12.19.11.08.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 10:43:21 -0800 (PST)
-Date:   Thu, 19 Dec 2019 12:43:18 -0600
+        Thu, 19 Dec 2019 11:08:35 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:08:33 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        michal.simek@xilinx.com, gregkh@linuxfoundation.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: Re: [PATCH v2 2/2] devicetree: bindings: Add the binding doc for
- xilinx APM
-Message-ID: <20191219184318.GA13328@bogus>
-References: <1575901405-3084-1-git-send-email-shubhrajyoti.datta@gmail.com>
- <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, tomi.valkeinen@ti.com, praneeth@ti.com,
+        yamonkar@cadence.com, sjakhade@cadence.com, rogerq@ti.com
+Subject: Re: [PATCH 2/3] dt-bindings: phy: Add lane<n>-mode property to WIZ
+ (SERDES wrapper)
+Message-ID: <20191219190833.GA16358@bogus>
+References: <cover.1575906694.git.jsarha@ti.com>
+ <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1575901405-3084-2-git-send-email-shubhrajyoti.datta@gmail.com>
+In-Reply-To: <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:53:25PM +0530, shubhrajyoti.datta@gmail.com wrote:
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On Mon, Dec 09, 2019 at 06:22:11PM +0200, Jyri Sarha wrote:
+> Add property to indicate the usage of SERDES lane controlled by the
+> WIZ wrapper. The wrapper configuration has some variation depending on
+> how each lane is going to be used.
 > 
-> Add the devicetree binding for xilinx APM.
-> 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
 > ---
-> v2:
-> patch added
+>  .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml    | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
->  .../devicetree/bindings/perf/xilinx_apm.txt        | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/xilinx_apm.txt
+> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> index 94e3b4b5ed8e..399725f65278 100644
+> --- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+> @@ -97,6 +97,18 @@ patternProperties:
+>        Torrent SERDES should follow the bindings specified in
+>        Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>  
+> +  "^lane[1-4]-mode$":
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [0, 1, 2, 3, 4, 5, 6]
+> +    description: |
+> +     Integer describing static lane usage for the lane indicated in
+> +     the property name. For Sierra there may be properties lane0 and
+> +     lane1, for Torrent all lane[1-4]-mode properties may be
+> +     there. The constants to indicate the lane usage are defined in
+> +     "include/dt-bindings/phy/phy.h". The lane is assumed to be unused
+> +     if its lane<n>-use property does not exist.
 
-As Michal said, DT schema please.
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/xilinx_apm.txt b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
-> new file mode 100644
-> index 0000000..a11c82e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/xilinx_apm.txt
-> @@ -0,0 +1,44 @@
-> +* Xilinx AXI Performance monitor IP
-> +
-> +Required properties:
-> +- compatible: "xlnx,axi-perf-monitor"
+The defines were intended to be in 'phys' cells. Does putting both lane 
+and mode in the client 'phys' properties not work?
 
-Version?
-
-> +- interrupts: Should contain APM interrupts.
-> +- interrupt-parent: Must be core interrupt controller.
-
-Drop this.
-
-> +- reg: Should contain APM registers location and length.
-> +- xlnx,enable-profile: Enables the profile mode.
-> +- xlnx,enable-trace: Enables trace mode.
-> +- xlnx,num-monitor-slots: Maximum number of slots in APM.
-> +- xlnx,enable-event-count: Enable event count.
-> +- xlnx,enable-event-log: Enable event logging.
-> +- xlnx,have-sampled-metric-cnt:Sampled metric counters enabled in APM.
-> +- xlnx,num-of-counters: Number of counters in APM
-> +- xlnx,metric-count-width: Metric Counter width (32/64)
-> +- xlnx,metrics-sample-count-width: Sampled metric counter width
-> +- xlnx,global-count-width: Global Clock counter width
-
-All these synthesis time config and not discoverable?
-
-Tell h/w designers to add feature registers so all this is 
-discoverable. </rant>
-
-> +- clocks: Input clock specifier.
-> +
-> +Optional properties:
-> +- xlnx,id-filter-32bit: APM is in 32-bit mode
-> +
-> +Example:
-> +++++++++
-> +
-> +apm: apm@44a00000 {
-> +    compatible = "xlnx,axi-perf-monitor";
-> +    interrupt-parent = <&axi_intc_1>;
-> +    interrupts = <1 2>;
-> +    reg = <0x44a00000 0x1000>;
-> +    clocks = <&clkc 15>;
-> +    xlnx,enable-profile = <0>;
-> +    xlnx,enable-trace = <0>;
-> +    xlnx,num-monitor-slots = <4>;
-> +    xlnx,enable-event-count = <1>;
-> +    xlnx,enable-event-log = <1>;
-> +    xlnx,have-sampled-metric-cnt = <1>;
-> +    xlnx,num-of-counters = <8>;
-> +    xlnx,metric-count-width = <32>;
-> +    xlnx,metrics-sample-count-width = <32>;
-> +    xlnx,global-count-width = <32>;
-> +    xlnx,metric-count-scale = <1>;
-> +    xlnx,id-filter-32bit;
-> +};
-> -- 
-> 2.1.1
-> 
+Rob
