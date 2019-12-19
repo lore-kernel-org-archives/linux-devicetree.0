@@ -2,81 +2,167 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 952CEC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C109AC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5934B24672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA0124672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576784059;
-	bh=OEXBUFpGOojF/xAmTnLX3mzmEyRSZCG05R1QC6NOmL0=;
+	s=default; t=1576784404;
+	bh=NcHbeLYwBagVtumanxomeifIycWFT48TXD1+WojSLro=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wznIw+eAyH+GsI85txrqGD66KR1K+M4z63diqXOXamVtu4bcYOjPGXPBQ5mR5YVhM
-	 XpCMeV5QnJSHWb3Fo38zQlFnaK/SNqGU0lFnJ8n7dp4QHlsjnfcP3npZXiEUhyAorp
-	 LSKFSoHyJg3XRxGEKeRQmBW8h9B9tqNF36nVaHFI=
+	b=f72D892Tx9F12hsjOnpxMcvLwYJ1+BKMQ4Ld/XXfiPoud/3XbWtC7fqfftt4149hX
+	 mh2gGbhFpl2lczMgksHKlWB6AIgcPbSxPqckviXtAQ/LTWBQRKgGdKEPS7ymORNxgr
+	 RKhI6vw5Fj52mknQAkJ1A0AZ+TzNT/FDfiuKTH4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfLSTeS (ORCPT
+        id S1727390AbfLSTkE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:34:18 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41303 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfLSTeS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 14:34:18 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so8523939otc.8;
-        Thu, 19 Dec 2019 11:34:18 -0800 (PST)
+        Thu, 19 Dec 2019 14:40:04 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:42791 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727269AbfLSTkE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 14:40:04 -0500
+Received: by mail-ot1-f53.google.com with SMTP id 66so8540457otd.9;
+        Thu, 19 Dec 2019 11:40:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4s0UeefcmQPxDO9I0vP0cU6H8/zBXgxnJhl+iNskVSk=;
-        b=sLnhB+4aWAcvZDoR6jisSulkxR+eIUrnWykxZrphobgUZvbRw0EjpBH1hKNIASV6Pa
-         B3Hh8w4t6aiU2BZM91hMhAyeL4HhsTTvOXVCaX/6ZR+Wk+xaZgm8qKZe8/pTtfuduSXk
-         Ttrx8xLkVN18pkzKlzNt27uTz31E88OnrY6fyRBcDDtXA8kPaPi1Ex+vcGIvTYL38aQF
-         T4gnIBgYObsoZbmUc5vSrRFKwG3LDN6hD7Ao3U6tJRAMDpsF2qeoUrY5o5VAHrh3eU8g
-         JjEoGRcbECRojz2IFatv9UMCltx8l3PqpjDF/QrejXc/cvDgKYQg5UQB6qSON2DE6XSo
-         7ChA==
-X-Gm-Message-State: APjAAAW1y4gKch+d5inEqqzHl3CFd+IRRveB8rSwb2olu/H8tCa8hcae
-        m+RnwybfcfbaKnVZwuDiQQ==
-X-Google-Smtp-Source: APXvYqwRRb0TpvCkbAd8DOTvX/AnQt1KbPO4q7/X6jdpiZYbQd+IW8/opQXVYnWiRvA6JuPFH2Fx4g==
-X-Received: by 2002:a9d:6251:: with SMTP id i17mr10703698otk.14.1576784058062;
-        Thu, 19 Dec 2019 11:34:18 -0800 (PST)
+        bh=4FD4E6VPRHSJlg1OMSyY98hDnZZOWMuHy6UnkVUj/RM=;
+        b=Ft/AdCzKPdyX3oHc5jvZBR4Kaqj4jpE7Q8XzPP0EYcT9xYnuC0/BZxUGrN8jhz8BIO
+         DE98t7yJ+SogBLg95Hag1kDnoZddyigaNdDCBg9H+8JXJ1NmLbAyr217y/9EW2qAT2+T
+         C/PGP32ENKQNE7zIEYfYF2Z3gkJLm8BJb1MFI3an9ZlgJ4XZWZ6MnsyZ+lk7q797Wn1a
+         ML8MbTnqxl8pF8QJltuJVaeCJCHrLn5hzyA1QdN411K43iqS1wBJd5WmRoon8HDDCXeg
+         HEMzuGB5YGI8ZfWMB+mGIvd0XvQjF9A2EnA2aoCYyMFYOUZ9euY4n0bii3QVIw94vISp
+         kqZg==
+X-Gm-Message-State: APjAAAV2kp/deZwL4eO5qNhs/fHla/MiadhUp5MHmhJLcesuzz/7Cr77
+        b+ZaVLwdQfCrfonGmJXNuw==
+X-Google-Smtp-Source: APXvYqxb3mN0ppbQoW8chdIbp9cEdwb9xhDSWxqJaXgyf3uzsInKjRVJLfT7puBtOC0JdkGYGP9ghg==
+X-Received: by 2002:a05:6830:124b:: with SMTP id s11mr10297161otp.333.1576784402776;
+        Thu, 19 Dec 2019 11:40:02 -0800 (PST)
 Received: from localhost ([2607:fb90:20de:fb54:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id 97sm2469562otx.29.2019.12.19.11.34.17
+        by smtp.gmail.com with ESMTPSA id s145sm2333734oie.44.2019.12.19.11.40.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 11:34:17 -0800 (PST)
-Date:   Thu, 19 Dec 2019 13:34:15 -0600
+        Thu, 19 Dec 2019 11:40:02 -0800 (PST)
+Date:   Thu, 19 Dec 2019 13:40:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Li Yang <leoyang.li@nxp.com>,
-        Yuantian Tang <andy.tang@nxp.com>,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 4/5] dt-bindings: arm: fsl: add Kontron sl28 boards
-Message-ID: <20191219193415.GA23458@bogus>
-References: <20191209234350.18994-1-michael@walle.cc>
- <20191209234350.18994-5-michael@walle.cc>
+To:     jassisinghbrar@gmail.com
+Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCHv1 1/2] dt-bindings: max3421-udc: add dt bindings for
+ MAX3420 UDC
+Message-ID: <20191219194000.GA23698@bogus>
+References: <20191210003124.32376-1-jassisinghbrar@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209234350.18994-5-michael@walle.cc>
+In-Reply-To: <20191210003124.32376-1-jassisinghbrar@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 10 Dec 2019 00:43:49 +0100, Michael Walle wrote:
-> Add the Kontron SMARC-sAL28 board, its variants and combination with
-> carriers.
+On Mon, Dec 09, 2019 at 06:31:24PM -0600, jassisinghbrar@gmail.com wrote:
+> From: Jassi Brar <jaswinder.singh@linaro.org>
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> Add YAML dt bindings for Maxim MAX3420 UDC controller.
+> 
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 > ---
->  .../devicetree/bindings/arm/fsl.yaml          | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
+>  .../bindings/usb/maxim,max3420-udc.yaml       | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml b/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> new file mode 100644
+> index 000000000000..cf4eec8a618e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> @@ -0,0 +1,60 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Dual license new bindings please:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/maxim,max3420-udc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MAXIM MAX3420/1 USB Peripheral Controller
+> +
+> +maintainers:
+> +  - Jassi Brar <jaswinder.singh@linaro.org>
+> +
+> +description: |
+> +  The controller provices USB2.0 compliant FullSpeed peripheral
+> +  implementation over the  SPI interface.
+
+space                        ^
+
+> +
+> +  Specifications about the part can be found at:
+> +    http://datasheets.maximintegrated.com/en/ds/MAX3420E.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxim,max3420-udc
+> +      - maxim,max3421-udc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: udc
+> +      - const: vbus
+
+interrupts are integers, not strings. Should be interrupt-names?
+
+> +
+> +  spi-max-frequency:
+> +    maximum: 26000000
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-names
+
+Add:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/gpio/gpio.h>
+> +      #include <dt-bindings/interrupt-controller/irq.h>
+> +      spi0 {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            udc@0 {
+> +                  compatible = "maxim,max3420-udc";
+> +                  reg = <0>;
+> +                  interrupt-parent = <&gpio>;
+> +                  interrupts = <0 IRQ_TYPE_EDGE_FALLING>, <10 IRQ_TYPE_EDGE_BOTH>;
+> +                  interrupt-names = "udc", "vbus";
+> +                  spi-max-frequency = <12500000>;
+> +            };
+> +      };
+> -- 
+> 2.20.1
+> 
