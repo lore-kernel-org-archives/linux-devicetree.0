@@ -2,196 +2,109 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4BDC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DFDC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67FE20716
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BF6218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rHT8uHWu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R5PjBEQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfLSNNy (ORCPT
+        id S1726846AbfLSNRr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:13:54 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55675 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726701AbfLSNNy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:13:54 -0500
-Received: by mail-wm1-f67.google.com with SMTP id q9so5383480wmj.5;
-        Thu, 19 Dec 2019 05:13:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=30R4i+eh2J89uoscLSPeK2Vr51YPAn+dxaXVrzkfTok=;
-        b=rHT8uHWuF7uDqMjuhM4LcwCROZK0wbgQNLPrFloVqZcfJXR9vn2W6dka3yHyoFWlSc
-         ceRHwub1HBeA7Q4LXL3thRs4s2c6fVRPERL38lhsiHaQIZEdgRJMvvlaiyPSkpT+Vauq
-         b6cQOc6+50kN/PSsO0Ksg3JP9igvfde6bPMgXtSIQD2KhJcBggEb7SXCGYGRb9GM+oKK
-         GNRAgQJBGPZPkuqB7262xVVZ2rBYgdgARgXwf14HPcyokwZMUw2Re3FmBc31jtBjQ7tU
-         DgACcSNtTbGrrePNyvLbnXwRACw9UHV+RylA4Q/Hg85cRwrfOIHgbobX7hdkO56gkIiO
-         GKvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=30R4i+eh2J89uoscLSPeK2Vr51YPAn+dxaXVrzkfTok=;
-        b=r6ZCMbdOFjoWLtpXDCBHDGWxY7d+5znKD6VVQng89PfyWBhQFyUzQsxX8KX/PUZJz0
-         MzAqejc3DsA7dAzDvJ6q06GeQ0lZ7jsJmQlHYa4ufR8P21kI1ddIpavwFg496pJjzRlR
-         WYQXXXAHdVZZCPtSn//JrwpSlwvmOXNMqFxzqD87PHQYk1BgcvtyIjDQCNQkhDiBaw2g
-         pBPta5eqUVl3HPA50k8LMcSphGVjt8cxe6Rx08TLOGFjkPYJFrXK3dpwh8mV01SB4ZvW
-         8M+6oZj7AbJUboZPY6i/dWdWp+yw/jJNXWHseR+gpYa1C3uq2Yfyyhn/Nk6uWDk3yKXU
-         29uA==
-X-Gm-Message-State: APjAAAUQWxTqH+zNRnvdYH9MRd/5cFlgy694IRGjj7qxF/wdmaQBNR5b
-        xHC7BPjMi4AxAZMTv60zsIo=
-X-Google-Smtp-Source: APXvYqxFt/j8Nd0py8kCGIHPPC0m9nro9zdbl3jOq/YkNA4zx9U1YwIP6XsuI5PzZw0OskmDRzNLSg==
-X-Received: by 2002:a7b:cb97:: with SMTP id m23mr9836342wmi.37.1576761231485;
-        Thu, 19 Dec 2019 05:13:51 -0800 (PST)
-Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id j2sm6212161wmk.23.2019.12.19.05.13.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 05:13:50 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:13:49 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V2 00/18] Tegra XUSB OTG support
-Message-ID: <20191219131349.GI1440537@ulmo>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+        Thu, 19 Dec 2019 08:17:47 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57998 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSNRq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:17:46 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJDHdR9054319;
+        Thu, 19 Dec 2019 07:17:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576761459;
+        bh=2DtoSfwQF0HK6yLy59cfwpATaGf4HB72ZXQDZhbGl2s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=R5PjBEQOKxDt+PpPr87G052DkxfTxvOu3MtDbQn065YlSubStXr7K4hZB73OqtaFe
+         JwNVPEMoiMDd1/T7Gj7+BGcPtzp8NUBNPXj/3axcoE39K/5FlOuTgx0KovUghIYWGt
+         ZrTBgxHviOq2wqLla3e9uYgd/S3xp356LMSYsAI0=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDHdCb126202;
+        Thu, 19 Dec 2019 07:17:39 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 19
+ Dec 2019 07:17:38 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 19 Dec 2019 07:17:38 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJDHZa3046472;
+        Thu, 19 Dec 2019 07:17:36 -0600
+Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
+ perform only 32-bit accesses
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-6-kishon@ti.com>
+ <20191216144932.GY24359@e119886-lin.cambridge.arm.com>
+ <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
+ <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <9b40e71a-c18c-a958-84fe-c5a126fe8272@ti.com>
+Date:   Thu, 19 Dec 2019 18:49:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cf0hFtnykp6aONGL"
-Content-Disposition: inline
-In-Reply-To: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Arnd,
 
---cf0hFtnykp6aONGL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 19/12/19 5:33 pm, Arnd Bergmann wrote:
+> On Thu, Dec 19, 2019 at 12:54 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Andrew,
+>>
+>> On 16/12/19 8:19 pm, Andrew Murray wrote:
+>>> On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
+>>>> Certain platforms like TI's J721E allow only 32-bit register accesses.
+>>>
+>>> When I first read this I thought you meant only 32-bit accesses are allowed
+>>> and not other sizes (such as 64-bit). However the limitation you address
+>>> here is that the J721E allows only 32-bit *aligned* register accesses.
+>>
+>> It's both, it allows only 32-bit aligned accesses and the size should be
+>> only 32 bits. That's why I always use "readl" in the APIs below.
+> 
+> In that case, can't you use the pci_generic_config_read32/write32
+> functions with a cadence specific .map_bus() function?
 
-On Wed, Dec 18, 2019 at 02:46:13PM +0530, Nagarjuna Kristam wrote:
-> This patch series adds OTG support on XUSB hardware used in Tegra210 and
-> Tegra186 SoCs.
->=20
-> This patchset is composed with :
->  - dt bindings of XUSB Pad Controller
->  - dt bindings for XUSB device Driver
->  - Tegra PHY driver for usb-role-switch and usb-phy
->  - Tegra XUSB host mode driver to support OTG mode
->  - Tegra XUSB device mode driver to use usb-phy and multi device mode
->  - dts for XUSB pad controller
->  - dts for xudc
->=20
-> Tegra Pad controller driver register for role switch updates for
-> OTG/peripheral capable USB ports and adds usb-phy for that corresponding
-> USB ports.
->=20
-> Host and Device mode drivers gets usb-phy from USB2's phy and registers
-> notifier for role changes to perform corresponding role tasks.
->=20
-> Tests done:
->  - device mode support using micro-B USB cable connection between ubuntu
->    host and DUT on micro-B port
->  - host mode support by connecting pen-drive to micro USB port on DUT
->    using micro-B OTG cable.
->  - toggling between these 2 modes by hot plugging corresponding cables.
+pci_generic_config_read32() is for reading configuration space registers
+only. The accessors I added here are for the controller IP configuration.
 
-Are there any tests we can run without manual intervention? Can we force
-the device into peripheral mode and then setup a configuration using
-configfs? I'm not sure how useful that would be since it doesn't really
-exercise the driver code very much and doesn't tell whether it's
-actually working.
+For the configuration space access I use
+pci_generic_config_read32/write32()([PATCH 11/13] PCI: j721e: Add TI
+J721E PCIe driver).
 
-Any other way how we can test this?
-
-Thierry
-
->=20
-> DUT: Jetson-tx1, Jetson tx2.
->=20
-> V2:
->  - Updated usb-role-switch documentation for Padctl driver.
->  - Update XUDC bindings doc as suggested by Rob.
->  - Used standard error codes for error return.
->  - Added of_platform_depopulate during error and driver removal.
->  - Updated error variable during phy initialization in XUDC driver.
->  - Updated Tegra210 soc dtb file as per changes to binding doc.
->=20
-> Nagarjuna Kristam (18):
->   dt-bindings: phy: tegra-xusb: Add usb-role-switch
->   dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
->   phy: tegra: xusb: Add usb-role-switch support
->   phy: tegra: xusb: Add usb-phy support
->   phy: tegra: xusb: Add support to get companion USB 3 port
->   phy: tegra: xusb: Add set_mode support for USB 2 phy on Tegra210
->   phy: tegra: xusb: Add set_mode support for utmi phy on Tegra186
->   usb: xhci-tegra: Add OTG support
->   usb: gadget: tegra-xudc: Remove usb-role-switch support
->   usb: gadget: tegra-xudc: Add usb-phy support
->   usb: gadget: tegra-xudc: use phy_set_mode to set/unset device mode
->   usb: gadget: tegra-xudc: support multiple device modes
->   arm64: tegra: update OTG port entries for jetson-tx1
->   arm64: tegra: update OTG port entries for jetson-tx2
->   arm64: tegra: Add xudc node for Tegra210
->   arm64: tegra: Enable xudc on Jetson TX1
->   arm64: tegra: Add xudc node for Tegra186
->   arm64: tegra: Enable xudc node on Jetson TX2
->=20
->  .../bindings/phy/nvidia,tegra124-xusb-padctl.txt   |   6 +
->  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 ++++++++++++++
->  arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  23 +-
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi           |  19 ++
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  34 ++-
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  19 ++
->  drivers/phy/tegra/Kconfig                          |   1 +
->  drivers/phy/tegra/xusb-tegra186.c                  | 109 ++++++--
->  drivers/phy/tegra/xusb-tegra210.c                  | 126 ++++++++--
->  drivers/phy/tegra/xusb.c                           | 134 ++++++++++
->  drivers/phy/tegra/xusb.h                           |   5 +
->  drivers/usb/gadget/udc/tegra-xudc.c                | 276 ++++++++++++++-=
-------
->  drivers/usb/host/xhci-tegra.c                      | 225 +++++++++++++++=
-+-
->  include/linux/phy/tegra/xusb.h                     |   2 +
->  14 files changed, 1031 insertions(+), 138 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xu=
-dc.yaml
->=20
-> --=20
-> 2.7.4
->=20
-
---cf0hFtnykp6aONGL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37d40ACgkQ3SOs138+
-s6GmMQ//UeIXKC8LonKqcjeF4FAXBH0H7fV5IRwdnm8zsRqWRZ18gzLd4ewLz6p3
-ETMQBEkzqmxtPsRsWnreMp1lSG8afpBTSjmfRKLqO56+Ch6LB2NRJWU8W+VzHi/m
-dMswAhZtjs++/jAPZX/EeME8EBEK60LoSk0XXLCZP51X20OJyJ49IN3SjZUrURP3
-DDR2ZGJzL+1gg6PZVRoGFW0qgXyfbK85X189EKCKkG3YnBpXEVOE00HvCOupMdkM
-9b8C8JvLP5kDpIVQafyrEphVMdleHNSkXkEYZgyE/TDUG6ypTgUebDxuHLaQu8sq
-iZy0bRS3P/uKBHZPxTeURW/EQURY8hBZf8j45Jqq/Qp7LXS6KXaFRFC28d9FealH
-bSTUIC2ji+QYuPqyZUj8KwtNXL3pcvOLvUeU7HesM1JRVtA91Qmgy/x1qFqseDGu
-fHawy4TE6CFdnaMK+SnmlYgEqH6DtyWCEDq7X8n0RC+IfBd3jTz4JfOKGt2VwLQW
-y6t5vP/TSC2eaKRdJIBjEERiqzPEkHGO4Q/7Qm7jrgMx8Uwq8QafMx9Qu5CvSFsV
-KZP6nGzhIA32VJAOfn9RdzYpVn7LYvQEZWZ5/vruMvlzJyEbg0vKTtx78akBR73q
-6bOLf2kCC3LeSUn/9oTGF63t59L1+9fN7s49eGt/ku91XTG/aN4=
-=9laO
------END PGP SIGNATURE-----
-
---cf0hFtnykp6aONGL--
+Thanks
+Kishon
