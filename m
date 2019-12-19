@@ -2,106 +2,138 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9B8C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FDFC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7ADD24672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF902146E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576774935;
+	bh=Gf6fKzJZuUvXAHQkWvxm55YxdWNDzJNdosA6mUGKHjA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RCs4y0qtAVsXidNHHXN8ZBDlZFtuchPTsLp+PqmthIM0sumLLsZGCsY7Y7YZK5Ldw
+	 8tRaejjQLHmpwIGB8/V7m67ezoSSHpgffF8HJjDJQnGgjqsvrn87WOFkUO2uQFOAt3
+	 31ZWYNtC7gyzvQG8K/+K+OQNg+vh83wAadJFyrPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfLSQ6p (ORCPT
+        id S1727014AbfLSRCP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:58:45 -0500
-Received: from mga02.intel.com ([134.134.136.20]:14807 "EHLO mga02.intel.com"
+        Thu, 19 Dec 2019 12:02:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726760AbfLSQ6o (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 11:58:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 08:58:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,332,1571727600"; 
-   d="scan'208";a="228308843"
-Received: from dpshah-mobl1.amr.corp.intel.com (HELO [10.254.191.243]) ([10.254.191.243])
-  by orsmga002.jf.intel.com with ESMTP; 19 Dec 2019 08:58:42 -0800
-Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
- wcd9340/wcd9341 codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, vinod.koul@linaro.org,
-        devicetree@vger.kernel.org, spapothi@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
-Date:   Thu, 19 Dec 2019 10:36:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726760AbfLSRCP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 12:02:15 -0500
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E449124672;
+        Thu, 19 Dec 2019 17:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576774934;
+        bh=Gf6fKzJZuUvXAHQkWvxm55YxdWNDzJNdosA6mUGKHjA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TQSEStuFgF7/JuT7Nq1X2HLaXZOiPmH15GI9c3S5NciCRZgcu5ua6eFxscAd1vxoY
+         EdgjxJzrKnIySNbcSpK0IFtvqkoc7XnQGZvin7Di/w1GBEQqrIhjtK4sBdUQnnIBtm
+         fR99zovTezoaed3BLXJsuvAzjSHYyOeL+svDUu2E=
+Received: by mail-qk1-f173.google.com with SMTP id x1so5181803qkl.12;
+        Thu, 19 Dec 2019 09:02:13 -0800 (PST)
+X-Gm-Message-State: APjAAAWvCHVTdrPKnNkbBKyObKgdmcF0A4i0Q8yTLIOF8hNHDYaXeV0y
+        S2l43uR9OZz4Y8jFSTl1h1BBgM6bglje+lHE0A==
+X-Google-Smtp-Source: APXvYqxfo/7e9wzlMy580Vd/102R/rWBP0PwZ//fNoQ8yxxiQhL+I/hOaEas3Y+kT2x51tzh7mSZJnDkNL/eoDWO7/0=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr8421615qkl.119.1576774933015;
+ Thu, 19 Dec 2019 09:02:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191218114625.28438-1-frank-w@public-files.de>
+ <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+ <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com> <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
+In-Reply-To: <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 19 Dec 2019 11:02:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL9gZbVC5X3gwYWpYc9-Geb4FvUP0cED8NC_MCEGQCy3g@mail.gmail.com>
+Message-ID: <CAL_JsqL9gZbVC5X3gwYWpYc9-Geb4FvUP0cED8NC_MCEGQCy3g@mail.gmail.com>
+Subject: Re: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Dec 19, 2019 at 6:05 AM Frank Wunderlich
+<frank-w@public-files.de> wrote:
+>
+> Hi Rob,
+>
+> so the way you prefer is this one (use new file for additions and including the board dts):
 
-> +static int wcd934x_slim_status(struct slim_device *sdev,
-> +			       enum slim_device_status status)
-> +{
-> +	switch (status) {
-> +	case SLIM_DEVICE_STATUS_UP:
-> +		return wcd934x_slim_status_up(sdev);
-> +	case SLIM_DEVICE_STATUS_DOWN:
-> +		mfd_remove_devices(&sdev->dev);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+Yes, or you could use an overlay, but that will raise other issues
+(current lack of support building them in the kernel).
 
-this is interesting/surprising - I just noticed what looks like a 
-significant change in how probe/initialization are handled.
+> arch/arm64/boot/dts/mediatek/mt7622-bpi-r64-mt7531.dts (example for mt7531-phy)
+>
+> /*
+>  * Copyright (c) 2018 MediaTek Inc.
+>  * Author:
+>  *
+>  * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+>  */
+>
+> /dts-v1/;
+>
+> #include "mt7622-bananapi-bpi-r64.dts"
+>
+> / {
+>         gsw: gsw@0 {
+>                 compatible = "mediatek,mt753x";
+>                 mediatek,ethsys = <&ethsys>;
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>         };
+> };
+>
+> &gsw {
+>         mediatek,mdio = <&mdio>;
+>         mediatek,portmap = "wllll";
+>         mediatek,mdio_master_pinmux = <0>;
+>         reset-gpios = <&pio 54 0>;
+>         interrupt-parent = <&pio>;
+>         interrupts = <53 IRQ_TYPE_LEVEL_HIGH>;
+>         status = "okay";
+>
+>         port5: port@5 {
+>                 compatible = "mediatek,mt753x-port";
+>                 reg = <5>;
+>                 phy-mode = "rgmii";
+>                 fixed-link {
+>                         speed = <1000>;
+>                         full-duplex;
+>                 };
+>         };
+>
+>         port6: port@6 {
+>                 compatible = "mediatek,mt753x-port";
+>                 reg = <6>;
+>                 phy-mode = "2500base-x";
+>                 fixed-link {
+>                         speed = <2500>;
+>                         full-duplex;
+>                 };
+>         };
+> };
+>
+> at least it compiles and after decompile the new nodes are visible...
+>
+> is there any way to drop nodes (in case dsa-driver gets merged i don't need it in the other 2)? i can disable them, but they will be present.
 
-It was my understanding that in SLIMbus the Linux devices are created at 
-probe time, and when the device reports present this 'device_status' 
-callback is used to notify the codec driver of a change. The rationale 
-for this was that the codec driver may control power switches/gpios that 
-are necessary for the device to appear on the bus.
+Yes, use '/delete-node/'.
 
-This argument was used to require an change in the SoundWire 
-implementation, so we followed this model of creating devices at probe 
-time based on information reported by ACPI/DT, and used the 
-'update_status' callback when the device is present on the bus (which 
-may happen after a delay or controlled by an external power switch). 
-This approach can lead to 'ghost devices' described in firmware but not 
-populated in hardware, and power management opens on how long a bus 
-needs to remain active if no devices report present.
-
-What I understand from the code above is that the devices are actually 
-created when the SLIMbus device reports PRESENT, which seems a 180 
-degree change in directions?
-
-I actually prefer it this way, and all current discussions in MIPI 
-circles point to the fact that when the bus starts all devices on that 
-bus should already be powered and have the ability to report present 
-immediately (if the bus starts in a 'safe' mode and then later programs 
-different PHY parameters, a device can no longer join the bus)
-
-I would however not remove the devices when the status is down but only 
-on an explicit .remove.
-
-Feedback welcome.
--Pierre
-
+Rob
