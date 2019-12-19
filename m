@@ -2,75 +2,96 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9B7C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 04:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9152BC2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC44222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 04:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB84222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:32:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576733570;
+	bh=3TqDyq33bDOA1DBAAdKO4OY8wnBgiYZgW9/buyRHLqc=;
+	h=In-Reply-To:References:Cc:Subject:From:To:Date:List-ID:From;
+	b=gSaIufhI59Wejx+C6lQ8CjkPdZX2wTJJ1Zg7Xy85nobVhW8QX0Uh2FN4MW/oiu5r6
+	 Ua2+VnJDhSY2yKDcwys+MivzvVP6Kdf/73+deuWwudPmOdaVeGibruq1gschX+AUzX
+	 lbvU3dUGhlOh5Nmkm2Jz5u729NNJXgdSDm1F6/7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfLSEbn (ORCPT
+        id S1726155AbfLSFcq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 18 Dec 2019 23:31:43 -0500
-Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17172 "EHLO
-        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbfLSEbn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 18 Dec 2019 23:31:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1576729890; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=UyDCt+TvGViy7M6vv40aTV3DcycbcgMO2OWiTSG7NUeiehLJv9/JSAa5S1i40OK55uq2f/TsPjOVashtWPHxXdGQ0pztDaG3G84LharH21Cs1JbcT0vrWcZ2A3EO52cWlfp16OUl9WiJdZpqs7NkVAHH0yOno9KeDBLomEA9pvI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1576729890; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=QhLda09z8A4MXJoGFxR1p93Bzx5xIlPXXi0mEtq581o=; 
-        b=VvgYcZ9Ysy57NfRSLXhp44RHpDCdmm0X8XfU0xHoAK8FYI+0Coj6GEHY24+WESTt8p3FjMF8eYFCvMe4JJ/+GCOto/3jfmDw1tZnGa+vv2qhMXQZCnCxzK0A///PxTaDnJOPY2W/H/d4MN8b8804HbqkDMjvkJNDG7MKEMGClE4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1576729888928382.37734837613027; Wed, 18 Dec 2019 20:31:28 -0800 (PST)
-Date:   Thu, 19 Dec 2019 04:15:58 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
-Message-ID: <20191219041558.GA23704@nessie>
-References: <20191219041039.23396-1-dan@dlrobertson.com>
- <20191219041039.23396-3-dan@dlrobertson.com>
+        Thu, 19 Dec 2019 00:32:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725821AbfLSFcq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:32:46 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88D3A222C2;
+        Thu, 19 Dec 2019 05:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576733564;
+        bh=3TqDyq33bDOA1DBAAdKO4OY8wnBgiYZgW9/buyRHLqc=;
+        h=In-Reply-To:References:Cc:Subject:From:To:Date:From;
+        b=PcpMTHNRau9NZL1ZlOqBXpdNprIkeT+kV7OT+iz0x+RJP2h9jWZkg8d/Ht+9GNZj+
+         UiO1w/+mRpxc2YSTdgWcO+6kWc8/wdbw+wjqaQlFhizz8oo1FVpNDlOM3twBK4b2cx
+         7z3B5lV256lAwcJJQ5d76sOQLf/9V/gCQhEsgZsY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219041039.23396-3-dan@dlrobertson.com>
-X-ZohoMailClient: External
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
+References: <1573812304-24074-1-git-send-email-tdas@codeaurora.org> <1573812304-24074-4-git-send-email-tdas@codeaurora.org> <CAOCk7NqfHe6jRPmw6o650fyd6EyVfFObHhJ9=21ipuAqJo6oGA@mail.gmail.com> <20191126181154.275EA20727@mail.kernel.org> <0101016eab0a4e76-b8eb44c5-d076-46b9-a156-b80dc650ca31-000000@us-west-2.amazonses.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 3/8] dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 18 Dec 2019 21:32:43 -0800
+Message-Id: <20191219053244.88D3A222C2@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 04:10:38AM +0000, Dan Robertson wrote:
-> ...
->  
-> +BOSCH SENSORTEC BMA400 ACCELEROMETER IIO DRIVER
-> +M:	Dan Robertson <dan@dlrobertson.com>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Supported
-> +F:	drivers/iio/accel/bma400*
-> +F:	Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
-> +
+Quoting Taniya Das (2019-11-26 20:06:49)
+>=20
+>=20
+> On 11/26/2019 11:41 PM, Stephen Boyd wrote:
+> > Quoting Jeffrey Hugo (2019-11-15 07:11:01)
+> >> On Fri, Nov 15, 2019 at 3:07 AM Taniya Das <tdas@codeaurora.org> wrote:
+> >>> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml =
+b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> >>> new file mode 100644
+> >>> index 0000000..c2d6243
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> >>> +      - description: GPLL0 source from GCC
+> >>
+> >> This is not an accurate conversion.  GPLL0 was not valid for 845, and
+> >> is required for 8998.
+> >=20
+> > Thanks for checking Jeff.
+> >=20
+> > It looks like on 845 there are two gpll0 clocks going to gpucc. From
+> > gpu_cc_parent_map_0:
+> >=20
+> >       "gcc_gpu_gpll0_clk_src",
+> >       "gcc_gpu_gpll0_div_clk_src",
+> >=20
+>=20
+> There are branches of GPLL0 which would be connected to most external=20
+> CCs. It is upto to the external CCs to either use them to source a=20
+> frequency or not.
 
-I mixed up the Status tag. This should be S: Maintained. Will fix in v8.
-
-Cheers,
-
- - Dan
+Yes, they can decide to use them or not, but they really do go to the
+CCs so the DT should describe that.
 
