@@ -2,133 +2,147 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9D4C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20C9C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 18:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7261C222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D010227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 18:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LnwL81uJ"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="LuuIQaqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfLSRr7 (ORCPT
+        id S1726959AbfLSSJe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:47:59 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37305 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbfLSRr6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 12:47:58 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so2886208plz.4
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 09:47:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T1xXSYuN/agEP+xV7gR2YsC5IQk2uBuXdMCptm0m2YY=;
-        b=LnwL81uJzzHpQGW58xTLid7cnT2djPHkv4Ix1kkA+y3mk249gC8TuTISQnyzyotyvR
-         GyrXXz8pSMkQCGZKN87K77JEeY6MIF+M9UKKVsbZTWFw2RWST60PkhbUouCoWzY5eggA
-         /JVtw0QINwXh9GTwNFh+9uWyDM5/are+lQXj4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T1xXSYuN/agEP+xV7gR2YsC5IQk2uBuXdMCptm0m2YY=;
-        b=WEo7ujJ3DH1bZpYM2FWSkvK62o3kSFBkXZzFMAvjg6uIx0HIA6TUrdGx7NajG5soBn
-         Q2e9gnbS6Ld1muThOftX07FoZhgOTb6GHp4X5QmP0s/cl5kjFdvbcMCjyJeUcAXjmhc6
-         aDYLYu3hMnZh+oa5XPbhIHhblA2tWHIu8Tacce1rL8WL1xC9rb32VLtbOQzeS0C6tOyJ
-         yI9W7LHgV1hpdGojqZ3nUmHlTNhyk7UYOOdExRhsrtSMY8R88h9/WxcmwsOce32mrCLw
-         yI8FqP47bYS1+H/Vu6iOdjYuXGxKCaabxJVcroRh4TxbRgmTqYnuwxFSjEjbjx4r3/qa
-         /Ffg==
-X-Gm-Message-State: APjAAAVAnLW7Ljgkt8MKgvgaTavBC8goDtiX+mgvU9zMXnFhglyahskf
-        9tEeglZZtzuVaH+oTrsCbPMfog==
-X-Google-Smtp-Source: APXvYqxSvas1HYsFv66zRl2Qk5NQy60MqFsqe7M1+Z+WlhN/myDxxhPJLJMBff2b/jwrzeoQaazX4A==
-X-Received: by 2002:a17:90a:cb96:: with SMTP id a22mr10875633pju.96.1576777677975;
-        Thu, 19 Dec 2019 09:47:57 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id g11sm7967658pgd.26.2019.12.19.09.47.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 09:47:57 -0800 (PST)
-Date:   Thu, 19 Dec 2019 09:47:55 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-Message-ID: <20191219174755.GY228856@google.com>
-References: <1576741521-30102-1-git-send-email-pillair@codeaurora.org>
+        Thu, 19 Dec 2019 13:09:34 -0500
+Received: from mail-eopbgr150089.outbound.protection.outlook.com ([40.107.15.89]:2549
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726797AbfLSSJd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:09:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bGNpe6Psy5VpG1wg5vnaDR5JbmFthWJef2sImYW6k7deH1dMPHECp8Bxmzv4PfM7cw3IGiYjjtSysLkiBaQby5CAsRRsOPFCLPGJ/TyrsyTTPdsNYzkaEXdoiNXpQ4KGw+MrTGqW0F+brz7Xuvlgc1LXoF64Fn35SWPGGzIrjyL9biqe3e1ngs35Uo0m1L0Jy4kOgbMjPUKupkhzpqKhSWtOSM7/dksPXPXA1vzgkSccDPkulRq0OBtsKp8984908+DGY2KDTA9IZk2flKhSsK/MA6sday60UnalGKOr/kwBRhKHHaWt6/rj6shXF23uV8Q7E4CGX9+hig2HDgGJBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SWh7VVjM9Oat2z4UrdXTuVsJtFzvCDrPWgsH31zBfkU=;
+ b=DYrmbWxCntLeIdJjQmsubP4X5zolbgA+sGUfY+YygLdAJkTEvk2vwYPyWYlN/5MnWQwTMtZQ+VZ4xR0PSwXndFCpOgN0p33paD/G1tzp/GEWfeap11fortuLlRt6hVHgzYYLOs/hZVRnLCFuS+XAY+GxT2m6uI+27VT2BMP3uqnCykHDgEae7dhkZSlfuJkAwfcDKYgqtOz3t+XXq8Rw9znSop1krCCW2ouMXL9nQ0lhYUoI6ejWWtx1imdmXWFIa5JULudFiFqdLLFyfSCFtsej9y3TJDuexRlA3TFAYeMkrq2CkRzaWtxqn7rSEZSHY9/K3A5267B4AFpXU7bSig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SWh7VVjM9Oat2z4UrdXTuVsJtFzvCDrPWgsH31zBfkU=;
+ b=LuuIQaqcXjpVZEV6ssXN/E2I2DKFnCp0UwXYBGcJ/xwd9o1nGBkieNa+DIIFFAtUegZE+7QcLY3TW/dCZY6A+oRrAttCVSXoUNSGbIjy8fWM9U470OEsRl31wajVNJ3CsFXVvLiuTnbA+k3PmFnTze2kixRQ/i2eQ3Ftd/4SfNA=
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.83) by
+ VI1PR04MB5343.eurprd04.prod.outlook.com (52.134.122.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Thu, 19 Dec 2019 18:09:29 +0000
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::f099:4735:430c:ef1d]) by VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::f099:4735:430c:ef1d%2]) with mapi id 15.20.2559.015; Thu, 19 Dec 2019
+ 18:09:29 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH 2/6] arm64: dts: ls104xardb: set correct PHY interface
+ mode
+Thread-Topic: [PATCH 2/6] arm64: dts: ls104xardb: set correct PHY interface
+ mode
+Thread-Index: AQHVtn//f78bYa9gd0u0I4pLNK+AgafBn02AgAAhfxA=
+Date:   Thu, 19 Dec 2019 18:09:29 +0000
+Message-ID: <VI1PR04MB55677C52CB536D79CCD8F3F2EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-3-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219160537.GI17475@lunn.ch>
+In-Reply-To: <20191219160537.GI17475@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=madalin.bucur@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [188.27.188.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5bf4a404-a6df-4cf6-7726-08d784ae9768
+x-ms-traffictypediagnostic: VI1PR04MB5343:
+x-microsoft-antispam-prvs: <VI1PR04MB534360B21BFA5C8313F92043AD520@VI1PR04MB5343.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0256C18696
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(13464003)(199004)(189003)(71200400001)(6916009)(52536014)(86362001)(4326008)(478600001)(2906002)(54906003)(5660300002)(33656002)(316002)(8676002)(81166006)(81156014)(6506007)(53546011)(186003)(26005)(8936002)(7696005)(55016002)(9686003)(64756008)(66446008)(66476007)(66556008)(76116006)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5343;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9QfUGT0MvxyQAD7Bab83QbCFvldzmOa5s2GMNSngl7A3Oj4/MO2c1EHIm7AC5iKITswH3TlwQNQLgXFhKcwHeaoWVqV04/LKS04rRnwHitHIMW9dcuIXulWHosnauhUwUGa9UKn7aK8avab4/g87GerBiZMQFH0BMA+8MbGKKS1i1+JPVw34ztwAIEdw01GM1bdD4vv80q4ymIiVAEDzBs1/SLIaHQDhdWu9DR1g8/liEKnxcpJsxKjZLR7KMbmsXdXba8TjFoZ9MvlXNONR3ubVaPAiR/7QDbds02IlY2Oi1k9wPFKxgKAPb53fcxX3lXC6F0eKbRs76OH0THNugQc613hN8jAL05+8BCravmXgCT3xxojD+6jGkRUwG6ow0RmDkSgnH6TQW8GaWrk1rXxmkdtHVdRs99onerH2iJ5oiZ+KH+F+A4OUC7RE5k2GH3364ykK40N3mD8dU2jFmUe20dB78eblOJGH1n3tiIRyM2qvcKjokMJmpb9/2CQa
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1576741521-30102-1-git-send-email-pillair@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bf4a404-a6df-4cf6-7726-08d784ae9768
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 18:09:29.3467
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oF1mp3JANMOfjMHgL2uDxi//ZXDt2cIYPnbTmyJIpqhya0+QKQxGeSn/SOUfoCfC+RydnzQ7qUn9IdmnQhK17g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5343
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 01:15:21PM +0530, Rakesh Pillai wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
-> 
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> ---
+> -----Original Message-----
+> From: Andrew Lunn <andrew@lunn.ch>
+> Sent: Thursday, December 19, 2019 6:06 PM
+> To: Madalin Bucur <madalin.bucur@nxp.com>
+> Cc: davem@davemloft.net; netdev@vger.kernel.org; linux@armlinux.org.uk;
+> f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
+> devicetree@vger.kernel.org
+> Subject: Re: [PATCH 2/6] arm64: dts: ls104xardb: set correct PHY interfac=
+e
+> mode
+>=20
+> On Thu, Dec 19, 2019 at 05:21:17PM +0200, Madalin Bucur wrote:
+> > From: Madalin Bucur <madalin.bucur@nxp.com>
+> >
+> > The DPAA 1 based LS1043ARDB and LS1046ARDB boards are using
+> > XFI for the 10G interfaces. Since at the moment of the addition
+> > of the first DPAA platforms the only 10G PHY interface type used
+> > was XGMII, although the boards were actually using XFI, they were
+> > wrongly declared as xgmii. This has propagated along the DPAA
+> > family of SoCs, all 10G interfaces being declared wrongly as
+> > XGMII. This patch addresses the problem for the ARM based DPAA
+> > SoCs. After the introduction of XFI PHY interface type we can
+> > address this issue.
+>=20
+> Hi Madalin
+>=20
+> This patch should come at the end, after you have added support for
+> these new modes. Otherwise anybody doing a git bisect could land on
+> code which has broken ethernet.
+>=20
+>      Andrew
 
-This does not apply cleanly against the current qcom/arm64-for-5.6
-or for-next branch, looks like you need to rebase.
+Hi Andrew,
 
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 189254f..b2ca143f 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -248,6 +248,11 @@
->  	status = "okay";
->  };
->  
-> +&wifi {
-> +	status = "okay";
-> +	qcom,msa_fixed_perm;
+you are right, if the device tree would arrive intact to the kernel that
+could occur. Unfortunately there are some fix-ups performed by the bootload=
+er
+(u-boot) that are likely to override the compatible so this ordering issue
+is shadowed by that other problem.
 
-What is the status of the patch adding this flag?
+Madalin
 
-> +};
-> +
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
->  
->  &qup_i2c2_default {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 666e9b9..ce2d2a5 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -42,6 +42,12 @@
->  			compatible = "qcom,cmd-db";
->  			no-map;
->  		};
-> +
-> +		wlan_fw_mem: memory@93900000 {
-> +			compatible = "removed-dma-pool";
-> +			no-map;
-> +			reg = <0 0x93900000 0 0x200000>;
-> +		};
->  	};
->  
->  	cpus {
-> @@ -1119,6 +1125,28 @@
->  				#clock-cells = <1>;
->  			};
->  		};
-> +
-> +		wifi: wifi@18800000 {
-> +			status = "disabled";
-
-nit: the convention seems to be to add this at the end of the node,
-which IMO makes sense since most other fields provide more 'interesting'
-information.
