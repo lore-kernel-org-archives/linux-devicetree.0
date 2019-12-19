@@ -2,300 +2,125 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA3DC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F24C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B17222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576782777;
-	bh=XcAIK+KVii8ys60FiiNiKDqvuFG99k8ByyXR0pYwnTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TXI/RmdHqX3hAhRsgoWXrq0SFL33NuRrx+CDGseuRmPq3TBWJGQmxpSq5bsyuNNF+
-	 k9IjGvSoz6+b4RbVIUoll75k6ILu2AfGHeP82s9E3vEsYAeHbNOdtzIYWzpOYh7JVG
-	 b9OevllmHRkUT2/AarJ4uL5sNjouRo+JIv6to2Pc=
+	by mail.kernel.org (Postfix) with ESMTP id 69FAA24672
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfLSSgF (ORCPT
+        id S1727020AbfLSTRD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 13:36:05 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35703 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727414AbfLSSgF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 13:36:05 -0500
-Received: by mail-oi1-f196.google.com with SMTP id k4so3470350oik.2;
-        Thu, 19 Dec 2019 10:36:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4OsvmAuY75E+vu9jghg3GThqB5YS2TizfBTomdGepIQ=;
-        b=OzkYYn2Id7SfaGJQHSZ8WcMwCT8t4SY7ryY/Q8P0oxbT38K2D0l3Zx2620KDVVpzqA
-         nrxn1H5AVJZ4EpswOcax0nMhjj0Om1qhUWqIcp5BfmINOYdJf+59fhtjhQeKNXfXlLYa
-         4e+8xdrGLeeqkdLMAHFKAjpXiF/4uJP+BAJJKyAAn08KROiyDik3p8y1qfDYiIH1bGtX
-         6RzjkU0jYx6U+EBiOUlihBxjrhUrN2P/0PCgFquuPQByuGPuuaxY/2flH9pSAAuI5LcO
-         B8YpNir75BM+BUr7MbQM4bWxfeZJCDlIYgoEf9VMG6x9T4zEE76m6ihxC+6T3VMO54wS
-         h5HA==
-X-Gm-Message-State: APjAAAVIA9TUzVWjKpqN5eZ4BSAUK2WMBzifprx+WGKsLanxQCy1tn5O
-        HgbEAV8JO3K3u4WZsAp/vTIMeNTsbg==
-X-Google-Smtp-Source: APXvYqyvbDBw02JZD0mbOg+mPYLDYThtKsrGFMhEk+PHRiDggZXhdjnWXDKdBY76zsy4T+PrEuPsKA==
-X-Received: by 2002:aca:c494:: with SMTP id u142mr2956136oif.86.1576780564540;
-        Thu, 19 Dec 2019 10:36:04 -0800 (PST)
-Received: from localhost ([2607:fb90:bdf:98e:3549:d84c:9720:edb4])
-        by smtp.gmail.com with ESMTPSA id q18sm1745728otk.38.2019.12.19.10.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 10:36:03 -0800 (PST)
-Date:   Thu, 19 Dec 2019 12:36:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: Re: [PATCH v4 3/3] arm64: dts: Add Unisoc's SC9863A SoC support
-Message-ID: <20191219183602.GA31035@bogus>
-References: <20191209114404.22483-1-zhang.lyra@gmail.com>
- <20191209114404.22483-4-zhang.lyra@gmail.com>
+        Thu, 19 Dec 2019 14:17:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:43338 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbfLSTRD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 14:17:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA0171FB;
+        Thu, 19 Dec 2019 11:17:02 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3D983F67D;
+        Thu, 19 Dec 2019 11:17:00 -0800 (PST)
+Subject: Re: [PATCH v5 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+To:     Talel Shenhar <talel@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
+        mchehab@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com,
+        barakw@amazon.com
+References: <1571911407-29379-1-git-send-email-talel@amazon.com>
+ <1571911407-29379-3-git-send-email-talel@amazon.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <411bd52f-a714-9b8d-c18c-2d7bcec3d850@arm.com>
+Date:   Thu, 19 Dec 2019 19:16:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209114404.22483-4-zhang.lyra@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1571911407-29379-3-git-send-email-talel@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:44:04PM +0800, Chunyan Zhang wrote:
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> 
-> Add basic DT to support Unisoc's SC9863A, with this patch,
-> the board sp9863a-1h10 can run into console.
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
->  arch/arm64/boot/dts/sprd/Makefile         |   3 +-
->  arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 523 ++++++++++++++++++++++
->  arch/arm64/boot/dts/sprd/sharkl3.dtsi     | 148 ++++++
->  arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  39 ++
->  4 files changed, 712 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
->  create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
->  create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+Hi Talel,
 
+On 24/10/2019 11:03, Talel Shenhar wrote:
+> The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
+> for error detection and correction (Single bit error correction, Double
+> detection). This driver introduces EDAC driver for that capability.
 
-> diff --git a/arch/arm64/boot/dts/sprd/sharkl3.dtsi b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
+> diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
 > new file mode 100644
-> index 000000000000..3b5a94560481
+> index 00000000..b9ef7dd
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-> @@ -0,0 +1,148 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Unisoc Sharkl3 platform DTS file
-> + *
-> + * Copyright (C) 2019, Unisoc Inc.
-> + */
-> +
-> +/ {
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	soc: soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		ap_ahb_regs: syscon@20e00000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x20e00000 0 0x4000>;
-> +		};
-> +
-> +		pub_ctrl_regs: syscon@300e0000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
+> +++ b/drivers/edac/al_mc_edac.c
+> @@ -0,0 +1,355 @@
 
-Having a bunch of the same compatible doesn't look right. I assume by 
-the label names each of these are a different set of registers. The 
-compatible should be specific enough the OS can match to a driver that 
-knows the register details.
+> +static void devm_al_mc_edac_del(void *data)
+> +{
+> +	edac_mc_del_mc(data);
+> +}
+> +
+> +static void devm_al_mc_edac_free(void *data)
+> +{
+> +	edac_mc_free(data);
+> +}
+> +
+> +static int al_mc_edac_probe(struct platform_device *pdev)
+> +{
+> +	void __iomem *mmio_base;
+> +	struct edac_mc_layer layers[1];
+> +	struct mem_ctl_info *mci;
+> +	struct al_mc_edac *al_mc;
+> +	int ret;
+> +
+> +	mmio_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(mmio_base)) {
+> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+> +			PTR_ERR(mmio_base));
+> +		return PTR_ERR(mmio_base);
+> +	}
+> +
+> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+> +	layers[0].size = 1;
+> +	layers[0].is_virt_csrow = false;
+> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+> +			    sizeof(struct al_mc_edac));
+> +	if (!mci)
+> +		return -ENOMEM;
 
-Doesn't look like you use all these, so maybe drop until you do and/or 
-figure out if you can use common bindings for some of these.
+> +	ret = devm_add_action(&pdev->dev, devm_al_mc_edac_free, mci);
+> +	if (ret) {
+> +		edac_mc_free(mci);
+> +		return ret;
+> +	}
 
-> +			reg = <0 0x300e0000 0 0x4000>;
-> +		};
-> +
-> +		pub_wrap_regs: syscon@300f0000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x300f0000 0 0x1000>;
-> +		};
-> +
-> +		pmu_regs: syscon@402b0000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x402b0000 0 0x4000>;
-> +		};
-> +
-> +		aon_apb_regs: syscon@402e0000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x402e0000 0 0x4000>;
-> +		};
-> +
-> +		anlg_phy_g1_regs: syscon@40350000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x40350000 0 0x3000>;
-> +		};
-> +
-> +		anlg_phy_g2_regs: syscon@40353000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x40353000 0 0x3000>;
-> +		};
-> +
-> +		anlg_phy_g4_regs: syscon@40359000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x40359000 0 0x3000>;
-> +		};
-> +
-> +		anlg_phy_g5_regs: syscon@4035c000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x4035c000 0 0x3000>;
-> +		};
-> +
-> +		anlg_phy_g7_regs: syscon@40363000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x40363000 0 0x3000>;
-> +		};
-> +
-> +		anlg_wrap_wcn_regs: syscon@40366000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x40366000 0 0x3000>;
-> +		};
-> +
-> +		mm_ahb_regs: syscon@60800000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x60800000 0 0x1000>;
-> +		};
-> +
-> +		mm_vsp_ahb_regs: syscon@62000000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x62000000 0 0x1000>;
-> +		};
-> +
-> +		ap_apb_regs: syscon@71300000 {
-> +			compatible = "sprd,sc9863a-glbregs", "syscon";
-> +			reg = <0 0x71300000 0 0x4000>;
-> +		};
-> +
-> +		apb@70000000 {
-> +			compatible = "simple-bus";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges = <0 0x0 0x70000000 0x10000000>;
-> +
-> +			uart0: serial@0 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x0 0x100>;
-> +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart1: serial@100000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x100000 0x100>;
-> +				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart2: serial@200000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x200000 0x100>;
-> +				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart3: serial@300000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x300000 0x100>;
-> +				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +
-> +			uart4: serial@400000 {
-> +				compatible = "sprd,sc9863a-uart",
-> +					     "sprd,sc9836-uart";
-> +				reg = <0x400000 0x100>;
-> +				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&ext_26m>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +	};
-> +
-> +	ext_26m: ext-26m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <26000000>;
-> +		clock-output-names = "ext-26m";
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> new file mode 100644
-> index 000000000000..5c32c1596337
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Unisoc SP9863A-1h10 boards DTS file
-> + *
-> + * Copyright (C) 2019, Unisoc Inc.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sc9863a.dtsi"
-> +
-> +/ {
-> +	model = "Spreadtrum SP9863A-1H10 Board";
-> +
-> +	compatible = "sprd,sp9863a-1h10", "sprd,sc9863a";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000 0x0 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial1:115200n8";
-> +		bootargs = "earlycon";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.20.1
-> 
+Cool. (edac_mc.c should probably provide a devm_edac_mc_alloc() that does this, but that
+can be future)
+
+
+> +static struct platform_driver al_mc_edac_driver = {
+> +	.probe = al_mc_edac_probe,
+
+
+(Looks like you can still remove the module even though there is no .remove here.)
+
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+
+Thanks,
+
+James
