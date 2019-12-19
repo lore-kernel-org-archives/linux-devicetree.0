@@ -2,110 +2,85 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F390C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8D4C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A63A24672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD9224683
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576794409;
+	bh=9OaV+Y4NTWQ2lFJgTXDlvMlmXzpqU0JzxBlte3aHf+c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=afJd2q7rv78OL7/BCU4sZ8SmXYfu14ND1bw5BWS6tj3Ce4LYxbMJppiaVqLjTWOh/
+	 LV4kiBK9gGHxhzaQoNZRehEZJTcmUSRl9BSKyl3krZXpwqEAHagAmLjo5PeuxLJi70
+	 U/ysq8OFcOfnJPTEku6KinMu372xfJaEY5QO0o5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfLSWVf (ORCPT
+        id S1726930AbfLSW0p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:21:35 -0500
-Received: from mga18.intel.com ([134.134.136.126]:45120 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbfLSWVe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 17:21:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Dec 2019 14:21:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,333,1571727600"; 
-   d="scan'208";a="267347305"
-Received: from dmulla-mobl.amr.corp.intel.com (HELO [10.254.112.28]) ([10.254.112.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Dec 2019 14:21:32 -0800
-Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
- wcd9340/wcd9341 codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, vinod.koul@linaro.org,
-        devicetree@vger.kernel.org, spapothi@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
- <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
- <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
-Date:   Thu, 19 Dec 2019 14:05:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 19 Dec 2019 17:26:45 -0500
+Received: from mail-oi1-f178.google.com ([209.85.167.178]:44952 "EHLO
+        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726880AbfLSW0p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 17:26:45 -0500
+Received: by mail-oi1-f178.google.com with SMTP id d62so3791933oia.11;
+        Thu, 19 Dec 2019 14:26:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jqq8LY7quOQ87/Gczi2Dv0ztqAoB2GKBCxLo/uj7ep8=;
+        b=kZ0IygETcCwTYOsNifAIcW3AO7aCPVHEYihCBgKr1/eCXjv3zcb94wTe+4FYBsIf5w
+         Nw3kjFNqzkUd5Dl0vaWmCozBk8oakX7Gt0/NbLahBigMdTgtC+AK6ZZ5T7Wd3UP/kWUn
+         oEgSTv7RELBFVl/H5K2Q3wq5tVZnUZ9OFwlUhRjE/FSBrstO1AkhGhHaTck7ZYXnI9My
+         glwZ0QjjaDmKgxX6TLxDgIxVXyfyBJK1EJCFEftNNNET+uz7epomJexbZqcBxQ8Dj6jn
+         jUOqo4TRe3im+2TDXZWECwo39NDmRNZxe8El8deBxxcZgW4+OhNGv2N4oJQPyzUEHXed
+         7RLA==
+X-Gm-Message-State: APjAAAWzLItJxatvKkSvfjYVbtuC23MI5W8wNccKPrO1TURPEkd3Ay0M
+        G57SNfCu/9FdkbB1oBQ0E1RoXQiGSA==
+X-Google-Smtp-Source: APXvYqxbPZlq94XPJTqNa3s92n082GMAw6K5NiT7FKfpiJdag5EtNAmLYlGnaIi9O1IqvCUv7ZfApg==
+X-Received: by 2002:aca:1e11:: with SMTP id m17mr3286383oic.167.1576794404525;
+        Thu, 19 Dec 2019 14:26:44 -0800 (PST)
+Received: from localhost (ip-184-205-0-249.ftwttx.spcsdns.net. [184.205.0.249])
+        by smtp.gmail.com with ESMTPSA id x19sm2528984otk.42.2019.12.19.14.26.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 14:26:43 -0800 (PST)
+Date:   Thu, 19 Dec 2019 16:26:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [RFC 01/25] dt-bindings: vendor-prefixes: Add Xnano
+Message-ID: <20191219222445.GA16503@bogus>
+References: <20191212033952.5967-1-afaerber@suse.de>
+ <20191212033952.5967-2-afaerber@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191212033952.5967-2-afaerber@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, 12 Dec 2019 04:39:28 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
+> Xnano is a Chinese TV box brand, but not much more is publicly known.
+> 
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-
->> It was my understanding that in SLIMbus the Linux devices are created 
->> at probe time, and when the device reports present this 
->> 'device_status' callback is used to notify the codec driver of a 
->> change. The rationale for this was that the codec driver may control 
->> power switches/gpios that are necessary for the device to appear on 
->> the bus.
-> 
-> We use same rational here to power switch and flip reset pins in device 
-> probe to power up the actual SLIMBus device in device probe.
-> 
-> Only difference here is that the actual SLIMBus device itself is 
-> represented as many child devices based on there functionality.
-> 
-> SLIMBus parent device in this case is MFD device which is created at 
-> probe time. However child devices for that device like gpio controller, 
-> codec, clock controller and soundwire controller are created only after 
-> the device is enumerated on the bus. Before that none of these devices 
-> will be in a position to talk on the bus.
-> 
-> 
->>
->> This argument was used to require an change in the SoundWire 
->> implementation, so we followed this model of creating devices at probe 
->> time based on information reported by ACPI/DT, and used the 
->> 'update_status' callback when the device is present on the bus (which 
->> may happen after a delay or controlled by an external power switch). 
->> This approach can lead to 'ghost devices' described in firmware but 
->> not populated in hardware, and power management opens on how long a 
->> bus needs to remain active if no devices report present.
->>
->> What I understand from the code above is that the devices are actually 
->> created when the SLIMbus device reports PRESENT, which seems a 180 
->> degree change in directions?
->>
-> Note these are the child devices of the MFD SLIMBus device.
-
-Ah ok. I guess the creation of those child devices when the parent 
-SLIMbus device reports PRESENT initially if fine, it's the part where 
-you remove them if the device loses sync or gets powered off which is 
-odd. And I guess technically you could still have race conditions where 
-a child device starts a transaction just as the parent is no longer 
-attached to the bus.
-
->> I would however not remove the devices when the status is down but 
->> only on an explicit .remove.
-> 
-> Am open for suggestions but I would not like the child devices to talk 
-> on the bus once the SLIMbus device is down! Only way to ensure or make 
-> it silent is to remove.
-
-it's as if you are missing a mechanism to forward the parent status to 
-the children so use remove() for lack of a better solution?
+Acked-by: Rob Herring <robh@kernel.org>
