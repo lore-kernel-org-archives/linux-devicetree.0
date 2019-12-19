@@ -2,89 +2,99 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3307EC2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5B6C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0064024676
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372CD222C2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 10:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gXqqZMtt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lak+yufu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfLSKgH (ORCPT
+        id S1726656AbfLSKhc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 05:36:07 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21166 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726622AbfLSKgH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 05:36:07 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJAWcHB023188;
-        Thu, 19 Dec 2019 11:35:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=Iemh3RU/aIK2iehtIHFQuSP9XvVK+0CTJ21s2KN63yo=;
- b=gXqqZMtt1rmXVv8DSNqowaaZF4CP5ipsS+CfHYPDclIlhMGNjgvC3kxymw3NCIhfk0KE
- T5DvKrwgHt3a+8s7URBKXpykwiUPAMK3ND/B8JIsTjaSzhs11IldghDLHb7J32f4H0oV
- HN63TEwVe7Q/GTCM9a0I6k4LJw07OtB+vRgmRELcvlpDBuVwr2fFpheErYYIMNRwoMMf
- 4yIAMuw+E/LXFw1zUPZjrMFDr9RzHyub6GyY0sk7hCH2k19PaQjA8M2hp1SQ6fAu+Ikb
- HA9Z9SBVGmO0SeWO6+dfv5mERJaEyTuUtbNucceK3ZAinG+jADU2H12If5VY7dmHL35H tA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wvpd1s21e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 19 Dec 2019 11:35:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 04B32100039;
-        Thu, 19 Dec 2019 11:35:41 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C51142A467F;
-        Thu, 19 Dec 2019 11:35:40 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 19 Dec 2019 11:35:40
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <kgene@kernel.org>, <krzk@kernel.org>,
-        <hminas@synopsys.com>
-CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <m.szyprowski@samsung.com>,
-        <amelie.delaunay@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 0/2] Add yaml DWC2 bindings
-Date:   Thu, 19 Dec 2019 11:35:34 +0100
-Message-ID: <20191219103536.25485-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-19_01:2019-12-17,2019-12-19 signatures=0
+        Thu, 19 Dec 2019 05:37:32 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35237 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbfLSKhc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 05:37:32 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so5086907wmb.0;
+        Thu, 19 Dec 2019 02:37:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dEvmcxcRbDnw5Esbmp5xNDj/bzEbhT/0+2MaiZbtS5U=;
+        b=Lak+yufuDPx18PWvNvcNvX7vS14JJsdeRWOlHq1oL9NZg6j8lsNzYXzgBeW7vWY+Lg
+         ma/zkuBkmnLq/u0ywSqh988wacsSEnKlu/TSPmH8bd8+L4DaRn5Am0msOuM7BNckWGND
+         AUWASC5JgPjj726HcpjjhLZvPtqrfpg9JuIb5P5d3V01qs61RizLot36tNOmQK9NE5Yg
+         Hk7M9OA1DwPUeD7zJZhlSgTOrsvCDUOpAUxgUxoG6leXKd7jDVz3mpaFWBke9ZzWiSUd
+         0yRCKwXcRe9WnNmXZKNgk6U5fjKYCdG1qQ4FCSiS/wNJnNBuOC4JwjKxdDYkvjOhYBFu
+         tEQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dEvmcxcRbDnw5Esbmp5xNDj/bzEbhT/0+2MaiZbtS5U=;
+        b=Jj52hyuu8Vb1vGF31ZH3LlBcJ8HJlnACl/o0TjFq0+uudfqMye2evgr9soU9jqJ+LE
+         p4zKsowFpS64Uzz4zjLDxSz7oISAfXv55YdyIpIIjOdG6QdBdVT1x9yDRZrgHR6cIMRY
+         mS6WoDvialFiB/cC4Es6aOqNT9KxQgeXOVRf34tsNaAxHvSgbREK1dDCnTREyPofZIGF
+         k6zkJZ1A6jdMWbNmYka4UkZDy0vL5eWgFaomDvukG0imXhfY59EIMVEKrznQAwv0wfw6
+         VAwBqEUsIQ9Q8MLsAaLMgCKTrfDnKDBcyyyvKXysjqlx3cMLkXP4w6BHYLnZ9epvn8rC
+         mevw==
+X-Gm-Message-State: APjAAAU+feILDY+tcDrHLELHvmcP9G2cn+PwLhkRCveWwatgNislc6Su
+        jKVEun2Be+0vjR1A6fuDbdk=
+X-Google-Smtp-Source: APXvYqwvTREV8saFCr0EAPE0obR3gxrSzVWmxDosp7ehqXK2yVaCvyLhE7uJIPB+kKC3nJsczB6ZhA==
+X-Received: by 2002:a1c:9a52:: with SMTP id c79mr9149301wme.127.1576751850387;
+        Thu, 19 Dec 2019 02:37:30 -0800 (PST)
+Received: from localhost.localdomain (p5B3F677C.dip0.t-ipconnect.de. [91.63.103.124])
+        by smtp.gmail.com with ESMTPSA id c68sm5735147wme.13.2019.12.19.02.37.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 02:37:29 -0800 (PST)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
+        heiko@sntech.de, shawnguo@kernel.org,
+        laurent.pinchart@ideasonboard.com, icenowy@aosc.io,
+        mchehab+samsung@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH 0/4] Add regulator support for mpq7920 
+Date:   Thu, 19 Dec 2019 11:37:17 +0100
+Message-Id: <20191219103721.10935-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert DWC2 bindings to json-schema and fix issue in dtsi file.
+This patch series add support for PMIC regulator driver for Monolithic
+Power System's MPQ7920 chipset. MPQ7920 provides support for 4-BUCK converter,
+one fixed voltage RTCLDO and 4-LDO regualtor, accessed over I2C.
 
-Benjamin Gaignard (2):
-  dt-bindings: usb: Convert DWC2 bindings to json-schema
-  ARM: dts: exynos: Remove unneeded "snps,dwc2" from hsotg node
+Thanks,
+Saravanan
 
- Documentation/devicetree/bindings/usb/dwc2.txt  |  64 ----------
- Documentation/devicetree/bindings/usb/dwc2.yaml | 152 ++++++++++++++++++++++++
- arch/arm/boot/dts/exynos3250.dtsi               |   2 +-
- 3 files changed, 153 insertions(+), 65 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/dwc2.txt
- create mode 100644 Documentation/devicetree/bindings/usb/dwc2.yaml
+Saravanan Sekar (4):
+  dt-bindings: Add an entry for Monolithic Power System, MPS
+  dt-bindings: regulator: add document bindings for mpq7920
+  regulator: mpq7920: add mpq7920 regulator driver
+  MAINTAINERS: Add entry for mpq7920 PMIC driver
+
+ .../bindings/regulator/mpq7920.yaml           | 149 +++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/mpq7920.c                   | 376 ++++++++++++++++++
+ drivers/regulator/mpq7920.h                   |  72 ++++
+ 7 files changed, 617 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+ create mode 100644 drivers/regulator/mpq7920.c
+ create mode 100644 drivers/regulator/mpq7920.h
 
 -- 
-2.15.0
+2.17.1
 
