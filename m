@@ -2,88 +2,323 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97191C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ED0C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6032B24672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576794676;
-	bh=JPhSXXuOi2gTNCsSXJs9wuR71QK3t/G7kKD1h+1npcM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ww1LRvGLlxVaouHAO8EbYnvHmwtK48kafSibgSD0bzCOHhpFN6vqO+yZh+29X0e0l
-	 ENL1/G/XyxT3fMW1rJmBxPl/3QD5z3rz+8RDoez57aDF+u819r9JjT96IYfV4EOacw
-	 clv0xfHe9jP8EtL3G3OuVUBl1aQpE4UXPu/28+yA=
+	by mail.kernel.org (Postfix) with ESMTP id 3B0E92465E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 22:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLSWbQ (ORCPT
+        id S1726866AbfLSWb3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 17:31:16 -0500
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:42924 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSWbP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 17:31:15 -0500
-Received: by mail-oi1-f173.google.com with SMTP id 18so3114224oin.9;
-        Thu, 19 Dec 2019 14:31:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=D6/Lnp9SQxWtLanrpfRv/1y5LG5SQwcq+M2dD1VqhCc=;
-        b=UIlkLJTzkB58yH9MjpyIv+ZigyxIADyYVhnN/t5STXZFfSHiNrh42+UhXN1DSGaIdZ
-         bSbTGoiM7AecdCxSoax5xHmn81NqzzXWbsy37SV/XUov+1B6Qaz4PvdX1z4HfKO+fQgl
-         OXzQbS67SSyndWNeRyp1blks1EHuiGrn+tn9hezCZvTKhP2oCY/4dUvQFOlSrQrbcIZs
-         bgxLnvHeS8UxWqo7AycBKEGMGdPsrO54peWdRB/kCB3r1hIIVMKY0blcrwGuZKIDh1K1
-         yXP1uKDNcbvMNkQWFWa9sGM5bZl9vBsbjQL3+zC+7SB+YbB31frqC0VrIeQvj6gv54YY
-         qUQQ==
-X-Gm-Message-State: APjAAAWC3SQnXsusLrXgSDk8WConFShY2VxQN2udRLpK4HVu2d4rz/ra
-        hNRZmAEGnidr3qgNJrioUA==
-X-Google-Smtp-Source: APXvYqxP+AsL2ClzQz1/tTdWWz61H8T7A5vOVoIHbEWTGgA7cl+qlj/GpeLj2PAWGr+P+OTYVDHkww==
-X-Received: by 2002:aca:cf50:: with SMTP id f77mr3288551oig.60.1576794674782;
-        Thu, 19 Dec 2019 14:31:14 -0800 (PST)
-Received: from localhost (ip-184-205-0-249.ftwttx.spcsdns.net. [184.205.0.249])
-        by smtp.gmail.com with ESMTPSA id n22sm2636449otj.36.2019.12.19.14.31.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 14:31:14 -0800 (PST)
-Date:   Thu, 19 Dec 2019 16:31:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        zypeng@titanmec.com, Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC 05/25] dt-bindings: vendor-prefixes: Add Titan Micro
- Electronics
-Message-ID: <20191219223108.GA25174@bogus>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-6-afaerber@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191212033952.5967-6-afaerber@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 19 Dec 2019 17:31:29 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22810 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726818AbfLSWb3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 17:31:29 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBJMRVQW020776;
+        Thu, 19 Dec 2019 17:31:14 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x0g28v223-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 17:31:14 -0500
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBJMRerJ021356;
+        Thu, 19 Dec 2019 17:31:13 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x0g28v21r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 17:31:13 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBJMV6BW007527;
+        Thu, 19 Dec 2019 22:31:12 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 2wvqc7ergj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 19 Dec 2019 22:31:12 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBJMVCka49217852
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Dec 2019 22:31:12 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 256DBAC05F;
+        Thu, 19 Dec 2019 22:31:12 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E20FAC060;
+        Thu, 19 Dec 2019 22:31:11 +0000 (GMT)
+Received: from [9.70.82.143] (unknown [9.70.82.143])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Dec 2019 22:31:11 +0000 (GMT)
+Subject: Re: [PATCH 04/14] powerpc/vas: Setup IRQ mapping and register port
+ for each window
+From:   Haren Myneni <haren@linux.ibm.com>
+To:     "Oliver O'Halloran" <oohall@gmail.com>
+Cc:     Haren Myneni <haren@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Device Tree <devicetree@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
+        hbabu@us.ibm.com
+In-Reply-To: <1576710781.12797.10.camel@hbabu-laptop>
+References: <1574816731.13250.9.camel@hbabu-laptop>
+         <CAOSf1CEvZ32xC71siuyfUQEcQ4yLoDtj2jGoc3jrmsHc0jD+Vw@mail.gmail.com>
+         <1576710781.12797.10.camel@hbabu-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Thu, 19 Dec 2019 14:31:06 -0800
+Message-ID: <1576794666.12797.50.camel@hbabu-laptop>
+Mime-Version: 1.0
+X-Mailer: Evolution 2.28.3 
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_07:2019-12-17,2019-12-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=2 impostorscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 lowpriorityscore=0 bulkscore=0 clxscore=1015 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912190168
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 12 Dec 2019 04:39:32 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Assign vendor prefix "titanmec", matching their domain name.
+On Wed, 2019-12-18 at 15:13 -0800, Haren Myneni wrote:
+> On Wed, 2019-12-18 at 18:18 +1100, Oliver O'Halloran wrote:
+> > On Wed, Nov 27, 2019 at 12:07 PM Haren Myneni <haren@linux.vnet.ibm.com> wrote:
+> > >
+> > > *snip*
+> > >
+> > > @@ -36,7 +62,18 @@ static int init_vas_instance(struct platform_device *pdev)
+> > >                 return -ENODEV;
+> > >         }
+> > >
+> > > -       if (pdev->num_resources != 4) {
+> > > +       rc = of_property_read_u64(dn, "ibm,vas-port", &port);
+> > > +       if (rc) {
+> > > +               pr_err("No ibm,vas-port property for %s?\n", pdev->name);
+> > > +               /* No interrupts property */
+> > > +               nresources = 4;
+> > > +       }
+> > > +
+> > > +       /*
+> > > +        * interrupts property is available with 'ibm,vas-port' property.
+> > > +        * 4 Resources and 1 IRQ if interrupts property is available.
+> > > +        */
+> > > +       if (pdev->num_resources != nresources) {
+> > >                 pr_err("Unexpected DT configuration for [%s, %d]\n",
+> > >                                 pdev->name, vasid);
+> > >                 return -ENODEV;
+> > 
+> > Right, so adding the IRQ in firmware will break the VAS driver in
+> > existing kernels since it changes the resource count. This is IMO a
+> > bug in the VAS driver that you should fix, but it does mean we need to
+> > think twice about having firmware assign an interrupt at boot.
 > 
-> Cc: zypeng@titanmec.com
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> Correct, Hence added vas-user-space nvram switch in skiboot.  
+> 
+> > 
+> > I had a closer look at this series and I'm not convinced that any
+> > firmware changes are actually required either. We already have OPAL
+> > calls for allocating an hwirq for the kernel to use and for getting
+> > the IRQ's XIVE trigger port (see pnv_ocxl_alloc_xive_irq() for an
+> > example). Why not use those here too? Doing so would allow us to
+> > assign interrupts to individual windows too which might be useful for
+> > the windows used by the kernel.
+> 
+> Thanks for the pointer. like using pnv_ocxl_alloc_xive_irq(), we can
+> disregard FW change. BTW, VAS fault handling is needed only for user
+> space VAS windows. 
+> 
+>  int vas_alloc_xive_irq(u32 chipid, u32 *irq, u64 *trigger_addr)
+> {
+>         __be64 flags, trigger_page;
+>         u32 hwirq;
+>         s64 rc;
+> 
+>         hwirq = opal_xive_allocate_irq_raw(chipid);
+>         if (hwirq < 0)
+>                 return -ENOENT;
+> 
+>         rc = opal_xive_get_irq_info(hwirq, &flags, NULL, &trigger_page,
+> NULL,
+>                                 NULL);
+>         if (rc || !trigger_page) {
+>                 xive_native_free_irq(hwirq);
+>                 return -ENOENT;
+>         }
+> 
+>         *irq = hwirq;
+>         *trigger_addr = be64_to_cpu(trigger_page);
+>         return 0;
+> }
+> 
+> We can have common function for VAS and cxl except per chip IRQ
+> allocation is needed for each VAS instance. I will post patch-set with
+> this change.
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+power9 will have only XIVE interrupt controller including on open-power
+systems. Correct?
+
+VAS need per chip IRQ allocation. The current interfaces (ex:
+xive_native_alloc_irq(void)) allocates IRQ on any chip
+(OPAL_XIVE_ANY_CHIP)
+So to use these interfaces for VAS, any concerns with the following
+patch:
+Changes: passing chip_id to xive_native_alloc_irq() and define
+xive_native_alloc_get_irq_info() in xive/native.c which can be used in
+ocxl and VAS.
+
+diff --git a/arch/powerpc/include/asm/xive.h b/arch/powerpc/include/asm/xive.h
+index 24cdf97..b310062 100644
+--- a/arch/powerpc/include/asm/xive.h
++++ b/arch/powerpc/include/asm/xive.h
+@@ -108,7 +108,7 @@ struct xive_q {
+ extern int xive_native_populate_irq_data(u32 hw_irq,
+ 					 struct xive_irq_data *data);
+ extern void xive_cleanup_irq_data(struct xive_irq_data *xd);
+-extern u32 xive_native_alloc_irq(void);
++extern u32 xive_native_alloc_irq(u32 chip_id);
+ extern void xive_native_free_irq(u32 irq);
+ extern int xive_native_configure_irq(u32 hw_irq, u32 target, u8 prio, u32 sw_irq);
+ 
+@@ -137,7 +137,8 @@ extern int xive_native_set_queue_state(u32 vp_id, uint32_t prio, u32 qtoggle,
+ 				       u32 qindex);
+ extern int xive_native_get_vp_state(u32 vp_id, u64 *out_state);
+ extern bool xive_native_has_queue_state_support(void);
+-
++extern int xive_native_alloc_get_irq_info(u32 chip_id, u32 *irq,
++					u64 *trigger_addr);
+ #else
+ 
+ static inline bool xive_enabled(void) { return false; }
+diff --git a/arch/powerpc/kvm/book3s_xive.c b/arch/powerpc/kvm/book3s_xive.c
+index 66858b7..59009e1 100644
+--- a/arch/powerpc/kvm/book3s_xive.c
++++ b/arch/powerpc/kvm/book3s_xive.c
+@@ -1299,7 +1299,7 @@ int kvmppc_xive_connect_vcpu(struct kvm_device *dev,
+ 	vcpu->arch.xive_cam_word = cpu_to_be32(xc->vp_cam | TM_QW1W2_VO);
+ 
+ 	/* Allocate IPI */
+-	xc->vp_ipi = xive_native_alloc_irq();
++	xc->vp_ipi = xive_native_alloc_irq(OPAL_XIVE_ANY_CHIP);
+ 	if (!xc->vp_ipi) {
+ 		pr_err("Failed to allocate xive irq for VCPU IPI\n");
+ 		r = -EIO;
+@@ -1711,7 +1711,7 @@ static int xive_set_source(struct kvmppc_xive *xive, long irq, u64 addr)
+ 	 * one and get the corresponding data
+ 	 */
+ 	if (!state->ipi_number) {
+-		state->ipi_number = xive_native_alloc_irq();
++		state->ipi_number = xive_native_alloc_irq(OPAL_XIVE_ANY_CHIP);
+ 		if (state->ipi_number == 0) {
+ 			pr_devel("Failed to allocate IPI !\n");
+ 			return -ENOMEM;
+diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
+index d83adb1..0adb228 100644
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -359,7 +359,7 @@ static int kvmppc_xive_native_set_source(struct kvmppc_xive *xive, long irq,
+ 	 * one and get the corresponding data
+ 	 */
+ 	if (!state->ipi_number) {
+-		state->ipi_number = xive_native_alloc_irq();
++		state->ipi_number = xive_native_alloc_irq(OPAL_XIVE_ANY_CHIP);
+ 		if (state->ipi_number == 0) {
+ 			pr_err("Failed to allocate IRQ !\n");
+ 			rc = -ENXIO;
+diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
+index 8c65aac..fb8f99a 100644
+--- a/arch/powerpc/platforms/powernv/ocxl.c
++++ b/arch/powerpc/platforms/powernv/ocxl.c
+@@ -487,24 +487,8 @@ int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
+ 
+ int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr)
+ {
+-	__be64 flags, trigger_page;
+-	s64 rc;
+-	u32 hwirq;
+-
+-	hwirq = xive_native_alloc_irq();
+-	if (!hwirq)
+-		return -ENOENT;
+-
+-	rc = opal_xive_get_irq_info(hwirq, &flags, NULL, &trigger_page, NULL,
+-				NULL);
+-	if (rc || !trigger_page) {
+-		xive_native_free_irq(hwirq);
+-		return -ENOENT;
+-	}
+-	*irq = hwirq;
+-	*trigger_addr = be64_to_cpu(trigger_page);
+-	return 0;
+-
++	return xive_native_alloc_get_irq_info(OPAL_XIVE_ANY_CHIP, irq,
++						trigger_addr);
+ }
+ EXPORT_SYMBOL_GPL(pnv_ocxl_alloc_xive_irq);
+ 
+diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+index 0ff6b73..c450838 100644
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -279,12 +279,12 @@ static int xive_native_get_ipi(unsigned int cpu, struct xive_cpu *xc)
+ }
+ #endif /* CONFIG_SMP */
+ 
+-u32 xive_native_alloc_irq(void)
++u32 xive_native_alloc_irq(u32 chip_id)
+ {
+ 	s64 rc;
+ 
+ 	for (;;) {
+-		rc = opal_xive_allocate_irq(OPAL_XIVE_ANY_CHIP);
++		rc = opal_xive_allocate_irq(chip_id);
+ 		if (rc != OPAL_BUSY)
+ 			break;
+ 		msleep(OPAL_BUSY_DELAY_MS);
+@@ -295,6 +295,29 @@ u32 xive_native_alloc_irq(void)
+ }
+ EXPORT_SYMBOL_GPL(xive_native_alloc_irq);
+ 
++int xive_native_alloc_get_irq_info(u32 chip_id, u32 *irq, u64 *trigger_addr)
++{
++	__be64 flags, trigger_page;
++	u32 hwirq;
++	s64 rc;
++
++	hwirq = xive_native_alloc_irq(chip_id);
++	if (!hwirq)
++		return -ENOENT;
++
++	rc = opal_xive_get_irq_info(hwirq, &flags, NULL, &trigger_page, NULL,
++				NULL);
++	if (rc || !trigger_page) {
++		xive_native_free_irq(hwirq);
++		return -ENOENT;
++	}
++	*irq = hwirq;
++	*trigger_addr = be64_to_cpu(trigger_page);
++
++	return 0;
++}
++EXPORT_SYMBOL(xive_native_alloc_get_irq_info);
++
+ void xive_native_free_irq(u32 irq)
+ {
+ 	for (;;) {
+
+
+
+
+
+
+
