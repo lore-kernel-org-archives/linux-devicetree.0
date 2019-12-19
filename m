@@ -7,82 +7,76 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4661EC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE3A8C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119CC206EC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B73A206EC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576796789;
-	bh=aCc4V1SetCaYPJhiek9ShfdR6T4K99gcjC0HqhEv1Sg=;
+	s=default; t=1576796874;
+	bh=1UwGQnsKsSVL/Sjr7ExtByNFEaes7NdRMbEJNsn3Jok=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lbYhFq3OMI1fLbBnyt0A4HsKItsQf8xWwxWzFuMsAnN+9icCOAhj6Y8Ctf2IwuDra
-	 GNnKfQlOdFhzR3imUWFeR0BzotPzVLjCr7GNK6AEbm6N4DKewT7SALTVpSe6tmaW26
-	 NWawJio4vwXacRonNvgtjBkgtY8X9Zo/0LkQhn7Y=
+	b=KGJBB5QBTbfU2GkP7Petu3q5soVa7iJ5IG/QrvPDjo0H4H8EHvsU3OBl/n77zQi5n
+	 HmYbq5jK+vv2u0miQTXtUKkvTVvkF29TkqhvehQIENzZMzaLsXrCO4gqz+DFGI6rif
+	 05cWMimiyybOgFXuIyBIfXvK0HbZ/VWJP67SKiTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbfLSXG2 (ORCPT
+        id S1727020AbfLSXHs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:06:28 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:39059 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfLSXG2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:06:28 -0500
-Received: by mail-oi1-f176.google.com with SMTP id a67so3867436oib.6;
-        Thu, 19 Dec 2019 15:06:28 -0800 (PST)
+        Thu, 19 Dec 2019 18:07:48 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35978 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLSXHs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:07:48 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w1so9261060otg.3;
+        Thu, 19 Dec 2019 15:07:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1yZH8V3CdOmQjuS73Msz5ZyhW6PkWuP2FDRhP7F/Hfk=;
-        b=M22OEG23pCc0+BccflyxWyi2vEZ2XxqgB0Vk/dE61KnVg4elHxlmdBIshGCFjjEh91
-         wBGGfVSWTkQWIIStfYfX/AoeaEx6ez3xkfbSKKlpSesKSfJMlmhPDVcHsH9Q1//kZlcA
-         Oin+71n/nqOv0RkbnkyKjLLAKlzBw4W7ql8f58nki+6pwq9gVoK3P3dF6sI0/40Kn6vt
-         zDZD+N8kYMZTu4vHREkbsXjvkzt7WoipAp+gVK+PsWcfB9fTC0ZSTX8VN7z6WeuWRVEp
-         c8cqMlCrPOjXPPSZ1jipCRuOvu7WEWckwX6kuKZFRnhOkEiheNZWnNwtaIgUSyiyG21d
-         Ln+g==
-X-Gm-Message-State: APjAAAUMIwfWKSwCeK0LEXqWUnTFsJFxLye/ErbpHXBhTfgWvvXVVgjh
-        gfHgtvpDMdqfIcKCZguLEA==
-X-Google-Smtp-Source: APXvYqwSIAXcQUDg2gX98PBOc+oiM4Gom1haSyaRLuef1KLWXsxmd15JOd90nbJsIeaJwD3TBVTLrQ==
-X-Received: by 2002:aca:f445:: with SMTP id s66mr3072290oih.95.1576796787716;
-        Thu, 19 Dec 2019 15:06:27 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DgX0NKioz1rOLIBSrzLogpmefAWeE3WIM8ZkXd4rq84=;
+        b=WvTmuBodTGIZtY1oFNFfJL0P6LAVRUMz2RXFVwdEzb3k0zNZprzumrcfEJLVlUj8yp
+         eJhAOgQANtKA3NE6nlsUmEB+npmJFyCodJNpc/aCoHP5CRqSW5jRiy8+GhR33bhqklxi
+         61NCAL6XVIiQqYPKPf2RnEut8DlioGfjSrrmaS+dNLvjjKGlwfz4+gkvhWQ31vlK4y83
+         53cDWoztNiU0D0wxq9unRi9FyVVG2u9EaknyiNb3IPBZQlwy5IxtLtScoijx6bilLBLV
+         6bVQbr2MsZiwDMCVNnXzPHc8RMGyUgzBa/zyCf39b5q5oKuqZYFC51o5UPQdn5kb8B1D
+         ocVQ==
+X-Gm-Message-State: APjAAAUHTprp+HyYz1W3FNwXBIrgXuCSt1GQbApXkedTvuLLYbbuo2Or
+        rJNMMu6QE0gaCLdcBdK7eg==
+X-Google-Smtp-Source: APXvYqwB9T3HzArMlvLUll2SoZeItk08mg/8cUPV/SIjXWZaF7FfZ7O50gyaF8wV0hnYcqYD0TrjJA==
+X-Received: by 2002:a9d:7c97:: with SMTP id q23mr11280615otn.253.1576796867866;
+        Thu, 19 Dec 2019 15:07:47 -0800 (PST)
 Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id m68sm2497501oig.50.2019.12.19.15.06.26
+        by smtp.gmail.com with ESMTPSA id n25sm2528516oic.6.2019.12.19.15.07.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:06:27 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:06:25 -0600
+        Thu, 19 Dec 2019 15:07:47 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:07:45 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [RFC 16/25] dt-bindings: leds: tm1628: Add Fude Microelectronics
- AiP1618
-Message-ID: <20191219230625.GA7332@bogus>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-17-afaerber@suse.de>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
+        johan.hedberg@gmail.com, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
+Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QCA6390
+Message-ID: <20191219230745.GA9366@bogus>
+References: <0101016ef8b923cf-ef36a521-9c4b-4360-842d-d641e0eaaf0e-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191212033952.5967-17-afaerber@suse.de>
+In-Reply-To: <0101016ef8b923cf-ef36a521-9c4b-4360-842d-d641e0eaaf0e-000000@us-west-2.amazonses.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 12 Dec 2019 04:39:43 +0100, =?UTF-8?q?Andreas=20F=C3=A4rber?= wrote:
-> Define a compatible string for AiP1618 chipset.
+On Thu, 12 Dec 2019 06:08:33 +0000, Rocky Liao wrote:
+> Add compatible string for the Qualcomm QCA6390 Bluetooth controller
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
 > ---
->  @Rob: This one would conditionally need to further restrict reg ranges then.
->  
->  Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml | 1 +
+>  Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
