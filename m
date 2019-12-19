@@ -2,82 +2,148 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8497C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC70FC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87C8C2467E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576776102;
-	bh=W+DNykC37RqfPj4trEBzgzpFECNymEArMcSSbX63dz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LmRTdMzB3gMs87IPgdILDTQyZgC9tZolgudLJukaD7k6wR2YfNFxZ9Ovw7AImshtJ
-	 A2q9JofESLftUnIBDRi0PvOQd1lB9yp/OX33UwVAPFM2xt0xwF9CG5Z8vEGMRIAEjG
-	 fPViZd5Vj3iiVNOYJ0RjVymi9Oq+9SP49zaeQ9J0=
+	by mail.kernel.org (Postfix) with ESMTP id B0D74227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 17:28:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dy9R8z7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfLSRVl (ORCPT
+        id S1726840AbfLSR2e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 12:21:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfLSRVl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 12:21:41 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD88227BF;
-        Thu, 19 Dec 2019 17:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576776101;
-        bh=W+DNykC37RqfPj4trEBzgzpFECNymEArMcSSbX63dz8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=puTIlALeKB1hcYSZhniRoqvABUQ7gJoFBGPj7Yw2j7iGPP7IJEZP4eflOkSfRIoyz
-         /bGGWJzEInJbpPKXdpjn9OCaEwtzqgxhbi7poPoJAHla600iid8NOM4r5r6cS9hFeW
-         suugbyReFtb072k5ERmxPQon4ywZShZVNsBimX5I=
-Date:   Thu, 19 Dec 2019 18:21:39 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     shubhrajyoti.datta@gmail.com
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: Re: [PATCH v2 2/3] misc: xilinx_flex: Add support for the flex noc
- Performance Monitor
-Message-ID: <20191219172139.GB2092676@kroah.com>
-References: <19bb1ad0783e66aef45b140ccf409917ef94e63b.1575609926.git.shubhrajyoti.datta@xilinx.com>
- <469d8bdde24055e01141b79a936dbd64c2481cc2.1575609926.git.shubhrajyoti.datta@xilinx.com>
+        Thu, 19 Dec 2019 12:28:34 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36473 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726818AbfLSR2e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 12:28:34 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k3so3482110pgc.3;
+        Thu, 19 Dec 2019 09:28:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FC3/QPaa5PZhaNcHhuFDAdfq0OHIUK1TdSdCzAHajCc=;
+        b=dy9R8z7vc/XXAEH3Rhv/7Zz2UzI+4YT7FYRMRYG4QOIcJ85CI0668ysW86zR7kZEwp
+         ryjCWDY/mOdSghg39/lNRhMPhF6u8IoZhXyvn5ahot+dLntHgepthUNUhRhty3H1FN1d
+         PEsSKcw8HruBh2pyfrfxxPgInCOU0e55yG3nARfoUOeTZGSUdHRBoOgSKkHs+1a5UkKr
+         Xs415JZcJ9xGShIbk4spwpHIOR93+/gIGju4C2xG/sQcxD0Ew9Ruudwr0dCJq5b5Kllp
+         NhI914BZRknzkfc+PSNBTN9GqkTfw8me85QmidXJQtJBx5stTy4O5krcjCjikPWHkvsg
+         WUeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FC3/QPaa5PZhaNcHhuFDAdfq0OHIUK1TdSdCzAHajCc=;
+        b=MoY/dTFAin7PESF/hwVlMnXQguQzUV9cVtbYu1arpu1g7HFcw7dXJuGEHrIKRhZbao
+         Fp5J+2nnsljEt4qdDeAlnKkDKjzW5EmNmCTsFaf58j/cTSnrdDNBe1jqsiBL/acEsmql
+         2ccTynJiGmGV8pqyek/yQHtDIhBVo9X+2jPepv/YmH0N/hlFovIogWlHFKcaYM+Q22SI
+         UoqEH749PgpUIvoWjquTMT0VjBN2V5kGWoFNwsbSmQwAAqnIPq2skXRGv1+rEkgwQZnG
+         RJsKEBy9lJAAfuKpKHAMuJHNnozEw2mE3NDvzQx/E4rxFSjUqRSnxCap9EW64p6k32ct
+         MCbQ==
+X-Gm-Message-State: APjAAAXJMDyNJHR5JAaULlg+YvdMoDGg7QOK72OT1x5nXAw/v/hJ1SrY
+        WL+hIDqOd47VI1IZdBraNKA=
+X-Google-Smtp-Source: APXvYqwsCwPHwOMp7hPK2BsRkPhtgmogTJE3yEjGSSPfL3FD3QcZJks5+w9l7rUtELd8fzk8Qz74UQ==
+X-Received: by 2002:a62:5547:: with SMTP id j68mr11289653pfb.6.1576776513100;
+        Thu, 19 Dec 2019 09:28:33 -0800 (PST)
+Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
+        by smtp.gmail.com with ESMTPSA id v143sm536209pfc.71.2019.12.19.09.28.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 09:28:32 -0800 (PST)
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5, H6, R40
+Date:   Thu, 19 Dec 2019 09:28:16 -0800
+Message-Id: <20191219172823.1652600-1-anarsoul@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <469d8bdde24055e01141b79a936dbd64c2481cc2.1575609926.git.shubhrajyoti.datta@xilinx.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:09:57AM +0530, shubhrajyoti.datta@gmail.com wrote:
-> +/**
-> + * xflex_remove - Driver remove function
-> + * @pdev: Pointer to the platform_device structure
-> + *
-> + * This function frees all the resources allocated to the device.
-> + *
-> + * Return: 0 always
-> + */
+This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+H6 and R40 SoCs.
 
-No need for kerneldoc documentation for static functions.
+v8:
+	- [vasily] Address more Maxime's comments for dt-schema
+	- [vasily] Add myself to MAINTAINERS for the driver and schema
+	- [vasily] Round calibration data size to word boundary for H6 and A64
+	- [vasily] Change offset for A64 since it reports too low temp otherwise.
+	           Likely conversion formula in user manual is not correct.
 
-> +static int xflex_remove(struct platform_device *pdev)
-> +{
-> +	sysfs_remove_groups(&pdev->dev.kobj, xflex_groups);
+v7:
+	- [vasily] Address Maxime's comments for dt-schema
+	- [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
+	- [vasily] Add Maxime's a-b to the driver patch 
 
-Your attribute groups can, and should, be automatically created by the
-driver core.  Set the driver's dev_groups pointer and that will happen
-for you.
+v6:
+	- [ondrej, vasily] Squash all driver related changes into a
+			   single patch
+	- [ondrej] Rename calib -> calibration
+	- [ondrej] Fix thermal zone registration check
+	- [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+	- [ondrej] Rework scale/offset values, H6 calibration
+	- [ondrej] Explicitly set mod clock to 24 MHz
+	- [ondrej] Set undocumented bits in CTRL0 for H6
+	- [ondrej] Add support for A83T
+	- [ondrej] Add dts changes for A83T, H3, H5, H6
+	- [vasily] Add dts changes for A64
+	- [vasily] Address Maxime's comments for YAML scheme
+	- [vasily] Make .calc_temp callback mandatory
+	- [vasily] Set .max_register in regmap config, so regs can be
+		   inspected using debugfs
 
-thanks,
+Ondrej Jirman (4):
+  ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+  ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+  arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+  arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
 
-greg k-h
+Vasily Khoruzhick (1):
+  arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+
+Yangtao Li (2):
+  thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+  dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+    bindings
+
+ .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
+ MAINTAINERS                                   |   8 +
+ arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+ arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+ drivers/thermal/Kconfig                       |  14 +
+ drivers/thermal/Makefile                      |   1 +
+ drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
+ 11 files changed, 985 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+ create mode 100644 drivers/thermal/sun8i_thermal.c
+
+-- 
+2.24.1
+
