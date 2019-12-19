@@ -2,131 +2,82 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F4CC43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC9CC2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B52227BF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560782072B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 05:45:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N3ZfoC8+"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ljh2nQ3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfLSFdj (ORCPT
+        id S1726463AbfLSFp0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 00:33:39 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:36452 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfLSFdi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 00:33:38 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBJ5XAMo090485;
-        Wed, 18 Dec 2019 23:33:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576733590;
-        bh=LOOY6W2Ku2R5ppLjFbe/RkqYjMl9lftew8PFB4joQIs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=N3ZfoC8+zHBNo+unnhOUoM5b//zS1vm0iE6RRaKDoli0tIVjMvE0s3DjrOe+SK6Yb
-         ZCa1CRV7PqFore/THw7HRmM2MYNLimmu3N3IA7EEWRymae76Tb2p65xyLOhapJNacj
-         XmWwX8VNPVQ227zYdY6HkPqpvWzYpbZLVO21MVvM=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBJ5XAu1122133
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Dec 2019 23:33:10 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 18
- Dec 2019 23:33:10 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 18 Dec 2019 23:33:10 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBJ5X6wR055261;
-        Wed, 18 Dec 2019 23:33:07 -0600
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
-To:     Michael Walle <michael@walle.cc>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-CC:     <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20191214191943.3679-1-michael@walle.cc>
- <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
- <af3692dba69e85fa8136ab3d170bef39@walle.cc>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <2dfc30a7-3261-d783-8256-f72458a0141b@ti.com>
-Date:   Thu, 19 Dec 2019 11:03:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 19 Dec 2019 00:45:26 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:62946 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725993AbfLSFpZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 00:45:25 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1576734325; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=x6DO8XFiQIG79wBQeDvjsylUmPKRxCL8a0jiGOwzMNc=; b=ljh2nQ3hQLeGU7eQ+WKZ85rVqRV/VIjDEpVp2+zJY3ikN13C2871GK8C1QDZpUEt4whHSwHt
+ uqArnzgTe/IpeuDTFri+uzikvcpJ48vTp8JmRViv3VcytR2cMAUhuKCrIDbM5zQzdguNUOcc
+ ZuOzHfmar7ZxhwJpQW4MxcyebzU=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5dfb0e73.7f4943671730-smtp-out-n02;
+ Thu, 19 Dec 2019 05:45:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C5EC8C48B01; Thu, 19 Dec 2019 05:45:23 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D5CA0C2BB93;
+        Thu, 19 Dec 2019 05:45:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D5CA0C2BB93
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org
+Cc:     ohad@wizery.com, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        p.zabel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 0/2] Add Modem support on SC7180 SoCs
+Date:   Thu, 19 Dec 2019 11:15:04 +0530
+Message-Id: <20191219054506.20565-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-In-Reply-To: <af3692dba69e85fa8136ab3d170bef39@walle.cc>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Michael,
+This patch series adds support for booting the Modem Q6 DSP found in
+Qualcomm's SC7180 SoCs.
 
-[...]
->>> +- no-unlock : By default, linux unlocks the whole flash because there
->>> +           are legacy flash devices which are locked by default
->>> +           after reset. Set this flag if you don't want linux to
->>> +           unlock the whole flash automatically. In this case you
->>> +           can control the non-volatile bits by the
->>> +           flash_lock/flash_unlock tools.
->>>
->>
->> Current SPI NOR framework unconditionally unlocks entire flash which
->> I agree is not the best thing to do, but I don't think we need
->> new DT property here. MTD cmdline partitions and DT partitions already
->> provide a way to specify that a partition should remain locked[1][2]
-> 
-> I know that the MTD layer has the same kind of unlocking. But that
-> unlocking is done on a per mtd partition basis. Eg. consider something
-> like the following
-> 
->  mtd1 bootloader  (locked)
->  mtd2 firmware    (locked)
->  mtd3 kernel
->  mtd4 environment
-> 
-> Further assume, that the end of mtd2 aligns with one of the possible
-> locking areas which are supported by the flash chip. Eg. the first quarter.
-> 
-> The mtd layer would do two (or four, if "lock" property is set) unlock()
-> calls, one for mtd1 and one for mtd2.
-> 
+V2:
+ * split the series according to SoC
+ * Duplicate code across q6v5proc_reset
+ * add Rob's 'Reviewed-by' tag
 
+Sibi Sankar (2):
+  dt-bindings: remoteproc: qcom: Add Q6V5 Modem PIL binding for SC7180
+  remoteproc: mss: q6v5-mss: Add modem support on SC7180
 
-> My point here is, that the mtd partitions doesn't always map to the
-> locking regions of the SPI flash (at least if the are not merged together).
-> 
-
-You are right! This will be an issue if existing partitions are not
-aligned to locking regions.
-
-I take my comments back... But I am not sure if a new DT property is the
-needed. This does not describe HW and is specific to Linux SPI NOR
-stack. How about a module parameter instead?
-Module parameter won't provide per flash granularity in controlling
-unlocking behavior. But I don't think that matters.
-
-Tudor,
-
-You had a patch doing something similar. Does module param sound good to
-you?
-
+ .../bindings/remoteproc/qcom,q6v5.txt         |  23 +-
+ drivers/remoteproc/qcom_q6v5_mss.c            | 199 +++++++++++++++++-
+ 2 files changed, 219 insertions(+), 3 deletions(-)
 
 -- 
-Regards
-Vignesh
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
