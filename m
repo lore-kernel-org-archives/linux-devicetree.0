@@ -2,147 +2,197 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA83C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F608C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C275D2465E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF42206EC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 19:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="lEbPRqMg"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WSGNJYbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfLSTBU (ORCPT
+        id S1728453AbfLSTBw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 14:01:20 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41209 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbfLSTBT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 14:01:19 -0500
-Received: by mail-lf1-f68.google.com with SMTP id m30so5105017lfp.8
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 11:01:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EnctfXeH6eSWsiC3SsB5Huqb0Ku44kDLoFN9p69SIAE=;
-        b=lEbPRqMg9JeGspNDXadsO0erORgltj+FUrBlrmYlwUjMc774JfhJ6eRumOi/hEBQc1
-         j/UkZlmTqlmFwyEQAz0i+0DGHuUvbLlC4AKLAlUIVPRGHmaqEzY7+6gI88wUx8LOezTp
-         6BQkhhD7gDpCJs7CNaKeplHsSflIs3AJgQMoNNyxeUH2ebKSk56q+NCyIZzeeWfZcHFv
-         HXQi+nxzjx1jRs9VMt4b6suCTgj9NDXnNpu11YNAKN1Kb+CZB9H1JhhcELAP7azOQw7P
-         1t4g9xWB8JNohzB+7BNQ21UOE2bci6K1O+MtXz5/dnZo8E0LfZv8LjVO9BimFwtNU4aD
-         h2OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=EnctfXeH6eSWsiC3SsB5Huqb0Ku44kDLoFN9p69SIAE=;
-        b=k70EE3j/70INDk3WWB2Z3tgDS6sSmbcR+Is/RMuvBwK1QvMJhnb2WsudCwKheqpIlJ
-         Nj/jkuWsxjl/gBZX64hxnWhA7qAJeuVHbCJpU3nYBb18XzXyLthwgjmsDxI1sr0acz1Y
-         APgHlgescjqAAftsCm76diUe9RB2vM4dblIdURQ5s+BrVH6MRbjMcHwLbEbW3jxh186L
-         h2B5zBdl6vmVEZt81o0TIUI1GZnfZv+xnvcAwNM8AjDhIIrVzR6b4PLnuZ8qyyvxm5lM
-         LdFKlqHpcVKmUEUUjcA2RHyTe8N79CeBjleKSTJJWVmwilZi2FkSGprKUgMj4WHJ8rXo
-         QhZg==
-X-Gm-Message-State: APjAAAVM0TdU9WZc8Y4hpoor/bZ5SrZmMT5mDJaw/3T0IjG5U/bIMEJo
-        znbuVTev5A0azXlx/yCg95928g==
-X-Google-Smtp-Source: APXvYqznQi99px26YNP9vyR+IDtMFUiA2KIXWA7/G1NfQxBqe4E+4935xoJv7nCF7+iJcnj4xRyJ5A==
-X-Received: by 2002:ac2:50cc:: with SMTP id h12mr6326667lfm.29.1576782077671;
-        Thu, 19 Dec 2019 11:01:17 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:899:8379:9861:263:6bbe:73b8])
-        by smtp.gmail.com with ESMTPSA id z5sm45547lji.40.2019.12.19.11.01.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 19 Dec 2019 11:01:16 -0800 (PST)
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-To:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        Thu, 19 Dec 2019 14:01:52 -0500
+Received: from mail-eopbgr30053.outbound.protection.outlook.com ([40.107.3.53]:30183
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729954AbfLSSuU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 13:50:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jjgm3sP/xZZ+Uq5N9PMfOc/BOdYPmxX6FKes9WEtQSmO/COcw4pfpoHj6dBNWyDNYrsejXHRVDO/d8/0/WWfZh2eLSM1h7TIEhSLnVBbxUbk1PGX60xQDnuvY8gpTtQGxBVT5VnCE0VR03nj22AxIJCMDPMFajEhAg8Fk498PI8W8de6FkfLTbNGmUfvo5DohT8yCgCpLLLtUeD9csVBjjaJ1aUtxVQt4D6uPrYS6v/8vARwugz+2yfZ7AuWazK75xFK549qc6BjgFLo/XKYHEvQY+eARLn2XTVK+4IhPXPVFocYvJiXvni7GwBlXsoR6e9E5l+lge34spWJYx5Ovg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9oGYvh3Tvye5Cz1ASfUZqcOvafB+pQUS1ydp0FwL0lM=;
+ b=ifJG/PdvdKDogrh3/aMf+0UymVKYseWkkxYFIJbGcegHfUCHS2p/b3K7kGDx8vXyh/b87k5frY2K7QBbSpoTieOeY+JWkJioKvZtXFXROUaQtOL2cSNQt/nm/m6KoAHvrVzcWItNs8HYCTgrPeiCfe/TDKahQm0PRPAE++ueCiNIWIXT6RdKEdcnRyQ1mrnvWmmEIljloMm/Fmh3yx0lg7Ic/kVyaxVRG0X+TqKF3Seqnj82OkUDui1xseCc9Mg0XYxMKS6f++EX6bKUrRybMawAI7EDEAjsrewROqfQxOL8tq5OMmAtIASPtJ+9VFS05J493N0THPyGBXrYGtZD1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9oGYvh3Tvye5Cz1ASfUZqcOvafB+pQUS1ydp0FwL0lM=;
+ b=WSGNJYbxwjYz1vpADM0RDuIhJEUbg4SJ6WMfmT2K1aLwU/fFo4bOG2193gm6D58+M2VlvBiw4cCpYKpWkyGzhIRCijNI4+pGqPohsG9zNzoXmNZTKrs0COveR7p3w/uXIKmnUkL2QkcAVCwT9+y5dhJ9k8x4ak9Rtga5VcxFYfk=
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.83) by
+ VI1PR04MB6160.eurprd04.prod.outlook.com (20.179.27.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.13; Thu, 19 Dec 2019 18:50:16 +0000
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::f099:4735:430c:ef1d]) by VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::f099:4735:430c:ef1d%2]) with mapi id 15.20.2559.015; Thu, 19 Dec 2019
+ 18:50:16 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        Mason Yang <masonccyang@mxic.com.tw>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
- <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
- <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
- <TY1PR01MB1562E196AB1C582F186CC74B8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Organization: Cogent Embedded
-Message-ID: <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
-Date:   Thu, 19 Dec 2019 22:01:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Subject: RE: [PATCH 5/6] net: fsl/fman: add support for PHY_INTERFACE_MODE_SFI
+Thread-Topic: [PATCH 5/6] net: fsl/fman: add support for
+ PHY_INTERFACE_MODE_SFI
+Thread-Index: AQHVtpH/Ss+S3H5dGE+6PcWOMQG+h6fByyqg
+Date:   Thu, 19 Dec 2019 18:50:16 +0000
+Message-ID: <VI1PR04MB5567899CDB9A9F36297CF236EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-6-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219173016.GD25745@shell.armlinux.org.uk>
+In-Reply-To: <20191219173016.GD25745@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=madalin.bucur@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [188.27.188.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 06fe249f-30b8-40b6-ea7d-08d784b449c6
+x-ms-traffictypediagnostic: VI1PR04MB6160:|VI1PR04MB6160:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB6160A916B2033AB1262E5AF3AD520@VI1PR04MB6160.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0256C18696
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(376002)(136003)(366004)(54094003)(199004)(189003)(13464003)(33656002)(186003)(4326008)(6916009)(26005)(9686003)(8936002)(53546011)(86362001)(6506007)(54906003)(2906002)(316002)(478600001)(5660300002)(76116006)(52536014)(8676002)(66946007)(81166006)(66556008)(64756008)(81156014)(66446008)(66476007)(7696005)(71200400001)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6160;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eC982kCEvyZNWhGGSyEd9gA9ngKOi/qBfwumSWnUIzLDOLi5Nu6ZcM5gDB4CbHq8BhXSd0QMKS68yXBHbaquKed4zTUAz3m46L8xcOxxTg0pbyi78y/hn13eMtt3pXfmAQvPbisF+ZRpGe1+srlyY1m3b3UpG9uCgCim5CAsPjvSJXb6Cg40qKP13g3g2Sg4FUrfZ/7QV4aMO6/kwJ5928xVJp4xCOGxJ5cueIxFSL03/7EnAECoK4Uh20Lf7h79+3HN4ayWSuYEY2Arivzkb0pNkvYEljXGPSxVdy/86b6KofW69Di0Rk7xYdjoWEF0PQwwPI1kaXsEZz/RkJQUWJ2mgUzoxgvyTfObqlAid26+zwf8qDasaa5Hmi1NE2Pq0RLZE8tpYPvZSSHt0w2vU4n/s6dXL8Yhbd2G3sQGMtiuYrX1EK+R2Ofx0sDtg3slhHICOXJIYNIi+X20paYzCZDD/+oig0aNPabPBZPKFrcnkA3An7FLCraJbYAiF9vfmd/T0Z22dz8yvE82oNhqEg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <TY1PR01MB1562E196AB1C582F186CC74B8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06fe249f-30b8-40b6-ea7d-08d784b449c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2019 18:50:16.1268
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PNZGcQSFcWYr/Ng8iSJ8b5z8gx8eW8dMhhhi0UPn6kkoGqEaawB5ZVf+wbCc6ZU6XprcZRKiNLNYeAd0TlsoFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6160
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+> -----Original Message-----
+> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> Sent: Thursday, December 19, 2019 7:30 PM
+> To: Madalin Bucur <madalin.bucur@nxp.com>
+> Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
+> f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
+> devicetree@vger.kernel.org; Madalin Bucur (OSS)
+> <madalin.bucur@oss.nxp.com>
+> Subject: Re: [PATCH 5/6] net: fsl/fman: add support for
+> PHY_INTERFACE_MODE_SFI
+>=20
+> On Thu, Dec 19, 2019 at 05:21:20PM +0200, Madalin Bucur wrote:
+> > Add support for the SFI PHY interface mode.
+> >
+> > Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+> > ---
+> >  drivers/net/ethernet/freescale/fman/fman_memac.c | 2 ++
+> >  drivers/net/ethernet/freescale/fman/mac.c        | 2 ++
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c
+> b/drivers/net/ethernet/freescale/fman/fman_memac.c
+> > index d0b12efadd6c..09fdec935bf2 100644
+> > --- a/drivers/net/ethernet/freescale/fman/fman_memac.c
+> > +++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
+> > @@ -440,6 +440,7 @@ static int init(struct memac_regs __iomem *regs,
+> struct memac_cfg *cfg,
+> >  	tmp =3D 0;
+> >  	switch (phy_if) {
+> >  	case PHY_INTERFACE_MODE_XFI:
+> > +	case PHY_INTERFACE_MODE_SFI:
+>=20
+> No difference between these two.
 
-On 12/19/2019 07:57 PM, Chris Brandt wrote:
+Until we get to some erratum implementation or other HW that may need it
+there's no difference. Then we'll add it and churn code wondering if it's
+really XFI only or also SFI. Just as I wonder if AQR do support 10GBase-KR
+backplane as a PHY-MAC interface...
 
->>> So at the moment, there is nothing yet for me to 'try' on the RZ/A series,
->> correct?
->>
->>    Why, I can send you a working version of the SPI driver, and even HF one
->> if you're
->> interested.
-> 
-> The point of this whole discussion is to determine if we should have 2 drivers
-> for the same Renesas HW IP.
-> 
-> There was a RPC-IF patch series that made it to v17....and is now dead.
-> 
-> You sent a new RFC series for a new method, but all it had was low level APIs,
-> no MTD framework, do it didn't really do anything.
+> >  	case PHY_INTERFACE_MODE_XGMII:
+> >  		tmp |=3D IF_MODE_10G;
+> >  		break;
+> > @@ -456,6 +457,7 @@ static int init(struct memac_regs __iomem *regs,
+> struct memac_cfg *cfg,
+> >  	/* TX_FIFO_SECTIONS */
+> >  	tmp =3D 0;
+> >  	if (phy_if =3D=3D PHY_INTERFACE_MODE_XFI ||
+> > +	    phy_if =3D=3D PHY_INTERFACE_MODE_SFI ||
+>=20
+> Again, no difference between these two.
+>=20
+> >  	    phy_if =3D=3D PHY_INTERFACE_MODE_XGMII) {
+> >  		if (slow_10g_if) {
+> >  			tmp |=3D (TX_FIFO_SECTIONS_TX_AVAIL_SLOW_10G |
+> > diff --git a/drivers/net/ethernet/freescale/fman/mac.c
+> b/drivers/net/ethernet/freescale/fman/mac.c
+> > index 2944188c19b3..5e6317742c38 100644
+> > --- a/drivers/net/ethernet/freescale/fman/mac.c
+> > +++ b/drivers/net/ethernet/freescale/fman/mac.c
+> > @@ -542,6 +542,7 @@ static const u16 phy2speed[] =3D {
+> >  	[PHY_INTERFACE_MODE_QSGMII]		=3D SPEED_1000,
+> >  	[PHY_INTERFACE_MODE_XGMII]		=3D SPEED_10000,
+> >  	[PHY_INTERFACE_MODE_XFI]		=3D SPEED_10000,
+> > +	[PHY_INTERFACE_MODE_SFI]		=3D SPEED_10000,
+>=20
+> Again, no difference between these two.
+>=20
+> >  };
+> >
+> >  static struct platform_device *dpaa_eth_add_device(int fman_id,
+> > @@ -800,6 +801,7 @@ static int mac_probe(struct platform_device
+> *_of_dev)
+> >
+> >  	/* The 10G interface only supports one mode */
+> >  	if (mac_dev->phy_if =3D=3D PHY_INTERFACE_MODE_XFI ||
+> > +	    mac_dev->phy_if =3D=3D PHY_INTERFACE_MODE_SFI ||
+>=20
+> Again, no difference between these two.
+>=20
+> I just don't see the point of perpetuating the XFI and SFI names for
+> something that is just plain 10GBASE-R.
 
-   Apparently you have missed the previous RFC iteration, the MFD/SPI drivers posted
-at end of May:
+If we do not let current maintainers properly describe their HW now,
+when it's fresh and in active development, if we ever decide to
+disambiguate later who will pick up the task of determining what 10G*
+it's actually meant there? I kind of went through this exercise for
+a similar change in u-boot (old platforms used XGMII instead of XFI/XAUI)
+and tracking down each of them, making sure they work is a pain (still not
+done testing all of them thus no patch sent yet).
 
-https://patchwork.kernel.org/patch/10969211/
-https://patchwork.kernel.org/patch/10969213/
-https://patchwork.kernel.org/patch/10969217/
-
-   There's not yet merged MTD patch you'd need too:
-
-http://patchwork.ozlabs.org/patch/1199645/
-
-   The MFD driver was shot down by Lee Jones who has advised placing the common
-code into drivers/memory/ instead... I don't want to re-post the SPI driver as
-I haven't yet addressed all of Mark Brown's comments...
-
-> If there was a complete patch set that I could try on the RZ/A SoCs and 
-> get a working SPI MTD device to show up, then I would drop my efforts of
-> getting my driver in and just add RZ/A support to the R-Car driver.
-
-   Please try these patches, there's a big chance they'll work. 
-
-[...]
-> Honestly, I'll be out of the office until January, so it's not like I'm 
-> going to do anything with it until then. But if there is a complete series
-> to try by then, I will see how it performs on RZ/A boards.
-
-   Hopefully I will have addressed Mark's feedback by then and post the new SPI
-driver... Have happy holidays! (Ours happen on 1/1 and last till 1/8 this year.)
-
-> Chris
-
-MBR, Sergei
+Regards,
+Madalin=20
