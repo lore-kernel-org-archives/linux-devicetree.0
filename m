@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962B5C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F277C32763
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D0624650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAE924682
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 16:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L6Y6F/bZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="npHKtHQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbfLSQbb (ORCPT
+        id S1726971AbfLSQbd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 11:31:31 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36215 "EHLO
+        Thu, 19 Dec 2019 11:31:33 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43190 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfLSQb3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 11:31:29 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so6637744wru.3
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 08:31:27 -0800 (PST)
+        with ESMTP id S1726982AbfLSQbc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 11:31:32 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so6592799wre.10
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 08:31:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dMO+Cx5tpHWBU9PvT9K3Ldxua2I75lUQvV4E3iN+Pd4=;
-        b=L6Y6F/bZ0X6GnA6kcBZgaXAVjxtjAyEeEzKHLOb7dyE7Xra2EWhN3E2FV1pD/3jeqF
-         Yl8MP7t7E6fc/B1SRXICTfrmmBAqXUHJRLw5pJcf29pPUWZ1hZGmH2wiA4Q4PGQA5yp0
-         drBOPo+Htx1MMDuIrvO0MavmC3p3Oar5PL9ngjx84tC3hJqd1xQdZ22JINufiVYFahyt
-         GQ4Ctzcx0fW8SfJ45uPErgBMYQESIqhJ9DHjaOzF4X5fsvpQM9FzqurIZlWcCEO3++B3
-         Y7uc8Bvn0GLBhxmFJ814rKwcuODaQ3avmBF9ttywapAxu57HzjwpSg6Vq2j/vEVr+wcg
-         pXvw==
+        bh=0nQT4ayYi2icUCghAPJFv/Sszvlp8khOsvgAay7NA80=;
+        b=npHKtHQyMJP1HB7cti1f6qmoeI+DJKFn7XvDJJvdFOvDZnGuyq626gmPPg1VW/g+vf
+         NqHOB4YW3LtpAFxkZLtWK59MIggQeBHMnf2FU4aoFn2biHVyVWj0iduHkMNtN+Cw2QKl
+         3GzgzVR/AU8hNb4bXoVdj3ptMWKCW30ACKJ3zUu58boNWddLRmDvOzJlIlY5xbZoskN5
+         NreU0QK4KXWGIqcGeZD3D1pGnvnWQRzTZfOi+0GHu41hGDI1yGc6L4u2Cpc68atX6ZYW
+         BASd0KfcX6CjN1z5HsyiO9BpOuElbJpjkF8aVQmcH6L1OGUKS7nE3VlxwSQerqKeYRZZ
+         jh5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dMO+Cx5tpHWBU9PvT9K3Ldxua2I75lUQvV4E3iN+Pd4=;
-        b=WpVNmekRSG0NvRaIVd1xgKgzqzCQ29Moxco6/FxLsinindNDc195Hci5QP2yyxXmWA
-         cwOGZp5hOPpZWj9Bdye329FAYv/qiQPllwqM5O4q4O/O399dGWu7nkze7BaOLZLX49QW
-         E0JNH7ePxXCsXULr06BIZsF4k1RCiryjpdA7v5P8meySp5YjXieS4Vtjl7bkmWoBGPEy
-         9aaQT0pL4VWGrPnBJAQqrVNpqmW7o6f79OhSsPAN096fXYFT2zWWZRSWDK7vZsJJGkXY
-         YK7Bn6DSsD3VEzXTEavIwANUYc/pYA/Mavfiw/8q2IzzMJDrLfBiizSbn9zIwjVsE9EF
-         ESMA==
-X-Gm-Message-State: APjAAAW+J3xKWnsmiYQcYyYX10sKAdwiVNBr4jR87qi3b64DMhNkmzg+
-        c5Vot5RinWi3K1qUWoaaHBemUw==
-X-Google-Smtp-Source: APXvYqyln7ft1HEYcBhtMdztDRUtjwcelgdooZlJCblVVFeLkALxpO+iJ6Q80B/Q1/dimC5vv0QgKA==
-X-Received: by 2002:adf:ce87:: with SMTP id r7mr10031904wrn.245.1576773086823;
-        Thu, 19 Dec 2019 08:31:26 -0800 (PST)
+        bh=0nQT4ayYi2icUCghAPJFv/Sszvlp8khOsvgAay7NA80=;
+        b=lAFNSlAi4GEDAwzTniKUJgf1nvwCFnjSPjEbJAWfp9DnaT8nqVnpbgwayceR81jn/l
+         /SwKlzw/LNMOZ4u+VXMEJ+wW26ENtX5BeApVv5RW95sXHKy5HhBcwnA4uIFH1v/9+bSf
+         ZNO+vrRhPsjWoqxcv1wlvQQHc8mmfGvPoZ3u/WPTZOfglR/KITfFf1Ft02sBPokCmGhP
+         mvbIqLHza4Z3n0oaCEdC3ZKYrfvdtQS9x+GQ6Q0gI80etJLD7r/mJcMtk0KqgIvtcKsC
+         KpVGNXO/NzKpsOmnNsk9RC0s6PMTfRPlamtwwNnimPbhLEjUOpW9rT1/EmSZCiqwGU3C
+         c2PA==
+X-Gm-Message-State: APjAAAW3v2HROY3EdS/APJNoPAa9b9pwCZDvqEoAwkzLv6QQ7fm7Hw64
+        bAivrSqFPeJLrwpHTh3rAQCaKA==
+X-Google-Smtp-Source: APXvYqySYIruAf+8UBV8yIOQEKLEyMW/IQr33V3GJnSu1IpDHvzkWr5tRTKgSPhwJDgoXMZbxqfv3Q==
+X-Received: by 2002:a5d:53d1:: with SMTP id a17mr10010531wrw.327.1576773090913;
+        Thu, 19 Dec 2019 08:31:30 -0800 (PST)
 Received: from localhost.localdomain (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
-        by smtp.gmail.com with ESMTPSA id u22sm7092068wru.30.2019.12.19.08.31.25
+        by smtp.gmail.com with ESMTPSA id u22sm7092068wru.30.2019.12.19.08.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 08:31:26 -0800 (PST)
+        Thu, 19 Dec 2019 08:31:30 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
@@ -65,9 +65,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         will@kernel.org, robin.murphy@arm.com, bhelgaas@google.com,
         eric.auger@redhat.com, jonathan.cameron@huawei.com,
         zhangfei.gao@linaro.org
-Subject: [PATCH v4 06/13] iommu/arm-smmu-v3: Add context descriptor tables allocators
-Date:   Thu, 19 Dec 2019 17:30:26 +0100
-Message-Id: <20191219163033.2608177-7-jean-philippe@linaro.org>
+Subject: [PATCH v4 09/13] iommu/arm-smmu-v3: Prepare for handling arm_smmu_write_ctx_desc() failure
+Date:   Thu, 19 Dec 2019 17:30:29 +0100
+Message-Id: <20191219163033.2608177-10-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191219163033.2608177-1-jean-philippe@linaro.org>
 References: <20191219163033.2608177-1-jean-philippe@linaro.org>
@@ -78,113 +78,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Support for SSID will require allocating context descriptor tables. Move
-the context descriptor allocation to separate functions.
+Second-level context descriptor tables will be allocated lazily in
+arm_smmu_write_ctx_desc(). Help with handling allocation failure by
+moving the CD write into arm_smmu_domain_finalise_s1().
 
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 57 ++++++++++++++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 11 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index b287e303b1d7..43d6a7ded6e4 100644
+index e147087198ef..b825a5639afc 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -568,6 +568,7 @@ struct arm_smmu_cd_table {
- struct arm_smmu_s1_cfg {
- 	struct arm_smmu_cd_table	table;
- 	struct arm_smmu_ctx_desc	cd;
-+	u8				s1cdmax;
- };
- 
- struct arm_smmu_s2_cfg {
-@@ -1455,6 +1456,31 @@ static int arm_smmu_cmdq_issue_sync(struct arm_smmu_device *smmu)
- }
- 
- /* Context descriptor manipulation functions */
-+static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
-+					struct arm_smmu_cd_table *table,
-+					size_t num_entries)
-+{
-+	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-+
-+	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
-+					 GFP_KERNEL);
-+	if (!table->ptr) {
-+		dev_warn(smmu->dev,
-+			 "failed to allocate context descriptor table\n");
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
-+static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
-+					struct arm_smmu_cd_table *table,
-+					size_t num_entries)
-+{
-+	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-+
-+	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
-+}
-+
- static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
- {
- 	u64 val = 0;
-@@ -1502,6 +1528,23 @@ static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
- 	cdptr[3] = cpu_to_le64(cfg->cd.mair);
- }
- 
-+static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
-+{
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
-+
-+	return arm_smmu_alloc_cd_leaf_table(smmu, &cfg->table,
-+					    1 << cfg->s1cdmax);
-+}
-+
-+static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
-+{
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
-+
-+	arm_smmu_free_cd_leaf_table(smmu, &cfg->table, 1 << cfg->s1cdmax);
-+}
-+
- /* Stream table manipulation functions */
- static void
- arm_smmu_write_strtab_l1_desc(__le64 *dst, struct arm_smmu_strtab_l1_desc *desc)
-@@ -2145,11 +2188,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
- 		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
- 
- 		if (cfg->table.ptr) {
--			dmam_free_coherent(smmu_domain->smmu->dev,
--					   CTXDESC_CD_DWORDS << 3,
--					   cfg->table.ptr,
--					   cfg->table.ptr_dma);
--
-+			arm_smmu_free_cd_tables(smmu_domain);
- 			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
- 		}
- 	} else {
-@@ -2173,13 +2212,9 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
- 	if (asid < 0)
- 		return asid;
- 
--	cfg->table.ptr = dmam_alloc_coherent(smmu->dev, CTXDESC_CD_DWORDS << 3,
--					     &cfg->table.ptr_dma, GFP_KERNEL);
--	if (!cfg->table.ptr) {
--		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
--		ret = -ENOMEM;
-+	ret = arm_smmu_alloc_cd_tables(smmu_domain);
-+	if (ret)
- 		goto out_free_asid;
--	}
- 
- 	cfg->cd.asid	= (u16)asid;
+@@ -2301,8 +2301,15 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
  	cfg->cd.ttbr	= pgtbl_cfg->arm_lpae_s1_cfg.ttbr[0];
+ 	cfg->cd.tcr	= pgtbl_cfg->arm_lpae_s1_cfg.tcr;
+ 	cfg->cd.mair	= pgtbl_cfg->arm_lpae_s1_cfg.mair;
++
++	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &cfg->cd);
++	if (ret)
++		goto out_free_tables;
++
+ 	return 0;
+ 
++out_free_tables:
++	arm_smmu_free_cd_tables(smmu_domain);
+ out_free_asid:
+ 	arm_smmu_bitmap_free(smmu->asid_map, asid);
+ 	return ret;
+@@ -2569,10 +2576,6 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 	if (smmu_domain->stage != ARM_SMMU_DOMAIN_BYPASS)
+ 		master->ats_enabled = arm_smmu_ats_supported(master);
+ 
+-	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1)
+-		arm_smmu_write_ctx_desc(smmu_domain, 0,
+-					&smmu_domain->s1_cfg.cd);
+-
+ 	arm_smmu_install_ste_for_dev(master);
+ 
+ 	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
 -- 
 2.24.1
 
