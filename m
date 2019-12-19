@@ -2,140 +2,94 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF89C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F87C2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E250124679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="cB0VKW/3"
+	by mail.kernel.org (Postfix) with ESMTP id BEB402467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 20:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576786955;
+	bh=2usS5KAg+sLWPldg9Hh1oSd8xcmAlqs8W/mIURXnf64=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DLExYot/CeyTD0IYzZxi2OAJLmitZiInQz7Td7mYetl/IxFo4lM3JwlAeC9+gRgVt
+	 5SR3KDhyPHUy330ocjzN4pS0kpSxPbS5olU/Fpmlo0HErRrsKA2GFBmRwuXXrg/cQT
+	 rPCT/8L2273v+DRXN8iYURJobnzQ5eg28Zcm2/nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbfLSUWP (ORCPT
+        id S1727553AbfLSUW1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 15:22:15 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:16079 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727380AbfLSUVr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:21:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576786905;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=TdmaWHXYZcW1R+/Rup5KpwyfgOBgzcXrSUBNzmQYpiw=;
-        b=cB0VKW/3YlaGJcw5TFpwBq5vbSQ++veq6MdY53dSvjY510MkGzpvXElPhWE1V1iuTq
-        NNnkkQYxriDvZ6FlCBvrnfR6s4PHJ4heq5ppg1QzsRnL1UIr4yVW3fTpl4SLCQfRGrN+
-        K1Y0Bhg1aNlNP3yvXyDjlKfTs3v3CXltlX4f2b1OZ88Q06YF1dh1RvuZc0RVnWKGc4yt
-        oILZt00GG2JLAxaFj5fsaeV7/HUoiH517sivRcicO+9/wC1z6bWxXYd+Yfw2Pj3ErXcD
-        iArLlxde2NoG+4qvo9whX/PKhcXZfHvlZXm5owQ1A5HxvnwsLJFtKbjcxxiPfyPVElD/
-        MAeA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXtszvsxM1"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.1.1 AUTH)
-        with ESMTPSA id f021e2vBJKLi3ZD
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 19 Dec 2019 21:21:44 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 6/9] ARM: dts: ux500: samsung-golden: Add touch screen
-Date:   Thu, 19 Dec 2019 21:20:49 +0100
-Message-Id: <20191219202052.19039-7-stephan@gerhold.net>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191219202052.19039-1-stephan@gerhold.net>
-References: <20191219202052.19039-1-stephan@gerhold.net>
+        Thu, 19 Dec 2019 15:22:27 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41483 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbfLSUW0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 15:22:26 -0500
+Received: by mail-ed1-f66.google.com with SMTP id c26so6139276eds.8;
+        Thu, 19 Dec 2019 12:22:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+XwXmMLYM0uNSnbJNWZYduJB3McxlK0rmyyXpOOOY+E=;
+        b=Q61p1QlHzlZXUxnnL3/GYWbDtQRd4v8Qz++Rh+adjdxI1kJGg/ID1V/rmWNMdgOctw
+         +AksTB8M/yI1I3kNIwkiepsWvbA9WK8PTjqharvualRUNDS/Q9dfQT06PYFvAH81mL4F
+         OmAF9/0wxyYEvWABJoN+yMkcTJvOjbNwZuMzH2ASmZnE59YL0pjX8V8sQ+fXJpw4DOdd
+         4jQVApDlNdE3243tZXvM9Lu4NPIyioeS9MUxB4ftESTgpbJT69Lf4tAOKtijvv8rO4/6
+         JpnbtKnnrRON2RRzsduvv9brlr26JJpQph+BHuy5/Q/0ZMDT62/ePJffmuE0Hu5EZzTp
+         KpEA==
+X-Gm-Message-State: APjAAAV/86KwEkcYWof+082ahooju/eslCxPLOz0+GJfJ9SkRpED5MI0
+        sSoOlgPhffUly9rA9H+Y6seQPfHw
+X-Google-Smtp-Source: APXvYqyvXs1b77JsdU/bIq/7bJEZPvD05zPHc+WyTqQxuAEMRrkLbVyqmxjhV8KF6k+gHok+ePJnvg==
+X-Received: by 2002:a17:907:20a8:: with SMTP id pw8mr11469298ejb.248.1576786944265;
+        Thu, 19 Dec 2019 12:22:24 -0800 (PST)
+Received: from kozik-lap ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id s15sm626909edc.22.2019.12.19.12.22.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 19 Dec 2019 12:22:23 -0800 (PST)
+Date:   Thu, 19 Dec 2019 21:22:20 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
+        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 9/9] arm64: dts: exynos: Replace deprecated property for
+ Exynos bus
+Message-ID: <20191219202220.GC21576@kozik-lap>
+References: <20191217055738.28445-1-cw00.choi@samsung.com>
+ <CGME20191217055107epcas1p44d46bdea7b326b86689f326742f5444a@epcas1p4.samsung.com>
+ <20191217055738.28445-10-cw00.choi@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191217055738.28445-10-cw00.choi@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-samsung-golden has an Atmel mXT224S touch controller connected to I2C.
-It is supported by the existing driver for atmel,maxtouch, so all we
-need to do to make it work is to define the necessary device tree nodes.
+On Tue, Dec 17, 2019 at 02:57:38PM +0900, Chanwoo Choi wrote:
+> Replace the property related to devfreq and devfreq-event device
+> to remove the deprecated property name.
+> - Replace 'devfreq' with 'exynos,parent-bus' property
+>   for getting the parent devfreq device of exynos-bus.
+> - Replace 'devfreq-events' with 'exynos,ppmu-device' property
+>   for getting the devfreq-event device to monitor bus utilization.
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  .../dts/exynos/exynos5433-tm2-common.dtsi     | 20 +++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 
-The atmel_mxt_ts driver does not support controlling regulators yet,
-so add regulator-always-on for now to turn on the necessary regulators.
+I'll pick it up the next cycle after driver get merged.
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- .../arm/boot/dts/ste-ux500-samsung-golden.dts | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-index 14a084e1846b..e75a425d177e 100644
---- a/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-+++ b/arch/arm/boot/dts/ste-ux500-samsung-golden.dts
-@@ -142,6 +142,26 @@ imu@68 {
- 			};
- 		};
- 
-+		i2c@80110000 {
-+			status = "okay";
-+
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&i2c3_c_2_default>;
-+			pinctrl-1 = <&i2c3_c_2_sleep>;
-+
-+			touchscreen@4a {
-+				compatible = "atmel,maxtouch";
-+				reg = <0x4a>;
-+
-+				/* GPIO218 (TSP_INT_1V8) */
-+				interrupt-parent = <&gpio6>;
-+				interrupts = <26 IRQ_TYPE_EDGE_FALLING>;
-+
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&tsp_default>;
-+			};
-+		};
-+
- 		prcmu@80157000 {
- 			ab8505 {
- 				ab8500_usb {
-@@ -161,6 +181,7 @@ ab8500_ldo_aux2 {
- 						regulator-name = "vreg_tsp_a3v3";
- 						regulator-min-microvolt = <3300000>;
- 						regulator-max-microvolt = <3300000>;
-+						regulator-always-on; /* FIXME */
- 					};
- 
- 					ab8500_ldo_aux3 {
-@@ -177,6 +198,7 @@ ab8500_ldo_aux5 {
- 						regulator-name = "vreg_tsp_1v8";
- 						regulator-min-microvolt = <1800000>;
- 						regulator-max-microvolt = <1800000>;
-+						regulator-always-on; /* FIXME */
- 					};
- 
- 					ab8500_ldo_aux6 {
-@@ -309,6 +331,15 @@ golden_cfg1 {
- 		};
- 	};
- 
-+	tsp {
-+		tsp_default: tsp_default {
-+			golden_cfg1 {
-+				pins = "GPIO218_AH11";	/* TSP_INT_1V8 */
-+				ste,config = <&gpio_in_nopull>;
-+			};
-+		};
-+	};
-+
- 	vibrator {
- 		vibrator_default: vibrator_default {
- 			golden_cfg1 {
--- 
-2.24.1
+Best regards,
+Krzysztof
 
