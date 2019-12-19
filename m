@@ -7,76 +7,81 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5956C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12904C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 09:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8378F24650
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 08:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0D224679
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 09:07:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="B///1u4m";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fMFlG8wx"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="A8TtDM/H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vnsH5DgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfLSIq3 (ORCPT
+        id S1726609AbfLSJHU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 03:46:29 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33305 "EHLO
+        Thu, 19 Dec 2019 04:07:20 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33345 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726652AbfLSIq3 (ORCPT
+        by vger.kernel.org with ESMTP id S1726599AbfLSJHT (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 03:46:29 -0500
+        Thu, 19 Dec 2019 04:07:19 -0500
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2D5104BD3;
-        Thu, 19 Dec 2019 03:46:27 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 19 Dec 2019 03:46:27 -0500
+        by mailnew.nyi.internal (Postfix) with ESMTP id CAB5F50AE;
+        Thu, 19 Dec 2019 04:07:17 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 19 Dec 2019 04:07:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=kwIeKSI5y8LRyccmLU4l+PItMC
-        5Ob0B+YfxBbkdxplM=; b=B///1u4mZgsSJV1c4Fsr1RK9D9cR2ZGXCnARMJDYsg
-        7QT9+K7UZo7vihHj65P4F9/wA4hY9zzIDGB5+fmje5dynN9EoesugbdEVeLUkDiJ
-        o/P2bD/3wdjuQE/L3rUs/2B9cOc0xNJ0GFOaYGM4tFBKDDGhB+kojLj45CAZgVFx
-        CU+WlIhK2jEllC3+R65WsocQV4iD38u138mU95LRmDb8lOSeLa9UYeYMKxzN9ZpL
-        1wHEElz5IW7ZNJhv2CcpjiwxrjOoKuC2iTOHD81EGhB4zgz7gJd5lw0Ln8wFDsVF
-        W2x+ctfTRcvPTu7bArNRdMwhj2/K2BqsVAw/jHSEDF4g==
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=SOOfmKLvxRcz+
+        8DUPnEW0vu/SfvtTEApShPAFQzhiUI=; b=A8TtDM/HFeGK33biCSEdsI2BMEFxb
+        2rdCei4PzuXUM6h6PP9IZGq4a2TYHR3SRIknVc36xNcKYML5FTFgWIO4s369EI0a
+        pf4NLtN87TDX0v4KSdtE3ZeE8OA9vLw6n0tzMWwJakFzwEmzof8UqIups3KcvTt5
+        Wk7z23y/so1Gss9iv19x1sVBFreVFill6dGZ0UbHqpkNCK5gy/KCoYdr/ghNHBmG
+        64KTc/Yl2mYgcPXjSm9RrWvzn39ik+PawiOxCHoyxy+1i3sU1YSAxcXcv8oOW1zH
+        52idMSEFWrulH0+nbQvVdFKEGSw/+EO0wxaN/nYDzYn4NSyiqzEqmftWw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=kwIeKSI5y8LRyccmL
-        U4l+PItMC5Ob0B+YfxBbkdxplM=; b=fMFlG8wxGxX+CGHfIcSriWyO0sYHu1GZ5
-        1340hE5bb02TVJo/nv/Z+HNQM/Eu5ENqRo2mLq6NUpZrcEOQoNJMyrgh7h67A2BQ
-        yQ/+DOcyOUPMyIvs6+Ed8zumD4+rIQTe6Rh1T6TNeCsn7ONfALo9l5vPVU2dW5eP
-        xAFU02zPrkFj5bbour888yrYmJoBqXTfqBUups/zA/jr7ppA033t2xHbbMf9yUqh
-        6xcsFTtZPTRjmY96AFUL5NyeDZQWzP6htiChS6zthklvxfpsCl55/tWB1rGaCtnj
-        2yVQZ1Pn7jtvt8eRTSS40+M1dLeQvS5dnJOVb5MWBSXagNxbL1TvQ==
-X-ME-Sender: <xms:4jj7XTI3wc1ib4If-8TTG79WzBjR4U9NB46ij0kbFgYdOkAZpNqbKg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddutddguddvvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enogevohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffo
-    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
-    himhgvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdr
-    ohhrghenucfkphepledtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomh
-    epmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:4jj7XerD6iiCsZG2r_57QaPz78VqJ8bOqy9IDx2tfojykXJQTLQkcQ>
-    <xmx:4jj7XRy9VWli1bPwjUlwLOq7UU5ENQF7EWGtuMxbOU9FZUKqQfyFfA>
-    <xmx:4jj7Xae26c5Wnesgn6ZHXtqknqMIaSKHRoQn6_ZsEZFUCbiUR2Qw9Q>
-    <xmx:4zj7XdfUdY1gFJlz3ftbJHtjUB6BZ0APXdcV9vLi4BOGi7jL0xWlOA>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=SOOfmKLvxRcz+8DUPnEW0vu/SfvtTEApShPAFQzhiUI=; b=vnsH5DgP
+        56uIOrRXSF8JcKUIf2k3z6QHt7fyx97RpPsa6NNQ9gakBaK6vA0+2QinysrrMZZi
+        X6Dw2HKiaqxMvmtDUKlY4nXkQzJDhmtgwnw/iJrkTWHFElLttE6CY/Z5v+c7gIai
+        6ZCQUEJEikRBKHDj6T/R9hZ7/0sEHJ+T8ep9Lbi3OS+aCVotIBhmWTqDk+ufH+9b
+        rY0L/0WKRPe0CAZCfwGs7/WAacdsjz4LZINcv8aqvfiIa8/HjCBhgX6DMOhARu+o
+        Dohv8NOzs8JnCcWHeIafxjT/FJUkhBk8dVASE9XFGHKvLDgs0F0Ya21OENXBlO4A
+        3DbOSWTeBG1IdQ==
+X-ME-Sender: <xms:xT37Xf0a54LdFmKACk07P-2xLHjlFjxjFyhCj2MLlzuRP72jeajAeg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdduudcutefuodetggdotefrodftvfcurf
+    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenogevoh
+    grshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffojghfggfg
+    sedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimh
+    gvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpeguvghvihgtvghtrhgvvgdrohhr
+    ghenucfkphepledtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmh
+    grgihimhgvsegtvghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:xT37XSttEBsK-N3jc7pkO3gaEkbxh9kLbWffVHGohBsjzp311scsAQ>
+    <xmx:xT37XYC0R_GQ1MOipiQmU4vieAm7ZumYsu7fpj0r6FB1DaPZWFwoGg>
+    <xmx:xT37Xe_oj-G_xWUDMFe7eZ2PCUdUtFDHMYo82LgVcoXK4Hctchflpw>
+    <xmx:xT37Xb6pNp59xLWGbkYkpzjKYmTaOwbpCZ6dNMwv2u5faDI8F0Ia-A>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 11D1380063;
-        Thu, 19 Dec 2019 03:46:25 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 0EFAC30609DC;
+        Thu, 19 Dec 2019 04:07:16 -0500 (EST)
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     tiny.windzz@gmail.com, vireshk@kernel.org, sboyd@kernel.org,
+To:     p.zabel@pengutronix.de, Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>, lee.jones@linaro.org,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH] dt-bindings: opp: Convert Allwinner H6 OPP to a schema
-Date:   Thu, 19 Dec 2019 09:46:23 +0100
-Message-Id: <20191219084623.944458-1-maxime@cerno.tech>
+Subject: [PATCH 2/3] dt-bindings: mfd: Convert Allwinner legacy PRCM bindings to schemas
+Date:   Thu, 19 Dec 2019 10:07:11 +0100
+Message-Id: <20191219090712.947490-2-maxime@cerno.tech>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191219090712.947490-1-maxime@cerno.tech>
+References: <20191219090712.947490-1-maxime@cerno.tech>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -84,328 +89,519 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Allwinner H6 SoCs use binning in order to provide binning to
-cpufreq which is supported in Linux, with a matching Device Tree binding.
+The Allwinner SoCs have a legacy set of bindings (and a drivers to
+support it in Linux) to support the PRCM unit found in most recent SoCs.
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+Now that we have the DT validation in place, let's split into separate file
+and convert the device tree bindings for those controllers to schemas, and
+mark them all as deprecated.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- .../allwinner,sun50i-h6-operating-points.yaml | 129 ++++++++++++++
- .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ------------------
- 2 files changed, 129 insertions(+), 167 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
- delete mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+ .../mfd/allwinner,sun6i-a31-prcm.yaml         | 219 ++++++++++++++++++
+ .../mfd/allwinner,sun8i-a23-prcm.yaml         | 200 ++++++++++++++++
+ .../devicetree/bindings/mfd/sun6i-prcm.txt    |  59 -----
+ 3 files changed, 419 insertions(+), 59 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
 
-diff --git a/Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml b/Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
+diff --git a/Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml b/Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml
 new file mode 100644
-index 000000000000..aef87a33a7c9
+index 000000000000..d131759ccaf3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
-@@ -0,0 +1,129 @@
++++ b/Documentation/devicetree/bindings/mfd/allwinner,sun6i-a31-prcm.yaml
+@@ -0,0 +1,219 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/opp/allwinner,sun50i-h6-operating-points.yaml#
++$id: http://devicetree.org/schemas/mfd/allwinner,sun6i-a31-prcm.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Allwinner H6 CPU OPP Device Tree Bindings
++title: Allwinner A31 PRCM Device Tree Bindings
 +
 +maintainers:
 +  - Chen-Yu Tsai <wens@csie.org>
 +  - Maxime Ripard <mripard@kernel.org>
 +
-+description: |
-+  For some SoCs, the CPU frequency subset and voltage value of each
-+  OPP varies based on the silicon variant in use. Allwinner Process
-+  Voltage Scaling Tables defines the voltage and frequency value based
-+  on the speedbin blown in the efuse combination. The
-+  sun50i-cpufreq-nvmem driver reads the efuse value from the SoC to
-+  provide the OPP framework with required information.
++deprecated: true
 +
 +properties:
 +  compatible:
-+    const: allwinner,sun50i-h6-operating-points
++    const: allwinner,sun6i-a31-prcm
 +
-+  nvmem-cells:
-+    description: |
-+      A phandle pointing to a nvmem-cells node representing the efuse
-+      registers that has information about the speedbin that is used
-+      to select the right frequency/voltage value pair. Please refer
-+      the for nvmem-cells bindings
-+      Documentation/devicetree/bindings/nvmem/nvmem.txt and also
-+      examples below.
-+
-+required:
-+  - compatible
-+  - nvmem-cells
++  reg:
++    maxItems: 1
 +
 +patternProperties:
-+  "opp-[0-9]+":
++  "^.*_(clk|rst)$":
 +    type: object
 +
 +    properties:
-+      opp-hz: true
++      compatible:
++        enum:
++          - allwinner,sun4i-a10-mod0-clk
++          - allwinner,sun6i-a31-apb0-clk
++          - allwinner,sun6i-a31-apb0-gates-clk
++          - allwinner,sun6i-a31-ar100-clk
++          - allwinner,sun6i-a31-clock-reset
++          - fixed-factor-clock
 +
-+    patternProperties:
-+      "opp-microvolt-.*": true
++    allOf:
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-apb0-clk
 +
-+    required:
-+      - opp-hz
-+      - opp-microvolt-speed0
-+      - opp-microvolt-speed1
-+      - opp-microvolt-speed2
++        then:
++          properties:
++            "#clock-cells":
++              const: 0
 +
-+    unevaluatedProperties: false
++            # Already checked in the main schema
++            compatible: true
 +
-+unevaluatedProperties: false
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              maxItems: 1
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-apb0-gates-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 1
++              description: >
++                This additional argument passed to that clock is the
++                offset of the bit controlling this particular gate in
++                the register.
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              minItems: 1
++              maxItems: 32
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-ar100-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 0
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 4
++              description: >
++                The parent order must match the hardware programming
++                order.
++
++            clock-output-names:
++              maxItems: 1
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-clock-reset
++
++        then:
++          properties:
++            "#reset-cells":
++              const: 1
++
++            # Already checked in the main schema
++            compatible: true
++
++            phandle: true
++
++          required:
++            - "#reset-cells"
++            - compatible
++
++          additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
 +
 +examples:
 +  - |
-+    cpu_opp_table: opp-table {
-+        compatible = "allwinner,sun50i-h6-operating-points";
-+        nvmem-cells = <&speedbin_efuse>;
-+        opp-shared;
++    #include <dt-bindings/clock/sun6i-a31-ccu.h>
 +
-+        opp-480000000 {
-+            clock-latency-ns = <244144>; /* 8 32k periods */
-+            opp-hz = /bits/ 64 <480000000>;
++    prcm@1f01400 {
++        compatible = "allwinner,sun6i-a31-prcm";
++        reg = <0x01f01400 0x200>;
 +
-+            opp-microvolt-speed0 = <880000>;
-+            opp-microvolt-speed1 = <820000>;
-+            opp-microvolt-speed2 = <800000>;
++        ar100: ar100_clk {
++            compatible = "allwinner,sun6i-a31-ar100-clk";
++            #clock-cells = <0>;
++            clocks = <&rtc 0>, <&osc24M>,
++                     <&ccu CLK_PLL_PERIPH>,
++                     <&ccu CLK_PLL_PERIPH>;
++            clock-output-names = "ar100";
 +        };
 +
-+        opp-720000000 {
-+            clock-latency-ns = <244144>; /* 8 32k periods */
-+            opp-hz = /bits/ 64 <720000000>;
-+
-+            opp-microvolt-speed0 = <880000>;
-+            opp-microvolt-speed1 = <820000>;
-+            opp-microvolt-speed2 = <800000>;
++        ahb0: ahb0_clk {
++            compatible = "fixed-factor-clock";
++            #clock-cells = <0>;
++            clock-div = <1>;
++            clock-mult = <1>;
++            clocks = <&ar100>;
++            clock-output-names = "ahb0";
 +        };
 +
-+        opp-816000000 {
-+            clock-latency-ns = <244144>; /* 8 32k periods */
-+            opp-hz = /bits/ 64 <816000000>;
-+
-+            opp-microvolt-speed0 = <880000>;
-+            opp-microvolt-speed1 = <820000>;
-+            opp-microvolt-speed2 = <800000>;
++        apb0: apb0_clk {
++            compatible = "allwinner,sun6i-a31-apb0-clk";
++            #clock-cells = <0>;
++            clocks = <&ahb0>;
++            clock-output-names = "apb0";
 +        };
 +
-+        opp-888000000 {
-+            clock-latency-ns = <244144>; /* 8 32k periods */
-+            opp-hz = /bits/ 64 <888000000>;
-+
-+            opp-microvolt-speed0 = <940000>;
-+            opp-microvolt-speed1 = <820000>;
-+            opp-microvolt-speed2 = <800000>;
++        apb0_gates: apb0_gates_clk {
++            compatible = "allwinner,sun6i-a31-apb0-gates-clk";
++            #clock-cells = <1>;
++            clocks = <&apb0>;
++            clock-output-names = "apb0_pio", "apb0_ir",
++                                 "apb0_timer", "apb0_p2wi",
++                                 "apb0_uart", "apb0_1wire",
++                                 "apb0_i2c";
 +        };
 +
-+        opp-1080000000 {
-+            clock-latency-ns = <244144>; /* 8 32k periods */
-+            opp-hz = /bits/ 64 <1080000000>;
-+
-+            opp-microvolt-speed0 = <1060000>;
-+            opp-microvolt-speed1 = <880000>;
-+            opp-microvolt-speed2 = <840000>;
++        ir_clk: ir_clk {
++            #clock-cells = <0>;
++            compatible = "allwinner,sun4i-a10-mod0-clk";
++            clocks = <&rtc 0>, <&osc24M>;
++            clock-output-names = "ir";
 +        };
 +
-+        opp-1320000000 {
-+            clock-latency-ns = <244144>; /* 8 32k periods */
-+            opp-hz = /bits/ 64 <1320000000>;
-+
-+            opp-microvolt-speed0 = <1160000>;
-+            opp-microvolt-speed1 = <940000>;
-+            opp-microvolt-speed2 = <900000>;
-+        };
-+
-+        opp-1488000000 {
-+            clock-latency-ns = <244144>; /* 8 32k periods */
-+            opp-hz = /bits/ 64 <1488000000>;
-+
-+            opp-microvolt-speed0 = <1160000>;
-+            opp-microvolt-speed1 = <1000000>;
-+            opp-microvolt-speed2 = <960000>;
++        apb0_rst: apb0_rst {
++            compatible = "allwinner,sun6i-a31-clock-reset";
++            #reset-cells = <1>;
 +        };
 +    };
 +
 +...
-diff --git a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+diff --git a/Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml b/Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml
+new file mode 100644
+index 000000000000..aa5e683b236c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/allwinner,sun8i-a23-prcm.yaml
+@@ -0,0 +1,200 @@
++# SPDX-License-Identifier: GPL-2.0+
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/allwinner,sun8i-a23-prcm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A23 PRCM Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <mripard@kernel.org>
++
++deprecated: true
++
++properties:
++  compatible:
++    const: allwinner,sun8i-a23-prcm
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  "^.*(clk|rst|codec).*$":
++    type: object
++
++    properties:
++      compatible:
++        enum:
++          - fixed-factor-clock
++          - allwinner,sun8i-a23-apb0-clk
++          - allwinner,sun8i-a23-apb0-gates-clk
++          - allwinner,sun6i-a31-clock-reset
++          - allwinner,sun8i-a23-codec-analog
++
++    required:
++      - compatible
++
++    allOf:
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun8i-a23-apb0-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 0
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              maxItems: 1
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun8i-a23-apb0-gates-clk
++
++        then:
++          properties:
++            "#clock-cells":
++              const: 1
++              description: >
++                This additional argument passed to that clock is the
++                offset of the bit controlling this particular gate in
++                the register.
++
++            # Already checked in the main schema
++            compatible: true
++
++            clocks:
++              maxItems: 1
++
++            clock-output-names:
++              minItems: 1
++              maxItems: 32
++
++            phandle: true
++
++          required:
++            - "#clock-cells"
++            - compatible
++            - clocks
++            - clock-output-names
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun6i-a31-clock-reset
++
++        then:
++          properties:
++            "#reset-cells":
++              const: 1
++
++            # Already checked in the main schema
++            compatible: true
++
++            phandle: true
++
++          required:
++            - "#reset-cells"
++            - compatible
++
++          additionalProperties: false
++
++      - if:
++          properties:
++            compatible:
++              contains:
++                const: allwinner,sun8i-a23-codec-analog
++
++        then:
++          properties:
++            # Already checked in the main schema
++            compatible: true
++
++            phandle: true
++
++          required:
++            - compatible
++
++          additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    prcm@1f01400 {
++        compatible = "allwinner,sun8i-a23-prcm";
++        reg = <0x01f01400 0x200>;
++
++        ar100: ar100_clk {
++            compatible = "fixed-factor-clock";
++            #clock-cells = <0>;
++            clock-div = <1>;
++            clock-mult = <1>;
++            clocks = <&osc24M>;
++            clock-output-names = "ar100";
++        };
++
++        ahb0: ahb0_clk {
++            compatible = "fixed-factor-clock";
++            #clock-cells = <0>;
++            clock-div = <1>;
++            clock-mult = <1>;
++            clocks = <&ar100>;
++            clock-output-names = "ahb0";
++        };
++
++        apb0: apb0_clk {
++            compatible = "allwinner,sun8i-a23-apb0-clk";
++            #clock-cells = <0>;
++            clocks = <&ahb0>;
++            clock-output-names = "apb0";
++        };
++
++        apb0_gates: apb0_gates_clk {
++            compatible = "allwinner,sun8i-a23-apb0-gates-clk";
++            #clock-cells = <1>;
++            clocks = <&apb0>;
++            clock-output-names = "apb0_pio", "apb0_timer",
++                                 "apb0_rsb", "apb0_uart",
++                                 "apb0_i2c";
++        };
++
++        apb0_rst: apb0_rst {
++            compatible = "allwinner,sun6i-a31-clock-reset";
++            #reset-cells = <1>;
++        };
++
++        codec_analog: codec-analog {
++            compatible = "allwinner,sun8i-a23-codec-analog";
++        };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
 deleted file mode 100644
-index 7deae57a587b..000000000000
---- a/Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+index daa091c2e67b..000000000000
+--- a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
 +++ /dev/null
-@@ -1,167 +0,0 @@
--Allwinner Technologies, Inc. NVMEM CPUFreq and OPP bindings
--===================================
+@@ -1,59 +0,0 @@
+-* Allwinner PRCM (Power/Reset/Clock Management) Multi-Functional Device
 -
--For some SoCs, the CPU frequency subset and voltage value of each OPP
--varies based on the silicon variant in use. Allwinner Process Voltage
--Scaling Tables defines the voltage and frequency value based on the
--speedbin blown in the efuse combination. The sun50i-cpufreq-nvmem driver
--reads the efuse value from the SoC to provide the OPP framework with
--required information.
+-PRCM is an MFD device exposing several Power Management related devices
+-(like clks and reset controllers).
 -
 -Required properties:
----------------------
--In 'cpus' nodes:
--- operating-points-v2: Phandle to the operating-points-v2 table to use.
+- - compatible: "allwinner,sun6i-a31-prcm" or "allwinner,sun8i-a23-prcm"
+- - reg: The PRCM registers range
 -
--In 'operating-points-v2' table:
--- compatible: Should be
--	- 'allwinner,sun50i-h6-operating-points'.
--- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
--		efuse registers that has information about the speedbin
--		that is used to select the right frequency/voltage value
--		pair. Please refer the for nvmem-cells bindings
--		Documentation/devicetree/bindings/nvmem/nvmem.txt and
--		also examples below.
+-The prcm node may contain several subdevices definitions:
+- - see Documentation/devicetree/bindings/clock/sunxi.txt for clock devices
+- - see Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt for reset
+-   controller devices
 -
--In every OPP node:
--- opp-microvolt-<name>: Voltage in micro Volts.
--			At runtime, the platform can pick a <name> and
--			matching opp-microvolt-<name> property.
--			[See: opp.txt]
--			HW:		<name>:
--			sun50i-h6	speed0 speed1 speed2
 -
--Example 1:
-----------
+-Example:
 -
--	cpus {
--		#address-cells = <1>;
--		#size-cells = <0>;
+-	prcm: prcm@1f01400 {
+-		compatible = "allwinner,sun6i-a31-prcm";
+-		reg = <0x01f01400 0x200>;
 -
--		cpu0: cpu@0 {
--			compatible = "arm,cortex-a53";
--			device_type = "cpu";
--			reg = <0>;
--			enable-method = "psci";
--			clocks = <&ccu CLK_CPUX>;
--			clock-latency-ns = <244144>; /* 8 32k periods */
--			operating-points-v2 = <&cpu_opp_table>;
--			#cooling-cells = <2>;
+-		/* Put subdevices here */
+-		ar100: ar100_clk {
+-			compatible = "allwinner,sun6i-a31-ar100-clk";
+-			#clock-cells = <0>;
+-			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
 -		};
 -
--		cpu1: cpu@1 {
--			compatible = "arm,cortex-a53";
--			device_type = "cpu";
--			reg = <1>;
--			enable-method = "psci";
--			clocks = <&ccu CLK_CPUX>;
--			clock-latency-ns = <244144>; /* 8 32k periods */
--			operating-points-v2 = <&cpu_opp_table>;
--			#cooling-cells = <2>;
+-		ahb0: ahb0_clk {
+-			compatible = "fixed-factor-clock";
+-			#clock-cells = <0>;
+-			clock-div = <1>;
+-			clock-mult = <1>;
+-			clocks = <&ar100_div>;
+-			clock-output-names = "ahb0";
 -		};
 -
--		cpu2: cpu@2 {
--			compatible = "arm,cortex-a53";
--			device_type = "cpu";
--			reg = <2>;
--			enable-method = "psci";
--			clocks = <&ccu CLK_CPUX>;
--			clock-latency-ns = <244144>; /* 8 32k periods */
--			operating-points-v2 = <&cpu_opp_table>;
--			#cooling-cells = <2>;
+-		apb0: apb0_clk {
+-			compatible = "allwinner,sun6i-a31-apb0-clk";
+-			#clock-cells = <0>;
+-			clocks = <&ahb0>;
+-			clock-output-names = "apb0";
 -		};
 -
--		cpu3: cpu@3 {
--			compatible = "arm,cortex-a53";
--			device_type = "cpu";
--			reg = <3>;
--			enable-method = "psci";
--			clocks = <&ccu CLK_CPUX>;
--			clock-latency-ns = <244144>; /* 8 32k periods */
--			operating-points-v2 = <&cpu_opp_table>;
--			#cooling-cells = <2>;
+-		apb0_gates: apb0_gates_clk {
+-			compatible = "allwinner,sun6i-a31-apb0-gates-clk";
+-			#clock-cells = <1>;
+-			clocks = <&apb0>;
+-			clock-output-names = "apb0_pio", "apb0_ir",
+-					"apb0_timer01", "apb0_p2wi",
+-					"apb0_uart", "apb0_1wire",
+-					"apb0_i2c";
 -		};
--        };
 -
--        cpu_opp_table: opp_table {
--                compatible = "allwinner,sun50i-h6-operating-points";
--                nvmem-cells = <&speedbin_efuse>;
--                opp-shared;
--
--                opp@480000000 {
--                        clock-latency-ns = <244144>; /* 8 32k periods */
--                        opp-hz = /bits/ 64 <480000000>;
--
--                        opp-microvolt-speed0 = <880000>;
--                        opp-microvolt-speed1 = <820000>;
--                        opp-microvolt-speed2 = <800000>;
--                };
--
--                opp@720000000 {
--                        clock-latency-ns = <244144>; /* 8 32k periods */
--                        opp-hz = /bits/ 64 <720000000>;
--
--                        opp-microvolt-speed0 = <880000>;
--                        opp-microvolt-speed1 = <820000>;
--                        opp-microvolt-speed2 = <800000>;
--                };
--
--                opp@816000000 {
--                        clock-latency-ns = <244144>; /* 8 32k periods */
--                        opp-hz = /bits/ 64 <816000000>;
--
--                        opp-microvolt-speed0 = <880000>;
--                        opp-microvolt-speed1 = <820000>;
--                        opp-microvolt-speed2 = <800000>;
--                };
--
--                opp@888000000 {
--                        clock-latency-ns = <244144>; /* 8 32k periods */
--                        opp-hz = /bits/ 64 <888000000>;
--
--                        opp-microvolt-speed0 = <940000>;
--                        opp-microvolt-speed1 = <820000>;
--                        opp-microvolt-speed2 = <800000>;
--                };
--
--                opp@1080000000 {
--                        clock-latency-ns = <244144>; /* 8 32k periods */
--                        opp-hz = /bits/ 64 <1080000000>;
--
--                        opp-microvolt-speed0 = <1060000>;
--                        opp-microvolt-speed1 = <880000>;
--                        opp-microvolt-speed2 = <840000>;
--                };
--
--                opp@1320000000 {
--                        clock-latency-ns = <244144>; /* 8 32k periods */
--                        opp-hz = /bits/ 64 <1320000000>;
--
--                        opp-microvolt-speed0 = <1160000>;
--                        opp-microvolt-speed1 = <940000>;
--                        opp-microvolt-speed2 = <900000>;
--                };
--
--                opp@1488000000 {
--                        clock-latency-ns = <244144>; /* 8 32k periods */
--                        opp-hz = /bits/ 64 <1488000000>;
--
--                        opp-microvolt-speed0 = <1160000>;
--                        opp-microvolt-speed1 = <1000000>;
--                        opp-microvolt-speed2 = <960000>;
--                };
--        };
--....
--soc {
--....
--	sid: sid@3006000 {
--		compatible = "allwinner,sun50i-h6-sid";
--		reg = <0x03006000 0x400>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		....
--		speedbin_efuse: speed@1c {
--			reg = <0x1c 4>;
+-		apb0_rst: apb0_rst {
+-			compatible = "allwinner,sun6i-a31-clock-reset";
+-			#reset-cells = <1>;
 -		};
--        };
--};
+-	};
 -- 
 2.23.0
 
