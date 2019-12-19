@@ -2,92 +2,148 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4411C43603
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E996C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F15222C2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0534B227BF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 12:05:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BUj3BqTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfLSMDs (ORCPT
+        id S1726777AbfLSMFX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 07:03:48 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:55627 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSMDs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 07:03:48 -0500
-Received: from mail-qv1-f53.google.com ([209.85.219.53]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MXH3Y-1iBNa345AU-00Yfyv; Thu, 19 Dec 2019 13:03:46 +0100
-Received: by mail-qv1-f53.google.com with SMTP id m14so2113644qvl.3;
-        Thu, 19 Dec 2019 04:03:45 -0800 (PST)
-X-Gm-Message-State: APjAAAXMlQFMB2P/264RYR8qG8bHAqtVvXZiWmueKgL7wxk/lTdZe/Nk
-        lOzae+eApQqXFmaZG3jgQSCd8S+cee5xbPRzixk=
-X-Google-Smtp-Source: APXvYqyRYAthWWOFbK4JwdbfUGnK3IkCerPrE6//l+bsXhqevvRLK6TVQiG7yBNWDpk0m44tuJY3intXaCEenSLn4+0=
-X-Received: by 2002:a0c:d788:: with SMTP id z8mr1183000qvi.211.1576757024622;
- Thu, 19 Dec 2019 04:03:44 -0800 (PST)
+        Thu, 19 Dec 2019 07:05:23 -0500
+Received: from mout.gmx.net ([212.227.17.20]:47773 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726744AbfLSMFX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 19 Dec 2019 07:05:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1576757117;
+        bh=oHbd8+naRUDak1t7HyPoUb8otyLjLJCOQAcfK+Mtclw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=BUj3BqTBMoOpb5xvOJVATNemxDnFJpV9ikmWOi/eIwg5ozA/WbgDfSTVEqE1z2L6N
+         lj4Bhgi546G3avdCloexk27s3O+Qi2s6Vy+iqzDwTO7XxZ9gKB7KCb4U2v5fMnuL0/
+         aa78MZPQJWt1Fc6hEf8WayNG2Xq5sKm9SoE3Hz2U=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.76.99.135] ([185.76.99.135]) by web-mail.gmx.net
+ (3c-app-gmx-bap68.server.lan [172.19.172.68]) (via HTTP); Thu, 19 Dec 2019
+ 13:05:17 +0100
 MIME-Version: 1.0
-References: <20191209092147.22901-1-kishon@ti.com> <20191209092147.22901-6-kishon@ti.com>
- <20191216144932.GY24359@e119886-lin.cambridge.arm.com> <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
-In-Reply-To: <d1ee4579-a3da-6a73-3516-a6d264f80995@ti.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 19 Dec 2019 13:03:28 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
-Message-ID: <CAK8P3a06XLSa-FHNGsN=b10JrddjbOKAvfU=iXdMa+0L43m5fA@mail.gmail.com>
-Subject: Re: [PATCH 05/13] PCI: cadence: Add read and write accessors to
- perform only 32-bit accesses
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:r6T3/CcYpNS86A2Hvx7bMZm1KM8FiNbjscHFDmZ+OK596/2FHQw
- 14vK4BjTgsPQWg4SSBHNWwqS6TU86YPVztPL/xXH5371kxHFXCsOvIde4HG5UNt1u8wGx55
- AWkOYni8+6x1/5B6p+HXnwF3lJ9Q0z5E62HCsdQbWJgy7ex2BMVj4+VbB231e4izNmOxWfJ
- 0wGPd+fGDcyCzLxj0dAUA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XyO0F0+TXjA=:r/8VdwCanuBYUQ4DTNJuie
- QffNdRqHrA0PKHo66OByfUYaRxiUtIsPRrHvHxTt1zL5lT8EoXHNMPX2q+M8d9+lHMpd1aebu
- Gp/ebIp1FCuP/ZiTLo5vkO8coqiWo6Q9O6dVZhwx0agYKLAjnVdKgaJLpPV2l5YB1jJIi4ihQ
- t2QuYf8cAMoLsLQYJbniTt6Z19W5dGHv3BY3WR76XSOOtdvLKqPn0QLUVSj0zg/UMasDZHG7H
- kW1NCbJmxsUpak2z2DSRSJEGIlXHpCDvxbNTUjdFmjdMYClFdGSWo0kYQM903zK72v4JM5+nI
- 0lXxrbubQPRvxq2PQKoOWKD9nQGp4l6CG2QKsh2LQl3Qt3ymNIbPsLNPznGX3b/GNhUWt6tV6
- ijGGsDUWuVKFxgoKuAdjizL2ncUp4pyW1OJwsrLkRB3aeZ6K5ILBlBpOVtMf3yOau4ZeNdUQN
- 2ah/h3Zd02t85RB5YOuNQQRZPpMhPJaHWuRVdJWeqekgFmRqHH3DocCIlsP2cB0mnaf0nge0U
- Yt/PKaBs73aspwFTixChOQYD/y+RrY2IBtUJxWm3O6EAV0Tmu3lSsNUc0k1PKvp3+073euJAc
- Gna6Ai5KQoQpszqJIQKDSujU+4sIsk7SJkwAJ9eX4tKVwyXABq9NNxKiK/LMs4zbYewnrA/C7
- x06Jrh2YnaZ4urjdevC9gRfdxkhj5HNKgatjJIG49k9kG9VGsfRaz2Vbgv92VEy5mA08P1RJB
- 5YCK/X8cl+tTLVq8kAtzWiXT+OhcTwjeer2YmBM7fapkJhpyvTr0xr0h3yPZHxDEqHXlyXB2R
- TZ6ZmjQOy1aA+uJZkPRzqjjwTdVro8AvcUjbNjRlTZSnOpR78z8Pl/mpb5gQkGLlW+VxQ6JCZ
- QbqpeebYENhYnrghRqrQ==
+Message-ID: <trinity-76f78a91-fc1f-479c-bd38-a7b989b28234-1576757117258@3c-app-gmx-bap68>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Rob Herring" <robh+dt@kernel.org>
+Cc:     "Masahiro Yamada" <masahiroy@kernel.org>,
+        "Linux Kbuild mailing list" <linux-kbuild@vger.kernel.org>,
+        "Michal Marek" <michal.lkml@markovi.net>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Frank Rowand" <frowand.list@gmail.com>,
+        DTML <devicetree@vger.kernel.org>
+Subject: Aw: Re: [PATCH] kbuild: Add DTC_CPP_FLAGS
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 19 Dec 2019 13:05:17 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
+References: <20191218114625.28438-1-frank-w@public-files.de>
+ <CAK7LNARWYE4-4Qp-YfTrrt1YCZ68b28FDoE45cDJkZTqUyXNUw@mail.gmail.com>
+ <CAL_Jsq+we-0c25Hn+eGDTsyTDwKEvs9LWV9QtLX1+8V3DmtFtg@mail.gmail.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:DinXypny3FYqi5CzziIi3ovA308cTpeTvs+7Oy2eWnoyOsphl0VSMhahYhaMGtihK1fXV
+ vpN/wCa5IDmiyqUhmKUQQNDZ1vWBbirdvM0YPz5A1vG40flYbB4dFXBvRtFDbY7xcSdWEPl9wUVP
+ SVq/Sk7qK+aHohKkYAYVtvJ1c1FblmjShV+5u/z5LFCY1N3xM7THpUCzExldJreEIWAetivgrst4
+ twq6rizclVTQyWi5z2hQLR/y/euTJfVENSrqX8eBVuxL7ZbOdf5teOCQ3kuB/fyUVV1IBy7vKRvU
+ 4U=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mDqwi3hrEVw=:1T4JUV+00BktsWI/C2ulmh
+ ZsMYnSjqf/cLm7gKHivmgzw3MUl33Qz8WAHPJgMq7luSL25eShs2KWVmPkGIOP1+3+3g5M1QF
+ 0RRz3JNze9TJdOmEOlJSJpphwXRrUjrgAAyGp5So0sVZ3i2qRIJ72kwrWQspOWg71jsJ0Swvv
+ k+EEoayHcf4mTCRBtkw56ZfBndtvxw4uznk4pVn4G+ET9DZHOsvJEQIoOTJ7lkODRfifiW1kp
+ Xk96mPO/G3TBp2boZBYJjJxQ8Mjkb7qQwrjMfUD+ogvTPugMutXO0uJ5iascIeTBmaVwX+477
+ +hrqL8MnzkNM1nE1b9rE78TJpsVmfZJXdYB9XQEwyX1rn0Oa/qT4+ctx7T5Nc4yzXxcTKXDwx
+ fmEtTi4LTrvroKdlT94qhgxPkTvavtkZmSbf9hlEp6FZi0jw2iPq2oBjAgJUP84HTZaQ+JjP2
+ NdQGH1vGlKtuUSncxNAGo+ozteS02X8QmR/073aOl16puqLT+JTqDeiBB9qvdbjfMFv+n3dNS
+ XCo4bswfiN3edBY/zUDSNPGRKfl2Z5rRum5wz1r336hUCHaMCYnXuL257DAC1VpPeiXBBJgWV
+ 7n4CgiR9pscLdWHu5yvYAZGzWnAV1FG48NMnU3uuRSX0r0hg/3Uo287r6RpZE5NpOfsD3ZQpS
+ 9eWitBN15Ai7KKI3+3wKaO7HF5KR/n6g7QKFhK5f5y5+8i+7OETtS/sPnIJosEZe6KMg=
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:54 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
-> Hi Andrew,
->
-> On 16/12/19 8:19 pm, Andrew Murray wrote:
-> > On Mon, Dec 09, 2019 at 02:51:39PM +0530, Kishon Vijay Abraham I wrote:
-> >> Certain platforms like TI's J721E allow only 32-bit register accesses.
-> >
-> > When I first read this I thought you meant only 32-bit accesses are allowed
-> > and not other sizes (such as 64-bit). However the limitation you address
-> > here is that the J721E allows only 32-bit *aligned* register accesses.
->
-> It's both, it allows only 32-bit aligned accesses and the size should be
-> only 32 bits. That's why I always use "readl" in the APIs below.
+Hi Rob,
 
-In that case, can't you use the pci_generic_config_read32/write32
-functions with a cadence specific .map_bus() function?
+so the way you prefer is this one (use new file for additions and includin=
+g the board dts):
 
-       Arnd
+arch/arm64/boot/dts/mediatek/mt7622-bpi-r64-mt7531.dts (example for mt7531=
+-phy)
+
+/*
+ * Copyright (c) 2018 MediaTek Inc.
+ * Author:
+ *
+ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ */
+
+/dts-v1/;
+
+#include "mt7622-bananapi-bpi-r64.dts"
+
+/ {
+        gsw: gsw@0 {
+                compatible =3D "mediatek,mt753x";
+                mediatek,ethsys =3D <&ethsys>;
+                #address-cells =3D <1>;
+                #size-cells =3D <0>;
+        };
+};
+
+&gsw {
+        mediatek,mdio =3D <&mdio>;
+        mediatek,portmap =3D "wllll";
+        mediatek,mdio_master_pinmux =3D <0>;
+        reset-gpios =3D <&pio 54 0>;
+        interrupt-parent =3D <&pio>;
+        interrupts =3D <53 IRQ_TYPE_LEVEL_HIGH>;
+        status =3D "okay";
+
+        port5: port@5 {
+                compatible =3D "mediatek,mt753x-port";
+                reg =3D <5>;
+                phy-mode =3D "rgmii";
+                fixed-link {
+                        speed =3D <1000>;
+                        full-duplex;
+                };
+        };
+
+        port6: port@6 {
+                compatible =3D "mediatek,mt753x-port";
+                reg =3D <6>;
+                phy-mode =3D "2500base-x";
+                fixed-link {
+                        speed =3D <2500>;
+                        full-duplex;
+                };
+        };
+};
+
+at least it compiles and after decompile the new nodes are visible...
+
+is there any way to drop nodes (in case dsa-driver gets merged i don't nee=
+d it in the other 2)? i can disable them, but they will be present.
+
+regards Frank
+
+
+> Gesendet: Mittwoch, 18. Dezember 2019 um 14:51 Uhr
+> Von: "Rob Herring" <robh+dt@kernel.org>
+> NAK. #ifdefs and complex macros in particular are features we don't
+> want in dts files.
+>
+> Rob
