@@ -2,90 +2,108 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86699C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5C4C43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F20224672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 398132465E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 23:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576798901;
-	bh=WDbZFckNEvJPr6jCEP4QNOUNi+4mtA5nNZFKyzu2/jE=;
+	s=default; t=1576799127;
+	bh=NGy45U9sLs8EFP+KO9rDavGV+YX6tWDybnj00qXdXS0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WdNQbu+Uhj/g3GVUso3nBrc+53W/vLvnoXAu3qJFENvDaqY+A8FTwJnLLUGyycPjO
-	 J6QzVVUDX69j+AF4f8T0PDo3c6WRxmwVmVcHnoShPK2NVyQSEl87ZEtwYZ9tmJ39yp
-	 xNezBGThC9FFDncS17pMk4M7oHaGycrXmVC+5898=
+	b=FByYed0BMT/oU7CTguaz4IrmDelXYBG0Aresm1B9cXd2U3dNUNomp3HvKrAhSq8NX
+	 hbt1ZYUD3oFyvB1zb2Hlv69g0L4mIK5VuYLDvXlbtRmEm+Bo9HWfKfjZ92BTa5bwAR
+	 WyCe09T8EffV++kfU51nux5UkFiEiOcNqVi9hLX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfLSXlk (ORCPT
+        id S1726967AbfLSXp0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 18:41:40 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33716 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfLSXlk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:41:40 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so9369742otp.0;
-        Thu, 19 Dec 2019 15:41:40 -0800 (PST)
+        Thu, 19 Dec 2019 18:45:26 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36806 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfLSXp0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 18:45:26 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w1so9366859otg.3
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 15:45:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tuBWf96skjWrgBgsVs1eiTg/OmTbAgb7ulePOSz2Qnw=;
-        b=t7Pn1zrF/O+rbi8qdRYBTy6nROYC1ohU+dua5kLpjcqbqhJ3UygqVr0RdSSMiuJyFp
-         OlVKJrJur/PpSs5UlSkHXxzFsUmQT0OJrYdj2Vv8ODgMWJN2JrfDjLo69ctuu1sqiS2d
-         qEB+5qwRxqjuPmBcTQwWaif9j3c6dX6RjUWQykV1vlKbwq1PD/KQ8Fi7nY67fegzdid5
-         ceyqfWJpXsgYd1fYROz2ZVlSzKDARUL+6yErHWu7taEyUS8gmRu3eusY4FKFHo9z1v8J
-         gEy1gb7tOnzBGv6dHTQspDDLLaePEW19fxKo7fXfvYwHnI2AGiFdboR8WdGf8lcIZ4t+
-         w78Q==
-X-Gm-Message-State: APjAAAXImPdAPFQePoRcFE9XzmFv8kQidx93utwiXovr1/Jxd/Dz/qCg
-        MCvxW9uN9SxEKmjZiyFYBg==
-X-Google-Smtp-Source: APXvYqx+c5pPnClOFiso3xv+CWXNZAeT4mHx+To+J+sLUZ0f72ogS0fPdQJKxDJGcfYcgfzf04IN3A==
-X-Received: by 2002:a05:6830:1608:: with SMTP id g8mr11056854otr.169.1576798899680;
-        Thu, 19 Dec 2019 15:41:39 -0800 (PST)
+        bh=CPTZbnsZwMAdm3+ywA9AmFZNzHoVlF3t8i/+Bbatuus=;
+        b=AbwDghDVzBriIRJs72mvl9Tm6o0AtILKfBrjaLolXhxUJn5K/KxWLjEP+IoFIuvS/8
+         Twk3eQhEHXiKk+9q0Rpn6mNDlun2IaI9kH6TcXYFtNVk6NlpLbM9/ydrigkOMTk97BHe
+         gUFQybUcXi8t9ECNp6WG1qI+yio2brJk06RZkjLm1NhBOzSYwt//56Bjm43jWG5bvnkG
+         +UwhBem46gV4duZM6GQdFyAeuZK1pGyedgiw17PIVR1UZ5Ysc8BRkrNqkocs4uruzkNz
+         gjvtN1Hrrmt3Cb7IWaza0u+ENnf2rNm8pP+BxccaNw/JQOIxPZOThUPrTwnIhQw6edTV
+         eYjA==
+X-Gm-Message-State: APjAAAXa0bj1gAahkYNvaSxydvz/vE0AaQM0b8IlS+CnR0xpwGcs7AZG
+        xfT4YIpdkzbbZbqwsO1vnw==
+X-Google-Smtp-Source: APXvYqzPrntJQUPYSBFKGHAAmivi/dtE3tpOOaqLhKu8OeZYLW39N4PiJJx99SeXD52l7Rmf2JkyHg==
+X-Received: by 2002:a05:6830:1116:: with SMTP id w22mr11981631otq.216.1576799125808;
+        Thu, 19 Dec 2019 15:45:25 -0800 (PST)
 Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id c12sm2555901oic.27.2019.12.19.15.41.37
+        by smtp.gmail.com with ESMTPSA id 47sm2730192otf.54.2019.12.19.15.45.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 15:41:39 -0800 (PST)
-Date:   Thu, 19 Dec 2019 17:41:36 -0600
+        Thu, 19 Dec 2019 15:45:25 -0800 (PST)
+Date:   Thu, 19 Dec 2019 17:45:22 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, peng.fan@nxp.com,
-        ping.bai@nxp.com, Adam Ford <aford173@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 4/7] dt-bindings: imx-gpcv2: Update bindings to
- support i.MX8M Mini
-Message-ID: <20191219234136.GA21689@bogus>
-References: <20191213160542.15757-1-aford173@gmail.com>
- <20191213160542.15757-5-aford173@gmail.com>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 2/2] dt-bindings: phy: Use a real life PX30 DSI PHY
+ example
+Message-ID: <20191219234415.GA22014@bogus>
+References: <20191213180019.25080-1-miquel.raynal@bootlin.com>
+ <20191213180019.25080-2-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191213160542.15757-5-aford173@gmail.com>
+In-Reply-To: <20191213180019.25080-2-miquel.raynal@bootlin.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Dec 2019 10:05:39 -0600, Adam Ford wrote:
-> The with the recent additions to the driver, the GPCv2 driver can
-> support the i.MX8M Mini, but it needs updated 'compatible' entry
-> to use the proper table.
+On Fri, Dec 13, 2019 at 07:00:19PM +0100, Miquel Raynal wrote:
+> Update the example phandles to reference actual nodes and give a
+> working starting point.
 > 
-> This patch adds the i.MX8MM to the compatible list of devices.
-> 
-> Signed-off-by: Adam Ford <aford173@gmail.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
-> V2:  No Change
+>  .../devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml       | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
->  Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+> index 72aca81e8959..2e35bfdf47a1 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/rockchip,px30-dsi-dphy.yaml
+> @@ -60,9 +60,9 @@ examples:
+>      dsi_dphy: phy@ff2e0000 {
+>          compatible = "rockchip,px30-dsi-dphy";
+>          reg = <0x0 0xff2e0000 0x0 0x10000>;
+> -        clocks = <&pmucru 13>, <&cru 12>;
+> +        clocks = <&pmucru SCLK_MIPIDSIPHY_REF>, <&cru PCLK_MIPIDSIPHY>;
+>          clock-names = "ref", "pclk";
+> -        resets = <&cru 12>;
+> +        resets = <&cru SRST_MIPIDSIPHY_P>;
 
-Acked-by: Rob Herring <robh@kernel.org>
+Without the appropriate include files, this will break building the 
+example.
+
+>          reset-names = "apb";
+>          #phy-cells = <0>;
+>      };
+> -- 
+> 2.20.1
+> 
