@@ -2,77 +2,76 @@ Return-Path: <SRS0=R1yt=2J=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07578C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EEBC43603
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A9424672
-	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738D5218AC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 19 Dec 2019 13:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NCHuEKCd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lm5impAQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbfLSNFI (ORCPT
+        id S1726779AbfLSNK0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 08:05:08 -0500
-Received: from mail-wr1-f50.google.com ([209.85.221.50]:37842 "EHLO
-        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfLSNFI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:05:08 -0500
-Received: by mail-wr1-f50.google.com with SMTP id w15so5927709wru.4;
-        Thu, 19 Dec 2019 05:05:06 -0800 (PST)
+        Thu, 19 Dec 2019 08:10:26 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54481 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfLSNKZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 08:10:25 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b19so5363990wmj.4;
+        Thu, 19 Dec 2019 05:10:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=OCHI/dMTY1KXvOgZzKQJaerVI/CjlKxj8UCw2Ic0XBk=;
-        b=NCHuEKCdJnumhEY3QqDycSaHcam5yUdqdgCh7QVLPRMqALZlb3nRvJ1a//tGhVju0l
-         UYVFmsLCfwmJSIGV20xlalviyurEtn07aBLIFTp+aPW98cr1su89C1hPrLix5wZnNXBI
-         w+Pf8IghBGE+PdtDBDzzPXCxIZ74Xs5tGizJx0HqYFTPJuETVvsdAHciRzvmC+Iw1RjQ
-         c59NKk8MYinbK2l6ZlXxNsMLuDaZd/WE9g5no3Upu4taEBYhHQ/cJFcuD5hoJM4/p6fv
-         pHKIrzGZaCQXOwLNmY415rzcy3TWnVBzvY06qM+8nlDqogJ9g0RTd3rPnCJcZekQZj53
-         EFbQ==
+        bh=ljoBAaiqPyKfB+/r9kIia5fJ5IasKjoTnuUoooLCttY=;
+        b=lm5impAQ0SE0Y/wC+5Pk1ACo0MPPy5wep3laEXykpRaVCp8IUUduHvD3AJ37kT/j8t
+         0ZQLyqJlEbqFHc0/5SRLY9SpbT41RT5pS8JNQsdAfz6FSGvT5q0l4kz4ZYoxPVEgy5cT
+         7fm9m+3QAZqo49qFw+WM4nCPmRHOSSRDRgOIO3AarsQL6XtD09bl8qmVua2YRXoayxW4
+         FxXUYMBHREZoizEBb7BbDlkFgQw1qw7IoySyJRaLsUeUatxYNp998ixQJhAhWNpgZnO8
+         FBrAeDexfQNixkqREJ7mwIawSUi8l4r5rZqLuVImrbXpZqE4nDn++RE/F74HKsFA3/qQ
+         iYNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OCHI/dMTY1KXvOgZzKQJaerVI/CjlKxj8UCw2Ic0XBk=;
-        b=m5ghxmOxollFvT5rJQBdeJox1KesfliDtg3ZvEBZ9j4QG4tf6ASzgGpwLfX99mqhU4
-         Uj8uODp9RsWgmaKxWR302zbMi5z3MdDPxw0Wk+z0++f+FWxFk/obtx3K9OKQWfDVjER9
-         3pnr2lDniblg+w1MgW5bFNxANrEfzxhnjp62NFgouc9yqZa4kELdRpXZ4n5gZjmdywGv
-         MpvPpSqZkmA/l/uj9cTb/Yxk5CV04qjBl05dFTMvuWiw/kI1JH7lj70HPx24R33MuapT
-         xonmyDhxL+nNhyBWODo3JvCxQca2+tgKS8RBCLGJW+UzqT4ihwecqMQ/SFutBOVAYkWe
-         qrMw==
-X-Gm-Message-State: APjAAAVhFbBtfcNCiluSP8gFVjhMlz6+3y6vFd5TVUbyq4IBmyctXmdY
-        xt0D/HvC6XxWBu0gSXOXbWc=
-X-Google-Smtp-Source: APXvYqzZDqHm8LgsW+KxT2rMTeTEP2cpHX9jZsqlecdU4JrBzjCeXM875YI3hDJlTFm5dN8PBji4Xg==
-X-Received: by 2002:adf:fc4b:: with SMTP id e11mr9279124wrs.326.1576760705553;
-        Thu, 19 Dec 2019 05:05:05 -0800 (PST)
+        bh=ljoBAaiqPyKfB+/r9kIia5fJ5IasKjoTnuUoooLCttY=;
+        b=LGR4PPZL0ouyuIuEizYPtCYECdxNO+DeaJmAhaQtSpGFWK14wYXwJwder1abzUdsDQ
+         TrGE1WRJSvMCDsBFhHKojLrLhorbqZHtsOunA8nhHw5Kv4MIEqFIzu2kpdT5N61KBTwV
+         vyOBfPnaPHcmWXfeVT5KT3INGH2iU/9q/eKTJVNcFsEf8Gt5RmWQ5wJlX0QhF8+jfgIS
+         k9DG9j3PbC43Zp5HKobEuHPHFYrEuoTFROYzAZ16t7dhQBrs2yQjVAUMoHkSfQAz0ffD
+         bctPcIgneRf/1IpoLq641Ilsbk2cOGoFi1CaBv4+dflBCJvsrxHislfMaprB1QEEUcUc
+         08og==
+X-Gm-Message-State: APjAAAW7SiTnWES2XlITFFwYNyrnrfII0nRKq1ExfKb3xpTZMw7BdwGn
+        Ecojn7dxb9klHfLV6kRqCzQ=
+X-Google-Smtp-Source: APXvYqx8uT+10Z7eyNA+PeiVmGb1Ij2ylbRV0dPAiWh2OWGqT/mE45vcobzMn33JKMrglsNOTcggFw==
+X-Received: by 2002:a05:600c:2509:: with SMTP id d9mr10171463wma.148.1576761023046;
+        Thu, 19 Dec 2019 05:10:23 -0800 (PST)
 Received: from localhost (pD9E518ED.dip0.t-ipconnect.de. [217.229.24.237])
-        by smtp.gmail.com with ESMTPSA id e16sm6219256wrs.73.2019.12.19.05.05.04
+        by smtp.gmail.com with ESMTPSA id k19sm6006039wmi.42.2019.12.19.05.10.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 05:05:04 -0800 (PST)
-Date:   Thu, 19 Dec 2019 14:05:03 +0100
+        Thu, 19 Dec 2019 05:10:21 -0800 (PST)
+Date:   Thu, 19 Dec 2019 14:10:20 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Nagarjuna Kristam <nkristam@nvidia.com>
 Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
         mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
         devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V2 01/18] dt-bindings: phy: tegra-xusb: Add
- usb-role-switch
-Message-ID: <20191219130503.GG1440537@ulmo>
+Subject: Re: [Patch V2 02/18] dt-bindings: usb: Add NVIDIA Tegra XUSB device
+ mode controller binding
+Message-ID: <20191219131020.GH1440537@ulmo>
 References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
- <1576660591-10383-2-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vJguvTgX93MxBIIe"
+        protocol="application/pgp-signature"; boundary="xHbokkKX1kTiQeDC"
 Content-Disposition: inline
-In-Reply-To: <1576660591-10383-2-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <1576660591-10383-3-git-send-email-nkristam@nvidia.com>
 User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -80,71 +79,58 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---vJguvTgX93MxBIIe
+--xHbokkKX1kTiQeDC
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 18, 2019 at 02:46:14PM +0530, Nagarjuna Kristam wrote:
-> Add usb-role-switch property for Tegra210 and Tegra186 platforms. This
-> entry is used by XUSB pad controller driver to register for role changes
-> for OTG/Peripheral capable USB 2 ports.
+On Wed, Dec 18, 2019 at 02:46:15PM +0530, Nagarjuna Kristam wrote:
+> Add device-tree binding documentation for the XUSB device mode controller
+> present on Tegra210 and Tegra186 SoC. This controller supports the USB 3.0
+> specification.
 >=20
 > Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
 > ---
 > V2:
->  - Moved usb-role-switch to seperate Required section as suggested by Thi=
-erry.
->  - Added reference to usb/usb-conn-gpio.txt for connector subnode.
+>  - used enum instead of oneOf and const.
+>  - Moved reg, reg-names, clocks, clock-names to property section from all=
+Of.
+>  - Limited allOf to min and max items based on soc.
+>  - Updated description for power-domains.
+>  - Added V1 reference
 > ---
->  .../devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt         | 6 =
+> V1
+>  - This document is yaml version of [1], with difference of usb-role-swit=
+ch
+>    removal.
+> [1] https://patchwork.kernel.org/patch/11156253/=20
+> ---
+>  .../devicetree/bindings/usb/nvidia,tegra-xudc.yaml | 190 +++++++++++++++=
 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-p=
-adctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
-tl.txt
-> index 9fb682e..23bf354 100644
-> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
-xt
-> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
-xt
-> @@ -174,6 +174,12 @@ Required properties:
->    - "device": for USB device mode
->    - "otg": for USB OTG mode
-> =20
-> +Required properties for OTG/Peripheral capable USB2 ports:
-> +- usb-role-switch: Boolean property to indicate that the port support OT=
-G or
-
-"supports", and also, why if it supports OTG *or* peripheral? Doesn't
-OTG imply peripheral? OTG means it can be either peripheral or host,
-right? So I think the end of that sentence can be just:
-
-	"... the port supports OTG."
-
-Otherwise:
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xu=
+dc.yaml
 
 Acked-by: Thierry Reding <treding@nvidia.com>
 
---vJguvTgX93MxBIIe
+--xHbokkKX1kTiQeDC
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37dX8ACgkQ3SOs138+
-s6E9OA//bHh0F1BqO/aGb55yWkza+6Fr4szv7ielM9sc/RyfkwQ8jskeP5rb+7r/
-IDTTzkYWxobsbwANTLhIwyEMwpuGEdIBQDe10fF6gDCHGKo2Lxkh144kAqr44SE+
-6pvySmahNmCgv6tI3+CTx9aReMObvwwIwgTCqGWCxAcUHn2KhOlszma920DVcx0D
-D0m+xayaAj27F3qGiHgMFkTrCFVxcDCPr7Jijhmp9jfsgnFX3olS8q8qKuiwwqHs
-UkkUpwQpFgWuaoDbM10ZG6jk1rRFl005UyUxIPC9dpzZrcsF2SXcp1a+eYYK6j5I
-DBOZ1Glhp2MNOU6FdrXrF/Y8bwwwMOgZvjPKoX0DUSJzrHNQ2w/ILnoRgFOifZ//
-2HIx8B53g7OK/twNzRzMRsnRlrd+cMESq6KKAjQqBFhfZCIajcU/H9liwqRc2AGw
-Vfo+B3VBxgpU+FNY5blJ2G8PQJtXfsZfLZbhqqBiGt+xXqoYu+gacYaBAzlj/1Zs
-HPbDDD60DuivV2UXyNMi5Tzvl6LxXdtgjGWZgppPAbysmotdMq/Wn/Jkowj5jGkT
-AfWdYe+Gomi7dwZHedqzRyqYNVLV9kVrkZp64I/xu8CgVvUBN4huDlUOW6PB18bv
-jRecgrTUOcHWNyVoETkuggvGWuW1bywqR2dqeYimkZmQSfKf9Ro=
-=F9ta
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl37drwACgkQ3SOs138+
+s6FUQQ/+OrJZ0hWoS78OvNSUKU7kj5/4HMxKtRlJYDRrzGmyKWyIWZYEqVDysdia
+j4v1eFU5qv4WaMLtfM+S9lgRgK5lOJq0rmYll+dhyYdeemeIkg3rSYIOzvSLUONV
+5mKh6rke3+0LgVXL5Vw3iZxBp47n5rlUVKDsRGgUzPF5VgF5VsCRO9Pl0qIi+q3l
+e9TqdpDTY6AKTYzIL1Gg3nty+gURZ1t1wUYXDJq9GSzUBYu2fNG4F9NmI3XmcKzu
+19g6rC39FV1aqyjqVJ2pSDNhjI8zBXNNVvTl7RFLo7EyVoECnsVYwYp30gQzNrmm
+NJfNinkKZBXx5jGlGsGK/HuRal5umvY/2Hvz6CmFpT2NwI249kAb06xG0KfOK1h+
+q5IgZiSE+60cEXHPEcqz209306XjLELsYrlAP6IcI+3nBAZq+y8s5fgs35wJ5PfH
+3cjQvS1IZiDH9P5pqE8zq61/jhLgGgPEpAixEr0twvZ9UPhw0yDr6K5YN1tAgQaG
+TYdl47GxYlDMHUOOq+6T8yUlqhcOqmNhyV0aVHDao9LLSBNOs7AxiLSFC1a2Ef+O
+FQWcikXoLaPW7o5y1Qp7VRMEvHVWGLYBPdO/pfTnlKDdW1WQ9qPfY10RSociPJTw
++2bHzACFUla3quMKz+NruDHjDxcSug+qq/OfTVXG6yMviOYX/zY=
+=tlfO
 -----END PGP SIGNATURE-----
 
---vJguvTgX93MxBIIe--
+--xHbokkKX1kTiQeDC--
