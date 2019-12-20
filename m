@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C6C7C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32948C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5101F2465E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0915E2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGSzuqa/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="soKJ/5TQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfLTSPj (ORCPT
+        id S1727657AbfLTSP2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:15:39 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42213 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbfLTSPh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 13:15:37 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s64so5316186pgb.9;
-        Fri, 20 Dec 2019 10:15:36 -0800 (PST)
+        Fri, 20 Dec 2019 13:15:28 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45948 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727442AbfLTSP1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 13:15:27 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b22so4420279pls.12;
+        Fri, 20 Dec 2019 10:15:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tqgMOfA8sXNQ1nHNXDwM+uFyeMFK/y1mMMZrgJbJyWQ=;
-        b=kGSzuqa/16QQPlyKTXUaaszzb0chg480zEnxlGUWyvemS7KHE8Hfh+v0SOluH76dJU
-         yCV8WDN5eEIcNV9+hHOFEs31yO3q3+LOnLmkTEi/g2UJhWtHMHlI4hEy8beHwBQ1/zF9
-         UqyqmiVJ2tlRj8gfVsCbHfAP0sM68VQpCyX5pkUmytBqVikdhy3ZpFarRGcBRrncJ/GC
-         4DxscFw3TkQIQm/ISL9RjYplwl28pfiXGsqDrw17vTAi5OyWBIgBbEHAwsP0P/WlEKlE
-         aGNJ7Vzc/ipS+/qWGPbdmUy05qRe7RQyFoguKceX7fU5gU5kH4MXgUXZzu2k3EF4c/dm
-         jmBg==
+        bh=ZYaULAOf/ipunpDAVFMxi/EQXHSk5RtELu2hRAqrmfo=;
+        b=soKJ/5TQY63UbRSr/zPOYFJ//r47GQwE1DlWZTnD/JRFIV8IQl4fP78yE6RtyVDOTM
+         Xqs+kbKYthY9UWqBajEEgYYWTCR0RS2la8elKIZi5NY0R06W8EoVf3mKr8raOBD8G9cz
+         Ym+nO58OKnQuLNjrLn+eVzpu4lPQoAtZpg3I8Ri5JjhLCaEju+x4IyG21EfTmCSB/k0x
+         4sObaHtpzlWF5wgIwAtPsT+aS37pKAW3MQ/wOIzrGzXhVhHxAUpNAjwhlrl0iBK6PFLf
+         TH9ypavrq9CRYk506KGbtKOsQCB8wouPiNT0yhlbDOAVxCRTCj0tcXlnHi+j3tGaBH06
+         MzDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tqgMOfA8sXNQ1nHNXDwM+uFyeMFK/y1mMMZrgJbJyWQ=;
-        b=EoBPGeYNfO3qDMV8MG16mCs8L4UfvYG8wQ8hqVHFXD+TZQ53mEdLh0Pqn0VlIlQaBA
-         4WDvLJTcztZ0vKzbnofKwXgG+ytzHjJJtxiL8P9yMITr+rLSzeb16g46GyF76sjUugpR
-         xEa8g/xlFGf74IDMWEAX8R1Y7NqK7XeBjp5egi9DQvz5vSf8HmMYkOBbpZ6Ll+nZImlF
-         cay4RHztldOYrqhPHPHluWh6QP5IXYZ1t8AnI0P1lRnVWD2E1nsmR78TnrthjqXs7HW0
-         7aCoq0OuF+UNdO5IKpAj3ef0GrED0BkTLucTe1y3SGWm9xfsJi24UZ2NqNO4JKf66DLl
-         EI0w==
-X-Gm-Message-State: APjAAAUaBVufRpX4Wa+mb5TjoDgpn/ZTc6jW3eIhKdNAe5LFQm9E7exz
-        M56512+/MUJdbQJfdWAaJteZrflX
-X-Google-Smtp-Source: APXvYqz4phS6fiO9QZqaox45xLxanq30YhWlBAkqqvNpzcJgkEduQMGIgzZWdp9pKljReDpVwX/a1g==
-X-Received: by 2002:aa7:9629:: with SMTP id r9mr17762855pfg.51.1576865735454;
-        Fri, 20 Dec 2019 10:15:35 -0800 (PST)
+        bh=ZYaULAOf/ipunpDAVFMxi/EQXHSk5RtELu2hRAqrmfo=;
+        b=W8H4nB8APF3rfYHiNSYYqgayw6GIQ03DiLcCd2PlRwkjcAlgMnx9+8qUyN8G23zj/2
+         3fM6mpWfmsG7qumCVak0ukfC3c7NlDD9Xyy3xTOf1fu+GH2t39az5FmqVSJFOXkr5055
+         sdtlVXNSDnHPdCco//Ji2/ljtZQSA8MiAkeXqCz96UhC88+BNMAPAvO9uRfnUrgvNCDc
+         R8WYvnFNGQ9jHsqKCreqgtRu2FNz/zgukXNu9iKE/hCnEt9BkwDXjyqBqpj2CR9xorIC
+         bd5/rJBcdgH13jacY37m3P83CIWlxExk56l+pNo8Qv18JUMh2wbHdUv2iMjhGK1pBqRi
+         RBvQ==
+X-Gm-Message-State: APjAAAVej7Ct1PwwLXxd60gPwAE1j2l8GD+MzOWTYRLo+snDnQ1ViTQ1
+        e/zsFx/JKDrbo52S7g4p/nSoTWD6
+X-Google-Smtp-Source: APXvYqzPCFhIou48B2xrgnV5RxShqn7fWYHRBbPW40IcR6fiy1vjmYBl8m8ZtgOHHXG27L5Dse17tw==
+X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr17638902pjn.60.1576865725709;
+        Fri, 20 Dec 2019 10:15:25 -0800 (PST)
 Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id j28sm11833869pgb.36.2019.12.20.10.15.33
+        by smtp.gmail.com with ESMTPSA id j28sm11833869pgb.36.2019.12.20.10.15.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 10:15:34 -0800 (PST)
+        Fri, 20 Dec 2019 10:15:24 -0800 (PST)
 From:   Richard Cochran <richardcochran@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Willem de Bruijn <willemb@google.com>,
         Wingman Kwok <w-kwok2@ti.com>
-Subject: [PATCH V7 net-next 07/11] net: Add a layer for non-PHY MII time stamping drivers.
-Date:   Fri, 20 Dec 2019 10:15:16 -0800
-Message-Id: <eb6976012724b50a9d830eafd048e6956d8a3be0.1576865315.git.richardcochran@gmail.com>
+Subject: [PATCH V7 net-next 01/11] net: phy: Introduce helper functions for time stamping support.
+Date:   Fri, 20 Dec 2019 10:15:10 -0800
+Message-Id: <bb9bfc2826fa92bedde11664b0c0e0b9d028a689.1576865315.git.richardcochran@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576865315.git.richardcochran@gmail.com>
 References: <cover.1576865315.git.richardcochran@gmail.com>
@@ -83,273 +83,90 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-While PHY time stamping drivers can simply attach their interface
-directly to the PHY instance, stand alone drivers require support in
-order to manage their services.  Non-PHY MII time stamping drivers
-have a control interface over another bus like I2C, SPI, UART, or via
-a memory mapped peripheral.  The controller device will be associated
-with one or more time stamping channels, each of which sits snoops in
-on a MII bus.
-
-This patch provides a glue layer that will enable time stamping
-channels to find their controlling device.
+Some parts of the networking stack and at least one driver test fields
+within the 'struct phy_device' in order to query time stamping
+capabilities and to invoke time stamping methods.  This patch adds a
+functional interface around the time stamping fields.  This will allow
+insulating the callers from future changes to the details of the time
+stamping implemenation.
 
 Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/Makefile          |   2 +
- drivers/net/phy/mii_timestamper.c | 125 ++++++++++++++++++++++++++++++
- include/linux/mii_timestamper.h   |  63 +++++++++++++++
- net/Kconfig                       |   7 +-
- 4 files changed, 194 insertions(+), 3 deletions(-)
- create mode 100644 drivers/net/phy/mii_timestamper.c
+ include/linux/phy.h | 60 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index d846b4dc1c68..fe5badf13b65 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -43,6 +43,8 @@ obj-$(CONFIG_MDIO_SUN4I)	+= mdio-sun4i.o
- obj-$(CONFIG_MDIO_THUNDER)	+= mdio-thunder.o
- obj-$(CONFIG_MDIO_XGENE)	+= mdio-xgene.o
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 5032d453ac66..fc51aacb03a7 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -936,6 +936,66 @@ static inline bool phy_polling_mode(struct phy_device *phydev)
+ 	return phydev->irq == PHY_POLL;
+ }
  
-+obj-$(CONFIG_NETWORK_PHY_TIMESTAMPING) += mii_timestamper.o
-+
- obj-$(CONFIG_SFP)		+= sfp.o
- sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
- obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
-diff --git a/drivers/net/phy/mii_timestamper.c b/drivers/net/phy/mii_timestamper.c
-new file mode 100644
-index 000000000000..2f12c5d901df
---- /dev/null
-+++ b/drivers/net/phy/mii_timestamper.c
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Support for generic time stamping devices on MII buses.
-+// Copyright (C) 2018 Richard Cochran <richardcochran@gmail.com>
-+//
-+
-+#include <linux/mii_timestamper.h>
-+
-+static LIST_HEAD(mii_timestamping_devices);
-+static DEFINE_MUTEX(tstamping_devices_lock);
-+
-+struct mii_timestamping_desc {
-+	struct list_head list;
-+	struct mii_timestamping_ctrl *ctrl;
-+	struct device *device;
-+};
++/**
++ * phy_has_hwtstamp - Tests whether a PHY time stamp configuration.
++ * @phydev: the phy_device struct
++ */
++static inline bool phy_has_hwtstamp(struct phy_device *phydev)
++{
++	return phydev && phydev->drv && phydev->drv->hwtstamp;
++}
 +
 +/**
-+ * register_mii_tstamp_controller() - registers an MII time stamping device.
-+ *
-+ * @device:	The device to be registered.
-+ * @ctrl:	Pointer to device's control interface.
-+ *
-+ * Returns zero on success or non-zero on failure.
++ * phy_has_rxtstamp - Tests whether a PHY supports receive time stamping.
++ * @phydev: the phy_device struct
 + */
-+int register_mii_tstamp_controller(struct device *device,
-+				   struct mii_timestamping_ctrl *ctrl)
++static inline bool phy_has_rxtstamp(struct phy_device *phydev)
 +{
-+	struct mii_timestamping_desc *desc;
-+
-+	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&desc->list);
-+	desc->ctrl = ctrl;
-+	desc->device = device;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_add_tail(&mii_timestamping_devices, &desc->list);
-+	mutex_unlock(&tstamping_devices_lock);
-+
-+	return 0;
++	return phydev && phydev->drv && phydev->drv->rxtstamp;
 +}
-+EXPORT_SYMBOL(register_mii_tstamp_controller);
 +
 +/**
-+ * unregister_mii_tstamp_controller() - unregisters an MII time stamping device.
-+ *
-+ * @device:	A device previously passed to register_mii_tstamp_controller().
++ * phy_has_tsinfo - Tests whether a PHY reports time stamping and/or
++ * PTP hardware clock capabilities.
++ * @phydev: the phy_device struct
 + */
-+void unregister_mii_tstamp_controller(struct device *device)
++static inline bool phy_has_tsinfo(struct phy_device *phydev)
 +{
-+	struct mii_timestamping_desc *desc;
-+	struct list_head *this, *next;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_for_each_safe(this, next, &mii_timestamping_devices) {
-+		desc = list_entry(this, struct mii_timestamping_desc, list);
-+		if (desc->device == device) {
-+			list_del_init(&desc->list);
-+			kfree(desc);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&tstamping_devices_lock);
++	return phydev && phydev->drv && phydev->drv->ts_info;
 +}
-+EXPORT_SYMBOL(unregister_mii_tstamp_controller);
 +
 +/**
-+ * register_mii_timestamper - Enables a given port of an MII time stamper.
-+ *
-+ * @node:	The device tree node of the MII time stamp controller.
-+ * @port:	The index of the port to be enabled.
-+ *
-+ * Returns a valid interface on success or ERR_PTR otherwise.
++ * phy_has_txtstamp - Tests whether a PHY supports transmit time stamping.
++ * @phydev: the phy_device struct
 + */
-+struct mii_timestamper *register_mii_timestamper(struct device_node *node,
-+						 unsigned int port)
++static inline bool phy_has_txtstamp(struct phy_device *phydev)
 +{
-+	struct mii_timestamper *mii_ts = NULL;
-+	struct mii_timestamping_desc *desc;
-+	struct list_head *this;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_for_each(this, &mii_timestamping_devices) {
-+		desc = list_entry(this, struct mii_timestamping_desc, list);
-+		if (desc->device->of_node == node) {
-+			mii_ts = desc->ctrl->probe_channel(desc->device, port);
-+			if (!IS_ERR(mii_ts)) {
-+				mii_ts->device = desc->device;
-+				get_device(desc->device);
-+			}
-+			break;
-+		}
-+	}
-+	mutex_unlock(&tstamping_devices_lock);
-+
-+	return mii_ts ? mii_ts : ERR_PTR(-EPROBE_DEFER);
-+}
-+EXPORT_SYMBOL(register_mii_timestamper);
-+
-+/**
-+ * unregister_mii_timestamper - Disables a given MII time stamper.
-+ *
-+ * @mii_ts:	An interface obtained via register_mii_timestamper().
-+ *
-+ */
-+void unregister_mii_timestamper(struct mii_timestamper *mii_ts)
-+{
-+	struct mii_timestamping_desc *desc;
-+	struct list_head *this;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_for_each(this, &mii_timestamping_devices) {
-+		desc = list_entry(this, struct mii_timestamping_desc, list);
-+		if (desc->device == mii_ts->device) {
-+			desc->ctrl->release_channel(desc->device, mii_ts);
-+			put_device(desc->device);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&tstamping_devices_lock);
-+}
-+EXPORT_SYMBOL(unregister_mii_timestamper);
-diff --git a/include/linux/mii_timestamper.h b/include/linux/mii_timestamper.h
-index 36002386029c..fa940bbaf8ae 100644
---- a/include/linux/mii_timestamper.h
-+++ b/include/linux/mii_timestamper.h
-@@ -33,10 +33,15 @@ struct phy_device;
-  *		the phy_device mutex.
-  *
-  * @ts_info:	Handles ethtool queries for hardware time stamping.
-+ * @device:	Remembers the device to which the instance belongs.
-  *
-  * Drivers for PHY time stamping devices should embed their
-  * mii_timestamper within a private structure, obtaining a reference
-  * to it using container_of().
-+ *
-+ * Drivers for non-PHY time stamping devices should return a pointer
-+ * to a mii_timestamper from the probe_channel() callback of their
-+ * mii_timestamping_ctrl interface.
-  */
- struct mii_timestamper {
- 	bool (*rxtstamp)(struct mii_timestamper *mii_ts,
-@@ -53,6 +58,64 @@ struct mii_timestamper {
- 
- 	int  (*ts_info)(struct mii_timestamper *mii_ts,
- 			struct ethtool_ts_info *ts_info);
-+
-+	struct device *device;
-+};
-+
-+/**
-+ * struct mii_timestamping_ctrl - MII time stamping controller interface.
-+ *
-+ * @probe_channel:	Callback into the controller driver announcing the
-+ *			presence of the 'port' channel.  The 'device' field
-+ *			had been passed to register_mii_tstamp_controller().
-+ *			The driver must return either a pointer to a valid
-+ *			MII timestamper instance or PTR_ERR.
-+ *
-+ * @release_channel:	Releases an instance obtained via .probe_channel.
-+ */
-+struct mii_timestamping_ctrl {
-+	struct mii_timestamper *(*probe_channel)(struct device *device,
-+						 unsigned int port);
-+	void (*release_channel)(struct device *device,
-+				struct mii_timestamper *mii_ts);
- };
- 
-+#ifdef CONFIG_NETWORK_PHY_TIMESTAMPING
-+
-+int register_mii_tstamp_controller(struct device *device,
-+				   struct mii_timestamping_ctrl *ctrl);
-+
-+void unregister_mii_tstamp_controller(struct device *device);
-+
-+struct mii_timestamper *register_mii_timestamper(struct device_node *node,
-+						 unsigned int port);
-+
-+void unregister_mii_timestamper(struct mii_timestamper *mii_ts);
-+
-+#else
-+
-+static inline
-+int register_mii_tstamp_controller(struct device *device,
-+				   struct mii_timestamping_ctrl *ctrl)
-+{
-+	return -EOPNOTSUPP;
++	return phydev && phydev->drv && phydev->drv->txtstamp;
 +}
 +
-+static inline void unregister_mii_tstamp_controller(struct device *device)
++static inline int phy_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
 +{
++	return phydev->drv->hwtstamp(phydev, ifr);
 +}
 +
-+static inline
-+struct mii_timestamper *register_mii_timestamper(struct device_node *node,
-+						 unsigned int port)
++static inline bool phy_rxtstamp(struct phy_device *phydev, struct sk_buff *skb,
++				int type)
 +{
-+	return NULL;
++	return phydev->drv->rxtstamp(phydev, skb, type);
 +}
 +
-+static inline void unregister_mii_timestamper(struct mii_timestamper *mii_ts)
++static inline int phy_ts_info(struct phy_device *phydev,
++			      struct ethtool_ts_info *tsinfo)
 +{
++	return phydev->drv->ts_info(phydev, tsinfo);
 +}
 +
-+#endif
++static inline void phy_txtstamp(struct phy_device *phydev, struct sk_buff *skb,
++				int type)
++{
++	phydev->drv->txtstamp(phydev, skb, type);
++}
 +
- #endif
-diff --git a/net/Kconfig b/net/Kconfig
-index bd191f978a23..52af65e5d28c 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -108,9 +108,10 @@ config NETWORK_PHY_TIMESTAMPING
- 	bool "Timestamping in PHY devices"
- 	select NET_PTP_CLASSIFY
- 	help
--	  This allows timestamping of network packets by PHYs with
--	  hardware timestamping capabilities. This option adds some
--	  overhead in the transmit and receive paths.
-+	  This allows timestamping of network packets by PHYs (or
-+	  other MII bus snooping devices) with hardware timestamping
-+	  capabilities. This option adds some overhead in the transmit
-+	  and receive paths.
- 
- 	  If you are unsure how to answer this question, answer N.
- 
+ /**
+  * phy_is_internal - Convenience function for testing if a PHY is internal
+  * @phydev: the phy_device struct
 -- 
 2.20.1
 
