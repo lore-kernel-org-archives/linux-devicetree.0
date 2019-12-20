@@ -2,627 +2,399 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B0BC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 04:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3A4C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 04:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB9224676
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 04:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0832465E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 04:13:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="s5ftQEin"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BSPnCvvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfLTEAw (ORCPT
+        id S1727148AbfLTENm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 23:00:52 -0500
-Received: from mail-eopbgr680056.outbound.protection.outlook.com ([40.107.68.56]:11495
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727110AbfLTEAw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 23:00:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lMc7crj2C9M3mbtZHagm/tYLrMSCyv83XCzFW50g/UCYMu5YE9aiCPxVLKhNeZN1451lIrbyqYi/gLqKY3QD9xcW4aC9bzIcLs5VrdijsmEvwWn7BHOax1Hed+UBtlMNmePrvRUPx4zrfHEcmb7h1Hqg/euGUX7DqNqbE4SZJcW+pcnYf97qwH+hQFqX0FP9OaROC5oQzxH8dEZwQULWO80EFoCnfwyW6cdXd6RTXWumjrZmljU/EB03DH7NgtKLxsu2Ujc1FcmyuWxABbJylw4GQmipAXBkyon1sM6dUVbynD43DvrQTrlEqkoM978qx2c4eBzYpVgvZuhupEXZqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2aGi3ky3McHHsltAc8WTeHnk/rcNfKjMbjxKIzhl4eU=;
- b=afX7DEAx8w48rt0vi6GLS1eJEhG+tgUPNb2kLTPq4Su3vK7XT/qIAa68Gxx8LwDwSZf3xQgBssPoYWnWasi6HbKY6sX8BUkOGjHrD7rUdwdvCxdwHVd7o3pMeMmecBRvblKZr+xB2G32JXezZOvu0NDQrD3iRGSnWUigtz8gCfeCXasesuwI9rSYpAXCoo8AMpyUEQZFT2ZUqM6fLY6ljmc1HgHurPY4kHF9mQ4z0hjElFrZXCWqt1V9Vd/y5NpyO3gVDFZuI6bcJoTWGC1tTHZc17EvUburyOS25vl/7mXTMKZIL5trHfPdfZ68ALF444BMZsly1hzTeSLzppycPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2aGi3ky3McHHsltAc8WTeHnk/rcNfKjMbjxKIzhl4eU=;
- b=s5ftQEinhlN9iHkdU6IBRLBMVLo1KAwDJEUU992NYkjFVA83gHJQ3W+PrhJ2qLaolLjX+A7WGu0fuaqsi+f/stSeFnDDWK3KA5uuqrqpChORtiTk4wGFFYIL98+nOrcS1LiuRrx4D3CGAHfW4OAsaLDMKz/6b8wZGik+EGEXH5Y=
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
- SN6PR08MB5022.namprd08.prod.outlook.com (52.135.107.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15; Fri, 20 Dec 2019 04:00:45 +0000
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::7c80:2b62:5d9a:2139]) by SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::7c80:2b62:5d9a:2139%4]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
- 04:00:45 +0000
-Received: from labundy.com (136.49.227.119) by SN4PR0401CA0027.namprd04.prod.outlook.com (2603:10b6:803:2a::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2559.14 via Frontend Transport; Fri, 20 Dec 2019 04:00:44 +0000
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/7] dt-bindings: Add bindings for Azoteq
- IQS620A/621/622/624/625
-Thread-Topic: [PATCH v2 1/7] dt-bindings: Add bindings for Azoteq
- IQS620A/621/622/624/625
-Thread-Index: AQHVrij7SDxpuO5/BEuAwvUFNi/XqqfAoDMAgAHXkwA=
-Date:   Fri, 20 Dec 2019 04:00:45 +0000
-Message-ID: <20191220040042.GB2658@labundy.com>
-References: <1575851866-18919-1-git-send-email-jeff@labundy.com>
- <1575851866-18919-2-git-send-email-jeff@labundy.com>
- <20191218235252.GA19438@bogus>
-In-Reply-To: <20191218235252.GA19438@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0401CA0027.namprd04.prod.outlook.com
- (2603:10b6:803:2a::13) To SN6PR08MB5053.namprd08.prod.outlook.com
- (2603:10b6:805:78::25)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jeff@labundy.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [136.49.227.119]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 490b8446-f4f5-412d-b6b2-08d785013064
-x-ms-traffictypediagnostic: SN6PR08MB5022:
-x-microsoft-antispam-prvs: <SN6PR08MB5022F7E831D63AA3EA13C784D32D0@SN6PR08MB5022.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(376002)(136003)(39830400003)(396003)(34096005)(199004)(189003)(25584004)(966005)(86362001)(54906003)(4326008)(36756003)(2906002)(52116002)(7696005)(26005)(66946007)(8886007)(508600001)(66556008)(64756008)(66446008)(66476007)(5660300002)(8676002)(16526019)(186003)(30864003)(6916009)(33656002)(81156014)(8936002)(316002)(71200400001)(2616005)(956004)(55016002)(1076003)(81166006)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB5022;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: labundy.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HxYqBu/J4vhtv92Jj+B9zETbdisXtY1vQYeXSYRYa8mEKpHTEfMmrwQy6kok0KA6uHmt877hY7DSIrquboGGcG05tAGsJWEqUBsHHmGfPyHkn/Hgfr6ilbiPyZnJ2qCJbTrEk2tNrajd0cI42nd9Zdyra3OzdLnyfgicxCGMOeDWtYUsI8DmzFcmjY0UmyVquo4KHsxAMdqVC7FeiFzU5bRVIhXZCptALa6ayXI1VR1AnsljiUc1S3mNre6PCu5FhPpQrl5IrE+W94MZ4QECIhpXxgOUjrYtLEmXlHb+p4yGtAHctO7pKHwxP+O5RvyUUFWlBmeagYHXUEKAWzaGcJXxRgqgEQg+8gWj1JGCwUmVmL7pS+IE0NGCY/BRqtMOYo2TapQ8KurPUkbQju8mlXTRz6xafN8tN1t3bHwA9bZZuUY2ovPGw0NRWsJiH806iTTnIOQ06FV4KF/xu3fpGOG+PjxUV+w891MXQ/97imXfn+GSmW2wwPpSgirtRXYlSXTtLnqfuofTUuByI8d3+A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F9C820E91F18CF43AECB3466A7F63700@namprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 19 Dec 2019 23:13:42 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7884 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbfLTENm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 23:13:42 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dfc4a650000>; Thu, 19 Dec 2019 20:13:29 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 19 Dec 2019 20:13:39 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 19 Dec 2019 20:13:39 -0800
+Received: from [10.2.169.197] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
+ 2019 04:13:34 +0000
+Subject: Re: [PATCH v4 06/19] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1576613046-17159-1-git-send-email-skomatineni@nvidia.com>
+ <1576613046-17159-7-git-send-email-skomatineni@nvidia.com>
+ <87b2b266-e4a9-9a7a-2336-6ec57d7c4d1d@gmail.com>
+ <55a56c3d-3fac-cc77-46ae-acf5de77d262@gmail.com>
+ <e11d2ea9-20f1-6920-7efc-ba8a50312f75@gmail.com>
+ <c5bb3c25-1fae-3ca9-6bf3-c3d66be20e19@nvidia.com>
+ <664f1a41-d539-36e8-092b-11d7e4555108@nvidia.com>
+ <31020f6b-97bf-eb48-1150-0355c868eafc@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <8fa81a47-63e5-d64d-7cc6-7fdd20ff89f0@nvidia.com>
+Date:   Thu, 19 Dec 2019 20:13:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 490b8446-f4f5-412d-b6b2-08d785013064
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 04:00:45.2900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rWKE+gAkQRetXI8butBos8HVWTMureIqirYYy5CJuthetpjP4HXhG+8+YETjXZDDBzqUU+XsOyJJwLhgxFDMGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB5022
+In-Reply-To: <31020f6b-97bf-eb48-1150-0355c868eafc@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576815209; bh=FGMy5NPEQX32NvFu3Bzhyu5lW23YNxqhvO3u22xekQY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=BSPnCvvqYsNlSudN+J8rckO94cynlTbg6GGkfURgLI4HDSoOeYj2yRZBzaV39Pz2l
+         WjmS2SA5K+RVvDJgqkKZyOTloSiy0S3zJ7D1cqX8UVoMxqLoWavIu8KTx595er7psY
+         megKNOBEyBd5RAndVcF+71p6FwefBDJEBZsutDFBjLdwrrOahcQf9cZgduB3Ouz+mj
+         TKbl8NMRvd+tPZqBfp7/7Zy/ncBBAJlGnz0FxD7oBX+8570a32svtxaybdD98CRvA3
+         cWf6UUrR/d/fRa6clmtc7toKKceVTE5+VqEKnVj/Sc2gbXIVDNjgOTkotOMcjBMfl7
+         +yc7i5TdGjbkg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-Thank you for your prompt review and your kind words. A couple of questions
-and comments for you below.
-
-On Wed, Dec 18, 2019 at 05:52:52PM -0600, Rob Herring wrote:
-> On Mon, Dec 09, 2019 at 12:38:32AM +0000, Jeff LaBundy wrote:
-> > This patch adds device tree bindings for the Azoteq IQS620A, IQS621,
-> > IQS622, IQS624 and IQS625 multi-function sensors.
-> >=20
-> > A total of three bindings are presented (one MFD and two child nodes);
-> > they are submitted as a single patch because the child node bindings
-> > have no meaning in the absence of the MFD binding.
-> >=20
-> > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> > ---
-> > Changes in v2:
-> >   - Removed "prox" child node and moved "keys" and "pwm" child nodes to=
- their
-> >     own bindings
-> >   - Replaced linux,fw-file property with more common firmware-name prop=
-erty
-> >   - Converted all bindings to YAML
->=20
-> Good job for first go.
->=20
-> >=20
-> >  .../devicetree/bindings/input/iqs62x-keys.yaml     | 126 +++++++++++++=
-++
-> >  Documentation/devicetree/bindings/mfd/iqs62x.yaml  | 177 +++++++++++++=
-++++++++
-> >  .../devicetree/bindings/pwm/iqs620a-pwm.yaml       |  30 ++++
-> >  3 files changed, 333 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/iqs62x-keys=
-.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/iqs62x.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/iqs620a-pwm.y=
-aml
->=20
-> A couple of minor things below. With those fixed:
->=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
->=20
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/input/iqs62x-keys.yaml b=
-/Documentation/devicetree/bindings/input/iqs62x-keys.yaml
-> > new file mode 100644
-> > index 0000000..e9b54e0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/iqs62x-keys.yaml
-> > @@ -0,0 +1,126 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/input/iqs62x-keys.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Azoteq IQS620A/621/622/624/625 Keys and Switches
-> > +
-> > +maintainers:
-> > +  - Jeff LaBundy <jeff@labundy.com>
-> > +
-> > +description: |
-> > +  The Azoteq IQS620A, IQS621, IQS622, IQS624 and IQS625 multi-function=
- sensors
-> > +  feature a variety of self-capacitive, mutual-inductive and Hall-effe=
-ct sens-
-> > +  ing capabilities that can facilitate a variety of contactless key an=
-d switch
-> > +  applications.
-> > +
-> > +  These functions are collectively represented by a "keys" child node =
-from the
-> > +  parent MFD driver. See Documentation/devicetree/bindings/mfd/iqs62x.=
-yaml for
-> > +  further details and examples. Sensor hardware configuration (self-ca=
-pacitive
-> > +  vs. mutual-inductive, etc.) is selected based on the device's firmwa=
-re.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - azoteq,iqs620a-keys
-> > +      - azoteq,iqs621-keys
-> > +      - azoteq,iqs622-keys
-> > +      - azoteq,iqs624-keys
-> > +      - azoteq,iqs625-keys
-> > +
-> > +  linux,keycodes:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +      - minItems: 1
-> > +        maxItems: 16
-> > +    description: |
-> > +      Specifies the numeric keycodes associated with each available to=
-uch or
-> > +      proximity event according to the following table. An 'x' indicat=
-es the
-> > +      event is supported for a given device. Specify 0 for unused even=
-ts.
-> > +
-> > +      ----------------------------------------------------------------=
----------
-> > +      | #  | Event              | IQS620A | IQS621 | IQS622 | IQS624 |=
- IQS625 |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 0  | CH0 Touch          |    x    |    x   |    x   |    x   |=
-    x   |
-> > +      |    | Antenna 1 Touch*   |    x    |        |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 1  | CH0 Proximity      |    x    |    x   |    x   |    x   |=
-    x   |
-> > +      |    | Antenna 1 Prox.*   |    x    |        |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 2  | CH1 Touch          |    x    |    x   |    x   |    x   |=
-    x   |
-> > +      |    | Ant. 1 Deep Touch* |    x    |        |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 3  | CH1 Proximity      |    x    |    x   |    x   |    x   |=
-    x   |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 4  | CH2 Touch          |    x    |        |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 5  | CH2 Proximity      |    x    |        |        |        |=
-        |
-> > +      |    | Antenna 2 Prox.*   |    x    |        |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 6  | Metal (+) Touch**  |    x    |    x   |        |        |=
-        |
-> > +      |    | Ant. 2 Deep Touch* |    x    |        |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 7  | Metal (+) Prox.**  |    x    |    x   |        |        |=
-        |
-> > +      |    | Antenna 2 Touch*   |    x    |        |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 8  | Metal (-) Touch**  |    x    |    x   |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 9  | Metal (-) Prox.**  |    x    |    x   |        |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 10 | SAR Active***      |    x    |        |    x   |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 11 | SAR Quick Rel.***  |    x    |        |    x   |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 12 | SAR Movement***    |    x    |        |    x   |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 13 | SAR Filter Halt*** |    x    |        |    x   |        |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 14 | Wheel Up           |         |        |        |    x   |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      | 15 | Wheel Down         |         |        |        |    x   |=
-        |
-> > +      ----------------------------------------------------------------=
----------
-> > +      *   Two-channel SAR. Replaces CH0-2 plus metal touch and proximi=
-ty events
-> > +          if enabled via firmware.
-> > +      **  "+" and "-" refer to the polarity of a channel's delta (LTA =
-- counts),
-> > +          where "LTA" is defined as the channel's long-term average.
-> > +      *** One-channel SAR. Replaces CH0-2 touch and proximity events i=
-f enabled
-> > +          via firmware.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - linux,keycodes
->=20
-> Add:=20
->=20
-> additionalProperties: false
->=20
-
-When I add this, the dt_binding_check step complains that the hall switch c=
-hild nodes
-used in the examples are unrecognized, e.g.:
-
-iqs620a@44: keys: 'hall-switch-south' does not match any of the regexes: 'p=
-inctrl-[0-9]+'
-
-When I originally encountered this, I found that the mdio-mux child node in=
- [0] seems
-to be a similar example and omits additionalProperties, which is why I orig=
-inally did
-that here. Do you have any advice on how to proceed?
-
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
-> > +          - azoteq,iqs620a-keys
-> > +          - azoteq,iqs621-keys
-> > +          - azoteq,iqs622-keys
-> > +then:
-> > +  patternProperties:
-> > +    "^hall-switch-(north|south)$":
-> > +      type: object
-> > +      description:
-> > +        Represents north/south-field Hall-effect sensor touch or proxi=
-mity
-> > +        events. Note that north/south-field orientation is reversed on=
- the
-> > +        IQS620AXzCSR device due to its flip-chip package.
-> > +
-> > +      properties:
-> > +        linux,code:
-> > +          $ref: /schemas/types.yaml#/definitions/uint32
-> > +          description: Numeric switch code associated with the event.
-> > +
-> > +        azoteq,use-prox:
-> > +          $ref: /schemas/types.yaml#/definitions/flag
-> > +          description:
-> > +            If present, specifies that Hall-effect sensor reporting sh=
-ould
-> > +            use the device's wide-range proximity threshold instead of=
- its
-> > +            close-range touch threshold (default).
-> > +
-> > +      required:
-> > +        - linux,code
-> > +
-
-Do you think I should specify additionalProperties: false within these chil=
-d nodes?
-
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/mfd/iqs62x.yaml b/Docume=
-ntation/devicetree/bindings/mfd/iqs62x.yaml
-> > new file mode 100644
-> > index 0000000..24e6004
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/iqs62x.yaml
-> > @@ -0,0 +1,177 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/iqs62x.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Azoteq IQS620A/621/622/624/625 Multi-Function Sensors
-> > +
-> > +maintainers:
-> > +  - Jeff LaBundy <jeff@labundy.com>
-> > +
-> > +description: |
-> > +  The Azoteq IQS620A, IQS621, IQS622, IQS624 and IQS625 multi-function=
- sensors
-> > +  integrate multiple sensing technologies in a single package.
-> > +
-> > +  Link to data sheets: https://www.azoteq.com/
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - azoteq,iqs620a
-> > +      - azoteq,iqs621
-> > +      - azoteq,iqs622
-> > +      - azoteq,iqs624
-> > +      - azoteq,iqs625
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  firmware-name:
-> > +    $ref: /schemas/types.yaml#/definitions/string
-> > +    description:
-> > +      Specifies the name of the calibration and configuration file sel=
-ected by
-> > +      the driver. If this property is omitted, the name is chosen base=
-d on the
-> > +      device name with ".bin" as the extension (e.g. iqs620a.bin for I=
-QS620A).
-> > +
-> > +  keys:
-> > +    $ref: ../input/iqs62x-keys.yaml
-> > +
-> > +  pwm:
-> > +    $ref: ../pwm/iqs620a-pwm.yaml
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
->=20
-> Add:=20
->=20
-> additionalProperties: false
->=20
-
-Sure thing, will do.
-
-> > +
-> > +examples:
-> > +  - |
-> > +    /*
-> > +     * Dual capacitive buttons with additional "air button," unipolar =
-lid
-> > +     * switch and panel-mounted LED.
-> > +     */
-> > +    #include <dt-bindings/input/input.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c {
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            iqs620a@44 {
-> > +                    compatible =3D "azoteq,iqs620a";
-> > +                    reg =3D <0x44>;
-> > +                    interrupt-parent =3D <&gpio>;
-> > +                    interrupts =3D <17 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +                    keys {
-> > +                            compatible =3D "azoteq,iqs620a-keys";
-> > +
-> > +                            linux,keycodes =3D <KEY_SELECT>,
-> > +                                             <KEY_MENU>,
-> > +                                             <KEY_OK>,
-> > +                                             <KEY_MENU>;
-> > +
-> > +                            hall-switch-south {
-> > +                                    linux,code =3D <SW_LID>;
-> > +                                    azoteq,use-prox;
-> > +                            };
-> > +                    };
-> > +
-> > +                    iqs620a_pwm: pwm {
-> > +                            compatible =3D "azoteq,iqs620a-pwm";
-> > +                            #pwm-cells =3D <2>;
-> > +                    };
-> > +            };
-> > +    };
-> > +
-> > +    pwmleds {
-> > +            compatible =3D "pwm-leds";
-> > +
-> > +            panel {
-> > +                    pwms =3D <&iqs620a_pwm 0 1000000>;
-> > +                    max-brightness =3D <255>;
-> > +            };
-> > +    };
-> > +
-> > +  - |
-> > +    /* Single inductive button with bipolar dock/tablet-mode switch. *=
-/
-> > +    #include <dt-bindings/input/input.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c {
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            iqs620a@44 {
-> > +                    compatible =3D "azoteq,iqs620a";
-> > +                    reg =3D <0x44>;
-> > +                    interrupt-parent =3D <&gpio>;
-> > +                    interrupts =3D <17 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +                    firmware-name =3D "iqs620a_coil.bin";
-> > +
-> > +                    keys {
-> > +                            compatible =3D "azoteq,iqs620a-keys";
-> > +
-> > +                            linux,keycodes =3D <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <KEY_MUTE>;
-> > +
-> > +                            hall-switch-north {
-> > +                                    linux,code =3D <SW_DOCK>;
-> > +                            };
-> > +
-> > +                            hall-switch-south {
-> > +                                    linux,code =3D <SW_TABLET_MODE>;
-> > +                            };
-> > +                    };
-> > +            };
-> > +    };
-> > +
-> > +  - |
-> > +    /* Dual capacitive buttons with volume knob. */
-> > +    #include <dt-bindings/input/input.h>
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +
-> > +    i2c {
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            iqs624@44 {
-> > +                    compatible =3D "azoteq,iqs624";
-> > +                    reg =3D <0x44>;
-> > +                    interrupt-parent =3D <&gpio>;
-> > +                    interrupts =3D <17 IRQ_TYPE_LEVEL_LOW>;
-> > +
-> > +                    keys {
-> > +                            compatible =3D "azoteq,iqs624-keys";
-> > +
-> > +                            linux,keycodes =3D <BTN_0>,
-> > +                                             <0>,
-> > +                                             <BTN_1>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <0>,
-> > +                                             <KEY_VOLUMEUP>,
-> > +                                             <KEY_VOLUMEDOWN>;
-> > +                    };
-> > +            };
-> > +    };
-> > +
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml b/D=
-ocumentation/devicetree/bindings/pwm/iqs620a-pwm.yaml
-> > new file mode 100644
-> > index 0000000..6b7aaef
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/iqs620a-pwm.yaml
-> > @@ -0,0 +1,30 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pwm/iqs620a-pwm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Azoteq IQS620A PWM Generator
-> > +
-> > +maintainers:
-> > +  - Jeff LaBundy <jeff@labundy.com>
-> > +
-> > +description: |
-> > +  The Azoteq IQS620A multi-function sensor generates a fixed-frequency=
- PWM
-> > +  output represented by a "pwm" child node from the parent MFD driver.=
- See
-> > +  Documentation/devicetree/bindings/mfd/iqs62x.yaml for further detail=
-s as
-> > +  well as an example.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - azoteq,iqs620a-pwm
-> > +
-> > +  "#pwm-cells":
-> > +    const: 2
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#pwm-cells"
->=20
-> Add:=20
->=20
-> additionalProperties: false
->=20
-
-Sure thing, will do.
-
-> > +
-> > +...
-> > --
-> > 2.7.4
-> >=20
-
-[0] Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-
-Kind regards,
-Jeff LaBundy
+On 12/19/19 5:39 PM, Dmitry Osipenko wrote:
+> 20.12.2019 04:21, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 12/18/19 4:41 PM, Sowjanya Komatineni wrote:
+>>> On 12/18/19 1:44 PM, Dmitry Osipenko wrote:
+>>>> 18.12.2019 11:35, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> 18.12.2019 11:30, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> 17.12.2019 23:03, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
+:
+>>>>>>> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and
+>>>>>>> currently
+>>>>>>> these PMC clocks are registered by Tegra clock driver with each
+>>>>>>> clock as
+>>>>>>> separate mux and gate clocks using clk_register_mux and
+>>>>>>> clk_register_gate
+>>>>>>> by passing PMC base address and register offsets and PMC
+>>>>>>> programming for
+>>>>>>> these clocks happens through direct PMC access by the clock driver.
+>>>>>>>
+>>>>>>> With this, when PMC is in secure mode any direct PMC access from th=
+e
+>>>>>>> non-secure world does not go through and these clocks will not be
+>>>>>>> functional.
+>>>>>>>
+>>>>>>> This patch adds these PMC clocks registration to pmc driver with
+>>>>>>> PMC as
+>>>>>>> a clock provider and registers each clock as single clock.
+>>>>>>>
+>>>>>>> clk_ops callback implementations for these clocks uses
+>>>>>>> tegra_pmc_readl and
+>>>>>>> tegra_pmc_writel which supports PMC programming in both secure
+>>>>>>> mode and
+>>>>>>> non-secure mode.
+>>>>>>>
+>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>> ---
+>>>>>>>  =C2=A0 drivers/soc/tegra/pmc.c | 248
+>>>>>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>>>  =C2=A0 1 file changed, 248 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>>>>>> index ea0e11a09c12..6d65194a6e71 100644
+>>>>>>> --- a/drivers/soc/tegra/pmc.c
+>>>>>>> +++ b/drivers/soc/tegra/pmc.c
+>>>>>>> @@ -13,6 +13,9 @@
+>>>>>>>  =C2=A0 =C2=A0 #include <linux/arm-smccc.h>
+>>>>>>>  =C2=A0 #include <linux/clk.h>
+>>>>>>> +#include <linux/clk-provider.h>
+>>>>>>> +#include <linux/clkdev.h>
+>>>>>>> +#include <linux/clk/clk-conf.h>
+>>>>>>>  =C2=A0 #include <linux/clk/tegra.h>
+>>>>>>>  =C2=A0 #include <linux/debugfs.h>
+>>>>>>>  =C2=A0 #include <linux/delay.h>
+>>>>>>> @@ -48,6 +51,7 @@
+>>>>>>>  =C2=A0 #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>>>>>>>  =C2=A0 #include <dt-bindings/gpio/tegra186-gpio.h>
+>>>>>>>  =C2=A0 #include <dt-bindings/gpio/tegra194-gpio.h>
+>>>>>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>>>>>>  =C2=A0 =C2=A0 #define PMC_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0
+>>>>>>>  =C2=A0 #define=C2=A0 PMC_CNTRL_INTR_POLARITY=C2=A0=C2=A0=C2=A0 BIT=
+(17) /* inverts INTR
+>>>>>>> polarity */
+>>>>>>> @@ -100,6 +104,7 @@
+>>>>>>>  =C2=A0 #define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0x168
+>>>>>>>  =C2=A0 #define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 0x16c
+>>>>>>>  =C2=A0 +#define PMC_CLK_OUT_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 0x1a8
+>>>>>>>  =C2=A0 #define PMC_SENSOR_CTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1b0
+>>>>>>>  =C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_SCRATCH_WRITE=C2=A0=C2=A0=C2=
+=A0 BIT(2)
+>>>>>>>  =C2=A0 #define=C2=A0 PMC_SENSOR_CTRL_ENABLE_RST=C2=A0=C2=A0=C2=A0 =
+BIT(1)
+>>>>>>> @@ -155,6 +160,64 @@
+>>>>>>>  =C2=A0 #define=C2=A0 TEGRA_SMC_PMC_READ=C2=A0=C2=A0=C2=A0 0xaa
+>>>>>>>  =C2=A0 #define=C2=A0 TEGRA_SMC_PMC_WRITE=C2=A0=C2=A0=C2=A0 0xbb
+>>>>>>>  =C2=A0 +struct pmc_clk {
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 m=
+ux_mask;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 m=
+ux_shift;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 g=
+ate_shift;
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
+>>>>>>> +
+>>>>>>> +struct pmc_clk_init_data {
+>>>>>>> +=C2=A0=C2=A0=C2=A0 char *name;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 const char *const *parents;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 int num_parents;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 int clk_id;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 mux_shift;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u8 gate_shift;
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +static const char * const clk_out1_parents[] =3D { "osc", "osc_div=
+2",
+>>>>>>> +=C2=A0=C2=A0=C2=A0 "osc_div4", "extern1",
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +static const char * const clk_out2_parents[] =3D { "osc", "osc_div=
+2",
+>>>>>>> +=C2=A0=C2=A0=C2=A0 "osc_div4", "extern2",
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +static const char * const clk_out3_parents[] =3D { "osc", "osc_div=
+2",
+>>>>>>> +=C2=A0=C2=A0=C2=A0 "osc_div4", "extern3",
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +static const struct pmc_clk_init_data tegra_pmc_clks_data[] =3D {
+>>>>>>> +=C2=A0=C2=A0=C2=A0 {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "clk_out_1",
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out1_p=
+arents,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRAY_=
+SIZE(clk_out1_parents),
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .clk_id =3D TEGRA_PMC_C=
+LK_OUT_1,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 6,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 2,
+>>>>>> I'd replace these with a single .shift, given that mux_shift =3D
+>>>>>> gate_shift + 4 for all clocks.
+>>>>>>
+>>>>>>> +=C2=A0=C2=A0=C2=A0 },
+>>>>>>> +=C2=A0=C2=A0=C2=A0 {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "clk_out_2",
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out2_p=
+arents,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRAY_=
+SIZE(clk_out2_parents),
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .clk_id =3D TEGRA_PMC_C=
+LK_OUT_2,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 14,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 10,
+>>>>>>> +=C2=A0=C2=A0=C2=A0 },
+>>>>>>> +=C2=A0=C2=A0=C2=A0 {
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .name =3D "clk_out_3",
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out3_p=
+arents,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRAY_=
+SIZE(clk_out3_parents),
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .clk_id =3D TEGRA_PMC_C=
+LK_OUT_3,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D 22,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D 18,
+>>>>>>> +=C2=A0=C2=A0=C2=A0 },
+>>>>>>> +};
+>>>>>>> +
+>>>>>>>  =C2=A0 struct tegra_powergate {
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct generic_pm_domain genpd;
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc;
+>>>>>>> @@ -254,6 +317,9 @@ struct tegra_pmc_soc {
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct tegra_wake_event *wake=
+_events;
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int num_wake_events;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 const struct pmc_clk_init_data *pmc_clks_data;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 unsigned int num_pmc_clks;
+>>>>>>>  =C2=A0 };
+>>>>>>>  =C2=A0 =C2=A0 static const char * const tegra186_reset_sources[] =
+=3D {
+>>>>>>> @@ -2163,6 +2229,173 @@ static int tegra_pmc_clk_notify_cb(struct
+>>>>>>> notifier_block *nb,
+>>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
+>>>>>>>  =C2=A0 }
+>>>>>>>  =C2=A0 +static void pmc_clk_fence_udelay(u32 offset)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_readl(pmc, offset);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 /* pmc clk propagation delay 2 us */
+>>>>>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, clk->offs) >> clk-=
+>mux_shift;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D clk->mux_mask;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 return val;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, clk->offs);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 val &=3D ~(clk->mux_mask << clk->mux_shift);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 val |=3D index << clk->mux_shift;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, clk->offs);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(clk->offs);
+> Is this fencing applies only to clock changes or maybe it won't hurt to
+> move it into tegra_pmc_writel()?
+>
+>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 return tegra_pmc_readl(pmc, clk->offs) & BIT(cl=
+k->gate_shift)
+>>>>>>> ? 1 : 0;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static void pmc_clk_set_state(unsigned long offs, u32 shift, int
+>>>>>>> state)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, offs);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 val =3D state ? (val | BIT(shift)) : (val & ~BI=
+T(shift));
+>>>>>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, offs);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(offs);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static int pmc_clk_enable(struct clk_hw *hw)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(clk->offs, clk->gate_shift, 1=
+);
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static void pmc_clk_disable(struct clk_hw *hw)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *clk =3D to_pmc_clk(hw);
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(clk->offs, clk->gate_shift, 0=
+);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static const struct clk_ops pmc_clk_ops =3D {
+>>>>>>> +=C2=A0=C2=A0=C2=A0 .get_parent =3D pmc_clk_mux_get_parent,
+>>>>>>> +=C2=A0=C2=A0=C2=A0 .set_parent =3D pmc_clk_mux_set_parent,
+>>>>>>> +=C2=A0=C2=A0=C2=A0 .determine_rate =3D __clk_mux_determine_rate,
+>>>>>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
+>>>>>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
+>>>>>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +static struct clk *
+>>>>>>> +tegra_pmc_clk_out_register(const struct pmc_clk_init_data *data,
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 unsigned long offset)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk *pmc_clk;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk =3D kzalloc(sizeof(*pmc_clk), GFP_KERNE=
+L);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 if (!pmc_clk)
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOMEM)=
+;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 init.name =3D data->name;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_ops;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D data->parents;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D data->num_parents;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D CLK_SET_RATE_NO_REPARENT | CLK_S=
+ET_RATE_PARENT |
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 CLK_SET_PARENT_GATE;
+>>>>>>> +
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk->hw.init =3D &init;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk->offs =3D offset;
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pmc_clk->mux_mask =3D 3;
+>>>>>> If mux_mask is a constant value, perhaps will be better to replace t=
+he
+>>>>>> variable with a literal?
+>>>>>>
+>>>>>> #define PMC_CLK_OUT_MUX_MASK=C2=A0=C2=A0=C2=A0 GENMASK(1, 0)
+>>>>> Maybe even:
+>>>>>
+>>>>> #define PMC_CLK_OUT_MUX_MASK(c)=C2=A0=C2=A0=C2=A0 GENMASK(c->shift + =
+1, c->shift)
+>>> MUX Mask is used only here for PMC clock out and is same for all
+>>> clk_out mux so will use
+>>>
+>>> #define PMC_CLK_OUT_MUX_MASK=C2=A0=C2=A0=C2=A0 GENMASK(1, 0)
+>>>
+>>>> I want to point out that may be a separated gate/mux shifts is a fine
+>>>> variant, you should try and see whether another variants produce more
+>>>> concise result.
+>>>>
+>>>> [snip]
+>> We can do mux_shift as gate_shift + 4 and that restricts this clk
+>> register only for clk1/2/3 as well and there are no other clocks in pmc
+>> anyway.
+>>
+>> How about using bit shift define for CLK1, CLK2, and CLK3?
+>>
+>> .mux_shift =3D PMC_CLK1_SRC_SEL_SHIFT,
+>>
+>> .gate_shift =3D PMC_CLK1_FORCE_EN_SHIFT,
+>>
+>>
+> I think that just renaming ".gate_shift" -> ".force_en_shift" should be
+> good enough.
+You meant to assign bit position directly instead of defines like what I=20
+have now in v4 and use force_en_shift instead of gate_shift?
