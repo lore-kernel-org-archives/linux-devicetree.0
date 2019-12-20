@@ -2,298 +2,269 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4420C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F14C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CF624680
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0C1227BF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:38:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Namo/UWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfLTHiS (ORCPT
+        id S1726030AbfLTHiw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:38:18 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:56027 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfLTHiS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 02:38:18 -0500
-Received: from [10.18.38.198] (10.18.38.198) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 20 Dec
- 2019 15:38:52 +0800
-Subject: Re: [PATCH v2 3/6] phy: amlogic: Add Amlogic A1 USB2 PHY Driver
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Kevin Hilman <khilman@baylibre.com>
-CC:     Yue Wang <yue.wang@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com>
- <1576636944-196192-4-git-send-email-hanjie.lin@amlogic.com>
- <4cbc4216-4f1b-dab2-fccd-4ece7cfedb77@baylibre.com>
- <da372dff-4467-5d04-c8ae-055f89a5b11b@amlogic.com>
- <e66d35b1-4e85-bde4-abf7-af3f569e64e8@baylibre.com>
-From:   Hanjie Lin <hanjie.lin@amlogic.com>
-Message-ID: <def5256a-a66c-bd46-8765-5cd0cf7fa239@amlogic.com>
-Date:   Fri, 20 Dec 2019 15:38:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <e66d35b1-4e85-bde4-abf7-af3f569e64e8@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 20 Dec 2019 02:38:52 -0500
+Received: from mail-eopbgr00055.outbound.protection.outlook.com ([40.107.0.55]:29188
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725965AbfLTHiw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:38:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QGGiVuqTS9H1b5xm/lrWVCclNUaW2Vmah8tXrCuYzWfV+7WWjSrotA+5raNz2z/7YGHyHWdp1ZM5U0zlmTe2N1h+oBGK2FoW0yxvokhd51/QUa8y3JtSreHRFBq2CqXpGZ4vllW4NOjUiySPI4JKtvdPpvGTqstYV8dHtYGeTPxMFxBSuvw4k0PO4Fp0RComV43jjF0uzVi6EvxL28NbKzHpQUxTVhN+IbJQPrTHyXir+UcDwq50TLY5FC1zTxYU/3MKABy+7hcua5jrkyqPCRM+74qSHH8xVcLDwWIBAd159LCdIfWXeMM6Cluc0KyPdwysH2NHK36MEr68/ytqkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bIAkZUtMuWVqmAijM2+Qw0lR7L0Nx8eKSa935UpUKkA=;
+ b=A3HM/+oHwB0SsODhewS7mjw5wx/Hiayz1NpNe9fAHNdsT3uGz0I1aSz8mW+ldRG5S0cku4tRYRDEZcti+1qF+lF99gCAg6H4o3ZIAGuKjMi6HFnfHWiA5q3eE4cRNHQ5PIcaUGO4sTlyZtu5FAa+PFkDU2OHrERsL8kYyjEjsiM0GP0bfzjuw9FoPhJSOoqQO0BPdqyoDCz5v29TvdwNuStYhkyN8AWADnO//fABJPUtkutpWEE6lwjc7t5BaHqyobYgXN8VsjCVY5mo6W6Y56IDeF1eCpSGlNTC2KxIwAvddFTA4JV+4ejBsSRMtA3Oi61eD4kflRiCoWSjzrSScQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bIAkZUtMuWVqmAijM2+Qw0lR7L0Nx8eKSa935UpUKkA=;
+ b=Namo/UWpzD+Xg6WFWqvnPSmvQjvrhADPsyeS8GhJ045rIWYnzVW2EIL8izY+ZJF4CjvoypVRd04p8f3YMum3rRRvPIXVBu6bCTzdQdNLzHZxEd8INbKukYQRzGEGe7pswIAQJ56t7ImyI6vyRYqHHxk/rUJ4J8bFdmpKR4duExc=
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.83) by
+ VI1PR04MB5248.eurprd04.prod.outlook.com (20.177.52.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Fri, 20 Dec 2019 07:38:46 +0000
+Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::f099:4735:430c:ef1d]) by VI1PR04MB5567.eurprd04.prod.outlook.com
+ ([fe80::f099:4735:430c:ef1d%2]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
+ 07:38:46 +0000
+From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        "antoine.tenart@free-electrons.com" 
+        <antoine.tenart@free-electrons.com>,
+        "jaz@semihalf.com" <jaz@semihalf.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Thread-Topic: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Thread-Index: AQHVtn//emqdPRPEmEKC7Ncoej9h46fBtnoAgAAR9oCAAAh2AIAAKmuAgAAEEQCAAKEqIA==
+Date:   Fri, 20 Dec 2019 07:38:45 +0000
+Message-ID: <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219190308.GE25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219214930.GG25745@shell.armlinux.org.uk>
+In-Reply-To: <20191219214930.GG25745@shell.armlinux.org.uk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.38.198]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=madalin.bucur@oss.nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 93dffde8-c633-4ac4-9d26-08d7851fa563
+x-ms-traffictypediagnostic: VI1PR04MB5248:|VI1PR04MB5248:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB52481451C62653234A257A76AD2D0@VI1PR04MB5248.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 025796F161
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(13464003)(199004)(189003)(55016002)(9686003)(478600001)(26005)(186003)(4326008)(64756008)(66946007)(86362001)(66476007)(66446008)(66556008)(7416002)(5660300002)(2906002)(7696005)(81166006)(81156014)(8936002)(76116006)(33656002)(6506007)(71200400001)(110136005)(54906003)(316002)(52536014)(8676002)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5248;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: o7kjiIwvS6VBWgRH+ENKOZkXMk/KcfffGjODRpojsv+cjelxEJdXYEMymtP/hTvF+m+0hOvjaazfeu62wESp4+P3/bPOUyb0NVOSttD10a99SCpT+lo1ZC05ma9MNRShVJy+IzuufRqYvvqq/fENWM+4ppE19LjastSwZ6M+0ZypHiALcdNvd4NZxhGnuDlXfh0R3q0aLah3eBGJutDWNygj/mCtiaqpM7cZlMGTwFR4qJSVXv6cU9WW96tf6Bhpo0g9hDrm5bQn56wN/ceR0PrVOblDXwNVGU6EAC1yzraLqy6fKKorp/wKtCDPPHMd7FZA/duam9uv15eJGkwYzzvwsE3EUyzsnOdWr3304e4fKXnya/5RPwGH0A4yZA5IvWhcVkMKCNn7CAnx4rJY0ZyuKBE7bVCxvp4Ej3S93kP1Zk43/p4TSwEWhaE7IPlD+mP3Ggt00fZpZAyBEQb9FJ0Do1dK7UnHePGC92ZHSJdi3HIOVqM8Zj8ZIkB2G3OIkX3qaO1oRtv1ren7a/sd8ahtSVnrlqoIAGoa/JKNI44=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93dffde8-c633-4ac4-9d26-08d7851fa563
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 07:38:46.0394
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w47uo4bjNgCvgQRc4BYPnlJC7RQ6cjk/uBzpyTYUEd5eb/Z9eb2QNbj9S1MM90wDXk765FuLwJ0vrm9yUUzjeg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5248
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+> -----Original Message-----
+> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> On Thu, Dec 19, 2019 at 09:34:57PM +0000, Madalin Bucur (OSS) wrote:
+> > > -----Original Message-----
+> > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > > On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
+> > > > > -----Original Message-----
+> > > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > > > >
+> > > > > On Thu, Dec 19, 2019 at 05:21:16PM +0200, Madalin Bucur wrote:
+> > > > > > From: Madalin Bucur <madalin.bucur@nxp.com>
+> > > > > >
+> > > > > > Add explicit entries for XFI, SFI to make sure the device
+> > > > > > tree entries for phy-connection-type "xfi" or "sfi" are
+> > > > > > properly parsed and differentiated against the existing
+> > > > > > backplane 10GBASE-KR mode.
+> > > > >
+> > > > > 10GBASE-KR is actually used for XFI and SFI (due to a slight
+> > > > > mistake on my part, it should've been just 10GBASE-R).
+> > > > >
+> > > > > Please explain exactly what the difference is between XFI, SFI
+> > > > > and 10GBASE-R. I have not been able to find definitive definition=
+s
+> > > > > for XFI and SFI anywhere, and they appear to be precisely identic=
+al
+> > > > > to 10GBASE-R. It seems that it's just a terminology thing, with
+> > > > > different groups wanting to "own" what is essentially exactly the
+> > > > > same interface type.
+> > > >
+> > > > Hi Russell,
+> > > >
+> > > > 10GBase-R could be used as a common nominator but just as well 10G
+> > > > and remove the rest while we're at it. There are/may be differences=
+ in
+> > > > features, differences in the way the HW is configured (the most
+> > > > important aspect) and one should be able to determine what interfac=
+e
+> > > > type is in use to properly configure the HW. SFI does not have the
+> > > > CDR function in the PMD, relying on the PMA signal conditioning vs =
+the
+> > > > XFI that requires this in the PMD. We kept the xgmii compatible for=
+ so
+> > > > long without much issues until someone started cleaning up the PHY
+> > > > supported modes. Since we're doing that, let's be rigorous. The 10G=
+Base-KR
+> > > > is important too, we have some backplane code in preparation and
+> > > > having it there could pave the way for a simpler integration.
+> > >
+> > > The problem we currently have is:
+> > >
+> > > $ grep '10gbase-kr' arch/*/boot/dts -r
+> > >
+> > > virtually none of those are actually backplane. For the mcbin
+> > > matches, these are either to a 88x3310 PHY for the doubleshot, which
+> > > dynamically operates between XFI, 5GBASE-R, 2500BASE-X, or SGMII acco=
+rding
+> > > to the datasheet.
+> >
+> > Yes, I've seen it's used already in several places:
+> >
+> > $ grep PHY_INTERFACE_MODE_10GKR drivers/net -nr
+> > drivers/net/phy/marvell10g.c:219:       if (iface !=3D
+> PHY_INTERFACE_MODE_10GKR) {
+> > drivers/net/phy/marvell10g.c:307:           phydev->interface !=3D
+> PHY_INTERFACE_MODE_10GKR)
+> > drivers/net/phy/marvell10g.c:389:            phydev->interface =3D=3D
+> PHY_INTERFACE_MODE_10GKR) && phydev->link) {
+> > drivers/net/phy/marvell10g.c:398:                       phydev-
+> >interface =3D PHY_INTERFACE_MODE_10GKR;
+> > drivers/net/phy/phylink.c:296:          case PHY_INTERFACE_MODE_10GKR:
+> > drivers/net/phy/aquantia_main.c:361:            phydev->interface =3D
+> PHY_INTERFACE_MODE_10GKR;
+> > drivers/net/phy/aquantia_main.c:499:        phydev->interface !=3D
+> PHY_INTERFACE_MODE_10GKR)
+> > drivers/net/phy/sfp-bus.c:340:          return
+> PHY_INTERFACE_MODE_10GKR;
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1117:   return
+> interface =3D=3D PHY_INTERFACE_MODE_10GKR ||
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1203:   case
+> PHY_INTERFACE_MODE_10GKR:
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1652:   case
+> PHY_INTERFACE_MODE_10GKR:
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4761:   case
+> PHY_INTERFACE_MODE_10GKR:
+> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4783:   case
+> PHY_INTERFACE_MODE_10GKR:
+> >
+> > We should fix this, if it's incorrect.
+> >
+> > > If we add something else, then the problem becomes what to do about
+> > > that lot - one of the problems is, it seems we're going to be
+> > > breaking DT compatibility by redefining 10gbase-kr to be correct.
+> >
+> > We need the committer/maintainer to update that to a correct value.
+>=20
+> The general principle is, we don't break existing DT - in that, we
+> expect DT files from current kernels to work with future kernels. So,
+> we're kind of stuck with "10gbase-kr" being used for this at least in
+> the medium term.
+>=20
+> By all means introduce "xfi" and "sfi" if you think that there is a
+> need to discriminate between the two, but I've seen no hardware which
+> that treats them any differently from 10gbase-r.
+>=20
+> If we want to support real 10gbase-kr, then I think we need to consider
+> how to do that without affecting compatibility with what we already
+> have.
+>=20
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down
+> 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
 
+I've looked at the device tree entries using 10GBase-KR:
 
-On 2019/12/19 18:12, Neil Armstrong wrote:
-> On 19/12/2019 10:48, Hanjie Lin wrote:
->>
->>
->> On 2019/12/18 21:17, Neil Armstrong wrote:
->>> Hi,
->>>
->>> On 18/12/2019 03:42, Hanjie Lin wrote:
->>>> This adds support for the USB2 PHY found in the Amlogic A1 SoC Family.
->>>>
->>>> It supports host mode only.
->>>>
->>>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
->>>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
->>>> ---
->>>>  drivers/phy/amlogic/phy-meson-g12a-usb2.c | 102 ++++++++++++++++++++++--------
->>>>  1 file changed, 74 insertions(+), 28 deletions(-)
->>>>
->>>> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb2.c b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
->>>> index 9065ffc..2c242d3 100644
->>>> --- a/drivers/phy/amlogic/phy-meson-g12a-usb2.c
->>>> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb2.c
->>>> @@ -146,11 +146,18 @@
->>>>  #define RESET_COMPLETE_TIME					1000
->>>>  #define PLL_RESET_COMPLETE_TIME					100
->>>>  
->>>> +enum {
->>>> +	MESON_USB2_PHY_VERSION_10 = 0,
->>>> +	MESON_USB2_PHY_VERSION_11,
->>>
->>> Are these the real "versions" of the phy or it's made up ?
->>>
->>
->> This version is made up and only for distinguish a1 and g12a.
-> 
-> No problem, in this case simply use the SoC family instead of 10 and 11.
-> 
-> Neil
-> 
+all these are disabled:
 
-Of course, it looks more accurate, I will get rid of phy version in next version.
+// disabled, commit mentions interface is SFI, jaz@semihalf.com
+arch/arm64/boot/dts/marvell/cn9132-db.dts:107:  phy-mode =3D "10gbase-kr";
 
->>
->>>> +	MESON_USB2_PHY_VERSION_COUNT,
->>>> +};
->>>> +
->>>>  struct phy_meson_g12a_usb2_priv {
->>>>  	struct device		*dev;
->>>>  	struct regmap		*regmap;
->>>>  	struct clk		*clk;
->>>>  	struct reset_control	*reset;
->>>> +	int phy_version;
->>>>  };
->>>>  
->>>>  static const struct regmap_config phy_meson_g12a_usb2_regmap_conf = {
->>>> @@ -192,18 +199,33 @@ static int phy_meson_g12a_usb2_init(struct phy *phy)
->>>>  		     FIELD_PREP(PHY_CTRL_R17_MPLL_FILTER_PVT2, 2) |
->>>>  		     FIELD_PREP(PHY_CTRL_R17_MPLL_FILTER_PVT1, 9));
->>>>  
->>>> -	regmap_write(priv->regmap, PHY_CTRL_R18,
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_LKW_SEL, 1) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_LK_W, 9) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_LK_S, 0x27) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_PFD_GAIN, 1) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_ROU, 7) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_DATA_SEL, 3) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_BIAS_ADJ, 1) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_BB_MODE, 0) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_ALPHA, 3) |
->>>> -		     FIELD_PREP(PHY_CTRL_R18_MPLL_ADJ_LDO, 1) |
->>>> -		     PHY_CTRL_R18_MPLL_ACG_RANGE);
->>>> +	if (priv->phy_version == MESON_USB2_PHY_VERSION_10)
->>>> +		regmap_write(priv->regmap, PHY_CTRL_R18,
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_LKW_SEL, 1) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_LK_W, 9) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_LK_S, 0x27) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_PFD_GAIN, 1) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_ROU, 7) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_DATA_SEL, 3) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_BIAS_ADJ, 1) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_BB_MODE, 0) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_ALPHA, 3) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_ADJ_LDO, 1) |
->>>> +			     PHY_CTRL_R18_MPLL_ACG_RANGE);
->>>> +	else if (priv->phy_version == MESON_USB2_PHY_VERSION_11)
->>>> +		regmap_write(priv->regmap, PHY_CTRL_R18,
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_LKW_SEL, 1) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_LK_W, 9) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_LK_S, 0x27) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_PFD_GAIN, 1) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_ROU, 7) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_DATA_SEL, 3) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_BIAS_ADJ, 1) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_BB_MODE, 0) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_ALPHA, 3) |
->>>> +			     FIELD_PREP(PHY_CTRL_R18_MPLL_ADJ_LDO, 1) |
->>>> +			     PHY_CTRL_R18_MPLL_ACG_RANGE |
->>>> +			     PHY_CTRL_R18_MPLL_DCO_CLK_SEL);
->>>
->>> The only difference is PHY_CTRL_R18_MPLL_ACG_RANGE | PHY_CTRL_R18_MPLL_DCO_CLK_SEL,
->>> you can easily simplify the code here by using a temp variable.
->>>
->>
->> Yes, it will looks more clearly.
->>
->>>>  
->>>>  	udelay(PLL_RESET_COMPLETE_TIME);
->>>>  
->>>> @@ -227,13 +249,24 @@ static int phy_meson_g12a_usb2_init(struct phy *phy)
->>>>  		     FIELD_PREP(PHY_CTRL_R20_USB2_BGR_VREF_4_0, 0) |
->>>>  		     FIELD_PREP(PHY_CTRL_R20_USB2_BGR_DBG_1_0, 0));
->>>>  
->>>> -	regmap_write(priv->regmap, PHY_CTRL_R4,
->>>> -		     FIELD_PREP(PHY_CTRL_R4_CALIB_CODE_7_0, 0xf) |
->>>> -		     FIELD_PREP(PHY_CTRL_R4_CALIB_CODE_15_8, 0xf) |
->>>> -		     FIELD_PREP(PHY_CTRL_R4_CALIB_CODE_23_16, 0xf) |
->>>> -		     PHY_CTRL_R4_TEST_BYPASS_MODE_EN |
->>>> -		     FIELD_PREP(PHY_CTRL_R4_I_C2L_BIAS_TRIM_1_0, 0) |
->>>> -		     FIELD_PREP(PHY_CTRL_R4_I_C2L_BIAS_TRIM_3_2, 0));
->>>> +	if (priv->phy_version == MESON_USB2_PHY_VERSION_10)
->>>> +		regmap_write(priv->regmap, PHY_CTRL_R4,
->>>> +			     FIELD_PREP(PHY_CTRL_R4_CALIB_CODE_7_0, 0xf) |
->>>> +			     FIELD_PREP(PHY_CTRL_R4_CALIB_CODE_15_8, 0xf) |
->>>> +			     FIELD_PREP(PHY_CTRL_R4_CALIB_CODE_23_16, 0xf) |
->>>> +			     PHY_CTRL_R4_TEST_BYPASS_MODE_EN |
->>>> +			     FIELD_PREP(PHY_CTRL_R4_I_C2L_BIAS_TRIM_1_0, 0) |
->>>> +			     FIELD_PREP(PHY_CTRL_R4_I_C2L_BIAS_TRIM_3_2, 0));
->>>> +	else if (priv->phy_version == MESON_USB2_PHY_VERSION_11) {
->>>> +		regmap_write(priv->regmap, PHY_CTRL_R21,
->>>> +			     PHY_CTRL_R21_USB2_CAL_ACK_EN |
->>>> +			     PHY_CTRL_R21_USB2_TX_STRG_PD |
->>>> +			     FIELD_PREP(PHY_CTRL_R21_USB2_OTG_ACA_TRIM_1_0, 2));
->>>> +
->>>> +		/* Analog Settings */
->>>> +		regmap_write(priv->regmap, PHY_CTRL_R13,
->>>> +			     FIELD_PREP(PHY_CTRL_R13_MIN_COUNT_FOR_SYNC_DET, 7));
->>>> +	}
->>>>  
->>>>  	/* Tuning Disconnect Threshold */
->>>>  	regmap_write(priv->regmap, PHY_CTRL_R3,
->>>> @@ -241,11 +274,13 @@ static int phy_meson_g12a_usb2_init(struct phy *phy)
->>>>  		     FIELD_PREP(PHY_CTRL_R3_HSDIC_REF, 1) |
->>>>  		     FIELD_PREP(PHY_CTRL_R3_DISC_THRESH, 3));
->>>>  
->>>> -	/* Analog Settings */
->>>> -	regmap_write(priv->regmap, PHY_CTRL_R14, 0);
->>>> -	regmap_write(priv->regmap, PHY_CTRL_R13,
->>>> -		     PHY_CTRL_R13_UPDATE_PMA_SIGNALS |
->>>> -		     FIELD_PREP(PHY_CTRL_R13_MIN_COUNT_FOR_SYNC_DET, 7));
->>>> +	if (priv->phy_version == MESON_USB2_PHY_VERSION_10) {
->>>> +		/* Analog Settings */
->>>> +		regmap_write(priv->regmap, PHY_CTRL_R14, 0);
->>>> +		regmap_write(priv->regmap, PHY_CTRL_R13,
->>>> +			     PHY_CTRL_R13_UPDATE_PMA_SIGNALS |
->>>> +			     FIELD_PREP(PHY_CTRL_R13_MIN_COUNT_FOR_SYNC_DET, 7));
->>>> +	}
->>>>  
->>>>  	return 0;
->>>>  }
->>>> @@ -271,6 +306,7 @@ static int phy_meson_g12a_usb2_probe(struct platform_device *pdev)
->>>>  	struct resource *res;
->>>>  	struct phy_meson_g12a_usb2_priv *priv;
->>>>  	struct phy *phy;
->>>> +	struct device_node *np = dev->of_node;
->>>>  	void __iomem *base;
->>>>  	int ret;
->>>>  
->>>> @@ -286,14 +322,23 @@ static int phy_meson_g12a_usb2_probe(struct platform_device *pdev)
->>>>  	if (IS_ERR(base))
->>>>  		return PTR_ERR(base);
->>>>  
->>>> +	if (of_device_is_compatible(np, "amlogic,g12a-usb2-phy"))
->>>> +		priv->phy_version = MESON_USB2_PHY_VERSION_10;
->>>> +	else if (of_device_is_compatible(np, "amlogic,a1-usb2-phy"))
->>>> +		priv->phy_version = MESON_USB2_PHY_VERSION_11;
->>>> +	else
->>>> +		return -EINVAL;
->>>
->>> Please use of_device_get_match_data() and a match data for each compatible instead.
->>>
->>
->> OK, I will fix it in next version.
->>
->>>> +
->>>>  	priv->regmap = devm_regmap_init_mmio(dev, base,
->>>>  					     &phy_meson_g12a_usb2_regmap_conf);
->>>>  	if (IS_ERR(priv->regmap))
->>>>  		return PTR_ERR(priv->regmap);
->>>>  
->>>> -	priv->clk = devm_clk_get(dev, "xtal");
->>>> -	if (IS_ERR(priv->clk))
->>>> -		return PTR_ERR(priv->clk);
->>>> +	if (priv->phy_version == MESON_USB2_PHY_VERSION_10) {
->>>> +		priv->clk = devm_clk_get(dev, "xtal");
->>>> +		if (IS_ERR(priv->clk))
->>>> +			return PTR_ERR(priv->clk);
->>>> +	}
->>>>  
->>>>  	priv->reset = devm_reset_control_get(dev, "phy");
->>>>  	if (IS_ERR(priv->reset))
->>>> @@ -322,7 +367,8 @@ static int phy_meson_g12a_usb2_probe(struct platform_device *pdev)
->>>>  
->>>>  static const struct of_device_id phy_meson_g12a_usb2_of_match[] = {
->>>>  	{ .compatible = "amlogic,g12a-usb2-phy", },
->>>> -	{ },
->>>> +	{ .compatible = "amlogic,a1-usb2-phy", },
->>>> +	{ /* Sentinel */ }
->>>>  };
->>>>  MODULE_DEVICE_TABLE(of, phy_meson_g12a_usb2_of_match);
->>>>  
->>>>
->>>
->>> Thanks,
->>> Neil
->>>
->>> .
->>>
->>
->> Thanks,
->> Hanjie.Lin
->>
-> 
-> .
-> 
+// disabled, SFI with SFP cage, jaz@semihalf.com
+arch/arm64/boot/dts/marvell/cn9130-db.dts:131:  phy-mode =3D "10gbase-kr";
+arch/arm64/boot/dts/marvell/cn9131-db.dts:89:   phy-mode =3D "10gbase-kr";
 
+these are used:
 
-Thanks,
-Hanjie.Lin
+// SFP ports, antoine.tenart@free-electrons.com
+arch/arm64/boot/dts/marvell/armada-7040-db.dts:279:     phy-mode =3D "10gba=
+se-kr";=20
+arch/arm64/boot/dts/marvell/armada-8040-db.dts:190:     phy-mode =3D "10gba=
+se-kr";
+arch/arm64/boot/dts/marvell/armada-8040-db.dts:334:     phy-mode =3D "10gba=
+se-kr";
+
+// SFP, 10GKR, antoine.tenart@free-electrons.com
+arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:37:   phy-mode =3D "10gba=
+se-kr";
+arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:44:   phy-mode =3D "10gba=
+se-kr";
+
+// SFP, baruch@tkos.co.il
+arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts:279: phy-mode =
+=3D "10gbase-kr";
+
+// SFP+, rmk+kernel@armlinux.org.uk
+arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:19:        phy=
+-mode =3D "10gbase-kr";=20
+arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:26:        phy=
+-mode =3D "10gbase-kr";=20
+
+I've added the information I could derive from the commit message.
+Maybe the original authors of the commits can help us with more
+information on the actual HW capabilities/operation mode.
+
+Regards,
+Madalin
