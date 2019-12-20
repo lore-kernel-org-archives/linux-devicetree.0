@@ -2,118 +2,109 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121E1C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0B6C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D853921655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:57:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4U/Cy0J"
+	by mail.kernel.org (Postfix) with ESMTP id 8E17E21655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfLTO5R (ORCPT
+        id S1727395AbfLTPBc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:57:17 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34004 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727233AbfLTO5R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 09:57:17 -0500
-Received: by mail-pl1-f193.google.com with SMTP id x17so4214806pln.1;
-        Fri, 20 Dec 2019 06:57:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hkWco8dRw59sMhOMYfREd70FxO1H0nWVA/bQQmTVaVs=;
-        b=B4U/Cy0Jo5ZWdcTxOejAzkRKtbqu1oJ8cNX48pzKNRMx1jx7bG6GM0Fr8ZLpoMgfKR
-         RmeJwCepYBDlD6HLi5Im7D7ORLfF9mdZyjTpceiiVUAGTYpTuxiMuUGANPH8pauiyk2A
-         wPQlW9yUzrADqqqzH7kDOH3w0k2ahGfUr/trYz0kNaLZeVju1wXwlXOUb9gITh9BfKN7
-         b4Spa9s0ePcrVUpP88/J6nHsxFPd7mqLD3LMWWKKXHAQRGiNDLi+NofQoQSy2zBPu/3q
-         Ia61NeWbWgJ1dINVmjGEa0/8IUSnrS101RX4O4ID+dhea8bctn7Cz8WvCUfGCW2c2x/B
-         OfJQ==
+        Fri, 20 Dec 2019 10:01:32 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46320 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfLTPBc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 10:01:32 -0500
+Received: by mail-oi1-f196.google.com with SMTP id p67so4610560oib.13;
+        Fri, 20 Dec 2019 07:01:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hkWco8dRw59sMhOMYfREd70FxO1H0nWVA/bQQmTVaVs=;
-        b=VAxZDqbaTxpgLhkJivKMfl5sxLsqe7SkIGApfRBHFZV6+Jr9459Qg9QXWe4GTi3gOA
-         J/s5Mdz7A6MKsjP6XUjcRjBz64x9qOMLp3REFnXQdkstxORRHlk922nRn+hgYdjNbujl
-         FLANia5CZgtUiKFcUoRN3FupZdIXhErqrL1eBY9IBKySer5wtLacbramWZ98IVNiR0u7
-         olyT3hvR8tL89/Z9//FMonggxCFmqtpdRpqSRBSFLYjbbAvAXGeOJz2oYrzsoBL8vINv
-         wLQw+qtOuzowS4RU4ybAnytZ9JSeQdtiec9W4Yawj7zdJQIyZQ/9NZKZOKzpjCh8nqnl
-         kJkQ==
-X-Gm-Message-State: APjAAAX+Vc1LdHHpjuUad6LCG3kwUw6KUC4TFBBR2auSBo+Kj17sgwqM
-        j/hsmJwds78lhKIYCpn6hK8=
-X-Google-Smtp-Source: APXvYqwy7FBGM1nmXMxgGMObkWPUX4z7afo67yur0K79OgQbDAlglTObe9TLYetTlj+g52JNcu3Mjw==
-X-Received: by 2002:a17:902:bc45:: with SMTP id t5mr15255745plz.163.1576853836223;
-        Fri, 20 Dec 2019 06:57:16 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id x7sm13927986pfp.93.2019.12.20.06.57.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 06:57:15 -0800 (PST)
-Date:   Fri, 20 Dec 2019 06:57:12 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: Re: [PATCH V6 net-next 06/11] net: Introduce a new MII time stamping
- interface.
-Message-ID: <20191220145712.GA3846@localhost>
-References: <cover.1576511937.git.richardcochran@gmail.com>
- <28939f11b984759257167e778d0c73c0dd206a35.1576511937.git.richardcochran@gmail.com>
- <20191217092155.GL6994@lunn.ch>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+iJQh1B5KXxx5DhyusKnyQJixmTQKTrZ2Rj0CaEWDOQ=;
+        b=Jhhhe0bADpO+zDdWsoOS0FQ92wou+1qHWGn4xQ9e0H+P19Foffdon215FeLrt5cIKS
+         5FLT+bS1rIfyk40JXxUVXD9E1rZ9fcyaYo4tNKOtVZ6UarGXp0Hc4QLYsEaGyRgC7UJi
+         hUglpC1CUwVhpUk65yoNL46yN4aOxMK4nXj3Hz5SzCfKQzOKFVk3tgdeBmm9LMMMxi0F
+         LNfI2kgMh/HZhAj+6uhre8ezTV5y24Pjw29PDz4002GP74qUHyo6X4qUlEYQh77dpZaz
+         5tBuZZA1NzBMb2NlK0EykCcjSF6Ea34Zvgjxl/cEa59SLpl8qNgooMAQOsITCLNxpEPQ
+         Tocg==
+X-Gm-Message-State: APjAAAU/FqDVg3uMegNZIT6MbEQR80ExtFwX6+E7xDKgmLkGOcdsRmsF
+        ZnsE+yFMy8+FYdPwtZWLDo47WFfGN8n8Trin8pxbQpWs
+X-Google-Smtp-Source: APXvYqwWJiewRz8Q9MAA6yfhGHK2rHY5vZ6rtov/p5xg5x7TBF8tOOvwQWl8evm8v0Pc3phtj7/JsDolMsD8M2faC1w=
+X-Received: by 2002:aca:36c5:: with SMTP id d188mr4050927oia.54.1576854091491;
+ Fri, 20 Dec 2019 07:01:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217092155.GL6994@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1570717560-7431-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570717560-7431-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20191014181016.GA1927@bogus> <TY1PR01MB17708F6646BD736C52A22BFCC0530@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB17708F6646BD736C52A22BFCC0530@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Dec 2019 16:01:20 +0100
+Message-ID: <CAMuHMdV+1g9Oh9YPSsRQYO0=k8DYoaBhthY0HxSUVW9=L5jeFA@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 1/3] dt-bindings: can: rcar_can: Add r8a774b1 support
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 10:21:55AM +0100, Andrew Lunn wrote:
-> Forward declarations are considered bad.
+Hi Fabrizio,
 
-Not by me!
+On Wed, Dec 18, 2019 at 4:15 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Do you think you can take this patch?
 
-> Please add a new patch to the
-> series which moves code around first.
+Sure, queuing in renesas-dt-bindings-for-v5.6.
 
-Sorry, I disagree.  For new drivers, sure, but for testing, production
-drivers, moving code blocks around "just because" is only asking for
-new bugs due to copy-pastos.
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: 14 October 2019 19:10
+> > Subject: Re: [PATCH net-next v2 1/3] dt-bindings: can: rcar_can: Add r8a774b1 support
+> >
+> > On Thu, 10 Oct 2019 15:25:58 +0100, Fabrizio Castro wrote:
+> > > Document RZ/G2N (r8a774b1) SoC specific bindings.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > > v1->v2:
+> > > * No change
+> > >
+> > >  Documentation/devicetree/bindings/net/can/rcar_can.txt | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
 
-> When using phylink, not phylib, this call will not happen. You need to
-> add a similar bit of code in phylink_mac_config().
+Gr{oetje,eeting}s,
 
-Good to know.
+                        Geert
 
-> For the moment what you have is sufficient. I doubt anybody is using
-> the dp83640 with phylink, and the new hardware you are targeting seems
-> to be RGMII based, not SERDES, which is the main use case for PHYLINK.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Yeah, my impression is that the phyter will be the first and last phy
-time stamping device ever created.  Designers reject this part because
-it is 100 mbit only.  And there are no gigabit+ phys with time
-stamping at all.
-
-So I don't anticipate the phylink layer needing any of this time
-stamping stuff in the foreseeable future.
-
-Thanks,
-Richard
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
