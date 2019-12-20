@@ -2,269 +2,227 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F14C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D73C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0C1227BF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FAC4227BF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Namo/UWp"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Hg9dNTef";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Js7NxNuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726030AbfLTHiw (ORCPT
+        id S1727190AbfLTHps (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:38:52 -0500
-Received: from mail-eopbgr00055.outbound.protection.outlook.com ([40.107.0.55]:29188
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbfLTHiw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 02:38:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QGGiVuqTS9H1b5xm/lrWVCclNUaW2Vmah8tXrCuYzWfV+7WWjSrotA+5raNz2z/7YGHyHWdp1ZM5U0zlmTe2N1h+oBGK2FoW0yxvokhd51/QUa8y3JtSreHRFBq2CqXpGZ4vllW4NOjUiySPI4JKtvdPpvGTqstYV8dHtYGeTPxMFxBSuvw4k0PO4Fp0RComV43jjF0uzVi6EvxL28NbKzHpQUxTVhN+IbJQPrTHyXir+UcDwq50TLY5FC1zTxYU/3MKABy+7hcua5jrkyqPCRM+74qSHH8xVcLDwWIBAd159LCdIfWXeMM6Cluc0KyPdwysH2NHK36MEr68/ytqkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bIAkZUtMuWVqmAijM2+Qw0lR7L0Nx8eKSa935UpUKkA=;
- b=A3HM/+oHwB0SsODhewS7mjw5wx/Hiayz1NpNe9fAHNdsT3uGz0I1aSz8mW+ldRG5S0cku4tRYRDEZcti+1qF+lF99gCAg6H4o3ZIAGuKjMi6HFnfHWiA5q3eE4cRNHQ5PIcaUGO4sTlyZtu5FAa+PFkDU2OHrERsL8kYyjEjsiM0GP0bfzjuw9FoPhJSOoqQO0BPdqyoDCz5v29TvdwNuStYhkyN8AWADnO//fABJPUtkutpWEE6lwjc7t5BaHqyobYgXN8VsjCVY5mo6W6Y56IDeF1eCpSGlNTC2KxIwAvddFTA4JV+4ejBsSRMtA3Oi61eD4kflRiCoWSjzrSScQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bIAkZUtMuWVqmAijM2+Qw0lR7L0Nx8eKSa935UpUKkA=;
- b=Namo/UWpzD+Xg6WFWqvnPSmvQjvrhADPsyeS8GhJ045rIWYnzVW2EIL8izY+ZJF4CjvoypVRd04p8f3YMum3rRRvPIXVBu6bCTzdQdNLzHZxEd8INbKukYQRzGEGe7pswIAQJ56t7ImyI6vyRYqHHxk/rUJ4J8bFdmpKR4duExc=
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.83) by
- VI1PR04MB5248.eurprd04.prod.outlook.com (20.177.52.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.15; Fri, 20 Dec 2019 07:38:46 +0000
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d]) by VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d%2]) with mapi id 15.20.2559.016; Fri, 20 Dec 2019
- 07:38:46 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        "antoine.tenart@free-electrons.com" 
-        <antoine.tenart@free-electrons.com>,
-        "jaz@semihalf.com" <jaz@semihalf.com>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Topic: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Index: AQHVtn//emqdPRPEmEKC7Ncoej9h46fBtnoAgAAR9oCAAAh2AIAAKmuAgAAEEQCAAKEqIA==
-Date:   Fri, 20 Dec 2019 07:38:45 +0000
-Message-ID: <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191219190308.GE25745@shell.armlinux.org.uk>
- <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191219214930.GG25745@shell.armlinux.org.uk>
-In-Reply-To: <20191219214930.GG25745@shell.armlinux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=madalin.bucur@oss.nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 93dffde8-c633-4ac4-9d26-08d7851fa563
-x-ms-traffictypediagnostic: VI1PR04MB5248:|VI1PR04MB5248:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB52481451C62653234A257A76AD2D0@VI1PR04MB5248.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 025796F161
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(13464003)(199004)(189003)(55016002)(9686003)(478600001)(26005)(186003)(4326008)(64756008)(66946007)(86362001)(66476007)(66446008)(66556008)(7416002)(5660300002)(2906002)(7696005)(81166006)(81156014)(8936002)(76116006)(33656002)(6506007)(71200400001)(110136005)(54906003)(316002)(52536014)(8676002)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5248;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: o7kjiIwvS6VBWgRH+ENKOZkXMk/KcfffGjODRpojsv+cjelxEJdXYEMymtP/hTvF+m+0hOvjaazfeu62wESp4+P3/bPOUyb0NVOSttD10a99SCpT+lo1ZC05ma9MNRShVJy+IzuufRqYvvqq/fENWM+4ppE19LjastSwZ6M+0ZypHiALcdNvd4NZxhGnuDlXfh0R3q0aLah3eBGJutDWNygj/mCtiaqpM7cZlMGTwFR4qJSVXv6cU9WW96tf6Bhpo0g9hDrm5bQn56wN/ceR0PrVOblDXwNVGU6EAC1yzraLqy6fKKorp/wKtCDPPHMd7FZA/duam9uv15eJGkwYzzvwsE3EUyzsnOdWr3304e4fKXnya/5RPwGH0A4yZA5IvWhcVkMKCNn7CAnx4rJY0ZyuKBE7bVCxvp4Ej3S93kP1Zk43/p4TSwEWhaE7IPlD+mP3Ggt00fZpZAyBEQb9FJ0Do1dK7UnHePGC92ZHSJdi3HIOVqM8Zj8ZIkB2G3OIkX3qaO1oRtv1ren7a/sd8ahtSVnrlqoIAGoa/JKNI44=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 20 Dec 2019 02:45:48 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:42137 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725941AbfLTHps (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:45:48 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id A5D916662;
+        Fri, 20 Dec 2019 02:45:45 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Fri, 20 Dec 2019 02:45:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=IernsQDish/tY0fKm35BITr1oVw
+        IrtJ2huVtA+lAAII=; b=Hg9dNTefPxrRFhFJ7/0oUiZL6B4ocQSvTjiEVlQpMyk
+        EIjn9yLUKda5vGMynmFHdu2X2i/gp7SBl/xGG6bDPgH6BmY46/IEarofgmxehViK
+        zTCZOawJbYOj8Jg+XHEFYBh7rf+WEljwfaynw9+DnKs192p/avjStagYZDO/JUts
+        Wvri5vUPP+1OyFA0yaqXVtx/YgKRfbcLia/1QVLqd1TL9SaN/y77JH5wYK6wbWKz
+        iBQLhmjGUbAf9CzEOtUJhTfkBaHzMpfyIm8txmS6adGdfcyB1UYPnk5Z32bCVds5
+        W066SqyxEgL0nhCaaqzZ5HLHXSEsD3uK5SXnvMnK3Jw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=IernsQ
+        Dish/tY0fKm35BITr1oVwIrtJ2huVtA+lAAII=; b=Js7NxNuNEGi8SGQaWMKYFk
+        T7Rb3OfZda/GoAZkf3N7AcdAhXNF8bsEuKQSeOzbCoA/ajB9Nvxzx1nMGT+FH/a4
+        et2AGMLDkKNtIVfO6oEk7SPeigsfI42GRa41/ZQx1FpE74X8cy6oZNHsIOoeei/5
+        ry10PxuT8UVq4iVMXr96s/rZwgYShuUHJS0eM9/A1NAw/XDmpMSUMStZ7NQNII+E
+        OwzVKzhTbshZ66/ugAuxjFvCD4k9efQ2y737gwsFEGDwAB8jpkLJYHT34nAhwf9q
+        soRcMhWleGuKzKZXxRuSWg0u5d27eVDPoVLtVKRYxJfOYk1A7FFkmijMRc6Fq9Hg
+        ==
+X-ME-Sender: <xms:KHz8XcQ9Wzvi-Mi3QDBZb7PGLgHuBtiXinkVi-4WicdPDu_2unOTYw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdduvddguddtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrg
+    hinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhnecuve
+    hluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:KHz8Xd6Kqfr7snzeQ_H2Fi37n3PHftUjvD5edtn-kHZAO4dnV2AumA>
+    <xmx:KHz8XeXyfMrwDB11jp0_oumgeYD3VhcRPNl_nISlT-nuFuDPwR7nyQ>
+    <xmx:KHz8XQsGXJhNFN08aUmphTpo_f3HP_tOVvSVnOrr_4NNul0Lm6M4fA>
+    <xmx:KXz8XSwJRpIMKTywUxiLKJXr8l8J0nQdMDOY2Fe-yqKeyU4o25saQA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3B4B480059;
+        Fri, 20 Dec 2019 02:45:44 -0500 (EST)
+Date:   Fri, 20 Dec 2019 08:45:42 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com,
+        peter.ujfalusi@ti.com, bparrot@ti.com, subhajit_paul@ti.com,
+        praneeth@ti.com, yamonkar@cadence.com, sjakhade@cadence.com,
+        sam@ravnborg.org, robh+dt@kernel.org
+Subject: Re: [PATCH v4 3/5] dt-bindings: display: ti,j721e-dss: Add dt-schema
+ yaml binding
+Message-ID: <20191220074542.x7czuhefup3xmujp@gilmour.lan>
+References: <cover.1576704528.git.jsarha@ti.com>
+ <89db418c91689beb6e63e0c3c99b39655948b429.1576704528.git.jsarha@ti.com>
+ <20191219083839.lmuhxynbbqy4d4hp@gilmour.lan>
+ <2acd648f-6532-c7d8-c9d0-f4c5229c7923@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93dffde8-c633-4ac4-9d26-08d7851fa563
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 07:38:46.0394
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w47uo4bjNgCvgQRc4BYPnlJC7RQ6cjk/uBzpyTYUEd5eb/Z9eb2QNbj9S1MM90wDXk765FuLwJ0vrm9yUUzjeg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5248
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="m6jygddtlvecxjhx"
+Content-Disposition: inline
+In-Reply-To: <2acd648f-6532-c7d8-c9d0-f4c5229c7923@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> On Thu, Dec 19, 2019 at 09:34:57PM +0000, Madalin Bucur (OSS) wrote:
-> > > -----Original Message-----
-> > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > > On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
-> > > > > -----Original Message-----
-> > > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > > > >
-> > > > > On Thu, Dec 19, 2019 at 05:21:16PM +0200, Madalin Bucur wrote:
-> > > > > > From: Madalin Bucur <madalin.bucur@nxp.com>
-> > > > > >
-> > > > > > Add explicit entries for XFI, SFI to make sure the device
-> > > > > > tree entries for phy-connection-type "xfi" or "sfi" are
-> > > > > > properly parsed and differentiated against the existing
-> > > > > > backplane 10GBASE-KR mode.
-> > > > >
-> > > > > 10GBASE-KR is actually used for XFI and SFI (due to a slight
-> > > > > mistake on my part, it should've been just 10GBASE-R).
-> > > > >
-> > > > > Please explain exactly what the difference is between XFI, SFI
-> > > > > and 10GBASE-R. I have not been able to find definitive definition=
-s
-> > > > > for XFI and SFI anywhere, and they appear to be precisely identic=
-al
-> > > > > to 10GBASE-R. It seems that it's just a terminology thing, with
-> > > > > different groups wanting to "own" what is essentially exactly the
-> > > > > same interface type.
-> > > >
-> > > > Hi Russell,
-> > > >
-> > > > 10GBase-R could be used as a common nominator but just as well 10G
-> > > > and remove the rest while we're at it. There are/may be differences=
- in
-> > > > features, differences in the way the HW is configured (the most
-> > > > important aspect) and one should be able to determine what interfac=
-e
-> > > > type is in use to properly configure the HW. SFI does not have the
-> > > > CDR function in the PMD, relying on the PMA signal conditioning vs =
-the
-> > > > XFI that requires this in the PMD. We kept the xgmii compatible for=
- so
-> > > > long without much issues until someone started cleaning up the PHY
-> > > > supported modes. Since we're doing that, let's be rigorous. The 10G=
-Base-KR
-> > > > is important too, we have some backplane code in preparation and
-> > > > having it there could pave the way for a simpler integration.
-> > >
-> > > The problem we currently have is:
-> > >
-> > > $ grep '10gbase-kr' arch/*/boot/dts -r
-> > >
-> > > virtually none of those are actually backplane. For the mcbin
-> > > matches, these are either to a 88x3310 PHY for the doubleshot, which
-> > > dynamically operates between XFI, 5GBASE-R, 2500BASE-X, or SGMII acco=
-rding
-> > > to the datasheet.
+
+--m6jygddtlvecxjhx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Thu, Dec 19, 2019 at 04:01:58PM +0200, Jyri Sarha wrote:
+> On 19/12/2019 10:38, Maxime Ripard wrote:
+> > On Thu, Dec 19, 2019 at 10:23:17AM +0200, Jyri Sarha wrote:
+> >> Add dt-schema yaml bindig for J721E DSS, J721E version TI Keystone
+> >> Display SubSystem.
+> >>
+> >> Version history:
+> >>
+> >> v2: no change
+> >>
+> >> v3: - reg-names: "wp" -> "wb"
+> >>     - Add ports node
+> >>     - Add includes to dts example
+> >>     - reindent dts example
+> >>
+> >> v4: - Add descriptions to reg, clocks, and interrups properties
+> >>     - Remove minItems when its value is the same as maxItems value
+> >>
+> >> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> >> ---
+> >>  .../bindings/display/ti/ti,j721e-dss.yaml     | 209 ++++++++++++++++++
+> >>  1 file changed, 209 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> >> new file mode 100644
+> >> index 000000000000..cd68c4294f9a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+> >> @@ -0,0 +1,209 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >> +# Copyright 2019 Texas Instruments Incorporated
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: "http://devicetree.org/schemas/display/ti/ti,j721e-dss.yaml#"
+> >> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> >> +
+> >> +title: Texas Instruments J721E Display Subsystem
+> >> +
+> >> +maintainers:
+> >> +  - Jyri Sarha <jsarha@ti.com>
+> >> +  - Tomi Valkeinen <tomi.valkeinen@ti.com>
+> >> +
+> >> +description: |
+> >> +  The J721E TI Keystone Display SubSystem with four output ports and
+> >> +  four video planes. There is two full video planes and two "lite
+> >> +  planes" without scaling support. The video ports can be connected to
+> >> +  the SoC's DPI pins or to integrated display bridges on the SoC.
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: ti,j721e-dss
+> >> +
+> >> +  reg:
+> >> +    maxItems: 17
+> >> +    description: |
+> >> +      Addresses to each DSS memory region described in the SoC's TRM.
+> >> +      The reg-names refer to memory regions as follows:
+> >> +      reg-names: Region Name in TRM:     Description:
+> >> +      common_m   DSS0_DISPC_0_COMMON_M   DSS Master common register area
+> >> +      common_s0  DSS0_DISPC_0_COMMON_SO  DSS Shared common register area 0
+> >> +      common_s1  DSS0_DISPC_0_COMMON_S1  DSS Shared common register area 1
+> >> +      common_s2  DSS0_DISPC_0_COMMON_S2  DSS Shared common register area 2
+> >> +      vidl1      DSS0_VIDL1              VIDL1 light video plane 1
+> >> +      vidl2      DSS0_VIDL2              VIDL2 light video plane 2
+> >> +      vid1       DSS0_VID1               VID1 video plane 1
+> >> +      vid2       DSS0_VID2               VID1 video plane 2
+> >> +      ovr1       DSS0_OVR1               OVR1 overlay manager for vp1
+> >> +      ovr2       DSS0_OVR2               OVR2 overlay manager for vp2
+> >> +      ovr3       DSS0_OVR3               OVR1 overlay manager for vp3
+> >> +      ovr4       DSS0_OVR4               OVR2 overlay manager for vp4
+> >> +      vp1        DSS0_VP1                VP1 video port 1
+> >> +      vp2        DSS0_VP2                VP1 video port 2
+> >> +      vp3        DSS0_VP3                VP1 video port 3
+> >> +      vp4        DSS0_VP4                VP1 video port 4
+> >> +      wp         DSS0_WB                 Write Back registers
 > >
-> > Yes, I've seen it's used already in several places:
+> > I guess it applies to all your schemas in that patch series, but you
+> > could just do something like
 > >
-> > $ grep PHY_INTERFACE_MODE_10GKR drivers/net -nr
-> > drivers/net/phy/marvell10g.c:219:       if (iface !=3D
-> PHY_INTERFACE_MODE_10GKR) {
-> > drivers/net/phy/marvell10g.c:307:           phydev->interface !=3D
-> PHY_INTERFACE_MODE_10GKR)
-> > drivers/net/phy/marvell10g.c:389:            phydev->interface =3D=3D
-> PHY_INTERFACE_MODE_10GKR) && phydev->link) {
-> > drivers/net/phy/marvell10g.c:398:                       phydev-
-> >interface =3D PHY_INTERFACE_MODE_10GKR;
-> > drivers/net/phy/phylink.c:296:          case PHY_INTERFACE_MODE_10GKR:
-> > drivers/net/phy/aquantia_main.c:361:            phydev->interface =3D
-> PHY_INTERFACE_MODE_10GKR;
-> > drivers/net/phy/aquantia_main.c:499:        phydev->interface !=3D
-> PHY_INTERFACE_MODE_10GKR)
-> > drivers/net/phy/sfp-bus.c:340:          return
-> PHY_INTERFACE_MODE_10GKR;
-> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1117:   return
-> interface =3D=3D PHY_INTERFACE_MODE_10GKR ||
-> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1203:   case
-> PHY_INTERFACE_MODE_10GKR:
-> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1652:   case
-> PHY_INTERFACE_MODE_10GKR:
-> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4761:   case
-> PHY_INTERFACE_MODE_10GKR:
-> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4783:   case
-> PHY_INTERFACE_MODE_10GKR:
+> > reg:
+> >   items:
+> >     - description: DSS Master common register area
+> >     - description: DSS Shared common register area 0
+> >     - description: DSS Shared common register area 1
 > >
-> > We should fix this, if it's incorrect.
-> >
-> > > If we add something else, then the problem becomes what to do about
-> > > that lot - one of the problems is, it seems we're going to be
-> > > breaking DT compatibility by redefining 10gbase-kr to be correct.
-> >
-> > We need the committer/maintainer to update that to a correct value.
->=20
-> The general principle is, we don't break existing DT - in that, we
-> expect DT files from current kernels to work with future kernels. So,
-> we're kind of stuck with "10gbase-kr" being used for this at least in
-> the medium term.
->=20
-> By all means introduce "xfi" and "sfi" if you think that there is a
-> need to discriminate between the two, but I've seen no hardware which
-> that treats them any differently from 10gbase-r.
->=20
-> If we want to support real 10gbase-kr, then I think we need to consider
-> how to do that without affecting compatibility with what we already
-> have.
->=20
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down
-> 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+>
+> Ok, thanks. I was not sure if you can do that (still a newbie with
+> yaml). What do you think about Peter Ujfalusi's suggestion of putting
+> the descriptions to reg-names (and clock-names and  interrupt-names)?
+> e.g. something like this:
+>
+>   reg-names:
+>     items:
+>       - const: common_m
+>       - description: DSS Master common register area
+>       - const: common_s0
+>       - description: DSS Master common register area
 
-I've looked at the device tree entries using 10GBase-KR:
+No, you can't really intertwin them like this, this would mean that
+you would expect twice the number of items.
 
-all these are disabled:
+You could do something like this:
+reg-names:
+  items:
+    - const: common_m
+      description: DSS Master common register area
+    - const: common_s0
+      description: DSS Master common register area
 
-// disabled, commit mentions interface is SFI, jaz@semihalf.com
-arch/arm64/boot/dts/marvell/cn9132-db.dts:107:  phy-mode =3D "10gbase-kr";
+But on a more fundamental level, the register area is stored under
+regs, while reg-names is just a label for that area, so having the
+description under reg, and the labels under reg-names makes more sense
+(well, to me at least :))
 
-// disabled, SFI with SFP cage, jaz@semihalf.com
-arch/arm64/boot/dts/marvell/cn9130-db.dts:131:  phy-mode =3D "10gbase-kr";
-arch/arm64/boot/dts/marvell/cn9131-db.dts:89:   phy-mode =3D "10gbase-kr";
+Maxiem
 
-these are used:
+--m6jygddtlvecxjhx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-// SFP ports, antoine.tenart@free-electrons.com
-arch/arm64/boot/dts/marvell/armada-7040-db.dts:279:     phy-mode =3D "10gba=
-se-kr";=20
-arch/arm64/boot/dts/marvell/armada-8040-db.dts:190:     phy-mode =3D "10gba=
-se-kr";
-arch/arm64/boot/dts/marvell/armada-8040-db.dts:334:     phy-mode =3D "10gba=
-se-kr";
+-----BEGIN PGP SIGNATURE-----
 
-// SFP, 10GKR, antoine.tenart@free-electrons.com
-arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:37:   phy-mode =3D "10gba=
-se-kr";
-arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:44:   phy-mode =3D "10gba=
-se-kr";
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfx8JgAKCRDj7w1vZxhR
+xR53AQDNPULr/AXZ/AaAZP0f7WH6pDb2CP3Iz6tXFoTQSOP37gD+PCEqh9OCtiun
+rg1q2pzSB/RjPdqP7AAv6jmJnqFcSAo=
+=t4NP
+-----END PGP SIGNATURE-----
 
-// SFP, baruch@tkos.co.il
-arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts:279: phy-mode =
-=3D "10gbase-kr";
-
-// SFP+, rmk+kernel@armlinux.org.uk
-arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:19:        phy=
--mode =3D "10gbase-kr";=20
-arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:26:        phy=
--mode =3D "10gbase-kr";=20
-
-I've added the information I could derive from the commit message.
-Maybe the original authors of the commits can help us with more
-information on the actual HW capabilities/operation mode.
-
-Regards,
-Madalin
+--m6jygddtlvecxjhx--
