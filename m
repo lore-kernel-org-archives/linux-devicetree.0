@@ -2,109 +2,165 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193EBC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6710BC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FD924682
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="whFIJrJD"
+	by mail.kernel.org (Postfix) with ESMTP id 4836824684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfLTKNW (ORCPT
+        id S1727394AbfLTKN5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:13:22 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33478 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbfLTKNV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 05:13:21 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKADDQe056920;
-        Fri, 20 Dec 2019 04:13:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576836793;
-        bh=9DmEO+OYxJgAdf+riV2ejuQ1fMZXsgBMxnnPcmuwnhE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=whFIJrJD4FprTZAOiJ8wEeSEisPM8Fr46QZ4DUg2HBS0RzHmsZClqBvWZG7dtqXXX
-         jBMa+TkyD+euyhiIO3PtCHaVpBXU2f2wIAOuIYSQHgMCRnWeO20FdKHDL2SMCMSLz4
-         WAcpB+HHQOqrcVsItNufA43SY3GMKqEpJPdlA8mk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKADCSi014986
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 20 Dec 2019 04:13:12 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
- Dec 2019 04:13:05 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 20 Dec 2019 04:13:05 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKAD1TA072417;
-        Fri, 20 Dec 2019 04:13:02 -0600
-Subject: Re: [PATCH v7 05/12] dmaengine: Add support for reporting DMA cached
- data amount
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
-        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
-        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
-        <vigneshr@ti.com>
-References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-6-peter.ujfalusi@ti.com>
- <20191220083713.GL2536@vkoul-mobl>
- <f28301f7-4624-b4f8-d781-7ebfa4ae7856@ti.com>
- <20191220095755.GN2536@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <ea912bfb-a315-a230-85e9-9c9110b3f0d7@ti.com>
-Date:   Fri, 20 Dec 2019 12:13:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 20 Dec 2019 05:13:57 -0500
+Received: from mga09.intel.com ([134.134.136.24]:27828 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727399AbfLTKN4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:13:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 02:13:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
+   d="scan'208";a="228566117"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 20 Dec 2019 02:13:52 -0800
+Received: from andy by smile with local (Exim 4.93-RC7)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1iiFI8-0000Yx-UM; Fri, 20 Dec 2019 12:13:52 +0200
+Date:   Fri, 20 Dec 2019 12:13:52 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yixin.zhu@linux.intel.com, qi-ming.wu@intel.com,
+        rtanwar <rahul.tanwar@intel.com>
+Subject: Re: [PATCH v2 1/2] clk: intel: Add CGU clock driver for a new SoC
+Message-ID: <20191220101352.GU32742@smile.fi.intel.com>
+References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
+ <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191220095755.GN2536@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 20/12/2019 11.57, Vinod Koul wrote:
-> On 20-12-19, 10:49, Peter Ujfalusi wrote:
+On Fri, Dec 20, 2019 at 11:31:07AM +0800, Rahul Tanwar wrote:
+> From: rtanwar <rahul.tanwar@intel.com>
 > 
->>>> +static inline void dma_set_in_flight_bytes(struct dma_tx_state *state,
->>>> +					   u32 in_flight_bytes)
->>>> +{
->>>> +	if (state)
->>>> +		state->in_flight_bytes = in_flight_bytes;
->>>> +}
->>>
->>> This would be used by dmaengine drivers right, so lets move it to drivers/dma/dmaengine.h
->>>
->>> lets not expose this to users :)
->>
->> I have put it where the dma_set_residue() was.
->> I can add a patch first to move dma_set_residue() then add
-> 
-> not sure I follow, but dma_set_residue() in already in drivers/dma/dmaengine.h
+> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
+> Intel network processor SoC. It provides programming interfaces to control
+> & configure all CPU & peripheral clocks. Add common clock framework based
+> clock controller driver for CGU.
 
-and this patch adds the dma_set_in_flight_bytes() to
-drivers/dma/dmaengine.h
+...
 
-in include/linux/dmaengine.h the dma_tx_state struct is updated only.
+>  drivers/clk/Kconfig           |   8 +
 
-- Péter
+This should be in x86 folder and you perhaps need to add
+source "drivers/clk/x86/Kconfig" here.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Also drivers/clk/Makefile should be updated accordingly.
+
+...
+
+> +static int lgm_pll_wait_for_lock(struct lgm_clk_pll *pll)
+> +{
+> +	int max_loop_cnt = 100;
+> +	unsigned long flags;
+> +	unsigned int val;
+> +
+> +	while (max_loop_cnt > 0) {
+> +		raw_spin_lock_irqsave(&pll->lock, flags);
+> +		val = lgm_get_clk_val(pll->membase, pll->reg, 0, 1);
+> +		raw_spin_unlock_irqrestore(&pll->lock, flags);
+> +
+> +		if (val)
+> +			return 0;
+> +
+> +		udelay(1);
+> +		max_loop_cnt--;
+> +	}
+
+Looks like a repetition of iopoll.h.
+Even without that the waiting loops like this more natural in a form of
+
+	unsigned int count = ...;
+	...
+	do {
+		...
+	} while (--count);
+
+> +
+> +	return -EIO;
+> +}
+
+I think I told you that during internal review.
+
+...
+
+> +void lgm_set_clk_val(void *membase, u32 reg,
+> +		     u8 shift, u8 width, u32 set_val)
+
+There is plenty of space, and to be precise it would take exactly 80, on the
+previous line.
+
+> +{
+> +	u32 mask = (GENMASK(width - 1, 0) << shift);
+> +	u32 regval;
+> +
+> +	regval = readl(membase + reg);
+> +	regval = (regval & ~mask) | ((set_val << shift) & mask);
+> +	writel(regval, membase + reg);
+> +}
+
+...
+
+> +void lgm_clk_add_lookup(struct lgm_clk_provider *ctx,
+> +			struct clk_hw *hw, unsigned int id)
+
+Ditto.
+
+...
+
+> +	if (gate->flags & GATE_CLK_HW)
+> +		reg = GATE_HW_REG_EN(gate->reg);
+> +	else if (gate->flags & GATE_CLK_SW)
+> +		reg = gate->reg;
+> +	else {
+> +		dev_err(gate->dev, "%s has unsupported flags 0x%lx\n",
+> +			clk_hw_get_name(hw), gate->flags);
+> +		return 0;
+> +	}
+
+Missed curly braces in first two conditionals.
+
+...
+
+> +	if (gate->flags & GATE_CLK_HW)
+> +		reg = GATE_HW_REG_STAT(gate->reg);
+> +	else if (gate->flags & GATE_CLK_SW)
+> +		reg = gate->reg;
+> +	else {
+> +		dev_err(gate->dev, "%s has unsupported flags 0x%lx\n",
+> +			clk_hw_get_name(hw), gate->flags);
+> +		return 0;
+> +	}
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
