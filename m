@@ -2,90 +2,110 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13358C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB715C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DFE24680
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576831442;
-	bh=J+KO1euN3uvMfgpMsULDxngajs9YXpEjKc3Gbd9072M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uoirRm45+u5IjyU+7pg1Z6P72QTPmbGmM8JnAoX8ikEzM2TgyZAtfa0G5lXZ4rngN
-	 /HMEn8CY9mLla9HwvAhoPCFND7393U5MxmAuGqdUwTfKZJ2j2LfF2fMUv/OJn9y1ve
-	 TSMv/JyImou2eHevDoAj3GxSkAl95sgorHtuzmjw=
+	by mail.kernel.org (Postfix) with ESMTP id 802C424680
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:48:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ttjR8bV7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfLTIn5 (ORCPT
+        id S1727184AbfLTIsB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:43:57 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38253 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbfLTIn4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 03:43:56 -0500
-Received: by mail-ed1-f65.google.com with SMTP id i16so7476318edr.5;
-        Fri, 20 Dec 2019 00:43:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IXbuaf/Cq2tGfd6OZrRmEJyDn3Ce5xlbWFBppOEzCYc=;
-        b=IulSYQ1S+hyqanhMqs0MDzV+WyUZFvvvbu1tKbfYMlf1QeHAwwh6DWHeSRvL3PGcxM
-         1jcPnFr7jhKfymYpL3vD+bsXfIGtwDxpSv/MM0JBIWcbymhg8f70+EQ7ka/PaqWhhTY8
-         0oWTNN36K85SieK4b+PHB9qi1IShVZJ2zaQKWMQ4GZ3DHNoEjnk0CKcig3Hc/X3FoyX+
-         XI0W4CmglS2sXM66YgTs5JHjWA1wOPCx0P+xlVGLY1M7suoROjmGewgNGXrwW8e0T17H
-         VCn6WZOoA+ldUf0o8jNwJJANJThxbxGe6cq7z0Jz+qcOfRjqNKgwAiRPajo3k18y34h7
-         4uEA==
-X-Gm-Message-State: APjAAAXc7sMA1Us4p3zr0qsywW/FwHzc//OOrAbQdS+CqK//57VanbZR
-        52nwmMf8JtciRhuY1+TqUHo=
-X-Google-Smtp-Source: APXvYqxp9hgF9PmaT2oTuADAB64PkgIFMZvrclHRsxE6EbN2yuHZHHK9cKtisRYEhpTDGewTtbAR7A==
-X-Received: by 2002:a17:906:b797:: with SMTP id dt23mr14655260ejb.241.1576831434074;
-        Fri, 20 Dec 2019 00:43:54 -0800 (PST)
-Received: from pi3 ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id u23sm842501edq.74.2019.12.20.00.43.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 00:43:53 -0800 (PST)
-Date:   Fri, 20 Dec 2019 09:43:50 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     robh+dt@kernel.org, heiko@sntech.de, leonard.crestez@nxp.com,
-        lukasz.luba@arm.com, mark.rutland@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 04/11] dt-bindings: devfreq: exynos-bus: Replace
- deprecated 'devfreq' and 'devfreq-events' property
-Message-ID: <20191220084350.GA20583@pi3>
-References: <20191220002430.11995-1-cw00.choi@samsung.com>
- <CGME20191220001759epcas1p3051f7916542b7234aac5273e0baab83b@epcas1p3.samsung.com>
- <20191220002430.11995-5-cw00.choi@samsung.com>
+        Fri, 20 Dec 2019 03:48:01 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58524 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbfLTIsB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 03:48:01 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBK8lkiC080256;
+        Fri, 20 Dec 2019 02:47:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576831667;
+        bh=Y8SJjnPJ2zTuwuUuXvi/iusPn5VXym1DpE2Ni2sJVGo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ttjR8bV7NcwEdlkksg4iqfMbc72kqxA+NZTKn9KmxuhtXaL3iKjJXdhaOe2e/Ezqv
+         nbs7Au55+6yRYcCGdvlleszGHyIlbb+kJmuFygZ5ljUOwzoBIN2whH0Z78c5MJHrjJ
+         Izudz+vTDeyFhiiD6C7C8kAp+755Iw8c7TO64hFI=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK8lkr6065686;
+        Fri, 20 Dec 2019 02:47:46 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 02:47:46 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 02:47:46 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBK8lgp6045691;
+        Fri, 20 Dec 2019 02:47:43 -0600
+Subject: Re: [PATCH v7 04/12] dmaengine: Add metadata_ops for
+ dma_async_tx_descriptor
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-5-peter.ujfalusi@ti.com>
+ <20191220083216.GK2536@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <8f66594b-3c4a-dae2-9445-0e7d28e017b8@ti.com>
+Date:   Fri, 20 Dec 2019 10:48:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191220002430.11995-5-cw00.choi@samsung.com>
+In-Reply-To: <20191220083216.GK2536@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 09:24:23AM +0900, Chanwoo Choi wrote:
-> In order to remove the deprecated 'devfreq' and 'devfreq-events' property,
-> replace with new following properties
-> - Replace 'devfreq' with 'exynos,parent-bus' property
-> - Replace 'devfreq-events' with 'exynos,ppmu-device' property
+Hi Vinod,
+
+On 20/12/2019 10.32, Vinod Koul wrote:
+> Hi Peter,
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
->  .../bindings/devfreq/exynos-bus.txt           | 22 +++++++++----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
+> On 09-12-19, 11:43, Peter Ujfalusi wrote:
+> 
+>> +int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
+>> +				   void *data, size_t len)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!desc)
+>> +		return -EINVAL;
+>> +
+>> +	ret = desc_check_and_set_metadata_mode(desc, DESC_METADATA_CLIENT);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (!desc->metadata_ops || !desc->metadata_ops->attach)
+>> +		return -ENOTSUPP;
+>> +
+>> +	return desc->metadata_ops->attach(desc, data, len);
+> 
+> this looks good to me, only thing is we should check if people are
+> mixing the modes :)
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+desc_check_and_set_metadata_mode() does the checking to make sure that
+the modes are not mixed.
 
-Best regards,
-Krzysztof
+- Péter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
