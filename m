@@ -2,114 +2,92 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C708C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB7AC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4817E21655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07CBA222C2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbfLTPnu (ORCPT
+        id S1727400AbfLTPtt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:43:50 -0500
-Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17179 "EHLO
-        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbfLTPnu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 10:43:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1576856617; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=LMfAddAC147eF5m77yvmXtqBvWmzPz8EeM2CLg/O2oKsihO159fCaKZNAIdl+JtIqPRpT6QwsyZvE2pyPitqWgFoHWSR8mst+1bZmyhjSXSKwrgNv21iyY60GkBMesduxm3HopdH14oWSjK2+ldR/BxnPJZPPfdh03fYjLnt6jw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1576856617; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=ELXCfpLFeQLNeL9QjnCCUngKGgfk8dL/TAnQ4db+uqs=; 
-        b=fdiUXZnwWeK5DxojtYqIUglgxCAUgdU93kUYA4cRBK67fgNvv5ODmXCr6D9pzABvTz/y9QtJklZkX46F3cJlxFh6FIHkIJnG2KUaAFnqa1aaaux3874olKeYVbPgT+feEiHhYSm1hT5r2vndVTy76Wo7x+N50JGwRFnLth9nTlc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1576856616397592.4934687792177; Fri, 20 Dec 2019 07:43:36 -0800 (PST)
-Date:   Fri, 20 Dec 2019 15:28:05 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
-Message-ID: <20191220152805.GD16415@nessie>
-References: <20191219041039.23396-1-dan@dlrobertson.com>
- <20191219041039.23396-3-dan@dlrobertson.com>
- <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com>
- <20191220043220.GA16415@nessie>
- <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
- <CAHp75VdzE4uKKJ_5g8eMZR+GSX9W+7Lc+kh2OYt5o7_8_NHTpw@mail.gmail.com>
+        Fri, 20 Dec 2019 10:49:49 -0500
+Received: from mga11.intel.com ([192.55.52.93]:27460 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727270AbfLTPtt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 10:49:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 07:49:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,336,1571727600"; 
+   d="scan'208";a="267551905"
+Received: from pkriegsm-mobl.amr.corp.intel.com (HELO [10.252.132.172]) ([10.252.132.172])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Dec 2019 07:49:34 -0800
+Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
+ wcd9340/wcd9341 codec
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, spapothi@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+ <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
+ <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
+ <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
+ <3fa4997f-4409-97f6-ba10-a87013383eb7@linaro.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <df1c8ef8-2619-99b7-317c-1970c9413d00@linux.intel.com>
+Date:   Fri, 20 Dec 2019 09:22:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdzE4uKKJ_5g8eMZR+GSX9W+7Lc+kh2OYt5o7_8_NHTpw@mail.gmail.com>
-X-ZohoMailClient: External
+In-Reply-To: <3fa4997f-4409-97f6-ba10-a87013383eb7@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 11:32:42AM +0200, Andy Shevchenko wrote:
-> On Fri, Dec 20, 2019 at 11:27 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Fri, Dec 20, 2019 at 6:48 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> > > On Thu, Dec 19, 2019 at 01:02:28PM +0200, Andy Shevchenko wrote:
-> > > > On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> >
-> > > > > +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
-> > > > > +                                            int hz, int uhz)
-> > > > > +{
-> > > > > +       unsigned int idx;
-> > > > > +       unsigned int odr;
-> > > > > +       unsigned int val;
-> > > > > +       int ret;
-> > > > > +
-> > > > > +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
-> > > > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
-> > > > > +                       return -EINVAL;
-> > > > > +
-> > > > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
-> > > >
-> > > > Again, AFAICS division may be avoided in both cases (% and / above)
-> > > > because of is_power_of_2() check below.
-> > > > Can you revisit this?
-> > >
-> > > Yeah I can update this in the next patchset, but I don't know if it is much more
-> > > readable this way.
-> >
-> > You may describe the algo in the comment.
-> >
-> > Let's see how it might look like
-> >
-> >   if (uhz)
-> >     return -EINVAL;
-> >   idx = __ffs(val);
-> >   /* We're expecting value to be 2^n * ODR_MIN_WHOLE_HZ */
-> >   if ((val >> idx) != BMA400_ACC_ODR_MIN_WHOLE_HZ)
+
+
+>>> Note these are the child devices of the MFD SLIMBus device.
+>>
+>> Ah ok. I guess the creation of those child devices when the parent 
+>> SLIMbus device reports PRESENT initially if fine, it's the part where 
+>> you remove them if the device loses sync or gets powered off which is 
+>> odd. And I guess technically you could still have race conditions 
+>> where a child device starts a transaction just as the parent is no 
+>> longer attached to the bus.
 > 
-> Okay, this would require trickier conditional for the cases when
-> MIN_WHOLE_HZ can be divided by 2^k...
-> Still from performance point of view it might be much faster than division.
+> Losing power to SLIMBus device is very odd usecase and if it happens 
+> suggests that threre are bigger issues on the board design itself. This 
+> case should never happen. Even if it happens we would get timeout errors 
+> on every SLIMbus transactions.
+> 
+>>
+>>>> I would however not remove the devices when the status is down but 
+>>>> only on an explicit .remove.
+>>>
+>>> Am open for suggestions but I would not like the child devices to 
+>>> talk on the bus once the SLIMbus device is down! Only way to ensure 
+>>> or make it silent is to remove.
+>>
+>> it's as if you are missing a mechanism to forward the parent status to 
+>> the children so use remove() for lack of a better solution?
+> That is true. This gives bit more control on the slave device lifecycle.
+> Current solution works fine for now with less complexities across 
+> multiple drivers. I also agree that there is scope of improvement in 
+> future for this.
 
-I think the other checks will ensure we return -EINVAL in those cases. I ran a
-basic for loop and verified this.
+ok, makes sense, thanks for the answers. No further questions, so
 
-Cheers,
-
- - Dan
-
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
