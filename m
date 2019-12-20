@@ -2,190 +2,118 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92999C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121E1C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F7121655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D853921655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NcBqpqxr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4U/Cy0J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfLTOzV (ORCPT
+        id S1727359AbfLTO5R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:55:21 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20524 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727359AbfLTOzV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 09:55:21 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBKEqpTP016204;
-        Fri, 20 Dec 2019 15:55:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=sVrTZIezbYnRiKZqMTLj6zzvZboDkSX5bAiYWhg0T7o=;
- b=NcBqpqxrKkxfyeDW+SY0cyO5g6DMetHFtAwa1fm5KWIVBAlUjHDhUvgBz9heMPbwatBJ
- xy0xpppdSlhdbtOPPW4MH9Xbqs9tE5wlg8K5gpQWbfl3La5fIsM5Zwq/a+v3MiNRThwm
- 92PxGh0mHmLtedC62PRLA32GEzvN3acsPlvFzckT7vXGZUqIapKEh0z+x4SCX7is2IZX
- jI2gDRTEA/gRjFRbld+Pkvy4LeYG7TbPuwgxez2PWanoceYfdIDheqTYWS68pFvqFhDc
- Zotrtr+UC/hH76bCS6oEox8txTdYo91Fds55nJyIUgqkmCxJQwrp+IDCLh1wOVbcJM+Z /g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wvnreyuer-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 20 Dec 2019 15:55:08 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C8F310003D;
-        Fri, 20 Dec 2019 15:55:04 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 275E72FF5DF;
-        Fri, 20 Dec 2019 15:55:04 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec 2019 15:55:03
- +0100
-From:   Yannick Fertre <yannick.fertre@st.com>
-To:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 20 Dec 2019 09:57:17 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34004 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbfLTO5R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 09:57:17 -0500
+Received: by mail-pl1-f193.google.com with SMTP id x17so4214806pln.1;
+        Fri, 20 Dec 2019 06:57:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hkWco8dRw59sMhOMYfREd70FxO1H0nWVA/bQQmTVaVs=;
+        b=B4U/Cy0Jo5ZWdcTxOejAzkRKtbqu1oJ8cNX48pzKNRMx1jx7bG6GM0Fr8ZLpoMgfKR
+         RmeJwCepYBDlD6HLi5Im7D7ORLfF9mdZyjTpceiiVUAGTYpTuxiMuUGANPH8pauiyk2A
+         wPQlW9yUzrADqqqzH7kDOH3w0k2ahGfUr/trYz0kNaLZeVju1wXwlXOUb9gITh9BfKN7
+         b4Spa9s0ePcrVUpP88/J6nHsxFPd7mqLD3LMWWKKXHAQRGiNDLi+NofQoQSy2zBPu/3q
+         Ia61NeWbWgJ1dINVmjGEa0/8IUSnrS101RX4O4ID+dhea8bctn7Cz8WvCUfGCW2c2x/B
+         OfJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hkWco8dRw59sMhOMYfREd70FxO1H0nWVA/bQQmTVaVs=;
+        b=VAxZDqbaTxpgLhkJivKMfl5sxLsqe7SkIGApfRBHFZV6+Jr9459Qg9QXWe4GTi3gOA
+         J/s5Mdz7A6MKsjP6XUjcRjBz64x9qOMLp3REFnXQdkstxORRHlk922nRn+hgYdjNbujl
+         FLANia5CZgtUiKFcUoRN3FupZdIXhErqrL1eBY9IBKySer5wtLacbramWZ98IVNiR0u7
+         olyT3hvR8tL89/Z9//FMonggxCFmqtpdRpqSRBSFLYjbbAvAXGeOJz2oYrzsoBL8vINv
+         wLQw+qtOuzowS4RU4ybAnytZ9JSeQdtiec9W4Yawj7zdJQIyZQ/9NZKZOKzpjCh8nqnl
+         kJkQ==
+X-Gm-Message-State: APjAAAX+Vc1LdHHpjuUad6LCG3kwUw6KUC4TFBBR2auSBo+Kj17sgwqM
+        j/hsmJwds78lhKIYCpn6hK8=
+X-Google-Smtp-Source: APXvYqwy7FBGM1nmXMxgGMObkWPUX4z7afo67yur0K79OgQbDAlglTObe9TLYetTlj+g52JNcu3Mjw==
+X-Received: by 2002:a17:902:bc45:: with SMTP id t5mr15255745plz.163.1576853836223;
+        Fri, 20 Dec 2019 06:57:16 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id x7sm13927986pfp.93.2019.12.20.06.57.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 06:57:15 -0800 (PST)
+Date:   Fri, 20 Dec 2019 06:57:12 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: display: Convert orisetech,otm8009a panel to DT schema
-Date:   Fri, 20 Dec 2019 15:54:48 +0100
-Message-ID: <1576853688-2143-1-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: Re: [PATCH V6 net-next 06/11] net: Introduce a new MII time stamping
+ interface.
+Message-ID: <20191220145712.GA3846@localhost>
+References: <cover.1576511937.git.richardcochran@gmail.com>
+ <28939f11b984759257167e778d0c73c0dd206a35.1576511937.git.richardcochran@gmail.com>
+ <20191217092155.GL6994@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-20_03:2019-12-17,2019-12-20 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217092155.GL6994@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yannick Fertré <yannick.fertre@st.com>
+On Tue, Dec 17, 2019 at 10:21:55AM +0100, Andrew Lunn wrote:
+> Forward declarations are considered bad.
 
-Convert the orisetech,otm8009a panel binding to DT schema.
+Not by me!
 
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
----
- .../bindings/display/panel/orisetech,otm8009a.txt  | 23 --------
- .../bindings/display/panel/orisetech,otm8009a.yaml | 62 ++++++++++++++++++++++
- 2 files changed, 62 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
- create mode 100644 Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
+> Please add a new patch to the
+> series which moves code around first.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
-deleted file mode 100644
-index 203b03e..0000000
---- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--Orise Tech OTM8009A 3.97" 480x800 TFT LCD panel (MIPI-DSI video mode)
--
--The Orise Tech OTM8009A is a 3.97" 480x800 TFT LCD panel connected using
--a MIPI-DSI video interface. Its backlight is managed through the DSI link.
--
--Required properties:
--  - compatible: "orisetech,otm8009a"
--  - reg: the virtual channel number of a DSI peripheral
--
--Optional properties:
--  - reset-gpios: a GPIO spec for the reset pin (active low).
--  - power-supply: phandle of the regulator that provides the supply voltage.
--
--Example:
--&dsi {
--	...
--	panel@0 {
--		compatible = "orisetech,otm8009a";
--		reg = <0>;
--		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
--		power-supply = <&v1v8>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-new file mode 100644
-index 0000000..02bd69e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/orisetech,otm8009a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Orise Tech OTM8009A 3.97" 480x800 panel
-+
-+maintainers:
-+  - Yannick Fertre <yannick.fertre@st.com>
-+
-+description:
-+  The Orise Tech OTM8009A is a 3.97" 480x800 TFT LCD panel connected using
-+  a MIPI-DSI video interface. Its backlight is managed through the DSI link.
-+
-+properties:
-+  compatible:
-+    const: orisetech,otm8009a
-+
-+  power-supply:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  backlight:
-+    maxItems: 1
-+
-+  port:
-+    maxItems: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    display1: display {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      panel {
-+        compatible = "orisetech,otm8009a";
-+        reg = <0>;
-+        reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
-+        power-supply = <&v1v8>;
-+
-+        port {
-+          panel_in_dsi: endpoint {
-+            remote-endpoint = <&controller_out_dsi>;
-+          };
-+        };
-+      };
-+    };
-+
-+...
--- 
-2.7.4
+Sorry, I disagree.  For new drivers, sure, but for testing, production
+drivers, moving code blocks around "just because" is only asking for
+new bugs due to copy-pastos.
+
+> When using phylink, not phylib, this call will not happen. You need to
+> add a similar bit of code in phylink_mac_config().
+
+Good to know.
+
+> For the moment what you have is sufficient. I doubt anybody is using
+> the dp83640 with phylink, and the new hardware you are targeting seems
+> to be RGMII based, not SERDES, which is the main use case for PHYLINK.
+
+Yeah, my impression is that the phyter will be the first and last phy
+time stamping device ever created.  Designers reject this part because
+it is 100 mbit only.  And there are no gigabit+ phys with time
+stamping at all.
+
+So I don't anticipate the phylink layer needing any of this time
+stamping stuff in the foreseeable future.
+
+Thanks,
+Richard
 
