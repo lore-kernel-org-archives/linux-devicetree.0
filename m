@@ -2,276 +2,72 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7084C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD293C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738082465E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fgUzCoxZ"
+	by mail.kernel.org (Postfix) with ESMTP id 87A9024684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfLTHAF (ORCPT
+        id S1727135AbfLTHBp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 02:00:05 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37758 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbfLTHAF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 02:00:05 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c23so3693010plz.4
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 23:00:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fC3JoLkbnwXvlpi7t/a7WSOC0sr7d5AZj1xh2J+UQWc=;
-        b=fgUzCoxZIrK8T+zhBZBxenZpkETpNWuij5YvgiDRqexvZ6DuCnw1A5aHv48ouQ77ib
-         CtIfZpOF1PzVz0Ozn9aVjnmio8aK2cITR3+NmlKwRzHxk3SV/A4tUMcWEKWON5GHCFCV
-         xBCpkJb17a3FBh88qlrJmml4whEOSaX4p4BxufL66ZLSqT2Cjy5aLgp5so+es+pM6Duu
-         VPEKZOxMj5VnJllBsku7+B26djfOC4Qx+xfNGAp5l+ZQGmEVsie1Fd1WEZFHYCjVYPOT
-         Qi+DwE7kqGOpvV6VIxgnQPRa6Rchh/wS6XogUPvc3JpRVNMShUwgK9VdXy7g6gqRqSjP
-         3oWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fC3JoLkbnwXvlpi7t/a7WSOC0sr7d5AZj1xh2J+UQWc=;
-        b=bqcl2pVUV/m9LSwNJ273Y6kCbiydq3HP+ODharvzvgvl8ZDXWQRQxHHzyx7PKKWoX6
-         cO/a57CY8rJSRPPbEiLkUw1NqFoCTy1XjCPgBcEQ7MLGf7YyUajQNTe67Y0s5RMjYlcK
-         Qcs+dT1hXsLhrxqo/6qavLeK9hGiaJLmxDEKbC0oKI4Zug3RLLH1Q6URAnqksY+muYTB
-         RjIrUx/YMl+/coGZmZRFph0xQYTiIhRFWM2t23z/HORSsG7VGIRVYL8S8jr4Mec9VU3X
-         jiOYQP9dxQj0mfULFU93JKcMdwHjZpCvWylfR2wVEo9ScXpUOnEM52D+hHJwmeH1bpaK
-         QjJQ==
-X-Gm-Message-State: APjAAAXd63XYklFN/RusS1nrow3QPNlbt5bjEecR0jbmv6mkUUJFSMcW
-        6S+on7LJ1efnqwwO4rLzvAutzw==
-X-Google-Smtp-Source: APXvYqyvF8WqOEnDOKkQl2mto0QI+sqGXOJYxmZaqRoa8Klu1NtQWWmTfOdd/Szh3Agx5Dhifxokrw==
-X-Received: by 2002:a17:90a:2467:: with SMTP id h94mr6695795pje.79.1576825204473;
-        Thu, 19 Dec 2019 23:00:04 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v4sm11046290pgo.63.2019.12.19.23.00.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 23:00:03 -0800 (PST)
-Date:   Thu, 19 Dec 2019 22:59:54 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     jhugo@codeaurora.org, robh+dt@kernel.org, ohad@wizery.com,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, agross@kernel.org
-Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: msm8998: Add ADSP, MPSS and
- SLPI nodes
-Message-ID: <20191220065954.GA1908628@ripper>
-References: <20191218132217.28141-1-sibis@codeaurora.org>
- <20191218132217.28141-6-sibis@codeaurora.org>
+        Fri, 20 Dec 2019 02:01:45 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:59328 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726149AbfLTHBo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 02:01:44 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id B7CD3DFCA1;
+        Fri, 20 Dec 2019 06:53:21 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id wCVs-2_js28d; Fri, 20 Dec 2019 06:53:20 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id A1AA6DFC76;
+        Fri, 20 Dec 2019 06:53:20 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id CWbO3TUnEhvu; Fri, 20 Dec 2019 06:53:20 +0000 (UTC)
+Received: from furthur.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 03EF0DF383;
+        Fri, 20 Dec 2019 06:53:19 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        soc@kernel.org
+Subject: [PATCH 1/5] Enable HSIC on MMP3 SoC
+Date:   Fri, 20 Dec 2019 07:53:09 +0100
+Message-Id: <20191220065314.237624-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191218132217.28141-6-sibis@codeaurora.org>
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed 18 Dec 05:22 PST 2019, Sibi Sankar wrote:
+Hi,
 
-> This patch adds ADSP, MPSS and SLPI nodes for MSM8998 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi |   8 ++
->  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 124 ++++++++++++++++++++++
->  2 files changed, 132 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> index 6db3f9e0344d1..e87094665c52c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> @@ -312,6 +312,14 @@
->  	};
->  };
->  
-> +&remoteproc_adsp {
-> +	status = "okay";
-> +};
-> +
-> +&remoteproc_slpi {
-> +	status = "okay";
-> +};
-> +
->  &tlmm {
->  	gpio-reserved-ranges = <0 4>, <81 4>;
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index 8d799e868a5d3..014127700afb0 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -1075,6 +1075,61 @@
->  			#interrupt-cells = <0x2>;
->  		};
->  
-> +		remoteproc_mss: remoteproc@4080000 {
-> +			compatible = "qcom,msm8998-mss-pil";
-> +			reg = <0x04080000 0x100>, <0x04180000 0x20>;
-> +			reg-names = "qdsp6", "rmb";
-> +
-> +			interrupts-extended =
-> +				<&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
-> +				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> +				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> +				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> +				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-> +				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-names = "wdog", "fatal", "ready",
-> +					  "handover", "stop-ack",
-> +					  "shutdown-ack";
-> +
-> +			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-> +				 <&gcc GCC_BIMC_MSS_Q6_AXI_CLK>,
-> +				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-> +				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-> +				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-> +				 <&gcc GCC_MSS_MNOC_BIMC_AXI_CLK>,
-> +				 <&rpmcc RPM_SMD_QDSS_CLK>,
-> +				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
+this patch set enables the HSIC USB on MMP3 platform. It adds support
+for the necessary clocks and adds the device tree nodes.
 
-RPM_SMD_XO_CLK_SRC doesn't seem to be implemented...
+Apart from patch 3/5, the patches need to be applied in order.
 
-I did pull in a patch from Jeff that defines it, but when I boot the
-modem I see the following error repeatedly:
+I've tested this on a MMP3-based Dell Wyse 3020/Ariel machine. The HSIC
+controllers should be present on MMP2 too, but I don't have a board
+where it is wired up.
 
-[  616.632227] qcom-q6v5-mss 4080000.remoteproc: fatal error received: dog_hb.c:266:DOG_HB detects starvation of task 0xda172640, triage with its own
+Thanks,
+Lubo
 
 
-
-All the qrtr services seems registered nicely, so the remote does come
-up before it goes down.
-
-Also, adsp comes up nicely.
-
-Regards,
-Bjorn
-
-> +			clock-names = "iface", "bus", "mem", "gpll0_mss",
-> +				      "snoc_axi", "mnoc_axi", "qdss", "xo";
-> +
-> +			qcom,smem-states = <&modem_smp2p_out 0>;
-> +			qcom,smem-state-names = "stop";
-> +
-> +			resets = <&gcc GCC_MSS_RESTART>;
-> +			reset-names = "mss_restart";
-> +
-> +			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-> +
-> +			power-domains = <&rpmpd MSM8998_VDDCX>,
-> +					<&rpmpd MSM8998_VDDMX>;
-> +			power-domain-names = "cx", "mx";
-> +
-> +			mba {
-> +				memory-region = <&mba_mem>;
-> +			};
-> +
-> +			mpss {
-> +				memory-region = <&mpss_mem>;
-> +			};
-> +
-> +			glink-edge {
-> +				interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
-> +				label = "modem";
-> +				qcom,remote-pid = <1>;
-> +				mboxes = <&apcs_glb 15>;
-> +			};
-> +		};
-> +
->  		gpucc: clock-controller@5065000 {
->  			compatible = "qcom,msm8998-gpucc";
->  			#clock-cells = <1>;
-> @@ -1088,6 +1143,42 @@
->  				      "gpll0";
->  		};
->  
-> +		remoteproc_slpi: remoteproc@5800000 {
-> +			compatible = "qcom,msm8998-slpi-pas";
-> +			reg = <0x05800000 0x4040>;
-> +
-> +			interrupts-extended = <&intc GIC_SPI 390 IRQ_TYPE_EDGE_RISING>,
-> +					      <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> +					      <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> +					      <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> +					      <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-names = "wdog", "fatal", "ready",
-> +					  "handover", "stop-ack";
-> +
-> +			px-supply = <&vreg_lvs2a_1p8>;
-> +
-> +			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
-> +				 <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
-> +			clock-names = "xo", "aggre2";
-> +
-> +			memory-region = <&slpi_mem>;
-> +
-> +			qcom,smem-states = <&slpi_smp2p_out 0>;
-> +			qcom,smem-state-names = "stop";
-> +
-> +			power-domains = <&rpmpd MSM8998_SSCCX>;
-> +			power-domain-names = "ssc_cx";
-> +
-> +			status = "disabled";
-> +
-> +			glink-edge {
-> +				interrupts = <GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-> +				label = "dsps";
-> +				qcom,remote-pid = <3>;
-> +				mboxes = <&apcs_glb 27>;
-> +			};
-> +		};
-> +
->  		stm: stm@6002000 {
->  			compatible = "arm,coresight-stm", "arm,primecell";
->  			reg = <0x06002000 0x1000>,
-> @@ -1880,6 +1971,39 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		remoteproc_adsp: remoteproc@17300000 {
-> +			compatible = "qcom,msm8998-adsp-pas";
-> +			reg = <0x17300000 0x4040>;
-> +
-> +			interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
-> +					      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> +					      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> +					      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> +					      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-names = "wdog", "fatal", "ready",
-> +					  "handover", "stop-ack";
-> +
-> +			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>;
-> +			clock-names = "xo";
-> +
-> +			memory-region = <&adsp_mem>;
-> +
-> +			qcom,smem-states = <&adsp_smp2p_out 0>;
-> +			qcom,smem-state-names = "stop";
-> +
-> +			power-domains = <&rpmpd MSM8998_VDDCX>;
-> +			power-domain-names = "cx";
-> +
-> +			status = "disabled";
-> +
-> +			glink-edge {
-> +				interrupts = <GIC_SPI 157 IRQ_TYPE_EDGE_RISING>;
-> +				label = "lpass";
-> +				qcom,remote-pid = <2>;
-> +				mboxes = <&apcs_glb 9>;
-> +			};
-> +		};
-> +
->  		apcs_glb: mailbox@17911000 {
->  			compatible = "qcom,msm8998-apcs-hmss-global";
->  			reg = <0x17911000 0x1000>;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
