@@ -2,108 +2,85 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B2C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9857FC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1D721655
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C132146E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zFKX5Mx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfLTPE4 (ORCPT
+        id S1727395AbfLTPeG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:04:56 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40403 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727233AbfLTPE4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 10:04:56 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w21so4445776otj.7;
-        Fri, 20 Dec 2019 07:04:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xIXSDPOOX2OHZ/9UyDaX8zGuRfcDybDX4Wqu+KsOODA=;
-        b=sFswHyToitcauv+VQ/ZbCt8ttho7mKiKXixup/Np6QFr+MRF5qWgkXbVeQDgJFimZ5
-         7sofXUgBT3MxQLpJwDT6ECirxx8ZcGMFGXMddqHxb3nv+p07i59UlV4LaXctIyiqK34D
-         dGerzxyYpcu7VmzLEyL141SefEzMOBcXgVDgOirzaiDpyMoxraZnLmI9cIFEscLwXzF8
-         i5AmKKd+BPCeGV6F/mNn7siQ1jW31u19CE8P+efJWqoegiPjhIhXCdOT6ormLGPdqPzM
-         w19bL461AOaPPRgpgqZg6r8zLrIs4AzaO8gBqGxk5OzQqDYemJ360AIuelAVsgD/gHnm
-         yYXw==
-X-Gm-Message-State: APjAAAXjkuQ1swddvaIE2xXysQKZPZ80bjii+mykTXrSErSv+/MCfId6
-        8vCut4Xoka97nC/jE8VpeGnGfk85WtUHJ5R6rGmVzg==
-X-Google-Smtp-Source: APXvYqyTAKnoo5F9im1mYMj/SXRfvhTRApAZxNoKMuSQVvjWyyC7PQ64avx40ELmisiT5cF2oDbrovaa69yULurZ9MM=
-X-Received: by 2002:a9d:2073:: with SMTP id n106mr5653440ota.145.1576854294903;
- Fri, 20 Dec 2019 07:04:54 -0800 (PST)
-MIME-Version: 1.0
-References: <1570104229-59144-1-git-send-email-biju.das@bp.renesas.com> <5af2669f-b977-1c36-95fb-ad006548b0d8@linaro.org>
-In-Reply-To: <5af2669f-b977-1c36-95fb-ad006548b0d8@linaro.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 20 Dec 2019 16:04:43 +0100
-Message-ID: <CAMuHMdVTTiMj+7bF0_TbX9k+QUKpsTto4aut=d0pkwz6_rOVfg@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: timer: renesas, cmt: Document r8a774b1
- CMT support
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Fri, 20 Dec 2019 10:34:06 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:35226 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727181AbfLTPeF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 10:34:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FlEdcjqR14Yp6BDuBVePu7rcTs7oSKGfaNl9lmmWvhY=; b=zFKX5Mx6zfivGSorxUsCX27mrf
+        Mdb7jKv4NoU2UpfVY45idZm7bRTqFThe+ouaRvXPd4oGnAAhXw3PSRzXQcp0PToyJj8nEk62cGtIX
+        bzhUpCsvadN1+mTB6aJRnpwhbimkq4102brSkFxx2RKwX8OJwhozOOuKIRSrBfEZCeSU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iiKHv-0003HC-5i; Fri, 20 Dec 2019 16:33:59 +0100
+Date:   Fri, 20 Dec 2019 16:33:59 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: Re: [PATCH V6 net-next 06/11] net: Introduce a new MII time stamping
+ interface.
+Message-ID: <20191220153359.GA11117@lunn.ch>
+References: <cover.1576511937.git.richardcochran@gmail.com>
+ <28939f11b984759257167e778d0c73c0dd206a35.1576511937.git.richardcochran@gmail.com>
+ <20191217092155.GL6994@lunn.ch>
+ <20191220145712.GA3846@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220145712.GA3846@localhost>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Daniel,
+On Fri, Dec 20, 2019 at 06:57:12AM -0800, Richard Cochran wrote:
+> On Tue, Dec 17, 2019 at 10:21:55AM +0100, Andrew Lunn wrote:
+> > Forward declarations are considered bad.
+> 
+> Not by me!
 
-On Wed, Dec 4, 2019 at 5:36 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
-> On 03/10/2019 14:03, Biju Das wrote:
-> > Document SoC specific bindings for RZ/G2N (r8a774b1) SoC.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > ---
-> > V1-->V2
-> >  * Rebased to tip/timers
-> > ---
-> >  Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > index a444cfc..a747fab 100644
-> > --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > @@ -29,6 +29,8 @@ Required Properties:
-> >      - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
-> >      - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
-> >      - "renesas,r8a774a1-cmt1" for the 48-bit CMT devices included in r8a774a1.
-> > +    - "renesas,r8a774b1-cmt0" for the 32-bit CMT0 device included in r8a774b1.
-> > +    - "renesas,r8a774b1-cmt1" for the 48-bit CMT devices included in r8a774b1.
-> >      - "renesas,r8a774c0-cmt0" for the 32-bit CMT0 device included in r8a774c0.
-> >      - "renesas,r8a774c0-cmt1" for the 48-bit CMT devices included in r8a774c0.
-> >      - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
->
-> Applied, thanks!
+Lets see what David says.
 
-Thanks!
-Looks like it's been a while you pushed your local branches to git.linaro.org?
+> > For the moment what you have is sufficient. I doubt anybody is using
+> > the dp83640 with phylink, and the new hardware you are targeting seems
+> > to be RGMII based, not SERDES, which is the main use case for PHYLINK.
+> 
+> Yeah, my impression is that the phyter will be the first and last phy
+> time stamping device ever created.  Designers reject this part because
+> it is 100 mbit only.  And there are no gigabit+ phys with time
+> stamping at all.
 
-Gr{oetje,eeting}s,
+The Marvell PHY datasheets indicate they support PTP. I've not looked
+at how they implement it, and if the current model will work.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+   Andrew
