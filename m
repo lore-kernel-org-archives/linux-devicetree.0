@@ -2,118 +2,119 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F28C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06665C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED33D2465E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:06:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hmNDsrcT"
+	by mail.kernel.org (Postfix) with ESMTP id D73B12467F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfLTKG1 (ORCPT
+        id S1727129AbfLTKJs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:06:27 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:34806 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfLTKG1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:06:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=as6IYqvOwKnH4gVYbLvmr3OksXVTViVqoOiYR3nLmvE=; b=hmNDsrcTVknj3kMDP0UCFSAoV+
-        RFtmlaTTJJyTlSca604hHzHP+cBr5N4IQTWVE5VjvvBXIPVBYFpkII9IXVYOTebr0QOc78mERvWrG
-        8G/245hWZbp5c46AKG/RmKY+UNcs8jOcRIcGXCeNTPonUMZF/4ovd119+IbDc3J9Xv94=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iiFAn-0007He-MV; Fri, 20 Dec 2019 11:06:17 +0100
-Date:   Fri, 20 Dec 2019 11:06:17 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "antoine.tenart@free-electrons.com" 
-        <antoine.tenart@free-electrons.com>,
-        "jaz@semihalf.com" <jaz@semihalf.com>,
-        "baruch@tkos.co.il" <baruch@tkos.co.il>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Message-ID: <20191220100617.GE24174@lunn.ch>
-References: <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191219190308.GE25745@shell.armlinux.org.uk>
- <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191219214930.GG25745@shell.armlinux.org.uk>
- <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191220091642.GJ25745@shell.armlinux.org.uk>
- <20191220092900.GB24174@lunn.ch>
- <VI1PR04MB55679B12D4E7C9EC05FE0D9AEC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+        Fri, 20 Dec 2019 05:09:48 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:60231 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfLTKJs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 05:09:48 -0500
+X-Originating-IP: 90.65.102.129
+Received: from kb-xps (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: kamel.bouhara@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id B9615C0002;
+        Fri, 20 Dec 2019 10:09:45 +0000 (UTC)
+Date:   Fri, 20 Dec 2019 11:09:44 +0100
+From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] dt-bindings: arm: at91: Document Kizboxmini and
+ Smartkiz boards binding
+Message-ID: <20191220100944.GB2601@kb-xps>
+References: <20191209091339.32593-1-kamel.bouhara@bootlin.com>
+ <20191218202345.GA22591@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB55679B12D4E7C9EC05FE0D9AEC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+In-Reply-To: <20191218202345.GA22591@bogus>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 09:39:08AM +0000, Madalin Bucur (OSS) wrote:
-> > -----Original Message-----
-> > From: Andrew Lunn <andrew@lunn.ch>
-> > Sent: Friday, December 20, 2019 11:29 AM
-> > To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Cc: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>; antoine.tenart@free-
-> > electrons.com; jaz@semihalf.com; baruch@tkos.co.il; davem@davemloft.net;
-> > netdev@vger.kernel.org; f.fainelli@gmail.com; hkallweit1@gmail.com;
-> > shawnguo@kernel.org; devicetree@vger.kernel.org
-> > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-> > 
-> > > How does this help us when we can't simply change the existing usage?
-> > > We can update the DT but we can't free up the usage of "10gbase-kr".
-> > 
-> > Agreed. Code needs to keep on interpreting "10gbase-kr" as any 10G
-> > link. If we ever have a true 10gbase-kr, 802.3ap, one meter of copper
-> > and two connectors, we are going to have to add a new mode to
-> > represent true 10gbase-kr.
-> > 
-> > 	Andrew
-> 
-> Hi, actually we do have that. What would be the name of the new mode
-> representing true 10GBase-KR that we will need to add when we upstream
-> support for that?
+On Wed, Dec 18, 2019 at 02:23:45PM -0600, Rob Herring wrote:
+> On Mon, Dec 09, 2019 at 10:13:38AM +0100, Kamel Bouhara wrote:
+> > Document devicetree's bindings for the Overkiz's Kizbox Mini and
+> > Smartkiz boards, based on a SAM9G25 Atmel SoC.
+> >
+> > Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> > ---
+> > Changes in v2
+> > =============
+> > 	- Added Kizboxmini Base board documentation
+> > 	- Merged Smartkiz documentation as it is also a sam9g25 based
+> > 	board
+> >
+> > Changes in v3
+> > =============
+> > 	- Made a single items list with all the sam9g25 based boards and
+> > 	put description into a comment.
+> > 	- Fixed duplicated item in enum list and checked with 'make
+> > 	dt_binding_check'
+> >
+> > Changes in v4
+> > =============
+> > 	- Fix missing "-" before items list
+> >
+> > Changes in v5
+> > =============
+> > 	- s/at91-kizboxmini_common.dtsi/at91-kizboxmini-common.dtsi/
+> > ---
+> >  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> > index 6dd8be401673..8d50915330e8 100644
+> > --- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
+> > @@ -35,6 +35,16 @@ properties:
+> >                - atmel,at91sam9x60
+> >            - const: atmel,at91sam9
+> >
+> > +      - items:
+> > +          - enum:
+> > +                - overkiz,kizboxmini-base # Overkiz kizbox Mini Base Board
+> > +                - overkiz,kizboxmini-mb   # Overkiz kizbox Mini Mother Board
+> > +                - overkiz,kizboxmini-rd   # Overkiz kizbox Mini RailDIN
+> > +                - overkiz,smartkiz        # Overkiz SmartKiz Board
+>
+> Should be indented 2 fewer spaces. Otherwise,
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Ah!
+Ok, thanks.
 
-This is going to be messy.
+Cheers,
 
-Do you really need to differentiate? What seems to make 802.3ap
-different is the FEC, autoneg and link training. Does you hardware
-support this? Do you need to know you are supposed to be using 802.3ap
-in order to configure these features?
+>
+> > +          - const: atmel,at91sam9g25
+> > +          - const: atmel,at91sam9x5
+> > +          - const: atmel,at91sam9
+> > +
+> >        - items:
+> >            - enum:
+> >                - atmel,at91sam9g15
+> > --
+> > 2.24.0
+> >
 
-What are we going to report to user space? 10gbase-kr, or
-10gbase-kr-true? How do we handle the mess this makes with firmware
-based cards which correctly report
-ETHTOOL_LINK_MODE_10000baseKR_Full_BIT to user space?
-
-What do we currently report to user space? Is it possible for us to
-split DT from user space? DT says 10gbase-kr-true but to user space we
-say ETHTOOL_LINK_MODE_10000baseKR_Full_BIT?
-
-I think in order to work through these issues, somebody probably needs
-the hardware, and the desire to see it working. So it might actually
-be you who makes a proposal how we sort this out, with help from
-Russell and I.
-
-	Andrew
+--
+Kamel Bouhara, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
