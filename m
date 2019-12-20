@@ -2,104 +2,130 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E48C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 13:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B9CC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C131E222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 13:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46206218AC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="knIFojO5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmcVoTvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfLTNkb (ORCPT
+        id S1727359AbfLTOAu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 08:40:31 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:44104 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727344AbfLTNkb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 08:40:31 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 5D7D942336;
-        Fri, 20 Dec 2019 13:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576849230; bh=Ar4tQxExynwUMAHZi/U/mRWmdym3BiGnnWXXk6fzbwA=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=knIFojO5ZRj+MvX37D5JrR8KHTinKTJqydIWPaZccS/YAvt7cpPK3DQIYMey4yZ+C
-         oqkyFAWlLIWhGUhh95KfnSwd6zHCcrgZ0XLpG8AHmdESxKjggYYw5Uhj45J8ObRCSg
-         oqBpf40WZJs+EUbtl93Q/StPpIX3Z62J6bLzqb09U1ekS6C9eFMATXTwYMyhCtjx4x
-         cQUDMtxjDirh2kVWKvniokdwlsUeMS5TSaNGCteskwO0FLMIOcyeYBBdrYFc2C/FKM
-         mxdyHU9d2bNrzr9Tw1gSZlkCwvu9gGuddeWiBM+O8hlOXKml4Aj3WM+u5zdX3CBAP5
-         laO6yg1T6IsYA==
-Received: from tejas-VirtualBox (joglekar-e7480.internal.synopsys.com [10.144.133.13])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPSA id D80FEA0057;
-        Fri, 20 Dec 2019 13:40:26 +0000 (UTC)
-Received: by tejas-VirtualBox (sSMTP sendmail emulation); Fri, 20 Dec 2019 19:10:24 +0530
-Date:   Fri, 20 Dec 2019 19:10:24 +0530
-Message-Id: <2450178afa4e09b315402c64224b44b542363fc7.1576848504.git.joglekar@synopsys.com>
-In-Reply-To: <cover.1576848504.git.joglekar@synopsys.com>
-References: <cover.1576848504.git.joglekar@synopsys.com>
-From:   Tejas Joglekar <Tejas.Joglekar@synopsys.com>
-Subject: [RFC PATCH 4/4] dt-bindings: usb: Add snps,consolidate-trbs & consolidate-trbs
-To:     Tejas Joglekar <Tejas.Joglekar@synopsys.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     John Youn <John.Youn@synopsys.com>
+        Fri, 20 Dec 2019 09:00:50 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38178 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbfLTOAu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 09:00:50 -0500
+Received: by mail-lf1-f68.google.com with SMTP id r14so7121370lfm.5;
+        Fri, 20 Dec 2019 06:00:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LpY4UiJbzxoVMEU3tzXRKhaFsho/SBomG9uT1fm9NeU=;
+        b=QmcVoTvCYHaEw3r3AT627QQ7IXxWLbNZblYiue9GJXEHjUQPU+HX32uvIeeQJHnqmb
+         xfL0NXmuO6szPJ1onlrLq0gnR6lwPoH+8m0gXasUpSUDOfPeyv58mCBbeDvZqaDZjAFA
+         VnkimRaUPTyuYXcKJsc/kNaEIHp+DkcNLwBrjzSzk7x+D3XCEJkVWjpI5R22rpy9fhgh
+         XlphLIu5euvM8usPlZ0KHsv9WbxmVhgHX21/yCWve8pD1JivI5bO9p0Llqy6evS3AKgX
+         vlLuRRPl3+Qofjc8ZSgT3sKcReNnlKMwu/Znj/VFb1v2bO/CpBsjVKRYMDWyifbcVOX3
+         g9sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LpY4UiJbzxoVMEU3tzXRKhaFsho/SBomG9uT1fm9NeU=;
+        b=WM4PX3Rn1o9kjr/iJRL9gBq59ZD2c+ChaP04v3eRVk1vDFwoTh8fqf4PbAVHsUwbrK
+         0FWxV4lPFJ9TqXFw8cWIAfNPab9v7HpJ35Og81IU9Dz0ATxAphl+ZMMz7tOklNR9cWgc
+         SW4mfuYrHwmhU9OxteMSSaDUsxMqI/rJJqz0wxz4ushboEc2bHvvlfPBbgz5k9OBM4Ce
+         b1q21Gz5I2g1tIMyzhVQQzAf7Q5w1Ust91BfNTVVE4MlTIpZCEwMaU3fGuv0+5NpGy/V
+         HlnOZ+7kGMSFrgaC9EdFwMxl+bPg04e911xEg6OBwjd3DAK0jezQjcdFUlsI/uQgdRmD
+         pFYA==
+X-Gm-Message-State: APjAAAVJ19vHgIbvrXSJS/87IrZLStE86PC7a4m3zgfxXHlyzP9LhDq+
+        U2nHZZmH6Wq6SXRncY5PedTKcw1Z
+X-Google-Smtp-Source: APXvYqxLF1kxYTtinKHI+BlHSC56oAk50xiDl2BhSeOUe4iEzValcOoZApvFNIEH1QLTEWNANmMzzA==
+X-Received: by 2002:a19:ae18:: with SMTP id f24mr9266082lfc.155.1576850448338;
+        Fri, 20 Dec 2019 06:00:48 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id m24sm5328108ljb.81.2019.12.20.06.00.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 06:00:47 -0800 (PST)
+Subject: Re: [PATCH 1/2] ARM: dts: tegra20: add labels to i2c nodes
+To:     Richard Leitner <richard.leitner@skidata.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191219130431.30458-1-richard.leitner@skidata.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <01ac756c-1e51-5d62-ca45-9e0b4f106a29@gmail.com>
+Date:   Fri, 20 Dec 2019 17:00:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20191219130431.30458-1-richard.leitner@skidata.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds the documentation for consolidate-trbs, and
-snps,consolidate-trbs property. These when set enables the quirk for
-XHCI driver for consolidation of TRB's when small buffer sizes are
-scattered over the TRB cache not making up to MPS or total transfer size
-with Synopsys xHC.
+19.12.2019 16:04, Richard Leitner пишет:
+> Add numbered labels to the i2c nodes of the Tegra20 SoC so we just need
+> to alias it from derived boards.
+> 
+> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+> ---
+>  arch/arm/boot/dts/tegra20.dtsi | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 9c58e7fcf5c0..e02f75757a7e 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -464,7 +464,7 @@
+>  		clocks = <&tegra_car TEGRA20_CLK_RTC>;
+>  	};
+>  
+> -	i2c@7000c000 {
+> +	i2c1: i2c@7000c000 {
+>  		compatible = "nvidia,tegra20-i2c";
+>  		reg = <0x7000c000 0x100>;
+>  		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -494,7 +494,7 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	i2c@7000c400 {
+> +	i2c2: i2c@7000c400 {
+>  		compatible = "nvidia,tegra20-i2c";
+>  		reg = <0x7000c400 0x100>;
+>  		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -510,7 +510,7 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	i2c@7000c500 {
+> +	i2c3: i2c@7000c500 {
+>  		compatible = "nvidia,tegra20-i2c";
+>  		reg = <0x7000c500 0x100>;
+>  		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+> 
 
-Signed-off-by: Tejas Joglekar <joglekar@synopsys.com>
----
- Documentation/devicetree/bindings/usb/dwc3.txt     | 6 ++++++
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
- 2 files changed, 7 insertions(+)
+Hello Richard,
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 66780a47ad85..9851da41a442 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -101,6 +101,12 @@ Optional properties:
- 			this and tx-thr-num-pkt-prd to a valid, non-zero value
- 			1-16 (DWC_usb31 programming guide section 1.2.3) to
- 			enable periodic ESS TX threshold.
-+ - snps,consolidate-trbs: enable TRBs consolidation - host mode only. Set this
-+			to valid then for Synopsys xHC the TRBs would be
-+			consolidated to at least MPS in order to prevent the
-+			controller getting hang due to small buffer sizes which
-+			does not make up to MPS size or total transfer size
-+			across TRB cache.
- 
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 3f378951d624..be8d5e6a6333 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -43,6 +43,7 @@ Optional properties:
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
-   - imod-interval-ns: default interrupt moderation interval is 5000ns
-   - phys : see usb-hcd.yaml in the current directory
-+  - consolidate-trbs: indicate if you need to consolidate trbs
- 
- additionally the properties from usb-hcd.yaml (in the current directory) are
- supported.
--- 
-2.11.0
+Why derived boards couldn't label nodes by themselves? That's what all
+derived boards are doing already.
 
+BTW, upstream should benefit from the submitted changes. This is not a
+very useful change for upstream if you're not updating the actual DTs of
+any of the boards in arch/arm/boot/dts/*.
