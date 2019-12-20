@@ -2,146 +2,119 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F52C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F292C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B508F24682
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:15:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576836907;
-	bh=3q1NF9VG9IWQH0lcsKzRWfLp9RNI0lBU9URATav/sck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CMY8yr4pavDPLuaevJDyeJrIwaPBSN3S0ZL4W636lNtqskB0fpResK8WpvkUSxC29
-	 HmEfjdmYA99nCY/WKhf96g6AqQbczQlZ8c4CUQ1RJCTeVF+hx+mdrKBIXLma5KJ8xs
-	 6TQlBGdROUPhHxP6j23mnS3A2K3837+PhkNW6xyE=
+	by mail.kernel.org (Postfix) with ESMTP id 710B124679
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:27:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vLmOQumr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfLTKPC (ORCPT
+        id S1727184AbfLTK1Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:15:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbfLTKPB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:15:01 -0500
-Received: from localhost (unknown [106.201.107.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F5D206D8;
-        Fri, 20 Dec 2019 10:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576836901;
-        bh=3q1NF9VG9IWQH0lcsKzRWfLp9RNI0lBU9URATav/sck=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gxHI/HJ87pI2J2ulQlfQdf6utepKQnhIl8aUTOmKmyc4Gy1AS/BlCDM8D6h30RU1q
-         tFA5JERdV3SyPUgVJXQWTinJTNYs+bMMTVe/LzFse92eoKqDeWsKMzaxd4TBaQnMYV
-         4nTCX9z29x19dtDhNUDlXVuqmRBKo32w6wui6mKU=
-Date:   Fri, 20 Dec 2019 15:44:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com, vigneshr@ti.com
-Subject: Re: [PATCH v7 03/12] dmaengine: doc: Add sections for per descriptor
- metadata support
-Message-ID: <20191220101456.GO2536@vkoul-mobl>
-References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-4-peter.ujfalusi@ti.com>
- <20191220082810.GJ2536@vkoul-mobl>
- <4508bc1c-d424-3285-cb47-d32a4d25b2c9@ti.com>
+        Fri, 20 Dec 2019 05:27:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53435 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfLTK1Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 05:27:24 -0500
+Received: by mail-wm1-f66.google.com with SMTP id m24so8375135wmc.3
+        for <devicetree@vger.kernel.org>; Fri, 20 Dec 2019 02:27:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n0d7A9vcdYOjJrptRZ7l/Py3puK9fLPBMNKquvCDBS8=;
+        b=vLmOQumrckuy/uRuCU6yj4xJmKBQPT49yE9Lmv9XbT/e4gBL/sCo8bZKZcNnCad6h0
+         EzThNeJ09aW/PlljQ59lBAJU4BTFH/sJ04aytmPiYK8I+kWIlRR7MA+jfxfIdYPt0QA+
+         nWQBF3Yni8tdLR3XUHykRBHWmfvqVXQaGhEGSRHgOQSSpQYvqCdZLAV47obw4KLsYyi9
+         53sRvzHkBz6I54lzaP/B2akmRLThzlzDdlRePi86UJs02KQobisvc7mvwOLdjBx6VCTX
+         127qaleSFwWS0mM1so33m0aD7tPk56PVtyMWniexnnQ7x7CARkRBFdSJ9Z+wu8UimdzM
+         7p3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n0d7A9vcdYOjJrptRZ7l/Py3puK9fLPBMNKquvCDBS8=;
+        b=r+PGJXRSjlRXiJTuhXsgBMUfvoC+q35QsgSfnIk57k2YKcy8tQkTog6wzgRX7/OxM7
+         tyHn/zhlj16AnwinnpWh2IbAbfqsSzxejtomxRz2UkD4FNvDDYjw74Q99xr9VWt00NlB
+         SsmMJoGwO0lswSUDMzKzXY0zZ8inIvf1YpPTF9fKDjsoks6czhYQ1nZXMuL7g/9Ev03P
+         xMIqR9qk64fWoMfIBbYj2iNb/WTj9uQx3d4yBIfgkaAAjIHEvhavWE6+g3n3xJvv27fW
+         sM7Q7sqgEtsX32na3C6YqPqhufAffXIal93y6KUt82h3y9XsFIKYRsD5N6Lemb7Pg7J9
+         zb+Q==
+X-Gm-Message-State: APjAAAUnowv5tbRJr17AMa6/RrrFcuvDhI620XkUSYUu/SEHZKYvlKuB
+        /ykW34w4FxLRZQxQrUgHh+hnvg==
+X-Google-Smtp-Source: APXvYqyVpEoQ0ffKKhojLArPhnqkXcZq4Qsi1o1iUUiVSKzewceGkEew3wQ3Hvpb8P8F0HzsUlM/ag==
+X-Received: by 2002:a7b:c246:: with SMTP id b6mr15254728wmj.75.1576837643320;
+        Fri, 20 Dec 2019 02:27:23 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id r68sm9232066wmr.43.2019.12.20.02.27.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 20 Dec 2019 02:27:22 -0800 (PST)
+Subject: Re: [alsa-devel] [PATCH v6 02/11] mfd: wcd934x: add support to
+ wcd9340/wcd9341 codec
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc:     robh@kernel.org, alsa-devel@alsa-project.org,
+        bgoswami@codeaurora.org, vinod.koul@linaro.org,
+        devicetree@vger.kernel.org, spapothi@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-3-srinivas.kandagatla@linaro.org>
+ <af48cd71-fa1a-dbc5-0e88-e315ea13c28c@linux.intel.com>
+ <db36d6d7-40a2-bbd2-f299-838abf4d92cc@linaro.org>
+ <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <3fa4997f-4409-97f6-ba10-a87013383eb7@linaro.org>
+Date:   Fri, 20 Dec 2019 10:27:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4508bc1c-d424-3285-cb47-d32a4d25b2c9@ti.com>
+In-Reply-To: <4492b71e-9923-365c-f22c-3766e2d5bae2@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-12-19, 11:52, Peter Ujfalusi wrote:
-> Hi Vinod,
-> 
-> On 20/12/2019 10.28, Vinod Koul wrote:
-> > Hi Peter,
-> > 
-> > On 09-12-19, 11:43, Peter Ujfalusi wrote:
-> > 
-> >> +  Optional: per descriptor metadata
-> >> +  ---------------------------------
-> >> +  DMAengine provides two ways for metadata support.
-> >> +
-> >> +  DESC_METADATA_CLIENT
-> >> +
-> >> +    The metadata buffer is allocated/provided by the client driver and it is
-> >> +    attached to the descriptor.
-> >> +
-> >> +  .. code-block:: c
-> >> +
-> >> +     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
-> >> +				   void *data, size_t len);
-> >> +
-> >> +  DESC_METADATA_ENGINE
-> >> +
-> >> +    The metadata buffer is allocated/managed by the DMA driver. The client
-> > 
-> > and when would it be freed?
-> 
-> It is not defined as it could be driver dependent, but afaik we have
-> defined (which I'm not sure why it is not here or in the code) that in
-> DESC_METADATA_ENGINE case the metadata pointer is valid for the client
-> between the time it got the desc (via prep call) and the execution of
-> the completion callback.
-> Iow, DESC_METADATA_ENGINE does not make any sense if the client want to
-> receive metadata back and does not provide a callback.
 
-Make sense and once callback completes driver can free it up!
-> 
-> I will extend the documentation and comment in the code to reflect this.
 
-makes sense, thanks!
+On 19/12/2019 20:05, Pierre-Louis Bossart wrote:
+>>>
+>> Note these are the child devices of the MFD SLIMBus device.
+> 
+> Ah ok. I guess the creation of those child devices when the parent 
+> SLIMbus device reports PRESENT initially if fine, it's the part where 
+> you remove them if the device loses sync or gets powered off which is 
+> odd. And I guess technically you could still have race conditions where 
+> a child device starts a transaction just as the parent is no longer 
+> attached to the bus.
+
+Losing power to SLIMBus device is very odd usecase and if it happens 
+suggests that threre are bigger issues on the board design itself. This 
+case should never happen. Even if it happens we would get timeout errors 
+on every SLIMbus transactions.
 
 > 
-> >> +    driver can ask for the pointer, maximum size and the currently used size of
-> >> +    the metadata and can directly update or read it.
-> >> +
-> >> +  .. code-block:: c
-> >> +
-> >> +     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
-> >> +		size_t *payload_len, size_t *max_len);
-> >> +
-> >> +     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
-> >> +		size_t payload_len);
-> >> +
-> >> +  Client drivers can query if a given mode is supported with:
-> >> +
-> >> +  .. code-block:: c
-> >> +
-> >> +     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
-> >> +		enum dma_desc_metadata_mode mode);
-> >> +
-> >> +  Depending on the used mode client drivers must follow different flow.
-> >> +
-> >> +  DESC_METADATA_CLIENT
-> >> +
-> >> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
-> >> +      1. prepare the descriptor (dmaengine_prep_*)
-> >> +         construct the metadata in the client's buffer
-> >> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
-> >> +         descriptor
-> >> +      3. submit the transfer
-> > 
-> > This is simpler, txn finished the metadata would be freed up right?
+>>> I would however not remove the devices when the status is down but 
+>>> only on an explicit .remove.
+>>
+>> Am open for suggestions but I would not like the child devices to talk 
+>> on the bus once the SLIMbus device is down! Only way to ensure or make 
+>> it silent is to remove.
 > 
-> It is up to the client driver what it does with the provided buffer. As
-> for what the DMA driver does is not documented as it is not relevant and
-> can be different by different HW or SW implementation.
+> it's as if you are missing a mechanism to forward the parent status to 
+> the children so use remove() for lack of a better solution?
+That is true. This gives bit more control on the slave device lifecycle.
+Current solution works fine for now with less complexities across 
+multiple drivers. I also agree that there is scope of improvement in 
+future for this.
 
-yeah lets document that and the fact the dmaengine driver cant touch it
-after the callback
--- 
-~Vinod
+Thanks,
+srini
