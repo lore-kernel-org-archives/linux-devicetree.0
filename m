@@ -2,559 +2,148 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27176C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97A3C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E39452465E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:38:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA1D24684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dHt2yfVj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfLTKim (ORCPT
+        id S1727180AbfLTKmF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:38:42 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:36755 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfLTKim (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 05:38:42 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: kamel.bouhara@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9FB62240003;
-        Fri, 20 Dec 2019 10:38:37 +0000 (UTC)
-From:   Kamel Bouhara <kamel.bouhara@bootlin.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        =?UTF-8?q?K=C3=A9vin=20RAYMOND?= <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: [PATCH v6 2/2] ARM: dts: at91: add smartkiz support and a common kizboxmini dtsi file
-Date:   Fri, 20 Dec 2019 11:38:35 +0100
-Message-Id: <20191220103835.160154-2-kamel.bouhara@bootlin.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191220103835.160154-1-kamel.bouhara@bootlin.com>
-References: <20191220103835.160154-1-kamel.bouhara@bootlin.com>
+        Fri, 20 Dec 2019 05:42:05 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50870 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfLTKmF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 05:42:05 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKAfu1p061714;
+        Fri, 20 Dec 2019 04:41:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576838516;
+        bh=2v2z+FS+yA7LYnWwxztL6URPv5REOEKRsiKuUYtz5xE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dHt2yfVjBXdDDHSnVV4JabkC8Wkx8sVLr0nA12+xfaxXlDn2MLtSHGdx6hxK474nB
+         dKIi6IGX6eLhZP/XKdwhe1ZG57BtZN1t5HwNlLUgc061NKIK5fnDOklWP0ZKopBg+J
+         S750CPw72EoWAfXbN9EwXBZsDZgrv+dgFxRlayPY=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKAfuG1103346
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 04:41:56 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 04:41:55 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 04:41:55 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKAfqQ1122772;
+        Fri, 20 Dec 2019 04:41:52 -0600
+Subject: Re: [PATCH v7 06/12] dmaengine: ti: Add cppi5 header for K3
+ NAVSS/UDMA
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>,
+        <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-7-peter.ujfalusi@ti.com>
+ <20191220095455.GM2536@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d5bd6bcf-9c1e-8633-fdc4-ee787100b44c@ti.com>
+Date:   Fri, 20 Dec 2019 12:42:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191220095455.GM2536@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Split the existing Kizbox Mini boards into three board configuration,
-the base board, the mother board and the RailDIN board.
-Add a new dts file for the SmartKiz board support.
+Hi Vinod,
 
-Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
----
- arch/arm/boot/dts/Makefile                    |   5 +-
- arch/arm/boot/dts/at91-kizboxmini-base.dts    |  24 +++
- ...oxmini.dts => at91-kizboxmini-common.dtsi} | 163 +++++++++---------
- arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  26 +++
- arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  49 ++++++
- arch/arm/boot/dts/at91-smartkiz.dts           | 109 ++++++++++++
- 6 files changed, 293 insertions(+), 83 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-base.dts
- rename arch/arm/boot/dts/{at91-kizboxmini.dts => at91-kizboxmini-common.dtsi} (51%)
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
- create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
- create mode 100644 arch/arm/boot/dts/at91-smartkiz.dts
+On 20/12/2019 11.54, Vinod Koul wrote:
+> On 09-12-19, 11:43, Peter Ujfalusi wrote:
+> 
+>> +#define CPPI5_INFO2_DESC_RETPUSHPOLICY		BIT(16)
+>> +#define CPPI5_INFO2_DESC_RETP_MASK		GENMASK(18, 16)
+>> +
+>> +#define CPPI5_INFO2_DESC_RETQ_SHIFT		(0)
+>> +#define CPPI5_INFO2_DESC_RETQ_MASK		GENMASK(15, 0)
+>> +
+>> +#define CPPI5_INFO3_DESC_SRCTAG_SHIFT		(16U)
+>> +#define CPPI5_INFO3_DESC_SRCTAG_MASK		GENMASK(31, 16)
+>> +#define CPPI5_INFO3_DESC_DSTTAG_SHIFT		(0)
+>> +#define CPPI5_INFO3_DESC_DSTTAG_MASK		GENMASK(15, 0)
+>> +
+>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_SHIFT	(0)
+>> +#define CPPI5_BUFINFO1_HDESC_DATA_LEN_MASK	GENMASK(27, 0)
+>> +
+>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_SHIFT	(0)
+>> +#define CPPI5_OBUFINFO0_HDESC_BUF_LEN_MASK	GENMASK(27, 0)
+> 
+> I think you can remove the SHIFT defines and use ffs() to get the bit
+> position for shift
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 08011dc8c7a6..d9ef9de25382 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -37,7 +37,10 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	at91-ariag25.dtb \
- 	at91-ariettag25.dtb \
- 	at91-cosino_mega2560.dtb \
--	at91-kizboxmini.dtb \
-+	at91-kizboxmini-base.dtb \
-+	at91-kizboxmini-mb.dtb \
-+	at91-kizboxmini-rd.dtb \
-+	at91-smartkiz.dtb \
- 	at91-wb45n.dtb \
- 	at91sam9g15ek.dtb \
- 	at91sam9g25ek.dtb \
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-base.dts b/arch/arm/boot/dts/at91-kizboxmini-base.dts
-new file mode 100644
-index 000000000000..81c29ca5cc1b
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-base.dts
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * at91-kizboxmini-base.dts - Device Tree file for Overkiz Kizbox mini
-+ * base board
-+ *
-+ * Copyright (C) 2015 Overkiz SAS
-+ *   Author: Antoine Aubert <a.aubert@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini";
-+	compatible = "overkiz,kizboxmini-base", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+};
-+
-+&pinctrl_usart0 {
-+	atmel,pins =
-+		<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
-+		 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE
-+		 AT91_PIOA 2 AT91_PERIPH_GPIO AT91_PINCTRL_MULTI_DRIVE>;
-+};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini.dts b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-similarity index 51%
-rename from arch/arm/boot/dts/at91-kizboxmini.dts
-rename to arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-index cb22f5fb055f..fddf267b2d17 100644
---- a/arch/arm/boot/dts/at91-kizboxmini.dts
-+++ b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-@@ -1,17 +1,16 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * at91-kizboxmini.dts - Device Tree file for Overkiz Kizbox mini board
-  *
-- * Copyright (C) 2014 Gaël PORTAY <g.portay@overkiz.com>
-+ * Copyright (C) 2014-2018 Overkiz SAS
-+ *   Author: Antoine Aubert <a.aubert@overkiz.com>
-+ *           Gaël Portay <g.portay@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ *           Dorian Rocipon <d.rocipon@overkiz.com>
-  */
--/dts-v1/;
- #include "at91sam9g25.dtsi"
--#include <dt-bindings/pwm/pwm.h>
+Right. I'll convert to use ffs()
 
- / {
--	model = "Overkiz Kizbox mini";
--	compatible = "overkiz,kizboxmini", "atmel,at91sam9g25", "atmel,at91sam9x5", "atmel,at91sam9";
--
- 	chosen {
- 		bootargs = "ubi.mtd=ubi";
- 		stdout-path = &dbgu;
-@@ -22,24 +21,16 @@ memory {
- 	};
+> 
+>> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
+>> +					u32 sw_data_size)
+>> +{
+>> +	u32 desc_size;
+>> +
+>> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
+>> +		return 0;
+>> +
+>> +	desc_size = sizeof(struct cppi5_host_desc_t) + psdata_size +
+>> +		    sw_data_size;
+> 
+> I think there was an API for this kind of mem allocation of struct and
+> buffer attached...
 
- 	clocks {
--		slow_xtal {
--			clock-frequency = <32768>;
--		};
--
- 		main_xtal {
- 			clock-frequency = <12000000>;
- 		};
--	};
+The returned size is not only used when allocating memory or setting up
+the dma_pool, but for UDMAP's fetch size parameter.
 
--	ahb {
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
--			status = "okay";
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+
-+		adc_op_clk {
-+			status = "disabled";
- 		};
- 	};
+>> +static inline void cppi5_hdesc_reset_hbdesc(struct cppi5_host_desc_t *desc)
+>> +{
+>> +	desc->hdr = (struct cppi5_desc_hdr_t) { 0 };
+>> +	desc->next_desc = 0;
+> 
+> would this not be superfluous? Or if you want a memset call?
 
-@@ -63,17 +54,25 @@ reset {
- 		};
- 	};
+The intention is to reset the header and the next descriptor link but
+leave the backing buffer information intact. This allows the reuse of a
+descriptor+buffer and we only need to set the header bits + next
+descriptor pointer if any.
 
--	pwm_leds {
-+	leds: pwm_leds {
- 		compatible = "pwm-leds";
+>> +static inline u32 *cppi5_hdesc_get_psdata32(struct cppi5_host_desc_t *desc)
+>> +{
+>> +	return (u32 *)cppi5_hdesc_get_psdata(desc);
+> 
+> you dont need casts away from void *
 
--		green {
-+		led_blue: pwm_blue {
-+			label = "pwm:blue:user";
-+			pwms = <&pwm0 2 10000000 0>;
-+			max-brightness = <255>;
-+			linux,default-trigger = "none";
-+			status = "disabled";
-+		};
-+
-+		led_green: pwm_green {
- 			label = "pwm:green:user";
- 			pwms = <&pwm0 0 10000000 0>;
- 			max-brightness = <255>;
- 			linux,default-trigger = "default-on";
- 		};
+Hrm, or just remove this, clients can use the cppi5_hdesc_get_psdata()
+directly.
 
--		red {
-+		led_red: pwm_red {
- 			label = "pwm:red:user";
- 			pwms = <&pwm0 1 10000000 0>;
- 			max-brightness = <255>;
-@@ -82,53 +81,12 @@ red {
- 	};
- };
 
--&dbgu {
-+&usart0 {
-+	atmel,use-dma-rx;
-+	atmel,use-dma-tx;
- 	status = "okay";
- };
+- Péter
 
--&ebi {
--	pinctrl-0 = <&pinctrl_ebi_addr_nand
--		     &pinctrl_ebi_data_0_7>;
--	pinctrl-names = "default";
--	status = "okay";
--
--	nand-controller {
--		pinctrl-0 = <&pinctrl_nand_oe_we
--			     &pinctrl_nand_cs
--			     &pinctrl_nand_rb>;
--		pinctrl-names = "default";
--		status = "okay";
--
--		nand@3 {
--			reg = <0x3 0x0 0x800000>;
--			rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
--			cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			nand-ecc-strength = <4>;
--			nand-ecc-step-size = <512>;
--			nand-on-flash-bbt;
--			label = "atmel_nand";
--
--			partitions {
--				compatible = "fixed-partitions";
--				#address-cells = <1>;
--				#size-cells = <1>;
--
--				bootstrap@0 {
--					label = "bootstrap";
--					reg = <0x0 0x20000>;
--				};
--
--				ubi@20000 {
--					label = "ubi";
--					reg = <0x20000 0x7fe0000>;
--				};
--			};
--		};
--	};
--};
--
- &macb0 {
- 	phy-mode = "rmii";
- 	status = "okay";
-@@ -137,26 +95,70 @@ &macb0 {
- &pwm0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_pwm0_1
--		     &pinctrl_pwm0_pwm1_1>;
-+		     &pinctrl_pwm0_pwm1_1
-+		     &pinctrl_pwm0_pwm2_1>;
- 	status = "okay";
- };
-
--&tcb0 {
--	timer@0 {
--		compatible = "atmel,tcb-timer";
--		reg = <0>;
--	};
-+&dbgu {
-+	status = "okay";
-+};
-
--	timer@1 {
--		compatible = "atmel,tcb-timer";
--		reg = <1>;
--	};
-+&watchdog {
-+	status = "okay";
- };
-
--&usart0 {
-+&adc0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "disabled";
-+};
-+
-+&ebi {
-+	pinctrl-0 = <&pinctrl_ebi_addr_nand
-+			&pinctrl_ebi_data_0_7>;
-+	pinctrl-names = "default";
- 	status = "okay";
- };
-
-+&nand_controller {
-+	status = "okay";
-+	pinctrl-0 = <&pinctrl_nand_oe_we
-+		     &pinctrl_nand_cs
-+		     &pinctrl_nand_rb>;
-+	pinctrl-names = "default";
-+
-+	nand@3 {
-+		reg = <0x3 0x0 0x800000>;
-+		rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+		cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-on-flash-bbt;
-+		label = "atmel_nand";
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootstrap@0 {
-+				label = "bootstrap";
-+				reg = <0x0 0x20000>;
-+			};
-+
-+			ubi@20000 {
-+				label = "ubi";
-+				reg = <0x20000 0x7fe0000>;
-+			};
-+		};
-+	};
-+};
-+
- &usb0 {
- 	num-ports = <1>;
- 	status = "okay";
-@@ -166,6 +168,3 @@ &usb1 {
- 	status = "okay";
- };
-
--&watchdog {
--	status = "okay";
--};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-mb.dts b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-new file mode 100644
-index 000000000000..c07d3076a9bc
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-mb.dts
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini Mother Board";
-+	compatible = "overkiz,kizboxmini-mb", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+};
-+
-+&usb0 {
-+	num-ports = <2>;
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&led_blue {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-rd.dts b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-new file mode 100644
-index 000000000000..ab50f4d22387
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-kizboxmini-rd.dts
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2015-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz Kizbox Mini RailDIN";
-+	compatible = "overkiz,kizboxmini-rd", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		adc_op_clk {
-+			status = "okay";
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	adc0 {
-+		pinctrl_adc0_ad5: adc0_ad5-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
-+};
-+
-+&usart0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&led_blue {
-+	status = "okay";
-+};
-+
-+&adc0 {
-+	atmel,adc-vref = <2500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_ad5>;
-+	atmel,adc-channels-used = <0x0020>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/at91-smartkiz.dts b/arch/arm/boot/dts/at91-smartkiz.dts
-new file mode 100644
-index 000000000000..106f23ba4a3b
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-smartkiz.dts
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 Overkiz SAS
-+ *   Author: Mickael Gardet <m.gardet@overkiz.com>
-+ *           Kévin Raymond <k.raymond@overkiz.com>
-+ *           Dorian Rocipon <d.rocipon@overkiz.com>
-+ */
-+/dts-v1/;
-+#include "at91-kizboxmini-common.dtsi"
-+
-+/ {
-+	model = "Overkiz SmartKiz";
-+	compatible = "overkiz,smartkiz", "atmel,at91sam9g25",
-+		     "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	clocks {
-+		adc_op_clk {
-+			status = "okay";
-+		};
-+	};
-+
-+	aliases {
-+		serial5 = &uart0;
-+	};
-+
-+	pio_keys {
-+		hk_reset {
-+			label = "HK_RESET";
-+			gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power_rf {
-+			label = "POWER_RF";
-+			gpios = <&pioA 20 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		power_wifi {
-+			label = "POWER_WIFI";
-+			gpios = <&pioA 21 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	i2c1 {
-+		pinctrl_i2c1: i2c1-0 {
-+			atmel,pins =
-+				<AT91_PIOC 0 AT91_PERIPH_C AT91_PINCTRL_PULL_UP
-+				AT91_PIOC 1 AT91_PERIPH_C AT91_PINCTRL_PULL_UP>;
-+		};
-+	};
-+
-+	adc0 {
-+		pinctrl_adc0_ad0: adc0_ad0-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 11 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad5: adc0_ad5-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 16 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad6: adc0_ad6-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 17 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+		pinctrl_adc0_ad11: adc0_ad11-0 {
-+			/* pull-up disable */
-+			atmel,pins = <AT91_PIOB 10 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	dmas = <0>, <0>;
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "disabled";
-+};
-+
-+&macb0 {
-+	status = "disabled";
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&leds {
-+	blue {
-+		status = "okay";
-+	};
-+};
-+
-+&adc0 {
-+	atmel,adc-vref = <2500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&pinctrl_adc0_ad0
-+		&pinctrl_adc0_ad5
-+		&pinctrl_adc0_ad6
-+		&pinctrl_adc0_ad11
-+	>;
-+	atmel,adc-channels-used = <0x0861>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
---
-2.24.0
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
