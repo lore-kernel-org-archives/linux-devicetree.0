@@ -2,211 +2,152 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78596C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16054C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574552467F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B5824685
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:28:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576830497;
+	bh=/KzTBILL8UHCE07b1BUC9/oeP6eglWtHpVzn8+71Crg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MNbh0Cfp0AYjvVRl/tMbMINsiFcVfNdb50x6Lgw0e6aF8sPwUkvt+21d1NmoS5Ru9
+	 ooCqk0lWfnfaV6YlF37B4mSSxebiB9tKNuVSug2f9X29XCLrIkrxf4i5xihteZSCDy
+	 SyQYuM4YdaelofcMWWaq5o6x36vHuRuwuPnP4Fz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfLTIRw (ORCPT
+        id S1726327AbfLTI2Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:17:52 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:57908 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbfLTIRw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 03:17:52 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C47B4293281
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Rob Herring <robh@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ulrich Hecht <uli@fpond.eu>,
+        Fri, 20 Dec 2019 03:28:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbfLTI2Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 03:28:16 -0500
+Received: from localhost (unknown [106.201.107.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7648A227BF;
+        Fri, 20 Dec 2019 08:28:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576830495;
+        bh=/KzTBILL8UHCE07b1BUC9/oeP6eglWtHpVzn8+71Crg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I0f+gM3rUF7VxJ7D2UmrQkNTfFaxtbS95hDsAW4nP/sZkybZqFyTOWe+lJyWoDumH
+         zJo+49xPEuIwTNkTd/YYaOBkRtJNp9b2QwQUU7IjEmrIbP3659GxF+hbt1a8h8qB+y
+         Wa6osl7DPbfxyGPDUoQlwXKprDozAnNIZXEJ0NVI=
+Date:   Fri, 20 Dec 2019 13:58:10 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v22 1/2] Documentation: bridge: Add documentation for ps8640 DT properties
-Date:   Fri, 20 Dec 2019 09:17:37 +0100
-Message-Id: <20191220081738.1895-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191220081738.1895-1-enric.balletbo@collabora.com>
-References: <20191220081738.1895-1-enric.balletbo@collabora.com>
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v7 03/12] dmaengine: doc: Add sections for per descriptor
+ metadata support
+Message-ID: <20191220082810.GJ2536@vkoul-mobl>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-4-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209094332.4047-4-peter.ujfalusi@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+Hi Peter,
 
-Add documentation for DT properties supported by
-ps8640 DSI-eDP converter.
+On 09-12-19, 11:43, Peter Ujfalusi wrote:
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Ulrich Hecht <uli@fpond.eu>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-I maintained the ack from Rob Herring and the review from Philipp
-because in essence the only thing I did is migrate to YAML format and
-check that no errors are reported via dtbs_check. Just let me know if
-you're not agree.
+> +  Optional: per descriptor metadata
+> +  ---------------------------------
+> +  DMAengine provides two ways for metadata support.
+> +
+> +  DESC_METADATA_CLIENT
+> +
+> +    The metadata buffer is allocated/provided by the client driver and it is
+> +    attached to the descriptor.
+> +
+> +  .. code-block:: c
+> +
+> +     int dmaengine_desc_attach_metadata(struct dma_async_tx_descriptor *desc,
+> +				   void *data, size_t len);
+> +
+> +  DESC_METADATA_ENGINE
+> +
+> +    The metadata buffer is allocated/managed by the DMA driver. The client
 
-Apart from this note that I removed the mode-sel property because is not
-used and I renamed sleep-gpios to powerdown-gpios.
+and when would it be freed?
 
-Changes in v22:
-- Migrate to YAML format (Maxime Ripart)
-- Remove mode-sel property.
-- Rename sleep-gpios to powerdown-gpios.
+> +    driver can ask for the pointer, maximum size and the currently used size of
+> +    the metadata and can directly update or read it.
+> +
+> +  .. code-block:: c
+> +
+> +     void *dmaengine_desc_get_metadata_ptr(struct dma_async_tx_descriptor *desc,
+> +		size_t *payload_len, size_t *max_len);
+> +
+> +     int dmaengine_desc_set_metadata_len(struct dma_async_tx_descriptor *desc,
+> +		size_t payload_len);
+> +
+> +  Client drivers can query if a given mode is supported with:
+> +
+> +  .. code-block:: c
+> +
+> +     bool dmaengine_is_metadata_mode_supported(struct dma_chan *chan,
+> +		enum dma_desc_metadata_mode mode);
+> +
+> +  Depending on the used mode client drivers must follow different flow.
+> +
+> +  DESC_METADATA_CLIENT
+> +
+> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +         construct the metadata in the client's buffer
+> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+> +         descriptor
+> +      3. submit the transfer
 
-Changes in v21: None
-Changes in v19: None
-Changes in v18: None
-Changes in v17: None
-Changes in v16: None
-Changes in v15: None
-Changes in v14: None
-Changes in v13: None
-Changes in v12: None
-Changes in v11: None
+This is simpler, txn finished the metadata would be freed up right?
+> +    - DMA_DEV_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +      2. use dmaengine_desc_attach_metadata() to attach the buffer to the
+> +         descriptor
+> +      3. submit the transfer
+> +      4. when the transfer is completed, the metadata should be available in the
+> +         attached buffer
 
- .../bindings/display/bridge/ps8640.yaml       | 112 ++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+and when and how would driver free that up :)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.yaml b/Documentation/devicetree/bindings/display/bridge/ps8640.yaml
-new file mode 100644
-index 000000000000..5dff93641bea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ps8640.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ps8640.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MIPI DSI to eDP Video Format Converter Device Tree Bindings
-+
-+maintainers:
-+  - Nicolas Boichat <drinkcat@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+description: |
-+  The PS8640 is a low power MIPI-to-eDP video format converter supporting
-+  mobile devices with embedded panel resolutions up to 2048 x 1536. The
-+  device accepts a single channel of MIPI DSI v1.1, with up to four lanes
-+  plus clock, at a transmission rate up to 1.5Gbit/sec per lane. The
-+  device outputs eDP v1.4, one or two lanes, at a link rate of up to
-+  3.24Gbit/sec per lane.
-+
-+properties:
-+  compatible:
-+    const: parade,ps8640
-+
-+  reg:
-+    maxItems: 1
-+    description: Base I2C address of the device.
-+
-+  powerdown-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low powerdown.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low reset.
-+
-+  vdd12-supply:
-+    maxItems: 1
-+    description: Regulator for 1.2V digital core power.
-+
-+  vdd33-supply:
-+    maxItems: 1
-+    description: Regulator for 3.3V digital core power.
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing DSI input & output port nodes with endpoint
-+      definitions as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+      Documentation/devicetree/bindings/graph.txt
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Video port for DSI input
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for eDP output (panel or connector).
-+
-+    required:
-+      - port@0
-+
-+required:
-+  - compatible
-+  - reg
-+  - powerdown-gpios
-+  - reset-gpios
-+  - vdd12-supply
-+  - vdd33-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ps8640: edp-bridge@18 {
-+            compatible = "parade,ps8640";
-+            reg = <0x18>;
-+            powerdown-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
-+            vdd12-supply = <&ps8640_fixed_1v2>;
-+            vdd33-supply = <&mt6397_vgp2_reg>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    ps8640_in: endpoint {
-+                        remote-endpoint = <&dsi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    ps8640_out: endpoint {
-+                        remote-endpoint = <&panel_in>;
-+                   };
-+                };
-+            };
-+        };
-+    };
-+
+> +
+> +  DESC_METADATA_ENGINE
+> +
+> +    - DMA_MEM_TO_DEV / DEV_MEM_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +      2. use dmaengine_desc_get_metadata_ptr() to get the pointer to the
+> +         engine's metadata area
+> +      3. update the metadata at the pointer
+> +      4. use dmaengine_desc_set_metadata_len()  to tell the DMA engine the
+> +         amount of data the client has placed into the metadata buffer
+> +      5. submit the transfer
+> +    - DMA_DEV_TO_MEM:
+> +      1. prepare the descriptor (dmaengine_prep_*)
+> +      2. submit the transfer
+> +      3. on transfer completion, use dmaengine_desc_get_metadata_ptr() to get the
+> +         pointer to the engine's metadata area
+> +      4. Read out the metadata from the pointer
+> +
+> +  .. note::
+> +
+> +     Mixed use of DESC_METADATA_CLIENT / DESC_METADATA_ENGINE is not allowed,
+> +     client drivers must use either of the modes per descriptor.
+
+We should check that if not done already!
 -- 
-2.20.1
-
+~Vinod
