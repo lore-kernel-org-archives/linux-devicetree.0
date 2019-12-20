@@ -2,237 +2,174 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3203C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3ACC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4F924679
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576829419;
-	bh=+Ue4YMhrP/TWYQlndBEEgxM06Vnt+rRsoVr9iQWxelE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gLOKd54WclFEXMMOA3VVuce2AIRIvhkliv2IVn5MR2jcEY9aWmmevc6gUcL9+IH0Q
-	 E2088nQn9d5dLfoYhGsCF6vP6Fc/5Zju4e6Su0fNLa7i6a0uKkKFMlNFJeglrpnQ3s
-	 Hc8QjX0hGnd8R3uL+kzSZ1DifNSo0bGKUT8Pvnl0=
+	by mail.kernel.org (Postfix) with ESMTP id 51EF924679
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfLTIKT (ORCPT
+        id S1727084AbfLTIRv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:10:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbfLTIKT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 03:10:19 -0500
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7516424679
-        for <devicetree@vger.kernel.org>; Fri, 20 Dec 2019 08:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576829417;
-        bh=+Ue4YMhrP/TWYQlndBEEgxM06Vnt+rRsoVr9iQWxelE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=S0oIFPQObmtIOa9rw99ptEgYXT/oj/IwIuSfBD4Nbq1CVfvNpxC7EUG0f7kL0HRkn
-         SFeq/dBmmBu1c3aNPkxIAPGdUq+EyNjwanTM5M1J9nMPL24B2JZqX4hlWVnrYuCZmb
-         woEBI8/f6KPjS0AS8mWBtfG6TJ7zpInKTMXfgAGg=
-Received: by mail-wm1-f51.google.com with SMTP id 20so8096902wmj.4
-        for <devicetree@vger.kernel.org>; Fri, 20 Dec 2019 00:10:17 -0800 (PST)
-X-Gm-Message-State: APjAAAU3PdPL1WtzlFcu7/lYp0OrWCmYQ1XUk8r9H3MC7xcpwPxZxSpQ
-        EREnNfmUTEt5zOkGSK2zFKW/nFPBtK9ObViVRZs=
-X-Google-Smtp-Source: APXvYqxhnNTk+tBts6iL8RTAJJTNANczfG9ySH/QeJ429H9ZAEV4BLijfH7J3nM108Y2UmJVOEn06rVPMnKstFJR8BY=
-X-Received: by 2002:a1c:3c45:: with SMTP id j66mr14308187wma.2.1576829415971;
- Fri, 20 Dec 2019 00:10:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219084332.944123-1-maxime@cerno.tech> <CAGb2v643z-GwEgOV_OS96ESihDgGNOwp2s7eyJr68QFyPNqd_Q@mail.gmail.com>
- <20191220080310.w2xtgzxend5bmv2q@gilmour.lan>
-In-Reply-To: <20191220080310.w2xtgzxend5bmv2q@gilmour.lan>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Fri, 20 Dec 2019 16:10:03 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65+zpc1_0K2Co4uOUrfshzmVCf1Rc6Ob2YtmdmdsNTAvQ@mail.gmail.com>
-Message-ID: <CAGb2v65+zpc1_0K2Co4uOUrfshzmVCf1Rc6Ob2YtmdmdsNTAvQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: usb: Convert Allwinner A80 USB PHY
- controller to a schema
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 20 Dec 2019 03:17:51 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57880 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfLTIRv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 03:17:51 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 7665B28DA32
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ulrich Hecht <uli@fpond.eu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v22 0/2] drm/bridge: PS8640 MIPI-to-eDP bridge
+Date:   Fri, 20 Dec 2019 09:17:36 +0100
+Message-Id: <20191220081738.1895-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 4:03 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Thu, Dec 19, 2019 at 11:24:52PM +0800, Chen-Yu Tsai wrote:
-> > On Thu, Dec 19, 2019 at 4:43 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > >
-> > > The Allwinner A80 SoCs have a USB PHY controller that is used by Linux,
-> > > with a matching Device Tree binding.
-> > >
-> > > Now that we have the DT validation in place, let's convert the device tree
-> > > bindings for that controller over to a YAML schemas.
-> > >
-> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > ---
-> > >  .../phy/allwinner,sun9i-a80-usb-phy.yaml      | 135 ++++++++++++++++++
-> > >  .../devicetree/bindings/phy/sun9i-usb-phy.txt |  37 -----
-> > >  2 files changed, 135 insertions(+), 37 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > new file mode 100644
-> > > index 000000000000..ded7d6f0a119
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > @@ -0,0 +1,135 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/phy/allwinner,sun9i-a80-usb-phy.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Allwinner A80 USB PHY Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Chen-Yu Tsai <wens@csie.org>
-> > > +  - Maxime Ripard <mripard@kernel.org>
-> > > +
-> > > +properties:
-> > > +  "#phy-cells":
-> > > +    const: 0
-> > > +
-> > > +  compatible:
-> > > +    const: allwinner,sun9i-a80-usb-phy
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    anyOf:
-> > > +      - description: Main PHY Clock
-> > > +
-> > > +      - items:
-> > > +          - description: Main PHY clock
-> > > +          - description: HSIC 12MHz clock
-> > > +          - description: HSIC 480MHz clock
-> > > +
-> > > +  clock-names:
-> > > +    oneOf:
-> > > +      - const: phy
-> > > +
-> > > +      - items:
-> > > +          - const: phy
-> > > +          - const: hsic_12M
-> > > +          - const: hsic_480M
-> > > +
-> > > +  resets:
-> > > +    anyOf:
-> > > +      - description: Normal USB PHY reset
-> > > +
-> > > +      - items:
-> > > +          - description: Normal USB PHY reset
-> > > +          - description: HSIC Reset
-> > > +
-> > > +  reset-names:
-> > > +    oneOf:
-> > > +      - const: phy
-> > > +
-> > > +      - items:
-> > > +          - const: phy
-> > > +          - const: hsic
-> > > +
-> > > +  phy_type:
-> > > +    const: hsic
-> > > +    description:
-> > > +      When absent, the PHY type will be assumed to be normal USB.
-> > > +
-> > > +  phy-supply:
-> > > +    description:
-> > > +      Regulator that powers VBUS
-> > > +
-> > > +required:
-> > > +  - "#phy-cells"
-> > > +  - compatible
-> > > +  - reg
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - resets
-> > > +  - reset-names
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +if:
-> > > +  properties:
-> > > +    phy_type:
-> > > +      const: hsic
-> > > +
-> > > +  required:
-> > > +    - phy_type
-> > > +
-> > > +then:
-> > > +  properties:
-> > > +    clocks:
-> > > +      maxItems: 3
-> > > +
-> > > +    clock-names:
-> > > +      maxItems: 3
-> > > +
-> > > +    resets:
-> > > +      maxItems: 2
-> > > +
-> > > +    reset-names:
-> > > +      maxItems: 2
-> >
-> > So this is slightly incorrect. If phy_type == "hsic", then the
-> > "phy" clock and reset should not be needed. I say should because
-> > no boards actually came with HSIC implemented. The A80 Optimus
-> > board had the HSIC lines on one of the GPIO headers, but I never
-> > had any HSIC chips lol.
->
-> This isn't what the previous binding was saying though :/
+Hi all,
 
-From the original binding:
+This is another version of the driver. Note that the driver changed
+significally and is a more simply because now is using the panel_bridge
+helpers. Apart from this, I addressed the comments from Maxime, Laurent
+and Ezequiel.
 
-- clock-names : depending on the "phy_type" property,
-  * "phy" for normal USB
-  * "hsic_480M", "hsic_12M" for HSIC
-- resets : a list of phandle + reset specifier pairs
-- reset-names : depending on the "phy_type" property,
-  * "phy" for normal USB
-  * "hsic" for HSIC
+This bridge is required to have the embedded display working on an Acer
+Chromebook R13 ("Elm"). Hopefully we are a bit more close to have this
+driver merged. If more changes are required, please let me know and I
+will work on it.
 
-It is recommended to list all clocks and resets available.
-The driver will only use those matching the phy_type.
+Note: Along these around 20 revisions of this driver I was unable to
+reconstruct the full changelog history, so I'm skipping this. Sorry
+about that, I promise I'll maintain the changelog for future revisions.
 
-> > > -- phy_type : "hsic" for HSIC usage;
-> > > -            other values or absence of this property indicates normal USB
-> > > -- clocks : phandle + clock specifier for the phy clocks
-> > > -- clock-names : depending on the "phy_type" property,
-> > > -  * "phy" for normal USB
-> > > -  * "hsic_480M", "hsic_12M" for HSIC
-> > > -- resets : a list of phandle + reset specifier pairs
-> > > -- reset-names : depending on the "phy_type" property,
-> > > -  * "phy" for normal USB
-> > > -  * "hsic" for HSIC
->
-> It's speficied that the reset and clock is needed. If we want to
-> revise that, we can do it, but I guess it should be in a separate
-> patch than the one doing the conversion. Here we just want to express
-> the exact same thing.
+Thanks,
+ Enric
 
-So the original binding only recommends having all clocks.
-But given that these are internal to the SoC, having them
-all is easier I suppose.
+Changes in v22:
+- Migrate to YAML format (Maxime Ripart)
+- Remove mode-sel property.
+- Rename sleep-gpios to powerdown-gpios.
+- Remove sysfs attributes because are not really used (Enric Balletbo)
+- Use enum for address page offsets (Ezequiel Garcia)
+- Remove enable tracking (Enric Balletbo)
+- Use panel_bridge API (Laurent Pinchart)
+- Do not use kernel-doc format for non kernel-doc formatted commands (Enric Balletbo)
+- Remove verbose message for PAGE1_VSTART command (Ezequiel Garcia)
+- Use time_is_after_jiffies idiom (Ezequiel Garcia)
+- Remove unused macros (Ezequiel Garcia)
+- Fix weird alignment in dsi->mode_flags (Laurent Pinchart)
+- Use drm_of_find_panel_or_bridge helper (Laurent Pinchart)
+- Remove mode-sel-gpios as is not used (Laurent Pinchart)
+- Remove error messages to get gpios as the core will already report it (Enric Balletbo)
+- Remove redundant message getting the regulators (Laurent Pinchart)
+- Rename sleep-gpios to powerdown-gpios (Laurent Pinchart)
+- Use ARRAY_SIZE(ps_bridge->page) instead of MAX_DEV when possible (Laurent Pinchart)
+- Fix race with userspace accessing the sysfs attributes (Laurent Pinchart)
+- Remove id_table as is only used on DR platforms (Laurent Pinchart)
+- Convert to new i2c device probe() (Laurent Pinchart)
+- Use i2c_smbus_read/write helpers instead of open coding it (Laurent Pinchart)
+- Remove unnused global variables (Laurent Pinchart)
+- Remove unnused fields in ps8640 struct (Laurent Pinchart)
+- Remove commented-out headers (Laurent Pinchart)
 
-ChenYu
+Changes in v21:
+ - Use devm_i2c_new_dummy_device and fix build issue using deprecated i2c_new_dummy
+ - Fix build issue due missing drm_bridge.h
+ - Do not remove in ps8640_remove device managed resources
+
+Changes in v19:
+ - fixed return value of ps8640_probe() when no panel is found
+
+Changes in v18:
+ - followed DRM API changes
+ - use DEVICE_ATTR_RO()
+ - remove firmware update code
+ - add SPDX identifier
+
+Changes in v17:
+ - remove some unused head files.
+ - add macros for ps8640 pages.
+ - remove ddc_i2c client
+ - add mipi_dsi_device_register_full
+ - remove the manufacturer from the name and i2c_device_id
+
+Changes in v16:
+ - Disable ps8640 DSI MCS Function.
+ - Rename gpios name more clearly.
+ - Tune the ps8640 power on sequence.
+
+Changes in v15:
+ - Drop drm_connector_(un)register calls from parade ps8640.
+   The main DRM driver mtk_drm_drv now calls
+   drm_connector_register_all() after drm_dev_register() in the
+   mtk_drm_bind() function. That function should iterate over all
+   connectors and call drm_connector_register() for each of them.
+   So, remove drm_connector_(un)register calls from parade ps8640.
+
+Changes in v14:
+ - update copyright info.
+ - change bridge_to_ps8640 and connector_to_ps8640 to inline function.
+ - fix some coding style.
+ - use sizeof as array counter.
+ - use drm_get_edid when read edid.
+ - add mutex when firmware updating.
+
+Changes in v13:
+ - add const on data, ps8640_write_bytes(struct i2c_client *client, const u8 *data, u16 data_len)
+ - fix PAGE2_SW_REST tyro.
+ - move the buf[3] init to entrance of the function.
+
+Changes in v12:
+ - fix hw_chip_id build warning
+
+Changes in v11:
+ - Remove depends on I2C, add DRM depends
+ - Reuse ps8640_write_bytes() in ps8640_write_byte()
+ - Use timer check for polling like the routines in <linux/iopoll.h>
+ - Fix no drm_connector_unregister/drm_connector_cleanup when ps8640_bridge_attach fail
+ - Check the ps8640 hardware id in ps8640_validate_firmware
+ - Remove fw_version check
+ - Move ps8640_validate_firmware before ps8640_enter_bl
+ - Add ddc_i2c unregister when probe fail and ps8640_remove
+
+Jitao Shi (2):
+  Documentation: bridge: Add documentation for ps8640 DT properties
+  drm/bridge: Add I2C based driver for ps8640 bridge
+
+ .../bindings/display/bridge/ps8640.yaml       | 112 ++++++
+ drivers/gpu/drm/bridge/Kconfig                |  11 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/parade-ps8640.c        | 354 ++++++++++++++++++
+ 4 files changed, 478 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+ create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+
+-- 
+2.20.1
+
