@@ -2,154 +2,103 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAB9C2D0C1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96095C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 01:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E399624672
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED822465E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 01:10:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G65PKDWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfLTA4F (ORCPT
+        id S1727029AbfLTBKG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:56:05 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:42144 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfLTA4F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 19 Dec 2019 19:56:05 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1ii6aF-00061N-6O; Fri, 20 Dec 2019 01:55:59 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 19 Dec 2019 20:10:06 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39773 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfLTBKG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 20:10:06 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y1so5702227lfb.6;
+        Thu, 19 Dec 2019 17:10:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vfXm6wroocpySxHofx5c4RN9rb7rL72Tf/ud1qMqmoY=;
+        b=G65PKDWVPT8+CLmF6P9smz/Dioz++TJ9ygZxsNXMvxPv1x0DWS+GCbzzfnY6X9cZ/+
+         qkBMf4gu/uuprXCiBit4s1jbkrh5ACIQxAPnYZoIS2KrPQbKWqPKMwk5fgsCgUJ5HyXA
+         eSKecA1JtVz1+tKv84R0X6NkNCZ6aDUeHC+Tz97HsnYVIl8bvYIszdP6jYP2FKvoDYMB
+         BUuqrEOEWlQxHcBglTGXEcYumSKeY/wUzV4hCLaKijQcgfEUls6Xj74T4Myj8qJ7cSPK
+         7ULYbCthziu8V7VghwALXOkb15JXswM6PsD/3NeqW+O514n6KCUPj5CUIgfZPZHe2smx
+         7KeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vfXm6wroocpySxHofx5c4RN9rb7rL72Tf/ud1qMqmoY=;
+        b=idV2as2nOnwdF416GM2UtvtV2qL08aX3mPL3Yt1KWkr21zgIgr6pykrsGnqeBqfaEv
+         4yINyOSg2/dy3nVibUFE6tJqD/lpoZ8g+OYG4XmuilC3xMc/4BQS3Lp6WEtWQJg7YKvH
+         fGadAyd7EjA8MIK3WwtKlceJvYpaml/fBGSkjm/jNgBR/QvdvPj6eA0sDhHNT5efhAo7
+         GAurCqX5J3TTmu/pvOkdPCzlOSrVWLVjqIQL5BguAIBDbf0QAGzswcKQCG7iEsgCc6Gj
+         FTnG/cRzQ5ZnkRaGGR83CQGXC8uBbtAHrbueZfBusX+cn+8ciIp+dAEfEFK4YA/WqyPY
+         6ueA==
+X-Gm-Message-State: APjAAAWtmWXJiEsuPMjh6K85uRJ2IdLljyQNOBtq67uQ3vQpjhQzl3I7
+        7thxxrk6WuiD6HkD7ihN9eY=
+X-Google-Smtp-Source: APXvYqzrNLmEcJpG0JJJYPq9vWiBHeyQpiDFG0zq4ESkVj7MdFyCrN+aQYkJOUlWsi2n+v7u1EDBSA==
+X-Received: by 2002:a19:3f51:: with SMTP id m78mr7469292lfa.70.1576804204162;
+        Thu, 19 Dec 2019 17:10:04 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id a12sm3542761ljk.48.2019.12.19.17.10.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Dec 2019 17:10:03 -0800 (PST)
+Subject: Re: [PATCH v2 9/9] dt-bindings: input: elants-i2c: Document eKTF3624
+To:     Rob Herring <robh@kernel.org>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Describe PX30 caches
-Date:   Fri, 20 Dec 2019 01:55:58 +0100
-Message-ID: <1982322.8UTTk47u2F@diego>
-In-Reply-To: <20191204103940.22050-1-miquel.raynal@bootlin.com>
-References: <20191204103940.22050-1-miquel.raynal@bootlin.com>
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Scott Liu <scott.liu@emc.com.tw>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <882916345a8aa2dc545a1bd2ca150cf913371d1a.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <20191219214254.GA25646@bogus>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0f91ef03-42f7-9fcc-2394-2d10a9dbbb17@gmail.com>
+Date:   Fri, 20 Dec 2019 04:10:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191219214254.GA25646@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Mittwoch, 4. Dezember 2019, 11:39:40 CET schrieb Miquel Raynal:
-> PX30 SoCs feature 4 Cortex-A35 CPUs with each of them a L1 data and
-> instruction cache. Both are 32kiB wide (PX30 TRM) and made of 64-bit
-> lines (ARM Cortex-A35 manual). I-cache is 2-way set associative (ARM
-> Cortex-A35 manual), D-cache is 4-way set associative (ARM
-> Cortex-A35manual).
+20.12.2019 00:43, Rob Herring пишет:
+> On Wed, 11 Dec 2019 17:03:26 +0100, =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= wrote:
+>> From: Dmitry Osipenko <digetx@gmail.com>
+>>
+>> The eKTF3624 hardware is similar to eKTH3500.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>> ---
+>>  Documentation/devicetree/bindings/input/elants_i2c.txt | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
 > 
-> An L2 cache is placed after these 4 L1 caches (PX30 TRM), is 256kiB
-> wide (PX30 TRM) and made of 64-bit lines (ARM Cortex-A35 manual) and
-> is 8-way set associative (ARM Cortex-A35 manual).
+> Acked-by: Rob Herring <robh@kernel.org>
 > 
-> Describe all of them in the PX30 DTSI.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  arch/arm64/boot/dts/rockchip/px30.dtsi | 35 ++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> index 1fd12bd09e83..0e10a224a84b 100644
-> --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-> @@ -48,6 +48,13 @@
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
->  			dynamic-power-coefficient = <90>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -60,6 +67,13 @@
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
->  			dynamic-power-coefficient = <90>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
->  		};
->  
->  		cpu2: cpu@2 {
-> @@ -72,6 +86,13 @@
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
->  			dynamic-power-coefficient = <90>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
->  		};
->  
->  		cpu3: cpu@3 {
-> @@ -84,6 +105,13 @@
->  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
->  			dynamic-power-coefficient = <90>;
->  			operating-points-v2 = <&cpu0_opp_table>;
-> +			i-cache-size = <0x8000>;
-> +			i-cache-line-size = <64>;
-> +			i-cache-sets = <256>;
-> +			d-cache-size = <0x8000>;
-> +			d-cache-line-size = <64>;
-> +			d-cache-sets = <128>;
-> +			next-level-cache = <&l2>;
->  		};
->  
->  		idle-states {
-> @@ -107,6 +135,13 @@
->  				min-residency-us = <2000>;
->  			};
->  		};
-> +
-> +		l2: l2-cache {
-> +			compatible = "cache";
-> +			cache-size = <0x40000>;
-> +			cache-line-size = <64>;
-> +			cache-sets = <512>;
-> +		};
->  	};
 
-Looks like Rob did answer my unspoken question, citing his reply to
-	"arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support" [0]
-
-"We only define cache attributes if not discoverable or the cache ID 
-registers are wrong and you need to override what's discoverable."
-
-So unless the cache information read during boot is wrong, it looks
-like we don't need this.
-
-Heiko
-
-
-[0] https://patchwork.kernel.org/patch/11279705/
-
-
-
+Thank you very much!
