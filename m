@@ -2,414 +2,153 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3601AC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC521C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DD02465E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE98F24682
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:55:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lnsxrNEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfLTKpy (ORCPT
+        id S1727233AbfLTKzH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 05:45:54 -0500
-Received: from mga02.intel.com ([134.134.136.20]:4109 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbfLTKpy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 05:45:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Dec 2019 02:45:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,335,1571727600"; 
-   d="scan'208";a="210780192"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 20 Dec 2019 02:45:51 -0800
-Received: from andy by smile with local (Exim 4.93-RC7)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iiFn5-00011C-9a; Fri, 20 Dec 2019 12:45:51 +0200
-Date:   Fri, 20 Dec 2019 12:45:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-Subject: Re: [PATCH 2/2] phy: intel: Add driver support for combo phy
-Message-ID: <20191220104551.GV32742@smile.fi.intel.com>
-References: <9f3df8c403bba3633391551fc601cbcd2f950959.1576824311.git.eswara.kota@linux.intel.com>
- <09556a80a967780072ae1240c7c8356f9142de50.1576824311.git.eswara.kota@linux.intel.com>
+        Fri, 20 Dec 2019 05:55:07 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40637 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfLTKzH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 05:55:07 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so8955326wrn.7
+        for <devicetree@vger.kernel.org>; Fri, 20 Dec 2019 02:55:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
+        b=lnsxrNECjkBnFDoUoh4Zk3vI7gih7BdHS5VDD/ljXCsq9ilLRKOZ8GzzX7sx/6q8XK
+         zXuAKwefaAx9xOCMJiNWqqF/21CHWenY5X0UiZceAAACBFFJpSOR2/UekgYy3Alhn+7K
+         ieZJlFRB2hooAr36DkhTxOLH/VBGWvH3v/mySwaI6BcLANoApcE8RhKRUozqUqqmupM9
+         pRRKHrcSYVWSErKLI8B7XsVpW7oGvA9qLZMI7MVHFPZ7zG0gSaC9VyAIgYXmv8TF26Ih
+         fDVRzS4kElTzBv5ztckoj5PvaMpdOldZIi3GMchS7cYL/6H8DBkQYaUkNyrvhqkZXB72
+         YaSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=a9C14P9lsGAuh8F6Rdx7vHrUThQ9aonGy2O3DOUo7Ds=;
+        b=ezPJ1LVAbeG1IQVjtEh17+G/4JIK8NKfng7Ghv82vpVr6CP8XIKhfc0q6yFcpLNcGY
+         kBT4WOcZmwNqRMA/DBhNi5F4K/ApHc9d7qG3gzIrus+SXgigiQ56Kyy3hZaNif6RA2HA
+         PSMv8HCAqypgwSMAv5bP4gMB7MLZ4OPyI3TaxEVQHfQqQFHdX2Km+cOiLpxPWoekh13L
+         sdGPKehZSt4nVsNFbWo+WzwEiDmCZ0Orrvre7TqleXuO/8ohXLJbYgeYBMeEmZr5B/K8
+         IeGRyyAkQq5cYSZHIcfp0Jj/D6Z2xjlj3YwGwpqy5zmwLclCVEZRaXDD1M7UqPGCinMl
+         tj2A==
+X-Gm-Message-State: APjAAAUe3QBO4TJAZbZZcO7RWSrGXMEDNN/MNb6LjDJZEj03VfLiHeFR
+        ATxL8ft2fusIK1PTdrDQckjZlQ==
+X-Google-Smtp-Source: APXvYqyicvSFzhHzxpljiw/uidTI78NGorAjjg+bi/J4O8iYxkHUB7TVkQ+2LhBMrPCHOQeS/2zn7Q==
+X-Received: by 2002:adf:f052:: with SMTP id t18mr14250816wro.192.1576839304724;
+        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
+Received: from dell ([2.27.35.132])
+        by smtp.gmail.com with ESMTPSA id f17sm9339549wmc.8.2019.12.20.02.55.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 02:55:04 -0800 (PST)
+Date:   Fri, 20 Dec 2019 10:55:05 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828 bindings
+Message-ID: <20191220105505.GS18955@dell>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
+ <20191219143647.GQ18955@dell>
+ <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <09556a80a967780072ae1240c7c8356f9142de50.1576824311.git.eswara.kota@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 03:28:28PM +0800, Dilip Kota wrote:
-> Combo phy subsystem provides PHYs for various
-> controllers like PCIe, SATA and EMAC.
-
-...
-
-> +#define REG_COMBO_MODE(x)	((x) * 0x200)
-
-Perhaps  + 0x000
-
-> +#define REG_CLK_DISABLE(x)	((x) * 0x200 + 0x124)
-
-...
-
-> +static const char *const intel_iphy_names[] = {"pcie", "xpcs", "sata"};
-> +static const unsigned long intel_iphy_clk_rate[] = {
-
-names (note S)
-rate -> rates
-
-> +	CLK_100MHZ, CLK_156_25MHZ, CLK_100MHZ
-> +};
-
-...
-
-> +static ssize_t intel_cbphy_info_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct intel_combo_phy *cbphy;
-> +	int i, off;
-> +
-> +	cbphy = dev_get_drvdata(dev);
-> +
-> +	off = sprintf(buf, "mode: %u\n", cbphy->mode);
-> +
-> +	off += sprintf(buf + off, "aggr mode: %s\n",
-
-> +		      cbphy->aggr_mode == PHY_DL_MODE ? "Yes" : "No");
-
-Can't you do
-
-static inline const char *yesno(bool choice)
-{
-	return choice ? "Yes" : "No";
-}
-
-and use it here and below?
-
-Somebody already shared the idea that the above helper should be available
-globally.
-
-> +
-> +	off += sprintf(buf + off, "capability: ");
-> +	for (i = PHY_PCIE_MODE; i < PHY_MAX_MODE; i++) {
-> +		if (BIT(i) & cbphy->phy_cap)
-> +			off += sprintf(buf + off, "%s ", intel_iphy_names[i]);
-> +	}
-> +
-> +	off += sprintf(buf + off, "\n");
-> +
-> +	for (i = 0; i < PHY_MAX_NUM; i++) {
-> +		off += sprintf(buf + off, "PHY%d mode: %s, enable: %s\n",
-> +			       i, intel_iphy_names[cbphy->iphy[i].phy_mode],
-> +			       cbphy->iphy[i].enable ? "Yes" : "No");
-> +	}
-> +
-> +	return off;
-> +}
-
-...
-
-> +static struct attribute *intel_cbphy_attrs[] = {
-> +	&dev_attr_intel_cbphy_info.attr,
-
-> +	NULL,
-
-Comma is redundant for terminator lines.
-
-> +};
-
-
-> +static int intel_cbphy_sysfs_init(struct intel_combo_phy *cbphy)
-> +{
-> +	return devm_device_add_groups(cbphy->dev, intel_cbphy_groups);
-> +}
-
-What the point?
-Moreover, can't you use .dev_groups member of struct device_driver?
-
-...
-
-> +		ret =  phy_cfg(sphy);
-
-In several places you have extra unneeded white spaces.
-
-...
-
-> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
-> +			       0, PCIE_PHY_GEN_CTRL);
-
-Configure your editor properly! There is plenty of room on the previous line.
-
-...
-
-> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
-> +			       1, PCIE_PHY_GEN_CTRL);
-
-Ditto.
-
-...
-
-> +static int intel_cbphy_init(struct phy *phy)
-> +{
-> +	struct intel_cbphy_iphy *iphy;
-
-
-> +	int ret = 0;
-
-Redundant assignment. See below.
-
-> +
-> +	iphy = phy_get_drvdata(phy);
-> +
-> +	if (iphy->phy_mode == PHY_PCIE_MODE) {
-> +		ret = intel_cbphy_iphy_cfg(iphy,
-> +					   intel_cbphy_pcie_en_pad_refclk);
-> +	}
-> +
-> +	if (!ret)
-> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_on);
-> +
-> +	return ret;
-
-Why not to simple do
-
-	if (A) {
-		ret = ...;
-		if (ret)
-			return ret;
-	}
-
-	return intel_...;
-
-?
-
-> +}
-> +
-> +static int intel_cbphy_exit(struct phy *phy)
-> +{
-> +	struct intel_cbphy_iphy *iphy;
-> +	int ret = 0;
-> +
-> +	iphy = phy_get_drvdata(phy);
-> +
-> +	if (iphy->power_en)
-> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_off);
-> +
-> +	if (!ret && iphy->phy_mode == PHY_PCIE_MODE)
-> +		ret = intel_cbphy_iphy_cfg(iphy,
-> +					   intel_cbphy_pcie_dis_pad_refclk);
-> +
-> +	return ret;
-
-Ditto.
-
-> +}
-
-...
-
-> +static int intel_cbphy_iphy_mem_resource(struct intel_cbphy_iphy *iphy)
-> +{
-> +	void __iomem *base;
-> +
-> +	base = devm_platform_ioremap_resource(iphy->pdev, 0);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	iphy->app_base = base;
-> +
-> +	return 0;
-> +}
-
-What's the point of this helper?
-
-...
-
-> +static int intel_cbphy_iphy_get_clks(struct intel_cbphy_iphy *iphy)
-> +{
-> +	enum intel_phy_mode mode = iphy->phy_mode;
-> +	struct device *dev = iphy->dev;
-
-> +	int ret = 0;
-
-Redundant. Simple return 0 explicitly at the end.
-Ditto for other places in this patch.
-
-> +	if (IS_ERR(iphy->freq_clk)) {
-> +		ret = PTR_ERR(iphy->freq_clk);
-> +		if (ret != -EPROBE_DEFER) {
-> +			dev_err(dev, "PHY[%u:%u] No %s freq clock\n",
-> +				COMBO_PHY_ID(iphy), PHY_ID(iphy),
-> +				intel_iphy_names[mode]);
-> +		}
-> +
-> +		return ret;
-> +	}
-> +
-> +	iphy->clk_rate = intel_iphy_clk_rate[mode];
-> +
-> +	return ret;
-> +}
-
-...
-
-> +static int intel_cbphy_iphy_dt_parse(struct intel_combo_phy *cbphy,
-> +				     struct fwnode_handle *fwn, int idx)
-
-fwn -> fwnode.
-
-> +{
-> +	struct intel_cbphy_iphy *iphy = &cbphy->iphy[idx];
-> +	struct platform_device *pdev;
-> +	struct device *dev;
-> +	int ret = 0;
-> +	u32 prop;
-> +
-> +	iphy->id = idx;
-> +	iphy->enable = false;
-> +	iphy->power_en = false;
-> +	iphy->parent = cbphy;
-
-> +	iphy->np = to_of_node(fwn);
-> +	pdev = of_find_device_by_node(iphy->np);
-
-Why? Can't it be done simpler?
-
-> +	if (!pdev) {
-> +		dev_warn(cbphy->dev, "Combo-PHY%u: PHY device: %d disabled!\n",
-> +			 cbphy->id, idx);
-> +		return 0;
-> +	}
-
-> +	if (!(BIT(iphy->phy_mode) & cbphy->phy_cap)) {
-
-Yoda style?
-
-...
-
-> +				" Mode mismatch lane0 : %u, lane1 : %u\n",
-
-Extra leading space.
-
-...
-
-> +static int intel_cbphy_dt_parse(struct intel_combo_phy *cbphy)
-> +{
-> +	struct device *dev = cbphy->dev;
-
-> +	struct device_node *np = dev->of_node;
-
-Why do you need this one? You have to device if it's OF centric driver or not.
-
-> +	struct fwnode_handle *fwn;
-
-Better name is fwnode as done in plenty other drivers.
-
-> +	int i = 0, ret = 0;
-
-i = 0 better to have near to its user.
-ret = 0 is redundant assignment.
-
-
-> +	ret = device_property_read_u32(dev, "intel,bid", &cbphy->bid);
-> +	if (ret) {
-> +		dev_err(dev, "NO intel,bid provided!\n");
-> +		return ret;
-> +	}
-> +
-> +	device_for_each_child_node(dev, fwn) {
-> +		if (i >= PHY_MAX_NUM) {
-> +			fwnode_handle_put(fwn);
-> +			dev_err(dev, "Error: DT child number larger than %d\n",
-> +				PHY_MAX_NUM);
-> +			return -EINVAL;
-> +		}
-> +
-> +		ret = intel_cbphy_iphy_dt_parse(cbphy, fwn, i);
-> +		if (ret) {
-> +			fwnode_handle_put(fwn);
-> +			return ret;
-> +		}
-> +
-> +		i++;
-> +	}
-> +
-> +	return intel_cbphy_dt_sanity_check(cbphy);
-> +}
-
-...
-
-> +	regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
-
-No error check?
-
-> +
-> +	return 0;
-
-...
-
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "PHY[%u:%u]: register phy provider failed!\n",
-> +			COMBO_PHY_ID(iphy), PHY_ID(iphy));
-
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	return 0;
-
-return PTR_ERR_OR_ZERO(...);
-
-...
-
-> +	ret = of_property_read_u32(dev->of_node, "cell-index", &id);
-
-You should decide either you go with OF centric API(s) or with device property
-one as below.
-
-> +	if (!device_property_read_bool(dev, "intel,cap-pcie-only"))
-> +		cbphy->phy_cap |= PHY_XPCS_CAP | PHY_SATA_CAP;
-
-...
-
-> +	ret = intel_cbphy_sysfs_init(cbphy);
-> +
-> +	return ret;
-
-return intel_...();
-
-...
-
-> +static struct platform_driver intel_cbphy_driver = {
-> +	.probe = intel_cbphy_probe,
-> +	.driver = {
-> +		.name = "intel-combo-phy",
-> +		.of_match_table = of_intel_cbphy_match,
-> +	}
-> +};
-> +
-> +builtin_platform_driver(intel_cbphy_driver);
-
-Can we unbound it? Is it okay to do unbind/bind cycle? Had it been tested for
-that?
+On Fri, 20 Dec 2019, Vaittinen, Matti wrote:
+
+> 
+> On Thu, 2019-12-19 at 14:36 +0000, Lee Jones wrote:
+> > On Thu, 19 Dec 2019, Vaittinen, Matti wrote:
+> > 
+> > > Hello Mark, Lee, Rob
+> > > 
+> > > I just noticed we have a dependency here. This binding is referring
+> > > to
+> > > regulator binding - which was applied by Mark and is thus missing
+> > > from
+> > > the series. What's the best way forward?
+> > > 
+> > > On Thu, 2019-12-19 at 11:46 +0200, Matti Vaittinen wrote:
+> > > > ROHM BD71828 Power management IC integrates 7 buck converters, 7
+> > > > LDOs,
+> > > > a real-time clock (RTC), 3 GPO/regulator control pins, HALL input
+> > > > and a 32.768 kHz clock gate.
+> > > > 
+> > > > Document the dt bindings drivers are using.
+> > > > 
+> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com
+> > > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > ---
+> > > > 
+> > > > No changes since v6
+> > > 
+> > > //snip
+> > > 
+> > > > +  regulators:
+> > > > +    $ref: ../regulator/rohm,bd71828-regulator.yaml
+> > > 
+> > > This file is missing from the series and is applied to Mark's tree.
+> > 
+> > Shouldn't matter.  I guess they're all heading for he same release.
+> > 
+> Ok. Thanks for clarification. I was asking this because Rob asked me to
+> reorder the patches a few versions ago so that the dt_binding_check
+> Make target would not be broken between commits. He asked me to submit
+> the regulator and LED bindings first and MFD (which refers to those)
+> only after them. Thus I was wondering if the final merge order of MFD
+> and regulator trees is such that it can result the breakage Rob hoped
+> to avoid. But I am more than glad if the series can go in like this :)
+
+It's not something that concerns me personally.  I only care about
+*build* breakages.  Rob might be more upset about it however.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
