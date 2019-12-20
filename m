@@ -2,251 +2,515 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3333BC2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7D1C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D07218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:28:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fHVWIQye"
+	by mail.kernel.org (Postfix) with ESMTP id C267B2146E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbfLTW1M (ORCPT
+        id S1727534AbfLTW3i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:27:12 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18904 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfLTW1M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:27:12 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dfd4ab30000>; Fri, 20 Dec 2019 14:26:59 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 20 Dec 2019 14:27:10 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 20 Dec 2019 14:27:10 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 20 Dec
- 2019 22:27:09 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 20 Dec 2019 22:27:09 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.169.197]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dfd4abc0005>; Fri, 20 Dec 2019 14:27:09 -0800
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 00/19] Move PMC clocks into Tegra PMC driver
-Date:   Fri, 20 Dec 2019 14:26:46 -0800
-Message-ID: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 20 Dec 2019 17:29:38 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:51670 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbfLTW3i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 17:29:38 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iiQlx-0002TZ-F3; Fri, 20 Dec 2019 23:29:25 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     dri-devel@lists.freedesktop.org, sam@ravnborg.org
+Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com, maxime@cerno.tech
+Subject: Re: [PATCH v4 3/3] drm/panel: add panel driver for Xinpeng XPP055C272 panels
+Date:   Fri, 20 Dec 2019 23:29:24 +0100
+Message-ID: <6888670.FVnnZQrD8c@phil>
+In-Reply-To: <20191217222906.19943-3-heiko@sntech.de>
+References: <20191217222906.19943-1-heiko@sntech.de> <20191217222906.19943-3-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576880819; bh=asazRWiPJkycU0Ptiq64FfWr2r7+tRHu9Gh9ZXYyWoc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=fHVWIQyefUgY+a/Go8BLVMb4306hVX0yDjoQp5+fS7++AIyidBZdPW57y15ndAE2d
-         Sq79R4/4/ZoMY1xvVqBxe1oJSIrmpJJPCbImkK9/h2YI2YuA2TD1TVnpjXbEsanHX0
-         oAqtHoxtjq3zmvTJyiH3le+uB1CK1YNu4cEQ875qBpSoOb/h/7RtRVtUbQ+YCNFDOW
-         L5XvKkCrifgBW+gzEOKwJkf18hTQLezgx+qqfq+PROy46fljh4MvZOXseljqo1ZeAk
-         qJxtMRjmF+UhQekQYC4as7LBPqzyB84e1aDS3rdhy/pYrQOAATq9jamEvBfN7vXy2w
-         SmVg/oPRfwwRA==
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series moves Tegra PMC clocks from clock driver to pmc driver
-along with the device trees changes and audio driver which uses one of
-the pmc clock for audio mclk.
+Hi Sam,
 
-Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
-are currently registered by Tegra clock driver using clk_regiser_mux and
-clk_register_gate which performs direct Tegra PMC register access.
+Am Dienstag, 17. Dezember 2019, 23:29:06 CET schrieb Heiko Stuebner:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> Base on the somewhat similar Rocktech driver but adapted for
+> panel-specific init of the XPP055C272.
+> 
+> changes in v3:
+> - remove wrong negative sync flags from display-mode to fix a display
+>   artifact of the output getting move a tiny bit to the right
+> changes in v2:
+> - move to drm-panel-internal backlight handling (Sam)
+> - adapt to changes that happened to drm_panel structs+functions (Sam)
+> - sort includes (Sam)
+> - drop unnecessary DRV_NAME constant (Sam)
+> - do mipi_dsi_dcs_exit_sleep_mode and mipi_dsi_dcs_set_display_on
+>   in panel prepare (not init_sequence) to keep symmetric (Sam)
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-When Tegra PMC is in secure mode, any access from non-secure world will
-not go through.
+are you satisfied with the changes, requested last weekend?
 
-This patch series adds these Tegra PMC clocks and blink controls to Tegra
-PMC driver with PMC as clock provider and removes them from Tegra clock
-driver.
+Thanks
+Heiko
 
-PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru Tegra210
-and clock driver does inital parent configuration for it and enables them.
-But this clock should be taken care by audio driver as there is no need
-to have this clock pre enabled.
+> ---
+>  drivers/gpu/drm/panel/Kconfig                 |  10 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../gpu/drm/panel/panel-xinpeng-xpp055c272.c  | 400 ++++++++++++++++++
+>  3 files changed, 411 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
+> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index f152bc4eeb53..fb1ded47677e 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -355,4 +355,14 @@ config DRM_PANEL_TRULY_NT35597_WQXGA
+>  	help
+>  	  Say Y here if you want to enable support for Truly NT35597 WQXGA Dual DSI
+>  	  Video Mode panel
+> +
+> +config DRM_PANEL_XINPENG_XPP055C272
+> +	tristate "Xinpeng XPP055C272 panel driver"
+> +	depends on OF
+> +	depends on DRM_MIPI_DSI
+> +	depends on BACKLIGHT_CLASS_DEVICE
+> +	help
+> +	  Say Y here if you want to enable support for the Xinpeng
+> +	  XPP055C272 controller for 720x1280 LCD panels with MIPI/RGB/SPI
+> +	  system interfaces.
+>  endmenu
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index b6cd39fe0f20..71d7722146a7 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -38,3 +38,4 @@ obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
+>  obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
+>  obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
+>  obj-$(CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA) += panel-truly-nt35597.o
+> +obj-$(CONFIG_DRM_PANEL_XINPENG_XPP055C272) += panel-xinpeng-xpp055c272.o
+> diff --git a/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
+> new file mode 100644
+> index 000000000000..1a7ded012344
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-xinpeng-xpp055c272.c
+> @@ -0,0 +1,400 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Xinpeng xpp055c272 5.5" MIPI-DSI panel driver
+> + * Copyright (C) 2019 Theobroma Systems Design und Consulting GmbH
+> + *
+> + * based on
+> + *
+> + * Rockteck jh057n00900 5.5" MIPI-DSI panel driver
+> + * Copyright (C) Purism SPC 2019
+> + */
+> +
+> +#include <drm/drm_mipi_dsi.h>
+> +#include <drm/drm_modes.h>
+> +#include <drm/drm_panel.h>
+> +#include <drm/drm_print.h>
+> +
+> +#include <video/display_timing.h>
+> +#include <video/mipi_display.h>
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/media-bus-format.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +/* Manufacturer specific Commands send via DSI */
+> +#define XPP055C272_CMD_ALL_PIXEL_OFF	0x22
+> +#define XPP055C272_CMD_ALL_PIXEL_ON	0x23
+> +#define XPP055C272_CMD_SETDISP		0xb2
+> +#define XPP055C272_CMD_SETRGBIF		0xb3
+> +#define XPP055C272_CMD_SETCYC		0xb4
+> +#define XPP055C272_CMD_SETBGP		0xb5
+> +#define XPP055C272_CMD_SETVCOM		0xb6
+> +#define XPP055C272_CMD_SETOTP		0xb7
+> +#define XPP055C272_CMD_SETPOWER_EXT	0xb8
+> +#define XPP055C272_CMD_SETEXTC		0xb9
+> +#define XPP055C272_CMD_SETMIPI		0xbA
+> +#define XPP055C272_CMD_SETVDC		0xbc
+> +#define XPP055C272_CMD_SETPCR		0xbf
+> +#define XPP055C272_CMD_SETSCR		0xc0
+> +#define XPP055C272_CMD_SETPOWER		0xc1
+> +#define XPP055C272_CMD_SETECO		0xc6
+> +#define XPP055C272_CMD_SETPANEL		0xcc
+> +#define XPP055C272_CMD_SETGAMMA		0xe0
+> +#define XPP055C272_CMD_SETEQ		0xe3
+> +#define XPP055C272_CMD_SETGIP1		0xe9
+> +#define XPP055C272_CMD_SETGIP2		0xea
+> +
+> +struct xpp055c272 {
+> +	struct device *dev;
+> +	struct drm_panel panel;
+> +	struct gpio_desc *reset_gpio;
+> +	struct regulator *vci;
+> +	struct regulator *iovcc;
+> +	bool prepared;
+> +};
+> +
+> +static inline struct xpp055c272 *panel_to_xpp055c272(struct drm_panel *panel)
+> +{
+> +	return container_of(panel, struct xpp055c272, panel);
+> +}
+> +
+> +#define dsi_generic_write_seq(dsi, cmd, seq...) do {			\
+> +		static const u8 d[] = { seq };				\
+> +		int ret;						\
+> +		ret = mipi_dsi_dcs_write(dsi, cmd, d, ARRAY_SIZE(d));	\
+> +		if (ret < 0)						\
+> +			return ret;					\
+> +	} while (0)
+> +
+> +static int xpp055c272_init_sequence(struct xpp055c272 *ctx)
+> +{
+> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> +	struct device *dev = ctx->dev;
+> +
+> +	/*
+> +	 * Init sequence was supplied by the panel vendor without much
+> +	 * documentation.
+> +	 */
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETEXTC, 0xf1, 0x12, 0x83);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETMIPI,
+> +			      0x33, 0x81, 0x05, 0xf9, 0x0e, 0x0e, 0x00, 0x00,
+> +			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x44, 0x25,
+> +			      0x00, 0x91, 0x0a, 0x00, 0x00, 0x02, 0x4f, 0x01,
+> +			      0x00, 0x00, 0x37);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPOWER_EXT, 0x25);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPCR, 0x02, 0x11, 0x00);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETRGBIF,
+> +			      0x0c, 0x10, 0x0a, 0x50, 0x03, 0xff, 0x00, 0x00,
+> +			      0x00, 0x00);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETSCR,
+> +			      0x73, 0x73, 0x50, 0x50, 0x00, 0x00, 0x08, 0x70,
+> +			      0x00);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETVDC, 0x46);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPANEL, 0x0b);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETCYC, 0x80);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETDISP, 0xc8, 0x12, 0x30);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETEQ,
+> +			      0x07, 0x07, 0x0B, 0x0B, 0x03, 0x0B, 0x00, 0x00,
+> +			      0x00, 0x00, 0xFF, 0x00, 0xC0, 0x10);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETPOWER,
+> +			      0x53, 0x00, 0x1e, 0x1e, 0x77, 0xe1, 0xcc, 0xdd,
+> +			      0x67, 0x77, 0x33, 0x33);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETECO, 0x00, 0x00, 0xff,
+> +			      0xff, 0x01, 0xff);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETBGP, 0x09, 0x09);
+> +	msleep(20);
+> +
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETVCOM, 0x87, 0x95);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETGIP1,
+> +			      0xc2, 0x10, 0x05, 0x05, 0x10, 0x05, 0xa0, 0x12,
+> +			      0x31, 0x23, 0x3f, 0x81, 0x0a, 0xa0, 0x37, 0x18,
+> +			      0x00, 0x80, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80,
+> +			      0x01, 0x00, 0x00, 0x00, 0x48, 0xf8, 0x86, 0x42,
+> +			      0x08, 0x88, 0x88, 0x80, 0x88, 0x88, 0x88, 0x58,
+> +			      0xf8, 0x87, 0x53, 0x18, 0x88, 0x88, 0x81, 0x88,
+> +			      0x88, 0x88, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00,
+> +			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETGIP2,
+> +			      0x00, 0x1a, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00,
+> +			      0x00, 0x00, 0x00, 0x00, 0x1f, 0x88, 0x81, 0x35,
+> +			      0x78, 0x88, 0x88, 0x85, 0x88, 0x88, 0x88, 0x0f,
+> +			      0x88, 0x80, 0x24, 0x68, 0x88, 0x88, 0x84, 0x88,
+> +			      0x88, 0x88, 0x23, 0x10, 0x00, 0x00, 0x1c, 0x00,
+> +			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+> +			      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x05,
+> +			      0xa0, 0x00, 0x00, 0x00, 0x00);
+> +	dsi_generic_write_seq(dsi, XPP055C272_CMD_SETGAMMA,
+> +			      0x00, 0x06, 0x08, 0x2a, 0x31, 0x3f, 0x38, 0x36,
+> +			      0x07, 0x0c, 0x0d, 0x11, 0x13, 0x12, 0x13, 0x11,
+> +			      0x18, 0x00, 0x06, 0x08, 0x2a, 0x31, 0x3f, 0x38,
+> +			      0x36, 0x07, 0x0c, 0x0d, 0x11, 0x13, 0x12, 0x13,
+> +			      0x11, 0x18);
+> +
+> +	msleep(60);
+> +
+> +	DRM_DEV_DEBUG_DRIVER(dev, "Panel init sequence done\n");
+> +	return 0;
+> +}
+> +
+> +static int xpp055c272_unprepare(struct drm_panel *panel)
+> +{
+> +	struct xpp055c272 *ctx = panel_to_xpp055c272(panel);
+> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> +	int ret;
+> +
+> +	if (!ctx->prepared)
+> +		return 0;
+> +
+> +	ret = mipi_dsi_dcs_set_display_off(dsi);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(ctx->dev, "failed to set display off: %d\n",
+> +			      ret);
+> +
+> +	mipi_dsi_dcs_enter_sleep_mode(dsi);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(ctx->dev, "failed to enter sleep mode: %d\n",
+> +			      ret);
+> +		return ret;
+> +	}
+> +
+> +	regulator_disable(ctx->iovcc);
+> +	regulator_disable(ctx->vci);
+> +
+> +	ctx->prepared = false;
+> +
+> +	return 0;
+> +}
+> +
+> +static int xpp055c272_prepare(struct drm_panel *panel)
+> +{
+> +	struct xpp055c272 *ctx = panel_to_xpp055c272(panel);
+> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
+> +	int ret;
+> +
+> +	if (ctx->prepared)
+> +		return 0;
+> +
+> +	DRM_DEV_DEBUG_DRIVER(ctx->dev, "Resetting the panel\n");
+> +	ret = regulator_enable(ctx->vci);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(ctx->dev,
+> +			      "Failed to enable vci supply: %d\n", ret);
+> +		return ret;
+> +	}
+> +	ret = regulator_enable(ctx->iovcc);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(ctx->dev,
+> +			      "Failed to enable iovcc supply: %d\n", ret);
+> +		goto disable_vci;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+> +	/* T6: 10us */
+> +	usleep_range(10, 20);
+> +	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
+> +
+> +	/* T8: 20ms */
+> +	msleep(20);
+> +
+> +	ret = xpp055c272_init_sequence(ctx);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(ctx->dev, "Panel init sequence failed: %d\n",
+> +			      ret);
+> +		goto disable_iovcc;
+> +	}
+> +
+> +	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(ctx->dev, "Failed to exit sleep mode: %d\n", ret);
+> +		goto disable_iovcc;
+> +	}
+> +
+> +	/* T9: 120ms */
+> +	msleep(120);
+> +
+> +	ret = mipi_dsi_dcs_set_display_on(dsi);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(ctx->dev, "Failed to set display on: %d\n", ret);
+> +		goto disable_iovcc;
+> +	}
+> +
+> +	msleep(50);
+> +
+> +	ctx->prepared = true;
+> +
+> +	return 0;
+> +
+> +disable_iovcc:
+> +	regulator_disable(ctx->iovcc);
+> +disable_vci:
+> +	regulator_disable(ctx->vci);
+> +	return ret;
+> +}
+> +
+> +static const struct drm_display_mode default_mode = {
+> +	.hdisplay	= 720,
+> +	.hsync_start	= 720 + 40,
+> +	.hsync_end	= 720 + 40 + 10,
+> +	.htotal		= 720 + 40 + 10 + 40,
+> +	.vdisplay	= 1280,
+> +	.vsync_start	= 1280 + 22,
+> +	.vsync_end	= 1280 + 22 + 4,
+> +	.vtotal		= 1280 + 22 + 4 + 11,
+> +	.vrefresh	= 60,
+> +	.clock		= 64000,
+> +	.width_mm	= 68,
+> +	.height_mm	= 121,
+> +};
+> +
+> +static int xpp055c272_get_modes(struct drm_panel *panel,
+> +				struct drm_connector *connector)
+> +{
+> +	struct xpp055c272 *ctx = panel_to_xpp055c272(panel);
+> +	struct drm_display_mode *mode;
+> +
+> +	mode = drm_mode_duplicate(connector->dev, &default_mode);
+> +	if (!mode) {
+> +		DRM_DEV_ERROR(ctx->dev, "Failed to add mode %ux%u@%u\n",
+> +			      default_mode.hdisplay, default_mode.vdisplay,
+> +			      default_mode.vrefresh);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	drm_mode_set_name(mode);
+> +
+> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +	connector->display_info.width_mm = mode->width_mm;
+> +	connector->display_info.height_mm = mode->height_mm;
+> +	drm_mode_probed_add(connector, mode);
+> +
+> +	return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs xpp055c272_funcs = {
+> +	.unprepare	= xpp055c272_unprepare,
+> +	.prepare	= xpp055c272_prepare,
+> +	.get_modes	= xpp055c272_get_modes,
+> +};
+> +
+> +static int xpp055c272_probe(struct mipi_dsi_device *dsi)
+> +{
+> +	struct device *dev = &dsi->dev;
+> +	struct xpp055c272 *ctx;
+> +	int ret;
+> +
+> +	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +
+> +	ctx->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+> +	if (IS_ERR(ctx->reset_gpio)) {
+> +		DRM_DEV_ERROR(dev, "cannot get reset gpio\n");
+> +		return PTR_ERR(ctx->reset_gpio);
+> +	}
+> +
+> +	ctx->vci = devm_regulator_get(dev, "vci");
+> +	if (IS_ERR(ctx->vci)) {
+> +		ret = PTR_ERR(ctx->vci);
+> +		if (ret != -EPROBE_DEFER)
+> +			DRM_DEV_ERROR(dev,
+> +				      "Failed to request vci regulator: %d\n",
+> +				      ret);
+> +		return ret;
+> +	}
+> +
+> +	ctx->iovcc = devm_regulator_get(dev, "iovcc");
+> +	if (IS_ERR(ctx->iovcc)) {
+> +		ret = PTR_ERR(ctx->iovcc);
+> +		if (ret != -EPROBE_DEFER)
+> +			DRM_DEV_ERROR(dev,
+> +				      "Failed to request iovcc regulator: %d\n",
+> +				      ret);
+> +		return ret;
+> +	}
+> +
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	ctx->dev = dev;
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
+> +			  MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_EOT_PACKET;
+> +
+> +	drm_panel_init(&ctx->panel, &dsi->dev, &xpp055c272_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
+> +
+> +	ret = drm_panel_of_backlight(&ctx->panel);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev, "Failed to find backlight: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	drm_panel_add(&ctx->panel);
+> +
+> +	ret = mipi_dsi_attach(dsi);
+> +	if (ret < 0) {
+> +		DRM_DEV_ERROR(dev, "mipi_dsi_attach failed: %d\n", ret);
+> +		drm_panel_remove(&ctx->panel);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void xpp055c272_shutdown(struct mipi_dsi_device *dsi)
+> +{
+> +	struct xpp055c272 *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = drm_panel_unprepare(&ctx->panel);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to unprepare panel: %d\n",
+> +			      ret);
+> +
+> +	ret = drm_panel_disable(&ctx->panel);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to disable panel: %d\n",
+> +			      ret);
+> +}
+> +
+> +static int xpp055c272_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct xpp055c272 *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	xpp055c272_shutdown(dsi);
+> +
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		DRM_DEV_ERROR(&dsi->dev, "Failed to detach from DSI host: %d\n",
+> +			      ret);
+> +
+> +	drm_panel_remove(&ctx->panel);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id xpp055c272_of_match[] = {
+> +	{ .compatible = "xinpeng,xpp055c272" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, xpp055c272_of_match);
+> +
+> +static struct mipi_dsi_driver xpp055c272_driver = {
+> +	.driver = {
+> +		.name = "panel-xinpeng-xpp055c272",
+> +		.of_match_table = xpp055c272_of_match,
+> +	},
+> +	.probe	= xpp055c272_probe,
+> +	.remove = xpp055c272_remove,
+> +	.shutdown = xpp055c272_shutdown,
+> +};
+> +module_mipi_dsi_driver(xpp055c272_driver);
+> +
+> +MODULE_AUTHOR("Heiko Stuebner <heiko.stuebner@theobroma-systems.com>");
+> +MODULE_DESCRIPTION("DRM driver for Xinpeng xpp055c272 MIPI DSI panel");
+> +MODULE_LICENSE("GPL v2");
+> 
 
-So, this series also includes patch that updates ASoC driver to take
-care of parent configuration for mclk if device tree don't specify
-initial parent configuration using assigned-clock-parents.
-
-DTs are also updated to use clk_out_1 as audio mclk rather than extern1.
-
-This series also includes a patch for mclk fallback to extern1 when
-retrieving mclk fails to have this backward compatible of new DT with
-old kernels.
-
-[v5]:	Changes between v4 and v5 are
-	- v4 feedback
-	- updated dt-binding pmc YAML schema with more description on power
-	  gate nodes and pad configuration state nodes.
-	- update tegra_asoc_utils_set_rate to disable audio mclk only if
-	  its in enable state.
-
-[v4]:	Changes between v3 and v4 are
-	- v3 Feedback
-	- Updated clocks clk_m_div2 and clk_m_div4 as osc_div2 and osc_div4.
-	  Tegra don't have clk_m_div2, clk_m_div4 and they should actually
-	  be osc_div2 and osc_div4 clocks from osc pads.
-	- Fixed PMC clock parents to use osc, osc_div2, osc_div4.
-	- Register each PMC clock as single clock rather than separate
-	  mux and gate clocks.
-	- Update ASoC utils to use resource managed APIs rather than
-	  using clk_get and clk_put.
-	- Updated device tree and ASoC driver to use clk_out_1 instead of
-	  clk_out_1_mux as PMC clocks are registered as single clock.
-	- Update clock driver init_table to not enable audio related clocks
-	  as ASoC utils will do audio clock enables.
-
-[v3]:	Changes between v2 and v3 are
-	- Removes set parent of clk_out_1_mux to extern1 and enabling
-	  extern1 from the clock driver.
-	- Doesn't enable clk_out_1 and blink by default in pmc driver
-	- Updates ASoC driver to take care of audio mclk parent
-	  configuration incase if device tree don't specify assigned
-	  clock parent properties and enables mclk using both clk_out_1
-	  and extern1.
-	- updates all device trees using extern1 as mclk in sound node
-	  to use clk_out_1 from pmc.
-	- patch for YAML format pmc dt-binding
-	- Includes v2 feedback
-
-[v2]:	Changes between v1 and v2 are
-	- v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
-	  blink controls to Tegra PMC driver and removing clk-tegra-pmc.
-	- feedback related to pmc clocks in Tegra PMC driver from v1
-	- Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC programming
-	  by the clock driver using helper functions from Tegra PMC.
-
- 	  Note:
-	  To use helper functions from PMC driver, PMC early init need to
-	  happen prior to using helper functions and these helper functions are
-	  for PLLM Override and PLLE IDDQ programming in PMC during PLLM/PLLE
-	  clock registration which happen in clock_init prior to Tegra PMC
-	  probe.
-	  Moving PLLM/PLLE clocks registration to happen after Tegra PMC
-	  impacts other clocks EMC, MC and corresponding tegra_emc_init and
-	  tegra_mc_init.
-	  This implementation of configuring PMC registers thru helper
-	  functions in clock driver needs proper changes across PMC, Clock,
-	  EMC and MC inits to have it work across all Tegra platforms.
-
-	  Currently PLLM Override is not enabled in the bootloader so proper
-	  patches for this fix will be taken care separately.
-
-[v1]:	v1 includes patches for below fixes.
-	- adding clk_out_1, clk_out_2, clk_out_3, blink controls to Tegra PMC
-	  driver and removing clk-tegra-pmc.
-	- updated clock provider from tegra_car to pmc in the device tree
-	  tegra210-smaug.dts that uses clk_out_2.
-	- Added helper functions in PMC driver for WB0 PLLM overrides and PLLE
-	  IDDQ programming to use by clock driver and updated clock driver to
-	  use these helper functions and removed direct PMC access from clock
-	  driver and all pmc base address references in clock driver.
 
 
-Sowjanya Komatineni (19):
-  dt-bindings: clock: tegra: Change CLK_M_DIV to OSC_DIV clocks
-  clk: tegra: Change CLK_M_DIV clocks to OSC_DIV clocks
-  clk: tegra: Fix Tegra PMC clock out parents
-  dt-bindings: tegra: Convert Tegra PMC bindings to YAML
-  dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
-  soc: tegra: Add Tegra PMC clocks registration into PMC driver
-  dt-bindings: soc: tegra-pmc: Add id for Tegra PMC 32KHz blink clock
-  soc: tegra: Add support for 32KHz blink clock
-  clk: tegra: Remove tegra_pmc_clk_init along with clk ids
-  dt-bindings: clock: tegra: Remove pmc clock ids from clock dt-bindings
-  ASoC: tegra: Use device managed resource APIs to get the clock
-  ASoC: tegra: Add initial parent configuration for audio mclk
-  ASoC: tegra: Add fallback implementation for audio mclk
-  clk: tegra: Remove audio related clock enables from init_table
-  ARM: dts: tegra: Add clock-cells property to pmc
-  arm64: tegra: Add clock-cells property to Tegra PMC node
-  ARM: tegra: Update sound node clocks in device tree
-  arm64: tegra: smaug: Change clk_out_2 provider to pmc
-  ASoC: nau8825: change Tegra clk_out_2 provider from tegra_car to pmc
-
- .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 300 -----------------
- .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml     | 357 +++++++++++++++++++++
- .../devicetree/bindings/sound/nau8825.txt          |   2 +-
- arch/arm/boot/dts/tegra114-dalmore.dts             |   8 +-
- arch/arm/boot/dts/tegra114.dtsi                    |   4 +-
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi        |   8 +-
- arch/arm/boot/dts/tegra124-apalis.dtsi             |   8 +-
- arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   8 +-
- arch/arm/boot/dts/tegra124-nyan.dtsi               |   8 +-
- arch/arm/boot/dts/tegra124-venice2.dts             |   8 +-
- arch/arm/boot/dts/tegra124.dtsi                    |   4 +-
- arch/arm/boot/dts/tegra20.dtsi                     |   4 +-
- arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi         |   8 +-
- arch/arm/boot/dts/tegra30-apalis.dtsi              |   8 +-
- arch/arm/boot/dts/tegra30-beaver.dts               |   8 +-
- arch/arm/boot/dts/tegra30-cardhu.dtsi              |   8 +-
- arch/arm/boot/dts/tegra30-colibri.dtsi             |   8 +-
- arch/arm/boot/dts/tegra30.dtsi                     |   4 +-
- arch/arm64/boot/dts/nvidia/tegra132.dtsi           |   4 +-
- arch/arm64/boot/dts/nvidia/tegra210-smaug.dts      |   2 +-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +-
- drivers/clk/tegra/Makefile                         |   1 -
- drivers/clk/tegra/clk-id.h                         |  11 +-
- drivers/clk/tegra/clk-tegra-fixed.c                |  32 +-
- drivers/clk/tegra/clk-tegra-pmc.c                  | 122 -------
- drivers/clk/tegra/clk-tegra114.c                   |  41 +--
- drivers/clk/tegra/clk-tegra124.c                   |  46 +--
- drivers/clk/tegra/clk-tegra20.c                    |   9 +-
- drivers/clk/tegra/clk-tegra210.c                   |  30 +-
- drivers/clk/tegra/clk-tegra30.c                    |  31 +-
- drivers/clk/tegra/clk.h                            |   1 -
- drivers/soc/tegra/pmc.c                            | 352 ++++++++++++++++++++
- include/dt-bindings/clock/tegra114-car.h           |  18 +-
- include/dt-bindings/clock/tegra124-car-common.h    |  18 +-
- include/dt-bindings/clock/tegra20-car.h            |   2 +-
- include/dt-bindings/clock/tegra210-car.h           |  18 +-
- include/dt-bindings/clock/tegra30-car.h            |  18 +-
- include/dt-bindings/soc/tegra-pmc.h                |  16 +
- sound/soc/tegra/tegra_alc5632.c                    |   7 +-
- sound/soc/tegra/tegra_asoc_utils.c                 | 114 ++++---
- sound/soc/tegra/tegra_asoc_utils.h                 |   1 -
- sound/soc/tegra/tegra_max98090.c                   |  22 +-
- sound/soc/tegra/tegra_rt5640.c                     |  22 +-
- sound/soc/tegra/tegra_rt5677.c                     |   7 +-
- sound/soc/tegra/tegra_sgtl5000.c                   |   7 +-
- sound/soc/tegra/tegra_wm8753.c                     |  22 +-
- sound/soc/tegra/tegra_wm8903.c                     |  22 +-
- sound/soc/tegra/tegra_wm9712.c                     |   8 +-
- sound/soc/tegra/trimslice.c                        |  18 +-
- 49 files changed, 1012 insertions(+), 779 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
- delete mode 100644 drivers/clk/tegra/clk-tegra-pmc.c
- create mode 100644 include/dt-bindings/soc/tegra-pmc.h
-
--- 
-2.7.4
 
