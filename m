@@ -2,126 +2,77 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2AAC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4246EC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34152146E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015162146E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:29:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uH0KpIPu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="PQkfGe3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfLTJ1V (ORCPT
+        id S1727191AbfLTJ3Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:27:21 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44449 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTJ1V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 04:27:21 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 195so4005454pfw.11;
-        Fri, 20 Dec 2019 01:27:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UNKiOniHzSKU3M0oT+PWGTepgoOHttWen9RJRN7cbpk=;
-        b=uH0KpIPuYsKhauy6uDQhR85oanHO0ONzdFK7YxazqR6sWO9AwuAefTRRLoK/BWBk6Q
-         CTt4LtkBoZ87Na9BXfi97V5YLBsPuD0UV9e5IcniNMOlKjjgRAJ+d2Lasbchk9lQSpSt
-         AAs2v73a9RCHWpbm9qz5q+3kgLG8l6T7DoF4juV+sEM2pwMN1MbyrcmK8cLDy7ApOcxg
-         MerYx4DlqEJ/0awwoKr2crZ/Y9G5pbv01mKyWL93w+w7UB3vKy7uu3CtBMQniuMNb5Qs
-         81tlO/0iXZy228ouq1IMN4VomlwZBhrAu4N546u3gCQjLb9g36UlQD7q5zBlUcd8URuY
-         fZrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNKiOniHzSKU3M0oT+PWGTepgoOHttWen9RJRN7cbpk=;
-        b=dFylgAAtfum9DdSMcEdO+1kB383jHG+bgnWGhhNo75iKCNIAjQKrkg8nVr2B6hSlXG
-         mH/szNVRzSzJOcJETrCq4aZZVaRaPjWDy2sDwrn8FKA579IxQzSKiU/R5oCWW5s0Cq3G
-         hYNFWhuBasXp4CxcZ8SV9P4hus8p8eATpvkhgMIqeDBqawjEiNFKsUVmtkyrotVSc9Tg
-         viLSvDBwbluKvRo3RAGD2l/mwVwFyoj6LsqfMOYJP0ioAg1yusmjUqTwY6cNlO0j37i2
-         7NzufRx6gzmDUPKOFT7vFmZ1lCPzJi7k9t9HL9beu8yQPkZZku9U12z6qinG1cx4W1Hy
-         DTvg==
-X-Gm-Message-State: APjAAAWn4nUxoNA4JOM/9x/ElUigqHaX03vLl/27EV5dddLk1+TVdzo6
-        4Hafqp+yU+UKOr58+365azh5gMcp3PtXmckjqfc=
-X-Google-Smtp-Source: APXvYqyh1hbkXRo8C51/PO5I/y84aZ4jUWZTawBw/0oDDbc5KxDjYVnkag2sPe7rExGKev7pFacrKd2Ne5qbnrqiDpA=
-X-Received: by 2002:a63:941:: with SMTP id 62mr14407335pgj.203.1576834040029;
- Fri, 20 Dec 2019 01:27:20 -0800 (PST)
+        Fri, 20 Dec 2019 04:29:16 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:34742 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727167AbfLTJ3Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 04:29:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=0Zho+IwXTx7nIiyKWPWvg5wp0VQAUlZmE3ckFFsswTs=; b=PQkfGe3U52Q3dkjP3BmHOcDCjq
+        C2XXAnB1YibLfJycjJIMywfCyxNqgxHt12bN4QSaRF5jsyIiqv8+jMXVAIWxFuxDvfZWJzdybX3yC
+        SLq3EJXzwwol2bLfJTmylAqrnh+8mJr24a7nPNTxiT/8axkwTq1jTJLrZA4hUl0R0qgY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iiEai-0006nF-Pl; Fri, 20 Dec 2019 10:29:00 +0100
+Date:   Fri, 20 Dec 2019 10:29:00 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        "antoine.tenart@free-electrons.com" 
+        <antoine.tenart@free-electrons.com>,
+        "jaz@semihalf.com" <jaz@semihalf.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191220092900.GB24174@lunn.ch>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219190308.GE25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219214930.GG25745@shell.armlinux.org.uk>
+ <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191220091642.GJ25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
- <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com> <20191220043220.GA16415@nessie>
-In-Reply-To: <20191220043220.GA16415@nessie>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 20 Dec 2019 11:27:10 +0200
-Message-ID: <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191220091642.GJ25745@shell.armlinux.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 6:48 AM Dan Robertson <dan@dlrobertson.com> wrote:
-> On Thu, Dec 19, 2019 at 01:02:28PM +0200, Andy Shevchenko wrote:
-> > On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> How does this help us when we can't simply change the existing usage?
+> We can update the DT but we can't free up the usage of "10gbase-kr".
 
-> > > +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
-> > > +                                            int hz, int uhz)
-> > > +{
-> > > +       unsigned int idx;
-> > > +       unsigned int odr;
-> > > +       unsigned int val;
-> > > +       int ret;
-> > > +
-> > > +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
-> > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
-> > > +                       return -EINVAL;
-> > > +
-> > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
-> >
-> > Again, AFAICS division may be avoided in both cases (% and / above)
-> > because of is_power_of_2() check below.
-> > Can you revisit this?
->
-> Yeah I can update this in the next patchset, but I don't know if it is much more
-> readable this way.
+Agreed. Code needs to keep on interpreting "10gbase-kr" as any 10G
+link. If we ever have a true 10gbase-kr, 802.3ap, one meter of copper
+and two connectors, we are going to have to add a new mode to
+represent true 10gbase-kr.
 
-You may describe the algo in the comment.
-
-Let's see how it might look like
-
-  if (uhz)
-    return -EINVAL;
-  idx = __ffs(val);
-  /* We're expecting value to be 2^n * ODR_MIN_WHOLE_HZ */
-  if ((val >> idx) != BMA400_ACC_ODR_MIN_WHOLE_HZ)
-    retutn -EINVAL;
-  idx += BMA400_ACC_ODR_MIN_RAW + 1;
-
-Would it work?
-
-> > > +               if (!is_power_of_2(val))
-> > > +                       return -EINVAL;
-> > > +
-> > > +               idx = __ffs(val) + BMA400_ACC_ODR_MIN_RAW + 1;
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+	Andrew
