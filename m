@@ -2,116 +2,115 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588C5C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AA7C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBE224680
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F3424680
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MslHLb5T"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ASNoFJRQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfLTMKR (ORCPT
+        id S1727370AbfLTMY4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:10:17 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36519 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfLTMKQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 07:10:16 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so9214901wru.3;
-        Fri, 20 Dec 2019 04:10:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=X8fFKkVj4hVB9s3VYcXKcrcscgrJeT7dVkyworQG7Xs=;
-        b=MslHLb5TC48pWyXB4rVGeaN6vAkMcZk2Fa4J70Qk+CY3wY0hUJFGBwlni22LS3h6Nh
-         YkEn+fR3yKhiWZV/zYs/7cdNCwZdC3CEc7CFIkD7IE1PmA+1/49VH5dgYWCCh3bgxxc1
-         16tOH2klG8c+0QyUK69jc8x865EfIyboJPlg1r1t7TwOsHZTdor/R9G4DjIX6iWIEHdH
-         gmwZNGoKGXc1hORo8+WyQSxyFqD5K99YNELnymcSSgj5B5qkQ4FbDqUG2cFgm0M8uCdh
-         FtqEuPccZNS/5NTvodhMjvp0v3mVL6WWdOI382nHbqYW7X3stO92+huOi6gyi6oMWT14
-         3Jgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=X8fFKkVj4hVB9s3VYcXKcrcscgrJeT7dVkyworQG7Xs=;
-        b=DI8RRCW6ev9b78JusOR2c/JUZ1TVIScbmzefTX1hKv1Dw5RnfTzv8kRw9/Rg9BRTcy
-         nZevSiWrDo8ickUIeHlPaqckNGAFm/PdoS70vpDCIhfVp2ObcksfqSCa4DEjUFUCvoe9
-         BW5goXHRYxGsbMvJ1a5SbSxM2p5ifmvmhyH/MhO7u6bNPdzaHJujDwFeQv+Ouz5VbBKL
-         9moN5wSW8exT9HjrUbXFB/dCp2EWuiACpXQzpI02uwAFu+ZsPiPmTiiOiPa6R0UHvius
-         W8oYAtAsJ50Vo9T6PHGj2XTXOiU6b3FyErfk/xTTklqDFk3zq4RrrF5zsxj0rE4Xww/A
-         t00g==
-X-Gm-Message-State: APjAAAX++bqJGtqcGawmECY5tcgbE0aGQWjyDqVLJ/Hf2ms6ARQRK774
-        h1yzhXAc8ndFBvTbRVFSnYg=
-X-Google-Smtp-Source: APXvYqxu69/OA3v3zdnCC+w0hFNzMJZksszafbk/ti6SQ/UDJYSqsScNIR4ZDvM0JKvWKNarB+0Fwg==
-X-Received: by 2002:adf:ce87:: with SMTP id r7mr14428940wrn.245.1576843815297;
-        Fri, 20 Dec 2019 04:10:15 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id s16sm9722493wrn.78.2019.12.20.04.10.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Dec 2019 04:10:14 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: rockchip: rk3308-roc-cc: sort nodes in alphabetical order
-Date:   Fri, 20 Dec 2019 13:10:07 +0100
-Message-Id: <20191220121007.29337-2-jbx6244@gmail.com>
+        Fri, 20 Dec 2019 07:24:56 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:48360 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727346AbfLTMY4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 07:24:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=References:In-Reply-To:Message-Id:Date:Subject:
+        Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=q7Pl04+25XaAjE2x9uF6zsDQzpaHxRr7Osf7kSzlnZI=; b=ASNoFJRQG7/VkrK8hr04zadi7
+        ZsALiXvrb3/UXcAzLbpnfRguYxa/13dnhb3ukoG07kjczAdxcoI7lhdLJhFOpiXrSsf3oF1GsFPaa
+        4Coxq5bTIA6PM+ryOCA2GE16OXyhDGZQGnLimOxrmyqSs4c13JjjDqVTE666nYp/5mIEA=;
+Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iiHKq-0001zU-UV; Fri, 20 Dec 2019 13:24:49 +0100
+Received: from andi by localhost with local (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iiHKo-0008Tl-K8; Fri, 20 Dec 2019 13:24:46 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v5 4/5] mfd: rn5t618: add more subdevices
+Date:   Fri, 20 Dec 2019 13:24:15 +0100
+Message-Id: <20191220122416.31881-5-andreas@kemnade.info>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191220121007.29337-1-jbx6244@gmail.com>
-References: <20191220121007.29337-1-jbx6244@gmail.com>
+In-Reply-To: <20191220122416.31881-1-andreas@kemnade.info>
+References: <20191220122416.31881-1-andreas@kemnade.info>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sort nodes in alphabetical order.
-Place &pwm5 below &pwm0.
+The RC5T619 has a RTC which is missing in the
+RN5T618. Add it as subdevice to prepare for their implementation
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Changes in v3:
+- alignment cleanup
+ drivers/mfd/rn5t618.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-index 23527daa7..14ba4c152 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3308-roc-cc.dts
-@@ -141,12 +141,6 @@
- 	};
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index 6bdc5a023cbf..ec378715137b 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -14,6 +14,7 @@
+ #include <linux/mfd/rn5t618.h>
+ #include <linux/module.h>
+ #include <linux/of_device.h>
++#include <linux/platform_device.h>
+ #include <linux/reboot.h>
+ #include <linux/regmap.h>
+ 
+@@ -22,6 +23,12 @@ static const struct mfd_cell rn5t618_cells[] = {
+ 	{ .name = "rn5t618-wdt" },
  };
  
--&pwm5 {
--	status = "okay";
--	pinctrl-names = "active";
--	pinctrl-0 = <&pwm5_pin_pull_down>;
--};
--
- &pinctrl {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&rtc_32k>;
-@@ -165,8 +159,14 @@
- };
- 
- &pwm0 {
--	status = "okay";
- 	pinctrl-0 = <&pwm0_pin_pull_down>;
-+	status = "okay";
++static const struct mfd_cell rc5t619_cells[] = {
++	{ .name = "rn5t618-regulator" },
++	{ .name = "rc5t619-rtc" },
++	{ .name = "rn5t618-wdt" },
 +};
 +
-+&pwm5 {
-+	pinctrl-names = "active";
-+	pinctrl-0 = <&pwm5_pin_pull_down>;
-+	status = "okay";
- };
+ static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
+@@ -173,8 +180,16 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
+ 	}
  
- &sdmmc {
+-	ret = devm_mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
+-				   ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
++	if (priv->variant == RC5T619)
++		ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_NONE,
++					   rc5t619_cells,
++					   ARRAY_SIZE(rc5t619_cells),
++					   NULL, 0, NULL);
++	else
++		ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_NONE,
++					   rn5t618_cells,
++					   ARRAY_SIZE(rn5t618_cells),
++					   NULL, 0, NULL);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
+ 		return ret;
 -- 
 2.11.0
 
