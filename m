@@ -2,89 +2,246 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 072ECC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68213C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 23:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FA62146E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1BD20866
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 23:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576882490;
-	bh=FhSIQVGkG/HvMbdRBsPKIYkm1u8+h8pRpTCxtPOOuEw=;
+	s=default; t=1576883444;
+	bh=wR5may7mAUmZ/CfDdApD8FEoqLFXXveiSgTP3bUJqSM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Rp7DVL2wR0AKzM637lN2heMkAhamdFW+Q3c5JokGlo8t7051ks6DUWLewygdS5ZBw
-	 wjnGYvblgdbDloc6IqsaJrvax6LFcV0M0s62pHwej9XIK52bzwpdqbyv5txhycQ5Wc
-	 hlR5EXgp4/WFmfjjseebWvk69yl5NSQXphPGuTRk=
+	b=qwpJQXGqjNubIjsjHfhwo0JP3K7WvSdXhBOmTRANVUOGhKpEeQa+J5VqgJMIYgmsn
+	 o1gI2mg3Fhdqn5xo1nz+lGkwLrXnh8xetVmgyb96Ae9OuRUpNt1/Oys0REJKG3syDW
+	 0ZWbWVNaExNYOcMJJxGuM3E8MagmRqxCEqax1Mgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfLTWyu (ORCPT
+        id S1726492AbfLTXKn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:54:50 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40609 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfLTWyu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:54:50 -0500
-Received: by mail-io1-f67.google.com with SMTP id x1so10974266iop.7;
-        Fri, 20 Dec 2019 14:54:49 -0800 (PST)
+        Fri, 20 Dec 2019 18:10:43 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45691 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfLTXKn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 18:10:43 -0500
+Received: by mail-io1-f68.google.com with SMTP id i11so10985994ioi.12;
+        Fri, 20 Dec 2019 15:10:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N6aXh/oY7lMy+cARmMvGPpZJvUooMcIfU6lzBw92zjc=;
-        b=IYva/2omyTOYtBLWDNUwb3/8fJ9o4jDg1NiTwpX7uzPY+HiLhFsiSbKrQsfR3F44rv
-         G3ffU3wr+iSh6aPLBv30dhXpAQTPeEIWqa0SnQ3ehKXjqOacFz5ZsXlF072zmar6A9Mz
-         zBAs6/IcZyCFZKTytJ5Ih00xEX7L6uWtSaeUG12TBz2WoM9TsB0cbK6tFKYzoc8Du+gm
-         asXwaccypTN0SFx5abyelLwhx1DFcvMO+NaI+LajNt1AMoEwG+PE2Hqn5/euwPvl1DVZ
-         Nj2PsfkwCXk7iuM8VNl/1YHEnvuQi1nukrO2NzzIkEbKxoSt/+eYgKVcz6WlnVsAuBmw
-         OtGA==
-X-Gm-Message-State: APjAAAVWHw6ib6cwhh6Ju5wV9l5RgLpy3f8rxZ45B1Sc/fONM9HgG3b0
-        LdoC8rzlGUK/yP9FK+L8pw==
-X-Google-Smtp-Source: APXvYqxRHv3mavUCCTrXPMpUhFxucuGGurQ6Fm6MRXBtA0U0dF6vAMO9RsEqh8V50CJdUZic7aVDsg==
-X-Received: by 2002:a02:8817:: with SMTP id r23mr14536778jai.120.1576882489464;
-        Fri, 20 Dec 2019 14:54:49 -0800 (PST)
+        bh=OIn6PrxteiiCCeumPwNHhx+bzoiO5dkpRtAE3G60zXE=;
+        b=GvDFrEcjEUbkQgOH9NP/Cl/JRzkR0Vjpaz4/6BWmy+wcFRh3D3Q6Fk6+d/wSIpDBjO
+         5UA7WW7mclAWJVTOSlo5o5fP7yvPYCD/SVCib1lcRNpFTNNSKLQclykCNebUZZCsPXXJ
+         GriLZNFbttIkv0IsffRDCghGuVv8aPp6bkhI5ho2rDg569tsBWFPiD80ELbM7vvf5qLV
+         TjPlJcRHDBXRpuFO+4arevvOJnNWGfvKSOr99nc9JxYEZubjKlCeWlF01f7SS88+GQ9G
+         9aNVX9Lrxb7PcTi7Kx98YgX5JaDHWvVtSxqxAZSNlJBSpZLMgLzQ4DwI60nwLHpF1QZN
+         Ve1A==
+X-Gm-Message-State: APjAAAVnTj0lmjwSo1Igli+3XQ8+9hwARqVGFwWi+a8V1dTZj08Abvna
+        zqtLmDXX6XYR5vupxXWuAg==
+X-Google-Smtp-Source: APXvYqzCnCrDwqSr2I9ZY+upYlvbICf4o4U9kOYjx5cXQ5142+g7eav5whXMKaItjrPG0hOLydb1Cg==
+X-Received: by 2002:a05:6602:2209:: with SMTP id n9mr10934138ion.62.1576883442554;
+        Fri, 20 Dec 2019 15:10:42 -0800 (PST)
 Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id z15sm5471450ill.20.2019.12.20.14.54.48
+        by smtp.gmail.com with ESMTPSA id m27sm5505377ilb.53.2019.12.20.15.10.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 14:54:48 -0800 (PST)
-Date:   Fri, 20 Dec 2019 15:54:48 -0700
+        Fri, 20 Dec 2019 15:10:41 -0800 (PST)
+Date:   Fri, 20 Dec 2019 16:10:40 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, fabrice.gasnier@st.com,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH 1/3] dt-bindings: nvmem: Convert STM32 ROMEM to
- json-schema
-Message-ID: <20191220225448.GA5275@bogus>
-References: <20191219144117.21527-1-benjamin.gaignard@st.com>
- <20191219144117.21527-2-benjamin.gaignard@st.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Andrey Pronin <apronin@chromium.org>
+Subject: Re: [PATCH] dt-bindings: tpm: Convert cr50 binding to YAML
+Message-ID: <20191220231040.GA11384@bogus>
+References: <20191217005424.226858-1-swboyd@chromium.org>
+ <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219144117.21527-2-benjamin.gaignard@st.com>
+In-Reply-To: <CAD=FV=UQAgd2R=ykTCnBZuOvFFKoWu4o-3Rq=GEdrc1KKSi9cQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 19 Dec 2019 15:41:15 +0100, Benjamin Gaignard wrote:
-> Convert the STM32 ROMEM binding to DT schema format using json-schema
+On Tue, Dec 17, 2019 at 09:45:02AM -0800, Doug Anderson wrote:
+> Hi,
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  .../devicetree/bindings/nvmem/st,stm32-romem.txt   | 31 ---------------
->  .../devicetree/bindings/nvmem/st,stm32-romem.yaml  | 46 ++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
->  create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
+> On Mon, Dec 16, 2019 at 4:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > This allows us to validate the dt binding to the implementation. Add the
+> > interrupt property too, because that's required but nobody noticed when
+> > the non-YAML binding was introduced.
+> >
+> > Cc: Andrey Pronin <apronin@chromium.org>
+> > Cc: Douglas Anderson <dianders@chromium.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  .../bindings/security/tpm/google,cr50.txt     | 19 -------
+> >  .../bindings/security/tpm/google,cr50.yaml    | 52 +++++++++++++++++++
+> >  2 files changed, 52 insertions(+), 19 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> >  create mode 100644 Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt b/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> > deleted file mode 100644
+> > index cd69c2efdd37..000000000000
+> > --- a/Documentation/devicetree/bindings/security/tpm/google,cr50.txt
+> > +++ /dev/null
+> > @@ -1,19 +0,0 @@
+> > -* H1 Secure Microcontroller with Cr50 Firmware on SPI Bus.
+> > -
+> > -H1 Secure Microcontroller running Cr50 firmware provides several
+> > -functions, including TPM-like functionality. It communicates over
+> > -SPI using the FIFO protocol described in the PTP Spec, section 6.
+> > -
+> > -Required properties:
+> > -- compatible: Should be "google,cr50".
+> > -- spi-max-frequency: Maximum SPI frequency.
+> > -
+> > -Example:
+> > -
+> > -&spi0 {
+> > -       tpm@0 {
+> > -               compatible = "google,cr50";
+> > -               reg = <0>;
+> > -               spi-max-frequency = <800000>;
+> > -       };
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> > new file mode 100644
+> > index 000000000000..8bfff0e757af
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/security/tpm/google,cr50.yaml
+> > @@ -0,0 +1,52 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/tpm/google,cr50.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: H1 Secure Microcontroller with Cr50 Firmware on SPI Bus
+> > +
+> > +description:
+> > +  H1 Secure Microcontroller running Cr50 firmware provides several functions,
+> > +  including TPM-like functionality. It communicates over SPI using the FIFO
+> > +  protocol described in the PTP Spec, section 6.
+> > +
+> > +maintainers:
+> > +  - Andrey Pronin <apronin@chromium.org>
 > 
+> Does Andrey agree to be the maintainer here?
+> 
+> 
+> I'd like to see if we can delete most of what you've written here.
+> Specifically in "spi/spi-controller.yaml" you can see a really nice
+> description of what SPI devices ought to look like.  Can we just
+> reference that?  To do that I _think_ we actually need to break that
+> description into a separate YAML file and then include it from there
+> and here.  Maybe someone on the list can confirm or we can just post
+> some patches for that?
+> 
+> 
+> > +properties:
+> > +  compatible:
+> > +    const: google,cr50
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> 
+> I'm curious if you need a minItems here.  ...and if we don't somehow
+> include it, should we follow 'spi-controller.yaml' and treat this like
+> an int?
 
-Applied, thanks.
+Really, just 'true' is sufficient as you can't say which CS number it is 
+here.
+> 
+> 
+> > +  spi-max-frequency:
+> > +    maxItems: 1
+> 
+> This is not an array type.  Why do you need maxItems?  Should treat
+> like an int?  Do we have any ranges of sane values we can put here?
+> I'm sure that there is a maximum that Cr50 can talk at.
+> 
+> 
+> > +  interrupts:
+> > +    maxItems: 1
+> 
+> I'm curious if you need a minItems here.
+
+No. It's implied to be the same. (The tooling adds it because that's not 
+how json-schema works).
+
+> 
+> ...also: should we be trying to validate the flags at all?  AKA that
+> Cr50 expects a rising edge interrupt?
+
+You can't really because you don't know how many cells.
+
+> 
+> 
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - spi-max-frequency
+> 
+> Technically spi-max-frequency might not be required (the SPI binding
+> doesn't list it as such), but I guess it was before...
+
+Generally, we expect a device knows its max and this should only be used 
+it a board has a lower value. However, sometimes there's exceptions. 
+
+Shouldn't really be debate here unless the old binding doc was wrong.
+
+> 
+> 
+> > +  - interrupts
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    spi {
+> > +      #address-cells = <0x1>;
+> > +      #size-cells = <0x0>;
+> > +      tpm@0 {
+> > +          compatible = "google,cr50";
+> > +          reg = <0>;
+> > +          spi-max-frequency = <800000>;
+> > +          interrupts = <50 IRQ_TYPE_EDGE_RISING>;
+> 
+> I would tend to prefer seeing the interrupt parent in the example
+> since it's pretty likely that the GPIO controller isn't the overall
+> parent and likely that our interrupt is a GPIO.  I'm not sure the
+> convention, though.
+
+Example is fine, but shouldn't be in the schema.
+
+> > +      };
+> > +    };
+> > +
+> > +...
+> 
+> Is the "..." important here?  I guess this is only if you're trying to
+> jam two bindings into the same file, but I could be wrong.  I guess a
+> bunch of arm ones owned by Rob have it at the end (though the example
+> doesn't?), so maybe it's right?
+
+We won't ever have 2 because '$ref' lookups wouldn't work. 
+
+It only matters that we are consistent because if/when we want to 
+programatically edit files, the ruamel yaml parser writes out what it is 
+told, not what it read in. That also means fixing these is pretty easy.
+
+My current position is to have them, but it's not anything I check ATM 
+and I forget it too.
 
 Rob
