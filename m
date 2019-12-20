@@ -2,171 +2,107 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32948C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E29C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0915E2082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="soKJ/5TQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9F9AA20866
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfLTSP2 (ORCPT
+        id S1727422AbfLTSxB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:15:28 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45948 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbfLTSP1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 13:15:27 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so4420279pls.12;
-        Fri, 20 Dec 2019 10:15:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZYaULAOf/ipunpDAVFMxi/EQXHSk5RtELu2hRAqrmfo=;
-        b=soKJ/5TQY63UbRSr/zPOYFJ//r47GQwE1DlWZTnD/JRFIV8IQl4fP78yE6RtyVDOTM
-         Xqs+kbKYthY9UWqBajEEgYYWTCR0RS2la8elKIZi5NY0R06W8EoVf3mKr8raOBD8G9cz
-         Ym+nO58OKnQuLNjrLn+eVzpu4lPQoAtZpg3I8Ri5JjhLCaEju+x4IyG21EfTmCSB/k0x
-         4sObaHtpzlWF5wgIwAtPsT+aS37pKAW3MQ/wOIzrGzXhVhHxAUpNAjwhlrl0iBK6PFLf
-         TH9ypavrq9CRYk506KGbtKOsQCB8wouPiNT0yhlbDOAVxCRTCj0tcXlnHi+j3tGaBH06
-         MzDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZYaULAOf/ipunpDAVFMxi/EQXHSk5RtELu2hRAqrmfo=;
-        b=W8H4nB8APF3rfYHiNSYYqgayw6GIQ03DiLcCd2PlRwkjcAlgMnx9+8qUyN8G23zj/2
-         3fM6mpWfmsG7qumCVak0ukfC3c7NlDD9Xyy3xTOf1fu+GH2t39az5FmqVSJFOXkr5055
-         sdtlVXNSDnHPdCco//Ji2/ljtZQSA8MiAkeXqCz96UhC88+BNMAPAvO9uRfnUrgvNCDc
-         R8WYvnFNGQ9jHsqKCreqgtRu2FNz/zgukXNu9iKE/hCnEt9BkwDXjyqBqpj2CR9xorIC
-         bd5/rJBcdgH13jacY37m3P83CIWlxExk56l+pNo8Qv18JUMh2wbHdUv2iMjhGK1pBqRi
-         RBvQ==
-X-Gm-Message-State: APjAAAVej7Ct1PwwLXxd60gPwAE1j2l8GD+MzOWTYRLo+snDnQ1ViTQ1
-        e/zsFx/JKDrbo52S7g4p/nSoTWD6
-X-Google-Smtp-Source: APXvYqzPCFhIou48B2xrgnV5RxShqn7fWYHRBbPW40IcR6fiy1vjmYBl8m8ZtgOHHXG27L5Dse17tw==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr17638902pjn.60.1576865725709;
-        Fri, 20 Dec 2019 10:15:25 -0800 (PST)
-Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id j28sm11833869pgb.36.2019.12.20.10.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 10:15:24 -0800 (PST)
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
+        Fri, 20 Dec 2019 13:53:01 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:54932 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727390AbfLTSxA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 13:53:00 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B05A52003C1;
+        Fri, 20 Dec 2019 19:52:58 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A0C142013CC;
+        Fri, 20 Dec 2019 19:52:54 +0100 (CET)
+Received: from lsv03124.swis.in-blr01.nxp.com (lsv03124.swis.in-blr01.nxp.com [92.120.146.121])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A7FBB402A5;
+        Sat, 21 Dec 2019 02:52:49 +0800 (SGT)
+From:   Kuldeep Singh <kuldeep.singh@nxp.com>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: [PATCH V7 net-next 01/11] net: phy: Introduce helper functions for time stamping support.
-Date:   Fri, 20 Dec 2019 10:15:10 -0800
-Message-Id: <bb9bfc2826fa92bedde11664b0c0e0b9d028a689.1576865315.git.richardcochran@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1576865315.git.richardcochran@gmail.com>
-References: <cover.1576865315.git.richardcochran@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Kuldeep Singh <kuldeep.singh@nxp.com>
+Subject: [PATCH] arm64: dts: ls208xa: Update qspi node properties for LS2088ARDB
+Date:   Sat, 21 Dec 2019 00:22:34 +0530
+Message-Id: <1576867954-17756-1-git-send-email-kuldeep.singh@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some parts of the networking stack and at least one driver test fields
-within the 'struct phy_device' in order to query time stamping
-capabilities and to invoke time stamping methods.  This patch adds a
-functional interface around the time stamping fields.  This will allow
-insulating the callers from future changes to the details of the time
-stamping implemenation.
+LS2088ADB has one spansion flash s25fs512s of size 64M.
 
-Signed-off-by: Richard Cochran <richardcochran@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Add qspi dts entry for the board using compatibles as "jedec,spi-nor" to
+probe flash successfully. Also, align properties with other board dts
+properties.
+
+Use dt-bindings constants in interrupts instead of using numbers.
+
+Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
 ---
- include/linux/phy.h | 60 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 10 +++++++++-
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |  4 ++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 5032d453ac66..fc51aacb03a7 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -936,6 +936,66 @@ static inline bool phy_polling_mode(struct phy_device *phydev)
- 	return phydev->irq == PHY_POLL;
- }
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+index 6fd7f63085c9..d0d670227ae2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+@@ -108,7 +108,15 @@
+ };
  
-+/**
-+ * phy_has_hwtstamp - Tests whether a PHY time stamp configuration.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_hwtstamp(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->hwtstamp;
-+}
+ &qspi {
+-	status = "disabled";
++	status = "okay";
 +
-+/**
-+ * phy_has_rxtstamp - Tests whether a PHY supports receive time stamping.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_rxtstamp(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->rxtstamp;
-+}
-+
-+/**
-+ * phy_has_tsinfo - Tests whether a PHY reports time stamping and/or
-+ * PTP hardware clock capabilities.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_tsinfo(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->ts_info;
-+}
-+
-+/**
-+ * phy_has_txtstamp - Tests whether a PHY supports transmit time stamping.
-+ * @phydev: the phy_device struct
-+ */
-+static inline bool phy_has_txtstamp(struct phy_device *phydev)
-+{
-+	return phydev && phydev->drv && phydev->drv->txtstamp;
-+}
-+
-+static inline int phy_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
-+{
-+	return phydev->drv->hwtstamp(phydev, ifr);
-+}
-+
-+static inline bool phy_rxtstamp(struct phy_device *phydev, struct sk_buff *skb,
-+				int type)
-+{
-+	return phydev->drv->rxtstamp(phydev, skb, type);
-+}
-+
-+static inline int phy_ts_info(struct phy_device *phydev,
-+			      struct ethtool_ts_info *tsinfo)
-+{
-+	return phydev->drv->ts_info(phydev, tsinfo);
-+}
-+
-+static inline void phy_txtstamp(struct phy_device *phydev, struct sk_buff *skb,
-+				int type)
-+{
-+	phydev->drv->txtstamp(phydev, skb, type);
-+}
-+
- /**
-  * phy_is_internal - Convenience function for testing if a PHY is internal
-  * @phydev: the phy_device struct
++	s25fs512s0: flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "jedec,spi-nor";
++		spi-max-frequency = <50000000>;
++		reg = <0>;
++	};
+ };
+ 
+ &sata0 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+index 8b2fd278844b..f96d06da96be 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+@@ -618,16 +618,16 @@
+ 		};
+ 
+ 		qspi: spi@20c0000 {
+-			status = "disabled";
+ 			compatible = "fsl,ls2080a-qspi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0x0 0x20c0000 0x0 0x10000>,
+ 			      <0x0 0x20000000 0x0 0x10000000>;
+ 			reg-names = "QuadSPI", "QuadSPI-memory";
+-			interrupts = <0 25 0x4>; /* Level high type */
++			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+ 			clock-names = "qspi_en", "qspi";
++			status = "disabled";
+ 		};
+ 
+ 		pcie1: pcie@3400000 {
 -- 
-2.20.1
+2.17.1
 
