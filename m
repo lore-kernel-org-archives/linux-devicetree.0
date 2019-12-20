@@ -2,171 +2,222 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A95C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EFDC43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19A9F2067C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:55:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BYTTQMKl"
+	by mail.kernel.org (Postfix) with ESMTP id A08F921655
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 13:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576847363;
+	bh=z9BphCZrr8pVS6by4Dj/5isL6Vy7+SuDHoPLLbjcOIc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=LxSyUqbrrwQBNRIoSRigx8ocy1j58fcW7lfZW3+YsyzDeTPfB91r4v8zKI1XshodR
+	 9e09p/9Darfa4Us7k3QgfElJn9OtdYIB2tpu/VMxDBam5sEyeKP9ockv7fwHwxivBG
+	 wrhHE2a4ZWNwNmsEvt993OVMLUUggYFV4jS3Eh1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfLTMz3 (ORCPT
+        id S1727381AbfLTNJX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:55:29 -0500
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:52999 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727344AbfLTMz3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 07:55:29 -0500
-Received: by mail-wm1-f46.google.com with SMTP id p9so8845033wmc.2;
-        Fri, 20 Dec 2019 04:55:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=47U1otsxYlinLNAscqJD75X6EAli96RR6XYpuDRuenk=;
-        b=BYTTQMKllgycraKHarnwqJf8SP4/xmLzv9sqBRHH5Jlky2jdi7TsjV0FpyLasstZXX
-         Gnz3BQ23iT6rF2wjm8aR/p2cANBU5xasgeSZacD8RBsWIOq+FzDUv4aX3n0gqaDQZSum
-         0bv0gkqK2DxGD83GZfUu3FCfcCg4GCvwM7HfxIMewlav5ZsxG80YBOic1rrgmF6LbfdP
-         2/JEsjMRO+HLj3QEzUSrSWYCnOFYmB9rnwpUQ26KXVdU+1otPKfeJEF8+av//+18iQfd
-         FU6qDpqC/QcHo+mezj/JB4lnKNSZNeRmWCsmSt+2mhAYAsCOmN/QVffUnH/Di1JHXZSE
-         UxeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=47U1otsxYlinLNAscqJD75X6EAli96RR6XYpuDRuenk=;
-        b=MPLy/JTcMUbfTy/m9JqXoaUHHt+e83aIz03ymQl7bOrXt5LhmSHTdbzDYe6iPajiRo
-         4kUsL+ssjNlSr+VxIllI76bdMfts8Eaw+HjqrnulvAt/fFM2RO42tMY67tZHIrsG9OKW
-         ZUNbUqP7eFZKZR78AXYvKFhcW8tYOOVjh8O+VbNeOn79LLQQGDc+15vZnDeU2mXwMO9j
-         zkJ9QPGV3o9vAkKdTK8PHK3T9p4e8xaP1EJ5vOtNVJboBG5LQ8ajo0TismImFGfiC0DI
-         NyzgfdNEM+mf0qGJpyVehEGfZWhOTb6AxurxwBIx180IdQbm8W5NaqunKWjpL3j1aq5w
-         8kKg==
-X-Gm-Message-State: APjAAAUuz0+aiBV7w7tsgUiAlxhv0lFMINKgPeWpgvQOTwPrOG1jxVUc
-        DFEwxY4My7jTg2aaz64Et6RR2BE7
-X-Google-Smtp-Source: APXvYqyag6PPQfT7+x6ofkH7w6P6paES7VP6Wm61XxrDabaVQVUo7j2A4lOVwoTmjNVhlw0slPBRIg==
-X-Received: by 2002:a7b:c1d8:: with SMTP id a24mr16446761wmj.130.1576846526989;
-        Fri, 20 Dec 2019 04:55:26 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k16sm10148078wru.0.2019.12.20.04.55.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Dec 2019 04:55:26 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: rk3368-lion-haikou: remove identical &uart0 node
-Date:   Fri, 20 Dec 2019 13:55:20 +0100
-Message-Id: <20191220125520.29871-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 20 Dec 2019 08:09:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:50680 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727359AbfLTNJX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 08:09:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 445FB30E;
+        Fri, 20 Dec 2019 05:09:22 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B70A73F719;
+        Fri, 20 Dec 2019 05:09:21 -0800 (PST)
+Date:   Fri, 20 Dec 2019 13:09:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Pascal Paillet <p.paillet@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>, p.paillet@st.com,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: Convert stm32-pwr regulator to json-schema" to the regulator tree
+In-Reply-To: <20191205161359.20755-1-p.paillet@st.com>
+Message-Id: <applied-20191205161359.20755-1-p.paillet@st.com>
+X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove identical &uart0 node.
-Sort nodes in alphabetical order.
+The patch
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+   regulator: Convert stm32-pwr regulator to json-schema
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.6
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 130ac214294bcb5efc93229c7d10144c4992e90a Mon Sep 17 00:00:00 2001
+From: Pascal Paillet <p.paillet@st.com>
+Date: Thu, 5 Dec 2019 17:13:59 +0100
+Subject: [PATCH] regulator: Convert stm32-pwr regulator to json-schema
+
+Convert the stm32-pwr regulator binding to DT schema format using
+json-schema.
+
+Signed-off-by: Pascal Paillet <p.paillet@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20191205161359.20755-1-p.paillet@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../arm64/boot/dts/rockchip/rk3368-lion-haikou.dts | 76 ++++++++++------------
- 1 file changed, 35 insertions(+), 41 deletions(-)
+ .../regulator/st,stm32mp1-pwr-reg.txt         | 43 -------------
+ .../regulator/st,stm32mp1-pwr-reg.yaml        | 64 +++++++++++++++++++
+ 2 files changed, 64 insertions(+), 43 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-index 8251f3c0d..93601fe05 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-@@ -64,47 +64,6 @@
- 	};
- };
- 
--&sdmmc {
--	bus-width = <4>;
--	cap-mmc-highspeed;
--	cap-sd-highspeed;
--	cd-gpios = <&gpio2 RK_PB3 GPIO_ACTIVE_LOW>;
--	disable-wp;
--	max-frequency = <25000000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
--	rockchip,default-sample-phase = <90>;
--	vmmc-supply = <&vcc3v3_baseboard>;
--	status = "okay";
--};
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+deleted file mode 100644
+index e372dd3f0c8a..000000000000
+--- a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-STM32MP1 PWR Regulators
+------------------------
 -
--&spi2 {
--	cs-gpios = <0>, <&gpio2 RK_PC3 GPIO_ACTIVE_LOW>;
--	status = "okay";
--};
+-Available Regulators in STM32MP1 PWR block are:
+-  - reg11 for regulator 1V1
+-  - reg18 for regulator 1V8
+-  - usb33 for the swtich USB3V3
 -
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
--	status = "okay";
--};
+-Required properties:
+-- compatible: Must be "st,stm32mp1,pwr-reg"
+-- list of child nodes that specify the regulator reg11, reg18 or usb33
+-  initialization data for defined regulators. The definition for each of
+-  these nodes is defined using the standard binding for regulators found at
+-  Documentation/devicetree/bindings/regulator/regulator.txt.
+-- vdd-supply: phandle to the parent supply/regulator node for vdd input
+-- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for usb33
 -
--&usb_otg {
--	dr_mode = "otg";
--	status = "okay";
--};
+-Example:
 -
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
--	status = "okay";
--};
+-pwr_regulators: pwr@50001000 {
+-	compatible = "st,stm32mp1,pwr-reg";
+-	reg = <0x50001000 0x10>;
+-	vdd-supply = <&vdd>;
+-	vdd_3v3_usbfs-supply = <&vdd_usb>;
 -
--&uart1 {
--	/* alternate function of GPIO5/6 */
--	status = "disabled";
--};
+-	reg11: reg11 {
+-		regulator-name = "reg11";
+-		regulator-min-microvolt = <1100000>;
+-		regulator-max-microvolt = <1100000>;
+-	};
 -
- &pinctrl {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&haikou_pin_hog>;
-@@ -144,3 +103,38 @@
- 		};
- 	};
- };
+-	reg18: reg18 {
+-		regulator-name = "reg18";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-	};
+-
+-	usb33: usb33 {
+-		regulator-name = "usb33";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+new file mode 100644
+index 000000000000..8d8f38fe85dc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/st,stm32mp1-pwr-reg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	cd-gpios = <&gpio2 RK_PB3 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	max-frequency = <25000000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
-+	rockchip,default-sample-phase = <90>;
-+	vmmc-supply = <&vcc3v3_baseboard>;
-+	status = "okay";
-+};
++title: STM32MP1 PWR voltage regulators
 +
-+&spi2 {
-+	cs-gpios = <0>, <&gpio2 RK_PC3 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
++maintainers:
++  - Pascal Paillet <p.paillet@st.com>
 +
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+	status = "okay";
-+};
++properties:
++  compatible:
++    const: st,stm32mp1,pwr-reg
 +
-+&uart1 {
-+	/* alternate function of GPIO5/6 */
-+	status = "disabled";
-+};
++  reg:
++    maxItems: 1
 +
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
++  vdd-supply:
++    description: Input supply phandle(s) for vdd input
++
++  vdd_3v3_usbfs-supply:
++    description: Input supply phandle(s) for vdd_3v3_usbfs input
++
++patternProperties:
++  "^(reg11|reg18|usb33)$":
++    type: object
++
++    allOf:
++      - $ref: "regulator.yaml#"
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pwr@50001000 {
++      compatible = "st,stm32mp1,pwr-reg";
++      reg = <0x50001000 0x10>;
++      vdd-supply = <&vdd>;
++      vdd_3v3_usbfs-supply = <&vdd_usb>;
++
++      reg11 {
++        regulator-name = "reg11";
++        regulator-min-microvolt = <1100000>;
++        regulator-max-microvolt = <1100000>;
++      };
++
++      reg18 {
++        regulator-name = "reg18";
++        regulator-min-microvolt = <1800000>;
++        regulator-max-microvolt = <1800000>;
++      };
++
++      usb33 {
++        regulator-name = "usb33";
++        regulator-min-microvolt = <3300000>;
++        regulator-max-microvolt = <3300000>;
++      };
++    };
++...
 -- 
-2.11.0
+2.20.1
 
