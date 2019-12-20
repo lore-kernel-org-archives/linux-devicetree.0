@@ -2,154 +2,158 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD793C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90636C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938BE2082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrAkQMBU"
+	by mail.kernel.org (Postfix) with ESMTP id 5A14C2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576881902;
+	bh=v3aT8i1kmfUNSU54kS7vQUV8GP/eYzB/rE68T0MccPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h63j726gIO/O5FFEpmOZvgS+36PzraQSx8sAErR2qcw1ca9T8eJQeYMqRxHPO5eME
+	 T/oyV27ZXNoM9rm6XT3W/gh5a/BdKSUEZDhHmC9G0aKvCzO/l1spGWqql4onMU1uIz
+	 cOVUC+TLsFZpe9PCHdabjYYXITUldgopFM9oEdaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfLTWlw (ORCPT
+        id S1726389AbfLTWo6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:41:52 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38825 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726030AbfLTWlv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:41:51 -0500
-Received: by mail-ed1-f66.google.com with SMTP id i16so9925986edr.5;
-        Fri, 20 Dec 2019 14:41:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yIZnV50OUwepqjkr46AdLFR5nCFpfLqglWhqFqYw4CM=;
-        b=UrAkQMBUFc6/fwgxMQjwWmHGOLiG59B0StM/jqim+MeQq2YvM8yXiYv82zsOEK6IOc
-         ZSyBCZf5y7KqAr+Sk9Kj/Q7L5WhE8N/jfN5U6IlIHDMq1E2xc/fTtkssTH4OmnK+rE5v
-         kY7xojEqG/JsEfDWiLmnW3VL5G2+fIN9rzDqvl2I+ll5MPwxE8Nn6yhNbOmqAVjDaokQ
-         1TL7rxPI+K+447Leox3ZN2+b29zeP3qcw5X/7dDmi/Tf9BY6o57Tbg3cKCSKhLarKf//
-         YemkdJLd7bObxCuSR6g43lGEKYbn9v6mlPmAg3QRmapow73mht1Mmd+mOlxUbFx5fGJe
-         AZJA==
+        Fri, 20 Dec 2019 17:44:58 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39248 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfLTWo6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:44:58 -0500
+Received: by mail-io1-f68.google.com with SMTP id c16so9537103ioh.6;
+        Fri, 20 Dec 2019 14:44:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yIZnV50OUwepqjkr46AdLFR5nCFpfLqglWhqFqYw4CM=;
-        b=jvHCuDvAp61p+lDqjiZtz+3/Rq/zy0sXWVixZ+N5mv6k6Ho8W1DLSjjZYZi+FwyOKZ
-         TnTkbzCF1hi77R0zIDo5O+8ocmjK3eIK1+sTLTEOoD+jlVt3BxrIuJe5p6YaadAUuJkt
-         5+LjmWM9WfhrrDPO3pb2JNem/J7wPBQSvak09hdmeKc6oPnBgB1rD4zLnz2qxsm5S9tC
-         OmVTfYWEg6VZjh+ILOenc4XFbsXvcBymG71f1FtoKXKTZhQJOk3/Lg5ol3g5J+FlgO4h
-         hKV/K3vDYBuLt76cUXbsYT2iyuX5wnCU3PGKH5Ox6dAQY2ghWjilSJuwrrLtC7jHGbQe
-         ZChQ==
-X-Gm-Message-State: APjAAAUqv6Uff6rjuA8ztYP3gohfg/Y7xyQ0YTAWRXQGEH2/OjfIYS9u
-        X8ofeQv6Be/h8bjWIaxqLdo=
-X-Google-Smtp-Source: APXvYqwiIe7BOTSh69Cfj+gKpBjWcmYbqEBVeLwgkCc3RSPVb22D4OCyw4DPR2Jnq8eG54lDcbrRrA==
-X-Received: by 2002:a17:906:9511:: with SMTP id u17mr18637398ejx.13.1576881709262;
-        Fri, 20 Dec 2019 14:41:49 -0800 (PST)
-Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id d19sm531899ejd.21.2019.12.20.14.41.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2019 14:41:48 -0800 (PST)
-Subject: Re: [PATCH V7 net-next 09/11] net: mdio: of: Register discovered MII
- time stampers.
-To:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
-Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7WksmJcfldBGfJZrpiFcVuuuNcslqmFm7JaA1MXSRJw=;
+        b=WvV4M3SZMDzHl53cn3HF3nz3zDmc4Dtwj1+38BeOwH27LvVBnfbhYolB8FbLskxmlZ
+         qm1yRDarf0SGqod6ugjwLkPs8VFxsskG3jUtaqRIs74/8iB9dcQ9wJxeGFsO5Cp58vSx
+         KxGDFLCUnkoIeqsLtIQRlWSY3Z+vjZ5b+u0MkwNzY+L/PvoszZtIPjCPAzC8mR95gyDC
+         uFfYSKpWb4m4i8XRcen76F/9bBZv1A5DlOdWyQNIDq8NCiRXCuCeXxclUShGEw7o/NPc
+         D7n19KIL+ZLCNpDS6c4x58i9eIqtW7xH4Xw3NmJpS/L9puF4fswAbHqHAEEruY0wXI6p
+         41RA==
+X-Gm-Message-State: APjAAAXXqEAAHF6nmQTGRKnPrC1fa3wjn7uUpR7wPNrz09Y5zj3JCK1a
+        1+KAOjSl7UjBrOYDmlV23w==
+X-Google-Smtp-Source: APXvYqwtuXnxyLzSziWitzIzubl3H2AMh1E7q6ytM/gh5JGmnxiN9pRqFX6kE1zi5VLp9PQSEdPfJg==
+X-Received: by 2002:a02:a309:: with SMTP id q9mr14248125jai.141.1576881897182;
+        Fri, 20 Dec 2019 14:44:57 -0800 (PST)
+Received: from localhost ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id e85sm5472679ilk.78.2019.12.20.14.44.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 14:44:56 -0800 (PST)
+Date:   Fri, 20 Dec 2019 15:44:55 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     p.zabel@pengutronix.de, Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>, lee.jones@linaro.org,
         Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>, Rob Herring <robh@kernel.org>
-References: <cover.1576865315.git.richardcochran@gmail.com>
- <9af33891bfa5f3d4c42654228eabab2e3d39c259.1576865315.git.richardcochran@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <2651ffae-d3ea-d8fd-632a-79630c1a95ac@gmail.com>
-Date:   Fri, 20 Dec 2019 14:41:44 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>
+Subject: Re: [PATCH 1/3] dt-bindings: clocks: Convert Allwinner legacy clocks
+ to schemas
+Message-ID: <20191220224455.GA18967@bogus>
+References: <20191219090712.947490-1-maxime@cerno.tech>
 MIME-Version: 1.0
-In-Reply-To: <9af33891bfa5f3d4c42654228eabab2e3d39c259.1576865315.git.richardcochran@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219090712.947490-1-maxime@cerno.tech>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/20/19 10:15 AM, Richard Cochran wrote:
-> When parsing a PHY node, register its time stamper, if any, and attach
-> the instance to the PHY device.
+On Thu, 19 Dec 2019 10:07:10 +0100, Maxime Ripard wrote:
+> The Allwinner SoCs have a legacy set of bindings (and a framework to
+> support it in Linux) for their clock controllers.
 > 
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Now that we have the DT validation in place, let's split into separate file
+> and convert the device tree bindings for those clocks to schemas, and mark
+> them all as deprecated.
+> 
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  .../clock/allwinner,sun4i-a10-ahb-clk.yaml    | 108 +++++++++
+>  .../clock/allwinner,sun4i-a10-apb0-clk.yaml   |  50 ++++
+>  .../clock/allwinner,sun4i-a10-apb1-clk.yaml   |  52 ++++
+>  .../clock/allwinner,sun4i-a10-axi-clk.yaml    |  61 +++++
+>  .../clock/allwinner,sun4i-a10-cpu-clk.yaml    |  52 ++++
+>  .../allwinner,sun4i-a10-display-clk.yaml      |  57 +++++
+>  .../clock/allwinner,sun4i-a10-gates-clk.yaml  | 152 ++++++++++++
+>  .../clock/allwinner,sun4i-a10-mbus-clk.yaml   |  63 +++++
+>  .../clock/allwinner,sun4i-a10-mmc-clk.yaml    |  87 +++++++
+>  .../clock/allwinner,sun4i-a10-mod0-clk.yaml   |  80 +++++++
+>  .../clock/allwinner,sun4i-a10-mod1-clk.yaml   |  57 +++++
+>  .../clock/allwinner,sun4i-a10-osc-clk.yaml    |  51 ++++
+>  .../clock/allwinner,sun4i-a10-pll1-clk.yaml   |  71 ++++++
+>  .../clock/allwinner,sun4i-a10-pll3-clk.yaml   |  50 ++++
+>  .../clock/allwinner,sun4i-a10-pll5-clk.yaml   |  53 +++++
+>  .../clock/allwinner,sun4i-a10-pll6-clk.yaml   |  53 +++++
+>  .../allwinner,sun4i-a10-tcon-ch0-clk.yaml     |  77 ++++++
+>  .../clock/allwinner,sun4i-a10-usb-clk.yaml    | 166 +++++++++++++
+>  .../clock/allwinner,sun4i-a10-ve-clk.yaml     |  55 +++++
+>  .../clock/allwinner,sun5i-a13-ahb-clk.yaml    |  52 ++++
+>  .../clock/allwinner,sun6i-a31-pll6-clk.yaml   |  53 +++++
+>  .../clock/allwinner,sun7i-a20-gmac-clk.yaml   |  51 ++++
+>  .../clock/allwinner,sun7i-a20-out-clk.yaml    |  52 ++++
+>  .../allwinner,sun8i-h3-bus-gates-clk.yaml     | 103 ++++++++
+>  .../clock/allwinner,sun9i-a80-ahb-clk.yaml    |  52 ++++
+>  .../clock/allwinner,sun9i-a80-apb0-clk.yaml   |  63 +++++
+>  .../clock/allwinner,sun9i-a80-cpus-clk.yaml   |  52 ++++
+>  .../clock/allwinner,sun9i-a80-gt-clk.yaml     |  52 ++++
+>  .../allwinner,sun9i-a80-mmc-config-clk.yaml   |  68 ++++++
+>  .../clock/allwinner,sun9i-a80-pll4-clk.yaml   |  50 ++++
+>  .../allwinner,sun9i-a80-usb-mod-clk.yaml      |  60 +++++
+>  .../allwinner,sun9i-a80-usb-phy-clk.yaml      |  60 +++++
+>  .../devicetree/bindings/clock/sunxi.txt       | 225 ------------------
+>  33 files changed, 2163 insertions(+), 225 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ahb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-apb1-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-axi-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-cpu-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-display-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-gates-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mbus-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mmc-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-mod1-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-osc-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll1-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll3-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll5-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-pll6-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-tcon-ch0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-usb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ve-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun5i-a13-ahb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun6i-a31-pll6-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-gmac-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun7i-a20-out-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun8i-h3-bus-gates-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-ahb-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-apb0-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-cpus-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-gt-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-mmc-config-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-pll4-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-mod-clk.yaml
+>  create mode 100644 Documentation/devicetree/bindings/clock/allwinner,sun9i-a80-usb-phy-clk.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/clock/sunxi.txt
+> 
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Applied, thanks.
+
+Rob
