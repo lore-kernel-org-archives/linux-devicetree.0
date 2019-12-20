@@ -2,92 +2,209 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E53C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D183C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74A421D7E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C753B21D7E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ErlhKYuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfLTPve (ORCPT
+        id S1727412AbfLTPze (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:51:34 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:40432 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfLTPvd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 10:51:33 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c77so4312635oib.7;
-        Fri, 20 Dec 2019 07:51:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tulvWuO+lfC11OaHpbro2bnBMTva8CQZsIKaKyF21W0=;
-        b=UJwup9Bb3803MRbopQr7p+m07N32OBnvrYjf3nfv2bMTBfuZT4uGwPUXhSGYz7IDxy
-         mrDVj83hk2vcf3nHWlMe8+AxPjBhqQwyoFat83iwDDd7eZIXhJ/gepyoTSnjQIMB4vP1
-         ScpZE11mrJHHL7YyMP79KM3bqOpWkPoO8jaIt0fOYFbGiPr0H4s3zxuWQVJ5ixxLA1JT
-         vuWW374yedPCiNfFgpa5k7f84q0199vK8WRJyZrmupiZzSywly+saJCCnV5YhRAOIdjn
-         JLWeRqOTui3nAEhVPN5zc5Onl+pUJzRk27AVAsFSA0sU9DV3mv6XSmNGc0roe1zEaRo0
-         MVZw==
-X-Gm-Message-State: APjAAAVLBdsuh8zyW5nBUTKs0u+qo3uReb9CK6HtpX2c0xaMBuGNFLwx
-        5oSg53cLathP9KJwAuazTq68Dr7/2pmzhsjkew8=
-X-Google-Smtp-Source: APXvYqzchUhqLwQiMfXZKXZyP7v8fIN2PO8DqcEhtTUOkjyL7QPAh7bHF/N4b1oZe/fFPjGrc7KJChncR16AfjCVknA=
-X-Received: by 2002:a05:6808:292:: with SMTP id z18mr648668oic.131.1576857092572;
- Fri, 20 Dec 2019 07:51:32 -0800 (PST)
+        Fri, 20 Dec 2019 10:55:34 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45064 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfLTPze (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 10:55:34 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBKFtKAN029413;
+        Fri, 20 Dec 2019 09:55:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576857320;
+        bh=E0sjyG5zACA11UP2eDwLCxrK9I8pA8ivSVPD3zmgbcI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ErlhKYuP2Z+vgfQUlHzOsR/1KMIbnLmqPqGcdm4GnpIetF0BL53Aw0WJruzMETWRp
+         WX3Skd3JVJDVZ3PtbFYh+8hNWcTVHgjfeKDyju3m5xX6QOVaPUFQmPgddzr9xgoese
+         CNkXsAo604l26Q47Bpf4UARe8k7GmIu0OG8C05zw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBKFtKB9110082
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 20 Dec 2019 09:55:20 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 20
+ Dec 2019 09:55:19 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 20 Dec 2019 09:55:19 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBKFtEE0005603;
+        Fri, 20 Dec 2019 09:55:17 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <praneeth@ti.com>,
+        <yamonkar@cadence.com>, <sjakhade@cadence.com>, <sam@ravnborg.org>,
+        <robh+dt@kernel.org>, <maxime@cerno.tech>
+Subject: [PATCH v5 1/5] dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
+Date:   Fri, 20 Dec 2019 17:55:09 +0200
+Message-ID: <a89be75beefdc4e9ab5f194495b49f3538c9fc5e.1576857145.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1576857145.git.jsarha@ti.com>
+References: <cover.1576857145.git.jsarha@ti.com>
 MIME-Version: 1.0
-References: <20191213164115.3697-1-geert+renesas@glider.be> <506390662.44203.1576307324771@webmail.strato.com>
-In-Reply-To: <506390662.44203.1576307324771@webmail.strato.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 20 Dec 2019 16:51:21 +0100
-Message-ID: <CAMuHMdVfV1u_fWGSP7SyDDR4vCB2qVkibr0irtUMnSfoh=nGUg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] arm: dts: renesas: Group tuples in
- reg/ranges/dma-ranges/states properties
-To:     Ulrich Hecht <uli@fpond.eu>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Dec 14, 2019 at 8:08 AM Ulrich Hecht <uli@fpond.eu> wrote:
-> > On December 13, 2019 at 5:41 PM Geert Uytterhoeven <geert+renesas@glider.be> wrote:
-> > To improve human readability and enable automatic validation, tuples
-> > in various properties should be grouped.  While "make dtbs_check" does
-> > not impose this yet for all properties, it does for some, hence
-> > triggering me to fix (I hope) all of them.
-> >
-> > Unfortunately even after this, a few "... is too long" warnings are
-> > still printed (e.g. for PCI "ranges"), which I believe are false
-> > positives.
-> >
-> > This series is against renesas-devel-2019-12-13-v5.5-rc1[*] with
-> > "[PATCH] ARM: dts: rcar-gen2: Fix PCI high address in
-> > interrupt-map-mask" applied on top.
-> >
-> > Thanks for your comments!
->
-> For the whole series:
-> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Add dt-schema yaml bindig for K2G DSS, an ultra-light version of TI
+Keystone Display SubSystem.
 
-Thanks, queuing in renesas-devel for v5.6.
+Version history:
 
-Gr{oetje,eeting}s,
+v2: no change
 
-                        Geert
+v3: - Add ports node
+    - Add includes to dts example
+    - reindent dts example
 
+v4: - Add descriptions to reg and clocks properties
+    - Remove minItems when its value is the same as maxItems value
+    - Remove ports node
+
+v5: - itemize reg and clocks properties' descriptions
+
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ .../bindings/display/ti/ti,k2g-dss.yaml       | 109 ++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+new file mode 100644
+index 000000000000..532bb4794968
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/ti/ti,k2g-dss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments K2G Display Subsystem
++
++maintainers:
++  - Jyri Sarha <jsarha@ti.com>
++  - Tomi Valkeinen <tomi.valkeinen@ti.com>
++
++description: |
++  The K2G DSS is an ultra-light version of TI Keystone Display
++  SubSystem. It has only one output port and video plane. The
++  output is DPI.
++
++properties:
++  compatible:
++    const: ti,k2g-dss
++
++  reg:
++    items:
++      - description: cfg DSS top level
++      - description: common DISPC common
++      - description: VID1 video plane 1
++      - description: OVR1 overlay manager for vp1
++      - description: VP1 video port 1
++
++  reg-names:
++    items:
++      - const: cfg
++      - const: common
++      - const: vid1
++      - const: ovr1
++      - const: vp1
++
++  clocks:
++    items:
++      - description: fck DSS functional clock
++      - description: vp1 Video Port 1 pixel clock
++
++  clock-names:
++    items:
++      - const: fck
++      - const: vp1
++
++  interrupts:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++    description: phandle to the associated power domain
++
++  port:
++    type: object
++    description:
++      Port as described in Documentation/devictree/bindings/graph.txt.
++      The DSS DPI output port node
++
++  max-memory-bandwidth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Input memory (from main memory to dispc) bandwidth limit in
++      bytes per second
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    dss: dss@02540000 {
++            compatible = "ti,k2g-dss";
++            reg =   <0x02540000 0x400>,
++                    <0x02550000 0x1000>,
++                    <0x02557000 0x1000>,
++                    <0x0255a800 0x100>,
++                    <0x0255ac00 0x100>;
++            reg-names = "cfg", "common", "vid1", "ovr1", "vp1";
++            clocks =        <&k2g_clks 0x2 0>,
++                            <&k2g_clks 0x2 1>;
++            clock-names = "fck", "vp1";
++            interrupts = <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>;
++
++            power-domains = <&k2g_pds 0x2>;
++
++            max-memory-bandwidth = <230000000>;
++            ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    port@0 {
++                            dpi_out: endpoint {
++                                    remote-endpoint = <&sii9022_in>;
++                            };
++                    };
++            };
++    };
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
