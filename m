@@ -2,149 +2,121 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E07C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 06:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF7EC2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 06:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E285227BF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 06:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sZ9tz0G8"
+	by mail.kernel.org (Postfix) with ESMTP id 1BE4324685
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 06:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLTGDj (ORCPT
+        id S1725874AbfLTGdT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:03:39 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39375 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbfLTGDi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 01:03:38 -0500
-Received: by mail-pf1-f196.google.com with SMTP id q10so4611349pfs.6
-        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 22:03:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BJiMDheEc4Dz3SCcZDWv2TjUR9XTPMA9tJa+wASKwh4=;
-        b=sZ9tz0G8P50ktiBWQhBbmVsag2N/7gsuH3ZT/yz8TCooHKqs6eYpCEEPCQy90hKzCY
-         OMVYtEYSsKVxXYgsV0Ef/J3L/O4MTAJwPewN9BBKoQ8NypC09VDdOTSNVrbAgib5cjNg
-         tFBljfoPPhV3/bvu+0P4Bl+w+UoDY63+rDaPjqWVYmNFcyoJElSQjcPuyQntz68ybOYl
-         2AWHZDa1xc5TdeVE6U7Tdicv1oj41Gcj/tBv2U2bttv5KQGxyrBNZzudybJXycxRQw4U
-         VbhaSilaxKZZTO7/e+11dNOyr/Imnri3Qh1zruXEqniyCiC7Dqg9ChnNJ6pKU5Ixp9qz
-         ldZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BJiMDheEc4Dz3SCcZDWv2TjUR9XTPMA9tJa+wASKwh4=;
-        b=dKOfYU6h4qp/2yXPKcOTsfN5mwsJt8MoCasJMWvcr3nptb5A73NE+FgCGVxzEwdE6/
-         /Xv/QB3yslv3wvT5o5GZJtriv76qvXBYWuOI2EU9MGX6v+vn8QpD5EP+UG91IKO5tV1O
-         5LPpiQxZpK+v25AnSQjPXsGT5Lmw8Tfizp/1vmoktdJsKkkRHBEwE+I+blHaAi5GAV9L
-         eyJ+sD1opFrSGc/lJRn9Tx+Qokdla3YphyjUbzr9C93ahVVyYC/sqLEqSJtICeXrbkPk
-         7Y0GdAzA1x09N03RqQUGeHQB4UA+D7IkxPLc1uIdEVGjcmwcegTgkQbCUR9xZbm83Svy
-         879Q==
-X-Gm-Message-State: APjAAAVlLtgVOUqskjxkG3vL7HrDIuovcmt+QHW85EPpmw0xF90gK2rG
-        IujroV0vFTXCZUzSPprfYdbJJw==
-X-Google-Smtp-Source: APXvYqw43t5sI6xNXehAhi/tVfRpA0qQfBdsV+7R8+zdX08NvO7qcx0/6jalWLh6phHMfVSFk3NCDw==
-X-Received: by 2002:a63:e14b:: with SMTP id h11mr12661045pgk.297.1576821817879;
-        Thu, 19 Dec 2019 22:03:37 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l15sm8835710pjl.24.2019.12.19.22.03.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 22:03:37 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: qcom: msm8996: Use generic QMP driver for UFS
-Date:   Thu, 19 Dec 2019 22:03:04 -0800
-Message-Id: <20191220060304.1867795-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191220060304.1867795-1-bjorn.andersson@linaro.org>
-References: <20191220060304.1867795-1-bjorn.andersson@linaro.org>
+        Fri, 20 Dec 2019 01:33:19 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:57220 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfLTGdT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 01:33:19 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-5e-5dfc6b2c7575
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 32.E9.08102.C2B6CFD5; Fri, 20 Dec 2019 07:33:16 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Fri, 20 Dec 2019 07:33:12 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828
+ bindings
+Thread-Topic: [PATCH v7 02/12] dt-bindings: mfd: Document ROHM BD71828
+ bindings
+Thread-Index: AQHVtlEjPJdYWhzff0OqIDcPrX4s7KfBKG6AgABNp4CAAQs1gA==
+Date:   Fri, 20 Dec 2019 06:33:11 +0000
+Message-ID: <e734a11ed158814119256a3fac253a8574c90837.camel@fi.rohmeurope.com>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+         <702daeb9d8604e2feddd5f6f92b067a2d60d81ad.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+         <f9b0fbb7b898691d09ed8954e8df67cf3706aa96.camel@fi.rohmeurope.com>
+         <20191219143647.GQ18955@dell>
+In-Reply-To: <20191219143647.GQ18955@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1C16384D061ADF49AF9CC3E5ACD4B484@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TW0wUVxjumZmdOaCDwwJy3GpTpxgDKojh4ZhSNRp0+lCLaXxRNzjIyG5g
+        d8nsYqFGgzFaXazBlIZ25VLpgrig4iIoCK0hYLeoXKIgqKCrSINVCRFLEIKdYarwNN/83+1/
+        +A8k9QO0AZqtDkm2iuk8HUhdr5j0rlqZNmVc3Z+/DLu7uhn8/atyBo8VtVH4J/8gjUta2nU4
+        9+ZlHX5QW03hR29aAf737jEC50+dJfDoiQEdrimZAvhOQyGNa19cAPhG5V0al93rInBhmY/C
+        XW0JuL+tlcZHmloYPN1zidoQJlQVVwFhpPcIIxRX7RfqXf2M4PUcp4WHPY208GfvFUIoKJ4g
+        hIrKcUZ47f0kMXDHvPhk0bHvG3OqNWbd7nmmk6fPMxljwVm9nUE54GqwEwRAxMWhC2NvgRME
+        Qj3XDdD0HwWM9uMD6NaQk3YCCGkuHjn7GNUQysUit+8ZpWpIrhyiU4f7Z4gQLhH1dPopTbQN
+        +T0/Ag1vRG9uFc7MKW4Z+v3iDzoVs9xWdN7pmvHqOSeB7tfFqTiAi0KjnWWEigG3BB3PeTWD
+        SS4ceYfGddrWHHI3dpAaDkPDT6f/n/OoaULdASr6SHSxIUaDG1DH4EYtZSnKz/Uz2gbB6K9f
+        Bqk8sNA1p8A1a3bNml1zzK455l+BzgOQRTSnp4oOKTZaljKjZZvJonz22CxeoN3L2FXwrvnL
+        ZkBA0AwWQYIPY5O/njLqg5JtKdkm0W5KkjPTJXszQJDkQ9kHxyaMejZFzP5Okm3vqY8hxYez
+        y/2njHpO7UqTpAxJfs8uhpBH7JBJCQ2WpVQpa6853TFLEzBADQ80hNola4oki5kOU5J6HEl2
+        5TpUar7SK5kVO2vPEC3KVLO2gRUwb7iolIQtRWWlpJ6y2qySIZyNUJs4VWrKtH4oeg7CIeBD
+        2KNq0Hzl0XzIea5UEEoFjHyrVjjEWcqQA6oN69ZGnl7DX8t78vKsr71+nPzoN+u5Gsu72uVF
+        B7ulyd7Xa2tLeE/fePzCiIT1PuO9AgcTtylockdfVuWh7d/68OaBUnuE+0CKf9dX1WcqPv1i
+        ODtxm4cKe1nxz4JN23fGfFa35fM85ucRqWlJ4f3J1oTbNx+PYPeC8twtEVzr35uf8ZTdJMZG
+        kbJd/A/V97ob8QMAAA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With support for the MSM8996 UFS PHY added to the common QMP driver,
-migrate the DTS to use the common QMP binding.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- None
-
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 33 +++++++++++++++------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index b302d2451007..330a1e7cb7d8 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1323,27 +1323,30 @@ spmi_bus: qcom,spmi@400f000 {
- 			#interrupt-cells = <4>;
- 		};
- 
--		ufsphy: phy@627000 {
--			compatible = "qcom,msm8996-ufs-phy-qmp-14nm";
--			reg = <0x627000 0xda8>;
--			reg-names = "phy_mem";
--			#phy-cells = <0>;
-+		ufs_phy: phy@627000 {
-+			compatible = "qcom,msm8996-qmp-ufs-phy";
-+			reg = <0x00627000 0x1c4>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
- 
- 			vdda-phy-supply = <&pm8994_l28>;
- 			vdda-pll-supply = <&pm8994_l12>;
--
--			vdda-phy-max-microamp = <18380>;
--			vdda-pll-max-microamp = <9440>;
--
- 			vddp-ref-clk-supply = <&pm8994_l25>;
--			vddp-ref-clk-max-microamp = <100>;
--			vddp-ref-clk-always-on;
- 
--			clock-names = "ref_clk_src", "ref_clk";
--			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
--				 <&gcc GCC_UFS_CLKREF_CLK>;
-+			clocks = <&gcc GCC_UFS_CLKREF_CLK>;
-+			clock-names = "ref";
-+
- 			resets = <&ufshc 0>;
-+			reset-names = "ufsphy";
- 			status = "disabled";
-+
-+			ufs_phy_lane: lanes@627400 {
-+				reg = <0x627400 0x12c>,
-+				      <0x627600 0x200>,
-+				      <0x627c00 0x1b4>;
-+				#phy-cells = <0>;
-+			};
- 		};
- 
- 		ufshc: ufshc@624000 {
-@@ -1351,7 +1354,7 @@ ufshc: ufshc@624000 {
- 			reg = <0x624000 0x2500>;
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
- 
--			phys = <&ufsphy>;
-+			phys = <&ufs_phy_lane>;
- 			phy-names = "ufsphy";
- 
- 			vcc-supply = <&pm8994_l20>;
--- 
-2.24.0
-
+DQpPbiBUaHUsIDIwMTktMTItMTkgYXQgMTQ6MzYgKzAwMDAsIExlZSBKb25lcyB3cm90ZToNCj4g
+T24gVGh1LCAxOSBEZWMgMjAxOSwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToNCj4gDQo+ID4gSGVs
+bG8gTWFyaywgTGVlLCBSb2INCj4gPiANCj4gPiBJIGp1c3Qgbm90aWNlZCB3ZSBoYXZlIGEgZGVw
+ZW5kZW5jeSBoZXJlLiBUaGlzIGJpbmRpbmcgaXMgcmVmZXJyaW5nDQo+ID4gdG8NCj4gPiByZWd1
+bGF0b3IgYmluZGluZyAtIHdoaWNoIHdhcyBhcHBsaWVkIGJ5IE1hcmsgYW5kIGlzIHRodXMgbWlz
+c2luZw0KPiA+IGZyb20NCj4gPiB0aGUgc2VyaWVzLiBXaGF0J3MgdGhlIGJlc3Qgd2F5IGZvcndh
+cmQ/DQo+ID4gDQo+ID4gT24gVGh1LCAyMDE5LTEyLTE5IGF0IDExOjQ2ICswMjAwLCBNYXR0aSBW
+YWl0dGluZW4gd3JvdGU6DQo+ID4gPiBST0hNIEJENzE4MjggUG93ZXIgbWFuYWdlbWVudCBJQyBp
+bnRlZ3JhdGVzIDcgYnVjayBjb252ZXJ0ZXJzLCA3DQo+ID4gPiBMRE9zLA0KPiA+ID4gYSByZWFs
+LXRpbWUgY2xvY2sgKFJUQyksIDMgR1BPL3JlZ3VsYXRvciBjb250cm9sIHBpbnMsIEhBTEwgaW5w
+dXQNCj4gPiA+IGFuZCBhIDMyLjc2OCBrSHogY2xvY2sgZ2F0ZS4NCj4gPiA+IA0KPiA+ID4gRG9j
+dW1lbnQgdGhlIGR0IGJpbmRpbmdzIGRyaXZlcnMgYXJlIHVzaW5nLg0KPiA+ID4gDQo+ID4gPiBT
+aWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2htZXVy
+b3BlLmNvbQ0KPiA+ID4gPg0KPiA+ID4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
+cm5lbC5vcmc+DQo+ID4gPiAtLS0NCj4gPiA+IA0KPiA+ID4gTm8gY2hhbmdlcyBzaW5jZSB2Ng0K
+PiA+IA0KPiA+IC8vc25pcA0KPiA+IA0KPiA+ID4gKyAgcmVndWxhdG9yczoNCj4gPiA+ICsgICAg
+JHJlZjogLi4vcmVndWxhdG9yL3JvaG0sYmQ3MTgyOC1yZWd1bGF0b3IueWFtbA0KPiA+IA0KPiA+
+IFRoaXMgZmlsZSBpcyBtaXNzaW5nIGZyb20gdGhlIHNlcmllcyBhbmQgaXMgYXBwbGllZCB0byBN
+YXJrJ3MgdHJlZS4NCj4gDQo+IFNob3VsZG4ndCBtYXR0ZXIuICBJIGd1ZXNzIHRoZXkncmUgYWxs
+IGhlYWRpbmcgZm9yIGhlIHNhbWUgcmVsZWFzZS4NCj4gDQpPay4gVGhhbmtzIGZvciBjbGFyaWZp
+Y2F0aW9uLiBJIHdhcyBhc2tpbmcgdGhpcyBiZWNhdXNlIFJvYiBhc2tlZCBtZSB0bw0KcmVvcmRl
+ciB0aGUgcGF0Y2hlcyBhIGZldyB2ZXJzaW9ucyBhZ28gc28gdGhhdCB0aGUgZHRfYmluZGluZ19j
+aGVjaw0KTWFrZSB0YXJnZXQgd291bGQgbm90IGJlIGJyb2tlbiBiZXR3ZWVuIGNvbW1pdHMuIEhl
+IGFza2VkIG1lIHRvIHN1Ym1pdA0KdGhlIHJlZ3VsYXRvciBhbmQgTEVEIGJpbmRpbmdzIGZpcnN0
+IGFuZCBNRkQgKHdoaWNoIHJlZmVycyB0byB0aG9zZSkNCm9ubHkgYWZ0ZXIgdGhlbS4gVGh1cyBJ
+IHdhcyB3b25kZXJpbmcgaWYgdGhlIGZpbmFsIG1lcmdlIG9yZGVyIG9mIE1GRA0KYW5kIHJlZ3Vs
+YXRvciB0cmVlcyBpcyBzdWNoIHRoYXQgaXQgY2FuIHJlc3VsdCB0aGUgYnJlYWthZ2UgUm9iIGhv
+cGVkDQp0byBhdm9pZC4gQnV0IEkgYW0gbW9yZSB0aGFuIGdsYWQgaWYgdGhlIHNlcmllcyBjYW4g
+Z28gaW4gbGlrZSB0aGlzIDopDQoNClRoYW5rcyBhZ2FpbiBmb3IgYWxsIHRoZSBoZWxwIGd1eXMg
+OikNCg0KQnIsDQoJTWF0dGkgDQo=
