@@ -2,413 +2,276 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37371C2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 06:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7084C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8DD24683
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 06:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738082465E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 07:00:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Igilwne7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fgUzCoxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfLTGsz (ORCPT
+        id S1727167AbfLTHAF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 01:48:55 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:24496 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727165AbfLTGsq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 01:48:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1576824526; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=yULheCYr7BEWVuEb+PpqfaBCeDGdS/D1AVjQ5r5rUZ4=; b=Igilwne7C0tpm58opd5MM25OP6U+Z4Aae46IDezkWi/D+T41dPvnfBg0r33WSvxTDMZ5PMB4
- /eHRnjLWSMfvIqp3+9Hd1/oXvhYNTojWt2wGyTImKJbki8yVEliGSXuF+VsETDwaUG/5mIik
- Fl5Bu8C9eHkz1GOLU2wiTHUpPJQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5dfc6ec8.7f6b56a81f10-smtp-out-n03;
- Fri, 20 Dec 2019 06:48:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9E9D5C447A0; Fri, 20 Dec 2019 06:48:40 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D778AC447A2;
-        Fri, 20 Dec 2019 06:48:35 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D778AC447A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org, swboyd@chromium.org
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, dianders@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 1/2] dt-bindings: power: rpmpd: Convert rpmpd bindings to yaml
-Date:   Fri, 20 Dec 2019 12:18:22 +0530
-Message-Id: <20191220064823.6115-2-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20191220064823.6115-1-sibis@codeaurora.org>
-References: <20191220064823.6115-1-sibis@codeaurora.org>
+        Fri, 20 Dec 2019 02:00:05 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37758 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbfLTHAF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 02:00:05 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so3693010plz.4
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 23:00:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fC3JoLkbnwXvlpi7t/a7WSOC0sr7d5AZj1xh2J+UQWc=;
+        b=fgUzCoxZIrK8T+zhBZBxenZpkETpNWuij5YvgiDRqexvZ6DuCnw1A5aHv48ouQ77ib
+         CtIfZpOF1PzVz0Ozn9aVjnmio8aK2cITR3+NmlKwRzHxk3SV/A4tUMcWEKWON5GHCFCV
+         xBCpkJb17a3FBh88qlrJmml4whEOSaX4p4BxufL66ZLSqT2Cjy5aLgp5so+es+pM6Duu
+         VPEKZOxMj5VnJllBsku7+B26djfOC4Qx+xfNGAp5l+ZQGmEVsie1Fd1WEZFHYCjVYPOT
+         Qi+DwE7kqGOpvV6VIxgnQPRa6Rchh/wS6XogUPvc3JpRVNMShUwgK9VdXy7g6gqRqSjP
+         3oWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fC3JoLkbnwXvlpi7t/a7WSOC0sr7d5AZj1xh2J+UQWc=;
+        b=bqcl2pVUV/m9LSwNJ273Y6kCbiydq3HP+ODharvzvgvl8ZDXWQRQxHHzyx7PKKWoX6
+         cO/a57CY8rJSRPPbEiLkUw1NqFoCTy1XjCPgBcEQ7MLGf7YyUajQNTe67Y0s5RMjYlcK
+         Qcs+dT1hXsLhrxqo/6qavLeK9hGiaJLmxDEKbC0oKI4Zug3RLLH1Q6URAnqksY+muYTB
+         RjIrUx/YMl+/coGZmZRFph0xQYTiIhRFWM2t23z/HORSsG7VGIRVYL8S8jr4Mec9VU3X
+         jiOYQP9dxQj0mfULFU93JKcMdwHjZpCvWylfR2wVEo9ScXpUOnEM52D+hHJwmeH1bpaK
+         QjJQ==
+X-Gm-Message-State: APjAAAXd63XYklFN/RusS1nrow3QPNlbt5bjEecR0jbmv6mkUUJFSMcW
+        6S+on7LJ1efnqwwO4rLzvAutzw==
+X-Google-Smtp-Source: APXvYqyvF8WqOEnDOKkQl2mto0QI+sqGXOJYxmZaqRoa8Klu1NtQWWmTfOdd/Szh3Agx5Dhifxokrw==
+X-Received: by 2002:a17:90a:2467:: with SMTP id h94mr6695795pje.79.1576825204473;
+        Thu, 19 Dec 2019 23:00:04 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v4sm11046290pgo.63.2019.12.19.23.00.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 23:00:03 -0800 (PST)
+Date:   Thu, 19 Dec 2019 22:59:54 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     jhugo@codeaurora.org, robh+dt@kernel.org, ohad@wizery.com,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org
+Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: msm8998: Add ADSP, MPSS and
+ SLPI nodes
+Message-ID: <20191220065954.GA1908628@ripper>
+References: <20191218132217.28141-1-sibis@codeaurora.org>
+ <20191218132217.28141-6-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191218132217.28141-6-sibis@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert RPM/RPMH power-domain bindings to yaml.
+On Wed 18 Dec 05:22 PST 2019, Sibi Sankar wrote:
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- .../devicetree/bindings/power/qcom,rpmpd.txt  | 150 ----------------
- .../devicetree/bindings/power/qcom,rpmpd.yaml | 170 ++++++++++++++++++
- 2 files changed, 170 insertions(+), 150 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
- create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+> This patch adds ADSP, MPSS and SLPI nodes for MSM8998 SoCs.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi |   8 ++
+>  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 124 ++++++++++++++++++++++
+>  2 files changed, 132 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> index 6db3f9e0344d1..e87094665c52c 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+> @@ -312,6 +312,14 @@
+>  	};
+>  };
+>  
+> +&remoteproc_adsp {
+> +	status = "okay";
+> +};
+> +
+> +&remoteproc_slpi {
+> +	status = "okay";
+> +};
+> +
+>  &tlmm {
+>  	gpio-reserved-ranges = <0 4>, <81 4>;
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> index 8d799e868a5d3..014127700afb0 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> @@ -1075,6 +1075,61 @@
+>  			#interrupt-cells = <0x2>;
+>  		};
+>  
+> +		remoteproc_mss: remoteproc@4080000 {
+> +			compatible = "qcom,msm8998-mss-pil";
+> +			reg = <0x04080000 0x100>, <0x04180000 0x20>;
+> +			reg-names = "qdsp6", "rmb";
+> +
+> +			interrupts-extended =
+> +				<&intc GIC_SPI 448 IRQ_TYPE_EDGE_RISING>,
+> +				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
+> +				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready",
+> +					  "handover", "stop-ack",
+> +					  "shutdown-ack";
+> +
+> +			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
+> +				 <&gcc GCC_BIMC_MSS_Q6_AXI_CLK>,
+> +				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
+> +				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
+> +				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
+> +				 <&gcc GCC_MSS_MNOC_BIMC_AXI_CLK>,
+> +				 <&rpmcc RPM_SMD_QDSS_CLK>,
+> +				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
 
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-deleted file mode 100644
-index 6346d00b1b400..0000000000000
---- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-+++ /dev/null
-@@ -1,150 +0,0 @@
--Qualcomm RPM/RPMh Power domains
--
--For RPM/RPMh Power domains, we communicate a performance state to RPM/RPMh
--which then translates it into a corresponding voltage on a rail
--
--Required Properties:
-- - compatible: Should be one of the following
--	* qcom,msm8976-rpmpd: RPM Power domain for the msm8976 family of SoC
--	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
--	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of SoC
--	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
--	* qcom,sc7180-rpmhpd: RPMh Power domain for the sc7180 family of SoC
--	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
--	* qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of SoC
-- - #power-domain-cells: number of cells in Power domain specifier
--	must be 1.
-- - operating-points-v2: Phandle to the OPP table for the Power domain.
--	Refer to Documentation/devicetree/bindings/power/power_domain.txt
--	and Documentation/devicetree/bindings/opp/opp.txt for more details
--
--Refer to <dt-bindings/power/qcom-rpmpd.h> for the level values for
--various OPPs for different platforms as well as Power domain indexes
--
--Example: rpmh power domain controller and OPP table
--
--#include <dt-bindings/power/qcom-rpmhpd.h>
--
--opp-level values specified in the OPP tables for RPMh power domains
--should use the RPMH_REGULATOR_LEVEL_* constants from
--<dt-bindings/power/qcom-rpmhpd.h>
--
--	rpmhpd: power-controller {
--		compatible = "qcom,sdm845-rpmhpd";
--		#power-domain-cells = <1>;
--		operating-points-v2 = <&rpmhpd_opp_table>;
--
--		rpmhpd_opp_table: opp-table {
--			compatible = "operating-points-v2";
--
--			rpmhpd_opp_ret: opp1 {
--				opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
--			};
--
--			rpmhpd_opp_min_svs: opp2 {
--				opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
--			};
--
--			rpmhpd_opp_low_svs: opp3 {
--				opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
--			};
--
--			rpmhpd_opp_svs: opp4 {
--				opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
--			};
--
--			rpmhpd_opp_svs_l1: opp5 {
--				opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
--			};
--
--			rpmhpd_opp_nom: opp6 {
--				opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
--			};
--
--			rpmhpd_opp_nom_l1: opp7 {
--				opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
--			};
--
--			rpmhpd_opp_nom_l2: opp8 {
--				opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
--			};
--
--			rpmhpd_opp_turbo: opp9 {
--				opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
--			};
--
--			rpmhpd_opp_turbo_l1: opp10 {
--				opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
--			};
--		};
--	};
--
--Example: rpm power domain controller and OPP table
--
--	rpmpd: power-controller {
--		compatible = "qcom,msm8996-rpmpd";
--		#power-domain-cells = <1>;
--		operating-points-v2 = <&rpmpd_opp_table>;
--
--		rpmpd_opp_table: opp-table {
--			compatible = "operating-points-v2";
--
--			rpmpd_opp_low: opp1 {
--				opp-level = <1>;
--			};
--
--			rpmpd_opp_ret: opp2 {
--				opp-level = <2>;
--			};
--
--			rpmpd_opp_svs: opp3 {
--				opp-level = <3>;
--			};
--
--			rpmpd_opp_normal: opp4 {
--				opp-level = <4>;
--			};
--
--			rpmpd_opp_high: opp5 {
--				opp-level = <5>;
--			};
--
--			rpmpd_opp_turbo: opp6 {
--				opp-level = <6>;
--			};
--		};
--	};
--
--Example: Client/Consumer device using OPP table
--
--	leaky-device0@12350000 {
--		compatible = "foo,i-leak-current";
--		reg = <0x12350000 0x1000>;
--		power-domains = <&rpmhpd SDM845_MX>;
--		operating-points-v2 = <&leaky_opp_table>;
--	};
--
--
--	leaky_opp_table: opp-table {
--		compatible = "operating-points-v2";
--
--		opp1 {
--			opp-hz = /bits/ 64 <144000>;
--			required-opps = <&rpmhpd_opp_low>;
--		};
--
--		opp2 {
--			opp-hz = /bits/ 64 <400000>;
--			required-opps = <&rpmhpd_opp_ret>;
--		};
--
--		opp3 {
--			opp-hz = /bits/ 64 <20000000>;
--			required-opps = <&rpmpd_opp_svs>;
--		};
--
--		opp4 {
--			opp-hz = /bits/ 64 <25000000>;
--			required-opps = <&rpmpd_opp_normal>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-new file mode 100644
-index 0000000000000..ba605310abeb8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
-@@ -0,0 +1,170 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/power/qcom,rpmpd.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm RPM/RPMh Power domains
-+
-+maintainers:
-+  - Rajendra Nayak <rnayak@codeaurora.org>
-+
-+description:
-+  For RPM/RPMh Power domains, we communicate a performance state to RPM/RPMh
-+  which then translates it into a corresponding voltage on a rail.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,msm8976-rpmpd
-+      - qcom,msm8996-rpmpd
-+      - qcom,msm8998-rpmpd
-+      - qcom,qcs404-rpmpd
-+      - qcom,sc7180-rpmhpd
-+      - qcom,sdm845-rpmhpd
-+      - qcom,sm8150-rpmhpd
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  operating-points-v2: true
-+
-+  opp-table:
-+    type: object
-+
-+required:
-+  - compatible
-+  - '#power-domain-cells'
-+  - operating-points-v2
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+
-+    // Example 1 (rpmh power domain controller and OPP table):
-+
-+    #include <dt-bindings/power/qcom-rpmpd.h>
-+
-+    rpmhpd: power-controller {
-+      compatible = "qcom,sdm845-rpmhpd";
-+      #power-domain-cells = <1>;
-+      operating-points-v2 = <&rpmhpd_opp_table>;
-+
-+      rpmhpd_opp_table: opp-table {
-+        compatible = "operating-points-v2";
-+
-+        rpmhpd_opp_ret: opp1 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-+        };
-+
-+        rpmhpd_opp_min_svs: opp2 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+        };
-+
-+        rpmhpd_opp_low_svs: opp3 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+        };
-+
-+        rpmhpd_opp_svs: opp4 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+        };
-+
-+        rpmhpd_opp_svs_l1: opp5 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+        };
-+
-+        rpmhpd_opp_nom: opp6 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+        };
-+
-+        rpmhpd_opp_nom_l1: opp7 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+        };
-+
-+        rpmhpd_opp_nom_l2: opp8 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-+        };
-+
-+        rpmhpd_opp_turbo: opp9 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+        };
-+
-+        rpmhpd_opp_turbo_l1: opp10 {
-+          opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-+        };
-+      };
-+    };
-+
-+  - |
-+
-+    // Example 2 (rpm power domain controller and OPP table):
-+
-+    rpmpd: power-controller {
-+      compatible = "qcom,msm8996-rpmpd";
-+      #power-domain-cells = <1>;
-+      operating-points-v2 = <&rpmpd_opp_table>;
-+
-+      rpmpd_opp_table: opp-table {
-+        compatible = "operating-points-v2";
-+
-+        rpmpd_opp_low: opp1 {
-+          opp-level = <1>;
-+        };
-+
-+        rpmpd_opp_ret: opp2 {
-+          opp-level = <2>;
-+        };
-+
-+        rpmpd_opp_svs: opp3 {
-+          opp-level = <3>;
-+        };
-+
-+        rpmpd_opp_normal: opp4 {
-+          opp-level = <4>;
-+        };
-+
-+        rpmpd_opp_high: opp5 {
-+          opp-level = <5>;
-+        };
-+
-+        rpmpd_opp_turbo: opp6 {
-+          opp-level = <6>;
-+        };
-+      };
-+    };
-+
-+  - |
-+
-+    // Example 3 (Client/Consumer device using OPP table):
-+
-+    leaky-device0@12350000 {
-+      compatible = "foo,i-leak-current";
-+      reg = <0x12350000 0x1000>;
-+      power-domains = <&rpmhpd 0>;
-+      operating-points-v2 = <&leaky_opp_table>;
-+    };
-+
-+    leaky_opp_table: opp-table {
-+      compatible = "operating-points-v2";
-+      opp1 {
-+        opp-hz = /bits/ 64 <144000>;
-+        required-opps = <&rpmhpd_opp_low>;
-+      };
-+
-+      opp2 {
-+        opp-hz = /bits/ 64 <400000>;
-+        required-opps = <&rpmhpd_opp_ret>;
-+      };
-+
-+      opp3 {
-+        opp-hz = /bits/ 64 <20000000>;
-+        required-opps = <&rpmpd_opp_svs>;
-+      };
-+
-+      opp4 {
-+        opp-hz = /bits/ 64 <25000000>;
-+        required-opps = <&rpmpd_opp_normal>;
-+      };
-+    };
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+RPM_SMD_XO_CLK_SRC doesn't seem to be implemented...
+
+I did pull in a patch from Jeff that defines it, but when I boot the
+modem I see the following error repeatedly:
+
+[  616.632227] qcom-q6v5-mss 4080000.remoteproc: fatal error received: dog_hb.c:266:DOG_HB detects starvation of task 0xda172640, triage with its own
+
+
+
+All the qrtr services seems registered nicely, so the remote does come
+up before it goes down.
+
+Also, adsp comes up nicely.
+
+Regards,
+Bjorn
+
+> +			clock-names = "iface", "bus", "mem", "gpll0_mss",
+> +				      "snoc_axi", "mnoc_axi", "qdss", "xo";
+> +
+> +			qcom,smem-states = <&modem_smp2p_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			resets = <&gcc GCC_MSS_RESTART>;
+> +			reset-names = "mss_restart";
+> +
+> +			qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
+> +
+> +			power-domains = <&rpmpd MSM8998_VDDCX>,
+> +					<&rpmpd MSM8998_VDDMX>;
+> +			power-domain-names = "cx", "mx";
+> +
+> +			mba {
+> +				memory-region = <&mba_mem>;
+> +			};
+> +
+> +			mpss {
+> +				memory-region = <&mpss_mem>;
+> +			};
+> +
+> +			glink-edge {
+> +				interrupts = <GIC_SPI 452 IRQ_TYPE_EDGE_RISING>;
+> +				label = "modem";
+> +				qcom,remote-pid = <1>;
+> +				mboxes = <&apcs_glb 15>;
+> +			};
+> +		};
+> +
+>  		gpucc: clock-controller@5065000 {
+>  			compatible = "qcom,msm8998-gpucc";
+>  			#clock-cells = <1>;
+> @@ -1088,6 +1143,42 @@
+>  				      "gpll0";
+>  		};
+>  
+> +		remoteproc_slpi: remoteproc@5800000 {
+> +			compatible = "qcom,msm8998-slpi-pas";
+> +			reg = <0x05800000 0x4040>;
+> +
+> +			interrupts-extended = <&intc GIC_SPI 390 IRQ_TYPE_EDGE_RISING>,
+> +					      <&slpi_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&slpi_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +					      <&slpi_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +					      <&slpi_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready",
+> +					  "handover", "stop-ack";
+> +
+> +			px-supply = <&vreg_lvs2a_1p8>;
+> +
+> +			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+> +				 <&rpmcc RPM_SMD_AGGR2_NOC_CLK>;
+> +			clock-names = "xo", "aggre2";
+> +
+> +			memory-region = <&slpi_mem>;
+> +
+> +			qcom,smem-states = <&slpi_smp2p_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			power-domains = <&rpmpd MSM8998_SSCCX>;
+> +			power-domain-names = "ssc_cx";
+> +
+> +			status = "disabled";
+> +
+> +			glink-edge {
+> +				interrupts = <GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
+> +				label = "dsps";
+> +				qcom,remote-pid = <3>;
+> +				mboxes = <&apcs_glb 27>;
+> +			};
+> +		};
+> +
+>  		stm: stm@6002000 {
+>  			compatible = "arm,coresight-stm", "arm,primecell";
+>  			reg = <0x06002000 0x1000>,
+> @@ -1880,6 +1971,39 @@
+>  			#size-cells = <0>;
+>  		};
+>  
+> +		remoteproc_adsp: remoteproc@17300000 {
+> +			compatible = "qcom,msm8998-adsp-pas";
+> +			reg = <0x17300000 0x4040>;
+> +
+> +			interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
+> +					      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +					      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +					      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +					      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready",
+> +					  "handover", "stop-ack";
+> +
+> +			clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>;
+> +			clock-names = "xo";
+> +
+> +			memory-region = <&adsp_mem>;
+> +
+> +			qcom,smem-states = <&adsp_smp2p_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			power-domains = <&rpmpd MSM8998_VDDCX>;
+> +			power-domain-names = "cx";
+> +
+> +			status = "disabled";
+> +
+> +			glink-edge {
+> +				interrupts = <GIC_SPI 157 IRQ_TYPE_EDGE_RISING>;
+> +				label = "lpass";
+> +				qcom,remote-pid = <2>;
+> +				mboxes = <&apcs_glb 9>;
+> +			};
+> +		};
+> +
+>  		apcs_glb: mailbox@17911000 {
+>  			compatible = "qcom,msm8998-apcs-hmss-global";
+>  			reg = <0x17911000 0x1000>;
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
