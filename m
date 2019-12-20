@@ -2,102 +2,218 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C883C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7143BC2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6C4222C2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576800064;
-	bh=YSxFiz0PchVKuc7L2Gj89RDgVqtUUuac8sdiWqu/6FE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RpLnQfqBOedakQRuJjjiLAVuTJmVrbS45pLHgG6VSfLF8rouFFtjjtC3BowgqmEgU
-	 BT762Qrl1SskkRVx3yvzJ7t8pclHKgnbKPQRcRRt4/iPNj1aQKg0D5MJQk9wL5zuYy
-	 UdXfhMVuLBvaPg4BcowOKeLxuZikZxxUnNuV4ftw=
+	by mail.kernel.org (Postfix) with ESMTP id 3538124683
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aS3dL6dt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfLTABD (ORCPT
+        id S1727177AbfLTASG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:01:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37091 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfLTABD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 19:01:03 -0500
-Received: by mail-ot1-f66.google.com with SMTP id k14so9407305otn.4;
-        Thu, 19 Dec 2019 16:01:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ixxxBsIzEckZyMKz6FP9blKKJXoRngv5HsAGvReLZD4=;
-        b=rkyHf9VrnzV+dTlmOUUaZNDYE2iWXwyf7a4/0fizOECKxqGYrP+RnJr4+lAaKBIMBH
-         PC95pumHpWeG3jVzepJ7EKCcFX9ZgH03a4BkvOqg97fV/+q2U4g8W4DjlTORD5vKmh8d
-         5/vflJRjtwcMBs/Cxj9Ic6KAYJZ9DvHzbw9B3mQDsFAizm+McprG3RL/x+kS2Bjss24c
-         xAEJIsTbXc8Z25+3WJzgg49FYghI8jcPDaJFGPng40M560POo7F4Dw2xtJFyKKrmqmma
-         NgGrORfZjEx17f35HbYarjbj/iPFGEGJlUJLgbFNaIdSXdEPjPxELAAkc37NVdGXUzpa
-         weCQ==
-X-Gm-Message-State: APjAAAXOXxSRyGUkULx8rdt0WTDaI8z6VDASGVMgUpKfHyaAEOFU9Jnq
-        eZu+AFIP79u677En67c2jQ==
-X-Google-Smtp-Source: APXvYqzEJwtRPN0UXZ/xR2ptdwnUmxXBKOPtOTRVoyqaKCSz+7WnsyzpWFMgdicP0Vvzr157+uUKXg==
-X-Received: by 2002:a9d:6a5a:: with SMTP id h26mr11893681otn.103.1576800062626;
-        Thu, 19 Dec 2019 16:01:02 -0800 (PST)
-Received: from localhost (ip-184-205-174-147.ftwttx.spcsdns.net. [184.205.174.147])
-        by smtp.gmail.com with ESMTPSA id l128sm2541590oif.55.2019.12.19.16.01.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Dec 2019 16:01:02 -0800 (PST)
-Date:   Thu, 19 Dec 2019 18:01:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     openipmi-developer@lists.sourceforge.net, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, haiyue.wang@linux.intel.com,
-        minyard@acm.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        robh+dt@kernel.org, joel@jms.id.au,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: ipmi: aspeed: Introduce a v2 binding
- for KCS
-Message-ID: <20191220000101.GA16104@bogus>
-References: <cover.fe20dfec1a7c91771c6bb574814ffb4bb49e2136.1576462051.git-series.andrew@aj.id.au>
- <8aec8994bbe1186d257b0a712e13cf914c5ebe35.1576462051.git-series.andrew@aj.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8aec8994bbe1186d257b0a712e13cf914c5ebe35.1576462051.git-series.andrew@aj.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 19 Dec 2019 19:18:06 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:50834 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfLTASG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 19:18:06 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191220001803epoutp01d87c18d4384b088be914214d41befcd4~h7Dss8EdW2163421634epoutp01N
+        for <devicetree@vger.kernel.org>; Fri, 20 Dec 2019 00:18:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191220001803epoutp01d87c18d4384b088be914214d41befcd4~h7Dss8EdW2163421634epoutp01N
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576801083;
+        bh=xSkjfrpCKtZLu3yXna9MHxvv/MLQoXPvCufUjXVdDao=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aS3dL6dtP842ovIcgPRHQEy21dcAXpToG3IwaGnRDmktv3WFMLdWvYCrSbMnmrCHQ
+         hyfwjbNL69ysIL7+AwMFmwLLbilhjBnR3ccJKa0kNkMqyZD/e77GxgQfJBrgmOj8Fj
+         N2Y4wpONhun1FpK9kMAH5N17ekLphFpyUuNkWGtk=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191220001802epcas1p41ec9253a90fa075931ada26a5625468c~h7DsMY6OL0539105391epcas1p4a;
+        Fri, 20 Dec 2019 00:18:02 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47f8Th3ZNfzMqYkp; Fri, 20 Dec
+        2019 00:18:00 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.E5.57028.8331CFD5; Fri, 20 Dec 2019 09:18:00 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191220001800epcas1p3accefc4384d9503481311f25f5794cb8~h7DpoID1u1379413794epcas1p3J;
+        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191220001800epsmtrp2b28a72fc38cf21fe5fd87af2ff76222f~h7DpnRz820512905129epsmtrp2Y;
+        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
+X-AuditID: b6c32a35-4f3ff7000001dec4-16-5dfc13381ed3
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        23.7C.06569.8331CFD5; Fri, 20 Dec 2019 09:18:00 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191220001759epsmtip10394decb60eec4a2af165514065cfb39~h7Dpborb-2227322273epsmtip1n;
+        Fri, 20 Dec 2019 00:17:59 +0000 (GMT)
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     robh+dt@kernel.org, krzk@kernel.org, heiko@sntech.de,
+        leonard.crestez@nxp.com, lukasz.luba@arm.com
+Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org, cw00.choi@samsung.com,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: [PATCH v2 07/11] PM / devfreq: exynos-bus: Replace the deprecated
+ 'devfreq' and 'devfreq-events' property
+Date:   Fri, 20 Dec 2019 09:24:26 +0900
+Message-Id: <20191220002430.11995-8-cw00.choi@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191220002430.11995-1-cw00.choi@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFJsWRmVeSWpSXmKPExsWy7bCmvq6F8J9Yg1dNshb357UyWlz/8pzV
+        Yv6Rc6wW/x+9ZrXof/ya2eL8+Q3sFmeb3rBbrLj7kdVi0+NrrBaXd81hs/jce4TR4tOD/8wW
+        M87vY7JY2NTCbrH2yF12i6XXLzJZ3G5cwWbRuvcIu4OQx5p5axg9Nq3qZPPYvKTeY+O7HUwe
+        fVtWMXpsvzaP2ePzJrkA9qhsm4zUxJTUIoXUvOT8lMy8dFsl7+B453hTMwNDXUNLC3MlhbzE
+        3FRbJRefAF23zBygN5QUyhJzSoFCAYnFxUr6djZF+aUlqQoZ+cUltkqpBSk5BZYFesWJucWl
+        eel6yfm5VoYGBkamQIUJ2RmbGhaxFLRIVNzYOJ2pgXGvcBcjJ4eEgInE7ec/2LsYuTiEBHYw
+        Snz5c4sJwvnEKLH7VAczhPONUaL57082mJb7W1dBtexllHi5cwUjSEJI4AujxIkHjiA2m4CW
+        xP4XN8AaRAQyJGa+vswK0sAs8JFJomvbXbCEsECJxL/TnSwgNouAqsSa22/ABvEKWElcPPmR
+        FWKbvMTqDQeYQWxOAWuJLc8egm2WEGhml3i/7TNQMweQ4yJx7KcDRL2wxKvjW9ghbCmJz+/2
+        Ql1dLbHy5BE2iN4ORokt+y9ALTCW2L90MhPIHGYBTYn1u/QhwooSO3/PBbuHWYBP4t3XHlaI
+        VbwSHW1CECXKEpcf3GWCsCUlFrd3Qq3ykDh3qQ8aQH2MEk/3drFNYJSbhbBhASPjKkax1ILi
+        3PTUYsMCQ+Qo28QITqdapjsYp5zzOcQowMGoxMPrkPY7Vog1say4MvcQowQHs5II7+2On7FC
+        vCmJlVWpRfnxRaU5qcWHGE2BITmRWUo0OR+Y6vNK4g1NjYyNjS1MDM1MDQ2VxHk5flyMFRJI
+        TyxJzU5NLUgtgulj4uCUamAsqTmr1R4dqLl1ulVh5MdSj1z2O1P8lplx1+qfK46qNn8VIXk7
+        sFbeSP+DcZh0adqfVw8yuZ6yufq4ltXsFOhY+ESW23TVrMvPfXy1+G2iTxu37r/wYeun3qVT
+        2q9rL9inK1j8v/Hd+SZbprrpXs0vNVSfH9JiNVy15nHVp5XmjF4GK29mqSmxFGckGmoxFxUn
+        AgD31qlbvQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMLMWRmVeSWpSXmKPExsWy7bCSnK6F8J9Yg/OH2Czuz2tltLj+5Tmr
+        xfwj51gt/j96zWrR//g1s8X58xvYLc42vWG3WHH3I6vFpsfXWC0u75rDZvG59wijxacH/5kt
+        Zpzfx2SxsKmF3WLtkbvsFkuvX2SyuN24gs2ide8RdgchjzXz1jB6bFrVyeaxeUm9x8Z3O5g8
+        +rasYvTYfm0es8fnTXIB7FFcNimpOZllqUX6dglcGZsaFrEUtEhU3Ng4namBca9wFyMnh4SA
+        icT9ravYQWwhgd2MEnsOpkPEJSWmXTzK3MXIAWQLSxw+XNzFyAVU8olRYtWn04wgNWwCWhL7
+        X9xgA7FFBPIkNm38ygxSxCzwn0ni+8kHYEXCAkUSk78fZAKxWQRUJdbcfgMW5xWwkrh48iMr
+        xDJ5idUbDjCD2JwC1hJbnj2EOshK4uX5C6wTGPkWMDKsYpRMLSjOTc8tNiwwykst1ytOzC0u
+        zUvXS87P3cQIDnotrR2MJ07EH2IU4GBU4uF1SPsdK8SaWFZcmXuIUYKDWUmE93bHz1gh3pTE
+        yqrUovz4otKc1OJDjNIcLErivPL5xyKFBNITS1KzU1MLUotgskwcnFINjE1XPefeu8N0Ryb0
+        u/Wj3R3NR4+oiOoJyIS1+71f+fXsjizDgKl9B8zWqKR37uNJZz9lMuWlzzGN2GTzpvZ5UxN0
+        9nptMPk2+5PnmwsNpSv3X10V1tyyK/sYq2/Llvt2rrcO/3wRovUxflJn0aULXzPfmeZtSzG7
+        dpT1l+ns93vsVM33TBK5aazEUpyRaKjFXFScCADBJIQvdgIAAA==
+X-CMS-MailID: 20191220001800epcas1p3accefc4384d9503481311f25f5794cb8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191220001800epcas1p3accefc4384d9503481311f25f5794cb8
+References: <20191220002430.11995-1-cw00.choi@samsung.com>
+        <CGME20191220001800epcas1p3accefc4384d9503481311f25f5794cb8@epcas1p3.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 16 Dec 2019 12:57:40 +1030, Andrew Jeffery wrote:
-> The v2 binding utilises reg and renames some of the v1 properties.
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
-> v2: Rename slave-reg to aspeed,lpc-io-reg
-> 
-> Rob: After our discussion about the name of 'slave-reg' on v1 I've thought
-> about it some more and have landed on aspeed,lpc-io-reg. In v1 I argued that
-> the name should be generic and you suggested that if so it should go in a
-> generic binding document - I've thought about this some more and concluded that
-> it was hard to pin down exactly where it should be documented if it were
-> generic (the generic ASPEED LPC binding is one place, but that would suggest
-> that the property is still ASPEED-specific; maybe some discussion with
-> Nuvoton might give some insight).
-> 
-> Regardless, it turns out that the address specification is really
-> ASPEED-specific in this case: The KCS host interface in the LPC IO space
-> consists of a data and status register, but the slave controller infers the
-> address of the second from the address of the first and thus only the address
-> of the first can be programmed on the BMC-side. ASPEED supply documentation
-> that maps the LPC-side register layout for given LPC IO base addresses. I think
-> this is esoteric enough to warrant the aspeed prefix.
-> 
->  Documentation/devicetree/bindings/ipmi/aspeed-kcs-bmc.txt | 20 +++++---
->  1 file changed, 14 insertions(+), 6 deletions(-)
-> 
+Replace the deprecated 'devfreq' and 'devfreq-events' property
+with new following properties.
+- 'devfreq' is changed to 'exynos,parent-bus' property
+- 'devfreq-events' is changed to 'exynos,ppmu-device' property
+But, to guarantee the backward-compatibility, keep the support
+both 'devfreq' and 'devfreq-events' property.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ drivers/devfreq/exynos-bus.c | 52 +++++++++++++++++++++++++-----------
+ 1 file changed, 37 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+index c4931ef53f15..9fdb188915e8 100644
+--- a/drivers/devfreq/exynos-bus.c
++++ b/drivers/devfreq/exynos-bus.c
+@@ -88,22 +88,35 @@ static int exynos_bus_get_event(struct exynos_bus *bus,
+ 
+ static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
+ {
+-	struct device_node *node = of_parse_phandle(np, "devfreq", 0);
+-
+-	if (!node)
+-		return ERR_PTR(-ENODEV);
+-
++	struct device_node *node = of_parse_phandle(np, "exynos,parent-bus", 0);
++
++	if (!node) {
++		/*
++		 * Check the deprecated 'devfreq' property
++		 * to support backward-compatibility.
++		 */
++		node = of_parse_phandle(np, "devfreq", 0);
++		if (!node)
++			return ERR_PTR(-ENODEV);
++	}
+ 	return devfreq_get_devfreq_by_node(node);
+ }
+ 
+ static struct devfreq_event_dev *exynos_bus_get_edev(struct device_node *np,
+ 							int index)
+ {
+-	struct device_node *node = of_parse_phandle(np, "devfreq-events",
+-							index);
+-
+-	if (!node)
+-		return ERR_PTR(-ENODEV);
++	struct device_node *node = of_parse_phandle(np,
++					"exynos,ppmu-device", index);
++
++	if (!node) {
++		/*
++		 * Check the deprecated 'devfreq-events' property
++		 * to support backward-compatibility.
++		 */
++		node = of_parse_phandle(np, "devfreq-events", index);
++		if (!node)
++			return ERR_PTR(-ENODEV);
++	}
+ 	return devfreq_event_get_edev_by_node(node);
+ }
+ 
+@@ -214,11 +227,20 @@ static int exynos_bus_parent_parse_of(struct device_node *np,
+ 	 * buses. This raw data will be used in devfreq ondemand governor.
+ 	 */
+ 	count = of_property_count_elems_of_size(dev->of_node,
+-					"devfreq-events", sizeof(u32));
++					"exynos,ppmu-device", sizeof(u32));
+ 	if (count < 0) {
+-		dev_err(dev, "failed to get the count of devfreq-event dev\n");
+-		ret = count;
+-		goto err_regulator;
++		/*
++		 * Check the deprecated 'devfreq-events' property
++		 * to support backward-compatibility.
++		 */
++		count = of_property_count_elems_of_size(dev->of_node,
++					"devfreq-events", sizeof(u32));
++		if (count < 0) {
++			dev_err(dev,
++				"failed to get the count of devfreq-event dev\n");
++			ret = count;
++			goto err_regulator;
++		}
+ 	}
+ 	bus->edev_count = count;
+ 
+@@ -423,7 +445,7 @@ static int exynos_bus_probe(struct platform_device *pdev)
+ 	if (!profile)
+ 		return -ENOMEM;
+ 
+-	node = of_parse_phandle(dev->of_node, "devfreq", 0);
++	node = of_parse_phandle(dev->of_node, "exynos,parent-bus", 0);
+ 	if (node) {
+ 		of_node_put(node);
+ 		passive = true;
+-- 
+2.17.1
+
