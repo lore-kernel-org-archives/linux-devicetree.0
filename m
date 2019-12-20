@@ -5,59 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3779C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD793C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE9E2082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 938BE2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:41:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsgsM+pW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrAkQMBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfLTWiO (ORCPT
+        id S1726594AbfLTWlw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:38:14 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45317 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfLTWiO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:38:14 -0500
-Received: by mail-ed1-f68.google.com with SMTP id v28so9898701edw.12;
-        Fri, 20 Dec 2019 14:38:12 -0800 (PST)
+        Fri, 20 Dec 2019 17:41:52 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38825 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726030AbfLTWlv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:41:51 -0500
+Received: by mail-ed1-f66.google.com with SMTP id i16so9925986edr.5;
+        Fri, 20 Dec 2019 14:41:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2r49eAQhNoJzMCqJX37cFxPO2nRvAF4I0bdhxB6haiE=;
-        b=SsgsM+pW0a2X+bwWiccj6NqxYQNmuX0nXyx0/tAEDJiokX56o6oXCN10LTJx7FbrsZ
-         vufTKpbm/Dd/Nkf+DlE4LYmRQwM1NBx9XVtNfTT5WrmiK2J630mnjDXeIE+eHU3ge94+
-         MUsLHkL2i4m94sA6TgY+dg6gINT3+198pJRafhWd8p/bfPKdAAb6iEKBubwSQ4fI6c7l
-         hjwtZHoI+Xr7Xtl3Db2QZ8mw8ZHVfmt8NLA2+Q2Lg8RP+5HJ9B3QgU9Oe6gLb18rYpxF
-         vjNZwkO14DMtkjLfwcZyPyFEFqJlc42DslWwo0+OLLaP7FYOoxan10GYWNAM2k8KOw8c
-         bKtg==
+        bh=yIZnV50OUwepqjkr46AdLFR5nCFpfLqglWhqFqYw4CM=;
+        b=UrAkQMBUFc6/fwgxMQjwWmHGOLiG59B0StM/jqim+MeQq2YvM8yXiYv82zsOEK6IOc
+         ZSyBCZf5y7KqAr+Sk9Kj/Q7L5WhE8N/jfN5U6IlIHDMq1E2xc/fTtkssTH4OmnK+rE5v
+         kY7xojEqG/JsEfDWiLmnW3VL5G2+fIN9rzDqvl2I+ll5MPwxE8Nn6yhNbOmqAVjDaokQ
+         1TL7rxPI+K+447Leox3ZN2+b29zeP3qcw5X/7dDmi/Tf9BY6o57Tbg3cKCSKhLarKf//
+         YemkdJLd7bObxCuSR6g43lGEKYbn9v6mlPmAg3QRmapow73mht1Mmd+mOlxUbFx5fGJe
+         AZJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=2r49eAQhNoJzMCqJX37cFxPO2nRvAF4I0bdhxB6haiE=;
-        b=XEoeLcVhtadGABAEadT23ELZ3Jcs3kkwzzDORXVsh01/FB7RYh5SLEMjGHnAPGfQrR
-         9f3BeoQlbZgnEi1UVKj26AblDHNZdhWOHngczTE4+yyl5NA4rbRFIGrLhO7RtX6lcwxz
-         1WrCYYMpkqTiwh5B22gd7yhOdsD9qRUQmkoheddakiW31UcLH1Np0Aw0zvc4Fp/QoTtk
-         JDo2M0vlPCrlWAXYdR1VHy87F8VbiDbyfCUMeqwEcc4fujP4ZfAWUcODUqeMp28x2wjU
-         lSNb/R1Sf0vLsw6271aaHPh2oXokXXk+d4Bv6+erd/HzxzUd1tIe+kfYu4b41opSccEh
-         iqXA==
-X-Gm-Message-State: APjAAAUTZg1vkleOfQwbzIYgspTT4KSreTA5i20n/LXDW6oqT551TvNw
-        jlJQ+KqvqaczfmyrRrEozL8=
-X-Google-Smtp-Source: APXvYqy3c+3leSp65flqQxVh+lceaAHZC7JmpcebSWutEQwVawMecBkEd7TJ0C8NSNVnT3BCZvNLGQ==
-X-Received: by 2002:a50:cd11:: with SMTP id z17mr18825721edi.178.1576881491349;
-        Fri, 20 Dec 2019 14:38:11 -0800 (PST)
+        bh=yIZnV50OUwepqjkr46AdLFR5nCFpfLqglWhqFqYw4CM=;
+        b=jvHCuDvAp61p+lDqjiZtz+3/Rq/zy0sXWVixZ+N5mv6k6Ho8W1DLSjjZYZi+FwyOKZ
+         TnTkbzCF1hi77R0zIDo5O+8ocmjK3eIK1+sTLTEOoD+jlVt3BxrIuJe5p6YaadAUuJkt
+         5+LjmWM9WfhrrDPO3pb2JNem/J7wPBQSvak09hdmeKc6oPnBgB1rD4zLnz2qxsm5S9tC
+         OmVTfYWEg6VZjh+ILOenc4XFbsXvcBymG71f1FtoKXKTZhQJOk3/Lg5ol3g5J+FlgO4h
+         hKV/K3vDYBuLt76cUXbsYT2iyuX5wnCU3PGKH5Ox6dAQY2ghWjilSJuwrrLtC7jHGbQe
+         ZChQ==
+X-Gm-Message-State: APjAAAUqv6Uff6rjuA8ztYP3gohfg/Y7xyQ0YTAWRXQGEH2/OjfIYS9u
+        X8ofeQv6Be/h8bjWIaxqLdo=
+X-Google-Smtp-Source: APXvYqwiIe7BOTSh69Cfj+gKpBjWcmYbqEBVeLwgkCc3RSPVb22D4OCyw4DPR2Jnq8eG54lDcbrRrA==
+X-Received: by 2002:a17:906:9511:: with SMTP id u17mr18637398ejx.13.1576881709262;
+        Fri, 20 Dec 2019 14:41:49 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id cb20sm1143063edb.1.2019.12.20.14.38.08
+        by smtp.googlemail.com with ESMTPSA id d19sm531899ejd.21.2019.12.20.14.41.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Dec 2019 14:38:10 -0800 (PST)
-Subject: Re: [PATCH V7 net-next 05/11] net: netcp_ethss: Use the PHY time
- stamping interface.
+        Fri, 20 Dec 2019 14:41:48 -0800 (PST)
+Subject: Re: [PATCH V7 net-next 09/11] net: mdio: of: Register discovered MII
+ time stampers.
 To:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
 Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
         Andrew Lunn <andrew@lunn.ch>,
@@ -69,9 +70,9 @@ Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
         Murali Karicheri <m-karicheri2@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
+        Wingman Kwok <w-kwok2@ti.com>, Rob Herring <robh@kernel.org>
 References: <cover.1576865315.git.richardcochran@gmail.com>
- <2ccbb4b81949214c34053da6b1462947f33ec450.1576865315.git.richardcochran@gmail.com>
+ <9af33891bfa5f3d4c42654228eabab2e3d39c259.1576865315.git.richardcochran@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -127,12 +128,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <fd36f4fd-2a70-255e-c177-a8f0df65b3b4@gmail.com>
-Date:   Fri, 20 Dec 2019 14:38:06 -0800
+Message-ID: <2651ffae-d3ea-d8fd-632a-79630c1a95ac@gmail.com>
+Date:   Fri, 20 Dec 2019 14:41:44 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <2ccbb4b81949214c34053da6b1462947f33ec450.1576865315.git.richardcochran@gmail.com>
+In-Reply-To: <9af33891bfa5f3d4c42654228eabab2e3d39c259.1576865315.git.richardcochran@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -142,13 +143,12 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 12/20/19 10:15 AM, Richard Cochran wrote:
-> The netcp_ethss driver tests fields of the phy_device in order to
-> determine whether to defer to the PHY's time stamping functionality.
-> This patch replaces the open coded logic with an invocation of the
-> proper methods.
+> When parsing a PHY node, register its time stamper, if any, and attach
+> the instance to the PHY device.
 > 
 > Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
