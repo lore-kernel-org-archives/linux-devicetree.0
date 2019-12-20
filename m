@@ -2,79 +2,172 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E289C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 16:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5345C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 16:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F77B20665
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 16:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FF220716
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 16:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3SUifF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfLTQte (ORCPT
+        id S1727381AbfLTQw7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 11:49:34 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:56797 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727233AbfLTQtd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 11:49:33 -0500
-X-Originating-IP: 90.65.102.129
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 51A222000B;
-        Fri, 20 Dec 2019 16:49:31 +0000 (UTC)
-Date:   Fri, 20 Dec 2019 17:49:31 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        devicetree@vger.kernel.org,
-        =?iso-8859-1?Q?K=E9vin?= RAYMOND <k.raymond@overkiz.com>,
-        Mickael GARDET <m.gardet@overkiz.com>
-Subject: Re: [PATCH v6 2/2] ARM: dts: at91: add smartkiz support and a common
- kizboxmini dtsi file
-Message-ID: <20191220164931.GE895367@piout.net>
-References: <20191220103835.160154-1-kamel.bouhara@bootlin.com>
- <20191220103835.160154-2-kamel.bouhara@bootlin.com>
+        Fri, 20 Dec 2019 11:52:59 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42089 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbfLTQw7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 11:52:59 -0500
+Received: by mail-io1-f68.google.com with SMTP id n11so3320432iom.9;
+        Fri, 20 Dec 2019 08:52:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ndHzsNMeOrrxjTjbncU3QaDZ3rrlbXY6z57guIALSrc=;
+        b=O3SUifF2KdavJEOmR+c7IFeapv5LO67FDptELAjawFJpV/ZRMjaJWbp7dOEflCzZiN
+         Mww++8bwxW6qsJ6LwMGjWWagaDaZFgft1At9n2MvBZfYhSScJR9Liit/tFx54+3tlYGg
+         ePHQAZSXAbIJRsBVJY+P7erLP7q6nWmnO9ffttbDfi+GxvlwrpGPkiIrQ9sJ8KapdM05
+         PLcdbDTmbyhPAWoPKpz9FYrTNNLUa+VtIYpkKsN4fr0sj9bzcTvjnmLSsjTOW9lZqj8L
+         YhLByHoVecmF0sMsvGlk480DrR5mmOIIfel+PjGahuSgh8UFXef55BK4y0bgVCESZs6k
+         N0gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ndHzsNMeOrrxjTjbncU3QaDZ3rrlbXY6z57guIALSrc=;
+        b=rXcjv+5jv41thqFttHApIEf4hviDx0heMEk/CMWUikE8g+nK39rSZna2jOIbtbs7pu
+         dcz/ovlwLcPbamYfo+GOhDYaGM+YEzSzN/cKj7VPBJ+i5tollv91PrsIJqAWKww13UZF
+         gM+QtgSNWemjfbEonTCio9n/TxSThBjV0ICBTtctefQXjfaK3HetQFp9nua320KqZ2+Z
+         cPk0yBnpKO3v4bxWGnr5R7EI4SFBhbFtxJuGaf/1qCJ2CEjhsIkniKSEYgfIemNx4aA8
+         NmfkMWL7SMc1x4TVKyuBXByjL1pYigl0rsReNGHDNHBAGD7IRxV7ErnW/gQ/jcMnSQYJ
+         IfoA==
+X-Gm-Message-State: APjAAAU3SUj0jzGmi7LB4LH8rMMxksKjmXOFA/LiVVBfDhvPFNL005bP
+        +hV4ZXXtXdrVqYqEvXK+mokN8T4br0vsfSrLuTY=
+X-Google-Smtp-Source: APXvYqw3N9lze1UCJupGScpsgHgYH4lkik2+KjpGxrR1N9odwIYIxfVR708G/MdkSwn23Y2DsEnLB/OXCx5b+qSFM6Y=
+X-Received: by 2002:a02:3409:: with SMTP id x9mr12957487jae.3.1576860778063;
+ Fri, 20 Dec 2019 08:52:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191220103835.160154-2-kamel.bouhara@bootlin.com>
+References: <20190612093915.18973-1-p.zabel@pengutronix.de>
+ <20190612093915.18973-9-p.zabel@pengutronix.de> <20190709142555.GA14360@bogus>
+In-Reply-To: <20190709142555.GA14360@bogus>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Fri, 20 Dec 2019 10:52:41 -0600
+Message-ID: <CAHCN7xJCGu1-XzJkqgxeMAbdSbBrVbeRC=nysHmUCQZ_Myf-qA@mail.gmail.com>
+Subject: Re: [PATCH v5 08/10] media: dt-bindings: Document i.MX8MQ and i.MX8MM
+ VPU bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        devicetree <devicetree@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20/12/2019 11:38:35+0100, Kamel Bouhara wrote:
-> Split the existing Kizbox Mini boards into three board configuration,
-> the base board, the mother board and the RailDIN board.
-> Add a new dts file for the SmartKiz board support.
-> 
-> Signed-off-by: Kévin RAYMOND <k.raymond@overkiz.com>
-> Signed-off-by: Mickael GARDET <m.gardet@overkiz.com>
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> ---
->  arch/arm/boot/dts/Makefile                    |   5 +-
->  arch/arm/boot/dts/at91-kizboxmini-base.dts    |  24 +++
->  ...oxmini.dts => at91-kizboxmini-common.dtsi} | 163 +++++++++---------
->  arch/arm/boot/dts/at91-kizboxmini-mb.dts      |  26 +++
->  arch/arm/boot/dts/at91-kizboxmini-rd.dts      |  49 ++++++
->  arch/arm/boot/dts/at91-smartkiz.dts           | 109 ++++++++++++
->  6 files changed, 293 insertions(+), 83 deletions(-)
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-base.dts
->  rename arch/arm/boot/dts/{at91-kizboxmini.dts => at91-kizboxmini-common.dtsi} (51%)
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
->  create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
->  create mode 100644 arch/arm/boot/dts/at91-smartkiz.dts
-> 
-Applied, thanks.
+On Tue, Jul 9, 2019 at 9:26 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Jun 12, 2019 at 11:39:13AM +0200, Philipp Zabel wrote:
+> > Add devicetree binding documentation for the Hantro G1/G2 VPU on i.MX8MQ
+> > and for the Hantro G1/G2/H1 VPU on i.MX8MM.
+> >
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Are there any updates to this?  It would be nice to have the VPU
+working in the mainline, but it seems to have stalled.
+
+adam
+> > ---
+> >  .../devicetree/bindings/media/imx8m-vpu.txt   | 56 +++++++++++++++++++
+> >  1 file changed, 56 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/imx8m-vpu.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/imx8m-vpu.txt b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
+> > new file mode 100644
+> > index 000000000000..659bd28dd002
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/imx8m-vpu.txt
+> > @@ -0,0 +1,56 @@
+> > +device-tree bindings for Hantro G1/G2/H1 VPU codecs implemented on i.MX8M SoCs
+> > +
+> > +Required properties:
+> > +- compatible: value should be one of the following
+> > +             "nxp,imx8mq-vpu",
+> > +             "nxp,imx8mm-vpu";
+> > +- regs: VPU core and control block register ranges
+> > +- reg-names: should be
+> > +             "g1", "g2", "ctrl" on i.MX8MQ,
+> > +             "g1", "g2", "h1", "ctrl" on i.MX8MM.
+>
+> Would be nicer to put h1 at the end, so the indexes don't change.
+>
+> > +- interrupts: encoding and decoding interrupt specifiers
+> > +- interrupt-names: should be
+> > +             "g1", "g2" on i.MX8MQ,
+> > +             "g1", "g2", "h1" on i.MX8MM.
+> > +- clocks: phandle to VPU core clocks and bus clock
+> > +- clock-names: should be
+> > +             "g1", "g2", "bus" on i.MX8MQ,
+> > +             "g1", "g2", "h1", "bus" on i.MX8MM.
+>
+> Here too.
+>
+> > +- power-domains: phandle to power domain node
+> > +
+> > +Examples:
+> > +
+> > +     vpu: vpu@38300000 {
+>
+> video-codec@...
+>
+> > +             compatible = "nxp,imx8mq-vpu";
+> > +             reg = <0x38300000 0x10000>,
+> > +                   <0x38310000 0x10000>,
+> > +                   <0x38320000 0x10000>;
+> > +             reg-names = "g1", "g2", "ctrl";
+> > +             interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> > +             interrupt-names = "g1", "g2";
+> > +             clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
+> > +                      <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
+> > +                      <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+> > +             clock-names = "g1", "g2", "bus";
+> > +             power-domains = <&pgc_vpu>;
+> > +     };
+> > +
+> > +     vpu: vpu@38300000 {
+>
+> Are 2 examples really necessary?
+>
+> > +             compatible = "nxp,imx8mm-vpu";
+> > +             reg = <0x38300000 0x10000>,
+> > +                   <0x38310000 0x10000>,
+> > +                   <0x38320000 0x10000>;
+> > +                   <0x38330000 0x10000>;
+> > +             reg-names = "g1", "g2", "h1", "ctrl";
+> > +             interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> > +                          <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > +             interrupt-names = "g1", "g2", "h1";
+> > +             clocks = <&clk IMX8MQ_CLK_VPU_G1_ROOT>,
+> > +                      <&clk IMX8MQ_CLK_VPU_G2_ROOT>,
+> > +                      <&clk IMX8MQ_CLK_VPU_H1_ROOT>,
+> > +                      <&clk IMX8MQ_CLK_VPU_DEC_ROOT>;
+> > +             clock-names = "g1", "g2", "h1", "bus";
+> > +             power-domains = <&pgc_vpu>;
+> > +     };
+> > --
+> > 2.20.1
+> >
