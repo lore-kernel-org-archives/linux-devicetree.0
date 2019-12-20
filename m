@@ -2,181 +2,114 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB272C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9433FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B7F24676
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B23124680
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 00:40:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="spuF/qFn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IiSA+8Zu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfLTASG (ORCPT
+        id S1727006AbfLTAk0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 19:18:06 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:38169 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfLTASG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 19:18:06 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191220001803epoutp045f9593694a4911a4db3a42c0b2dc303c~h7Ds8MKBP1437414374epoutp04j
-        for <devicetree@vger.kernel.org>; Fri, 20 Dec 2019 00:18:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191220001803epoutp045f9593694a4911a4db3a42c0b2dc303c~h7Ds8MKBP1437414374epoutp04j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576801083;
-        bh=S+iTTR7YS56dzyI55r8/lhpfBKHxzbzpg0qwtASqaDg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=spuF/qFnEcsFKkL4i9DY26+FYV4fc21IbuNkcMLfCLhy3aLiKmEaZFhj5MSbq7T+L
-         03R/2kvU0zMhRzx9Xul/3DTcpY9kWQNPD72Ip/qSIBx9vjvyOQhjN5mz4pPwj1feD/
-         wLRCHsid3W1vh1bDuty0q33bIXcBYIlgE9aRd63M=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191220001803epcas1p43f2eb2446fe864510345a0fa0a138ca4~h7DsfHLvQ2970029700epcas1p4z;
-        Fri, 20 Dec 2019 00:18:03 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47f8Th5XLDzMqYm8; Fri, 20 Dec
-        2019 00:18:00 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        13.14.48498.8331CFD5; Fri, 20 Dec 2019 09:18:00 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191220001800epcas1p41ab059757aeec99060cb4f47b0f48ac0~h7Dp5LzNI0539105391epcas1p4U;
-        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191220001800epsmtrp2deff76c71f1dd044df080b04b8107e70~h7Dp4bFky0512905129epsmtrp2a;
-        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
-X-AuditID: b6c32a36-a3dff7000001bd72-5d-5dfc1338b9b5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        94.7C.06569.8331CFD5; Fri, 20 Dec 2019 09:18:00 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191220001800epsmtip19396ebe23f3620ccf806f2f8f6f02b22~h7DpskC3_1958919589epsmtip1Q;
-        Fri, 20 Dec 2019 00:18:00 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     robh+dt@kernel.org, krzk@kernel.org, heiko@sntech.de,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com
-Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org, cw00.choi@samsung.com,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 09/11] memory: samsung: exynos5422-dmc: Replace the
- deprecated 'devfreq-events' property
-Date:   Fri, 20 Dec 2019 09:24:28 +0900
-Message-Id: <20191220002430.11995-10-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191220002430.11995-1-cw00.choi@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOJsWRmVeSWpSXmKPExsWy7bCmnq6F8J9Yg5UntC3uz2tltLj+5Tmr
-        xfwj51gt/j96zWrR//g1s8X58xvYLc42vWG3WHH3I6vFpsfXWC0u75rDZvG59wijxacH/5kt
-        Zpzfx2SxsKmF3WLtkbvsFkuvX2SyuN24gs2ide8RdgchjzXz1jB6bFrVyeaxeUm9x8Z3O5g8
-        +rasYvTYfm0es8fnTXIB7FHZNhmpiSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJ
-        uam2Si4+AbpumTlAbygplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCiwL9IoTc4tL
-        89L1kvNzrQwNDIxMgQoTsjPutaxlKZgmWDHrwmH2BsaFfF2MnBwSAiYSMz9uY+xi5OIQEtjB
-        KDGlaxs7SEJI4BOjxKXpcV2MHED2N0aJbSww9Utbv7FA1O9llJj17z1U8xdGiX3fLrOCVLEJ
-        aEnsf3GDDcQWEciQmPkaJM7FwSzwkUmia9tdNpCpwgK5Ej0bDEFqWARUJVpm72YGsXkFrCUu
-        /17ACrFNXmL1hgNgcU6g+JZnD9lB5kgINLNLtH7uYYIocpF4u2QDVIOwxKvjW9ghbCmJz+/2
-        skHY1RIrTx5hg2juYJTYsv8CVIOxxP6lk5lADmIW0JRYv0sfIqwosfP3XEYQm1mAT+Ld1x5W
-        kBIJAV6JjjYhiBJlicsP7kKdICmxuL0TapWHxJ1Xc1kggdjHKLHmtcAERrlZCAsWMDKuYhRL
-        LSjOTU8tNiwwQo6vTYzgRKpltoNx0TmfQ4wCHIxKPLwOab9jhVgTy4orcw8xSnAwK4nw3u74
-        GSvEm5JYWZValB9fVJqTWnyI0RQYkhOZpUST84FJPq8k3tDUyNjY2MLE0MzU0FBJnJfjx8VY
-        IYH0xJLU7NTUgtQimD4mDk6pBsYpW6/6H+CUdenkEto9Y/HWwBdPL90LeZpkINSQUGeqvMZW
-        aKdH68GdGe9nd7mqvmBQNqiTLhXo17GdI/dI951PfOuMtpkJ+bbyrZzxSYsSORPzD5q/ftv+
-        etuk5I+9n1MypN1cdpVOzqhNakhtlbXovZG1UrpOp8e1+s6TPT36IpkSH78pKbEUZyQaajEX
-        FScCAK/aE+O6AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSnK6F8J9Yg+WtEhb357UyWlz/8pzV
-        Yv6Rc6wW/x+9ZrXof/ya2eL8+Q3sFmeb3rBbrLj7kdVi0+NrrBaXd81hs/jce4TR4tOD/8wW
-        M87vY7JY2NTCbrH2yF12i6XXLzJZ3G5cwWbRuvcIu4OQx5p5axg9Nq3qZPPYvKTeY+O7HUwe
-        fVtWMXpsvzaP2ePzJrkA9igum5TUnMyy1CJ9uwSujHsta1kKpglWzLpwmL2BcSFfFyMnh4SA
-        icTS1m8sXYxcHEICuxklzi19zQiRkJSYdvEocxcjB5AtLHH4cDFEzSdGiemz9rOD1LAJaEns
-        f3GDDcQWEciT2LTxKzNIEbPAfyaJ7ycfgA0SFsiWmDxrDiuIzSKgKtEyezcziM0rYC1x+fcC
-        Vohl8hKrNxwAi3MCxbc8ewi2QEjASuLl+QusExj5FjAyrGKUTC0ozk3PLTYsMMpLLdcrTswt
-        Ls1L10vOz93ECA57La0djCdOxB9iFOBgVOLhdUj7HSvEmlhWXJl7iFGCg1lJhPd2x89YId6U
-        xMqq1KL8+KLSnNTiQ4zSHCxK4rzy+ccihQTSE0tSs1NTC1KLYLJMHJxSDYyldcfl5vD+Ml67
-        0fJeR+Ld3GsGrb1tvi0nuqSdXs6aNfu1Usq1B5J7GK7/WTqHb61bjDyrS5Bp6mmbUq0Vl3/u
-        +HpdalnSj2pWc9MFNe1urz8os3IsnjfReM0S9bMmjPHHGG8w2kZvXa6uHXXNtvmF49cO3Tzx
-        E1OFj8w6Lnkzb0b4DyFvdU4lluKMREMt5qLiRAAiFaEvdwIAAA==
-X-CMS-MailID: 20191220001800epcas1p41ab059757aeec99060cb4f47b0f48ac0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191220001800epcas1p41ab059757aeec99060cb4f47b0f48ac0
-References: <20191220002430.11995-1-cw00.choi@samsung.com>
-        <CGME20191220001800epcas1p41ab059757aeec99060cb4f47b0f48ac0@epcas1p4.samsung.com>
+        Thu, 19 Dec 2019 19:40:26 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:56027 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfLTAk0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 19:40:26 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d5so3307233pjz.5
+        for <devicetree@vger.kernel.org>; Thu, 19 Dec 2019 16:40:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jRdtiusu+beWJmpVDOcRJ7adeaD2r8nAbkaw7dnEM3o=;
+        b=IiSA+8Zu5xMGrVWMYcIurnZ+82iGEVaMNMAYiegms9yncV4Odo6L5M/TGQpyIezn8m
+         tV4zwJ4ShOl3QB4MLIww8dJAE8GgAtN7bg0I0FblsIfNchewk13zr9OCsk24esyGcjqe
+         CeGtVcnpDJB1UcX3MdrZrffNlHFR9DBIuVtsQScHTeosd/J4UpJWV4sVJUWxuiyyXFQU
+         usb0+ndwgbW0KJE1z0Nad/3t/NOHqyRlRhrJe85j6rweybaBMTQABri1nG5ZdcejyZTZ
+         Yyv5+xScQSwEnGQiQDlpr+SiYIO0C+ZYrWJ42h1joK3SUIkhf0UQcgqSZAIkbCqAZ3pP
+         EReQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jRdtiusu+beWJmpVDOcRJ7adeaD2r8nAbkaw7dnEM3o=;
+        b=DBCFMQh15QdhJQEyqPkadsMNDdF+ITUrfmwMeOJa6uwvAfMkeBXlYIb4Pcdf01F151
+         4fE3vC4dzxNvOMZbGy83sl2kgwxr4yP1M5Xh9QC2sq6+1XwNsPcDAj0/Mo4zrB+bQiut
+         pL1rE+QhPSiUG3GfWyJE4ou7v8+XlCsnIssWuLP3h57M/bS2pI/GoylONWh5YL408nuZ
+         xvQOm2V8PYdg2+KqBL9nf8Buc6Z4rgQqfnLvSrC1Qw2kVM7O9uJRuDhWDxekAg9Fzy8O
+         q9QMj5AplAO2D7l5PqApDR+XZq8s95DSL/e3U0GLK247aPNQe2N3Dc4sT3ObIsBctQkH
+         6hBw==
+X-Gm-Message-State: APjAAAViLPaXFpZvVMKELKpbKvlZE1IJhCyXCn1FxmQVOpBljB2bXrpA
+        3keGbLYKDNYZBK9Gse3d2ZY+1w==
+X-Google-Smtp-Source: APXvYqyXI07TRonse1dFs0JYqbSY6q5JMDHO4GTlLVXHf3CyrogLeSTQza7mciIV4JED48jdhYeetg==
+X-Received: by 2002:a17:902:59c9:: with SMTP id d9mr11951312plj.184.1576802425465;
+        Thu, 19 Dec 2019 16:40:25 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id o16sm8713462pgl.58.2019.12.19.16.40.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Dec 2019 16:40:24 -0800 (PST)
+Date:   Thu, 19 Dec 2019 16:40:22 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: qcs404: Update the compatible for
+ watchdog timer
+Message-ID: <20191220004022.GE3755841@builder>
+References: <cover.1576211720.git.saiprakash.ranjan@codeaurora.org>
+ <757995875cc12d3f5a8f5fd5659b04653950970a.1576211720.git.saiprakash.ranjan@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <757995875cc12d3f5a8f5fd5659b04653950970a.1576211720.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Replace the deprecated 'devfreq-events' property with 'exynos,ppmu-device'
-property. But, to guarantee the backward-compatibility, keep the support
-of 'devfreq-events' property.
+On Thu 12 Dec 20:53 PST 2019, Sai Prakash Ranjan wrote:
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- drivers/memory/samsung/exynos5422-dmc.c | 29 ++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 6 deletions(-)
+> Update the compatible for QCS404 watchdog timer with proper
+> SoC specific compatible.
+> 
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index f11fe29a69fc..6e8aa19e84d3 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -1270,10 +1270,17 @@ static int exynos5_dmc_init_clks(struct exynos5_dmc *dmc)
- static struct devfreq_event_dev *exynos5_dmc_get_edev(struct device_node *np,
- 							int index)
- {
--	struct device_node *node = of_parse_phandle(np, "devfreq-events",
-+	struct device_node *node = of_parse_phandle(np, "exynos,ppmu-device",
- 							index);
--	if (!node)
--		return ERR_PTR(-ENODEV);
-+	if (!node) {
-+		 /*
-+		  * Check the deprecated 'devfreq-events' property
-+		  * to support backward-compatibility.
-+		 */
-+		node = of_parse_phandle(np, "devfreq-events", index);
-+		if (!node)
-+			return ERR_PTR(-ENODEV);
-+	}
- 	return devfreq_event_get_edev_by_node(node);
- }
- 
-@@ -1292,10 +1299,20 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
- 	int ret, i;
- 
- 	dmc->num_counters = of_property_count_elems_of_size(dmc->dev->of_node,
--					"devfreq-events", sizeof(u32));
-+					"exynos,ppmu-device", sizeof(u32));
- 	if (dmc->num_counters < 0) {
--		dev_err(dmc->dev, "could not get devfreq-event counters\n");
--		return dmc->num_counters;
-+		 /*
-+		  * Check the deprecated 'devfreq-events' property
-+		  * to support backward-compatibility.
-+		 */
-+		dmc->num_counters = of_property_count_elems_of_size(
-+					dmc->dev->of_node,
-+					"devfreq-events", sizeof(u32));
-+		if (dmc->num_counters < 0) {
-+			dev_err(dmc->dev,
-+				"could not get devfreq-event counters\n");
-+			return dmc->num_counters;
-+		}
- 	}
- 
- 	counters_size = sizeof(struct devfreq_event_dev) * dmc->num_counters;
--- 
-2.17.1
+Applied
 
+Thanks,
+Bjorn
+
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index f5f0c4c9cb16..c9e8e629045b 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -905,7 +905,7 @@
+>  		};
+>  
+>  		watchdog@b017000 {
+> -			compatible = "qcom,kpss-wdt";
+> +			compatible = "qcom,apss-wdt-qcs404", "qcom,kpss-wdt";
+>  			reg = <0x0b017000 0x1000>;
+>  			clocks = <&sleep_clk>;
+>  		};
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
