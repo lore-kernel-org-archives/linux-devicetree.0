@@ -2,109 +2,165 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C6CC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB70C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC7424684
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7092146E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 12:46:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tk2mRZKA"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="WBxNdLsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfLTMY4 (ORCPT
+        id S1727269AbfLTMqs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 07:24:56 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:48358 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbfLTMY4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 07:24:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Message-Id:Date:Subject:Cc:To:From:Sender:
-        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RBosA1WXv7+ZQ+18j+VhmhTjKGR8E8xllD/Rd9oJey4=; b=Tk2mRZKAgHCqxHXhZkJZCaXkcz
-        ziDMUULEv7GANWvFA+/U0sKpZscZo/do24A4Pg4/5KH64P9F78UefievcccXdBj7+1VGNHClW4MJH
-        sQ8WBEu8GuWD8jbx+pvJ5dSFsJRXwj3nz+iPQwVArFVRU+VN/V3EgD/ointGEBkabTOM=;
-Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iiHKn-0001zJ-6K; Fri, 20 Dec 2019 13:24:45 +0100
-Received: from andi by localhost with local (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iiHKj-0008TW-Ni; Fri, 20 Dec 2019 13:24:42 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v5 0/5] Add rtc support for rn5t618 mfd
-Date:   Fri, 20 Dec 2019 13:24:11 +0100
-Message-Id: <20191220122416.31881-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.11.0
+        Fri, 20 Dec 2019 07:46:48 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:60755 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfLTMqs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 07:46:48 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 6D56123D1F;
+        Fri, 20 Dec 2019 13:46:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1576846005;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GrX8218OZlK1OdarzjqvWdw/65Ksoux5IbNS+/y+8TE=;
+        b=WBxNdLsKddON8fDuOngYT9aWaqD8OK10kkTHtAcjAiHlYv7llsmLpvhqbamS4C1dZQPjBD
+        ikjLCAjK28tl/KKgfkgOS8iBDDou6hkY/ifKISm8BpyY2r0GkSsY6F69i2GfMp4A/2HPKP
+        3Uq08nQc7zBAb6uwpsEqEMvPyVzL4jc=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Fri, 20 Dec 2019 13:46:40 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] dt-bindings: mtd: spi-nor: document new flag
+In-Reply-To: <2dfc30a7-3261-d783-8256-f72458a0141b@ti.com>
+References: <20191214191943.3679-1-michael@walle.cc>
+ <556fe468-0080-ad05-8228-5ff8f1b3dac6@ti.com>
+ <af3692dba69e85fa8136ab3d170bef39@walle.cc>
+ <2dfc30a7-3261-d783-8256-f72458a0141b@ti.com>
+Message-ID: <09f5f76eb49a38c4b2960abe688b2892@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 6D56123D1F
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[9];
+         NEURAL_HAM(-0.00)[-0.742];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In the variant RC5T619 the mfd has an RTC. This patchset adds
-support for it. To do so it adds the missing register defines in 
-rn5t618.h and general irq handling for that.
-It seems that the irq definitions are the same except missing RTC
-but due to missing ability to test that I do not add them here.
+Hi Vignesh,
 
-The rtc driver itself is based on 
-https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
-but heavily reworked.
+Am 2019-12-19 06:33, schrieb Vignesh Raghavendra:
+> Hi Michael,
+> 
+> [...]
+>>>> +- no-unlock : By default, linux unlocks the whole flash because 
+>>>> there
+>>>> +           are legacy flash devices which are locked by default
+>>>> +           after reset. Set this flag if you don't want linux to
+>>>> +           unlock the whole flash automatically. In this case you
+>>>> +           can control the non-volatile bits by the
+>>>> +           flash_lock/flash_unlock tools.
+>>>> 
+>>> 
+>>> Current SPI NOR framework unconditionally unlocks entire flash which
+>>> I agree is not the best thing to do, but I don't think we need
+>>> new DT property here. MTD cmdline partitions and DT partitions 
+>>> already
+>>> provide a way to specify that a partition should remain locked[1][2]
+>> 
+>> I know that the MTD layer has the same kind of unlocking. But that
+>> unlocking is done on a per mtd partition basis. Eg. consider something
+>> like the following
+>> 
+>>  mtd1 bootloader  (locked)
+>>  mtd2 firmware    (locked)
+>>  mtd3 kernel
+>>  mtd4 environment
+>> 
+>> Further assume, that the end of mtd2 aligns with one of the possible
+>> locking areas which are supported by the flash chip. Eg. the first 
+>> quarter.
+>> 
+>> The mtd layer would do two (or four, if "lock" property is set) 
+>> unlock()
+>> calls, one for mtd1 and one for mtd2.
+>> 
+> 
+> 
+>> My point here is, that the mtd partitions doesn't always map to the
+>> locking regions of the SPI flash (at least if the are not merged 
+>> together).
+>> 
+> 
+> You are right! This will be an issue if existing partitions are not
+> aligned to locking regions.
+> 
+> I take my comments back... But I am not sure if a new DT property is 
+> the
+> needed. This does not describe HW and is specific to Linux SPI NOR
+> stack. How about a module parameter instead?
+> Module parameter won't provide per flash granularity in controlling
+> unlocking behavior. But I don't think that matters.
 
-It was tested on the Kobo Clara HD.
+I don't argue against having a kernel parameter, but just wanting to 
+point
+out another alternative (which might be controversial):
 
-For cleaning up there is a separate off-topic patch:
-mfd: rn5t618: cleanup i2c_device_id
+  - What is the purpose of this unlock_all() at all. Apparently there are
+    some flashes which have the protection bits set. Either at startup
+    (and then they are non-volatile) or they come in that state out of 
+the
+    factory. The latter makes little sense IMHO.
 
-Changes in v5:
-- static rn5t618_irq_init
-- PLATFORM_DEVID_NONE
-- added some Acked-Bys
+  - Actually, all newer flashes we've used have these bits non-volatile 
+and
+    are unlocked by default.
 
-Changes in v4:
-- use macros for IRQ definitions
-- merge rn5t618-core.c and rn5t618-irq.c
+So can't we have a whitelist (ie. a new flag in the spi_nor_ids) which
+supresses the unlock if they haven't any block protections bit set
+according to the manual? Because in this case the unlocking makes never
+sense IMHO.
 
-Changes in v3:
-- alignment cleanup
-- output cleanup, remove useless toggling of alarm flag in rtc probe
-- updated bindings description, so patch 1/5 becomes 2/6 and so on
+-michael
 
-Changes in v2:
-- no dead code in irq code
-- various improvements and cleanups in rtc driver itself
-
-Andreas Kemnade (5):
-  dt-bindings: mfd: rn5t618: Document optional property interrupts
-  mfd: rn5t618: add IRQ support
-  mfd: rn5t618: add RTC related registers
-  mfd: rn5t618: add more subdevices
-  rtc: rc5t619: add ricoh rc5t619 RTC driver
-
- Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
- drivers/mfd/Kconfig                               |   1 +
- drivers/mfd/rn5t618.c                             | 109 +++++-
- drivers/rtc/Kconfig                               |  10 +
- drivers/rtc/Makefile                              |   1 +
- drivers/rtc/rtc-rc5t619.c                         | 444 ++++++++++++++++++++++
- include/linux/mfd/rn5t618.h                       |  26 ++
- 7 files changed, 593 insertions(+), 2 deletions(-)
- create mode 100644 drivers/rtc/rtc-rc5t619.c
-
--- 
-2.11.0
-
+> 
+> Tudor,
+> 
+> You had a patch doing something similar. Does module param sound good 
+> to
+> you?
