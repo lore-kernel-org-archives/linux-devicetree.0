@@ -2,128 +2,128 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D10C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F92C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2AA8206DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A912D2146E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576879875;
-	bh=o3HlDsr/siqnvBypoqfes0hM1iU+w9VPO3GGDO30DCY=;
+	s=default; t=1576879941;
+	bh=abgPvh1cAN8OegF/GMVW9qKqXeD6Vo0YP0ogUcVZC/Y=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U9P/nVQsxYoiN0i2LFZC84N2uVRd2MltfFHm5i935FOGA4syKfnd1qh/++GwvbOdi
-	 aFAIUh2jFgzJtQlw4j3H9wFF62KM233/4166jPQSs5hPFq8fP6N6FIcGLv74pySl6i
-	 fQCzvoTHK8ZdVVMBq8UMlEaKl/kfSyULm7EBtBYg=
+	b=k5vlbi8GgEtJ6oReOMoZj9BHk+pTfBOIeRBzkocybHwpAiI6fe088kl4+uMaj9h+O
+	 ZCfCPlK0zmq+1ntQUs8ICcFrKmegHKqrwv3egFWGkUqdaKdbPJj0Q9OPGyH2YnUsbY
+	 4lDdVR/cMShl/ce45fyi6YswfQJcuawYctgRvBxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727489AbfLTWLP (ORCPT
+        id S1727473AbfLTWMV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:11:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35108 "EHLO mail.kernel.org"
+        Fri, 20 Dec 2019 17:12:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727473AbfLTWLP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 17:11:15 -0500
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+        id S1727413AbfLTWMV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 17:12:21 -0500
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34F43206DA;
-        Fri, 20 Dec 2019 22:11:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DA52146E;
+        Fri, 20 Dec 2019 22:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576879874;
-        bh=o3HlDsr/siqnvBypoqfes0hM1iU+w9VPO3GGDO30DCY=;
+        s=default; t=1576879940;
+        bh=abgPvh1cAN8OegF/GMVW9qKqXeD6Vo0YP0ogUcVZC/Y=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Bk+/AnavemaMi4clu0XTYMxgz8x2XpfFgSlxqSFF/S1nRrwSuF8yXBq6aNvJ1XzLq
-         BXZY4LONqS80LLzvgCRmnS37q5qmxDt3Z6YlxZ//1p3OjVvaSVUC5qBaGr7xmp171b
-         hnXW70Xm3h2XpCcFk7nrqn030tfE2TaXJCItrEpY=
-Received: by mail-qv1-f53.google.com with SMTP id u10so4140478qvi.2;
-        Fri, 20 Dec 2019 14:11:14 -0800 (PST)
-X-Gm-Message-State: APjAAAWLgh5kEIYExJfOLrtzI1g7XrQ+BiT818QJzSPoNPLdsmdZ6GfY
-        BfiWDuA+gr5/ipuxqLG9YSheFiGUWmRI761EJQ==
-X-Google-Smtp-Source: APXvYqxrgGyYUnVQtwMdPxLJhjvv7v/OzHoM6VSqE3TWWKKTIdvS8IJO01k1ZQwCfgUv7ibbCHD2kx9PtSPl9rbZ9Yc=
-X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr14223740qvo.20.1576879873293;
- Fri, 20 Dec 2019 14:11:13 -0800 (PST)
+        b=mdUG4wlCOfFUYklEWNJp0dDs6JbBrd4gghWVQMblfiv7oNc7MfwvsU9T0wLx1QiPU
+         M2myRXBwePTP2t1/f9Focc9/nSHMFux7AptegAgUbn1BxSd2kpsOjlLMjfujOMvsq/
+         CyTRDwi6nQ81X6GlnSSMBkM6CMst0Kemm17gYR9k=
+Received: by mail-qk1-f172.google.com with SMTP id w127so8864700qkb.11;
+        Fri, 20 Dec 2019 14:12:20 -0800 (PST)
+X-Gm-Message-State: APjAAAXng99FhVIMVJ4qTeE3lafzU0aNQXR1wV/KyJWCinWj1JCKi+Nf
+        LE847h5tjNM9IT8r4EmjScMCjlUAKly3jXRGQQ==
+X-Google-Smtp-Source: APXvYqyAoezf59Vb0TgP/Q6GTEtoJSM8Qlqy3Hir3jvUrfI5dyTJG/NQOPxC/8atEWQcPTR8IY3P9jcPdKcq0ttJCV8=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr15824191qkn.254.1576879939367;
+ Fri, 20 Dec 2019 14:12:19 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1576118671.git.thinhn@synopsys.com> <b791f032edb8e6a739c342dbd0d2d5faa66ddfb8.1576118671.git.thinhn@synopsys.com>
- <87mubyvtuh.fsf@kernel.org> <6193f738-03ac-51b5-cdf0-d9b252a50146@synopsys.com>
- <87d0cswvs9.fsf@kernel.org> <20191219221704.GA29965@bogus> <b48e59f9-5339-b1c9-cc16-604900bd1cc4@synopsys.com>
-In-Reply-To: <b48e59f9-5339-b1c9-cc16-604900bd1cc4@synopsys.com>
+References: <1576069760-11473-1-git-send-email-yamonkar@cadence.com>
+ <1576069760-11473-15-git-send-email-yamonkar@cadence.com> <20191219212546.GA30631@bogus>
+ <BYAPR07MB5110503F5B2B0A2B9E3E02F5D22D0@BYAPR07MB5110.namprd07.prod.outlook.com>
+In-Reply-To: <BYAPR07MB5110503F5B2B0A2B9E3E02F5D22D0@BYAPR07MB5110.namprd07.prod.outlook.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 20 Dec 2019 15:11:00 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqKrRSk0NhqZ5tcus23rWfBzHcxBs8ZR6qv2qR4z_NrD_A@mail.gmail.com>
-Message-ID: <CAL_JsqKrRSk0NhqZ5tcus23rWfBzHcxBs8ZR6qv2qR4z_NrD_A@mail.gmail.com>
-Subject: Re: [RFC PATCH 13/14] usb: devicetree: dwc3: Add property to disable
- mult TRB fetch
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+Date:   Fri, 20 Dec 2019 15:12:07 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqL=nQTSZ1aQ+EOkE9Shg4Q2JT4T1yhLokC8bxifsS2fzw@mail.gmail.com>
+Message-ID: <CAL_JsqL=nQTSZ1aQ+EOkE9Shg4Q2JT4T1yhLokC8bxifsS2fzw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v1 14/15] dt-bindings: phy: phy-cadence-torrent:
+ Add platform dependent compatible string
+To:     Yuti Suresh Amonkar <yamonkar@cadence.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Youn <John.Youn@synopsys.com>
+        "kishon@ti.com" <kishon@ti.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jsarha@ti.com" <jsarha@ti.com>,
+        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
+        "praneeth@ti.com" <praneeth@ti.com>,
+        Milind Parab <mparab@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 3:52 PM Thinh Nguyen <Thinh.Nguyen@synopsys.com> wrote:
+On Fri, Dec 20, 2019 at 2:43 AM Yuti Suresh Amonkar
+<yamonkar@cadence.com> wrote:
 >
 > Hi,
 >
-> Rob Herring wrote:
-> > On Fri, Dec 13, 2019 at 09:04:54AM +0200, Felipe Balbi wrote:
-> >> Hi,
-> >>
-> >> Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
-> >>>> Thinh Nguyen <Thinh.Nguyen@synopsys.com> writes:
-> >>>>> DWC_usb32 has a feature where it can issue multiple TRB fetch requests.
-> >>>>> Add a new property to limit and only do only single TRB fetch request.
-> >>>>>
-> >>>>> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-> >>>>> ---
-> >>>>>    Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
-> >>>>>    1 file changed, 2 insertions(+)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >>>>> index ff35fa6de2eb..29d6f9b1fc70 100644
-> >>>>> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> >>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >>>>> @@ -108,6 +108,8 @@ Optional properties:
-> >>>>>     - snps,num-trb-prefetch: max value to do TRBs cache for DWC_usb32. The value
-> >>>>>                           can be from 1 to DWC_USB32_CACHE_TRBS_PER_TRANSFER.
-> >>>>>                           Default value is DWC_USB32_CACHE_TRBS_PER_TRANSFER.
-> >>>>> + - snps,dis-mult-trb-fetch: set to issue only single TRB fetch request in
-> >>>>> +                 DWC_usb32.
-> >>>> two questions:
-> >>>>
-> >>>> - how is this different from passing 1 to the previous DT binding
-> >>> The previous DT binding is related to the number TRBs to cache while
-> >>> this one is related to whether the controller will send multiple
-> >>> (internal) fetch commands to fetch the TRBs.
-> >>>
-> >>>> - do we know of anybody having issues with multi-trb prefetch?
-> >>> No, we added this for various internal tests.
-> >> We really a better way for you guys to have your test coverage enabled
-> >> with upstream kernel. I wonder if DT guys would accept a set of bindings
-> >> marked as "for testing purposes". In any case, we really need to enable
-> >> Silicon Validation with upstream kernel.
-> > Well, anything would be better than the endless stream of new
-> > properties. Include 'test-mode' in the property names would be fine I
-> > guess.
+> > -----Original Message-----
+> > From: Rob Herring <robh@kernel.org>
+> > Sent: Friday, December 20, 2019 2:56
+> > To: Yuti Suresh Amonkar <yamonkar@cadence.com>
+> > Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> > kishon@ti.com; mark.rutland@arm.com; jsarha@ti.com;
+> > tomi.valkeinen@ti.com; praneeth@ti.com; Milind Parab
+> > <mparab@cadence.com>; Swapnil Kashinath Jakhade
+> > <sjakhade@cadence.com>
+> > Subject: Re: [RESEND PATCH v1 14/15] dt-bindings: phy: phy-cadence-
+> > torrent: Add platform dependent compatible string
+> >
+> > EXTERNAL MAIL
+> >
+> >
+> > On Wed, Dec 11, 2019 at 02:09:19PM +0100, Yuti Amonkar wrote:
+> > > Add a new compatible string used for TI SoCs using Torrent PHY.
+> > >
+> > > Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml | 4
+> > > +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> > > b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> > > index 8069498..60e024b 100644
+> > > --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> > > +++ b/Documentation/devicetree/bindings/phy/phy-cadence-
+> > torrent.yaml
+> > > @@ -15,7 +15,9 @@ maintainers:
+> > >
+> > >  properties:
+> > >    compatible:
+> > > -    const: cdns,torrent-phy
+> > > +    anyOf:
+> >
+> > Should be an enum or if both strings can be present then you need 2 oneOf
+> > entries for 1 string and 2 strings.
 > >
 >
-> Generally the properties are for some quirks or configurations that the
-> controller must use to work properly and not for debugging purposes.
-> Unfortunately, this list can be long..
+> We can have only one compatible string at a time, so should I use like this?
+>
+> compatible:
+>      enum:
+>           - cdns,torrent-phy
+>           - ti,j721e-serdes-10g
 
-quirks or testing? Now I'm confused, which is it?
-
-I'm sure I've said this before (for DWC3), but it is better to have a
-compatible string for each implementation (usually an SoC) so you can
-address new quirks without a dtb change and continually adding new
-properties.
-
-Rob
+Yes.
