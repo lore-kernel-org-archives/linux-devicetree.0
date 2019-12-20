@@ -2,116 +2,90 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F162DC2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13358C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D4F206EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DFE24680
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576831442;
+	bh=J+KO1euN3uvMfgpMsULDxngajs9YXpEjKc3Gbd9072M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uoirRm45+u5IjyU+7pg1Z6P72QTPmbGmM8JnAoX8ikEzM2TgyZAtfa0G5lXZ4rngN
+	 /HMEn8CY9mLla9HwvAhoPCFND7393U5MxmAuGqdUwTfKZJ2j2LfF2fMUv/OJn9y1ve
+	 TSMv/JyImou2eHevDoAj3GxSkAl95sgorHtuzmjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbfLTImz (ORCPT
+        id S1727176AbfLTIn5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:42:55 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.1]:38043 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727188AbfLTImz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 03:42:55 -0500
-Received: from [85.158.142.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-a.eu-central-1.aws.symcld.net id 2A/D8-12484-B898CFD5; Fri, 20 Dec 2019 08:42:51 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHKsWRWlGSWpSXmKPExsVy8IPnUd2uzj+
-  xBrM7LSzmnG9hsZh/5ByrxeFFLxgtmhevZ7O4//Uoo8XNT99YLS7vmsNm0b5xNqvF0usXmSze
-  f+pksmjde4Td4v+eHewWP3fNY7G4PXEyowOfx5p5axg9tqy8yeSxc9Zddo9NqzrZPO5c28Pms
-  X/uGnaP/r8GHp83yQVwRLFm5iXlVySwZqy49Y2p4AVHxelLx5kbGA+wdTFycQgJrGeUuPl8Dp
-  DDCeRUSHSdvsIIYvMKmErsW7KPGcRmE9CReDRzPROIzSKgKvGmdQKYLSzgIPHz2GJ2kEEiAle
-  YJZ683sUM4jALTGOU2PPxMDPEJEGJkzOfsIDYzAISEgdfvGCG2KYlcW7NKrBtEgL2EtPfXwWK
-  cwDZ+hKNx2IhwoYS32d9Y4GwzSVuPlvONoGRfxaSqbOQTF3AyLSK0SKpKDM9oyQ3MTNH19DAQ
-  NfQ0FjXWNfMUC+xSjdRL7VUNzk1r6QoESipl1herFdcmZuck6KXl1qyiREYVSmFzLY7GM++f6
-  t3iFGSg0lJlDfJ/0+sEF9SfkplRmJxRnxRaU5q8SFGGQ4OJQnexjagnGBRanpqRVpmDjDCYdI
-  SHDxKIrzW7UBp3uKCxNzizHSI1ClGXY7r7/cuZRZiycvPS5US510CUiQAUpRRmgc3ApZsLjHK
-  SgnzMjIwMAjxFKQW5WaWoMq/YhTnYFQS5o0GmcKTmVcCt+kV0BFMQEdwaP4COaIkESEl1cA06
-  Yu7S/nVsxvYVzHXfePsvRAfHxHgmqxxmlO+afKrwKzdB354LT+b0vjQPGf+on37lVeovf/jMN
-  vonNHyW5svcs1n8Xlr/S94/zMp+Z28cyfWfUvJ+8THejmRt+6PaiHDcmOFCw2X4ndwbrnZ1nt
-  NVLV1io7X34NhBitNP0r1q01NtjQwl03U3uDHdqj5wKQS8ZBT544euzrfcn5V0jPpQ3MWu688
-  1pVz/rTFR8kZs4QOLt2ezpDlyr393pkZk3a965ws2z45qUXo/slmw5c+ZaHXlyiYzL8T+IjJo
-  c0o5N/ODp0spwtyb9nifn/50SdstJIlIrL82I8Y4QpFhivfX0c+DOWp2Hh2YcuUtzOilViKMx
-  INtZiLihMBQA+pY7EDAAA=
-X-Env-Sender: roy.im.opensource@diasemi.com
-X-Msg-Ref: server-11.tower-223.messagelabs.com!1576831370!805441!1
-X-Originating-IP: [193.240.73.197]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 24232 invoked from network); 20 Dec 2019 08:42:50 -0000
-Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
-  by server-11.tower-223.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 20 Dec 2019 08:42:50 -0000
-Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
- SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
- 14.3.468.0; Fri, 20 Dec 2019 08:42:43 +0000
-Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22266)      id
- A5B643FB8D; Fri, 20 Dec 2019 08:42:43 +0000 (GMT)
-Message-ID: <cover.1576830367.git.Roy.Im@diasemi.com>
-From:   Roy Im <roy.im.opensource@diasemi.com>
-Date:   Fri, 20 Dec 2019 17:26:07 +0900
-Subject: [RESEND PATCH V8 0/3]  da7280: haptic driver submission
-To:     "David S. Miller" <davem@davemloft.net>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+        Fri, 20 Dec 2019 03:43:57 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38253 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbfLTIn4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 03:43:56 -0500
+Received: by mail-ed1-f65.google.com with SMTP id i16so7476318edr.5;
+        Fri, 20 Dec 2019 00:43:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IXbuaf/Cq2tGfd6OZrRmEJyDn3Ce5xlbWFBppOEzCYc=;
+        b=IulSYQ1S+hyqanhMqs0MDzV+WyUZFvvvbu1tKbfYMlf1QeHAwwh6DWHeSRvL3PGcxM
+         1jcPnFr7jhKfymYpL3vD+bsXfIGtwDxpSv/MM0JBIWcbymhg8f70+EQ7ka/PaqWhhTY8
+         0oWTNN36K85SieK4b+PHB9qi1IShVZJ2zaQKWMQ4GZ3DHNoEjnk0CKcig3Hc/X3FoyX+
+         XI0W4CmglS2sXM66YgTs5JHjWA1wOPCx0P+xlVGLY1M7suoROjmGewgNGXrwW8e0T17H
+         VCn6WZOoA+ldUf0o8jNwJJANJThxbxGe6cq7z0Jz+qcOfRjqNKgwAiRPajo3k18y34h7
+         4uEA==
+X-Gm-Message-State: APjAAAXc7sMA1Us4p3zr0qsywW/FwHzc//OOrAbQdS+CqK//57VanbZR
+        52nwmMf8JtciRhuY1+TqUHo=
+X-Google-Smtp-Source: APXvYqxp9hgF9PmaT2oTuADAB64PkgIFMZvrclHRsxE6EbN2yuHZHHK9cKtisRYEhpTDGewTtbAR7A==
+X-Received: by 2002:a17:906:b797:: with SMTP id dt23mr14655260ejb.241.1576831434074;
+        Fri, 20 Dec 2019 00:43:54 -0800 (PST)
+Received: from pi3 ([194.230.155.234])
+        by smtp.googlemail.com with ESMTPSA id u23sm842501edq.74.2019.12.20.00.43.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 00:43:53 -0800 (PST)
+Date:   Fri, 20 Dec 2019 09:43:50 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     robh+dt@kernel.org, heiko@sntech.de, leonard.crestez@nxp.com,
+        lukasz.luba@arm.com, mark.rutland@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 04/11] dt-bindings: devfreq: exynos-bus: Replace
+ deprecated 'devfreq' and 'devfreq-events' property
+Message-ID: <20191220084350.GA20583@pi3>
+References: <20191220002430.11995-1-cw00.choi@samsung.com>
+ <CGME20191220001759epcas1p3051f7916542b7234aac5273e0baab83b@epcas1p3.samsung.com>
+ <20191220002430.11995-5-cw00.choi@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
-X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 20/12/2019 06:45:00
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191220002430.11995-5-cw00.choi@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds support for the Dialog DA7280 Haptic driver IC.
+On Fri, Dec 20, 2019 at 09:24:23AM +0900, Chanwoo Choi wrote:
+> In order to remove the deprecated 'devfreq' and 'devfreq-events' property,
+> replace with new following properties
+> - Replace 'devfreq' with 'exynos,parent-bus' property
+> - Replace 'devfreq-events' with 'exynos,ppmu-device' property
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  .../bindings/devfreq/exynos-bus.txt           | 22 +++++++++----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
 
-In this patch set the following is provided:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-[PATCH V8 1/3] MAINTAINERS file update for DA7280
-[PATCH V8 2/3] DA7280 DT Binding
-[PATCH V8 3/3] DA7280 Driver
-
-This patch applies against linux-next and v5.4
-
-Thank you,
-Roy Im, Dialog Semiconductor Ltd.
-
-Roy Im (3):
-  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
-  dt-bindings: input: Add document bindings for DA7280
-  Input: new da7280 haptic driver
-
- .../devicetree/bindings/input/dlg,da7280.txt       |  109 ++
- MAINTAINERS                                        |    2 +
- drivers/input/misc/Kconfig                         |   13 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/da7280.c                        | 1683 ++++++++++++++++++++
- drivers/input/misc/da7280.h                        |  412 +++++
- 6 files changed, 2220 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
- create mode 100644 drivers/input/misc/da7280.c
- create mode 100644 drivers/input/misc/da7280.h
-
--- 
-end-of-patch for RESEND PATCH V8
+Best regards,
+Krzysztof
 
