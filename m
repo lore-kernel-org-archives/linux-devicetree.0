@@ -2,92 +2,154 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7971C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3779C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4F6218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576881372;
-	bh=508FPwH2o/Hcz0rn6rjo++zWtK7Hjgf5Pq3UDPPmELA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VN3LpAx4/hhkTaYeG1wVVrHJu8fjc9l33PDQjRnnS6rDL8wp4ZcQbwWptCdkRcWQ7
-	 qtIZbDs935g+mqLQiQU5KwFeOtEtU1uadsloXR0fqitMh9tpUSO67lA0zwa8spo0dR
-	 b4WFD28TmYSFqtbJeGaTxeSn5RY7YzuhU07QQwjE=
+	by mail.kernel.org (Postfix) with ESMTP id BBE9E2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 22:38:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsgsM+pW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfLTWgL (ORCPT
+        id S1726674AbfLTWiO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 17:36:11 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42207 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726705AbfLTWgL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:36:11 -0500
-Received: by mail-io1-f68.google.com with SMTP id n11so4233747iom.9;
-        Fri, 20 Dec 2019 14:36:11 -0800 (PST)
+        Fri, 20 Dec 2019 17:38:14 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45317 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfLTWiO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 17:38:14 -0500
+Received: by mail-ed1-f68.google.com with SMTP id v28so9898701edw.12;
+        Fri, 20 Dec 2019 14:38:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2r49eAQhNoJzMCqJX37cFxPO2nRvAF4I0bdhxB6haiE=;
+        b=SsgsM+pW0a2X+bwWiccj6NqxYQNmuX0nXyx0/tAEDJiokX56o6oXCN10LTJx7FbrsZ
+         vufTKpbm/Dd/Nkf+DlE4LYmRQwM1NBx9XVtNfTT5WrmiK2J630mnjDXeIE+eHU3ge94+
+         MUsLHkL2i4m94sA6TgY+dg6gINT3+198pJRafhWd8p/bfPKdAAb6iEKBubwSQ4fI6c7l
+         hjwtZHoI+Xr7Xtl3Db2QZ8mw8ZHVfmt8NLA2+Q2Lg8RP+5HJ9B3QgU9Oe6gLb18rYpxF
+         vjNZwkO14DMtkjLfwcZyPyFEFqJlc42DslWwo0+OLLaP7FYOoxan10GYWNAM2k8KOw8c
+         bKtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r/ujD9cpeTVxLA7xaDbDkgLLbv59I8EnWN3w9PFRh2g=;
-        b=CfQI50th2kD8QYPeoNjILEDx6726AeCW7JS6qxw3LWTaNzvPxTx/4TP/fgR11OWClX
-         pZhJumWHdewnNbjwmj0zb3ESfqlGwdJsvJdIVd3x6PleJeTO5U5K27+qE8h4AVHMHpC1
-         HQMZqd+73SkIs0vA2wSxtzyDmpIMkjmBnY+lzVeOQAt+pj8r80dVkbiVM/P/tKmfQ1fW
-         DFoOYqgMgKRUcbZ3d68PcRVAb5ubot/VB6WUsV7oqnfvUcnNUrAT4OgJ0h9/b++5Nctj
-         woAl5VLU/FkbvauujBPYK/lRWsR3SScbQgpmmi7buRigGjFASXu7ines3uVadN0ycDYA
-         1kyg==
-X-Gm-Message-State: APjAAAVIkMpJupgwb85sAWJr/9yxjZDOEv16MOZ1q6ek3umO93i/UcM4
-        OCZNDkXa2SgJvi8hUFzhug==
-X-Google-Smtp-Source: APXvYqznRk6G0L20Qoe2oj7Zw9Ec8BirMdFnF1btWzmGivMJBa/bk89K1dHrEAE9tQQWsYloq5Ln2g==
-X-Received: by 2002:a02:cd9c:: with SMTP id l28mr14138518jap.46.1576881370878;
-        Fri, 20 Dec 2019 14:36:10 -0800 (PST)
-Received: from localhost ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id e1sm5446541ill.47.2019.12.20.14.36.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 14:36:10 -0800 (PST)
-Date:   Fri, 20 Dec 2019 15:36:09 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     tiny.windzz@gmail.com, vireshk@kernel.org, sboyd@kernel.org,
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=2r49eAQhNoJzMCqJX37cFxPO2nRvAF4I0bdhxB6haiE=;
+        b=XEoeLcVhtadGABAEadT23ELZ3Jcs3kkwzzDORXVsh01/FB7RYh5SLEMjGHnAPGfQrR
+         9f3BeoQlbZgnEi1UVKj26AblDHNZdhWOHngczTE4+yyl5NA4rbRFIGrLhO7RtX6lcwxz
+         1WrCYYMpkqTiwh5B22gd7yhOdsD9qRUQmkoheddakiW31UcLH1Np0Aw0zvc4Fp/QoTtk
+         JDo2M0vlPCrlWAXYdR1VHy87F8VbiDbyfCUMeqwEcc4fujP4ZfAWUcODUqeMp28x2wjU
+         lSNb/R1Sf0vLsw6271aaHPh2oXokXXk+d4Bv6+erd/HzxzUd1tIe+kfYu4b41opSccEh
+         iqXA==
+X-Gm-Message-State: APjAAAUTZg1vkleOfQwbzIYgspTT4KSreTA5i20n/LXDW6oqT551TvNw
+        jlJQ+KqvqaczfmyrRrEozL8=
+X-Google-Smtp-Source: APXvYqy3c+3leSp65flqQxVh+lceaAHZC7JmpcebSWutEQwVawMecBkEd7TJ0C8NSNVnT3BCZvNLGQ==
+X-Received: by 2002:a50:cd11:: with SMTP id z17mr18825721edi.178.1576881491349;
+        Fri, 20 Dec 2019 14:38:11 -0800 (PST)
+Received: from [10.67.50.49] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id cb20sm1143063edb.1.2019.12.20.14.38.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Dec 2019 14:38:10 -0800 (PST)
+Subject: Re: [PATCH V7 net-next 05/11] net: netcp_ethss: Use the PHY time
+ stamping interface.
+To:     Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
+Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: Re: [PATCH] dt-bindings: opp: Convert Allwinner H6 OPP to a schema
-Message-ID: <20191220223609.GA8940@bogus>
-References: <20191219084623.944458-1-maxime@cerno.tech>
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+References: <cover.1576865315.git.richardcochran@gmail.com>
+ <2ccbb4b81949214c34053da6b1462947f33ec450.1576865315.git.richardcochran@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <fd36f4fd-2a70-255e-c177-a8f0df65b3b4@gmail.com>
+Date:   Fri, 20 Dec 2019 14:38:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219084623.944458-1-maxime@cerno.tech>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <2ccbb4b81949214c34053da6b1462947f33ec450.1576865315.git.richardcochran@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 19 Dec 2019 09:46:23 +0100, Maxime Ripard wrote:
-> The Allwinner H6 SoCs use binning in order to provide binning to
-> cpufreq which is supported in Linux, with a matching Device Tree binding.
+On 12/20/19 10:15 AM, Richard Cochran wrote:
+> The netcp_ethss driver tests fields of the phy_device in order to
+> determine whether to defer to the PHY's time stamping functionality.
+> This patch replaces the open coded logic with an invocation of the
+> proper methods.
 > 
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
-> 
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  .../allwinner,sun50i-h6-operating-points.yaml | 129 ++++++++++++++
->  .../bindings/opp/sun50i-nvmem-cpufreq.txt     | 167 ------------------
->  2 files changed, 129 insertions(+), 167 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
->  delete mode 100644 Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-> 
+> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
