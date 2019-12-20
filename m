@@ -7,251 +7,412 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F329C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B119C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0068C20716
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3512467F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 08:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="UYTlmZGE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YS6eykLt"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ndr5reQv";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="JHincInR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbfLTIDO (ORCPT
+        id S1727165AbfLTIFO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 03:03:14 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42891 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725941AbfLTIDO (ORCPT
+        Fri, 20 Dec 2019 03:05:14 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:63984 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725941AbfLTIFO (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 03:03:14 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id E81B522452;
-        Fri, 20 Dec 2019 03:03:12 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Fri, 20 Dec 2019 03:03:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=P05QFYyJXu05BQJPt60bECzjIiL
-        xz5zzubxatFHTuWo=; b=UYTlmZGE5QB93pvPV/g36IgVw2sca7YYx0Ug7dVOWBW
-        l7cBrNZ/IuMcvJgHv6uPwcbpShsEJ+zgea2BjZG0HdPrbbIvP7vcX9m6HgRPCmP2
-        XtXKdjg9rrXOOkJKY0t29pQlos2Cb27jr9XqBXyBu8YRkh5NPm7Z/ty03ww4FNEv
-        RH58e8ubEbS6Ktn8n6Fs+EUxJ4bDzl3TdNieFG6JylOJbb8m4vrUAUb2RYJtXlSa
-        sOZCWK3D1qbw2Ilid9bPIKsA153ZrTariFQhZ3pylnFQBumDkglzxP8adSjQnXYw
-        1vpD73RiMGVPMmIHjoS2HKb/jIomMqtgyGU/Kmh44KA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=P05QFY
-        yJXu05BQJPt60bECzjIiLxz5zzubxatFHTuWo=; b=YS6eykLtDsAWM9Ji7ig6+f
-        8jb7H1usN586n5TnCnLEJZKn1i6wYvvvbgFCt8O8QVDux+mELZ/j84nxo8eIOQLn
-        ZzXu6IQAOtKB6b0xnXhj7OSTqxYaBNj/d/Ud+jSOHt53Ajn8IpFvQKzoV8QvmgpD
-        5tpoEZlmWajCFuZEhFC7ymghBaNjFWv3PQElivnbw/b3wkvaYBg7JHb8kWknaKLp
-        XoMxHZs1VOhQoG2ji5bzcXsjDJmKLqaxpWYL948AGOl0Of+g1S3PdzK02+kC6OTk
-        LG5qnDDq2Mg1uTDYEIrL5cTg6iN1lvUTYX+0Wg/GP6tJ2JaZHv9eUXtLED8a63Xw
-        ==
-X-ME-Sender: <xms:QID8XW2gMYpxo0mVouQRpk2WRR7RPrSvfaq2zOD22ct_jfj89Gj1fA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdduvddgudduvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucffohhmrg
-    hinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecu
-    rfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhnecuve
-    hluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:QID8XV3mCXXRyoDdcPQVS2F6SwWuvreFo6vNYCKQvIWG7SYXSsWkoQ>
-    <xmx:QID8XZcjfxh1XrvFFjJ3LRTik40YN7w_xvI6LavfZKwWxk4OzIX-yw>
-    <xmx:QID8XbGLTXVTOl5zDL0B-JPHrg_XwEg3rJ15gnzKuhqBwmNHLs_7_A>
-    <xmx:QID8XSOZyeas3Tn1n4rI40Rjm_R01uXiY4FyR28VCWmWj2UuYLMJDw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0192B306088B;
-        Fri, 20 Dec 2019 03:03:11 -0500 (EST)
-Date:   Fri, 20 Dec 2019 09:03:10 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] dt-bindings: usb: Convert Allwinner A80 USB PHY
- controller to a schema
-Message-ID: <20191220080310.w2xtgzxend5bmv2q@gilmour.lan>
-References: <20191219084332.944123-1-maxime@cerno.tech>
- <CAGb2v643z-GwEgOV_OS96ESihDgGNOwp2s7eyJr68QFyPNqd_Q@mail.gmail.com>
+        Fri, 20 Dec 2019 03:05:14 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBK7xeQK027368;
+        Fri, 20 Dec 2019 00:05:03 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=OUff02j2r31gNZcDLaHfXDojAzOxysBMfhBt7dA4C5k=;
+ b=ndr5reQvFCCDFJPqJbJIbuoFJ/mOxrMV3HzFhxdn0Ei2+ZUrLYFwOLTiaciANuu2Dre6
+ 6iCPOKGVNERWIRZsCn81yAp9SPe44tp9tLj/5qZnrkvBUBypoRzNG3RQ/a26ikmfJwSr
+ zyCE/DLn/ryLYtEXvkT7ktvNAqLeqCKN4g+poVJoip+oiTanttE6YMchhoEi6gzeFJ7T
+ ujX4+IvOEucKCHIeS01AxEAunwHc72Iln2UG05kBnWZ55LAAINwKcQC5LQmPXkUfeXzN
+ sXh+1+D5wNDEoFI68fRcYqh0cRSatJZz4B7JkSZFwxtxG4KjjT2uy0LuokhMOk8UPrhT zA== 
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2056.outbound.protection.outlook.com [104.47.45.56])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2wyr9p6rpx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 20 Dec 2019 00:05:03 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZhzsmQ2iuaLl89tBa5rABZ1HibklCRKL/eN58oXWc074LnrH/kiuPWTzcIlC5IsyYQIajYJugO82SDbdgrtTK0ScwYDIcp3jGwj2JkZERK1V3zU3MowzEcFkFPE3aZkUnE00pDvONHKkQMxR2AfNy5QUN4gYfrQHHZTaWoR1olIV5Td6hqOWlPe2JKVJ4/OxmjLKw5OpshXSYz8rPqoVlAlO6f/fCk2gBj00DEeP+oyVMMWYKP+u+fAP6Hp177TwjHQyUe5nHmIcHH4mJJXk4NYdXEtl3SzbVEXBNwTUt25WPkc1BK0GECC9gufX2yed7kX3UF6SHAHYvzS7OSmCzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OUff02j2r31gNZcDLaHfXDojAzOxysBMfhBt7dA4C5k=;
+ b=QGQIXUBEXIu4oJFLE0l+eYq/rI08IeZKYhYUgwCnjk4BloxVJPdlT1sbMW1bPkKwaiL62JieTw84sKBXwACnmBRlTPVUfLBocG4ljagLB35XTija/ob2zkfzXKNupvepTbaVN4OgH4ZCY6cYeowqFEYT3m7PkoRlF5oB7ubOvJfDMD6ola8VI4RIAUY0qU7IIjPfkdCN8zRB9CUdWyRfSkQ1XtAeYTHNfXveLEAC6kRoBmb0NOoKQZxIZ9EkPi2WGGATjtlmlQpf7Yz3C7pp3gRynO61QTGWJyVTSNn6q3k9nvWM/S833lFEbIGOsHLY+LPo4UkR3fiVZOc8VfHBmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OUff02j2r31gNZcDLaHfXDojAzOxysBMfhBt7dA4C5k=;
+ b=JHincInRfjs6nQTECy27v6p6Tpo+TVPJSUKHV6ynaSfa8Rni3+PxMfzUjazTszhobhOqYN2hngJ1D3+Db5ZRTa+rzx41WY/fFhAkvQvIGigzbMJgDTgZNZM9xDqL3Z2lh3LzoaMOQ6hSVe1dZ0q8y8gYUKnIJKxgvqFkwj5eISE=
+Received: from BYAPR07MB5110.namprd07.prod.outlook.com (20.176.255.14) by
+ BYAPR07MB6134.namprd07.prod.outlook.com (20.179.88.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.16; Fri, 20 Dec 2019 08:04:58 +0000
+Received: from BYAPR07MB5110.namprd07.prod.outlook.com
+ ([fe80::e4c9:23b3:78c1:acdd]) by BYAPR07MB5110.namprd07.prod.outlook.com
+ ([fe80::e4c9:23b3:78c1:acdd%6]) with mapi id 15.20.2559.012; Fri, 20 Dec 2019
+ 08:04:58 +0000
+From:   Yuti Suresh Amonkar <yamonkar@cadence.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jsarha@ti.com" <jsarha@ti.com>,
+        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
+        "praneeth@ti.com" <praneeth@ti.com>,
+        Milind Parab <mparab@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+Subject: RE: [RESEND PATCH v1 02/15] dt-bindings:phy: Convert Cadence MHDP PHY
+ bindings to YAML.
+Thread-Topic: [RESEND PATCH v1 02/15] dt-bindings:phy: Convert Cadence MHDP
+ PHY bindings to YAML.
+Thread-Index: AQHVsCQ8Q9KmNWZjKkyps5tDo7aPsqfCAUsAgACikQA=
+Date:   Fri, 20 Dec 2019 08:04:58 +0000
+Message-ID: <BYAPR07MB511064CAE0E9B64564261643D22D0@BYAPR07MB5110.namprd07.prod.outlook.com>
+References: <1576069760-11473-1-git-send-email-yamonkar@cadence.com>
+ <1576069760-11473-3-git-send-email-yamonkar@cadence.com>
+ <20191219211050.GA1841@bogus>
+In-Reply-To: <20191219211050.GA1841@bogus>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 553d7f9a-0c3d-4301-6ed7-08d785234ea8
+x-ms-traffictypediagnostic: BYAPR07MB6134:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR07MB61340B0DB318F4D99C231CC6D22D0@BYAPR07MB6134.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
+x-forefront-prvs: 025796F161
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(366004)(189003)(199004)(36092001)(13464003)(478600001)(19627235002)(7696005)(52536014)(5660300002)(71200400001)(107886003)(6916009)(4326008)(86362001)(8936002)(316002)(9686003)(8676002)(81156014)(81166006)(54906003)(55016002)(33656002)(6506007)(76116006)(53546011)(2906002)(26005)(186003)(55236004)(66946007)(64756008)(66556008)(66476007)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB6134;H:BYAPR07MB5110.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Qe8/WgEWMNVUwGGTHmWFqKmi4vtL9G6+LOAiflXN96vS3GUtBy5AbOutRUpBfP6pTpHkVh119iQ0WL321ZdeWxGHJAK0g/g5PJ1DhqgUrIJMUfHU8kUuAH7g5iOzY9Y2RUhbazgHm856zn2u2O2iFjr2jPUYo2eqL2nyR5ZUnGXLunkkcyS9MuOnkm3C6Jg63T+illt6aVyjFkPiFL+vzTh9Lxz5v6jpDq0to9Ug3AmsXioE9SCt4uvp4ep9mcayA8ZjrJG/vhTUe63btBnI0hStLsiT6lg6zoTRDdwJXaOWhVeAJH28uJ1YQgrc77i06D9OyBTM4/eY3T6FjYWkQg93DbOIKoia5gIJMAqdHbpi+PTV/jTm9EwUEcrlU5s2rJ0LcXFkSknXwLH4qanedYM7BgiQE4ZIhCpldOgOcxenSMu7YIMI3nqMSrnHLIOUiYgAOhkn6GbDVsym6U+CauLMk6tqM0/e+zxYASS+2Y4sfq64+cfTnE5tkW9H6qSUvz6x8HMs3FAjvsJa+bjIQ9x032wqSxKMiDsILxnmPuqOqE5hHZ0oxQE/Fh0pejE0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w4wy6vydjn7c7a6g"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v643z-GwEgOV_OS96ESihDgGNOwp2s7eyJr68QFyPNqd_Q@mail.gmail.com>
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 553d7f9a-0c3d-4301-6ed7-08d785234ea8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 08:04:58.4496
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X86bmRxp5qeE6Nx49q6OmWaK5NVuOMfOeqavNJe7LPHx/4PAqOHJMU6FtnMAwP0lzcVWWurYpqCe++EKoomiKEXGb1eaQhIgicdrfSXS66o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB6134
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-19_08:2019-12-17,2019-12-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ impostorscore=0 adultscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 phishscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912200063
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---w4wy6vydjn7c7a6g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
 Hi,
 
-On Thu, Dec 19, 2019 at 11:24:52PM +0800, Chen-Yu Tsai wrote:
-> On Thu, Dec 19, 2019 at 4:43 PM Maxime Ripard <maxime@cerno.tech> wrote:
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Friday, December 20, 2019 2:41
+> To: Yuti Suresh Amonkar <yamonkar@cadence.com>
+> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> kishon@ti.com; mark.rutland@arm.com; jsarha@ti.com;
+> tomi.valkeinen@ti.com; praneeth@ti.com; Milind Parab
+> <mparab@cadence.com>; Swapnil Kashinath Jakhade
+> <sjakhade@cadence.com>
+> Subject: Re: [RESEND PATCH v1 02/15] dt-bindings:phy: Convert Cadence
+> MHDP PHY bindings to YAML.
+>=20
+> EXTERNAL MAIL
+>=20
+>=20
+> On Wed, Dec 11, 2019 at 02:09:07PM +0100, Yuti Amonkar wrote:
+>=20
+> > - Convert the MHDP PHY devicetree bindings to yaml schemas.
+>=20
+> > - Rename DP PHY to have generic Torrent PHY nomrnclature.
+>=20
+> > - Rename compatible string from "cdns,dp-phy" to "cdns,torrent-phy".
+>=20
+>=20
+>=20
+> You can't just change compatible strings. It's an ABI. Unless you know
+>=20
+> for sure there are no users that would care.
+>=20
+
+The driver has never been functional and therefore not used in any active u=
+se cases. We will update this in the commit description=20
+of next patch series.
+
+>=20
+>=20
 > >
-> > The Allwinner A80 SoCs have a USB PHY controller that is used by Linux,
-> > with a matching Device Tree binding.
-> >
-> > Now that we have the DT validation in place, let's convert the device tree
-> > bindings for that controller over to a YAML schemas.
-> >
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+>=20
+> > Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+>=20
 > > ---
-> >  .../phy/allwinner,sun9i-a80-usb-phy.yaml      | 135 ++++++++++++++++++
-> >  .../devicetree/bindings/phy/sun9i-usb-phy.txt |  37 -----
-> >  2 files changed, 135 insertions(+), 37 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
+>=20
+> >  .../devicetree/bindings/phy/phy-cadence-dp.txt     | 30 ------------
+>=20
+> >  .../bindings/phy/phy-cadence-torrent.yaml          | 57
+> ++++++++++++++++++++++
+>=20
+> >  2 files changed, 57 insertions(+), 30 deletions(-)
+>=20
+> >  delete mode 100644 Documentation/devicetree/bindings/phy/phy-
+> cadence-dp.txt
+>=20
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-
+> cadence-torrent.yaml
+>=20
 > >
-> > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
+>=20
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+> b/Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>=20
+> > deleted file mode 100644
+>=20
+> > index 7f49fd54e..0000000
+>=20
+> > --- a/Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>=20
+> > +++ /dev/null
+>=20
+> > @@ -1,30 +0,0 @@
+>=20
+> > -Cadence MHDP DisplayPort SD0801 PHY binding
+>=20
+> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>=20
+> > -
+>=20
+> > -This binding describes the Cadence SD0801 PHY hardware included with
+>=20
+> > -the Cadence MHDP DisplayPort controller.
+>=20
+> > -
+>=20
+> > -----------------------------------------------------------------------=
+---------
+>=20
+> > -Required properties (controller (parent) node):
+>=20
+> > -- compatible	: Should be "cdns,dp-phy"
+>=20
+> > -- reg		: Defines the following sets of registers in the parent
+>=20
+> > -		  mhdp device:
+>=20
+> > -			- Offset of the DPTX PHY configuration registers
+>=20
+> > -			- Offset of the SD0801 PHY configuration registers
+>=20
+> > -- #phy-cells	: from the generic PHY bindings, must be 0.
+>=20
+> > -
+>=20
+> > -Optional properties:
+>=20
+> > -- num_lanes	: Number of DisplayPort lanes to use (1, 2 or 4)
+>=20
+> > -- max_bit_rate	: Maximum DisplayPort link bit rate to use, in Mbps
+> (2160,
+>=20
+> > -		  2430, 2700, 3240, 4320, 5400 or 8100)
+>=20
+> > -----------------------------------------------------------------------=
+---------
+>=20
+> > -
+>=20
+> > -Example:
+>=20
+> > -	dp_phy: phy@f0fb030a00 {
+>=20
+> > -		compatible =3D "cdns,dp-phy";
+>=20
+> > -		reg =3D <0xf0 0xfb030a00 0x0 0x00000040>,
+>=20
+> > -		      <0xf0 0xfb500000 0x0 0x00100000>;
+>=20
+> > -		num_lanes =3D <4>;
+>=20
+> > -		max_bit_rate =3D <8100>;
+>=20
+> > -		#phy-cells =3D <0>;
+>=20
+> > -	};
+>=20
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-
+> torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-
+> torrent.yaml
+>=20
 > > new file mode 100644
-> > index 000000000000..ded7d6f0a119
+>=20
+> > index 0000000..4fa9d0a
+>=20
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > @@ -0,0 +1,135 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+>=20
+> > +++ b/Documentation/devicetree/bindings/phy/phy-cadence-
+> torrent.yaml
+>=20
+>=20
+>=20
+> Normal file naming is using the compatible string.
+>=20
+>=20
+>=20
+> > @@ -0,0 +1,57 @@
+>=20
 > > +%YAML 1.2
+>=20
 > > +---
-> > +$id: http://devicetree.org/schemas/phy/allwinner,sun9i-a80-usb-phy.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>=20
+> > +$id: "https://urldefense.proofpoint.com/v2/url?u=3Dhttp-
+> 3A__devicetree.org_schemas_phy_phy-2Dcadence-2Dtorrent.yaml-
+> 23&d=3DDwIBAg&c=3DaUq983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-
+> _haXqY&r=3DxythEVTj32hrXbonw_U5uD9n5Dh9J7TTTznvmGAGKo4&m=3D9-
+> kyiRknYkYa5DqMjgD8NdzvcteoR6ElMbozga1HYMw&s=3DR0d1BN7TnO9WvU1
+> Wd1msGE7rObNLWn_xhVoW247Ggu0&e=3D "
+>=20
+> > +$schema: "https://urldefense.proofpoint.com/v2/url?u=3Dhttp-
+> 3A__devicetree.org_meta-2Dschemas_core.yaml-
+> 23&d=3DDwIBAg&c=3DaUq983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-
+> _haXqY&r=3DxythEVTj32hrXbonw_U5uD9n5Dh9J7TTTznvmGAGKo4&m=3D9-
+> kyiRknYkYa5DqMjgD8NdzvcteoR6ElMbozga1HYMw&s=3DuIcZwMHgTJIbhKM1q
+> hWr_-4NoZWn5KaohCrVBA28Ruk&e=3D "
+>=20
 > > +
-> > +title: Allwinner A80 USB PHY Device Tree Bindings
+>=20
+> > +title: Cadence Torrent SD0801 PHY binding for DisplayPort
+>=20
 > > +
+>=20
+> > +description:
+>=20
+> > +  This binding describes the Cadence SD0801 PHY hardware included with
+>=20
+> > +  the Cadence MHDP DisplayPort controller.
+>=20
+> > +
+>=20
 > > +maintainers:
-> > +  - Chen-Yu Tsai <wens@csie.org>
-> > +  - Maxime Ripard <mripard@kernel.org>
+>=20
+> > +  - Swapnil Jakhade <sjakhade@cadence.com>
+>=20
+> > +  - Yuti Amonkar <yamonkar@cadence.com>
+>=20
 > > +
+>=20
 > > +properties:
-> > +  "#phy-cells":
-> > +    const: 0
-> > +
+>=20
 > > +  compatible:
-> > +    const: allwinner,sun9i-a80-usb-phy
+>=20
+> > +    const: cdns,torrent-phy
+>=20
 > > +
+>=20
 > > +  reg:
-> > +    maxItems: 1
+>=20
+> > +    items:
+>=20
+> > +      - description: Offset of the DPTX PHY configuration registers.
+>=20
+> > +      - description: Offset of the SD0801 PHY configuration registers.
+>=20
 > > +
-> > +  clocks:
-> > +    anyOf:
-> > +      - description: Main PHY Clock
+>=20
+> > +  "#phy-cells":
+>=20
+> > +    const: 0
+>=20
 > > +
-> > +      - items:
-> > +          - description: Main PHY clock
-> > +          - description: HSIC 12MHz clock
-> > +          - description: HSIC 480MHz clock
-> > +
-> > +  clock-names:
-> > +    oneOf:
-> > +      - const: phy
-> > +
-> > +      - items:
-> > +          - const: phy
-> > +          - const: hsic_12M
-> > +          - const: hsic_480M
-> > +
-> > +  resets:
-> > +    anyOf:
-> > +      - description: Normal USB PHY reset
-> > +
-> > +      - items:
-> > +          - description: Normal USB PHY reset
-> > +          - description: HSIC Reset
-> > +
-> > +  reset-names:
-> > +    oneOf:
-> > +      - const: phy
-> > +
-> > +      - items:
-> > +          - const: phy
-> > +          - const: hsic
-> > +
-> > +  phy_type:
-> > +    const: hsic
+>=20
+> > +  num_lanes:
+>=20
 > > +    description:
-> > +      When absent, the PHY type will be assumed to be normal USB.
+>=20
+> > +      Number of DisplayPort lanes.
+>=20
+> > +    allOf:
+>=20
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+>=20
+> > +      - enum: [1, 2, 4]
+>=20
 > > +
-> > +  phy-supply:
+>=20
+> > +  max_bit_rate:
+>=20
 > > +    description:
-> > +      Regulator that powers VBUS
+>=20
+> > +      Maximum DisplayPort link bit rate to use, in Mbps
+>=20
+> > +    allOf:
+>=20
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+>=20
+> > +      - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+>=20
 > > +
+>=20
 > > +required:
-> > +  - "#phy-cells"
+>=20
 > > +  - compatible
+>=20
 > > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - resets
-> > +  - reset-names
+>=20
+> > +  - "#phy-cells"
+>=20
 > > +
-> > +additionalProperties: false
-> > +
-> > +if:
-> > +  properties:
-> > +    phy_type:
-> > +      const: hsic
-> > +
-> > +  required:
-> > +    - phy_type
-> > +
-> > +then:
-> > +  properties:
-> > +    clocks:
-> > +      maxItems: 3
-> > +
-> > +    clock-names:
-> > +      maxItems: 3
-> > +
-> > +    resets:
-> > +      maxItems: 2
-> > +
-> > +    reset-names:
-> > +      maxItems: 2
->
-> So this is slightly incorrect. If phy_type == "hsic", then the
-> "phy" clock and reset should not be needed. I say should because
-> no boards actually came with HSIC implemented. The A80 Optimus
-> board had the HSIC lines on one of the GPIO headers, but I never
-> had any HSIC chips lol.
+>=20
+> > +examples:
+>=20
+> > +  - |
+>=20
+> > +    dp_phy: phy@f0fb030a00 {
+>=20
+> > +          compatible =3D "cdns,torrent-phy";
+>=20
+> > +          reg =3D <0xf0 0xfb030a00 0x0 0x00000040>,
+>=20
+> > +                <0xf0 0xfb500000 0x0 0x00100000>;
+>=20
+> > +          num_lanes =3D <4>;
+>=20
+> > +          max_bit_rate =3D <8100>;
+>=20
+> > +          #phy-cells =3D <0>;
+>=20
+> > +    };
+>=20
+> > +...
+>=20
+> > --
+>=20
+> > 2.7.4
+>=20
+> >
 
-This isn't what the previous binding was saying though :/
-
-> > -- phy_type : "hsic" for HSIC usage;
-> > -            other values or absence of this property indicates normal USB
-> > -- clocks : phandle + clock specifier for the phy clocks
-> > -- clock-names : depending on the "phy_type" property,
-> > -  * "phy" for normal USB
-> > -  * "hsic_480M", "hsic_12M" for HSIC
-> > -- resets : a list of phandle + reset specifier pairs
-> > -- reset-names : depending on the "phy_type" property,
-> > -  * "phy" for normal USB
-> > -  * "hsic" for HSIC
-
-It's speficied that the reset and clock is needed. If we want to
-revise that, we can do it, but I guess it should be in a separate
-patch than the one doing the conversion. Here we just want to express
-the exact same thing.
-
-Maxime
-
---w4wy6vydjn7c7a6g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfyAPQAKCRDj7w1vZxhR
-xW5+AP9OQT0iG1KACB7+fyhb1ftgTYAtbu5A3+Qdmq1mZkzQTQEA+VI4epD3poDc
-WIyy6GR5gCIfVqFBIX8TjubkJWEq0w4=
-=z95X
------END PGP SIGNATURE-----
-
---w4wy6vydjn7c7a6g--
+Thanks & Regards=20
+Yuti Amonkar
