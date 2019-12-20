@@ -2,206 +2,133 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE85C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D44C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44A02146E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A8B2146E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:32:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ufnVJ3iP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfLTJb4 (ORCPT
+        id S1727262AbfLTJc4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:31:56 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44708 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbfLTJb4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 04:31:56 -0500
-Received: from 79.184.253.1.ipv4.supernova.orange.pl (79.184.253.1) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id fe89d39e7f44edc6; Fri, 20 Dec 2019 10:31:54 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Niklas Cassel <nks@flawful.org>, linux-arm-msm@vger.kernel.org,
-        amit.kucheria@linaro.org, sboyd@kernel.org, vireshk@kernel.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/5] dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
-Date:   Fri, 20 Dec 2019 10:31:53 +0100
-Message-ID: <121319954.uyNvbQYpoT@kreacher>
-In-Reply-To: <20191129213917.1301110-2-niklas.cassel@linaro.org>
-References: <20191129213917.1301110-1-niklas.cassel@linaro.org> <20191129213917.1301110-2-niklas.cassel@linaro.org>
+        Fri, 20 Dec 2019 04:32:56 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34283 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727184AbfLTJc4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 04:32:56 -0500
+Received: by mail-pf1-f194.google.com with SMTP id l127so4896139pfl.1;
+        Fri, 20 Dec 2019 01:32:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hXPvfKvwAwee7RsrZpIamZ8UANcZvc4/7hzUJ9vWG30=;
+        b=ufnVJ3iPxZcZtJ92hsB9jBbHS38GFsw9MyCcx9SHRHdXmWo1pI6ZDU4ZFgZ9JeU7ZS
+         j2irv1vy1DCI/tEIMvh7yIDPtZ4T2IudbrsSUY7w2xI/3TNYdhDJNK4F0fqI2AjK4S1B
+         DZnLX8Uk0BHcXbzLOK9slVuYcpDEF75U/nEREA0vm3SQj7PKE3i2dUru17xsbs7PGUa+
+         uHOr1Rs58B+A9FuO5Dp9W3nhFJ2wYxY31YasiyNKs/k1RteF/C5jxwRfvHem7LcAOi9t
+         +DDteb1doMFCbUdUvGAAcbhL1yk50HwuVaCqH7+UjW7Kjt6F/GNcQIPX9MVEwJgoIE42
+         UdBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hXPvfKvwAwee7RsrZpIamZ8UANcZvc4/7hzUJ9vWG30=;
+        b=HPtTG0JCTxOaBNgAIsfMmf+tNOeaRwFQ7NhINxvzxBhxfSSSuc8V2q5315PjkjKH2E
+         aiKGEWFlL5gaJ4hpBo22WUXTS93EW9ODw+xyWBu/Y2fT1gbtaxlkpCGgp3Jp2O5JwukQ
+         1dUgYwR31j78hLrdSMAVveGCZQSD6iCqK6JIpixrcxCQ6S/psee2yA9sMZzUE/6Zecmk
+         BXfXig3Tx2il9wo2kW4xaB8eYW+bA2Ku/4VjMVKjJKFWKxr0zBaJ4ZMBS+l909oNGHMd
+         TEqCWnUgUhzGX1/qnOdQJkG5np2HkscRP+oab9xZL/PfRFLuBt0VZI198XqV5WarmnKQ
+         uzYg==
+X-Gm-Message-State: APjAAAWwpY9dpUzpGVRoG7MhYV++Eq9GUzOuMobX9ujt2jHMyj6Qqqrk
+        7TNZlSkdmnElOIg4Vgz1rMTmnZc1X5ETp+7G9OA=
+X-Google-Smtp-Source: APXvYqy89KLn49Y7AOaiBDwvJUbGIwKrXpVrAXbM6ogcz28z1+7I0//57vSQh5E6i+knbxU9bqCwYbEzCfkP8R4ECrQ=
+X-Received: by 2002:a62:1944:: with SMTP id 65mr15366030pfz.151.1576834375318;
+ Fri, 20 Dec 2019 01:32:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20191219041039.23396-1-dan@dlrobertson.com> <20191219041039.23396-3-dan@dlrobertson.com>
+ <CAHp75VdVmfAi5hSp23Gn8nm6LmX-Mr5Tnxcbus90DrRL+gVFRA@mail.gmail.com>
+ <20191220043220.GA16415@nessie> <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
+In-Reply-To: <CAHp75Vec5ADoFH9KoTnU5+uEZvGqS2+NUN+MLTiwzofDtGG0+A@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 20 Dec 2019 11:32:42 +0200
+Message-ID: <CAHp75VdzE4uKKJ_5g8eMZR+GSX9W+7Lc+kh2OYt5o7_8_NHTpw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/3] iio: (bma400) add driver for the BMA400
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Friday, November 29, 2019 10:39:11 PM CET Niklas Cassel wrote:
-> Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
-> 
-> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
-> Changes since v6:
-> -Picked up Bjorn's and Ulf's Reviewed-by.
-> 
->  .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
->  1 file changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> new file mode 100644
-> index 000000000000..ab0d5ebbad4e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> @@ -0,0 +1,130 @@
-> +QCOM CPR (Core Power Reduction)
-> +
-> +CPR (Core Power Reduction) is a technology to reduce core power on a CPU
-> +or other device. Each OPP of a device corresponds to a "corner" that has
-> +a range of valid voltages for a particular frequency. While the device is
-> +running at a particular frequency, CPR monitors dynamic factors such as
-> +temperature, etc. and suggests adjustments to the voltage to save power
-> +and meet silicon characteristic requirements.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address and size of the rbcpr register region
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the CPR interrupt
-> +
-> +- clocks:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: phandle to the reference clock
-> +
-> +- clock-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "ref"
-> +
-> +- vdd-apc-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: phandle to the vdd-apc-supply regulator
-> +
-> +- #power-domain-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: should be 0
-> +
-> +- operating-points-v2:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: A phandle to the OPP table containing the
-> +		    performance states supported by the CPR
-> +		    power domain
-> +
-> +- acc-syscon:
-> +	Usage: optional
-> +	Value type: <phandle>
-> +	Definition: phandle to syscon for writing ACC settings
-> +
-> +- nvmem-cells:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: phandle to nvmem cells containing the data
-> +		    that makes up a fuse corner, for each fuse corner.
-> +		    As well as the CPR fuse revision.
-> +
-> +- nvmem-cell-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
-> +		    "cpr_quotient_offset3", "cpr_init_voltage1",
-> +		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
-> +		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
-> +		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
-> +		    for qcs404.
-> +
-> +Example:
-> +
-> +	cpr_opp_table: cpr-opp-table {
-> +		compatible = "operating-points-v2-qcom-level";
-> +
-> +		cpr_opp1: opp1 {
-> +			opp-level = <1>;
-> +			qcom,opp-fuse-level = <1>;
-> +		};
-> +		cpr_opp2: opp2 {
-> +			opp-level = <2>;
-> +			qcom,opp-fuse-level = <2>;
-> +		};
-> +		cpr_opp3: opp3 {
-> +			opp-level = <3>;
-> +			qcom,opp-fuse-level = <3>;
-> +		};
-> +	};
-> +
-> +	power-controller@b018000 {
-> +		compatible = "qcom,qcs404-cpr", "qcom,cpr";
-> +		reg = <0x0b018000 0x1000>;
-> +		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
-> +		clocks = <&xo_board>;
-> +		clock-names = "ref";
-> +		vdd-apc-supply = <&pms405_s3>;
-> +		#power-domain-cells = <0>;
-> +		operating-points-v2 = <&cpr_opp_table>;
-> +		acc-syscon = <&tcsr>;
-> +
-> +		nvmem-cells = <&cpr_efuse_quot_offset1>,
-> +			<&cpr_efuse_quot_offset2>,
-> +			<&cpr_efuse_quot_offset3>,
-> +			<&cpr_efuse_init_voltage1>,
-> +			<&cpr_efuse_init_voltage2>,
-> +			<&cpr_efuse_init_voltage3>,
-> +			<&cpr_efuse_quot1>,
-> +			<&cpr_efuse_quot2>,
-> +			<&cpr_efuse_quot3>,
-> +			<&cpr_efuse_ring1>,
-> +			<&cpr_efuse_ring2>,
-> +			<&cpr_efuse_ring3>,
-> +			<&cpr_efuse_revision>;
-> +		nvmem-cell-names = "cpr_quotient_offset1",
-> +			"cpr_quotient_offset2",
-> +			"cpr_quotient_offset3",
-> +			"cpr_init_voltage1",
-> +			"cpr_init_voltage2",
-> +			"cpr_init_voltage3",
-> +			"cpr_quotient1",
-> +			"cpr_quotient2",
-> +			"cpr_quotient3",
-> +			"cpr_ring_osc1",
-> +			"cpr_ring_osc2",
-> +			"cpr_ring_osc3",
-> +			"cpr_fuse_revision";
-> +	};
-> 
+On Fri, Dec 20, 2019 at 11:27 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Fri, Dec 20, 2019 at 6:48 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> > On Thu, Dec 19, 2019 at 01:02:28PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Dec 19, 2019 at 6:27 AM Dan Robertson <dan@dlrobertson.com> wrote:
+>
+> > > > +static int bma400_set_accel_output_data_rate(struct bma400_data *data,
+> > > > +                                            int hz, int uhz)
+> > > > +{
+> > > > +       unsigned int idx;
+> > > > +       unsigned int odr;
+> > > > +       unsigned int val;
+> > > > +       int ret;
+> > > > +
+> > > > +       if (hz >= BMA400_ACC_ODR_MIN_WHOLE_HZ) {
+> > > > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> > > > +                       return -EINVAL;
+> > > > +
+> > > > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
+> > >
+> > > Again, AFAICS division may be avoided in both cases (% and / above)
+> > > because of is_power_of_2() check below.
+> > > Can you revisit this?
+> >
+> > Yeah I can update this in the next patchset, but I don't know if it is much more
+> > readable this way.
+>
+> You may describe the algo in the comment.
+>
+> Let's see how it might look like
+>
+>   if (uhz)
+>     return -EINVAL;
+>   idx = __ffs(val);
+>   /* We're expecting value to be 2^n * ODR_MIN_WHOLE_HZ */
+>   if ((val >> idx) != BMA400_ACC_ODR_MIN_WHOLE_HZ)
 
-I have queued up this one and the [2/5] for 5.6, but if you'd rather want them
-to go in via a different patch, please let me know and I'll drop them.
+Okay, this would require trickier conditional for the cases when
+MIN_WHOLE_HZ can be divided by 2^k...
+Still from performance point of view it might be much faster than division.
 
-Thanks!
+>     retutn -EINVAL;
+>   idx += BMA400_ACC_ODR_MIN_RAW + 1;
+>
+> Would it work?
+>
+> > > > +               if (!is_power_of_2(val))
+> > > > +                       return -EINVAL;
+> > > > +
+> > > > +               idx = __ffs(val) + BMA400_ACC_ODR_MIN_RAW + 1;
 
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
