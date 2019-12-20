@@ -2,85 +2,90 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9857FC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FB6C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C132146E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="zFKX5Mx6"
+	by mail.kernel.org (Postfix) with ESMTP id 4426E24684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 15:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfLTPeG (ORCPT
+        id S1727471AbfLTPi7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 10:34:06 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:35226 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfLTPeF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 20 Dec 2019 10:34:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FlEdcjqR14Yp6BDuBVePu7rcTs7oSKGfaNl9lmmWvhY=; b=zFKX5Mx6zfivGSorxUsCX27mrf
-        Mdb7jKv4NoU2UpfVY45idZm7bRTqFThe+ouaRvXPd4oGnAAhXw3PSRzXQcp0PToyJj8nEk62cGtIX
-        bzhUpCsvadN1+mTB6aJRnpwhbimkq4102brSkFxx2RKwX8OJwhozOOuKIRSrBfEZCeSU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iiKHv-0003HC-5i; Fri, 20 Dec 2019 16:33:59 +0100
-Date:   Fri, 20 Dec 2019 16:33:59 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
+        Fri, 20 Dec 2019 10:38:59 -0500
+Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17104 "EHLO
+        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfLTPi7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 10:38:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1576856324; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=ete8nDfbjMemKuv3U1vyPbsLah+80GDIki/Ssl0DHwBEgQ67nsi31XHbzSdZjLXxLrVLn1VdPm/cb6M8D2Wa83ZS218ka1g0TCzKJD3M07dqiTVkP8rVg5AOhwr8CPlD4NjH1jsaG/0gv4NDRk0r0i4XhTtzmf/ZAUXEn/1pfjE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1576856324; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=jGAXoe+RtUEJhHVG4fzxyeeTaAMDlemfjZegvpM3sN8=; 
+        b=i+F4ra6ORh/ecCvorhhQponAjEmkVa2WQUiZb0k7wwH1bp4IvSc4WJ2W9sZIBssQ7bdh22ae2x3dm/729vW+JLuoSf+BRNVY3mVTghQDy3djvYbIqedckYeGCBNIgzsMLzdEu8rXI+Nfa8Q9Eba+LJ12x9qj0KYy2kyGeoLt5Jg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
+        with SMTPS id 157685632244183.04042224278498; Fri, 20 Dec 2019 07:38:42 -0800 (PST)
+Date:   Fri, 20 Dec 2019 15:23:10 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: Re: [PATCH V6 net-next 06/11] net: Introduce a new MII time stamping
- interface.
-Message-ID: <20191220153359.GA11117@lunn.ch>
-References: <cover.1576511937.git.richardcochran@gmail.com>
- <28939f11b984759257167e778d0c73c0dd206a35.1576511937.git.richardcochran@gmail.com>
- <20191217092155.GL6994@lunn.ch>
- <20191220145712.GA3846@localhost>
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v7 3/3] iio: (bma400) basic regulator support
+Message-ID: <20191220152310.GC16415@nessie>
+References: <20191219041039.23396-1-dan@dlrobertson.com>
+ <20191219041039.23396-4-dan@dlrobertson.com>
+ <CAHp75VeU07TsV2NC5Myvmi7Q6tARbmt9=wQDRnXFqaX2G2Luiw@mail.gmail.com>
+ <CACRpkdbTissSRyJ5uh8X6RFTM+VSSML-JmtOC_i8_UY0VTVRAA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191220145712.GA3846@localhost>
+In-Reply-To: <CACRpkdbTissSRyJ5uh8X6RFTM+VSSML-JmtOC_i8_UY0VTVRAA@mail.gmail.com>
+X-ZohoMailClient: External
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 06:57:12AM -0800, Richard Cochran wrote:
-> On Tue, Dec 17, 2019 at 10:21:55AM +0100, Andrew Lunn wrote:
-> > Forward declarations are considered bad.
+On Thu, Dec 19, 2019 at 10:41:19PM +0100, Linus Walleij wrote:
+> On Thu, Dec 19, 2019 at 12:06 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Dec 19, 2019 at 6:28 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> > >
+> > > Add support for the VDD and VDDIO regulators using the regulator
+> > > framework.
+> > ...
+> >
+> > > +       data->vdd_supply = devm_regulator_get(data->dev, "vdd");
+> >
+> > > +       data->vddio_supply = devm_regulator_get(data->dev, "vddio");
+> >
+> > devm_regulator_bulk_get() ?
 > 
-> Not by me!
+> I always thought to use regulator_bulk* maybe 3 regulators and
+> definitely for more that 4 as it also clouds the view bit and is not
+> as straightforward to read as the single functions, but I suppose
+> it is a bit subjective :)
 
-Lets see what David says.
+I tend to agree, but I think in this case it will at least simplify the
+goto's.
 
-> > For the moment what you have is sufficient. I doubt anybody is using
-> > the dp83640 with phylink, and the new hardware you are targeting seems
-> > to be RGMII based, not SERDES, which is the main use case for PHYLINK.
-> 
-> Yeah, my impression is that the phyter will be the first and last phy
-> time stamping device ever created.  Designers reject this part because
-> it is 100 mbit only.  And there are no gigabit+ phys with time
-> stamping at all.
+Cheers,
 
-The Marvell PHY datasheets indicate they support PTP. I've not looked
-at how they implement it, and if the current model will work.
+ - Dan
 
-   Andrew
