@@ -2,245 +2,223 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75EFC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695D2C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9502A2467F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62CA2465E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="rUQhNjKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfLTJQT (ORCPT
+        id S1727169AbfLTJRE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:16:19 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:9320 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727192AbfLTJQS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 04:16:18 -0500
-Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 20 Dec 2019
- 17:16:51 +0800
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3] arm64: dts: meson-a1: add I2C nodes
-Date:   Fri, 20 Dec 2019 17:16:11 +0800
-Message-ID: <20191220091611.36319-1-jian.hu@amlogic.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 20 Dec 2019 04:17:04 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:48102 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbfLTJRE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 04:17:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8sKO/6rYgJpRoRJmNrRhGysz5dxEpKO9tVycSPqCab8=; b=rUQhNjKM+HRZfwotzfjsxwyVR
+        /OUrO/+vNLWRNDPbyhaRE8kPk+rlE9f1UqZB2jiqDT6921lkT8K58MSGN2rvwFQeJedFDzdn4YBsb
+        1b6nJOGsm4S5Phak4lgdz7L5goKObNbpZba2w/+xDoDBe0HS+Gx3Emy+4H6QOn34Ki9AYUdlPOrFN
+        2JfNXEdQREndXYkSoulFl2q8WzZllIzzcJ4xWH/bsT1xfXLDTznn/RBAat/fXLA7QUiPsTI3Un7PP
+        6OgcCetpaVDxMszClczY8KXXVzBv06Rx1/18J4ZtWObepy++58xOqy7yEPLqXjR4H2vJkMOD0MCI7
+        OiCXIIqkQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:43814)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iiEOw-0007xC-7E; Fri, 20 Dec 2019 09:16:50 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iiEOo-0006EP-GA; Fri, 20 Dec 2019 09:16:42 +0000
+Date:   Fri, 20 Dec 2019 09:16:42 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     "antoine.tenart@free-electrons.com" 
+        <antoine.tenart@free-electrons.com>,
+        "jaz@semihalf.com" <jaz@semihalf.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191220091642.GJ25745@shell.armlinux.org.uk>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219190308.GE25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219214930.GG25745@shell.armlinux.org.uk>
+ <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.8.25]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are four I2C controllers in A1 series,
-Share the same comptible with AXG. Compared to AXG,
-Drive strength feature is newly added in A1.
+On Fri, Dec 20, 2019 at 07:38:45AM +0000, Madalin Bucur (OSS) wrote:
+> > -----Original Message-----
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > On Thu, Dec 19, 2019 at 09:34:57PM +0000, Madalin Bucur (OSS) wrote:
+> > > > -----Original Message-----
+> > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > > > On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
+> > > > > > -----Original Message-----
+> > > > > > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > > > > >
+> > > > > > On Thu, Dec 19, 2019 at 05:21:16PM +0200, Madalin Bucur wrote:
+> > > > > > > From: Madalin Bucur <madalin.bucur@nxp.com>
+> > > > > > >
+> > > > > > > Add explicit entries for XFI, SFI to make sure the device
+> > > > > > > tree entries for phy-connection-type "xfi" or "sfi" are
+> > > > > > > properly parsed and differentiated against the existing
+> > > > > > > backplane 10GBASE-KR mode.
+> > > > > >
+> > > > > > 10GBASE-KR is actually used for XFI and SFI (due to a slight
+> > > > > > mistake on my part, it should've been just 10GBASE-R).
+> > > > > >
+> > > > > > Please explain exactly what the difference is between XFI, SFI
+> > > > > > and 10GBASE-R. I have not been able to find definitive definitions
+> > > > > > for XFI and SFI anywhere, and they appear to be precisely identical
+> > > > > > to 10GBASE-R. It seems that it's just a terminology thing, with
+> > > > > > different groups wanting to "own" what is essentially exactly the
+> > > > > > same interface type.
+> > > > >
+> > > > > Hi Russell,
+> > > > >
+> > > > > 10GBase-R could be used as a common nominator but just as well 10G
+> > > > > and remove the rest while we're at it. There are/may be differences in
+> > > > > features, differences in the way the HW is configured (the most
+> > > > > important aspect) and one should be able to determine what interface
+> > > > > type is in use to properly configure the HW. SFI does not have the
+> > > > > CDR function in the PMD, relying on the PMA signal conditioning vs the
+> > > > > XFI that requires this in the PMD. We kept the xgmii compatible for so
+> > > > > long without much issues until someone started cleaning up the PHY
+> > > > > supported modes. Since we're doing that, let's be rigorous. The 10GBase-KR
+> > > > > is important too, we have some backplane code in preparation and
+> > > > > having it there could pave the way for a simpler integration.
+> > > >
+> > > > The problem we currently have is:
+> > > >
+> > > > $ grep '10gbase-kr' arch/*/boot/dts -r
+> > > >
+> > > > virtually none of those are actually backplane. For the mcbin
+> > > > matches, these are either to a 88x3310 PHY for the doubleshot, which
+> > > > dynamically operates between XFI, 5GBASE-R, 2500BASE-X, or SGMII according
+> > > > to the datasheet.
+> > >
+> > > Yes, I've seen it's used already in several places:
+> > >
+> > > $ grep PHY_INTERFACE_MODE_10GKR drivers/net -nr
+> > > drivers/net/phy/marvell10g.c:219:       if (iface !=
+> > PHY_INTERFACE_MODE_10GKR) {
+> > > drivers/net/phy/marvell10g.c:307:           phydev->interface !=
+> > PHY_INTERFACE_MODE_10GKR)
+> > > drivers/net/phy/marvell10g.c:389:            phydev->interface ==
+> > PHY_INTERFACE_MODE_10GKR) && phydev->link) {
+> > > drivers/net/phy/marvell10g.c:398:                       phydev-
+> > >interface = PHY_INTERFACE_MODE_10GKR;
+> > > drivers/net/phy/phylink.c:296:          case PHY_INTERFACE_MODE_10GKR:
+> > > drivers/net/phy/aquantia_main.c:361:            phydev->interface =
+> > PHY_INTERFACE_MODE_10GKR;
+> > > drivers/net/phy/aquantia_main.c:499:        phydev->interface !=
+> > PHY_INTERFACE_MODE_10GKR)
+> > > drivers/net/phy/sfp-bus.c:340:          return
+> > PHY_INTERFACE_MODE_10GKR;
+> > > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1117:   return
+> > interface == PHY_INTERFACE_MODE_10GKR ||
+> > > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1203:   case
+> > PHY_INTERFACE_MODE_10GKR:
+> > > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:1652:   case
+> > PHY_INTERFACE_MODE_10GKR:
+> > > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4761:   case
+> > PHY_INTERFACE_MODE_10GKR:
+> > > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:4783:   case
+> > PHY_INTERFACE_MODE_10GKR:
+> > >
+> > > We should fix this, if it's incorrect.
+> > >
+> > > > If we add something else, then the problem becomes what to do about
+> > > > that lot - one of the problems is, it seems we're going to be
+> > > > breaking DT compatibility by redefining 10gbase-kr to be correct.
+> > >
+> > > We need the committer/maintainer to update that to a correct value.
+> > 
+> > The general principle is, we don't break existing DT - in that, we
+> > expect DT files from current kernels to work with future kernels. So,
+> > we're kind of stuck with "10gbase-kr" being used for this at least in
+> > the medium term.
+> > 
+> > By all means introduce "xfi" and "sfi" if you think that there is a
+> > need to discriminate between the two, but I've seen no hardware which
+> > that treats them any differently from 10gbase-r.
+> > 
+> > If we want to support real 10gbase-kr, then I think we need to consider
+> > how to do that without affecting compatibility with what we already
+> > have.
+> > 
+> > --
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down
+> > 622kbps up
+> > According to speedtest.net: 11.9Mbps down 500kbps up
+> 
+> I've looked at the device tree entries using 10GBase-KR:
+> 
+> all these are disabled:
+> 
+> // disabled, commit mentions interface is SFI, jaz@semihalf.com
+> arch/arm64/boot/dts/marvell/cn9132-db.dts:107:  phy-mode = "10gbase-kr";
+> 
+> // disabled, SFI with SFP cage, jaz@semihalf.com
+> arch/arm64/boot/dts/marvell/cn9130-db.dts:131:  phy-mode = "10gbase-kr";
+> arch/arm64/boot/dts/marvell/cn9131-db.dts:89:   phy-mode = "10gbase-kr";
+> 
+> these are used:
+> 
+> // SFP ports, antoine.tenart@free-electrons.com
+> arch/arm64/boot/dts/marvell/armada-7040-db.dts:279:     phy-mode = "10gbase-kr"; 
+> arch/arm64/boot/dts/marvell/armada-8040-db.dts:190:     phy-mode = "10gbase-kr";
+> arch/arm64/boot/dts/marvell/armada-8040-db.dts:334:     phy-mode = "10gbase-kr";
+> 
+> // SFP, 10GKR, antoine.tenart@free-electrons.com
+> arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:37:   phy-mode = "10gbase-kr";
+> arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts:44:   phy-mode = "10gbase-kr";
+> 
+> // SFP, baruch@tkos.co.il
+> arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dts:279: phy-mode = "10gbase-kr";
+> 
+> // SFP+, rmk+kernel@armlinux.org.uk
+> arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:19:        phy-mode = "10gbase-kr"; 
+> arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dts:26:        phy-mode = "10gbase-kr"; 
+> 
+> I've added the information I could derive from the commit message.
+> Maybe the original authors of the commits can help us with more
+> information on the actual HW capabilities/operation mode.
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+How does this help us when we can't simply change the existing usage?
+We can update the DT but we can't free up the usage of "10gbase-kr".
 
----
-This patch depends on A1 clock patchset at [0][3]
-
-Changes since v1 at [1]:
--change reg length to 0x20
--assign i2c bus alias in dts file
--add new feature note compared to AXG in changelog
-
-Changes since v2 at [2]:
--remove the dependence the commit description
--remove i2c alias in dtsi
--reorder the i2c nodes
--reorder the i2c pins
-
-[0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
-[1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
-[2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
-[3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
----
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 142 ++++++++++++++++++++++
- 1 file changed, 142 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index eab2ecd36aa8..1542eeee699d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -117,6 +117,16 @@
- 				};
- 			};
- 
-+			i2c0: i2c@1400 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x1400 0x0 0x20>;
-+				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_A>;
-+				status = "disabled";
-+			};
-+
- 			uart_AO: serial@1c00 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
-@@ -136,6 +146,36 @@
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-+
-+			i2c1: i2c@5c00 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x5c00 0x0 0x20>;
-+				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_B>;
-+				status = "disabled";
-+			};
-+
-+			i2c2: i2c@6800 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x6800 0x0 0x20>;
-+				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_C>;
-+				status = "disabled";
-+			};
-+
-+			i2c3: i2c@6c00 {
-+				compatible = "amlogic,meson-axg-i2c";
-+				reg = <0x0 0x6c00 0x0 0x20>;
-+				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clocks = <&clkc_periphs CLKID_I2C_M_D>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		gic: interrupt-controller@ff901000 {
-@@ -171,3 +211,105 @@
- 		#clock-cells = <0>;
- 	};
- };
-+
-+&periphs_pinctrl {
-+	i2c0_f9_pins:i2c0-f9 {
-+		mux {
-+			groups = "i2c0_sck_f9",
-+				"i2c0_sda_f10";
-+			function = "i2c0";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c0_f11_pins:i2c0-f11 {
-+		mux {
-+			groups = "i2c0_sck_f11",
-+				"i2c0_sda_f12";
-+			function = "i2c0";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c1_a_pins:i2c1-a {
-+		mux {
-+			groups = "i2c1_sck_a",
-+				"i2c1_sda_a";
-+			function = "i2c1";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c1_x_pins:i2c1-x {
-+		mux {
-+			groups = "i2c1_sck_x",
-+				"i2c1_sda_x";
-+			function = "i2c1";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_a4_pins:i2c2-a4 {
-+		mux {
-+			groups = "i2c2_sck_a4",
-+				"i2c2_sda_a5";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_a8_pins:i2c2-a8 {
-+		mux {
-+			groups = "i2c2_sck_a8",
-+				"i2c2_sda_a9";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_x0_pins:i2c2-x0 {
-+		mux {
-+			groups = "i2c2_sck_x0",
-+				"i2c2_sda_x1";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c2_x15_pins:i2c2-x15 {
-+		mux {
-+			groups = "i2c2_sck_x15",
-+				"i2c2_sda_x16";
-+			function = "i2c2";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c3_f_pins:i2c3-f {
-+		mux {
-+			groups = "i2c3_sck_f",
-+				"i2c3_sda_f";
-+			function = "i2c3";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+
-+	i2c3_x_pins:i2c3-x {
-+		mux {
-+			groups = "i2c3_sck_x",
-+				"i2c3_sda_x";
-+			function = "i2c3";
-+			bias-pull-up;
-+			drive-strength-microamp = <3000>;
-+		};
-+	};
-+};
 -- 
-2.24.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
