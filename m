@@ -2,127 +2,312 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409A2C2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 02:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A28CC2D0C1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 02:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA7C24680
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 02:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C39B24682
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 02:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hIQnQhoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfLTCAa (ORCPT
+        id S1727151AbfLTCIG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 19 Dec 2019 21:00:30 -0500
-Received: from twhmllg4.macronix.com ([211.75.127.132]:20888 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfLTCAa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 21:00:30 -0500
-X-Greylist: delayed 876 seconds by postgrey-1.27 at vger.kernel.org; Thu, 19 Dec 2019 21:00:29 EST
-Received: from TWHMLLG4.macronix.com (localhost [127.0.0.2] (may be forged))
-        by TWHMLLG4.macronix.com with ESMTP id xBK1jrCs058740;
-        Fri, 20 Dec 2019 09:45:53 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id xBK1jKui058465;
-        Fri, 20 Dec 2019 09:45:20 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id C202A1DF76EF89CEE2A3;
-        Fri, 20 Dec 2019 09:45:20 +0800 (CST)
-In-Reply-To: <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
-References: <20191206134202.18784-1-chris.brandt@renesas.com> <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com> <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com> <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com> <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com> <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com> <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com> <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com> <TY1PR01MB1562E196AB1C582F186CC74B8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com> <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
-To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
-Cc:     "Mark Brown" <broonie@kernel.org>,
-        "Chris Brandt" <Chris.Brandt@renesas.com>,
+        Thu, 19 Dec 2019 21:08:06 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:61438 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbfLTCIG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 19 Dec 2019 21:08:06 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191220020803epoutp03234232fab15bbe71d3f0d6714f037296~h8jvLFzGA1142311423epoutp03Z
+        for <devicetree@vger.kernel.org>; Fri, 20 Dec 2019 02:08:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191220020803epoutp03234232fab15bbe71d3f0d6714f037296~h8jvLFzGA1142311423epoutp03Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576807683;
+        bh=eSs+MwiRJJZo0ItAbtDipT1NsXBGbUd77PDZ4na95io=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=hIQnQhoJYMaAWTc7l80AV3oHem0P3lPS0BOy693GAqQhioNDswV6CwhZxznZ8SjHA
+         wRzLgVvO18aMOXZIjpuXEe4Vow+XlrxpZnO91Ks+pMcZNuz+NWRFfBUHozzT1oQ8AV
+         I0vSj/ZkMPbOCpJ0X+eFOoNnGxPH5ByF+68QLazY=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191220020802epcas1p108d12b986890536113a2606dea22d0b2~h8juYXHfO1615416154epcas1p1K;
+        Fri, 20 Dec 2019 02:08:02 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47fBwZ6GCQzMqYm4; Fri, 20 Dec
+        2019 02:07:58 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E4.5B.48019.EFC2CFD5; Fri, 20 Dec 2019 11:07:58 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191220020758epcas1p15aa38ab68b96cfdf9491166fa8b6fe1e~h8jqZ6Txc1617816178epcas1p1t;
+        Fri, 20 Dec 2019 02:07:58 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191220020758epsmtrp1768c093c0d73d55aececf5ac2738683d~h8jqY-7wa1131511315epsmtrp1D;
+        Fri, 20 Dec 2019 02:07:58 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-82-5dfc2cfef306
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BB.25.10238.DFC2CFD5; Fri, 20 Dec 2019 11:07:57 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191220020757epsmtip1c89599970371f05d80681d316d666094~h8jqBJH4R1567315673epsmtip1B;
+        Fri, 20 Dec 2019 02:07:57 +0000 (GMT)
+Subject: Re: [PATCH v2 02/11] PM / devfreq: Remove
+ devfreq_get_devfreq_by_phandle function
+To:     Leonard Crestez <leonard.crestez@nxp.com>,
+        "krzk@kernel.org" <krzk@kernel.org>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "lukasz.luba@arm.com" <lukasz.luba@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "a.swigon@samsung.com" <a.swigon@samsung.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>,
+        "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Stephen Boyd" <sboyd@kernel.org>
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <4aedc0fc-db5b-95bd-cf25-c3d711f512d2@samsung.com>
+Date:   Fri, 20 Dec 2019 11:14:29 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-X-KeepSent: 3F92D76C:33FFFBFC-482584D6:00093DAC;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF3F92D76C.33FFFBFC-ON482584D6.00093DAC-482584D6.0009A51D@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Fri, 20 Dec 2019 09:45:21 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/12/20 AM 09:45:20,
-        Serialize complete at 2019/12/20 AM 09:45:20
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com xBK1jKui058465
+In-Reply-To: <VI1PR04MB7023160888F88B5800A90189EE2D0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAJsWRmVeSWpSXmKPExsWy7bCmvu4/nT+xBl+WG1vcn9fKaDH/yDlW
+        i/+PXrNa9D9+zWxx/vwGdouzTW/YLVbc/chqsenxNVaLy7vmsFl87j3CaPHpwX9mixnn9zFZ
+        LGxqYbdYe+Quu8XS6xeZLG43rmCzaN17hN1B0GPNvDWMHptWdbJ5bF5S77Hx3Q4mj74tqxg9
+        tl+bx+zxeZNcAHtUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKL
+        T4CuW2YO0AdKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnALLAr3ixNzi0rx0veT8
+        XCtDAwMjU6DChOyMxT9esBY0GlQcO36fuYFxuXoXIyeHhICJRNfNDSxdjFwcQgI7GCVuXNoG
+        5XxilLh4+wIbhPONUeLmvicsMC2zX79jgkjsZZT4sLwHquo9o8TChomMIFXCAjESHxduYO1i
+        5OAQEQiROHIwDaSGWeAmm8SFW1OYQGrYBLQk9r+4wQZi8wsoSlz98Risl1fATuLBh1VgNSwC
+        qhJ73j1iBrFFBcIkTm5rgaoRlDg5E+QiDg5OgViJQ5PUQMLMAuISt57MZ4Kw5SW2v53DDLJX
+        QuAcu8SDTcuhPnCRuHb3BCOELSzx6vgWdghbSuJlfxuUXS2x8uQRNojmDkaJLfsvsEIkjCX2
+        L53MBLKYWUBTYv0ufYiwosTO33MZIRbzSbz72gP2u4QAr0RHmxBEibLE5Qd3mSBsSYnF7Z1s
+        ExiVZiH5ZhaSF2YheWEWwrIFjCyrGMVSC4pz01OLDQtMkGN7EyM4dWtZ7GDcc87nEKMAB6MS
+        D69D2u9YIdbEsuLK3EOMEhzMSiK8tzt+xgrxpiRWVqUW5ccXleakFh9iNAUG9kRmKdHkfGBe
+        ySuJNzQ1MjY2tjAxNDM1NFQS5+X4cTFWSCA9sSQ1OzW1ILUIpo+Jg1OqgXGF3qIQvQ1ix2Ju
+        p/C1xwSnzEvVUjIM8GR55cfa9FDKoE3vufazJrMHx9JXFd1S43pkvLBkw103q2M7z+q4/uBU
+        W/v67sonEYEKat8uCCY03DrNble9Z7mnzE/NmS/f7Up7u3jNPf24UBsf3X7WgtR1iVVX574W
+        /yK2//C3wxMVVxgLBqpeTVFiKc5INNRiLipOBAB5BPO58wMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsWy7bCSnO5fnT+xBkcfmVrcn9fKaDH/yDlW
+        i/+PXrNa9D9+zWxx/vwGdouzTW/YLVbc/chqsenxNVaLy7vmsFl87j3CaPHpwX9mixnn9zFZ
+        LGxqYbdYe+Quu8XS6xeZLG43rmCzaN17hN1B0GPNvDWMHptWdbJ5bF5S77Hx3Q4mj74tqxg9
+        tl+bx+zxeZNcAHsUl01Kak5mWWqRvl0CV8biHy9YCxoNKo4dv8/cwLhcvYuRk0NCwERi9ut3
+        TF2MXBxCArsZJa7c2c8MkZCUmHbxKJDNAWQLSxw+XAwSFhJ4yyjx/G4eiC0sECPxceEGVhBb
+        RCBEov/tYhaQOcwCd9kkvuz8zwwxdBazxKK9/9hAqtgEtCT2v7gBZvMLKEpc/fGYEcTmFbCT
+        ePBhFROIzSKgKrHn3SOwI0QFwiR2LnnMBFEjKHFy5hMWkIM4BWIlDk1SAwkzC6hL/Jl3iRnC
+        Fpe49WQ+E4QtL7H97RzmCYzCs5B0z0LSMgtJyywkLQsYWVYxSqYWFOem5xYbFhjmpZbrFSfm
+        Fpfmpesl5+duYgTHsJbmDsbLS+IPMQpwMCrx8Dqk/Y4VYk0sK67MPcQowcGsJMJ7u+NnrBBv
+        SmJlVWpRfnxRaU5q8SFGaQ4WJXHep3nHIoUE0hNLUrNTUwtSi2CyTBycUg2Mc3JMDzbemhMi
+        yxfTpJ4kEryx1To8fcqBGat4BPU1HBPztVknKETb6PKkLGeZutMl8/nxaDGpO20b47Sq4xrY
+        Hs6bxj/L8OKz1P1NUi9+mzdqCCt2y+mcZZus7sJn6NDRe1q8u51x8z2rU9cbpdd895u/fk3i
+        7sUK6yUqf93ik9MVuT7121UlluKMREMt5qLiRABUckrr3QIAAA==
+X-CMS-MailID: 20191220020758epcas1p15aa38ab68b96cfdf9491166fa8b6fe1e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0
+References: <20191220002430.11995-1-cw00.choi@samsung.com>
+        <CGME20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0@epcas1p4.samsung.com>
+        <20191220002430.11995-3-cw00.choi@samsung.com>
+        <VI1PR04MB70235291D8E40CB6225A0AF0EE2D0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+        <46e629e0-fee4-21a6-3baa-f347ff6417d8@samsung.com>
+        <VI1PR04MB7023160888F88B5800A90189EE2D0@VI1PR04MB7023.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Hello,
- 
-> On 12/19/2019 07:57 PM, Chris Brandt wrote:
+On 12/20/19 10:40 AM, Leonard Crestez wrote:
+> On 2019-12-20 2:54 AM, Chanwoo Choi wrote:
+>> On 12/20/19 9:46 AM, Leonard Crestez wrote:
+>>> On 20.12.2019 02:18, Chanwoo Choi wrote:
+>>>> Previously, devfreq core support 'devfreq' property in order to get
+>>>> the devfreq device by phandle. But, 'devfreq' property name is not proper
+>>>> on devicetree binding because this name doesn't mean the any h/w attribute.
+>>>>
+>>>> The devfreq core hand over the right to decide the property name
+>>>> for getting the devfreq device on devicetree. Each devfreq driver
+>>>> will decide the property name on devicetree binding and then get
+>>>> the devfreq device by using devfreq_get_devfreq_by_node().
+>>>>
+>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> ---
+>>>>    drivers/devfreq/devfreq.c    | 35 -----------------------------------
+>>>>    drivers/devfreq/exynos-bus.c | 12 +++++++++++-
+>>>>    include/linux/devfreq.h      |  8 --------
+>>>>    3 files changed, 11 insertions(+), 44 deletions(-)
+>>>>
+>>>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>>>> index cb8ca81c8973..c3d3c7c802a0 100644
+>>>> --- a/drivers/devfreq/devfreq.c
+>>>> +++ b/drivers/devfreq/devfreq.c
+>>>> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>>>>    
+>>>>    	return ERR_PTR(-ENODEV);
+>>>>    }
+>>>> -
+>>>> -/*
+>>>> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
+>>>> - * @dev - instance to the given device
+>>>> - * @index - index into list of devfreq
+>>>> - *
+>>>> - * return the instance of devfreq device
+>>>> - */
+>>>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+>>>> -{
+>>>> -	struct device_node *node;
+>>>> -	struct devfreq *devfreq;
+>>>> -
+>>>> -	if (!dev)
+>>>> -		return ERR_PTR(-EINVAL);
+>>>> -
+>>>> -	if (!dev->of_node)
+>>>> -		return ERR_PTR(-EINVAL);
+>>>> -
+>>>> -	node = of_parse_phandle(dev->of_node, "devfreq", index);
+>>>> -	if (!node)
+>>>> -		return ERR_PTR(-ENODEV);
+>>>> -
+>>>> -	devfreq = devfreq_get_devfreq_by_node(node);
+>>>> -	of_node_put(node);
+>>>> -
+>>>> -	return devfreq;
+>>>> -}
+>>>> -
+>>>>    #else
+>>>>    struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>>>>    {
+>>>>    	return ERR_PTR(-ENODEV);
+>>>>    }
+>>>> -
+>>>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+>>>> -{
+>>>> -	return ERR_PTR(-ENODEV);
+>>>> -}
+>>>>    #endif /* CONFIG_OF */
+>>>>    EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
+>>>> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
+>>>>    
+>>>>    /**
+>>>>     * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
+>>>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>>>> index 7f5917d59072..1bc4e3c81115 100644
+>>>> --- a/drivers/devfreq/exynos-bus.c
+>>>> +++ b/drivers/devfreq/exynos-bus.c
+>>>> @@ -86,6 +86,16 @@ static int exynos_bus_get_event(struct exynos_bus *bus,
+>>>>    	return ret;
+>>>>    }
+>>>>    
+>>>> +static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
+>>>> +{
+>>>> +	struct device_node *node = of_parse_phandle(np, "devfreq", 0);
+>>>> +
+>>>> +	if (!node)
+>>>> +		return ERR_PTR(-ENODEV);
+>>>> +
+>>>> +	return devfreq_get_devfreq_by_node(node);
+>>>
+>>> You need to call of_node_put(node) here and in several other places.
+>>>
+>>> The old devfreq_get_devfreq_by_phandle API handled this internally but
+>>> devfreq_get_devfreq_by_node doesn't.
+>>
+>> Thanks. I'll fix it.
+>>
+>>>
+>>> Maybe the _by_phandle API could be kept and just take the property name
+>>> instead of always using "devfreq"?
+>>
+>> Do you mean like below?
+>> devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+>> -> devfreq_get_devfreq_by_phandle(struct device *dev, char *property_name, int index)
+>>
+>> In case of devfreq-event.c,
+>> struct devfreq_event_dev *devfreq_event_get_edev_by_phandle(
+>> 						struct device *dev,
+>> 						char property_name,
+>> 						int index)
+>> int devfreq_event_get_edev_count(struct device *dev, char *property_name)
 > 
-> >>> So at the moment, there is nothing yet for me to 'try' on the RZ/A 
-series,
-> >> correct?
-> >>
-> >>    Why, I can send you a working version of the SPI driver, and even 
-HF one
-> >> if you're
-> >> interested.
-> > 
-> > The point of this whole discussion is to determine if we should have 2 
-drivers
-> > for the same Renesas HW IP.
-> > 
-> > There was a RPC-IF patch series that made it to v17....and is now 
-dead.
+> Yes. These helpers would avoid the need for explicit of_node_put.
+
+OK. Instead of removing devfreq_event_get_edev_by_phandle,
+change the function property of devfreq_event_get_edev_by_phandle on v3.
+
+After getting the review for dt-binding patch, I'll send v3 patches.
+
+> 
+>>
+>>>
+>>>> +}
+>>>> +
+>>>>    /*
+>>>>     * devfreq function for both simple-ondemand and passive governor
+>>>>     */
+>>>> @@ -353,7 +363,7 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>>>>    	profile->exit = exynos_bus_passive_exit;
+>>>>    
+>>>>    	/* Get the instance of parent devfreq device */
+>>>> -	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+>>>> +	parent_devfreq = exynos_bus_get_parent_devfreq(dev->of_node);
+>>>>    	if (IS_ERR(parent_devfreq))
+>>>>    		return -EPROBE_DEFER;
+>>>>    
+>>>> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+>>>> index 1dccc47acbce..a4351698fb64 100644
+>>>> --- a/include/linux/devfreq.h
+>>>> +++ b/include/linux/devfreq.h
+>>>> @@ -254,8 +254,6 @@ extern void devm_devfreq_unregister_notifier(struct device *dev,
+>>>>    				struct notifier_block *nb,
+>>>>    				unsigned int list);
+>>>>    extern struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node);
+>>>> -extern struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
+>>>> -						int index);
+>>>>    
+>>>>    #if IS_ENABLED(CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND)
+>>>>    /**
+>>>> @@ -413,12 +411,6 @@ static inline struct devfreq *devfreq_get_devfreq_by_node(struct device_node *no
+>>>>    	return ERR_PTR(-ENODEV);
+>>>>    }
+>>>>    
+>>>> -static inline struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev,
+>>>> -							int index)
+>>>> -{
+>>>> -	return ERR_PTR(-ENODEV);
+>>>> -}
+>>>> -
+>>>>    static inline int devfreq_update_stats(struct devfreq *df)
+>>>>    {
+>>>>    	return -EINVAL;
+> 
+> 
+> 
 
 
-It's under review by Geert Uytterhoeven
-
-https://patchwork.kernel.org/project/linux-renesas-soc/list/?submitter=181859 
-
-
-https://patchwork.kernel.org/patch/11078131/ 
-https://patchwork.kernel.org/patch/11078133/ 
-
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
