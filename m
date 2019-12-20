@@ -2,59 +2,60 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A214C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D15C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2880A21D7E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F10C21927
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 18:15:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMw/5OpE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XkJ/1JKu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfLTSPZ (ORCPT
+        id S1727474AbfLTSP3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 13:15:25 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43241 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbfLTSPZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 13:15:25 -0500
-Received: by mail-pl1-f195.google.com with SMTP id p27so4424924pli.10;
-        Fri, 20 Dec 2019 10:15:24 -0800 (PST)
+        Fri, 20 Dec 2019 13:15:29 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:56029 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727655AbfLTSP2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 13:15:28 -0500
+Received: by mail-pj1-f68.google.com with SMTP id d5so4441065pjz.5;
+        Fri, 20 Dec 2019 10:15:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lO//EsBagd0v62HI5e2wkHMmr4Jh18WGAA456XEJyjs=;
-        b=tMw/5OpEKlDf66y+/WphzlsOB79RZjIshQivOilP6d2SBrGRbzIvfsMfw209iRJio4
-         e7icun13AGDZqSj1GnnyieFriPPByueAm4+qvJ+6VokPCmDfeJfIdXgmODRZPHZZdzPj
-         DqYy9ovw8PaqT7066izQ4950Sj+/gvKA9pA7YIt+z9aihyLWN9T+rp2iNmXdi0lZosff
-         qluUomXXqoBBu20SGWi9pGtRgL8TlC5D92nOIgY22ZOcqYP5F36FKVjsxOUf1YOLzOA3
-         FPxZQ9UlkbcH/uWrtgoeO/0ykqodnHECmXbz/ttOTZFMoPP0N4EP6qvEW/AJivQllGO4
-         A/5g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OODuO3cQf/sLnSJw+k4jnIKQWXPwOQBlARmdG3AU+0k=;
+        b=XkJ/1JKuB1MJJOEquZ97MzqaKfowCu87bNEnlrytD4tPP3ftTKzwoB9cjlamvkb5tQ
+         nTh9EFQxLaz8r3ynE8/2RDxDUvtvg/t73d3bNDQ72BX6qJLECTovfWHVyKgqHmpO8oHa
+         eVkIXtl1075WltNtcC+OFppoRlbdLXhBtgclR4lQYqlomwk3qWyxIaAwXi57qakQUlR/
+         9mn872XrnPklLRxDekzcJaURLdQH0eYtvlXax8bHsu04ZOY66Lq0NIbH1Hf9o3DCmjOC
+         oRepnb0RYR5ZUHD9ImT60dvK1wX+OJPcxW2UuiScdFnw7GMTJkEYKAdRkOROE4vRGDCP
+         Gqjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lO//EsBagd0v62HI5e2wkHMmr4Jh18WGAA456XEJyjs=;
-        b=VkcP5sH4g7GAG38UNWhdMb7AwIJ3sb4yKZtU6jwvJrfrv7UDmjqBvIk3tMtU5jmnFh
-         6syhIfmuAzEnCpVfxBNE2GsFW22lN2SjqqA1NqqrAVX5WMYpEUbn6Ra/442PoTLeJwZR
-         pDvhmwtCDGOMdSwy787jxUmS9bXQ6/nMj4Iqa1pbCEiMjETkEfeul5HF3r2sk98zRRuQ
-         R4fRMAV08avCTv9rIAzxgvxu9v0kWHFAJ5wBZsLBIywvoXgv5HMmhYnJA9rLGPdobHIk
-         g97WIXEzFqQa7omd+3YRWyJaDWpKAJeop0BweQminaZUe8oqxOqvNVU4tBCT3fmiQAoU
-         v79w==
-X-Gm-Message-State: APjAAAUE6mLQiETtfQIl1f0sCwxFFGEhSOJX953zyez1ZnklxK5gwju2
-        PTl49nCmpoIzG2vo8XF0B3oHAu3x
-X-Google-Smtp-Source: APXvYqwDredtkNh/dAwr79ySAizvvjJl7yJx8tzaOWPXdc/g/h63VSHnuR4VP3YMndk6RlhCA4Ezbg==
-X-Received: by 2002:a17:902:788e:: with SMTP id q14mr16498068pll.305.1576865723973;
-        Fri, 20 Dec 2019 10:15:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OODuO3cQf/sLnSJw+k4jnIKQWXPwOQBlARmdG3AU+0k=;
+        b=A7h0dnh2OxohFS+a0rtEgJ1W4NS4yIgdH8n2nKJz5D/KYR8c0AgjjvH+hbfNjhx9LD
+         L8fwTl9yWlvLZhyqhA22sDps57olSaAAJSF3yWFOCh3hMn/nHqtUf3zdz8rX6h/RWXSc
+         3UNdYVECBkUNNE4frLomCcitqMi8zVk0FkxLdN6WSHLGehBK7f7uPBXQJ5zbPTZD51Gq
+         ge0noB7cPRJjVdJ7U7O/gzTlgBjief0Quaz3fpwrDBXr5ZFremm9Ms9u8pYXFyvCmk2u
+         3ibmJl4hOZxqDhlZ1emb/brPKzIs6uG8qiBNyrDApM43onV4zn3GMBOL35UixeaL1R7O
+         GzVw==
+X-Gm-Message-State: APjAAAUWVW1FQdqNhWkjn9uxgS6CD2NvCTX6zfSx8+PeJ+8wGNEBBXjT
+        TbnzuwWMXiUZGMIW8tj1fZ1cc81q
+X-Google-Smtp-Source: APXvYqxE1ElTIVWW0eiq9xiG7EA5QhHDgsyLRTUMo8sWWLhyWYJDiae41BLfJQslKGadwK8kokq4/Q==
+X-Received: by 2002:a17:902:b611:: with SMTP id b17mr16799950pls.210.1576865727289;
+        Fri, 20 Dec 2019 10:15:27 -0800 (PST)
 Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id j28sm11833869pgb.36.2019.12.20.10.15.21
+        by smtp.gmail.com with ESMTPSA id j28sm11833869pgb.36.2019.12.20.10.15.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Dec 2019 10:15:22 -0800 (PST)
+        Fri, 20 Dec 2019 10:15:26 -0800 (PST)
 From:   Richard Cochran <richardcochran@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
@@ -69,10 +70,12 @@ Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Willem de Bruijn <willemb@google.com>,
         Wingman Kwok <w-kwok2@ti.com>
-Subject: [PATCH V7 net-next 00/11] Peer to Peer One-Step time stamping
-Date:   Fri, 20 Dec 2019 10:15:09 -0800
-Message-Id: <cover.1576865315.git.richardcochran@gmail.com>
+Subject: [PATCH V7 net-next 02/11] net: macvlan: Use the PHY time stamping interface.
+Date:   Fri, 20 Dec 2019 10:15:11 -0800
+Message-Id: <c0d1f95851ef7459da05d439b3475335d0a00b61.1576865315.git.richardcochran@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1576865315.git.richardcochran@gmail.com>
+References: <cover.1576865315.git.richardcochran@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -80,113 +83,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds support for PTP (IEEE 1588) P2P one-step time
-stamping along with a driver for a hardware device that supports this.
+The macvlan layer tests fields of the phy_device in order to determine
+whether to invoke the PHY's tsinfo ethtool callback.  This patch
+replaces the open coded logic with an invocation of the proper
+methods.
 
-If the hardware supports p2p one-step, it subtracts the ingress time
-stamp value from the Pdelay_Request correction field.  The user space
-software stack then simply copies the correction field into the
-Pdelay_Response, and on transmission the hardware adds the egress time
-stamp into the correction field.
+Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/macvlan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This new functionality extends CONFIG_NETWORK_PHY_TIMESTAMPING to
-cover MII snooping devices, but it still depends on phylib, just as
-that option does.  Expanding beyond phylib is not within the scope of
-the this series.
-
-User space support is available in the current linuxptp master branch.
-
-- Patch 1 adds phy_device methods for existing time stamping fields.
-- Patches 2-5 convert the stack and drivers to the new methods.
-- Patches 6-9 add support for MII time stamping in non-PHY devices.
-- Patch 10 adds the new P2P 1-step option.
-- Patch 11 adds a driver implementing the new option.
-
-Thanks,
-Richard
-
-Changed in v7:
-~~~~~~~~~~~~~~
-
-- Converted pr_debug|err to dev_ variants in new driver.
-- Fixed device tree documentation per Rob's v6 review.
-- Picked up Andrew's and Rob's review tags.
-- Silenced sparse warnings in new driver.
-
-Changed in v6:
-~~~~~~~~~~~~~~
-
-- Added methods for accessing the phy_device time stamping fields.
-- Adjust the device tree documentation per Rob's v5 review.
-- Fixed the build failures due to missing exports.
-
-Changed in v5:
-~~~~~~~~~~~~~~
-
-- Fixed build failure in macvlan.
-- Fixed latent bug with its gcc warning in the driver.
-
-Changed in v4:
-~~~~~~~~~~~~~~
-
-- Correct error paths and PTR_ERR return values in the framework.
-- Expanded KernelDoc comments WRT PHY locking.
-- Pick up Andrew's review tag.
-
-Changed in v3:
-~~~~~~~~~~~~~~
-
-- Simplify the device tree binding and document the time stamping
-  phandle by itself.
-
-Changed in v2:
-~~~~~~~~~~~~~~
-
-- Per the v1 review, changed the modeling of MII time stamping
-  devices.  They are no longer a kind of mdio device.
-
-Richard Cochran (11):
-  net: phy: Introduce helper functions for time stamping support.
-  net: macvlan: Use the PHY time stamping interface.
-  net: vlan: Use the PHY time stamping interface.
-  net: ethtool: Use the PHY time stamping interface.
-  net: netcp_ethss: Use the PHY time stamping interface.
-  net: Introduce a new MII time stamping interface.
-  net: Add a layer for non-PHY MII time stamping drivers.
-  dt-bindings: ptp: Introduce MII time stamping devices.
-  net: mdio: of: Register discovered MII time stampers.
-  net: Introduce peer to peer one step PTP time stamping.
-  ptp: Add a driver for InES time stamping IP core.
-
- .../devicetree/bindings/ptp/ptp-ines.txt      |  35 +
- .../devicetree/bindings/ptp/timestamper.txt   |  42 +
- .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |   1 +
- drivers/net/ethernet/ti/netcp_ethss.c         |   8 +-
- drivers/net/macvlan.c                         |   4 +-
- drivers/net/phy/Makefile                      |   2 +
- drivers/net/phy/dp83640.c                     |  47 +-
- drivers/net/phy/mii_timestamper.c             | 125 +++
- drivers/net/phy/phy.c                         |   4 +-
- drivers/net/phy/phy_device.c                  |   5 +
- drivers/of/of_mdio.c                          |  30 +-
- drivers/ptp/Kconfig                           |  10 +
- drivers/ptp/Makefile                          |   1 +
- drivers/ptp/ptp_ines.c                        | 852 ++++++++++++++++++
- include/linux/mii_timestamper.h               | 121 +++
- include/linux/phy.h                           |  85 +-
- include/uapi/linux/net_tstamp.h               |   8 +
- net/8021q/vlan_dev.c                          |   4 +-
- net/Kconfig                                   |   7 +-
- net/core/dev_ioctl.c                          |   1 +
- net/core/timestamping.c                       |  20 +-
- net/ethtool/ioctl.c                           |   4 +-
- 22 files changed, 1351 insertions(+), 65 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
- create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
- create mode 100644 drivers/net/phy/mii_timestamper.c
- create mode 100644 drivers/ptp/ptp_ines.c
- create mode 100644 include/linux/mii_timestamper.h
-
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index 05631d97eeb4..d066cf58c926 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -1036,8 +1036,8 @@ static int macvlan_ethtool_get_ts_info(struct net_device *dev,
+ 	const struct ethtool_ops *ops = real_dev->ethtool_ops;
+ 	struct phy_device *phydev = real_dev->phydev;
+ 
+-	if (phydev && phydev->drv && phydev->drv->ts_info) {
+-		 return phydev->drv->ts_info(phydev, info);
++	if (phy_has_tsinfo(phydev)) {
++		return phy_ts_info(phydev, info);
+ 	} else if (ops->get_ts_info) {
+ 		return ops->get_ts_info(real_dev, info);
+ 	} else {
 -- 
 2.20.1
 
