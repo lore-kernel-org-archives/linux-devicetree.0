@@ -2,98 +2,118 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8386DC43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F28C43603
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55F37206EC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 09:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED33D2465E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 10:06:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MfZuZxlt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hmNDsrcT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfLTJ6a (ORCPT
+        id S1727209AbfLTKG1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 04:58:30 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:38500 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfLTJ6a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 04:58:30 -0500
-Received: by mail-ot1-f44.google.com with SMTP id d7so6840479otf.5;
-        Fri, 20 Dec 2019 01:58:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=74femySzIwPJDHG5x9zdNa+AfjyKAyPCNlMsQcYBmhs=;
-        b=MfZuZxlt/5aTM+eWADTAw1+ssMbTLO93nEPqcsWwi/PUCtCdYBBhFq6E7twghkXe1r
-         3hp+yhXgEhLdNM6yDFWsoqF0UQJYMvFLehRnFAl3EhwPF/6iUd7v5eIxRMCLrsEqTQcE
-         XBYzzVrEKNlWwW7NqXkTst1JFiYNMcHIMQsY7U8IYPwqM+K6d26bjDgKuk9s2gXYSTsM
-         WqWJpZAVCOk7XLCw/do4YsLvzuVHICVPZE7bnDmq/HSOPd5QXY3J8bzsK1WF5YqXE998
-         QLU7JhuIYTf/2c2caV3odpCQxCTt55p17hrVFqe/W+Cr6y3NDfSoZgOuS2aWRN6bWFOX
-         DJcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=74femySzIwPJDHG5x9zdNa+AfjyKAyPCNlMsQcYBmhs=;
-        b=VYicgB35pXcpvgXzUgqVAHokVvkO4rpqHYHwfZWfNG6RnpAUEuDFTlWR5CBJQjKFVS
-         27ktsCBMSoN1YgNavfkIKJfnMZT2O8xcsaH+bbleF2BsSLGWR/rsqCxfEq2H2rfII/we
-         G2z27LxrevNqM9KqQUNpaThNN8fiAfhAT9+gd/V01+VuMUFDI0dPkR1n3QYW3MY56MSD
-         HXuaGf0IsyPqbOHmNlXzsV75xM7wynP0BU8liTNdNFJ57h6eal0flxy25Q/f4HkKRbzS
-         zAEPd2MMfByoh6XoMPJdire3+s01/8DhrFVd0U3ca/ww7ae+iAcqxXtZQueiLee2ONKc
-         qSDg==
-X-Gm-Message-State: APjAAAVMDwHvQrGcWma98ByrrUfYEIJDblG4Odjyly3/6vqCOtMQnoYM
-        xUT+4zYCr943OJvlWCsCPV9VEwDWW7bxrG/D/aA=
-X-Google-Smtp-Source: APXvYqxNwbRenNNC3ee/+YtenI0dYdUuu8d469Q65xkASBDJ4VTai2GdRpnIGeCbklPsIf5o+/BCp8RjQDL4Dgpv5gE=
-X-Received: by 2002:a9d:478:: with SMTP id 111mr13874039otc.359.1576835909674;
- Fri, 20 Dec 2019 01:58:29 -0800 (PST)
+        Fri, 20 Dec 2019 05:06:27 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:34806 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727129AbfLTKG1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 05:06:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=as6IYqvOwKnH4gVYbLvmr3OksXVTViVqoOiYR3nLmvE=; b=hmNDsrcTVknj3kMDP0UCFSAoV+
+        RFtmlaTTJJyTlSca604hHzHP+cBr5N4IQTWVE5VjvvBXIPVBYFpkII9IXVYOTebr0QOc78mERvWrG
+        8G/245hWZbp5c46AKG/RmKY+UNcs8jOcRIcGXCeNTPonUMZF/4ovd119+IbDc3J9Xv94=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iiFAn-0007He-MV; Fri, 20 Dec 2019 11:06:17 +0100
+Date:   Fri, 20 Dec 2019 11:06:17 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "antoine.tenart@free-electrons.com" 
+        <antoine.tenart@free-electrons.com>,
+        "jaz@semihalf.com" <jaz@semihalf.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191220100617.GE24174@lunn.ch>
+References: <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219190308.GE25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219214930.GG25745@shell.armlinux.org.uk>
+ <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191220091642.GJ25745@shell.armlinux.org.uk>
+ <20191220092900.GB24174@lunn.ch>
+ <VI1PR04MB55679B12D4E7C9EC05FE0D9AEC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20191014141718.22603-1-narmstrong@baylibre.com>
- <20191014141718.22603-2-narmstrong@baylibre.com> <20191023201141.GA21235@bogus>
- <CA+3zgmsJPsvXgsjDQKKrSG+UNdY3SK+hKCTD2X3hGG+OXejHig@mail.gmail.com>
- <CAKgpwJWU3jB0DWEKE09TOV+YLceBFJ75ZirAXQbuhj8v3FwjXg@mail.gmail.com>
- <c32007f5-88b9-45c5-b542-b1dc4dbc76ea@baylibre.com> <CAKgpwJVHF6Ytdt9kq5SwiixFDLym_UPG51aXag1nVVay0pzofQ@mail.gmail.com>
- <45212db9-e366-2669-5c0a-3c5bd06287f6@synopsys.com> <ce35b6d2-7ed1-be2d-6e38-4c6e89340a40@baylibre.com>
- <CA+3zgmtWQwdJG5NT-t7__Mqt5u_U3m4+HEL6p4PWxx5NES7_AQ@mail.gmail.com>
-In-Reply-To: <CA+3zgmtWQwdJG5NT-t7__Mqt5u_U3m4+HEL6p4PWxx5NES7_AQ@mail.gmail.com>
-From:   Tim <elatllat@gmail.com>
-Date:   Fri, 20 Dec 2019 04:58:18 -0500
-Message-ID: <CA+3zgmsAWRYTqT+Q6t73ikYmm=L2gLmB6PEOUqLuMULfUcPKUg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] doc: dt: bindings: usb: dwc3: Update entries for
- disabling SS instances in park mode
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB55679B12D4E7C9EC05FE0D9AEC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch is still good on 5.4 and 5.5, and the following network lag
-was solved by separating the USB and NIC smp_affinity_list.
+On Fri, Dec 20, 2019 at 09:39:08AM +0000, Madalin Bucur (OSS) wrote:
+> > -----Original Message-----
+> > From: Andrew Lunn <andrew@lunn.ch>
+> > Sent: Friday, December 20, 2019 11:29 AM
+> > To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Cc: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>; antoine.tenart@free-
+> > electrons.com; jaz@semihalf.com; baruch@tkos.co.il; davem@davemloft.net;
+> > netdev@vger.kernel.org; f.fainelli@gmail.com; hkallweit1@gmail.com;
+> > shawnguo@kernel.org; devicetree@vger.kernel.org
+> > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+> > 
+> > > How does this help us when we can't simply change the existing usage?
+> > > We can update the DT but we can't free up the usage of "10gbase-kr".
+> > 
+> > Agreed. Code needs to keep on interpreting "10gbase-kr" as any 10G
+> > link. If we ever have a true 10gbase-kr, 802.3ap, one meter of copper
+> > and two connectors, we are going to have to add a new mode to
+> > represent true 10gbase-kr.
+> > 
+> > 	Andrew
+> 
+> Hi, actually we do have that. What would be the name of the new mode
+> representing true 10GBase-KR that we will need to add when we upstream
+> support for that?
 
-On Tue, Dec 10, 2019, 7:45 PM Tim <elatllat@gmail.com> wrote:
->
-> Just writing to say;
-> this patch is still performing well on 5.5.0-rc1, and
-> there is no speed improvement by adding DWC3_GUCTL_NAK_PER_ENH_HS BIT(17)
->     I get up to 3890 ms second lag with "ping -s 5120 $IP" when
-> copying between USB HDDs either way, but at least this patch stops the
-> crashing.
+Ah!
+
+This is going to be messy.
+
+Do you really need to differentiate? What seems to make 802.3ap
+different is the FEC, autoneg and link training. Does you hardware
+support this? Do you need to know you are supposed to be using 802.3ap
+in order to configure these features?
+
+What are we going to report to user space? 10gbase-kr, or
+10gbase-kr-true? How do we handle the mess this makes with firmware
+based cards which correctly report
+ETHTOOL_LINK_MODE_10000baseKR_Full_BIT to user space?
+
+What do we currently report to user space? Is it possible for us to
+split DT from user space? DT says 10gbase-kr-true but to user space we
+say ETHTOOL_LINK_MODE_10000baseKR_Full_BIT?
+
+I think in order to work through these issues, somebody probably needs
+the hardware, and the desire to see it working. So it might actually
+be you who makes a proposal how we sort this out, with help from
+Russell and I.
+
+	Andrew
