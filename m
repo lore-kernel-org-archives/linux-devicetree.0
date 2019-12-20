@@ -2,167 +2,116 @@ Return-Path: <SRS0=Tw2w=2K=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E81C43603
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE59C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E62218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA6224682
+	for <linux-devicetree@archiver.kernel.org>; Fri, 20 Dec 2019 14:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eCzaA1gU"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="CV6TGT6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfLTOps (ORCPT
+        id S1727417AbfLTOuw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 20 Dec 2019 09:45:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40477 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727381AbfLTOps (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 20 Dec 2019 09:45:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c14so9646155wrn.7;
-        Fri, 20 Dec 2019 06:45:46 -0800 (PST)
+        Fri, 20 Dec 2019 09:50:52 -0500
+Received: from mail-eopbgr1410122.outbound.protection.outlook.com ([40.107.141.122]:50752
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727452AbfLTOuv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:50:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WjAN9A4rgGbt/+t/HqZB4tF98cpNPlyT6YZAiN9Dfq/3iUtj0NNjKrlSbgTOznDR0SWFCBgM78S0eHKFmo1z0UPChuswDUSZF0JgqtLGnV0DxopNR+nVI7cJhSzsF8ej5PvbJZYxSq7FBxuyCxVoQKFPNE0g8py5JiIxlHWrYUXfRBQLQ/3RadnV1lVBhiiuUhlOuI3Hqf1/SN+SAoCSsx3Qk+P9YVW7EnCbhhRpwMjly9JRb48hG04liCPSgrIThjk4Htlj8m69k3v3L3FDGDplJ3eoVV8rqPg7Un0n1BbynsTVXUFPeeGpStXra0oLzOFCrDD0EOMlNmFYzG7Sjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0fnMi/P8prNXkLYk9kOca0ZyvW+PhNx4L2RgbBBgEhs=;
+ b=XG1fj4wp6FsZ4kNethFLUZtcZ7lpn8WM2+qYn+U0eo5/g3NKnLk/fqN83aRdS4ydxvx8ZNJ7T9Sp9rPWp0x5w03ftx8jJvcr4UwQTZVGw9omxbzhgIA8/bXgZe2PVR8OQf5ZfvySj77tsFOPVKW5CbRMyGZ90WmgMkEK/HYIIogij7BfEUOKu0+JDROOHFrIk/HaF+1/ZyEljNURgRGfb9B7hsaCWR86pZjWVNMAYFGSpvY45HSGIMwXMnHkgG2SlYPTeaNTmZNYz3+3PeefD2u74umeCngkTIYprGbHNefCA/Ftz8W87wjn+apmhmDkHphtsoSuJ5xDjOcnF5oEHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=pl3hFVbXh8V/pNW7LI4EULZNEnEA05Snk8lDcRO0F4I=;
-        b=eCzaA1gUWIYYBIg/IQTWc7sIFKYB1GqkT8s32yc8blx3R6j6hCIgTMBBckZDLig7fP
-         gp+sHfVT0yCurfEg7SKiyTLnNBa/KSfJPef0t5hUqx1vlrMGhHZuZVF91eX1N8oKMGn+
-         DWdCBVwIJV76oYCUvgrtWOHj38aMNSEolWVQFkUX2nXVVyoPajrRVvH4dgZoUJPIRiAb
-         3J+RRM5gKHwVo8VM6pTBAElWiaNdY4zUwzHzRKdlrQl20Oq692hBUJNOJpJeEdkum8X7
-         cZzOXYPLktB+3RHudr7hTjT0LRRoS78rI8/d+02KFwcahewvN1YMT3gntD6jtMRRgJjp
-         ufaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=pl3hFVbXh8V/pNW7LI4EULZNEnEA05Snk8lDcRO0F4I=;
-        b=OOjWAM81ajVStFTXhmmeYQFBGuoVgQ+1YoEakYq3KmjQ10yIowHNgWy0/r24x9J6Xd
-         8qGxVezxulUVQyJUwXt5nDo42yB4oulUrYr2cEGZvr/eJTd28URHjAWTM+x9iVIDP832
-         BCdyrZn1tDfxU1YuCiCgEupYYgpt0yas8XQ+et0NKVvPx2Z+JnRQmmfAXk6fcM6K8M7T
-         +5c+bHRKv7E7WOkOy7XdWeGtF1rgi5BI5xcXpL5s4cKeX+XQqxczAd4c0aILzyEFVd7f
-         eTw3FudBnKLANfPtgJ/xHlzPppfL1/cRFImLFTAqq+CZWgTTAtznjO2RgB1wRWcSD5+a
-         SeTg==
-X-Gm-Message-State: APjAAAWYpERI0QU070n/spdcKX8zywwIBJaRJCFwEyKRKSaxSO9I+yCh
-        PI0uKKmo3W6uFzAeXDc8zTI=
-X-Google-Smtp-Source: APXvYqwzSfkfp87+FaM77mK7bj+bOyD1OkSjuuKjhQwV4WixlXdcVQ1GWCN+pLWH1WcgZc5ig7ROIA==
-X-Received: by 2002:adf:e5ce:: with SMTP id a14mr15388222wrn.214.1576853146255;
-        Fri, 20 Dec 2019 06:45:46 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id 5sm10546226wrh.5.2019.12.20.06.45.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 20 Dec 2019 06:45:45 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: rk3399-evb: sort nodes in alphabetical order
-Date:   Fri, 20 Dec 2019 15:45:37 +0100
-Message-Id: <20191220144537.30867-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0fnMi/P8prNXkLYk9kOca0ZyvW+PhNx4L2RgbBBgEhs=;
+ b=CV6TGT6tg4QGL7Msk1bIIGKKx6HAbU1PcIebubnDyOf4hdpw0mLcN0OYo+ETKN/+ckUiZzO6dLgZBkjtK5CqlXRVCnO1/Zl8sw8fM4ZWsUWVD7HukDiornGY4YrDk5dVwFxrcl00MnQmxxM4Fzx1XYt4xOH5KLtDa/G2MWQALos=
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com (52.133.163.12) by
+ TY1PR01MB1738.jpnprd01.prod.outlook.com (52.133.162.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Fri, 20 Dec 2019 14:50:47 +0000
+Received: from TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2]) by TY1PR01MB1562.jpnprd01.prod.outlook.com
+ ([fe80::74db:232e:f59e:83f2%3]) with mapi id 15.20.2538.019; Fri, 20 Dec 2019
+ 14:50:47 +0000
+From:   Chris Brandt <Chris.Brandt@renesas.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: RE: [PATCH v2 3/6] clk: renesas: r7s9210: Add SPIBSC clock
+Thread-Topic: [PATCH v2 3/6] clk: renesas: r7s9210: Add SPIBSC clock
+Thread-Index: AQHVrDsZnI+SMLkmZkyW5+1FSLVd3qetcNKAgAAShiCAFapogIAAA00w
+Date:   Fri, 20 Dec 2019 14:50:47 +0000
+Message-ID: <TY1PR01MB1562F475C62C9E1823B47FC88A2D0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <20191206134202.18784-4-chris.brandt@renesas.com>
+ <5644c687-7692-53f2-f01e-0e7bf62464ea@cogentembedded.com>
+ <TY1PR01MB1562645184402F7C01CE36958A5F0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <CAMuHMdV40AVXf6NW-8AYtp0ZDM_aAe59z7G8XDR5R0tBk6v0YQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdV40AVXf6NW-8AYtp0ZDM_aAe59z7G8XDR5R0tBk6v0YQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcY2JyYW5kdDAxXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctMTliZDBmNzktMjMzOC0xMWVhLWFhNTgtOTRlNmY3Njc5M2FlXGFtZS10ZXN0XDE5YmQwZjdiLTIzMzgtMTFlYS1hYTU4LTk0ZTZmNzY3OTNhZWJvZHkudHh0IiBzej0iMjgzIiB0PSIxMzIyMTMyNzA0NTU3MjI1MjEiIGg9IjAvUXN4bitsak5ZSkM4T2RHanZncnR4aDhyUT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Brandt@renesas.com; 
+x-originating-ip: [75.60.247.61]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 305c4811-f569-4fba-866b-08d7855bffc4
+x-ms-traffictypediagnostic: TY1PR01MB1738:
+x-microsoft-antispam-prvs: <TY1PR01MB17384028DA888AA791EA2B128A2D0@TY1PR01MB1738.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 025796F161
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(39860400002)(346002)(366004)(396003)(189003)(199004)(86362001)(8676002)(52536014)(55016002)(6916009)(558084003)(71200400001)(316002)(2906002)(81166006)(9686003)(76116006)(5660300002)(66946007)(54906003)(478600001)(66476007)(6506007)(8936002)(186003)(7416002)(64756008)(81156014)(33656002)(66556008)(66446008)(7696005)(26005)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1738;H:TY1PR01MB1562.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VRF6xiLBFC/sgiV8D/oxmOCqduphFkUQ8scAbtgBzyrjiXqJXJvqIY7DZNCdl/a7ty9VzHb+2VLK7Ma46cpE4lZG7lUKbah2vctDw/7/onVNi7Ir/5egZy2Wl5RYD0ixNJ3Nen6vq4rzG8jU55dHtfwePyQjFnLt/5lg6VH6z/Pivt2iPxZiA1wU6l1E/vUuNIgUS+i8bPUWNr6237kF3bRmpMMWU757cbc+tVAMrrmi4VVG/GXr+f69cQEPYb2dBG7A8PbbgAA75jx00UGpZPYrpSlLav02KvYqutCIwxZIPTq27ri5IaFEDAiFSGZP0wrbmPfDKbTrd+Y+tvY7pwgqfSb4yO5ZXIwZMUMhCdJcZL4ZFheonEJOAtdVuGjOmc4sfbuPTfMLAX/d6BFE3CNwKtaWA+2R7iu81QX/diJ7vhMFyu088yMv8Q2RVFWj
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 305c4811-f569-4fba-866b-08d7855bffc4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Dec 2019 14:50:47.3533
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: T1WHM9/jDwNJyLAzkhs8P3jYdspFF06FhRyR3A/TbsXkTQ38cWnKz5b2YNuyGgS87EFeHo+gzAJYYht++gki4OuPiJxJIrYO7odf0rD4Dmw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1738
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sort nodes in alphabetical order.
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 66 ++++++++++++++---------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-index 77008dca4..6e8b63db2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -134,6 +134,39 @@
- 	status = "okay";
- };
- 
-+&pcie0 {
-+	ep-gpios = <&gpio3 RK_PB5 GPIO_ACTIVE_HIGH>;
-+	num-lanes = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_clkreqn_cpm>;
-+	status = "disabled";
-+};
-+
-+&pcie_phy {
-+	status = "disabled";
-+};
-+
-+&pinctrl {
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins =
-+				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+
-+		pmic_dvs2: pmic-dvs2 {
-+			rockchip,pins =
-+				<1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+
-+	usb2 {
-+		vcc5v0_host_en: vcc5v0-host-en {
-+			rockchip,pins =
-+				<4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
- &pwm0 {
- 	status = "okay";
- };
-@@ -154,18 +187,6 @@
- 	status = "okay";
- };
- 
--&pcie_phy {
--	status = "disabled";
--};
--
--&pcie0 {
--	ep-gpios = <&gpio3 RK_PB5 GPIO_ACTIVE_HIGH>;
--	num-lanes = <4>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&pcie_clkreqn_cpm>;
--	status = "disabled";
--};
--
- &u2phy0 {
- 	status = "okay";
- };
-@@ -203,24 +224,3 @@
- &usb_host1_ohci {
- 	status = "okay";
- };
--
--&pinctrl {
--	pmic {
--		pmic_int_l: pmic-int-l {
--			rockchip,pins =
--				<1 RK_PC5 RK_FUNC_GPIO &pcfg_pull_up>;
--		};
--
--		pmic_dvs2: pmic-dvs2 {
--			rockchip,pins =
--				<1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
--		};
--	};
--
--	usb2 {
--		vcc5v0_host_en: vcc5v0-host-en {
--			rockchip,pins =
--				<4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
--		};
--	};
--};
--- 
-2.11.0
-
+SGkgR2VlcnQsDQoNCk9uIEZyaSwgRGVjIDIwLCAyMDE5LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
+dGU6DQo+IGkuZS4gd2lsbCBxdWV1ZSBpbiBjbGstcmVuZXNhcy1mb3ItdjUuNiwgd2l0aCB0aGUg
+ZGVzY3JpcHRpb24gY2hhbmdlZCB0bw0KPiAiQWRkIFNQSUJTQyBjbG9jayBmb3IgUlovQTIuIi4N
+Cg0KVGhhbmsgeW91IQ0KDQpDaHJpcw0K
