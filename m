@@ -2,119 +2,109 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF451C47409
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 17:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E686EC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 18:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B832072B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 17:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576948866;
-	bh=ygQ+LLKc6onkKQohUjB4VeER1S5nL8ISyedIw3igvFQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qx0A7iwffhWgpBHSWwPyWv0/akYIc8xxbPX1rrsvVYmYt6gr0LOz6klJN8yEB1pGq
-	 +rXNfOar0X3Q3/JBLtLGgi0F+c5sinCTQlCEvyv2hHV8Ca90g6zQTx0ixbNYZSTPCz
-	 mSiv1bg4OwvhrYV/6kNG7vP9uuSy9Ek6B62oOBh0=
+	by mail.kernel.org (Postfix) with ESMTP id C51BE206EC
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 18:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfLURVD (ORCPT
+        id S1727031AbfLUSVB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 12:21:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbfLURVD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Dec 2019 12:21:03 -0500
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9080521D7D;
-        Sat, 21 Dec 2019 17:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576948862;
-        bh=ygQ+LLKc6onkKQohUjB4VeER1S5nL8ISyedIw3igvFQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x96NU+fxBzmg38mKk0TGitI2DkyJtAaQKY/5VTvgo818kI3m0Av9s6mvDML47ta94
-         P1eHg6Bp/jv5P0xoqarNn0EvL7tEDDphKBnvcv1WmbmRKyCHkjtqHCfJCQwI+86fG9
-         w1y42YhGVRdJIfTYdIwHvOCJNRQyDKTs2czaTwV0=
-Received: by mail-lj1-f169.google.com with SMTP id a13so13238963ljm.10;
-        Sat, 21 Dec 2019 09:21:02 -0800 (PST)
-X-Gm-Message-State: APjAAAXmnrWyTbJZoTZm1CArPqxhG91zVQlrxv5/ufx0j2uGkmkYZCYz
-        2uX8pAVJoTFlvnXkfXTppSEf+lpm6npC++VPFus=
-X-Google-Smtp-Source: APXvYqzxQbblDkSAhXsYJzBSq3hDVzSm7VnGs1SPM1HBdZJYbyVd5kmZbEvVMHb9JsKwPhMwlDsc1nNYruHS7j121S0=
-X-Received: by 2002:a2e:8551:: with SMTP id u17mr8218439ljj.165.1576948860712;
- Sat, 21 Dec 2019 09:21:00 -0800 (PST)
+        Sat, 21 Dec 2019 13:21:01 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:38364 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLUSVA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 13:21:00 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4B2391C24DF; Sat, 21 Dec 2019 19:20:58 +0100 (CET)
+Date:   Sat, 21 Dec 2019 19:20:57 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-amlogic@lists.infradead.org, Roc He <hepeng@zidoo.tv>,
+        zypeng@titanmec.com, sales@fdhisi.com, csd@princeton.com.tw
+Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
+ TM1628/FD628/AiP1618 LED controllers
+Message-ID: <20191221182057.GA32732@amd>
+References: <20191212033952.5967-1-afaerber@suse.de>
 MIME-Version: 1.0
-References: <CGME20191220120142eucas1p1f43c7a862d9c0faa72e14b21d7d697e9@eucas1p1.samsung.com>
- <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-3-a.swigon@samsung.com>
-In-Reply-To: <20191220115653.6487-3-a.swigon@samsung.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Sun, 22 Dec 2019 02:20:24 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH2mh4xcUUa+z=thdnrFsEgZ7NR5nmL4sK2ybARndhn01A@mail.gmail.com>
-Message-ID: <CAGTfZH2mh4xcUUa+z=thdnrFsEgZ7NR5nmL4sK2ybARndhn01A@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/7] interconnect: Relax requirement in of_icc_get_from_provider()
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Content-Disposition: inline
+In-Reply-To: <20191212033952.5967-1-afaerber@suse.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On Fri, Dec 20, 2019 at 9:03 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
-m> wrote:
->
-> This patch relaxes the condition in of_icc_get_from_provider() so that it
-> is no longer required to set #interconnect-cells =3D <1> in the DT. In ca=
-se
-> of the devfreq driver for exynos-bus, #interconnect-cells is always zero.
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It doesn't contain why don't need to require it. If you add more detailed
-description, it is better to understand.
+Hi!
 
->
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
-> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/interconnect/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index e6035c199369..74c68898a350 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -335,7 +335,7 @@ struct icc_node *of_icc_get_from_provider(struct of_p=
-handle_args *spec)
->         struct icc_node *node =3D ERR_PTR(-EPROBE_DEFER);
->         struct icc_provider *provider;
->
-> -       if (!spec || spec->args_count !=3D 1)
-> +       if (!spec)
->                 return ERR_PTR(-EINVAL);
->
->         mutex_lock(&icc_lock);
-> --
-> 2.17.1
->
+> This patch series implements the LED controllers found in some RTD1295 ba=
+sed
+> TV set-top boxes.
+>=20
+> Ever since I've had mainline Linux kernels booting on my Zidoo X9S TV box,
+> it's been bugging me that it kept displaying "boot" on its front display.
+> A hot lead was a TM1628 chip on the front display's daughterboard, which
+> English and Chinese datasheets were available for. The biggest
+> hurdle
+
+Fun :-).
+
+> It goes on to add a "text" attribute to the driver that enables DT-config=
+ured
+> seven-segment displays; I was expecting to find precedence in auxdisplay
+> subsystem but came up empty. So my driver currently integrates its own
+> generic (but incomplete) character-to-8-segments mapping, as well as in a
+> second step a combined-characters-to-8-segments mapping, which then gets
+> mapped to the chipset's available output lines. Doing this as sysfs
+> device
+
+I did not investigate this in great detail; but if it is displaying
+characters, auxdisplay is probably right subsystem to handle that. I
+guess LEDs can still take the low-level parts...
+
+Oh, and common dimming for many LEDs is seen on other hardware, too
+(Turris routers). Not sure how to handle that, either :-(.
+
+Best regards,
+									Pavel
+
 
 
 --=20
-Best Regards,
-Chanwoo Choi
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3+YokACgkQMOfwapXb+vJoqgCfY5/dzSIdT0c0DWaA1+WWkFdQ
+6wkAoIzd/X2VTQwW3tq7WApoawbDjUdO
+=xFhp
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
