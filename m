@@ -2,270 +2,170 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D593C47409
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0435BC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E412720665
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576959347;
-	bh=5ebffvH8RjGUA/CqJXLR3seJ47MPgsm90kIrp/SYkC8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zZc5ZG44jvVmbvciBOcX7bb65YAAnVraSuNf4qxBOH5tcwfB0uoMAfVfHQaer6o2i
-	 uZDR5iUtyS3jzDI0uLWCMvJD8I/flSEdL+BHIH1/FZVGCQPoeI+XayK8Px54s3XZS1
-	 oSglKFzNQFL88NKPh56/LZNwsKhWJOQW5I2f6O9k=
+	by mail.kernel.org (Postfix) with ESMTP id C52DE206D3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:20:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5NTEAng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbfLUUPq (ORCPT
+        id S1726842AbfLUUUn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 15:15:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfLUUPq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Dec 2019 15:15:46 -0500
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738AE206D8;
-        Sat, 21 Dec 2019 20:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576959344;
-        bh=5ebffvH8RjGUA/CqJXLR3seJ47MPgsm90kIrp/SYkC8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rRET7jGuQ9x3Bi6G6g9O1ZUsM1zX4zsiWIx1Nt2RxjGBVszQtqOvdsBF44Zl2BSMt
-         1/06vhY22BJ5Irc1JeHg41UBKX9WzhDW+rNMBK5x0tDO6y0e+Cza/GHqV8Sw63s/01
-         lpUg9+MvHXTQwpVg2VaK0P17ndrD+m0kBl/sU1CI=
-Received: by mail-lj1-f182.google.com with SMTP id a13so13616145ljm.10;
-        Sat, 21 Dec 2019 12:15:44 -0800 (PST)
-X-Gm-Message-State: APjAAAVY7MI3xsJU4gSDsvwvV8KoMBDiSSmJB1iMp9cB2mQtfgNLgyu5
-        IMnYJdjLvC6kiyRb8IfarSkHv2IKpwOOdf3KesQ=
-X-Google-Smtp-Source: APXvYqw/wOkj3/7bhV08O1Y2ozplefUJRTEti5Jg7xBvbgQ90EBzcMhD9yqJ5nlEbYLGWhZbqzIfqislmtInQwBiECg=
-X-Received: by 2002:a2e:9b05:: with SMTP id u5mr13652547lji.59.1576959342597;
- Sat, 21 Dec 2019 12:15:42 -0800 (PST)
+        Sat, 21 Dec 2019 15:20:43 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34902 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfLUUUn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 15:20:43 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s7so5678006pjc.0
+        for <devicetree@vger.kernel.org>; Sat, 21 Dec 2019 12:20:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hlfv7lgkbhZZ3SIc3UgNPE6Boampe7OtyYVE0MQkMSA=;
+        b=a5NTEAngDx1EoqJzthzVt4uROhz0Vyn8HAS8ScRGRkah+cuhPoYbuGVHLgoGj/Kxw/
+         ER3N84SQvXHcpZaTMmPY9o0SoIGsgVuvGbG2IbqVB+0YsxlwU0rvcHVznDRh8y14Kw5h
+         oPDRhUfuGDQG6e4tuEXp5bpInZReAGQ1QQcIMWv+80EpgS1gNQFPVWRmcMnL/L7S+pYF
+         JnUTw86bn2OflW+M8U5hmhRKQq7Ghw3w1C5OkSnpITAFkEJABmnuyNU7qHIgXd2o8EGn
+         Ux5+sGiWJndyi3NX19arm4VFRiy6+xNNPlqH6oU91vI4Kva5xe/qS9+AAaohc3N2lmys
+         yu+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hlfv7lgkbhZZ3SIc3UgNPE6Boampe7OtyYVE0MQkMSA=;
+        b=n+3o2MSQ/6ZG+TM1MIBWNbPODheDrayHJWO7GAAV7IgCSM+kzxqW9NjvdJJLjnAHiJ
+         4moaOB1LljZj6Bsp32C95433qw8VQ6yrzFsTvuKxMCoTI/krMyvoDcMPaTof9IMg1OU/
+         zMMDs0sOtGfdXqtEair2slX6wBFfWZId/mSRL5YlqC+NB9mn5cYy1OTnH9M3zmSKjH52
+         KZmgA+T+p8sH/+wDj53VQ2FzdK1eF333Oq+vw+4SW0t2FfnYImVMo2BfN60SV1TDrSE9
+         8IAonDdnGtJbALauNqMdTdSvFKer/aOskdXZs2D3t//MUAbLwk0MvkS3xu5XB2B4JpJT
+         Dcsw==
+X-Gm-Message-State: APjAAAU/1r9EmjkiK+Vfs+PWYdkfoZnZfAsJhSw6km+lTEH3l8mcGm3a
+        m4KzisrFIoLc3ct3P/BZn0JGDw==
+X-Google-Smtp-Source: APXvYqyQX0g/TRTJDsUTfUwZCKafU5aMcUF3r0SEXFOfDSiADSPnB2M6SwfytxMAz834jQERA25NCA==
+X-Received: by 2002:a17:90a:d682:: with SMTP id x2mr24626885pju.44.1576959642249;
+        Sat, 21 Dec 2019 12:20:42 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a13sm17946953pfc.40.2019.12.21.12.20.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 12:20:41 -0800 (PST)
+Date:   Sat, 21 Dec 2019 12:20:39 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/5] remoteproc: Add prepare/unprepare callbacks
+Message-ID: <20191221202039.GG549437@yoga>
+References: <20191210164014.50739-1-paul@crapouillou.net>
+ <20191210164014.50739-3-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <CGME20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7@eucas1p2.samsung.com>
- <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-8-a.swigon@samsung.com>
-In-Reply-To: <20191220115653.6487-8-a.swigon@samsung.com>
-From:   Chanwoo Choi <chanwoo@kernel.org>
-Date:   Sun, 22 Dec 2019 05:15:06 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH0LKmBzAokgN+2K4-PS87gc2GnchYaHJi33nMQBCTNS-g@mail.gmail.com>
-Message-ID: <CAGTfZH0LKmBzAokgN+2K4-PS87gc2GnchYaHJi33nMQBCTNS-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 7/7] drm: exynos: mixer: Add interconnect support
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210164014.50739-3-paul@crapouillou.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Tue 10 Dec 08:40 PST 2019, Paul Cercueil wrote:
 
-On Fri, Dec 20, 2019 at 9:03 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
-m> wrote:
->
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
->
-> This patch adds interconnect support to exynos-mixer. The mixer works
-> the same as before when CONFIG_INTERCONNECT is 'n'.
+> The .prepare() callback is called before the firmware is loaded to
+> memory. This is useful for instance in the case where some setup is
+> required for the memory to be accessible.
+> 
 
-The patch description doesn't include why interconnect is required
-and what to do.
+Would it make sense to somehow tie this prepare/unprepare to the actual
+struct rproc_mem_entry that needs the resource enabled?
 
->
-> Co-developed-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
-> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Regards,
+Bjorn
+
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  drivers/gpu/drm/exynos/exynos_mixer.c | 71 +++++++++++++++++++++++++--
->  1 file changed, 66 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exyn=
-os/exynos_mixer.c
-> index 6cfdb95fef2f..a7e7240a055f 100644
-> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
-> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-> @@ -13,6 +13,7 @@
->  #include <linux/component.h>
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/interconnect.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
-> @@ -97,6 +98,7 @@ struct mixer_context {
->         struct exynos_drm_crtc  *crtc;
->         struct exynos_drm_plane planes[MIXER_WIN_NR];
->         unsigned long           flags;
-> +       struct icc_path         *soc_path;
->
->         int                     irq;
->         void __iomem            *mixer_regs;
-> @@ -931,6 +933,40 @@ static void mixer_disable_vblank(struct exynos_drm_c=
-rtc *crtc)
->         mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
+> 
+> Notes:
+>     v2-v4: No change
+> 
+>  drivers/remoteproc/remoteproc_core.c | 16 +++++++++++++++-
+>  include/linux/remoteproc.h           |  4 ++++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 0a9fc7fdd1c3..3ea5f675a148 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1299,11 +1299,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+>  	struct device *dev = &rproc->dev;
+>  	int ret;
+>  
+> +	if (rproc->ops->prepare) {
+> +		ret = rproc->ops->prepare(rproc);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to prepare rproc: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	/* load the ELF segments to memory */
+>  	ret = rproc_load_segments(rproc, fw);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to load program segments: %d\n", ret);
+> -		return ret;
+> +		goto unprepare_rproc;
+>  	}
+>  
+>  	/*
+> @@ -1354,6 +1362,9 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+>  	rproc_unprepare_subdevices(rproc);
+>  reset_table_ptr:
+>  	rproc->table_ptr = rproc->cached_table;
+> +unprepare_rproc:
+> +	if (rproc->ops->unprepare)
+> +		rproc->ops->unprepare(rproc);
+>  
+>  	return ret;
 >  }
->
-> +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
-> +{
-> +       struct drm_display_mode *mode =3D &crtc->base.state->adjusted_mod=
-e;
-> +       struct mixer_context *ctx =3D crtc->ctx;
-> +       unsigned long bw, bandwidth =3D 0;
-> +       int i, j, sub;
+> @@ -1483,6 +1494,9 @@ static int rproc_stop(struct rproc *rproc, bool crashed)
+>  
+>  	rproc->state = RPROC_OFFLINE;
+>  
+> +	if (rproc->ops->unprepare)
+> +		rproc->ops->unprepare(rproc);
 > +
-> +       if (!ctx->soc_path)
-> +               return;
-> +
-> +       for (i =3D 0; i < MIXER_WIN_NR; i++) {
-> +               struct drm_plane *plane =3D &ctx->planes[i].base;
-> +               const struct drm_format_info *format;
-> +
-> +               if (plane->state && plane->state->crtc && plane->state->f=
-b) {
-> +                       format =3D plane->state->fb->format;
-> +                       bw =3D mode->hdisplay * mode->vdisplay *
-> +                                                       drm_mode_vrefresh=
-(mode);
-> +                       if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-> +                               bw /=3D 2;
-> +                       for (j =3D 0; j < format->num_planes; j++) {
-> +                               sub =3D j ? (format->vsub * format->hsub)=
- : 1;
-> +                               bandwidth +=3D format->cpp[j] * bw / sub;
-> +                       }
-> +               }
-> +       }
-> +
-> +       /* add 20% safety margin */
-> +       bandwidth =3D bandwidth / 4 * 5;
-> +
-> +       dev_dbg(ctx->dev, "exynos-mixer: safe bandwidth %ld Bps\n", bandw=
-idth);
-> +       icc_set_bw(ctx->soc_path, Bps_to_icc(bandwidth), 0);
-> +}
-
-I recommend that add the role of this function in order to guarantee
-the minimum bandwidth to prevent performance drop or h/w issue.
-
-> +
->  static void mixer_atomic_begin(struct exynos_drm_crtc *crtc)
->  {
->         struct mixer_context *ctx =3D crtc->ctx;
-> @@ -982,6 +1018,7 @@ static void mixer_atomic_flush(struct exynos_drm_crt=
-c *crtc)
->         if (!test_bit(MXR_BIT_POWERED, &mixer_ctx->flags))
->                 return;
->
-> +       mixer_set_memory_bandwidth(crtc);
->         mixer_enable_sync(mixer_ctx);
->         exynos_crtc_handle_event(crtc);
->  }
-> @@ -1029,6 +1066,7 @@ static void mixer_disable(struct exynos_drm_crtc *c=
-rtc)
->         for (i =3D 0; i < MIXER_WIN_NR; i++)
->                 mixer_disable_plane(crtc, &ctx->planes[i]);
->
-> +       mixer_set_memory_bandwidth(crtc);
->         exynos_drm_pipe_clk_enable(crtc, false);
->
->         pm_runtime_put(ctx->dev);
-> @@ -1220,12 +1258,22 @@ static int mixer_probe(struct platform_device *pd=
-ev)
->         struct device *dev =3D &pdev->dev;
->         const struct mixer_drv_data *drv;
->         struct mixer_context *ctx;
-> +       struct icc_path *path;
->         int ret;
->
-> +       /*
-> +        * Returns NULL if CONFIG_INTERCONNECT is disabled.
-> +        * May return ERR_PTR(-EPROBE_DEFER).
-> +        */
-> +       path =3D of_icc_get(dev, NULL);
-> +       if (IS_ERR(path))
-> +               return PTR_ERR(path);
-> +
->         ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
->         if (!ctx) {
->                 DRM_DEV_ERROR(dev, "failed to alloc mixer context.\n");
-> -               return -ENOMEM;
-> +               ret =3D -ENOMEM;
-> +               goto err;
->         }
->
->         drv =3D of_device_get_match_data(dev);
-> @@ -1233,6 +1281,7 @@ static int mixer_probe(struct platform_device *pdev=
-)
->         ctx->pdev =3D pdev;
->         ctx->dev =3D dev;
->         ctx->mxr_ver =3D drv->version;
-> +       ctx->soc_path =3D path;
->
->         if (drv->is_vp_enabled)
->                 __set_bit(MXR_BIT_VP_ENABLED, &ctx->flags);
-> @@ -1242,17 +1291,29 @@ static int mixer_probe(struct platform_device *pd=
-ev)
->         platform_set_drvdata(pdev, ctx);
->
->         ret =3D component_add(&pdev->dev, &mixer_component_ops);
-> -       if (!ret)
-> -               pm_runtime_enable(dev);
-> +       if (ret < 0)
-> +               goto err;
-> +
-> +       pm_runtime_enable(dev);
-> +
-> +       return 0;
-> +
-> +err:
-> +       icc_put(path);
->
->         return ret;
->  }
->
->  static int mixer_remove(struct platform_device *pdev)
->  {
-> -       pm_runtime_disable(&pdev->dev);
-> +       struct device *dev =3D &pdev->dev;
-> +       struct mixer_context *ctx =3D dev_get_drvdata(dev);
-> +
-> +       pm_runtime_disable(dev);
-> +
-> +       component_del(dev, &mixer_component_ops);
->
-> -       component_del(&pdev->dev, &mixer_component_ops);
-> +       icc_put(ctx->soc_path);
->
->         return 0;
->  }
-> --
-> 2.17.1
->
-
-Basically, I agree this patch about using ICC feature
-to guarantee the minimum bandwidth. But, I don't have
-the knowledge of exynos-mixer.c. So, just I reviewed
-the part of ICC usage. After digging the exynos-mixer.c,
-I'll reply the reviewed tag. Thanks.
-
---=20
-Best Regards,
-Chanwoo Choi
+>  	dev_info(dev, "stopped remote processor %s\n", rproc->name);
+>  
+>  	return 0;
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 5f201f0c86c3..a6272d1ba384 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -355,6 +355,8 @@ enum rsc_handling_status {
+>  
+>  /**
+>   * struct rproc_ops - platform-specific device handlers
+> + * @prepare:	prepare the device for power up (before the firmware is loaded)
+> + * @unprepare:	unprepare the device after it is stopped
+>   * @start:	power on the device and boot it
+>   * @stop:	power off the device
+>   * @kick:	kick a virtqueue (virtqueue id given as a parameter)
+> @@ -371,6 +373,8 @@ enum rsc_handling_status {
+>   * @get_boot_addr:	get boot address to entry point specified in firmware
+>   */
+>  struct rproc_ops {
+> +	int (*prepare)(struct rproc *rproc);
+> +	void (*unprepare)(struct rproc *rproc);
+>  	int (*start)(struct rproc *rproc);
+>  	int (*stop)(struct rproc *rproc);
+>  	void (*kick)(struct rproc *rproc, int vqid);
+> -- 
+> 2.24.0
+> 
