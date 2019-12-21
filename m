@@ -2,88 +2,199 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A042C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC6BC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657DB206CB
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99160206B7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:36:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtHrEbAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfLUT0c (ORCPT
+        id S1726593AbfLUTgn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 14:26:32 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42838 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfLUT0c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 14:26:32 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9022C1C24DF; Sat, 21 Dec 2019 20:26:29 +0100 (CET)
-Date:   Sat, 21 Dec 2019 20:26:28 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Sat, 21 Dec 2019 14:36:43 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46690 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfLUTgm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 14:36:42 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y14so7063534pfm.13;
+        Sat, 21 Dec 2019 11:36:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eYA18M1AHwTBfGDn9HaHwahCZ9Z228s4VmZRiOLYjRM=;
+        b=VtHrEbAWfdVDDZGox1YE1G7CRmege9NbDWizAXiWGhpVTBinL2u+soJ4LzYligSDW2
+         Cp7JLjFxfgwHPRKv64U/oM5i4uUQESMlpzCM8fy6MXqzAe5WR6SMHCCluYdmVwSmjvOn
+         bVY11nxCyIkfTawbeaebrRWnyhMOiI39x9XzY3f4GrFjDBglu+OKPPtIa/PEGwFJTsvd
+         +F9VnhwEKgjns7lN3YfgVmBO+xhC4vM6IT9ivvO7HBoZljKozLP4He8VgkFmWSRg3eeO
+         vJ9OCTlxizr4KW63hk4mBVtuL9WilXvqFntleOZpo7m5fms1Ap/33kSzvPmf/ySL2mvc
+         9qrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eYA18M1AHwTBfGDn9HaHwahCZ9Z228s4VmZRiOLYjRM=;
+        b=XJMdeNnLX108xlzp5iniWmXjkYNv7a2coLiMWZwWFl4JSiqbIeKWuY+7Tpr+BWcMC6
+         OhJ6UcXyh3fSf4b5PLmy6ZF6uzgysUdXnLzJ9YXlDMfWuAjgxWlBohaplFdHi68RKeK5
+         QxJ9FxTcYj2Jn8Kp3DAdP9k0xrcJ4Uk9YK2XKbmGFN/AYsIS08ctFM3vgi7ztY7ABurK
+         ze2jFdB58d0LVR/64Tg/AM11xLJM4oxulqiwOiy3a2Vxy5obZ+KNj5Q6cvic8aMNC813
+         eV2BTlcV7ERHQnCFELnr7sZnbblheQ0Co4CiV5dtMjJS7eGo7J6ttsSY/kISJbHVFf2i
+         9Guw==
+X-Gm-Message-State: APjAAAWiPdRK8sXQZfU3edEGQMUlNieiyRMnbxIS2vqspXL7NtWH3R1m
+        7hqBiHcLqLLHI5LsGWQyRzHXWoR8
+X-Google-Smtp-Source: APXvYqwA965W55iHgOHil2WldY42io+p8qmLr8ZxB+yIKgiDSkjJfQWuO7o5an2mz5tfTkMJexg8jQ==
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr22037250pgb.214.1576957001147;
+        Sat, 21 Dec 2019 11:36:41 -0800 (PST)
+Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id y197sm18512603pfc.79.2019.12.21.11.36.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2019 11:36:40 -0800 (PST)
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v7 01/12] dt-bindings: leds: ROHM BD71282 PMIC LED driver
-Message-ID: <20191221192628.GI32732@amd>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
- <389367d4bb5283420e22f078c60e0805d23183ee.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: [PATCH V8 net-next 00/12] Peer to Peer One-Step time stamping
+Date:   Sat, 21 Dec 2019 11:36:26 -0800
+Message-Id: <cover.1576956342.git.richardcochran@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0NB0lE7sNnW8+0qW"
-Content-Disposition: inline
-In-Reply-To: <389367d4bb5283420e22f078c60e0805d23183ee.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series adds support for PTP (IEEE 1588) P2P one-step time
+stamping along with a driver for a hardware device that supports this.
 
---0NB0lE7sNnW8+0qW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If the hardware supports p2p one-step, it subtracts the ingress time
+stamp value from the Pdelay_Request correction field.  The user space
+software stack then simply copies the correction field into the
+Pdelay_Response, and on transmission the hardware adds the egress time
+stamp into the correction field.
 
-On Thu 2019-12-19 11:44:50, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC LED driver device tree bindings.
->=20
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+This new functionality extends CONFIG_NETWORK_PHY_TIMESTAMPING to
+cover MII snooping devices, but it still depends on phylib, just as
+that option does.  Expanding beyond phylib is not within the scope of
+the this series.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+User space support is available in the current linuxptp master branch.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+- Patch 1 adds phy_device methods for existing time stamping fields.
+- Patches 2-5 convert the stack and drivers to the new methods.
+- Patch 6 moves code around the dp83640 driver.
+- Patches 7-10 add support for MII time stamping in non-PHY devices.
+- Patch 11 adds the new P2P 1-step option.
+- Patch 12 adds a driver implementing the new option.
 
---0NB0lE7sNnW8+0qW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks,
+Richard
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Changed in v8:
+~~~~~~~~~~~~~~
 
-iEYEARECAAYFAl3+ceQACgkQMOfwapXb+vJJ2wCfYAOe58hN8obn+J7VsS8wSsyl
-wScAnA28iJQPpN8gVwmgYEu1HmtWAv/J
-=54nq
------END PGP SIGNATURE-----
+- Avoided adding forward functional declarations in the dp83640 driver.
+- Picked up Florian's new review tags and another one from Andrew.
 
---0NB0lE7sNnW8+0qW--
+Changed in v7:
+~~~~~~~~~~~~~~
+
+- Converted pr_debug|err to dev_ variants in new driver.
+- Fixed device tree documentation per Rob's v6 review.
+- Picked up Andrew's and Rob's review tags.
+- Silenced sparse warnings in new driver.
+
+Changed in v6:
+~~~~~~~~~~~~~~
+
+- Added methods for accessing the phy_device time stamping fields.
+- Adjust the device tree documentation per Rob's v5 review.
+- Fixed the build failures due to missing exports.
+
+Changed in v5:
+~~~~~~~~~~~~~~
+
+- Fixed build failure in macvlan.
+- Fixed latent bug with its gcc warning in the driver.
+
+Changed in v4:
+~~~~~~~~~~~~~~
+
+- Correct error paths and PTR_ERR return values in the framework.
+- Expanded KernelDoc comments WRT PHY locking.
+- Pick up Andrew's review tag.
+
+Changed in v3:
+~~~~~~~~~~~~~~
+
+- Simplify the device tree binding and document the time stamping
+  phandle by itself.
+
+Changed in v2:
+~~~~~~~~~~~~~~
+
+- Per the v1 review, changed the modeling of MII time stamping
+  devices.  They are no longer a kind of mdio device.
+
+Richard Cochran (12):
+  net: phy: Introduce helper functions for time stamping support.
+  net: macvlan: Use the PHY time stamping interface.
+  net: vlan: Use the PHY time stamping interface.
+  net: ethtool: Use the PHY time stamping interface.
+  net: netcp_ethss: Use the PHY time stamping interface.
+  net: phy: dp83640: Move the probe and remove methods around.
+  net: Introduce a new MII time stamping interface.
+  net: Add a layer for non-PHY MII time stamping drivers.
+  dt-bindings: ptp: Introduce MII time stamping devices.
+  net: mdio: of: Register discovered MII time stampers.
+  net: Introduce peer to peer one step PTP time stamping.
+  ptp: Add a driver for InES time stamping IP core.
+
+ .../devicetree/bindings/ptp/ptp-ines.txt      |  35 +
+ .../devicetree/bindings/ptp/timestamper.txt   |  42 +
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |   1 +
+ drivers/net/ethernet/ti/netcp_ethss.c         |   8 +-
+ drivers/net/macvlan.c                         |   4 +-
+ drivers/net/phy/Makefile                      |   2 +
+ drivers/net/phy/dp83640.c                     | 217 ++---
+ drivers/net/phy/mii_timestamper.c             | 125 +++
+ drivers/net/phy/phy.c                         |   4 +-
+ drivers/net/phy/phy_device.c                  |   5 +
+ drivers/of/of_mdio.c                          |  30 +-
+ drivers/ptp/Kconfig                           |  10 +
+ drivers/ptp/Makefile                          |   1 +
+ drivers/ptp/ptp_ines.c                        | 852 ++++++++++++++++++
+ include/linux/mii_timestamper.h               | 121 +++
+ include/linux/phy.h                           |  85 +-
+ include/uapi/linux/net_tstamp.h               |   8 +
+ net/8021q/vlan_dev.c                          |   4 +-
+ net/Kconfig                                   |   7 +-
+ net/core/dev_ioctl.c                          |   1 +
+ net/core/timestamping.c                       |  20 +-
+ net/ethtool/ioctl.c                           |   4 +-
+ 22 files changed, 1432 insertions(+), 154 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
+ create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
+ create mode 100644 drivers/net/phy/mii_timestamper.c
+ create mode 100644 drivers/ptp/ptp_ines.c
+ create mode 100644 include/linux/mii_timestamper.h
+
+-- 
+2.20.1
+
