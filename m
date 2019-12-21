@@ -2,100 +2,131 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086CC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C1EC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 21:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55AD206A5
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gx65rvbT"
+	by mail.kernel.org (Postfix) with ESMTP id 3A41D206B7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 21:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfLUU6M (ORCPT
+        id S1727430AbfLUVHt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 15:58:12 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39481 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfLUU6M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 15:58:12 -0500
-Received: by mail-il1-f193.google.com with SMTP id x5so10988427ila.6;
-        Sat, 21 Dec 2019 12:58:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3jTL5Hj/xPv508RnFe+kVEmXkwrPo1hzDrzVfSCYG04=;
-        b=gx65rvbTwIqNbvAUWvrgMschImn6KdpsCA7elPq41Mf8JweOYDlwKep+lrsvElBLlO
-         fLEv9miM37ojOHaw6Rz7qRNYQiRjv9bUDGFocv+BtYuBcK0c0LLG8/qO4mpNtt9rdlS5
-         wXjua7wLHS3oeRSQdhyZzKoP3PWPKVMD/Z6bqlGdRAcdqPNN3+xaqmnDGvWSv7JLi8Rf
-         RlpNzDQARdkHqfuSRG2DHxLekd8OOtIbgS+1LQUkLClKm1rweswDg22nXeOC6tBAtV+Q
-         inHBRzFrCHUtGqtv9J7wYWaiUjnh+/4/7h9GgS50QB2cjg1kFEc/oxavP/xmFKT04uHm
-         2TOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3jTL5Hj/xPv508RnFe+kVEmXkwrPo1hzDrzVfSCYG04=;
-        b=K18OqhKje5iULktrP8L0XBQoY+87DWelUX2MThWAkhqzAn3yhrG6ckuzRXNoVFUb3S
-         3ozSKuwP/5cAebR5D+HfcGQLJdJKZqfUtHi4rIbhtA3KgdMctxU1ZyuXZ+5wJWp5NCdz
-         x4E04tJsk3/2uaQXInJl16/dfk/KfX8aNitHJHB0ZMzBS3CtlKJWXVj3lob/xHMCOUQC
-         79czaV6GWY2FG/HN3ZQvSOfAGN6W7OQ9ftG6JeiMoHaxU10x4X5lHVL0fC6v+p3aJra2
-         TFuYIKRl7Vw534R7LKFVAKikwS2xuhiDdmQGQKMpDraqFRHrt9D90iEek6t0i6KnEPQ1
-         j2UQ==
-X-Gm-Message-State: APjAAAXfjQFY1rcWCV49y133+RVnFG47kP5s0r37sX+QZlJGzHdSZ8dS
-        1LhNdVZBcOUE10siqt+r1vQG6+xKTYgsF1/RroQ=
-X-Google-Smtp-Source: APXvYqyc8NqYt53ySoRHrFd/M8DDGHoLrN3027yUv9fxIzSuHQmZzkpASAnzMZ47hx4Sb3w7l02oV0L828+X+AtId/k=
-X-Received: by 2002:a92:2904:: with SMTP id l4mr19394612ilg.166.1576961891357;
- Sat, 21 Dec 2019 12:58:11 -0800 (PST)
+        Sat, 21 Dec 2019 16:07:49 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34610 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726763AbfLUVHt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 21 Dec 2019 16:07:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2E76FACEC;
+        Sat, 21 Dec 2019 21:07:46 +0000 (UTC)
+Subject: Re: [RFC 00/25] arm64: realtek: Add Xnano X5 and implement
+ TM1628/FD628/AiP1618 LED controllers
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-realtek-soc@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        linux-leds@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+References: <20191212033952.5967-1-afaerber@suse.de>
+ <20191221182057.GA32732@amd>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <e26f985b-ceca-ca2c-a709-e7dc40c7fdd1@suse.de>
+Date:   Sat, 21 Dec 2019 22:07:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191113232245.4039932-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191113232245.4039932-1-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Sat, 21 Dec 2019 13:58:00 -0700
-Message-ID: <CAOCk7Nq_+fGh0QvMf4DDp6KLKk23F_FK1neDnioQYWgHXMj26w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191221182057.GA32732@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 4:23 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The WiFi firmware used on db845c implements the 8bit host-capability
-> message, so enable the quirk for this.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hi Pavel,
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+[- Roc He, - chipset vendors]
 
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> index 12f5f14ada5c..7ec7b90ab83e 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -625,6 +625,8 @@
->         vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
->         vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
->         vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-> +
-> +       qcom,snoc-host-cap-8bit-quirk;
->  };
->
->  /* PINCTRL - additions to nodes defined in sdm845.dtsi */
-> --
-> 2.23.0
->
+Am 21.12.19 um 19:20 schrieb Pavel Machek:
+>> It goes on to add a "text" attribute to the driver that enables DT-configured
+>> seven-segment displays; I was expecting to find precedence in auxdisplay
+>> subsystem but came up empty. So my driver currently integrates its own
+>> generic (but incomplete) character-to-8-segments mapping, as well as in a
+>> second step a combined-characters-to-8-segments mapping, which then gets
+>> mapped to the chipset's available output lines. Doing this as sysfs
+>> device
+> 
+> I did not investigate this in great detail; but if it is displaying
+> characters, auxdisplay is probably right subsystem to handle that.
+
+ausdisplay does not have any common API AFAICS. Most of them are 
+high-level displays with some parallel interface to set text and 
+metadata. Half of them hardcode the text to Linux or maybe offer a 
+Kconfig option to override it; the other half implements their own 
+character device file with ABI specific to that driver.
+
+> I
+> guess LEDs can still take the low-level parts...
+
+I'd hope so, but I believe we're missing multiple things there:
+
+1) A bulk-update API for setting multiple LEDs at once. 
+.brightness_set[_blocking]() is all we have on the device side, which 
+here results in two SPI commands. led_set_brightness[_sync]() is all I 
+see on the API side. We'd need an API that takes an array of LEDs and 
+brightness values and allows a common driver rather than individual 
+devices to update the Display RAM via SPI from an internal buffer.
+
+2) DT is currently limited to one node per LED device. We'd need 
+#led-cells, with current LED nodes defaulting to zero. That way we could 
+address LEDs from an external, e.g., auxdisplay driver via a two-cell 
+index for these LED controllers, without needing to have DT nodes for 
+each and every display segment.
+
+3) Better LED device names. More "function" values, or a reversal of the 
+label deprecation. Or an alternative API to register LEDs with manual name.
+
+4) LED triggers controlling more than one LED. linux,default-trigger 
+seems to assign one per LED, so that two heartbeats are quickly out of 
+sync. Doing it from code would probably be simpler than finding a way to 
+model this in DT, but I don't yet see how.
+
+Alternatively we could expose those LED output lines as a gpiochip, 
+which we can already index in DT, and consider the display GPIO-based, 
+but then we're in the situation again that GregKH was telling people to 
+either go screw themselves in userspace or move things into leds, which 
+now you're against.
+
+Also, if you don't allow displays in leds, then we can't have LED 
+triggers for them either.
+
+> 
+> Oh, and common dimming for many LEDs is seen on other hardware, too
+> (Turris routers). Not sure how to handle that, either :-(.
+
+That part I have indeed successfully solved with a backlight device.
+
+My current problem (WIP blocking a push) is the key input handling - not 
+sure how to model both LEDs and keys as DT child nodes - do we need a 
+compatible to distinguish between them? Unit addresses and reg values 
+would be in different ranges, making this awkward, not to mention the 
+problem of naming a compatible, given the incredible diverse chipsets.
+
+Regards,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
