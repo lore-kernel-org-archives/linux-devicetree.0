@@ -2,127 +2,130 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC24C2D0D7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 14:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7907C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 15:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1762070C
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 14:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899FB2070B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 15:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyXABD20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfLUOPj (ORCPT
+        id S1726885AbfLUPHM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 09:15:39 -0500
-Received: from smtp7.web4u.cz ([81.91.87.87]:51126 "EHLO mx-8.mail.web4u.cz"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726363AbfLUOO5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Dec 2019 09:14:57 -0500
-Received: from mx-8.mail.web4u.cz (localhost [127.0.0.1])
-        by mx-8.mail.web4u.cz (Postfix) with ESMTP id 7066A203713;
-        Sat, 21 Dec 2019 15:08:06 +0100 (CET)
-Received: from thor.pikron.com (unknown [89.102.8.6])
-        (Authenticated sender: ppisa@pikron.com)
-        by mx-8.mail.web4u.cz (Postfix) with ESMTPA id 126CB203712;
-        Sat, 21 Dec 2019 15:08:06 +0100 (CET)
-From:   pisa@cmp.felk.cvut.cz
-To:     devicetree@vger.kernel.org, mkl@pengutronix.de,
-        linux-can@vger.kernel.org, socketcan@hartkopp.net
-Cc:     wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
-        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
-        porazil@pikron.com, Pavel Pisa <pisa@cmp.felk.cvut.cz>
-Subject: [PATCH v3 2/6] dt-bindings: net: can: binding for CTU CAN FD open-source IP core.
-Date:   Sat, 21 Dec 2019 15:07:31 +0100
-Message-Id: <61533d59378822f8c808abf193b40070810d3d35.1576922226.git.pisa@cmp.felk.cvut.cz>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1576922226.git.pisa@cmp.felk.cvut.cz>
-References: <cover.1576922226.git.pisa@cmp.felk.cvut.cz>
-In-Reply-To: <cover.1576922226.git.pisa@cmp.felk.cvut.cz>
-References: <cover.1576922226.git.pisa@cmp.felk.cvut.cz>
-X-W4U-Auth: 036c2bfc9954ad56176992ec3cd014341e01efcf
+        Sat, 21 Dec 2019 10:07:12 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37587 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfLUPHM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 10:07:12 -0500
+Received: by mail-il1-f194.google.com with SMTP id t8so10572953iln.4;
+        Sat, 21 Dec 2019 07:07:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LkyVqaGL8pSvqNm/GP/crRw2qKqaYhVFS2IL3esjjss=;
+        b=YyXABD20DXHsGL/j/uU2X9GW2vWtYA4/REvABc1SKH1P+gDQRaUgyfvrN7RNZLFcCr
+         FE3Ac/vjCvKi0GIE4tdWnfyEliulLr1lEucydp2qpyI7uSmil51FTU+YufrF/ol7cPYy
+         3jz+O/ZDGl2N1kwK12gqNbDo3O8rHDRgtO5Fe0DrbWNwIkgPjcy/2MowkPNut2ycdeuL
+         eqmZrYwjta8g6lG0nudReRNfMSQDnkAFG2qpH0rAbJh0rZcE6EcqVg6K1jJMoiAj3aN8
+         a8vlolsXPlaKOLYXNXOiYc3ufw2b1w12tDjhlMw09kGop1Ok33ZFy8Afo/1KDncRMmMH
+         bLlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LkyVqaGL8pSvqNm/GP/crRw2qKqaYhVFS2IL3esjjss=;
+        b=fA3CYqN1NIuqfdvBWro1nTcZ9r8YB1nRuBk9kXfgp2aL/2Rx0Q9Yzn+yWmtzNgfa+a
+         YOKBOSWAnytiJEZERbK5ABD2rfRoDuEjpcIIp/J+HlOmeGk/kECEg0Glq1Q5NMQav64b
+         WQD9UcpmnLNv1E0IwkMxWpRb5SGFKh2/QTYqoUDNBGuojeUC5rx38xhZF8OrNgnn3YKZ
+         aYn6ktQU7ZbwSwrywmYInqomIOeAbhvJmPeB4rbYZsMFS5iRK0Zc2uN9Sg/5MtJ1Bg60
+         XEfh5B6kdxto/s1AwHuIenu2szPXolbIEe3eZk0wB8t7mrk+BoJHr141lVpt4tqACFjH
+         teBg==
+X-Gm-Message-State: APjAAAX+mz2k7vEas0QFGuLPdJaChRwlTAlJSeYxaslVxU+qEcaUnAqy
+        XTvO/KwI6virHS24X5VZEewqvY8VMHRBhkfLqQ3pPA==
+X-Google-Smtp-Source: APXvYqwvQf5cIvO4uRO1C7m1YDUP8Y4ctwyyWjl1EAYmu/rnU1BO5cqKngYGLE5EGBXHkD57AG4IlXjPHwoNstd3jeY=
+X-Received: by 2002:a92:1547:: with SMTP id v68mr16711743ilk.58.1576940831051;
+ Sat, 21 Dec 2019 07:07:11 -0800 (PST)
+MIME-Version: 1.0
+References: <20191213160542.15757-1-aford173@gmail.com>
+In-Reply-To: <20191213160542.15757-1-aford173@gmail.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Sat, 21 Dec 2019 09:06:58 -0600
+Message-ID: <CAHCN7xKuVCGqgRpixa9UPkWq92Gg=dm4XxAczBKAZCoMzcBVJg@mail.gmail.com>
+Subject: Re: [PATCH V2 0/7] soc: imx: Enable additional functionality of
+ i.MX8M Mini
+To:     arm-soc <linux-arm-kernel@lists.infradead.org>
+Cc:     Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+On Fri, Dec 13, 2019 at 10:05 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> The GPCv2 controller on the i.MX8M Mini is compatible with the driver
+> used for the i.MX8MQ except for the register locations and names.
+> The GPCv2 controller is used to enable additional periperals currently
+> unavailable on the i.MX8M Mini.  In order to make them function,
+> the GPCv2 needs to be adapted so the drivers can associate their
+> power domain to the GPCv2 to enable them.
+>
+> This series makes one include file slightly more generic,
+> adds the iMX8M Mini entries, updates the bindings, adds them
+> to the device tree, then associates the new power domain to
+> both the OTG and PCIe controllers.
+>
+> Some peripherals may need additional power domain drivers in the future
+> due to limitations of the GPC driver, but the drivers for VPU and others are
+> not available yet.
 
-Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
----
- .../devicetree/bindings/net/can/ctu,ctucanfd.txt   | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
+Before I do a V3 to address Rob's comments, I am thinking I'll drop
+the items on the GPC that Jacky suggested would not work, and we don't
+have drivers for those other peripherals (GPU, VPU, etc.) anyway.  My
+main goal here was to try and get the USB OTG ports working, so I'd
+like to enabled enough of the items on the GPC that are similar to the
+i.MX8MQ and leave the more challenging items until we have either a
+better driver available and/or actual peripheral support coming.  I
+haven't seen LCDIF or DSI drivers pushed upstream yet, so I doubt
+we'll see GPU or VPU yet until those are done.
 
-diff --git a/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
-new file mode 100644
-index 000000000000..4cb2f04cb412
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/ctu,ctucanfd.txt
-@@ -0,0 +1,61 @@
-+Memory Mapped CTU CAN FD Open-source IP Core Device Tree Bindings
-+-----------------------------------------------------------------
-+
-+
-+The core sources and documentation on project page
-+
-+  https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core
-+  http://canbus.pages.fel.cvut.cz/ctucanfd_ip_core/Progdokum.pdf
-+
-+Integration in Xilinx Zynq SoC based system together with
-+OpenCores SJA1000 compatible controllers
-+
-+  https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top
-+
-+Martin Jerabek's dimploma thesis with integration and testing
-+framework description
-+
-+ https://dspace.cvut.cz/bitstream/handle/10467/80366/F3-DP-2019-Jerabek-Martin-Jerabek-thesis-2019-canfd.pdf
-+
-+Required properties:
-+
-+- compatible : should be one of "ctu,ctucanfd", "ctu,canfd-2".
-+      The "canfd-2" has been reserved for older revision of the IP core.
-+      The revision can be read from the IP core register as well.
-+
-+- reg = <(baseaddr) (size)> : specify mapping into physical address
-+      space of the processor system.
-+
-+- interrupts : property with a value describing the interrupt source
-+      required for the CTU CAN FD. For Zynq SoC system format is
-+      <(is_spi) (number) (type)> where is_spi defines if it is SPI
-+      (shared peripheral) interrupt, the second number is translated
-+      to the vector by addition of 32 on Zynq-7000 systems and type
-+      is IRQ_TYPE_LEVEL_HIGH (4) for Zynq.
-+
-+- clocks: phandle of reference clock (100 MHz is appropriate
-+      for FPGA implementation on Zynq-7000 system).
-+
-+Optional properties:
-+
-+- clock-names: not used in actual design but if more clocks are used
-+      by cores then "can_clk" would be clock source name for the clocks
-+      used to define CAN time-quanta.
-+
-+Example when integrated to Zynq-7000 system DTS:
-+
-+        / {
-+            /* ... */
-+            amba: amba {
-+                #address-cells = <1>;
-+                #size-cells = <1>;
-+                compatible = "simple-bus";
-+
-+                ctu_can_fd_0: can@43c30000 {
-+                    compatible = "ctu,ctucanfd";
-+                    interrupts = <0 30 4>;
-+                    clocks = <&clkc 15>;
-+                    reg = <0x43c30000 0x10000>;
-+                };
-+            };
-+        };
--- 
-2.11.0
+Does anyone from the NXP team have any other comments/concerns?
 
+adam
+>
+> Adam Ford (7):
+>   soc: imx: gpcv2: Rename imx8mq-power.h to imx8m-power.h
+>   soc: imx: gpcv2: Update imx8m-power.h to include iMX8M Mini
+>   soc: imx: gpcv2: add support for i.MX8M Mini SoC
+>   dt-bindings: imx-gpcv2: Update bindings to support i.MX8M Mini
+>   arm64: dts: imx8mm: add GPC power domains
+>   ARM64: dts: imx8mm: Fix clocks and power domain for USB OTG
+>   arm64: dts: imx8mm: Add PCIe support
+>
+>  .../bindings/power/fsl,imx-gpcv2.txt          |   6 +-
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi     | 127 ++++++++-
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi     |   2 +-
+>  drivers/soc/imx/gpcv2.c                       | 246 +++++++++++++++++-
+>  .../power/{imx8mq-power.h => imx8m-power.h}   |  14 +
+>  5 files changed, 387 insertions(+), 8 deletions(-)
+>  rename include/dt-bindings/power/{imx8mq-power.h => imx8m-power.h} (57%)
+>
+> --
+> 2.20.1
+>
