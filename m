@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADF4C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AC7C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06050206EC
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122D9206B7
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahk83Fg5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qUYmbyc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfLUTgw (ORCPT
+        id S1727339AbfLUTgz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 14:36:52 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35177 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfLUTgt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 14:36:49 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so5545575plt.2;
-        Sat, 21 Dec 2019 11:36:49 -0800 (PST)
+        Sat, 21 Dec 2019 14:36:55 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41980 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfLUTgz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 14:36:55 -0500
+Received: by mail-pl1-f196.google.com with SMTP id bd4so5534227plb.8;
+        Sat, 21 Dec 2019 11:36:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LZ93AY1+fKpm1lkv7HOM3paCh/zw2D/T/ZiNFPokrAw=;
-        b=ahk83Fg5iFOr5LxXXHbH5RT9e9MD2eV6kteRw7B8tdtbjaxE+slOVsiWHsEo35v5GR
-         sK9oMVGLBtYa6d+3a/DpIGtXcQx+kJ0LZLcbxmIXzi/WuTmnln4bX1RUvDQiISxFC9E6
-         a3B7g52k+dTMXcQH85oc1mReOWpRaT1QfKjM1/785S9Bju/30w1TQk5PXo/TN0LFW2A7
-         4gayD9A/Oz76q42h8xFgFZw4butA6ciZGKRbiYpWEYKYsw8oRlU4HRMRNZK+iFsXpzVG
-         1uSEkcwOzR7OZJWOLR5BFiqH8WXTZf2qwyVmRAAHKBc4kKxh5/TKbPBk5kqUn/AOP8/L
-         T5LQ==
+        bh=JibM5raV/YAFw3oVHiGpDr4SxeM+CWDiIkx7ilTDLCM=;
+        b=qUYmbyc3wvwfq+WzSe3ojeTh/xFwS9sMJR1HuJUGsyFayEqX++0GtMR4IPcXr+SB2n
+         nSbggx41PNZsLAb+ynt8Sw5qW76hNbWvwxf0S/2XzdBHNnX9O5tJXYUXGryfMGLQJ2ft
+         l4Jjb2iweErtMWtxTxRh4TYZmOljYgDqmYKCj5eznNxItIylq3EIREMQL0Rabuq0kWA6
+         uQYZ+E7vxM3nGoN1KfCpZ8t+N7KB8R7QFBbudlEXFYmaEt7fRO8tzoe8v/I9/bSGBtnG
+         TVifjLFIOYPUYBV3+BcZaNlyjz0nwL5OwbxC1Ngc/Txzbq6MsclHLicVKT0v1dEAp75Z
+         cvDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LZ93AY1+fKpm1lkv7HOM3paCh/zw2D/T/ZiNFPokrAw=;
-        b=IMrZ8TpGTVY2EfrNle7nZ7jIgX5X4gq/OlahgKGKGCVu/5vwdwAlrrnKluDN+WwUsF
-         q2NV4wnrN/twPzh+ChEo/QU1sfRPR2LGaObNU347xDO3NclzrFlzSEk2wFCdwY2HRVTJ
-         7WeyIczfWdfpOeSlOsM5zvmJaPCkhgCmccMLxGCcJeULpvrcQUmk6cuQdtV/edqz2fUX
-         Zls6JpblyVk61z9siZ4uGAIZCjy4DnbVzvL7/vCp3RgX0AuflIVLK18BEOFV8Jdu71We
-         lqhwzI1WdPCBp3jrV+F3yMbHhocVeB8W4E0ttyjbm1hu6GGhozkjwiA7zjppQ6EWJZmb
-         am+Q==
-X-Gm-Message-State: APjAAAUQAMqjCo+V+hJY3nFKjUTeEOZNr82qb6579ubPv+QKlni3zLgG
-        TaN7aO8J2Ic36kqvni6X8+rCCvyT
-X-Google-Smtp-Source: APXvYqyaWfVImWgFzZFryPWHuiQ/Oc9qphIn8ajBahnOWf9g3de5R8OF0TwGPiyXMIvf8xAio76BMA==
-X-Received: by 2002:a17:90a:a88d:: with SMTP id h13mr23038652pjq.55.1576957008437;
-        Sat, 21 Dec 2019 11:36:48 -0800 (PST)
+        bh=JibM5raV/YAFw3oVHiGpDr4SxeM+CWDiIkx7ilTDLCM=;
+        b=m+tKtlReroUlrJ6a83gACnR8HpgPasNDAKgBenqxGq1Wk9bCnwwS9Hb1Op1wqLhLxO
+         7krkK4Q7MmOlYCoN6s4EhnEb0J1wBOJBpbDGKjrPBX2sbKV70iW5hVGuBrEw/CCY2ETf
+         naOuXMUm++rD/zittMGynlDrEP957QeX0s+nreQzazDOKPahm/wR+ASW9h5QlvHtjgNC
+         tnvmzW3OUDpaGmwYEAmooqTy7RdTRvIM9hr0sDxMOqZhbTpuy0hgnNpfgVqsjDL72zaE
+         MUyZuZYToJQYOq5jETgDJO3XpcfosRgWNuhfZrbjLusIa7lT6aWcaiGSu3bUFhB3JGCM
+         TmqQ==
+X-Gm-Message-State: APjAAAVHO+9ER/wejYqfu0bZw+mhjC0NmF1aIFq7u9DHr85vgVVC1Bjo
+        Pdk47oW0QUSPcHubPnA1R2MZ3ms/
+X-Google-Smtp-Source: APXvYqwx9DHa3YrBPG+gsYZ0uBqquM2cZEnFt1FYahORWDXVNEdnWL3YaGV5c4c0YgnksuDonjjpOw==
+X-Received: by 2002:a17:90a:e291:: with SMTP id d17mr25019384pjz.116.1576957014100;
+        Sat, 21 Dec 2019 11:36:54 -0800 (PST)
 Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id y197sm18512603pfc.79.2019.12.21.11.36.47
+        by smtp.gmail.com with ESMTPSA id y197sm18512603pfc.79.2019.12.21.11.36.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 11:36:47 -0800 (PST)
+        Sat, 21 Dec 2019 11:36:53 -0800 (PST)
 From:   Richard Cochran <richardcochran@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Willem de Bruijn <willemb@google.com>,
         Wingman Kwok <w-kwok2@ti.com>
-Subject: [PATCH V8 net-next 05/12] net: netcp_ethss: Use the PHY time stamping interface.
-Date:   Sat, 21 Dec 2019 11:36:31 -0800
-Message-Id: <76cd58c2032f894184aeb2f1e23a59b368f3eb2c.1576956342.git.richardcochran@gmail.com>
+Subject: [PATCH V8 net-next 09/12] dt-bindings: ptp: Introduce MII time stamping devices.
+Date:   Sat, 21 Dec 2019 11:36:35 -0800
+Message-Id: <40fce97d7717ce74bedf64a79f4b96ee07003de0.1576956342.git.richardcochran@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576956342.git.richardcochran@gmail.com>
 References: <cover.1576956342.git.richardcochran@gmail.com>
@@ -83,58 +83,108 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The netcp_ethss driver tests fields of the phy_device in order to
-determine whether to defer to the PHY's time stamping functionality.
-This patch replaces the open coded logic with an invocation of the
-proper methods.
+This patch add a new binding that allows non-PHY MII time stamping
+devices to find their buses.  The new documentation covers both the
+generic binding and one upcoming user.
 
 Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/ethernet/ti/netcp_ethss.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/ptp/ptp-ines.txt      | 35 ++++++++++++++++
+ .../devicetree/bindings/ptp/timestamper.txt   | 42 +++++++++++++++++++
+ 2 files changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
+ create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
 
-diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
-index 86a3f42a3dcc..1280ccd581d4 100644
---- a/drivers/net/ethernet/ti/netcp_ethss.c
-+++ b/drivers/net/ethernet/ti/netcp_ethss.c
-@@ -2533,8 +2533,6 @@ static int gbe_del_vid(void *intf_priv, int vid)
- }
- 
- #if IS_ENABLED(CONFIG_TI_CPTS)
--#define HAS_PHY_TXTSTAMP(p) ((p)->drv && (p)->drv->txtstamp)
--#define HAS_PHY_RXTSTAMP(p) ((p)->drv && (p)->drv->rxtstamp)
- 
- static void gbe_txtstamp(void *context, struct sk_buff *skb)
- {
-@@ -2566,7 +2564,7 @@ static int gbe_txtstamp_mark_pkt(struct gbe_intf *gbe_intf,
- 	 * We mark it here because skb_tx_timestamp() is called
- 	 * after all the txhooks are called.
- 	 */
--	if (phydev && HAS_PHY_TXTSTAMP(phydev)) {
-+	if (phy_has_txtstamp(phydev)) {
- 		skb_shinfo(p_info->skb)->tx_flags |= SKBTX_IN_PROGRESS;
- 		return 0;
- 	}
-@@ -2588,7 +2586,7 @@ static int gbe_rxtstamp(struct gbe_intf *gbe_intf, struct netcp_packet *p_info)
- 	if (p_info->rxtstamp_complete)
- 		return 0;
- 
--	if (phydev && HAS_PHY_RXTSTAMP(phydev)) {
-+	if (phy_has_rxtstamp(phydev)) {
- 		p_info->rxtstamp_complete = true;
- 		return 0;
- 	}
-@@ -2830,7 +2828,7 @@ static int gbe_ioctl(void *intf_priv, struct ifreq *req, int cmd)
- 	struct gbe_intf *gbe_intf = intf_priv;
- 	struct phy_device *phy = gbe_intf->slave->phy;
- 
--	if (!phy || !phy->drv->hwtstamp) {
-+	if (!phy_has_hwtstamp(phy)) {
- 		switch (cmd) {
- 		case SIOCGHWTSTAMP:
- 			return gbe_hwtstamp_get(gbe_intf, req);
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-ines.txt b/Documentation/devicetree/bindings/ptp/ptp-ines.txt
+new file mode 100644
+index 000000000000..4c242bd1ce9c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/ptp-ines.txt
+@@ -0,0 +1,35 @@
++ZHAW InES PTP time stamping IP core
++
++The IP core needs two different kinds of nodes.  The control node
++lives somewhere in the memory map and specifies the address of the
++control registers.  There can be up to three port handles placed as
++attributes of PHY nodes.  These associate a particular MII bus with a
++port index within the IP core.
++
++Required properties of the control node:
++
++- compatible:		"ines,ptp-ctrl"
++- reg:			physical address and size of the register bank
++
++Required format of the port handle within the PHY node:
++
++- timestamper:		provides control node reference and
++			the port channel within the IP core
++
++Example:
++
++	tstamper: timestamper@60000000 {
++		compatible = "ines,ptp-ctrl";
++		reg = <0x60000000 0x80>;
++	};
++
++	ethernet@80000000 {
++		...
++		mdio {
++			...
++			ethernet-phy@3 {
++				...
++				timestamper = <&tstamper 0>;
++			};
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/ptp/timestamper.txt b/Documentation/devicetree/bindings/ptp/timestamper.txt
+new file mode 100644
+index 000000000000..fc550ce4d4ea
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/timestamper.txt
+@@ -0,0 +1,42 @@
++Time stamps from MII bus snooping devices
++
++This binding supports non-PHY devices that snoop the MII bus and
++provide time stamps.  In contrast to PHY time stamping drivers (which
++can simply attach their interface directly to the PHY instance), stand
++alone MII time stamping drivers use this binding to specify the
++connection between the snooping device and a given network interface.
++
++Non-PHY MII time stamping drivers typically talk to the control
++interface over another bus like I2C, SPI, UART, or via a memory mapped
++peripheral.  This controller device is associated with one or more
++time stamping channels, each of which snoops on a MII bus.
++
++The "timestamper" property lives in a phy node and links a time
++stamping channel from the controller device to that phy's MII bus.
++
++Example:
++
++	tstamper: timestamper@10000000 {
++		compatible = "ines,ptp-ctrl";
++		reg = <0x10000000 0x80>;
++	};
++
++	ethernet@20000000 {
++		mdio {
++			ethernet-phy@1 {
++				timestamper = <&tstamper 0>;
++			};
++		};
++	};
++
++	ethernet@30000000 {
++		mdio {
++			ethernet-phy@2 {
++				timestamper = <&tstamper 1>;
++			};
++		};
++	};
++
++In this example, time stamps from the MII bus attached to phy@1 will
++appear on time stamp channel 0 (zero), and those from phy@2 appear on
++channel 1.
 -- 
 2.20.1
 
