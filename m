@@ -6,200 +6,115 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3189C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 16:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF451C47409
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 17:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B61921927
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 16:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B832072B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 17:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576944131;
-	bh=9Pvao+jXX0PCNDC7N1F3k9oHnH1BnDFD/aI52kgxil8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sCcHUeS6w6BGc7hr+Pbkr8hbaexGfWhV41pO5WnhXz+e8MzsPHRfNEftuf/fsVlhu
-	 auOGlLrPEKkblE/xk0dUFsAqaBpiYPBWUr1Xg99MMwuwibsY5UYtqDMSHGJfKjtPPp
-	 NiK+tqxMNtOUuVUMuLDDk4U3RN1+KbWx1eduvQdM=
+	s=default; t=1576948866;
+	bh=ygQ+LLKc6onkKQohUjB4VeER1S5nL8ISyedIw3igvFQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qx0A7iwffhWgpBHSWwPyWv0/akYIc8xxbPX1rrsvVYmYt6gr0LOz6klJN8yEB1pGq
+	 +rXNfOar0X3Q3/JBLtLGgi0F+c5sinCTQlCEvyv2hHV8Ca90g6zQTx0ixbNYZSTPCz
+	 mSiv1bg4OwvhrYV/6kNG7vP9uuSy9Ek6B62oOBh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfLUQCI (ORCPT
+        id S1726593AbfLURVD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 11:02:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        Sat, 21 Dec 2019 12:21:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbfLUQCI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 21 Dec 2019 11:02:08 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726319AbfLURVD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 21 Dec 2019 12:21:03 -0500
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0AE42072B;
-        Sat, 21 Dec 2019 16:02:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9080521D7D;
+        Sat, 21 Dec 2019 17:21:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576944126;
-        bh=9Pvao+jXX0PCNDC7N1F3k9oHnH1BnDFD/aI52kgxil8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qSSL64IGSgg1gGqNQWkYp0zn6HAB8AervjDy2k1DqBZyJ1I/L7b8g4+sOhv01HQSR
-         9L5Vff2aLXleaIQzahSUu6hHRwAKRzo/LY98TUKK1nz4zAmDHByHwTz8MWyA2d8ywW
-         tIEv1JULX5cMRsn4vWtR54GeX2M0ctCcbiwxWQ64=
-Date:   Sat, 21 Dec 2019 17:02:03 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH v13 4/7] drm/sun4i: dsi: Handle bus clock via
- regmap_mmio_attach_clk
-Message-ID: <20191221160203.sokdonzswd6as4ed@gilmour.lan>
-References: <20191218191017.2895-1-jagan@amarulasolutions.com>
- <20191218191017.2895-5-jagan@amarulasolutions.com>
- <20191218220536.vwww45yctm5ye3vg@gilmour.lan>
- <CAMty3ZDgnn0LyGVYmzQhTtg7JdiqH_cW_dZ=o2SA1NSF=i2ufg@mail.gmail.com>
+        s=default; t=1576948862;
+        bh=ygQ+LLKc6onkKQohUjB4VeER1S5nL8ISyedIw3igvFQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=x96NU+fxBzmg38mKk0TGitI2DkyJtAaQKY/5VTvgo818kI3m0Av9s6mvDML47ta94
+         P1eHg6Bp/jv5P0xoqarNn0EvL7tEDDphKBnvcv1WmbmRKyCHkjtqHCfJCQwI+86fG9
+         w1y42YhGVRdJIfTYdIwHvOCJNRQyDKTs2czaTwV0=
+Received: by mail-lj1-f169.google.com with SMTP id a13so13238963ljm.10;
+        Sat, 21 Dec 2019 09:21:02 -0800 (PST)
+X-Gm-Message-State: APjAAAXmnrWyTbJZoTZm1CArPqxhG91zVQlrxv5/ufx0j2uGkmkYZCYz
+        2uX8pAVJoTFlvnXkfXTppSEf+lpm6npC++VPFus=
+X-Google-Smtp-Source: APXvYqzxQbblDkSAhXsYJzBSq3hDVzSm7VnGs1SPM1HBdZJYbyVd5kmZbEvVMHb9JsKwPhMwlDsc1nNYruHS7j121S0=
+X-Received: by 2002:a2e:8551:: with SMTP id u17mr8218439ljj.165.1576948860712;
+ Sat, 21 Dec 2019 09:21:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="t7kehamjyxpiwads"
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZDgnn0LyGVYmzQhTtg7JdiqH_cW_dZ=o2SA1NSF=i2ufg@mail.gmail.com>
+References: <CGME20191220120142eucas1p1f43c7a862d9c0faa72e14b21d7d697e9@eucas1p1.samsung.com>
+ <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-3-a.swigon@samsung.com>
+In-Reply-To: <20191220115653.6487-3-a.swigon@samsung.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Sun, 22 Dec 2019 02:20:24 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH2mh4xcUUa+z=thdnrFsEgZ7NR5nmL4sK2ybARndhn01A@mail.gmail.com>
+Message-ID: <CAGTfZH2mh4xcUUa+z=thdnrFsEgZ7NR5nmL4sK2ybARndhn01A@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 2/7] interconnect: Relax requirement in of_icc_get_from_provider()
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---t7kehamjyxpiwads
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sat, Dec 21, 2019 at 05:11:00PM +0530, Jagan Teki wrote:
-> On Thu, Dec 19, 2019 at 3:35 AM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > On Thu, Dec 19, 2019 at 12:40:14AM +0530, Jagan Teki wrote:
-> > > regmap has special API to enable the controller bus clock while
-> > > initializing register space, and current driver is using
-> > > devm_regmap_init_mmio_clk which require to specify bus
-> > > clk_id argument as "bus"
-> > >
-> > > But, the usage of clocks are varies between different Allwinner
-> > > DSI controllers. Clocking in A33 would need bus and mod clocks
-> > > where as A64 would need only bus clock.
-> > >
-> > > Since A64 support only single bus clock, it is optional to
-> > > specify the clock-names on the controller device tree node.
-> > > So using NULL on clk_id would get the attached clock.
-> > >
-> > > To support clk_id as "bus" and "NULL" during clock enablement
-> > > between controllers, this patch add generic code to handle
-> > > the bus clock using regmap_mmio_attach_clk with associated
-> > > regmap APIs.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > > Changes for v13:
-> > > - update the changes since has_mod_clk is dropped in previous patch
-> > >
-> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 45 +++++++++++++++++++++-----
-> > >  1 file changed, 37 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > index 68b88a3dc4c5..de8955fbeb00 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > @@ -1081,6 +1081,7 @@ static const struct component_ops sun6i_dsi_ops = {
-> > >  static int sun6i_dsi_probe(struct platform_device *pdev)
-> > >  {
-> > >       struct device *dev = &pdev->dev;
-> > > +     const char *bus_clk_name = NULL;
-> > >       struct sun6i_dsi *dsi;
-> > >       struct resource *res;
-> > >       void __iomem *base;
-> > > @@ -1094,6 +1095,10 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-> > >       dsi->host.ops = &sun6i_dsi_host_ops;
-> > >       dsi->host.dev = dev;
-> > >
-> > > +     if (of_device_is_compatible(dev->of_node,
-> > > +                                 "allwinner,sun6i-a31-mipi-dsi"))
-> > > +             bus_clk_name = "bus";
-> > > +
-> > >       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >       base = devm_ioremap_resource(dev, res);
-> > >       if (IS_ERR(base)) {
-> > > @@ -1107,25 +1112,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-> > >               return PTR_ERR(dsi->regulator);
-> > >       }
-> > >
-> > > -     dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
-> > > -                                           &sun6i_dsi_regmap_config);
-> > > -     if (IS_ERR(dsi->regs)) {
-> > > -             dev_err(dev, "Couldn't create the DSI encoder regmap\n");
-> > > -             return PTR_ERR(dsi->regs);
-> > > -     }
-> > > -
-> > >       dsi->reset = devm_reset_control_get_shared(dev, NULL);
-> > >       if (IS_ERR(dsi->reset)) {
-> > >               dev_err(dev, "Couldn't get our reset line\n");
-> > >               return PTR_ERR(dsi->reset);
-> > >       }
-> > >
-> > > +     dsi->regs = devm_regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
-> > > +     if (IS_ERR(dsi->regs)) {
-> > > +             dev_err(dev, "Couldn't init regmap\n");
-> > > +             return PTR_ERR(dsi->regs);
-> > > +     }
-> > > +
-> > > +     dsi->bus_clk = devm_clk_get(dev, bus_clk_name);
-> > > +     if (IS_ERR(dsi->bus_clk)) {
-> > > +             dev_err(dev, "Couldn't get the DSI bus clock\n");
-> > > +             ret = PTR_ERR(dsi->bus_clk);
-> > > +             goto err_regmap;
-> > > +     } else {
-> > > +             ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
-> > > +             if (ret)
-> > > +                     goto err_bus_clk;
-> > > +     }
-> > > +
-> > >       if (of_device_is_compatible(dev->of_node,
-> > >                                   "allwinner,sun6i-a31-mipi-dsi")) {
-> > >               dsi->mod_clk = devm_clk_get(dev, "mod");
-> > >               if (IS_ERR(dsi->mod_clk)) {
-> > >                       dev_err(dev, "Couldn't get the DSI mod clock\n");
-> > > -                     return PTR_ERR(dsi->mod_clk);
-> > > +                     ret = PTR_ERR(dsi->mod_clk);
-> > > +                     goto err_attach_clk;
-> > >               }
-> > >       }
-> > >
-> > > @@ -1164,6 +1180,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-> > >       pm_runtime_disable(dev);
-> > >  err_unprotect_clk:
-> > >       clk_rate_exclusive_put(dsi->mod_clk);
-> > > +err_attach_clk:
-> > > +     if (!IS_ERR(dsi->bus_clk))
-> > > +             regmap_mmio_detach_clk(dsi->regs);
-> > > +err_bus_clk:
-> > > +     if (!IS_ERR(dsi->bus_clk))
-> > > +             clk_put(dsi->bus_clk);
-> >
-> > You still have an unbalanced clk_get / clk_put here
+On Fri, Dec 20, 2019 at 9:03 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
+m> wrote:
 >
-> You mean it is not needed right since devm_clk_get has release call
-> via devres_alloc?
+> This patch relaxes the condition in of_icc_get_from_provider() so that it
+> is no longer required to set #interconnect-cells =3D <1> in the DT. In ca=
+se
+> of the devfreq driver for exynos-bus, #interconnect-cells is always zero.
 
-Yes
+It doesn't contain why don't need to require it. If you add more detailed
+description, it is better to understand.
 
---t7kehamjyxpiwads
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/interconnect/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index e6035c199369..74c68898a350 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -335,7 +335,7 @@ struct icc_node *of_icc_get_from_provider(struct of_p=
+handle_args *spec)
+>         struct icc_node *node =3D ERR_PTR(-EPROBE_DEFER);
+>         struct icc_provider *provider;
+>
+> -       if (!spec || spec->args_count !=3D 1)
+> +       if (!spec)
+>                 return ERR_PTR(-EINVAL);
+>
+>         mutex_lock(&icc_lock);
+> --
+> 2.17.1
+>
 
------BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXf5B+wAKCRDj7w1vZxhR
-xZM9AQCrafDvLwSSlNcQULuicORIzPWMazFjtacua+XGYDocXgD/Q1jWoH3YVfv+
-Vg1KN3sfbAmPOOzkStNmyhh1eKgi9wM=
-=b8tT
------END PGP SIGNATURE-----
-
---t7kehamjyxpiwads--
+--=20
+Best Regards,
+Chanwoo Choi
