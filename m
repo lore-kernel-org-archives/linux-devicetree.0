@@ -2,68 +2,80 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5168DC43603
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 05:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25E2C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 10:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262F42070B
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 05:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537AB2070C
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 10:32:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OwW0n1L0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725845AbfLUFRf (ORCPT
+        id S1726254AbfLUKc3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 00:17:35 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:56854 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfLUFRf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 00:17:35 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 50522153CAB2E;
-        Fri, 20 Dec 2019 21:17:34 -0800 (PST)
-Date:   Fri, 20 Dec 2019 21:17:33 -0800 (PST)
-Message-Id: <20191220.211733.1421052503969423092.davem@davemloft.net>
-To:     vincent.cheng.xh@renesas.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net-next 1/1] ptp: clockmatrix: Rework clockmatrix
- version information.
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1576725697-11828-2-git-send-email-vincent.cheng.xh@renesas.com>
-References: <1576725697-11828-1-git-send-email-vincent.cheng.xh@renesas.com>
-        <1576725697-11828-2-git-send-email-vincent.cheng.xh@renesas.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 20 Dec 2019 21:17:34 -0800 (PST)
+        Sat, 21 Dec 2019 05:32:29 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:35920 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfLUKc3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 21 Dec 2019 05:32:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ZLLUZpJnkLBntPrYgkZ0eLvRTG/5CNGD+v3mJn84hSk=; b=OwW0n1L0KvKRDIyRlO4VVPDj9i
+        USJza6Tk50WRSt/K9YTIG0PgYGrTwcqKEoujlyx1ZZUJmkA+e06N8On1sebEy9/4fKTS6JdaxVw5i
+        czkaSMQcyfVh2DmpuyH9+YYWcgWsNygjJkFLxStAVD06atmPV5QeEirtfn0ZEXZolXQY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iic3a-0008Qc-Sp; Sat, 21 Dec 2019 11:32:22 +0100
+Date:   Sat, 21 Dec 2019 11:32:22 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: Re: [PATCH V7 net-next 07/11] net: Add a layer for non-PHY MII time
+ stamping drivers.
+Message-ID: <20191221103222.GB30801@lunn.ch>
+References: <cover.1576865315.git.richardcochran@gmail.com>
+ <eb6976012724b50a9d830eafd048e6956d8a3be0.1576865315.git.richardcochran@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb6976012724b50a9d830eafd048e6956d8a3be0.1576865315.git.richardcochran@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: vincent.cheng.xh@renesas.com
-Date: Wed, 18 Dec 2019 22:21:37 -0500
-
-> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+On Fri, Dec 20, 2019 at 10:15:16AM -0800, Richard Cochran wrote:
+> While PHY time stamping drivers can simply attach their interface
+> directly to the PHY instance, stand alone drivers require support in
+> order to manage their services.  Non-PHY MII time stamping drivers
+> have a control interface over another bus like I2C, SPI, UART, or via
+> a memory mapped peripheral.  The controller device will be associated
+> with one or more time stamping channels, each of which sits snoops in
+> on a MII bus.
 > 
-> Remove pipeline id, bond id, csr id, and irq id.
-> Changes source register for reading HW rev id.
-> Add OTP config select.
+> This patch provides a glue layer that will enable time stamping
+> channels to find their controlling device.
 > 
-> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 
-Nothing in this commit message explains why this change is being made.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-What is wrong with the existing version code?  What is better about the
-new code?
-
-You always must explain why a change is being made and give as much
-information and details and background as possible.
-
-Thank you.
+    Andrew
