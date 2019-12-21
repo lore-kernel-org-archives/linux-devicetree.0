@@ -2,493 +2,211 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2867C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB16EC2D0D3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D57B206B7
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:37:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ju8F89K+"
+	by mail.kernel.org (Postfix) with ESMTP id 96EA7206D8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 19:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfLUThH (ORCPT
+        id S1727070AbfLUTiD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 14:37:07 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35180 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727370AbfLUTgw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 14:36:52 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so5545590plt.2;
-        Sat, 21 Dec 2019 11:36:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dzpxMgQGPBxKFPxA2ZWhu0FYgZIkokXEkuR+Pbt8+yo=;
-        b=Ju8F89K+YTXrPc3laetjNwYwkNpNWJRBXBbXV7Dglup96/2v6l8/BVkL8qgyMcw4jg
-         3+XQGfAY7JbMs5nskSsRkOif8MEQqC1K/5/jVFA3btO9SXxkzgYOhJzvFN8/tYwUal53
-         4YtK8F4gVB6xUN4OpuA/go++565BKLHHhSraS7niug2k+fPwcmpSfEFsTKnjIsPzKTca
-         jReCl988NX2gQuuxnZKJ2n0ZumZ0+yk6pdO7NdsV+u+Z/mj2rW4QaXT3BPFotd+X6JZ4
-         14kkTedSbOhepoSoSaC23NgWFRT9lGJmEeGM5kFpVfQOa5OWTJ9cxrradBU9/acDyeOJ
-         JQdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dzpxMgQGPBxKFPxA2ZWhu0FYgZIkokXEkuR+Pbt8+yo=;
-        b=tEt+1s3W7lBEAiWbU4T18c4ONSHjrX4YXqHDlnNICCfBpARwhdlfK7iqZz23Mirfeb
-         pcv5VJopgX+p4zUFlJMwvESepdR1CDB7QDtpS/XmPJ4LeHhEEsKHwBtf5S5m2iD5E9lQ
-         BtUckue5QDiSLshh6K4h+qeBixcXke00NXlFwMCczqmTrsdGC3XRCVbAadiPehE4W29e
-         V5PcAqaK18Og9XraM2AbVi0tLpbMSG6rD6vEnIMe3yf7W/3bdSofeXM1XnqVV9Yw5CgB
-         Y4iE3n3uFiOm3dm5GZMw8WkyOe0sz9SFk5YZk9oAztjZ/DEoIV5X3wsF8W+qO4zZsZpi
-         6vEQ==
-X-Gm-Message-State: APjAAAVZX62GwHUDyTcmGPCYUd209iNdFgjxLwePI6WY4kwhYwAlyH82
-        D69w7Lo7sZGAhrzQbgKw49farkkj
-X-Google-Smtp-Source: APXvYqyJKiGfwFGb4okd3ffyvD9DaZs9i1a9/7/VK/wXHYKV2xV5lyx3VmP9RD8/J3Yr5+QxuSQEZA==
-X-Received: by 2002:a17:90a:b10a:: with SMTP id z10mr24826938pjq.115.1576957011194;
-        Sat, 21 Dec 2019 11:36:51 -0800 (PST)
-Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id y197sm18512603pfc.79.2019.12.21.11.36.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 11:36:50 -0800 (PST)
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sat, 21 Dec 2019 14:38:03 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44320 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfLUTiC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 14:38:02 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A25F51C24A9; Sat, 21 Dec 2019 20:37:59 +0100 (CET)
+Date:   Sat, 21 Dec 2019 20:37:58 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: [PATCH V8 net-next 07/12] net: Introduce a new MII time stamping interface.
-Date:   Sat, 21 Dec 2019 11:36:33 -0800
-Message-Id: <08ba968da04b8d0f2d663fd018109b52dfafe5c6.1576956342.git.richardcochran@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1576956342.git.richardcochran@gmail.com>
-References: <cover.1576956342.git.richardcochran@gmail.com>
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v7 11/12] leds: Add common LED binding parsing support to
+ LED class/core
+Message-ID: <20191221193758.GJ32732@amd>
+References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+ <c7abf8d15ea54fee504fbec5666d013c26d3b62a.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vkEkAx9hr54EJ73W"
+Content-Disposition: inline
+In-Reply-To: <c7abf8d15ea54fee504fbec5666d013c26d3b62a.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently the stack supports time stamping in PHY devices.  However,
-there are newer, non-PHY devices that can snoop an MII bus and provide
-time stamps.  In order to support such devices, this patch introduces
-a new interface to be used by both PHY and non-PHY devices.
 
-In addition, the one and only user of the old PHY time stamping API is
-converted to the new interface.
+--vkEkAx9hr54EJ73W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Richard Cochran <richardcochran@gmail.com>
----
- drivers/net/phy/dp83640.c       | 39 +++++++++++++---------
- drivers/net/phy/phy.c           |  4 +--
- drivers/net/phy/phy_device.c    |  2 ++
- include/linux/mii_timestamper.h | 58 +++++++++++++++++++++++++++++++++
- include/linux/phy.h             | 41 ++++++-----------------
- net/core/timestamping.c         | 20 ++++++------
- 6 files changed, 106 insertions(+), 58 deletions(-)
- create mode 100644 include/linux/mii_timestamper.h
+Hi!
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index b58abdb5491e..ac72a324fcd1 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -98,6 +98,7 @@ struct dp83640_private {
- 	struct list_head list;
- 	struct dp83640_clock *clock;
- 	struct phy_device *phydev;
-+	struct mii_timestamper mii_ts;
- 	struct delayed_work ts_work;
- 	int hwts_tx_en;
- 	int hwts_rx_en;
-@@ -1229,9 +1230,10 @@ static int dp83640_config_intr(struct phy_device *phydev)
- 	}
- }
- 
--static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
-+static int dp83640_hwtstamp(struct mii_timestamper *mii_ts, struct ifreq *ifr)
- {
--	struct dp83640_private *dp83640 = phydev->priv;
-+	struct dp83640_private *dp83640 =
-+		container_of(mii_ts, struct dp83640_private, mii_ts);
- 	struct hwtstamp_config cfg;
- 	u16 txcfg0, rxcfg0;
- 
-@@ -1307,8 +1309,8 @@ static int dp83640_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- 
- 	mutex_lock(&dp83640->clock->extreg_lock);
- 
--	ext_write(0, phydev, PAGE5, PTP_TXCFG0, txcfg0);
--	ext_write(0, phydev, PAGE5, PTP_RXCFG0, rxcfg0);
-+	ext_write(0, dp83640->phydev, PAGE5, PTP_TXCFG0, txcfg0);
-+	ext_write(0, dp83640->phydev, PAGE5, PTP_RXCFG0, rxcfg0);
- 
- 	mutex_unlock(&dp83640->clock->extreg_lock);
- 
-@@ -1338,10 +1340,11 @@ static void rx_timestamp_work(struct work_struct *work)
- 		schedule_delayed_work(&dp83640->ts_work, SKB_TIMESTAMP_TIMEOUT);
- }
- 
--static bool dp83640_rxtstamp(struct phy_device *phydev,
-+static bool dp83640_rxtstamp(struct mii_timestamper *mii_ts,
- 			     struct sk_buff *skb, int type)
- {
--	struct dp83640_private *dp83640 = phydev->priv;
-+	struct dp83640_private *dp83640 =
-+		container_of(mii_ts, struct dp83640_private, mii_ts);
- 	struct dp83640_skb_info *skb_info = (struct dp83640_skb_info *)skb->cb;
- 	struct list_head *this, *next;
- 	struct rxts *rxts;
-@@ -1387,11 +1390,12 @@ static bool dp83640_rxtstamp(struct phy_device *phydev,
- 	return true;
- }
- 
--static void dp83640_txtstamp(struct phy_device *phydev,
-+static void dp83640_txtstamp(struct mii_timestamper *mii_ts,
- 			     struct sk_buff *skb, int type)
- {
- 	struct dp83640_skb_info *skb_info = (struct dp83640_skb_info *)skb->cb;
--	struct dp83640_private *dp83640 = phydev->priv;
-+	struct dp83640_private *dp83640 =
-+		container_of(mii_ts, struct dp83640_private, mii_ts);
- 
- 	switch (dp83640->hwts_tx_en) {
- 
-@@ -1414,9 +1418,11 @@ static void dp83640_txtstamp(struct phy_device *phydev,
- 	}
- }
- 
--static int dp83640_ts_info(struct phy_device *dev, struct ethtool_ts_info *info)
-+static int dp83640_ts_info(struct mii_timestamper *mii_ts,
-+			   struct ethtool_ts_info *info)
- {
--	struct dp83640_private *dp83640 = dev->priv;
-+	struct dp83640_private *dp83640 =
-+		container_of(mii_ts, struct dp83640_private, mii_ts);
- 
- 	info->so_timestamping =
- 		SOF_TIMESTAMPING_TX_HARDWARE |
-@@ -1454,13 +1460,18 @@ static int dp83640_probe(struct phy_device *phydev)
- 		goto no_memory;
- 
- 	dp83640->phydev = phydev;
--	INIT_DELAYED_WORK(&dp83640->ts_work, rx_timestamp_work);
-+	dp83640->mii_ts.rxtstamp = dp83640_rxtstamp;
-+	dp83640->mii_ts.txtstamp = dp83640_txtstamp;
-+	dp83640->mii_ts.hwtstamp = dp83640_hwtstamp;
-+	dp83640->mii_ts.ts_info  = dp83640_ts_info;
- 
-+	INIT_DELAYED_WORK(&dp83640->ts_work, rx_timestamp_work);
- 	INIT_LIST_HEAD(&dp83640->rxts);
- 	INIT_LIST_HEAD(&dp83640->rxpool);
- 	for (i = 0; i < MAX_RXTS; i++)
- 		list_add(&dp83640->rx_pool_data[i].list, &dp83640->rxpool);
- 
-+	phydev->mii_ts = &dp83640->mii_ts;
- 	phydev->priv = dp83640;
- 
- 	spin_lock_init(&dp83640->rx_lock);
-@@ -1501,6 +1512,8 @@ static void dp83640_remove(struct phy_device *phydev)
- 	if (phydev->mdio.addr == BROADCAST_ADDR)
- 		return;
- 
-+	phydev->mii_ts = NULL;
-+
- 	enable_status_frames(phydev, false);
- 	cancel_delayed_work_sync(&dp83640->ts_work);
- 
-@@ -1537,10 +1550,6 @@ static struct phy_driver dp83640_driver = {
- 	.config_init	= dp83640_config_init,
- 	.ack_interrupt  = dp83640_ack_interrupt,
- 	.config_intr    = dp83640_config_intr,
--	.ts_info	= dp83640_ts_info,
--	.hwtstamp	= dp83640_hwtstamp,
--	.rxtstamp	= dp83640_rxtstamp,
--	.txtstamp	= dp83640_txtstamp,
- };
- 
- static int __init dp83640_init(void)
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 80be4d691e5b..541ed01496bf 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -422,8 +422,8 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
- 		return 0;
- 
- 	case SIOCSHWTSTAMP:
--		if (phydev->drv && phydev->drv->hwtstamp)
--			return phydev->drv->hwtstamp(phydev, ifr);
-+		if (phydev->mii_ts && phydev->mii_ts->hwtstamp)
-+			return phydev->mii_ts->hwtstamp(phydev->mii_ts, ifr);
- 		/* fall through */
- 
- 	default:
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 0887ed2bb050..ee45838f90c9 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -919,6 +919,8 @@ static void phy_link_change(struct phy_device *phydev, bool up, bool do_carrier)
- 			netif_carrier_off(netdev);
- 	}
- 	phydev->adjust_link(netdev);
-+	if (phydev->mii_ts && phydev->mii_ts->link_state)
-+		phydev->mii_ts->link_state(phydev->mii_ts, phydev);
- }
- 
- /**
-diff --git a/include/linux/mii_timestamper.h b/include/linux/mii_timestamper.h
-new file mode 100644
-index 000000000000..36002386029c
---- /dev/null
-+++ b/include/linux/mii_timestamper.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Support for generic time stamping devices on MII buses.
-+ * Copyright (C) 2018 Richard Cochran <richardcochran@gmail.com>
-+ */
-+#ifndef _LINUX_MII_TIMESTAMPER_H
-+#define _LINUX_MII_TIMESTAMPER_H
-+
-+#include <linux/device.h>
-+#include <linux/ethtool.h>
-+#include <linux/skbuff.h>
-+
-+struct phy_device;
-+
-+/**
-+ * struct mii_timestamper - Callback interface to MII time stamping devices.
-+ *
-+ * @rxtstamp:	Requests a Rx timestamp for 'skb'.  If the skb is accepted,
-+ *		the MII time stamping device promises to deliver it using
-+ *		netif_rx() as soon as a timestamp becomes available. One of
-+ *		the PTP_CLASS_ values is passed in 'type'.  The function
-+ *		must return true if the skb is accepted for delivery.
-+ *
-+ * @txtstamp:	Requests a Tx timestamp for 'skb'.  The MII time stamping
-+ *		device promises to deliver it using skb_complete_tx_timestamp()
-+ *		as soon as a timestamp becomes available. One of the PTP_CLASS_
-+ *		values is passed in 'type'.
-+ *
-+ * @hwtstamp:	Handles SIOCSHWTSTAMP ioctl for hardware time stamping.
-+ *
-+ * @link_state: Allows the device to respond to changes in the link
-+ *		state.  The caller invokes this function while holding
-+ *		the phy_device mutex.
-+ *
-+ * @ts_info:	Handles ethtool queries for hardware time stamping.
-+ *
-+ * Drivers for PHY time stamping devices should embed their
-+ * mii_timestamper within a private structure, obtaining a reference
-+ * to it using container_of().
-+ */
-+struct mii_timestamper {
-+	bool (*rxtstamp)(struct mii_timestamper *mii_ts,
-+			 struct sk_buff *skb, int type);
-+
-+	void (*txtstamp)(struct mii_timestamper *mii_ts,
-+			 struct sk_buff *skb, int type);
-+
-+	int  (*hwtstamp)(struct mii_timestamper *mii_ts,
-+			 struct ifreq *ifreq);
-+
-+	void (*link_state)(struct mii_timestamper *mii_ts,
-+			   struct phy_device *phydev);
-+
-+	int  (*ts_info)(struct mii_timestamper *mii_ts,
-+			struct ethtool_ts_info *ts_info);
-+};
-+
-+#endif
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index fc51aacb03a7..a34266deba3c 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -17,6 +17,7 @@
- #include <linux/linkmode.h>
- #include <linux/mdio.h>
- #include <linux/mii.h>
-+#include <linux/mii_timestamper.h>
- #include <linux/module.h>
- #include <linux/timer.h>
- #include <linux/workqueue.h>
-@@ -441,6 +442,7 @@ struct phy_device {
- 	struct sfp_bus *sfp_bus;
- 	struct phylink *phylink;
- 	struct net_device *attached_dev;
-+	struct mii_timestamper *mii_ts;
- 
- 	u8 mdix;
- 	u8 mdix_ctrl;
-@@ -546,29 +548,6 @@ struct phy_driver {
- 	 */
- 	int (*match_phy_device)(struct phy_device *phydev);
- 
--	/* Handles ethtool queries for hardware time stamping. */
--	int (*ts_info)(struct phy_device *phydev, struct ethtool_ts_info *ti);
--
--	/* Handles SIOCSHWTSTAMP ioctl for hardware time stamping. */
--	int  (*hwtstamp)(struct phy_device *phydev, struct ifreq *ifr);
--
--	/*
--	 * Requests a Rx timestamp for 'skb'. If the skb is accepted,
--	 * the phy driver promises to deliver it using netif_rx() as
--	 * soon as a timestamp becomes available. One of the
--	 * PTP_CLASS_ values is passed in 'type'. The function must
--	 * return true if the skb is accepted for delivery.
--	 */
--	bool (*rxtstamp)(struct phy_device *dev, struct sk_buff *skb, int type);
--
--	/*
--	 * Requests a Tx timestamp for 'skb'. The phy driver promises
--	 * to deliver it using skb_complete_tx_timestamp() as soon as a
--	 * timestamp becomes available. One of the PTP_CLASS_ values
--	 * is passed in 'type'.
--	 */
--	void (*txtstamp)(struct phy_device *dev, struct sk_buff *skb, int type);
--
- 	/* Some devices (e.g. qnap TS-119P II) require PHY register changes to
- 	 * enable Wake on LAN, so set_wol is provided to be called in the
- 	 * ethernet driver's set_wol function. */
-@@ -942,7 +921,7 @@ static inline bool phy_polling_mode(struct phy_device *phydev)
-  */
- static inline bool phy_has_hwtstamp(struct phy_device *phydev)
- {
--	return phydev && phydev->drv && phydev->drv->hwtstamp;
-+	return phydev && phydev->mii_ts && phydev->mii_ts->hwtstamp;
- }
- 
- /**
-@@ -951,7 +930,7 @@ static inline bool phy_has_hwtstamp(struct phy_device *phydev)
-  */
- static inline bool phy_has_rxtstamp(struct phy_device *phydev)
- {
--	return phydev && phydev->drv && phydev->drv->rxtstamp;
-+	return phydev && phydev->mii_ts && phydev->mii_ts->rxtstamp;
- }
- 
- /**
-@@ -961,7 +940,7 @@ static inline bool phy_has_rxtstamp(struct phy_device *phydev)
-  */
- static inline bool phy_has_tsinfo(struct phy_device *phydev)
- {
--	return phydev && phydev->drv && phydev->drv->ts_info;
-+	return phydev && phydev->mii_ts && phydev->mii_ts->ts_info;
- }
- 
- /**
-@@ -970,30 +949,30 @@ static inline bool phy_has_tsinfo(struct phy_device *phydev)
-  */
- static inline bool phy_has_txtstamp(struct phy_device *phydev)
- {
--	return phydev && phydev->drv && phydev->drv->txtstamp;
-+	return phydev && phydev->mii_ts && phydev->mii_ts->txtstamp;
- }
- 
- static inline int phy_hwtstamp(struct phy_device *phydev, struct ifreq *ifr)
- {
--	return phydev->drv->hwtstamp(phydev, ifr);
-+	return phydev->mii_ts->hwtstamp(phydev->mii_ts, ifr);
- }
- 
- static inline bool phy_rxtstamp(struct phy_device *phydev, struct sk_buff *skb,
- 				int type)
- {
--	return phydev->drv->rxtstamp(phydev, skb, type);
-+	return phydev->mii_ts->rxtstamp(phydev->mii_ts, skb, type);
- }
- 
- static inline int phy_ts_info(struct phy_device *phydev,
- 			      struct ethtool_ts_info *tsinfo)
- {
--	return phydev->drv->ts_info(phydev, tsinfo);
-+	return phydev->mii_ts->ts_info(phydev->mii_ts, tsinfo);
- }
- 
- static inline void phy_txtstamp(struct phy_device *phydev, struct sk_buff *skb,
- 				int type)
- {
--	phydev->drv->txtstamp(phydev, skb, type);
-+	phydev->mii_ts->txtstamp(phydev->mii_ts, skb, type);
- }
- 
- /**
-diff --git a/net/core/timestamping.c b/net/core/timestamping.c
-index 7911235706a9..04840697fe79 100644
---- a/net/core/timestamping.c
-+++ b/net/core/timestamping.c
-@@ -13,7 +13,7 @@
- static unsigned int classify(const struct sk_buff *skb)
- {
- 	if (likely(skb->dev && skb->dev->phydev &&
--		   skb->dev->phydev->drv))
-+		   skb->dev->phydev->mii_ts))
- 		return ptp_classify_raw(skb);
- 	else
- 		return PTP_CLASS_NONE;
-@@ -21,7 +21,7 @@ static unsigned int classify(const struct sk_buff *skb)
- 
- void skb_clone_tx_timestamp(struct sk_buff *skb)
- {
--	struct phy_device *phydev;
-+	struct mii_timestamper *mii_ts;
- 	struct sk_buff *clone;
- 	unsigned int type;
- 
-@@ -32,22 +32,22 @@ void skb_clone_tx_timestamp(struct sk_buff *skb)
- 	if (type == PTP_CLASS_NONE)
- 		return;
- 
--	phydev = skb->dev->phydev;
--	if (likely(phydev->drv->txtstamp)) {
-+	mii_ts = skb->dev->phydev->mii_ts;
-+	if (likely(mii_ts->txtstamp)) {
- 		clone = skb_clone_sk(skb);
- 		if (!clone)
- 			return;
--		phydev->drv->txtstamp(phydev, clone, type);
-+		mii_ts->txtstamp(mii_ts, clone, type);
- 	}
- }
- EXPORT_SYMBOL_GPL(skb_clone_tx_timestamp);
- 
- bool skb_defer_rx_timestamp(struct sk_buff *skb)
- {
--	struct phy_device *phydev;
-+	struct mii_timestamper *mii_ts;
- 	unsigned int type;
- 
--	if (!skb->dev || !skb->dev->phydev || !skb->dev->phydev->drv)
-+	if (!skb->dev || !skb->dev->phydev || !skb->dev->phydev->mii_ts)
- 		return false;
- 
- 	if (skb_headroom(skb) < ETH_HLEN)
-@@ -62,9 +62,9 @@ bool skb_defer_rx_timestamp(struct sk_buff *skb)
- 	if (type == PTP_CLASS_NONE)
- 		return false;
- 
--	phydev = skb->dev->phydev;
--	if (likely(phydev->drv->rxtstamp))
--		return phydev->drv->rxtstamp(phydev, skb, type);
-+	mii_ts = skb->dev->phydev->mii_ts;
-+	if (likely(mii_ts->rxtstamp))
-+		return mii_ts->rxtstamp(mii_ts, skb, type);
- 
- 	return false;
- }
--- 
-2.20.1
+> Qucik grep for 'for_each' or 'linux,default-trigger' or
 
+quick.
+
+> If init_data is goven but no starting point for node lookup - then
+
+is given.
+
+> (parent) device's own DT node is used. If no led-compatible is given,
+> then of_match is searched for. If neither led-compatible not of_match
+
+nor of_match.
+
+> is given then device's own node or passed starting point are used as
+> such.
+>=20
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>=20
+> No changes since v6
+>=20
+>  drivers/leds/led-class.c |  99 +++++++++++++--
+>  drivers/leds/led-core.c  | 258 ++++++++++++++++++++++++++++++++-------
+>  include/linux/leds.h     |  94 ++++++++++++--
+>  3 files changed, 385 insertions(+), 66 deletions(-)
+
+Quite a lot of code added here. Can I trust you that we we'll delete
+320 lines by converting driver or two?
+
+> +static void led_add_props(struct led_classdev *ld, struct led_properties=
+ *props)
+> +{
+> +	if (props->default_trigger)
+> +		ld->default_trigger =3D props->default_trigger;
+> +	/*
+> +	 * According to binding docs the LED is by-default turned OFF unless
+> +	 * default_state is used to indicate it should be ON or that state
+> +	 * should be kept as is
+> +	 */
+> +	if (props->default_state) {
+> +		ld->brightness =3D LED_OFF;
+> +		if (!strcmp(props->default_state, "on"))
+> +			ld->brightness =3D LED_FULL;
+
+Max brightness is not always =3D=3D LED_FULL these days.
+
+> @@ -322,6 +398,10 @@ int led_classdev_register_ext(struct device *parent,
+>  			led_cdev->name);
+> =20
+>  	return 0;
+> +err_out:
+> +	if (led_cdev->fwnode_owned)
+> +		fwnode_handle_put(fw);
+> +	return ret;
+>  }
+
+led_cdev->fwnode_owned =3D false here?
+
+
+> +/**
+> + * led_find_fwnode - find fwnode for led
+> + * @parent	LED controller device
+> + * @init_data	led init data with match information
+> + *
+> + * Scans the firmware nodes and returns node matching the given init_dat=
+a.
+> + * NOTE: Function increases refcount for found node. Caller must decrease
+> + * refcount using fwnode_handle_put when finished with node.
+> + */
+> +struct fwnode_handle *led_find_fwnode(struct device *parent,
+> +				      struct led_init_data *init_data)
+> +{
+> +	struct fwnode_handle *fw;
+> +
+> +	/*
+> +	 * This should never be called W/O init data. We could always return
+
+without
+
+> +	 * For now we do only do node look-up for drivers which populate
+> +	 * the new match properties. We could and perhaps should do
+> +	 * fw =3D dev_fwnode(parent); if given fwnode is NULL. But in order to
+> +	 * not break existing setups we keep the old behaviour and just directly
+
+not to break.
+
+> +	/*
+> +	 * Simple things are pretty. I think simplest is to use DT node-name
+> +	 * for matching the node with LED - same way regulators use the node
+> +	 * name to match with desc.
+> +	 *
+> +	 * This may not work with existing LED DT entries if the node name has
+> +	 * been freely selectible. In order to this to work the binding doc
+
+selectable?
+
+> +	/**
+> +	 * Please note, logic changed - if invalid property is found we bail
+> +	 * early out without parsing the rest of the properties. Originally
+> +	 * this was the case only for 'label' property. I don't know the
+> +	 * rationale behind original logic allowing invalid properties to be
+> +	 * given. If there is a reason then we should reconsider this.
+> +	 * Intuitively it feels correct to just yell and quit if we hit value we
+> +	 * don't understand - but intuition may be wrong at times :)
+> +	 */
+
+Is this supposed to be linuxdoc?
+
+> +/**
+> + * led_find_fwnode - find fwnode matching given LED init data
+> + * @parent: LED controller device this LED is driven by
+> + * @init_data: the LED class device initialization data
+> + *
+> + * Find the fw node matching given LED init data.
+> + * NOTE: Function increases refcount for found node. Caller must decrease
+> + * refcount using fwnode_handle_put when finished with node.
+> + *
+> + * Returns: node handle or NULL if matching fw node was not found
+> + */
+> +struct fwnode_handle *led_find_fwnode(struct device *parent,
+> +				      struct led_init_data *init_data);
+> +
+
+If function _gets_ the node and increments its usage count, is it
+normally called "get"?
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vkEkAx9hr54EJ73W
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3+dJYACgkQMOfwapXb+vI5hwCguJGtDjUqt+k608fpEwPgCOSC
+u/0An3uL0Mm/3r+rCblBrcKUTFUHSXNC
+=t+A/
+-----END PGP SIGNATURE-----
+
+--vkEkAx9hr54EJ73W--
