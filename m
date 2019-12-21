@@ -2,98 +2,100 @@ Return-Path: <SRS0=APCC=2L=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527D6C2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086CC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2564E206D3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55AD206A5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 21 Dec 2019 20:58:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gx65rvbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfLUUWA (ORCPT
+        id S1727382AbfLUU6M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 21 Dec 2019 15:22:00 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48428 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfLUUWA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 15:22:00 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9E47B1C24A9; Sat, 21 Dec 2019 21:21:57 +0100 (CET)
-Date:   Sat, 21 Dec 2019 21:21:56 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [RFC 14/25] arm64: dts: realtek: rtd1295-xnano-x5: Add regular
- LEDs to FD628
-Message-ID: <20191221202156.GL32732@amd>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-15-afaerber@suse.de>
+        Sat, 21 Dec 2019 15:58:12 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39481 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfLUU6M (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 21 Dec 2019 15:58:12 -0500
+Received: by mail-il1-f193.google.com with SMTP id x5so10988427ila.6;
+        Sat, 21 Dec 2019 12:58:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3jTL5Hj/xPv508RnFe+kVEmXkwrPo1hzDrzVfSCYG04=;
+        b=gx65rvbTwIqNbvAUWvrgMschImn6KdpsCA7elPq41Mf8JweOYDlwKep+lrsvElBLlO
+         fLEv9miM37ojOHaw6Rz7qRNYQiRjv9bUDGFocv+BtYuBcK0c0LLG8/qO4mpNtt9rdlS5
+         wXjua7wLHS3oeRSQdhyZzKoP3PWPKVMD/Z6bqlGdRAcdqPNN3+xaqmnDGvWSv7JLi8Rf
+         RlpNzDQARdkHqfuSRG2DHxLekd8OOtIbgS+1LQUkLClKm1rweswDg22nXeOC6tBAtV+Q
+         inHBRzFrCHUtGqtv9J7wYWaiUjnh+/4/7h9GgS50QB2cjg1kFEc/oxavP/xmFKT04uHm
+         2TOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3jTL5Hj/xPv508RnFe+kVEmXkwrPo1hzDrzVfSCYG04=;
+        b=K18OqhKje5iULktrP8L0XBQoY+87DWelUX2MThWAkhqzAn3yhrG6ckuzRXNoVFUb3S
+         3ozSKuwP/5cAebR5D+HfcGQLJdJKZqfUtHi4rIbhtA3KgdMctxU1ZyuXZ+5wJWp5NCdz
+         x4E04tJsk3/2uaQXInJl16/dfk/KfX8aNitHJHB0ZMzBS3CtlKJWXVj3lob/xHMCOUQC
+         79czaV6GWY2FG/HN3ZQvSOfAGN6W7OQ9ftG6JeiMoHaxU10x4X5lHVL0fC6v+p3aJra2
+         TFuYIKRl7Vw534R7LKFVAKikwS2xuhiDdmQGQKMpDraqFRHrt9D90iEek6t0i6KnEPQ1
+         j2UQ==
+X-Gm-Message-State: APjAAAXfjQFY1rcWCV49y133+RVnFG47kP5s0r37sX+QZlJGzHdSZ8dS
+        1LhNdVZBcOUE10siqt+r1vQG6+xKTYgsF1/RroQ=
+X-Google-Smtp-Source: APXvYqyc8NqYt53ySoRHrFd/M8DDGHoLrN3027yUv9fxIzSuHQmZzkpASAnzMZ47hx4Sb3w7l02oV0L828+X+AtId/k=
+X-Received: by 2002:a92:2904:: with SMTP id l4mr19394612ilg.166.1576961891357;
+ Sat, 21 Dec 2019 12:58:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rfwNdt5cNUUjB/69"
-Content-Disposition: inline
-In-Reply-To: <20191212033952.5967-15-afaerber@suse.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191113232245.4039932-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20191113232245.4039932-1-bjorn.andersson@linaro.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Sat, 21 Dec 2019 13:58:00 -0700
+Message-ID: <CAOCk7Nq_+fGh0QvMf4DDp6KLKk23F_FK1neDnioQYWgHXMj26w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: db845c: Enable ath10k 8bit host-cap quirk
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed, Nov 13, 2019 at 4:23 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> The WiFi firmware used on db845c implements the 8bit host-capability
+> message, so enable the quirk for this.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
---rfwNdt5cNUUjB/69
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-Hi!
-
-> Add child nodes for individual LED indicators plus the half-second colon.
->=20
-> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
 > ---
-
-> +			apps@1,4 {
-> +				reg =3D <1 4>;
-> +				color =3D <LED_COLOR_ID_WHITE>;
-> +				function =3D LED_FUNCTION_INDICATOR;
-> +				function-enumerator =3D <1>;
-> +			};
+>  arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+> index 12f5f14ada5c..7ec7b90ab83e 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+> @@ -625,6 +625,8 @@
+>         vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
+>         vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
+>         vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
 > +
-> +			setup@2,4 {
-> +				reg =3D <2 4>;
-> +				color =3D <LED_COLOR_ID_WHITE>;
-> +				function =3D LED_FUNCTION_INDICATOR;
-> +				function-enumerator =3D <2>;
-> +			};
-
-having 10 "indicator" leds is not going to be exactly useful.
-
-So, what does the display look like? "apps", "setup", "usb", "card",
-=2E.. texts?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---rfwNdt5cNUUjB/69
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3+fuQACgkQMOfwapXb+vKpLACfQv6vWFQeNIi5z/L8L8LVHFOD
-K8EAoJZ1a/I813U8L01scB3b7YB0aRsq
-=AN0b
------END PGP SIGNATURE-----
-
---rfwNdt5cNUUjB/69--
+> +       qcom,snoc-host-cap-8bit-quirk;
+>  };
+>
+>  /* PINCTRL - additions to nodes defined in sdm845.dtsi */
+> --
+> 2.23.0
+>
