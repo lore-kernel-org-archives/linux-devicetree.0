@@ -2,243 +2,103 @@ Return-Path: <SRS0=TQXC=2M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A6DC2D0D4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 18:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32677C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 20:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B33F20733
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 18:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577038077;
-	bh=AXO3IG0scX/owDhFJ2EPWEb/thMP3sqao2HJei/CAzc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ijf3LM5ZBggiFyH2F0og9tyPagWsPmDgXCMDy5QGugi3MNwIMen3PcMvdFmDO3bEf
-	 A3Wo6GNfJoos2E8J/ZMXiLuxJfz3fRM0jKv+whNj7mmAgO22Z4EBEbUP9a4HnA5uNr
-	 G38wnKn8YKVc1REAhoQGIauV9zgfKdUwWnXwRSes=
+	by mail.kernel.org (Postfix) with ESMTP id EEFE9206B7
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 20:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyK5VB/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbfLVSH4 (ORCPT
+        id S1726057AbfLVUpV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 13:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725951AbfLVSH4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Dec 2019 13:07:56 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EE0F206D3;
-        Sun, 22 Dec 2019 18:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577038074;
-        bh=AXO3IG0scX/owDhFJ2EPWEb/thMP3sqao2HJei/CAzc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=o8qsTO6uyPeA0tG362Hu/HzXq37yTAu6ytXeCbFzGZt6Zgs6CScuaOoqydSfTJt25
-         KCyhR3cgoe9WOiahsqK16E2Iu8SqTgmI382nqu7/8u7RivHx/xisjRY3W3lcG5ELq9
-         WGnYvm84bN5VEtuIs1fMaDpohhGZOWM7dR3bpFJM=
-Date:   Sun, 22 Dec 2019 18:07:49 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     <Michael.Hennerich@analog.com>, <alexandru.ardelean@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: frequency: Add docs for LTC6952
-Message-ID: <20191222180749.4ad0a939@archlinux>
-In-Reply-To: <20191219134810.6677-1-mircea.caprioru@analog.com>
-References: <20191219134810.6677-1-mircea.caprioru@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 22 Dec 2019 15:45:21 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43211 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725951AbfLVUpV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 15:45:21 -0500
+Received: by mail-wr1-f66.google.com with SMTP id d16so14587895wre.10;
+        Sun, 22 Dec 2019 12:45:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4+rTus2NxW8CdBcDQP+AlQ20MDROyr2Jjwi3989i+Bg=;
+        b=MyK5VB/tjTp7tnEi4fMhduxkAdQEN6tmOw/ELaDsjiq2eN0UJcuKypgLUC5WSTaQr3
+         7YjFv50HI9B0TmdlHLLKOM1gIFVHu3kS2ElnM9skuV25irqkKuyjN7EuNfEykOi6LnQe
+         Em4TFF8R0Z7IwZNOzoU1q/fFuYmcLXOpJN1er1cCbnUj1BzihGVJBmcnVhPjvdoig0MJ
+         G8/dhUX/PE+h87i+xB2wobrctH/GU7P3vAiL7hdjk5tWMJOdRR66jrk72/qgSlr2VVS7
+         Y3gUGCZ1kJRSC2u2L0sUVMcKgPnpMiWLHXJaV9BFXEIizhrIZVjHM2OZBV5TNodxunrM
+         GUPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4+rTus2NxW8CdBcDQP+AlQ20MDROyr2Jjwi3989i+Bg=;
+        b=f6mo4cpRIcE590IXX3t5W8A6G8f6zegxJFLbKwowBwAatwHT697ID18l7JBxhKkzRU
+         xJyFlAN5un6nDOpYultGyA6jzvtWcRsh5VL7x+SlG4y5hNqFrCGGxz/ZaDsqTwgA5VDI
+         I3mv9m3kFuUwMpHYx96YzattnhpCedeX9suSmu4+Gol18f/+hn7eUh9YV4gIsuCAJBGa
+         Orfp3DF7H+Je03SqIHJfhMw9wLOo89WGsji/HZIRmujLXFFii2n2yPsRdk64YRsMFc6i
+         r0xZSnqV+mwlNFDfjb4288ycHsNavyG69xMv1J8Dw9NfcjAV+xPWoC6VrcLmsE44bZGC
+         b37w==
+X-Gm-Message-State: APjAAAV0Fb8EZtXQWUhYBspMyC1Yp3lJqvaBTcCsLr04JE92cOW4CtX8
+        nHXeYrSV8lGkPImbrB/kGn0=
+X-Google-Smtp-Source: APXvYqyOZCPmaU+08UkTlF4huxdYdHJoSPmdoO9aAVaXuiU88DXVlOX6YzaqUjEHUuLTNVXE0lU0NQ==
+X-Received: by 2002:adf:ef03:: with SMTP id e3mr27528694wro.216.1577047518728;
+        Sun, 22 Dec 2019 12:45:18 -0800 (PST)
+Received: from localhost.localdomain (p5B3F6AB6.dip0.t-ipconnect.de. [91.63.106.182])
+        by smtp.gmail.com with ESMTPSA id o4sm17603792wrx.25.2019.12.22.12.45.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 12:45:17 -0800 (PST)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
+        shawnguo@kernel.org, heiko@sntech.de, sam@ravnborg.org,
+        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
+        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
+        davem@davemloft.net, mchehab+samsung@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/4] Add regulator support for mpq7920
+Date:   Sun, 22 Dec 2019 21:45:03 +0100
+Message-Id: <20191222204507.32413-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 19 Dec 2019 15:48:08 +0200
-Mircea Caprioru <mircea.caprioru@analog.com> wrote:
+Changes in V3:
+    - fixed review comments in Documentation and dt_bindings_check passed 
 
-> Document support for Analog Devices LTC6952 ultralow jitter, 4.5GHz PLL
-> with 11 outputs and JESD204B/C support.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-I''m far from sure if we have the right balance of clock and IIO specific
-+ device specific bindings in here.
+Changes in V2:
+    - fixed all the review comments in the driver, avoid ternery operator, inline & constant
+    - fixed/modifed review comments in Documentation
 
-For example should the divider only be controlled by whatever the clock
-consumer requests?
+This patch series add support for PMIC regulator driver for Monolithic
+Power System's MPQ7920 chipset. MPQ7920 provides support for 4-BUCK converter,
+one fixed voltage RTCLDO and 4-LDO regualtor, accessed over I2C.
 
-Definitely want some review of this from the clock side of things.
+Saravanan Sekar (4):
+  dt-bindings: Add an entry for Monolithic Power System, MPS
+  dt-bindings: regulator: add document bindings for mpq7920
+  regulator: mpq7920: add mpq7920 regulator driver
+  MAINTAINERS: Add entry for mpq7920 PMIC driver
 
-Thanks,
+ .../bindings/regulator/mpq7920.yaml           | 143 +++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   7 +
+ drivers/regulator/Kconfig                     |  10 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/mpq7920.c                   | 396 ++++++++++++++++++
+ drivers/regulator/mpq7920.h                   |  72 ++++
+ 7 files changed, 631 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+ create mode 100644 drivers/regulator/mpq7920.c
+ create mode 100644 drivers/regulator/mpq7920.h
 
-Jonathan
-
-
-> ---
->  .../bindings/iio/frequency/adi,ltc6952.yaml   | 127 ++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml b/Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml
-> new file mode 100644
-> index 000000000000..a28c773c3948
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/frequency/adi,ltc6952.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2019 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/frequency/adi,ltc6952.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices LTC6952 ultralow jitter, JESD204B/C clock generation IC.
-> +
-> +maintainers:
-> +  - Mircea Caprioru <mircea.caprioru@analog.com>
-> +
-> +description: |
-> +  Analog Devices LTC6952 ultralow jitter, JESD204B/C clock generation IC.
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ltc6952.pdf 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ltc6952
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clock-output-names:
-> +    description: |
-> +      Clock output signal names indexed by the first cell in the clock
-> +      specifier (see clock/clock-bindings.txt)
-> +    maxItems: 1
-> +
-> +  adi,vco-frequency-hz:
-> +    description: |
-> +      VCO input frequency. This is fed to the internal distribution path and
-> +      feedback dividers.
-
-Superficially this feels like it should be a established via the requested
-output frequencies and some idea of a 'best' value to satisfy them?
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    maxItems: 1
-> +
-> +  adi,ref-frequency-hz:
-> +    description: |
-> +      Reference input frequency. This is fed in the reference divider.
-
-Is this not just an upstream clock? 
-
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clock-output-names
-> +
-> +patternProperties:
-> +  "^channel@[0-9]$":
-> +    type: object
-> +    description: Represents the external channels which are connected to the device.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          The channel number. It can have up to 11 channels numbered from 0 to 10.
-> +        maxItems: 1
-> +
-> +      adi,extended-name:
-> +        description: Descriptive channel name.
-I mention in review of patch 2 this is a definite no.   A separate
-out_chanX_label type attribute could provide this an use standard "label" dt
-binding.  I think we currently have that for the IIO device but not yet its channels.
-
-> +        maxItems: 1
-> +
-> +      adi,divider:
-> +        description: |
-> +          Channel divider. This divides the incoming VCO frequency.
-Fundamental thing here is the output frequency required by any consumer.
-Feels like this should be done through the clock framework bindings rather than
-explicit controls here..
-
-
-> +        maxItems: 1
-> +
-> +      adi,digital-delay:
-
-So I'm assuming there is no binding for this level of fine control in normal
-clock bindings?  I would like some input from people more knowledgeable on
-that framework though.
-
-> +        description: |
-> +          Each output divider can have the start time of the output delayed by
-> +          integer multiples of half of the VCO period after a synchronization
-> +          event.
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - minimum: 0
-> +          - maximum: 4095
-> +        maxItems: 1
-> +
-> +      adi,analog-delay:
-> +        description: |
-> +          Each output has a fine analog delay feature to further adjust its
-> +          output delay time (tADELx) in small steps.
-
-Umm. Can we do better than 'small steps' for the units of this?
-
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - minimum: 0
-> +          - maximum: 63
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +
-> +examples:
-> +   - |
-> +     ltc6952@0 {
-> +       compatible = "adi,ltc6952";
-> +       reg = <0>;
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       spi-max-frequency = <10000000>;
-> +
-> +       clock-output-names = "ltc6952_out0", "ltc6952_out1", "ltc6952_out2",
-> +         "ltc6952_out3", "ltc6952_out4", "ltc6952_out5", "ltc6952_out6",
-> +         "ltc6952_out7", "ltc6952_out8", "ltc6952_out9", "ltc6952_out10";
-> +       #clock-cells = <1>;
-> +
-> +       adi,vco-frequency-hz = <4000000000>;
-> +       adi,ref-frequency-hz = <100000000>;
-> +
-> +       ltc6952_c0: channel@0 {
-> +         reg = <0>;
-> +         adi,extended-name = "REF_CLK";
-> +         adi,divider = <10>;
-> +         adi,digital-delay = <100>;
-> +         adi,analog-delay = <0>;
-> +       };
-> +
-> +       ltc6952_c1: channel@1 {
-> +         reg = <1>;
-> +         adi,extended-name = "TEST_CLK";
-> +         adi,divider = <10>;
-> +       };
-> +     };
+-- 
+2.17.1
 
