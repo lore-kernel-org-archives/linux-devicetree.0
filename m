@@ -5,154 +5,98 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442D0C2D0D5
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F20C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC192070A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C1120665
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxhiRDaJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLUP93BW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfLVOK4 (ORCPT
+        id S1726623AbfLVOK6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 09:10:56 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45445 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfLVOK4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 09:10:56 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so7837598pfg.12;
+        Sun, 22 Dec 2019 09:10:58 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41371 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfLVOK6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 09:10:58 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c9so13944582wrw.8;
         Sun, 22 Dec 2019 06:10:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=y2NgiqlWrB0g1nYThxREdvdN0lYU2uUNLMalSkDDff8=;
-        b=fxhiRDaJnFZagib3CeNKGtfPJXOjuu8y7mIxT8xt2DaPo6QZX13U144wA2Ot02mzta
-         mjv+29sTjUQf3vVS4St6SXHNZh+RoQwL8GZlG9n3CuHeHhY2MJlvxH29wN9npcXgBScl
-         A/i8RXBYpJ46iLd8xT/NnLhtzhvA2sD2LL8ShHWlSNthfAAGoB+Pwen4GRoUsNpGJAZ3
-         NYS/9O52cE7QHiY/yg/RfIlpuJQULU12OrwuEW9VqKq5dRrdsSMqm4Op8UBcZXRDXZq5
-         h4KbWg5p+fGlbX5wyUWo1QvUQKF8DI6rUA+Hpw69V4xVqzjfgYn4p0l3edkJOUaWxF35
-         xZgw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=vzFYuc95AWY6svq+EBkTgwMguKL8GySeZ2TwbGI8OIM=;
+        b=uLUP93BWw0o+JzGgvJbHS+JQq2j1+NBwmhp+m4Ik109/D6oaX5YQAmSL97SKYfWENj
+         9U3hX5wRhynx3P/ymFwsgDAiQlvfSSoAoSyyoULEMnlaqPsc64jHQQLDlfRc7hGKjZ8m
+         RkEUeiqYjQW+OG7JZROkofNpcYfASzs8CLN6WRihBpRh7zNO6hm8KKmnKFceUkx5f3DX
+         4XeySBgPFwdUYAaOPuVgwj0oblL5rCXAvU14LkZTn76fQfE7x4jqAh45YvYgleyxNqAc
+         EV2DBP5T4M48S/NnnqlZHiNveDd0i5hN8ZycFqoBb309C0x8tk6HfTnJyxnGOVU4oG5D
+         USJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=y2NgiqlWrB0g1nYThxREdvdN0lYU2uUNLMalSkDDff8=;
-        b=osGm1RjeoiS9DNg7ApdQcgKgFtaX6485Xyr2VtUTSZKsXdSvxC+D/c617LxZO4p3IJ
-         +VNEztyjOkQj/DBjuiP3snOG+RWXp3ByVWnT09b8s8Q0+cSf0tAmlQlLpfeACP976TU7
-         enT9v4osM0pWupK86JIbHdvLf9yqJKnEchuXjd/HBtSiPIotsjnd7MxR9dWT4iyzjzz/
-         8o1Y8t/4aQ7Zip5yI6Ud7avO93vd9no98vuYIGVXLcL43CSkFO+1c+P02mxdijJyjuBp
-         jZjbX21Gtbdk1UDnhl8Iwnu8mBeGNftG71xTzh0BQSUSjPVBEY7VEKo57sMNNUMXtpJu
-         ESxw==
-X-Gm-Message-State: APjAAAWGocCcrvZMiFYGiZzsjLzZvKsC54ipiO2cW4ZO5OpAqB/CHIwP
-        t7oiGuety6DNiTI8FyhCJQomRb8P9Us=
-X-Google-Smtp-Source: APXvYqz19xRqv00GKGiTWaxyYCkFcRGVDz67nDMNvrCZxMzhuk+LP0W777jysfBEOiMp76TRkFPSGQ==
-X-Received: by 2002:a65:66da:: with SMTP id c26mr26319588pgw.354.1577023855335;
+         :references:mime-version:content-transfer-encoding;
+        bh=vzFYuc95AWY6svq+EBkTgwMguKL8GySeZ2TwbGI8OIM=;
+        b=dKn2w8PTYYw6yuypmf36K5KMoxiqXoGzFzbLgNdfCPcezLF9NlDd/mypEOgus+4/Kl
+         OfsXIx7vsu3d7Y9PE5kMwaKVTsQ7VGy0/Zv1AHli0UGqxliODCFAuo++AUJUK0eKoYVb
+         mNWSDGG4nCv0/wDB0xzNt7kgkpmpDCEaEzsjd9VO22VNCYhl5XwTMbxDebF600weK5jt
+         1QuiZTzz28VRcw9Dp91ZimtzIeBxCUI83aluCcQ//e44JQrM7RQXkXbpABnkMFnPLIzT
+         MAzFjH/H4P+gr7e3V/sMf7ReE/LDMyoOGPmFOIlQPbVj3WRYxdkCJ4Z5Ktb6IMtYVrfY
+         zg8A==
+X-Gm-Message-State: APjAAAW287UnOhru1pAubnDisq9CNIpkseF1PozNpc0ybo2Q9feYv2Ot
+        VdeT+sT04nwptAw5iyN4K1Y=
+X-Google-Smtp-Source: APXvYqzAiT+VAg4ExN9JaDt0Y33c1cY7telDW1fwAubpR0qMOkVKKO0fuJ7ozhYjeykY1C+d8exOHg==
+X-Received: by 2002:adf:ee45:: with SMTP id w5mr24860066wro.352.1577023855885;
         Sun, 22 Dec 2019 06:10:55 -0800 (PST)
-Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
-        by smtp.gmail.com with ESMTPSA id x33sm18320073pga.86.2019.12.22.06.10.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id c5sm16640151wmb.9.2019.12.22.06.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 22 Dec 2019 06:10:54 -0800 (PST)
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-To:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 1/2] hwmon: (pwm-fan) add option to stop fan on shutdown
-Date:   Sun, 22 Dec 2019 23:10:22 +0900
-Message-Id: <1577023823-9615-2-git-send-email-akinobu.mita@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1577023823-9615-1-git-send-email-akinobu.mita@gmail.com>
-References: <1577023823-9615-1-git-send-email-akinobu.mita@gmail.com>
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 11/13] arm64: tegra: Add interrupt for memory controller on Tegra186
+Date:   Sun, 22 Dec 2019 15:10:33 +0100
+Message-Id: <20191222141035.1649937-12-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191222141035.1649937-1-thierry.reding@gmail.com>
+References: <20191222141035.1649937-1-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The pwm-fan driver leaves the fun running when shutting down the system.
-(On the other hand the gpio-fan driver stops it.)
+From: Thierry Reding <treding@nvidia.com>
 
-This adds an optional property "disable-state-shutdown" in case someone
-wants to stop the fun running when shutting down the system.
+The memory controller can be interrupted by certain conditions. Add the
+interrupt to the device tree node to allow drivers to trap these
+conditions.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Kamil Debski <kamil@wypas.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/hwmon/pwm-fan.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 42ffd2e..8775d37 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -33,6 +33,7 @@ struct pwm_fan_ctx {
- 	u8 pulses_per_revolution;
- 	ktime_t sample_start;
- 	struct timer_list rpm_timer;
-+	bool disable_state_shutdown;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 7dc7fa8bcc39..584498a999d4 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -142,6 +142,7 @@ agic: interrupt-controller@2a40000 {
+ 	memory-controller@2c00000 {
+ 		compatible = "nvidia,tegra186-mc";
+ 		reg = <0x0 0x02c00000 0x0 0xb0000>;
++		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+ 		status = "disabled";
+ 	};
  
- 	unsigned int pwm_value;
- 	unsigned int pwm_fan_state;
-@@ -292,6 +293,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 
- 	mutex_init(&ctx->lock);
- 
-+	ctx->disable_state_shutdown =
-+		of_property_read_bool(dev->of_node, "disable-state-shutdown");
-+
- 	ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
- 	if (IS_ERR(ctx->pwm)) {
- 		ret = PTR_ERR(ctx->pwm);
-@@ -390,8 +394,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int pwm_fan_suspend(struct device *dev)
-+static int pwm_fan_disable(struct device *dev)
- {
- 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
- 	struct pwm_args args;
-@@ -418,6 +421,22 @@ static int pwm_fan_suspend(struct device *dev)
- 	return 0;
- }
- 
-+static void pwm_fan_shutdown(struct platform_device *pdev)
-+{
-+	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
-+
-+	if (!ctx->disable_state_shutdown)
-+		return;
-+
-+	pwm_fan_disable(&pdev->dev);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int pwm_fan_suspend(struct device *dev)
-+{
-+	return pwm_fan_disable(dev);
-+}
-+
- static int pwm_fan_resume(struct device *dev)
- {
- 	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
-@@ -455,6 +474,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_fan_match);
- 
- static struct platform_driver pwm_fan_driver = {
- 	.probe		= pwm_fan_probe,
-+	.shutdown	= pwm_fan_shutdown,
- 	.driver	= {
- 		.name		= "pwm-fan",
- 		.pm		= &pwm_fan_pm,
 -- 
-2.7.4
+2.24.1
 
