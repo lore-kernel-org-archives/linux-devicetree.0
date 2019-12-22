@@ -2,154 +2,120 @@ Return-Path: <SRS0=TQXC=2M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F191C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375B6C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB0820733
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:12:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577020377;
-	bh=7fo1Bsez53qvaIMcnnp2p8h4Fw2pDtHMMLmgtCx+WjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZklRKbR5cLv6CtauM8Dh+u/MBOLXhlZ3I6OIkVxylsVaUmr1aXxC7igJt6L1xiDsj
-	 uegll/5q5mRYtf7d29PKL8CXWSLRCWIuDsZqpmZd6e2ug/b0r7vsU0m4SPtFsTdfEy
-	 5yycbuLC5Pj2MUqsvaSlhgzBbvdfBwNaHC7U5Jss=
+	by mail.kernel.org (Postfix) with ESMTP id E92B32070A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="c/4QJdYH";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PNu7Iyo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725807AbfLVNM4 (ORCPT
+        id S1725879AbfLVNOE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 08:12:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfLVNM4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Dec 2019 08:12:56 -0500
+        Sun, 22 Dec 2019 08:14:04 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37677 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725839AbfLVNOE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Dec 2019 08:14:04 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7DDBD21EAF;
+        Sun, 22 Dec 2019 08:14:02 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sun, 22 Dec 2019 08:14:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=6JRtu6/FSoZskdTK01GZ0CTmiB4
+        OHc18FEE2M7YfZ44=; b=c/4QJdYH6JMfXxH0NVyif7qaUzgr2V8inPWeAOBwFV2
+        A4klfeUDeSPZ9Oy+D9Va0C13hveYbiv21kXKt6mJ1H5uKtYSs0yoCYM8itRnWLfp
+        i+HjH7Aji0Co5IuBNoYpmUp9/Hu++9zIc0HMUOZR4fLrEaOriLMYG5R40nyvyclN
+        rUfB6aVZ0Mjob1WS48KvQOWW7cFSXPjmWrlXHQzvf7utUYG0rbDufqYfHOs7LOvc
+        mfz0ry9ujrvsGTzv5ISkVam4PmjwGl7Wyq8mGfHU8nELVLsg8/F78eEHz0PKT3+d
+        vo0ZJpSpziy7qsnzugZfDIpJyVNb1y0rMYOTN3bjibA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=6JRtu6
+        /FSoZskdTK01GZ0CTmiB4OHc18FEE2M7YfZ44=; b=PNu7Iyo/NjcmZ8rHntTCx4
+        KgfzWGPy2rSjuwOhWsLCSFLkNjVMkeUrYQ84Cy/sOtxueIGyIQ1Aqq06QdPFDqfq
+        YaMZxiH3HzbZceY/kCe60pfq6tCGdg3BMLYRT/ErMA1wUemz6n/ssJga/yV/Lxce
+        lzgUSlwt0VkOYk7FKhznITzp+eU+fyEyst8fKCehOVFZlopbbo9OJ9SOGKqbD+FS
+        TN2i8STNbdMinA2Wgx+ghpAB2XsMQA5X4kd+a+AQwET4XiYzJRq2vJZAJUo8MxbP
+        lN0672Pyn2a+aKSnRJPr3SD4q3kScff3eLCvalvWDTro2M0lfFRw7g7Ml9H89+TQ
+        ==
+X-ME-Sender: <xms:GGz_XeL4pKMK6jPnylhuRRydSGJxd_t4_KYkhEeqDXxEI5jGSVAwwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddukedggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
+    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:GGz_XRVCMCEGNFTmGX-CiZTX6yn5gGfKAO0AoH6xPZRPjOjFJ3lOfg>
+    <xmx:GGz_XSh_f9oQ1wQodakDO4MOrEkwrpTHLAOWFUz5xIdAL63VwzEoZA>
+    <xmx:GGz_XdsZFFzttiHHm4BuQkdOGG6ThE5UnsaWIzs_tQzYLEyokINtEg>
+    <xmx:Gmz_XQQghZIAac85hGTAqKg-Clet6Yw8SBfI0ECEFXvGMh3D8EM4CA>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC48C2067C;
-        Sun, 22 Dec 2019 13:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577020375;
-        bh=7fo1Bsez53qvaIMcnnp2p8h4Fw2pDtHMMLmgtCx+WjE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O6NmTRWamrm8T248gsebwRoVAUQ4JGuFBFiY2kHQlWxmaJl5qGcz5/BicZryms7QH
-         2DmFNJc20vV/EBi2z5ekGq5N9NnmAJr1jHC5iBNvWcPoFuJA1zNqsiuQZ38tI2bF84
-         rW1dEo6GWyIMR/+uu1+SFDuH5YxfxV8tHq86AD8w=
-Date:   Sun, 22 Dec 2019 14:12:52 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, heiko@sntech.de,
-        sam@ravnborg.org, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: regulator: add document bindings for
- mpq7920
-Message-ID: <20191222131252.ajrat2kxcyvozzia@gilmour.lan>
-References: <20191221234029.7796-1-sravanhome@gmail.com>
- <20191221234029.7796-3-sravanhome@gmail.com>
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2B3548005A;
+        Sun, 22 Dec 2019 08:14:00 -0500 (EST)
+Date:   Sun, 22 Dec 2019 14:13:57 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
+        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: display: panel: Add binding document
+ for Leadtek LTK500HD1829
+Message-ID: <20191222131357.e6qropl3tjweh6sv@gilmour.lan>
+References: <20191222000634.11284-1-heiko@sntech.de>
+ <20191222000634.11284-2-heiko@sntech.de>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q43gh6v3wj5ad5fi"
+        protocol="application/pgp-signature"; boundary="sc7sshwacka3qoyv"
 Content-Disposition: inline
-In-Reply-To: <20191221234029.7796-3-sravanhome@gmail.com>
+In-Reply-To: <20191222000634.11284-2-heiko@sntech.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---q43gh6v3wj5ad5fi
+--sc7sshwacka3qoyv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Dec 22, 2019 at 12:40:27AM +0100, Saravanan Sekar wrote:
-> Add device tree binding information for mpq7920 regulator driver.
-> Example bindings for mpq7920 are added.
+On Sun, Dec 22, 2019 at 01:06:33AM +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 >
-> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> ---
->  .../bindings/regulator/mpq7920.yaml           | 135 ++++++++++++++++++
->  1 file changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> The LTK500HD1829 is a 5.0" 720x1280 DSI display.
 >
-> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
-> new file mode 100644
-> index 000000000000..a60d3ef04c05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
-> @@ -0,0 +1,135 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Monolithic Power System MPQ7920 PMIC
-> +
-> +maintainers:
-> +  - Saravanan Sekar <sravanhome@gmail.com>
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "mpq@[0-9a-f]{1,2}"
+> changes in v2:
+> - fix id (Maxime)
+> - drop port (Maxime)
+>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-This is still not a valid node name
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-> +  compatible:
-> +    enum:
-> +	- mps,mpq7920
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  regulators:
-> +    type: object
-> +    description: |
-> +      list of regulators provided by this controller, must be named
-> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
-> +      The valid names for regulators are
-> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
-
-These should be validated.
-
-> +  properties:
-
-If it's properties under the regulators node, it should be at one more
-indentation level.
-
-> +       mps,time-slot:
-
-This should have an allOf here
-
-> +         - $ref: "/schemas/types.yaml#/definitions/uint8"
-> +         - enum: [ 0, 1, 2, 3 ]
-> +         - default: 0
-> +       description: |
-> +         each regulator output shall be delayed during power on/off sequence which
-> +         based on configurable time slot value, must be one of following corresponding
-> +         value 0.5ms, 2ms, 8ms, 16ms
-
-And this should be under the property, not at the same level.
-
-Did you run dt_bindings_check?
-
+Thanks!
 Maxime
 
---q43gh6v3wj5ad5fi
+--sc7sshwacka3qoyv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXf9r1AAKCRDj7w1vZxhR
-xdfAAP9LE45bHHScx2Iw015hPBYVCLIwpqkV7lG2MenTX2mDWAEArKgGeyv9CeSj
-BlqZDlA5FtX5YfPaFGRnSu0wTnoNYAs=
-=y9bw
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXf9sFQAKCRDj7w1vZxhR
+xeVeAQCeTGqtBrvGfyWczqcpwD5okqbAPsi3jEh+8+Skuvmc/gEA7Andamgcj7F/
+sswb8NI1BlqVqBoIVjiYQLE2K8kb8wE=
+=zYW4
 -----END PGP SIGNATURE-----
 
---q43gh6v3wj5ad5fi--
+--sc7sshwacka3qoyv--
