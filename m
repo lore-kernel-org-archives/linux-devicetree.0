@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB57C2D0D4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCDAC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E342070A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B4D2084D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="lB4V4tgg"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="dNOsofgd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfLVN3h (ORCPT
+        id S1726666AbfLVN3l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 08:29:37 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43072 "EHLO
+        Sun, 22 Dec 2019 08:29:41 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39561 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726549AbfLVN3g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 08:29:36 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p27so6108598pli.10
-        for <devicetree@vger.kernel.org>; Sun, 22 Dec 2019 05:29:36 -0800 (PST)
+        with ESMTP id S1726645AbfLVN3l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 08:29:41 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so3167131plp.6
+        for <devicetree@vger.kernel.org>; Sun, 22 Dec 2019 05:29:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KhD44eBjciixBbXS0jbewwrbs2b2OiqLmvbXkaKHo00=;
-        b=lB4V4tgg9XJchkZsFP26liTLrD5wSsSFIAEJ32qjq+iAwPpa8KAOLT+EVxcmw1pwYK
-         WMckdTBx4XBA2jV1zAMUZl7P6mpT+gvrq67YYby5w8wExWSzt8Nz7CRKG/z/R4vuRF6+
-         shHJH9AM/F2G+LyXB5Hw4yotlUHH1pZsM8UDM=
+        bh=NRAz4ZoqKI0Nd9TLnyy5Bof8VE4wzHjzOviJFUDWFYU=;
+        b=dNOsofgdHJWSE8kXto64TSNFpxvXSvTZtOGMWYtrAbWMsEWHOWfyZJKTWKxhM/tWbM
+         AzxWaWz0PjEHFhYXmk9MIjDaDM8CUit4sGy/NLqKXDZxAxfI5cQfx55rk7JCf61gEnsQ
+         6XQLOI6jPwnXWXY7UFUUb9Fhteq4HIuQHSf8w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KhD44eBjciixBbXS0jbewwrbs2b2OiqLmvbXkaKHo00=;
-        b=HYskPZsRBnRFN03kVvV9zShTyR/L1b/dMbfy4KUdWmRwTvJYwsJMGPWwXV58fvLrJG
-         FwFFmvw1m2HwGlGuxr5QXJLSCKVtf8FgeSibDhwyq7IxKCSV+6zf0zO3I3tfUnOzo2SO
-         RLdVVjEhBZr3a2VBK+viBRsMXyCmcb5jcv6O+q1lqEQp8A1lCtrUl09WPQUYxK4BE+ED
-         MgBY1WTwMDzuyOb9ZeRs7gutqX22vas8G6S9xbfIYyasDaua6Jb7+b6xNaC7EUS9sFQI
-         2hKQ4NaogrYEKG+6O6W2j3y0HWqRGjv7VsHSnNZqGO/n3neqnbPmLUBc7DDA4EpB9Op+
-         VR2Q==
-X-Gm-Message-State: APjAAAXpm6ARtaB8T4H76H53G08TEs1y8aPZ+DmyKd366hBfeYJPi5fn
-        QLPt0B0jcSlLFO183DILY5vi5Q==
-X-Google-Smtp-Source: APXvYqzVvyqaDb1iAdI2rOGho/ufZoqSGILukc81YMHL6NVkze8m/8RkPnz08yfklmZh9CKXZYH2lw==
-X-Received: by 2002:a17:902:74cb:: with SMTP id f11mr24895957plt.139.1577021375724;
-        Sun, 22 Dec 2019 05:29:35 -0800 (PST)
+        bh=NRAz4ZoqKI0Nd9TLnyy5Bof8VE4wzHjzOviJFUDWFYU=;
+        b=NHUiaX/qq3P2N+id7575YA+Hw+Gmf6a8i1dMJJAH+84odEa+LdAMGWai3e1o8rTONZ
+         +6jOHAKVSdIfGEWLrj5EAjjYTAGTg/aIUAL+epxOKETLTV/w5092PwsTnLd8jiU7x3Xg
+         58P7ZEaZit48pQA5G+s3NAg5eKAmWb9uzVzeumjD4jdHmhOUZ6SXzxjIja/TAK4XhMUb
+         lDhgF5626JhITu2joaIHBy/oly4rFNJOlSPhJ4zSOt0jb29QQIZF5IGR3tVFPlev8qU2
+         6l3un0nOJAjWPDvMkbFCKWME2qPqaEdYQvTDLzpS7WJ1E/EZOM0RLeFXfRqZmVbWDjCW
+         hjaQ==
+X-Gm-Message-State: APjAAAUC903Kg+1cHz5HQsFbCKbXl7aF9klu+VaG5mypPsdy5b4uRGkA
+        5Rc3Ciw4+hPjb1bq+hkTs2W8hg==
+X-Google-Smtp-Source: APXvYqzi7D0b+20qvpHdXr2HAOx7HQsXtaHE5dZtjtMXAPfngax/iDdiCqnpwtaqArWonhyBKuzS1A==
+X-Received: by 2002:a17:90a:a4c4:: with SMTP id l4mr27148361pjw.48.1577021380573;
+        Sun, 22 Dec 2019 05:29:40 -0800 (PST)
 Received: from localhost.localdomain ([49.206.202.16])
-        by smtp.gmail.com with ESMTPSA id o2sm12073058pjo.26.2019.12.22.05.29.31
+        by smtp.gmail.com with ESMTPSA id o2sm12073058pjo.26.2019.12.22.05.29.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 05:29:35 -0800 (PST)
+        Sun, 22 Dec 2019 05:29:40 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ Cc:     michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v14 2/7] dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
-Date:   Sun, 22 Dec 2019 18:52:24 +0530
-Message-Id: <20191222132229.30276-3-jagan@amarulasolutions.com>
+Subject: [PATCH v14 3/7] drm/sun4i: dsi: Get the mod clock for A31
+Date:   Sun, 22 Dec 2019 18:52:25 +0530
+Message-Id: <20191222132229.30276-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191222132229.30276-1-jagan@amarulasolutions.com>
 References: <20191222132229.30276-1-jagan@amarulasolutions.com>
@@ -77,37 +77,43 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The MIPI DSI PHY controller on Allwinner A64 is similar
-on the one on A31.
+As per the user manual, look like mod clock is not mandatory
+for all Allwinner MIPI DSI controllers, it is connected to
+CLK_DSI_SCLK for A31 and not available in A64.
 
-Add A64 compatible and append A31 compatible as fallback.
+So, add compatible check for A31 and get mod clock accordingly.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v14:
 - none
 
- .../bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml         | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-index fa46670de299..8841938050b2 100644
---- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-@@ -15,7 +15,11 @@ properties:
-     const: 0
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index c958ca9bae63..68b88a3dc4c5 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -1120,10 +1120,13 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dsi->reset);
+ 	}
  
-   compatible:
--    const: allwinner,sun6i-a31-mipi-dphy
-+    oneOf:
-+      - const: allwinner,sun6i-a31-mipi-dphy
-+      - items:
-+          - const: allwinner,sun50i-a64-mipi-dphy
-+          - const: allwinner,sun6i-a31-mipi-dphy
+-	dsi->mod_clk = devm_clk_get(dev, "mod");
+-	if (IS_ERR(dsi->mod_clk)) {
+-		dev_err(dev, "Couldn't get the DSI mod clock\n");
+-		return PTR_ERR(dsi->mod_clk);
++	if (of_device_is_compatible(dev->of_node,
++				    "allwinner,sun6i-a31-mipi-dsi")) {
++		dsi->mod_clk = devm_clk_get(dev, "mod");
++		if (IS_ERR(dsi->mod_clk)) {
++			dev_err(dev, "Couldn't get the DSI mod clock\n");
++			return PTR_ERR(dsi->mod_clk);
++		}
+ 	}
  
-   reg:
-     maxItems: 1
+ 	/*
 -- 
 2.18.0.321.gffc6fa0e3
 
