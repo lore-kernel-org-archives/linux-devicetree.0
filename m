@@ -2,120 +2,223 @@ Return-Path: <SRS0=TQXC=2M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375B6C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB421C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92B32070A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF072070A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="c/4QJdYH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PNu7Iyo/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TX7pOrAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725879AbfLVNOE (ORCPT
+        id S1726613AbfLVNZF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 08:14:04 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:37677 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbfLVNOE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Dec 2019 08:14:04 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7DDBD21EAF;
-        Sun, 22 Dec 2019 08:14:02 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 22 Dec 2019 08:14:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=6JRtu6/FSoZskdTK01GZ0CTmiB4
-        OHc18FEE2M7YfZ44=; b=c/4QJdYH6JMfXxH0NVyif7qaUzgr2V8inPWeAOBwFV2
-        A4klfeUDeSPZ9Oy+D9Va0C13hveYbiv21kXKt6mJ1H5uKtYSs0yoCYM8itRnWLfp
-        i+HjH7Aji0Co5IuBNoYpmUp9/Hu++9zIc0HMUOZR4fLrEaOriLMYG5R40nyvyclN
-        rUfB6aVZ0Mjob1WS48KvQOWW7cFSXPjmWrlXHQzvf7utUYG0rbDufqYfHOs7LOvc
-        mfz0ry9ujrvsGTzv5ISkVam4PmjwGl7Wyq8mGfHU8nELVLsg8/F78eEHz0PKT3+d
-        vo0ZJpSpziy7qsnzugZfDIpJyVNb1y0rMYOTN3bjibA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=6JRtu6
-        /FSoZskdTK01GZ0CTmiB4OHc18FEE2M7YfZ44=; b=PNu7Iyo/NjcmZ8rHntTCx4
-        KgfzWGPy2rSjuwOhWsLCSFLkNjVMkeUrYQ84Cy/sOtxueIGyIQ1Aqq06QdPFDqfq
-        YaMZxiH3HzbZceY/kCe60pfq6tCGdg3BMLYRT/ErMA1wUemz6n/ssJga/yV/Lxce
-        lzgUSlwt0VkOYk7FKhznITzp+eU+fyEyst8fKCehOVFZlopbbo9OJ9SOGKqbD+FS
-        TN2i8STNbdMinA2Wgx+ghpAB2XsMQA5X4kd+a+AQwET4XiYzJRq2vJZAJUo8MxbP
-        lN0672Pyn2a+aKSnRJPr3SD4q3kScff3eLCvalvWDTro2M0lfFRw7g7Ml9H89+TQ
-        ==
-X-ME-Sender: <xms:GGz_XeL4pKMK6jPnylhuRRydSGJxd_t4_KYkhEeqDXxEI5jGSVAwwg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddukedggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggv
-    rhhnohdrthgvtghhnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:GGz_XRVCMCEGNFTmGX-CiZTX6yn5gGfKAO0AoH6xPZRPjOjFJ3lOfg>
-    <xmx:GGz_XSh_f9oQ1wQodakDO4MOrEkwrpTHLAOWFUz5xIdAL63VwzEoZA>
-    <xmx:GGz_XdsZFFzttiHHm4BuQkdOGG6ThE5UnsaWIzs_tQzYLEyokINtEg>
-    <xmx:Gmz_XQQghZIAac85hGTAqKg-Clet6Yw8SBfI0ECEFXvGMh3D8EM4CA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2B3548005A;
-        Sun, 22 Dec 2019 08:14:00 -0500 (EST)
-Date:   Sun, 22 Dec 2019 14:13:57 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
-        sam@ravnborg.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: display: panel: Add binding document
- for Leadtek LTK500HD1829
-Message-ID: <20191222131357.e6qropl3tjweh6sv@gilmour.lan>
-References: <20191222000634.11284-1-heiko@sntech.de>
- <20191222000634.11284-2-heiko@sntech.de>
+        Sun, 22 Dec 2019 08:25:05 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35851 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726539AbfLVNZE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 08:25:04 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a6so5376346plm.3;
+        Sun, 22 Dec 2019 05:25:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yAOtMUwD/qpfStPtispf3vk9JaKfKQUNKLcLxT26P+w=;
+        b=TX7pOrAwGAXN6pE7nq78PMMvdr4vJzLvqz44HqMKGqbQsNjK5i6RvG5WMB/hR6KGf6
+         4NPr2Qfy5CiPUykEyODKg8lqNrjqq0WnUFUfdnUyt6E5NnM8dPN+ydbjQJFH73UVuK16
+         XaupZPv3e96ASYNJlvURztvPFk85Ks1X68k+Fa+J7QyQIaAwqxYR/VRBesLb8DWm6dhg
+         5JaD48vFawlXW9c/3fe837M17MBHZR1+09CVwQA+qgVrNPv5QmJQ0dTv2uLH8ZNzbSgw
+         rF2icc//h7Vcn1FCO2KphtRVvZYL994ltq/Ldk9k7vltBl6/sPW6bumwtcgKXmI1/ZcK
+         x1Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yAOtMUwD/qpfStPtispf3vk9JaKfKQUNKLcLxT26P+w=;
+        b=USBmtuLNzMuNCaYPVSu3roXvWe78C+Oz7OZCpMLUIyvBI2bnazBM13Kn/iz+0O+A5h
+         nmDZgTAaTubszY+3JIixzfF/HYmguEQFRbEf8/ZRsk4jiAEXP3opCtf+Hq16PhhVwrF+
+         9hoDM7OVBoDjAIkANmYmlzVA9RYjPAxgU0eqjaS5HD6tCxsHqwkg6dix0ZMQbgB/CbSs
+         VtXk2H2qMpapeOdBjsbT1rGqUpJNO1XpkbpnvKYstXRvBTufWJ5qn6s35K8ryOCznXZ1
+         ysH24bfPI/NEYuT441bnJfFwQENDT/gJcCp9J3QzCa3jAye2CDwpmlsUHxwdIHLjlpjG
+         wv/w==
+X-Gm-Message-State: APjAAAVfbjRGD7wYHfF5FKko/gdwthfRfS7OLxBTdzIviiLNL0fA2Qt3
+        rNPOK00lpoUhHNJ70EbSw8U=
+X-Google-Smtp-Source: APXvYqz7JAli1bhkUSt9KMgUJ/tuA/JNFlY9P88wOQBoqkeETc3LPCu0h3YXwDXQ7y2NnbxuZ+4qMg==
+X-Received: by 2002:a17:902:8207:: with SMTP id x7mr1160978pln.286.1577021103598;
+        Sun, 22 Dec 2019 05:25:03 -0800 (PST)
+Received: from localhost (64.64.229.47.16clouds.com. [64.64.229.47])
+        by smtp.gmail.com with ESMTPSA id b4sm20816190pfd.18.2019.12.22.05.25.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 22 Dec 2019 05:25:03 -0800 (PST)
+Date:   Sun, 22 Dec 2019 21:24:59 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/10] usb: phy: tegra: Use u32 for hardware register
+ variables
+Message-ID: <20191222132227.GA7096@nuc8i5>
+References: <20191220015238.9228-1-digetx@gmail.com>
+ <20191220015238.9228-9-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sc7sshwacka3qoyv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191222000634.11284-2-heiko@sntech.de>
+In-Reply-To: <20191220015238.9228-9-digetx@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Dec 20, 2019 at 04:52:36AM +0300, Dmitry Osipenko wrote:
+> There is a mix of u32/ULONG usage in the driver's code. Let's switch to
+> u32 uniformly, for consistency.
+> 
+> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/usb/phy/phy-tegra-usb.c | 28 +++++++++++++++-------------
+>  1 file changed, 15 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
+> index d5739b6e0b6c..551c94e3877a 100644
+> --- a/drivers/usb/phy/phy-tegra-usb.c
+> +++ b/drivers/usb/phy/phy-tegra-usb.c
+> @@ -202,7 +202,7 @@ static inline struct tegra_usb_phy *to_tegra_usb_phy(struct usb_phy *u_phy)
+>  static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	if (phy->soc_config->has_hostpc) {
+>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+> @@ -221,7 +221,7 @@ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+>  static void set_phcd(struct tegra_usb_phy *phy, bool enable)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	if (phy->soc_config->has_hostpc) {
+>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+> @@ -320,7 +320,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+>  {
+>  	struct tegra_utmip_config *config = phy->config;
+>  	void __iomem *base = phy->pad_regs;
+> -	unsigned long val, flags;
+> +	unsigned long flags;
+> +	u32 val;
+Why are you still using unsigned long here?
 
---sc7sshwacka3qoyv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>  	int err;
+>  
+>  	err = clk_prepare_enable(phy->pad_clk);
+> @@ -355,7 +356,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+>  static int utmip_pad_power_off(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->pad_regs;
+> -	unsigned long val, flags;
+> +	unsigned long flags;
+> +	u32 val;
+ditto
 
-On Sun, Dec 22, 2019 at 01:06:33AM +0100, Heiko Stuebner wrote:
-> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
->
-> The LTK500HD1829 is a 5.0" 720x1280 DSI display.
->
-> changes in v2:
-> - fix id (Maxime)
-> - drop port (Maxime)
->
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
-Thanks!
-Maxime
-
---sc7sshwacka3qoyv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXf9sFQAKCRDj7w1vZxhR
-xeVeAQCeTGqtBrvGfyWczqcpwD5okqbAPsi3jEh+8+Skuvmc/gEA7Andamgcj7F/
-sswb8NI1BlqVqBoIVjiYQLE2K8kb8wE=
-=zYW4
------END PGP SIGNATURE-----
-
---sc7sshwacka3qoyv--
+>  	int err;
+>  
+>  	if (!utmip_pad_count) {
+> @@ -393,7 +395,7 @@ static int utmi_wait_register(void __iomem *reg, u32 mask, u32 result)
+>  static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	/*
+>  	 * The USB driver may have already initiated the phy clock
+> @@ -425,7 +427,7 @@ static void utmi_phy_clk_disable(struct tegra_usb_phy *phy)
+>  static void utmi_phy_clk_enable(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	/*
+>  	 * The USB driver may have already initiated the phy clock
+> @@ -460,7 +462,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
+>  {
+>  	struct tegra_utmip_config *config = phy->config;
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  	int err;
+>  
+>  	val = readl_relaxed(base + USB_SUSP_CTRL);
+> @@ -611,7 +613,7 @@ static int utmi_phy_power_on(struct tegra_usb_phy *phy)
+>  static int utmi_phy_power_off(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	utmi_phy_clk_disable(phy);
+>  
+> @@ -646,7 +648,7 @@ static int utmi_phy_power_off(struct tegra_usb_phy *phy)
+>  static void utmi_phy_preresume(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	val = readl_relaxed(base + UTMIP_TX_CFG0);
+>  	val |= UTMIP_HS_DISCON_DISABLE;
+> @@ -656,7 +658,7 @@ static void utmi_phy_preresume(struct tegra_usb_phy *phy)
+>  static void utmi_phy_postresume(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	val = readl_relaxed(base + UTMIP_TX_CFG0);
+>  	val &= ~UTMIP_HS_DISCON_DISABLE;
+> @@ -667,7 +669,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
+>  				   enum tegra_usb_phy_port_speed port_speed)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+>  	val &= ~UTMIP_DPDM_OBSERVE_SEL(~0);
+> @@ -687,7 +689,7 @@ static void utmi_phy_restore_start(struct tegra_usb_phy *phy,
+>  static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  
+>  	val = readl_relaxed(base + UTMIP_MISC_CFG0);
+>  	val &= ~UTMIP_DPDM_OBSERVE;
+> @@ -698,7 +700,7 @@ static void utmi_phy_restore_end(struct tegra_usb_phy *phy)
+>  static int ulpi_phy_power_on(struct tegra_usb_phy *phy)
+>  {
+>  	void __iomem *base = phy->regs;
+> -	unsigned long val;
+> +	u32 val;
+>  	int err;
+>  
+>  	err = gpio_direction_output(phy->reset_gpio, 0);
+> -- 
+> 2.24.0
+> 
