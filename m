@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB0EC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AA2C2D0D3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922E120665
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B43C62070A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 14:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNPLaEpg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzLNJJ0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbfLVOKt (ORCPT
+        id S1726291AbfLVOKv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 09:10:49 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35091 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfLVOKs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 09:10:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so13943045wro.2;
-        Sun, 22 Dec 2019 06:10:47 -0800 (PST)
+        Sun, 22 Dec 2019 09:10:51 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52784 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfLVOKv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 09:10:51 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so13385947wmc.2;
+        Sun, 22 Dec 2019 06:10:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4FvfcScGOqGCyba7I+4/EUJ/GDOw2ve0f7wiG+UB+Yk=;
-        b=aNPLaEpgXfe75PXfHkh/q2rblg7LM/KyqESWRqdYRdmuOLmibo6GmhKl+N+OoX5chn
-         FaN+qnTy/PFcd7Nx8kgqN2T5wCGx7ppknWZiyNaT2uMPNVp+tofRAaERrvOre/lVID3h
-         VcDHh1pFqVuy8dVACycHeD9f5j5WFsIE7fqJzuSB+4m18d/2gHuAeCtIHYj+9H8FY8ap
-         6ns05TefErVRgvQl/HUuXcg+BHcnPb4kblTVwM2cmbIBtTeGbawO0GXnyKNsnxemNtoi
-         cSggQXQHgbV8YsQ8YmrdugrpGbxnOknFh3KMr7B8GwpbvugR+z9g3/B1dc7w3hQTq28O
-         LkFQ==
+        bh=ikfJiDpjg9QYCtJ3tEmCYkHOmVUTASh0OD5MpVkjVLU=;
+        b=gzLNJJ0Q+KkYDQw5mVCzdY39juEHI8921wIgvSOjZnq1UQYZGK9ioW6xbd1w/pZyOc
+         0FTklasvkROuH4jJvbWbnzv/l8jlw/ytE9LaNk0ms+B0WE4SVnpersTg5bb6c6prdwu/
+         7qhUoU6YDXcQ9GaiNxFL2uVuy5/6zbiwjfXR+AyIcmWKaqxG87IIPFDfhMZt7Sp65zzr
+         Ac3OLh/kvNmUAMfD13U1nVS3q0GT+in7M7LFeQjeY0F6wkGiRokwV2TGK21hDkLIgLUh
+         xM02vCWaEXRAUPHS17wOr4APBbYGsdv+rHwPImkyemBUhN+aarFT2XQlCST7n0FP3ceE
+         WGXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4FvfcScGOqGCyba7I+4/EUJ/GDOw2ve0f7wiG+UB+Yk=;
-        b=BWH7txtvOWFmkoKGndjvCLi8KENR7oy6WDaf5f/KptfUCNccg/L1VDl+DP3MD4yACH
-         2Ooxmbg6iXjlmSn5UBhlcfNlZQ06vYOdxK+gSdWmhuQro68TQgE/KeJB8OKFloUr3wqj
-         odYNOKi5YOobRMqeawIBwWH/6HdHC++H82eiPtVx5FDTYRsBen9SnZpW3KNJSJLg+VIY
-         /kc97TKCo40IUyg0eux1rV3A8r2QH9CcD9FdIhGjre+3K4OTLrgb78XZjyKEF6jfBjsV
-         q0CGH0TdaZubIGAIxZImFL092zyBADhwYAmwFHucG3A3952nVSpz95+8GHNCK6U/hbEi
-         MXcA==
-X-Gm-Message-State: APjAAAWbW4wHIroUn5H6vJr6+9zkH6fp1ThNLSge58IJSOYS62IvYe6/
-        MmS+4i8JljNRUfI/l7CzvAU=
-X-Google-Smtp-Source: APXvYqwsyfdpXYdEEVQFXEvp0IDzKMoJPOqO6It1AhrUeq0ndIPicJ1AmEY9lzhoj3jt/FLdu3bitg==
-X-Received: by 2002:a5d:690e:: with SMTP id t14mr25345611wru.65.1577023847368;
-        Sun, 22 Dec 2019 06:10:47 -0800 (PST)
+        bh=ikfJiDpjg9QYCtJ3tEmCYkHOmVUTASh0OD5MpVkjVLU=;
+        b=jXIiuUw+hiNenOsP+hEIebElzirdiuooQjo4Z9iM+arF2Q7LmIuqlwsLBh3Ii0/IWX
+         GybJYsWsd8KkiTdaA2AMjZXxWVD+YXKDYo16FAfxW+2LtF6t3dkAfaAGKlCER5NjRIFU
+         UOf25ku+tb8tHCcUGjaJY12/ryg3MrRJNFln9MPfOHCEOk2MqOAM4XIQQ7YIWVtlU0pR
+         a3ygz+/gRCCcFVDP6L/unCGrlAjcHPMzxcmO47K6Ybr4K9XYnO11ciyfb/W1ai/N3mVX
+         gQvB+85Wk9jN36AbH9A4s8z3f5JyslaiVP5+0urkVISfN7VTpzk5QvcMvGEjlnoHTAUh
+         KuIA==
+X-Gm-Message-State: APjAAAWCQwJgTbNe1hjL3k1xfd2TPWF4Yoz2ZMsMbd0YgNskYz6D29rE
+        zOjBeaSc9+5NhDcqVq5AVR0=
+X-Google-Smtp-Source: APXvYqxH/UjRNAHzS217dwm1H2UKxNF5l3vyB9FvGUpFv1KPJJBP0SrEThecMZsb/8psOPk7oPR+eg==
+X-Received: by 2002:a1c:9d8b:: with SMTP id g133mr25936600wme.27.1577023849320;
+        Sun, 22 Dec 2019 06:10:49 -0800 (PST)
 Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id l17sm16860427wro.77.2019.12.22.06.10.46
+        by smtp.gmail.com with ESMTPSA id t190sm16546496wmt.44.2019.12.22.06.10.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 06:10:46 -0800 (PST)
+        Sun, 22 Dec 2019 06:10:48 -0800 (PST)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 06/13] memory: tegra: Extract memory client SID programming
-Date:   Sun, 22 Dec 2019 15:10:28 +0100
-Message-Id: <20191222141035.1649937-7-thierry.reding@gmail.com>
+Subject: [PATCH 07/13] memory: tegra: Add system sleep support
+Date:   Sun, 22 Dec 2019 15:10:29 +0100
+Message-Id: <20191222141035.1649937-8-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191222141035.1649937-1-thierry.reding@gmail.com>
 References: <20191222141035.1649937-1-thierry.reding@gmail.com>
@@ -76,89 +76,49 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Move programming of the memory client to SID mapping into a separate
-function so that it can be reused from multiple call sites.
+Add system suspend/resume support for the memory controller found on
+Tegra186 and later. This is required so that the SID registers can be
+reprogrammed after their content was lost during system sleep.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/memory/tegra/tegra186.c | 49 ++++++++++++++++++---------------
- 1 file changed, 27 insertions(+), 22 deletions(-)
+ drivers/memory/tegra/tegra186.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 diff --git a/drivers/memory/tegra/tegra186.c b/drivers/memory/tegra/tegra186.c
-index ad5c353dba6e..57895116c8e5 100644
+index 57895116c8e5..77a313f1bf0e 100644
 --- a/drivers/memory/tegra/tegra186.c
 +++ b/drivers/memory/tegra/tegra186.c
-@@ -32,6 +32,32 @@ struct tegra186_mc {
- 	const struct tegra186_mc_soc *soc;
+@@ -602,10 +602,29 @@ static const struct of_device_id tegra186_mc_of_match[] = {
  };
+ MODULE_DEVICE_TABLE(of, tegra186_mc_of_match);
  
-+static void tegra186_mc_program_sid(struct tegra186_mc *mc)
++static int tegra186_mc_suspend(struct device *dev)
 +{
-+	unsigned int i;
-+
-+	for (i = 0; i < mc->soc->num_clients; i++) {
-+		const struct tegra186_mc_client *client = &mc->soc->clients[i];
-+		u32 override, security;
-+
-+		override = readl(mc->regs + client->regs.override);
-+		security = readl(mc->regs + client->regs.security);
-+
-+		dev_dbg(mc->dev, "client %s: override: %x security: %x\n",
-+			client->name, override, security);
-+
-+		dev_dbg(mc->dev, "setting SID %u for %s\n", client->sid,
-+			client->name);
-+		writel(client->sid, mc->regs + client->regs.override);
-+
-+		override = readl(mc->regs + client->regs.override);
-+		security = readl(mc->regs + client->regs.security);
-+
-+		dev_dbg(mc->dev, "client %s: override: %x security: %x\n",
-+			client->name, override, security);
-+	}
++	return 0;
 +}
 +
- static const struct tegra186_mc_client tegra186_mc_clients[] = {
- 	{
- 		.name = "ptcr",
-@@ -549,7 +575,6 @@ static int tegra186_mc_probe(struct platform_device *pdev)
- {
- 	struct tegra186_mc *mc;
- 	struct resource *res;
--	unsigned int i;
- 	int err;
- 
- 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
-@@ -565,28 +590,8 @@ static int tegra186_mc_probe(struct platform_device *pdev)
- 
- 	mc->dev = &pdev->dev;
- 
--	for (i = 0; i < mc->soc->num_clients; i++) {
--		const struct tegra186_mc_client *client = &mc->soc->clients[i];
--		u32 override, security;
--
--		override = readl(mc->regs + client->regs.override);
--		security = readl(mc->regs + client->regs.security);
--
--		dev_dbg(&pdev->dev, "client %s: override: %x security: %x\n",
--			client->name, override, security);
--
--		dev_dbg(&pdev->dev, "setting SID %u for %s\n", client->sid,
--			client->name);
--		writel(client->sid, mc->regs + client->regs.override);
--
--		override = readl(mc->regs + client->regs.override);
--		security = readl(mc->regs + client->regs.security);
--
--		dev_dbg(&pdev->dev, "client %s: override: %x security: %x\n",
--			client->name, override, security);
--	}
--
- 	platform_set_drvdata(pdev, mc);
++static int tegra186_mc_resume(struct device *dev)
++{
++	struct tegra186_mc *mc = dev_get_drvdata(dev);
++
 +	tegra186_mc_program_sid(mc);
- 
- 	return err;
- }
++
++	return 0;
++}
++
++static const struct dev_pm_ops tegra186_mc_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(tegra186_mc_suspend, tegra186_mc_resume)
++};
++
+ static struct platform_driver tegra186_mc_driver = {
+ 	.driver = {
+ 		.name = "tegra186-mc",
+ 		.of_match_table = tegra186_mc_of_match,
++		.pm = &tegra186_mc_pm_ops,
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.prevent_deferred_probe = true,
 -- 
 2.24.1
 
