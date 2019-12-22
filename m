@@ -2,226 +2,173 @@ Return-Path: <SRS0=TQXC=2M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18116C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 16:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60540C2D0D6
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 17:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D634E20733
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 16:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309DF20733
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 17:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577030769;
-	bh=Sl2yx+lIrkKRhlpPMiDC1rjSdFHftcpX7mfEQyeZ20I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=U3ObQ5OW6BtfYxiVh9sQshiupTDlXMbUIRCqepWyruV4a8Duyg2b/tmBG7sUCNKwN
-	 fEX9JyaVz1Po06wuHnXIl+WJig05ZJhKfc2INKVz1RgWmLHHv2XA5jgunqYNjy1UoK
-	 /AWcUaWJbPtzGWH6i3c5zSTlUpg9O2sOiClrkFQw=
+	s=default; t=1577034564;
+	bh=geqtjwNhYhPjKOQTr6T9PrwqzqjPWdQ7WW0r3/weydI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hxmBbdWxpukpXKyG1+EwEyko20DcYszgRUFBw+o9Y9RSfoX7DrnoPXDVEyyqCYjek
+	 CZBj2OgH+/Q5iEMrdO/wUR5dI4UDG/G3onKkZwZxfBeMglMkgiuB6GdfxRIRezr43a
+	 ADOqLzRjTUNEU312urYYnKxE9MFapJGPX1sA5eZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbfLVQGJ (ORCPT
+        id S1725971AbfLVRJV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 11:06:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49006 "EHLO mail.kernel.org"
+        Sun, 22 Dec 2019 12:09:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725903AbfLVQGJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Dec 2019 11:06:09 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725919AbfLVRJV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Dec 2019 12:09:21 -0500
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FF262070A;
-        Sun, 22 Dec 2019 16:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46063206B7;
+        Sun, 22 Dec 2019 17:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577030767;
-        bh=Sl2yx+lIrkKRhlpPMiDC1rjSdFHftcpX7mfEQyeZ20I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RhCO6G/MA3S/IylOiCv75UeAaV3VxlWxDc469AEtXzrcsJ9/JS+kRl0a81BMCOtFd
-         ba/9oua7Rci6Jcnl93sfy4SzPdm3wsnuA0PJZun+WGiDA5hlMUi2akK00cvDUD5U2e
-         FV0vndPp7uscHyRBUhSC6IuJpKuTCaWFLqXLZzBE=
-Date:   Sun, 22 Dec 2019 16:06:02 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Dan Robertson <dan@dlrobertson.com>
-Cc:     linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 3/3] iio: (bma400) basic regulator support
-Message-ID: <20191222160602.0f889650@archlinux>
-In-Reply-To: <20191220160051.26321-4-dan@dlrobertson.com>
-References: <20191220160051.26321-1-dan@dlrobertson.com>
-        <20191220160051.26321-4-dan@dlrobertson.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1577034559;
+        bh=geqtjwNhYhPjKOQTr6T9PrwqzqjPWdQ7WW0r3/weydI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=07BQMQ6Hi57dx/JRXrxf2u1oNEjJQB034YRiconHLdRB0lLKc4Hwfe97RW05Uv/tq
+         AKKDhe6nGpWcF/9npYiw5Fq7zftXQnLc13UPWdC0kF0ifrclA2+d+VZlDC8Ya5r7E8
+         tfwfwll4JDkG/JDZSwUMYCfglmEytTVVBzC+tQJE=
+Received: by mail-lf1-f52.google.com with SMTP id 15so10942870lfr.2;
+        Sun, 22 Dec 2019 09:09:19 -0800 (PST)
+X-Gm-Message-State: APjAAAWdkqqIfYX1GDzTIc5509s+wbpIH7AjL2VBEL49BBdSNBNLGv7+
+        va06MXGAiwGHQMgbCtUlsZzis6+27yCosBJMzwk=
+X-Google-Smtp-Source: APXvYqwBbqcf1Pd8XBumubRFDeYehrjcMzLoDXNvGe/zro6dSDNnXlMk5m00bIDMFtqyXV44zbdUED/i0ZPagGGw2/Y=
+X-Received: by 2002:ac2:5444:: with SMTP id d4mr15264932lfn.49.1577034557468;
+ Sun, 22 Dec 2019 09:09:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CGME20191220120143eucas1p1c9b01ae8c2e4ecd70423ef9d8001536f@eucas1p1.samsung.com>
+ <20191220115653.6487-1-a.swigon@samsung.com> <20191220115653.6487-4-a.swigon@samsung.com>
+In-Reply-To: <20191220115653.6487-4-a.swigon@samsung.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Mon, 23 Dec 2019 02:08:41 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH0zfvPYtTv6v+5nq99Gd2PVtg+O20dwf2nbV2j1U0nxCQ@mail.gmail.com>
+Message-ID: <CAGTfZH0zfvPYtTv6v+5nq99Gd2PVtg+O20dwf2nbV2j1U0nxCQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 3/7] interconnect: Allow inter-provider pairs to be configured
+To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>, inki.dae@samsung.com,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 20 Dec 2019 16:00:51 +0000
-Dan Robertson <dan@dlrobertson.com> wrote:
+Hi,
 
-> Add support for the VDD and VDDIO regulators using the regulator
-> framework.
-> 
-> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
-I tweaked a little bit below to drop the select for REGULATOR.
-That should be unnecessary.
+On Fri, Dec 20, 2019 at 9:03 PM Artur =C5=9Awigo=C5=84 <a.swigon@samsung.co=
+m> wrote:
+>
+> In the exynos-bus devfreq driver every bus is probed separately and is
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+IMHO, the patch description should specify the more general cause
+why have to be changed. Actually, almost people might not know
+the 'exynos-bus'. So, firstly, you have to specify the general cause
+why this patch is necessary without 'exynos-bus' word and then
+add the real use-case with 'exynos-bus' example.
 
-Thanks,
-
-Jonathan
-
+> assigned a separate interconnect provider. However, the interconnect
+> framework does not call the '->set' callback for pairs of nodes which
+> belong to different providers.
+>
+> This patch adds support for a new boolean 'inter_set' field in struct
+> icc_provider. Setting it to 'true' enables calling '->set' for
+> inter-provider node pairs. All existing users of the interconnect
+> framework allocate this structure with kzalloc, and are therefore
+> unaffected.
+>
+> Signed-off-by: Artur =C5=9Awigo=C5=84 <a.swigon@samsung.com>
 > ---
->  drivers/iio/accel/Kconfig       |  1 +
->  drivers/iio/accel/bma400.h      |  4 ++++
->  drivers/iio/accel/bma400_core.c | 39 ++++++++++++++++++++++++++++-----
->  3 files changed, 39 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-> index 670e60568033..9cfe9c790190 100644
-> --- a/drivers/iio/accel/Kconfig
-> +++ b/drivers/iio/accel/Kconfig
-> @@ -116,6 +116,7 @@ config BMA400
->  	tristate "Bosch BMA400 3-Axis Accelerometer Driver"
->  	select REGMAP
->  	select BMA400_I2C if I2C
-> +	select REGULATOR
-You shouldn't need to select REGULATOR. There are stub functions such
-that I believe this code should still work fine without it.
+>  drivers/interconnect/core.c           | 11 +++++------
+>  include/linux/interconnect-provider.h |  2 ++
+>  2 files changed, 7 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 74c68898a350..a28bd0f8a497 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -259,23 +259,22 @@ static int aggregate_requests(struct icc_node *node=
+)
+>  static int apply_constraints(struct icc_path *path)
+>  {
+>         struct icc_node *next, *prev =3D NULL;
+> +       struct icc_provider *p;
+>         int ret =3D -EINVAL;
+>         int i;
+>
+>         for (i =3D 0; i < path->num_nodes; i++) {
+>                 next =3D path->reqs[i].node;
+> +               p =3D next->provider;
+>
+> -               /*
+> -                * Both endpoints should be valid master-slave pairs of t=
+he
+> -                * same interconnect provider that will be configured.
+> -                */
+> -               if (!prev || next->provider !=3D prev->provider) {
+> +               /* both endpoints should be valid master-slave pairs */
+> +               if (!prev || (p !=3D prev->provider && !p->inter_set)) {
+>                         prev =3D next;
+>                         continue;
+>                 }
+>
+>                 /* set the constraints */
+> -               ret =3D next->provider->set(prev, next);
+> +               ret =3D p->set(prev, next);
+>                 if (ret)
+>                         goto out;
+>
+> diff --git a/include/linux/interconnect-provider.h b/include/linux/interc=
+onnect-provider.h
+> index cc965b8fab53..b6ae0ee686c5 100644
+> --- a/include/linux/interconnect-provider.h
+> +++ b/include/linux/interconnect-provider.h
+> @@ -41,6 +41,7 @@ struct icc_node *of_icc_xlate_onecell(struct of_phandle=
+_args *spec,
+>   * @xlate: provider-specific callback for mapping nodes from phandle arg=
+uments
+>   * @dev: the device this interconnect provider belongs to
+>   * @users: count of active users
+> + * @inter_set: whether inter-provider pairs will be configured with @set
+>   * @data: pointer to private data
+>   */
+>  struct icc_provider {
+> @@ -53,6 +54,7 @@ struct icc_provider {
+>         struct icc_node* (*xlate)(struct of_phandle_args *spec, void *dat=
+a);
+>         struct device           *dev;
+>         int                     users;
+> +       bool                    inter_set;
+>         void                    *data;
+>  };
+>
+> --
+> 2.17.1
+>
 
-This assumes the regulators are always on, but that is valid for
-some platforms.
 
-
->  	help
->  	  Say Y here if you want to build a driver for the Bosch BMA400
->  	  triaxial acceleration sensor.
-> diff --git a/drivers/iio/accel/bma400.h b/drivers/iio/accel/bma400.h
-> index 15c0e307d2c4..5ad10db9819f 100644
-> --- a/drivers/iio/accel/bma400.h
-> +++ b/drivers/iio/accel/bma400.h
-> @@ -86,6 +86,10 @@
->  #define BMA400_SCALE_MIN            38357
->  #define BMA400_SCALE_MAX            306864
->  
-> +#define BMA400_NUM_REGULATORS       2
-> +#define BMA400_VDD_REGULATOR        0
-> +#define BMA400_VDDIO_REGULATOR      1
-> +
->  extern const struct regmap_config bma400_regmap_config;
->  
->  int bma400_probe(struct device *dev, struct regmap *regmap, const char *name);
-> diff --git a/drivers/iio/accel/bma400_core.c b/drivers/iio/accel/bma400_core.c
-> index e7ba01e79d2c..61eb676e46be 100644
-> --- a/drivers/iio/accel/bma400_core.c
-> +++ b/drivers/iio/accel/bma400_core.c
-> @@ -19,6 +19,7 @@
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #include "bma400.h"
->  
-> @@ -53,6 +54,7 @@ struct bma400_sample_freq {
->  struct bma400_data {
->  	struct device *dev;
->  	struct regmap *regmap;
-> +	struct regulator_bulk_data regulators[BMA400_NUM_REGULATORS];
->  	struct mutex mutex; /* data register lock */
->  	struct iio_mount_matrix orientation;
->  	enum bma400_power_mode power_mode;
-> @@ -573,17 +575,38 @@ static int bma400_init(struct bma400_data *data)
->  		goto out;
->  	}
->  
-> +	data->regulators[BMA400_VDD_REGULATOR].supply = "vdd";
-> +	data->regulators[BMA400_VDDIO_REGULATOR].supply = "vddio";
-> +	ret = devm_regulator_bulk_get(data->dev,
-> +				      ARRAY_SIZE(data->regulators),
-> +				      data->regulators);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(data->dev,
-> +				"Failed to get regulators: %d\n",
-> +				ret);
-> +
-> +		goto out;
-> +	}
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(data->regulators),
-> +				    data->regulators);
-> +	if (ret) {
-> +		dev_err(data->dev, "Failed to enable regulators: %d\n",
-> +			ret);
-> +		goto out;
-> +	}
-> +
->  	ret = bma400_get_power_mode(data);
->  	if (ret) {
->  		dev_err(data->dev, "Failed to get the initial power-mode\n");
-> -		goto out;
-> +		goto err_reg_disable;
->  	}
->  
->  	if (data->power_mode != POWER_MODE_NORMAL) {
->  		ret = bma400_set_power_mode(data, POWER_MODE_NORMAL);
->  		if (ret) {
->  			dev_err(data->dev, "Failed to wake up the device\n");
-> -			goto out;
-> +			goto err_reg_disable;
->  		}
->  		/*
->  		 * TODO: The datasheet waits 1500us here in the example, but
-> @@ -596,15 +619,15 @@ static int bma400_init(struct bma400_data *data)
->  
->  	ret = bma400_get_accel_output_data_rate(data);
->  	if (ret)
-> -		goto out;
-> +		goto err_reg_disable;
->  
->  	ret = bma400_get_accel_oversampling_ratio(data);
->  	if (ret)
-> -		goto out;
-> +		goto err_reg_disable;
->  
->  	ret = bma400_get_accel_scale(data);
->  	if (ret)
-> -		goto out;
-> +		goto err_reg_disable;
->  
->  	/*
->  	 * Once the interrupt engine is supported we might use the
-> @@ -614,6 +637,9 @@ static int bma400_init(struct bma400_data *data)
->  	 */
->  	return regmap_write(data->regmap, BMA400_ACC_CONFIG2_REG, 0x00);
->  
-> +err_reg_disable:
-> +	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
-> +			       data->regulators);
->  out:
->  	return ret;
->  }
-> @@ -809,6 +835,9 @@ int bma400_remove(struct device *dev)
->  	ret = bma400_set_power_mode(data, POWER_MODE_SLEEP);
->  	mutex_unlock(&data->mutex);
->  
-> +	regulator_bulk_disable(ARRAY_SIZE(data->regulators),
-> +			       data->regulators);
-> +
->  	iio_device_unregister(indio_dev);
->  
->  	return ret;
-> 
-> 
-
+--=20
+Best Regards,
+Chanwoo Choi
