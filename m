@@ -2,101 +2,154 @@ Return-Path: <SRS0=TQXC=2M=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E5EC2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F191C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D3420733
-	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 11:39:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHqDsh7P"
+	by mail.kernel.org (Postfix) with ESMTP id 0FB0820733
+	for <linux-devicetree@archiver.kernel.org>; Sun, 22 Dec 2019 13:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577020377;
+	bh=7fo1Bsez53qvaIMcnnp2p8h4Fw2pDtHMMLmgtCx+WjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZklRKbR5cLv6CtauM8Dh+u/MBOLXhlZ3I6OIkVxylsVaUmr1aXxC7igJt6L1xiDsj
+	 uegll/5q5mRYtf7d29PKL8CXWSLRCWIuDsZqpmZd6e2ug/b0r7vsU0m4SPtFsTdfEy
+	 5yycbuLC5Pj2MUqsvaSlhgzBbvdfBwNaHC7U5Jss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLVLjh (ORCPT
+        id S1725807AbfLVNM4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 06:39:37 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56166 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbfLVLjg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 22 Dec 2019 06:39:36 -0500
-Received: by mail-wm1-f67.google.com with SMTP id q9so13188309wmj.5;
-        Sun, 22 Dec 2019 03:39:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BHjz7vpaJMgCiJxedS2/DgNIB5kdLeeix42Ihq8AUE8=;
-        b=jHqDsh7PHiAU0A2PLZUoxpQR2wzTxZ/UOF/1k9mbJF39TG9UIbJwL5yiUooW2wG9pa
-         qk8iDvSvnhL5Sg+TpBTDyh/sNVQWJ3xCc66CJWs6fuH67h7DAI51ROuSDkZJTF1QoXNx
-         O9E0FfRJqZ2+suljC/RurqX+I1s7si5Rso2gTnFE1Ythst+TPBPJ3mDIP9LYwim7rCgi
-         SB0A9XConqu9/dfD2GTlSShOG6bo2JvvMUjLDIrqIXpoPZ2+PWMQJc6PLuluzcwFJKav
-         6wnQOdfsx0qzpZvapJlRhFHgJPYWG6sb4QO/c/FfJJUEMTQ4vR58u2IMpbog0XpdMv6N
-         /zRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BHjz7vpaJMgCiJxedS2/DgNIB5kdLeeix42Ihq8AUE8=;
-        b=lxBfExVdkNPtsvqvlDk9Wx4rXwFCRJD4NQZGBLu5jyYoeWKxziN8XSeyuM4nnO5cPw
-         WO1AmelHx5nr3QOG5cpi4WsbY3Wm8KtpnJfi3Bv5AtpKPKCwpsGmLVsChiVRkK+AIhCe
-         KraPw08T8ch2JioasMB/592Y5wO8XRnJrBPRJdIOubvZMME2OyyZUQA7d811mvYsh6+j
-         K2j/E2XQ7hRHS5UW8I0KwwfgskwD7Ztgcw7r7Eu4dhmWpoSEVGdvl3bOc7vagFrttgaA
-         Rm3KVIhineu+08OtQtXzGMZCzG8bY81jnOmJ6fIGjy5Ou933ncvBHlLaTuh9mcCP4Vjn
-         uRug==
-X-Gm-Message-State: APjAAAVjSVJ94SrDKluKXhSAG64PqoybB+Ewg7gkqBRUc3iQ12caY+xT
-        kCfxMvTuiIZ4F3pv2IiY+m0=
-X-Google-Smtp-Source: APXvYqyPpmzYMc/qk93sM8p9elfRQveUws+795Ae2kc0u/tuwHQohHIVpnIMNTyP48o8gGQQ75SKqg==
-X-Received: by 2002:a7b:cc81:: with SMTP id p1mr26631309wma.62.1577014774392;
-        Sun, 22 Dec 2019 03:39:34 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id h2sm17937457wrt.45.2019.12.22.03.39.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 03:39:33 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 6/6] arm64: tegra: Rename EMC on Tegra132
-Date:   Sun, 22 Dec 2019 12:39:21 +0100
-Message-Id: <20191222113921.1469372-7-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191222113921.1469372-1-thierry.reding@gmail.com>
-References: <20191222113921.1469372-1-thierry.reding@gmail.com>
+        Sun, 22 Dec 2019 08:12:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725791AbfLVNM4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 22 Dec 2019 08:12:56 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC48C2067C;
+        Sun, 22 Dec 2019 13:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577020375;
+        bh=7fo1Bsez53qvaIMcnnp2p8h4Fw2pDtHMMLmgtCx+WjE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O6NmTRWamrm8T248gsebwRoVAUQ4JGuFBFiY2kHQlWxmaJl5qGcz5/BicZryms7QH
+         2DmFNJc20vV/EBi2z5ekGq5N9NnmAJr1jHC5iBNvWcPoFuJA1zNqsiuQZ38tI2bF84
+         rW1dEo6GWyIMR/+uu1+SFDuH5YxfxV8tHq86AD8w=
+Date:   Sun, 22 Dec 2019 14:12:52 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20191222131252.ajrat2kxcyvozzia@gilmour.lan>
+References: <20191221234029.7796-1-sravanhome@gmail.com>
+ <20191221234029.7796-3-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="q43gh6v3wj5ad5fi"
+Content-Disposition: inline
+In-Reply-To: <20191221234029.7796-3-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
 
-Rename the EMC node to external-memory-controller according to device
-tree best practices.
+--q43gh6v3wj5ad5fi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra132.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Dec 22, 2019 at 12:40:27AM +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mpq7920 regulator driver.
+> Example bindings for mpq7920 are added.
+>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> ---
+>  .../bindings/regulator/mpq7920.yaml           | 135 ++++++++++++++++++
+>  1 file changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> new file mode 100644
+> index 000000000000..a60d3ef04c05
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Monolithic Power System MPQ7920 PMIC
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "mpq@[0-9a-f]{1,2}"
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-index 31caebada944..34367179ba24 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-@@ -602,7 +602,7 @@ mc: memory-controller@70019000 {
- 		#iommu-cells = <1>;
- 	};
- 
--	emc: emc@7001b000 {
-+	emc: external-memory-controller@7001b000 {
- 		compatible = "nvidia,tegra132-emc", "nvidia,tegra124-emc";
- 		reg = <0x0 0x7001b000 0x0 0x1000>;
- 		clocks = <&tegra_car TEGRA124_CLK_EMC>;
--- 
-2.24.1
+This is still not a valid node name
 
+> +  compatible:
+> +    enum:
+> +	- mps,mpq7920
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  regulators:
+> +    type: object
+> +    description: |
+> +      list of regulators provided by this controller, must be named
+> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+> +      The valid names for regulators are
+> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
+
+These should be validated.
+
+> +  properties:
+
+If it's properties under the regulators node, it should be at one more
+indentation level.
+
+> +       mps,time-slot:
+
+This should have an allOf here
+
+> +         - $ref: "/schemas/types.yaml#/definitions/uint8"
+> +         - enum: [ 0, 1, 2, 3 ]
+> +         - default: 0
+> +       description: |
+> +         each regulator output shall be delayed during power on/off sequence which
+> +         based on configurable time slot value, must be one of following corresponding
+> +         value 0.5ms, 2ms, 8ms, 16ms
+
+And this should be under the property, not at the same level.
+
+Did you run dt_bindings_check?
+
+Maxime
+
+--q43gh6v3wj5ad5fi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXf9r1AAKCRDj7w1vZxhR
+xdfAAP9LE45bHHScx2Iw015hPBYVCLIwpqkV7lG2MenTX2mDWAEArKgGeyv9CeSj
+BlqZDlA5FtX5YfPaFGRnSu0wTnoNYAs=
+=y9bw
+-----END PGP SIGNATURE-----
+
+--q43gh6v3wj5ad5fi--
