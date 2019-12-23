@@ -2,90 +2,110 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EADC2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3D8C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C312081E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577087262;
-	bh=4xIpyul81ZB6jziSHYOg8wZLR7P2OO3hPO/6T4WzP9I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dgRyRKfPe1+rhkVAzJrPe1od924UP995bq/vhn5Dlc5vK1qF84JgYO/gLmdK9QC5q
-	 etWvdVa4haQe30t/+khoXnUbGNBP2vSpa1P+RgnSk3gAc8CLGVy8Q4CD0QeOQGEHh2
-	 xY76IyqgZfQ9L07o2nfCK7vyfYiveTnaTsqUhpB0=
+	by mail.kernel.org (Postfix) with ESMTP id A2DFA20715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLtTzH9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbfLWHrl (ORCPT
+        id S1725926AbfLWHsP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 02:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfLWHrl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 02:47:41 -0500
-Received: from localhost (unknown [223.226.34.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7FD920709;
-        Mon, 23 Dec 2019 07:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577087260;
-        bh=4xIpyul81ZB6jziSHYOg8wZLR7P2OO3hPO/6T4WzP9I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sj264GW4NWW558WLPO7JhumGISP1AW3mT83azNaMc30GCm41ZkGCwn45FLST/eDPC
-         qNag4qDsVEKOArRkvFq+0kXd2rzcZk2F7XDS6PkGixRFhdcuexZ0vPylIC/DYLaxHS
-         6IXXYXTNrWOAsQSIEGGu23cAyHBKsBi1glCbuHvs=
-Date:   Mon, 23 Dec 2019 13:17:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     linux-omap@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 12/14] dmaengine: ti: omap-dma: Use cpu notifier to block
- idle for omap2
-Message-ID: <20191223074736.GB2536@vkoul-mobl>
-References: <20191217001925.44558-1-tony@atomide.com>
- <20191217001925.44558-13-tony@atomide.com>
- <20191217002716.GT35479@atomide.com>
+        Mon, 23 Dec 2019 02:48:15 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43475 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfLWHsP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 02:48:15 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d18so12034944qtj.10;
+        Sun, 22 Dec 2019 23:48:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2FJiERJq8seSOSllZH5YEQwwR1oj81w19nx1TE+EiOU=;
+        b=DLtTzH9MNQBe0QaZgTDVJi1ZZHB9hfP3crI9OK2Y0wAG9ltJOO/KTTAH+Ers5VFoWc
+         vCsPz/gxO1GKNLyLLT2INRzujN8gbcoLHi794Klpqqhrf5aUh9kCQY61m0q5FOMv7pWL
+         4vliKQtnC+QVtiSFA7lZB7mraLCi3TbUVbumJioSAWZ7wrBAgfD51yFr+0OHd3dwjbM/
+         DZ4+tTzwy+z3BJpGVwgr1o64tavDOeMuBwh2ciffMRDfutiy0CKnH+ZVPvj88ySgYG+d
+         RZNZDrRjJoo/WcNQcEakrBYwN8Hf2CiU3dsO6AQaY6jsuGIXeJEaWCt2UJfhc+75m/gW
+         tuSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2FJiERJq8seSOSllZH5YEQwwR1oj81w19nx1TE+EiOU=;
+        b=bSMSQfQ6VqjTE8YOte9Pb3Jwt7sHYpN+dpZjRnO+7KztDO0mnjF3mqpi7nWMMlrnnh
+         1oTetJ5+zk9TOnmJ0sCjsljnyFTCep3UcGchvpzYb7ilL8BZddmL9JHN9PB9RBonMI+I
+         w6m9NjfptDvyqfTOtFgJYSHlzvp2muqRTQfW6DPr89C6VOJ+J9v3KeA+lYQegvoxXsSX
+         aVIgy+YTXbphMISjkSM8O5azofxif8XR8cjiuUTWQbGlGfLsCtrnnYkuztwQ7NbRZ2QL
+         DydG2E8ytlDHU6oDl8KRCKMcInMqeRp/fHtTh+mokGM4/SKlTQbqwfXcjbQU8J80hc52
+         9nwQ==
+X-Gm-Message-State: APjAAAU92GSzLsuy3xdYJ3VTE+4JT9vV+PA4AcfYi3TY9pMRZS0aq8WU
+        2oDk/LqgEMOPqjVtgsCyz73En9Ian9uIL5n8V8k=
+X-Google-Smtp-Source: APXvYqyvf3vxurJvXfLOn2BfIE0NvTSP3CZXj/aOJrKdFo9xEcgZ7fdeYCMSQNPTYo8AeyffGkTIQU2xcVU6QMYEmyI=
+X-Received: by 2002:ac8:541a:: with SMTP id b26mr22512155qtq.276.1577087294188;
+ Sun, 22 Dec 2019 23:48:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217002716.GT35479@atomide.com>
+References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+ <dd3303a956e7dd5c065ac2b92b1dea7ee5d1df17.1575978484.git.baolin.wang7@gmail.com>
+ <CADBw62o3vW_hdFwcMdQFJqx2HpNhCEHOxADQO9LztzpqCVQBpg@mail.gmail.com> <547d91fa-66c5-e3bb-4028-2578f070695c@linaro.org>
+In-Reply-To: <547d91fa-66c5-e3bb-4028-2578f070695c@linaro.org>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 23 Dec 2019 15:48:02 +0800
+Message-ID: <CADBw62pcYZ_GR1OrS3VG-Y1T8CYOcL4pRzTwBt6of4ZmzhhNng@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] thermal: sprd: Add Spreadtrum thermal driver support
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>, freeman.liu@unisoc.com,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16-12-19, 16:27, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [191217 00:20]:
-> > diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-> > --- a/drivers/dma/ti/omap-dma.c
-> > +++ b/drivers/dma/ti/omap-dma.c
-> > +	case CPU_CLUSTER_PM_ENTER:
-> > +		while (1) {
-> > +			lch = find_next_bit(od->lch_bitmap, od->lch_count,
-> > +					    lch + 1);
-> > +			if (lch >= od->lch_count)
-> > +				break;
-> > +			c = od->lch_map[lch];
-> > +			if (!c)
-> > +				continue;
-> > +			if (omap_dma_chan_read(c, CCR) & CCR_ENABLE) {
-> > +				pr_info("XXX %s: lch%i busy\n", __func__, lch);
-> > +				return NOTIFY_BAD;
-> 
-> Oops the pr_info line here can be dropped :)
+Hi Daniel,
 
-feel free to add my after after fixing :)
+On Mon, Dec 23, 2019 at 3:42 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Baolin,
+>
+> On 23/12/2019 07:31, Baolin Wang wrote:
+> > Hi Rui and Daniel,
+> >
+> > On Tue, Dec 10, 2019 at 8:08 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> >>
+> >> From: Freeman Liu <freeman.liu@unisoc.com>
+> >>
+> >> This patch adds the support for Spreadtrum thermal sensor controller,
+> >> which can support maximum 8 sensors.
+> >>
+> >> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> >> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> >> ---
+> >> Changes from v1:
+> >>  - None.
+> >> ---
+> >
+> > Any comments for this patch? Thanks.
+>
+> as it is a new driver, it takes a bit more time for the review.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Sure, thanks.
 
--- 
-~Vinod
+>
+> By the way, is there any open documentation for the hardware?
+
+Unfortunately, our company did not supply public documentation for
+thermal until now.
