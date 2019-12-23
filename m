@@ -2,132 +2,172 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A50C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADF0C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4D3206D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:00:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="RsRzvYGo"
+	by mail.kernel.org (Postfix) with ESMTP id C907C206D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbfLWJAy (ORCPT
+        id S1726266AbfLWJDZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 04:00:54 -0500
-Received: from mail-eopbgr60077.outbound.protection.outlook.com ([40.107.6.77]:39290
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726007AbfLWJAy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 04:00:54 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jpz5VzHWIBQxHUdK6HH6GtI0MzVN4Gg2xsNX6Y9QpVm9oaJMq4C+vMK6HYRji/AC3dXWuptGq2AQzzC3AuZIqAYnE+iKbY9q5GtsKs7hbSxDoF+J6fAz1ca6M8muGPJRNDiKGcIuVwyj51YNxJjUdtA/fTV9eZzsEIZqLbiQLIDoS1m1zdRqaLBNcuPlvXDjgYP+6Wvv3keWl4puYFDe7+zX2kF/PhM84vCgncqtz9g98ChYA0nCCIE+1HlERiovHKpz6GuxafJE2eKBrGfnaN8T1CSuPNLm8UAQ51WgweeOUG/XWtmeyf0m9nzns1E71ntptaG0clNUYvglVVl5wA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8/aQqq4zi0FS0ACbmdtACrWnR/9703gnFctNHejqvIY=;
- b=QKlnfXv2UtuJwVMMJhk6tHEs/D0V2qMzXnVWbVc7hoiFuAKv87Oj39J9bfa5WvAMtWhMse7vKRhdR93vaBP/5u3xLTqjUzfjPHuo3/c4NCcLDuENN1gqz0d63afGztCl+Sdnh7baPYIh/G9H2VZXbza8XiV3Qd9BnPwzB32vgjvHZEQNIr72EIRqZfl+jU9523766sIwxFXHTM3uE0iF2Bie/lsMVCWZ0JZv6cfGE7sjMgjVPudXliKBhO3JnkGnIV+++YUMQps/z7GZFGzbzVhV0X7EMwNuBOCgzn4H2zRljyChmNW0dwrpPbHXyWEdl/ZypOGlDkQORDHitrcang==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8/aQqq4zi0FS0ACbmdtACrWnR/9703gnFctNHejqvIY=;
- b=RsRzvYGo6E0z2f2cEMlSAd+Xhau/oE2cOaNAk3VZGD8KBhDOn09FZvv4bz887ECatD/Xim4w/tojc6MhxXmOvHszMzQEKwBuJRdfr+w1KSBCa/dDnydTNGvYAzVlIgcnx0DMMn8SFr7/lcayES0j3qrAGMJQF2yAmssv6xQ55/I=
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com (20.178.123.83) by
- VI1PR04MB6334.eurprd04.prod.outlook.com (20.179.28.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2559.14; Mon, 23 Dec 2019 09:00:50 +0000
-Received: from VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d]) by VI1PR04MB5567.eurprd04.prod.outlook.com
- ([fe80::f099:4735:430c:ef1d%2]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
- 09:00:50 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: [RFC] obsolete references to
- Documentation/devicetree/bindings/net/ethernet.txt
-Thread-Topic: [RFC] obsolete references to
- Documentation/devicetree/bindings/net/ethernet.txt
-Thread-Index: AdW5b3hESqtZbbnjQOembQWO6V8MuA==
-Date:   Mon, 23 Dec 2019 09:00:50 +0000
-Message-ID: <VI1PR04MB5567BBD2827A5DDDFD0D82B7EC2E0@VI1PR04MB5567.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=madalin.bucur@oss.nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [188.27.188.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 136963e6-91d2-46a4-70ed-08d787869c01
-x-ms-traffictypediagnostic: VI1PR04MB6334:
-x-microsoft-antispam-prvs: <VI1PR04MB633468724337D7D76A00AE93AD2E0@VI1PR04MB6334.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 0260457E99
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(199004)(189003)(8676002)(55016002)(4326008)(81166006)(2906002)(8936002)(81156014)(478600001)(9686003)(4744005)(7696005)(6506007)(66946007)(66476007)(66446008)(76116006)(71200400001)(5660300002)(66556008)(64756008)(33656002)(110136005)(52536014)(316002)(186003)(54906003)(86362001)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB6334;H:VI1PR04MB5567.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Xgdb9M1BBHgK43ezUv+biOylrWuBYFyL2auEv0c+OzuaKjy+V8KHW8gUEEyXwultuSc8LHdfsu5XNeJC2m8XV7x8fK0gWfQM+V5y6ltmAec/cJS78OKAOskTuZ6C8wq/qUgangSVWYSnid2+9nlywW0Lja8i0HrjUw27oqKRI3zJIjabB8Uwb7RLfElI6CikO1ZgHNOzxNdyuNZlEcL/fat44fTeeDCZffLxVB94eg416We/bQSgLcIgIPkWTe1KbxefObwiQkZVhfRp095/jCV2kBYlLbrk7anP3RgBgU/f9DPPlxSuleoosXHAeau+ojSG/xLgo3naGZLwo6Vm3of0VA9kSa6OzAToqd9NMxRb0R2VzaKR3R/S9hRALrJlTJ/7kI+dYuv+ZMNyyYwO5/00eE0xUZscPBs7xFvDWR6z22Tlm3WKSPElDquc3L+7
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Dec 2019 04:03:25 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:36283 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbfLWJDZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 04:03:25 -0500
+X-Originating-IP: 90.76.211.102
+Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C0EFA1BF206;
+        Mon, 23 Dec 2019 09:03:21 +0000 (UTC)
+Date:   Mon, 23 Dec 2019 10:03:20 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Describe PX30 caches
+Message-ID: <20191223100320.3b852485@xps13>
+In-Reply-To: <1982322.8UTTk47u2F@diego>
+References: <20191204103940.22050-1-miquel.raynal@bootlin.com>
+        <1982322.8UTTk47u2F@diego>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 136963e6-91d2-46a4-70ed-08d787869c01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 09:00:50.7053
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u5CnRw4RMAKnBKEXsS+/rHTPVm5JLQzVYvDjQWyR+MOzxsQuypgQjSnmECiD2NdZG+fSv0tuNml/37w9JzqHew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6334
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Heiko,
 
-this patch removed the ethernet.txt content and added the information found=
- in
-it in the ethernet-controller.yaml (Documentation/devicetree/bindings/net):
+Heiko Stübner <heiko@sntech.de> wrote on Fri, 20 Dec 2019 01:55:58
++0100:
 
-  commit 9d3de3c58347623b5e71d554628a1571cd3142ad
-  Author: Maxime Ripard <maxime.ripard@bootlin.com>
-  Date:   Thu Jun 27 17:31:43 2019 +0200
+> Am Mittwoch, 4. Dezember 2019, 11:39:40 CET schrieb Miquel Raynal:
+> > PX30 SoCs feature 4 Cortex-A35 CPUs with each of them a L1 data and
+> > instruction cache. Both are 32kiB wide (PX30 TRM) and made of 64-bit
+> > lines (ARM Cortex-A35 manual). I-cache is 2-way set associative (ARM
+> > Cortex-A35 manual), D-cache is 4-way set associative (ARM
+> > Cortex-A35manual).
+> > 
+> > An L2 cache is placed after these 4 L1 caches (PX30 TRM), is 256kiB
+> > wide (PX30 TRM) and made of 64-bit lines (ARM Cortex-A35 manual) and
+> > is 8-way set associative (ARM Cortex-A35 manual).
+> > 
+> > Describe all of them in the PX30 DTSI.
+> > 
+> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/px30.dtsi | 35 ++++++++++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > index 1fd12bd09e83..0e10a224a84b 100644
+> > --- a/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
+> > @@ -48,6 +48,13 @@
+> >  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> >  			dynamic-power-coefficient = <90>;
+> >  			operating-points-v2 = <&cpu0_opp_table>;
+> > +			i-cache-size = <0x8000>;
+> > +			i-cache-line-size = <64>;
+> > +			i-cache-sets = <256>;
+> > +			d-cache-size = <0x8000>;
+> > +			d-cache-line-size = <64>;
+> > +			d-cache-sets = <128>;
+> > +			next-level-cache = <&l2>;
+> >  		};
+> >  
+> >  		cpu1: cpu@1 {
+> > @@ -60,6 +67,13 @@
+> >  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> >  			dynamic-power-coefficient = <90>;
+> >  			operating-points-v2 = <&cpu0_opp_table>;
+> > +			i-cache-size = <0x8000>;
+> > +			i-cache-line-size = <64>;
+> > +			i-cache-sets = <256>;
+> > +			d-cache-size = <0x8000>;
+> > +			d-cache-line-size = <64>;
+> > +			d-cache-sets = <128>;
+> > +			next-level-cache = <&l2>;
+> >  		};
+> >  
+> >  		cpu2: cpu@2 {
+> > @@ -72,6 +86,13 @@
+> >  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> >  			dynamic-power-coefficient = <90>;
+> >  			operating-points-v2 = <&cpu0_opp_table>;
+> > +			i-cache-size = <0x8000>;
+> > +			i-cache-line-size = <64>;
+> > +			i-cache-sets = <256>;
+> > +			d-cache-size = <0x8000>;
+> > +			d-cache-line-size = <64>;
+> > +			d-cache-sets = <128>;
+> > +			next-level-cache = <&l2>;
+> >  		};
+> >  
+> >  		cpu3: cpu@3 {
+> > @@ -84,6 +105,13 @@
+> >  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> >  			dynamic-power-coefficient = <90>;
+> >  			operating-points-v2 = <&cpu0_opp_table>;
+> > +			i-cache-size = <0x8000>;
+> > +			i-cache-line-size = <64>;
+> > +			i-cache-sets = <256>;
+> > +			d-cache-size = <0x8000>;
+> > +			d-cache-line-size = <64>;
+> > +			d-cache-sets = <128>;
+> > +			next-level-cache = <&l2>;
+> >  		};
+> >  
+> >  		idle-states {
+> > @@ -107,6 +135,13 @@
+> >  				min-residency-us = <2000>;
+> >  			};
+> >  		};
+> > +
+> > +		l2: l2-cache {
+> > +			compatible = "cache";
+> > +			cache-size = <0x40000>;
+> > +			cache-line-size = <64>;
+> > +			cache-sets = <512>;
+> > +		};
+> >  	};  
+> 
+> Looks like Rob did answer my unspoken question, citing his reply to
+> 	"arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support" [0]
+> 
+> "We only define cache attributes if not discoverable or the cache ID 
+> registers are wrong and you need to override what's discoverable."
+> 
+> So unless the cache information read during boot is wrong, it looks
+> like we don't need this.
 
-      dt-bindings: net: Add YAML schemas for the generic Ethernet options
+Well, I actually met the:
 
-      The Ethernet controllers have a good number of generic options that c=
-an be
-      needed in a device tree. Add a YAML schemas for those.
+         "Unable to detect cache hierarchy for CPU <x>"
 
-      Reviewed-by: Rob Herring <robh@kernel.org>
-      Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-      Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-      Signed-off-by: Rob Herring <robh@kernel.org>
+warning in the dmesg. Do you know anything about cache ID registers?
 
-There are still many references to the previous ethernet.txt document:
+There is some kind of "i-cache" infos [TRM page 391] but it doesn't
+seem enough to describe the cache hierarchy.
 
-  $ grep ethernet.txt Documentation/devicetree/bindings/net/ -r | wc -l
-  96
-
-Should those be updated too or it's enough to rely on the current content
-of the previous ethernet.txt file:
-
-  $ cat Documentation/devicetree/bindings/net/ethernet.txt
-  This file has moved to ethernet-controller.yaml.
+> 
+> Heiko
+> 
+> 
+> [0] https://patchwork.kernel.org/patch/11279705/
 
 Thanks,
-Madalin
+Miquèl
