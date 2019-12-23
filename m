@@ -2,212 +2,142 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950C4C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D31C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C2320709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BA92073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:53:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBDmb6ak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLWOfw (ORCPT
+        id S1726754AbfLWOxP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:35:52 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33342 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfLWOft (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 09:35:49 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 459872921D8
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Rob Herring <robh@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ulrich Hecht <uli@fpond.eu>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v22 1/2] Documentation: bridge: Add documentation for ps8640 DT properties
-Date:   Mon, 23 Dec 2019 15:35:37 +0100
-Message-Id: <20191223143538.20327-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191223143538.20327-1-enric.balletbo@collabora.com>
-References: <20191223143538.20327-1-enric.balletbo@collabora.com>
+        Mon, 23 Dec 2019 09:53:15 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38042 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfLWOxP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 09:53:15 -0500
+Received: by mail-pj1-f68.google.com with SMTP id l35so7603289pje.3;
+        Mon, 23 Dec 2019 06:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=3HYYz4nX1W0aJ3i8Yqd286kyh4DuRONRoG/BRh5FLZM=;
+        b=FBDmb6akcXnRiy4gGu86k3JBWheD7EF8ZJShoGDQKnd3gH9eVeNeCLS+juVOdYYUeg
+         ekcNjKvoqGR/iKqvpVI5Ba8BIJBqBQETnGcgBo/+I7yrkgJSbAZwDcLnGRRBCNA8DXJJ
+         YfuTY+j/6oYNlDceqx4BTi7rf8PQZcqeUKu0jbhhAFiF1QaqXwp72vLZ145sZ46vO6et
+         5Pnini8/3ndy41lpqZuJFA8M8drxuawVrfQ5xAfOfO5m+9YVnyDROoTsjXH8zmWzS5oI
+         PgxXThJ8xlzK9gCPE0i+YP1I4ZPgXqgd4e49VJuJhtQSus03DHvOUVFML/6gImeLZlOv
+         GgXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=3HYYz4nX1W0aJ3i8Yqd286kyh4DuRONRoG/BRh5FLZM=;
+        b=eb+sKqrByP9qFsTgyJ4HtFq/KKvqgOFOMC0CwFZBCIJhVoWKrEi7XhyFaWBAdep1JT
+         tINJqx406dFO0REo72VqWoQyskzer6imKSR+P7QI8y3rfLQuhdNUyG6v3lbSbBseg3O9
+         DT+ni3NBt3gx3DwaXcHgej79azBuqzSKpmJy5FEnHHyPsbBfdG1P50FVZMhVgMsaAeTf
+         Q/6UnmGtl7GZgLguCmbkGtF0pGMW06gJgmerySZ5mBTk77Pop3cOHCWuJmpEwGgmSMOf
+         LUm7f3HOWnKEjLQcOahVqWnlRdD5UMIzyqQ8U0C82jntMdsCUS80qZ1GlcgRXiYhqNFv
+         zc7w==
+X-Gm-Message-State: APjAAAWIWQ9Elxrz+H2uUOdgTVwJs88HrAn36FxbXESvcZGJdmIJhSD1
+        K/iGW5sMrokd3NecWVGORcQ=
+X-Google-Smtp-Source: APXvYqxcDbt12KSYdO549nYw+DSqKGA6Tdn3bVL7y1mSg9juQo+yboExHfaY7Nv7BuzAG8wiOUqI7w==
+X-Received: by 2002:a17:902:8d8c:: with SMTP id v12mr9725188plo.336.1577112794685;
+        Mon, 23 Dec 2019 06:53:14 -0800 (PST)
+Received: from localhost (64.64.229.47.16clouds.com. [64.64.229.47])
+        by smtp.gmail.com with ESMTPSA id 100sm20590383pjo.17.2019.12.23.06.53.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Dec 2019 06:53:14 -0800 (PST)
+Date:   Mon, 23 Dec 2019 22:53:11 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/10] usb: phy: tegra: Use u32 for hardware register
+ variables
+Message-ID: <20191223145311.GA9183@nuc8i5>
+References: <20191220015238.9228-1-digetx@gmail.com>
+ <20191220015238.9228-9-digetx@gmail.com>
+ <20191222132227.GA7096@nuc8i5>
+ <6c0fbeb2-3db2-f331-fc0a-a900241a32f5@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c0fbeb2-3db2-f331-fc0a-a900241a32f5@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+On Mon, Dec 23, 2019 at 12:48:09AM +0300, Dmitry Osipenko wrote:
+> 22.12.2019 16:24, Dejin Zheng пишет:
+> > On Fri, Dec 20, 2019 at 04:52:36AM +0300, Dmitry Osipenko wrote:
+> >> There is a mix of u32/ULONG usage in the driver's code. Let's switch to
+> >> u32 uniformly, for consistency.
+> >>
+> >> Suggested-by: Thierry Reding <thierry.reding@gmail.com>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  drivers/usb/phy/phy-tegra-usb.c | 28 +++++++++++++++-------------
+> >>  1 file changed, 15 insertions(+), 13 deletions(-)
+> >>
+> >> diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
+> >> index d5739b6e0b6c..551c94e3877a 100644
+> >> --- a/drivers/usb/phy/phy-tegra-usb.c
+> >> +++ b/drivers/usb/phy/phy-tegra-usb.c
+> >> @@ -202,7 +202,7 @@ static inline struct tegra_usb_phy *to_tegra_usb_phy(struct usb_phy *u_phy)
+> >>  static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+> >>  {
+> >>  	void __iomem *base = phy->regs;
+> >> -	unsigned long val;
+> >> +	u32 val;
+> >>  
+> >>  	if (phy->soc_config->has_hostpc) {
+> >>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+> >> @@ -221,7 +221,7 @@ static void set_pts(struct tegra_usb_phy *phy, u8 pts_val)
+> >>  static void set_phcd(struct tegra_usb_phy *phy, bool enable)
+> >>  {
+> >>  	void __iomem *base = phy->regs;
+> >> -	unsigned long val;
+> >> +	u32 val;
+> >>  
+> >>  	if (phy->soc_config->has_hostpc) {
+> >>  		val = readl_relaxed(base + TEGRA_USB_HOSTPC1_DEVLC);
+> >> @@ -320,7 +320,8 @@ static int utmip_pad_power_on(struct tegra_usb_phy *phy)
+> >>  {
+> >>  	struct tegra_utmip_config *config = phy->config;
+> >>  	void __iomem *base = phy->pad_regs;
+> >> -	unsigned long val, flags;
+> >> +	unsigned long flags;
+> >> +	u32 val;
+> > Why are you still using unsigned long here?
+> 
+> Please take a look at [1][2], the types are matching callees.
+> 
+> [1]
+> https://elixir.bootlin.com/linux/v5.5-rc2/source/include/linux/spinlock.h#L249
+> 
+> [2]
+> https://elixir.bootlin.com/linux/v5.5-rc2/source/include/asm-generic/io.h#L297
 
-Add documentation for DT properties supported by
-ps8640 DSI-eDP converter.
+Okay, thanks for your explanation.
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Ulrich Hecht <uli@fpond.eu>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-I maintained the ack from Rob Herring and the review from Philipp
-because in essence the only thing I did is migrate to YAML format and
-check that no errors are reported via dtbs_check. Just let me know if
-you're not agree.
-
-Apart from this note that I removed the mode-sel property because is not
-used and I renamed sleep-gpios to powerdown-gpios.
-
-Changes in v23: None
-Changes in v22:
-- Migrate to YAML format (Maxime Ripart)
-- Remove mode-sel property.
-- Rename sleep-gpios to powerdown-gpios.
-
-Changes in v21: None
-Changes in v19: None
-Changes in v18: None
-Changes in v17: None
-Changes in v16: None
-Changes in v15: None
-Changes in v14: None
-Changes in v13: None
-Changes in v12: None
-Changes in v11: None
-
- .../bindings/display/bridge/ps8640.yaml       | 112 ++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.yaml b/Documentation/devicetree/bindings/display/bridge/ps8640.yaml
-new file mode 100644
-index 000000000000..5dff93641bea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ps8640.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ps8640.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MIPI DSI to eDP Video Format Converter Device Tree Bindings
-+
-+maintainers:
-+  - Nicolas Boichat <drinkcat@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+description: |
-+  The PS8640 is a low power MIPI-to-eDP video format converter supporting
-+  mobile devices with embedded panel resolutions up to 2048 x 1536. The
-+  device accepts a single channel of MIPI DSI v1.1, with up to four lanes
-+  plus clock, at a transmission rate up to 1.5Gbit/sec per lane. The
-+  device outputs eDP v1.4, one or two lanes, at a link rate of up to
-+  3.24Gbit/sec per lane.
-+
-+properties:
-+  compatible:
-+    const: parade,ps8640
-+
-+  reg:
-+    maxItems: 1
-+    description: Base I2C address of the device.
-+
-+  powerdown-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low powerdown.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low reset.
-+
-+  vdd12-supply:
-+    maxItems: 1
-+    description: Regulator for 1.2V digital core power.
-+
-+  vdd33-supply:
-+    maxItems: 1
-+    description: Regulator for 3.3V digital core power.
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing DSI input & output port nodes with endpoint
-+      definitions as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+      Documentation/devicetree/bindings/graph.txt
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Video port for DSI input
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for eDP output (panel or connector).
-+
-+    required:
-+      - port@0
-+
-+required:
-+  - compatible
-+  - reg
-+  - powerdown-gpios
-+  - reset-gpios
-+  - vdd12-supply
-+  - vdd33-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ps8640: edp-bridge@18 {
-+            compatible = "parade,ps8640";
-+            reg = <0x18>;
-+            powerdown-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
-+            vdd12-supply = <&ps8640_fixed_1v2>;
-+            vdd33-supply = <&mt6397_vgp2_reg>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    ps8640_in: endpoint {
-+                        remote-endpoint = <&dsi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    ps8640_out: endpoint {
-+                        remote-endpoint = <&panel_in>;
-+                   };
-+                };
-+            };
-+        };
-+    };
-+
--- 
-2.20.1
-
+Dejin
