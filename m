@@ -2,77 +2,126 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63400C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E83C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EA4206CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AED5206B7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 09:30:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="aDKswfiU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQD5dm/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725963AbfLWJN6 (ORCPT
+        id S1726096AbfLWJaI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 04:13:58 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:37896 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfLWJN6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 04:13:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=zj0RL7Zd9GclpVJkxgTizJ6N2fE32p248ECn/vlYHAI=; b=aDKswfiUO/HvuxIQXJKPE9WKTh
-        jy4UXbKtXFHWt/g9wFDa0STGLZo1xd1Tebl56Z1i2zleGOPcBVe7zdFS53XiYo3tkAx17U7CjmX83
-        fVVwq2+mBs8jKZSw09e0uWHz1OfYNH9hwl0G9tGzYS3K1HxKeS3CnfeiREAGEfAn9qdw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ijJmk-0000X0-Ot; Mon, 23 Dec 2019 10:13:54 +0100
-Date:   Mon, 23 Dec 2019 10:13:54 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: Re: [PATCH V8 net-next 07/12] net: Introduce a new MII time stamping
- interface.
-Message-ID: <20191223091354.GF32356@lunn.ch>
-References: <cover.1576956342.git.richardcochran@gmail.com>
- <08ba968da04b8d0f2d663fd018109b52dfafe5c6.1576956342.git.richardcochran@gmail.com>
+        Mon, 23 Dec 2019 04:30:08 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38926 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfLWJaI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 04:30:08 -0500
+Received: by mail-pj1-f65.google.com with SMTP id t101so7231398pjb.4;
+        Mon, 23 Dec 2019 01:30:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E6Rxt5mTP6uQSUFNQdkev/Gx4HMwNUXESrGV3msFxjU=;
+        b=AQD5dm/xrPHJRAbvT0ND3uDS924lgRAjufBAD0in06aCdKyS8PoMQlAgoLVTB5x9kq
+         5WBUEtv7kOfWTCV8C6nVlEqNhJT8101sSqVa4T/jQdNR6qdrCL/t33h25ozeJNrzOFu9
+         CmUJTvyhr2qFN54ImlAljnueIFqfztbOE8I9cF+4GTCYthxj7zBzCPfxNU94ZTi2iKI+
+         0irJdkHqf6lppHTzYgptMkLnk1U1jL2uyrCoVmlM7tFW3/vdl/8GhvS8TvnOvCi3nKKP
+         c6SH8LreWdQFnTZ1/UyB/uJCNlQKU6tfv+tAdOWjIxEQo1D42WGHq7468Ty13dVgUlNx
+         QTzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E6Rxt5mTP6uQSUFNQdkev/Gx4HMwNUXESrGV3msFxjU=;
+        b=sWNbNA8q2+/VZWRp6RenTgO/33mwGMcbVhjR+7m0BPEfaPz214zmm5pPbObnVaBF6f
+         uZ1HofmCeTb00R8Mo+hokxpM0kXzpnieqFueH2iFmMCryewq4DaXMECowPxI7EeKk6hw
+         VwZpqaMZmZp4LXOMxF2oupcdxiEebSrMJgrJaAHvvbUpnhyMbaAa/BoGwIgSMVILo1+0
+         VCWuhtIxwiOaTq7/XgHWONAbIcA6vzs1hD+7UO1Q63KULpwFq9tNPZYj9JixTCB6V7XJ
+         8NPNkThG0pu4T7dDPDNCv1LqaJb9zWUkyDf+b6vurRUOaa6kEsyqJFuN0Eu4Fj+DRPKJ
+         P4pg==
+X-Gm-Message-State: APjAAAUXSqrOeIWaSNRtTpyp6r7NJ5bR3dkAr5AhYc1MkVT3TbpblQnn
+        7Emtpkqn5E9hv7+tsIeFhhM=
+X-Google-Smtp-Source: APXvYqyaaI7uOGrpKdqVEHRttrmOmOL34BXrpCBwgAATEruJifXFkHyfN+Sit9JuGuxyNXhDQH+s8w==
+X-Received: by 2002:a17:902:265:: with SMTP id 92mr29128079plc.313.1577093407770;
+        Mon, 23 Dec 2019 01:30:07 -0800 (PST)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id i127sm24625970pfc.55.2019.12.23.01.30.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 01:30:06 -0800 (PST)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH v5 0/3] Add Unisoc's SC9863A support
+Date:   Mon, 23 Dec 2019 17:29:45 +0800
+Message-Id: <20191223092948.24824-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08ba968da04b8d0f2d663fd018109b52dfafe5c6.1576956342.git.richardcochran@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 11:36:33AM -0800, Richard Cochran wrote:
-> Currently the stack supports time stamping in PHY devices.  However,
-> there are newer, non-PHY devices that can snoop an MII bus and provide
-> time stamps.  In order to support such devices, this patch introduces
-> a new interface to be used by both PHY and non-PHY devices.
-> 
-> In addition, the one and only user of the old PHY time stamping API is
-> converted to the new interface.
-> 
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+SC9863A has Octa-core ARM Cortex A55 application processor. Find more
+details about it on the website: http://www.unisoc.com/sc9863a
 
-    Andrew
+Changes from v4:
+* Removed syscon nodes which should be added when used.
+* Added Acked-by from Rob Herring.
+
+Changes from v3:
+* Rebased on v5.5-rc1;
+* Fix the cpu-map to put all cpus into the single cluster;
+* Fixed a bindings error.
+
+Changes from v2:
+* Discard some dt-bindings patches which have been applied by Rob Herring.
+* Added a new dt-binding file for sprd global-regs, also added a vendor directory for sprd.
+* Moved sprd.yaml to the vendor directory.
+* Addressed comments from Rob:
+- fixed dtbs_check errors;
+- move gic under to the bus node;
+- removed msi-controller from gic, sinceSC9863A doesn't provide ITS;
+- added specific compatible string for syscon nodes;
+- cut down registers range of syscon nodes;
+- removed unnecessary property "sprd,sc-id";
+- added earlycon support in devicetree.
+
+Changes from v1: 
+- Convert DT bindings to json-schema.
+
+Chunyan Zhang (3):
+  dt-bindings: arm: sprd: add global registers bindings
+  dt-bindings: arm: move sprd board file to vendor directory
+  arm64: dts: Add Unisoc's SC9863A SoC support
+
+ .../bindings/arm/sprd/global-regs.yaml        |  34 ++
+ .../bindings/arm/{ => sprd}/sprd.yaml         |   2 +-
+ arch/arm64/boot/dts/sprd/Makefile             |   3 +-
+ arch/arm64/boot/dts/sprd/sc9863a.dtsi         | 523 ++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sharkl3.dtsi         |  78 +++
+ arch/arm64/boot/dts/sprd/sp9863a-1h10.dts     |  39 ++
+ 6 files changed, 677 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/sprd/global-regs.yaml
+ rename Documentation/devicetree/bindings/arm/{ => sprd}/sprd.yaml (92%)
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+
+-- 
+2.20.1
+
