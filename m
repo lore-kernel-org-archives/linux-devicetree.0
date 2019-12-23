@@ -2,153 +2,130 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA62CC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF325C2D0D0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 807EF207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577100392;
-	bh=U674jlYACjQhhGCy4e3+CzEaPgiSjsEmvjKCwhbFzqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MKahWqFCT0ZYQBAYYoQ71vK06Horgg23EDfVz3pDIRW0O7iseU2ZntNJl2BfkEzpJ
-	 jgooMFqC+/dQA/FcW4ZsFB2g3jHt8XDTR1jHxLUe6CIYOTbYeWNr3ZiM4iAwrLSn6o
-	 DeRovTZWPsPc9p8kaoj0JQPLhrx/wn1F5JT+s7as=
+	by mail.kernel.org (Postfix) with ESMTP id 82CF3207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NdccdyXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfLWL03 (ORCPT
+        id S1726680AbfLWLda (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:26:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfLWL02 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:26:28 -0500
-Received: from localhost (unknown [223.226.34.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83040207FF;
-        Mon, 23 Dec 2019 11:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577100387;
-        bh=U674jlYACjQhhGCy4e3+CzEaPgiSjsEmvjKCwhbFzqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eroF/x42FAFqJKFuiVMDn5gYmfp+YgrmPRGgnjhd4c9dKvwJB7A1iMuS5bamcLlIk
-         HL+DKo0W06Yey+iPDZ+l97Ca4a9P+7vi679IhZ4hpHK7VfFnZH0qIxJFFHZ0ydILBj
-         9puTCrdym62yreuoQBN3bvWGm7HublXnyBDANolg=
-Date:   Mon, 23 Dec 2019 16:56:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
-        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
-        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
-        j-keerthy@ti.com, vigneshr@ti.com
-Subject: Re: [PATCH v7 09/12] dmaengine: ti: New driver for K3 UDMA
-Message-ID: <20191223112623.GF2536@vkoul-mobl>
-References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
- <20191209094332.4047-10-peter.ujfalusi@ti.com>
- <20191223073425.GV2536@vkoul-mobl>
- <ea473fed-276f-6b71-070b-02ab1f51ed89@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea473fed-276f-6b71-070b-02ab1f51ed89@ti.com>
+        Mon, 23 Dec 2019 06:33:30 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36172 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfLWLda (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 06:33:30 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so17415087ljg.3
+        for <devicetree@vger.kernel.org>; Mon, 23 Dec 2019 03:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=W86PjKWMp0DXo0oqU8GNbupPzD4JvnNKtjFCMr2/NeY=;
+        b=NdccdyXLPkXmuyhQhYpFznqNVNxOoSsQFB6qZE+cGCN/yafZMxkrGX0vWu+TxIsXW/
+         X5BGr3a08PLAYMNKPk/W2RNBFvKi062Fy0T4WRkjPVBQTpKEkYFbAv7ZMAYw+R/2YrT9
+         UGJ46wZHvNC6WDA9XZS7gBWDVCB31c93auJxUMVpu0QsAJwj3Mhvxp+Bopcqu7p5Aajj
+         v1YibMM54480J3Qh7wX7BLOSZMEigllisVovl2hKKF9ck7cUrijaKtfHSczq7eIdwtm5
+         +duB5ivl1vG4Eshuy2LtdzkuhTKtCGtOujbkafb06ml+1+gIV9k1KhjG6oAnGCBp1su0
+         ZUyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=W86PjKWMp0DXo0oqU8GNbupPzD4JvnNKtjFCMr2/NeY=;
+        b=Cs3INVLFlY4bY2p9H7LZIjJRsjhs0W7gIUreOmzDo7r8dXJwFg+ImT7qfLwY54MnIO
+         OcfP/rv/bVaKVyKGND9zFNiroUFWiV2SZT0WimZg0Yn+8nHkDT9MZXxh9ymFjen6Hv/B
+         0xQL9PGIlHrGmxZ0IsiOLj/4HpGM4B5xW/8FvShQYzrE8UJxSCDVIU1T3JjFJztz+3cl
+         wq15fRLnEAX3fQZ7flBquhkvgAl9AVA7k0FYgC48k1xLN73dlfxlIE/Q+jWao27dxrYM
+         +fQBzuBgV1PDXWP+mInHxdgK24WaRLf/WIjgPVjn4nZg0ORPFVNyshFpLLyusSs//bvU
+         wwKw==
+X-Gm-Message-State: APjAAAX1GHlOwLrS27AHPIvDvmskAYrmQQdGRgrFFez1zyHn0XoLbh40
+        +9tp3VU7dQF8ThIcgkL8nsXBeQ==
+X-Google-Smtp-Source: APXvYqyvE4LFXz14TEeueaK3Hw30PRJx8l5ut0WQKynuK1BG5vv7bGEblHk4zcQqosmEsfb6sqn3Mw==
+X-Received: by 2002:a2e:2d01:: with SMTP id t1mr12640896ljt.36.1577100808204;
+        Mon, 23 Dec 2019 03:33:28 -0800 (PST)
+Received: from localhost.localdomain ([37.157.136.193])
+        by smtp.gmail.com with ESMTPSA id g15sm8381500ljk.8.2019.12.23.03.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2019 03:33:27 -0800 (PST)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v3 00/12] Venus new features
+Date:   Mon, 23 Dec 2019 13:32:59 +0200
+Message-Id: <20191223113311.20602-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23-12-19, 10:59, Peter Ujfalusi wrote:
+Hello,
 
-> >> +static void udma_reset_counters(struct udma_chan *uc)
-> >> +{
-> >> +	u32 val;
-> >> +
-> >> +	if (uc->tchan) {
-> >> +		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
-> >> +		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_BCNT_REG, val);
-> > 
-> > so you read back from UDMA_TCHAN_RT_BCNT_REG and write same value to
-> > it??
-> 
-> Yes, that's correct. This is how we can reset it. The counter is
-> decremented with the value you have written to the register.
+Chnages since v2:
 
-aha, with so many read+write back I would have added a helper.. Not a
-big deal though can be updated later
+  - addressed DT schema review comments in patches 6/12 to 9/12
 
-> >> +static struct udma_desc *udma_alloc_tr_desc(struct udma_chan *uc,
-> >> +					    size_t tr_size, int tr_count,
-> >> +					    enum dma_transfer_direction dir)
-> >> +{
-> >> +	struct udma_hwdesc *hwdesc;
-> >> +	struct cppi5_desc_hdr_t *tr_desc;
-> >> +	struct udma_desc *d;
-> >> +	u32 reload_count = 0;
-> >> +	u32 ring_id;
-> >> +
-> >> +	switch (tr_size) {
-> >> +	case 16:
-> >> +	case 32:
-> >> +	case 64:
-> >> +	case 128:
-> >> +		break;
-> >> +	default:
-> >> +		dev_err(uc->ud->dev, "Unsupported TR size of %zu\n", tr_size);
-> >> +		return NULL;
-> >> +	}
-> >> +
-> >> +	/* We have only one descriptor containing multiple TRs */
-> >> +	d = kzalloc(sizeof(*d) + sizeof(d->hwdesc[0]), GFP_ATOMIC);
-> > 
-> > this is invoked from prep_ so should use GFP_NOWAIT, we dont use
-> > GFP_ATOMIC :)
-> 
-> Ok. btw: EDMA and sDMA driver is using GFP_ATOMIC :o
 
-heh, we made sure to document this bit :)
+v2 can be found at [1].
 
-> >> +static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
-> >> +				   enum dma_slave_buswidth dev_width,
-> >> +				   u16 elcnt)
-> >> +{
-> >> +	if (uc->ep_type != PSIL_EP_PDMA_XY)
-> >> +		return 0;
-> >> +
-> >> +	/* Bus width translates to the element size (ES) */
-> >> +	switch (dev_width) {
-> >> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-> >> +		d->static_tr.elsize = 0;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> >> +		d->static_tr.elsize = 1;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_3_BYTES:
-> >> +		d->static_tr.elsize = 2;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> >> +		d->static_tr.elsize = 3;
-> >> +		break;
-> >> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
-> >> +		d->static_tr.elsize = 4;
-> > 
-> > seems like ffs(dev_width) to me?
-> 
-> Not really:
-> ffs(DMA_SLAVE_BUSWIDTH_1_BYTE) = 1
-> ffs(DMA_SLAVE_BUSWIDTH_2_BYTES) = 2
-> ffs(DMA_SLAVE_BUSWIDTH_3_BYTES) = 1
+regards,
+Stan
 
-I missed this!
+[1] https://lkml.org/lkml/2019/12/18/444
 
-> ffs(DMA_SLAVE_BUSWIDTH_4_BYTES) = 3
-> ffs(DMA_SLAVE_BUSWIDTH_8_BYTES) = 4
+Aniket Masule (2):
+  media: venus: introduce core selection
+  media: venus: vdec: handle 10bit bitstreams
 
-Otherwise you are ffs() - 1
+Stanimir Varbanov (10):
+  venus: redesign clocks and pm domains control
+  venus: venc: blacklist two encoder properties
+  v4l: Add source event change for bit-depth
+  dt-bindings: media: venus: Convert msm8916 to DT schema
+  dt-bindings: media: venus: Convert msm8996 to DT schema
+  dt-bindings: media: venus: Convert sdm845 to DT schema
+  dt-bindings: media: venus: Add sdm845v2 DT schema
+  venus: core: add sdm845-v2 DT compatible and resource struct
+  arm64: dts: sdm845: follow venus-sdm845v2 DT binding
+  dt-bindings: media: venus: delete old binding document
+
+ .../bindings/media/qcom,msm8916-venus.yaml    | 117 +++
+ .../bindings/media/qcom,msm8996-venus.yaml    | 153 +++
+ .../bindings/media/qcom,sdm845-venus-v2.yaml  | 139 +++
+ .../bindings/media/qcom,sdm845-venus.yaml     | 157 +++
+ .../devicetree/bindings/media/qcom,venus.txt  | 120 ---
+ .../media/uapi/v4l/vidioc-dqevent.rst         |   8 +-
+ .../media/videodev2.h.rst.exceptions          |   1 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  25 +-
+ drivers/media/platform/qcom/venus/Makefile    |   2 +-
+ drivers/media/platform/qcom/venus/core.c      | 122 ++-
+ drivers/media/platform/qcom/venus/core.h      |  31 +-
+ drivers/media/platform/qcom/venus/helpers.c   | 435 ++------
+ drivers/media/platform/qcom/venus/helpers.h   |   4 -
+ drivers/media/platform/qcom/venus/hfi_cmds.c  |   2 +
+ .../media/platform/qcom/venus/hfi_helper.h    |   6 +
+ .../media/platform/qcom/venus/hfi_parser.h    |   5 +
+ .../media/platform/qcom/venus/pm_helpers.c    | 964 ++++++++++++++++++
+ .../media/platform/qcom/venus/pm_helpers.h    |  65 ++
+ drivers/media/platform/qcom/venus/vdec.c      |  88 +-
+ drivers/media/platform/qcom/venus/venc.c      |  75 +-
+ include/uapi/linux/videodev2.h                |   1 +
+ 21 files changed, 1873 insertions(+), 647 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8916-venus.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,msm8996-venus.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,sdm845-venus.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+ create mode 100644 drivers/media/platform/qcom/venus/pm_helpers.c
+ create mode 100644 drivers/media/platform/qcom/venus/pm_helpers.h
 
 -- 
-~Vinod
+2.17.1
+
