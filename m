@@ -2,92 +2,128 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABA5C2D0D5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 05:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A792C2D0D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 06:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1F02206B7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 05:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEE320663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 06:12:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P+iJV5pb"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V5Ui3vQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbfLWFt3 (ORCPT
+        id S1725867AbfLWGMg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 00:49:29 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53513 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfLWFt3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 00:49:29 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so6961048pjc.3
-        for <devicetree@vger.kernel.org>; Sun, 22 Dec 2019 21:49:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1XUacwVg6UtA8MchmvXuh03DJHAG9CnuImbIcloSG5k=;
-        b=P+iJV5pbry18PLZyr669o+IPKh7QicKAILliFehkugV8ZOKOxqSVcVXCmVSgYN9xrj
-         xPe/xyLltPJI0X9rQ5GMwIfto/S4RT67Q3m7djdZY1OI6uYLvGqoHUhK+AGCiiojEPLm
-         zvsrB/SWV0NUhLbE2cPom+DB22t5tcs8k0dhTICX6mSFxKzyzMegfjldRBFkbD/PA23q
-         /7U/8X+5JVjimI1Q24WalhGe91L1whzdSfg6ro0rNYPBfCCiKVfg6vC3RmjDE9Zhon/S
-         TiNnGD7+dIqmKWYJuX7UXloGM21mecV56nSdh2yFlLZPDfGvWj+zzjQSW6+QbV0LY3dd
-         afFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1XUacwVg6UtA8MchmvXuh03DJHAG9CnuImbIcloSG5k=;
-        b=gfaiIMi6wALUfyVzF8unh6hDpkXZn1gogqx8L5mgYuiEoZvY3g//XlPe6sp07ySKb1
-         vCNj4pX63YYK6iBOUPdUk1GKNU2cspT7F85/D8xdEF7ugCnAMN/+DMKnJIFvOqPtKjLg
-         EFfvSWsfASZywEJiunJMu1UMmaaIL62Bbo3jVw1bQVqLcKteKYvL7D/jsx/vmlwfMWgT
-         8/TwLE8JLU0gw2aE9H5XF5stUZb/C3MEjBzJRdkEljETfm/UZJ9OAixoGPHaAJpBp+D8
-         3w6sB4oZXgTIEjo5N/Jvg+2onxinjUotgMa39dRNC1/xy+N4YQSOTGMtMOus2niNjsYo
-         ZsXQ==
-X-Gm-Message-State: APjAAAUCA6RmH/EQbqFJmkKWmndBL6/1hTcm1l/5dGIAihvgwbTGLuF1
-        lF+4kAZRLQXqaUBKIQMNqNDfqA==
-X-Google-Smtp-Source: APXvYqw+lXD6B//G6RmvqL6dzbQ+OHOTBYMX7tSL/CHI+FnUJbP04tPOj2vJTeE6aVXU6tCj3fxQmQ==
-X-Received: by 2002:a17:90a:b392:: with SMTP id e18mr25820505pjr.118.1577080168070;
-        Sun, 22 Dec 2019 21:49:28 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l14sm19731779pgt.42.2019.12.22.21.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Dec 2019 21:49:27 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, ath10k@lists.infradead.org
-Subject: [PATCH 0/2] ath10k: Enable QDSS clock on sm8150
-Date:   Sun, 22 Dec 2019 21:48:53 -0800
-Message-Id: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        Mon, 23 Dec 2019 01:12:36 -0500
+Received: from mail-eopbgr00056.outbound.protection.outlook.com ([40.107.0.56]:10358
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbfLWGMg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Dec 2019 01:12:36 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SYSaUl8VC1z5fBwjkzyi006VM/xEPnBIwHP0d4/3iYfUHJKeBDSep0vqI2cGcmOqNBawqwK/FQamYRHKEf6hgOu9RbQk2SpgOFm6mLnhme5Y/KkDYj24wQp6VcrXDVhJa3wQuT4siem1E+z30jHZRll4oZjp/LBA2g/UPYYxRy7gxuAE5W6MbXKF1PeaXiacUVyyGhs1nEgIPATLbamiyVsHJFosdEgKswtqSA5+W5TA76jvY/bG5Akq58bVPnfVcOHgiRvj8aYKU9xvZ7axITWp0n68WH6KaVLv5i1CAF7Ig/ivI2O3T6KFTDIf6Mc0sIrgAD8zKJYfIsYTN8OcIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7mefm3d82/kdLpLir2oc/hAF26QbAMmVhQrbYoJTSBk=;
+ b=mb+29tBUKcxl+Db2vCaTe6ylrY0wyx2eATUI5L1mEQeRhl75R+hmpapB0ZMj84d64I0NvyFJLpS/XP62T2TKTshWM2VqZyNmrCG3TROSXX+wmh9gy0+cSjsxKDUFA5md2EQd94xWOQTmD1pGgXVuNgc6FI6SbkRb5z+swQtYm5Zf7OHDXtkqHPC9QuV65AJjYvFIGCmGjrACUFXaXMfFeLLpUcQAO3wuiwijElfdarWLPYkIipFYcMmBgLyHj8gF4NN7Z0CmFeXghYNRixXQhZZuQxFwh0snTGhtKEmJ4FX0QwEitMTcgaB0Af7j1gLRjkLvzimyEURncRMCX1GQsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7mefm3d82/kdLpLir2oc/hAF26QbAMmVhQrbYoJTSBk=;
+ b=V5Ui3vQnjokTNYgVEmtnFz7vOBVOpUxiZIByAxYyu1FyJldD2K3LkGp5ZzcioJ3e+psFVcjFuNLAL+yOkVCGdqM4jQKMvNAKVcpLSYlg5gAMaR0iqKlIH8zI1i2UftZwUu7SRgrUEv6owCvwNhBDS0BwTyGfj7d0Kfc8NvG9EdY=
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
+ VI1PR04MB7152.eurprd04.prod.outlook.com (10.186.158.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2559.15; Mon, 23 Dec 2019 06:12:32 +0000
+Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
+ ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2559.017; Mon, 23 Dec 2019
+ 06:12:32 +0000
+From:   Peng Ma <peng.ma@nxp.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
+ QorIQ LS1028A platform
+Thread-Topic: [EXT] Re: [v5 1/3] dmaengine: fsl-edma: Add eDMA support for
+ QorIQ LS1028A platform
+Thread-Index: AQHVsJ2TZ/jVyH6lNkyvcDWZa1lfcae/dvcAgAAYxuCAAhhbAIABQiJg
+Date:   Mon, 23 Dec 2019 06:12:32 +0000
+Message-ID: <VI1PR04MB4431671A81F87AB20A0313E6ED2E0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+References: <20191212033714.4090-1-peng.ma@nxp.com>
+ <20191218062636.GS2536@vkoul-mobl>
+ <VI1PR04MB44311BE955B863C73DF4CD4CED530@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <20191219155458.GY2536@vkoul-mobl>
+In-Reply-To: <20191219155458.GY2536@vkoul-mobl>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.ma@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 66c26685-71e5-450f-0213-08d7876f18eb
+x-ms-traffictypediagnostic: VI1PR04MB7152:|VI1PR04MB7152:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB71527827608529BD68AE8D90ED2E0@VI1PR04MB7152.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0260457E99
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(13464003)(199004)(189003)(186003)(64756008)(44832011)(71200400001)(8936002)(2906002)(52536014)(76116006)(26005)(7696005)(66446008)(86362001)(5660300002)(66476007)(66946007)(6506007)(66556008)(33656002)(316002)(9686003)(55016002)(478600001)(81166006)(6916009)(8676002)(81156014)(54906003)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB7152;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: B/pZPHoIAo1qaKJarAa6XA5TYPfTvyxq44ge1c++Et+b/VFJV9qJ5U6THDFvMJ2XJWVE63Lc29b5p9wGx6CmlZPSRhI93E56uDP7E3K35pCGeZDhi7GhButDxT1M95YbBwLiHJmir0w4aRWJBbVboZZrGgSzZelt77h2bA5CGv3hUDjIYMXZEnrHhHpXjs39q2Q8cbeX4k5WVK2A18mv5xMvplzV0dhQkKH7QJssowjz+uv5jghVsymesupz1NiQGEK7pSJqz0WtgGjeI/rRpbd45Ne0PYB/aALCNs4crHymtlOt3l8vHNFSSPC9FmuKGTzaoT+NMXZXEc3PXvyNxqTIQL/2UqD9R2mUuKfQU1lTQMDEYsce22fsLozjgFP+w34IEr4d143MNaUoiI0LzcyFoEMaHT+np3cmn+yaHqhMgrdsGN5H3M7g2osDt9ZBfdgl3OXc6UnN5vj4Tw6NIkgGLjW488zw+uMkDRZ0h6L7PIXnOJGJ1dwaAQl9VsTp
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66c26685-71e5-450f-0213-08d7876f18eb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Dec 2019 06:12:32.3509
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: suFb/ZoT7jamvtc+Tqk4MHxi4wCKL8wtAuqRNV7XW9m/GYezczLzPo2GOmDefAAL
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7152
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On SM8150 the WiFi firmware depends on the QDSS clock ticking, or the system
-will reset due to an NoC error. So this adds an optional clock to the ath10k
-binding and makes sure it's enabled while the WiFi firmware needs it.
-
-Bjorn Andersson (2):
-  ath10k: Add optional qdss clk
-  arm64: dts: qcom: sm8150: Specify qdss clock for wifi
-
- .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 2 +-
- arch/arm64/boot/dts/qcom/sm8150.dtsi                          | 4 ++--
- drivers/net/wireless/ath/ath10k/snoc.c                        | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
--- 
-2.24.0
-
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFZpbm9kIEtvdWwgPHZrb3Vs
+QGtlcm5lbC5vcmc+DQo+U2VudDogMjAxOcTqMTLUwjE5yNUgMjM6NTUNCj5UbzogUGVuZyBNYSA8
+cGVuZy5tYUBueHAuY29tPg0KPkNjOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBh
+cm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8NCj5MaSA8bGVveWFuZy5saUBueHAuY29t
+PjsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBSb2JpbiBHb25nDQo+PHlpYmluLmdvbmdAbnhw
+LmNvbT47IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+bGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnDQo+U3ViamVjdDogUmU6IFtFWFRdIFJlOiBbdjUgMS8zXSBkbWFl
+bmdpbmU6IGZzbC1lZG1hOiBBZGQgZURNQSBzdXBwb3J0IGZvcg0KPlFvcklRIExTMTAyOEEgcGxh
+dGZvcm0NCj4NCj5DYXV0aW9uOiBFWFQgRW1haWwNCj4NCj5PbiAxOC0xMi0xOSwgMDg6MDgsIFBl
+bmcgTWEgd3JvdGU6DQo+ID5CdHcgcGxzIHNlbmQgYmluZGluZ3MgYXMgcGF0Y2gxIGFuZCBkcml2
+ZXIgY2hhbmdlcyBhcyBwYXRjaDIuDQo+PiBbUGVuZyBNYV0gSSBkb24ndCB1bmRlcnN0YW5kIHRo
+aXMgc2VudGVuY2UsIFBsZWFzZSBnaXZlIG1lIG1vcmUNCj5pbmZvcm1hdGlvbi4NCj4+IEFzIEkg
+a25vdyBwYXRjaDEgaXMgZHJpdmVyIGNoYW5nZXMsIHBhdGNoMiBpcyBkdHMgY2hhbmdlcywgcGF0
+Y2gzIGlzIGJpbmRpbmcNCj5jaGFuZ2VzLg0KPj4gWW91IGFjY2VwdGVkIHBhdGNoMSBhbmQgcGF0
+Y2gzLCBJIGFtIHB1enpsZWQgZm9yIHBhdGNoMiBhbmQgeW91cg0KPmNvbW1lbnRzLg0KPg0KPlRo
+ZSBvcmRlciBvZiBwYXRjaGVzIHNob3VsZCBhbHdheXMgYmUgZHQtYmluZGluZ3MgZmlyc3QsIGZv
+bGxvd2VyZCBieSBkcml2ZXINCj5jaGFuZ2UgYW5kIHRoZSBkdHMgY2hhbmdlcyBhcyB0aGUgbGFz
+dCBvbmUgaW4gdGhlIHNlcmllcy4NCj4NCltQZW5nIE1hXSBPS6OsR290IGl0Lg0KVGhhbmtzIHZl
+cnkgbXVjaCENCg0KQmVzdCBSZWdhcmRzLA0KUGVuZw0KPi0tDQo+flZpbm9kDQo=
