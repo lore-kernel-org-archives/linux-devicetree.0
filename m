@@ -2,211 +2,385 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AD5C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC7AC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52B62073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZggbavCY"
+	by mail.kernel.org (Postfix) with ESMTP id 941B22073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:28:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577122107;
+	bh=IldxQV/npKqtDIbhumgb8ZHtmddjBkkR/a6esCwXkC8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VjysDACbRNn5ItRuqEiyKPTRYcdp7QCxQEdiNXN3nGQUWH0ZUyv4AwOCLl8A81DUx
+	 gosrfCuPqQL6TIOwN9PuHm1+tF3U9YJxv8WqTgEWGnQE7cAEIwC0BVyPuyMYjE3zKR
+	 kIHndJeuPVh5Qy9uvskxtmToBR8y4P5b4c2tqD7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfLWRXq (ORCPT
+        id S1726805AbfLWR20 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:23:46 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38564 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfLWRXq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 12:23:46 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k8so18419001ljh.5;
-        Mon, 23 Dec 2019 09:23:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=u+GgTQ7ybWZ7C8xjZYQV6OBNXZmHXRlNnZIqFKfsmh0=;
-        b=ZggbavCYF9R03LN/GA6A8IAjFSb2I19CLDSBWQ1cQjNoQHj5a7Cb5dLLQ0uuvjh4dt
-         2c/EYAH0FjqszqiRQsgRk0oaOz9p0XWQiqmebWcRycVX92AGQU280HM2wSK0mOrtV3ZW
-         THBmUoPVoBx5qVJnVpEhwQr99eL+zZW6R4SFlEPUZpaylRjFkKApK9YUkxmmFxE6QQ3e
-         L0Mu04D0CmHyaG7ULHT42Eci7sdBnJ5Oteai40TGYjG/4ARyoKCDDwBUrPk4fwqcJkRH
-         2/ZZ5M6bS3m/fGY4SwcMs2wSgVDalGauOVsWZQ3K6oeYAOdHXdsEYYWIbCgCCQMBMZcW
-         /zhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u+GgTQ7ybWZ7C8xjZYQV6OBNXZmHXRlNnZIqFKfsmh0=;
-        b=F9uH5IY9EhncLZHOfQvFGMisPHsW6cyBm324yUiNSf3DRNSdqENwX5OBsAz4RjYCiN
-         trFr6RvgwJrN2HJ60IFNmuFxMLiKx2GXSo35i38XAkfvRP/3ky5eJ1miPDF2KV9CNoY0
-         MjnxqtFppOGSXKXFLp0mj3k8F6PV2jbAgBmHZoglHmrjmeq/ICWJEqKF65A4mm/bdkjX
-         FEVEh50K2KJLJDzrLxuacdOYRpniNl8h/sFe+yOwUlGjerUH7oQJrMyihxlms2EVFjcp
-         C6w0UtQONCKWWsCqLsOHRQWd2O5v0IUCPPvYxaXbxAXefJTCTgQKxDlcoUO3dPGEeQPC
-         /ymg==
-X-Gm-Message-State: APjAAAUEKoycboNfGYgRMaSuxOonx2e9AiMg3etsNBb6unttNFmtPbRZ
-        v1G75MclpNC+YqtDNQdTqMw=
-X-Google-Smtp-Source: APXvYqznVHMwk4z0zRQUa244lrNFQoo8AGsEqJjn52aZ+3QFYFwDs9N4TOHu5uO+eUBLwMuv73DHlw==
-X-Received: by 2002:a05:651c:282:: with SMTP id b2mr18236642ljo.41.1577121823402;
-        Mon, 23 Dec 2019 09:23:43 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id q26sm8568568lfc.52.2019.12.23.09.23.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Dec 2019 09:23:42 -0800 (PST)
-Subject: Re: [PATCH v2 10/10] usb: chipidea: tegra: Add USB_TEGRA_PHY module
- to driver's dependencies
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Geis <pgwipeout@gmail.com>
-References: <20191220015238.9228-1-digetx@gmail.com>
- <20191220015238.9228-11-digetx@gmail.com>
- <20191220035650.GC19921@b29397-desktop>
- <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
- <20191223063958.GD19921@b29397-desktop>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1d2e3ea0-a7ff-3e83-57d1-05ffddb0da07@gmail.com>
-Date:   Mon, 23 Dec 2019 20:23:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 23 Dec 2019 12:28:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbfLWR20 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Dec 2019 12:28:26 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42F09206CB;
+        Mon, 23 Dec 2019 17:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577122105;
+        bh=IldxQV/npKqtDIbhumgb8ZHtmddjBkkR/a6esCwXkC8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Dqo5Zg9m1hGKakrI4wV4dmNncHAXFbEJvhUME8qzGgLl0c7K0ZIjaVB73GJ5g9geo
+         HRCnVOyjks8sB5T3ocfuR0Oh1WSB8MZLUmdk88Rr3QVnLYyFgz7fnCA13lzOXL7FI3
+         BJPh/Jm1njFIBMHXZzqJP39E/GYtsbxducCIFwKQ=
+Date:   Mon, 23 Dec 2019 17:28:21 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 4/4] iio: accel: bma180: BMA254 support
+Message-ID: <20191223172821.17f058ab@archlinux>
+In-Reply-To: <20191211213819.14024-4-linus.walleij@linaro.org>
+References: <20191211213819.14024-1-linus.walleij@linaro.org>
+        <20191211213819.14024-4-linus.walleij@linaro.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191223063958.GD19921@b29397-desktop>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-23.12.2019 09:40, Peter Chen пишет:
-> On 19-12-20 07:31:08, Dmitry Osipenko wrote:
->> 20.12.2019 06:56, Peter Chen пишет:
->>> On 19-12-20 04:52:38, Dmitry Osipenko wrote:
->>>> Now, when ci_hdrc_tegra kernel module is loaded, the phy_tegra_usb module
->>>> is loaded too regardless of kernel's configuration. Previously this
->>>> problem was masked because Tegra's EHCI driver is usually enabled in
->>>> kernel's config and thus PHY driver was getting loaded because of it, but
->>>> now I was making some more thorough testing and noticed that PHY's module
->>>> isn't getting auto-loaded without the host driver.
->>>>
->>>> Note that ChipIdea's driver doesn't use any of the exported functions of
->>>> phy_tegra_usb module and thus the module needs to be requested explicitly.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/usb/chipidea/Kconfig         | 1 +
->>>>  drivers/usb/chipidea/ci_hdrc_tegra.c | 6 ++++++
->>>>  2 files changed, 7 insertions(+)
->>>>
->>>> diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
->>>> index ae850b3fddf2..d53db520e209 100644
->>>> --- a/drivers/usb/chipidea/Kconfig
->>>> +++ b/drivers/usb/chipidea/Kconfig
->>>> @@ -7,6 +7,7 @@ config USB_CHIPIDEA
->>>>  	select RESET_CONTROLLER
->>>>  	select USB_ULPI_BUS
->>>>  	select USB_ROLE_SWITCH
->>>> +	select USB_TEGRA_PHY if ARCH_TEGRA
->>>>  	help
->>>>  	  Say Y here if your system has a dual role high speed USB
->>>>  	  controller based on ChipIdea silicon IP. It supports:
->>>> diff --git a/drivers/usb/chipidea/ci_hdrc_tegra.c b/drivers/usb/chipidea/ci_hdrc_tegra.c
->>>> index 7455df0ede49..8bc11100245d 100644
->>>> --- a/drivers/usb/chipidea/ci_hdrc_tegra.c
->>>> +++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
->>>> @@ -53,6 +53,12 @@ static int tegra_udc_probe(struct platform_device *pdev)
->>>>  	struct tegra_udc *udc;
->>>>  	int err;
->>>>  
->>>> +	if (IS_MODULE(CONFIG_USB_TEGRA_PHY)) {
->>>> +		err = request_module("phy_tegra_usb");
->>>> +		if (err)
->>>> +			return err;
->>>> +	}
->>>> +
->>>
->>> Why you do this dependency, if this controller driver can't
->>> get USB PHY, it should return error. What's the return value
->>> after calling below:
->>>
->>> 	udc->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "nvidia,phy", 0);
->>
->> It returns -EPROBE_DEFER when phy_tegra_usb isn't loaded.
->>
->> So if you'll do:
->>
->> # rmmod ci_hdrc_tegra; rmmod ci_hdrc; rmmod phy_tegra_usb;
->> # modprobe ci_hdrc_tegra
->> # lsmod
->> Module                  Size  Used by
->> ci_hdrc_tegra          16384  0
->> ci_hdrc                45056  1 ci_hdrc_tegra
->>
->> After this patch:
->>
->> # rmmod ci_hdrc_tegra; rmmod ci_hdrc; rmmod phy_tegra_usb;
->> # modprobe ci_hdrc_tegra
->> # lsmod
->> Module                  Size  Used by
->> Module                  Size  Used by
->> phy_tegra_usb          20480  1
->> ci_hdrc_tegra          16384  0
->> ci_hdrc                45056  1 ci_hdrc_tegra
+On Wed, 11 Dec 2019 22:38:19 +0100
+Linus Walleij <linus.walleij@linaro.org> wrote:
+
+> This adds support for the BMA254 variant of this
+> accelerometer. The only difference for the simple IIO
+> driver is that values are 12 bit and the temperature
+> offset differs by 1 degree.
 > 
-> I wonder why the driver needs such dependency? If there are two phy
-> drivers could work with this controller driver, you may request two
-> modules.
+> Cc: Peter Meerwald <pmeerw@pmeerw.net>
+> Cc: Oleksandr Kravchenko <o.v.kravchenko@globallogic.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Well, if somebody wants to use some PHY driver other than the upstream's
-standard one, then that person could simply load the custom driver
-module first, such that it will bind to the PHY's device first.
+I'm never keen on wildcards, and there is a bma253.
 
-It is also possible to manually unbind the standard driver from PHY's
-device and then bind whatever driver you want.
+So please go back to using explicit part numbers.
+If you feel a need to indicate a particular structure
+applies to multiple devices, then use a comment to do so.
 
-> Doesn't such dependency should be done by the board
-> level script?
+I thought about doing this myself, but you might disagree :)
 
-This patch only improves the default behaviour that is common for all
-NVIDIA Tegra boards, it doesn't prevent from doing any special
-customizations.
+Jonathan
 
-Perhaps the Kconfig change could be dropped from this patch in order to
-provide a bit more flexibility in regards to kernel's configuration, but
-I'm very doubtful that realistically anyone would want to replace the
-default driver with anything else on Tegra. The Kconfig change also puts
-ChipIdea's UDC driver in line with the Tegra's EHCI driver that selects
-USB_TEGRA_PHY, please see drivers/usb/host/Kconfig.
+> ---
+>  .../devicetree/bindings/iio/accel/bma180.txt  |   7 +-
+>  drivers/iio/accel/Kconfig                     |   4 +-
+>  drivers/iio/accel/bma180.c                    | 108 +++++++++++++++---
+>  3 files changed, 100 insertions(+), 19 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bma180.txt b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+> index 3b25b4c4d446..f53237270b32 100644
+> --- a/Documentation/devicetree/bindings/iio/accel/bma180.txt
+> +++ b/Documentation/devicetree/bindings/iio/accel/bma180.txt
+> @@ -1,11 +1,14 @@
+> -* Bosch BMA180 / BMA250 triaxial acceleration sensor
+> +* Bosch BMA180 / BMA25x triaxial acceleration sensor
+>  
+>  http://omapworld.com/BMA180_111_1002839.pdf
+>  http://ae-bst.resource.bosch.com/media/products/dokumente/bma250/bst-bma250-ds002-05.pdf
+>  
+>  Required properties:
+>  
+> -  - compatible : should be "bosch,bma180" or "bosch,bma250"
+> +  - compatible : should be one of:
+> +    "bosch,bma180"
+> +    "bosch,bma250"
+> +    "bosch,bma254"
+>    - reg : the I2C address of the sensor
+>  
+>  Optional properties:
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index d4ef35aeb579..2f10fd7954fc 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -89,13 +89,13 @@ config ADXL372_I2C
+>  	  module will be called adxl372_i2c.
+>  
+>  config BMA180
+> -	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
+> +	tristate "Bosch BMA180/BMA25x 3-Axis Accelerometer Driver"
+>  	depends on I2C
+>  	select IIO_BUFFER
+>  	select IIO_TRIGGERED_BUFFER
+>  	help
+>  	  Say Y here if you want to build a driver for the Bosch BMA180 or
+> -	  BMA250 triaxial acceleration sensor.
+> +	  BMA25x triaxial acceleration sensor.
+>  
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called bma180.
+> diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
+> index f583f10ccbb9..952b2918525b 100644
+> --- a/drivers/iio/accel/bma180.c
+> +++ b/drivers/iio/accel/bma180.c
+> @@ -9,6 +9,7 @@
+>   * SPI is not supported by driver
+>   * BMA180: 7-bit I2C slave address 0x40 or 0x41
+>   * BMA250: 7-bit I2C slave address 0x18 or 0x19
+> + * BMA254: 7-bit I2C slave address 0x18 or 0x19
+>   */
+>  
+>  #include <linux/module.h>
+> @@ -34,17 +35,20 @@
+>  enum chip_ids {
+>  	BMA180,
+>  	BMA250,
+> +	BMA254,
+>  };
+>  
+>  struct bma180_data;
+>  
+>  struct bma180_part_info {
+> +	u8 chip_id;
+>  	const struct iio_chan_spec *channels;
+>  	unsigned int num_channels;
+>  	const int *scale_table;
+>  	unsigned int num_scales;
+>  	const int *bw_table;
+>  	unsigned int num_bw;
+> +	int center_temp;
+>  
+>  	u8 int_reset_reg, int_reset_mask;
+>  	u8 sleep_reg, sleep_mask;
+> @@ -52,6 +56,7 @@ struct bma180_part_info {
+>  	u8 scale_reg, scale_mask;
+>  	u8 power_reg, power_mask, lowpower_val;
+>  	u8 int_enable_reg, int_enable_mask;
+> +	u8 int_map_reg, int_enable_dataready_int1_mask;
+>  	u8 softreset_reg;
+>  
+>  	int (*chip_config)(struct bma180_data *data);
+> @@ -90,6 +95,8 @@ struct bma180_part_info {
+>  #define BMA180_RESET_VAL	0xb6
+>  
+>  #define BMA180_ID_REG_VAL	0x03
+> +#define BMA250_ID_REG_VAL	0x03
+> +#define BMA254_ID_REG_VAL	0xfa /* 250 decimal */
+>  
+>  /* Chip power modes */
+>  #define BMA180_LOW_POWER	0x03
+> @@ -110,6 +117,23 @@ struct bma180_part_info {
+>  #define BMA250_INT1_DATA_MASK	BIT(0)
+>  #define BMA250_INT_RESET_MASK	BIT(7) /* Reset pending interrupts */
+>  
+> +#define BMA254_RANGE_REG	0x0f
+> +#define BMA254_BW_REG		0x10
+> +#define BMA254_POWER_REG	0x11
+> +#define BMA254_RESET_REG	0x14
+> +#define BMA254_INT_ENABLE_REG	0x17
+> +#define BMA254_INT_MAP_REG	0x1a
+> +#define BMA254_INT_RESET_REG	0x21
+> +
+> +#define BMA254_RANGE_MASK	GENMASK(3, 0) /* Range of accel values */
+> +#define BMA254_BW_MASK		GENMASK(4, 0) /* Accel bandwidth */
+> +#define BMA254_SUSPEND_MASK	BIT(7) /* chip will sleep */
+> +#define BMA254_LOWPOWER_MASK	BIT(6)
+> +#define BMA254_DATA_INTEN_MASK	BIT(4)
+> +#define BMA254_INT2_DATA_MASK	BIT(7)
+> +#define BMA254_INT1_DATA_MASK	BIT(0)
+> +#define BMA254_INT_RESET_MASK	BIT(7) /* Reset pending interrupts */
+> +
+>  struct bma180_data {
+>  	struct regulator *vdd_supply;
+>  	struct regulator *vddio_supply;
+> @@ -135,8 +159,8 @@ enum bma180_chan {
+>  static int bma180_bw_table[] = { 10, 20, 40, 75, 150, 300 }; /* Hz */
+>  static int bma180_scale_table[] = { 1275, 1863, 2452, 3727, 4903, 9709, 19417 };
+>  
+> -static int bma250_bw_table[] = { 8, 16, 31, 63, 125, 250 }; /* Hz */
+> -static int bma250_scale_table[] = { 0, 0, 0, 38344, 0, 76590, 0, 0, 153180, 0,
+> +static int bma25x_bw_table[] = { 8, 16, 31, 63, 125, 250 }; /* Hz */
+> +static int bma25x_scale_table[] = { 0, 0, 0, 38344, 0, 76590, 0, 0, 153180, 0,
+>  	0, 0, 306458 };
+>  
+>  static int bma180_get_data_reg(struct bma180_data *data, enum bma180_chan chan)
+> @@ -310,8 +334,11 @@ static int bma180_chip_init(struct bma180_data *data)
+>  
+>  	if (ret < 0)
+>  		return ret;
+> -	if (ret != BMA180_ID_REG_VAL)
+> +	if (ret != data->part_info->chip_id) {
+> +		dev_err(&data->client->dev, "wrong chip ID %d expected %d\n",
+> +			ret, data->part_info->chip_id);
+>  		return -ENODEV;
+> +	}
+>  
+>  	ret = bma180_soft_reset(data);
+>  	if (ret)
+> @@ -358,7 +385,7 @@ static int bma180_chip_config(struct bma180_data *data)
+>  	return ret;
+>  }
+>  
+> -static int bma250_chip_config(struct bma180_data *data)
+> +static int bma25x_chip_config(struct bma180_data *data)
+>  {
+>  	int ret = bma180_chip_init(data);
+>  
+> @@ -370,8 +397,12 @@ static int bma250_chip_config(struct bma180_data *data)
+>  	ret = bma180_set_scale(data, 38344); /* 2 G */
+>  	if (ret)
+>  		goto err;
+> -	ret = bma180_set_bits(data, BMA250_INT_MAP_REG,
+> -		BMA250_INT1_DATA_MASK, 1);
+> +	/*
+> +	 * This enables dataready interrupt on the INT1 pin
+> +	 * FIXME: support using the INT2 pin
+> +	 */
+> +	ret = bma180_set_bits(data, data->part_info->int_map_reg,
+> +		data->part_info->int_enable_dataready_int1_mask, 1);
+>  	if (ret)
+>  		goto err;
+>  
+> @@ -397,7 +428,7 @@ static void bma180_chip_disable(struct bma180_data *data)
+>  	dev_err(&data->client->dev, "failed to disable the chip\n");
+>  }
+>  
+> -static void bma250_chip_disable(struct bma180_data *data)
+> +static void bma25x_chip_disable(struct bma180_data *data)
+>  {
+>  	if (bma180_set_new_data_intr_state(data, false))
+>  		goto err;
+> @@ -500,7 +531,7 @@ static int bma180_read_raw(struct iio_dev *indio_dev,
+>  			return -EINVAL;
+>  		}
+>  	case IIO_CHAN_INFO_OFFSET:
+> -		*val = 48; /* 0 LSB @ 24 degree C */
+> +		*val = data->part_info->center_temp;
+>  		return IIO_VAL_INT;
+>  	default:
+>  		return -EINVAL;
+> @@ -630,14 +661,24 @@ static const struct iio_chan_spec bma250_channels[] = {
+>  	IIO_CHAN_SOFT_TIMESTAMP(4),
+>  };
+>  
+> +static const struct iio_chan_spec bma254_channels[] = {
+> +	BMA180_ACC_CHANNEL(X, 12),
+> +	BMA180_ACC_CHANNEL(Y, 12),
+> +	BMA180_ACC_CHANNEL(Z, 12),
+> +	BMA180_TEMP_CHANNEL,
+> +	IIO_CHAN_SOFT_TIMESTAMP(4),
+> +};
+> +
+>  static const struct bma180_part_info bma180_part_info[] = {
+>  	[BMA180] = {
+> +		.chip_id = BMA180_ID_REG_VAL,
+>  		.channels = bma180_channels,
+>  		.num_channels = ARRAY_SIZE(bma180_channels),
+>  		.scale_table = bma180_scale_table,
+>  		.num_scales = ARRAY_SIZE(bma180_scale_table),
+>  		.bw_table = bma180_bw_table,
+>  		.num_bw = ARRAY_SIZE(bma180_bw_table),
+> +		.center_temp = 48, /* 0 LSB @ 24 degree C */
+>  		.int_reset_reg = BMA180_CTRL_REG0,
+>  		.int_reset_mask = BMA180_RESET_INT,
+>  		.sleep_reg = BMA180_CTRL_REG0,
+> @@ -656,12 +697,14 @@ static const struct bma180_part_info bma180_part_info[] = {
+>  		.chip_disable = bma180_chip_disable,
+>  	},
+>  	[BMA250] = {
+> +		.chip_id = BMA250_ID_REG_VAL,
+>  		.channels = bma250_channels,
+>  		.num_channels = ARRAY_SIZE(bma250_channels),
+> -		.scale_table = bma250_scale_table,
+> -		.num_scales = ARRAY_SIZE(bma250_scale_table),
+> -		.bw_table = bma250_bw_table,
+> -		.num_bw = ARRAY_SIZE(bma250_bw_table),
+> +		.scale_table = bma25x_scale_table,
+> +		.num_scales = ARRAY_SIZE(bma25x_scale_table),
+> +		.bw_table = bma25x_bw_table,
+> +		.num_bw = ARRAY_SIZE(bma25x_bw_table),
+> +		.center_temp = 48, /* 0 LSB @ 24 degree C */
+>  		.int_reset_reg = BMA250_INT_RESET_REG,
+>  		.int_reset_mask = BMA250_INT_RESET_MASK,
+>  		.sleep_reg = BMA250_POWER_REG,
+> @@ -675,9 +718,39 @@ static const struct bma180_part_info bma180_part_info[] = {
+>  		.lowpower_val = 1,
+>  		.int_enable_reg = BMA250_INT_ENABLE_REG,
+>  		.int_enable_mask = BMA250_DATA_INTEN_MASK,
+> +		.int_map_reg = BMA250_INT_MAP_REG,
+> +		.int_enable_dataready_int1_mask = BMA250_INT1_DATA_MASK,
+>  		.softreset_reg = BMA250_RESET_REG,
+> -		.chip_config = bma250_chip_config,
+> -		.chip_disable = bma250_chip_disable,
+> +		.chip_config = bma25x_chip_config,
+> +		.chip_disable = bma25x_chip_disable,
+> +	},
+> +	[BMA254] = {
+> +		.chip_id = BMA254_ID_REG_VAL,
+> +		.channels = bma254_channels,
+> +		.num_channels = ARRAY_SIZE(bma254_channels),
+> +		.scale_table = bma25x_scale_table,
+> +		.num_scales = ARRAY_SIZE(bma25x_scale_table),
+> +		.bw_table = bma25x_bw_table,
+> +		.num_bw = ARRAY_SIZE(bma25x_bw_table),
+> +		.center_temp = 46, /* 0 LSB @ 23 degree C */
+> +		.int_reset_reg = BMA254_INT_RESET_REG,
+> +		.int_reset_mask = BMA254_INT_RESET_MASK,
+> +		.sleep_reg = BMA254_POWER_REG,
+> +		.sleep_mask = BMA254_SUSPEND_MASK,
+> +		.bw_reg = BMA254_BW_REG,
+> +		.bw_mask = BMA254_BW_MASK,
+> +		.scale_reg = BMA254_RANGE_REG,
+> +		.scale_mask = BMA254_RANGE_MASK,
+> +		.power_reg = BMA254_POWER_REG,
+> +		.power_mask = BMA254_LOWPOWER_MASK,
+> +		.lowpower_val = 1,
+> +		.int_enable_reg = BMA254_INT_ENABLE_REG,
+> +		.int_enable_mask = BMA254_DATA_INTEN_MASK,
+> +		.int_map_reg = BMA254_INT_MAP_REG,
+> +		.int_enable_dataready_int1_mask = BMA254_INT1_DATA_MASK,
+> +		.softreset_reg = BMA254_RESET_REG,
+> +		.chip_config = bma25x_chip_config,
+> +		.chip_disable = bma25x_chip_disable,
+>  	},
+>  };
+>  
+> @@ -918,6 +991,7 @@ static SIMPLE_DEV_PM_OPS(bma180_pm_ops, bma180_suspend, bma180_resume);
+>  static const struct i2c_device_id bma180_ids[] = {
+>  	{ "bma180", BMA180 },
+>  	{ "bma250", BMA250 },
+> +	{ "bma254", BMA254 },
+>  	{ }
+>  };
+>  
+> @@ -932,6 +1006,10 @@ static const struct of_device_id bma180_of_match[] = {
+>  		.compatible = "bosch,bma250",
+>  		.data = (void *)BMA250
+>  	},
+> +	{
+> +		.compatible = "bosch,bma254",
+> +		.data = (void *)BMA254
+> +	},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, bma180_of_match);
+> @@ -951,5 +1029,5 @@ module_i2c_driver(bma180_driver);
+>  
+>  MODULE_AUTHOR("Kravchenko Oleksandr <x0199363@ti.com>");
+>  MODULE_AUTHOR("Texas Instruments, Inc.");
+> -MODULE_DESCRIPTION("Bosch BMA180/BMA250 triaxial acceleration sensor");
+> +MODULE_DESCRIPTION("Bosch BMA180/BMA25x triaxial acceleration sensor");
+>  MODULE_LICENSE("GPL");
 
-> Do you know are there any other drivers do such things?
-
-I don't think that any of the USB host drivers are currently doing such
-things, but in general there are quite a lot of drivers in kernel that
-are using request_module [1].
-
-[1] https://elixir.bootlin.com/linux/latest/ident/request_module
-
-Please note that drivers/usb/host/ehci-tegra.c uses exported symbols
-from usb/phy/phy-tegra-usb.c and that is why the EHCI driver doesn't
-need to explicitly load the phy_tegra_usb module, the load happens
-automatically because of the missing symbols.
-
-Also, please note that it is possible to squash the Tegra EHCI driver
-into ci_hdrc_tegra.c and then the explicit dependency on the
-phy_tegra_usb won't be needed anymore since it will be replaced with an
-implicit dependency. We (me and Peter Geis) already had some
-experimental patches that do the successful squashing of the drivers,
-but looks like Peter got sidetracked for a more important things for
-now, we'll probably return to that work later on.
