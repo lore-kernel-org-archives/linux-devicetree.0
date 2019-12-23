@@ -2,156 +2,187 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF20AC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 08:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3861C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 08:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC74420715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 08:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CB4206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 08:27:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="vUj/wDxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbfLWIOE (ORCPT
+        id S1725905AbfLWI1V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 03:14:04 -0500
-Received: from comms.puri.sm ([159.203.221.185]:48822 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfLWIOE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 03:14:04 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 1BA8EDF8E0;
-        Mon, 23 Dec 2019 00:14:03 -0800 (PST)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Uts9EHEHOjDE; Mon, 23 Dec 2019 00:14:02 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: imx8mq-librem5-devkit: add accelerometer and
- gyro sensor
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     robh@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de,
-        linux-imx@nxp.com, kernel@puri.sm, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191203130336.18763-1-martin.kepplinger@puri.sm>
- <f8b4710b-4430-a42f-d29a-8f2f4d22b46e@puri.sm>
- <20191223071805.GR11523@dragon>
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
- 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
- ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
-Message-ID: <f2f1e320-6a9e-a669-c7c0-0402570b1e9a@puri.sm>
-Date:   Mon, 23 Dec 2019 09:13:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-In-Reply-To: <20191223071805.GR11523@dragon>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Dec 2019 03:27:21 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37486 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbfLWI1U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 03:27:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rrga2Vig6Fp5zMT/ELJyNk5MJZmPGBRKBTXeByM7a+4=; b=vUj/wDxu0RrYtE8dCubT8zqyj
+        niVOwtX468MF7FNTqR4L1BqNPYjbBEYU76makEiTrwe/aruWfNKk7dAkazijWlHt4lUuMgxuz7za4
+        MF3sfK2NawCFIsHpP3OUifyQOvMSqhO+7A41+Xf7iT5CorHr21BPKoYP+qfCQZQ7imczVIWd5YfqQ
+        UUinkq6BSEc/41p84pN4aJF5BvVygtd0o5BqfFJedK39QDKQS5KZyNvt5eihg3DsPVjVtdjbzWa1U
+        ldjduJjqByROnr6sIwQ6/XQob/XzU4SATjd+l8ILyu0lXtkAe26m1dNoYjK0m0ipcdxZ8tMA4qnNH
+        qJOlkehEg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56826)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ijJ3R-0000cN-Km; Mon, 23 Dec 2019 08:27:05 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ijJ3J-0000fC-UA; Mon, 23 Dec 2019 08:26:57 +0000
+Date:   Mon, 23 Dec 2019 08:26:57 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "antoine.tenart@free-electrons.com" 
+        <antoine.tenart@free-electrons.com>,
+        "jaz@semihalf.com" <jaz@semihalf.com>,
+        "baruch@tkos.co.il" <baruch@tkos.co.il>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191223082657.GL25745@shell.armlinux.org.uk>
+References: <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219190308.GE25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567010C06EB9A4734431106EC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191219214930.GG25745@shell.armlinux.org.uk>
+ <VI1PR04MB556768668EEEDFD61B7AA518EC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191220091642.GJ25745@shell.armlinux.org.uk>
+ <20191220092900.GB24174@lunn.ch>
+ <VI1PR04MB55679B12D4E7C9EC05FE0D9AEC2D0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191220100617.GE24174@lunn.ch>
+ <VI1PR04MB556727A95090FFB4F9836DA2EC2E0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB556727A95090FFB4F9836DA2EC2E0@VI1PR04MB5567.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 23.12.19 08:18, Shawn Guo wrote:
-> On Mon, Dec 16, 2019 at 10:32:15AM +0100, Martin Kepplinger wrote:
->> On 03.12.19 14:03, Martin Kepplinger wrote:
->>> Now that there is driver support, describe the accel and gyro sensor parts
->>> of the LSM9DS1 IMU.
->>>
->>> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
->>> ---
->>>  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
->>> index 683a11035643..7a92704c53ec 100644
->>> --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
->>> +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
->>> @@ -415,6 +415,13 @@
->>>  	pinctrl-0 = <&pinctrl_i2c3>;
->>>  	status = "okay";
->>>  
->>> +	accel_gyro@6a {
+On Mon, Dec 23, 2019 at 07:50:08AM +0000, Madalin Bucur (OSS) wrote:
+> > -----Original Message-----
+> > From: Andrew Lunn <andrew@lunn.ch>
+> > Sent: Friday, December 20, 2019 12:06 PM
+> > To: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>
+> > Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>;
+> > antoine.tenart@free-electrons.com; jaz@semihalf.com; baruch@tkos.co.il;
+> > davem@davemloft.net; netdev@vger.kernel.org; f.fainelli@gmail.com;
+> > hkallweit1@gmail.com; shawnguo@kernel.org; devicetree@vger.kernel.org
+> > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+> > 
+> > On Fri, Dec 20, 2019 at 09:39:08AM +0000, Madalin Bucur (OSS) wrote:
+> > > > -----Original Message-----
+> > > > From: Andrew Lunn <andrew@lunn.ch>
+> > > > Sent: Friday, December 20, 2019 11:29 AM
+> > > > To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > > > Cc: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>;
+> > antoine.tenart@free-
+> > > > electrons.com; jaz@semihalf.com; baruch@tkos.co.il;
+> > davem@davemloft.net;
+> > > > netdev@vger.kernel.org; f.fainelli@gmail.com; hkallweit1@gmail.com;
+> > > > shawnguo@kernel.org; devicetree@vger.kernel.org
+> > > > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+> > > >
+> > > > > How does this help us when we can't simply change the existing
+> > usage?
+> > > > > We can update the DT but we can't free up the usage of "10gbase-kr".
+> > > >
+> > > > Agreed. Code needs to keep on interpreting "10gbase-kr" as any 10G
+> > > > link. If we ever have a true 10gbase-kr, 802.3ap, one meter of copper
+> > > > and two connectors, we are going to have to add a new mode to
+> > > > represent true 10gbase-kr.
+> > > >
+> > > > 	Andrew
+> > >
+> > > Hi, actually we do have that. What would be the name of the new mode
+> > > representing true 10GBase-KR that we will need to add when we upstream
+> > > support for that?
+> > 
+> > Ah!
+> > 
+> > This is going to be messy.
+> > 
+> > Do you really need to differentiate? What seems to make 802.3ap
+> > different is the FEC, autoneg and link training. Does you hardware
+> > support this? Do you need to know you are supposed to be using 802.3ap
+> > in order to configure these features?
 > 
-> We prefer to use hyphen than underscore in node name.  Also nodes with
-> unit-address should be sorted in the address.
+> Yes, it does.
 > 
-> Shawn
+> > What are we going to report to user space? 10gbase-kr, or
+> > 10gbase-kr-true? How do we handle the mess this makes with firmware
+> > based cards which correctly report
+> > ETHTOOL_LINK_MODE_10000baseKR_Full_BIT to user space?
+> > 
+> > What do we currently report to user space? Is it possible for us to
+> > split DT from user space? DT says 10gbase-kr-true but to user space we
+> > say ETHTOOL_LINK_MODE_10000baseKR_Full_BIT?
+> > 
+> > I think in order to work through these issues, somebody probably needs
+> > the hardware, and the desire to see it working. So it might actually
+> > be you who makes a proposal how we sort this out, with help from
+> > Russell and I.
+> > 
+> > 	Andrew
+> 
+> We're overcomplicating the fix. As far as I can see only some Marvell boards
+> declared 10GBase-KR as PHY interface type. These either support 10GBase-KR or
+> they don't. When we learn this, we'll need to set things straight in the device
+> trees and code. Until then it will remain as is, there is no trouble with that.
 
-thanks a lot for taking a look. resent.
+No we aren't.
 
-                               martin
+You think we can just change the existing DT, switching them to use
+XFI/SFI and free up the "10gbase-kr" definition.  Yes, we can change
+the existing DT.  What we *can't* do is free up the existing definition
+for "10gbase-kr" because old device trees must continue to work with
+new kernels.  That is one of the rules we abide by with the kernel.
 
+Now, looking at the Armada 8040 data, it only mentions XFI.  It's
+described as "10GBASE-R (10GbE on single SERDES, including XFI)"
+and goes on to say that it is compliant with "IEEE 802.3 standard".
+However, there is no mention of a CDR, except for XAUI/XSGS mode,
+not for 10GBASE-R/XFI mode.
+
+So, it really isn't clear whether Marvell uses "XFI" to refer to a
+port with a CDR or not.
+
+Marvell's original MVPP2.2 and comphy drivers did used to distinguish
+between XFI and SFI, but there was absolutely no difference in the
+way the hardware was programmed.
+
+Then there's the matter that (I believe with some firmware) it can
+also support 10GBASE-KR (with clause 73 AN) after all.
+
+So, we can't just replace the existing usage in DT with "SFI" just
+because it's connected to a SFP cage, or "XFI" if it's connected
+to a PHY which also mentiones "XFI" in its datasheet. We can't tell
+whether the hardware _actually_ supports 1EEE 10GBASE-R, XFI or SFI.
+
+Given that XFI and SFI are not actually documented (afaics) this is
+really not that surprising - and I would not be surprised if these
+three terms were used interchangably by some device manufacturers
+as a result.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
