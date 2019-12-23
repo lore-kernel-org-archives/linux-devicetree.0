@@ -2,232 +2,160 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01825C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF88C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDE020715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577098972;
-	bh=wIMlSyZudQ/lRHdZGot4YB5kkwjSs6MK2vp2syp5DTE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zXgkskSWX6fxFd4A/5wnscvWjqdt50mzFknUqCj67RoAl4LoHINFuXZh4qWExnUDb
-	 g5NmQE486DhZuP0602lJkblCAIkQi8GCQKCkUGrBu/vn4N+0PxMEj/XwQfcHY90EYv
-	 nlQOym5FvAOvBIUJg5aAOeRiHaN8H72awhkeeHWg=
+	by mail.kernel.org (Postfix) with ESMTP id E5B14206B7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:05:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XueZiEjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfLWLCw (ORCPT
+        id S1726833AbfLWLFF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:02:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfLWLCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:02:52 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 336B2206B7;
-        Mon, 23 Dec 2019 11:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577098971;
-        bh=wIMlSyZudQ/lRHdZGot4YB5kkwjSs6MK2vp2syp5DTE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BwZhZ+jTDKJ4gTSwF3InXNW77vLZRhXqWcQQharJP3kLw52SGIs6Q34NMk+AEW/L2
-         ZN6mQWbMsNoIao0fSUIhxFIKE/d5jVsje5Hg7mBho4ZAvDmtQu54Gb+cmdWOqD1/u+
-         WQB5Axtc0GqiEZ/V5vyBUfTRtjU6NFoKwdgZeLa0=
-Date:   Mon, 23 Dec 2019 11:02:46 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <Michael.Hennerich@analog.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
-        Stefan Popa <stefan.popa@analog.com>
-Subject: Re: [PATCH 2/3] iio: frequency: adf4371: Introduce channel child
- nodes
-Message-ID: <20191223110246.39e008c3@archlinux>
-In-Reply-To: <20191219133755.26109-2-beniamin.bia@analog.com>
-References: <20191219133755.26109-1-beniamin.bia@analog.com>
-        <20191219133755.26109-2-beniamin.bia@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 23 Dec 2019 06:05:05 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54020 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfLWLFE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 06:05:04 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNB4nqh085533;
+        Mon, 23 Dec 2019 05:04:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577099089;
+        bh=VT1M5dqtRAnjjucjMwv2H5EWhncw9k8dboUf61IMjoE=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=XueZiEjB5tUt/VXh06Q8NsJ1/6s5ZgVexf58M3J5zOQlXR1TD9aBJgmvbnteyWsy0
+         YRtVOdOlDgBkTxTWvNeArerengki0t8LGpl9x66wtdE4Bli4vWpgZFvbptO0USgU2C
+         L8rGDsY8scgYP3WPUCvxybLciwxxYV33H8ysmseo=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNB4nTM106157
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Dec 2019 05:04:49 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
+ Dec 2019 05:04:48 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 23 Dec 2019 05:04:48 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNB4eM8025693;
+        Mon, 23 Dec 2019 05:04:44 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>, <frowand.list@gmail.com>
+Subject: [PATCH v8 01/18] bindings: soc: ti: add documentation for k3 ringacc
+Date:   Mon, 23 Dec 2019 13:04:41 +0200
+Message-ID: <20191223110458.30766-2-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 19 Dec 2019 15:37:54 +0200
-Beniamin Bia <beniamin.bia@analog.com> wrote:
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-> From: Stefan Popa <stefan.popa@analog.com>
-> 
-> The ADF4371/ADF4372 devices support individual configurations for the
-> output channels. Each child node represents a channel for which
-> "power-up-frequency" and "output-enable" optional properties are currently
-> supported.
-> 
-> If the "power-up-frequency" is specified for a channel, the driver checks
-> if the value provided is in sync with the frequencies set on the other
-> channels. This limitation is due to the fact that all the channel
-> frequencies are derived from the VCO fundamental frequency.
-> 
-> If the "output-enable" property is specified, then the channel will be
-> enabled, otherwise, the driver will initialize the defaults (RF8x will
-> be the only enabled channel).
-> 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-The code looks good.  Question outstanding is the one I raised in review
-of the binding doc.  What's this for?
+The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+enable straightforward passing of work between a producer and a consumer.
+There is one RINGACC module per NAVSS on TI AM65x and j721e.
 
-Thanks,
+This patch introduces RINGACC device tree bindings.
 
-Jonathan
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Keerthy <j-keerthy@ti.com>
+---
+ .../devicetree/bindings/soc/ti/k3-ringacc.txt | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
 
-> ---
->  drivers/iio/frequency/adf4371.c | 79 ++++++++++++++++++++++++++++++++-
->  1 file changed, 77 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
-> index 7d77ebdbea82..e2a599b912e5 100644
-> --- a/drivers/iio/frequency/adf4371.c
-> +++ b/drivers/iio/frequency/adf4371.c
-> @@ -154,10 +154,16 @@ struct adf4371_chip_info {
->  	const struct iio_chan_spec *channels;
->  };
->  
-> +struct adf4371_channel_config {
-> +	bool enable;
-> +	unsigned long long freq;
-> +};
-> +
->  struct adf4371_state {
->  	struct spi_device *spi;
->  	struct regmap *regmap;
->  	struct clk *clkin;
-> +	struct adf4371_channel_config channel_cfg[4];
->  	/*
->  	 * Lock for accessing device registers. Some operations require
->  	 * multiple consecutive R/W operations, during which the device
-> @@ -175,6 +181,7 @@ struct adf4371_state {
->  	unsigned int mod2;
->  	unsigned int rf_div_sel;
->  	unsigned int ref_div_factor;
-> +	bool mute_till_lock_en;
->  	u8 buf[10] ____cacheline_aligned;
->  };
->  
-> @@ -480,6 +487,36 @@ static const struct iio_info adf4371_info = {
->  	.debugfs_reg_access = &adf4371_reg_access,
->  };
->  
-> +static int adf4371_channel_config(struct adf4371_state *st)
-> +{
-> +	unsigned long long rate;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < st->chip_info->num_channels; i++) {
-> +		if (st->channel_cfg[i].freq == 0)
-> +			continue;
-> +
-> +		rate = adf4371_pll_fract_n_get_rate(st, i);
-> +		if (rate == 0) {
-> +			ret = adf4371_set_freq(st, st->channel_cfg[i].freq, i);
-> +			if (ret < 0)
-> +				return ret;
-> +		} else if (rate != st->channel_cfg[i].freq) {
-> +			dev_err(&st->spi->dev,
-> +				"Clock rate for chanel %d is not in sync\n", i);
-> +			return -EINVAL;
-> +		}
-> +		/* Powerup channel if the property was specified in the dt */
-> +		if (st->channel_cfg[i].enable) {
-> +			ret = adf4371_channel_power_down(st, i, false);
-> +			if (ret < 0)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int adf4371_setup(struct adf4371_state *st)
->  {
->  	unsigned int synth_timeout = 2, timeout = 1, vco_alc_timeout = 1;
-> @@ -497,7 +534,7 @@ static int adf4371_setup(struct adf4371_state *st)
->  		return ret;
->  
->  	/* Mute to Lock Detect */
-> -	if (device_property_read_bool(&st->spi->dev, "adi,mute-till-lock-en")) {
-> +	if (st->mute_till_lock_en) {
->  		ret = regmap_update_bits(st->regmap, ADF4371_REG(0x25),
->  					 ADF4371_MUTE_LD_MSK,
->  					 ADF4371_MUTE_LD(1));
-> @@ -545,7 +582,11 @@ static int adf4371_setup(struct adf4371_state *st)
->  	st->buf[3] = synth_timeout;
->  	st->buf[4] = ADF4371_VCO_ALC_TOUT(vco_alc_timeout);
->  
-> -	return regmap_bulk_write(st->regmap, ADF4371_REG(0x30), st->buf, 5);
-> +	ret = regmap_bulk_write(st->regmap, ADF4371_REG(0x30), st->buf, 5);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	return adf4371_channel_config(st);
->  }
->  
->  static void adf4371_clk_disable(void *data)
-> @@ -555,6 +596,36 @@ static void adf4371_clk_disable(void *data)
->  	clk_disable_unprepare(st->clkin);
->  }
->  
-> +static int adf4371_parse_dt(struct adf4371_state *st)
-> +{
-> +	unsigned char num_channels;
-> +	unsigned int channel;
-> +	struct fwnode_handle *child;
-> +	int ret;
-> +
-> +	if (device_property_read_bool(&st->spi->dev, "adi,mute-till-lock-en"))
-> +		st->mute_till_lock_en = true;
-> +
-> +	num_channels = device_get_child_node_count(&st->spi->dev);
-> +	if (num_channels > st->chip_info->num_channels)
-> +		return -EINVAL;
-> +
-> +	device_for_each_child_node(&st->spi->dev, child) {
-> +		ret = fwnode_property_read_u32(child, "reg", &channel);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = fwnode_property_present(child, "adi,output-enable");
-> +		st->channel_cfg[channel].enable = ret;
-> +
-> +		fwnode_property_read_u64(child,
-> +					 "adi,power-up-frequency",
-> +					 &st->channel_cfg[channel].freq);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int adf4371_probe(struct spi_device *spi)
->  {
->  	const struct spi_device_id *id = spi_get_device_id(spi);
-> @@ -602,6 +673,10 @@ static int adf4371_probe(struct spi_device *spi)
->  
->  	st->clkin_freq = clk_get_rate(st->clkin);
->  
-> +	ret = adf4371_parse_dt(st);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	ret = adf4371_setup(st);
->  	if (ret < 0) {
->  		dev_err(&spi->dev, "ADF4371 setup failed\n");
+diff --git a/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+new file mode 100644
+index 000000000000..59758ccce809
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+@@ -0,0 +1,59 @@
++* Texas Instruments K3 NavigatorSS Ring Accelerator
++
++The Ring Accelerator (RA) is a machine which converts read/write accesses
++from/to a constant address into corresponding read/write accesses from/to a
++circular data structure in memory. The RA eliminates the need for each DMA
++controller which needs to access ring elements from having to know the current
++state of the ring (base address, current offset). The DMA controller
++performs a read or write access to a specific address range (which maps to the
++source interface on the RA) and the RA replaces the address for the transaction
++with a new address which corresponds to the head or tail element of the ring
++(head for reads, tail for writes).
++
++The Ring Accelerator is a hardware module that is responsible for accelerating
++management of the packet queues. The K3 SoCs can have more than one RA instances
++
++Required properties:
++- compatible	: Must be "ti,am654-navss-ringacc";
++- reg		: Should contain register location and length of the following
++		  named register regions.
++- reg-names	: should be
++		  "rt" - The RA Ring Real-time Control/Status Registers
++		  "fifos" - The RA Queues Registers
++		  "proxy_gcfg" - The RA Proxy Global Config Registers
++		  "proxy_target" - The RA Proxy Datapath Registers
++- ti,num-rings	: Number of rings supported by RA
++- ti,sci-rm-range-gp-rings : TI-SCI RM subtype for GP ring range
++- ti,sci	: phandle on TI-SCI compatible System controller node
++- ti,sci-dev-id	: TI-SCI device id of the ring accelerator
++- msi-parent	: phandle for "ti,sci-inta" interrupt controller
++
++Optional properties:
++ -- ti,dma-ring-reset-quirk : enable ringacc / udma ring state interoperability
++		  issue software w/a
++
++Example:
++
++ringacc: ringacc@3c000000 {
++	compatible = "ti,am654-navss-ringacc";
++	reg =	<0x0 0x3c000000 0x0 0x400000>,
++		<0x0 0x38000000 0x0 0x400000>,
++		<0x0 0x31120000 0x0 0x100>,
++		<0x0 0x33000000 0x0 0x40000>;
++	reg-names = "rt", "fifos",
++		    "proxy_gcfg", "proxy_target";
++	ti,num-rings = <818>;
++	ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
++	ti,dma-ring-reset-quirk;
++	ti,sci = <&dmsc>;
++	ti,sci-dev-id = <187>;
++	msi-parent = <&inta_main_udmass>;
++};
++
++client:
++
++dma_ipx: dma_ipx@<addr> {
++	...
++	ti,ringacc = <&ringacc>;
++	...
++}
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
