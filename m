@@ -2,135 +2,124 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868FBC2D0D0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 12:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E85C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 12:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CED82073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 12:01:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577102505;
-	bh=d1XHN84mIpC2WXkedmTZRyzHrAdPTzEjVBsv9ilL3eQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bR8QS9bb0RFTH4zKmS+DBZ7UzWInPaqLSESo4D/xob06YnT1ZF3LWhgh/Y6QhVtdU
-	 YxYf4zV+bdo1B64X+Co80fYfs6Su+xyTbdkYbyCTOLyF2Tnuo1euHreLZM7Ekr29KJ
-	 FQq3cuuMt1a/sH7D5oJZvZprHmtrE5228dlLIyWE=
+	by mail.kernel.org (Postfix) with ESMTP id 5175D20715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 12:07:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yH6GtR7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfLWMBp (ORCPT
+        id S1726709AbfLWMHk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 07:01:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfLWMBo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 07:01:44 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B3F20709;
-        Mon, 23 Dec 2019 12:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577102504;
-        bh=d1XHN84mIpC2WXkedmTZRyzHrAdPTzEjVBsv9ilL3eQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AWSgqV1tfgltZkoaQo7tvfGClXEg/YBvCCIwImwZXzCgnC4OYTFGLi3U81XZZ914f
-         0FTZnPBCXhQGVSXh1Eq+ViGhQTAGedHaUdu+JB4pR848N/WxNtQVETImFl7GfnAAR8
-         nJ/qLxlRL/hO9leeHauXQTjqTQOh4mALTyOwYLGw=
-Date:   Mon, 23 Dec 2019 12:01:39 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     <Eugen.Hristev@microchip.com>
-Cc:     <robh+dt@kernel.org>, <alexandre.belloni@bootlin.com>,
-        <Nicolas.Ferre@microchip.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <a.zummo@towertech.it>, <Ludovic.Desroches@microchip.com>
-Subject: Re: [PATCH 03/10] dt-bindings: iio: trigger: at91-rtc-trigger: add
- bindings
-Message-ID: <20191223120139.557416b8@archlinux>
-In-Reply-To: <1576686157-11939-4-git-send-email-eugen.hristev@microchip.com>
-References: <1576686157-11939-1-git-send-email-eugen.hristev@microchip.com>
-        <1576686157-11939-4-git-send-email-eugen.hristev@microchip.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 23 Dec 2019 07:07:40 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:40054 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726679AbfLWMHk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 07:07:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=F4tsb7PW4zFpLC7EOtPGBjzINEMkMbZx84q7LYNGooU=; b=yH6GtR7yflOVtImr6967Co3ay
+        d/XaiswbaRJM3OuRqi0NE9HKd8IsJ52tPrIY7E2O4ue3anmycFXy/SGKOk/Ql59kNTV6toiEE6zIm
+        a3AyfVRXR/PSM4J6Nk4/cXpNmMiGVu1XLi4gPOYtiIKgDAXRXlQjPGPryqK5EYIUVA84LWkxI2ZbH
+        4R1bG7dwh562RIRwjx0PQ04Ut6aDiZK/KByd8pvPqOW7KTMA56JtlIxTaMZLHrw5vYSBtAmp1PAa2
+        U2m4767DABblYab+CcLmAG/gObQlCdrhggGkm7ZATXZdj8GIlxynVy8ZNVfLCZLnxb1WVe2n+g8og
+        +sLm/q9PQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:52756)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ijMUo-0001hB-GO; Mon, 23 Dec 2019 12:07:34 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ijMUl-0000n5-47; Mon, 23 Dec 2019 12:07:31 +0000
+Date:   Mon, 23 Dec 2019 12:07:31 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Madalin Bucur <madalin.bucur@nxp.com>
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191223120730.GO25745@shell.armlinux.org.uk>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 18 Dec 2019 16:23:59 +0000
-<Eugen.Hristev@microchip.com> wrote:
+On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
+> 10GBase-R could be used as a common nominator but just as well 10G and
+> remove the rest while we're at it. There are/may be differences in
+> features, differences in the way the HW is configured (the most
+> important aspect) and one should be able to determine what interface
+> type is in use to properly configure the HW. SFI does not have the CDR
+> function in the PMD, relying on the PMA signal conditioning vs the XFI
+> that requires this in the PMD.
 
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> Add bindings for AT91 RTC ADC Trigger hardware node.
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-If this does make sense (under discussion) I think it should be in
-the rtc binding doc.  This doesn't make it explicit that this particular
-block is a child node of that block as far as I can see...
+I've now found a copy of INF-8077i on the net, which seems to be the
+document that defines XFI. The definition in there seems to be very
+similar to SFI in that it is an electrical specification, not a
+protocol specification, and, just like SFI, it defines the electrical
+characteristics at the cage, not at the serdes. Therefore, the effects
+of the board layout come into play to achieve compliance with XFI.
 
-Jonathan
+Just like SFI, XFI can be used with multiple different underlying
+protocols. I quote:
 
-> ---
->  .../bindings/iio/trigger/at91-rtc-trigger.yaml     | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 040000 Documentation/devicetree/bindings/iio/trigger
->  create mode 100644 Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml b/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml
-> new file mode 100644
-> index 0000000..c8c5886
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/trigger/at91-rtc-trigger.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright 2019 Eugen Hristev <eugen.hristev@gmail.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/bindings/iio/trigger/microchip,rtc-adc-trigger.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Microchip AT91 RTC ADC Trigger (Real Time Clock to Analog to Digital Converter)
-> +
-> +maintainers:
-> +  - Eugen Hristev <eugen.hristev@microchip.com>
-> +
-> +description: |
-> +  Bindings for the Microchip AT91 RTC ADC Trigger.
-> +  The Real Time Clock block inside AT91 SoCs can be connected with a direct
-> +  hardware line to the ADC. This line can be raised at a specific time
-> +  interval in order to trigger the ADC to perform conversions.
-> +  Datasheet can be found here: http://ww1.microchip.com/downloads/en/devicedoc/ds60001476b.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,rtc-adc-trigger
-> +
-> +  reg:
-> +    description: |
-> +      Register map address (start address, size).
-> +    maxItems: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    {
-> +      #address_cells = <1>;
-> +      #size-cells = <1>;
-> +
-> +      rtc_adc_trigger: rtc-adc-trigger {
-> +        reg = <0x0 0x10>;
-> +        compatible = "microchip,rtc-adc-trigger";
-> +      };
-> +    };
+  "The XFI interface is designed to support SONET OC-192,
+  IEEE.Std-802.3ae, 10GFC and G.709(OTU-2) applications."
 
+Therefore, to describe 10GBASE-R as "XFI" is most definitely incorrect.
+10GBASE-R is just _one_ protocol that can be run over XFI, but it is
+not the only one.
+
+As for CDR, INF-8077i says:
+
+  "The XFP module shall include a Signal Conditioner based on CDR (Clock
+  Data Recovery) technology for complete regeneration."
+
+Whereas for SFP modules, SFF-8472 revision 11.4 added optional support
+for CDR on the modules.
+
+In any case, the CDR is a matter for the module itself, not for the
+host, so it seems that isn't relevent.
+
+Everything that I've said concerning SFI in my previous email (in date
+order), and why we should not be defining that as a phy_interface_t
+seems to also apply to XFI from what I've read in INF-8077i, and it
+seems my original decision that we should not separately define
+XFI and SFI from 10GBASE-R is well founded.
+
+Given that meeting these electrical characteristics involves the
+effects of the board, and it is impractical for a board to switch
+between different electrical characteristics at runtime (routing serdes
+lanes to both a SFP+ and XFP cage is impractical due to reflections on
+unterminated paths) I really don't see any reason why we need two
+different phy_interface_t definitions for these.  As mentioned, the
+difference between XFI and SFI is electrical, and involves the board
+layout, which is a platform specific issue.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
