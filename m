@@ -2,176 +2,81 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE801C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 10:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17507C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 10:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8545B206CB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 10:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EG+bJFvK"
+	by mail.kernel.org (Postfix) with ESMTP id E17EB206D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 10:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfLWKEv (ORCPT
+        id S1726150AbfLWKOT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:04:51 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:22269 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726679AbfLWKEu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 05:04:50 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577095489; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=O5mBrUc9Gs8AbX+fg0tFlrKjAwTzQVOduOeFrwJqWhk=;
- b=EG+bJFvKgWXce1BqdkALX995Q6oFCVal1gT2FoNRNYRVrXj1eZlsKe4OoNb2EHspgBF4nFrQ
- 8yiil94G/+xKAqvsVmxhzl22F3tRIUft1nGKYDPmT/NeytUk4xX6o7CRm97dzcnes3SgfX9q
- qGhYmGWfJCNgSEhzYyyBdZsNp6E=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e00913e.7f13296c1b90-smtp-out-n01;
- Mon, 23 Dec 2019 10:04:46 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 30003C433A2; Mon, 23 Dec 2019 10:04:46 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: dikshita)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7BEB0C43383;
-        Mon, 23 Dec 2019 10:04:45 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 23 Dec 2019 15:34:45 +0530
-From:   dikshita@codeaurora.org
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vgarodia@codeaurora.org
-Subject: Re: [PATCH 3/3] venus: core: add sc7180 DT compatible and resource
- struct
-In-Reply-To: <b1b5ee06-bc39-cfc0-b2c8-8073f8857fde@linaro.org>
-References: <1576828760-13176-1-git-send-email-dikshita@codeaurora.org>
- <1576828760-13176-4-git-send-email-dikshita@codeaurora.org>
- <b1b5ee06-bc39-cfc0-b2c8-8073f8857fde@linaro.org>
-Message-ID: <98c83352cae3a5e38a3711f81dc28df5@codeaurora.org>
-X-Sender: dikshita@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Mon, 23 Dec 2019 05:14:19 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:41654 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbfLWKOT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Dec 2019 05:14:19 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0C5FA200A44;
+        Mon, 23 Dec 2019 11:14:17 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F39922007E5;
+        Mon, 23 Dec 2019 11:14:16 +0100 (CET)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7C1E82033F;
+        Mon, 23 Dec 2019 11:14:16 +0100 (CET)
+From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org, linux@armlinux.org.uk,
+        andrew@lunn.ch
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, devicetree@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, Madalin Bucur <madalin.bucur@oss.nxp.com>
+Subject: [PATCH net-next v2 0/7] Add PHY connection types for XFI and SFI
+Date:   Mon, 23 Dec 2019 12:14:06 +0200
+Message-Id: <1577096053-20507-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: git-send-email 2.1.0
+Content-Type: text/plain; charset="us-ascii"
+Reply-to: madalin.bucur@oss.nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stan,
+For a long time the only 10G interface mode registered in the code was
+XGMII and some PHYs and MACs that actually supported other modes just
+used that to denote 10G. Recently more modes were added (USXGMII,
+10GKR) to better match the actual HW support. In this respect, the use
+of 10GBase-KR to denote not only backplane but also XFI and SFI can be
+improved upon. This patch series introduces XFI and SFI PHY connection
+types and initial users for them.
 
-Thanks for the review!
 
-On 2019-12-20 15:03, Stanimir Varbanov wrote:
-> Hi Dikshita,
-> 
-> Thanks for the patch!
-> 
-> On 12/20/19 9:59 AM, Dikshita Agarwal wrote:
->> This add DT compatible string and resource structure for sc7180.
->> 
->> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
->> ---
->>  drivers/media/platform/qcom/venus/core.c | 58 
->> +++++++++++++++++++++++++++++++-
->>  1 file changed, 57 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/media/platform/qcom/venus/core.c 
->> b/drivers/media/platform/qcom/venus/core.c
->> index c7525d9..e8c8b28 100644
->> --- a/drivers/media/platform/qcom/venus/core.c
->> +++ b/drivers/media/platform/qcom/venus/core.c
->> @@ -469,7 +469,7 @@ static __maybe_unused int 
->> venus_runtime_resume(struct device *dev)
->>  	{ 2073600, 3929000, 0, 5551000, 0 },	/* 4096x2160@60 */
->>  	{ 1036800, 1987000, 0, 2797000, 0 },	/* 4096x2160@30 */
->>  	{  489600, 1040000, 0, 1298000, 0 },	/* 1920x1080@60 */
->> -	{  244800,  530000, 0,  659000, 0 },	/* 1920x1080@30 */
->> +	{  244800,  442000, 0,  659000, 0 },	/* 1920x1080@30 */
-> 
-> unrelated change, please drop it
-Sure, I will address this in next version.
-> 
->>  };
->> 
->>  static const struct venus_resources sdm845_res = {
->> @@ -521,11 +521,67 @@ static __maybe_unused int 
->> venus_runtime_resume(struct device *dev)
->>  	.fwname = "qcom/venus-5.2/venus.mdt",
->>  };
->> 
->> +static const struct freq_tbl sc7180_freq_table[] = {
->> +	{  0, 380000000 },
->> +	{  0, 340000000 },
->> +	{  0, 270000000 },
->> +	{  0, 150000000 },
-> 
-> why .load is zero?
-.load is not being used any longer to calculate load and is a dummy 
-value.
-So keeping it 0.
+Changes from v1:
+  Reorder patches to avoid issues with git bisect
+  Add devicetree bindings entry for XFI, SFI
 
-> 
->> +};
->> +
->> +static struct codec_freq_data sc7180_codec_freq_data[] =  {
->> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675, 10 },
->> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675, 10 },
->> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675, 10 },
->> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200, 10 },
->> +};
-> 
-> the table is exactly the same as sdm845 one, please reuse it.
-Sure, I will address this in next version.
-> 
->> +
->> +static const struct bw_tbl sc7180_bw_table_enc[] = {
->> +	{  972000,  750000, 0, 0, 0 },	/* 3840x2160@30 */
->> +	{  489600,  451000, 0, 0, 0 },	/* 1920x1080@60 */
->> +	{  244800,  234000, 0, 0, 0 },	/* 1920x1080@30 */
->> +};
->> +
->> +static const struct bw_tbl sc7180_bw_table_dec[] = {
->> +	{ 1036800, 1386000, 0, 1875000, 0 },	/* 4096x2160@30 */
->> +	{  489600,  865000, 0, 1146000, 0 },	/* 1920x1080@60 */
->> +	{  244800,  530000, 0,  583000, 0 },	/* 1920x1080@30 */
->> +};
->> +
->> +static const struct venus_resources sc7180_res = {
->> +	.freq_tbl = sc7180_freq_table,
->> +	.freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
->> +	.bw_tbl_enc = sc7180_bw_table_enc,
->> +	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
->> +	.bw_tbl_dec = sc7180_bw_table_dec,
->> +	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
->> +	.codec_freq_data = sc7180_codec_freq_data,
->> +	.codec_freq_data_size = ARRAY_SIZE(sc7180_codec_freq_data),
->> +	.clks = {"core", "iface", "bus" },
->> +	.clks_num = 3,
->> +	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
->> +	.vcodec_clks_num = 2,
->> +	.vcodec_pmdomains = { "venus", "vcodec0" },
->> +	.vcodec_pmdomains_num = 2,
->> +	.vcodec_num = 1,
->> +	.max_load = 3110400,	/* 4096x2160@90 */
-> 
-> Looking into above bandwidth tables I can guess that the maximimum load
-> is reached at 4096x2160@30? If so you have to change it here.
+Madalin Bucur (7):
+  net: phy: add interface modes for XFI, SFI
+  net: fsl/fman: rename IF_MODE_XGMII to IF_MODE_10G
+  net: fsl/fman: add support for PHY_INTERFACE_MODE_XFI
+  net: fsl/fman: add support for PHY_INTERFACE_MODE_SFI
+  net: phy: aquantia: add support for PHY_INTERFACE_MODE_XFI
+  dt-bindings: net: add xfi, sfi to phy-connection-type
+  arm64: dts: ls104xardb: set correct PHY interface mode
 
-After checking further on this I see that max_load can be removed since
-it is not being used now to determine if H/W is overloaded or not.
-What do you suggest?
-> 
-> <cut>
+ Documentation/devicetree/bindings/net/ethernet-controller.yaml |  2 ++
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts              |  2 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts              |  4 ++--
+ drivers/net/ethernet/freescale/fman/fman_memac.c               | 10 +++++++---
+ drivers/net/ethernet/freescale/fman/mac.c                      | 10 +++++++---
+ drivers/net/phy/aquantia_main.c                                |  5 ++++-
+ include/linux/phy.h                                            |  7 ++++++-
+ 7 files changed, 29 insertions(+), 11 deletions(-)
+
+-- 
+2.1.0
+
