@@ -2,78 +2,130 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D678C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 13:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED34C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 13:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC8F2073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 13:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C033F2053B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 13:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2tsuAGxa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDAyIimi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLWNqm (ORCPT
+        id S1726691AbfLWN6o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:46:42 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:38272 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbfLWNqm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 08:46:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bSCU9ggM4t8oYLfb+CzYIiVu00cmp7t1fROUDLoekzE=; b=2tsuAGxawTw2fBco5baqmQJVpM
-        nOQJLdcuz2XNiyDD3fpPvnEEGZFLx9qaqVdD7dBDCIcfykby4zAFw0JBdIy2Ra+QZotVV4VOrpotT
-        PMviJ8+2GRU3sv9QlCJfnQSWspUk6aqkrbgSWhL2xvjfbOYkg3YTWKpIar+TjWyeefs0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ijO2c-00044V-Df; Mon, 23 Dec 2019 14:46:34 +0100
-Date:   Mon, 23 Dec 2019 14:46:34 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Message-ID: <20191223134634.GL32356@lunn.ch>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191223120730.GO25745@shell.armlinux.org.uk>
+        Mon, 23 Dec 2019 08:58:44 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36641 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfLWN6n (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 08:58:43 -0500
+Received: by mail-io1-f67.google.com with SMTP id r13so6169596ioa.3;
+        Mon, 23 Dec 2019 05:58:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3PKfJo7e/F8iYmHNlUC4kcHL5CKe5kHebcIO1c7mfek=;
+        b=dDAyIimizk4oR9NYXHcsKtFz27JZds8feHchTbuhSFGETI/pNbAsciKDI4kkOO1IfW
+         nd1fJJu8DGsZTzaO48gK39ip/2Y7RXR64/zH5QtItx5EMlpR/syeXSe2R4uiULrRrwOF
+         DGIaEEckCcWI0jeY0KKBgvwVAilBeRgkNhrBI9GEFTr+z77vSDBRAysEiLX9O5JQ+sl8
+         89Bv2ne5VAOHZasFhbr5n/1sqBzJ+m2+PDv7/foH36JVYk+2N6zc0oY2wVDAx/ELxRVJ
+         9/Hjh8GLcGbiqL84jnvkKy46ND/X9Enf9+4wn4alAT5qQoGvuaru7lZB96gaBN10o4jB
+         T7/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3PKfJo7e/F8iYmHNlUC4kcHL5CKe5kHebcIO1c7mfek=;
+        b=qO52ApdHUP6nHcLJT8UtBz284YenKPidOAI42S4sELqaZAHSwB0KDURhmr8Xip5CCy
+         WxQ/HS2wLEkh28wPfdqD8WcHGlLq2HUXZcPtEMCzSxl2t+MJFCivoVEo7nbaBb6dEEc0
+         iiT+/A/1AKwqpKDe4QoIxg6M8hWTQaw2jiAmWVtVgzU1l4U3cfwwISs0ELQq7bJu0kLT
+         sCtf37MMX8/I1DFnJH6Wj3Joi1AU0fZ7HLZ16H9GDCW+/icsQ3P/op8CNJe+Ffb6Nk+W
+         N02hhYQEN0NbCwUpljx20qzTfWBfdkkTkt6MWmqRiBOTnW2+muXmQ3YHmN4fPf5asM21
+         90UA==
+X-Gm-Message-State: APjAAAVIUF9M9oorJiHExJL2s1T/Q8h2dRzLqYXhF+NbgkfBypdsSpvG
+        XtQzgL+vSeIupTSuPTbZ93hMqOGZsmVYhMwWAK8=
+X-Google-Smtp-Source: APXvYqzUM8YJ6tRj448hYxFlxEOEtyUsp/J3wkALdJo8nymUv20lta/KuUBHcl5Mm/Nxt1SgHLy1Br5zccJrGGPCy8E=
+X-Received: by 2002:a02:ca56:: with SMTP id i22mr22510644jal.140.1577109523001;
+ Mon, 23 Dec 2019 05:58:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223120730.GO25745@shell.armlinux.org.uk>
+References: <1577096361-8381-1-git-send-email-harigovi@codeaurora.org>
+In-Reply-To: <1577096361-8381-1-git-send-email-harigovi@codeaurora.org>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 23 Dec 2019 06:58:32 -0700
+Message-ID: <CAOCk7NoDsjGWV=ddZO2yVG_n2N-mhdhfeaNML=kTTr2Mg88q0Q@mail.gmail.com>
+Subject: Re: [Freedreno] [v1] drm/msm: update LANE_CTRL register value from
+ default value
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Given that meeting these electrical characteristics involves the
-> effects of the board, and it is impractical for a board to switch
-> between different electrical characteristics at runtime (routing serdes
-> lanes to both a SFP+ and XFP cage is impractical due to reflections on
-> unterminated paths) I really don't see any reason why we need two
-> different phy_interface_t definitions for these.  As mentioned, the
-> difference between XFI and SFI is electrical, and involves the board
-> layout, which is a platform specific issue.
+On Mon, Dec 23, 2019 at 3:19 AM Harigovindan P <harigovi@codeaurora.org> wrote:
+>
+> Updating REG_DSI_LANE_CTRL register value by reading default
+> register value and writing it back using bitwise OR with
+> DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST. This works for all panels.
 
-Hi Russell
+Why?
+You explain what the code does, which I can tell from reading the
+code.  The commit text should tell me why this change is necessary.
+Why would I care if this change is in my tree or not?  What feature
+does it provide or what issue does it fix?
 
-So we make phy_interface_t define the protocol. We should clearly
-document that.
-
-Are we going to need another well defined DT property for the
-electrical interface? What is where we have XFI and SFI, etc?
-
-	   Andrew
+>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/dsi/dsi_host.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> index e6289a3..d3c5233 100644
+> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
+> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+> @@ -816,7 +816,7 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
+>         u32 flags = msm_host->mode_flags;
+>         enum mipi_dsi_pixel_format mipi_fmt = msm_host->format;
+>         const struct msm_dsi_cfg_handler *cfg_hnd = msm_host->cfg_hnd;
+> -       u32 data = 0;
+> +       u32 data = 0, lane_ctrl = 0;
+>
+>         if (!enable) {
+>                 dsi_write(msm_host, REG_DSI_CTRL, 0);
+> @@ -904,9 +904,11 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
+>         dsi_write(msm_host, REG_DSI_LANE_SWAP_CTRL,
+>                   DSI_LANE_SWAP_CTRL_DLN_SWAP_SEL(msm_host->dlane_swap));
+>
+> -       if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
+> +       if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS)) {
+> +               lane_ctrl = dsi_read(msm_host, REG_DSI_LANE_CTRL);
+>                 dsi_write(msm_host, REG_DSI_LANE_CTRL,
+> -                       DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
+> +                       lane_ctrl | DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
+> +       }
+>
+>         data |= DSI_CTRL_ENABLE;
+>
+> --
+> 2.7.4
+>
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
