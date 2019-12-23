@@ -7,100 +7,216 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AB8C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 16:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F449C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C4B2073A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F972075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hc43iZkj"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MiE4tafp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZMG9kPX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfLWQos (ORCPT
+        id S1726920AbfLWRUw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 11:44:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43040 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfLWQor (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 11:44:47 -0500
-Received: by mail-wr1-f67.google.com with SMTP id d16so17202499wre.10
-        for <devicetree@vger.kernel.org>; Mon, 23 Dec 2019 08:44:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xz4QttoGSZMNzHsoQ2oRSp3hgFmNlArUTi27jCKVI2E=;
-        b=hc43iZkjfH0OUTYKjWomh+9SENA1fOyHO9Hd+ZYCvOrhmiHkVFDvEqpg6Uvkwieozz
-         TqMNEWevj+8aVqSxYDK+PjblNx6uAC1ZscAuU0A3eSb8Qq2IkDFt34MXMOmiynH0Dh80
-         gH5I86szOUlV53ssgoBoE2Nnj6CHusAh8eV/w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xz4QttoGSZMNzHsoQ2oRSp3hgFmNlArUTi27jCKVI2E=;
-        b=rITCS9diodMJyV7YHrviogMHgEGO6yye+znk/XB+7fEL3Ihfw+XvMA8s7HHYZHStet
-         o3gzTXjGhlQIaqQ1B6oIq2vlaybYXid/rWypf/jkpnO2XRCGwV6XTfz0st5S5ahpdilE
-         tFhzMoz9fBN0bKl5O3KKpoO7QGdpE9XExkH3HshOeKKUqgZq5LNy31R8JSKttyp4Aocn
-         9jgTDKWqNebyqsFLGI4eb9AsaZtSCOJRrLxGPDEBPPEMahW27Vvs/eSrUsi9KLinYKsP
-         MQvdoYgeEc+ban+pNDPIOQL8yPyada47Hs9uZD+lTdzLP9ymFl/whUBPotXlFq46ddnw
-         9ypg==
-X-Gm-Message-State: APjAAAXAf6IB/L+4evr5FPPNMMvlvbEkpjRx0NM0leOK3uZP3HWPf7Hu
-        Iitha06Wr65qqRTyfs1HS0WJ7uBHOVYLKKzR/LpOsg==
-X-Google-Smtp-Source: APXvYqzjY5Ndxdkg90YTTgT83bomZvha4HtdaAVrcqNGOwiJ5sZ1UY0BVyKQt2vKuUjueRbYrq6Cu1T+lJ4Xqse+S0A=
-X-Received: by 2002:adf:fe4d:: with SMTP id m13mr28408842wrs.179.1577119485955;
- Mon, 23 Dec 2019 08:44:45 -0800 (PST)
+        Mon, 23 Dec 2019 12:20:52 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:50139 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726907AbfLWRUw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Dec 2019 12:20:52 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id D264366B0;
+        Mon, 23 Dec 2019 12:20:50 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 23 Dec 2019 12:20:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=3uY4HFDkgTih8k9wjqYyEaZq6ao
+        EBWq7EA6Fi+wvbDE=; b=MiE4tafpYSn8TrvHNqOO0UYGazX/xNFKAEQtP4Jqhu6
+        2JP7nC+l4y5UJOzOTRgdCs//Ae3JcEnSTipDP8L1NyUyB1Vz2Gf5KNfxtY8W/PpT
+        7kWmMRSN9DxtPIzwKg9ghAl2JZE0DaSfP6lVQNjlZH3QbDCe6M+EoWBTo4hWCZAC
+        WL6Bgcdpi6fpj9PVckrx3TDyIjv9kBLJwUIV3O5TECIQmhm8QXbiPaOTsXkK/gXE
+        6opLg2RT8VHV8xFw2F0YuCDsgPvY9YZ9Fg9hWEFshqxSTW4i4KTsnr4DSVdSoq7U
+        QJt57qTD6ajPcehtzgeCh0dDrJbxMeZQyMp5K7rd/6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=3uY4HF
+        DkgTih8k9wjqYyEaZq6aoEBWq7EA6Fi+wvbDE=; b=ZMG9kPX/G5Vi/XyYblME8o
+        xVcBEvBTqsGF+R6OX5xvdNAzRsqS7tlw0QEb+xtauxUoPgUosMH5G4PvmAr8kS9S
+        W+iECVrttSrSWiSY59t1Pb7E5hz4MjbdVopz1DOaBfSuWR2uYtxq0A42/mIS3crZ
+        4z7/NrCOtsqtXNq5zFDvGtqCSBy9xm0GRPCRwEVL4RC1PMYew7hgJgXsnMQMRWgd
+        GNrtj7PJ3FTrKklMurlAbwOPbMkwifnsx31biZFBw8TahJ8Gj/X35GAcFtnUAZpZ
+        ecUzZEcOCOoPrMl2qAaIFKpzQ82xVtXWmwkz1tAgdMyO+Dn8+fSysk9yAhZh3oSw
+        ==
+X-ME-Sender: <xms:cPcAXi7TaXAKw_ipbQdcKqRzGBamyoYrmDDHN9VOtvBiiB9RjnL7XA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddvtddgleekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
+    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdduudelrddvtdeirddvtdeg
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhne
+    cuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:cPcAXry9FKRbXT7tTej4r1oyo-TsQ8E7fM1p0cjjltWwOrVCd8PWHQ>
+    <xmx:cPcAXuy3c8eTxCKOFG_Hka-RvW_Ki4iGfNHYdr8DAumyKi9YfZOW9w>
+    <xmx:cPcAXrUOxADV--HhJoTBcCN0kP_bz3fEpwdoLimZHUHYAk1SK_c9wA>
+    <xmx:cvcAXkkLgfxOWLJM5sXM42Va5gjJjTAxthvV2LMiweM5NLwaIpnXPw>
+Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A453B3060845;
+        Mon, 23 Dec 2019 12:20:48 -0500 (EST)
+Date:   Mon, 23 Dec 2019 18:22:06 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Yuti Amonkar <yamonkar@cadence.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, airlied@linux.ie,
+        daniel@ffwll.ch, mark.rutland@arm.com, a.hajda@samsung.com,
+        narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net, praneeth@ti.com,
+        jsarha@ti.com, tomi.valkeinen@ti.com, mparab@cadence.com,
+        sjakhade@cadence.com
+Subject: Re: [PATCH v2 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
+ bridge bindings in yaml format
+Message-ID: <20191223172206.ojnka2exmcld4nrl@hendrix.home>
+References: <1577114202-15970-1-git-send-email-yamonkar@cadence.com>
+ <1577114202-15970-2-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-References: <20191223163546.29637-1-michael@amarulasolutions.com>
- <20191223163546.29637-2-michael@amarulasolutions.com> <CAOMZO5CzZvDSEkYcz3LzMCnLp8ZW7zNBd18LkKZWtbh0PMQvdg@mail.gmail.com>
-In-Reply-To: <CAOMZO5CzZvDSEkYcz3LzMCnLp8ZW7zNBd18LkKZWtbh0PMQvdg@mail.gmail.com>
-From:   Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
-Date:   Mon, 23 Dec 2019 17:44:34 +0100
-Message-ID: <CAOf5uw=aRpyJPRB5kv8iGv1TkPQH_vMRSy0UoA6POWgsUiechA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6dl: Fix typo in i.CoreM6 1.5 Dual MIPI
- starter kit
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="krgpiy72sujxxp5c"
+Content-Disposition: inline
+In-Reply-To: <1577114202-15970-2-git-send-email-yamonkar@cadence.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
 
-On Mon, Dec 23, 2019 at 5:43 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Michael,
->
-> On Mon, Dec 23, 2019 at 1:35 PM Michael Trimarchi
-> <michael@amarulasolutions.com> wrote:
-> >
-> > Fix the file to be included in dual mipi starter kit. This
-> > fix ethernet probing
-> >
-> > Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
-> > ---
-> >  arch/arm/boot/dts/imx6dl-icore-mipi.dts | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx6dl-icore-mipi.dts b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-> > index e43bccb78ab2..d8f3821a0ffd 100644
-> > --- a/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-> > +++ b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-> > @@ -8,7 +8,7 @@
-> >  /dts-v1/;
-> >
-> >  #include "imx6dl.dtsi"
-> > -#include "imx6qdl-icore.dtsi"
-> > +#include "imx6qdl-icore-1.5.dtsi"
->
-> Jagan submitted the same fix today:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2019-December/701895.html
+--krgpiy72sujxxp5c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sorry, was not in copy. He said to me but I was not aware about one of my queue
+On Mon, Dec 23, 2019 at 04:16:40PM +0100, Yuti Amonkar wrote:
+> Document the bindings used for the Cadence MHDP DPI/DP bridge in
+> yaml format.
+>
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> ---
+>  .../bindings/display/bridge/cdns,mhdp.yaml         | 109 +++++++++++++++++++++
+>  1 file changed, 109 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> new file mode 100644
+> index 0000000..aed6224
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
+> @@ -0,0 +1,109 @@
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence MHDP bridge
+> +
+> +maintainers:
+> +  - Swapnil Jakhade <sjakhade@cadence.com>
+> +  - Yuti Amonkar <yamonkar@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - cdns,mhdp8546
+> +      - ti,j721e-mhdp8546
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      DP bridge clock, it's used by the IP to know how to translate a number of
+> +      clock cycles into a time (which is used to comply with DP standard timings
+> +      and delays).
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description:
+> +          Register block of mhdptx apb registers upto PHY mapped area(AUX_CONFIG_P).
+> +          The AUX and PMA registers are mapped to associated phy driver.
+> +      - description:
+> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
+> +
+> +  reg-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: mhdptx
+> +      - const: j721e-intg
 
-Michael
+You should have an if / then clause to validate that the length is the
+proper one based on the value of the compatible.
+
+> +  phys:
+> +    description: see the Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+
+phys is a generic property, so we shouldn't tie it to one particular
+phy. Especially since there's nothing in it that really explain what
+this property is supposed to be.
+
+> +  phy-names:
+> +    const: dpphy
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      Ports as described in Documentation/devicetree/bindings/graph.txt
+> +    properties:
+> +       '#address-cells':
+> +         const: 1
+> +       '#size-cells':
+> +         const: 0
+> +       port@0:
+> +         description:
+> +           input port representing the DP bridge input
+> +
+> +       port@1:
+> +         description:
+> +           output port representing the DP bridge output
+> +    required:
+> +      - port@0
+> +      - port@1
+> +      - '#address-cells'
+> +      - '#size-cells'
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - reg
+> +  - phys
+> +  - phy-names
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    mhdp: dp-bridge@f0fb000000 {
+> +        compatible = "cdns,mhdp8546";
+> +        reg = <0xf0 0xfb000000 0x0 0x1000000>,
+> +              <0xf0 0xfc000000 0x0 0x2000000>;
+
+There's two items here, yet you're not using the TI compatible?
+
+Maxime
+
+--krgpiy72sujxxp5c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgD3vgAKCRDj7w1vZxhR
+xUA3AQC/pwICe4jhx/goC8w+guLB6HWSeSv/mRuIIFbcIefZzQD8D32DLBlk6UIv
+LES2rZiDFShdS1q7KraOF8zI89VOlwc=
+=y/zJ
+-----END PGP SIGNATURE-----
+
+--krgpiy72sujxxp5c--
