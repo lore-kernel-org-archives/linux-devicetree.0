@@ -2,221 +2,159 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB86C2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43529C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF9A21569
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0979920715
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sbcFqhQS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Kd0+4lqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfLWOYL (ORCPT
+        id S1726802AbfLWOay (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:24:11 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45580 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbfLWOYK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 09:24:10 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNENxdb127514;
-        Mon, 23 Dec 2019 08:23:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577111039;
-        bh=+On56O2Tc/wog1z+VbvgCVcTNDNaeeIWmkKlZWUSHDg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sbcFqhQSYaxf42gfHtCuGmYayRIDQ6g9/8AhIfJsVtbo5qIjWGNM4VQbao6iG+Ktb
-         dXbzbnN6aPrN/1DiE8p9dh8EE0RKnIVMXxoL4hvwM2CwPpZAqDhnNGPeuFJaiqOQmi
-         CIJJB3mIDmbpz2rNiWGKuLV4Z4+kzG30kINHIYSA=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNENxQ9056841
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Dec 2019 08:23:59 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 08:23:59 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 08:23:59 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNENtNM074112;
-        Mon, 23 Dec 2019 08:23:56 -0600
-Subject: Re: [PATCH v3 2/7] mmc: sdhci: add support for using external DMA
- devices
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <ulf.hansson@linaro.org>, <zhang.chunyan@linaro.org>,
-        <tony@atomide.com>
-References: <20191210095151.15441-1-faiz_abbas@ti.com>
- <20191210095151.15441-3-faiz_abbas@ti.com>
- <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
- <fdf1334a-39bc-9247-9934-df6e1562f4b8@ti.com>
- <ebfceaa6-a8a9-1df2-4c31-263f097b68bd@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <eee34228-117e-02fe-4c77-d6b316a20819@ti.com>
-Date:   Mon, 23 Dec 2019 19:55:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 23 Dec 2019 09:30:54 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:41708 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfLWOay (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 09:30:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pdZ3BuuxpVapCxvBdAVMUi9tPzHQHaYDwu490xXxIf0=; b=Kd0+4lqGJwmug40BnNtP3IgP7
+        aonsKBkyDdA6wQs/C3uABhYtqwSvmK2Pagd/LOHthiyBniuIbkf09knaLSaNwCOrWUWSVvltBDBbl
+        0ETptaMupAmlsftbwlKPCObdZDZJb9DXZxfqLqHAf6vL+g8yfJS74gW8ydUzJsJaRHeK5p00a9d2A
+        w0ymxhV7Ukbkz7Y+AMxFPDHfI/9/qZxGY6d1TZ0GsVQtUWuPC/mpt6BvqGyRSeSsxcLFwrvJq9cnk
+        StfTYTcCDqpenzwCqp4U5VtXmLCe2Cv5ghi1uW3gTikwcVSNFdChx4HD3Z2V4ZcwvFTeiKgFiIOGv
+        udEAGpIuQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:45290)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ijOjO-0002ML-J0; Mon, 23 Dec 2019 14:30:46 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ijOjK-0000sn-HR; Mon, 23 Dec 2019 14:30:42 +0000
+Date:   Mon, 23 Dec 2019 14:30:42 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20191223143042.GQ25745@shell.armlinux.org.uk>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191223120730.GO25745@shell.armlinux.org.uk>
+ <20191223134634.GL32356@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <ebfceaa6-a8a9-1df2-4c31-263f097b68bd@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191223134634.GL32356@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adrian,
-
-On 16/12/19 7:15 pm, Adrian Hunter wrote:
-> On 16/12/19 10:27 am, Faiz Abbas wrote:
->> Hi Adrian,
->>
->> On 12/12/19 6:25 pm, Adrian Hunter wrote:
->>> On 10/12/19 11:51 am, Faiz Abbas wrote:
->>>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>>>
->>>> Some standard SD host controllers can support both external dma
->>>> controllers as well as ADMA/SDMA in which the SD host controller
->>>> acts as DMA master. TI's omap controller is the case as an example.
->>>>
->>>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
->>>> the host controller but does not have any support for external DMA
->>>> controllers implemented using dmaengine, meaning that custom code is
->>>> needed for any systems that use an external DMA controller with SDHCI.
->>>>
->>>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
->>>> 1. Map scatterlists before dmaengine_prep_slave_sg()
->>>> 2. Use dma_async() functions inside of the send_command() path and call
->>>> terminate_sync() in non-atomic context in case of an error.
->>>>
->>>> @@ -2652,6 +2845,18 @@ static bool sdhci_request_done(struct sdhci_host *host)
->>>>  	if (host->flags & SDHCI_REQ_USE_DMA) {
->>>>  		struct mmc_data *data = mrq->data;
->>>>  
->>>> +		spin_unlock_irqrestore(&host->lock, flags);
->>>> +
->>>> +		/* Terminate and synchronize dma in case of an error */
->>>> +		if (data && (mrq->cmd->error || data->error) &&
->>>> +		    host->use_external_dma) {
->>>> +			struct dma_chan *chan = sdhci_external_dma_channel(host,
->>>> +									  data);
->>>> +			dmaengine_terminate_sync(chan);
->>>> +		}
->>>> +
->>>> +		spin_lock_irqsave(&host->lock, flags);
->>>> +
->>>
->>> Need to take the mrq out of mrqs_done[] to ensure it is not processed again,
->>> and put it back again to be consistent with the remaining code. Also put
->>> host->use_external_dma as the first condition i.e.
->>>
->>> 		if (host->use_external_dma && data &&
->>> 		    (mrq->cmd->error || data->error)) {
->>> 			struct dma_chan *chan = sdhci_external_dma_channel(host, data);
->>>
->>> 			host->mrqs_done[i] = NULL;
->>> 			spin_unlock_irqrestore(&host->lock, flags);
->>> 			dmaengine_terminate_sync(chan);
->>> 			spin_lock_irqsave(&host->lock, flags);
->>> 			sdhci_set_mrq_done(host, mrq);
->>> 		}
->>>
->>> where sdhci_set_mrq_done() is factored out from __sdhci_finish_mrq() i.e.
->>>
->>> static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
->>> {
->>> 	int i;
->>>
->>> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->>> 		if (host->mrqs_done[i] == mrq) {
->>> 			WARN_ON(1);
->>> 			return;
->>> 		}
->>> 	}
->>>
->>> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->>> 		if (!host->mrqs_done[i]) {
->>> 			host->mrqs_done[i] = mrq;
->>> 			break;
->>> 		}
->>> 	}
->>>
->>> 	WARN_ON(i >= SDHCI_MAX_MRQS);
->>> }
->>>
->>> sdhci_set_mrq_done() can be made in the refactoring patch.
->> Haven't we already done the sdhci_set_mrq_done() part in
->> __sdhci_finish_mrq()?
->>
->> We are picking up an already "done" mrq, looking at whether it had any
->> error and then sychronizing with external dma. Or at least that is my
->> understanding.
+On Mon, Dec 23, 2019 at 02:46:34PM +0100, Andrew Lunn wrote:
+> > Given that meeting these electrical characteristics involves the
+> > effects of the board, and it is impractical for a board to switch
+> > between different electrical characteristics at runtime (routing serdes
+> > lanes to both a SFP+ and XFP cage is impractical due to reflections on
+> > unterminated paths) I really don't see any reason why we need two
+> > different phy_interface_t definitions for these.  As mentioned, the
+> > difference between XFI and SFI is electrical, and involves the board
+> > layout, which is a platform specific issue.
 > 
-> sdhci supports having 2 requests (1 data, 1 cmd) at a time, so there is an
-> error case where 1 request will wait for the 2nd request before doing a
-> reset.  That logic is further down in sdhci_request_done() so you have to
-> put the mrq back into host->mrqs_done[] to make it work.
-
-Sorry for the late response. I had to spend some time figuring out how
-the mrqs_done handling works. Will add the new function above.
-
+> Hi Russell
 > 
->>
->>>
->>>>  		if (data && data->host_cookie == COOKIE_MAPPED) {
->>>>  			if (host->bounce_buffer) {
->>>>  				/*
->>>> @@ -3758,12 +3963,28 @@ int sdhci_setup_host(struct sdhci_host *host)
->>>>  		       mmc_hostname(mmc), host->version);
->>>>  	}
->>>>  
->>>> -	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
->>>> +	if (host->use_external_dma) {
->>>> +		ret = sdhci_external_dma_init(host);
->>>> +		if (ret == -EPROBE_DEFER)
->>>> +			goto unreg;
->>>> +
->>>> +		/*
->>>> +		 * Fall back to use the DMA/PIO integrated in standard SDHCI
->>>> +		 * instead of external DMA devices.
->>>> +		 */
->>>> +		if (ret)
->>>> +			sdhci_switch_external_dma(host, false);
->>>> +	}
->>>> +
->>>> +	if (host->quirks & SDHCI_QUIRK_FORCE_DMA) {
->>>>  		host->flags |= SDHCI_USE_SDMA;
->>>> -	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
->>>> +	} else if (!(host->caps & SDHCI_CAN_DO_SDMA)) {
->>>>  		DBG("Controller doesn't have SDMA capability\n");
->>>> -	else
->>>> +	} else if (host->use_external_dma) {
->>>> +		/* Using dma-names to detect external dma capability */
->>>
->>> What is this change for?  Do you expect for SDHCI_USE_SDMA and
->>> SDHCI_USE_ADMA flags to be clear?
->>
->> Yes. Today the code enables SDMA by default (in the else part below
->> this). I want it to not enable SDMA in the external dma case.
-> 
-> What about moving the "if (host->use_external_dma) {" clause and explicitly
-> clearing SDHCI_USE_SDMA and SDHCI_USE_ADMA?
-> 
+> So we make phy_interface_t define the protocol. We should clearly
+> document that.
 
-I am ok with this as well. Sending a new version.
+I really think so.
 
-Thanks,
-Faiz
+> Are we going to need another well defined DT property for the
+> electrical interface? What is where we have XFI and SFI, etc?
 
+It is conceivable that board firmware or a serdes driver needs to know
+what settings to apply, but I think we need to think long and hard
+about that. As I've pointed out, it's probably not going to be a one
+size fits all thing, because the properties of the PCB come into play.
 
+On the Armada 8040, the electrical configuration is part of the comphy
+block. The kernel does contain code to configure it using fixed
+settings, but that is just a fallback when there is no support in the
+ATF firmware. ATF firmware added support, and I know that the
+Macchiatobin support has different electrical values for the 10G
+Ethernet ports compared to the Marvell default - because I did a lot
+of reverse engineering with the poor Marvell documentation to figure
+out how to get an eye diagram out of the hardware, and used that to
+improve the reliability of the SFP+ ports on the Macchiatobin single
+shot and GT-8k boards.
+
+Marvell implemented automatic comphy tuning in u-boot/firwmare, which
+improves the performance of comphy on Marvell's hardware, but actually
+ends up making things worse on the Macchiatobin platforms compared to
+my hand-tuned parameters, with errors and link failures becoming
+common.
+
+There are multiple parameters that need to be configured, it isn't
+a simple "just use XFI" or "just use SFI" settings.
+
+Given that the electrical parameters are board dependent, they can
+even be interface dependent if a board has several different
+interfaces, so what is compliant for XFI on one port may not be
+compliant for XFI on a different port. Different routing of the
+Serdes lines may mean crosstalk is different, or different trace
+capacitance needing different emphasis settings.
+
+What I'm getting at is, basically, I don't think a one-size-fits-all
+"XFI" or "SFI" specifier makes any sense what so ever.
+
+I also can't think how we'd generalise it - the parameters required
+to set the serdes hardware are likely to be implementation dependent.
+If you've ever looked at Marvell's COMPHY documentation, it has a
+hundred or more registers controlling all sorts of different serdes
+parameters, some of them in the analogue domain others in the digital
+domain. Some FFE, CTLE, DFE etc parameters - and many without
+anything but a brief description of the register.
+
+There are some simpler implementations too.  For example, SATA is
+another example of serdes, and just like XFI and SFI, it also has
+its own specifications for the electrical side... and then there's
+eSATA as well.  For the eSATA port on the Cubox-i, I ended up with:
+
+        fsl,transmit-level-mV = <1104>;
+        fsl,transmit-boost-mdB = <0>;
+        fsl,transmit-atten-16ths = <9>;
+        fsl,no-spread-spectrum;
+
+which I arrived at by blind analysis and successive approximation,
+and was later confirmed to be correct when Rabeeh eventually got
+around to proving the eye mask. I doubt that having an "eSATA" vs
+"SATA" mode setting for the driver would have worked: just as I'm
+saying for XFI vs SFI, the correct set of parameters for one platform
+is likely not correct for another platform.
+
+So, I think it's up to the serdes/comphy/firmware to figure out how
+to configure the electrical properties for a serdes lane to meet the
+specification for the _platform_ in question, including where it gets
+the data for that configuration, be it from DT or board firmware.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
