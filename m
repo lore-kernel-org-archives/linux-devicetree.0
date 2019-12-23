@@ -2,130 +2,221 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED34C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 13:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB86C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C033F2053B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 13:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF9A21569
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDAyIimi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sbcFqhQS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLWN6o (ORCPT
+        id S1726798AbfLWOYL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 08:58:44 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36641 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfLWN6n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 08:58:43 -0500
-Received: by mail-io1-f67.google.com with SMTP id r13so6169596ioa.3;
-        Mon, 23 Dec 2019 05:58:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3PKfJo7e/F8iYmHNlUC4kcHL5CKe5kHebcIO1c7mfek=;
-        b=dDAyIimizk4oR9NYXHcsKtFz27JZds8feHchTbuhSFGETI/pNbAsciKDI4kkOO1IfW
-         nd1fJJu8DGsZTzaO48gK39ip/2Y7RXR64/zH5QtItx5EMlpR/syeXSe2R4uiULrRrwOF
-         DGIaEEckCcWI0jeY0KKBgvwVAilBeRgkNhrBI9GEFTr+z77vSDBRAysEiLX9O5JQ+sl8
-         89Bv2ne5VAOHZasFhbr5n/1sqBzJ+m2+PDv7/foH36JVYk+2N6zc0oY2wVDAx/ELxRVJ
-         9/Hjh8GLcGbiqL84jnvkKy46ND/X9Enf9+4wn4alAT5qQoGvuaru7lZB96gaBN10o4jB
-         T7/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3PKfJo7e/F8iYmHNlUC4kcHL5CKe5kHebcIO1c7mfek=;
-        b=qO52ApdHUP6nHcLJT8UtBz284YenKPidOAI42S4sELqaZAHSwB0KDURhmr8Xip5CCy
-         WxQ/HS2wLEkh28wPfdqD8WcHGlLq2HUXZcPtEMCzSxl2t+MJFCivoVEo7nbaBb6dEEc0
-         iiT+/A/1AKwqpKDe4QoIxg6M8hWTQaw2jiAmWVtVgzU1l4U3cfwwISs0ELQq7bJu0kLT
-         sCtf37MMX8/I1DFnJH6Wj3Joi1AU0fZ7HLZ16H9GDCW+/icsQ3P/op8CNJe+Ffb6Nk+W
-         N02hhYQEN0NbCwUpljx20qzTfWBfdkkTkt6MWmqRiBOTnW2+muXmQ3YHmN4fPf5asM21
-         90UA==
-X-Gm-Message-State: APjAAAVIUF9M9oorJiHExJL2s1T/Q8h2dRzLqYXhF+NbgkfBypdsSpvG
-        XtQzgL+vSeIupTSuPTbZ93hMqOGZsmVYhMwWAK8=
-X-Google-Smtp-Source: APXvYqzUM8YJ6tRj448hYxFlxEOEtyUsp/J3wkALdJo8nymUv20lta/KuUBHcl5Mm/Nxt1SgHLy1Br5zccJrGGPCy8E=
-X-Received: by 2002:a02:ca56:: with SMTP id i22mr22510644jal.140.1577109523001;
- Mon, 23 Dec 2019 05:58:43 -0800 (PST)
+        Mon, 23 Dec 2019 09:24:11 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45580 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfLWOYK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 09:24:10 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNENxdb127514;
+        Mon, 23 Dec 2019 08:23:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577111039;
+        bh=+On56O2Tc/wog1z+VbvgCVcTNDNaeeIWmkKlZWUSHDg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=sbcFqhQSYaxf42gfHtCuGmYayRIDQ6g9/8AhIfJsVtbo5qIjWGNM4VQbao6iG+Ktb
+         dXbzbnN6aPrN/1DiE8p9dh8EE0RKnIVMXxoL4hvwM2CwPpZAqDhnNGPeuFJaiqOQmi
+         CIJJB3mIDmbpz2rNiWGKuLV4Z4+kzG30kINHIYSA=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNENxQ9056841
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 23 Dec 2019 08:23:59 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
+ Dec 2019 08:23:59 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 23 Dec 2019 08:23:59 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNENtNM074112;
+        Mon, 23 Dec 2019 08:23:56 -0600
+Subject: Re: [PATCH v3 2/7] mmc: sdhci: add support for using external DMA
+ devices
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>
+CC:     <kishon@ti.com>, <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <ulf.hansson@linaro.org>, <zhang.chunyan@linaro.org>,
+        <tony@atomide.com>
+References: <20191210095151.15441-1-faiz_abbas@ti.com>
+ <20191210095151.15441-3-faiz_abbas@ti.com>
+ <92fd22bf-3024-928d-ebf5-e7382988a36b@intel.com>
+ <fdf1334a-39bc-9247-9934-df6e1562f4b8@ti.com>
+ <ebfceaa6-a8a9-1df2-4c31-263f097b68bd@intel.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <eee34228-117e-02fe-4c77-d6b316a20819@ti.com>
+Date:   Mon, 23 Dec 2019 19:55:22 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <1577096361-8381-1-git-send-email-harigovi@codeaurora.org>
-In-Reply-To: <1577096361-8381-1-git-send-email-harigovi@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 23 Dec 2019 06:58:32 -0700
-Message-ID: <CAOCk7NoDsjGWV=ddZO2yVG_n2N-mhdhfeaNML=kTTr2Mg88q0Q@mail.gmail.com>
-Subject: Re: [Freedreno] [v1] drm/msm: update LANE_CTRL register value from
- default value
-To:     Harigovindan P <harigovi@codeaurora.org>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ebfceaa6-a8a9-1df2-4c31-263f097b68bd@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 3:19 AM Harigovindan P <harigovi@codeaurora.org> wrote:
->
-> Updating REG_DSI_LANE_CTRL register value by reading default
-> register value and writing it back using bitwise OR with
-> DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST. This works for all panels.
+Hi Adrian,
 
-Why?
-You explain what the code does, which I can tell from reading the
-code.  The commit text should tell me why this change is necessary.
-Why would I care if this change is in my tree or not?  What feature
-does it provide or what issue does it fix?
+On 16/12/19 7:15 pm, Adrian Hunter wrote:
+> On 16/12/19 10:27 am, Faiz Abbas wrote:
+>> Hi Adrian,
+>>
+>> On 12/12/19 6:25 pm, Adrian Hunter wrote:
+>>> On 10/12/19 11:51 am, Faiz Abbas wrote:
+>>>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+>>>>
+>>>> Some standard SD host controllers can support both external dma
+>>>> controllers as well as ADMA/SDMA in which the SD host controller
+>>>> acts as DMA master. TI's omap controller is the case as an example.
+>>>>
+>>>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
+>>>> the host controller but does not have any support for external DMA
+>>>> controllers implemented using dmaengine, meaning that custom code is
+>>>> needed for any systems that use an external DMA controller with SDHCI.
+>>>>
+>>>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
+>>>> 1. Map scatterlists before dmaengine_prep_slave_sg()
+>>>> 2. Use dma_async() functions inside of the send_command() path and call
+>>>> terminate_sync() in non-atomic context in case of an error.
+>>>>
+>>>> @@ -2652,6 +2845,18 @@ static bool sdhci_request_done(struct sdhci_host *host)
+>>>>  	if (host->flags & SDHCI_REQ_USE_DMA) {
+>>>>  		struct mmc_data *data = mrq->data;
+>>>>  
+>>>> +		spin_unlock_irqrestore(&host->lock, flags);
+>>>> +
+>>>> +		/* Terminate and synchronize dma in case of an error */
+>>>> +		if (data && (mrq->cmd->error || data->error) &&
+>>>> +		    host->use_external_dma) {
+>>>> +			struct dma_chan *chan = sdhci_external_dma_channel(host,
+>>>> +									  data);
+>>>> +			dmaengine_terminate_sync(chan);
+>>>> +		}
+>>>> +
+>>>> +		spin_lock_irqsave(&host->lock, flags);
+>>>> +
+>>>
+>>> Need to take the mrq out of mrqs_done[] to ensure it is not processed again,
+>>> and put it back again to be consistent with the remaining code. Also put
+>>> host->use_external_dma as the first condition i.e.
+>>>
+>>> 		if (host->use_external_dma && data &&
+>>> 		    (mrq->cmd->error || data->error)) {
+>>> 			struct dma_chan *chan = sdhci_external_dma_channel(host, data);
+>>>
+>>> 			host->mrqs_done[i] = NULL;
+>>> 			spin_unlock_irqrestore(&host->lock, flags);
+>>> 			dmaengine_terminate_sync(chan);
+>>> 			spin_lock_irqsave(&host->lock, flags);
+>>> 			sdhci_set_mrq_done(host, mrq);
+>>> 		}
+>>>
+>>> where sdhci_set_mrq_done() is factored out from __sdhci_finish_mrq() i.e.
+>>>
+>>> static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
+>>> {
+>>> 	int i;
+>>>
+>>> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
+>>> 		if (host->mrqs_done[i] == mrq) {
+>>> 			WARN_ON(1);
+>>> 			return;
+>>> 		}
+>>> 	}
+>>>
+>>> 	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
+>>> 		if (!host->mrqs_done[i]) {
+>>> 			host->mrqs_done[i] = mrq;
+>>> 			break;
+>>> 		}
+>>> 	}
+>>>
+>>> 	WARN_ON(i >= SDHCI_MAX_MRQS);
+>>> }
+>>>
+>>> sdhci_set_mrq_done() can be made in the refactoring patch.
+>> Haven't we already done the sdhci_set_mrq_done() part in
+>> __sdhci_finish_mrq()?
+>>
+>> We are picking up an already "done" mrq, looking at whether it had any
+>> error and then sychronizing with external dma. Or at least that is my
+>> understanding.
+> 
+> sdhci supports having 2 requests (1 data, 1 cmd) at a time, so there is an
+> error case where 1 request will wait for the 2nd request before doing a
+> reset.  That logic is further down in sdhci_request_done() so you have to
+> put the mrq back into host->mrqs_done[] to make it work.
 
->
-> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/dsi/dsi_host.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> index e6289a3..d3c5233 100644
-> --- a/drivers/gpu/drm/msm/dsi/dsi_host.c
-> +++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
-> @@ -816,7 +816,7 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
->         u32 flags = msm_host->mode_flags;
->         enum mipi_dsi_pixel_format mipi_fmt = msm_host->format;
->         const struct msm_dsi_cfg_handler *cfg_hnd = msm_host->cfg_hnd;
-> -       u32 data = 0;
-> +       u32 data = 0, lane_ctrl = 0;
->
->         if (!enable) {
->                 dsi_write(msm_host, REG_DSI_CTRL, 0);
-> @@ -904,9 +904,11 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
->         dsi_write(msm_host, REG_DSI_LANE_SWAP_CTRL,
->                   DSI_LANE_SWAP_CTRL_DLN_SWAP_SEL(msm_host->dlane_swap));
->
-> -       if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
-> +       if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS)) {
-> +               lane_ctrl = dsi_read(msm_host, REG_DSI_LANE_CTRL);
->                 dsi_write(msm_host, REG_DSI_LANE_CTRL,
-> -                       DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
-> +                       lane_ctrl | DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
-> +       }
->
->         data |= DSI_CTRL_ENABLE;
->
-> --
-> 2.7.4
->
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+Sorry for the late response. I had to spend some time figuring out how
+the mrqs_done handling works. Will add the new function above.
+
+> 
+>>
+>>>
+>>>>  		if (data && data->host_cookie == COOKIE_MAPPED) {
+>>>>  			if (host->bounce_buffer) {
+>>>>  				/*
+>>>> @@ -3758,12 +3963,28 @@ int sdhci_setup_host(struct sdhci_host *host)
+>>>>  		       mmc_hostname(mmc), host->version);
+>>>>  	}
+>>>>  
+>>>> -	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
+>>>> +	if (host->use_external_dma) {
+>>>> +		ret = sdhci_external_dma_init(host);
+>>>> +		if (ret == -EPROBE_DEFER)
+>>>> +			goto unreg;
+>>>> +
+>>>> +		/*
+>>>> +		 * Fall back to use the DMA/PIO integrated in standard SDHCI
+>>>> +		 * instead of external DMA devices.
+>>>> +		 */
+>>>> +		if (ret)
+>>>> +			sdhci_switch_external_dma(host, false);
+>>>> +	}
+>>>> +
+>>>> +	if (host->quirks & SDHCI_QUIRK_FORCE_DMA) {
+>>>>  		host->flags |= SDHCI_USE_SDMA;
+>>>> -	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
+>>>> +	} else if (!(host->caps & SDHCI_CAN_DO_SDMA)) {
+>>>>  		DBG("Controller doesn't have SDMA capability\n");
+>>>> -	else
+>>>> +	} else if (host->use_external_dma) {
+>>>> +		/* Using dma-names to detect external dma capability */
+>>>
+>>> What is this change for?  Do you expect for SDHCI_USE_SDMA and
+>>> SDHCI_USE_ADMA flags to be clear?
+>>
+>> Yes. Today the code enables SDMA by default (in the else part below
+>> this). I want it to not enable SDMA in the external dma case.
+> 
+> What about moving the "if (host->use_external_dma) {" clause and explicitly
+> clearing SDHCI_USE_SDMA and SDHCI_USE_ADMA?
+> 
+
+I am ok with this as well. Sending a new version.
+
+Thanks,
+Faiz
+
+
