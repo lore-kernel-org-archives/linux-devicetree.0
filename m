@@ -2,221 +2,211 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F449C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15AD5C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F972075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52B62073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 17:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MiE4tafp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZMG9kPX/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZggbavCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfLWRUw (ORCPT
+        id S1726805AbfLWRXq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 12:20:52 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:50139 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726907AbfLWRUw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 12:20:52 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D264366B0;
-        Mon, 23 Dec 2019 12:20:50 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Mon, 23 Dec 2019 12:20:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=3uY4HFDkgTih8k9wjqYyEaZq6ao
-        EBWq7EA6Fi+wvbDE=; b=MiE4tafpYSn8TrvHNqOO0UYGazX/xNFKAEQtP4Jqhu6
-        2JP7nC+l4y5UJOzOTRgdCs//Ae3JcEnSTipDP8L1NyUyB1Vz2Gf5KNfxtY8W/PpT
-        7kWmMRSN9DxtPIzwKg9ghAl2JZE0DaSfP6lVQNjlZH3QbDCe6M+EoWBTo4hWCZAC
-        WL6Bgcdpi6fpj9PVckrx3TDyIjv9kBLJwUIV3O5TECIQmhm8QXbiPaOTsXkK/gXE
-        6opLg2RT8VHV8xFw2F0YuCDsgPvY9YZ9Fg9hWEFshqxSTW4i4KTsnr4DSVdSoq7U
-        QJt57qTD6ajPcehtzgeCh0dDrJbxMeZQyMp5K7rd/6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=3uY4HF
-        DkgTih8k9wjqYyEaZq6aoEBWq7EA6Fi+wvbDE=; b=ZMG9kPX/G5Vi/XyYblME8o
-        xVcBEvBTqsGF+R6OX5xvdNAzRsqS7tlw0QEb+xtauxUoPgUosMH5G4PvmAr8kS9S
-        W+iECVrttSrSWiSY59t1Pb7E5hz4MjbdVopz1DOaBfSuWR2uYtxq0A42/mIS3crZ
-        4z7/NrCOtsqtXNq5zFDvGtqCSBy9xm0GRPCRwEVL4RC1PMYew7hgJgXsnMQMRWgd
-        GNrtj7PJ3FTrKklMurlAbwOPbMkwifnsx31biZFBw8TahJ8Gj/X35GAcFtnUAZpZ
-        ecUzZEcOCOoPrMl2qAaIFKpzQ82xVtXWmwkz1tAgdMyO+Dn8+fSysk9yAhZh3oSw
-        ==
-X-ME-Sender: <xms:cPcAXi7TaXAKw_ipbQdcKqRzGBamyoYrmDDHN9VOtvBiiB9RjnL7XA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvddvtddgleekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdduudelrddvtdeirddvtdeg
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhne
-    cuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:cPcAXry9FKRbXT7tTej4r1oyo-TsQ8E7fM1p0cjjltWwOrVCd8PWHQ>
-    <xmx:cPcAXuy3c8eTxCKOFG_Hka-RvW_Ki4iGfNHYdr8DAumyKi9YfZOW9w>
-    <xmx:cPcAXrUOxADV--HhJoTBcCN0kP_bz3fEpwdoLimZHUHYAk1SK_c9wA>
-    <xmx:cvcAXkkLgfxOWLJM5sXM42Va5gjJjTAxthvV2LMiweM5NLwaIpnXPw>
-Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A453B3060845;
-        Mon, 23 Dec 2019 12:20:48 -0500 (EST)
-Date:   Mon, 23 Dec 2019 18:22:06 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Yuti Amonkar <yamonkar@cadence.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, airlied@linux.ie,
-        daniel@ffwll.ch, mark.rutland@arm.com, a.hajda@samsung.com,
-        narmstrong@baylibre.com, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, praneeth@ti.com,
-        jsarha@ti.com, tomi.valkeinen@ti.com, mparab@cadence.com,
-        sjakhade@cadence.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: drm/bridge: Document Cadence MHDP
- bridge bindings in yaml format
-Message-ID: <20191223172206.ojnka2exmcld4nrl@hendrix.home>
-References: <1577114202-15970-1-git-send-email-yamonkar@cadence.com>
- <1577114202-15970-2-git-send-email-yamonkar@cadence.com>
+        Mon, 23 Dec 2019 12:23:46 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38564 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfLWRXq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 12:23:46 -0500
+Received: by mail-lj1-f196.google.com with SMTP id k8so18419001ljh.5;
+        Mon, 23 Dec 2019 09:23:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=u+GgTQ7ybWZ7C8xjZYQV6OBNXZmHXRlNnZIqFKfsmh0=;
+        b=ZggbavCYF9R03LN/GA6A8IAjFSb2I19CLDSBWQ1cQjNoQHj5a7Cb5dLLQ0uuvjh4dt
+         2c/EYAH0FjqszqiRQsgRk0oaOz9p0XWQiqmebWcRycVX92AGQU280HM2wSK0mOrtV3ZW
+         THBmUoPVoBx5qVJnVpEhwQr99eL+zZW6R4SFlEPUZpaylRjFkKApK9YUkxmmFxE6QQ3e
+         L0Mu04D0CmHyaG7ULHT42Eci7sdBnJ5Oteai40TGYjG/4ARyoKCDDwBUrPk4fwqcJkRH
+         2/ZZ5M6bS3m/fGY4SwcMs2wSgVDalGauOVsWZQ3K6oeYAOdHXdsEYYWIbCgCCQMBMZcW
+         /zhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u+GgTQ7ybWZ7C8xjZYQV6OBNXZmHXRlNnZIqFKfsmh0=;
+        b=F9uH5IY9EhncLZHOfQvFGMisPHsW6cyBm324yUiNSf3DRNSdqENwX5OBsAz4RjYCiN
+         trFr6RvgwJrN2HJ60IFNmuFxMLiKx2GXSo35i38XAkfvRP/3ky5eJ1miPDF2KV9CNoY0
+         MjnxqtFppOGSXKXFLp0mj3k8F6PV2jbAgBmHZoglHmrjmeq/ICWJEqKF65A4mm/bdkjX
+         FEVEh50K2KJLJDzrLxuacdOYRpniNl8h/sFe+yOwUlGjerUH7oQJrMyihxlms2EVFjcp
+         C6w0UtQONCKWWsCqLsOHRQWd2O5v0IUCPPvYxaXbxAXefJTCTgQKxDlcoUO3dPGEeQPC
+         /ymg==
+X-Gm-Message-State: APjAAAUEKoycboNfGYgRMaSuxOonx2e9AiMg3etsNBb6unttNFmtPbRZ
+        v1G75MclpNC+YqtDNQdTqMw=
+X-Google-Smtp-Source: APXvYqznVHMwk4z0zRQUa244lrNFQoo8AGsEqJjn52aZ+3QFYFwDs9N4TOHu5uO+eUBLwMuv73DHlw==
+X-Received: by 2002:a05:651c:282:: with SMTP id b2mr18236642ljo.41.1577121823402;
+        Mon, 23 Dec 2019 09:23:43 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id q26sm8568568lfc.52.2019.12.23.09.23.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Dec 2019 09:23:42 -0800 (PST)
+Subject: Re: [PATCH v2 10/10] usb: chipidea: tegra: Add USB_TEGRA_PHY module
+ to driver's dependencies
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peter Geis <pgwipeout@gmail.com>
+References: <20191220015238.9228-1-digetx@gmail.com>
+ <20191220015238.9228-11-digetx@gmail.com>
+ <20191220035650.GC19921@b29397-desktop>
+ <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
+ <20191223063958.GD19921@b29397-desktop>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1d2e3ea0-a7ff-3e83-57d1-05ffddb0da07@gmail.com>
+Date:   Mon, 23 Dec 2019 20:23:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="krgpiy72sujxxp5c"
-Content-Disposition: inline
-In-Reply-To: <1577114202-15970-2-git-send-email-yamonkar@cadence.com>
+In-Reply-To: <20191223063958.GD19921@b29397-desktop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+23.12.2019 09:40, Peter Chen пишет:
+> On 19-12-20 07:31:08, Dmitry Osipenko wrote:
+>> 20.12.2019 06:56, Peter Chen пишет:
+>>> On 19-12-20 04:52:38, Dmitry Osipenko wrote:
+>>>> Now, when ci_hdrc_tegra kernel module is loaded, the phy_tegra_usb module
+>>>> is loaded too regardless of kernel's configuration. Previously this
+>>>> problem was masked because Tegra's EHCI driver is usually enabled in
+>>>> kernel's config and thus PHY driver was getting loaded because of it, but
+>>>> now I was making some more thorough testing and noticed that PHY's module
+>>>> isn't getting auto-loaded without the host driver.
+>>>>
+>>>> Note that ChipIdea's driver doesn't use any of the exported functions of
+>>>> phy_tegra_usb module and thus the module needs to be requested explicitly.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/usb/chipidea/Kconfig         | 1 +
+>>>>  drivers/usb/chipidea/ci_hdrc_tegra.c | 6 ++++++
+>>>>  2 files changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+>>>> index ae850b3fddf2..d53db520e209 100644
+>>>> --- a/drivers/usb/chipidea/Kconfig
+>>>> +++ b/drivers/usb/chipidea/Kconfig
+>>>> @@ -7,6 +7,7 @@ config USB_CHIPIDEA
+>>>>  	select RESET_CONTROLLER
+>>>>  	select USB_ULPI_BUS
+>>>>  	select USB_ROLE_SWITCH
+>>>> +	select USB_TEGRA_PHY if ARCH_TEGRA
+>>>>  	help
+>>>>  	  Say Y here if your system has a dual role high speed USB
+>>>>  	  controller based on ChipIdea silicon IP. It supports:
+>>>> diff --git a/drivers/usb/chipidea/ci_hdrc_tegra.c b/drivers/usb/chipidea/ci_hdrc_tegra.c
+>>>> index 7455df0ede49..8bc11100245d 100644
+>>>> --- a/drivers/usb/chipidea/ci_hdrc_tegra.c
+>>>> +++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
+>>>> @@ -53,6 +53,12 @@ static int tegra_udc_probe(struct platform_device *pdev)
+>>>>  	struct tegra_udc *udc;
+>>>>  	int err;
+>>>>  
+>>>> +	if (IS_MODULE(CONFIG_USB_TEGRA_PHY)) {
+>>>> +		err = request_module("phy_tegra_usb");
+>>>> +		if (err)
+>>>> +			return err;
+>>>> +	}
+>>>> +
+>>>
+>>> Why you do this dependency, if this controller driver can't
+>>> get USB PHY, it should return error. What's the return value
+>>> after calling below:
+>>>
+>>> 	udc->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "nvidia,phy", 0);
+>>
+>> It returns -EPROBE_DEFER when phy_tegra_usb isn't loaded.
+>>
+>> So if you'll do:
+>>
+>> # rmmod ci_hdrc_tegra; rmmod ci_hdrc; rmmod phy_tegra_usb;
+>> # modprobe ci_hdrc_tegra
+>> # lsmod
+>> Module                  Size  Used by
+>> ci_hdrc_tegra          16384  0
+>> ci_hdrc                45056  1 ci_hdrc_tegra
+>>
+>> After this patch:
+>>
+>> # rmmod ci_hdrc_tegra; rmmod ci_hdrc; rmmod phy_tegra_usb;
+>> # modprobe ci_hdrc_tegra
+>> # lsmod
+>> Module                  Size  Used by
+>> Module                  Size  Used by
+>> phy_tegra_usb          20480  1
+>> ci_hdrc_tegra          16384  0
+>> ci_hdrc                45056  1 ci_hdrc_tegra
+> 
+> I wonder why the driver needs such dependency? If there are two phy
+> drivers could work with this controller driver, you may request two
+> modules.
 
---krgpiy72sujxxp5c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well, if somebody wants to use some PHY driver other than the upstream's
+standard one, then that person could simply load the custom driver
+module first, such that it will bind to the PHY's device first.
 
-On Mon, Dec 23, 2019 at 04:16:40PM +0100, Yuti Amonkar wrote:
-> Document the bindings used for the Cadence MHDP DPI/DP bridge in
-> yaml format.
->
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> ---
->  .../bindings/display/bridge/cdns,mhdp.yaml         | 109 +++++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> new file mode 100644
-> index 0000000..aed6224
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,mhdp.yaml
-> @@ -0,0 +1,109 @@
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/display/bridge/cdns,mhdp.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence MHDP bridge
-> +
-> +maintainers:
-> +  - Swapnil Jakhade <sjakhade@cadence.com>
-> +  - Yuti Amonkar <yamonkar@cadence.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - cdns,mhdp8546
-> +      - ti,j721e-mhdp8546
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      DP bridge clock, it's used by the IP to know how to translate a number of
-> +      clock cycles into a time (which is used to comply with DP standard timings
-> +      and delays).
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description:
-> +          Register block of mhdptx apb registers upto PHY mapped area(AUX_CONFIG_P).
-> +          The AUX and PMA registers are mapped to associated phy driver.
-> +      - description:
-> +          Register block for DSS_EDP0_INTG_CFG_VP registers in case of TI J7 SoCs.
-> +
-> +  reg-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: mhdptx
-> +      - const: j721e-intg
+It is also possible to manually unbind the standard driver from PHY's
+device and then bind whatever driver you want.
 
-You should have an if / then clause to validate that the length is the
-proper one based on the value of the compatible.
+> Doesn't such dependency should be done by the board
+> level script?
 
-> +  phys:
-> +    description: see the Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+This patch only improves the default behaviour that is common for all
+NVIDIA Tegra boards, it doesn't prevent from doing any special
+customizations.
 
-phys is a generic property, so we shouldn't tie it to one particular
-phy. Especially since there's nothing in it that really explain what
-this property is supposed to be.
+Perhaps the Kconfig change could be dropped from this patch in order to
+provide a bit more flexibility in regards to kernel's configuration, but
+I'm very doubtful that realistically anyone would want to replace the
+default driver with anything else on Tegra. The Kconfig change also puts
+ChipIdea's UDC driver in line with the Tegra's EHCI driver that selects
+USB_TEGRA_PHY, please see drivers/usb/host/Kconfig.
 
-> +  phy-names:
-> +    const: dpphy
-> +
-> +  ports:
-> +    type: object
-> +    description:
-> +      Ports as described in Documentation/devicetree/bindings/graph.txt
-> +    properties:
-> +       '#address-cells':
-> +         const: 1
-> +       '#size-cells':
-> +         const: 0
-> +       port@0:
-> +         description:
-> +           input port representing the DP bridge input
-> +
-> +       port@1:
-> +         description:
-> +           output port representing the DP bridge output
-> +    required:
-> +      - port@0
-> +      - port@1
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - reg
-> +  - phys
-> +  - phy-names
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    mhdp: dp-bridge@f0fb000000 {
-> +        compatible = "cdns,mhdp8546";
-> +        reg = <0xf0 0xfb000000 0x0 0x1000000>,
-> +              <0xf0 0xfc000000 0x0 0x2000000>;
+> Do you know are there any other drivers do such things?
 
-There's two items here, yet you're not using the TI compatible?
+I don't think that any of the USB host drivers are currently doing such
+things, but in general there are quite a lot of drivers in kernel that
+are using request_module [1].
 
-Maxime
+[1] https://elixir.bootlin.com/linux/latest/ident/request_module
 
---krgpiy72sujxxp5c
-Content-Type: application/pgp-signature; name="signature.asc"
+Please note that drivers/usb/host/ehci-tegra.c uses exported symbols
+from usb/phy/phy-tegra-usb.c and that is why the EHCI driver doesn't
+need to explicitly load the phy_tegra_usb module, the load happens
+automatically because of the missing symbols.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgD3vgAKCRDj7w1vZxhR
-xUA3AQC/pwICe4jhx/goC8w+guLB6HWSeSv/mRuIIFbcIefZzQD8D32DLBlk6UIv
-LES2rZiDFShdS1q7KraOF8zI89VOlwc=
-=y/zJ
------END PGP SIGNATURE-----
-
---krgpiy72sujxxp5c--
+Also, please note that it is possible to squash the Tegra EHCI driver
+into ci_hdrc_tegra.c and then the explicit dependency on the
+phy_tegra_usb won't be needed anymore since it will be replaced with an
+implicit dependency. We (me and Peter Geis) already had some
+experimental patches that do the successful squashing of the drivers,
+but looks like Peter got sidetracked for a more important things for
+now, we'll probably return to that work later on.
