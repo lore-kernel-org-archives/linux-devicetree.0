@@ -2,76 +2,104 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A50EC2D0D4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 03:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35646C2D0D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 05:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBAA208C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 03:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577073448;
-	bh=HMWmu7fLzjD4zHWaJI1X0iL80kRp1P9VNuoGUhoQRKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m9mOz8+KGcgKVLodEJ962Nk+3V5WT2iFwgSpdOyYj76wAefojutBDOqqDWgMm3dNi
-	 N8b3X4ra4JdebwK4ODT47qssAE56q1FRLFluPWWvJW60OKRPxXzxYvkrVhxnZWvCQn
-	 yPuPPjpg/ug/Ha9pS38sBHSr3rTfEdUJXccoRJw4=
+	by mail.kernel.org (Postfix) with ESMTP id 0BA8620709
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 05:49:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kG4Voaia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfLWD5Y (ORCPT
+        id S1726177AbfLWFtc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 22 Dec 2019 22:57:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbfLWD5Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 22 Dec 2019 22:57:24 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47A3E20709;
-        Mon, 23 Dec 2019 03:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577073444;
-        bh=HMWmu7fLzjD4zHWaJI1X0iL80kRp1P9VNuoGUhoQRKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xJzoeeF1/dw1fgzu36QaQ97BE8OM0U2I1GejPfCl/ybUsDko7hz9wVs/TpOoKeqXB
-         zI8e03xUgf/NVbcZFVre+m7tAV5sDvB0/uxkYHkrxvky6uU+e5I9AztgISvrqW7AIh
-         8krSe87z2BpOaWjH4TJVpWzP0qJ2pXGN0A1GxenQ=
-Date:   Mon, 23 Dec 2019 11:57:01 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [v5 2/3] arm64: dts: ls1028a: Update edma compatible to fit eDMA
- driver
-Message-ID: <20191223035701.GK11523@dragon>
-References: <20191212033714.4090-1-peng.ma@nxp.com>
- <20191212033714.4090-2-peng.ma@nxp.com>
+        Mon, 23 Dec 2019 00:49:32 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40046 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfLWFtb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 00:49:31 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q8so8627013pfh.7
+        for <devicetree@vger.kernel.org>; Sun, 22 Dec 2019 21:49:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1TAbfRw81wKjdlTK4DIpia8dPfGxXFTyTxBsBiwwkkI=;
+        b=kG4VoaiaWW1vD5ps1J4P+FfDOHsHkXtmjijWd4hvkskVttky6HDYPqWh67j5RsN1Pn
+         tiW1BqPJcpvZ9hJ48esmhbOViZZtsrE/qTw5GClQSiw3gSVUdTtKCVGzmpbjYT5vq0Ne
+         gY2Uvv/3+BfdXj2uaAJ9BA72SMu7mVJ59cClzrJfp2MwMSWEmoJabVRl2uqL4N71GHfq
+         UzNh8Sdjkbu7GcvVNm2uZWhlHQkJVrp27DcBpQkKxNI1UfApVheLQ0JDrfhOl4Qh0Ywj
+         0MJaMlG3OpwPIVYzwNW9Ft60xrlKy8q75gxSiSf+0+56sUe363slVJsofYp4rghVRfAq
+         uDTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1TAbfRw81wKjdlTK4DIpia8dPfGxXFTyTxBsBiwwkkI=;
+        b=C81pmPKuwjP8yQI6v2Abxml2dowMGnR9SwUWQF37SfVQX5avZr3DIK6i0ahxtqHLKR
+         1tWsdEO195jpwmxaZ/UKrslSHseL0hAuHNbVxoXtbwa4xV6TPyVyRj13YhUzTIiGC4CY
+         9nk408tK0AgiNepTi/lCXmxw+8hiJWcMWtiBxmU5tRZx4YtdBt+Hn6/UgXw2HVM9zLHG
+         Xb02tlcqKjjOVOXkS+oPlOi/k8Dw/8/aauPDR1kb2329RAAhj6aWhTn5EjSeSKgwkS2Q
+         UF2Ms635Op8haQQ5zgoaflAfH2PLZE8ZanDOh3lt+BZF/Oo5OgX3+Ccm4uwd3KK4rDPF
+         B+VQ==
+X-Gm-Message-State: APjAAAULJZcPnxS9PES6OiQIlBvWpXZ+oOt54LW2+/yuB53W3jB2uxdF
+        mCFO0Wnw189Hh9Lz3o7e83+PAQ==
+X-Google-Smtp-Source: APXvYqxy4LnU/4UbJSEnuIjt2lbosN4Qr2FWETJStKyhLrZ1sLKFbK2FAuxj/bEHT6NhZ0QILwBT2w==
+X-Received: by 2002:a63:fd43:: with SMTP id m3mr29595462pgj.164.1577080170792;
+        Sun, 22 Dec 2019 21:49:30 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l14sm19731779pgt.42.2019.12.22.21.49.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 22 Dec 2019 21:49:30 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andy Gross <agross@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        ath10k@lists.infradead.org
+Subject: [PATCH 2/2] arm64: dts: qcom: sm8150: Specify qdss clock for wifi
+Date:   Sun, 22 Dec 2019 21:48:55 -0800
+Message-Id: <20191223054855.3020665-3-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
+References: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212033714.4090-2-peng.ma@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 03:38:15AM +0000, Peng Ma wrote:
-> The eDMA of LS1028A soc has a little bit different from others, So we
-> should distinguish them in driver by compatible.
-> 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+The WiFi firmware on SM8150 requires the QDSS clock to be ticking, so
+specify this clock for the wifi node.
 
-Applied, thanks.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index 373fa098ebb2..0f0c9db3d484 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -929,8 +929,8 @@ wifi: wifi@18800000 {
+ 			reg = <0 0x18800000 0 0x800000>;
+ 			reg-names = "membase";
+ 			memory-region = <&wlan_mem>;
+-			clock-names = "cxo_ref_clk_pin";
+-			clocks = <&rpmhcc RPMH_RF_CLK2>;
++			clock-names = "cxo_ref_clk_pin", "qdss";
++			clocks = <&rpmhcc RPMH_RF_CLK2>, <&aoss_qmp>;
+ 			interrupts = <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
+-- 
+2.24.0
+
