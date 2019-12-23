@@ -2,159 +2,182 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43529C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA4AC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0979920715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Kd0+4lqG"
+	by mail.kernel.org (Postfix) with ESMTP id 9B3A7206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 14:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfLWOay (ORCPT
+        id S1726802AbfLWOfs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 09:30:54 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:41708 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbfLWOay (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 09:30:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pdZ3BuuxpVapCxvBdAVMUi9tPzHQHaYDwu490xXxIf0=; b=Kd0+4lqGJwmug40BnNtP3IgP7
-        aonsKBkyDdA6wQs/C3uABhYtqwSvmK2Pagd/LOHthiyBniuIbkf09knaLSaNwCOrWUWSVvltBDBbl
-        0ETptaMupAmlsftbwlKPCObdZDZJb9DXZxfqLqHAf6vL+g8yfJS74gW8ydUzJsJaRHeK5p00a9d2A
-        w0ymxhV7Ukbkz7Y+AMxFPDHfI/9/qZxGY6d1TZ0GsVQtUWuPC/mpt6BvqGyRSeSsxcLFwrvJq9cnk
-        StfTYTcCDqpenzwCqp4U5VtXmLCe2Cv5ghi1uW3gTikwcVSNFdChx4HD3Z2V4ZcwvFTeiKgFiIOGv
-        udEAGpIuQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:45290)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ijOjO-0002ML-J0; Mon, 23 Dec 2019 14:30:46 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ijOjK-0000sn-HR; Mon, 23 Dec 2019 14:30:42 +0000
-Date:   Mon, 23 Dec 2019 14:30:42 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Message-ID: <20191223143042.GQ25745@shell.armlinux.org.uk>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191223120730.GO25745@shell.armlinux.org.uk>
- <20191223134634.GL32356@lunn.ch>
+        Mon, 23 Dec 2019 09:35:48 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33310 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbfLWOfs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 09:35:48 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C88CA28A3A8
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ulrich Hecht <uli@fpond.eu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v22 0/2] drm/bridge: PS8640 MIPI-to-eDP bridge
+Date:   Mon, 23 Dec 2019 15:35:36 +0100
+Message-Id: <20191223143538.20327-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191223134634.GL32356@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 02:46:34PM +0100, Andrew Lunn wrote:
-> > Given that meeting these electrical characteristics involves the
-> > effects of the board, and it is impractical for a board to switch
-> > between different electrical characteristics at runtime (routing serdes
-> > lanes to both a SFP+ and XFP cage is impractical due to reflections on
-> > unterminated paths) I really don't see any reason why we need two
-> > different phy_interface_t definitions for these.  As mentioned, the
-> > difference between XFI and SFI is electrical, and involves the board
-> > layout, which is a platform specific issue.
-> 
-> Hi Russell
-> 
-> So we make phy_interface_t define the protocol. We should clearly
-> document that.
+Hi all,
 
-I really think so.
+This is another version of the driver. Note that the driver changed
+significally and is a more simply because now is using the panel_bridge
+helpers. Apart from this, I addressed the comments from Maxime, Laurent
+and Ezequiel.
 
-> Are we going to need another well defined DT property for the
-> electrical interface? What is where we have XFI and SFI, etc?
+This bridge is required to have the embedded display working on an Acer
+Chromebook R13 ("Elm"). Hopefully we are a bit more close to have this
+driver merged. If more changes are required, please let me know and I
+will work on it.
 
-It is conceivable that board firmware or a serdes driver needs to know
-what settings to apply, but I think we need to think long and hard
-about that. As I've pointed out, it's probably not going to be a one
-size fits all thing, because the properties of the PCB come into play.
+Note: Along these around 20 revisions of this driver I was unable to
+reconstruct the full changelog history, so I'm skipping this. Sorry
+about that, I promise I'll maintain the changelog for future revisions.
 
-On the Armada 8040, the electrical configuration is part of the comphy
-block. The kernel does contain code to configure it using fixed
-settings, but that is just a fallback when there is no support in the
-ATF firmware. ATF firmware added support, and I know that the
-Macchiatobin support has different electrical values for the 10G
-Ethernet ports compared to the Marvell default - because I did a lot
-of reverse engineering with the poor Marvell documentation to figure
-out how to get an eye diagram out of the hardware, and used that to
-improve the reliability of the SFP+ ports on the Macchiatobin single
-shot and GT-8k boards.
+Thanks,
+ Enric
 
-Marvell implemented automatic comphy tuning in u-boot/firwmare, which
-improves the performance of comphy on Marvell's hardware, but actually
-ends up making things worse on the Macchiatobin platforms compared to
-my hand-tuned parameters, with errors and link failures becoming
-common.
+Changes in v23:
+- Merge mute/unmute functions into one (Nicolas Boichat)
+- Use enum for ENABLE/DISABLE instead of bool (Ezequiel Garcia)
+- Rename mute/unmute to vdo_control and fix error messages (Nicolas Boichat and Enric)
+- Add space between address and address parameter 'address%02x' (Nicolas Boichat)
+- Add Tested-by Hsin-Yi
+- Added me as author after the refactor
 
-There are multiple parameters that need to be configured, it isn't
-a simple "just use XFI" or "just use SFI" settings.
+Changes in v22:
+- Migrate to YAML format (Maxime Ripart)
+- Remove mode-sel property.
+- Rename sleep-gpios to powerdown-gpios.
+- Remove sysfs attributes because are not really used (Enric Balletbo)
+- Use enum for address page offsets (Ezequiel Garcia)
+- Remove enable tracking (Enric Balletbo)
+- Use panel_bridge API (Laurent Pinchart)
+- Do not use kernel-doc format for non kernel-doc formatted commands (Enric Balletbo)
+- Remove verbose message for PAGE1_VSTART command (Ezequiel Garcia)
+- Use time_is_after_jiffies idiom (Ezequiel Garcia)
+- Remove unused macros (Ezequiel Garcia)
+- Fix weird alignment in dsi->mode_flags (Laurent Pinchart)
+- Use drm_of_find_panel_or_bridge helper (Laurent Pinchart)
+- Remove mode-sel-gpios as is not used (Laurent Pinchart)
+- Remove error messages to get gpios as the core will already report it (Enric Balletbo)
+- Remove redundant message getting the regulators (Laurent Pinchart)
+- Rename sleep-gpios to powerdown-gpios (Laurent Pinchart)
+- Use ARRAY_SIZE(ps_bridge->page) instead of MAX_DEV when possible (Laurent Pinchart)
+- Fix race with userspace accessing the sysfs attributes (Laurent Pinchart)
+- Remove id_table as is only used on DR platforms (Laurent Pinchart)
+- Convert to new i2c device probe() (Laurent Pinchart)
+- Use i2c_smbus_read/write helpers instead of open coding it (Laurent Pinchart)
+- Remove unnused global variables (Laurent Pinchart)
+- Remove unnused fields in ps8640 struct (Laurent Pinchart)
+- Remove commented-out headers (Laurent Pinchart)
 
-Given that the electrical parameters are board dependent, they can
-even be interface dependent if a board has several different
-interfaces, so what is compliant for XFI on one port may not be
-compliant for XFI on a different port. Different routing of the
-Serdes lines may mean crosstalk is different, or different trace
-capacitance needing different emphasis settings.
+Changes in v21:
+ - Use devm_i2c_new_dummy_device and fix build issue using deprecated i2c_new_dummy
+ - Fix build issue due missing drm_bridge.h
+ - Do not remove in ps8640_remove device managed resources
 
-What I'm getting at is, basically, I don't think a one-size-fits-all
-"XFI" or "SFI" specifier makes any sense what so ever.
+Changes in v19:
+ - fixed return value of ps8640_probe() when no panel is found
 
-I also can't think how we'd generalise it - the parameters required
-to set the serdes hardware are likely to be implementation dependent.
-If you've ever looked at Marvell's COMPHY documentation, it has a
-hundred or more registers controlling all sorts of different serdes
-parameters, some of them in the analogue domain others in the digital
-domain. Some FFE, CTLE, DFE etc parameters - and many without
-anything but a brief description of the register.
+Changes in v18:
+ - followed DRM API changes
+ - use DEVICE_ATTR_RO()
+ - remove firmware update code
+ - add SPDX identifier
 
-There are some simpler implementations too.  For example, SATA is
-another example of serdes, and just like XFI and SFI, it also has
-its own specifications for the electrical side... and then there's
-eSATA as well.  For the eSATA port on the Cubox-i, I ended up with:
+Changes in v17:
+ - remove some unused head files.
+ - add macros for ps8640 pages.
+ - remove ddc_i2c client
+ - add mipi_dsi_device_register_full
+ - remove the manufacturer from the name and i2c_device_id
 
-        fsl,transmit-level-mV = <1104>;
-        fsl,transmit-boost-mdB = <0>;
-        fsl,transmit-atten-16ths = <9>;
-        fsl,no-spread-spectrum;
+Changes in v16:
+ - Disable ps8640 DSI MCS Function.
+ - Rename gpios name more clearly.
+ - Tune the ps8640 power on sequence.
 
-which I arrived at by blind analysis and successive approximation,
-and was later confirmed to be correct when Rabeeh eventually got
-around to proving the eye mask. I doubt that having an "eSATA" vs
-"SATA" mode setting for the driver would have worked: just as I'm
-saying for XFI vs SFI, the correct set of parameters for one platform
-is likely not correct for another platform.
+Changes in v15:
+ - Drop drm_connector_(un)register calls from parade ps8640.
+   The main DRM driver mtk_drm_drv now calls
+   drm_connector_register_all() after drm_dev_register() in the
+   mtk_drm_bind() function. That function should iterate over all
+   connectors and call drm_connector_register() for each of them.
+   So, remove drm_connector_(un)register calls from parade ps8640.
 
-So, I think it's up to the serdes/comphy/firmware to figure out how
-to configure the electrical properties for a serdes lane to meet the
-specification for the _platform_ in question, including where it gets
-the data for that configuration, be it from DT or board firmware.
+Changes in v14:
+ - update copyright info.
+ - change bridge_to_ps8640 and connector_to_ps8640 to inline function.
+ - fix some coding style.
+ - use sizeof as array counter.
+ - use drm_get_edid when read edid.
+ - add mutex when firmware updating.
+
+Changes in v13:
+ - add const on data, ps8640_write_bytes(struct i2c_client *client, const u8 *data, u16 data_len)
+ - fix PAGE2_SW_REST tyro.
+ - move the buf[3] init to entrance of the function.
+
+Changes in v12:
+ - fix hw_chip_id build warning
+
+Changes in v11:
+ - Remove depends on I2C, add DRM depends
+ - Reuse ps8640_write_bytes() in ps8640_write_byte()
+ - Use timer check for polling like the routines in <linux/iopoll.h>
+ - Fix no drm_connector_unregister/drm_connector_cleanup when ps8640_bridge_attach fail
+ - Check the ps8640 hardware id in ps8640_validate_firmware
+ - Remove fw_version check
+ - Move ps8640_validate_firmware before ps8640_enter_bl
+ - Add ddc_i2c unregister when probe fail and ps8640_remove
+
+Jitao Shi (2):
+  Documentation: bridge: Add documentation for ps8640 DT properties
+  drm/bridge: Add I2C based driver for ps8640 bridge
+
+ .../bindings/display/bridge/ps8640.yaml       | 112 ++++++
+ drivers/gpu/drm/bridge/Kconfig                |  11 +
+ drivers/gpu/drm/bridge/Makefile               |   1 +
+ drivers/gpu/drm/bridge/parade-ps8640.c        | 348 ++++++++++++++++++
+ 4 files changed, 472 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+ create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.20.1
+
