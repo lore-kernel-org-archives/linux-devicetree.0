@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15712C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8141C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE49B20715
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7CE2073A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SEmFS4yU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hYUVfMXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfLWLGG (ORCPT
+        id S1727282AbfLWLGB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:06:06 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39124 "EHLO
+        Mon, 23 Dec 2019 06:06:01 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:39096 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfLWLGF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 06:06:05 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNB5pFZ032320;
-        Mon, 23 Dec 2019 05:05:51 -0600
+        with ESMTP id S1726918AbfLWLGB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 06:06:01 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBNB5eGN032255;
+        Mon, 23 Dec 2019 05:05:40 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577099151;
-        bh=rp/62BQYhqoboYRxDYwm8GGofs63IPLsPbjQvI9zhO4=;
+        s=ti-com-17Q1; t=1577099140;
+        bh=M1ivEh29hpV8EdEIdoVxe758e9/ZAjRIkjB2WDihgI0=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=SEmFS4yU+Ye4liFn8IDs48Dmku+Fd2i06zwMpWmUJ0x2tL6nti6tHJbiozeT+sWuM
-         Cy+VKPC6qySjnpnR39Zn0ko0TnyUpiw7BxYo8aVca+kXXan0aSq/p+UfCpV1EMiGSE
-         vulJHo8jxf4D4IKfkKRtZIZPpCnSzmpQkQOETmm0=
+        b=hYUVfMXssJk1iZU5wrCs5NLKOQ9vWueJuucBE+anjp+E9hthXch9UDkOGg+6OmbT5
+         xTvIixaGdnlm6T6Eiic2t8zkm1IR7pn4oRIzFWof3/y0ExBTUxuRyefJo9cwdCyNY7
+         zIjolHX0wCr5kfnrfQxj/kbkNnTCjFuNQJb++08E=
 Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBNB5p1M026258
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 23 Dec 2019 05:05:51 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE103.ent.ti.com
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNB5eTs037678;
+        Mon, 23 Dec 2019 05:05:40 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
  (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 23
- Dec 2019 05:05:51 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 05:05:39 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 23 Dec 2019 05:05:51 -0600
+ Frontend Transport; Mon, 23 Dec 2019 05:05:39 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNB4eMO025693;
-        Mon, 23 Dec 2019 05:05:47 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBNB4eML025693;
+        Mon, 23 Dec 2019 05:05:35 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <nm@ti.com>,
         <ssantosh@kernel.org>
@@ -56,9 +55,9 @@ CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
         <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
         <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
         <vigneshr@ti.com>, <frowand.list@gmail.com>
-Subject: [PATCH v8 17/18] dmaengine: ti: k3-udma-glue: Allow the driver to be built as module
-Date:   Mon, 23 Dec 2019 13:04:57 +0200
-Message-ID: <20191223110458.30766-18-peter.ujfalusi@ti.com>
+Subject: [PATCH v8 14/18] of: irq: Export of_msi_get_domain
+Date:   Mon, 23 Dec 2019 13:04:54 +0200
+Message-ID: <20191223110458.30766-15-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191223110458.30766-1-peter.ujfalusi@ti.com>
 References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
@@ -71,49 +70,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The ring accelerator driver can be built as module since all depending
-functions are exported.
+From: Matthias Brugger <matthias.bgg@gmail.com>
 
+Export of_mis_get_domain to enable it for users from outside.
+
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Keerthy <j-keerthy@ti.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/dma/ti/Kconfig        | 2 +-
- drivers/dma/ti/k3-udma-glue.c | 4 +++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/of/irq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/ti/Kconfig b/drivers/dma/ti/Kconfig
-index beb000be7d1b..987339e6f517 100644
---- a/drivers/dma/ti/Kconfig
-+++ b/drivers/dma/ti/Kconfig
-@@ -48,7 +48,7 @@ config TI_K3_UDMA
- 	  DMA engine is used in AM65x and j721e.
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index a296eaf52a5b..73017506ef00 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -673,6 +673,7 @@ struct irq_domain *of_msi_get_domain(struct device *dev,
  
- config TI_K3_UDMA_GLUE_LAYER
--	bool "Texas Instruments UDMA Glue layer for non DMAengine users"
-+	tristate "Texas Instruments UDMA Glue layer for non DMAengine users"
- 	depends on ARCH_K3 || COMPILE_TEST
- 	depends on TI_K3_UDMA
- 	help
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index c1511298ece2..fe3f96f6e0a1 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -10,7 +10,7 @@
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
--#include <linux/init.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/soc/ti/k3-ringacc.h>
-@@ -1196,3 +1196,5 @@ int k3_udma_glue_rx_get_irq(struct k3_udma_glue_rx_channel *rx_chn,
- 	return flow->virq;
+ 	return NULL;
  }
- EXPORT_SYMBOL_GPL(k3_udma_glue_rx_get_irq);
-+
-+MODULE_LICENSE("GPL v2");
++EXPORT_SYMBOL_GPL(of_msi_get_domain);
+ 
+ /**
+  * of_msi_configure - Set the msi_domain field of a device
 -- 
 Peter
 
