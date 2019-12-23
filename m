@@ -2,115 +2,170 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BD1C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 10:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D8DC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884B5206B7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 10:57:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jebe56vF"
+	by mail.kernel.org (Postfix) with ESMTP id 8A84220882
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577098816;
+	bh=1vGFLkbvKus/2D6hTriWlriq8CwJYe5ZiDjw/Yj+Ibs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lirS9HSk0snjCT0lbVERO2/oP/fpFGCwTIeq/nBhxk7x4tjAkBrz7GynQmRfA1QAr
+	 Es+LDWyIUZAWx7kQAV1YrW9SIX/xXAyfg8InzoZuGWZuT8jofPvxU/Y9kh44Wzu8ht
+	 SvCfByNNJSDht51Ok9CkO2DsDQq2TSNfMl65bUqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbfLWK5v (ORCPT
+        id S1726876AbfLWLAP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 05:57:51 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:39166 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbfLWK5v (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 05:57:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AJi1bSzf2CTFSkBMqdWcYKhm22m5Iv4lMaNhZ4z9I8M=; b=jebe56vFX/WrSsKn38pH7tlt6
-        ds4FplDdyNA/X8EwWIOpf/ZreeMrSTzqFweWtxF80HKteoP1N5guiaUi9yRKkbnFRw/BahOD8pQNR
-        H0rJPbaI+FSc7hF4YQec0MdvI3+AheYw+34DFPcZK0Q2i2Y7DBLhBtDxNNP7jZ1OCPIKSiZXA1cWy
-        FcvvDAYI7Rp9PsrTLIMw8uuKkxGvH7Zl/1Y2daJp8ugskzTzArcX9anx9afBb98FuShtjCzoPqMMA
-        JV5OMbP1Lgn9FbVdCl5rABeQtRZfCROhjDbzbjuubAEtDWOqEtFbfsPpp2zKvCfnvxAcyRsf0pdeI
-        7CxL4c+kA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:45216)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ijLPE-0001K7-SC; Mon, 23 Dec 2019 10:57:46 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ijLPD-0000kk-QF; Mon, 23 Dec 2019 10:57:43 +0000
-Date:   Mon, 23 Dec 2019 10:57:43 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Madalin Bucur <madalin.bucur@oss.nxp.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, Madalin Bucur <madalin.bucur@nxp.com>
-Subject: Re: [PATCH net-next v2 1/7] net: phy: add interface modes for XFI,
- SFI
-Message-ID: <20191223105743.GN25745@shell.armlinux.org.uk>
-References: <1577096053-20507-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1577096053-20507-2-git-send-email-madalin.bucur@oss.nxp.com>
+        Mon, 23 Dec 2019 06:00:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726257AbfLWLAP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Dec 2019 06:00:15 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67E3120709;
+        Mon, 23 Dec 2019 11:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577098814;
+        bh=1vGFLkbvKus/2D6hTriWlriq8CwJYe5ZiDjw/Yj+Ibs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rzzQgUOtZcpmHu9QFAnBpt2h+j+o8mYL/1GgXDHHxCnfAZzFGeI7PnBsWFtqS2vQc
+         Bssaxd7RJNRE03xY5UVa33WlsM2kz0F/Tx5kyyBR2DDa+d+gc0FOBfOntift2LGmDt
+         fPrQUKq5h1baHBo4tVN2weaLd13uBu/DMWvF8JmU=
+Date:   Mon, 23 Dec 2019 11:00:09 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <Michael.Hennerich@analog.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
+Subject: Re: [PATCH 3/3] dt-binding: iio: Add documentation for ADF4371
+ channel child notes
+Message-ID: <20191223110009.6fcc2951@archlinux>
+In-Reply-To: <20191219133755.26109-3-beniamin.bia@analog.com>
+References: <20191219133755.26109-1-beniamin.bia@analog.com>
+        <20191219133755.26109-3-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577096053-20507-2-git-send-email-madalin.bucur@oss.nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 12:14:07PM +0200, Madalin Bucur wrote:
-> From: Madalin Bucur <madalin.bucur@nxp.com>
-> 
-> Add explicit entries for XFI, SFI to make sure the device
-> tree entries for phy-connection-type "xfi" or "sfi" are
-> properly parsed and differentiated against the existing
-> backplane 10GBASE-KR mode.
-> 
-> Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+On Thu, 19 Dec 2019 15:37:55 +0200
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-NAK until we've finished discussing this matter in the previous posting.
-
+> This patch documents the ADF4371 individual channel configuration.
+> 
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
 > ---
->  include/linux/phy.h | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  .../bindings/iio/frequency/adf4371.yaml       | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
 > 
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index dd4a91f1feaa..5651c7be0c45 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -99,7 +99,8 @@ typedef enum {
->  	PHY_INTERFACE_MODE_2500BASEX,
->  	PHY_INTERFACE_MODE_RXAUI,
->  	PHY_INTERFACE_MODE_XAUI,
-> -	/* 10GBASE-KR, XFI, SFI - single lane 10G Serdes */
-> +	PHY_INTERFACE_MODE_XFI,
-> +	PHY_INTERFACE_MODE_SFI,
->  	PHY_INTERFACE_MODE_10GKR,
->  	PHY_INTERFACE_MODE_USXGMII,
->  	PHY_INTERFACE_MODE_MAX,
-> @@ -175,6 +176,10 @@ static inline const char *phy_modes(phy_interface_t interface)
->  		return "rxaui";
->  	case PHY_INTERFACE_MODE_XAUI:
->  		return "xaui";
-> +	case PHY_INTERFACE_MODE_XFI:
-> +		return "xfi";
-> +	case PHY_INTERFACE_MODE_SFI:
-> +		return "sfi";
->  	case PHY_INTERFACE_MODE_10GKR:
->  		return "10gbase-kr";
->  	case PHY_INTERFACE_MODE_USXGMII:
-> -- 
-> 2.1.0
-> 
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> index 7ec3ec94356b..5339c929e883 100644
+> --- a/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> +++ b/Documentation/devicetree/bindings/iio/frequency/adf4371.yaml
+> @@ -40,12 +40,48 @@ properties:
+>        output stage will shut down until the ADF4371/ADF4372 achieves lock as
+>        measured by the digital lock detect circuitry.
+>  
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+>  required:
+>    - compatible
+>    - reg
+>    - clocks
+>    - clock-names
+>  
+> +  patternProperties:
+> +  "^channel@[01]$":
+> +    type: object
+> +    description: Represents the external channels which are connected to the device.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The channel number. It can have up to 3 channels on adf4372
+> +          and 4 channels on adf4371, numbered from 0 to 3.
+> +        maxItems: 1
+> +
+> +      adi,output-enable:
+> +        description: |
+> +          If this property is specified, the output channel will be enabled.
+> +          If left empty, the driver will initialize the defaults (RF8x, channel 0
+> +          will be the only one enabled).
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+If I read the driver right, this is effectively 'power up channel when driver
+loads'.  Why do we need that in DT?  A bit of udev magic or similar and the existing
+controls can set both this and the frequency below.  Would happen a tiny
+bit after the driver loads, but I assume the driver current loads with the channels
+turned off so that shouldn't matter...
+
+> +        maxItems: 1
+> +
+> +      adi,power-up-frequency:
+> +        description: |
+> +          Set the frequency after power up for the channel. If this property is
+> +          specified, it has to be in sync with the power up frequency set on the
+> +          other channels. This limitation is due to the fact that all the channel
+> +          frequencies are derived from the VCO fundamental frequency.
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+>  examples:
+>    - |
+>      spi0 {
+> @@ -55,9 +91,36 @@ examples:
+>          frequency@0 {
+>                  compatible = "adi,adf4371";
+>                  reg = <0>;
+> +
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+>                  spi-max-frequency = <1000000>;
+>                  clocks = <&adf4371_clkin>;
+>                  clock-names = "clkin";
+> +
+> +                channel@0 {
+> +                        reg = <0>;
+> +                        adi,output-enable;
+> +                        adi,power-up-frequency = /bits/ 64 <8000000000>;
+> +                };
+> +
+> +                channel@1 {
+> +                        reg = <1>;
+> +                        adi,output-enable;
+> +                };
+> +
+> +                channel@2 {
+> +                        reg = <2>;
+> +                        adi,output-enable;
+> +                        adi,power-up-frequency = /bits/ 64 <16000000000>;
+> +                };
+> +
+> +                channel@3 {
+> +                        reg = <3>;
+> +                        adi,output-enable;
+> +                        adi,power-up-frequency = /bits/ 64 <32000000000>;
+> +                };
+>          };
+>      };
+>  ...
+
