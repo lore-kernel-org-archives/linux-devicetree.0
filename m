@@ -1,105 +1,321 @@
 Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75E2C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ADEC2D0D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6574120709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8719D207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 07:34:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577085510;
-	bh=+xZCTXHEyRCDiG9GABKQf4z73/JeJ/82+LVQggHUV4Q=;
+	s=default; t=1577086475;
+	bh=fc0vBGUMxGca4/eK9EQKsfeCIREgxwImKP2Or6ThPsM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CIYU0wVvKoW2s1ccQpU/fkTdp7BhjpAHRJdqyXXpyOt7xAAPUdbfkl8eOg7HESt4r
-	 3Mm54Pb0cwVkBcwBS8ugIZiXkbKNMId9yQpvz7FsRhKh5HAjjirmsuS46YnM1jzf8E
-	 5w/nEz8lCnADrT14a5SpVszYTWFTU8+7wCSoEzuQ=
+	b=egFfPwppmv+LcvigF3AMtfTQWdZuVRkcHAZ8kz2TfHEJy6JpCsIoEcKZ381kY79VK
+	 Je2usRT2QxnrILb1OYeWAKrVSYfgN3cnBi/CXQK41nbnuKl6ypkQq7myozSyFnhJYu
+	 8327hqw9gS6YYs4xYpkhhiz+EURbImCgfFLdxzyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbfLWHS3 (ORCPT
+        id S1725867AbfLWHec (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 02:18:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
+        Mon, 23 Dec 2019 02:34:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfLWHS3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 02:18:29 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1725810AbfLWHec (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 23 Dec 2019 02:34:32 -0500
+Received: from localhost (unknown [223.226.34.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B42F206B7;
-        Mon, 23 Dec 2019 07:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C1E1206D3;
+        Mon, 23 Dec 2019 07:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577085508;
-        bh=+xZCTXHEyRCDiG9GABKQf4z73/JeJ/82+LVQggHUV4Q=;
+        s=default; t=1577086471;
+        bh=fc0vBGUMxGca4/eK9EQKsfeCIREgxwImKP2Or6ThPsM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NO7thX31ekyQ86+u0f0xQWbM16nK8c6pi9PpYNibBKFHJIcPkv4M9Sn8Gb0O/uRBn
-         NgfY/xCASxjNaTxG0Wdl8/peWyKvIMYSU8m/BuYobLWssYsWugMTf3D21TtmTG++dB
-         PGNRVlb/DtbVX4700KGjyGjrEiRQU3mWz1QDglN8=
-Date:   Mon, 23 Dec 2019 15:18:06 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     robh@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de,
-        linux-imx@nxp.com, kernel@puri.sm, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mq-librem5-devkit: add accelerometer and
- gyro sensor
-Message-ID: <20191223071805.GR11523@dragon>
-References: <20191203130336.18763-1-martin.kepplinger@puri.sm>
- <f8b4710b-4430-a42f-d29a-8f2f4d22b46e@puri.sm>
+        b=M9y1IaGl8hEx0poB3+dGztg99Npyw9AfOcUje4SZW6kixyrwu9V2yxEjs27FJxBHd
+         5Cz7Kw1tA7Xa5TvvDwDF3EH5Bn3yhOJnI67l4gR2z/SZgvcUGy58rlLGde2Z9LIy3+
+         NIsbCK2HDVXK19x41WEi+fQM5hO0ZpIeoW/HMjfk=
+Date:   Mon, 23 Dec 2019 13:04:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v7 09/12] dmaengine: ti: New driver for K3 UDMA
+Message-ID: <20191223073425.GV2536@vkoul-mobl>
+References: <20191209094332.4047-1-peter.ujfalusi@ti.com>
+ <20191209094332.4047-10-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f8b4710b-4430-a42f-d29a-8f2f4d22b46e@puri.sm>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191209094332.4047-10-peter.ujfalusi@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 10:32:15AM +0100, Martin Kepplinger wrote:
-> On 03.12.19 14:03, Martin Kepplinger wrote:
-> > Now that there is driver support, describe the accel and gyro sensor parts
-> > of the LSM9DS1 IMU.
-> > 
-> > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-> > ---
-> >  arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > index 683a11035643..7a92704c53ec 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > @@ -415,6 +415,13 @@
-> >  	pinctrl-0 = <&pinctrl_i2c3>;
-> >  	status = "okay";
-> >  
-> > +	accel_gyro@6a {
+On 09-12-19, 11:43, Peter Ujfalusi wrote:
 
-We prefer to use hyphen than underscore in node name.  Also nodes with
-unit-address should be sorted in the address.
+> +#include <linux/kernel.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/dmapool.h>
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/list.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/of.h>
+> +#include <linux/of_dma.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
 
-Shawn
+to many of headers, do we need all!
 
-> > +		compatible = "st,lsm9ds1-imu";
-> > +		reg = <0x6a>;
-> > +		vdd-supply = <&reg_3v3_p>;
-> > +		vddio-supply = <&reg_3v3_p>;
-> > +	};
-> > +
-> >  	magnetometer@1e	{
-> >  		compatible = "st,lsm9ds1-magn";
-> >  		reg = <0x1e>;
-> > 
-> 
-> (adding / fixing people in CC)
-> 
-> Are there any questions about this addition or the followup fix?
-> 
-> thanks a lot,
-> 
->                                martin
+> +static char *udma_get_dir_text(enum dma_transfer_direction dir)
+> +{
+> +	switch (dir) {
+> +	case DMA_DEV_TO_MEM:
+> +		return "DEV_TO_MEM";
+> +	case DMA_MEM_TO_DEV:
+> +		return "MEM_TO_DEV";
+> +	case DMA_MEM_TO_MEM:
+> +		return "MEM_TO_MEM";
+> +	case DMA_DEV_TO_DEV:
+> +		return "DEV_TO_DEV";
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return "invalid";
+> +}
+
+this seems generic which other ppl may need, can we move it to core.
+
+> +
+> +static void udma_reset_uchan(struct udma_chan *uc)
+> +{
+> +	uc->state = UDMA_CHAN_IS_IDLE;
+> +	uc->remote_thread_id = -1;
+> +	uc->dir = DMA_MEM_TO_MEM;
+> +	uc->pkt_mode = false;
+> +	uc->ep_type = PSIL_EP_NATIVE;
+> +	uc->enable_acc32 = 0;
+> +	uc->enable_burst = 0;
+> +	uc->channel_tpl = 0;
+> +	uc->psd_size = 0;
+> +	uc->metadata_size = 0;
+> +	uc->hdesc_size = 0;
+> +	uc->notdpkt = 0;
+
+rather than do setting zero, why note memset and then set the nonzero
+members only?
+
+> +static void udma_reset_counters(struct udma_chan *uc)
+> +{
+> +	u32 val;
+> +
+> +	if (uc->tchan) {
+> +		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_BCNT_REG);
+> +		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_BCNT_REG, val);
+
+so you read back from UDMA_TCHAN_RT_BCNT_REG and write same value to
+it??
+
+> +
+> +		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_SBCNT_REG);
+> +		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_SBCNT_REG, val);
+> +
+> +		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_PCNT_REG);
+> +		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_PCNT_REG, val);
+> +
+> +		val = udma_tchanrt_read(uc->tchan, UDMA_TCHAN_RT_PEER_BCNT_REG);
+> +		udma_tchanrt_write(uc->tchan, UDMA_TCHAN_RT_PEER_BCNT_REG, val);
+> +	}
+> +
+> +	if (uc->rchan) {
+> +		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_BCNT_REG);
+> +		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_BCNT_REG, val);
+> +
+> +		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_SBCNT_REG);
+> +		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_SBCNT_REG, val);
+> +
+> +		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_PCNT_REG);
+> +		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PCNT_REG, val);
+> +
+> +		val = udma_rchanrt_read(uc->rchan, UDMA_RCHAN_RT_PEER_BCNT_REG);
+> +		udma_rchanrt_write(uc->rchan, UDMA_RCHAN_RT_PEER_BCNT_REG, val);
+
+True for all of these, what am I missing :)
+
+> +static int udma_start(struct udma_chan *uc)
+> +{
+> +	struct virt_dma_desc *vd = vchan_next_desc(&uc->vc);
+> +
+> +	if (!vd) {
+> +		uc->desc = NULL;
+> +		return -ENOENT;
+> +	}
+> +
+> +	list_del(&vd->node);
+> +
+> +	uc->desc = to_udma_desc(&vd->tx);
+> +
+> +	/* Channel is already running and does not need reconfiguration */
+> +	if (udma_is_chan_running(uc) && !udma_chan_needs_reconfiguration(uc)) {
+> +		udma_start_desc(uc);
+> +		goto out;
+
+How about the case where settings are different than the current one?
+
+> +static struct udma_desc *udma_alloc_tr_desc(struct udma_chan *uc,
+> +					    size_t tr_size, int tr_count,
+> +					    enum dma_transfer_direction dir)
+> +{
+> +	struct udma_hwdesc *hwdesc;
+> +	struct cppi5_desc_hdr_t *tr_desc;
+> +	struct udma_desc *d;
+> +	u32 reload_count = 0;
+> +	u32 ring_id;
+> +
+> +	switch (tr_size) {
+> +	case 16:
+> +	case 32:
+> +	case 64:
+> +	case 128:
+> +		break;
+> +	default:
+> +		dev_err(uc->ud->dev, "Unsupported TR size of %zu\n", tr_size);
+> +		return NULL;
+> +	}
+> +
+> +	/* We have only one descriptor containing multiple TRs */
+> +	d = kzalloc(sizeof(*d) + sizeof(d->hwdesc[0]), GFP_ATOMIC);
+
+this is invoked from prep_ so should use GFP_NOWAIT, we dont use
+GFP_ATOMIC :)
+
+> +static struct udma_desc *
+> +udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
+> +		      unsigned int sglen, enum dma_transfer_direction dir,
+> +		      unsigned long tx_flags, void *context)
+> +{
+> +	enum dma_slave_buswidth dev_width;
+> +	struct scatterlist *sgent;
+> +	struct udma_desc *d;
+> +	size_t tr_size;
+> +	struct cppi5_tr_type1_t *tr_req = NULL;
+> +	unsigned int i;
+> +	u32 burst;
+> +
+> +	if (dir == DMA_DEV_TO_MEM) {
+> +		dev_width = uc->cfg.src_addr_width;
+> +		burst = uc->cfg.src_maxburst;
+> +	} else if (dir == DMA_MEM_TO_DEV) {
+> +		dev_width = uc->cfg.dst_addr_width;
+> +		burst = uc->cfg.dst_maxburst;
+> +	} else {
+> +		dev_err(uc->ud->dev, "%s: bad direction?\n", __func__);
+> +		return NULL;
+> +	}
+> +
+> +	if (!burst)
+> +		burst = 1;
+> +
+> +	/* Now allocate and setup the descriptor. */
+> +	tr_size = sizeof(struct cppi5_tr_type1_t);
+> +	d = udma_alloc_tr_desc(uc, tr_size, sglen, dir);
+> +	if (!d)
+> +		return NULL;
+> +
+> +	d->sglen = sglen;
+> +
+> +	tr_req = (struct cppi5_tr_type1_t *)d->hwdesc[0].tr_req_base;
+
+cast away from void *?
+
+> +static int udma_configure_statictr(struct udma_chan *uc, struct udma_desc *d,
+> +				   enum dma_slave_buswidth dev_width,
+> +				   u16 elcnt)
+> +{
+> +	if (uc->ep_type != PSIL_EP_PDMA_XY)
+> +		return 0;
+> +
+> +	/* Bus width translates to the element size (ES) */
+> +	switch (dev_width) {
+> +	case DMA_SLAVE_BUSWIDTH_1_BYTE:
+> +		d->static_tr.elsize = 0;
+> +		break;
+> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
+> +		d->static_tr.elsize = 1;
+> +		break;
+> +	case DMA_SLAVE_BUSWIDTH_3_BYTES:
+> +		d->static_tr.elsize = 2;
+> +		break;
+> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+> +		d->static_tr.elsize = 3;
+> +		break;
+> +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
+> +		d->static_tr.elsize = 4;
+
+seems like ffs(dev_width) to me?
+
+> +static struct udma_desc *
+> +udma_prep_slave_sg_pkt(struct udma_chan *uc, struct scatterlist *sgl,
+> +		       unsigned int sglen, enum dma_transfer_direction dir,
+> +		       unsigned long tx_flags, void *context)
+> +{
+> +	struct scatterlist *sgent;
+> +	struct cppi5_host_desc_t *h_desc = NULL;
+> +	struct udma_desc *d;
+> +	u32 ring_id;
+> +	unsigned int i;
+> +
+> +	d = kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_ATOMIC);
+
+GFP_NOWAIT here and few other places
+
+> +static struct udma_desc *
+> +udma_prep_dma_cyclic_pkt(struct udma_chan *uc, dma_addr_t buf_addr,
+> +			 size_t buf_len, size_t period_len,
+> +			 enum dma_transfer_direction dir, unsigned long flags)
+> +{
+> +	struct udma_desc *d;
+> +	u32 ring_id;
+> +	int i;
+> +	int periods = buf_len / period_len;
+> +
+> +	if (periods > (K3_UDMA_DEFAULT_RING_SIZE - 1))
+> +		return NULL;
+> +
+> +	if (period_len > 0x3FFFFF)
+
+Magic?
+
+> +static enum dma_status udma_tx_status(struct dma_chan *chan,
+> +				      dma_cookie_t cookie,
+> +				      struct dma_tx_state *txstate)
+> +{
+> +	struct udma_chan *uc = to_udma_chan(chan);
+> +	enum dma_status ret;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&uc->vc.lock, flags);
+> +
+> +	ret = dma_cookie_status(chan, cookie, txstate);
+> +
+> +	if (!udma_is_chan_running(uc))
+> +		ret = DMA_COMPLETE;
+
+Even for paused, not started channel? Not sure what will be return on those cases
+-- 
+~Vinod
