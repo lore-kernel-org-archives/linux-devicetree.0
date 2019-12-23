@@ -7,62 +7,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EEBC2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95A5C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C39F2063A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B0B20882
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 11:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOEN0idd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gAq2cysK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfLWLee (ORCPT
+        id S1726928AbfLWLeg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 06:34:34 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43816 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbfLWLdv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 06:33:51 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so17417923ljm.10
-        for <devicetree@vger.kernel.org>; Mon, 23 Dec 2019 03:33:49 -0800 (PST)
+        Mon, 23 Dec 2019 06:34:36 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35757 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfLWLdt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 06:33:49 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j1so10046631lja.2
+        for <devicetree@vger.kernel.org>; Mon, 23 Dec 2019 03:33:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uwOaY4uZyAiVBXTrHS/QGxhnoJkW9mn9qhM7V3ufkpk=;
-        b=TOEN0iddsMKhu7erelHFvtos483hvm6hSAa/XzInW0s5le0n9XkxJdbTPKU9wilSGm
-         KIpWiNSNc9kRfyjmT3k+29N4p7BczLQS1N6LBV41C2AjRMuGg3IxIAOBtRpO6BRC2UoF
-         781U1/osC14Uu4d1rztuISa+0yfKf5bYw1P8dh9I3dU5A4UbufM5DJieE02yh2lncrof
-         gAt/BqueP0GvZi5NQpyvmLq9FJan2wZPRxZS267pGBUTDgAjY5Te8sAJ8n4t0yT+x46u
-         HfPil4nbIIedc4V9uOSi8P9nU7A69lwG7X4akRZxFXCI+yChKEUKc+GAbWOTtpDo+qRJ
-         6vrg==
+        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
+        b=gAq2cysKYZZfj4Q8zAemwVqnt5m0oC3iqy37p1iR40SVb+N7zvSbX9h4shinQdiimL
+         tcxtDJadBJ572tOx6WeL2xYwiCMx8viFF8fASfQGgBD2DvK+oAEv/Tm4fFeM/0uNl9In
+         yXxqZkCfQErbq/BfvBOTW1KvoLHsf4p5MhC3QbBHuq5aUHykWh3sdJPDku6WotC5We2G
+         6WoQzNoV2XMM5l6YLzdDQYY0EuQZIyH6J5K6J0Y0dMdUFwrbyAWlfkoW/9+I6O76NlWP
+         cPT5B7ENvofMc1Wl6O1nUmL3VVrPqG6XRnkBejagryZ3Z/H/VpAVEJ+BvOPOObB7rSuK
+         oQbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=uwOaY4uZyAiVBXTrHS/QGxhnoJkW9mn9qhM7V3ufkpk=;
-        b=GEHxA3hEs/M3YehxOmrXytZe0NPGbsLChvblQg5/ZhTd6rVf5txSdfixJIH/TPifuT
-         JwRvOYIh/J8PtCYWZKAU1b+MR6V52az/KSuOi4HbJr24ve3lArBdbC4Wti49/MUNG4wP
-         luUScz2epC4nSlnV/g0Hkc1c+5TZSiS9rnlgq9oaYPQuwXTH+swn4xnZs3EBN04YbaBC
-         oM+H+PUrUyTL98nH0xkaQUlPQp+iVZNlJKUMze6e1o/UIwSdZgo5jqeunRT+94P5twAn
-         5EaAIlr4W/cO+eanZAbHfqrmLyAgYSp36A/t1dnTSQfBOUwCgWj/CibRbvANVUY3UkXm
-         u75Q==
-X-Gm-Message-State: APjAAAUuQAcsqmcAKqoPOXjytDye8W8wBlGSunrwzxkqcNFFOYVnRnIU
-        5fTzB8UcsjIYHT8ST9cCdsEjTA==
-X-Google-Smtp-Source: APXvYqywEVVSpfWiWJMk9qJKbjFA5pCG4TnzVmqM3iSUL4wve+qmC8GdwrkQv/eGqXVvjrP464w6gA==
-X-Received: by 2002:a2e:824a:: with SMTP id j10mr17946548ljh.209.1577100828871;
-        Mon, 23 Dec 2019 03:33:48 -0800 (PST)
+        bh=fdnv5G54kjVyBGm0/gl9gu7nvtpvFPt8yg5pxAgrcmE=;
+        b=s/exYeBcylDjtTEyxbjDDtNyYOGVaJXWea7Um7MxV27trKrbYjWu0iRCymrynQ3cXa
+         Wd/PJThPiRpRUTzU6fBnai7e69b5x2a2O4xxdDBqlAO0Gym7eWrOX5BxMIIsVdf51Jtg
+         4joZc6t/nARRNykNBfM/5oKDpVURR5TYOrCFG78IzBmhcZ7MaPvhsg7rNYiB3GK5neqj
+         41OA5TYYRxhkbCqWe3lNKBd0mZ3nrKNKsUg6NC+4ifbUHliZjUnkngC+FsUhOfPJgOQx
+         +y6VrN/bVNSgayLTKsoCwk6+0j4XvXApHZyiNksRstgj1itxwGp7q3clmHw8bxV7t3qQ
+         dSfA==
+X-Gm-Message-State: APjAAAXfid68XSs062gVrRxmFqC718OlSlpoCgom3TogLwYBlwqkQECu
+        jt41Ze1ISM+hOYzSBwEaqiSeDA==
+X-Google-Smtp-Source: APXvYqwOZpdpPPDJHLpxGOc/ElhqDZAYStQCW2QgMpCSboNbWVcXL8In/iZ+hCKvUAladS2LuxozXA==
+X-Received: by 2002:a2e:6c13:: with SMTP id h19mr8124037ljc.221.1577100827132;
+        Mon, 23 Dec 2019 03:33:47 -0800 (PST)
 Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id g15sm8381500ljk.8.2019.12.23.03.33.47
+        by smtp.gmail.com with ESMTPSA id g15sm8381500ljk.8.2019.12.23.03.33.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Dec 2019 03:33:48 -0800 (PST)
+        Mon, 23 Dec 2019 03:33:46 -0800 (PST)
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
-        Aniket Masule <amasule@codeaurora.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v3 05/12] media: venus: vdec: handle 10bit bitstreams
-Date:   Mon, 23 Dec 2019 13:33:04 +0200
-Message-Id: <20191223113311.20602-6-stanimir.varbanov@linaro.org>
+Subject: [PATCH v3 04/12] v4l: Add source event change for bit-depth
+Date:   Mon, 23 Dec 2019 13:33:03 +0200
+Message-Id: <20191223113311.20602-5-stanimir.varbanov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191223113311.20602-1-stanimir.varbanov@linaro.org>
 References: <20191223113311.20602-1-stanimir.varbanov@linaro.org>
@@ -71,218 +70,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Aniket Masule <amasule@codeaurora.org>
+This event indicate that the source color bit-depth is changed
+during run-time. The client must get the new format and re-allocate
+buffers for it. This can usually happens with video decoder (encoders)
+when the bit-stream color bit-depth is changed from 8 to 10bits
+or vice versa.
 
-Handle 10bit video streams in the decoder by using dithering, i.e
-the decoder output buffers will be in 8bit format.
-
-The runtime handling is implemented by sending v4l2 event to
-userspace application, then the application should stop the
-streaming on capture queue and initiate format negotiation, and
-start streaming again.
-
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-Co-developed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- drivers/media/platform/qcom/venus/core.h      |  1 +
- drivers/media/platform/qcom/venus/helpers.c   | 97 +++++++++++++++++++
- .../media/platform/qcom/venus/hfi_helper.h    |  5 +
- drivers/media/platform/qcom/venus/vdec.c      |  8 +-
- 4 files changed, 110 insertions(+), 1 deletion(-)
+ Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+ Documentation/media/videodev2.h.rst.exceptions  | 1 +
+ include/uapi/linux/videodev2.h                  | 1 +
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index bfbd4a1ba089..55bdeda780bc 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -382,6 +382,7 @@ struct venus_inst {
- 	u32 session_type;
- 	union hfi_get_property hprop;
- 	unsigned int core_acquired: 1;
-+	unsigned int bit_depth;
+diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+index 42659a3d1705..fad853d440cf 100644
+--- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
++++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+@@ -402,7 +402,13 @@ call.
+ 	that many Video Capture devices are not able to recover from a temporary
+ 	loss of signal and so restarting streaming I/O is required in order for
+ 	the hardware to synchronize to the video signal.
+-
++    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
++      - 0x0002
++      - This event gets triggered when color bit-depth change is detected
++	from a video decoder. Applications will have to query the new pixel
++	format and re-negotiate the queue. In most cases the streaming must be
++	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
++	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+ 
+ Return Value
+ ============
+diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+index cb6ccf91776e..209709114378 100644
+--- a/Documentation/media/videodev2.h.rst.exceptions
++++ b/Documentation/media/videodev2.h.rst.exceptions
+@@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
+ replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+ 
+ replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
++replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
+ 
+ replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+ 
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 04481c717fee..2a5138ac6d25 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -2307,6 +2307,7 @@ struct v4l2_event_frame_sync {
  };
  
- #define IS_V1(core)	((core)->res->hfi_version == HFI_VERSION_1XX)
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index 043e0d8705a8..a29662405e3a 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -626,6 +626,76 @@ static u32 get_framesize_raw_nv12_ubwc(u32 width, u32 height)
- 		     max(extradata, y_stride * 48), SZ_4K);
- }
+ #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
++#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
  
-+static u32 get_framesize_raw_p010(u32 width, u32 height)
-+{
-+	u32 y_plane, uv_plane, y_stride, uv_stride, y_sclines, uv_sclines;
-+
-+	y_stride = ALIGN(width * 2, 256);
-+	uv_stride = ALIGN(width * 2, 256);
-+	y_sclines = ALIGN(height, 32);
-+	uv_sclines = ALIGN((height + 1) >> 1, 16);
-+	y_plane = y_stride * y_sclines;
-+	uv_plane = uv_stride * uv_sclines;
-+
-+	return ALIGN((y_plane + uv_plane), SZ_4K);
-+}
-+
-+static u32 get_framesize_raw_p010_ubwc(u32 width, u32 height)
-+{
-+	u32 y_stride, uv_stride, y_sclines, uv_sclines;
-+	u32 y_ubwc_plane, uv_ubwc_plane;
-+	u32 y_meta_stride, y_meta_scanlines;
-+	u32 uv_meta_stride, uv_meta_scanlines;
-+	u32 y_meta_plane, uv_meta_plane;
-+	u32 size;
-+
-+	y_stride = ALIGN(width * 2, 256);
-+	uv_stride = ALIGN(width * 2, 256);
-+	y_sclines = ALIGN(height, 16);
-+	uv_sclines = ALIGN((height + 1) >> 1, 16);
-+
-+	y_ubwc_plane = ALIGN(y_stride * y_sclines, SZ_4K);
-+	uv_ubwc_plane = ALIGN(uv_stride * uv_sclines, SZ_4K);
-+	y_meta_stride = ALIGN(DIV_ROUND_UP(width, 32), 64);
-+	y_meta_scanlines = ALIGN(DIV_ROUND_UP(height, 4), 16);
-+	y_meta_plane = ALIGN(y_meta_stride * y_meta_scanlines, SZ_4K);
-+	uv_meta_stride = ALIGN(DIV_ROUND_UP((width + 1) >> 1, 16), 64);
-+	uv_meta_scanlines = ALIGN(DIV_ROUND_UP((height + 1) >> 1, 4), 16);
-+	uv_meta_plane = ALIGN(uv_meta_stride * uv_meta_scanlines, SZ_4K);
-+
-+	size = y_ubwc_plane + uv_ubwc_plane + y_meta_plane + uv_meta_plane;
-+
-+	return ALIGN(size, SZ_4K);
-+}
-+
-+static u32 get_framesize_raw_yuv420_tp10_ubwc(u32 width, u32 height)
-+{
-+	u32 y_stride, uv_stride, y_sclines, uv_sclines;
-+	u32 y_ubwc_plane, uv_ubwc_plane;
-+	u32 y_meta_stride, y_meta_scanlines;
-+	u32 uv_meta_stride, uv_meta_scanlines;
-+	u32 y_meta_plane, uv_meta_plane;
-+	u32 size;
-+
-+	y_stride = ALIGN(ALIGN(width, 192) * 4 / 3, 256);
-+	uv_stride = ALIGN(ALIGN(width, 192) * 4 / 3, 256);
-+	y_sclines = ALIGN(height, 16);
-+	uv_sclines = ALIGN((height + 1) >> 1, 16);
-+
-+	y_ubwc_plane = ALIGN(y_stride * y_sclines, SZ_4K);
-+	uv_ubwc_plane = ALIGN(uv_stride * uv_sclines, SZ_4K);
-+	y_meta_stride = ALIGN(DIV_ROUND_UP(width, 48), 64);
-+	y_meta_scanlines = ALIGN(DIV_ROUND_UP(height, 4), 16);
-+	y_meta_plane = ALIGN(y_meta_stride * y_meta_scanlines, SZ_4K);
-+	uv_meta_stride = ALIGN(DIV_ROUND_UP((width + 1) >> 1, 24), 64);
-+	uv_meta_scanlines = ALIGN(DIV_ROUND_UP((height + 1) >> 1, 4), 16);
-+	uv_meta_plane = ALIGN(uv_meta_stride * uv_meta_scanlines, SZ_4K);
-+
-+	size = y_ubwc_plane + uv_ubwc_plane + y_meta_plane + uv_meta_plane;
-+
-+	return ALIGN(size, SZ_4K);
-+}
-+
- u32 venus_helper_get_framesz_raw(u32 hfi_fmt, u32 width, u32 height)
- {
- 	switch (hfi_fmt) {
-@@ -634,6 +704,12 @@ u32 venus_helper_get_framesz_raw(u32 hfi_fmt, u32 width, u32 height)
- 		return get_framesize_raw_nv12(width, height);
- 	case HFI_COLOR_FORMAT_NV12_UBWC:
- 		return get_framesize_raw_nv12_ubwc(width, height);
-+	case HFI_COLOR_FORMAT_P010:
-+		return get_framesize_raw_p010(width, height);
-+	case HFI_COLOR_FORMAT_P010_UBWC:
-+		return get_framesize_raw_p010_ubwc(width, height);
-+	case HFI_COLOR_FORMAT_YUV420_TP10_UBWC:
-+		return get_framesize_raw_yuv420_tp10_ubwc(width, height);
- 	default:
- 		return 0;
- 	}
-@@ -1235,6 +1311,27 @@ int venus_helper_get_out_fmts(struct venus_inst *inst, u32 v4l2_fmt,
- 	if (!caps)
- 		return -EINVAL;
- 
-+	if (inst->bit_depth == VIDC_BITDEPTH_10 &&
-+	    inst->session_type == VIDC_SESSION_TYPE_DEC) {
-+		found_ubwc =
-+			find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT,
-+					   HFI_COLOR_FORMAT_YUV420_TP10_UBWC);
-+		found = find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT2,
-+					   HFI_COLOR_FORMAT_NV12);
-+		if (found_ubwc && found) {
-+			/*
-+			 * Hard-code DPB buffers to be 10bit UBWC and decoder
-+			 * output buffers in 8bit NV12 until V4L2 is able to
-+			 * expose compressed/tiled formats to applications.
-+			 */
-+			*out_fmt = HFI_COLOR_FORMAT_YUV420_TP10_UBWC;
-+			*out2_fmt = HFI_COLOR_FORMAT_NV12;
-+			return 0;
-+		}
-+
-+		return -EINVAL;
-+	}
-+
- 	if (ubwc) {
- 		ubwc_fmt = fmt | HFI_COLOR_FORMAT_UBWC_BASE;
- 		found_ubwc = find_fmt_from_caps(caps, HFI_BUFFER_OUTPUT,
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index 2a47f6c0a07a..0b4597c73fb5 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -793,6 +793,9 @@ struct hfi_h264_vui_timing_info {
- 	u32 time_scale;
- };
- 
-+#define VIDC_BITDEPTH_8		0
-+#define VIDC_BITDEPTH_10	1
-+
- struct hfi_bit_depth {
- 	u32 buffer_type;
- 	u32 bit_depth;
-@@ -841,8 +844,10 @@ struct hfi_extradata_input_crop {
- #define HFI_COLOR_FORMAT_10_BIT_BASE		0x4000
- 
- #define HFI_COLOR_FORMAT_YUV420_TP10		0x4002
-+#define HFI_COLOR_FORMAT_P010			0x4003
- #define HFI_COLOR_FORMAT_NV12_UBWC		0x8002
- #define HFI_COLOR_FORMAT_YUV420_TP10_UBWC	0xc002
-+#define HFI_COLOR_FORMAT_P010_UBWC		0xc003
- #define HFI_COLOR_FORMAT_RGBA8888_UBWC		0x8010
- 
- struct hfi_uncompressed_format_select {
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 7b7a4f3377cf..eeff0d8e46b2 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -1172,7 +1172,7 @@ static void vdec_buf_done(struct venus_inst *inst, unsigned int buf_type,
- static void vdec_event_change(struct venus_inst *inst,
- 			      struct hfi_event_data *ev_data, bool sufficient)
- {
--	static const struct v4l2_event ev = {
-+	struct v4l2_event ev = {
- 		.type = V4L2_EVENT_SOURCE_CHANGE,
- 		.u.src_change.changes = V4L2_EVENT_SRC_CH_RESOLUTION };
- 	struct device *dev = inst->core->dev_dec;
-@@ -1193,6 +1193,11 @@ static void vdec_event_change(struct venus_inst *inst,
- 	inst->out_width = ev_data->width;
- 	inst->out_height = ev_data->height;
- 
-+	if (inst->bit_depth != ev_data->bit_depth) {
-+		inst->bit_depth = ev_data->bit_depth;
-+		ev.u.src_change.changes |= V4L2_EVENT_SRC_CH_COLOR_DEPTH;
-+	}
-+
- 	dev_dbg(dev, "event %s sufficient resources (%ux%u)\n",
- 		sufficient ? "" : "not", ev_data->width, ev_data->height);
- 
-@@ -1340,6 +1345,7 @@ static int vdec_open(struct file *file)
- 	inst->buf_count = 0;
- 	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
- 	inst->core_acquired = false;
-+	inst->bit_depth = VIDC_BITDEPTH_8;
- 	init_waitqueue_head(&inst->reconf_wait);
- 	venus_helper_init_instance(inst);
- 
+ struct v4l2_event_src_change {
+ 	__u32 changes;
 -- 
 2.17.1
 
