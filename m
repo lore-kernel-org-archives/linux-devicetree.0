@@ -2,96 +2,160 @@ Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBD6C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 21:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176ADC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 21:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7603E20709
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 21:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB412206CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 21:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cU77YKvN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTCbj/0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfLWVcl (ORCPT
+        id S1726884AbfLWVoc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 16:32:41 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:57934 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfLWVcl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 23 Dec 2019 16:32:41 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47hXd161hnz5Y;
-        Mon, 23 Dec 2019 22:32:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1577136758; bh=O/d828ISA+n1x4IWaq8yeucNGGNrooHV7Ka+PXufgYU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cU77YKvNJgICtrxQwdrkuA3dQmlcb8JweNlMyWAgunfnFPBDztMQ9mNZutXs3wY0M
-         bLepP0vcFy4lhzj/XoAAmsd5S2fEKwaUVVHKoD5L+2LAQYWwtGxsJTnKpu8dBVcNuO
-         a4tabsxU6iYFP6vH2NSeZiCtuKhUmC1LXFzUjc9cNfJNkEDsipFwo6d+Lr1R0DYzYp
-         OD6ckcGPRmWjduIsXOGp1CCLTcKAOkOoJuBTBFzeQM0es/zNTJmcoL94jPigS60mKB
-         O9ZTMghJZmA/x/NhP5wUuQ+Li65bpKqxnmGCbUd/uT4Z38ZzVekALoxobVpKIGMDBe
-         4md82MjUvOVAw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Mon, 23 Dec 2019 22:32:34 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Peter Chen <peter.chen@nxp.com>, Rob Herring <robh-dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 10/10] usb: chipidea: tegra: Add USB_TEGRA_PHY module
- to driver's dependencies
-Message-ID: <20191223213234.GA28786@qmqm.qmqm.pl>
-References: <20191220015238.9228-1-digetx@gmail.com>
- <20191220015238.9228-11-digetx@gmail.com>
- <20191220035650.GC19921@b29397-desktop>
- <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
+        Mon, 23 Dec 2019 16:44:32 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43188 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfLWVoc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 16:44:32 -0500
+Received: by mail-io1-f67.google.com with SMTP id n21so15883742ioo.10;
+        Mon, 23 Dec 2019 13:44:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=koCPH0cxDF98YbtxSO0x6h+giqorikDtjWlhEuBq+TE=;
+        b=HTCbj/0XVTGB/KTu/PdEO4PeXaUwXec4k2rZhUz2+pFW1HTk9BpyyrF2q7eFYEE63n
+         I37QuNMYtTdCFN+K93pQff9cqpDlV5e0ngY8oIW1jgIkmtNUbEa8U3LvfZWiRzUmmFyc
+         2a4GVb44gvYUcxj7BRngqqXDn2/sxqQtk0y/23GoA0M/skPKloTFiPWxgrRNgcQJnS+n
+         +wNOH+yszpOVh9+9BwbaL3PQO5VR9Xxc5ZD5cH24s8WhgyWkG1EuNjd7wVxaOUzyiDz8
+         zTWEgeqLZ5I3ummZ+H3O8+sBQhcbTez7mmPvtlKlhyuwuMRz9+BHL+324fl97D2vi/aj
+         vy/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=koCPH0cxDF98YbtxSO0x6h+giqorikDtjWlhEuBq+TE=;
+        b=AWVMKfy/AyrMsQxlFxbibWaAReFI7DAg8I7bt3zwnd+YamsmU4xVHywjtTyDO0g0lj
+         /WI4bGCtjPtwbt00ofUWdrEkGiuHdT7yAVjzaRpCwNXqxrdNkI/3HjVa+qJNj7PuZH6b
+         hDFkgnz6KJfzg+q6kJFavVZaMh/CAYus9MetkyUs7IEVigaVhwdTfh/a/sIv+dvVrWoj
+         vpUgII5SAp4gknYbwfw73b7/qIYwBF/4jic9Zlk2oOLNAvBpsPSvFZ2CkEy8eXdAkuR3
+         9OAfIZ9GJUrvRt0A94Y6p+AdN97kvJYS8G0HlgKvA9AgVBKsifMKmfBJfeLT0UFTgQ5O
+         QcOQ==
+X-Gm-Message-State: APjAAAVV2JGJY+5/jtFK8S0kEpM0/aazBdTgqGzX3AC0Z3Vm5dVrlSEe
+        JXjBGXKyu51KwWidus0bwyxvb6ij59/Ukqp+KwQ=
+X-Google-Smtp-Source: APXvYqyu46ajAJWwSKClwA3Ac23soXJMDMYYyY/c2MylFWpxaO6OKoAWs4fUYI7wX7F4yfyuIR8jIEmZ6TniFrsXx0s=
+X-Received: by 2002:a02:2a8e:: with SMTP id w136mr6107392jaw.117.1577137471307;
+ Mon, 23 Dec 2019 13:44:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fb7dee6e-e645-fe45-126c-c5f1e280bc26@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191210003124.32376-1-jassisinghbrar@gmail.com> <20191219194000.GA23698@bogus>
+In-Reply-To: <20191219194000.GA23698@bogus>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Mon, 23 Dec 2019 15:44:20 -0600
+Message-ID: <CABb+yY3COBOHLQXkQMzB_DWh-yXsrtJqnD9vi9FfMPYBTgVuyg@mail.gmail.com>
+Subject: Re: [PATCHv1 1/2] dt-bindings: max3421-udc: add dt bindings for
+ MAX3420 UDC
+To:     Rob Herring <robh@kernel.org>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 07:31:08AM +0300, Dmitry Osipenko wrote:
-> 20.12.2019 06:56, Peter Chen пишет:
-> > On 19-12-20 04:52:38, Dmitry Osipenko wrote:
-[...]
-> >> --- a/drivers/usb/chipidea/ci_hdrc_tegra.c
-> >> +++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
-> >> @@ -53,6 +53,12 @@ static int tegra_udc_probe(struct platform_device *pdev)
-> >>  	struct tegra_udc *udc;
-> >>  	int err;
-> >>  
-> >> +	if (IS_MODULE(CONFIG_USB_TEGRA_PHY)) {
-> >> +		err = request_module("phy_tegra_usb");
-> >> +		if (err)
-> >> +			return err;
-> >> +	}
-> >> +
-> > 
-> > Why you do this dependency, if this controller driver can't
-> > get USB PHY, it should return error. What's the return value
-> > after calling below:
-> > 
-> > 	udc->phy = devm_usb_get_phy_by_phandle(&pdev->dev, "nvidia,phy", 0);
-> 
-> It returns -EPROBE_DEFER when phy_tegra_usb isn't loaded.
+On Thu, Dec 19, 2019 at 1:40 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Dec 09, 2019 at 06:31:24PM -0600, jassisinghbrar@gmail.com wrote:
+> > From: Jassi Brar <jaswinder.singh@linaro.org>
+> >
+> > Add YAML dt bindings for Maxim MAX3420 UDC controller.
+> >
+> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> > ---
+> >  .../bindings/usb/maxim,max3420-udc.yaml       | 60 +++++++++++++++++++
+> >  1 file changed, 60 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml b/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> > new file mode 100644
+> > index 000000000000..cf4eec8a618e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+> > @@ -0,0 +1,60 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+>
+> Dual license new bindings please:
+>
+> (GPL-2.0-only OR BSD-2-Clause)
+>
+ok
 
-How are other driver modules autoloaded? Isn't there an appropriate
-MODALIAS or MODULE_DEVICE_TABLE in there?
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/usb/maxim,max3420-udc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MAXIM MAX3420/1 USB Peripheral Controller
+> > +
+> > +maintainers:
+> > +  - Jassi Brar <jaswinder.singh@linaro.org>
+> > +
+> > +description: |
+> > +  The controller provices USB2.0 compliant FullSpeed peripheral
+> > +  implementation over the  SPI interface.
+>
+> space                        ^
+>
+ok
 
-Best Regards,
-Michał Mirosław
+> > +
+> > +  Specifications about the part can be found at:
+> > +    http://datasheets.maximintegrated.com/en/ds/MAX3420E.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - maxim,max3420-udc
+> > +      - maxim,max3421-udc
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +    items:
+> > +      - const: udc
+> > +      - const: vbus
+>
+> interrupts are integers, not strings. Should be interrupt-names?
+>
+yes
+
+> > +
+> > +  spi-max-frequency:
+> > +    maximum: 26000000
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-names
+>
+> Add:
+>
+> additionalProperties: false
+>
+ok
+
+Thanks.
