@@ -3,83 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE5DC2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 06:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F43C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 07:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7966C2071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 06:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F982073B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 07:32:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577170456;
-	bh=ZKiiDeIHEimT5RF49wdxk08CEo4aIHjAHjFkXzaey7Y=;
+	s=default; t=1577172750;
+	bh=e5Lx3fav9aHPYbQQLVJ8r8urYsQzhkPfNR/pW89IEzY=;
 	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=Lj8MEkaqSNZz45iVe9695LrYOA42AcK9E+OZCOF+QxbVx/G1gdEdOAju6UVLo90VE
-	 fJ2Iy+BCIXsz1dSfQ8whWjEl4HlaJPVFNPCog41h9SpfOJGTz4R5NP5msp3mMprNnV
-	 wev+LpmcssSYxItpohdG6VCaSVP/jBqMzedAS71k=
+	b=DbaoKXP4R/3eoTnkq4ezfhe02AouaWnqAopW0cLmEbuH1vd3bovK9mvf58sqT+Zc5
+	 xhrslrE8hfRHl25sP7leShxR7+BTxziMbg1p93U+1NEcL3FUr7NzdbktzwCkODzKeb
+	 +niAaSIGoGFaL0/XcWIwRLxlEIlQwATnp6ecfh3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbfLXGyQ (ORCPT
+        id S1725993AbfLXHc3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 01:54:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38866 "EHLO mail.kernel.org"
+        Tue, 24 Dec 2019 02:32:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfLXGyP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Dec 2019 01:54:15 -0500
+        id S1726037AbfLXHc3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Dec 2019 02:32:29 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D09B620706;
-        Tue, 24 Dec 2019 06:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68302206B7;
+        Tue, 24 Dec 2019 07:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577170454;
-        bh=ZKiiDeIHEimT5RF49wdxk08CEo4aIHjAHjFkXzaey7Y=;
+        s=default; t=1577172748;
+        bh=e5Lx3fav9aHPYbQQLVJ8r8urYsQzhkPfNR/pW89IEzY=;
         h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=XD/RA8iIKhhmqKRAYapiwrONvPCq/s/0rct5T1yVgKpw15dEQr4ILYfgyPZaPBQ0N
-         w2MGva0yTs/pjiEyEbMOCYXAOeYP9ZSfev1N/rA9WOhHHH8pu1G0qouZQNUj/1P3n+
-         kW+SQz5bkTrNMQWF30Q6IHU4RMWGk3jkJcoRpSX8=
+        b=PVIP/PkURFqmzZPXEhTK+7hdJGt4rFx3a65T+psJM2DkPh6q9hIHwk44H8ZMbvFrd
+         pBnyZt15MphKr7xhE8x8Noymtxtox9Hpdrn1GpNvhEaUa/tp8paBn2AgzuMahysl3k
+         4FuRhM56J6bhoOXik71QYxVB7Hce3NCHpFVY4YvM=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4907f35240ae77bba4a27fd32f1e586e00cd434d.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com> <4907f35240ae77bba4a27fd32f1e586e00cd434d.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+In-Reply-To: <20191209183511.3576038-6-daniel@zonque.org>
+References: <20191209183511.3576038-1-daniel@zonque.org> <20191209183511.3576038-6-daniel@zonque.org>
+Cc:     mturquette@baylibre.com, robh+dt@kernel.org, broonie@kernel.org,
+        lee.jones@linaro.org, lars@metafoo.de, pascal.huerst@gmail.com,
+        Daniel Mack <daniel@zonque.org>
 From:   Stephen Boyd <sboyd@kernel.org>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Subject: Re: [PATCH v7 07/12] clk: bd718x7: Support ROHM BD71828 clk block
+To:     Daniel Mack <daniel@zonque.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/10] dt-bindings: clock: Add documentation for AD242x clock providers
 User-Agent: alot/0.8.1
-Date:   Mon, 23 Dec 2019 22:54:14 -0800
-Message-Id: <20191224065414.D09B620706@mail.kernel.org>
+Date:   Mon, 23 Dec 2019 23:32:27 -0800
+Message-Id: <20191224073228.68302206B7@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Matti Vaittinen (2019-12-19 01:52:13)
-> BD71828GW is a single-chip power management IC for battery-powered portab=
-le
-> devices. Add support for controlling BD71828 clk using bd718x7 driver.
->=20
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
+Quoting Daniel Mack (2019-12-09 10:35:05)
+> diff --git a/Documentation/devicetree/bindings/clock/adi,ad242x-clk.yaml =
+b/Documentation/devicetree/bindings/clock/adi,ad242x-clk.yaml
+> new file mode 100644
+> index 000000000000..f434b3e4928e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/adi,ad242x-clk.yaml
+> @@ -0,0 +1,32 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/clock/adi,ad242x-clk.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Analog Devices AD242x clock provider
+> +
+> +maintainers:
+> +  - Daniel Mack <daniel@zonque.org>
+> +
+> +description: |
+> +  This module is part of the AD242x MFD device. For more details and an =
+example
+> +  refer to Documentation/devicetree/bindings/mfd/ad242x.yaml.
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+I think we usually leave off Documentation/devicetree/ from paths when
+they're inside the bindings directory.
 
-I guess we can't win and break the build dependency on the "generic"
-header file :/
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad2428w-clk
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clock-output-names:
+> +    minItems: 2
+> +    maxItems: 2
+> +    description: |
+> +      Array of two strings to use as names for the generated output cloc=
+ks
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> \ No newline at end of file
+
+Why no newline at end of file? Is there an example?
 
