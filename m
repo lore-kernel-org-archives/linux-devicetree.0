@@ -1,138 +1,181 @@
-Return-Path: <SRS0=v2WM=2N=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1856C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 22:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFDEC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 00:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01052075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 23 Dec 2019 22:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DAC20643
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 00:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="WZFpyQFo"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="iBUc0x4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726954AbfLWWzb (ORCPT
+        id S1726853AbfLXA1R (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 17:55:31 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46420 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfLWWzb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 17:55:31 -0500
-Received: by mail-io1-f67.google.com with SMTP id t26so17563279ioi.13
-        for <devicetree@vger.kernel.org>; Mon, 23 Dec 2019 14:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yCY+BqVcdbrXD0gu/PsP/KokjQz+TuxHQGPsNwzwFVQ=;
-        b=WZFpyQFoDNC2LiXKC+BdJ3QRHePv8zANl/ujX87H7RpEgPDnFOgTTy2J4n9hNG1hBV
-         mWyZEhcepZUzOKTy8YnaIn7dOiqHt4kReiqM/8Td3CY5pNmFB4weota1r6/wjM4KD2tM
-         MUSlhRW/SIvWKpWwQSRHW12ZGU9bnTAm7TUGVRnWEalKTe1ueGJb2SFxe7oRHDrcwqVJ
-         Ii0nSylfyhHGA/qJKCQ6E2pqWjx+NRbwfixb4HayWnW9ewNIdkk1eg00nPxbBck/pEb4
-         IccyTvyKy3pbYVH8PSO/vJdcK0HUZOU0E2JFYtp/z3rKhVYTcD9DEKiTDllJVwWRGCt4
-         /3NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yCY+BqVcdbrXD0gu/PsP/KokjQz+TuxHQGPsNwzwFVQ=;
-        b=NKxUmE/vLMY0N/16Pty58h4mqq/6T8kE7zt5WpuFy3RcHzcrD0fyCkiYj9zgURfFCo
-         hkFHXmlkgrMeRonScgVyGi5aOoI8Vh5kAtmSUQzhM2VEmwiZGVzrNjg9P/VtbCXYvuE8
-         40Spgd7QpKIKDerXGOJD7ncMurU8qEbAiXuYn7POSVNMXg/aB/2cw+4vZeKh5SIh9l2t
-         aPd+7lpaVXHws8SDMjKfSrgK1n5aOtNaNwW0u4HRC0lN1ZwdonMS+xIhepZ6ZZQRBXIj
-         btf0g21xv5qmxdTrqYE2kc7ss9oMiFtTgPYJltlHs3erN8I97WWUox+5KAPUo/GjlT+b
-         OZcA==
-X-Gm-Message-State: APjAAAWAf9HB2g3VSuiCpRFs+6o9V6lVy6do08Xc2gx+2W0e/aBKT5/t
-        xJE/5buskXSq6xKXKeUXt68y2t/uNt2548WUgS3twg==
-X-Google-Smtp-Source: APXvYqw5ermERDc5VenZlmctHWndmFEZr/NIjilASC/vSpdvgbvFnE3TMf4Vbb5vFX5lweWQMgDGMe/yNK7ZPHzI8zQ=
-X-Received: by 2002:a6b:5917:: with SMTP id n23mr22528622iob.112.1577141730332;
- Mon, 23 Dec 2019 14:55:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20191223214412.12259-1-rjones@gateworks.com> <20191223214412.12259-2-rjones@gateworks.com>
- <CAOMZO5CLfyZjuz3c+Xr9v0D5h+r83PGgi8BrMnQZOOZSM-iGGw@mail.gmail.com>
-In-Reply-To: <CAOMZO5CLfyZjuz3c+Xr9v0D5h+r83PGgi8BrMnQZOOZSM-iGGw@mail.gmail.com>
-From:   Bobby Jones <rjones@gateworks.com>
-Date:   Mon, 23 Dec 2019 14:55:19 -0800
-Message-ID: <CALAE=UAok8dazxPj16TAV7rQ_6EZvLBp3t5J2CjweMyECkZAHA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] ARM: dts: imx: Add GW5907 board support
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mon, 23 Dec 2019 19:27:17 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:47550 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfLXA1Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 19:27:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1577147234; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=fNIZfTznwRicv1L3tfCg8DVacLlI9bpQ8BJN1yvLWCU=;
+        b=iBUc0x4vbq+4lSji13z2d+saT7tVMXDrBcYb1Mj1lT1mD7lBmiXT5dbD4coZWZLN/2PWdb
+        w5xk54yGkUIvZyEz/v/FeI0qcWGwXmgBT5EVS6R8tMR+lEPmUpxPPuUtUDIuuotgfLHta2
+        ZVYMPE6m2L9hpT4daVCC9TWV7Wgj9Cw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Tim Harvey <tharvey@gateworks.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     od@zcrc.me, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] dt-bindings: sound: Convert jz47*-codec doc to YAML
+Date:   Tue, 24 Dec 2019 01:27:07 +0100
+Message-Id: <20191224002708.1207884-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 23, 2019 at 2:06 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Robert,
->
-> On Mon, Dec 23, 2019 at 6:44 PM Robert Jones <rjones@gateworks.com> wrote:
-> >
-> > The Gateworks GW5907 is an IMX6 SoC based single board computer with:
-> >  - IMX6Q or IMX6DL
-> >  - 32bit DDR3 DRAM
-> >  - FEC GbE Phy
-> >  - bi-color front-panel LED
-> >  - 256MB NAND boot device
-> >  - Gateworks System Controller (hwmon, pushbutton controller, EEPROM)
-> >  - Digital IO expander (pca9555)
-> >  - Joystick 12bit adc (ads1015)
-> >
-> > Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> > Signed-off-by: Robert Jones <rjones@gateworks.com>
->
-> Not clear on the authorship on this patch.
->
-> If the original author is Tim, then his name should appear in the From field.
->
+Convert ingenic,jz4740-codec.txt and ingenic,jz4725b-codec.txt to one
+single ingenic,codec.yaml file, since they share the same binding.
 
-Original author for all but the GW5910 patch was myself. It's probably
-not clear here but Tim reviewed the patches prior to submission and
-had me add him as a Signed-off-by.
+Add the ingenic,jz4770-codec compatible string in the process.
 
-Would it be better to just remove those lines from the patches in this case?
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/sound/ingenic,codec.yaml         | 55 +++++++++++++++++++
+ .../bindings/sound/ingenic,jz4725b-codec.txt  | 20 -------
+ .../bindings/sound/ingenic,jz4740-codec.txt   | 20 -------
+ 3 files changed, 55 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/ingenic,codec.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
+ delete mode 100644 Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
 
-> > ---
-> >  arch/arm/boot/dts/Makefile            |   2 +
-> >  arch/arm/boot/dts/imx6dl-gw5907.dts   |  14 ++
-> >  arch/arm/boot/dts/imx6q-gw5907.dts    |  14 ++
-> >  arch/arm/boot/dts/imx6qdl-gw5907.dtsi | 399 ++++++++++++++++++++++++++++++++++
-> >  4 files changed, 429 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx6dl-gw5907.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6q-gw5907.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6qdl-gw5907.dtsi
-> >
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 1e9e1af..9ee80e2 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -422,6 +422,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
-> >         imx6dl-gw560x.dtb \
-> >         imx6dl-gw5903.dtb \
-> >         imx6dl-gw5904.dtb \
-> > +       imx6dl-gw5907.dtb \
->
-> You should add an additional patch that add these new boards in
-> Documentation/devicetree/bindings/arm/fsl.yaml
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,codec.yaml b/Documentation/devicetree/bindings/sound/ingenic,codec.yaml
+new file mode 100644
+index 000000000000..eb4be86464bb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ingenic,codec.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/ingenic,codec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ingenic JZ47xx internal codec DT bindings
++
++maintainers:
++  - Paul Cercueil <paul@crapouillou.net>
++
++properties:
++  $nodename:
++    pattern: '^audio-codec@.*'
++
++  compatible:
++    oneOf:
++      - const: ingenic,jz4770-codec
++      - const: ingenic,jz4725b-codec
++      - const: ingenic,jz4740-codec
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: aic
++
++  '#sound-dai-cells':
++    const: 0
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#sound-dai-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/jz4740-cgu.h>
++    codec: audio-codec@10020080 {
++      compatible = "ingenic,jz4740-codec";
++      reg = <0x10020080 0x8>;
++      #sound-dai-cells = <0>;
++      clocks = <&cgu JZ4740_CLK_AIC>;
++      clock-names = "aic";
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
+deleted file mode 100644
+index 05adc0d47b13..000000000000
+--- a/Documentation/devicetree/bindings/sound/ingenic,jz4725b-codec.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-Ingenic JZ4725B codec controller
+-
+-Required properties:
+-- compatible : "ingenic,jz4725b-codec"
+-- reg : codec registers location and length
+-- clocks : phandle to the AIC clock.
+-- clock-names: must be set to "aic".
+-- #sound-dai-cells: Must be set to 0.
+-
+-Example:
+-
+-codec: audio-codec@100200a4 {
+-	compatible = "ingenic,jz4725b-codec";
+-	reg = <0x100200a4 0x8>;
+-
+-	#sound-dai-cells = <0>;
+-
+-	clocks = <&cgu JZ4725B_CLK_AIC>;
+-	clock-names = "aic";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt b/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
+deleted file mode 100644
+index 1ffcade87e7b..000000000000
+--- a/Documentation/devicetree/bindings/sound/ingenic,jz4740-codec.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-Ingenic JZ4740 codec controller
+-
+-Required properties:
+-- compatible : "ingenic,jz4740-codec"
+-- reg : codec registers location and length
+-- clocks : phandle to the AIC clock.
+-- clock-names: must be set to "aic".
+-- #sound-dai-cells: Must be set to 0.
+-
+-Example:
+-
+-codec: audio-codec@10020080 {
+-	compatible = "ingenic,jz4740-codec";
+-	reg = <0x10020080 0x8>;
+-
+-	#sound-dai-cells = <0>;
+-
+-	clocks = <&cgu JZ4740_CLK_AIC>;
+-	clock-names = "aic";
+-};
+-- 
+2.24.0
 
-So I was planning on just adding an enum line for "gw,ventana" under
-the i.MX6DL and i.MX6Q based Boards sections. Would that be
-sufficient?
-
-We have a lot of individual custom boards and it doesn't seem correct
-to add individual strings for every one in both sections.
