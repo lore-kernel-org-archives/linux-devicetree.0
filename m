@@ -2,192 +2,112 @@ Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910E9C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 11:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA65C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 11:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C0720706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 11:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE40206B7
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 11:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbfLXLaM (ORCPT
+        id S1726195AbfLXLbU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 06:30:12 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:42114 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbfLXLaL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Dec 2019 06:30:11 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 8FC0DFB03;
-        Tue, 24 Dec 2019 12:30:09 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Lwf3d9cYzpal; Tue, 24 Dec 2019 12:30:07 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 7D7EF40BD8; Tue, 24 Dec 2019 12:30:07 +0100 (CET)
-Date:   Tue, 24 Dec 2019 12:30:07 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Tue, 24 Dec 2019 06:31:20 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:57670 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfLXLbU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 06:31:20 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 4F88F20025;
+        Tue, 24 Dec 2019 12:31:13 +0100 (CET)
+Date:   Tue, 24 Dec 2019 12:31:11 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Boris Brezillon <boris.brezillon@collabora.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
-Message-ID: <20191224113007.GB23468@bogon.m.sigxcpu.org>
-References: <cover.1576499103.git.agx@sigxcpu.org>
- <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
- <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>
+Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
+ double-linked list
+Message-ID: <20191224113111.GB14837@ravnborg.org>
+References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
+ <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
+ <20191203141515.3597631-5-boris.brezillon@collabora.com>
+ <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
+ <20191216155551.083dcbaf@collabora.com>
+ <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
+ <20191216162542.261c821c@collabora.com>
+ <60f03d50-7c0f-c3d0-920f-0625c08b2171@samsung.com>
+ <1010f5fc-0672-643c-4410-e053a928cb66@samsung.com>
+ <20191224104422.25dbf980@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3d66b07d-b4c5-43e6-4378-d63cc84b8d43@ti.com>
+In-Reply-To: <20191224104422.25dbf980@collabora.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=Mk4_XeWDY7XfxF_RUtAA:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dan,
-I'm a bit confused about the regmap_write -> regmap_update_bits switch
-(see below), maybe you can shed some light on it?
+Hi Boris.
 
-On Tue, Dec 17, 2019 at 06:53:45AM -0600, Dan Murphy wrote:
-> Guido
+> Just a reminder of my 2 proposals:
 > 
-> On 12/16/19 6:28 AM, Guido Günther wrote:
-> > Overvoltage protection and brightness mode are currently hardcoded
-> > as disabled in the driver. Make these configurable via DT.
+> 1/ implement the bridge_ops->pre_enable/post_disable() hooks so you can
+>    split your enable/disable logic in 2 parts and make sure things are
+>    ready when the panel/next bridge tries to send DSI commands
+> 2/ move everything that's needed to send DSI commands out of the
+>    ->enable() path (maybe in runtime PM resume/suspend hooks) so you
+>    can call that in the DSI transfer path too
 > 
-> Can we split these up to two separate patch series?
-> 
-> We are adding 2 separate features and if something is incorrect with one of
-> the changes it is a bit hard to debug.
-> 
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >   drivers/leds/leds-lm3692x.c | 43 +++++++++++++++++++++++++++++++------
-> >   1 file changed, 37 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> > index 8b408102e138..2c084b333628 100644
-> > --- a/drivers/leds/leds-lm3692x.c
-> > +++ b/drivers/leds/leds-lm3692x.c
-> > @@ -114,6 +114,7 @@ struct lm3692x_led {
-> >   	struct regulator *regulator;
-> >   	int led_enable;
-> >   	int model_id;
-> > +	u8 boost_ctrl, brightness_ctrl;
-> >   };
-> >   static const struct reg_default lm3692x_reg_defs[] = {
-> > @@ -249,10 +250,7 @@ static int lm3692x_init(struct lm3692x_led *led)
-> >   	if (ret)
-> >   		goto out;
-> > -	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL,
-> > -			LM3692X_BOOST_SW_1MHZ |
-> > -			LM3692X_BOOST_SW_NO_SHIFT |
-> > -			LM3692X_OCP_PROT_1_5A);
-> > +	ret = regmap_write(led->regmap, LM3692X_BOOST_CTRL, led->boost_ctrl);
-> >   	if (ret)
-> >   		goto out;
-> 
-> regmap_update_bits
+> As pointed out by Laurent, #1 doesn't work because some panel drivers
+> send DSI commands in their ->prepare() hook, and ->pre_enable() methods
+> are called in reverse order, meaning that the DRM panel bridge driver
+> would try to issue DSI commands before the DSI host controllers is ready
+> to send them. I still thing #2 is a good option.
 
-The driver is writing full register values (regmap_write) here as
-before, do you want that to change? Likely i'm overlooking something.
+Jitao Shi suggested to extend panels so we had a sequence of:
 
-> > @@ -268,8 +266,7 @@ static int lm3692x_init(struct lm3692x_led *led)
-> >   	if (ret)
-> >   		goto out;
-> > -	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL,
-> > -			LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN);
-> > +	ret = regmap_write(led->regmap, LM3692X_BRT_CTRL, led->brightness_ctrl);
-> >   	if (ret)
-> >   		goto out;
-> regmap_update_bits
+  prepare_power()  <= new callback,
+                   here one should NOT be allowed to send
+                   DSI commands
+  prepare()
+  enable()
 
-Same here.
+   #
+   # panel is now ready to show your favourite christmas movie
+   #
 
-> > @@ -326,6 +323,8 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >   {
-> >   	struct fwnode_handle *child = NULL;
-> >   	struct led_init_data init_data = {};
-> > +	u32 ovp = 0;
-> > +	bool exp_mode;
-> >   	int ret;
-> >   	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
-> > @@ -350,6 +349,38 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
-> >   		led->regulator = NULL;
-> >   	}
-> > +	led->boost_ctrl = LM3692X_BOOST_SW_1MHZ |
-> > +		LM3692X_BOOST_SW_NO_SHIFT |
-> > +		LM3692X_OCP_PROT_1_5A;
-> Make this a #define and then it can be reused as a mask for
-> regmap_update_bits
-> > +	ret = device_property_read_u32(&led->client->dev,
-> > +				       "ti,overvoltage-volts", &ovp);
-> > +	if (!ret) {
-> 
-> if (ret)
-> 
->     set boost_ctrl to default value since the default is not 0
->
-> led->boost_ctrl |= LM3692X_OVP_29V;
-> 
-> else
-> 
->      do case
->
+  disable()
+  unprepare()
+  unprepare_power()  <= new callback
 
-Fixed.
 
-> > +		switch (ovp) {
-> > +		case 0:
-> > +			break;
-> > +		case 22:
-> If the value is 21v why is this case 22?  DT binding says 21 is the first
-> value
+Would this help implement what you suggest above?
+Relevant panels would then have to be updated - but this
+is doable.
 
-Fixed, also added the 17V for the case where both bits a are 0.
-
-> > +			led->boost_ctrl |= LM3692X_OVP_21V;
-> > +			break;
-> > +		case 25:
-> > +			led->boost_ctrl |= LM3692X_OVP_25V;
-> > +			break;
-> > +		case 29:
-> > +			led->boost_ctrl |= LM3692X_OVP_29V;
-> > +			break;
-> > +		default:
-> > +			dev_err(&led->client->dev, "Invalid OVP %d\n", ovp);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +	dev_dbg(&led->client->dev, "OVP: %dV", ovp);
-> > +
-> extra debug statement
-
-dropped.
-
-> > +	led->brightness_ctrl = LM3692X_BL_ADJ_POL | LM3692X_RAMP_EN;
-> Same comment as before on the #define
-> > +	exp_mode = device_property_read_bool(&led->client->dev,
-> > +				     "ti,brightness-mapping-exponential");
-> > +	dev_dbg(&led->client->dev, "Exponential brightness: %d", exp_mode);
-> 
-> extra debug statement
-
-dropped.
-
-Cheers and thanks for the comments,
- -- Guido
-
-> 
-> Dan
-> 
-> 
+	Sam
