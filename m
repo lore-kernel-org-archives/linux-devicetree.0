@@ -2,564 +2,131 @@ Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEC4C2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDD2C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 16:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D7620643
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 16:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 366642071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 16:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="B3nFyoMs"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="W0hlLL5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfLXQWg (ORCPT
+        id S1726171AbfLXQ6Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 11:22:36 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:20121 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbfLXQWg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 11:22:36 -0500
-X-Greylist: delayed 710 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Dec 2019 11:22:33 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577204552;
-        s=strato-dkim-0002; d=dawncrow.de;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=jd8HIQj/ubKtUx8YHbbLAuh5R4GnjEShJcHWuqyq1x0=;
-        b=B3nFyoMsxOOtYautXf/bK2TnowsynLWvAAFbL/IuiQIsawJ7xmRm4MGnQ59aH9NGSm
-        JimoBhK3V0K4EVwU1my/nG6lT0qdHcOu1cmTqxITgcgIKcZoRgnXTIa6M3qNRboEu5Tf
-        QzKMLr8ajPdPeEFClFv/fVY5X9zFNWkCzolGi7csMfd4HWPct266kiUebSYJcVAa0/Qd
-        VU0CjKdd3UTgQkbKQwZVnASRtnh5dlJCtvy7PlMnXtPrAiSggTV/Qar7ZcP6f/ychzqt
-        lKGpH+c9AquLp+29XvbOBRcFN7lu5ROvQ4qxwnkoWU3xbsW//Bw0QxnMu5QklClkOENy
-        36iQ==
-X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZGGjY6ptdusOaLnXzn3ovD+FrFdXyk="
-X-RZG-CLASS-ID: mo00
-Received: from tesla.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id I099d1vBOGAT3jc
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 24 Dec 2019 17:10:29 +0100 (CET)
-From:   =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>
-To:     webmaster@dawncrow.de, linux@arm.linux.org.uk, robh+dt@kernel.org,
-        mark.rutland@arm.com, bcousson@baylibre.com, tony@atomide.com,
-        linux-omap@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: Add omap3-echo
-Date:   Tue, 24 Dec 2019 17:10:05 +0100
-Message-Id: <20191224161005.28083-1-nerv@dawncrow.de>
-X-Mailer: git-send-email 2.17.1
+        Tue, 24 Dec 2019 11:58:25 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37797 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbfLXQ6Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 11:58:25 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so15485724lfc.4
+        for <devicetree@vger.kernel.org>; Tue, 24 Dec 2019 08:58:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=J9xVipWdZ9ewXXkBZXIrSrABSMZzc9X1MMnhoAbWXlE=;
+        b=W0hlLL5DhTEpCFv0TCctzYOTXyobKMI6Y6UJK8+lDzVhnHItHqQwaIpn680DfYumSV
+         L8WcWNVtAVhspp+9zGEG05NY2Th2BRK8yr/LBjNXiqAM/JFXdq2isbMLHBZPrMvXg/n0
+         pF/574ew1QU8lMu8AA68vrFTMlZwzN43O4YFR0soGdns80TeDSeZlF/mUZ1fMejn/WEj
+         BkgoETEWv70bXzccrBSJ1DQ4IYDU3/uJLE1qGrL0sJyHHXvZSlpG7TKjSdqmBnzcNne/
+         mhRNJ6DrtfIb3G8kzyuQlh3QToM5aJZTIlslg0SRb1VYd9JUY0o5Ayl8xO3zpTXgisBm
+         PoIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=J9xVipWdZ9ewXXkBZXIrSrABSMZzc9X1MMnhoAbWXlE=;
+        b=rR51uHWvKjpnupjsRhj7Hkvll6thpH8xjL5raZ64ksmzsaZoUP9aeRrfmyMvf744Js
+         Cd1NnXLf8qaMVe7lcRNa5pTiWpHuV67NwR1BgmTOnVeoOU38ZfTupPeZ2QHE7b8eE8DA
+         Fyd81J/g9dD1DCSKrQ22CjnKwwCaMA0pJMQFp79e4ShE/u/ju45J5/HsFvJKAOfAvJIS
+         QALNs+9zFtr6i37gmo59SDhkKIh1x4zX+YFidbyJiap/jeDG7Y0rDArFfKqGZUsQVBEt
+         j3KoUgheYPtRjqFcf5XzBzCC9wa7kIoxyOWv3UzQ8erGVUGGZ4AZ+LHXL5Y/k4l3Kf5h
+         sa1g==
+X-Gm-Message-State: APjAAAUJQcd74AWD1ioVXfmouMx/PqGdAx+0gx+9cD99xnKPwPIPRGX2
+        rJpTnRPl1oQSHkH+/w2XCgSqMQ==
+X-Google-Smtp-Source: APXvYqwV8IVoVjnuRZBeIW/7BCYcFzMxWYQyUyZDt6oXFV1ZN/xkagQ1KHils7pYZlCWzv9yW2hdjA==
+X-Received: by 2002:a19:c1c1:: with SMTP id r184mr20571865lff.128.1577206703390;
+        Tue, 24 Dec 2019 08:58:23 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:441d:5f5:f336:feb9:305c:b1aa])
+        by smtp.gmail.com with ESMTPSA id x21sm10232507ljd.2.2019.12.24.08.58.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Dec 2019 08:58:22 -0800 (PST)
+Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
+To:     masonccyang@mxic.com.tw
+Cc:     Mark Brown <broonie@kernel.org>,
+        Chris Brandt <Chris.Brandt@renesas.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+References: <20191206134202.18784-1-chris.brandt@renesas.com>
+ <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
+ <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
+ <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
+ <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
+ <TY1PR01MB1562E196AB1C582F186CC74B8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
+ <OF3F92D76C.33FFFBFC-ON482584D6.00093DAC-482584D6.0009A51D@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <bac1f4db-302d-0dd7-3b66-341a74f67a6b@cogentembedded.com>
+Date:   Tue, 24 Dec 2019 19:58:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <OF3F92D76C.33FFFBFC-ON482584D6.00093DAC-482584D6.0009A51D@mxic.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is the first generation Amazon Echo from 2016.
-Audio support is not yet implemented.
+Hello!
 
-Signed-off-by: André Hentschel <nerv@dawncrow.de>
----
+On 12/20/2019 04:45 AM, masonccyang@mxic.com.tw wrote:
 
-I have local patches for the microphone array, but cleaning that up will take some time.
-Audio output seems to be even harder work...
-You can find a tutorial on how to boot the Echo here:
-https://labs.f-secure.com/archive/alexa-are-you-listening/
+>>>>> So at the moment, there is nothing yet for me to 'try' on the RZ/A series,
+>>>> correct?
+>>>>
+>>>>    Why, I can send you a working version of the SPI driver, and even HF one
+>>>> if you're
+>>>> interested.
+>>>
+>>> The point of this whole discussion is to determine if we should have 2 drivers
+>>> for the same Renesas HW IP.
+>>>
+>>> There was a RPC-IF patch series that made it to v17....and is now dead.
+> 
+> It's under review by Geert Uytterhoeven
+> 
+> https://patchwork.kernel.org/project/linux-renesas-soc/list/?submitter=181859 
+> https://patchwork.kernel.org/patch/11078131/ 
+> https://patchwork.kernel.org/patch/11078133/
 
- arch/arm/boot/dts/Makefile       |   1 +
- arch/arm/boot/dts/omap3-echo.dts | 466 +++++++++++++++++++++++++++++++
- 2 files changed, 467 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-echo.dts
+https://patchwork.kernel.org/patch/11078137/
+https://patchwork.kernel.org/patch/11078139/ 
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b21b3a64641a..923dabc09203 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -685,6 +685,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
- 	omap3-devkit8000.dtb \
- 	omap3-devkit8000-lcd43.dtb \
- 	omap3-devkit8000-lcd70.dtb \
-+	omap3-echo.dtb \
- 	omap3-evm.dtb \
- 	omap3-evm-37xx.dtb \
- 	omap3-gta04a3.dtb \
-diff --git a/arch/arm/boot/dts/omap3-echo.dts b/arch/arm/boot/dts/omap3-echo.dts
-new file mode 100644
-index 000000000000..751560b18f79
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-echo.dts
-@@ -0,0 +1,466 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019 André Hentschel <nerv@dawncrow.de>
-+ */
-+/dts-v1/;
-+
-+#include "omap36xx.dtsi"
-+
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Amazon Echo (first generation)";
-+	compatible = "amazon,omap3-echo", "ti,omap3630", "ti,omap3";
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vdd1_reg>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0xc600000>; /* 198 MB */
-+	};
-+
-+	vcc5v: fixedregulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc3v3: fixedregulator1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc1v8: fixedregulator2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-+		post-power-on-delay-ms = <40>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&button_pins>;
-+
-+		mute-button {
-+			label = "mute";
-+			linux,code = <KEY_MUTE>;
-+			gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;	/* GPIO_70 */
-+			wakeup-source;
-+		};
-+
-+		help-button {
-+			label = "help";
-+			linux,code = <KEY_HELP>;
-+			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;	/* GPIO_72 */
-+			wakeup-source;
-+		};
-+	};
-+
-+	rotary: rotary-encoder {
-+		compatible = "rotary-encoder";
-+		gpios = <
-+			&gpio3  5 GPIO_ACTIVE_HIGH /* GPIO_69 */
-+			&gpio3 12 GPIO_ACTIVE_HIGH /* GPIO_76 */
-+		>;
-+		linux,axis = <REL_X>;
-+		rotary-encoder,relative-axis;
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+
-+	lp5523A: lp5523A@32 {
-+		compatible = "national,lp5523";
-+		label = "q1";
-+		reg = <0x32>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+		enable-gpio = <&gpio4 13 GPIO_ACTIVE_HIGH>; /* GPIO_109 */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523B: lp5523B@33 {
-+		compatible = "national,lp5523";
-+		label = "q3";
-+		reg = <0x33>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523C: lp5523C@34 {
-+		compatible = "national,lp5523";
-+		label = "q4";
-+		reg = <0x34>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523D: lp552D@35 {
-+		compatible = "national,lp5523";
-+		label = "q2";
-+		reg = <0x35>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+};
-+
-+#include "tps65910.dtsi"
-+
-+&omap3_pmx_core {
-+	tps_pins: pinmux_tps_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21e0, PIN_INPUT_PULLUP | PIN_OFF_INPUT_PULLUP | PIN_OFF_OUTPUT_LOW | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* sys_nirq.sys_nirq */ 
-+		>;
-+	};
-+
-+	button_pins: pinmux_button_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x20dc, PIN_INPUT | MUX_MODE4)	/* dss_data0.gpio_70 */
-+			OMAP3_CORE1_IOPAD(0x20e0, PIN_INPUT | MUX_MODE4)	/* dss_data2.gpio_72 */
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2144, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_clk.sdmmc1_clk */
-+			OMAP3_CORE1_IOPAD(0x2146, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_cmd.sdmmc1_cmd */
-+			OMAP3_CORE1_IOPAD(0x2148, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat0.sdmmc1_dat0 */
-+			OMAP3_CORE1_IOPAD(0x214a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat1.sdmmc1_dat1 */
-+			OMAP3_CORE1_IOPAD(0x214c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat2.sdmmc1_dat2 */
-+			OMAP3_CORE1_IOPAD(0x214e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat3.sdmmc1_dat3 */
-+		>;
-+	};
-+
-+	mmc2_pins: pinmux_mmc2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2158, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_clk.sdmmc2_clk */
-+			OMAP3_CORE1_IOPAD(0x215a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_cmd.sdmmc2_cmd */
-+			OMAP3_CORE1_IOPAD(0x215c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat0.sdmmc2_dat0 */
-+			OMAP3_CORE1_IOPAD(0x215e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat1.sdmmc2_dat1 */
-+			OMAP3_CORE1_IOPAD(0x2160, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat2.sdmmc2_dat2 */
-+			OMAP3_CORE1_IOPAD(0x2162, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat3.sdmmc2_dat3 */
-+			OMAP3_CORE1_IOPAD(0x2164, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat4.sdmmc2_dat4 */
-+			OMAP3_CORE1_IOPAD(0x2166, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat5.sdmmc2_dat5 */
-+			OMAP3_CORE1_IOPAD(0x2168, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat6.sdmmc2_dat6 */
-+			OMAP3_CORE1_IOPAD(0x216a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat7.sdmmc2_dat7 */
-+		>;
-+	};
-+};
-+
-+&omap3_pmx_core2 {
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+			OMAP3630_CORE2_IOPAD(0x25d8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
-+			OMAP3630_CORE2_IOPAD(0x25da, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_ctl.sdmmc3_cmd */
-+			OMAP3630_CORE2_IOPAD(0x25e2, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
-+			OMAP3630_CORE2_IOPAD(0x25e4, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
-+			OMAP3630_CORE2_IOPAD(0x25e6, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d5.sdmmc3_dat1 */
-+			OMAP3630_CORE2_IOPAD(0x25e8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
-+		>;
-+	};
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	bus-width = <8>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc3 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+	non-removable;
-+	disable-wp;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	vmmc-supply = <&vcc3v3>;
-+	vqmmc-supply = <&vcc1v8>;
-+};
-+
-+
-+&tps {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&tps_pins>;
-+
-+	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+	interrupt-parent = <&intc>;
-+
-+	ti,en-ck32k-xtal;
-+	ti,system-power-controller;
-+
-+	vcc1-supply = <&vcc5v>;
-+	vcc2-supply = <&vcc5v>;
-+	vcc3-supply = <&vcc5v>;
-+	vcc4-supply = <&vcc5v>;
-+	vcc5-supply = <&vcc5v>;
-+	vcc6-supply = <&vcc5v>;
-+	vcc7-supply = <&vcc5v>;
-+	vccio-supply = <&vcc5v>;
-+
-+	regulators {
-+
-+		vio_reg: regulator@1 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd1_reg: regulator@2 {
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		vdd2_reg: regulator@3 {
-+			regulator-name = "vdd_dsp";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd3_reg: regulator@4 {
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig1_reg: regulator@5 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <2700000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig2_reg: regulator@6 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vpll_reg: regulator@7 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <2500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdac_reg: regulator@8 {
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux1_reg: regulator@9 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2850000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux2_reg: regulator@10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux33_reg: regulator@11 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vmmc_reg: regulator@12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+&sgx_module {
-+	status = "disabled";
-+};
--- 
-2.17.1
+   It doesn't matter much what's in the renesas-soc patchwork, the patch would
+be merged thru the linux-spi repo, and in their patchwork the status of your v17
+patches is "New, archived"...
 
+> thanks & best regards,
+> Mason
+
+MBR, Sergei
