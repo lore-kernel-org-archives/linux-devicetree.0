@@ -2,131 +2,80 @@ Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDD2C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 16:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C887C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 17:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366642071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 16:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="W0hlLL5D"
+	by mail.kernel.org (Postfix) with ESMTP id E5C9820706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 17:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfLXQ6Z (ORCPT
+        id S1726873AbfLXRcV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 11:58:25 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37797 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726184AbfLXQ6Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 11:58:25 -0500
-Received: by mail-lf1-f68.google.com with SMTP id b15so15485724lfc.4
-        for <devicetree@vger.kernel.org>; Tue, 24 Dec 2019 08:58:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J9xVipWdZ9ewXXkBZXIrSrABSMZzc9X1MMnhoAbWXlE=;
-        b=W0hlLL5DhTEpCFv0TCctzYOTXyobKMI6Y6UJK8+lDzVhnHItHqQwaIpn680DfYumSV
-         L8WcWNVtAVhspp+9zGEG05NY2Th2BRK8yr/LBjNXiqAM/JFXdq2isbMLHBZPrMvXg/n0
-         pF/574ew1QU8lMu8AA68vrFTMlZwzN43O4YFR0soGdns80TeDSeZlF/mUZ1fMejn/WEj
-         BkgoETEWv70bXzccrBSJ1DQ4IYDU3/uJLE1qGrL0sJyHHXvZSlpG7TKjSdqmBnzcNne/
-         mhRNJ6DrtfIb3G8kzyuQlh3QToM5aJZTIlslg0SRb1VYd9JUY0o5Ayl8xO3zpTXgisBm
-         PoIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=J9xVipWdZ9ewXXkBZXIrSrABSMZzc9X1MMnhoAbWXlE=;
-        b=rR51uHWvKjpnupjsRhj7Hkvll6thpH8xjL5raZ64ksmzsaZoUP9aeRrfmyMvf744Js
-         Cd1NnXLf8qaMVe7lcRNa5pTiWpHuV67NwR1BgmTOnVeoOU38ZfTupPeZ2QHE7b8eE8DA
-         Fyd81J/g9dD1DCSKrQ22CjnKwwCaMA0pJMQFp79e4ShE/u/ju45J5/HsFvJKAOfAvJIS
-         QALNs+9zFtr6i37gmo59SDhkKIh1x4zX+YFidbyJiap/jeDG7Y0rDArFfKqGZUsQVBEt
-         j3KoUgheYPtRjqFcf5XzBzCC9wa7kIoxyOWv3UzQ8erGVUGGZ4AZ+LHXL5Y/k4l3Kf5h
-         sa1g==
-X-Gm-Message-State: APjAAAUJQcd74AWD1ioVXfmouMx/PqGdAx+0gx+9cD99xnKPwPIPRGX2
-        rJpTnRPl1oQSHkH+/w2XCgSqMQ==
-X-Google-Smtp-Source: APXvYqwV8IVoVjnuRZBeIW/7BCYcFzMxWYQyUyZDt6oXFV1ZN/xkagQ1KHils7pYZlCWzv9yW2hdjA==
-X-Received: by 2002:a19:c1c1:: with SMTP id r184mr20571865lff.128.1577206703390;
-        Tue, 24 Dec 2019 08:58:23 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:441d:5f5:f336:feb9:305c:b1aa])
-        by smtp.gmail.com with ESMTPSA id x21sm10232507ljd.2.2019.12.24.08.58.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Dec 2019 08:58:22 -0800 (PST)
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-To:     masonccyang@mxic.com.tw
-Cc:     Mark Brown <broonie@kernel.org>,
-        Chris Brandt <Chris.Brandt@renesas.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-References: <20191206134202.18784-1-chris.brandt@renesas.com>
- <922cfa46-efb5-9e6d-67ea-3ac505b8211c@cogentembedded.com>
- <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
- <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
- <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
- <TY1PR01MB1562E196AB1C582F186CC74B8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
- <OF3F92D76C.33FFFBFC-ON482584D6.00093DAC-482584D6.0009A51D@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <bac1f4db-302d-0dd7-3b66-341a74f67a6b@cogentembedded.com>
-Date:   Tue, 24 Dec 2019 19:58:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Tue, 24 Dec 2019 12:32:21 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:54775 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbfLXRcV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 12:32:21 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 41D6D20005;
+        Tue, 24 Dec 2019 17:32:18 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 3/5] arm64: dts: meson-axg: Add PCIE PHY node
+Date:   Tue, 24 Dec 2019 18:39:40 +0100
+Message-Id: <20191224173942.18160-4-repk@triplefau.lt>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191224173942.18160-1-repk@triplefau.lt>
+References: <20191224173942.18160-1-repk@triplefau.lt>
 MIME-Version: 1.0
-In-Reply-To: <OF3F92D76C.33FFFBFC-ON482584D6.00093DAC-482584D6.0009A51D@mxic.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+Enable PCIE PHY node to make PCIE reliable on AXG SoC.
 
-On 12/20/2019 04:45 AM, masonccyang@mxic.com.tw wrote:
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
->>>>> So at the moment, there is nothing yet for me to 'try' on the RZ/A series,
->>>> correct?
->>>>
->>>>    Why, I can send you a working version of the SPI driver, and even HF one
->>>> if you're
->>>> interested.
->>>
->>> The point of this whole discussion is to determine if we should have 2 drivers
->>> for the same Renesas HW IP.
->>>
->>> There was a RPC-IF patch series that made it to v17....and is now dead.
-> 
-> It's under review by Geert Uytterhoeven
-> 
-> https://patchwork.kernel.org/project/linux-renesas-soc/list/?submitter=181859 
-> https://patchwork.kernel.org/patch/11078131/ 
-> https://patchwork.kernel.org/patch/11078133/
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 04803c3bccfa..e679ef26ab79 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1356,6 +1356,15 @@ tdmout_c: audio-controller@580 {
+ 			};
+ 		};
+ 
++		pcie_phy: pcie-phy@ff644000 {
++			compatible = "amlogic,axg-pcie-phy";
++			reg = <0x0 0xff644000 0x0 0x2000>;
++			aml,hhi-gpr = <&sysctrl>;
++			resets = <&reset RESET_PCIE_PHY>;
++			reset-names = "phy";
++			#phy-cells = <0>;
++		};
++
+ 		aobus: bus@ff800000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xff800000 0x0 0x100000>;
+-- 
+2.24.0
 
-https://patchwork.kernel.org/patch/11078137/
-https://patchwork.kernel.org/patch/11078139/ 
-
-   It doesn't matter much what's in the renesas-soc patchwork, the patch would
-be merged thru the linux-spi repo, and in their patchwork the status of your v17
-patches is "New, archived"...
-
-> thanks & best regards,
-> Mason
-
-MBR, Sergei
