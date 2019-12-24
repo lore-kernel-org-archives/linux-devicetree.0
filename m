@@ -2,186 +2,118 @@ Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64371C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 09:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5419CC2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 10:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2FF20706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 09:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2B02071A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 10:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfLXJtn (ORCPT
+        id S1726183AbfLXKBx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 04:49:43 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42776 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbfLXJtn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 04:49:43 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0FCFE2923C9;
-        Tue, 24 Dec 2019 09:49:40 +0000 (GMT)
-Date:   Tue, 24 Dec 2019 10:49:36 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
- double-linked list
-Message-ID: <20191224104936.6a7c4977@collabora.com>
-In-Reply-To: <20191224104422.25dbf980@collabora.com>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
-        <20191203141515.3597631-5-boris.brezillon@collabora.com>
-        <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
-        <20191216155551.083dcbaf@collabora.com>
-        <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
-        <20191216162542.261c821c@collabora.com>
-        <60f03d50-7c0f-c3d0-920f-0625c08b2171@samsung.com>
-        <1010f5fc-0672-643c-4410-e053a928cb66@samsung.com>
-        <20191224104422.25dbf980@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 24 Dec 2019 05:01:53 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:59378 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726076AbfLXKBx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Dec 2019 05:01:53 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Dec 2019 15:29:51 +0530
+Received: from pillair-linux.qualcomm.com ([10.204.116.193])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Dec 2019 15:29:41 +0530
+Received: by pillair-linux.qualcomm.com (Postfix, from userid 452944)
+        id AC35E37AC; Tue, 24 Dec 2019 15:29:40 +0530 (IST)
+From:   Rakesh Pillai <pillair@codeaurora.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+Subject: [PATCH v3] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Tue, 24 Dec 2019 15:29:35 +0530
+Message-Id: <1577181575-25788-1-git-send-email-pillair@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 24 Dec 2019 10:44:22 +0100
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+Add device node for the ath10k SNOC platform driver probe
+and add resources required for WCN3990 on sc7180 soc.
 
-> On Tue, 24 Dec 2019 10:16:49 +0100
-> Andrzej Hajda <a.hajda@samsung.com> wrote:
-> 
-> > On 23.12.2019 10:55, Marek Szyprowski wrote:  
-> > > Hi Boris,
-> > >
-> > > On 16.12.2019 16:25, Boris Brezillon wrote:    
-> > >> On Mon, 16 Dec 2019 16:02:36 +0100
-> > >> Marek Szyprowski <m.szyprowski@samsung.com> wrote:    
-> > >>> Hi Boris,
-> > >>>
-> > >>> On 16.12.2019 15:55, Boris Brezillon wrote:    
-> > >>>> On Mon, 16 Dec 2019 14:54:25 +0100
-> > >>>> Marek Szyprowski <m.szyprowski@samsung.com> wrote:    
-> > >>>>> On 03.12.2019 15:15, Boris Brezillon wrote:    
-> > >>>>>> So that each element in the chain can easily access its predecessor.
-> > >>>>>> This will be needed to support bus format negotiation between elements
-> > >>>>>> of the bridge chain.
-> > >>>>>>
-> > >>>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > >>>>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> > >>>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>    
-> > >>>>> I've noticed that this patch got merged to linux-next as commit
-> > >>>>> 05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks booting of
-> > >>>>> Samsung Exynos5250-based Arndale board. Booting stops after following
-> > >>>>> messages:
-> > >>>>>
-> > >>>>> [drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
-> > >>>>> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
-> > >>>>> exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
-> > >>>>> exynos-drm exynos-drm: bound 14500000.dsi (ops exynos_dsi_component_ops)
-> > >>>>> exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
-> > >>>>> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> > >>>>> [drm] No driver support for vblank timestamp query.
-> > >>>>> [drm] Cannot find any crtc or sizes
-> > >>>>> [drm] Cannot find any crtc or sizes
-> > >>>>> [drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 0
-> > >>>>>
-> > >>>>> I will try to debug this and provide more information soon.
-> > >>>>>       
-> > >>>> Can you try with this diff applied?    
-> > >>> This patch doesn't change anything.    
-> > >> Okay. Can you do a list_for_each_entry() on both encoder->bridge_chain
-> > >> and dsi->bridge_chain (dump bridge pointers in a pr_info()) before and
-> > >> after the list_splice_init() call?    
-> > > encoder->bridge_chain contains only one element. dsi->drive_chain is empty.
-> > >
-> > > Replacing that list_splice() with INIT_LIST_HEAD(&encoder->bridge_chain) 
-> > > fixed the boot issue.  
-> 
-> If INIT_LIST_HEAD() worked, I don't understand why replacing the
-> list_splice() call by a list_splice_init() (which doing a list_splice()
-> + INIT_LIST_HEAD()) didn't fix the problem. Are you sure the
-> list_splice_init() version doesn't work?
-> 
-> > > It looks that this is related with the way the 
-> > > Exynos DSI handles bridges (in bridge and out brige?). Maybe Andrzej 
-> > > will give a bit more detailed comment and spread some light on this.    
-> > 
-> > 
-> > Hi Marek, Boris,
-> > 
-> > 
-> > I have not followed latest patches due to high work load, my bad. Marek
-> > thanks from pointing
-> > 
-> > About ExynosDSI bridge handling:
-> > 
-> > The order of calling encoder, bridge (and consequently panel) ops
-> > enforced by DRM core (bridge->pre_enable, encoder->enable,
-> > bridge->enable) does not fit to ExynosDSI hardware initialization
-> > sequence, if I remember correctly it does not fit to whole MIPI DSI
-> > standard (I think similar situation is with eDP). As a result DSI
-> > drivers must use some ugly workarounds, rely on HW properly coping with
-> > incorrect sequences, or, as in case of ExynosDSI driver, just avoid
-> > using encoder->bridge chaining and call bridge ops by itself when suitable.  
-> 
-> Yes, that's definitely hack-ish, and I proposed 2 solutions to address
-> that in previous versions of this patchset, unfortunately I didn't get
-> any feedback so I went for the less invasive option (keep the hack but
-> adapt it to the double-linked list changes), which still lead to
-> regressions :-/.
-> 
-> Just a reminder of my 2 proposals:
-> 
-> 1/ implement the bridge_ops->pre_enable/post_disable() hooks so you can
->    split your enable/disable logic in 2 parts and make sure things are
->    ready when the panel/next bridge tries to send DSI commands
-> 2/ move everything that's needed to send DSI commands out of the
->    ->enable() path (maybe in runtime PM resume/suspend hooks) so you  
->    can call that in the DSI transfer path too
-> 
-> As pointed out by Laurent, #1 doesn't work because some panel drivers
-> send DSI commands in their ->prepare() hook, and ->pre_enable() methods
-> are called in reverse order, meaning that the DRM panel bridge driver
-> would try to issue DSI commands before the DSI host controllers is ready
-> to send them. I still thing #2 is a good option.
-> 
-> > 
-> > So proper patch converting to double-linked list should not try to
-> > splice ExynosDSI private bridge list with with encoder's, encoder's list
-> > should be always empty, as Marek suggested.  
-> 
-> That's exactly what I wanted to do: make the encoder's list empty after
-> attach() and restore it to its initial state before unregistering
-> the bridge, except I forgot that list_splice() doesn't call
-> INIT_LIST_HEAD(). It's still not clear to me why replacing the
-> list_splice() call by a list_splice_init() didn't work.
+Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+---
+This change is dependent on the below set of changes
+arm64: dts: sc7180: Add qupv3_0 and qupv3_1 (https://lore.kernel.org/patchwork/patch/1150367/)
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
-Okay, I think I figured it out: drm_bridge_chain_xx() helpers use
-encoder->bridge_chain as their list head, and you'll never hit the 'elem
-is list head' condition since we moved all elems from
-encoder->bridge_chain to exynos_dsi->bridge_chain. The only way this
-can work is if we stop using the helpers and implement our own list
-iterators.
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 189254f..b2ca143f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -248,6 +248,11 @@
+ 	status = "okay";
+ };
+ 
++&wifi {
++	status = "okay";
++	qcom,msa_fixed_perm;
++};
++
+ /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+ 
+ &qup_i2c2_default {
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 666e9b9..7efb97f 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -42,6 +42,12 @@
+ 			compatible = "qcom,cmd-db";
+ 			no-map;
+ 		};
++
++		wlan_fw_mem: memory@93900000 {
++			compatible = "removed-dma-pool";
++			no-map;
++			reg = <0 0x93900000 0 0x200000>;
++		};
+ 	};
+ 
+ 	cpus {
+@@ -1119,6 +1125,28 @@
+ 				#clock-cells = <1>;
+ 			};
+ 		};
++
++		wifi: wifi@18800000 {
++			compatible = "qcom,wcn3990-wifi";
++			reg = <0 0x18800000 0 0x800000>;
++			reg-names = "membase";
++			iommus = <&apps_smmu 0xC0 0x1>;
++			interrupts =
++				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
++				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
++				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
++				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
++				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
++				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
++				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
++				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
++				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
++				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
++				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
++				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
++			memory-region = <&wlan_fw_mem>;
++			status = "disabled";
++		};
+ 	};
+ 
+ 	timer {
+-- 
+2.7.4
+
