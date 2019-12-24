@@ -2,215 +2,143 @@ Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C43C2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 07:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE1AC2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 08:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3152077B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 07:46:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577173602;
-	bh=1BJxrvDxsrR7VIQZMUVHbOxilZxPHKLhLbtnCYK0wCI=;
-	h=In-Reply-To:References:Cc:From:To:Subject:Date:List-ID:From;
-	b=CyH6jJJB/hX4Pr1PIWnZSdQp6Wwo1DCfvTKDjUunvV4nFOgaTEOh5EJ/IFngxgdRo
-	 MuHJPph06sZjtD5xqgoVdzZgT2+xmEppPxHsfP9aBqp7Ppq/MglyYjiczi3dl+v1nH
-	 szptQRNpqx4GekPloUYMnY6MYlj3kDyMivvEfGEw=
+	by mail.kernel.org (Postfix) with ESMTP id E5178206CB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 08:04:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B0O2k2Wr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbfLXHqm (ORCPT
+        id S1726128AbfLXIEl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 02:46:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726910AbfLXHqk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Dec 2019 02:46:40 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1589220706;
-        Tue, 24 Dec 2019 07:46:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577173599;
-        bh=1BJxrvDxsrR7VIQZMUVHbOxilZxPHKLhLbtnCYK0wCI=;
-        h=In-Reply-To:References:Cc:From:To:Subject:Date:From;
-        b=JdfRkv/iA1GPjKltY9g+b6rJwS1+cIxjN0vr48ttnpmYMEX8QPn5meFCchbWv1huh
-         l5/CLVEWnsvGvfxUOH+WSJj1UElcjrFHTrpxVoM+UwvZIgbLRtqAKwkA5RoQzbHRTr
-         W3VvVkpDVzCB4m2PWvDaoMi4Nd5r5ZrjumyhIS7s=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 24 Dec 2019 03:04:41 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48372 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfLXIEl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 03:04:41 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBO84WQf044802;
+        Tue, 24 Dec 2019 02:04:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577174672;
+        bh=1Ded6pvuMA3oMdmazX4/A7l0KSskT0kDg81kNM68v+Q=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=B0O2k2Wr9saFAaISz01NN4EwJZsrFCOh2m5F9hZDnD2YsjuYdtLRN5c+JPWn2R9sb
+         7wduya7EG5lefJZ5YCtVDMq/9+2PmotsaEVzTpfl2iQs6TOkPAZ79k9Otr+mTolvFM
+         iWnfa4fvzk4uA6k0A/r/u7b9XuQmWwyL9+WcsHEE=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBO84WjW050928
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 24 Dec 2019 02:04:32 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
+ Dec 2019 02:04:32 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 24 Dec 2019 02:04:32 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBO84TMr013924;
+        Tue, 24 Dec 2019 02:04:30 -0600
+Subject: Re: [PATCH 09/13] dt-bindings: PCI: Add host mode dt-bindings for
+ TI's J721E SoC
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
+References: <20191209092147.22901-1-kishon@ti.com>
+ <20191209092147.22901-10-kishon@ti.com> <20191219000841.GA4251@bogus>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <fc145cbc-88f2-5ccb-5c20-4be1ac81fe25@ti.com>
+Date:   Tue, 24 Dec 2019 13:36:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191209183511.3576038-11-daniel@zonque.org>
-References: <20191209183511.3576038-1-daniel@zonque.org> <20191209183511.3576038-11-daniel@zonque.org>
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org, broonie@kernel.org,
-        lee.jones@linaro.org, lars@metafoo.de, pascal.huerst@gmail.com,
-        Daniel Mack <daniel@zonque.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Daniel Mack <daniel@zonque.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/10] clk: Add support for AD242x clock output providers
-User-Agent: alot/0.8.1
-Date:   Mon, 23 Dec 2019 23:46:38 -0800
-Message-Id: <20191224074639.1589220706@mail.kernel.org>
+In-Reply-To: <20191219000841.GA4251@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Daniel Mack (2019-12-09 10:35:10)
-> diff --git a/drivers/clk/clk-ad242x.c b/drivers/clk/clk-ad242x.c
-> new file mode 100644
-> index 000000000000..201789d8f174
-> --- /dev/null
-> +++ b/drivers/clk/clk-ad242x.c
-> @@ -0,0 +1,231 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/clk.h>
+Hi Rob,
 
-Is this include used?
+On 19/12/19 5:38 AM, Rob Herring wrote:
+> On Mon, Dec 09, 2019 at 02:51:43PM +0530, Kishon Vijay Abraham I wrote:
+>> Add host mode dt-bindings for TI's J721E SoC.
+>>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../bindings/pci/ti,j721e-pci-host.yaml       | 161 ++++++++++++++++++
+>>  1 file changed, 161 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>> new file mode 100644
+>> index 000000000000..96184e1f419f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+>> @@ -0,0 +1,161 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +# Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/pci/ti,j721e-pci-host.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: TI J721E PCI Host (PCIe Wrapper)
+>> +
+>> +maintainers:
+>> +  - Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> There's now a PCI bus schema. Reference it here:
+> 
+> allOf:
+>   - $ref: "/schemas/pci/pci-bus.yaml#"
+> 
+>> +
+>> +properties:
+>> +  compatible:
+>> +      enum:
+>> +          - ti,j721e-pcie-host
+> 
+> Indentation.
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 4
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: intd_cfg
+>> +      - const: user_cfg
+>> +      - const: reg
+>> +      - const: cfg
+>> +
+>> +  ti,syscon-pcie-ctrl:
+>> +    description: Phandle to the SYSCON entry required for configuring PCIe mode
+>> +                 and link speed.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> 
+> You can drop the 'allOf' here if there aren't more constraints.
 
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/errno.h>
+Do you mean I don't have to include phandle schema here? I don't seem to
+be able to include $ref without allOf.
 
-Is this include used?
-
-> +#include <linux/mfd/ad242x.h>
-
-Any way we can avoid this build dependency? Maybe just put defines in
-this driver that deals with the clk bits of the device?
-
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <dt-bindings/clock/adi,ad242x.h>
-> +
-> +#define AD242X_NUM_CLKS 2
-> +
-> +struct ad242x_clk_hw {
-> +       struct clk_hw hw;
-> +       struct clk_init_data init;
-
-Do we need to keep around this init data after probe? I'd rather leave
-this out.
-
-> +       struct ad242x_node *node;
-
-What's the point of this structure? Can we use dev->parent->regmap and
-just store the struct regmap pointer here instead of using this custom
-struct?
-
-> +       u8 reg;
-> +};
-> +
-> +struct ad242x_clk_driver_data {
-> +       struct ad242x_clk_hw hw[AD242X_NUM_CLKS];
-
-If this is the only drvdata, then I'd prefer just the array and not
-another struct so we can have clarity.
-
-> +};
-> +
-> +static inline struct ad242x_clk_hw *to_ad242x_clk(struct clk_hw *hw)
-> +{
-> +       return container_of(hw, struct ad242x_clk_hw, hw);
-> +}
-> +
-[...]
-> +
-> +static long ad242x_clk_round_rate(struct clk_hw *hw, unsigned long rate,
-> +                                 unsigned long *parent_rate)
-> +{
-> +       unsigned long pll_rate =3D *parent_rate * 2048UL;
-> +       unsigned long prediv, div;
-> +
-> +       if (rate > pll_rate / 4 || rate < pll_rate / 1024UL)
-> +               return -EINVAL;
-
-This callback should round the rate to something valid. If the rate is
-larger than pll_rate / 4 then it should clamp to be the highest rate
-supported. Likewise for something slow.
-
-> +
-> +       ad242x_do_div(rate, pll_rate, &prediv, &div);
-> +
-> +       return pll_rate / (prediv * div);
-> +}
-> +
-[...]
-> +
-> +static struct clk_hw *
-> +ad242x_of_clk_get(struct of_phandle_args *clkspec, void *data)
-> +{
-> +       struct ad242x_clk_driver_data *drvdata =3D data;
-> +       unsigned int idx =3D clkspec->args[0];
-> +
-> +       return &drvdata->hw[idx].hw;
-
-It looks quite a bit like of_clk_hw_onecell_get(). Can that be used? Or
-at least check for out of bounds and return failure?
-
-> +}
-> +
-> +static int ad242x_clk_probe(struct platform_device *pdev)
-> +{
-> +       const char *clk_names[AD242X_NUM_CLKS] =3D { "clkout1", "clkout2"=
- };
-> +       u8 regs[AD242X_NUM_CLKS] =3D { AD242X_CLK1CFG, AD242X_CLK2CFG };
-> +       struct ad242x_clk_driver_data *drvdata;
-> +       struct device *dev =3D &pdev->dev;
-> +       const char *sync_clk_name;
-> +       struct ad242x_node *node;
-> +       int i, ret;
-> +
-> +       if (!dev->of_node)
-> +               return -ENODEV;
-
-Please drop this. It's not useful.
-
-> +
-> +       drvdata =3D devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> +       if (!drvdata)
-> +               return -ENOMEM;
-> +
-> +       node =3D dev_get_drvdata(dev->parent);
-
-Add a NULL check on node?
-
-> +       sync_clk_name =3D ad242x_master_get_clk_name(node->master);
-> +
-> +       for (i =3D 0; i < AD242X_NUM_CLKS; i++) {
-> +               const char *name;
-> +
-> +               if (of_property_read_string_index(dev->of_node,
-> +                                                 "clock-output-names",
-> +                                                 i, &name) =3D=3D 0)
-> +                       drvdata->hw[i].init.name =3D name;
-> +               else
-> +                       drvdata->hw[i].init.name =3D clk_names[i];
-
-Do you need unique names? Or can you generate psuedo unique names based
-on the device name and clk number?
-
-> +
-> +               drvdata->hw[i].reg =3D regs[i];
-> +               drvdata->hw[i].init.ops =3D &ad242x_clk_ops;
-> +               drvdata->hw[i].init.num_parents =3D 1;
-> +               drvdata->hw[i].init.parent_names =3D &sync_clk_name;
-> +               drvdata->hw[i].hw.init =3D &drvdata->hw[i].init;
-> +               drvdata->hw[i].node =3D node;
-> +
-> +               ret =3D devm_clk_hw_register(dev, &drvdata->hw[i].hw);
-> +               if (ret < 0)
-> +                       return ret;
-> +       }
-> +
-> +       return devm_of_clk_add_hw_provider(dev, ad242x_of_clk_get, drvdat=
-a);
-> +}
+Thanks
+Kishon
