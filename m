@@ -2,217 +2,152 @@ Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2997C2D0D0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 04:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF8BC2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 05:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E1320718
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 04:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8586320730
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 05:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C3heL7nl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXcMGRKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbfLXExc (ORCPT
+        id S1725866AbfLXF3v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 23 Dec 2019 23:53:32 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:21060 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfLXExc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 23 Dec 2019 23:53:32 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191224045329epoutp0359c1f7f9ef86986b29eb19c2b9449b0e~jNZU9UbDB0306603066epoutp03H
-        for <devicetree@vger.kernel.org>; Tue, 24 Dec 2019 04:53:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191224045329epoutp0359c1f7f9ef86986b29eb19c2b9449b0e~jNZU9UbDB0306603066epoutp03H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577163209;
-        bh=+MavX6V0fSjJ2hx2U3IVU9tdN5bV0kJVEfSN65G9Bag=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=C3heL7nl4UxijwnhEm1TPnHxnNf4iNHNYDkqqobLrMyt1gNY5OEI5lVOVXChtndHC
-         0AMRy+Y7HZgrelIaJ9I8Xa6rlwPF/ZqxvXW/Fn71Ml4iSHYU63Y+hFY5g3VY5dfdJu
-         HLDPzkw5YtQ9vNiheljskseuLp9isEvMyGBixfQE=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191224045329epcas1p42a371233a0b53f54f5646bd87c540bda~jNZUfho-80985109851epcas1p4F;
-        Tue, 24 Dec 2019 04:53:29 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47hkPV5kBrzMqYks; Tue, 24 Dec
-        2019 04:53:18 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CF.ED.48019.CB9910E5; Tue, 24 Dec 2019 13:53:16 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191224045316epcas1p4b27534f3200f57fad70cf52c8c867f48~jNZIpAXjO0962409624epcas1p4X;
-        Tue, 24 Dec 2019 04:53:16 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191224045316epsmtrp1aafafc08d5ce3dc89e9b3781b14c4840~jNZIoK0vQ2686226862epsmtrp1h;
-        Tue, 24 Dec 2019 04:53:16 +0000 (GMT)
-X-AuditID: b6c32a38-23fff7000001bb93-eb-5e0199bc809e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9F.83.06569.CB9910E5; Tue, 24 Dec 2019 13:53:16 +0900 (KST)
-Received: from [10.113.221.211] (unknown [10.113.221.211]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191224045316epsmtip23aeb6e6c62cf0571538c300231d08c55~jNZIXRGaY2283022830epsmtip25;
-        Tue, 24 Dec 2019 04:53:16 +0000 (GMT)
-Subject: Re: [RFC PATCH v3 7/7] drm: exynos: mixer: Add interconnect support
-To:     =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, cw00.choi@samsung.com,
-        myungjoo.ham@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
-        b.zolnierkie@samsung.com, krzk@kernel.org
-From:   Inki Dae <inki.dae@samsung.com>
-Message-ID: <6e8aa13a-c831-a7ee-70d3-f6b08fe6fbc3@samsung.com>
-Date:   Tue, 24 Dec 2019 13:56:51 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Tue, 24 Dec 2019 00:29:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33585 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbfLXF3u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 00:29:50 -0500
+Received: by mail-ot1-f65.google.com with SMTP id b18so3168882otp.0;
+        Mon, 23 Dec 2019 21:29:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5mIHnK6BEXabOhDkyqQEsS+XZ4SjPH+Ikpu6wNoKfTY=;
+        b=OXcMGRKt+jJv0xgFfQWCl/en/y7wiuoYYfovW6TgMPcdLXQVqP3tw5pvmFCEyhHwZP
+         wNFcQtSUDSe6dQMP49m9xNBUFB/s9iIpiv6RKSFKfjSqWtMP2OO+VzWtmCATpb+QyjO9
+         ZlC4vCaO07aKO/ajAkyUaVpRBFGhQ1QAIEEKyxXosQtMmBqm84ZoxrSU7gEsXjq/egWp
+         8jzR13+nUBRG6h9dFV4BlBULrmjylMxNpj9Dk2WoSbBPiv1tM02umpcDg8nxuejqflYC
+         1iZgvwkFxCKhHw1LU07KbJM+Eh2PoCcvRk549DxQS5m7c6NMVds8cQpXvgqjHT5hnTXd
+         1SsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5mIHnK6BEXabOhDkyqQEsS+XZ4SjPH+Ikpu6wNoKfTY=;
+        b=rPHMcOK09scCQqmMIbV1efI1jt4FVcO+DI9lQ5hTG3O5HTPVGXHhm9PuLiDIkWkmT4
+         /n+NI8lddIOc1d3ELgUot8MQbUPuBE5eePpqgAtvrAal3O4pCyVNSVb42lt3DOYV9LnB
+         k5uVx/FT4tH/DsrPcYn1V7YI8d9ls3v53FdRpls1ysrXV9GAyM9E+W6Q4ro7vOrKz9U6
+         yfEsp1zFzgaEsYyYDwyWZl/yMWZwVlSCKRL+Awx5Ux/lxj+kxFk13D4re+3WHwUehgin
+         14/mIlYo8ytNMZkOhUNERlY5fCHPm/NXx6nSuAXHMvOjPGAq2rXDwn0ZINJTfVOvwLAI
+         8F5g==
+X-Gm-Message-State: APjAAAUJetQzAirAc4RLwXTKkf0FGieJu9vReLDnzv9i3Fh80HdC1JKB
+        Q5we2MyaabrOX9G8LRnLaI9Bkpx8
+X-Google-Smtp-Source: APXvYqzBtDy5T8KNyDQtb9LOhaIsbpL690b19vPzf0dbocSBvDQ6VjIZQwUMHSj7KJKAuf5Z0AlrYw==
+X-Received: by 2002:a05:6830:605:: with SMTP id w5mr34268557oti.79.1577165389758;
+        Mon, 23 Dec 2019 21:29:49 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id p20sm8171116otr.71.2019.12.23.21.29.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 23 Dec 2019 21:29:48 -0800 (PST)
+Date:   Mon, 23 Dec 2019 22:29:47 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, yixin.zhu@linux.intel.com,
+        qi-ming.wu@intel.com, rtanwar <rahul.tanwar@intel.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH v2 1/2] clk: intel: Add CGU clock driver for a new SoC
+Message-ID: <20191224052947.GA54145@ubuntu-m2-xlarge-x86>
+References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
+ <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191220115653.6487-8-a.swigon@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0xTVxTHve/1vT6MdW8V5cgShUdMJkmxD6i7qDCXGfOyEanxn2XJwBf6
-        Bg39lb4WlJj4E2Q4RbJsQjfUEOM6KoqFGcDKHOKvEamdhjEGQtQwQS3xR9GoUVseRv77nHO+
-        J/d7zr2XIbU36ETGbHNJTpto4ei5qjMXlut0gXqUrz/RpsMjhysQPl13isL/PP2fwkd6+ih8
-        MzJJ40Pn/DQOBlvU2Dv8iML+O/0UvtH5C42f7O9BuC7YReDmnmE1/m+nl8Z1P4zTaz8Q/E3f
-        0cJQf4AWRvZdJoTWY9uF0+F2QjjQ1oSEJ/4lRvXXJWuKJdEkOZMkW6HdZLYVZXNfbir4vMCw
-        Us/r+Cz8CZdkE61SNrcu16hbb7ZEfXNJpaLFHU0ZRVnmVuSscdrdLimp2C67sjnJYbI4shxp
-        smiV3baitEK7dRWv16cbosLNJcUVD4KUo2fxlq6LncQOdCu+GjEMsJkwETBVo7mMlm1HcP5K
-        iFaCxwhGx5uQEkwhqAqfVFWjuOmOszUvZgrnEPj3t8y0TCJ49WMHiqkWsLlQuatFFSvEs28Q
-        9B7/jYoFJDuIIFDTS8VUNLsMar0jdIw1bA48O+xXx1gVzXc/7KVjDheyX0FvRFQkH8LV+rvT
-        NuLYLLjy9P60nGQTYPDuEULhpbD7959JxepxNXSNfabwOhh4MEUovAAmLrepFU6E8ZrKGS6D
-        sfCYSlnMNphq2KJgBoS8phiS7HI41blCESdDx8sGpBw6H8KR7ylFrYGqSq0i4eBSaAApDHD9
-        WC2tsACNzQfUB1GyZ9ZYnlmjeGaN4nl/8FGkakKLJIdsLZJk3pE5+6r9aPpBp+J2FOjL7UYs
-        g7h5mpYLc/K1lFgqb7V2I2BILl7jc6J8rcYkbi2XnPYCp9siyd3IEF16LZm4sNAe/R42VwFv
-        SM/IyMCZ/EoDz3MJGuZ56BstWyS6pBJJckjOd30EE5e4A6FGo1jliu9I8/17sGFjDt+3wVK5
-        rTDPeHF9sneIeHHoo9Hb9QnPfjVH8KtLPsOYr7zaMLBp6tuPF0+klD8Knv9Dur3azCy6lpfi
-        GW5Nj5A3q/ZUDGz+dPSnOaVtIS5/8OoXfw+7BTaUpReHyppfT5rHy+75wnv/DBA1f+X1m0vm
-        cSq5WORTSacsvgUkAgvi5gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKIsWRmVeSWpSXmKPExsWy7bCSvO6emYxxBi92CVjcn9fKaLFxxnpW
-        i+tfnrNazD9yjtXiytf3bBbT925iszh/fgO7xYq7H1ktNj2+xmpxedccNovPvUcYLWac38dk
-        sfbIXXaL240r2CxmTH7J5sDvsWlVJ5vHnWt72Dzudx9n8ti8pN5j47sdTB59W1YxenzeJBfA
-        HsVlk5Kak1mWWqRvl8CV0frmPGvBEcmKfUd3MTUw3hPpYuTkkBAwkdjd/4uxi5GLQ0hgN6NE
-        98rXQA4HUEJCYstWDghTWOLw4WKIkreMEo8bPzCC9AoL+Ei0NW1gAUmICPxnlHjYdgxsELPA
-        LUaJpl1TwKrApj7q0wGx2QRUJSauuM8GYvMK2El8n7eJHcRmAYofensaLC4qECHxfPsNRoga
-        QYmTM5+wgNicApYSJ768BqtnFlCX+DPvEjOELS5x68l8JghbXqJ562zmCYxCs5C0z0LSMgtJ
-        yywkLQsYWVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgRHppbWDsYTJ+IPMQpwMCrx
-        8EYcZIgTYk0sK67MPcQowcGsJMK7uogxTog3JbGyKrUoP76oNCe1+BCjNAeLkjivfP6xSCGB
-        9MSS1OzU1ILUIpgsEwenVAOj390VKjyVmi86DMsul3snq1wsDXZda7WLUcsi6+jjuON/VdzC
-        ODuktSfW/3DonWsmyHedx5i9Yn/atn8xxapLHQ60BuaZVRp2WrzbWW49cXtv+9JnzBXZ7Rq3
-        d7SsWMl42Lwk4Lef9LNNaSy9UkueL+qS+heaKsqYrSASPMUmS/PuoU4XKyWW4oxEQy3mouJE
-        AAReOPzIAgAA
-X-CMS-MailID: 20191224045316epcas1p4b27534f3200f57fad70cf52c8c867f48
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7
-References: <20191220115653.6487-1-a.swigon@samsung.com>
-        <CGME20191220120146eucas1p22a7b0457be4f378b113f67dc25f2eba7@eucas1p2.samsung.com>
-        <20191220115653.6487-8-a.swigon@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Dec 20, 2019 at 11:31:07AM +0800, Rahul Tanwar wrote:
+> From: rtanwar <rahul.tanwar@intel.com>
+> 
+> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
+> Intel network processor SoC. It provides programming interfaces to control
+> & configure all CPU & peripheral clocks. Add common clock framework based
+> clock controller driver for CGU.
+> 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 
-19. 12. 20. 오후 8:56에 Artur Świgoń 이(가) 쓴 글:
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
+Hi Rahul,
+
+The 0day bot reported this warning with clang with your patch, mind
+taking a look at it since it seems like you will need to do a v2 based
+on other comments?
+
+It seems like the check either needs to be something different or the
+check should just be removed.
+
+Cheers,
+Nathan
+
+On Mon, Dec 23, 2019 at 04:48:54PM +0800, kbuild test robot wrote:
+> CC: kbuild-all@lists.01.org
+> In-Reply-To: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+> References: <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+> TO: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> CC: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+> CC: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, yixin.zhu@linux.intel.com, qi-ming.wu@intel.com, rtanwar <rahul.tanwar@intel.com>, Rahul Tanwar <rahul.tanwar@linux.intel.com>
 > 
-> This patch adds interconnect support to exynos-mixer. The mixer works
-> the same as before when CONFIG_INTERCONNECT is 'n'.
+> Hi Rahul,
 > 
-> Co-developed-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on clk/clk-next]
+> [also build test WARNING on robh/for-next v5.5-rc3 next-20191220]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Rahul-Tanwar/clk-intel-Add-a-new-driver-for-a-new-clock-controller-IP/20191223-110300
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
+> config: x86_64-allyesconfig (attached as .config)
+> compiler: clang version 10.0.0 (git://gitmirror/llvm_project 891e25b02d760d0de18c7d46947913b3166047e7)
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All warnings (new ones prefixed by >>):
+> 
+> >> drivers/clk/x86/clk-cgu.c:50:20: warning: address of array 'ctx->clk_data.hws' will always evaluate to 'true' [-Wpointer-bool-conversion]
+>            if (ctx->clk_data.hws)
+>            ~~  ~~~~~~~~~~~~~~^~~
+>    1 warning generated.
+> 
+> vim +50 drivers/clk/x86/clk-cgu.c
+> 
+>     46	
+>     47	void lgm_clk_add_lookup(struct lgm_clk_provider *ctx,
+>     48				struct clk_hw *hw, unsigned int id)
+>     49	{
+>   > 50		if (ctx->clk_data.hws)
+>     51			ctx->clk_data.hws[id] = hw;
+>     52	}
+>     53	
+> 
 > ---
->  drivers/gpu/drm/exynos/exynos_mixer.c | 71 +++++++++++++++++++++++++--
->  1 file changed, 66 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
-> index 6cfdb95fef2f..a7e7240a055f 100644
-> --- a/drivers/gpu/drm/exynos/exynos_mixer.c
-> +++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-> @@ -13,6 +13,7 @@
->  #include <linux/component.h>
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/interconnect.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/kernel.h>
-> @@ -97,6 +98,7 @@ struct mixer_context {
->  	struct exynos_drm_crtc	*crtc;
->  	struct exynos_drm_plane	planes[MIXER_WIN_NR];
->  	unsigned long		flags;
-> +	struct icc_path		*soc_path;
->  
->  	int			irq;
->  	void __iomem		*mixer_regs;
-> @@ -931,6 +933,40 @@ static void mixer_disable_vblank(struct exynos_drm_crtc *crtc)
->  	mixer_reg_writemask(mixer_ctx, MXR_INT_EN, 0, MXR_INT_EN_VSYNC);
->  }
->  
-> +static void mixer_set_memory_bandwidth(struct exynos_drm_crtc *crtc)
-> +{
-> +	struct drm_display_mode *mode = &crtc->base.state->adjusted_mode;
-> +	struct mixer_context *ctx = crtc->ctx;
-> +	unsigned long bw, bandwidth = 0;
-> +	int i, j, sub;
-> +
-> +	if (!ctx->soc_path)
-> +		return;
-> +
-> +	for (i = 0; i < MIXER_WIN_NR; i++) {
-> +		struct drm_plane *plane = &ctx->planes[i].base;
-> +		const struct drm_format_info *format;
-> +
-> +		if (plane->state && plane->state->crtc && plane->state->fb) {
-> +			format = plane->state->fb->format;
-> +			bw = mode->hdisplay * mode->vdisplay *
-> +							drm_mode_vrefresh(mode);
-> +			if (mode->flags & DRM_MODE_FLAG_INTERLACE)
-> +				bw /= 2;
-> +			for (j = 0; j < format->num_planes; j++) {
-> +				sub = j ? (format->vsub * format->hsub) : 1;
-> +				bandwidth += format->cpp[j] * bw / sub;
-> +			}
-> +		}
-> +	}
-> +
-> +	/* add 20% safety margin */
-> +	bandwidth = bandwidth / 4 * 5;
-> +
-> +	dev_dbg(ctx->dev, "exynos-mixer: safe bandwidth %ld Bps\n", bandwidth);
-> +	icc_set_bw(ctx->soc_path, Bps_to_icc(bandwidth), 0);
-> +}
-> +
->  static void mixer_atomic_begin(struct exynos_drm_crtc *crtc)
->  {
->  	struct mixer_context *ctx = crtc->ctx;
-> @@ -982,6 +1018,7 @@ static void mixer_atomic_flush(struct exynos_drm_crtc *crtc)
->  	if (!test_bit(MXR_BIT_POWERED, &mixer_ctx->flags))
->  		return;
->  
-> +	mixer_set_memory_bandwidth(crtc);
->  	mixer_enable_sync(mixer_ctx);
->  	exynos_crtc_handle_event(crtc);
->  }
-> @@ -1029,6 +1066,7 @@ static void mixer_disable(struct exynos_drm_crtc *crtc)
->  	for (i = 0; i < MIXER_WIN_NR; i++)
->  		mixer_disable_plane(crtc, &ctx->planes[i]);
->  > +	mixer_set_memory_bandwidth(crtc);
-
-Your intention is to set peak and average bandwidth to 0 at disabling mixer device?
-
-Thanks,
-Inki Dae
+> 0-DAY kernel test infrastructure                 Open Source Technology Center
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
