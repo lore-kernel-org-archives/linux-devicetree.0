@@ -3,193 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9136BC2D0D2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 10:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2318C2D0CF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 11:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6711A20722
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 10:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8900120706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 11:26:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbfLXKDO (ORCPT
+        id S1726184AbfLXL0X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 05:03:14 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:42950 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfLXKDO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 24 Dec 2019 05:03:14 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id BF61928FA57;
-        Tue, 24 Dec 2019 10:03:10 +0000 (GMT)
-Date:   Tue, 24 Dec 2019 11:03:07 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
- double-linked list
-Message-ID: <20191224110307.00ca841d@collabora.com>
-In-Reply-To: <20191224104936.6a7c4977@collabora.com>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
-        <20191203141515.3597631-5-boris.brezillon@collabora.com>
-        <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
-        <20191216155551.083dcbaf@collabora.com>
-        <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
-        <20191216162542.261c821c@collabora.com>
-        <60f03d50-7c0f-c3d0-920f-0625c08b2171@samsung.com>
-        <1010f5fc-0672-643c-4410-e053a928cb66@samsung.com>
-        <20191224104422.25dbf980@collabora.com>
-        <20191224104936.6a7c4977@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 24 Dec 2019 06:26:23 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:42022 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbfLXL0X (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Dec 2019 06:26:23 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 8179BFB03;
+        Tue, 24 Dec 2019 12:26:18 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id nHMPm4X5RhAK; Tue, 24 Dec 2019 12:26:17 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 91FB140BD8; Tue, 24 Dec 2019 12:26:16 +0100 (CET)
+Date:   Tue, 24 Dec 2019 12:26:16 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] leds: lm3692x: Allow to set ovp and brigthness mode
+Message-ID: <20191224112616.GA23468@bogon.m.sigxcpu.org>
+References: <cover.1576499103.git.agx@sigxcpu.org>
+ <9c87a17aefbf758d58f199f7046114ee7505a1fa.1576499103.git.agx@sigxcpu.org>
+ <20191221191844.GH32732@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191221191844.GH32732@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 24 Dec 2019 10:49:36 +0100
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
-
-> On Tue, 24 Dec 2019 10:44:22 +0100
-> Boris Brezillon <boris.brezillon@collabora.com> wrote:
+Hi,
+On Sat, Dec 21, 2019 at 08:18:44PM +0100, Pavel Machek wrote:
+> Hi!
 > 
-> > On Tue, 24 Dec 2019 10:16:49 +0100
-> > Andrzej Hajda <a.hajda@samsung.com> wrote:
-> >   
-> > > On 23.12.2019 10:55, Marek Szyprowski wrote:    
-> > > > Hi Boris,
-> > > >
-> > > > On 16.12.2019 16:25, Boris Brezillon wrote:      
-> > > >> On Mon, 16 Dec 2019 16:02:36 +0100
-> > > >> Marek Szyprowski <m.szyprowski@samsung.com> wrote:      
-> > > >>> Hi Boris,
-> > > >>>
-> > > >>> On 16.12.2019 15:55, Boris Brezillon wrote:      
-> > > >>>> On Mon, 16 Dec 2019 14:54:25 +0100
-> > > >>>> Marek Szyprowski <m.szyprowski@samsung.com> wrote:      
-> > > >>>>> On 03.12.2019 15:15, Boris Brezillon wrote:      
-> > > >>>>>> So that each element in the chain can easily access its predecessor.
-> > > >>>>>> This will be needed to support bus format negotiation between elements
-> > > >>>>>> of the bridge chain.
-> > > >>>>>>
-> > > >>>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > >>>>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> > > >>>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>      
-> > > >>>>> I've noticed that this patch got merged to linux-next as commit
-> > > >>>>> 05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks booting of
-> > > >>>>> Samsung Exynos5250-based Arndale board. Booting stops after following
-> > > >>>>> messages:
-> > > >>>>>
-> > > >>>>> [drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
-> > > >>>>> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
-> > > >>>>> exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
-> > > >>>>> exynos-drm exynos-drm: bound 14500000.dsi (ops exynos_dsi_component_ops)
-> > > >>>>> exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
-> > > >>>>> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> > > >>>>> [drm] No driver support for vblank timestamp query.
-> > > >>>>> [drm] Cannot find any crtc or sizes
-> > > >>>>> [drm] Cannot find any crtc or sizes
-> > > >>>>> [drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 0
-> > > >>>>>
-> > > >>>>> I will try to debug this and provide more information soon.
-> > > >>>>>         
-> > > >>>> Can you try with this diff applied?      
-> > > >>> This patch doesn't change anything.      
-> > > >> Okay. Can you do a list_for_each_entry() on both encoder->bridge_chain
-> > > >> and dsi->bridge_chain (dump bridge pointers in a pr_info()) before and
-> > > >> after the list_splice_init() call?      
-> > > > encoder->bridge_chain contains only one element. dsi->drive_chain is empty.
-> > > >
-> > > > Replacing that list_splice() with INIT_LIST_HEAD(&encoder->bridge_chain) 
-> > > > fixed the boot issue.    
-> > 
-> > If INIT_LIST_HEAD() worked, I don't understand why replacing the
-> > list_splice() call by a list_splice_init() (which doing a list_splice()
-> > + INIT_LIST_HEAD()) didn't fix the problem. Are you sure the
-> > list_splice_init() version doesn't work?
-> >   
-> > > > It looks that this is related with the way the 
-> > > > Exynos DSI handles bridges (in bridge and out brige?). Maybe Andrzej 
-> > > > will give a bit more detailed comment and spread some light on this.      
-> > > 
-> > > 
-> > > Hi Marek, Boris,
-> > > 
-> > > 
-> > > I have not followed latest patches due to high work load, my bad. Marek
-> > > thanks from pointing
-> > > 
-> > > About ExynosDSI bridge handling:
-> > > 
-> > > The order of calling encoder, bridge (and consequently panel) ops
-> > > enforced by DRM core (bridge->pre_enable, encoder->enable,
-> > > bridge->enable) does not fit to ExynosDSI hardware initialization
-> > > sequence, if I remember correctly it does not fit to whole MIPI DSI
-> > > standard (I think similar situation is with eDP). As a result DSI
-> > > drivers must use some ugly workarounds, rely on HW properly coping with
-> > > incorrect sequences, or, as in case of ExynosDSI driver, just avoid
-> > > using encoder->bridge chaining and call bridge ops by itself when suitable.    
-> > 
-> > Yes, that's definitely hack-ish, and I proposed 2 solutions to address
-> > that in previous versions of this patchset, unfortunately I didn't get
-> > any feedback so I went for the less invasive option (keep the hack but
-> > adapt it to the double-linked list changes), which still lead to
-> > regressions :-/.
-> > 
-> > Just a reminder of my 2 proposals:
-> > 
-> > 1/ implement the bridge_ops->pre_enable/post_disable() hooks so you can
-> >    split your enable/disable logic in 2 parts and make sure things are
-> >    ready when the panel/next bridge tries to send DSI commands
-> > 2/ move everything that's needed to send DSI commands out of the  
-> >    ->enable() path (maybe in runtime PM resume/suspend hooks) so you    
-> >    can call that in the DSI transfer path too
-> > 
-> > As pointed out by Laurent, #1 doesn't work because some panel drivers
-> > send DSI commands in their ->prepare() hook, and ->pre_enable() methods
-> > are called in reverse order, meaning that the DRM panel bridge driver
-> > would try to issue DSI commands before the DSI host controllers is ready
-> > to send them. I still thing #2 is a good option.
-> >   
-> > > 
-> > > So proper patch converting to double-linked list should not try to
-> > > splice ExynosDSI private bridge list with with encoder's, encoder's list
-> > > should be always empty, as Marek suggested.    
-> > 
-> > That's exactly what I wanted to do: make the encoder's list empty after
-> > attach() and restore it to its initial state before unregistering
-> > the bridge, except I forgot that list_splice() doesn't call
-> > INIT_LIST_HEAD(). It's still not clear to me why replacing the
-> > list_splice() call by a list_splice_init() didn't work.  
+> > Overvoltage protection and brightness mode are currently hardcoded
+> > as disabled in the driver. Make these configurable via DT.
 > 
-> Okay, I think I figured it out: drm_bridge_chain_xx() helpers use
-> encoder->bridge_chain as their list head, and you'll never hit the 'elem
-> is list head' condition since we moved all elems from
-> encoder->bridge_chain to exynos_dsi->bridge_chain. The only way this
-> can work is if we stop using the helpers and implement our own list
-> iterators.
+> What exactly is overvoltage protection good for? Should we default to
+> 29V if we have no other information?
 
-Just to make it clear, calling INIT_LIST_HEAD(encoder->bridge_chain)
-doesn't really fix the bug, it just prevents the hang (infinite loop)
-and turn all drm_bridge_chain_xx() calls into NOPs.
+The OVP protects the IC from overvoltage conditions on the output side.
+While looking at the manual again I noticed that i misremembered the
+'00' value which means 17V - not unprotected. Also the chip defaults
+to 29V OVP so i've adjusted that too.
+
+Cheers,
+ -- Guido
+
+> 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> 
+> > +	ret = device_property_read_u32(&led->client->dev,
+> > +				       "ti,overvoltage-volts", &ovp);
+> > +	if (!ret) {
+> > +		switch (ovp) {
+> > +		case 0:
+> > +			break;
+> > +		case 22:
+> > +			led->boost_ctrl |= LM3692X_OVP_21V;
+> > +			break;
+> 
+> Should be case 21.
+> 								Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
