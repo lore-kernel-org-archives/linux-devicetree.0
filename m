@@ -2,157 +2,90 @@ Return-Path: <SRS0=v23k=2O=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E86C2D0CF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 05:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F929C2D0D2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 05:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBBA12071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 05:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="o7nsMUVo"
+	by mail.kernel.org (Postfix) with ESMTP id 56CFE2071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 24 Dec 2019 05:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbfLXFcf (ORCPT
+        id S1726128AbfLXFtL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 24 Dec 2019 00:32:35 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:30786 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726009AbfLXFce (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 24 Dec 2019 00:32:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577165554; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=/zIvwtp8UO85ebHhHKbecVWYaBp9mm+ttOxLD7tikHo=; b=o7nsMUVoF6mYhJfu1qVENdj9rlXPjgemGk5imYsA1QRbiOm2WuZOAv/kNvH77e3wQRNzZ+ms
- JMa/3v2oUkKaV8jIlIMRHpfBEoEQ5minm3zHfvrp1K5lpgKqXNLVvNzf5kyh9BUw/DGXjEFB
- zipafXI01vPS9ux9disYCZkpcRs=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e01a2eb.7fc2925100a0-smtp-out-n01;
- Tue, 24 Dec 2019 05:32:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6E7C6C433CB; Tue, 24 Dec 2019 05:32:27 +0000 (UTC)
-Received: from sthella-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sthella)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C30D5C43383;
-        Tue, 24 Dec 2019 05:32:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C30D5C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthella@codeaurora.org
-From:   Shyam Kumar Thella <sthella@codeaurora.org>
-To:     agross@kernel.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     Shyam Kumar Thella <sthella@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-Date:   Tue, 24 Dec 2019 11:02:12 +0530
-Message-Id: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 24 Dec 2019 00:49:11 -0500
+Received: from mga03.intel.com ([134.134.136.65]:50042 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfLXFtL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 24 Dec 2019 00:49:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 21:49:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,350,1571727600"; 
+   d="scan'208";a="242421618"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Dec 2019 21:49:09 -0800
+Received: from [10.226.38.1] (unknown [10.226.38.1])
+        by linux.intel.com (Postfix) with ESMTP id A898E58046E;
+        Mon, 23 Dec 2019 21:49:06 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] clk: intel: Add CGU clock driver for a new SoC
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, yixin.zhu@linux.intel.com,
+        qi-ming.wu@intel.com, rtanwar <rahul.tanwar@intel.com>,
+        clang-built-linux@googlegroups.com
+References: <cover.1576811332.git.rahul.tanwar@linux.intel.com>
+ <ee8a8a0f0c882e22361895b2663870c8037c422f.1576811332.git.rahul.tanwar@linux.intel.com>
+ <20191224052947.GA54145@ubuntu-m2-xlarge-x86>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <c61235a7-969f-f534-e25f-e3990b9c8d11@linux.intel.com>
+Date:   Tue, 24 Dec 2019 13:49:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191224052947.GA54145@ubuntu-m2-xlarge-x86>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QTI SDAM allows PMIC peripherals to access the shared memory that is
-available on QTI PMICs. Add documentation for it.
 
-Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
----
- .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79 ++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
 
-diff --git a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-new file mode 100644
-index 0000000..8961a99
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
-+
-+maintainers:
-+  - Shyam Kumar Thella <sthella@codeaurora.org>
-+
-+description: |
-+  The SDAM provides scratch register space for the PMIC clients. This
-+  memory can be used by software to store information or communicate
-+  to/from the PBUS.
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,spmi-sdam
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+        description:
-+          Offset and size in bytes within the storage device.
-+
-+      bits:
-+        maxItems: 1
-+        items:
-+          items:
-+            - minimum: 0
-+              maximum: 7
-+              description:
-+                Offset in bit within the address range specified by reg.
-+            - minimum: 1
-+              description:
-+                Size in bit within the address range specified by reg.
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+examples:
-+  - |
-+      sdam_1: nvram@b000 {
-+         #address-cells = <1>;
-+         #size-cells = <1>;
-+         compatible = "qcom,spmi-sdam";
-+          reg = <0xb000 0x100>;
-+
-+          /* Data cells */
-+          restart_reason: restart@50 {
-+              reg = <0x50 0x1>;
-+              bits = <7 2>;
-+          };
-+      };
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+On 24/12/2019 1:29 PM, Nathan Chancellor wrote:
+> On Fri, Dec 20, 2019 at 11:31:07AM +0800, Rahul Tanwar wrote:
+>> From: rtanwar <rahul.tanwar@intel.com>
+>>
+>> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
+>> Intel network processor SoC. It provides programming interfaces to control
+>> & configure all CPU & peripheral clocks. Add common clock framework based
+>> clock controller driver for CGU.
+>>
+>> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> Hi Rahul,
+>
+> The 0day bot reported this warning with clang with your patch, mind
+> taking a look at it since it seems like you will need to do a v2 based
+> on other comments?
+>
+> It seems like the check either needs to be something different or the
+> check should just be removed.
+>
+> Cheers,
+> Nathan
+
+Hi Nathan,
+
+Yes sure, i will fix it in v3. I anyways need to post v3 to address review
+comments received from few reviewers. Thanks.
+
+Regards,
+Rahul
+
