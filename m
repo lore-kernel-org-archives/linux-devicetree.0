@@ -2,98 +2,158 @@ Return-Path: <SRS0=FlbI=2P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F22C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 21:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C933C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 21:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5FDD20838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 21:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGOQxTFw"
+	by mail.kernel.org (Postfix) with ESMTP id 704972073B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 21:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbfLYVB0 (ORCPT
+        id S1726464AbfLYV7v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 16:01:26 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43044 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfLYVBZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 16:01:25 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so11229480pfo.10;
-        Wed, 25 Dec 2019 13:01:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UKiEtbhKpkoXrN73naEOrx88kzwa9vSUmljrzrCA5Cc=;
-        b=bGOQxTFwxP1otsSd5NeJRqc73rlwFRxg/BNztDOWXV5KLxJ+1RfJ2kpkZg+sVY3uij
-         OVh3NdcAk4y/mxEwVyOplTqsO47IOJkEVDN7CZFXJX+0v6vG4Nw2UaC3KoaEdxPmjgeF
-         M9/pgXuVrJiMifN48wI8wpdJQdjqlho32Cjtc9zqikzLBehFm2an+UKWoC3ylDJ4gsHV
-         gOaKvk5WzhAk0AtPiPUgDrqa6Dj1uoLhkPfQEtNzX6Qq5rhgD4bmckHOCvghdSKOfxIr
-         yEfLSxdvRSo88b4Y+ED3KGEm4+Y0y1PUOjUdrJkdiW/ZNJBD3YhHX3LUxC4nlwDTV9Oc
-         N8TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UKiEtbhKpkoXrN73naEOrx88kzwa9vSUmljrzrCA5Cc=;
-        b=nVYL1ABIgIqESlbYMwkHy1UIAuc7OoKvAgBWYmGylwPrQw97u2G2s+ZHp3BR4jzxRs
-         6/PlTVODtI3DkEOWZDqdE4aigN3FOjAkHlEU7FrFVrsXqJfBqpcGLt2HMH7k5OURrWVG
-         dQryHg0vdNtvm9AiJulo4gEjbE6+L2V/wu11aPcS26/dLYVYjKVxZBsJPt1jpHq+xQM6
-         BrbDuBSe5JH3ZBktV0fldjM0e+eIY447NpCTjOrxGZUAIJZfDNhVusTFca1qXue084sG
-         5KRxXFH7drNjCcNTBnGfU/zMlZ5w/EWZzOhI6fjrkojAqVEPxCuFRj9U9VLIP89vVG/3
-         GLqQ==
-X-Gm-Message-State: APjAAAW1+nGCpLoaDaf5yggMH5msG0bzQecvRvZi9Jd/qKaMRfhx4Qg3
-        vhSxMSvR7zEN9ZnfiAqHVbw=
-X-Google-Smtp-Source: APXvYqxW5SaK5vVHtdzTRDHjbGXNaL7hHDnAwfUtpMj0wFspBzJa9z06R5wG/TCqvfOKZkLD6PH5ow==
-X-Received: by 2002:a63:26c4:: with SMTP id m187mr45446784pgm.410.1577307684968;
-        Wed, 25 Dec 2019 13:01:24 -0800 (PST)
-Received: from localhost.localdomain ([113.30.156.69])
-        by smtp.googlemail.com with ESMTPSA id k5sm7560232pju.5.2019.12.25.13.01.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Dec 2019 13:01:24 -0800 (PST)
-From:   Mohana Datta Yelugoti <ymdatta.work@gmail.com>
-To:     jacek.anaszewski@gmail.com
-Cc:     trivial@kernel.org, Mohana Datta Yelugoti <ymdatta.work@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        Wed, 25 Dec 2019 16:59:51 -0500
+Received: from mga02.intel.com ([134.134.136.20]:8384 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726461AbfLYV7v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Dec 2019 16:59:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Dec 2019 13:59:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,356,1571727600"; 
+   d="scan'208";a="392192802"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 25 Dec 2019 13:59:47 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1ikEh0-0007cC-Vl; Thu, 26 Dec 2019 05:59:46 +0800
+Date:   Thu, 26 Dec 2019 05:59:14 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     kbuild-all@lists.01.org, sravanhome@gmail.com, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: spi-ir-led: fix spelling mistake "balue"->"value"
-Date:   Thu, 26 Dec 2019 02:29:39 +0530
-Message-Id: <20191225205941.28429-1-ymdatta.work@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Subject: Re: [PATCH v3 3/4] regulator: mpq7920: add mpq7920 regulator driver
+Message-ID: <201912260536.tzKV8pVS%lkp@intel.com>
+References: <20191222204507.32413-4-sravanhome@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191222204507.32413-4-sravanhome@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is a spelling mistake in:
-      Documentation/bindings/leds/irled/spi-ir-led.txt.
-Fix it.
+Hi Saravanan,
 
-Signed-off-by: Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on regulator/for-next]
+[also build test WARNING on robh/for-next linus/master v5.5-rc3 next-20191220]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Saravanan-Sekar/Add-regulator-support-for-mpq7920/20191225-005026
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-129-g341daf20-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/regulator/mpq7920.c:339:44: sparse: sparse: Using plain integer as NULL pointer
+>> drivers/regulator/mpq7920.c:317:21: sparse: sparse: incorrect type in assignment (different modifiers)
+>> drivers/regulator/mpq7920.c:317:21: sparse:    expected struct regulator_ops *ops
+>> drivers/regulator/mpq7920.c:317:21: sparse:    got struct regulator_ops const *ops
+
+vim +339 drivers/regulator/mpq7920.c
+
+   306	
+   307	static inline int mpq7920_regulator_register(
+   308					struct mpq7920_regulator_info *info,
+   309					struct regulator_config *config)
+   310	{
+   311		int i;
+   312		struct regulator_desc *rdesc;
+   313		struct regulator_ops *ops;
+   314	
+   315		for (i = 0; i < MPQ7920_MAX_REGULATORS; i++) {
+   316			rdesc = &info->rdesc[i];
+ > 317			ops = rdesc->ops;
+   318			if (rdesc->curr_table) {
+   319				ops->get_current_limit =
+   320					regulator_get_current_limit_regmap;
+   321				ops->set_current_limit =
+   322					regulator_set_current_limit_regmap;
+   323			}
+   324	
+   325			info->rdev[i] = devm_regulator_register(info->dev, rdesc,
+   326						 config);
+   327			if (IS_ERR(info->rdev))
+   328				return PTR_ERR(info->rdev);
+   329		}
+   330	
+   331		return 0;
+   332	}
+   333	
+   334	static int mpq7920_i2c_probe(struct i2c_client *client,
+   335					    const struct i2c_device_id *id)
+   336	{
+   337		struct device *dev = &client->dev;
+   338		struct mpq7920_regulator_info *info;
+ > 339		struct regulator_config config = { 0 };
+   340		struct regmap *regmap;
+   341		int ret;
+   342	
+   343		info = devm_kzalloc(dev, sizeof(struct mpq7920_regulator_info),
+   344					GFP_KERNEL);
+   345		if (!info)
+   346			return -ENOMEM;
+   347	
+   348		info->dev = dev;
+   349		info->rdesc = mpq7920_regulators_desc;
+   350		regmap = devm_regmap_init_i2c(client, &mpq7920_regmap_config);
+   351		if (IS_ERR(regmap)) {
+   352			dev_err(dev, "Failed to allocate regmap!\n");
+   353			return PTR_ERR(regmap);
+   354		}
+   355	
+   356		i2c_set_clientdata(client, info);
+   357		info->regmap = regmap;
+   358		if (client->dev.of_node)
+   359			mpq7920_parse_dt(&client->dev, info);
+   360	
+   361		config.dev = info->dev;
+   362		config.regmap = regmap;
+   363		config.driver_data = info;
+   364	
+   365		ret = mpq7920_regulator_register(info, &config);
+   366		if (ret < 0)
+   367			dev_err(dev, "Failed to register regulator!\n");
+   368	
+   369		return ret;
+   370	}
+   371	
+
 ---
- Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
-index 21882c8d4b0c..83ff1b4d70a6 100644
---- a/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
-+++ b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
-@@ -8,7 +8,7 @@ Required properties:
- 	- compatible: should be "ir-spi-led".
- 
- Optional properties:
--	- duty-cycle: 8 bit balue that represents the percentage of one period
-+	- duty-cycle: 8 bit value that represents the percentage of one period
- 	  in which the signal is active.  It can be 50, 60, 70, 75, 80 or 90.
- 	- led-active-low: boolean value that specifies whether the output is
- 	  negated with a NOT gate.
--- 
-2.17.1
-
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
