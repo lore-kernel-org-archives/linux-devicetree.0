@@ -2,128 +2,98 @@ Return-Path: <SRS0=FlbI=2P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AA5C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 18:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F22C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 21:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B362073B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 18:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FDD20838
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 21:01:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bGOQxTFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfLYSyW (ORCPT
+        id S1726469AbfLYVB0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 13:54:22 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:43311 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfLYSyW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 13:54:22 -0500
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id CF474240003;
-        Wed, 25 Dec 2019 18:54:17 +0000 (UTC)
-Date:   Wed, 25 Dec 2019 20:02:20 +0100
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] dt-bindings: Add AXG PCIE PHY bindings
-Message-ID: <20191225190220.GF7304@voidbox>
-References: <20191224173942.18160-1-repk@triplefau.lt>
- <20191224173942.18160-6-repk@triplefau.lt>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224173942.18160-6-repk@triplefau.lt>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 25 Dec 2019 16:01:26 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43044 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726461AbfLYVBZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 16:01:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x6so11229480pfo.10;
+        Wed, 25 Dec 2019 13:01:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=UKiEtbhKpkoXrN73naEOrx88kzwa9vSUmljrzrCA5Cc=;
+        b=bGOQxTFwxP1otsSd5NeJRqc73rlwFRxg/BNztDOWXV5KLxJ+1RfJ2kpkZg+sVY3uij
+         OVh3NdcAk4y/mxEwVyOplTqsO47IOJkEVDN7CZFXJX+0v6vG4Nw2UaC3KoaEdxPmjgeF
+         M9/pgXuVrJiMifN48wI8wpdJQdjqlho32Cjtc9zqikzLBehFm2an+UKWoC3ylDJ4gsHV
+         gOaKvk5WzhAk0AtPiPUgDrqa6Dj1uoLhkPfQEtNzX6Qq5rhgD4bmckHOCvghdSKOfxIr
+         yEfLSxdvRSo88b4Y+ED3KGEm4+Y0y1PUOjUdrJkdiW/ZNJBD3YhHX3LUxC4nlwDTV9Oc
+         N8TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UKiEtbhKpkoXrN73naEOrx88kzwa9vSUmljrzrCA5Cc=;
+        b=nVYL1ABIgIqESlbYMwkHy1UIAuc7OoKvAgBWYmGylwPrQw97u2G2s+ZHp3BR4jzxRs
+         6/PlTVODtI3DkEOWZDqdE4aigN3FOjAkHlEU7FrFVrsXqJfBqpcGLt2HMH7k5OURrWVG
+         dQryHg0vdNtvm9AiJulo4gEjbE6+L2V/wu11aPcS26/dLYVYjKVxZBsJPt1jpHq+xQM6
+         BrbDuBSe5JH3ZBktV0fldjM0e+eIY447NpCTjOrxGZUAIJZfDNhVusTFca1qXue084sG
+         5KRxXFH7drNjCcNTBnGfU/zMlZ5w/EWZzOhI6fjrkojAqVEPxCuFRj9U9VLIP89vVG/3
+         GLqQ==
+X-Gm-Message-State: APjAAAW1+nGCpLoaDaf5yggMH5msG0bzQecvRvZi9Jd/qKaMRfhx4Qg3
+        vhSxMSvR7zEN9ZnfiAqHVbw=
+X-Google-Smtp-Source: APXvYqxW5SaK5vVHtdzTRDHjbGXNaL7hHDnAwfUtpMj0wFspBzJa9z06R5wG/TCqvfOKZkLD6PH5ow==
+X-Received: by 2002:a63:26c4:: with SMTP id m187mr45446784pgm.410.1577307684968;
+        Wed, 25 Dec 2019 13:01:24 -0800 (PST)
+Received: from localhost.localdomain ([113.30.156.69])
+        by smtp.googlemail.com with ESMTPSA id k5sm7560232pju.5.2019.12.25.13.01.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2019 13:01:24 -0800 (PST)
+From:   Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+To:     jacek.anaszewski@gmail.com
+Cc:     trivial@kernel.org, Mohana Datta Yelugoti <ymdatta.work@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: spi-ir-led: fix spelling mistake "balue"->"value"
+Date:   Thu, 26 Dec 2019 02:29:39 +0530
+Message-Id: <20191225205941.28429-1-ymdatta.work@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 06:39:42PM +0100, Remi Pommarel wrote:
-> Add documentation for PCIE PHYs found in AXG SoCs.
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  .../bindings/phy/amlogic,meson-axg-pcie.yaml  | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> new file mode 100644
-> index 000000000000..c622a1b38ffc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019 BayLibre, SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/phy/amlogic,meson-axg-pcie.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic AXG PCIE PHY
-> +
-> +maintainers:
-> +  - Remi Pommarel <repk@triplefau.lt>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,axg-pcie-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  aml,hhi-gpr:
-> +    maxItems: 1
+There is a spelling mistake in:
+      Documentation/bindings/leds/irled/spi-ir-led.txt.
+Fix it.
 
-My bad, I didn't know about devicetree schemas and their verification,
-I will fix the missing $ref: '/schemas/types.yaml#/definitions/phandle'
-here, add a description and add the missing include for reset in the
-example below in v4 along with upcoming comments on the other patches.
+Signed-off-by: Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+---
+ Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry about that.
+diff --git a/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
+index 21882c8d4b0c..83ff1b4d70a6 100644
+--- a/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
++++ b/Documentation/devicetree/bindings/leds/irled/spi-ir-led.txt
+@@ -8,7 +8,7 @@ Required properties:
+ 	- compatible: should be "ir-spi-led".
+ 
+ Optional properties:
+-	- duty-cycle: 8 bit balue that represents the percentage of one period
++	- duty-cycle: 8 bit value that represents the percentage of one period
+ 	  in which the signal is active.  It can be 50, 60, 70, 75, 80 or 90.
+ 	- led-active-low: boolean value that specifies whether the output is
+ 	  negated with a NOT gate.
+-- 
+2.17.1
 
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    items:
-> +      - const: phy
-> +
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - aml,hhi-gpr
-> +  - resets
-> +  - reset-names
-> +  - "#phy-cells"
-> +
-> +examples:
-> +  - |
-> +    pcie_phy: pcie-phy@ff644000 {
-> +          compatible = "amlogic,axg-pcie-phy";
-> +          reg = <0x0 0xff644000 0x0 0x2000>;
-> +          aml,hhi-gpr = <&sysctrl>;
-> +          resets = <&reset RESET_PCIE_PHY>;
-> +          reset-names = "phy";
-> +          #phy-cells = <0>;
-> +    };
-> -- 
-> 2.24.0
-> 
