@@ -2,304 +2,569 @@ Return-Path: <SRS0=FlbI=2P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F8C2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 06:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40641C2D0DA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 08:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD592072A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 06:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5AB20722
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 08:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PsJeMTkX"
+	dkim=pass (2048-bit key) header.d=avl.com header.i=@avl.com header.b="GdFk1USA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfLYG7m (ORCPT
+        id S1726185AbfLYIlt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 01:59:42 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:60614 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725865AbfLYG7m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 01:59:42 -0500
-X-UUID: 4a640fa9b08c4d2d91fbf6f0085d866f-20191225
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Pg7AnzKAKzQJK/UPqk1ILEP4QA125SuECfkXqQGQ7mU=;
-        b=PsJeMTkXvM2s2animk9dTA4gqWEbQZFIBkQKHx15xd2uOlO7X8TQqnFELShU487KoprmUW+r46bRbZjd1q9Locy6We+JuvtJxNHEtxh6jPWA70XK03VrIAaPc+lmLiE/I8E3V3n0B8yXTMxOYkc2J8vOTmDwtnQ2ofzWzag/ZaA=;
-X-UUID: 4a640fa9b08c4d2d91fbf6f0085d866f-20191225
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1338988706; Wed, 25 Dec 2019 14:59:26 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 25 Dec 2019 14:59:05 +0800
-Received: from [10.15.20.246] (10.15.20.246) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 25 Dec 2019 14:59:38 +0800
-Message-ID: <1577257111.1137.3.camel@mbjsdccf07>
-Subject: Re: [RESEND,PATCH 02/13] iommu/mediatek: Add mt6779 IOMMU basic
- support
-From:   chao hao <Chao.Hao@mediatek.com>
-To:     Yong Wu <yong.wu@mediatek.com>
-CC:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Jun Yan <jun.yan@mediatek.com>,
-        Cui Zhang <cui.zhang@mediatek.com>,
-        Guangming Cao <guangming.cao@mediatek.com>,
-        Anan Sun <anan.sun@mediatek.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>
-Date:   Wed, 25 Dec 2019 14:58:31 +0800
-In-Reply-To: <1576498063.28043.74.camel@mhfsdcap03>
-References: <20191104115238.2394-1-chao.hao@mediatek.com>
-         <20191104115238.2394-3-chao.hao@mediatek.com>
-         <1576498063.28043.74.camel@mhfsdcap03>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 25 Dec 2019 03:41:49 -0500
+Received: from mx07-002cda01.pphosted.com ([185.132.180.122]:56434 "EHLO
+        mx07-002cda01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726025AbfLYIlt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 25 Dec 2019 03:41:49 -0500
+X-Greylist: delayed 1917 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Dec 2019 03:41:45 EST
+Received: from pps.filterd (m0135535.ppops.net [127.0.0.1])
+        by mx07-002cda01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBP89jfr004786;
+        Wed, 25 Dec 2019 08:09:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=avl.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=08102019;
+ bh=qu24QIRzMzfkm/z11IZ0dF4AVfxke/mfIv2hKyfQJlA=;
+ b=GdFk1USAVMtbs4bUrqu+NzT2dBmm6BpcSm8xcmIQ/+rjB8r8WhDUnH+d3mLlAh0I4Njo
+ 3jCwUTAy27kqygVg+xzV+iIbz/GSi0Wu5hWbu0+XKOaTZrWRryyim/XGOPFAf4gJzg88
+ 6Bh7B5bhzfsBzuvPYv81ydjGWEExpLoeiTmyeXShqd4/yp0PfzpvCZyrCpydXVClUZ7h
+ zxgoeYIhy+B5giEBttblYWN4B/iN00iIMiNL41PkpugUWt9AJK3pIjMp167VVzYAO1Cz
+ M6Z0/CDE+TUpSZMicfHKEhjca6VxRwXhGk9SOTh2bxTMhJGlZtb54527Y3rp74lySKeS iw== 
+Received: from atgrzso2901.avl01.avlcorp.lan ([192.102.17.76])
+        by mx07-002cda01.pphosted.com with ESMTP id 2x1ckhcxq7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Dec 2019 08:09:44 +0000
+Received: from pps.filterd (atgrzso2901.avl01.avlcorp.lan [127.0.0.1])
+        by atgrzso2901.avl01.avlcorp.lan (8.16.0.27/8.16.0.27) with SMTP id xBP85aV5007263;
+        Wed, 25 Dec 2019 09:09:39 +0100
+Received: from atgrzsw1693.avl01.avlcorp.lan ([10.13.100.86])
+        by atgrzso2901.avl01.avlcorp.lan with ESMTP id 2x1byp8y8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 25 Dec 2019 09:09:39 +0100
+Received: from ATGRZSW1692.avl01.avlcorp.lan (10.12.64.113) by
+ atgrzsw1693.avl01.avlcorp.lan (10.12.64.114) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 25 Dec 2019 09:09:39 +0100
+Received: from ATGRZSW1692.avl01.avlcorp.lan ([172.18.42.156]) by
+ ATGRZSW1692.avl01.avlcorp.lan ([172.18.42.156]) with mapi id 15.00.1497.000;
+ Wed, 25 Dec 2019 09:09:39 +0100
+From:   "Denis, Tomislav AVL DiTEST" <Tomislav.Denis@avl.com>
+To:     'Jonathan Cameron' <jic23@kernel.org>
+CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v4 1/3] iio: pressure: Add driver for DLH pressure sensors
+Thread-Topic: [PATCH v4 1/3] iio: pressure: Add driver for DLH pressure
+ sensors
+Thread-Index: AQHVsAm4Bk5l/Tu0FUGgyDAq2mcbZKfH/+iAgAKUQZA=
+Date:   Wed, 25 Dec 2019 08:09:38 +0000
+Message-ID: <73e3ee1a69c343329ef39bf2b88020a9@ATGRZSW1692.avl01.avlcorp.lan>
+References: <20191211095946.7904-1-tomislav.denis@avl.com>
+        <20191211095946.7904-2-tomislav.denis@avl.com>
+ <20191223174241.779856de@archlinux>
+In-Reply-To: <20191223174241.779856de@archlinux>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.12.100.12]
+x-exclaimer-md-config: f9e74532-fb7d-4806-8539-2b9574eafa9a
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-12-25_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912250066
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-25_01:2019-12-24,2019-12-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912250065
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTEyLTE2IGF0IDIwOjA3ICswODAwLCBZb25nIFd1IHdyb3RlOg0KPiBPbiBN
-b24sIDIwMTktMTEtMDQgYXQgMTk6NTIgKzA4MDAsIENoYW8gSGFvIHdyb3RlOg0KPiA+IDEuIEFk
-ZCBtdDY3NzkgcmVnaXN0ZXJzIGRlZmluZSBmb3IgaW9tbXUuDQo+ID4gMi4gQWRkIG10Njc3OV9k
-YXRhIGRlZmluZSB0byBzdXBwb3J0IG10Njc3OSBpb21tdSBIVyBpbml0Lg0KPiA+IDMuIFRoZXJl
-IGFyZSB0d28gaW9tbXVzLCBvbmUgaXMgbW1faW9tbXUsIHRoZSBvdGhlciBpcyB2cHVfaW9tbXUu
-DQo+ID4gTU1fSU9NTVUgaXMgY29ubmVjdGVkIHNtaV9sYXJiIHRvIHN1cHBvcnQgbXVsdGltZWRp
-YSBlbmdpbmUgdG8NCj4gPiBhY2Nlc3MgRFJBTSwgYW5kIFZQVV9JT01NVSBpcyBjb25uZWN0ZWQg
-dG8gQVBVX2J1cyB0byBzdXBwb3J0DQo+ID4gVlBVLE1ETEEsRURNQSB0byBhY2Nlc3MgRFJBTS4g
-TU1fSU9NTVUgYW5kIFZQVV9JT01NVSB1c2UgdGhlIHNhbWUNCj4gPiBwYWdlIHRhYmxlIHRvIHNp
-bXBsaWZ5IGRlc2lnbiBieSAibXRrX2lvbW11X2dldF9tNHVfZGF0YSIuDQo+ID4gNC4gRm9yIHNt
-aV9sYXJiNiwgaXQgZG9lc24ndCB1c2UgbW1faW9tbXUsIHNvIHdlIGNhbiBkaXN0aW5ndWlzaA0K
-PiA+IHZwdV9pb21tdSBieSBpdCB3aGVuIGV4Y3V0ZXMgaW9tbXVfcHJvYmUuDQo+ID4gNS4gRm9y
-IG10Njc3OSBBUFVfSU9NTVUgZmF1bHQgaWQgaXMgaXJyZWd1bGFyLCBzbyBpdCB3YXMgdHJlYXRl
-ZA0KPiA+IHNwZWNpYWxseS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaGFvIEhhbyA8Y2hh
-by5oYW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2lvbW11L210a19pb21t
-dS5jIHwgOTEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ID4gIGRy
-aXZlcnMvaW9tbXUvbXRrX2lvbW11LmggfCAxMCArKysrLQ0KPiA+ICAyIGZpbGVzIGNoYW5nZWQs
-IDg3IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL2lvbW11L210a19pb21tdS5jIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0K
-PiA+IGluZGV4IDhjYTJlOTk5NjRmZS4uZjI4NDdlNjYxMTM3IDEwMDY0NA0KPiA+IC0tLSBhL2Ry
-aXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gPiArKysgYi9kcml2ZXJzL2lvbW11L210a19pb21t
-dS5jDQo+ID4gQEAgLTM4LDEyICszOCwyNCBAQA0KPiA+ICAjZGVmaW5lIFJFR19NTVVfSU5WTERf
-RU5EX0EJCQkweDAyOA0KPiA+ICANCj4gPiAgI2RlZmluZSBSRUdfTU1VX0lOVl9TRUwJCQkJMHgw
-MzgNCj4gPiArI2RlZmluZSBSRUdfTU1VX0lOVl9TRUxfTVQ2Nzc5CQkJMHgwMmMNCj4gPiAgI2Rl
-ZmluZSBGX0lOVkxEX0VOMAkJCQlCSVQoMCkNCj4gPiAgI2RlZmluZSBGX0lOVkxEX0VOMQkJCQlC
-SVQoMSkNCj4gPiAgDQo+ID4gICNkZWZpbmUgUkVHX01NVV9TVEFOREFSRF9BWElfTU9ERQkJMHgw
-NDgNCj4gPiArDQo+ID4gKyNkZWZpbmUgUkVHX01NVV9NSVNDX0NSVExfTVQ2Nzc5CQkweDA0OA0K
-PiANCj4gRGVmaW5pbmcgdHdvIHJlZ2lzdGVyIGluIHRoZSBzYW1lIG9mZnNldCBsb29rIHN0cmFu
-Z2UuIHNlZSBiZWxvdy4NCj4gDQo+ID4gKyNkZWZpbmUgUkVHX01NVV9TVEFOREFSRF9BWElfTU9E
-RV9NVDY3NzkJKEJJVCgzKSB8IEJJVCgxOSkpDQo+ID4gKyNkZWZpbmUgUkVHX01NVV9DT0hFUkVO
-Q0VfRU4JCQkoQklUKDApIHwgQklUKDE2KSkNCj4gPiArI2RlZmluZSBSRUdfTU1VX0lOX09SREVS
-X1dSX0VOCQkJKEJJVCgxKSB8IEJJVCgxNykpDQo+ID4gKyNkZWZpbmUgRl9NTVVfSEFMRl9FTlRS
-WV9NT0RFX0wJCQkoQklUKDUpIHwgQklUKDIxKSkNCj4gPiArI2RlZmluZSBGX01NVV9CTE9DS0lO
-R19NT0RFX0wJCQkoQklUKDQpIHwgQklUKDIwKSkNCj4gDQo+IFRoZSBsYXN0IGZvdXIgb25lcyBh
-cmUgbm90IHVzZWQuIFBsZWFzZSByZW1vdmUuDQo+IA0KPiA+ICsNCj4gPiAgI2RlZmluZSBSRUdf
-TU1VX0RDTV9ESVMJCQkJMHgwNTANCj4gPiAgDQo+ID4gKyNkZWZpbmUgUkVHX01NVV9XUl9MRU4J
-CQkJMHgwNTQNCj4gPiArI2RlZmluZSBGX01NVV9XUl9USFJPVF9ESVMJCQkoQklUKDUpIHwgIEJJ
-VCgyMSkpDQo+ID4gKw0KPiA+ICAjZGVmaW5lIFJFR19NTVVfQ1RSTF9SRUcJCQkweDExMA0KPiA+
-ICAjZGVmaW5lIEZfTU1VX1RGX1BST1RfVE9fUFJPR1JBTV9BRERSCQkoMiA8PCA0KQ0KPiA+ICAj
-ZGVmaW5lIEZfTU1VX1BSRUZFVENIX1JUX1JFUExBQ0VfTU9ECQlCSVQoNCkNCj4gPiBAQCAtODgs
-MTAgKzEwMCwxNCBAQA0KPiA+ICAjZGVmaW5lIFJFR19NTVUxX0lOVkxEX1BBCQkJMHgxNDgNCj4g
-PiAgI2RlZmluZSBSRUdfTU1VMF9JTlRfSUQJCQkJMHgxNTANCj4gPiAgI2RlZmluZSBSRUdfTU1V
-MV9JTlRfSUQJCQkJMHgxNTQNCj4gPiArI2RlZmluZSBGX01NVV9JTlRfSURfQ09NTV9JRChhKQkJ
-CSgoKGEpID4+IDkpICYgMHg3KQ0KPiA+ICsjZGVmaW5lIEZfTU1VX0lOVF9JRF9TVUJfQ09NTV9J
-RChhKQkJKCgoYSkgPj4gNykgJiAweDMpDQo+ID4gICNkZWZpbmUgRl9NTVVfSU5UX0lEX0xBUkJf
-SUQoYSkJCQkoKChhKSA+PiA3KSAmIDB4NykNCj4gPiAgI2RlZmluZSBGX01NVV9JTlRfSURfUE9S
-VF9JRChhKQkJCSgoKGEpID4+IDIpICYgMHgxZikNCj4gPiArI2RlZmluZSBGX01NVV9JTlRfSURf
-Q09NTV9BUFVfSUQoYSkJCSgoYSkgJiAweDMpDQo+ID4gKyNkZWZpbmUgRl9NTVVfSU5UX0lEX1NV
-Ql9BUFVfSUQoYSkJCSgoKGEpID4+IDIpICYgMHgzKQ0KPiA+ICANCj4gPiAtI2RlZmluZSBNVEtf
-UFJPVEVDVF9QQV9BTElHTgkJCTEyOA0KPiA+ICsjZGVmaW5lIE1US19QUk9URUNUX1BBX0FMSUdO
-CQkJMjU2DQo+ID4gIA0KPiA+ICAvKg0KPiA+ICAgKiBHZXQgdGhlIGxvY2FsIGFyYml0ZXIgSUQg
-YW5kIHRoZSBwb3J0aWQgd2l0aGluIHRoZSBsYXJiIGFyYml0ZXINCj4gPiBAQCAtMTY1LDcgKzE4
-MSw3IEBAIHN0YXRpYyB2b2lkIG10a19pb21tdV90bGJfZmx1c2hfYWxsKHZvaWQgKmNvb2tpZSkN
-Cj4gPiAgDQo+ID4gIAlmb3JfZWFjaF9tNHUoZGF0YSkgew0KPiA+ICAJCXdyaXRlbF9yZWxheGVk
-KEZfSU5WTERfRU4xIHwgRl9JTlZMRF9FTjAsDQo+ID4gLQkJCSAgICAgICBkYXRhLT5iYXNlICsg
-UkVHX01NVV9JTlZfU0VMKTsNCj4gPiArCQkJICAgICAgIGRhdGEtPmJhc2UgKyBkYXRhLT5wbGF0
-X2RhdGEtPmludl9zZWxfcmVnKTsNCj4gPiAgCQl3cml0ZWxfcmVsYXhlZChGX0FMTF9JTlZMRCwg
-ZGF0YS0+YmFzZSArIFJFR19NTVVfSU5WQUxJREFURSk7DQo+ID4gIAkJd21iKCk7IC8qIE1ha2Ug
-c3VyZSB0aGUgdGxiIGZsdXNoIGFsbCBkb25lICovDQo+ID4gIAl9DQo+ID4gQEAgLTE4Miw3ICsx
-OTgsNyBAQCBzdGF0aWMgdm9pZCBtdGtfaW9tbXVfdGxiX2ZsdXNoX3JhbmdlX3N5bmModW5zaWdu
-ZWQgbG9uZyBpb3ZhLCBzaXplX3Qgc2l6ZSwNCj4gPiAgCWZvcl9lYWNoX200dShkYXRhKSB7DQo+
-ID4gIAkJc3Bpbl9sb2NrX2lycXNhdmUoJmRhdGEtPnRsYl9sb2NrLCBmbGFncyk7DQo+ID4gIAkJ
-d3JpdGVsX3JlbGF4ZWQoRl9JTlZMRF9FTjEgfCBGX0lOVkxEX0VOMCwNCj4gPiAtCQkJICAgICAg
-IGRhdGEtPmJhc2UgKyBSRUdfTU1VX0lOVl9TRUwpOw0KPiA+ICsJCQkgICAgICAgZGF0YS0+YmFz
-ZSArIGRhdGEtPnBsYXRfZGF0YS0+aW52X3NlbF9yZWcpOw0KPiA+ICANCj4gPiAgCQl3cml0ZWxf
-cmVsYXhlZChpb3ZhLCBkYXRhLT5iYXNlICsgUkVHX01NVV9JTlZMRF9TVEFSVF9BKTsNCj4gPiAg
-CQl3cml0ZWxfcmVsYXhlZChpb3ZhICsgc2l6ZSAtIDEsDQo+ID4gQEAgLTIyNiw3ICsyNDIsNyBA
-QCBzdGF0aWMgaXJxcmV0dXJuX3QgbXRrX2lvbW11X2lzcihpbnQgaXJxLCB2b2lkICpkZXZfaWQp
-DQo+ID4gIAlzdHJ1Y3QgbXRrX2lvbW11X2RhdGEgKmRhdGEgPSBkZXZfaWQ7DQo+ID4gIAlzdHJ1
-Y3QgbXRrX2lvbW11X2RvbWFpbiAqZG9tID0gZGF0YS0+bTR1X2RvbTsNCj4gPiAgCXUzMiBpbnRf
-c3RhdGUsIHJlZ3ZhbCwgZmF1bHRfaW92YSwgZmF1bHRfcGE7DQo+ID4gLQl1bnNpZ25lZCBpbnQg
-ZmF1bHRfbGFyYiwgZmF1bHRfcG9ydDsNCj4gPiArCXVuc2lnbmVkIGludCBmYXVsdF9sYXJiLCBm
-YXVsdF9wb3J0LCBzdWJfY29tbSA9IDA7DQo+ID4gIAlib29sIGxheWVyLCB3cml0ZTsNCj4gPiAg
-DQo+ID4gIAkvKiBSZWFkIGVycm9yIGluZm8gZnJvbSByZWdpc3RlcnMgKi8NCj4gPiBAQCAtMjQy
-LDE3ICsyNTgsMzAgQEAgc3RhdGljIGlycXJldHVybl90IG10a19pb21tdV9pc3IoaW50IGlycSwg
-dm9pZCAqZGV2X2lkKQ0KPiA+ICAJfQ0KPiA+ICAJbGF5ZXIgPSBmYXVsdF9pb3ZhICYgRl9NTVVf
-RkFVTFRfVkFfTEFZRVJfQklUOw0KPiA+ICAJd3JpdGUgPSBmYXVsdF9pb3ZhICYgRl9NTVVfRkFV
-TFRfVkFfV1JJVEVfQklUOw0KPiA+IC0JZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9JRF9MQVJCX0lE
-KHJlZ3ZhbCk7DQo+ID4gIAlmYXVsdF9wb3J0ID0gRl9NTVVfSU5UX0lEX1BPUlRfSUQocmVndmFs
-KTsNCj4gPiArCWlmIChkYXRhLT5wbGF0X2RhdGEtPmhhc19zdWJfY29tbVtkYXRhLT5tNHVfaWRd
-KSB7DQo+ID4gKwkJLyogbTR1MSBpcyBWUFUgaW4gbXQ2Nzc5LiovDQo+ID4gKwkJaWYgKGRhdGEt
-Pm00dV9pZCAmJiBkYXRhLT5wbGF0X2RhdGEtPm00dV9wbGF0ID09IE00VV9NVDY3NzkpIHsNCj4g
-PiArCQkJZmF1bHRfbGFyYiA9IEZfTU1VX0lOVF9JRF9DT01NX0FQVV9JRChyZWd2YWwpOw0KPiA+
-ICsJCQlzdWJfY29tbSA9IEZfTU1VX0lOVF9JRF9TVUJfQVBVX0lEKHJlZ3ZhbCk7DQo+ID4gKwkJ
-CWZhdWx0X3BvcnQgPSAwOyAvKiBmb3IgbXQ2Nzc5IEFQVSBJRCBpcyBpcnJlZ3VsYXIgKi8NCj4g
-PiArCQl9IGVsc2Ugew0KPiA+ICsJCQlmYXVsdF9sYXJiID0gRl9NTVVfSU5UX0lEX0NPTU1fSUQo
-cmVndmFsKTsNCj4gPiArCQkJc3ViX2NvbW0gPSBGX01NVV9JTlRfSURfU1VCX0NPTU1fSUQocmVn
-dmFsKTsNCj4gPiArCQl9DQo+ID4gKwl9IGVsc2Ugew0KPiA+ICsJCWZhdWx0X2xhcmIgPSBGX01N
-VV9JTlRfSURfTEFSQl9JRChyZWd2YWwpOw0KPiA+ICsJfQ0KPiA+ICANCj4gPiAtCWZhdWx0X2xh
-cmIgPSBkYXRhLT5wbGF0X2RhdGEtPmxhcmJpZF9yZW1hcFtmYXVsdF9sYXJiXTsNCj4gPiArCWZh
-dWx0X2xhcmIgPSBkYXRhLT5wbGF0X2RhdGEtPmxhcmJpZF9yZW1hcFtkYXRhLT5tNHVfaWRdW2Zh
-dWx0X2xhcmJdOw0KPiA+ICANCj4gPiAgCWlmIChyZXBvcnRfaW9tbXVfZmF1bHQoJmRvbS0+ZG9t
-YWluLCBkYXRhLT5kZXYsIGZhdWx0X2lvdmEsDQo+ID4gIAkJCSAgICAgICB3cml0ZSA/IElPTU1V
-X0ZBVUxUX1dSSVRFIDogSU9NTVVfRkFVTFRfUkVBRCkpIHsNCj4gPiAgCQlkZXZfZXJyX3JhdGVs
-aW1pdGVkKA0KPiA+ICAJCQlkYXRhLT5kZXYsDQo+ID4gLQkJCSJmYXVsdCB0eXBlPTB4JXggaW92
-YT0weCV4IHBhPTB4JXggbGFyYj0lZCBwb3J0PSVkIGxheWVyPSVkICVzXG4iLA0KPiA+IC0JCQlp
-bnRfc3RhdGUsIGZhdWx0X2lvdmEsIGZhdWx0X3BhLCBmYXVsdF9sYXJiLCBmYXVsdF9wb3J0LA0K
-PiA+ICsJCQkiZmF1bHQgdHlwZT0weCV4IGlvdmE9MHgleCBwYT0weCV4IGxhcmI9JWQgc3ViX2Nv
-bW09JWQgcG9ydD0lZCByZWd2YWw9MHgleCBsYXllcj0lZCAlc1xuIiwNCj4gPiArCQkJaW50X3N0
-YXRlLCBmYXVsdF9pb3ZhLCBmYXVsdF9wYSwgZmF1bHRfbGFyYiwNCj4gPiArCQkJc3ViX2NvbW0s
-IGZhdWx0X3BvcnQsIHJlZ3ZhbCwNCj4gPiAgCQkJbGF5ZXIsIHdyaXRlID8gIndyaXRlIiA6ICJy
-ZWFkIik7DQo+ID4gIAl9DQo+ID4gIA0KPiA+IEBAIC01NDUsMTEgKzU3NCwxMiBAQCBzdGF0aWMg
-aW50IG10a19pb21tdV9od19pbml0KGNvbnN0IHN0cnVjdCBtdGtfaW9tbXVfZGF0YSAqZGF0YSkN
-Cj4gPiAgCQlyZXR1cm4gcmV0Ow0KPiA+ICAJfQ0KPiA+ICANCj4gPiArCXJlZ3ZhbCA9IHJlYWRs
-X3JlbGF4ZWQoZGF0YS0+YmFzZSArIFJFR19NTVVfQ1RSTF9SRUcpOw0KPiA+ICAJaWYgKGRhdGEt
-PnBsYXRfZGF0YS0+bTR1X3BsYXQgPT0gTTRVX01UODE3MykNCj4gPiAtCQlyZWd2YWwgPSBGX01N
-VV9QUkVGRVRDSF9SVF9SRVBMQUNFX01PRCB8DQo+ID4gKwkJcmVndmFsIHw9IEZfTU1VX1BSRUZF
-VENIX1JUX1JFUExBQ0VfTU9EIHwNCj4gPiAgCQkJIEZfTU1VX1RGX1BST1RfVE9fUFJPR1JBTV9B
-RERSX01UODE3MzsNCj4gPiAgCWVsc2UNCj4gPiAtCQlyZWd2YWwgPSBGX01NVV9URl9QUk9UX1RP
-X1BST0dSQU1fQUREUjsNCj4gPiArCQlyZWd2YWwgfD0gRl9NTVVfVEZfUFJPVF9UT19QUk9HUkFN
-X0FERFI7DQo+ID4gIAl3cml0ZWxfcmVsYXhlZChyZWd2YWwsIGRhdGEtPmJhc2UgKyBSRUdfTU1V
-X0NUUkxfUkVHKTsNCj4gPiAgDQo+ID4gIAlyZWd2YWwgPSBGX0wyX01VTElUX0hJVF9FTiB8DQo+
-ID4gQEAgLTU4OSw2ICs2MTksMjAgQEAgc3RhdGljIGludCBtdGtfaW9tbXVfaHdfaW5pdChjb25z
-dCBzdHJ1Y3QgbXRrX2lvbW11X2RhdGEgKmRhdGEpDQo+ID4gIAlpZiAoZGF0YS0+cGxhdF9kYXRh
-LT5yZXNldF9heGkpDQo+ID4gIAkJd3JpdGVsX3JlbGF4ZWQoMCwgZGF0YS0+YmFzZSArIFJFR19N
-TVVfU1RBTkRBUkRfQVhJX01PREUpOw0KPiA+ICANCj4gPiArCWlmIChkYXRhLT5wbGF0X2RhdGEt
-Pmhhc193cl9sZW4pIHsNCj4gPiArCQkvKiB3cml0ZSBjb21tYW5kIHRocm90dGxpbmcgbW9kZSAq
-Lw0KPiA+ICsJCXJlZ3ZhbCA9IHJlYWRsX3JlbGF4ZWQoZGF0YS0+YmFzZSArIFJFR19NTVVfV1Jf
-TEVOKTsNCj4gPiArCQlyZWd2YWwgJj0gfkZfTU1VX1dSX1RIUk9UX0RJUzsNCj4gPiArCQl3cml0
-ZWxfcmVsYXhlZChyZWd2YWwsIGRhdGEtPmJhc2UgKyBSRUdfTU1VX1dSX0xFTik7DQo+ID4gKwl9
-DQo+ID4gKwkvKiBzcGVjaWFsIHNldHRpbmdzIGZvciBtbXUwIChtdWx0aW1lZGlhIGlvbW11KSAq
-Lw0KPiA+ICsJaWYgKGRhdGEtPnBsYXRfZGF0YS0+aGFzX21pc2NfY3RybFtkYXRhLT5tNHVfaWRd
-KSB7DQo+ID4gKwkJcmVndmFsID0gcmVhZGxfcmVsYXhlZChkYXRhLT5iYXNlICsgUkVHX01NVV9N
-SVNDX0NSVExfTVQ2Nzc5KTsNCj4gPiArCQkvKiBub24tc3RhbmRhcmQgQVhJIG1vZGUgKi8NCj4g
-PiArCQlyZWd2YWwgJj0gflJFR19NTVVfU1RBTkRBUkRfQVhJX01PREVfTVQ2Nzc5Ow0KPiA+ICsJ
-CXdyaXRlbF9yZWxheGVkKHJlZ3ZhbCwgZGF0YS0+YmFzZSArIFJFR19NTVVfTUlTQ19DUlRMX01U
-Njc3OSk7DQo+ID4gKwl9DQo+IA0KPiAgICAgIDB4NDggYXJlIFJFR19NTVVfU1RBTkRBUkRfQVhJ
-X01PREUgaW4gYm90aCBtdDgxNzMgYW5kIG10ODE4Mywgd2hpbGUNCj4gaXQgaXMgUkVHX01NVV9N
-SVNDX0NSVEwgaW4gbXQyNzEyLCBtdDY3NzkgYW5kIHRoZSBsYXRlc3Qgc29jLCByaWdodD8gSQ0K
-PiB0aGluayB3ZSBjYW4gdXNlIG9uZSBkZWZpbmluZywgbGlrZSB0aGlzOg0KPiANCj4gICAgICAg
-ICAgICNkZWZpbmUgIFJFR19NTVVfTUlTQ19DVFJMIDB4NDgNCj4gDQo+ICAgICAgICAgIGlmICgh
-ZGF0YS0+cGxhdF9kYXRhLT5oYXNfbWlzY19jdHJsW2RhdGEtPm00dV9pZF0pIHsNCj4gICAgICAg
-ICAgICAgICAgLyogRGlzYWJsZSBzdGFuZGFyZCBheGkgbW9kZSB3aGlsZSBpdCBpcw0KPiBSRUdf
-TU1VX1NUQU5EQVJEX0FYSV9NT0RFICovDQo+IAkJd3JpdGVsX3JlbGF4ZWQoMCwgZGF0YS0+YmFz
-ZSArIFJFR19NTVVfTUlTQ19DVFJMKTsNCj4gCSB9IGVsc2UgaWYgKGRhdGEtPm00dV9pZCA9PSAw
-KSB7DQo+IAkJcmVndmFsID0gcmVhZGxfcmVsYXhlZChkYXRhLT5iYXNlICsgUkVHX01NVV9NSVND
-X0NUUkwpOw0KPiAJCXJlZ3ZhbCAmPSB+UkVHX01NVV9TVEFOREFSRF9BWElfTU9ERV9NVDY3Nzk7
-DQo+IAkJd3JpdGVsX3JlbGF4ZWQocmVndmFsLCBkYXRhLT5iYXNlICsgUkVHX01NVV9NSVNDX0NU
-UkwpOw0KPiAgICAgICAgICB9DQo+IA0KPiAJIE1lYW53aGlsZSByZW1vdmUgdGhlIHNldHRpbmcg
-Zm9yIFJFR19NTVVfU1RBTkRBUkRfQVhJX01PREUgYWJvdmUuDQo+IA0KPiA+ICsNCj4gPiAgCWlm
-IChkZXZtX3JlcXVlc3RfaXJxKGRhdGEtPmRldiwgZGF0YS0+aXJxLCBtdGtfaW9tbXVfaXNyLCAw
-LA0KPiA+ICAJCQkgICAgIGRldl9uYW1lKGRhdGEtPmRldiksICh2b2lkICopZGF0YSkpIHsNCj4g
-PiAgCQl3cml0ZWxfcmVsYXhlZCgwLCBkYXRhLT5iYXNlICsgUkVHX01NVV9QVF9CQVNFX0FERFIp
-Ow0KPiA+IEBAIC02NzgsNiArNzIyLDkgQEAgc3RhdGljIGludCBtdGtfaW9tbXVfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCQl9DQo+ID4gIAkJZGF0YS0+bGFyYl9p
-bXVbaWRdLmRldiA9ICZwbGFyYmRldi0+ZGV2Ow0KPiA+ICANCj4gPiArCQlpZiAoZGF0YS0+cGxh
-dF9kYXRhLT5tNHUxX21hc2sgPT0gKDEgPDwgaWQpKQ0KPiA+ICsJCQlkYXRhLT5tNHVfaWQgPSAx
-Ow0KPiA+ICsNCj4gPiAgCQljb21wb25lbnRfbWF0Y2hfYWRkX3JlbGVhc2UoZGV2LCAmbWF0Y2gs
-IHJlbGVhc2Vfb2YsDQo+ID4gIAkJCQkJICAgIGNvbXBhcmVfb2YsIGxhcmJub2RlKTsNCj4gPiAg
-CX0NCj4gPiBAQCAtNzMxLDYgKzc3OCw3IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgbXRr
-X2lvbW11X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+ICAJc3RydWN0IG10a19pb21t
-dV9zdXNwZW5kX3JlZyAqcmVnID0gJmRhdGEtPnJlZzsNCj4gPiAgCXZvaWQgX19pb21lbSAqYmFz
-ZSA9IGRhdGEtPmJhc2U7DQo+ID4gIA0KPiA+ICsJcmVnLT53cl9sZW4gPSByZWFkbF9yZWxheGVk
-KGJhc2UgKyBSRUdfTU1VX1dSX0xFTik7DQo+ID4gIAlyZWctPnN0YW5kYXJkX2F4aV9tb2RlID0g
-cmVhZGxfcmVsYXhlZChiYXNlICsNCj4gPiAgCQkJCQkgICAgICAgUkVHX01NVV9TVEFOREFSRF9B
-WElfTU9ERSk7DQo+ID4gIAlyZWctPmRjbV9kaXMgPSByZWFkbF9yZWxheGVkKGJhc2UgKyBSRUdf
-TU1VX0RDTV9ESVMpOw0KPiA+IEBAIC03NTYsNiArODA0LDcgQEAgc3RhdGljIGludCBfX21heWJl
-X3VudXNlZCBtdGtfaW9tbXVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiAgCQlkZXZf
-ZXJyKGRhdGEtPmRldiwgIkZhaWxlZCB0byBlbmFibGUgY2xrKCVkKSBpbiByZXN1bWVcbiIsIHJl
-dCk7DQo+ID4gIAkJcmV0dXJuIHJldDsNCj4gPiAgCX0NCj4gPiArCXdyaXRlbF9yZWxheGVkKHJl
-Zy0+d3JfbGVuLCBiYXNlICsgUkVHX01NVV9XUl9MRU4pOw0KPiA+ICAJd3JpdGVsX3JlbGF4ZWQo
-cmVnLT5zdGFuZGFyZF9heGlfbW9kZSwNCj4gPiAgCQkgICAgICAgYmFzZSArIFJFR19NTVVfU1RB
-TkRBUkRfQVhJX01PREUpOw0KPiA+ICAJd3JpdGVsX3JlbGF4ZWQocmVnLT5kY21fZGlzLCBiYXNl
-ICsgUkVHX01NVV9EQ01fRElTKTsNCj4gPiBAQCAtNzc5LDcgKzgyOCwyMCBAQCBzdGF0aWMgY29u
-c3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQyNzEyX2RhdGEgPSB7DQo+ID4gIAkuaGFz
-XzRnYl9tb2RlID0gdHJ1ZSwNCj4gPiAgCS5oYXNfYmNsayAgICAgPSB0cnVlLA0KPiA+ICAJLmhh
-c192bGRfcGFfcm5nICAgPSB0cnVlLA0KPiA+IC0JLmxhcmJpZF9yZW1hcCA9IHswLCAxLCAyLCAz
-LCA0LCA1LCA2LCA3LCA4LCA5fSwNCj4gPiArCS5sYXJiaWRfcmVtYXBbMF0gPSB7MCwgMSwgMiwg
-MywgNCwgNSwgNiwgNywgOCwgOX0sDQo+ID4gKwkuaW52X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9T
-RUwsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9w
-bGF0X2RhdGEgbXQ2Nzc5X2RhdGEgPSB7DQo+ID4gKwkubTR1X3BsYXQgPSBNNFVfTVQ2Nzc5LA0K
-PiA+ICsJLmxhcmJpZF9yZW1hcFswXSA9IHswLCAxLCAyLCAzLCA1LCA3LCAxMCwgOX0sDQo+ID4g
-KwkvKiB2cDZhLCB2cDZiLCBtZGxhL2NvcmUyLCBtZGxhL2VkbWMqLw0KPiA+ICsJLmxhcmJpZF9y
-ZW1hcFsxXSA9IHsyLCAwLCAzLCAxfSwNCj4gPiArCS5oYXNfc3ViX2NvbW0gPSB7dHJ1ZSwgdHJ1
-ZX0sDQo+ID4gKwkuaGFzX3dyX2xlbiA9IHRydWUsDQo+ID4gKwkuaGFzX21pc2NfY3RybCA9IHt0
-cnVlLCBmYWxzZX0sDQo+ID4gKwkuaW52X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9TRUxfTVQ2Nzc5
-LA0KPiA+ICsJLm00dTFfbWFzayA9ICBCSVQoNiksDQo+ID4gIH07DQo+ID4gIA0KPiA+ICBzdGF0
-aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgbXQ4MTczX2RhdGEgPSB7DQo+ID4g
-QEAgLTc4NywxNyArODQ5LDIwIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRf
-ZGF0YSBtdDgxNzNfZGF0YSA9IHsNCj4gPiAgCS5oYXNfNGdiX21vZGUgPSB0cnVlLA0KPiA+ICAJ
-Lmhhc19iY2xrICAgICA9IHRydWUsDQo+ID4gIAkucmVzZXRfYXhpICAgID0gdHJ1ZSwNCj4gPiAt
-CS5sYXJiaWRfcmVtYXAgPSB7MCwgMSwgMiwgMywgNCwgNX0sIC8qIExpbmVhciBtYXBwaW5nLiAq
-Lw0KPiA+ICsJLmxhcmJpZF9yZW1hcFswXSA9IHswLCAxLCAyLCAzLCA0LCA1fSwgLyogTGluZWFy
-IG1hcHBpbmcuICovDQo+ID4gKwkuaW52X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9TRUwsDQo+ID4g
-IH07DQo+ID4gIA0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEg
-bXQ4MTgzX2RhdGEgPSB7DQo+ID4gIAkubTR1X3BsYXQgICAgID0gTTRVX01UODE4MywNCj4gPiAg
-CS5yZXNldF9heGkgICAgPSB0cnVlLA0KPiA+IC0JLmxhcmJpZF9yZW1hcCA9IHswLCA0LCA1LCA2
-LCA3LCAyLCAzLCAxfSwNCj4gPiArCS5sYXJiaWRfcmVtYXBbMF0gPSB7MCwgNCwgNSwgNiwgNywg
-MiwgMywgMX0sDQo+ID4gKwkuaW52X3NlbF9yZWcgPSBSRUdfTU1VX0lOVl9TRUwsDQo+ID4gIH07
-DQo+ID4gIA0KPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfaW9tbXVf
-b2ZfaWRzW10gPSB7DQo+ID4gIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcxMi1tNHUi
-LCAuZGF0YSA9ICZtdDI3MTJfZGF0YX0sDQo+ID4gKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVr
-LG10Njc3OS1tNHUiLCAuZGF0YSA9ICZtdDY3NzlfZGF0YX0sDQo+ID4gIAl7IC5jb21wYXRpYmxl
-ID0gIm1lZGlhdGVrLG10ODE3My1tNHUiLCAuZGF0YSA9ICZtdDgxNzNfZGF0YX0sDQo+ID4gIAl7
-IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1tNHUiLCAuZGF0YSA9ICZtdDgxODNfZGF0
-YX0sDQo+ID4gIAl7fQ0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5o
-IGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiA+IGluZGV4IGVhOTQ5YTMyNGUzMy4uMTMy
-ZGM3NjVhNDBiIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4g
-PiArKysgYi9kcml2ZXJzL2lvbW11L210a19pb21tdS5oDQo+ID4gQEAgLTI1LDExICsyNSwxMyBA
-QCBzdHJ1Y3QgbXRrX2lvbW11X3N1c3BlbmRfcmVnIHsNCj4gPiAgCXUzMgkJCQlpbnRfbWFpbl9j
-b250cm9sOw0KPiA+ICAJdTMyCQkJCWl2cnBfcGFkZHI7DQo+ID4gIAl1MzIJCQkJdmxkX3BhX3Ju
-ZzsNCj4gPiArCXUzMgkJCQl3cl9sZW47DQo+ID4gIH07DQo+ID4gIA0KPiA+ICBlbnVtIG10a19p
-b21tdV9wbGF0IHsNCj4gPiAgCU00VV9NVDI3MDEsDQo+ID4gIAlNNFVfTVQyNzEyLA0KPiA+ICsJ
-TTRVX01UNjc3OSwNCj4gPiAgCU00VV9NVDgxNzMsDQo+ID4gIAlNNFVfTVQ4MTgzLA0KPiA+ICB9
-Ow0KPiA+IEBAIC00Miw3ICs0NCwxMiBAQCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSB7DQo+
-ID4gIAlib29sICAgICAgICAgICAgICAgIGhhc19iY2xrOw0KPiA+ICAJYm9vbCAgICAgICAgICAg
-ICAgICBoYXNfdmxkX3BhX3JuZzsNCj4gPiAgCWJvb2wgICAgICAgICAgICAgICAgcmVzZXRfYXhp
-Ow0KPiA+IC0JdW5zaWduZWQgY2hhciAgICAgICBsYXJiaWRfcmVtYXBbTVRLX0xBUkJfTlJfTUFY
-XTsNCj4gPiArCWJvb2wgICAgICAgICAgICAgICAgaGFzX3N1Yl9jb21tWzJdOw0KPiA+ICsJYm9v
-bCAgICAgICAgICAgICAgICBoYXNfd3JfbGVuOw0KPiA+ICsJYm9vbCAgICAgICAgICAgICAgICBo
-YXNfbWlzY19jdHJsWzJdOw0KPiA+ICsJdTMyICAgICAgICAgICAgICAgICBpbnZfc2VsX3JlZzsN
-Cj4gPiArCXUzMiAgICAgICAgICAgICAgICAgbTR1MV9tYXNrOw0KPiANCj4gYWxwaGFiZXRpY2Fs
-bHkgZm9yIHRoZSBuZXcgb25lcy4NCj4gDQo+ID4gKwl1bnNpZ25lZCBjaGFyICAgICAgIGxhcmJp
-ZF9yZW1hcFsyXVtNVEtfTEFSQl9OUl9NQVhdOw0KPiA+ICB9Ow0KPiA+ICANCj4gPiAgc3RydWN0
-IG10a19pb21tdV9kb21haW47DQo+ID4gQEAgLTU5LDYgKzY2LDcgQEAgc3RydWN0IG10a19pb21t
-dV9kYXRhIHsNCj4gPiAgCWJvb2wgICAgICAgICAgICAgICAgICAgICAgICAgICAgZW5hYmxlXzRH
-QjsNCj4gPiAgCXNwaW5sb2NrX3QJCQl0bGJfbG9jazsgLyogbG9jayBmb3IgdGxiIHJhbmdlIGZs
-dXNoICovDQo+ID4gIA0KPiA+ICsJdTMyCQkJCW00dV9pZDsNCj4gPiAgCXN0cnVjdCBpb21tdV9k
-ZXZpY2UJCWlvbW11Ow0KPiA+ICAJY29uc3Qgc3RydWN0IG10a19pb21tdV9wbGF0X2RhdGEgKnBs
-YXRfZGF0YTsNCj4gDQo+IEJhc2ljYWxseSB0aGlzIHBhdGNoIGxvb2tzIG9rIGZvciBtZS4gQnV0
-IHBsZWFzZSBzcGxpdCBpdCB0byBzZXZlcmFsDQo+IHBhdGNoZXM6DQo+IA0KPiAxKSBFeHRlbmQg
-bGFyYmlkX3JlbWFwIHRvIGxhcmJpZF9yZW1hcFsyXS4NCj4gICAgQWN0dWFsbHkgbXQyNzEyIGFs
-c28gbmVlZCB0aGlzLiB0aGlzIGlzIHRoZSBtdDI3MTIgZGVmaW5pdGlvbi4NCj4gICAgbGFyYmlk
-X3JlbWFwWzBdID0gezAsIDEsIDIsIDN9LA0KPiAgICBsYXJiaWRfcmVtYXBbMV0gPSB7NCwgNSwg
-NywgOCwgOX0sDQo+IA0KPiAyKSBSZWdhcmRpbmcgdGhlIDB4NDgobWlzY19jdHJsIHJlZ2lzdGVy
-KQ0KPiANCj4gMykgQWRkIG00dTFfbWFzayB0byBkaXN0aW5ndWlzaCB0aGUgbTR1X2lkLg0KPiAN
-Cj4gNCkgQWRkIFJFR19NTVVfV1JfTEVOIGlmIHlvdSBuZWVkLg0KPiANCj4gNSkgUHV0IGludl9z
-ZWxfcmVnIGluIHRoZSBwbGF0X2RhdGEgZm9yIHByZXBhcmluZyBhZGQgMHgyYyBzdXBwb3J0IGlu
-DQo+IG10Njc3OS4NCj4gDQo+IDYpIEFkZCBuZXcgZmxvdyB0byBnZXQgU1VCX0NPTU1PTiBJRCBh
-bmQgVlBVIGxhcmJpZCBpbiB0aGUgdHJhbnNsYXRpb24NCj4gZmF1bHQuDQo+IA0KPiA3KSBBZGQg
-bXQ2Nzc5IHN1cHBvcnQuDQo+IA0KPiA+IA0KDQpvaywgSSB3aWxsIG1vZGlmeSB0aGVtIGZvciB5
-b3VyIGFib3ZlIGNvbW1lbnRzIGluIG5leHQgdmVyc2lvbiwgdGhhbmtzDQoNCj4gIA0KPiANCj4g
-DQoNCg==
+> On Wed, 11 Dec 2019 10:59:44 +0100
+> <tomislav.denis@avl.com> wrote:
+>=20
+> > From: Tomislav Denis <tomislav.denis@avl.com>
+> >
+> > All Sensors DLH is series of low voltage digital pressure sensors.
+> > Additionally to pressure value sensors deliver a temperature value.
+> > Sensors can be accessed over I2C and SPI, this driver supports only
+> > I2C access.
+> >
+> > Signed-off-by: Tomislav Denis <tomislav.denis@avl.com>
+>=20
+> Gah. My explanation on the wildcard naming thing was not clear before.
+> Sorry about that.  What I meant was this needs to have an explicit
+> name after a single part number.   I've renamed
+> as dlhl60d.c and all similar places.
+> I left the define prefix as DLH_ as unlikely we'll get any problems with =
+that.
+>=20
+> Applied to the togreg branch of iio.git and pushed out as testing for the
+> autobuilders to see if they can break it.
+>=20
+> Thanks,
+>=20
+> Jonathan
+>=20
+
+Hi Jonathan,
+
+Ok great. Thanks a lot for helping me with this, I've learned a lot from yo=
+u.
+
+Tomislav
+
+> > ---
+> >  MAINTAINERS                   |   7 +
+> >  drivers/iio/pressure/Kconfig  |  12 ++
+> >  drivers/iio/pressure/Makefile |   1 +
+> >  drivers/iio/pressure/dlh.c    | 375
+> ++++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 395 insertions(+)
+> >  create mode 100644 drivers/iio/pressure/dlh.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS index d5ea4e4..0fa24df 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -668,6 +668,13 @@ S:	Maintained
+> >  F:	Documentation/i2c/busses/i2c-ali1563.rst
+> >  F:	drivers/i2c/busses/i2c-ali1563.c
+> >
+> > +ALL SENSORS DLH SERIES PRESSURE SENSORS DRIVER
+> > +M:	Tomislav Denis <tomislav.denis@avl.com>
+> > +W:	http://www.allsensors.com/
+> > +S:	Maintained
+> > +L:	linux-iio@vger.kernel.org
+> > +F:	drivers/iio/pressure/dlh.c
+> > +
+> >  ALLEGRO DVT VIDEO IP CORE DRIVER
+> >  M:	Michael Tretter <m.tretter@pengutronix.de>
+> >  R:	Pengutronix Kernel Team <kernel@pengutronix.de>
+> > diff --git a/drivers/iio/pressure/Kconfig
+> > b/drivers/iio/pressure/Kconfig index ba420e4..3d383d8 100644
+> > --- a/drivers/iio/pressure/Kconfig
+> > +++ b/drivers/iio/pressure/Kconfig
+> > @@ -53,6 +53,18 @@ config IIO_CROS_EC_BARO
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called cros_ec_baro.
+> >
+> > +config DLH
+> > +	tristate "All Sensors DLH series low voltage digital pressure sensors=
+"
+> > +	depends on I2C
+> > +	select IIO_BUFFER
+> > +	select IIO_TRIGGERED_BUFFER
+> > +	help
+> > +	  Say yes here to build support for the All Sensors DLH series
+> > +	  pressure sensors driver.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called dlh.
+> > +
+> >  config DPS310
+> >  	tristate "Infineon DPS310 pressure and temperature sensor"
+> >  	depends on I2C
+> > diff --git a/drivers/iio/pressure/Makefile
+> > b/drivers/iio/pressure/Makefile index d8f5ace..c609ad4 100644
+> > --- a/drivers/iio/pressure/Makefile
+> > +++ b/drivers/iio/pressure/Makefile
+> > @@ -9,6 +9,7 @@ obj-$(CONFIG_BMP280) +=3D bmp280.o  bmp280-objs :=3D
+> > bmp280-core.o bmp280-regmap.o
+> >  obj-$(CONFIG_BMP280_I2C) +=3D bmp280-i2c.o
+> >  obj-$(CONFIG_BMP280_SPI) +=3D bmp280-spi.o
+> > +obj-$(CONFIG_DLH) +=3D dlh.o
+> >  obj-$(CONFIG_DPS310) +=3D dps310.o
+> >  obj-$(CONFIG_IIO_CROS_EC_BARO) +=3D cros_ec_baro.o
+> >  obj-$(CONFIG_HID_SENSOR_PRESS)   +=3D hid-sensor-press.o
+> > diff --git a/drivers/iio/pressure/dlh.c b/drivers/iio/pressure/dlh.c
+> > new file mode 100644 index 0000000..18fc4e1
+> > --- /dev/null
+> > +++ b/drivers/iio/pressure/dlh.c
+> > @@ -0,0 +1,375 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * All Sensors DLH series low voltage digital pressure sensors
+> > + *
+> > + * Copyright (c) 2019 AVL DiTEST GmbH
+> > + *   Tomislav Denis <tomislav.denis@avl.com>
+> > + *
+> > + * Datasheet: http://www.allsensors.com/cad/DS-0355_Rev_B.PDF
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/iio/iio.h>
+> > +#include <linux/iio/buffer.h>
+> > +#include <linux/iio/trigger_consumer.h> #include
+> > +<linux/iio/triggered_buffer.h> #include <asm/unaligned.h>
+> > +
+> > +/* Commands */
+> > +#define DLH_START_SINGLE    0xAA
+> > +
+> > +/* Status bits */
+> > +#define DLH_STATUS_OK       0x40
+> > +
+> > +/* DLH  data format */
+> > +#define DLH_NUM_READ_BYTES  7
+> > +#define DLH_NUM_DATA_BYTES  3
+> > +#define DLH_NUM_PR_BITS     24
+> > +#define DLH_NUM_TEMP_BITS   24
+> > +
+> > +/* DLH  timings */
+> > +#define DLH_SINGLE_DUT_MS   5
+> > +
+> > +enum dhl_ids {
+> > +	dlhl60d,
+> > +	dlhl60g,
+> > +};
+> > +
+> > +struct dlh_info {
+> > +	u8 osdig;           /* digital offset factor */
+> > +	unsigned int fss;   /* full scale span (inch H2O) */
+> > +};
+> > +
+> > +struct dlh_state {
+> > +	struct i2c_client *client;
+> > +	struct dlh_info info;
+> > +	bool use_interrupt;
+> > +	struct completion completion;
+> > +	u8 rx_buf[DLH_NUM_READ_BYTES] ____cacheline_aligned; };
+> > +
+> > +static struct dlh_info dlh_info_tbl[] =3D {
+> > +	[dlhl60d] =3D {
+> > +		.osdig =3D 2,
+> > +		.fss =3D 120,
+> > +	},
+> > +	[dlhl60g] =3D {
+> > +		.osdig =3D 10,
+> > +		.fss =3D 60,
+> > +	},
+> > +};
+> > +
+> > +
+> > +static int dlh_cmd_start_single(struct dlh_state *st) {
+> > +	int ret;
+> > +
+> > +	ret =3D i2c_smbus_write_byte(st->client, DLH_START_SINGLE);
+> > +	if (ret)
+> > +		dev_err(&st->client->dev,
+> > +			"%s: I2C write byte failed\n", __func__);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int dlh_cmd_read_data(struct dlh_state *st) {
+> > +	int ret;
+> > +
+> > +	ret =3D i2c_master_recv(st->client, st->rx_buf,
+> DLH_NUM_READ_BYTES);
+> > +	if (ret < 0) {
+> > +		dev_err(&st->client->dev,
+> > +			"%s: I2C read block failed\n", __func__);
+> > +		return ret;
+> > +	}
+> > +
+> > +	if (st->rx_buf[0] !=3D DLH_STATUS_OK) {
+> > +		dev_err(&st->client->dev,
+> > +			"%s: invalid status 0x%02x\n", __func__, st-
+> >rx_buf[0]);
+> > +		return -EBUSY;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int dlh_start_capture_and_read(struct dlh_state *st) {
+> > +	int ret;
+> > +
+> > +	if (st->use_interrupt)
+> > +		reinit_completion(&st->completion);
+> > +
+> > +	ret =3D dlh_cmd_start_single(st);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	if (st->use_interrupt) {
+> > +		ret =3D wait_for_completion_timeout(&st->completion,
+> > +			msecs_to_jiffies(DLH_SINGLE_DUT_MS));
+> > +		if (!ret) {
+> > +			dev_err(&st->client->dev,
+> > +				"%s: conversion timed out\n", __func__);
+> > +			return -ETIMEDOUT;
+> > +		}
+> > +	} else {
+> > +		mdelay(DLH_SINGLE_DUT_MS);
+> > +	}
+> > +
+> > +	return dlh_cmd_read_data(st);
+> > +}
+> > +
+> > +static int dlh_read_direct(struct dlh_state *st,
+> > +	unsigned int *pressure, unsigned int *temperature) {
+> > +	int ret;
+> > +
+> > +	ret =3D dlh_start_capture_and_read(st);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	*pressure =3D get_unaligned_be32(&st->rx_buf[1]) >> 8;
+> > +	*temperature =3D get_unaligned_be32(&st->rx_buf[3]) &
+> > +		GENMASK(DLH_NUM_TEMP_BITS - 1, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int dlh_read_raw(struct iio_dev *indio_dev,
+> > +	struct iio_chan_spec const *channel, int *value,
+> > +	int *value2, long mask)
+> > +{
+> > +	struct dlh_state *st =3D iio_priv(indio_dev);
+> > +	unsigned int pressure, temperature;
+> > +	int ret;
+> > +	s64 tmp;
+> > +	s32 rem;
+> > +
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_RAW:
+> > +		ret =3D iio_device_claim_direct_mode(indio_dev);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		ret =3D dlh_read_direct(st, &pressure, &temperature);
+> > +		iio_device_release_direct_mode(indio_dev);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		switch (channel->type) {
+> > +		case IIO_PRESSURE:
+> > +			*value =3D pressure;
+> > +			return IIO_VAL_INT;
+> > +
+> > +		case IIO_TEMP:
+> > +			*value =3D temperature;
+> > +			return IIO_VAL_INT;
+> > +
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	case IIO_CHAN_INFO_SCALE:
+> > +		switch (channel->type) {
+> > +		case IIO_PRESSURE:
+> > +			tmp =3D div_s64(125LL * st->info.fss * 24909 * 100,
+> > +				1 << DLH_NUM_PR_BITS);
+> > +			tmp =3D div_s64_rem(tmp, 1000000000LL, &rem);
+> > +			*value =3D tmp;
+> > +			*value2 =3D rem;
+> > +			return IIO_VAL_INT_PLUS_NANO;
+> > +
+> > +		case IIO_TEMP:
+> > +			*value =3D 125 * 1000;
+> > +			*value2 =3D DLH_NUM_TEMP_BITS;
+> > +			return IIO_VAL_FRACTIONAL_LOG2;
+> > +
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	case IIO_CHAN_INFO_OFFSET:
+> > +		switch (channel->type) {
+> > +		case IIO_PRESSURE:
+> > +			*value =3D -125 * st->info.fss * 24909;
+> > +			*value2 =3D 100 * st->info.osdig * 100000;
+> > +			return IIO_VAL_FRACTIONAL;
+> > +
+> > +		case IIO_TEMP:
+> > +			*value =3D -40 * 1000;
+> > +			return IIO_VAL_INT;
+> > +
+> > +		default:
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	return -EINVAL;
+> > +}
+> > +
+> > +static const struct iio_info dlh_info =3D {
+> > +	.read_raw =3D dlh_read_raw,
+> > +};
+> > +
+> > +static const struct iio_chan_spec dlh_channels[] =3D {
+> > +	{
+> > +		.type =3D IIO_PRESSURE,
+> > +		.indexed =3D 1,
+> > +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),
+> > +		.info_mask_shared_by_type =3D
+> > +			BIT(IIO_CHAN_INFO_SCALE) |
+> > +			BIT(IIO_CHAN_INFO_OFFSET),
+> > +		.scan_index =3D 0,
+> > +		.scan_type =3D {
+> > +			.sign =3D 'u',
+> > +			.realbits =3D DLH_NUM_PR_BITS,
+> > +			.storagebits =3D 32,
+> > +			.shift =3D 8,
+> > +			.endianness =3D IIO_BE,
+> > +		},
+> > +	}, {
+> > +		.type =3D IIO_TEMP,
+> > +		.indexed =3D 1,
+> > +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),
+> > +		.info_mask_shared_by_type =3D
+> > +			BIT(IIO_CHAN_INFO_SCALE) |
+> > +			BIT(IIO_CHAN_INFO_OFFSET),
+> > +		.scan_index =3D 1,
+> > +		.scan_type =3D {
+> > +			.sign =3D 'u',
+> > +			.realbits =3D DLH_NUM_TEMP_BITS,
+> > +			.storagebits =3D 32,
+> > +			.shift =3D 8,
+> > +			.endianness =3D IIO_BE,
+> > +		},
+> > +	}
+> > +};
+> > +
+> > +static irqreturn_t dlh_trigger_handler(int irq, void *private) {
+> > +	struct iio_poll_func *pf =3D private;
+> > +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> > +	struct dlh_state *st =3D iio_priv(indio_dev);
+> > +	int ret;
+> > +	unsigned int chn, i =3D 0;
+> > +	__be32 tmp_buf[2];
+> > +
+> > +	ret =3D dlh_start_capture_and_read(st);
+> > +	if (ret)
+> > +		goto out;
+> > +
+> > +	for_each_set_bit(chn, indio_dev->active_scan_mask,
+> > +		indio_dev->masklength) {
+> > +		memcpy(tmp_buf + i,
+> > +			&st->rx_buf[1] + chn * DLH_NUM_DATA_BYTES,
+> > +			DLH_NUM_DATA_BYTES);
+> > +		i++;
+> > +	}
+> > +
+> > +	iio_push_to_buffers(indio_dev, tmp_buf);
+> > +
+> > +out:
+> > +	iio_trigger_notify_done(indio_dev->trig);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static irqreturn_t dlh_interrupt(int irq, void *private) {
+> > +	struct iio_dev *indio_dev =3D private;
+> > +	struct dlh_state *st =3D iio_priv(indio_dev);
+> > +
+> > +	complete(&st->completion);
+> > +
+> > +	return IRQ_HANDLED;
+> > +};
+> > +
+> > +static int dlh_probe(struct i2c_client *client,
+> > +	const struct i2c_device_id *id)
+> > +{
+> > +	struct dlh_state *st;
+> > +	struct iio_dev *indio_dev;
+> > +	int ret;
+> > +
+> > +	if (!i2c_check_functionality(client->adapter,
+> > +		I2C_FUNC_I2C | I2C_FUNC_SMBUS_WRITE_BYTE)) {
+> > +		dev_err(&client->dev,
+> > +			"adapter doesn't support required i2c
+> functionality\n");
+> > +		return -EOPNOTSUPP;
+> > +	}
+> > +
+> > +	indio_dev =3D devm_iio_device_alloc(&client->dev, sizeof(*st));
+> > +	if (!indio_dev) {
+> > +		dev_err(&client->dev, "failed to allocate iio device\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	i2c_set_clientdata(client, indio_dev);
+> > +
+> > +	st =3D iio_priv(indio_dev);
+> > +	st->info =3D dlh_info_tbl[id->driver_data];
+> > +	st->client =3D client;
+> > +	st->use_interrupt =3D false;
+> > +
+> > +	indio_dev->name =3D id->name;
+> > +	indio_dev->dev.parent =3D &client->dev;
+> > +	indio_dev->dev.of_node =3D client->dev.of_node;
+> > +	indio_dev->info =3D &dlh_info;
+> > +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> > +	indio_dev->channels =3D  dlh_channels;
+> > +	indio_dev->num_channels =3D ARRAY_SIZE(dlh_channels);
+> > +
+> > +	if (client->irq > 0) {
+> > +		ret =3D devm_request_threaded_irq(&client->dev, client->irq,
+> > +			dlh_interrupt, NULL,
+> > +			IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+> > +			id->name, indio_dev);
+> > +		if (ret) {
+> > +			dev_err(&client->dev, "failed to allocate threaded
+> irq");
+> > +			return ret;
+> > +		}
+> > +
+> > +		st->use_interrupt =3D true;
+> > +		init_completion(&st->completion);
+> > +	}
+> > +
+> > +	ret =3D devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
+> > +		NULL, &dlh_trigger_handler, NULL);
+> > +	if (ret) {
+> > +		dev_err(&client->dev, "failed to setup iio buffer\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret =3D devm_iio_device_register(&client->dev, indio_dev);
+> > +	if (ret)
+> > +		dev_err(&client->dev, "failed to register iio device\n");
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static const struct of_device_id dlh_of_match[] =3D {
+> > +	{ .compatible =3D "asc,dlhl60d" },
+> > +	{ .compatible =3D "asc,dlhl60g" },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, dlh_of_match);
+> > +
+> > +static const struct i2c_device_id dlh_id[] =3D {
+> > +	{ "dlhl60d",    dlhl60d },
+> > +	{ "dlhl60g",    dlhl60g },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, dlh_id);
+> > +
+> > +static struct i2c_driver dlh_driver =3D {
+> > +	.driver =3D {
+> > +		.name =3D "dlh",
+> > +		.of_match_table =3D dlh_of_match,
+> > +	},
+> > +	.probe =3D dlh_probe,
+> > +	.id_table =3D dlh_id,
+> > +};
+> > +module_i2c_driver(dlh_driver);
+> > +
+> > +MODULE_AUTHOR("Tomislav Denis <tomislav.denis@avl.com>");
+> > +MODULE_DESCRIPTION("Driver for All Sensors DLH series pressure
+> > +sensors"); MODULE_LICENSE("GPL v2");
 
