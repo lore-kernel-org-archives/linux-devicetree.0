@@ -2,106 +2,127 @@ Return-Path: <SRS0=FlbI=2P=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1672C2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 17:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D6C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 17:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2FA2072A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 17:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="WSYuWWjH"
+	by mail.kernel.org (Postfix) with ESMTP id 1590520722
+	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 17:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577296671;
+	bh=9Xq4VcjOueDmHCx5x1MsWoS3HcZBZ8M/IUkjuiAPHRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pP35QljmJLg3NfPxuYk9v6l6N6JFnHOKeg6VqQENFRLV708nHPYMa2ciJamfWwv1H
+	 T1jCek1vwdSpRnCrYqQ5sLkKxTM2FFoGAM/1esTah+KbUsXoSmYsXMdrfDZfbSJCVM
+	 cogkaJKtQsoVesuN7EFLs9Yaq5/vD084UKSBB9qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbfLYRBt (ORCPT
+        id S1726410AbfLYR5u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 12:01:49 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:15639 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726397AbfLYRBs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 12:01:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577293304;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=OoOmW3Xk0QeJPZM69nPutxxHH8KJBgrsbAwySS3OQwQ=;
-        b=WSYuWWjHWbJ0/KGAEK9MEcRC8qI/XkpT3hGVTwL0lku6iRq0PYQeF9ltLLpKD6Y5vs
-        hs1l0IMJ1J2xB9kfEU6BK/U19HfMrb3u++vzqIbO2U0l6nuMEvAyKVT0nbcndz9mNb6t
-        IFq/2FhfjfTvgkC3/2GahV+xouua/fxef8xjffRk2d9me4VmxgzrIsx1r7mG887EI8kG
-        wJm8iXp5vJbJ+n8VjAEZOA/tNjWXMJLug8GRpjmwkjc5FaTdG/zTWeda64B/2TkT+oCn
-        uHU5PXx/4MenuvEZA7+wjxN/XRVailQVvSTCJ+wAe4VpRtWIgwz+8NJXwPFs7CJz/o3k
-        +DKg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBi5wp385lpdu3KwbY="
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.2.8]
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id a09dafvBPH1T4hq
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Wed, 25 Dec 2019 18:01:29 +0100 (CET)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] ARM: dts: Add omap3-echo
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191224184503.GK35479@atomide.com>
-Date:   Wed, 25 Dec 2019 18:01:33 +0100
-Cc:     =?utf-8?Q?Andr=C3=A9_Hentschel?= <nerv@dawncrow.de>,
-        webmaster@dawncrow.de, linux@arm.linux.org.uk, robh+dt@kernel.org,
-        mark.rutland@arm.com, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com>
-References: <20191224161005.28083-1-nerv@dawncrow.de> <20191224184503.GK35479@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Wed, 25 Dec 2019 12:57:50 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50258 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726353AbfLYR5u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 12:57:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lwfuEESWR4zX92Iq386iPtYoiE2TFNKpmeIvlfpb3Os=; b=ApchFp7KIms6vjJID9dvLZ2r+
+        PQTXOQ3OE960aPn9u/+AEYhG5LzJsAxA97mGha1rgYrqURa9QEAAH7eh+NOHB2MZv5A7/H4K/k4Ed
+        5kADNv5RtiErBeCzhHvh83uuv3GbqAUlGdvzN1dYcQdVJ3imwsytSCMn80BheYSlj5qg0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1ikAuf-0001kC-72; Wed, 25 Dec 2019 17:57:37 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 77952D01A24; Wed, 25 Dec 2019 17:57:36 +0000 (GMT)
+Date:   Wed, 25 Dec 2019 17:57:36 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 12/19] ASoC: tegra: Add initial parent configuration
+ for audio mclk
+Message-ID: <20191225175736.GC27497@sirena.org.uk>
+References: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
+ <1576880825-15010-13-git-send-email-skomatineni@nvidia.com>
+ <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
+Content-Disposition: inline
+In-Reply-To: <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
+X-Cookie: I have many CHARTS and DIAGRAMS..
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-> Am 24.12.2019 um 19:45 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * Andr=C3=A9 Hentschel <nerv@dawncrow.de> [191224 16:11]:
->> This is the first generation Amazon Echo from 2016.
->> Audio support is not yet implemented.
->=20
-> OK looks good to me, just worried about one part:
->=20
->> +&sgx_module {
->> +	status =3D "disabled";
->> +};
->=20
-> We should have a separate am3703.dtsi or whatever the SoC model
-> disabling sgx if not there on the SoC.
+--gr/z0/N6AeWAPJVB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think the am3703 is a dm3730 (omap3630) where the SGX and the
-DSP have not passed production test and are "disabled" by eFuses.
-This is a common procedure in silicon production to increase yield.
+On Mon, Dec 23, 2019 at 12:14:34AM +0300, Dmitry Osipenko wrote:
+> 21.12.2019 01:26, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > Tegra PMC clock clk_out_1 is dedicated for audio mclk from Tegra30
+> > through Tegra210 and currently Tegra clock driver does initial parent
+> > configuration for audio mclk "clk_out_1" and enables them by default.
 
-Therefore, there is a register which allows to dynamically determine
-what components (SGX and DSP) are available on a specific SoC chip.
-See "Table 1-6. Chip Identification" in the common
-"AM/DM37x Multimedia Device TRM".
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
 
-Such bits exists for omap34xx and for omap36xx (aka am37xx/dm37xx).
+> > -	clk_disable_unprepare(data->clk_cdev1);
+> > -	clk_disable_unprepare(data->clk_pll_a_out0);
+> > -	clk_disable_unprepare(data->clk_pll_a);
+> > +	if (__clk_is_enabled(data->clk_cdev1))
+> > +		clk_disable_unprepare(data->clk_cdev1);
 
-That way there is no need to disable/enable sgx through device tree
-variations and introducing more complexity by introducing more and more
-DTS for variants (am3703.dtsi, am3715.dtsi, dm3720.dtsi, dm3730.dtsi?).
+> The root of the problem is that you removed clocks enabling from
+> tegra_asoc_utils_init().
 
-BTW: what about a board that is/was produced in either am3703 or dm3730
-variants? Can they still share an omap36xx.dtsi based DTB?
+> I'm not sure why clocks should be disabled during the rate-changing,
+> probably this action is not really needed.
 
-So IMHO if there is an issue with sgx enabled on am3703 but no SGX
-hardware available on a specific SoC, the sysc setup should somehow read
-the bits and effectively disable all SGX related setup if it is not
-available on the SoC. If I remember correctly, some older hwmods did
-such things by checking SoC variant bits.
+I know nothing about this particular device but this is not that
+unusual a restriction for audio hardware, you often can't
+robustly reconfigure the clocking for a device while it's active
+due to issues in the hardware.  You often see issues with FIFOs
+glitching or state machines getting stuck.  This may not be an
+issue here but if it's something that's documented as a
+requirement it's probably good to pay attention.
 
-BR and thanks,
-Nikolaus
+--gr/z0/N6AeWAPJVB
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4Dow8ACgkQJNaLcl1U
+h9CI+gf+NTSVmEXknNylmrROVvkijHFJkHpvx7hDJFGvYsu/qNKP8FkbIRWeKkE1
+h1R5yupSd5QDSNRwtOG2Z3ZO5Dv/HYo+FmOIz+XDFNyKI7MU3fr4CkEzwZXcUzKt
+GcGGfzcxYPJ8H7f5tbVvNjRHu+DiDvHEFvShhKUbHk7HJYqCrG6eMCfEDHlEkHU5
+PkAp309INr7VEQSuch/JBXbvvI0glE66kcLH9CrHVdmrqc7hR8DmCm+49lGBOfIM
+Jv1ylQj/Kx52U/zErkRqc9nsAkgJtQVafmwwCFj5SEeJIpCIanlTUXbRFRMkaMBL
+5zpR7FZej7V40gjlWEGR0RaT9x6r5Q==
+=c7E7
+-----END PGP SIGNATURE-----
+
+--gr/z0/N6AeWAPJVB--
