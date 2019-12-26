@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51669C2D0DE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AEBC2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FB92075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F712075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uiH/hT6t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MDeul3j2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLZCQt (ORCPT
+        id S1726965AbfLZCQ2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 21:16:49 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50363 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726960AbfLZCQh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 21:16:37 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so2753886pjb.0;
-        Wed, 25 Dec 2019 18:16:37 -0800 (PST)
+        Wed, 25 Dec 2019 21:16:28 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:54152 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfLZCQ0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 21:16:26 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so2747707pjc.3;
+        Wed, 25 Dec 2019 18:16:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0xNn8rOhvQ0q/eVsblgqPKWbsQdxuQgNbseY+ebe5zk=;
-        b=uiH/hT6t6N6748th+48BCkyAR9uJD4b2RaXJ/h0XZhFcgflKtDXLZQmQiA3JzpMJGs
-         Zd0RCN6QwOdEnsZJTQagx5UyQtzRsrjgoEd2sJhTKFVlpFnJCAe/fqUJuM69bqV5U58t
-         WL0h/LsNJ7p1N4IjrgvxU1mzQyZhwtplLhmvfjopUf4OeHziS4iekLjfA0pQIPQpVQpL
-         JsoqRFxpIQtzdc7FVY5IPwKdLWv3IfOQidAAueRTeKeb6IOKQTgGB67e9TTGyqZlOXpa
-         D2hL7mdfMwrJJu5EL+ZVe4/EnSIibbtc/lxzEZyxaCCOz+HwitrJh1+s41RPbuSW0NGr
-         JFRA==
+        bh=ORrC0T+zd9DLceUTGoVwHDDyI0A9+B1dcciiqwr3CkI=;
+        b=MDeul3j2rTeg8/ocMh5LD+51TBdlOjAdiXkN/DLjMbBw6dpoI1hM9dwFzcDJTZF0ND
+         vYlbM5nMdJ9mIuDtwHh3Sd44NdevsnP6AVsgHvMP5JwuQBdc9R//jAOAnh3Z8Tvx9D1s
+         P3ZuyqiRmhVOczH4omjoL3uWctL6Tex53t/V0hwrdlIIXcv18qVGGE8/2ImGDqOVBi/6
+         7BOHthHyLZjx9IU1lvuCD68vSFWuP/k1ONV6wI4W7JFWzTJ6BrYepo+2mpNdWVMQusuE
+         UDCivAU5V84hcrXwGqX90s8BftWmtkDIXS1pgGGXwtK0P+67ywz0SBr8sPmIX9aQY+qF
+         s6UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0xNn8rOhvQ0q/eVsblgqPKWbsQdxuQgNbseY+ebe5zk=;
-        b=nKX0XatxvOHWKJTiJgR8Oc7XUDVPCtJKv/yXlbdsNvG3Uscx6M8hGccxA9fDFVZSy1
-         2HArHjIT2TLBieXKIVDQ/8TaHl7K7otYZMjnUIDxLygk3Y8vu73vfmdUPFBxyQoBzs4z
-         ozFoyrPxhaqYohmhgJrPQivzFYW7okpL7RL+dvqPiWr0DaiUcA1St5n/+m9Ywjj55jN3
-         7Bn2IJCS5EIMgIF/XrVoDYVQyWp8gGkpqaCIONTACZufEsEfrzZSUvwl3chO58ahSC/W
-         h0+W6tpjnUtQvOnp6vDK2B9B2EMdhK3L8a+1jYxSobpTvfiBdk2ab37DN5d3WVeEqOFb
-         ceFw==
-X-Gm-Message-State: APjAAAUZQ6w/w0deM4bCKGKiGomdxhco+XDz966azvE/nZ3IjAW5cJLf
-        mhhkh/208Foq7lk7G4E0IK12hoJq
-X-Google-Smtp-Source: APXvYqyyk+sKrngMza8Vnp27YMJnAMAIgvq+TTfss04Qs9J89dP1kprzwI916gHpkL7bvb79KtZjYQ==
-X-Received: by 2002:a17:902:9a98:: with SMTP id w24mr43971499plp.300.1577326596658;
-        Wed, 25 Dec 2019 18:16:36 -0800 (PST)
+        bh=ORrC0T+zd9DLceUTGoVwHDDyI0A9+B1dcciiqwr3CkI=;
+        b=cI38IXP5KhqeUk7vGvMx0uFoDo6HeWPyKIzfULJ1uO2h/ghjp0PIBeI5f+i2rsKB5p
+         nBfGQK42NB1HjtzAd0NM+Tv0yMim2ZuwBweZOoKMSxNXCdcQn5LnD3+Ct1ZpKplx6wvs
+         2HkJ/ReZFqtOaXHDdJoxok1+9BnTj5tS1ttBHIs/9a8VbPHApnDgWcHo3tQUhAP0kJfw
+         MWy2kuhGIa11e/r3NJadcGTNbRtyBkQFflkW4SLd0pjgd4Ir112W6WlrgOMLOeMxMD67
+         Y7fzpvLlRns1R987UpVr4Ho2Ef3n5RRduT1HzBTPRshrhBEjtMkNTbe7FGD2XIA0sy0y
+         gibA==
+X-Gm-Message-State: APjAAAXHjAqq+Y6uf1ZeJiSgScsTQap7FLq+RHWjuc1kOdcuSVWA1Wib
+        EALXjiVUTU1hMmMfr7XKI16FvTHy
+X-Google-Smtp-Source: APXvYqxjgLj8s9ORx5uA1EiK8vt0reG+VWX5Je4hreQ+z2wsqvDEiKh/9bVZDaCSPAHCc1geKZAiGQ==
+X-Received: by 2002:a17:90a:660b:: with SMTP id l11mr16237798pjj.47.1577326585248;
+        Wed, 25 Dec 2019 18:16:25 -0800 (PST)
 Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id b65sm31880723pgc.18.2019.12.25.18.16.35
+        by smtp.gmail.com with ESMTPSA id b65sm31880723pgc.18.2019.12.25.18.16.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Dec 2019 18:16:36 -0800 (PST)
+        Wed, 25 Dec 2019 18:16:24 -0800 (PST)
 From:   Richard Cochran <richardcochran@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
@@ -69,10 +69,10 @@ Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
         Murali Karicheri <m-karicheri2@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>, Rob Herring <robh@kernel.org>
-Subject: [PATCH V9 net-next 10/12] net: mdio: of: Register discovered MII time stampers.
-Date:   Wed, 25 Dec 2019 18:16:18 -0800
-Message-Id: <3e3eac41c3a43a9dc444903e0b0179b59f250498.1577326042.git.richardcochran@gmail.com>
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: [PATCH V9 net-next 02/12] net: macvlan: Use the PHY time stamping interface.
+Date:   Wed, 25 Dec 2019 18:16:10 -0800
+Message-Id: <de05fb4ca400758bac3c3930dec47841f3fcba9b.1577326042.git.richardcochran@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1577326042.git.richardcochran@gmail.com>
 References: <cover.1577326042.git.richardcochran@gmail.com>
@@ -83,103 +83,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When parsing a PHY node, register its time stamper, if any, and attach
-the instance to the PHY device.
+The macvlan layer tests fields of the phy_device in order to determine
+whether to invoke the PHY's tsinfo ethtool callback.  This patch
+replaces the open coded logic with an invocation of the proper
+methods.
 
 Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/net/phy/phy_device.c |  3 +++
- drivers/of/of_mdio.c         | 30 +++++++++++++++++++++++++++++-
- 2 files changed, 32 insertions(+), 1 deletion(-)
+ drivers/net/macvlan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index ee45838f90c9..debbda61e12b 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -881,6 +881,9 @@ EXPORT_SYMBOL(phy_device_register);
-  */
- void phy_device_remove(struct phy_device *phydev)
- {
-+	if (phydev->mii_ts)
-+		unregister_mii_timestamper(phydev->mii_ts);
-+
- 	device_del(&phydev->mdio.dev);
+diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
+index 05631d97eeb4..d066cf58c926 100644
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -1036,8 +1036,8 @@ static int macvlan_ethtool_get_ts_info(struct net_device *dev,
+ 	const struct ethtool_ops *ops = real_dev->ethtool_ops;
+ 	struct phy_device *phydev = real_dev->phydev;
  
- 	/* Assert the reset signal */
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index c6b87ce2b0cc..0b7aee235813 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -42,14 +42,37 @@ static int of_get_phy_id(struct device_node *device, u32 *phy_id)
- 	return -EINVAL;
- }
- 
-+static struct mii_timestamper *of_find_mii_timestamper(struct device_node *node)
-+{
-+	struct of_phandle_args arg;
-+	int err;
-+
-+	err = of_parse_phandle_with_fixed_args(node, "timestamper", 1, 0, &arg);
-+
-+	if (err == -ENOENT)
-+		return NULL;
-+	else if (err)
-+		return ERR_PTR(err);
-+
-+	if (arg.args_count != 1)
-+		return ERR_PTR(-EINVAL);
-+
-+	return register_mii_timestamper(arg.np, arg.args[0]);
-+}
-+
- static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 				    struct device_node *child, u32 addr)
- {
-+	struct mii_timestamper *mii_ts;
- 	struct phy_device *phy;
- 	bool is_c45;
- 	int rc;
- 	u32 phy_id;
- 
-+	mii_ts = of_find_mii_timestamper(child);
-+	if (IS_ERR(mii_ts))
-+		return PTR_ERR(mii_ts);
-+
- 	is_c45 = of_device_is_compatible(child,
- 					 "ethernet-phy-ieee802.3-c45");
- 
-@@ -57,11 +80,14 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
- 	else
- 		phy = get_phy_device(mdio, addr, is_c45);
--	if (IS_ERR(phy))
-+	if (IS_ERR(phy)) {
-+		unregister_mii_timestamper(mii_ts);
- 		return PTR_ERR(phy);
-+	}
- 
- 	rc = of_irq_get(child, 0);
- 	if (rc == -EPROBE_DEFER) {
-+		unregister_mii_timestamper(mii_ts);
- 		phy_device_free(phy);
- 		return rc;
- 	}
-@@ -90,10 +116,12 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
- 	 * register it */
- 	rc = phy_device_register(phy);
- 	if (rc) {
-+		unregister_mii_timestamper(mii_ts);
- 		phy_device_free(phy);
- 		of_node_put(child);
- 		return rc;
- 	}
-+	phy->mii_ts = mii_ts;
- 
- 	dev_dbg(&mdio->dev, "registered phy %pOFn at address %i\n",
- 		child, addr);
+-	if (phydev && phydev->drv && phydev->drv->ts_info) {
+-		 return phydev->drv->ts_info(phydev, info);
++	if (phy_has_tsinfo(phydev)) {
++		return phy_ts_info(phydev, info);
+ 	} else if (ops->get_ts_info) {
+ 		return ops->get_ts_info(real_dev, info);
+ 	} else {
 -- 
 2.20.1
 
