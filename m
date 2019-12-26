@@ -2,262 +2,276 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB583C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71028C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB775206CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A2920838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577399092;
-	bh=m4Ju/o9t4gAgk+H7nnBIXf6IV4gFEYVFIdQdh6R0tUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cmExVhQcfeeMAlAgGNMsCdYfovSTMl49EXlicwPyOcjFnifdaw2ON5hDzS8MWyVCN
-	 Cvx567lwJFBS08lRbWhMZGNABlP/qe9s9xPUPCT++uXFwKP1wrRrVpJ3gmizzFhdko
-	 jM4TnfH4XJE/Fs3u/dW745ktBYUF5/IccXvW4VRQ=
+	s=default; t=1577399140;
+	bh=vujbv1A6xlDUz2g33Y+kPra2PiAgA/fV/uyBHWmtQ6Y=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=bwyW7RP/zfe3bwldKgRh4Tlho0Q1rXz3XT3v1N17NkmZK8eHOF4alXQ/C+TaPRlcL
+	 gU+EliOqzsw/9b56S91yM8sdSVEvVCZ8YZEI4bbp9IXmagUURBSZ7hG1G/hCelB1y1
+	 IkG69jRXoV8wjdHBlB0aKVp0l8yn+rQy4speZtiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfLZWYw (ORCPT
+        id S1727033AbfLZWZj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:24:52 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36601 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfLZWYw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:24:52 -0500
-Received: by mail-io1-f65.google.com with SMTP id r13so14272074ioa.3;
-        Thu, 26 Dec 2019 14:24:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=37uqwtRwSPKrS7mePUoQwRbRxVBQ1BJulsNk0ZshgZ4=;
-        b=hW2qpQV1f1r8UgwfPA+eJshGpiDUYDLTwGHOxaA5NxraSPkGomehuIjOLkjEsHy0a7
-         vsj2HEBoHgYuAZXp7IKPKpEZaC3Jn5sEXcGQBY7MZds9jEIyowRTvm7RBoaXZFF6a+/l
-         lwzx+y9lreGzVJU5UFm4aJGYycAZGIGz8uiJbCCFXZ8ahzSC2mE6kgRz+WNpP/B8lPsy
-         SYUj0VCfCCY3vbwxCxPo5VhshmvkUFpFJPLKeY7LCyXj1fKBKrFa0DQg3RbGkU/YHFZ2
-         lpaAeztx5LT1OuBUti9Kk75myGktYEX9mUUxjSHU8lS+y/T4tUGrE7Tj9rK7hhpaaKuX
-         rRpA==
-X-Gm-Message-State: APjAAAUzGO1D9Qf5t/+E5c7NhX8EwI7jcm1a52sT0hgxJoWZq1VCjEUW
-        cyW9X07h5Xju5K5TBv8r8Q==
-X-Google-Smtp-Source: APXvYqwpmWnPzmhjJucVegrp/qxb0MG6G7PSqjM7NScWUgWQvP5DpgC4uYsIS18fm8wbuiIy81ilQg==
-X-Received: by 2002:a5d:8996:: with SMTP id m22mr33343498iol.141.1577399091059;
-        Thu, 26 Dec 2019 14:24:51 -0800 (PST)
-Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id m24sm8970619ioc.37.2019.12.26.14.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:24:50 -0800 (PST)
-Date:   Thu, 26 Dec 2019 15:24:49 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        a.hajda@samsung.com, narmstrong@baylibre.com,
-        tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net
-Subject: Re: [PATCH 1/2] dt-bindings: display: bridge: Add documentation for
- Toshiba tc358768
-Message-ID: <20191226222449.GA8816@bogus>
-References: <20191217101506.18910-1-peter.ujfalusi@ti.com>
- <20191217101506.18910-2-peter.ujfalusi@ti.com>
+        Thu, 26 Dec 2019 17:25:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfLZWZj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Dec 2019 17:25:39 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE60206CB;
+        Thu, 26 Dec 2019 22:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577399138;
+        bh=vujbv1A6xlDUz2g33Y+kPra2PiAgA/fV/uyBHWmtQ6Y=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=f7ktoGybsJOTU/FXJvQp6XsCinWkltPH/f82MaEdDRUwHWJyvbph23Zy8aPgNl0vG
+         qgiB+PunZlEVeUKdEC2kfxqDXYPGUSeF0s/NEW05PyKqoMs6aMMajbCeHfAar2RK6N
+         NDfrYvtnjRDsxnWAwM2acFt+Yn75kpo2oPPn9hm8=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217101506.18910-2-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191015103221.51345-2-kholk11@gmail.com>
+References: <20191015103221.51345-1-kholk11@gmail.com> <20191015103221.51345-2-kholk11@gmail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, mturquette@baylibre.com,
+        agross@kernel.org, bjorn.andersson@linaro.org, marijns95@gmail.com,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>
+To:     kholk11@gmail.com, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] clk: qcom: Add MSM8976/56 Global Clock Controller (GCC) driver
+User-Agent: alot/0.8.1
+Date:   Thu, 26 Dec 2019 14:25:37 -0800
+Message-Id: <20191226222538.2AE60206CB@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:15:05PM +0200, Peter Ujfalusi wrote:
-> TC358768/TC358778 is a Parallel RGB to MIPI DSI bridge.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  .../display/bridge/toshiba,tc358768.yaml      | 158 ++++++++++++++++++
->  1 file changed, 158 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
+Quoting kholk11@gmail.com (2019-10-15 03:32:20)
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 32dbb4f09492..f2a7743c53a1 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -188,6 +188,14 @@ config MSM_MMCC_8974
+>           Say Y if you want to support multimedia devices such as display,
+>           graphics, video encode/decode, camera, etc.
+> =20
+> +config MSM_GCC_8976
+> +       tristate "MSM8956/76 Global Clock Controller"
+> +       select QCOM_GDSC
+> +       help
+> +         Support for the global clock controller on msm8956/76 devices.
+> +         Say Y if you want to use peripheral devices such as UART, SPI,
+> +         i2c, USB, SD/eMMC, display, graphics, camera etc.
+
+Does it have display and graphics and camera?
+
+> +
+>  config MSM_GCC_8994
+>         tristate "MSM8994 Global Clock Controller"
+>         help
+> diff --git a/drivers/clk/qcom/gcc-msm8976.c b/drivers/clk/qcom/gcc-msm897=
+6.c
 > new file mode 100644
-> index 000000000000..8f96867caca0
+> index 000000000000..c670b53f0b5f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358768.yaml
-> @@ -0,0 +1,158 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358768.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/drivers/clk/qcom/gcc-msm8976.c
+> @@ -0,0 +1,4215 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Qualcomm Global Clock Controller driver for MSM8956/76
+> + *
+> + * Copyright (C) 2016, The Linux Foundation. All rights reserved.
+> + * Copyright (C) 2018, AngeloGioacchino Del Regno <kholk11@gmail.com>
+> + *
+> + * Author: AngeloGioacchino Del Regno <kholk11@gmail.com>
+> + */
 > +
-> +title: Toschiba TC358768/TC358778 Parallel RGB to MIPI DSI bridge
-> +
-> +maintainers:
-> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
-> +
-> +description: |
-> +  The TC358768/TC358778 is bridge device which converts RGB to DSI.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - toshiba,tc358768
-> +      - toshiba,tc358778
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base I2C address of the device
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to active low RESX pin
-> +
-> +  vddc-supply:
-> +    maxItems: 1
+> +#include <linux/kernel.h>
+> +#include <linux/clk.h>
 
-Drop this. Not an array. *-supply doesn't need further constraints.
+Is this include used?
 
-> +    description: Regulator for 1.2V internal core power.
-> +
-> +  vddmipi-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.2V for the MIPI.
-> +
-> +  vddio-supply:
-> +    maxItems: 1
-> +    description: Regulator for 1.8V - 3.3V IO power.
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/bitops.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_opp.h>
 
-Blank line here.
+Is this include used?
 
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: refclk
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        description: |
-> +          Video port for RGB input
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              data-lines:
-> +                enum: [ 16, 18, 24 ]
-> +
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +      port@1:
-> +        type: object
-> +        description: |
-> +          Video port for DSI output (panel or connector).
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
+> +#include <linux/module.h>
+> +#include <linux/mfd/syscon.h>
 
-No additionalProperties on this one?
+Is this include used?
+
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +#include <dt-bindings/clock/qcom,gcc-msm8976.h>
+> +
+> +#include "clk-alpha-pll.h"
+> +#include "clk-branch.h"
+> +#include "common.h"
+> +#include "clk-pll.h"
+> +#include "clk-regmap.h"
+> +#include "clk-rcg.h"
+> +#include "reset.h"
+> +#include "gdsc.h"
+[...]
+> +
+> +static struct clk_branch gcc_usb_fs_system_clk =3D {
+> +       .halt_reg =3D 0x3F004,
+
+Please use lowercase hex throughout the code.
+
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x3F004,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data) {
+> +                       .name =3D "gcc_usb_fs_system_clk",
+> +                       .parent_names =3D (const char*[]) {
+> +                               "usb_fs_system_clk_src",
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .flags =3D CLK_SET_RATE_PARENT,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+[...]
+> +
+> +static const struct of_device_id msm_clock_gcc_match_table[] =3D {
+
+This name is super generic. Can you name it gcc_msm8976_match_table?
+
+> +       { .compatible =3D "qcom,gcc-msm8976" },
+> +       {},
+
+Please drop the comma. This is the sentinel
+
+> +};
+> +
+> +static int gcc_8976_probe(struct platform_device *pdev)
+> +{
+> +       struct regmap *regmap;
+> +       int i, ret;
+> +       u32 val;
+> +
+> +       regmap =3D qcom_cc_map(pdev, &gcc_msm8976_desc);
+> +       if (IS_ERR(regmap))
+> +               return PTR_ERR(regmap);
+> +
+> +       /* Vote for GPLL0 to turn on. Needed by acpuclock. */
+> +       regmap_update_bits(regmap, 0x45000, BIT(0), BIT(0));
+> +
+> +       /* Register the hws */
+
+Please drop this useless comment.
+
+> +       for (i =3D 0; i < ARRAY_SIZE(gcc_msm8976_hws); i++) {
+> +               ret =3D devm_clk_hw_register(&pdev->dev, gcc_msm8976_hws[=
+i]);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret =3D qcom_cc_really_probe(pdev, &gcc_msm8976_desc, regmap);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to register GCC clocks\n");
+
+Please remove error print.
+
+> +               return ret;
+> +       }
+> +
+> +       clk_set_rate(apss_ahb_clk_src.clkr.hw.clk, 19200000);
+
+Why? Isn't it 19.2MHz by default?
+
+> +       clk_prepare_enable(apss_ahb_clk_src.clkr.hw.clk);
+
+Looks like the clk should be marked CLK_IS_CRITICAL. Also, document why
+clks are marked CLK_IS_CRITICAL with a comment.
 
 > +
-> +    required:
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +      - port@0
-> +      - port@1
+> +       /* Configure Sleep and Wakeup cycles for GMEM clock */
+> +       regmap_read(regmap, 0x59024, &val);
+> +       val ^=3D 0xFF0;
+> +       val |=3D (0 << 8);
+> +       val |=3D (0 << 4);
+> +       regmap_write(regmap, 0x59024, val);
+
+This is regmap_update_bits()?
+
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vddc-supply
-> +  - vddmipi-supply
-> +  - vddio-supply
-> +  - ports
+> +       clk_pll_configure_sr_hpm_lp(&gpll3, regmap,
+> +                                       &gpll3_config, true);
 > +
-> +additionalProperties: false
+> +       clk_set_rate(gpll3.clkr.hw.clk, 1100000000);
+
+Don't think this is required. The PLL configuration should do this.
+
 > +
-> +examples:
-> +  - |
-> +    i2c1 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
+> +       /* Enable AUX2 clock for APSS */
+> +       regmap_update_bits(regmap, 0x60000, BIT(2), BIT(2));
 > +
-> +      dsi_bridge: tc358768@0e {
-> +        compatible = "toshiba,tc358768";
-> +        reg = <0x0e>;
+> +       /* Oxili Ocmem in GX rail: OXILI_GMEM_CLAMP_IO */
+> +       regmap_update_bits(regmap, 0x5B00C, BIT(0), 0);
 > +
-> +        clocks = <&tc358768_refclk>;
-> +        clock-names = "refclk";
+> +       /* Configure Sleep and Wakeup cycles for OXILI clock */
+> +       val =3D regmap_read(regmap, 0x59020, &val);
+> +       val &=3D ~0xF0;
+> +       val |=3D (0 << 4);
+> +       regmap_write(regmap, 0x59020, val);
+
+regmap_update_bits()?
+
 > +
-> +        /* GPIO line is inverted before going to the bridge */
-> +        reset-gpios = <&pcf_display_board 0 1 /* GPIO_ACTIVE_LOW */>;
+> +       dev_dbg(&pdev->dev, "Registered GCC-8976 clocks\n");
+
+Please remove this. It's not useful.
+
 > +
-> +        vddc-supply = <&v1_2d>;
-> +        vddmipi-supply = <&v1_2d>;
-> +        vddio-supply = <&v3_3d>;
+> +       return 0;
+> +}
 > +
-> +        dsi_bridge_ports: ports {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
+> +static struct platform_driver gcc_8976_driver =3D {
+> +       .probe =3D gcc_8976_probe,
+> +       .driver =3D {
+> +               .name =3D "gcc-msm8976",
+> +               .of_match_table =3D msm_clock_gcc_match_table,
+> +       },
+> +};
 > +
-> +          port@0 {
-> +            reg = <0>;
-> +            rgb_in: endpoint {
-> +              remote-endpoint = <&dpi_out>;
-> +              data-lines = <24>;
-> +            };
-> +          };
+> +static int __init gcc_8976_init(void)
+> +{
+> +       return platform_driver_register(&gcc_8976_driver);
+> +}
+> +core_initcall_sync(gcc_8976_init);
 > +
-> +          port@1 {
-> +            reg = <1>;
-> +            dsi_out: endpoint {
-> +              remote-endpoint = <&lcd_in>;
-> +            };
-> +          };
-> +        };
-> +      };
-> +    };
-> +    
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+> +static void __exit gcc_8976_exit(void)
+> +{
+> +       platform_driver_unregister(&gcc_8976_driver);
+> +}
+> +module_exit(gcc_8976_exit);
+> +
+> +MODULE_AUTHOR("AngeloGioacchino Del Regno <kholk11@gmail.com>");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:gcc-msm8976");
+
+I don't think we need MODULE_ALIAS anymore.
+
