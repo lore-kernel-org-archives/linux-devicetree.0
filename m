@@ -2,148 +2,94 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EB0C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EC5C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEBD208C4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:42:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PqY30As1"
+	by mail.kernel.org (Postfix) with ESMTP id C25E920740
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577401113;
+	bh=nYlboj3D4Ow1KEn8N7GnpEl9I5V9FjZTZ5rZxeULx5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NJF/+wcGMfJI93vsiebXy17LwEG1gQdw8qk1/Qfw3jsAf907frolat1oO8NGHzVLx
+	 kIUMB8cQX/AyR94Hv+WBIvxHgrF4Eal9NsSE1bJnjv/d1PGGlIte3aG8X3Kz5wUh6H
+	 3pEo7Vp2EECMEYrVI157N9eQHXSeoy1soWz6Hd4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726960AbfLZWmM (ORCPT
+        id S1726885AbfLZW6d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:42:12 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33438 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfLZWmM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:42:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 6so13522361pgk.0
-        for <devicetree@vger.kernel.org>; Thu, 26 Dec 2019 14:42:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=id6gZntwEodgGYB59zQkWhTpj797ws8bHZpOKaKwYJ8=;
-        b=PqY30As1HVeTsX24x5Wj6WCdolUj9fYeWJEBcnm/4JCPDvmyvH9x1QTfXP2eGTVZQ1
-         SgT5ceOX/76pPplSxkAm83FKnrlB0KO9vDgkjmRMxA7AGFm6y0hlQYFai34ljisdikcR
-         OfO/U/usnsywyWLeTs4/d3vweZC8vywjC+KC07FSb50e33UhRcnWi3qM2vICFfDnw71q
-         kRlSgrhcyP9Z76tdaFIfxXq1GMQKOdBoz+1W6xSjpL+p3m1/TaKMZIhESojfWOV7uYd7
-         rnPRwsLoA53FXbRj0og5CCL7AQpw4wM9LINfJULA7095mS9a2b2CU+AvGFQaoXOpFLWm
-         IxLA==
+        Thu, 26 Dec 2019 17:58:33 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:34052 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfLZW6d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:58:33 -0500
+Received: by mail-il1-f193.google.com with SMTP id s15so21193724iln.1;
+        Thu, 26 Dec 2019 14:58:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=id6gZntwEodgGYB59zQkWhTpj797ws8bHZpOKaKwYJ8=;
-        b=UGwkcInDxEcT/J+82B4wHCoq8zB1bLz5iuHIn2psSqlb61CZ8574B+9YnlYhSpwt7S
-         L3+a+nrgMX82+POvJxxLBfgqfNxAGOSW/ju6Y3hFp6xr+HLOyUS76zwCmA5Lk8gCAtaj
-         1drybSlZlPL83sSYveh9n8yfRrjSYBLShP+ur/EW01ekN0YR9t7CH+KNdaLelgaMpY3T
-         LDvFPD/7XV/2mao5zVrTzLSEgcVfm25M7yD7MAh0puHSelsCn+e8QSkF35JuN0+R9W4a
-         khcc4hbzlUnmG0f+b1H/tytMchbsBlFfn+lCwgy3ZSZH3A29s62ceBQcnduKEeiZXWKY
-         4u7g==
-X-Gm-Message-State: APjAAAVgyzIrQ8fM3c5gkif403pxnMAhSav5Ck0UZhWriWA0i8+sgaGW
-        9ptvNlFn2kWGOP7eyPVL/WSTLQ==
-X-Google-Smtp-Source: APXvYqxSDVbs2vOYOg9yW7JRrsiG0gRtxLuW9Zc6TrdhfBj3WsbSXbIYpDKPF1Q7zUKCs+ontwnuvg==
-X-Received: by 2002:a63:6c09:: with SMTP id h9mr50054003pgc.34.1577400131224;
-        Thu, 26 Dec 2019 14:42:11 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id bo19sm11591246pjb.25.2019.12.26.14.42.09
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=19umCU1foW27C6F1T/aG75qtQ/YsllKFioJd6vrnCos=;
+        b=OscQeAk0ebhm4cTkwX6UvGpwbi1otWfW3HlA8rLAKUUqPB7c0c1owRcSAESZQ6njRD
+         qBNhLYYzkOEx60bKWwiLYw3z7V1jotKpGVLs8iAAZfwJ7RLOKOVdA8xpDx9bnflzLsmw
+         8lm9JiIiDqsTwR9OmlKgPl0c+itwiKPo2eT64HGIWQrwUZtTRk7PkfSE+OLF/284yTn6
+         c4zTBT7+HJNlarrO03PX/M0bBevs6ZFEnyzIRLZ8HsZn2UarL8kqzWv/fmrWkb2x8+5h
+         tHMiUfVUCqIaLSr6z/eK4t5O5HTjhmLaynMjAHyH1t1Jpyk4HGf0B5yjnNVqAhjlwZXB
+         KY8Q==
+X-Gm-Message-State: APjAAAUTU9JOFdQbHqPJ9g4HKju7T8UTzYu4bKe8n3K0Prnv1bxWKdB+
+        wffW+n90NuNw51yL8+UKiw==
+X-Google-Smtp-Source: APXvYqwI86xFoCX7YL80LZzMdEiLjiACERhaXHMCudrl3qXRjT+KzMJ9HPYZBlZkEjwH0sMKqSGASQ==
+X-Received: by 2002:a92:9107:: with SMTP id t7mr41848417ild.51.1577401112315;
+        Thu, 26 Dec 2019 14:58:32 -0800 (PST)
+Received: from localhost ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id 75sm12647588ila.61.2019.12.26.14.58.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:42:10 -0800 (PST)
-Date:   Thu, 26 Dec 2019 14:41:56 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-Message-ID: <20191226224156.GE1908628@ripper>
-References: <20191207203603.2314424-1-bjorn.andersson@linaro.org>
- <20191207203603.2314424-2-bjorn.andersson@linaro.org>
- <20191219063719.5AF942146E@mail.kernel.org>
- <20191220023427.GL448416@yoga>
- <20191224022042.7DDB120709@mail.kernel.org>
+        Thu, 26 Dec 2019 14:58:31 -0800 (PST)
+Date:   Thu, 26 Dec 2019 15:58:31 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: Re: [PATCH V9 net-next 09/12] dt-bindings: ptp: Introduce MII time
+ stamping devices.
+Message-ID: <20191226225831.GA22533@bogus>
+References: <cover.1577326042.git.richardcochran@gmail.com>
+ <ee2e7db95bfc8a30c7f398f051a073aaf38bb7f6.1577326042.git.richardcochran@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191224022042.7DDB120709@mail.kernel.org>
+In-Reply-To: <ee2e7db95bfc8a30c7f398f051a073aaf38bb7f6.1577326042.git.richardcochran@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 23 Dec 18:20 PST 2019, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2019-12-19 18:34:27)
-> > On Wed 18 Dec 22:37 PST 2019, Stephen Boyd wrote:
-> > 
-> > > Quoting Bjorn Andersson (2019-12-07 12:36:02)
-> > > > The CLKREF clocks are all fed by the clock signal on the CXO2 pad on the
-> > > > SoC. Update the definition of these clocks to allow this to be wired up
-> > > > to the appropriate clock source.
-> > > > 
-> > > > Retain "xo" as the global named parent to make the change a nop in the
-> > > > event that DT doesn't carry the necessary clocks definition.
-> > > 
-> > > Something seems wrong still.
-> > > 
-> > > I wonder if we need to add the XO "active only" clk to the rpm clk
-> > > driver(s) and mark it as CLK_IS_CRITICAL. In theory that is really the
-> > > truth for most of the SoCs out there because it's the only crystal that
-> > > needs to be on all the time when the CPU is active. The "normal" XO clk
-> > > will then be on all the time unless deep idle is entered and nobody has
-> > > turned that on via some clk_prepare() call. That's because we root all
-> > > other clks through the "normal" XO clk that will be on in deep
-> > > idle/suspend if someone needs it to be.
-> > > 
-> > 
-> > The patch doesn't attempt to address the fact that our representation of
-> > XO is incomplete, only the fact that CXO2 isn't properly described.
-> > 
-> > Looking at the clock distribution, we do have RPM_SMD_BB_CLK1_A which
-> > presumably is the clock you're referring to here - i.e. the clock
-> > resource connected to CXO.
+On Wed, 25 Dec 2019 18:16:17 -0800, Richard Cochran wrote:
+> This patch add a new binding that allows non-PHY MII time stamping
+> devices to find their buses.  The new documentation covers both the
+> generic binding and one upcoming user.
 > 
-> I don't mean the buffer clks, but the XO resource specifically. It's the
-> representation to the RPM that deep sleep/deep idle should or shouldn't
-> turn off XO and achieve "XO shutdown". Basically it can never be off
-> when the CPU is active because then the CPU itself wouldn't be clocked,
-> but when the CPU isn't active we may want to turn it off if nothing is
-> using it during sleep to clock some sort of wakeup logic or device that
-> is active when the CPU is idle.
+> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> ---
+>  .../devicetree/bindings/ptp/ptp-ines.txt      | 35 ++++++++++++++++
+>  .../devicetree/bindings/ptp/timestamper.txt   | 42 +++++++++++++++++++
+>  2 files changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
+>  create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
 > 
 
-I see. So we're missing the representation of the "raw" CXO in
-clk-smd-rpm.c, and I'm lacking some understanding of how these pieces
-should be tied together for us to realize the "XO shutdown"...
-
-> > 
-> > > Did the downstream code explicitly enable this ln_bb_clk in the phy
-> > > drivers? I think it may have?
-> > > 
-> > 
-> > Yes, afaict all downstream drivers consuming a CLKREF also consumes
-> > LN_BB and ensures that this is enabled. So we've been relying on UFS to
-> > either not have probed yet or that UFS probed successfully for PCIe and
-> > USB to be functional.
-> > 
-> > So either we need this patch to ensure that the requests propagates
-> > down, or I need to patch up the PHY drivers to ensure that they also
-> > vote for the PMIC clock - and I do prefer this patch.
-> 
-> Cool. Yeah seems better to just indicate that the reference clks are
-> clocked by something else and fix that problem now.
-> 
-
-Let me know if I shouldn't interpret this sentence as "let's merge this
-for now".
-
-Regards,
-Bjorn
+Reviewed-by: Rob Herring <robh@kernel.org>
