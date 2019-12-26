@@ -1,85 +1,209 @@
-Return-Path: <SRS0=FlbI=2P=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CE6C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 23:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51ACC2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE92C207FF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 25 Dec 2019 23:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40922072A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QftLw47Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJdBT0GB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfLYXWL (ORCPT
+        id S1726896AbfLZCQY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 18:22:11 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44686 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726489AbfLYXWL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 18:22:11 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so17380778lfa.11
-        for <devicetree@vger.kernel.org>; Wed, 25 Dec 2019 15:22:09 -0800 (PST)
+        Wed, 25 Dec 2019 21:16:24 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42871 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfLZCQX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 21:16:23 -0500
+Received: by mail-pg1-f195.google.com with SMTP id s64so12180089pgb.9;
+        Wed, 25 Dec 2019 18:16:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+Gy6dk1JceW57KpSGmAR3pzf0NX9lVcNuOQ3hyF1SQQ=;
-        b=QftLw47QATwWJrAK1J1ZkIPFgUbtVl/bijGpTQCZQnEbmlyWXU8+Dc1pLgxt2uazqb
-         lepCE2/H22kDC4gA4qcIq/QOQoHLvRUlAB3fYrwilQRWmIs66vJLWx54zSUIdxu19VDz
-         j0fBs5fg9aUMldgRX4sJosAL9Qiuc50NSjD50AK946tUKOhHZgRUDVOqlYzKAVBKPaR8
-         Ku7SJiSO16CJzFdbcsHM4+/oDtfM2KM2QiKT4NXNCgnEE2sOFu63RSajiRinXumBwsA4
-         pOlSidyJrjd9yR32tnhj9/F4+0zQ1oxftC0BgCZWFxhe8tsGhnF8NZERs7t3qNXfto2Z
-         n6eQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+/vn49TSRyoA+01p2GNrvJlmEOQCn7JHNSc6+qKghZ4=;
+        b=WJdBT0GB3TvKjHc/elR6LHm3FeYue4Yrt/4SacBw0BfLgqhMacO26WKVMTXSHXW+/j
+         qyQdzOtp62sNT94s7p71T5sbaYsiW7B3Dkf0At3s5WciXGt8y9VnZZv9J6te20BiA43h
+         VcoxEBS72t7Le8KjsJghAcslf19qEkdjIkVrQQvVXDLrCRUcVOpxPEcciI5YIJrvkAPx
+         l/4zbNR6wmZRBeHM/Wf/i967ndTp9mUrn3pgw8nYKClPHrTCKlBD6Y56Zws0vztP+ZvS
+         peMp5RNan23KbY4Q39dzD4t2Oqyu92Cd3k9F+5kheav2lkge81BZ6RPUey10FtMjQEgT
+         0NRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+Gy6dk1JceW57KpSGmAR3pzf0NX9lVcNuOQ3hyF1SQQ=;
-        b=PGdNDoIFouBp0Ccb6VvCLcudMFhfbtjFMG/gNQhYuMCUzB8VnKEXT6hDlPp4HvG1Uu
-         QGgm5ODUhysg05baOIaoDca+XL6DI2cYrUs8pK3Hf2zcDpn6cuOTii/0IUAKjiL5vsWM
-         2qgxR0GGFv1ErO9HJmqyAsgP3FeVJVcSa2y6ZUxiwZIEn0Yw2+eEu0bFTAsreKCeiLzw
-         ufSb9rP+dArP2bJ1tPbh5bqXaQH0ovwda6KSkv9WDlmS6wMGa4BFQsHPCYrTgySFdCZk
-         QONZWRMT6bu0odfk0PwIj5yDhSDAjvQi1v9Yt7WwWuki27NdvMD5IzewV7FpCP0GG7Jn
-         xSTw==
-X-Gm-Message-State: APjAAAVghbhACHkwR//xYawNReTqsyfTL54ZwbFg+8cm3sRcTSFQjrBm
-        AkttXOYLojEaieXYxJy0X2ssJ2MXzTJGi79Ujyt0f9Kw
-X-Google-Smtp-Source: APXvYqxP+4vajSwjPFxjWCJawxrvcwrC5tMG1NUMTBSdIZQPpZe+BN3HpSqOaj2VfoRuz2wvDvieM3+jXWf32Siik2k=
-X-Received: by 2002:a19:2389:: with SMTP id j131mr23035440lfj.86.1577316129048;
- Wed, 25 Dec 2019 15:22:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20191219202052.19039-1-stephan@gerhold.net>
-In-Reply-To: <20191219202052.19039-1-stephan@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 26 Dec 2019 00:21:57 +0100
-Message-ID: <CACRpkdaaK27UNxYkGM=LkeMXN+WzsmxvLgEpWdNd5GroA=4jdg@mail.gmail.com>
-Subject: Re: [PATCH 0/9] Add device tree for Samsung Galaxy S III mini (GT-I8190)
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+/vn49TSRyoA+01p2GNrvJlmEOQCn7JHNSc6+qKghZ4=;
+        b=YdCIXYpl19rbU6Hs5y/OkmZlmnGFuJeMdpVumRp1HKVls2m93AdJ9OlQuf4cJPmlk3
+         bbPCnyOkeJ2J0distAs/kTe12kijdl7vVxZyhIkQJNfgZ0x7X1y+JcNVX90e4RtojpYR
+         TqMxGMSC8RWMi9rb+cigCF3uQhOSQsBn8P3Kaqilhzj6VcjtjL4eoG6ljebkDuE78kxL
+         qbBHWZdu9KeSEOjGSlpowSnZJXX/NmzjM//4cBiBDxvvWuM19l60/t9efTjnrZma4mvp
+         p/PvJ3WXJdaFL2u/NiXPDG2b/ApaOy3z7HpOUSSwn2fByqZeRsy3tkMIIsANqSrf2Uwy
+         rEHA==
+X-Gm-Message-State: APjAAAULGCdJzgV3dzaIyO9hM8icRlBWjvKBgyKJs21Ie7pNwoGsorPX
+        1eQSkuKv1HY+nJu3oPy5fpSqTfyp
+X-Google-Smtp-Source: APXvYqyXxCLONq6Z5T2s2IEL+z2/mPFMqYzfY2mf/w4zxOhMTLvcL0QlKkOhpSRcRhFfCECUXJEQWA==
+X-Received: by 2002:a63:f643:: with SMTP id u3mr43994446pgj.291.1577326582348;
+        Wed, 25 Dec 2019 18:16:22 -0800 (PST)
+Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id b65sm31880723pgc.18.2019.12.25.18.16.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Dec 2019 18:16:21 -0800 (PST)
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Wingman Kwok <w-kwok2@ti.com>
+Subject: [PATCH V9 net-next 00/12] Peer to Peer One-Step time stamping
+Date:   Wed, 25 Dec 2019 18:16:08 -0800
+Message-Id: <cover.1577326042.git.richardcochran@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 9:21 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+This series adds support for PTP (IEEE 1588) P2P one-step time
+stamping along with a driver for a hardware device that supports this.
 
-> This patch series adds initial support for booting mainline on
-> the Samsung Galaxy S III mini (GT-I8190), codename: "samsung-golden".
-> samsung-golden uses the Ux500 SoC, which has great support in mainline.
+If the hardware supports p2p one-step, it subtracts the ingress time
+stamp value from the Pdelay_Request correction field.  The user space
+software stack then simply copies the correction field into the
+Pdelay_Response, and on transmission the hardware adds the egress time
+stamp into the correction field.
 
-I queued all the DTS changes in the linux-stericsson tree and will
-send a pull request for it soon-ish!
+This new functionality extends CONFIG_NETWORK_PHY_TIMESTAMPING to
+cover MII snooping devices, but it still depends on phylib, just as
+that option does.  Expanding beyond phylib is not within the scope of
+the this series.
 
-Thanks for your hard work Stephan!
+User space support is available in the current linuxptp master branch.
 
-Yours,
-Linus Walleij
+- Patch 1 adds phy_device methods for existing time stamping fields.
+- Patches 2-5 convert the stack and drivers to the new methods.
+- Patch 6 moves code around the dp83640 driver.
+- Patches 7-10 add support for MII time stamping in non-PHY devices.
+- Patch 11 adds the new P2P 1-step option.
+- Patch 12 adds a driver implementing the new option.
+
+Thanks,
+Richard
+
+Changed in v9:
+~~~~~~~~~~~~~~
+
+- Fix two more drivers' switch/case blocks WRT the new HWTSTAMP ioctl.
+- Picked up two more review tags from Andrew.
+
+Changed in v8:
+~~~~~~~~~~~~~~
+
+- Avoided adding forward functional declarations in the dp83640 driver.
+- Picked up Florian's new review tags and another one from Andrew.
+
+Changed in v7:
+~~~~~~~~~~~~~~
+
+- Converted pr_debug|err to dev_ variants in new driver.
+- Fixed device tree documentation per Rob's v6 review.
+- Picked up Andrew's and Rob's review tags.
+- Silenced sparse warnings in new driver.
+
+Changed in v6:
+~~~~~~~~~~~~~~
+
+- Added methods for accessing the phy_device time stamping fields.
+- Adjust the device tree documentation per Rob's v5 review.
+- Fixed the build failures due to missing exports.
+
+Changed in v5:
+~~~~~~~~~~~~~~
+
+- Fixed build failure in macvlan.
+- Fixed latent bug with its gcc warning in the driver.
+
+Changed in v4:
+~~~~~~~~~~~~~~
+
+- Correct error paths and PTR_ERR return values in the framework.
+- Expanded KernelDoc comments WRT PHY locking.
+- Pick up Andrew's review tag.
+
+Changed in v3:
+~~~~~~~~~~~~~~
+
+- Simplify the device tree binding and document the time stamping
+  phandle by itself.
+
+Changed in v2:
+~~~~~~~~~~~~~~
+
+- Per the v1 review, changed the modeling of MII time stamping
+  devices.  They are no longer a kind of mdio device.
+
+Richard Cochran (12):
+  net: phy: Introduce helper functions for time stamping support.
+  net: macvlan: Use the PHY time stamping interface.
+  net: vlan: Use the PHY time stamping interface.
+  net: ethtool: Use the PHY time stamping interface.
+  net: netcp_ethss: Use the PHY time stamping interface.
+  net: phy: dp83640: Move the probe and remove methods around.
+  net: Introduce a new MII time stamping interface.
+  net: Add a layer for non-PHY MII time stamping drivers.
+  dt-bindings: ptp: Introduce MII time stamping devices.
+  net: mdio: of: Register discovered MII time stampers.
+  net: Introduce peer to peer one step PTP time stamping.
+  ptp: Add a driver for InES time stamping IP core.
+
+ .../devicetree/bindings/ptp/ptp-ines.txt      |  35 +
+ .../devicetree/bindings/ptp/timestamper.txt   |  42 +
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |   1 +
+ .../ethernet/mellanox/mlxsw/spectrum_ptp.c    |   1 +
+ drivers/net/ethernet/microchip/lan743x_ptp.c  |   3 +
+ drivers/net/ethernet/qlogic/qede/qede_ptp.c   |   1 +
+ drivers/net/ethernet/ti/netcp_ethss.c         |   8 +-
+ drivers/net/macvlan.c                         |   4 +-
+ drivers/net/phy/Makefile                      |   2 +
+ drivers/net/phy/dp83640.c                     | 217 ++---
+ drivers/net/phy/mii_timestamper.c             | 125 +++
+ drivers/net/phy/phy.c                         |   4 +-
+ drivers/net/phy/phy_device.c                  |   5 +
+ drivers/of/of_mdio.c                          |  30 +-
+ drivers/ptp/Kconfig                           |  10 +
+ drivers/ptp/Makefile                          |   1 +
+ drivers/ptp/ptp_ines.c                        | 852 ++++++++++++++++++
+ include/linux/mii_timestamper.h               | 121 +++
+ include/linux/phy.h                           |  85 +-
+ include/uapi/linux/net_tstamp.h               |   8 +
+ net/8021q/vlan_dev.c                          |   4 +-
+ net/Kconfig                                   |   7 +-
+ net/core/dev_ioctl.c                          |   1 +
+ net/core/timestamping.c                       |  20 +-
+ net/ethtool/ioctl.c                           |   4 +-
+ 25 files changed, 1437 insertions(+), 154 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
+ create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
+ create mode 100644 drivers/net/phy/mii_timestamper.c
+ create mode 100644 drivers/ptp/ptp_ines.c
+ create mode 100644 include/linux/mii_timestamper.h
+
+-- 
+2.20.1
+
