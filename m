@@ -2,94 +2,110 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EC5C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27D8C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 23:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25E920740
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A626120838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 23:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577401113;
-	bh=nYlboj3D4Ow1KEn8N7GnpEl9I5V9FjZTZ5rZxeULx5I=;
+	s=default; t=1577401443;
+	bh=77ZMNYyNJHsNie1iMUw6+VuLBi9h/vaBwwcWfkgZHpA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NJF/+wcGMfJI93vsiebXy17LwEG1gQdw8qk1/Qfw3jsAf907frolat1oO8NGHzVLx
-	 kIUMB8cQX/AyR94Hv+WBIvxHgrF4Eal9NsSE1bJnjv/d1PGGlIte3aG8X3Kz5wUh6H
-	 3pEo7Vp2EECMEYrVI157N9eQHXSeoy1soWz6Hd4A=
+	b=ubmfNYc5yDsHpGG1tlejRil318JIsO6hGz9d1L5UTMUM8E3/S9UwRQ5EN4pxuB81L
+	 ZbnLhjN8RiIMmiznx8OzQyL0LA2ADfahZnvj0SP49ACcKTzlljpVQfRXVxPj8Z6CaX
+	 NDV7Q5VkPzxoWzAGfecrlGZriPx0KNALTdZToQA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfLZW6d (ORCPT
+        id S1726806AbfLZXED (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:58:33 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34052 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbfLZW6d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:58:33 -0500
-Received: by mail-il1-f193.google.com with SMTP id s15so21193724iln.1;
-        Thu, 26 Dec 2019 14:58:32 -0800 (PST)
+        Thu, 26 Dec 2019 18:04:03 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35818 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfLZXEC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 18:04:02 -0500
+Received: by mail-io1-f66.google.com with SMTP id v18so24407708iol.2;
+        Thu, 26 Dec 2019 15:04:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=19umCU1foW27C6F1T/aG75qtQ/YsllKFioJd6vrnCos=;
-        b=OscQeAk0ebhm4cTkwX6UvGpwbi1otWfW3HlA8rLAKUUqPB7c0c1owRcSAESZQ6njRD
-         qBNhLYYzkOEx60bKWwiLYw3z7V1jotKpGVLs8iAAZfwJ7RLOKOVdA8xpDx9bnflzLsmw
-         8lm9JiIiDqsTwR9OmlKgPl0c+itwiKPo2eT64HGIWQrwUZtTRk7PkfSE+OLF/284yTn6
-         c4zTBT7+HJNlarrO03PX/M0bBevs6ZFEnyzIRLZ8HsZn2UarL8kqzWv/fmrWkb2x8+5h
-         tHMiUfVUCqIaLSr6z/eK4t5O5HTjhmLaynMjAHyH1t1Jpyk4HGf0B5yjnNVqAhjlwZXB
-         KY8Q==
-X-Gm-Message-State: APjAAAUTU9JOFdQbHqPJ9g4HKju7T8UTzYu4bKe8n3K0Prnv1bxWKdB+
-        wffW+n90NuNw51yL8+UKiw==
-X-Google-Smtp-Source: APXvYqwI86xFoCX7YL80LZzMdEiLjiACERhaXHMCudrl3qXRjT+KzMJ9HPYZBlZkEjwH0sMKqSGASQ==
-X-Received: by 2002:a92:9107:: with SMTP id t7mr41848417ild.51.1577401112315;
-        Thu, 26 Dec 2019 14:58:32 -0800 (PST)
+        bh=4BxjXm5H+PVHzK3XnFpnxXvTcIKYGmKgODVv5UHOsHg=;
+        b=jhYa0XdG6jucyom2rEO5XNwOZjvxQXfQIVg7lVhBedfFrIK04Scj57ByNyFuIoNS1W
+         Kos61ivoZF8rjCTTR4XhTCsPfuY7VhWyTHp2a4bTnnEOPAuGHk7rRokMI9jRAstwoyNV
+         +N4hOf8oWL4CinJ0vwYsbNCnZk6Jgvmbq/hBN06ZEZRhPb+hvUUbfXKMX0z/+k6T2Fo1
+         TXcPIY3HL2BeUb8Si0qQdiXNp5TrO3tNjH0/3khss/cZVftlkygi557/dMHTYgGB4UQs
+         v5EW7usF3jgh+QzE74JZg4nzvc4o+YvuT+4CaRtmfBOHnTWbE72p76zKALFlu6Qj/AmX
+         kKIw==
+X-Gm-Message-State: APjAAAWdcy7UtBL5o0mv4WznWQyp83h6oAhE0YC9cHkrcIOVpRfgn4yo
+        nLG1KYr0FlDN8L3G/zKHLg==
+X-Google-Smtp-Source: APXvYqw2bGRiaMi/uFha0sHVD0awLqueKW90FLWiT0CRk7JBZTxizfad7ua9GqHYh9EH1UVXI14/eg==
+X-Received: by 2002:a5d:93cd:: with SMTP id j13mr31630721ioo.126.1577401442032;
+        Thu, 26 Dec 2019 15:04:02 -0800 (PST)
 Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id 75sm12647588ila.61.2019.12.26.14.58.31
+        by smtp.gmail.com with ESMTPSA id p12sm11217395ils.11.2019.12.26.15.04.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:58:31 -0800 (PST)
-Date:   Thu, 26 Dec 2019 15:58:31 -0700
+        Thu, 26 Dec 2019 15:04:00 -0800 (PST)
+Date:   Thu, 26 Dec 2019 16:03:59 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, David Miller <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+To:     Dan Robertson <dan@dlrobertson.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: Re: [PATCH V9 net-next 09/12] dt-bindings: ptp: Introduce MII time
- stamping devices.
-Message-ID: <20191226225831.GA22533@bogus>
-References: <cover.1577326042.git.richardcochran@gmail.com>
- <ee2e7db95bfc8a30c7f398f051a073aaf38bb7f6.1577326042.git.richardcochran@gmail.com>
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v8 1/3] dt-bindings: iio: accel: bma400: add bindings
+Message-ID: <20191226230359.GA29435@bogus>
+References: <20191220160051.26321-1-dan@dlrobertson.com>
+ <20191220160051.26321-2-dan@dlrobertson.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ee2e7db95bfc8a30c7f398f051a073aaf38bb7f6.1577326042.git.richardcochran@gmail.com>
+In-Reply-To: <20191220160051.26321-2-dan@dlrobertson.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 25 Dec 2019 18:16:17 -0800, Richard Cochran wrote:
-> This patch add a new binding that allows non-PHY MII time stamping
-> devices to find their buses.  The new documentation covers both the
-> generic binding and one upcoming user.
+On Fri, Dec 20, 2019 at 04:00:49PM +0000, Dan Robertson wrote:
+> Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
+> accelerometer sensor.
 > 
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Dan Robertson <dan@dlrobertson.com>
 > ---
->  .../devicetree/bindings/ptp/ptp-ines.txt      | 35 ++++++++++++++++
->  .../devicetree/bindings/ptp/timestamper.txt   | 42 +++++++++++++++++++
->  2 files changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-ines.txt
->  create mode 100644 Documentation/devicetree/bindings/ptp/timestamper.txt
+>  .../bindings/iio/accel/bosch,bma400.yaml      | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml b/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
+> new file mode 100644
+> index 000000000000..e87cb636b3e2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/bosch,bma400.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bosch BMA400 triaxial acceleration sensor
+> +
+> +maintainers:
+> +  - Dan Robertson <dan@dlrobertson.com>
+> +
+> +description: |
+> +  Acceleration and temerature iio sensors with an i2c interface
+
+checkpatch reports a typo here.
+
+Otherwise,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
