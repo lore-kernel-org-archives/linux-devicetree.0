@@ -2,88 +2,96 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 276ECC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2DFC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0B0520838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985D520882
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577399434;
-	bh=P+0KcDQ/Yx8Nuk7b2278RkgOxU2ZsiTj9sOmnw3t0/4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LOsIlWmoEMbG/33zoWF54XrMirkhjpfimV865Yt2SYuzzJcAugzKIUXtK+lEjQDb0
-	 X9x9JKlzPM+ECVlg1a87fu80PVNgI/tpjsxcc2WiWZY9I4V5WEqJfklzRFcqlleBVZ
-	 ULhGi6/RTSjR/4odnJN3LUFhGgK8X1WnF8W8iA1w=
+	s=default; t=1577399647;
+	bh=QldJk4VKqGrvE3OjqDXhHbkHHU0eF8gSaa/4Cc6vcN0=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=KZhJpZ1UCbgCUZvjKQg843BSnGXog71mHbG6A3+YEH2e1pLdBEGU23iRW2l5CpzNt
+	 a08gMN0d1kx9wfmeEVLCHtnB5NGKapBY6fdi1J409ThLJ0egS8NQCsvl0CaaiBXDWS
+	 WVzjE/DXFJYttwQ8LHTA31tLJpUJPB0BdsufYZhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfLZWaa (ORCPT
+        id S1726806AbfLZWeG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:30:30 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34626 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZWaa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:30:30 -0500
-Received: by mail-io1-f67.google.com with SMTP id z193so24320366iof.1;
-        Thu, 26 Dec 2019 14:30:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oXj0egOLEipXvK+Cz50CdkjFGq0EgLBghdmBZ/5exkA=;
-        b=BaM0Kv9PitrssQO4/B6aM9d1d2nm86iTYsvEAFl43U2yJ+W7z2dteG4zllHXMzH+Gy
-         E9gpMYNbg1shBDkfqlqJNLXxt9BtgnjChgh8j/0DMLtX4RRPWvq0JJgWDxM5oC0zP3tj
-         HviaSLP8+HUEJ51IJSjmZJ6oBb2/qsMtYqohZNyL6zk8aYYPQBi3UvDGY8JbN1eiSTCs
-         JTx4LOpb4C7FfBDJkKJx97v8CC975hLm4L07JjEcIOCnO9vUks9t+kO0LL5A9cdgzRwD
-         jU5d1f+mTRbyC4gESq4AcGR4Tz7pmZj4mr96f6dLMUh2pvK8liwuQzcKLrWWx3CKjS6a
-         KC8A==
-X-Gm-Message-State: APjAAAXXmMeAtRHeeX/4OUGZMg6lIqgzwAS7qQTz/1T6grl1CFFnUjOB
-        TM1h5sevwPIFgWc0qZLlXg==
-X-Google-Smtp-Source: APXvYqybilZELhr0wxtYJ1otx4J19UA6rDSIOcsvRrEk+czzp4qNmJFh99eChtoX3LmtuL9hvrlJFg==
-X-Received: by 2002:a5e:8b06:: with SMTP id g6mr31032706iok.61.1577399429555;
-        Thu, 26 Dec 2019 14:30:29 -0800 (PST)
-Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t88sm12617185ill.51.2019.12.26.14.30.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:30:28 -0800 (PST)
-Date:   Thu, 26 Dec 2019 15:30:27 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        mark.rutland@arm.com, paul@crapouillou.net, vkoul@kernel.org,
-        Zubair.Kakakhel@imgtec.com, dan.j.williams@intel.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, 2374286503@qq.com
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add X1830 bindings.
-Message-ID: <20191226223027.GA29959@bogus>
-References: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1576591140-125668-3-git-send-email-zhouyanjie@wanyeetech.com>
+        Thu, 26 Dec 2019 17:34:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbfLZWeG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Dec 2019 17:34:06 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1646206CB;
+        Thu, 26 Dec 2019 22:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577399645;
+        bh=QldJk4VKqGrvE3OjqDXhHbkHHU0eF8gSaa/4Cc6vcN0=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=jllC4FUUIZiakCJNf7Sc7uA9hN1uo7y3PGBGR6m/X92Xpj19etc719D8RL673XS9+
+         c/H2UcgM0ibEKQtRG2RpOQY50GpTZFl80b99TkVX5ZcijPgiCgafrK0PFG1aNW+V4G
+         DSq3dqW5gO8RzG37YNG2nU1hA3UfvNTGNA2GtDAY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1576591140-125668-3-git-send-email-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191226222315.GD1908628@ripper>
+References: <20191207203603.2314424-1-bjorn.andersson@linaro.org> <20191207203603.2314424-2-bjorn.andersson@linaro.org> <20191224024845.445A92070E@mail.kernel.org> <20191226222315.GD1908628@ripper>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
+User-Agent: alot/0.8.1
+Date:   Thu, 26 Dec 2019 14:34:04 -0800
+Message-Id: <20191226223405.A1646206CB@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 17 Dec 2019 21:58:59 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?=          wrote:
-> Add the dmaengine bindings for the X1830 Soc from Ingenic.
-> 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
->  .../devicetree/bindings/dma/jz4780-dma.txt         |  6 ++--
->  include/dt-bindings/dma/x1830-dma.h                | 39 ++++++++++++++++++++++
->  2 files changed, 43 insertions(+), 2 deletions(-)
->  create mode 100644 include/dt-bindings/dma/x1830-dma.h
-> 
+Quoting Bjorn Andersson (2019-12-26 14:23:15)
+> On Mon 23 Dec 18:48 PST 2019, Stephen Boyd wrote:
+>=20
+> > Quoting Bjorn Andersson (2019-12-07 12:36:02)
+> > > The CLKREF clocks are all fed by the clock signal on the CXO2 pad on =
+the
+> > > SoC. Update the definition of these clocks to allow this to be wired =
+up
+> > > to the appropriate clock source.
+> > >=20
+> > > Retain "xo" as the global named parent to make the change a nop in the
+> > > event that DT doesn't carry the necessary clocks definition.
+> > >=20
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > >  .../devicetree/bindings/clock/qcom,gcc.yaml   |  6 ++--
+> > >  drivers/clk/qcom/gcc-msm8996.c                | 35 +++++++++++++++--=
+--
+> > >  2 files changed, 32 insertions(+), 9 deletions(-)
+> >=20
+> > What is this patch based on? I think I'm missing some sort of 8996 yaml
+> > gcc binding patch.
+> >=20
+>=20
+> The patch applies cleanly on linux-next and afaict it depends on the
+> yamlification done in 9de7269e9703 ("dt-bindings: clock: Add YAML
+> schemas for the QCOM GCC clock bindings"), which git tells me is
+> included in v5.5-rc1 as well.
+>=20
+> Am I misunderstanding your question?
+>=20
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+There doesn't seem to be any sort of minitems or maxitems in my yaml
+binding file for the clocks or clock-names properties.
+
