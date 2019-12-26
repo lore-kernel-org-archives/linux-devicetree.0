@@ -2,110 +2,104 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C43CC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0444CC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 19:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77462080D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 19:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hs/GWrax"
+	by mail.kernel.org (Postfix) with ESMTP id D3A49206CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 19:19:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577387952;
+	bh=KJhAAxPi6IgaZRJVkFNcvlDs+6hxH45gC5MgZL0ev/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QkH20Harkh0L92iWLL9lwt2w5UexdYWjjWSfhorN8xyD4nySHADjqv4iePPsVjH5n
+	 sAs0xIW3PyNnaS0gM7PpIMvuWJgHW3LlK3cjd4XicmbCxnSVeUqUPRYzbqvn1rNKuB
+	 YNhtFi+Jexyn4h8YRhZKO/kL4lHvaunBJmD6KfxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726684AbfLZTBC (ORCPT
+        id S1726534AbfLZTTK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 14:01:02 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44866 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbfLZTBC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 14:01:02 -0500
-Received: by mail-pl1-f195.google.com with SMTP id az3so10745402plb.11
-        for <devicetree@vger.kernel.org>; Thu, 26 Dec 2019 11:01:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sKQGR3Y9ZuT+GSwwu9eznDqy2WWfte9UQ+0KNkkzAxk=;
-        b=hs/GWraxJbhlVWLQfZcPf2AkuAt27ITg23eVhx5slTXjZDmmGDT18wTrueDpo8m0eD
-         8d8nydd5QR4XNM4RlO0OI/H2a1NFTgxHehliFMY9dUOV0FnX722XY/AzHNyMTNOKskze
-         /E/RT0Ktig+uyz3qru8cFDQRsT9VwFN3cw+wI6TpLLSnHoeonM+S6NRQvi+2fypakTkM
-         PrUUoJgiek7czSCleZJgOzdjGXzkBRJH3QnkJ5ngcvkj6u6XoS9+f1jkj2Iqo7lQ5Irk
-         zI9gQ2FQsUULdbacEegcJC2mNQge8fWvBNmK8wds1h3AOBjTI0R7QlvccbBfnSIHahdX
-         0pcw==
+        Thu, 26 Dec 2019 14:19:10 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37314 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726511AbfLZTTJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 14:19:09 -0500
+Received: by mail-io1-f66.google.com with SMTP id k24so15276379ioc.4;
+        Thu, 26 Dec 2019 11:19:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sKQGR3Y9ZuT+GSwwu9eznDqy2WWfte9UQ+0KNkkzAxk=;
-        b=IVFFi8RdsuauMk9piZ09dThR109EepUgMvl/pMt0XE1j9S/6D+NPyA17kZEy0kJ3YY
-         EK3N0gcvmYM7p3AXWE2eqIhBlkNEmKImrKjX813vVQ4w3uku9oQIhXH+Vx3/xEbLjazW
-         8httleusHbOaBpPzWn41C1+K67EdRhfwFsuB4Fafgj7a7YeGSXHFN1MGjx1et+g1t1nO
-         4Vuhjp5Kto8kPRNKA2o6w0NoewJl7/lPCsuy6l4U8kbQqvKZYYCccF3ecvGUQypRQWaw
-         It9CRLoLEV8mk6/Kbu+HKmG5YH6n1T4LzLsivF/EZtktYBvYAMmTcsBBnPWNSJWJGXN1
-         JBjQ==
-X-Gm-Message-State: APjAAAWQyHcpy2t2bdy0EKnFGbGgph57iW+iBEG02UTqlq9utNhLCkeE
-        C8hmim9TitNv4L2yKv8DbKh0ww==
-X-Google-Smtp-Source: APXvYqzatM2elI5CdG4rtWQkuXM2/c5RjjfQZe6wfRlfMUYQEpcvtNgqLOYkooMoSJhAoTdOsq80fw==
-X-Received: by 2002:a17:90a:3742:: with SMTP id u60mr21741452pjb.29.1577386861619;
-        Thu, 26 Dec 2019 11:01:01 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q64sm12081353pjb.1.2019.12.26.11.01.00
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=yctUm+tP/JTWUbU92C3KuZCqpDM07cBinnz4jiKKOqQ=;
+        b=JLYNHywEiMYqrztF6zhnhy6pPXCi8kGMcluFPOD/xYC6PnE2RVzBmeC7bWa7yow1EL
+         Y+yx1Nr1850BRpEgEVlqOfQC6IGw14nq/3WjsZo/0EmwpUNVQ7FQ9eezhVw7GzeLpIWV
+         GIJ6G8Ufq60MeNyr/TRmw6d/EtL+v1q1A3r3L5EaiRtHd3WqY3LpQfhcozinrXGZyHRS
+         IhZurj8GixgOagt6y+C3KHTw/1T5gdbaJgNalbnQyK/UXW6pFNeYW5fryznLp1AsF6va
+         rvQw/smDmVwa7fHubxOvSjNKyVkM0cpYIOsRhUEB4zyu9yXNGzHBniyu/kUuimt97j8/
+         EzNg==
+X-Gm-Message-State: APjAAAUrAZ2245WWwsHz3+9NKgoisfW1TaequybPMcTcskznAfaUCgwz
+        pIerb2ZeQF6Iqp31hD7lO8YsbeY=
+X-Google-Smtp-Source: APXvYqy+jP/GydyoayFfqc8hNeW715Akwn3atklyNvagsLYAmw6MirUXuY6WNdRKQ9dUwb7PtlyjHw==
+X-Received: by 2002:a6b:bf06:: with SMTP id p6mr24081425iof.255.1577387948956;
+        Thu, 26 Dec 2019 11:19:08 -0800 (PST)
+Received: from localhost ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id w79sm12395491ill.70.2019.12.26.11.19.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 11:01:00 -0800 (PST)
-Date:   Thu, 26 Dec 2019 11:00:58 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     David Dai <daidavid1@codeaurora.org>, georgi.djakov@linaro.org,
-        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-Message-ID: <20191226190058.GL549437@yoga>
-References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
- <1576475925-20601-4-git-send-email-daidavid1@codeaurora.org>
- <20191226184803.GA26712@bogus>
+        Thu, 26 Dec 2019 11:19:08 -0800 (PST)
+Date:   Thu, 26 Dec 2019 12:19:06 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt: bindings: lm3692x: Document new properties
+Message-ID: <20191226191906.GA13331@bogus>
+References: <cover.1576499103.git.agx@sigxcpu.org>
+ <35a23315938909c80e7772838e1de0d2d46302f2.1576499103.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191226184803.GA26712@bogus>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <35a23315938909c80e7772838e1de0d2d46302f2.1576499103.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu 26 Dec 10:48 PST 2019, Rob Herring wrote:
-
-> On Sun, Dec 15, 2019 at 09:58:44PM -0800, David Dai wrote:
-> > In order to better represent the hardware and its different Network-On-Chip
-> > devices, split the sdm845 provider driver into NoC specific providers.
-> > Remove duplicate functionality already provided by the icc rpmh and
-> > bcm voter drivers to calculate and commit bandwidth requests to hardware.
->  
-> This breaks backwards compatibility. Is that okay for all 845 users?
+On Mon, Dec 16, 2019 at 01:28:05PM +0100, Guido Günther wrote:
+> We allow configuration of brightness mode and over voltage
+> protection.
 > 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> index 4c2d923f8758..f195e8b45d85 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
+> @@ -18,6 +18,10 @@ Required properties:
+>  Optional properties:
+>  	- enable-gpios : gpio pin to enable/disable the device.
+>  	- vled-supply : LED supply
+> +	- ti,brightness-mapping-exponential: Whether to use exponential
+> +	    brightness mapping
+> +	- ti,overvoltage-volts: Overvoltage protection in Volts, can
+> +	    be 0 (unprotected), 21, 25 or 29V
 
-Yes, based on our discussions surrounding adding support for the
-pre-rpmh platforms, we concluded a while ago that we would like to
-attempt to move to this structure instead of the originally agreed upon.
+'-microvolt' is the standard unit suffix.
 
-So we haven't merged any consumers using the current 845 binding in the
-upstream Linux repository.
-
-
-I'm not aware of any other public repositories that relies on the
-existing binding.
-
-Thanks,
-Bjorn
-
-> > Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> > ---
-> >  drivers/interconnect/qcom/sdm845.c             | 1122 ++++++++++--------------
-> >  include/dt-bindings/interconnect/qcom,sdm845.h |  263 +++---
-> >  2 files changed, 606 insertions(+), 779 deletions(-)
+>  
+>  Required child properties:
+>  	- reg : 0 - Will enable all LED sync paths
+> -- 
+> 2.23.0
+> 
