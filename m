@@ -2,86 +2,112 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D310EC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81475C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A781F20828
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE5B20828
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:51:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577386089;
-	bh=WE5VABXxrbBFv78YD+2gtrUA+pmg0ijU5WI+Y42vF6w=;
+	s=default; t=1577386296;
+	bh=VBZXjxjdRsNB84SOOcUxmioMugDs0O7JyQjyMRYnnlM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TfKRdDvF/ANA1Xk5woZaHzsGBdJVcLk5Yro2EMWurb+K4kW1jBpYDwK6AqfpEB7XZ
-	 Oxo7WJYiczlKHXnQqYrKkzrYBnD0sdhqwxYQhwNfonvjCg59RnADuStzmPYADZZEZi
-	 KOGbH4ZNMA+So+31BqXmLC/Q6fZbjDMyboh0J5uo=
+	b=KYLwRMkiMbhgUpTzKKkvp3InA5oCBjz+gurzBCC0wzBx7Y6pymlj7kq3fl2IPDu5p
+	 +YOvBQfaFVtn4cD8zXkH/0E9kNiAz/6e3pM3UTLvAdEiO9tq0OvgRQQiGSRWMT2WJj
+	 y6Uu1EPfET++81D2wfddeOT7WveUIaUxboPU7OuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfLZSsG (ORCPT
+        id S1726511AbfLZSvf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 13:48:06 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35829 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726511AbfLZSsG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 13:48:06 -0500
-Received: by mail-il1-f195.google.com with SMTP id g12so20797968ild.2;
-        Thu, 26 Dec 2019 10:48:05 -0800 (PST)
+        Thu, 26 Dec 2019 13:51:35 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:40771 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLZSvf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 13:51:35 -0500
+Received: by mail-il1-f196.google.com with SMTP id c4so20787962ilo.7;
+        Thu, 26 Dec 2019 10:51:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c7RGWu0p8lbIsNI9E7gie8Qmz5Oc4gSU1eH+CTzBx1w=;
-        b=gvhIPRwxbWnD/3rxq1igj07Yp26JxKX17NiPjU8lFJqcA5fTC+rbkyQo2taE6Vhrf9
-         POgBjztv3udjr+icz77m/tF8BE/sE9UPpAZVS+DALPxG8gahpIk6uCluzpvvXzMhQMFA
-         +G033r4COy4BdKjOzQikSX+vkSJyKcWp57ByXPZ4E/9NJPBaFsNWbKGDaCGnZ+kfnH/d
-         vwp2rJ+1/U8boPbM9TlfSLla84O05oZdQpRlpMxOA2yri+irPz0eodQWijMxnIk04bvY
-         bXdx0UGg2fOkdbYoMG8xXmHIaqHK8YlMaby8k4peP/inKaqi27JetS5Dfd1EAhLPmOD+
-         RIPA==
-X-Gm-Message-State: APjAAAWwf+xe9h3I7T2nOIJP/vRg1ZXPPMA/itamR9QtObTAfzOCimr+
-        x+cMQfYTFC0Q9o7g/frwJQ==
-X-Google-Smtp-Source: APXvYqzKkaWjyzChh+lwhXUm5XiDaXN/ONQ3pHPRyouH/yxHGBRhbsRuX3MClJdhh85El/7XDOT5Zg==
-X-Received: by 2002:a92:5b49:: with SMTP id p70mr39327056ilb.209.1577386085085;
-        Thu, 26 Dec 2019 10:48:05 -0800 (PST)
+        bh=3UMtDU8DxQ3MGtUa2c3Y90UpyYpDwJplb5ZS1zSkCmc=;
+        b=QrtocgHCQXk04vR6BgiPYGQm7ytzjiESt+NOeJO1mbHgWqa0VE1HZiCOlU7j/35RPI
+         e2yGeK8iCmQEQaWPAMLEhorxennaDJ6IL+VUtcRCPIkkqmKSmkZE+3b1geWoBjZ3sGpM
+         +0am8og/i+aOzMGIQ5a2mMzr06Pthk8MxKEkX4LNSJfqSbCYdbdfdLFbGkqZ4zhFhYKF
+         GXak+4NVTGODibAclqCuW8pA87KlLT+zGio450BNB3iaaC9J/3AHbKjUlKakwbb7SNzl
+         oN2XrzTK7U8KSzi7JkpXQqzPhZPzzBohzpjbFxfSseBilEQndodVGuiDYVunebopGYDe
+         BeJQ==
+X-Gm-Message-State: APjAAAUfvBPaNiBvirnysKFiyoJIgJWzN3rNHDuYmEQ2Q1fapPqUtest
+        /ISXr4IQCb0GXmzcoI8xiPBPEmo=
+X-Google-Smtp-Source: APXvYqySldlRAzOb9NpZjVOq6WC0G5C70Vuhd2vFmw3FOsorrKM5EEz3CstEkjK7Hu4QPpJKtktk+g==
+X-Received: by 2002:a92:9a56:: with SMTP id t83mr40442318ili.200.1577386294850;
+        Thu, 26 Dec 2019 10:51:34 -0800 (PST)
 Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id v64sm12509395ila.36.2019.12.26.10.48.04
+        by smtp.gmail.com with ESMTPSA id k16sm12454714ili.35.2019.12.26.10.51.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 10:48:04 -0800 (PST)
-Date:   Thu, 26 Dec 2019 11:48:03 -0700
+        Thu, 26 Dec 2019 10:51:34 -0800 (PST)
+Date:   Thu, 26 Dec 2019 11:51:32 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     David Dai <daidavid1@codeaurora.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-Message-ID: <20191226184803.GA26712@bogus>
-References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
- <1576475925-20601-4-git-send-email-daidavid1@codeaurora.org>
+To:     Tamizh Chelvam <tamizhr@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: ath10k: Add new dt entries to identify
+ coex support
+Message-ID: <20191226185132.GA31120@bogus>
+References: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576475925-20601-4-git-send-email-daidavid1@codeaurora.org>
+In-Reply-To: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 15, 2019 at 09:58:44PM -0800, David Dai wrote:
-> In order to better represent the hardware and its different Network-On-Chip
-> devices, split the sdm845 provider driver into NoC specific providers.
-> Remove duplicate functionality already provided by the icc rpmh and
-> bcm voter drivers to calculate and commit bandwidth requests to hardware.
- 
-This breaks backwards compatibility. Is that okay for all 845 users?
-
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+On Mon, Dec 16, 2019 at 05:10:14PM +0530, Tamizh Chelvam wrote:
+> This adds new dt entries qcom,coexist-support and qcom,coexist-gpio-pin
+> which will be used by ath10k driver to identify coex support
+> of a hardware and notify wifi firmware the gpio pin number.
+> This pin number information is needed for the hardware QCA4019.
+> 
+> Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
 > ---
->  drivers/interconnect/qcom/sdm845.c             | 1122 ++++++++++--------------
->  include/dt-bindings/interconnect/qcom,sdm845.h |  263 +++---
->  2 files changed, 606 insertions(+), 779 deletions(-)
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 0171283..a41e936 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -87,6 +87,10 @@ Optional properties:
+>  	Definition: Quirk specifying that the firmware expects the 8bit version
+>  		    of the host capability QMI request
+>  - qcom,xo-cal-data: xo cal offset to be configured in xo trim register.
+> +- qcom,coexist-support : should contain eithr "0" or "1" to indicate coex
+> +			 support by the hardware.
+> +- qcom,coexist-gpio-pin : gpio pin number  information to support coex
+> +			  which will be used by wifi firmware.
+
+What combinations of these 2 properties are valid?
+
+Is qcom,coexist-gpio-pin required for coexist support? If so then it 
+alone should be enough to enable/disable coexist.
+
+>  
+>  Example (to supply PCI based wifi block details):
+>  
+> @@ -156,6 +160,8 @@ wifi0: wifi@a000000 {
+>  	qcom,msi_addr = <0x0b006040>;
+>  	qcom,msi_base = <0x40>;
+>  	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
+> +	qcom,coexist-support = <1>;
+> +	qcom,coexist-gpio-pin = <0x33>;
+>  };
+>  
+>  Example (to supply wcn3990 SoC wifi block details):
+> -- 
+> 1.9.1
