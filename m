@@ -2,109 +2,112 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3DAC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 10:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6BFC2D0DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 10:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2365620838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 10:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A60CD208C4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 10:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="hR1Cvt5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbfLZKNj (ORCPT
+        id S1726055AbfLZKho (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 05:13:39 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42454 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfLZKNj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 05:13:39 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7E8E81C213B; Thu, 26 Dec 2019 11:13:37 +0100 (CET)
-Date:   Thu, 26 Dec 2019 11:13:36 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Thu, 26 Dec 2019 05:37:44 -0500
+Received: from vps.xff.cz ([195.181.215.36]:41446 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbfLZKhn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Dec 2019 05:37:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1577356660; bh=u9ETC+o/IDmexaGn/AkVQX1tykjZ0Q5WXzCFWQs4IxA=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=hR1Cvt5PDfOSjCTfWyHa0hGTOieD3sPrxsLePg0TlTIASuwGzDl2q8GisgkgvrTND
+         Ad042SwFVeTyJpga15dKzjnyL7Qx+AdS3XTEibZ3G/+eZY6Acv3SnomV22XY5ZCo6S
+         Yz1kcKqWTVQjg7HfdcsxUxBJorFSPu5KJji2LpCk=
+Date:   Thu, 26 Dec 2019 11:37:39 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] leds: lm3692x: Make sure we don't exceed the
- maximum led current
-Message-ID: <20191226101336.GD4033@amd>
-References: <cover.1577271823.git.agx@sigxcpu.org>
- <96dad031f3a9ff5bbc311d0ec8768b348b996bcf.1577271823.git.agx@sigxcpu.org>
+        devicetree@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+Message-ID: <20191226103739.bz3i73gjmn5q5veu@core.my.home>
+Mail-Followup-To: Maxime Ripard <mripard@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
+ <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="tEFtbjk+mNEviIIX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <96dad031f3a9ff5bbc311d0ec8768b348b996bcf.1577271823.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > Hi,
+> > >
+> > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > >> H6 and R40 SoCs.
+> > >
+> > > Thanks again for working on this.
+> > >
+> > > I'll merge the DT patches when the driver will have been merged.
+> >
+> > I've applied patches 1 & 2.
+> >
+> > They are in the testing branch and will go to the linux-next branch as
+> > soon as the kernelci passes.
+> 
+> I just merged all the other patches (except the patch 6, for the H6,
+> as requested by Vasily on IRC).
 
---tEFtbjk+mNEviIIX
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-On Wed 2019-12-25 12:07:19, Guido G=FCnther wrote:
-1;2802;0c> The current is given by the formular from page 12 of
-> https://www.ti.com/lit/ds/symlink/lm36922.pdf. We use this to limit the
-> led's max_brightness using the led-max-microamp DT property.
->=20
-> The formular for the lm36923 is identical according to the data
-sheet.
+I think you can apply H6 patch. This was just some misunderstanding
+and H6 is working.
 
-formula?
+thnaks and regards,
+	o.
 
->  static int lm3692x_probe_dt(struct lm3692x_led *led)
->  {
->  	struct fwnode_handle *child =3D NULL;
->  	struct led_init_data init_data =3D {};
-> -	u32 ovp;
-> +	u32 ovp, max_cur;
->  	bool exp_mode;
->  	int ret;
-> =20
-> @@ -397,6 +416,10 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->  		return ret;
->  	}
-> =20
-> +	fwnode_property_read_u32(child, "led-max-microamp", &max_cur);
-> +	led->led_dev.max_brightness =3D ret ? LED_FULL :
-> +		lm3692x_max_brightness(led, max_cur);
-> +
+> Thanks to everyone involved!
+> Maxime
 
-Umm. Should ret come from this fwnode_property_read_u32()?
 
-With that fixed,
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-(Feel free to wait for Rob before resending the series, and I guess
-you can merge it with the next one).
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---tEFtbjk+mNEviIIX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl4Eh9AACgkQMOfwapXb+vIglQCeMrwe/Mmp0WlahYYTtwHfe8sG
-OTMAmwfEU5NP/YUQIzgkfjiT8CLprnMZ
-=3xmI
------END PGP SIGNATURE-----
-
---tEFtbjk+mNEviIIX--
