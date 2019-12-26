@@ -2,121 +2,57 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9369C2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 03:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541B3C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 03:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD41C20828
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 03:46:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ol/dyqSp"
+	by mail.kernel.org (Postfix) with ESMTP id 2A6D22075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 03:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfLZDqy (ORCPT
+        id S1726893AbfLZDvz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 22:46:54 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:35259 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfLZDqx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 22:46:53 -0500
-Received: by mail-pj1-f68.google.com with SMTP id s7so2908764pjc.0
-        for <devicetree@vger.kernel.org>; Wed, 25 Dec 2019 19:46:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j+2rX8FiZ4+VJzSGDQVHPdrKdTn8xC9adwnhm0Nk3gU=;
-        b=Ol/dyqSpl3pnpBMw2kx4AGAZ6uqjbCPQtpxaOuG2ZnQRYknFyxWcIimPlwPM+IWE49
-         iVage9dTlEUPGAbFp1WPicTRY5fCH9oD28yqSBO8x0PNC2jfvR2L0tZf9TQeTefUZGnv
-         Y5ctq5E4mO20ks2Iy3hgApeCxX7VvjcCBwVizm30S0LxE2D2wx4O5jMuPTaJ07Ex8hNE
-         1eguNWXejJ8VC+QtWsqSczf76neRjtV8XDdFCIwBFIqD6mMnrfF2MngICw6TjzfMHoNr
-         40UYX+3Espuyo6rLH9M6vM3+o5m5WMAdaaOGko8jMonKCamhBGE+fhBHTIBtmtROk0V2
-         VNDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j+2rX8FiZ4+VJzSGDQVHPdrKdTn8xC9adwnhm0Nk3gU=;
-        b=DVDbhW+tPj96qqLEGTTWnwZy3BkfZwv4k5FiVhZ3CC3mo1nQ58qSrqtaGKScgo4zXc
-         s/tcfO1cgutGFcV36nxLar0IDMQJB3GjqqiOCwfqfdPgN4zwOAfZvo4o34GJfuQvaAQ0
-         ZI4nCLwl+Kmego7Ygp5Csty+g82mf5E6DjgZ/nhVeZ/rLx/qEQcNx+Wr8r5aJQyKiCiE
-         c6qDsvf6shkOa7UQgkIKc5nkBYq3MEoMA/VqOSbrMQ2mODHMuRXbziQlWobjYAgOgiPM
-         Ij5slCEGsk49rsAPRVEvVMZqHgplmshOhScvJK7493rCR+KEgNZI066gjywAIbd/tjDc
-         WZtA==
-X-Gm-Message-State: APjAAAXf+/zj+Dd195y58uI0zDTKVeE9BvcqbXjHKDQIicL7WKxoXt78
-        JBXZVcLIOrC1Nk0P+ddiy+xnDDEN9duIVA==
-X-Google-Smtp-Source: APXvYqydsNjenOjLM6kedF/cfl6vBI19aFX92/NfESo95ItFi7D0XqsSIsRtl7wuZfP5IorzxcxqKQ==
-X-Received: by 2002:a17:902:8685:: with SMTP id g5mr45434184plo.5.1577332012371;
-        Wed, 25 Dec 2019 19:46:52 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id hg11sm8195750pjb.14.2019.12.25.19.46.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Dec 2019 19:46:51 -0800 (PST)
-Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191210185351.14825-1-f.fainelli@gmail.com>
- <b65b61a6-3cc7-1e9b-9fa7-83f314e9bbf2@redhat.com>
- <5ef8d453-84e9-72dc-3db9-6a1923d61076@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <e1b21ba3-7129-17dc-86e1-2d2d68302e39@kernel.dk>
-Date:   Wed, 25 Dec 2019 20:46:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <5ef8d453-84e9-72dc-3db9-6a1923d61076@gmail.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+        Wed, 25 Dec 2019 22:51:55 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37360 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfLZDvz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 22:51:55 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 441E1154141AB;
+        Wed, 25 Dec 2019 19:51:52 -0800 (PST)
+Date:   Wed, 25 Dec 2019 19:51:51 -0800 (PST)
+Message-Id: <20191225.195151.1515066361114222949.davem@davemloft.net>
+To:     richardcochran@gmail.com
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        jacob.e.keller@intel.com, jakub.kicinski@netronome.com,
+        mark.rutland@arm.com, mlichvar@redhat.com, m-karicheri2@ti.com,
+        robh+dt@kernel.org, willemb@google.com, w-kwok2@ti.com
+Subject: Re: [PATCH V9 net-next 00/12] Peer to Peer One-Step time stamping
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1577326042.git.richardcochran@gmail.com>
+References: <cover.1577326042.git.richardcochran@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 25 Dec 2019 19:51:52 -0800 (PST)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/25/19 8:34 PM, Florian Fainelli wrote:
-> 
-> 
-> On 12/11/2019 5:31 AM, Hans de Goede wrote:
->> Hi,
->>
->> On 10-12-2019 19:53, Florian Fainelli wrote:
->>> Hi Jens,
->>>
->>> The first 4 patches are fixes and should ideally be queued up/picked up
->>> by stable. The last 4 patches add support for BCM7216 which is one of
->>> our latest devices supported by this driver.
->>>
->>> Patch #2 does a few things, but it was pretty badly broken before and it
->>> is hard not to fix all call sites (probe, suspend, resume) in one shot.
->>>
->>> Please let me know if you have any comments.
->>>
->>> Thanks!
->>
->> The entire series looks good to me:
->>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>
->> Regards,
-> 
-> Thanks Hans, Jens is this good to go from your perspective?
+From: Richard Cochran <richardcochran@gmail.com>
+Date: Wed, 25 Dec 2019 18:16:08 -0800
 
-I'll queue 1-4 up for 5.5 and mark for stable, then add 5-8 for
-5.6. Thanks!
+> This series adds support for PTP (IEEE 1588) P2P one-step time
+> stamping along with a driver for a hardware device that supports this.
 
--- 
-Jens Axboe
+Series applied, will push out after build testing.
 
+Thanks.
