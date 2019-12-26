@@ -2,276 +2,159 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71028C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F71C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45A2920838
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69450206CB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577399140;
-	bh=vujbv1A6xlDUz2g33Y+kPra2PiAgA/fV/uyBHWmtQ6Y=;
-	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
-	b=bwyW7RP/zfe3bwldKgRh4Tlho0Q1rXz3XT3v1N17NkmZK8eHOF4alXQ/C+TaPRlcL
-	 gU+EliOqzsw/9b56S91yM8sdSVEvVCZ8YZEI4bbp9IXmagUURBSZ7hG1G/hCelB1y1
-	 IkG69jRXoV8wjdHBlB0aKVp0l8yn+rQy4speZtiY=
+	s=default; t=1577399377;
+	bh=Za4/fhrgSGMJJT2DPQ1b7i4PH3qo+DebV62pODPtibg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ef6zITYvjZl1K+Ray1TTnbUET0+Z/u8AevOgSlZQkS5kclrvvwlaMgCboMkAHJdU6
+	 ot4qXCyO7hoeUP7GMqGTYw2ZsXAyAcfYD1VnrOuODcPT3/fDXYFk51/Is/Q93NQ5/a
+	 uO5FdK+PAZNenyjPyrER3qVjiqk0hqsf+01mNLM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfLZWZj (ORCPT
+        id S1726885AbfLZW3h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:25:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbfLZWZj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Dec 2019 17:25:39 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AE60206CB;
-        Thu, 26 Dec 2019 22:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577399138;
-        bh=vujbv1A6xlDUz2g33Y+kPra2PiAgA/fV/uyBHWmtQ6Y=;
-        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
-        b=f7ktoGybsJOTU/FXJvQp6XsCinWkltPH/f82MaEdDRUwHWJyvbph23Zy8aPgNl0vG
-         qgiB+PunZlEVeUKdEC2kfxqDXYPGUSeF0s/NEW05PyKqoMs6aMMajbCeHfAar2RK6N
-         NDfrYvtnjRDsxnWAwM2acFt+Yn75kpo2oPPn9hm8=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 26 Dec 2019 17:29:37 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44779 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbfLZW3g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:29:36 -0500
+Received: by mail-il1-f194.google.com with SMTP id z12so21085430iln.11;
+        Thu, 26 Dec 2019 14:29:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0HfQukFEOKou0TWVAOyJEghUYeBtOwFmOGUx5hYQoQQ=;
+        b=FWneVoon1qpjIG/zrUrKluXRyc/5nXH53yI73RGCsKkaL4EWBfRQShNd5cfCsLEfNk
+         mowt+ksiEZy+qAKuAy2POiRSbtlmVbAFzVtin3LzHnNAPI45e+isQrvbmT3GTYnwg7ax
+         4cDol6sA8KALk7A4m/JGqGiHRKNsu5vrQObYzcPcP8EXmqhFjxIWqbsaOD21AXJ9UTak
+         sNWWSp1MIyJaV54eoL9bHDG95gNNpSGzeOZZ0VJsEuVgJGIYQu1Zur38h34mj6SZonpy
+         D1ficwMv+G1eMJ5qIx0CsHhUG4o10OUyj8dbP3OpdjfX8PpYtzvnYTTBlPOodN8LvTcH
+         uYAw==
+X-Gm-Message-State: APjAAAXr69NmzzDBMDDoijI8vr2VHFoF3O8/z7ST1vUCLFKen+KdLS9e
+        taad2AskJn7yzHUOv+Iykg==
+X-Google-Smtp-Source: APXvYqyKHeFTS1rgXKIJtDHqKWaKwJuhNX9UygXL9K1AQkx1JoP6Vcp4Eq4BkAUtVgXSERlQ2Nhkgg==
+X-Received: by 2002:a92:ce85:: with SMTP id r5mr42607880ilo.301.1577399376036;
+        Thu, 26 Dec 2019 14:29:36 -0800 (PST)
+Received: from localhost ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id t23sm12668682ila.75.2019.12.26.14.29.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 14:29:34 -0800 (PST)
+Date:   Thu, 26 Dec 2019 15:29:33 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     YuDong Zhang <mtwget@gmail.com>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
+ Dynament Premier series single gas sensor
+Message-ID: <20191226222933.GA20958@bogus>
+References: <20191217102930.26102-1-mtwget@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191015103221.51345-2-kholk11@gmail.com>
-References: <20191015103221.51345-1-kholk11@gmail.com> <20191015103221.51345-2-kholk11@gmail.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, mturquette@baylibre.com,
-        agross@kernel.org, bjorn.andersson@linaro.org, marijns95@gmail.com,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>
-To:     kholk11@gmail.com, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] clk: qcom: Add MSM8976/56 Global Clock Controller (GCC) driver
-User-Agent: alot/0.8.1
-Date:   Thu, 26 Dec 2019 14:25:37 -0800
-Message-Id: <20191226222538.2AE60206CB@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217102930.26102-1-mtwget@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting kholk11@gmail.com (2019-10-15 03:32:20)
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 32dbb4f09492..f2a7743c53a1 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -188,6 +188,14 @@ config MSM_MMCC_8974
->           Say Y if you want to support multimedia devices such as display,
->           graphics, video encode/decode, camera, etc.
-> =20
-> +config MSM_GCC_8976
-> +       tristate "MSM8956/76 Global Clock Controller"
-> +       select QCOM_GDSC
-> +       help
-> +         Support for the global clock controller on msm8956/76 devices.
-> +         Say Y if you want to use peripheral devices such as UART, SPI,
-> +         i2c, USB, SD/eMMC, display, graphics, camera etc.
-
-Does it have display and graphics and camera?
-
-> +
->  config MSM_GCC_8994
->         tristate "MSM8994 Global Clock Controller"
->         help
-> diff --git a/drivers/clk/qcom/gcc-msm8976.c b/drivers/clk/qcom/gcc-msm897=
-6.c
+On Tue, Dec 17, 2019 at 06:29:30PM +0800, YuDong Zhang wrote:
+> Dynament Premier series single gas sensor.
+> 
+> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
+> ---
+>  .../iio/chemical/dynament,premier.yaml        | 39 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  MAINTAINERS                                   |  1 +
+>  3 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
 > new file mode 100644
-> index 000000000000..c670b53f0b5f
+> index 000000000000..e2bbae4dd086
 > --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-msm8976.c
-> @@ -0,0 +1,4215 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Qualcomm Global Clock Controller driver for MSM8956/76
-> + *
-> + * Copyright (C) 2016, The Linux Foundation. All rights reserved.
-> + * Copyright (C) 2018, AngeloGioacchino Del Regno <kholk11@gmail.com>
-> + *
-> + * Author: AngeloGioacchino Del Regno <kholk11@gmail.com>
-> + */
+> +++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#include <linux/kernel.h>
-> +#include <linux/clk.h>
-
-Is this include used?
-
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/bitops.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_opp.h>
-
-Is this include used?
-
-> +#include <linux/module.h>
-> +#include <linux/mfd/syscon.h>
-
-Is this include used?
-
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset-controller.h>
-> +#include <dt-bindings/clock/qcom,gcc-msm8976.h>
+> +title: Dynament Premier series single gas sensor
 > +
-> +#include "clk-alpha-pll.h"
-> +#include "clk-branch.h"
-> +#include "common.h"
-> +#include "clk-pll.h"
-> +#include "clk-regmap.h"
-> +#include "clk-rcg.h"
-> +#include "reset.h"
-> +#include "gdsc.h"
-[...]
+> +maintainers:
+> +  - YuDong Zhang <mtwget@gmail.com>
 > +
-> +static struct clk_branch gcc_usb_fs_system_clk =3D {
-> +       .halt_reg =3D 0x3F004,
-
-Please use lowercase hex throughout the code.
-
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x3F004,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data) {
-> +                       .name =3D "gcc_usb_fs_system_clk",
-> +                       .parent_names =3D (const char*[]) {
-> +                               "usb_fs_system_clk_src",
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
+> +description: |
+> +  single gas sensor capable of measuring gas concentration of dust
+> +  particles, multi-gas sensor are not supported.
 > +
-[...]
+> +  Specifications about the sensor can be found at:
+> +    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
 > +
-> +static const struct of_device_id msm_clock_gcc_match_table[] =3D {
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - dynament,premier
 
-This name is super generic. Can you name it gcc_msm8976_match_table?
-
-> +       { .compatible =3D "qcom,gcc-msm8976" },
-> +       {},
-
-Please drop the comma. This is the sentinel
-
-> +};
-> +
-> +static int gcc_8976_probe(struct platform_device *pdev)
-> +{
-> +       struct regmap *regmap;
-> +       int i, ret;
-> +       u32 val;
-> +
-> +       regmap =3D qcom_cc_map(pdev, &gcc_msm8976_desc);
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-> +
-> +       /* Vote for GPLL0 to turn on. Needed by acpuclock. */
-> +       regmap_update_bits(regmap, 0x45000, BIT(0), BIT(0));
-> +
-> +       /* Register the hws */
-
-Please drop this useless comment.
-
-> +       for (i =3D 0; i < ARRAY_SIZE(gcc_msm8976_hws); i++) {
-> +               ret =3D devm_clk_hw_register(&pdev->dev, gcc_msm8976_hws[=
-i]);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       ret =3D qcom_cc_really_probe(pdev, &gcc_msm8976_desc, regmap);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "Failed to register GCC clocks\n");
-
-Please remove error print.
-
-> +               return ret;
-> +       }
-> +
-> +       clk_set_rate(apss_ahb_clk_src.clkr.hw.clk, 19200000);
-
-Why? Isn't it 19.2MHz by default?
-
-> +       clk_prepare_enable(apss_ahb_clk_src.clkr.hw.clk);
-
-Looks like the clk should be marked CLK_IS_CRITICAL. Also, document why
-clks are marked CLK_IS_CRITICAL with a comment.
+Typically compatible strings are for a specific part #, so you can 
+handle any differences. Unless the differences are discoverable in 
+another way (like registers).
 
 > +
-> +       /* Configure Sleep and Wakeup cycles for GMEM clock */
-> +       regmap_read(regmap, 0x59024, &val);
-> +       val ^=3D 0xFF0;
-> +       val |=3D (0 << 8);
-> +       val |=3D (0 << 4);
-> +       regmap_write(regmap, 0x59024, val);
-
-This is regmap_update_bits()?
-
+> +  vcc-supply:
+> +    description: regulator that provides power to the sensor
 > +
-> +       clk_pll_configure_sr_hpm_lp(&gpll3, regmap,
-> +                                       &gpll3_config, true);
+> +required:
+> +  - compatible
 > +
-> +       clk_set_rate(gpll3.clkr.hw.clk, 1100000000);
-
-Don't think this is required. The PLL configuration should do this.
-
+> +examples:
+> +  - |
+> +    serial {
+> +      single-gas-sensor {
+> +        compatible = "dynament,premier";
+> +        vcc-supply = <&reg_vcc5v0>;
+> +      };
+> +    };
 > +
-> +       /* Enable AUX2 clock for APSS */
-> +       regmap_update_bits(regmap, 0x60000, BIT(2), BIT(2));
-> +
-> +       /* Oxili Ocmem in GX rail: OXILI_GMEM_CLAMP_IO */
-> +       regmap_update_bits(regmap, 0x5B00C, BIT(0), 0);
-> +
-> +       /* Configure Sleep and Wakeup cycles for OXILI clock */
-> +       val =3D regmap_read(regmap, 0x59020, &val);
-> +       val &=3D ~0xF0;
-> +       val |=3D (0 << 4);
-> +       regmap_write(regmap, 0x59020, val);
-
-regmap_update_bits()?
-
-> +
-> +       dev_dbg(&pdev->dev, "Registered GCC-8976 clocks\n");
-
-Please remove this. It's not useful.
-
-> +
-> +       return 0;
-> +}
-> +
-> +static struct platform_driver gcc_8976_driver =3D {
-> +       .probe =3D gcc_8976_probe,
-> +       .driver =3D {
-> +               .name =3D "gcc-msm8976",
-> +               .of_match_table =3D msm_clock_gcc_match_table,
-> +       },
-> +};
-> +
-> +static int __init gcc_8976_init(void)
-> +{
-> +       return platform_driver_register(&gcc_8976_driver);
-> +}
-> +core_initcall_sync(gcc_8976_init);
-> +
-> +static void __exit gcc_8976_exit(void)
-> +{
-> +       platform_driver_unregister(&gcc_8976_driver);
-> +}
-> +module_exit(gcc_8976_exit);
-> +
-> +MODULE_AUTHOR("AngeloGioacchino Del Regno <kholk11@gmail.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:gcc-msm8976");
-
-I don't think we need MODULE_ALIAS anymore.
-
+> +...
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 6046f4555852..5afca0586c41 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -261,6 +261,8 @@ patternProperties:
+>      description: Dragino Technology Co., Limited
+>    "^dserve,.*":
+>      description: dServe Technology B.V.
+> +  "^dynament,.*":
+> +    description: Dynament, Ltd.
+>    "^ea,.*":
+>      description: Embedded Artists AB
+>    "^ebs-systart,.*":
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ae228ac7adc9..4842a0afe32b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5796,6 +5796,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
+>  M:	YuDong Zhang <mtwget@gmail.com>
+>  S:	Maintained
+>  F:	drivers/iio/chemical/premier.c
+> +F:	Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+>  
+>  DYNAMIC DEBUG
+>  M:	Jason Baron <jbaron@akamai.com>
+> -- 
+> 2.24.1
+> 
