@@ -2,114 +2,92 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AEBC2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17833C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F712075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD982080D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 02:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MDeul3j2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WxGUZCtC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfLZCQ2 (ORCPT
+        id S1726896AbfLZCXH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 25 Dec 2019 21:16:28 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54152 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbfLZCQ0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 21:16:26 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so2747707pjc.3;
-        Wed, 25 Dec 2019 18:16:25 -0800 (PST)
+        Wed, 25 Dec 2019 21:23:07 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52291 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfLZCXH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 25 Dec 2019 21:23:07 -0500
+Received: by mail-pj1-f65.google.com with SMTP id a6so2757004pjh.2;
+        Wed, 25 Dec 2019 18:23:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ORrC0T+zd9DLceUTGoVwHDDyI0A9+B1dcciiqwr3CkI=;
-        b=MDeul3j2rTeg8/ocMh5LD+51TBdlOjAdiXkN/DLjMbBw6dpoI1hM9dwFzcDJTZF0ND
-         vYlbM5nMdJ9mIuDtwHh3Sd44NdevsnP6AVsgHvMP5JwuQBdc9R//jAOAnh3Z8Tvx9D1s
-         P3ZuyqiRmhVOczH4omjoL3uWctL6Tex53t/V0hwrdlIIXcv18qVGGE8/2ImGDqOVBi/6
-         7BOHthHyLZjx9IU1lvuCD68vSFWuP/k1ONV6wI4W7JFWzTJ6BrYepo+2mpNdWVMQusuE
-         UDCivAU5V84hcrXwGqX90s8BftWmtkDIXS1pgGGXwtK0P+67ywz0SBr8sPmIX9aQY+qF
-         s6UQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TCUk4e84OM7ozr9fasOhB77j1Cy6vPaAzkFi/kzM/DM=;
+        b=WxGUZCtCOatcYj6zMa84ZbATe3lknFdLPjExlr5y51rvLmDFnW9KN5BK12Wi7vU2fM
+         DGX7Rn4EPjBVe8shWkkI+RMx2OM7MaxRwZ4W6bt9KlYV6vyITmviFl628RdhYFk+B9H2
+         sU+7NbPiCIovK/EBvwahmdfYPsSQ9aZ5fZqoHKdpK40MEmMrvLXEFig1hXNxJAwnaLCc
+         LFpp2OxgKYmjq2oEguhQoWK5O7UgRIGMCaqSdNk2qLimJepB0dQTcTOSj2ah8aF0+o0k
+         R/0dOQOxYqo4j2/rAkga5nPlsInSz3xENDqWeKNCxvS6ieYfOK4YBanQZVyD5ZwZXqUA
+         c3yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ORrC0T+zd9DLceUTGoVwHDDyI0A9+B1dcciiqwr3CkI=;
-        b=cI38IXP5KhqeUk7vGvMx0uFoDo6HeWPyKIzfULJ1uO2h/ghjp0PIBeI5f+i2rsKB5p
-         nBfGQK42NB1HjtzAd0NM+Tv0yMim2ZuwBweZOoKMSxNXCdcQn5LnD3+Ct1ZpKplx6wvs
-         2HkJ/ReZFqtOaXHDdJoxok1+9BnTj5tS1ttBHIs/9a8VbPHApnDgWcHo3tQUhAP0kJfw
-         MWy2kuhGIa11e/r3NJadcGTNbRtyBkQFflkW4SLd0pjgd4Ir112W6WlrgOMLOeMxMD67
-         Y7fzpvLlRns1R987UpVr4Ho2Ef3n5RRduT1HzBTPRshrhBEjtMkNTbe7FGD2XIA0sy0y
-         gibA==
-X-Gm-Message-State: APjAAAXHjAqq+Y6uf1ZeJiSgScsTQap7FLq+RHWjuc1kOdcuSVWA1Wib
-        EALXjiVUTU1hMmMfr7XKI16FvTHy
-X-Google-Smtp-Source: APXvYqxjgLj8s9ORx5uA1EiK8vt0reG+VWX5Je4hreQ+z2wsqvDEiKh/9bVZDaCSPAHCc1geKZAiGQ==
-X-Received: by 2002:a17:90a:660b:: with SMTP id l11mr16237798pjj.47.1577326585248;
-        Wed, 25 Dec 2019 18:16:25 -0800 (PST)
-Received: from localhost.localdomain (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id b65sm31880723pgc.18.2019.12.25.18.16.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TCUk4e84OM7ozr9fasOhB77j1Cy6vPaAzkFi/kzM/DM=;
+        b=DM5qComGHQcTQlleYJEIIynk7snA3URJjdpX2ItRprFglibtccP28b+7M2hx+c0/Xe
+         ckHRkZcWKsmbJG8O/FuvXHO3a9zg7/syKrKLat9ZkIwoarrQas8SBRLiKwAQ1pGwG0xg
+         BRRyPsHRnsd4FHxuogzMFAIo652Q5HRFiqxalZGz2En/0PEzGwEOLHldskCAcPUrSjH7
+         D7UWubi0GqTAJqU54vHT4SjXCK7yHqdOoj4y/vMoQ59SGjBue0xDzhLVuMuxB2FjK+kf
+         LeXZDVB9C/uSu1QuLx16aC4DMBPZKjgCBGNUO4DdFTQ4bIXmNkLmEIyEma+VeubwEPeW
+         sgww==
+X-Gm-Message-State: APjAAAW2b0wwTg12G/B26RnPJUc+rsWxZV0LIE0cwlhOBRJ4odpQH9Mz
+        tH+B9vYs1cX8y5SctWG07TU=
+X-Google-Smtp-Source: APXvYqxLIr+xmeMIniOCx4LFbGEWJ27ZOmGHY0NifApVBetuWdE/P4gXJC/+VK0h6H2x347fFqAslg==
+X-Received: by 2002:a17:902:8d83:: with SMTP id v3mr40460349plo.282.1577326986188;
+        Wed, 25 Dec 2019 18:23:06 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id n26sm32570428pgd.46.2019.12.25.18.23.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Dec 2019 18:16:24 -0800 (PST)
+        Wed, 25 Dec 2019 18:23:05 -0800 (PST)
+Date:   Wed, 25 Dec 2019 18:23:03 -0800
 From:   Richard Cochran <richardcochran@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Wingman Kwok <w-kwok2@ti.com>
-Subject: [PATCH V9 net-next 02/12] net: macvlan: Use the PHY time stamping interface.
-Date:   Wed, 25 Dec 2019 18:16:10 -0800
-Message-Id: <de05fb4ca400758bac3c3930dec47841f3fcba9b.1577326042.git.richardcochran@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1577326042.git.richardcochran@gmail.com>
-References: <cover.1577326042.git.richardcochran@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com,
+        jacob.e.keller@intel.com, jakub.kicinski@netronome.com,
+        mark.rutland@arm.com, mlichvar@redhat.com, m-karicheri2@ti.com,
+        robh+dt@kernel.org, willemb@google.com, w-kwok2@ti.com
+Subject: Re: [PATCH V8 net-next 00/12] Peer to Peer One-Step time stamping
+Message-ID: <20191226022303.GA24487@localhost>
+References: <cover.1576956342.git.richardcochran@gmail.com>
+ <20191224.154713.990847792889689914.davem@davemloft.net>
+ <20191224.161528.379031720244201153.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224.161528.379031720244201153.davem@davemloft.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The macvlan layer tests fields of the phy_device in order to determine
-whether to invoke the PHY's tsinfo ethtool callback.  This patch
-replaces the open coded logic with an invocation of the proper
-methods.
+On Tue, Dec 24, 2019 at 04:15:28PM -0800, David Miller wrote:
+> Actually, I had to revert.  Richard, please fix this warning and resubmit:
 
-Signed-off-by: Richard Cochran <richardcochran@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/macvlan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks for catching that.  I found yet another case (not flagged by
+the compiler due to the driver not switching on the enum), and I put
+the fixes into v9.
 
-diff --git a/drivers/net/macvlan.c b/drivers/net/macvlan.c
-index 05631d97eeb4..d066cf58c926 100644
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -1036,8 +1036,8 @@ static int macvlan_ethtool_get_ts_info(struct net_device *dev,
- 	const struct ethtool_ops *ops = real_dev->ethtool_ops;
- 	struct phy_device *phydev = real_dev->phydev;
- 
--	if (phydev && phydev->drv && phydev->drv->ts_info) {
--		 return phydev->drv->ts_info(phydev, info);
-+	if (phy_has_tsinfo(phydev)) {
-+		return phy_ts_info(phydev, info);
- 	} else if (ops->get_ts_info) {
- 		return ops->get_ts_info(real_dev, info);
- 	} else {
--- 
-2.20.1
+During my audit, I also found a couple of other unrelated problems
+with drivers' HWTSTAMP ioctl implementations, but I'll put those up
+separately.
 
+Thanks,
+Richard
