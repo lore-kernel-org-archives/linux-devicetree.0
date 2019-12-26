@@ -4,110 +4,186 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81475C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD132C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE5B20828
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7052080D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 18:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577386296;
-	bh=VBZXjxjdRsNB84SOOcUxmioMugDs0O7JyQjyMRYnnlM=;
+	s=default; t=1577386586;
+	bh=qofhvnLir4yXKPBofip7iqoiOfFYbknkV6leA8/zahI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KYLwRMkiMbhgUpTzKKkvp3InA5oCBjz+gurzBCC0wzBx7Y6pymlj7kq3fl2IPDu5p
-	 +YOvBQfaFVtn4cD8zXkH/0E9kNiAz/6e3pM3UTLvAdEiO9tq0OvgRQQiGSRWMT2WJj
-	 y6Uu1EPfET++81D2wfddeOT7WveUIaUxboPU7OuA=
+	b=V3789O1ncyMxQbz7cWe0eOQY0y+OvjobOFSrz3+gUh32p/ZWz6JQkpO7NFIzvPJ0e
+	 8vontHbIL3ytl11xlKf3V3OLnEnOR8vkoqYVOfhxImgxNyf1rc+3pDTq1iL7/6wNRg
+	 YwsNqPrPfcwOIH3OpWf7i7ZT1pWezLJT3+232ffg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfLZSvf (ORCPT
+        id S1726534AbfLZS4Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 13:51:35 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40771 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfLZSvf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 13:51:35 -0500
-Received: by mail-il1-f196.google.com with SMTP id c4so20787962ilo.7;
-        Thu, 26 Dec 2019 10:51:35 -0800 (PST)
+        Thu, 26 Dec 2019 13:56:25 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43727 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726480AbfLZS4Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 13:56:25 -0500
+Received: by mail-io1-f67.google.com with SMTP id n21so22367750ioo.10;
+        Thu, 26 Dec 2019 10:56:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3UMtDU8DxQ3MGtUa2c3Y90UpyYpDwJplb5ZS1zSkCmc=;
-        b=QrtocgHCQXk04vR6BgiPYGQm7ytzjiESt+NOeJO1mbHgWqa0VE1HZiCOlU7j/35RPI
-         e2yGeK8iCmQEQaWPAMLEhorxennaDJ6IL+VUtcRCPIkkqmKSmkZE+3b1geWoBjZ3sGpM
-         +0am8og/i+aOzMGIQ5a2mMzr06Pthk8MxKEkX4LNSJfqSbCYdbdfdLFbGkqZ4zhFhYKF
-         GXak+4NVTGODibAclqCuW8pA87KlLT+zGio450BNB3iaaC9J/3AHbKjUlKakwbb7SNzl
-         oN2XrzTK7U8KSzi7JkpXQqzPhZPzzBohzpjbFxfSseBilEQndodVGuiDYVunebopGYDe
-         BeJQ==
-X-Gm-Message-State: APjAAAUfvBPaNiBvirnysKFiyoJIgJWzN3rNHDuYmEQ2Q1fapPqUtest
-        /ISXr4IQCb0GXmzcoI8xiPBPEmo=
-X-Google-Smtp-Source: APXvYqySldlRAzOb9NpZjVOq6WC0G5C70Vuhd2vFmw3FOsorrKM5EEz3CstEkjK7Hu4QPpJKtktk+g==
-X-Received: by 2002:a92:9a56:: with SMTP id t83mr40442318ili.200.1577386294850;
-        Thu, 26 Dec 2019 10:51:34 -0800 (PST)
+        bh=ToXdYUQkeYDdHoqDRcSS3dTsiT4R5dAKA/kDsRrqbhI=;
+        b=DyRW93k64GfJCQ9Ur9RvUBG67m/veso65llrj+T/jvCR/V9VVs2PTR2FFvnRVlO2eT
+         YFiwsUMVdHlRgdtL8C+N/ULYR5OYpePn7geayw1it+4IVv4Y23QsWuw7Yuu4XBfNdw4d
+         LGehXyd0hQKvySrAkvDPjkGOK9DmrAL4FuRWciQeTZpYlt4euSshNoo0VTEM5pQAj3C8
+         LKGsPKEAVmTd1IatKoUX4mo2RlE9kZExJl2eGhhKqIBAuPMTDohdpd5+GEZDzgFxJze1
+         bx+vcghylsptPyjbDoFPJUnTtz0v0IW2nhveaNIHDnjZ15rSlVpt+qzDiKibkZSsUf6D
+         uhMA==
+X-Gm-Message-State: APjAAAULacx2xtqV5v29fktumklCdZGrWr8CSh1+eeKoJz4KDhzzIKsh
+        xJ5VQpZwsCJvTYaNxE7R8A==
+X-Google-Smtp-Source: APXvYqxcD5zb2ctCYCJ+aegozBi9qaHP8u71SNg/N28coEluOAngGSi0T/I6lyj6OJ3DYPMg8kVJXg==
+X-Received: by 2002:a5d:8cd6:: with SMTP id k22mr30642435iot.283.1577386584924;
+        Thu, 26 Dec 2019 10:56:24 -0800 (PST)
 Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id k16sm12454714ili.35.2019.12.26.10.51.33
+        by smtp.gmail.com with ESMTPSA id y9sm8849619ion.54.2019.12.26.10.56.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 10:51:34 -0800 (PST)
-Date:   Thu, 26 Dec 2019 11:51:32 -0700
+        Thu, 26 Dec 2019 10:56:24 -0800 (PST)
+Date:   Thu, 26 Dec 2019 11:56:23 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Tamizh Chelvam <tamizhr@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: ath10k: Add new dt entries to identify
- coex support
-Message-ID: <20191226185132.GA31120@bogus>
-References: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH V2 3/6] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+Message-ID: <20191226185623.GA4463@bogus>
+References: <20191216121932.22967-1-zhang.lyra@gmail.com>
+ <20191216121932.22967-4-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
+In-Reply-To: <20191216121932.22967-4-zhang.lyra@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 05:10:14PM +0530, Tamizh Chelvam wrote:
-> This adds new dt entries qcom,coexist-support and qcom,coexist-gpio-pin
-> which will be used by ath10k driver to identify coex support
-> of a hardware and notify wifi firmware the gpio pin number.
-> This pin number information is needed for the hardware QCA4019.
+On Mon, Dec 16, 2019 at 08:19:29PM +0800, Chunyan Zhang wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > 
-> Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
+> add a new bindings to describe sc9863a clock compatible string.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../bindings/clock/sprd,sc9863a-clk.yaml      | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 0171283..a41e936 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -87,6 +87,10 @@ Optional properties:
->  	Definition: Quirk specifying that the firmware expects the 8bit version
->  		    of the host capability QMI request
->  - qcom,xo-cal-data: xo cal offset to be configured in xo trim register.
-> +- qcom,coexist-support : should contain eithr "0" or "1" to indicate coex
-> +			 support by the hardware.
-> +- qcom,coexist-gpio-pin : gpio pin number  information to support coex
-> +			  which will be used by wifi firmware.
+> diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> new file mode 100644
+> index 000000000000..881f0a0287e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2019 Unisoc Inc.
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: SC9863A Clock Control Unit Device Tree Bindings
+> +
+> +maintainers:
+> +  - Orson Zhai <orsonzhai@gmail.com>
+> +  - Baolin Wang <baolin.wang7@gmail.com>
+> +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> +
+> +properties:
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  compatible :
+> +    enum:
+> +      - sprd,sc9863a-ap-clk
+> +      - sprd,sc9863a-pmu-gate
+> +      - sprd,sc9863a-pll
+> +      - sprd,sc9863a-mpll
+> +      - sprd,sc9863a-rpll
+> +      - sprd,sc9863a-dpll
+> +      - sprd,sc9863a-aon-clk
+> +      - sprd,sc9863a-apahb-gate
+> +      - sprd,sc9863a-aonapb-gate
+> +      - sprd,sc9863a-mm-gate
+> +      - sprd,sc9863a-mm-clk
+> +      - sprd,sc9863a-vspahb-gate
+> +      - sprd,sc9863a-apapb-gate
 
-What combinations of these 2 properties are valid?
+These will probably need to be split to separate schemas for the reasons 
+below...
 
-Is qcom,coexist-gpio-pin required for coexist support? If so then it 
-alone should be enough to enable/disable coexist.
+> +
+> +  clocks:
+> +    description: |
+> +      The input parent clock(s) phandle for this clock, only list fixed
+> +      clocks which are decleared in devicetree.
 
->  
->  Example (to supply PCI based wifi block details):
->  
-> @@ -156,6 +160,8 @@ wifi0: wifi@a000000 {
->  	qcom,msi_addr = <0x0b006040>;
->  	qcom,msi_base = <0x40>;
->  	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
-> +	qcom,coexist-support = <1>;
-> +	qcom,coexist-gpio-pin = <0x33>;
->  };
->  
->  Example (to supply wcn3990 SoC wifi block details):
+typo.
+
+You need to define how many clocks.
+
+> +
+> +  clock-names:
+> +    description: |
+> +      Clock name strings used for driver to reference.
+
+You need to list out the names.
+
+> +
+> +  reg:
+> +    description: |
+> +      Contain the registers base address and length. It must be configured
+> +      only if no 'sprd,syscon' under the node.
+> +
+> +  sprd,syscon:
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +    description: |
+> +      The phandle to the syscon which is in the same address area with
+> +      the clock, and so we can get regmap for the clocks from the
+> +      syscon device.
+
+It is preferred to make the clock node a child of the syscon and then 
+you don't need this property.
+
+> +
+> +required:
+> +  - compatible
+> +  - '#clock-cells'
+> +
+> +examples:
+> +  - |
+> +    ap_clk: clock-controller@21500000 {
+> +      compatible = "sprd,sc9863a-ap-clk";
+> +      reg = <0 0x21500000 0 0x1000>;
+> +      clocks = <&ext_32k>, <&ext_26m>;
+> +      clock-names = "ext-32k", "ext-26m";
+> +      #clock-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    apahb_gate: apahb-gate {
+> +      compatible = "sprd,sc9863a-apahb-gate";
+> +      sprd,syscon = <&ap_ahb_regs>;
+> +      #clock-cells = <1>;
+> +    };
+> +
+> +...
 > -- 
-> 1.9.1
+> 2.20.1
+> 
