@@ -2,98 +2,88 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F4BC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276ECC2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD74206CB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PV215Hsw"
+	by mail.kernel.org (Postfix) with ESMTP id F0B0520838
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 22:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577399434;
+	bh=P+0KcDQ/Yx8Nuk7b2278RkgOxU2ZsiTj9sOmnw3t0/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LOsIlWmoEMbG/33zoWF54XrMirkhjpfimV865Yt2SYuzzJcAugzKIUXtK+lEjQDb0
+	 X9x9JKlzPM+ECVlg1a87fu80PVNgI/tpjsxcc2WiWZY9I4V5WEqJfklzRFcqlleBVZ
+	 ULhGi6/RTSjR/4odnJN3LUFhGgK8X1WnF8W8iA1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfLZW3r (ORCPT
+        id S1726706AbfLZWaa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 17:29:47 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43552 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfLZW3o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:29:44 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so24647317wre.10;
-        Thu, 26 Dec 2019 14:29:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=1OGCzyJCrst2owrhk2ZRzZZ6qSHUKtNRJtopFQDCbsw=;
-        b=PV215Hsw6rpU6vP8tuImqgBgyPzKwDg6oiJfeK9BI2rBRmCV9RZnRJNdrTCmzA18sl
-         AS3RHvtygKstcKILeYIz6G/MRPlhXvv0PePSsxoH1jzN1uyxUntdJieJRMFKYUL3pDcx
-         LanX2V0scXGeF7VHZ6HaGbNyujNzZtZH0bz1hUL7vBdudj7EZ640BDJVl6oVbOJoxFIp
-         iRopL0GXGwJfFzZDLeiVMMIJvD61+LmfjeVFFMeFaIHqQafRZrNaDnrBj4r9HNCMhj0x
-         T2uPxmMyn/YJDo0PQZM+RPTDbESmeZSa2PqitWJjHy1HN9nyoLfZhsZ8a6NYDuMIeArW
-         Ti/A==
+        Thu, 26 Dec 2019 17:30:30 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34626 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZWaa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 17:30:30 -0500
+Received: by mail-io1-f67.google.com with SMTP id z193so24320366iof.1;
+        Thu, 26 Dec 2019 14:30:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=1OGCzyJCrst2owrhk2ZRzZZ6qSHUKtNRJtopFQDCbsw=;
-        b=anMjLgZriyVGd7EUZqPERgEaLoKuxcIvsnmo4k/iBYvD1cT9+8v+5o4P8hmyRmP+ZT
-         dlHbKEJf1cWnY6oDItNed5Pc359gWHFagWfSc5QI3KX+1ZlsK6f3Uv+Szid0K1p963cc
-         4ZzPxkCh6zbkl5FfFkGJD87T+qbZz4IBsDmAWeJBvU104BkjbRObskw1D4jg8pFYgD5E
-         8DaLhk1Q9RRbROhZ7HTXmiqvlN33u7q7Q1OvZPWL/yUtOoGzttUkLmXE6EFmymR1Ta3u
-         6GWmbVxVFaA4+Eu46VSr2vEMTYAHt66cikCn7rutPTlM+KKt6ixoLgexok9hHabTECR2
-         28lQ==
-X-Gm-Message-State: APjAAAVyUpkSnUZ2e31Edzfe2tmyidvJJzvL1F3Zgkmc0+xIcQgZXw0S
-        JZb8S09NUu7ErzzNClr2+eI=
-X-Google-Smtp-Source: APXvYqzQzABVu+SKYv0g1W8iRSiOGI4Mbm6b7r1KT2cZ4MqQy2HX6xRCwfE2nFShloC8CUsB++GnHg==
-X-Received: by 2002:a5d:62d0:: with SMTP id o16mr46093512wrv.197.1577399382667;
-        Thu, 26 Dec 2019 14:29:42 -0800 (PST)
-Received: from localhost.localdomain (p5B3F7018.dip0.t-ipconnect.de. [91.63.112.24])
-        by smtp.gmail.com with ESMTPSA id j2sm9731276wmk.23.2019.12.26.14.29.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=oXj0egOLEipXvK+Cz50CdkjFGq0EgLBghdmBZ/5exkA=;
+        b=BaM0Kv9PitrssQO4/B6aM9d1d2nm86iTYsvEAFl43U2yJ+W7z2dteG4zllHXMzH+Gy
+         E9gpMYNbg1shBDkfqlqJNLXxt9BtgnjChgh8j/0DMLtX4RRPWvq0JJgWDxM5oC0zP3tj
+         HviaSLP8+HUEJ51IJSjmZJ6oBb2/qsMtYqohZNyL6zk8aYYPQBi3UvDGY8JbN1eiSTCs
+         JTx4LOpb4C7FfBDJkKJx97v8CC975hLm4L07JjEcIOCnO9vUks9t+kO0LL5A9cdgzRwD
+         jU5d1f+mTRbyC4gESq4AcGR4Tz7pmZj4mr96f6dLMUh2pvK8liwuQzcKLrWWx3CKjS6a
+         KC8A==
+X-Gm-Message-State: APjAAAXXmMeAtRHeeX/4OUGZMg6lIqgzwAS7qQTz/1T6grl1CFFnUjOB
+        TM1h5sevwPIFgWc0qZLlXg==
+X-Google-Smtp-Source: APXvYqybilZELhr0wxtYJ1otx4J19UA6rDSIOcsvRrEk+czzp4qNmJFh99eChtoX3LmtuL9hvrlJFg==
+X-Received: by 2002:a5e:8b06:: with SMTP id g6mr31032706iok.61.1577399429555;
+        Thu, 26 Dec 2019 14:30:29 -0800 (PST)
+Received: from localhost ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id t88sm12617185ill.51.2019.12.26.14.30.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 14:29:42 -0800 (PST)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        shawnguo@kernel.org, heiko@sntech.de, sam@ravnborg.org,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/4] dt-bindings: Add an entry for Monolithic Power System, MPS
-Date:   Thu, 26 Dec 2019 23:29:27 +0100
-Message-Id: <20191226222930.8882-2-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191226222930.8882-1-sravanhome@gmail.com>
-References: <20191226222930.8882-1-sravanhome@gmail.com>
+        Thu, 26 Dec 2019 14:30:28 -0800 (PST)
+Date:   Thu, 26 Dec 2019 15:30:27 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        mark.rutland@arm.com, paul@crapouillou.net, vkoul@kernel.org,
+        Zubair.Kakakhel@imgtec.com, dan.j.williams@intel.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, 2374286503@qq.com
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add X1830 bindings.
+Message-ID: <20191226223027.GA29959@bogus>
+References: <1576591140-125668-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1576591140-125668-3-git-send-email-zhouyanjie@wanyeetech.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576591140-125668-3-git-send-email-zhouyanjie@wanyeetech.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add an entry for Monolithic Power System, MPS
+On Tue, 17 Dec 2019 21:58:59 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?=          wrote:
+> Add the dmaengine bindings for the X1830 Soc from Ingenic.
+> 
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+> ---
+>  .../devicetree/bindings/dma/jz4780-dma.txt         |  6 ++--
+>  include/dt-bindings/dma/x1830-dma.h                | 39 ++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 2 deletions(-)
+>  create mode 100644 include/dt-bindings/dma/x1830-dma.h
+> 
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..5eac9d08bfa8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -605,6 +605,8 @@ patternProperties:
-     description: MiraMEMS Sensing Technology Co., Ltd.
-   "^mitsubishi,.*":
-     description: Mitsubishi Electric Corporation
-+  "^mps,.*":
-+    description: Monolithic Power Systems, Inc.
-   "^mosaixtech,.*":
-     description: Mosaix Technologies, Inc.
-   "^motorola,.*":
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
