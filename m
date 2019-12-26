@@ -2,267 +2,129 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCF1C2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 12:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294C5C2D0DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 12:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34E62075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 12:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEA052075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 12:48:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YefnrY+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfLZMCu (ORCPT
+        id S1726460AbfLZMsf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 07:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfLZMCu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Dec 2019 07:02:50 -0500
-Received: from localhost (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE9562075E;
-        Thu, 26 Dec 2019 12:02:46 +0000 (UTC)
-From:   Shawn Guo <shawn.guo@linaro.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: [PATCH 2/2] media: rc: ir-hix5hd2: add hi3796cv300-ir support
-Date:   Thu, 26 Dec 2019 20:02:22 +0800
-Message-Id: <20191226120222.14745-3-shawn.guo@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191226120222.14745-1-shawn.guo@linaro.org>
-References: <20191226120222.14745-1-shawn.guo@linaro.org>
+        Thu, 26 Dec 2019 07:48:35 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35908 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfLZMsf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 07:48:35 -0500
+Received: by mail-io1-f67.google.com with SMTP id r13so13114328ioa.3;
+        Thu, 26 Dec 2019 04:48:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Qyu5/qGz7cbokfaVr/Hbo6e3ec8nfhc/yTVZxVcJAHc=;
+        b=YefnrY+EbXXFw6NCNms+uP2FauCYX8EKKW7IStqcgZ54KItrEGn/LydFpjMviil83f
+         IW1I3cuFJuujnMkaahO8vjHIvrmwA2q81wpVQCAVyvqSefBHQd6tnGsnfs70RejWHS45
+         9M3N3yI3DsqIK6LzRuXKOBTf6Rkkyra6B55MxKyi7GiAlGbcApJ2snZ6JYLsUp4tChO9
+         +FUQkpP5R3u0L9oJhT8ittb4GYvz6lo/boEJwrBNG5+BL2XERJCWwtoiABAshfGI4jVC
+         9hZxJMGZUN+z+Zxks+onaDk2szb+ZRO3a0mWxmJFRVlb5Xz7drOwssgD6oCH6BmfRFt9
+         wkjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Qyu5/qGz7cbokfaVr/Hbo6e3ec8nfhc/yTVZxVcJAHc=;
+        b=RYJTdnj3nSnXGjXRnPWbnkr/jVbFECX8x8ogAeB40krJgvCnwtYxpGltw2hgSaL4u/
+         2dALbl4qiHnLH/emODaXNH2dKI8jH4e6uAzqkHsErH26Chk/VrlgEjVpOhnm56n4A2Sr
+         6h2oJLWyuKpLnp7EPUleeHy2LzrXL/5pRhZj5KlVNmB2T9MTudIi/jj1/86gIfVQG07m
+         OWYx+PR5SXYQP4/k3e+wd0kRgZX/59oKTruBs44xbLmDDIt5IpFJYZobeVZW6nBcS/e8
+         bshYA7tNu+wNCxwIKkFnbp1bbCap5MOQZb3BQKQ/VpU9sXxx3Kdw3BfQJ1k5AR43/mlP
+         m0sw==
+X-Gm-Message-State: APjAAAW4b5J1ziC2wZ5BMkmoBtDTwj4WX5QSgwAXLvVl8ybD9LFXbaf8
+        patI31KXJwX5gOWSzGkxXUhFPqQOnsMASiYFFJQ=
+X-Google-Smtp-Source: APXvYqzgTHGdCwlE1xHWPIw+T/zvXXg/5Q23YMQERnKG40D0J11GZjNSHiZT89pjLxBM19FDQcJcvzXznwVR1Scakqc=
+X-Received: by 2002:a6b:c410:: with SMTP id y16mr28959521ioa.18.1577364514436;
+ Thu, 26 Dec 2019 04:48:34 -0800 (PST)
+MIME-Version: 1.0
+References: <20191219172823.1652600-1-anarsoul@gmail.com> <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org> <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+ <20191226104419.GA26677@Red>
+In-Reply-To: <20191226104419.GA26677@Red>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Thu, 26 Dec 2019 20:47:47 +0800
+Message-ID: <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The IR device on Hi3796CV300 SoC is mostly same as hix5hd2, except the
-following two things.
+On Thu, Dec 26, 2019 at 6:44 PM Corentin Labbe
+<clabbe.montjoie@gmail.com> wrote:
+>
+> On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > > >> H6 and R40 SoCs.
+> > > >
+> > > > Thanks again for working on this.
+> > > >
+> > > > I'll merge the DT patches when the driver will have been merged.
+> > >
+> > > I've applied patches 1 & 2.
+> > >
+> > > They are in the testing branch and will go to the linux-next branch a=
+s
+> > > soon as the kernelci passes.
+> >
+> > I just merged all the other patches (except the patch 6, for the H6,
+> > as requested by Vasily on IRC).
+> >
+>
+> Hello
+>
+> Vasily asked to not apply H6 due to my test failling on h6 and since he d=
+idnt own any H6 hw.
+> But it was failling due my fault (a failling build).
+>
+> So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and=
+ B) as reported by my answer to this thread.
 
- - IR_CLK offset is 0x60 instead of 0x48.
- - It needs to set an extra bit in IR_ENABLE register to enable IR.
+HI Corentin,
 
-The following changes are made to deal with them.
+Although it is not calibrated, it should work on the R40. Can you give
+my patch a try?
 
- - Define a SoC specific data to accommodate IR_CLK offset and the flag
-   telling requirement of extra enable bit.
- - Create function hix5hd2_ir_enable() to handle IR enabling. The original
-   hix5hd2_ir_enable() is all about managing IR clock, so gets renamed
-   to hix5hd2_ir_clk_enable().
- - Device table hix5hd2_ir_table[] gets moved forward, as it's being
-   used by hix5hd2_ir_probe() now.
+Thx=EF=BC=8C
+Yangtao
 
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
----
- drivers/media/rc/ir-hix5hd2.c | 79 +++++++++++++++++++++++++++--------
- 1 file changed, 61 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/media/rc/ir-hix5hd2.c b/drivers/media/rc/ir-hix5hd2.c
-index 32ccefeff57d..d80cfa455c73 100644
---- a/drivers/media/rc/ir-hix5hd2.c
-+++ b/drivers/media/rc/ir-hix5hd2.c
-@@ -37,10 +37,13 @@
- #define INT_CLR_RCV		BIT(16)
- #define INT_CLR_RCVTIMEOUT	(BIT(16) | BIT(17))
- 
--#define IR_CLK			0x48
- #define IR_CLK_ENABLE		BIT(4)
- #define IR_CLK_RESET		BIT(5)
- 
-+/* IR_ENABLE register bits */
-+#define IR_ENABLE_EN		BIT(0)
-+#define IR_ENABLE_EN_EXTRA	BIT(8)
-+
- #define IR_CFG_WIDTH_MASK	0xffff
- #define IR_CFG_WIDTH_SHIFT	16
- #define IR_CFG_FORMAT_MASK	0x3
-@@ -58,6 +61,23 @@
- 
- #define IR_HIX5HD2_NAME		"hix5hd2-ir"
- 
-+/* Need to set extra bit for enabling IR */
-+#define HIX5HD2_FLAG_EXTRA_ENABLE	BIT(0)
-+
-+struct hix5hd2_soc_data {
-+	u32 clk_reg;
-+	u32 flags;
-+};
-+
-+static const struct hix5hd2_soc_data hix5hd2_data = {
-+	.clk_reg = 0x48,
-+};
-+
-+static const struct hix5hd2_soc_data hi3796cv300_data = {
-+	.clk_reg = 0x60,
-+	.flags = HIX5HD2_FLAG_EXTRA_ENABLE,
-+};
-+
- struct hix5hd2_ir_priv {
- 	int			irq;
- 	void __iomem		*base;
-@@ -66,15 +86,17 @@ struct hix5hd2_ir_priv {
- 	struct regmap		*regmap;
- 	struct clk		*clock;
- 	unsigned long		rate;
-+	const struct hix5hd2_soc_data *socdata;
- };
- 
--static int hix5hd2_ir_enable(struct hix5hd2_ir_priv *dev, bool on)
-+static int hix5hd2_ir_clk_enable(struct hix5hd2_ir_priv *dev, bool on)
- {
-+	u32 clk_reg = dev->socdata->clk_reg;
- 	u32 val;
- 	int ret = 0;
- 
- 	if (dev->regmap) {
--		regmap_read(dev->regmap, IR_CLK, &val);
-+		regmap_read(dev->regmap, clk_reg, &val);
- 		if (on) {
- 			val &= ~IR_CLK_RESET;
- 			val |= IR_CLK_ENABLE;
-@@ -82,7 +104,7 @@ static int hix5hd2_ir_enable(struct hix5hd2_ir_priv *dev, bool on)
- 			val &= ~IR_CLK_ENABLE;
- 			val |= IR_CLK_RESET;
- 		}
--		regmap_write(dev->regmap, IR_CLK, val);
-+		regmap_write(dev->regmap, clk_reg, val);
- 	} else {
- 		if (on)
- 			ret = clk_prepare_enable(dev->clock);
-@@ -92,12 +114,23 @@ static int hix5hd2_ir_enable(struct hix5hd2_ir_priv *dev, bool on)
- 	return ret;
- }
- 
-+static inline void hix5hd2_ir_enable(struct hix5hd2_ir_priv *priv)
-+{
-+	u32 val = IR_ENABLE_EN;
-+
-+	if (priv->socdata->flags & HIX5HD2_FLAG_EXTRA_ENABLE)
-+		val |= IR_ENABLE_EN_EXTRA;
-+
-+	writel_relaxed(val, priv->base + IR_ENABLE);
-+}
-+
- static int hix5hd2_ir_config(struct hix5hd2_ir_priv *priv)
- {
- 	int timeout = 10000;
- 	u32 val, rate;
- 
--	writel_relaxed(0x01, priv->base + IR_ENABLE);
-+	hix5hd2_ir_enable(priv);
-+
- 	while (readl_relaxed(priv->base + IR_BUSY)) {
- 		if (timeout--) {
- 			udelay(1);
-@@ -128,13 +161,13 @@ static int hix5hd2_ir_open(struct rc_dev *rdev)
- 	struct hix5hd2_ir_priv *priv = rdev->priv;
- 	int ret;
- 
--	ret = hix5hd2_ir_enable(priv, true);
-+	ret = hix5hd2_ir_clk_enable(priv, true);
- 	if (ret)
- 		return ret;
- 
- 	ret = hix5hd2_ir_config(priv);
- 	if (ret) {
--		hix5hd2_ir_enable(priv, false);
-+		hix5hd2_ir_clk_enable(priv, false);
- 		return ret;
- 	}
- 	return 0;
-@@ -144,7 +177,7 @@ static void hix5hd2_ir_close(struct rc_dev *rdev)
- {
- 	struct hix5hd2_ir_priv *priv = rdev->priv;
- 
--	hix5hd2_ir_enable(priv, false);
-+	hix5hd2_ir_clk_enable(priv, false);
- }
- 
- static irqreturn_t hix5hd2_ir_rx_interrupt(int irq, void *data)
-@@ -205,6 +238,13 @@ static irqreturn_t hix5hd2_ir_rx_interrupt(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static const struct of_device_id hix5hd2_ir_table[] = {
-+	{ .compatible = "hisilicon,hix5hd2-ir", &hix5hd2_data, },
-+	{ .compatible = "hisilicon,hi3796cv300-ir", &hi3796cv300_data, },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, hix5hd2_ir_table);
-+
- static int hix5hd2_ir_probe(struct platform_device *pdev)
- {
- 	struct rc_dev *rdev;
-@@ -212,6 +252,7 @@ static int hix5hd2_ir_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	struct hix5hd2_ir_priv *priv;
- 	struct device_node *node = pdev->dev.of_node;
-+	const struct of_device_id *of_id;
- 	const char *map_name;
- 	int ret;
- 
-@@ -219,6 +260,13 @@ static int hix5hd2_ir_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	of_id = of_match_device(hix5hd2_ir_table, dev);
-+	if (!of_id) {
-+		dev_err(dev, "Unable to initialize IR data\n");
-+		return -ENODEV;
-+	}
-+	priv->socdata = of_id->data;
-+
- 	priv->regmap = syscon_regmap_lookup_by_phandle(node,
- 						       "hisilicon,power-syscon");
- 	if (IS_ERR(priv->regmap)) {
-@@ -309,7 +357,7 @@ static int hix5hd2_ir_suspend(struct device *dev)
- 	struct hix5hd2_ir_priv *priv = dev_get_drvdata(dev);
- 
- 	clk_disable_unprepare(priv->clock);
--	hix5hd2_ir_enable(priv, false);
-+	hix5hd2_ir_clk_enable(priv, false);
- 
- 	return 0;
- }
-@@ -319,17 +367,18 @@ static int hix5hd2_ir_resume(struct device *dev)
- 	struct hix5hd2_ir_priv *priv = dev_get_drvdata(dev);
- 	int ret;
- 
--	ret = hix5hd2_ir_enable(priv, true);
-+	ret = hix5hd2_ir_clk_enable(priv, true);
- 	if (ret)
- 		return ret;
- 
- 	ret = clk_prepare_enable(priv->clock);
- 	if (ret) {
--		hix5hd2_ir_enable(priv, false);
-+		hix5hd2_ir_clk_enable(priv, false);
- 		return ret;
- 	}
- 
--	writel_relaxed(0x01, priv->base + IR_ENABLE);
-+	hix5hd2_ir_enable(priv);
-+
- 	writel_relaxed(0x00, priv->base + IR_INTM);
- 	writel_relaxed(0xff, priv->base + IR_INTC);
- 	writel_relaxed(0x01, priv->base + IR_START);
-@@ -341,12 +390,6 @@ static int hix5hd2_ir_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(hix5hd2_ir_pm_ops, hix5hd2_ir_suspend,
- 			 hix5hd2_ir_resume);
- 
--static const struct of_device_id hix5hd2_ir_table[] = {
--	{ .compatible = "hisilicon,hix5hd2-ir", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, hix5hd2_ir_table);
--
- static struct platform_driver hix5hd2_ir_driver = {
- 	.driver = {
- 		.name = IR_HIX5HD2_NAME,
--- 
-2.17.1
-
+>
+> Regards
