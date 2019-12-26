@@ -2,119 +2,119 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF6FC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 19:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2854C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 20:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FC020740
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 19:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577388140;
-	bh=h0usdPUBNffFSbR2BVkjJPeYhEAY6fsa3JYCRQEcRnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gxpM9Ka1i2tAbodjCPqDmtc+BpxBKo/WidZDBdglf8rp7UNd9MNrCQLgURL/J/YUh
-	 LikP+/2QQXDosTHOXdea+taLITdVi5knBaOhViwDSJNffgPKqs6eSPkNjFhpTg4+XU
-	 Y2Wdeqvq51nnyrGOiQSplejAe9DYAXOdZT2M+Yy4=
+	by mail.kernel.org (Postfix) with ESMTP id 7BA3A20740
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 20:11:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dkoPDMmR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfLZTWU (ORCPT
+        id S1726706AbfLZULL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 14:22:20 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41111 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfLZTWU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 14:22:20 -0500
-Received: by mail-io1-f65.google.com with SMTP id c16so20416254ioo.8;
-        Thu, 26 Dec 2019 11:22:19 -0800 (PST)
+        Thu, 26 Dec 2019 15:11:11 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44800 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfLZULL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 15:11:11 -0500
+Received: by mail-ed1-f67.google.com with SMTP id bx28so23591253edb.11;
+        Thu, 26 Dec 2019 12:11:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DKyS0Vzar44g5nZVMq7w89sJBVTVVQr7IhBAjNIROrI=;
+        b=dkoPDMmRO2eMwq7TMq1HtLGXctYNZZjUXuFpwJaYLHjL4DHZBgoqJoj2hhpUurQB86
+         quqctLUkVeEctiVeMOgGlQKlzRsXqBY2H2rp9rluW2Ub29W0vqIMPXGP+zlhb+8UJmBD
+         NSl/EdBjv3zKh1ruJhqdiuFdRG813PmDhGNiz+al4f34WHfimfbMB8AlJCQVI/WhMSfz
+         7kMLzUho23PWWhN6nGDqRlnyl5bOKDsKbnmG/QVlKaVotqfucxZCUwe+mp+f52OcZpnR
+         ec0YYHCFTvIhPXxhSWEyhNw5FkVMpPcjhLiNnsQBSClPmjXpKatN6p2YCq8M+5eNPBYE
+         1vLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R5ux+aGvRE7UtpZWNEHDpq3k2THh0opmzfMyK7lQA+4=;
-        b=hCDpSSLieOlbhG3SHdorTCIA19wv9VFFzfgKI0QhrVn8COMWCEV/+WOBsm0RdhQcgU
-         tC+S2PVEJsaObsFa0wxPWXKrZixMnaCV3qYiSQH/CBoP+MZgFtR8QvM0pqxzurro3KR+
-         C2gokJpNj6BDEG4dKIMth64lTzczX2x7eCLfypvtGX51clFnu02j/nbFcC6/xL/2xWfi
-         7Zwi1L39kC2BXWg1CFRHlxve0pjqo4IGQgQ8AB1MmDWJfRVEUUDbv5z8ENOsJXEOyn4z
-         FvDkhXkZ40rAVLRLci69UnGh9qmyYVgrHmTohrtcHVqZBtwOJ4pd8g9eBzkG0qIxZPBf
-         MOUg==
-X-Gm-Message-State: APjAAAXOOcui/iY7xHkcB4TDWzOYhThowj1jFLawMutEXKxcRNnfPspb
-        lc7OUoZlsZq6PrnWrdH57g==
-X-Google-Smtp-Source: APXvYqx2j8ZzstKCwh9JS77NHZuPA/MpsLy6K80JazDbIQ1Q8wufCtUxnmt94zLihf2RNl8QRxlb0w==
-X-Received: by 2002:a02:6558:: with SMTP id u85mr37591000jab.42.1577388139118;
-        Thu, 26 Dec 2019 11:22:19 -0800 (PST)
-Received: from localhost ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id b145sm8844951iof.60.2019.12.26.11.22.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 11:22:18 -0800 (PST)
-Date:   Thu, 26 Dec 2019 12:22:17 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     vincent.cheng.xh@renesas.com
-Cc:     mark.rutland@arm.com, richardcochran@gmail.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/3] dt-bindings: ptp: Rename ptp-idtcm.yaml to
- ptp-cm.yaml
-Message-ID: <20191226192217.GA17727@bogus>
-References: <1576558988-20837-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1576558988-20837-2-git-send-email-vincent.cheng.xh@renesas.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DKyS0Vzar44g5nZVMq7w89sJBVTVVQr7IhBAjNIROrI=;
+        b=DnR6LQSXjnUhRQyozO5E/IsetZ0az9w58fZux1kQq98Jrxp4Q3ffYaJHM4i1t4pYX9
+         NOUwRJO3J6gScDG7YZNTKc0ijq36SI5oNbVmRjVoMor4ZKSMdyJTOplW9m0MJzyBjCUQ
+         LwRugfdSpxpHFbXgvJmkAlG4o57hFBC1po79en973PuE6pE3hc7/+QhHuHy9Tc58N9yO
+         /rBTDlKGL0YojqyKHTqEyetOuib/6uGe9n4VDarN/TVZghYwnsMo3og1t3byLtzXNe2h
+         lV6RgwHPa0xcb5zFh01304ZrAgTnK29GZoqarsk4+xADj4kmcsA7IRtu3XyJU0XuPl1G
+         s2tw==
+X-Gm-Message-State: APjAAAVestf004B6fs77qzaHfRlTJqevVd8d6/b3wBW/trHYekgrn1zw
+        uXfcmB6AnPoDZ9PDQPtzrzmIiiyx5FfvXo06gZA=
+X-Google-Smtp-Source: APXvYqyOHd8m4jOZ18liraS1LmkJgDRRTlRaa1TAnpybzR7ymvltec/WOyoBzbMMK/SVycz37m9EThbBbClEbuEt25k=
+X-Received: by 2002:a50:fb96:: with SMTP id e22mr51700477edq.18.1577391069615;
+ Thu, 26 Dec 2019 12:11:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576558988-20837-2-git-send-email-vincent.cheng.xh@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191224173942.18160-1-repk@triplefau.lt> <20191224173942.18160-6-repk@triplefau.lt>
+In-Reply-To: <20191224173942.18160-6-repk@triplefau.lt>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 26 Dec 2019 21:10:58 +0100
+Message-ID: <CAFBinCBzt6SRGx+8iT=NHW00ip_gtg2cW7T8z9aqjeGPH8f7OQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] dt-bindings: Add AXG PCIE PHY bindings
+To:     Remi Pommarel <repk@triplefau.lt>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 12:03:06AM -0500, vincent.cheng.xh@renesas.com wrote:
-> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
-> 
-> Renesas Electronics Corporation completed acquisition of IDT in 2019.
-> 
-> This patch removes IDT references or replaces IDT with Renesas.
-> Renamed ptp-idtcm.yaml to ptp-cm.yaml.
-> 
-> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+On Tue, Dec 24, 2019 at 6:32 PM Remi Pommarel <repk@triplefau.lt> wrote:
+>
+> Add documentation for PCIE PHYs found in AXG SoCs.
+>
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > ---
->  Documentation/devicetree/bindings/ptp/ptp-cm.yaml  | 69 ++++++++++++++++++++++
->  .../devicetree/bindings/ptp/ptp-idtcm.yaml         | 69 ----------------------
->  2 files changed, 69 insertions(+), 69 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-cm.yaml
->  delete mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
-> 
+>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> new file mode 100644
+> index 000000000000..c622a1b38ffc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/amlogic,meson-axg-pcie.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Amlogic AXG PCIE PHY
+> +
+> +maintainers:
+> +  - Remi Pommarel <repk@triplefau.lt>
+> +
+> +properties:
 > +  compatible:
 > +    enum:
-> +      # For System Synchronizer
-> +      - renesas,8a34000
-> +      - renesas,8a34001
-> +      - renesas,8a34002
-> +      - renesas,8a34003
-> +      - renesas,8a34004
-> +      - renesas,8a34005
-> +      - renesas,8a34006
-> +      - renesas,8a34007
-> +      - renesas,8a34008
-> +      - renesas,8a34009
+> +      - amlogic,axg-pcie-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  aml,hhi-gpr:
+> +    maxItems: 1
+nit-pick (as I didn't have time to review the whole series yet):
+we have at least two other IP blocks that need this. they use
+"amlogic,hhi-sysctrl" for the property name
 
 
-> -  compatible:
-> -    enum:
-> -      # For System Synchronizer
-> -      - idt,8a34000
-> -      - idt,8a34001
-> -      - idt,8a34002
-> -      - idt,8a34003
-> -      - idt,8a34004
-> -      - idt,8a34005
-> -      - idt,8a34006
-> -      - idt,8a34007
-> -      - idt,8a34008
-> -      - idt,8a34009
-
-NAK. You can't change this as it is an ABI.
-
-Rob
-
+Martin
