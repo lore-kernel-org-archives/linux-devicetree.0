@@ -2,119 +2,93 @@ Return-Path: <SRS0=cCmK=2Q=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFDAC2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 10:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1FAC2D0DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 11:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CB82080D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 10:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E5B2075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 26 Dec 2019 11:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRWj7QJR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZHTiyIfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbfLZKoZ (ORCPT
+        id S1726074AbfLZLI1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 05:44:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44027 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbfLZKoY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 05:44:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so23324892wre.10;
-        Thu, 26 Dec 2019 02:44:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=W6Af4lIIOy516w1HZJv41QRub9HWiIk1RJOzz7dfgEQ=;
-        b=RRWj7QJRVGD7qhdqdeqYLZtA3GNeE24HteoqtMAQy9EdtyETZbqpILSloz8G+1S5l3
-         Cy8XV31tpQBWog6+NhQ5HZyK+hIMRWTEzlZDq+OY5LOH2PWHZAt54XpNkSFW9VNYvK7+
-         qOD+l/zTDhOjfG1WiXgWamWyNGx6mvp/eV7109emFx6+YLbOFGlnsQBka54AfSjekt3u
-         5bTHFNQZ7V3MphobXR5/U8bc0spT9mDwNzvS+LweUtl1Fe5JO8PmXYFYJbH3Vq6l48qN
-         ua7ud5NKDlQsiX8s1jsxKYZO3y1Qn6lYP536Y1fUhm8GTSH2duSQ/2CNMuBi732zoPwH
-         Swdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=W6Af4lIIOy516w1HZJv41QRub9HWiIk1RJOzz7dfgEQ=;
-        b=WpqReZYAPND0pJcvE72W7t63feEUjMf0zLIivNZG/OA1yiSlfkw6NVniuY5+ZEbrW4
-         aInUltIq5S4q0JYmTCcqODEBZDHT4LoTyJKZ0huTnfpQ0vIpmlPH1QKgl4ajCgUf6zws
-         O3G2AKTlrtOZmBFSpA6950aTjJHrNKBQuFPvhHPCfVF3yq/sb5SKmi2LUjxg7RvXElFf
-         /1saRg91ATeWk/0YPfPjOFafAX35mpsKt+lbra2M+XxSauq5i7I2AKVdew9HYV/BqbGf
-         Qz2S9Enwo3MJ93i4bmHYQ9kCH77VDqjutFIXceUrmAR/0qQe3aNmEVrt198v6PBuTgJf
-         3X9g==
-X-Gm-Message-State: APjAAAW/k0KiNch0+0lH0BHO9QHvQsHlvXX3v0zYa18v/UapCVSokY+a
-        Q5Hf8Ei7YzqD0tUlkABXANqdLnNU
-X-Google-Smtp-Source: APXvYqzgFYTin+GSIcMwEioDi0ZQwh5k4QJ4YC+vSqSVqZpzHffcKVk3xA1ydLymrJcfkxNAOQOngA==
-X-Received: by 2002:a5d:6ca1:: with SMTP id a1mr43133454wra.36.1577357062602;
-        Thu, 26 Dec 2019 02:44:22 -0800 (PST)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id y20sm7891048wmi.25.2019.12.26.02.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 02:44:21 -0800 (PST)
-Date:   Thu, 26 Dec 2019 11:44:19 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
- H6, R40
-Message-ID: <20191226104419.GA26677@Red>
-References: <20191219172823.1652600-1-anarsoul@gmail.com>
- <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
- <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
- <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+        Thu, 26 Dec 2019 06:08:27 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:40468 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbfLZLI1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Dec 2019 06:08:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=ukIw4m4IWdjtDk5tl+vpdhk2AgnUFvsYekg7tTbNV58=; b=ZHTiyIfdFWcU9Q83bJaMbTRwx0
+        M4IA11fwoXIwj+IX+Q+MvfwepBiRNPyZ0DNNx24Pb9fQyhMXBKOgzgNrUxVXy+sir+VNST6I8WNqk
+        nw+E/Mf+hL4eKIOC3YpaoTfGqlK5aBGy6lVC6fXQBBrdeKlW7lyzzuLRh2F6r+L7txKo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1ikR09-0001I2-2q; Thu, 26 Dec 2019 12:08:21 +0100
+Date:   Thu, 26 Dec 2019 12:08:21 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [RFC] obsolete references to
+ Documentation/devicetree/bindings/net/ethernet.txt
+Message-ID: <20191226110821.GE1480@lunn.ch>
+References: <VI1PR04MB5567BBD2827A5DDDFD0D82B7EC2E0@VI1PR04MB5567.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <VI1PR04MB5567BBD2827A5DDDFD0D82B7EC2E0@VI1PR04MB5567.eurprd04.prod.outlook.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
-> On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
-> > On 19/12/2019 18:33, Maxime Ripard wrote:
-> > > Hi,
-> > >
-> > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
-> > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
-> > >> H6 and R40 SoCs.
-> > >
-> > > Thanks again for working on this.
-> > >
-> > > I'll merge the DT patches when the driver will have been merged.
-> >
-> > I've applied patches 1 & 2.
-> >
-> > They are in the testing branch and will go to the linux-next branch as
-> > soon as the kernelci passes.
+On Mon, Dec 23, 2019 at 09:00:50AM +0000, Madalin Bucur (OSS) wrote:
+> Hi,
 > 
-> I just merged all the other patches (except the patch 6, for the H6,
-> as requested by Vasily on IRC).
+> this patch removed the ethernet.txt content and added the information found in
+> it in the ethernet-controller.yaml (Documentation/devicetree/bindings/net):
 > 
+>   commit 9d3de3c58347623b5e71d554628a1571cd3142ad
+>   Author: Maxime Ripard <maxime.ripard@bootlin.com>
+>   Date:   Thu Jun 27 17:31:43 2019 +0200
+> 
+>       dt-bindings: net: Add YAML schemas for the generic Ethernet options
+> 
+>       The Ethernet controllers have a good number of generic options that can be
+>       needed in a device tree. Add a YAML schemas for those.
+> 
+>       Reviewed-by: Rob Herring <robh@kernel.org>
+>       Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+>       Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>       Signed-off-by: Rob Herring <robh@kernel.org>
+> 
+> There are still many references to the previous ethernet.txt document:
+> 
+>   $ grep ethernet.txt Documentation/devicetree/bindings/net/ -r | wc -l
+>   96
+> 
+> Should those be updated too or it's enough to rely on the current content
+> of the previous ethernet.txt file:
+> 
+>   $ cat Documentation/devicetree/bindings/net/ethernet.txt
+>   This file has moved to ethernet-controller.yaml.
 
-Hello
+Hi Madalin
 
-Vasily asked to not apply H6 due to my test failling on h6 and since he didnt own any H6 hw.
-But it was failling due my fault (a failling build).
+Feel free to fix the references if you want. Probably a perl one liner
+should do most of the work.
 
-So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and B) as reported by my answer to this thread.
-
-Regards
+       Thanks
+	Andrew
