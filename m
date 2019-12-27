@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26C8C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EB6C2D0DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F2F218AC
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3457B20CC7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469290;
-	bh=3tyyKQREqMsKu1Ee8ah4w/mCEkqxToX7uq09Ncf4VDM=;
+	s=default; t=1577469315;
+	bh=Qf+Lke/xZRTcVCvZC0012unFzCPQGzOZY/o5doau+BU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DCWNWwtxQ6DxgBiSspkIXDXW7/0lBrqyvX1kWZbWYw/BrdZ0p3PRxbZXQcHM/nHa5
-	 wz36/wsFHlnOBFytpxAwp2vSE4AYTncb2BA7idvctoawCOszkgUiY0PTVD6jIY2CsL
-	 iKiQmJakjQj0sb25cFzO1vJp3xk3itoqDBuq3T/4=
+	b=MWddj00nF2zyjcfPzsK5hQS10mIBpMFCcy9dHr7R6Xpcs4qMg7uV+/nSxaCVW4xD8
+	 ZATq7iaZy++VXdYkjK3gL351kgaovmhCsA9SpC0hdNQURvQfYE8/YubKxik0kfsFnt
+	 DxQjUU83ShpwT0ABimNYbxl0FwB4wRDw5r50mWxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfL0Rmc (ORCPT
+        id S1727813AbfL0RmX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:42:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39406 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:42:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbfL0Rmb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:42:31 -0500
+        id S1727828AbfL0RmV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:42:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87E8022525;
-        Fri, 27 Dec 2019 17:42:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50C2A222C3;
+        Fri, 27 Dec 2019 17:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468550;
-        bh=3tyyKQREqMsKu1Ee8ah4w/mCEkqxToX7uq09Ncf4VDM=;
+        s=default; t=1577468541;
+        bh=Qf+Lke/xZRTcVCvZC0012unFzCPQGzOZY/o5doau+BU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jU+93leMhy6yD5obFfFHgtm0utmY0pyP5Pea+XAl++IXUgKKuHXtn16fBVQVCtvj+
-         vOwN7b2RN2UfkfRFQzgwMtfmGFUh3AHOZGN/WYjLbHlEDlO/zGr8X3oOe+EHeShAJg
-         RR8SngXN5IwoDlADDbcharQaHbenmSlaYr6+HtW4=
+        b=L+IwSrXxzggoZKnoBNBGvM09Li3dGNxONPZGZ6DJycHxunIc0+ZLAIAZnei52zlW0
+         hZtQQEJbxJLj1qptWTH3quoH9xDX2m+dXopcpm1xNihbGvrqH/fW5TtBnQ0b6AZvuz
+         m9D7Sk1uSUJHJQvr1nXN6yZicN3HR44YBeMfdxbI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 077/187] ARM: dts: am437x-gp/epos-evm: fix panel compatible
-Date:   Fri, 27 Dec 2019 12:39:05 -0500
-Message-Id: <20191227174055.4923-77-sashal@kernel.org>
+Cc:     Michael Walle <michael@walle.cc>,
+        Tang Yuantian <andy.tang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 070/187] arm64: dts: ls1028a: fix typo in TMU calibration data
+Date:   Fri, 27 Dec 2019 12:38:58 -0500
+Message-Id: <20191227174055.4923-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
 References: <20191227174055.4923-1-sashal@kernel.org>
@@ -61,52 +61,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Michael Walle <michael@walle.cc>
 
-[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
+[ Upstream commit 961f8209c8d5ef5d33da42e6656d7c8179899da0 ]
 
-The LCD panel on AM4 GP EVMs and ePOS boards seems to be
-osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
-the panel has changed since the early EVMs, or there has been a mistake
-with the panel type.
+The temperature sensor may jump backwards because there is a wrong
+calibration value. Both values have to be monotonically increasing.
+Fix it.
 
-Update the DT files accordingly.
+This was tested on a custom board.
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 571cebfe8e2b ("arm64: dts: ls1028a: Add Thermal Monitor Unit node")
+Signed-off-by: Michael Walle <michael@walle.cc>
+Acked-by: Tang Yuantian <andy.tang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index cae4500194fe..811c8cae315b 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -86,7 +86,7 @@
- 		};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		backlight = <&lcd_bl>;
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 95314121d111..078cb473fa7d 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -42,7 +42,7 @@
- 	};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		backlight = <&lcd_bl>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 72b9a75976a1..c7dae9ec17da 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -567,7 +567,7 @@
+ 					       0x00010004 0x0000003d
+ 					       0x00010005 0x00000045
+ 					       0x00010006 0x0000004d
+-					       0x00010007 0x00000045
++					       0x00010007 0x00000055
+ 					       0x00010008 0x0000005e
+ 					       0x00010009 0x00000066
+ 					       0x0001000a 0x0000006e
 -- 
 2.20.1
 
