@@ -2,153 +2,114 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AEBC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A23C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA8D208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577428459;
-	bh=QmhOaQhmStFpEX9h7iiPOQiA3ViF2ugMgnDWtCU9Ek8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2HCqzqGJ+4Xs4EaUk3vsewNUFDnoBLkcl5e3LdhpBdQiNbpZkHVLlWG1JtdheQglh
-	 ZdEQgPJerjg8HjB9RJrhGjN1M+NKjvu7cK8P3Vxne8T6j3Y++SuIYkhNa/AVrpdKLS
-	 37hi8ytXlXVwiamy/67gJ9vsY+KWQCye4Wf6FS3w=
+	by mail.kernel.org (Postfix) with ESMTP id 5676B20882
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbfL0GeS (ORCPT
+        id S1726265AbfL0Gg5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:34:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfL0GeS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 01:34:18 -0500
-Received: from localhost (unknown [106.201.34.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7251220828;
-        Fri, 27 Dec 2019 06:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577428457;
-        bh=QmhOaQhmStFpEX9h7iiPOQiA3ViF2ugMgnDWtCU9Ek8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j71b1ORR5isd/iuQCkuKk+CZkf8gXZyRZKiNR9MZgAtgIb1azhbGHN4o6PHKvEBvO
-         10xvGkDVQM+Bk8xfelvhFK+bnnZKiBgkzhXwAPSNKQxR/FvxCtP3ZqX3MW4AuQTi95
-         ceEaiwYCt+BlTKfgKiJO5RABJlP+bu1JKrCSxUOg=
-Date:   Fri, 27 Dec 2019 12:04:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA
- controller driver
-Message-ID: <20191227063411.GG3006@vkoul-mobl>
-References: <1576630620-1977-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com>
+        Fri, 27 Dec 2019 01:36:57 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:54637 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfL0Gg4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 01:36:56 -0500
+Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 27 Dec 2019
+ 14:37:14 +0800
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH v3 0/6] arm64: meson: Add support for USB on Amlogic A1
+Date:   Fri, 27 Dec 2019 14:36:40 +0800
+Message-ID: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com>
+Content-Type: text/plain
+X-Originating-IP: [10.18.11.213]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18-12-19, 09:57, Kunihiko Hayashi wrote:
-> This adds external DMA controller driver implemented in Socionext
-> UniPhier SoCs. This driver supports DMA_MEMCPY and DMA_SLAVE modes.
-> 
-> Since this driver does not support the the way to transfer size
-> unaligned to burst width, 'src_maxburst' or 'dst_maxburst' of
+This patchset adds support for USB on Amlogic A1 SoCs.
 
-You mean driver does not support any unaligned bursts?
+This patchset is composed with :
+- bindings of the PHY
+- bindings of the USB Control Glue
+- PHY Driver
+- USB Control Glue driver
+- dts of the PHY
+- dts of the USB Controller
 
-> +static int uniphier_xdmac_probe(struct platform_device *pdev)
-> +{
-> +	struct uniphier_xdmac_device *xdev;
-> +	struct device *dev = &pdev->dev;
-> +	struct dma_device *ddev;
-> +	int irq;
-> +	int nr_chans;
-> +	int i, ret;
-> +
-> +	if (of_property_read_u32(dev->of_node, "dma-channels", &nr_chans))
-> +		return -EINVAL;
-> +	if (nr_chans > XDMAC_MAX_CHANS)
-> +		nr_chans = XDMAC_MAX_CHANS;
-> +
-> +	xdev = devm_kzalloc(dev, struct_size(xdev, channels, nr_chans),
-> +			    GFP_KERNEL);
-> +	if (!xdev)
-> +		return -ENOMEM;
-> +
-> +	xdev->nr_chans = nr_chans;
-> +	xdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(xdev->reg_base))
-> +		return PTR_ERR(xdev->reg_base);
-> +
-> +	ddev = &xdev->ddev;
-> +	ddev->dev = dev;
-> +	dma_cap_zero(ddev->cap_mask);
-> +	dma_cap_set(DMA_MEMCPY, ddev->cap_mask);
-> +	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
-> +	ddev->src_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
-> +	ddev->dst_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
-> +	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
-> +			   BIT(DMA_MEM_TO_MEM);
-> +	ddev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> +	ddev->max_burst = XDMAC_MAX_WORDS;
-> +	ddev->device_free_chan_resources = uniphier_xdmac_free_chan_resources;
-> +	ddev->device_prep_dma_memcpy = uniphier_xdmac_prep_dma_memcpy;
-> +	ddev->device_prep_slave_sg = uniphier_xdmac_prep_slave_sg;
-> +	ddev->device_config = uniphier_xdmac_slave_config;
-> +	ddev->device_terminate_all = uniphier_xdmac_terminate_all;
-> +	ddev->device_synchronize = uniphier_xdmac_synchronize;
-> +	ddev->device_tx_status = dma_cookie_status;
-> +	ddev->device_issue_pending = uniphier_xdmac_issue_pending;
-> +	INIT_LIST_HEAD(&ddev->channels);
-> +
-> +	for (i = 0; i < nr_chans; i++) {
-> +		ret = uniphier_xdmac_chan_init(xdev, i);
-> +		if (ret) {
-> +			dev_err(dev,
-> +				"Failed to initialize XDMAC channel %d\n", i);
-> +			return ret;
+The Amlogic A1 USB Complex is composed of :
+- 1 DWC3 USB controller for USB2 Host functionality
+- 1 USB2 PHY for USB2 Host functionality
 
-so on error for channel N we leave N-1 channels initialized?
+The USB Control Glue setups the clocks and the reset about DWC3 USB
+controller, and binds to the USB2 PHY. It also configures the 8bit
+UTMI interfaces for the USB2 PHY, including setting USB2 phy mode.
 
-> +static int uniphier_xdmac_remove(struct platform_device *pdev)
-> +{
-> +	struct uniphier_xdmac_device *xdev = platform_get_drvdata(pdev);
-> +	struct dma_device *ddev = &xdev->ddev;
-> +	struct dma_chan *chan;
-> +	int ret;
-> +
-> +	/*
-> +	 * Before reaching here, almost all descriptors have been freed by the
-> +	 * ->device_free_chan_resources() hook. However, each channel might
-> +	 * be still holding one descriptor that was on-flight at that moment.
-> +	 * Terminate it to make sure this hardware is no longer running. Then,
-> +	 * free the channel resources once again to avoid memory leak.
-> +	 */
-> +	list_for_each_entry(chan, &ddev->channels, device_node) {
-> +		ret = dmaengine_terminate_sync(chan);
-> +		if (ret)
-> +			return ret;
-> +		uniphier_xdmac_free_chan_resources(chan);
+The USB2 PHY driver initializes the phy analog settings, phy PLL 
+setup and phy tuning.
 
-terminating sounds okayish but not freeing here. .ree_chan_resources()
-should have been called already and that should ensure that termination
-is already done...
+This patchset is based on A1 clock/power domain/reset series at [0].
+
+Changes since v1:[1]
+ - integrate glue and phy drivers into g12a's
+ 
+Changes since v2:[2]
+ - modify amlogic,meson-g12a-usb-ctrl.yaml with dt_binding_check tool
+ - phy/glue driver use of_device_get_match_data to distinguish A1 from G12A
+
+[0]
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=185477
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=180055
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=189643
+
+[1] : https://lore.kernel.org/linux-amlogic/1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com/
+
+[2] : https://lore.kernel.org/linux-amlogic/1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com/
+
+Hanjie Lin (6):
+  dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
+  dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
+  phy: amlogic: Add Amlogic A1 USB2 PHY Driver
+  usb: dwc3: Add Amlogic A1 DWC3 glue
+  arm64: dts: meson: a1: Enable USB2 PHY
+  arm64: dts: meson: a1: Enable DWC3 controller
+
+ .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    |  55 +++++++++++
+ .../bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml  |  57 +++++++++--
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  44 +++++++++
+ drivers/phy/amlogic/phy-meson-g12a-usb2.c          |  93 ++++++++++++------
+ drivers/usb/dwc3/dwc3-meson-g12a.c                 | 105 +++++++++++++++------
+ 5 files changed, 292 insertions(+), 62 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
 
 -- 
-~Vinod
+2.7.4
+
