@@ -2,145 +2,73 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BACC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDA2C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 02:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FE52080D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 01:35:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577410532;
-	bh=cza6PrMG2LCdaf+NGecegJLqy0CS9RpK88jv08rjwLU=;
-	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
-	b=ip+iA8jGJzHJPSlz9Lj/79I6KTsnjgTuZPgGZ6UeT0UeUMOb6IwBjiz/UhbJMPEku
-	 V3R8C/fx1HISNUTgNg6TVWMLFDCAlFizKH5/DeZjH2b+eAg2am11RCIozUu+xvVxqd
-	 HW8jV4gQyLeUFlIr+XGFrDHggscls5xf1oNM/o7k=
+	by mail.kernel.org (Postfix) with ESMTP id CC82C20838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 02:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfL0Bfa (ORCPT
+        id S1726115AbfL0CQF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 20:35:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47602 "EHLO mail.kernel.org"
+        Thu, 26 Dec 2019 21:16:05 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:44196 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbfL0Bf3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 26 Dec 2019 20:35:29 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A445B2080D;
-        Fri, 27 Dec 2019 01:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577410528;
-        bh=cza6PrMG2LCdaf+NGecegJLqy0CS9RpK88jv08rjwLU=;
-        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
-        b=PeZBHZBkQyRaDfaZDG3vZaRTcEMgVMs9ouVBb87r8KwsXuvhUp2ZIC21Zt29xBQsT
-         lT/+O3ub5mPrstV1Ct2Hj3KSmxl4FiAmwKUDyfOWxO2tFH/yJYTnuM+KWYklR7p7cn
-         Jjf1v0Iv/997dbhwWiiSCHcqaa7+SJneSxhzho7A=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191226224156.GE1908628@ripper>
-References: <20191207203603.2314424-1-bjorn.andersson@linaro.org> <20191207203603.2314424-2-bjorn.andersson@linaro.org> <20191219063719.5AF942146E@mail.kernel.org> <20191220023427.GL448416@yoga> <20191224022042.7DDB120709@mail.kernel.org> <20191226224156.GE1908628@ripper>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        id S1726550AbfL0CQD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 26 Dec 2019 21:16:03 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 70C7C1A1008;
+        Fri, 27 Dec 2019 03:16:02 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1427F1A0683;
+        Fri, 27 Dec 2019 03:15:52 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6063D40291;
+        Fri, 27 Dec 2019 10:15:39 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
+        will@kernel.org, bjorn.andersson@linaro.org, olof@lixom.net,
+        maxime@cerno.tech, leonard.crestez@nxp.com, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, ping.bai@nxp.com, abel.vesa@nxp.com,
         linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Pisati <p.pisati@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-User-Agent: alot/0.8.1
-Date:   Thu, 26 Dec 2019 17:35:27 -0800
-Message-Id: <20191227013528.A445B2080D@mail.kernel.org>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 3/3] arm64: defconfig: Enable CONFIG_CLK_IMX8MP by default
+Date:   Fri, 27 Dec 2019 10:12:28 +0800
+Message-Id: <1577412748-28213-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1577412748-28213-1-git-send-email-Anson.Huang@nxp.com>
+References: <1577412748-28213-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-12-26 14:41:56)
-> On Mon 23 Dec 18:20 PST 2019, Stephen Boyd wrote:
->=20
-> > Quoting Bjorn Andersson (2019-12-19 18:34:27)
-> > > On Wed 18 Dec 22:37 PST 2019, Stephen Boyd wrote:
-> > >=20
-> > > > Quoting Bjorn Andersson (2019-12-07 12:36:02)
-> > > > > The CLKREF clocks are all fed by the clock signal on the CXO2 pad=
- on the
-> > > > > SoC. Update the definition of these clocks to allow this to be wi=
-red up
-> > > > > to the appropriate clock source.
-> > > > >=20
-> > > > > Retain "xo" as the global named parent to make the change a nop i=
-n the
-> > > > > event that DT doesn't carry the necessary clocks definition.
-> > > >=20
-> > > > Something seems wrong still.
-> > > >=20
-> > > > I wonder if we need to add the XO "active only" clk to the rpm clk
-> > > > driver(s) and mark it as CLK_IS_CRITICAL. In theory that is really =
-the
-> > > > truth for most of the SoCs out there because it's the only crystal =
-that
-> > > > needs to be on all the time when the CPU is active. The "normal" XO=
- clk
-> > > > will then be on all the time unless deep idle is entered and nobody=
- has
-> > > > turned that on via some clk_prepare() call. That's because we root =
-all
-> > > > other clks through the "normal" XO clk that will be on in deep
-> > > > idle/suspend if someone needs it to be.
-> > > >=20
-> > >=20
-> > > The patch doesn't attempt to address the fact that our representation=
- of
-> > > XO is incomplete, only the fact that CXO2 isn't properly described.
-> > >=20
-> > > Looking at the clock distribution, we do have RPM_SMD_BB_CLK1_A which
-> > > presumably is the clock you're referring to here - i.e. the clock
-> > > resource connected to CXO.
-> >=20
-> > I don't mean the buffer clks, but the XO resource specifically. It's the
-> > representation to the RPM that deep sleep/deep idle should or shouldn't
-> > turn off XO and achieve "XO shutdown". Basically it can never be off
-> > when the CPU is active because then the CPU itself wouldn't be clocked,
-> > but when the CPU isn't active we may want to turn it off if nothing is
-> > using it during sleep to clock some sort of wakeup logic or device that
-> > is active when the CPU is idle.
-> >=20
->=20
-> I see. So we're missing the representation of the "raw" CXO in
-> clk-smd-rpm.c, and I'm lacking some understanding of how these pieces
-> should be tied together for us to realize the "XO shutdown"...
+Select CONFIG_CLK_IMX8MP by default to support i.MX8MP clock driver.
 
-Ok. This is another topic so not important to this patch right now.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
->=20
-> > >=20
-> > > > Did the downstream code explicitly enable this ln_bb_clk in the phy
-> > > > drivers? I think it may have?
-> > > >=20
-> > >=20
-> > > Yes, afaict all downstream drivers consuming a CLKREF also consumes
-> > > LN_BB and ensures that this is enabled. So we've been relying on UFS =
-to
-> > > either not have probed yet or that UFS probed successfully for PCIe a=
-nd
-> > > USB to be functional.
-> > >=20
-> > > So either we need this patch to ensure that the requests propagates
-> > > down, or I need to patch up the PHY drivers to ensure that they also
-> > > vote for the PMIC clock - and I do prefer this patch.
-> >=20
-> > Cool. Yeah seems better to just indicate that the reference clks are
-> > clocked by something else and fix that problem now.
-> >=20
->=20
-> Let me know if I shouldn't interpret this sentence as "let's merge this
-> for now".
-
-Yes I'd like to merge for now but the binding needs to be adjusted.
-Please resend.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c7a94c4ff..8d9b9ce 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -701,6 +701,7 @@ CONFIG_COMMON_CLK_PWM=y
+ CONFIG_CLK_RASPBERRYPI=m
+ CONFIG_CLK_IMX8MM=y
+ CONFIG_CLK_IMX8MN=y
++CONFIG_CLK_IMX8MP=y
+ CONFIG_CLK_IMX8MQ=y
+ CONFIG_CLK_IMX8QXP=y
+ CONFIG_TI_SCI_CLK=y
+-- 
+2.7.4
 
