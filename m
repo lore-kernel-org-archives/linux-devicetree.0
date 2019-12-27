@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB53EC2D0DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95FAC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC359208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875FB2173E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbfL0UCb (ORCPT
+        id S1727419AbfL0UCk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 15:02:31 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46718 "EHLO
+        Fri, 27 Dec 2019 15:02:40 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46786 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbfL0UC3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 15:02:29 -0500
+        with ESMTP id S1727398AbfL0UCk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 15:02:40 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 1B18929288B
+        with ESMTPSA id 5B7AC29288A
 From:   Helen Koike <helen.koike@collabora.com>
 To:     linux-rockchip@lists.infradead.org
 Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
@@ -34,11 +34,10 @@ Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
         joacim.zetterling@gmail.com, kernel@collabora.com,
         ezequiel@collabora.com, linux-media@vger.kernel.org,
         jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org,
-        Jacob Chen <jacob2.chen@rock-chips.com>,
         Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v12 07/11] media: staging: rkisp1: add document for rkisp1 meta buffer format
-Date:   Fri, 27 Dec 2019 17:01:12 -0300
-Message-Id: <20191227200116.2612137-8-helen.koike@collabora.com>
+Subject: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip MIPI RX D-PHY yaml bindings
+Date:   Fri, 27 Dec 2019 17:01:14 -0300
+Message-Id: <20191227200116.2612137-10-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191227200116.2612137-1-helen.koike@collabora.com>
 References: <20191227200116.2612137-1-helen.koike@collabora.com>
@@ -49,100 +48,121 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+Add yaml DT bindings for Rockchip MIPI D-PHY RX
 
-This commit add document for rkisp1 meta buffer format
+This was tested and verified with:
+mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml  Documentation/devicetree/bindings/phy/
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
 
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 ---
 
 Changes in v12:
-- Change Jacob's email to original jacob2.chen@rock-chips.com
+- The commit replaces the following commit in previous series named
+media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+This new patch adds yaml binding and was verified with
+make dtbs_check and make dt_binding_check
 
 Changes in v11: None
 Changes in v10:
 - unsquash
 
 Changes in v9:
+- fix title division style
 - squash
-- migrate to staging
-- remove meta-formats.rst update
+- move to staging
 
-Changes in v8:
-- Add SPDX in the header
-- Remove emacs configs
-- Fix doc style
-
+Changes in v8: None
 Changes in v7:
-- s/correspond/corresponding
-- s/use/uses
-- s/docuemnt/document
+- updated doc with new design and tested example
 
- .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
- .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
- 2 files changed, 45 insertions(+)
- create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
- create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+ .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
 
-diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
 new file mode 100644
-index 000000000000..32034e481357
+index 000000000000..af97f1b3e005
 --- /dev/null
-+++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-@@ -0,0 +1,23 @@
-+.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+.. _v4l2-meta-fmt-rkisp1-params:
++title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
 +
-+============================
-+V4L2_META_FMT_RK_ISP1_PARAMS
-+============================
++maintainers:
++  - Helen Koike <helen.koike@collabora.com>
++  - Ezequiel Garcia <ezequiel@collabora.com>
 +
-+Rockchip ISP1 Parameters Data
++description: |
++  The Rockchip SoC has a MIPI D-PHY bus with an RX0 entry which connects to
++  the ISP1 (Image Signal Processing unit v1.0) for CSI cameras.
 +
-+Description
-+===========
++properties:
++  compatible:
++    const: rockchip,rk3399-mipi-dphy
 +
-+This format describes input parameters for the Rockchip ISP1.
++  reg:
++    maxItems: 1
 +
-+It uses c-struct :c:type:`rkisp1_params_cfg`, which is defined in
-+the ``linux/rkisp1-config.h`` header file.
++  clocks:
++    items:
++      - description: Mipi d-phy ref clock
++      - description: Mipi d-phy rx0 cfg clock
++      - description: Video in/out general register file clock
 +
-+The parameters consist of multiple modules.
-+The module won't be updated if the corresponding bit was not set in module_*_update.
++  clock-names:
++    items:
++      - const: dphy-ref
++      - const: dphy-cfg
++      - const: grf
 +
-+.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-+   :functions: rkisp1_params_cfg
-diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-new file mode 100644
-index 000000000000..4ad303f96421
---- /dev/null
-+++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-@@ -0,0 +1,22 @@
-+.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++  '#phy-cells':
++    const: 0
 +
-+.. _v4l2-meta-fmt-rkisp1-stat:
++  power-domains:
++    description: Video in/out power domain.
++    maxItems: 1
 +
-+=============================
-+V4L2_META_FMT_RK_ISP1_STAT_3A
-+=============================
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - '#phy-cells'
++  - power-domains
 +
++additionalProperties: false
 +
-+Rockchip ISP1 Statistics Data
++examples:
++  - |
 +
-+Description
-+===========
++    /*
++     * MIPI RX D-PHY use registers in "general register files", it
++     * should be a child of the GRF.
++     *
++     * grf: syscon@ff770000 {
++     *  compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
++     *  ...
++     */
 +
-+This format describes image color statistics information generated by the Rockchip
-+ISP1.
++    #include <dt-bindings/clock/rk3399-cru.h>
++    #include <dt-bindings/power/rk3399-power.h>
 +
-+It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
-+the ``linux/rkisp1-config.h`` header file.
-+
-+.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-+   :functions: rkisp1_stat_buffer
++    dphy: mipi-dphy {
++        compatible = "rockchip,rk3399-mipi-dphy";
++        clocks = <&cru SCLK_MIPIDPHY_REF>,
++                 <&cru SCLK_DPHY_RX0_CFG>,
++                 <&cru PCLK_VIO_GRF>;
++        clock-names = "dphy-ref", "dphy-cfg", "grf";
++        power-domains = <&power RK3399_PD_VIO>;
++        #phy-cells = <0>;
++    };
 -- 
 2.24.0
 
