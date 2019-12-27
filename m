@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDB4C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E8BC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE5221582
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42130206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfL0UCM (ORCPT
+        id S1727359AbfL0UC1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 15:02:12 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46646 "EHLO
+        Fri, 27 Dec 2019 15:02:27 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46694 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727215AbfL0UCH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 15:02:07 -0500
+        with ESMTP id S1726527AbfL0UC1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 15:02:27 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 5258F292889
+        with ESMTPSA id 8D024283C43
 From:   Helen Koike <helen.koike@collabora.com>
 To:     linux-rockchip@lists.infradead.org
 Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
@@ -34,12 +34,16 @@ Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
         joacim.zetterling@gmail.com, kernel@collabora.com,
         ezequiel@collabora.com, linux-media@vger.kernel.org,
         jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
         Jacob Chen <jacob2.chen@rock-chips.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Yichong Zhong <zyc@rock-chips.com>,
+        Jacob Chen <cc@rock-chips.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>,
         Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v12 04/11] media: staging: rkisp1: add user space ABI definitions
-Date:   Fri, 27 Dec 2019 17:01:09 -0300
-Message-Id: <20191227200116.2612137-5-helen.koike@collabora.com>
+Subject: [PATCH v12 06/11] media: staging: rkisp1: add output device for parameters
+Date:   Fri, 27 Dec 2019 17:01:11 -0300
+Message-Id: <20191227200116.2612137-7-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191227200116.2612137-1-helen.koike@collabora.com>
 References: <20191227200116.2612137-1-helen.koike@collabora.com>
@@ -50,25 +54,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
+From: Jacob Chen <jacob2.chen@rock-chips.com>
 
-Add the header for userspace
+Add the output video driver that accept parameters from userspace.
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+Signed-off-by: Yichong Zhong <zyc@rock-chips.com>
+Signed-off-by: Jacob Chen <cc@rock-chips.com>
+Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Signed-off-by: Allon Huang <allon.huang@rock-chips.com>
+Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 ---
 
 Changes in v12:
-- Change Jacob's email to original jacob2.chen@rock-chips.com
+- Several cleanups
+- Commit re-organization to not break bisectability
 
 Changes in v11:
+params
+- fix compiling warnings
 - fix checkpatch errors
 
 Changes in v10:
 - unsquash
-- define metadata pixelformats in uapi/rkisp1-config.h
 
 Changes in v9:
 - squash
@@ -76,838 +88,1880 @@ Changes in v9:
 
 Changes in v8: None
 Changes in v7:
-- Fix checkpatch errors (lines over 80 and SPDX)
-- Add TODO to improve docs
+- s/strlcpy/strscpy
+- s/strcpy/strscpy
+- fix config lsc error
+LSC data table size is 17x17, but when configuring data to ISP,
+should be aligned to 18x17. That means every last data of last
+line should be filled with 0, and not filled with the data of
+next line.
+- Update new ISP parameters immediately
+For those sub modules that have shadow registers in core isp, the
+new programing parameters would not be active if both
+CIF_ISP_CTRL_ISP_CFG_UPD_PERMANENT and CFG_UPD are not set. Now
+we configure CFG_UPD to force update the shadow registers when new
+ISP parameters are configured.
+- fix some ISP parameters config error
+Some ISP parameter config functions may override the old enable
+bit value, because the enable bits of these modules are in the
+same registers with parameters. So we should save the old enable
+bits firstly.
+- code styling and checkpatch fixes
 
- .../staging/media/rkisp1/uapi/rkisp1-config.h | 819 ++++++++++++++++++
- 1 file changed, 819 insertions(+)
- create mode 100644 drivers/staging/media/rkisp1/uapi/rkisp1-config.h
+ drivers/staging/media/rkisp1/Makefile        |    3 +-
+ drivers/staging/media/rkisp1/rkisp1-common.h |   35 +
+ drivers/staging/media/rkisp1/rkisp1-dev.c    |   46 +-
+ drivers/staging/media/rkisp1/rkisp1-isp.c    |   19 +
+ drivers/staging/media/rkisp1/rkisp1-params.c | 1630 ++++++++++++++++++
+ 5 files changed, 1717 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-params.c
 
-diff --git a/drivers/staging/media/rkisp1/uapi/rkisp1-config.h b/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
-new file mode 100644
-index 000000000000..ca0d031b14ac
---- /dev/null
-+++ b/drivers/staging/media/rkisp1/uapi/rkisp1-config.h
-@@ -0,0 +1,819 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+diff --git a/drivers/staging/media/rkisp1/Makefile b/drivers/staging/media/rkisp1/Makefile
+index 399f5c5f4d92..69ca59c7ef34 100644
+--- a/drivers/staging/media/rkisp1/Makefile
++++ b/drivers/staging/media/rkisp1/Makefile
+@@ -4,4 +4,5 @@ rockchip-isp1-objs += 	rkisp1-capture.o \
+ 			rkisp1-dev.o \
+ 			rkisp1-isp.o \
+ 			rkisp1-resizer.o \
+-			rkisp1-stats.o
++			rkisp1-stats.o \
++			rkisp1-params.o
+diff --git a/drivers/staging/media/rkisp1/rkisp1-common.h b/drivers/staging/media/rkisp1/rkisp1-common.h
+index 60efcedf26cc..a4f680fa2a81 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-common.h
++++ b/drivers/staging/media/rkisp1/rkisp1-common.h
+@@ -195,6 +195,27 @@ struct rkisp1_stats {
+ 	struct mutex wq_lock;
+ };
+ 
 +/*
-+ * Rockchip ISP1 userspace API
++ * struct rkisp1_params - ISP input parameters device
++ *
++ * @cur_params: Current ISP parameters
++ * @is_first_params: the first params should take effect immediately
++ */
++struct rkisp1_params {
++	struct rkisp1_vdev_node vnode;
++	struct rkisp1_device *rkisp1;
++
++	spinlock_t config_lock;
++	struct list_head params;
++	struct rkisp1_params_cfg cur_params;
++	struct v4l2_format vdev_fmt;
++	bool is_streaming;
++	bool is_first_params;
++
++	enum v4l2_quantization quantization;
++	enum rkisp1_fmt_raw_pat_type raw_type;
++};
++
+ struct rkisp1_resizer {
+ 	struct v4l2_subdev sd;
+ 	enum rkisp1_stream_id id;
+@@ -222,6 +243,7 @@ struct rkisp1_debug {
+  * @isp: ISP sub-device
+  * @rkisp1_capture: capture video device
+  * @stats: ISP statistics output device
++ * @params: ISP input parameters device
+  */
+ struct rkisp1_device {
+ 	void __iomem *base_addr;
+@@ -238,6 +260,7 @@ struct rkisp1_device {
+ 	struct rkisp1_resizer resizer_devs[2];
+ 	struct rkisp1_capture capture_devs[2];
+ 	struct rkisp1_stats stats;
++	struct rkisp1_params params;
+ 	struct media_pipeline pipe;
+ 	struct vb2_alloc_ctx *alloc_ctx;
+ 	struct rkisp1_debug debug;
+@@ -287,6 +310,7 @@ void rkisp1_isp_isr(struct rkisp1_device *rkisp1);
+ void rkisp1_mipi_isr(struct rkisp1_device *rkisp1);
+ void rkisp1_capture_isr(struct rkisp1_device *rkisp1);
+ void rkisp1_stats_isr(struct rkisp1_stats *stats, u32 isp_ris);
++void rkisp1_params_isr(struct rkisp1_device *rkisp1, u32 isp_mis);
+ 
+ int rkisp1_capture_devs_register(struct rkisp1_device *rkisp1);
+ void rkisp1_capture_devs_unregister(struct rkisp1_device *rkisp1);
+@@ -299,4 +323,15 @@ int rkisp1_stats_register(struct rkisp1_stats *stats,
+ 			  struct rkisp1_device *rkisp1);
+ void rkisp1_stats_unregister(struct rkisp1_stats *stats);
+ 
++void rkisp1_params_configure(struct rkisp1_params *params,
++			     enum rkisp1_fmt_raw_pat_type bayer_pat,
++			     enum v4l2_quantization quantization);
++void rkisp1_params_disable(struct rkisp1_params *params);
++int rkisp1_params_register(struct rkisp1_params *params,
++			   struct v4l2_device *v4l2_dev,
++			   struct rkisp1_device *rkisp1);
++void rkisp1_params_unregister(struct rkisp1_params *params);
++
++void rkisp1_params_isr_handler(struct rkisp1_device *rkisp1, u32 isp_mis);
++
+ #endif /* _RKISP1_COMMON_H */
+diff --git a/drivers/staging/media/rkisp1/rkisp1-dev.c b/drivers/staging/media/rkisp1/rkisp1-dev.c
+index 63d1b92b5dac..11dd33ba1ab9 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-dev.c
++++ b/drivers/staging/media/rkisp1/rkisp1-dev.c
+@@ -57,13 +57,13 @@
+  * |  DMA   |------------------------------------+                          Self Picture Path
+  * +--------+
+  *
+- *         rkisp1-stats.c 
+- *       |===============|
+- *       +---------------+
+- *       |               |
+- *       |      ISP      |
+- *       |               |
+- *       +---------------+
++ *         rkisp1-stats.c        rkisp1-params.c
++ *       |===============|      |===============|
++ *       +---------------+      +---------------+
++ *       |               |      |               |
++ *       |      ISP      |      |      ISP      |
++ *       |               |      |               |
++ *       +---------------+      +---------------+
+  *
+  *
+  * Media Topology
+@@ -72,13 +72,13 @@
+  *      | Sensor 2 |     | Sensor X |
+  *      ------------ ... ------------
+  *      |    0     |     |    0     |
+- *      +----------+     +----------+
+- *                  \      |
+- *                   \     |
+- *    +----------+    \    |
+- *    | Sensor 1 |     v   v
+- *    ------------      +------+------+
+- *    |    0     |----->|  0   |  1   |
++ *      +----------+     +----------+      +-----------+
++ *                  \      |               |  params   |
++ *                   \     |               | (output)  |
++ *    +----------+    \    |               +-----------+
++ *    | Sensor 1 |     v   v                     |
++ *    ------------      +------+------+          |
++ *    |    0     |----->|  0   |  1   |<---------+
+  *    +----------+      |------+------|
+  *                      |     ISP     |
+  *                      |------+------|
+@@ -164,6 +164,14 @@ static int rkisp1_create_links(struct rkisp1_device *rkisp1)
+ 			return ret;
+ 	}
+ 
++	/* params links */
++	source = &rkisp1->params.vnode.vdev.entity;
++	sink = &rkisp1->isp.sd.entity;
++	ret = media_create_pad_link(source, 0, sink,
++				    RKISP1_ISP_PAD_SINK_PARAMS, flags);
++	if (ret)
++		return ret;
++
+ 	/* 3A stats links */
+ 	source = &rkisp1->isp.sd.entity;
+ 	sink = &rkisp1->stats.vnode.vdev.entity;
+@@ -352,14 +360,21 @@ static int rkisp1_entities_register(struct rkisp1_device *rkisp1)
+ 	if (ret)
+ 		goto err_unreg_capture_devs;
+ 
++	ret = rkisp1_params_register(&rkisp1->params,
++				     &rkisp1->v4l2_dev, rkisp1);
++	if (ret)
++		goto err_unreg_stats;
++
+ 	ret = rkisp1_subdev_notifier(rkisp1);
+ 	if (ret) {
+ 		dev_err(rkisp1->dev,
+ 			"Failed to register subdev notifier(%d)\n", ret);
+-		goto err_unreg_stats;
++		goto err_unreg_params;
+ 	}
+ 
+ 	return 0;
++err_unreg_params:
++	rkisp1_params_unregister(&rkisp1->params);
+ err_unreg_stats:
+ 	rkisp1_stats_unregister(&rkisp1->stats);
+ err_unreg_capture_devs:
+@@ -529,6 +544,7 @@ static int rkisp1_remove(struct platform_device *pdev)
+ 	v4l2_async_notifier_unregister(&rkisp1->notifier);
+ 	v4l2_async_notifier_cleanup(&rkisp1->notifier);
+ 
++	rkisp1_params_unregister(&rkisp1->params);
+ 	rkisp1_stats_unregister(&rkisp1->stats);
+ 	rkisp1_capture_devs_unregister(rkisp1);
+ 	rkisp1_resizer_devs_unregister(rkisp1);
+diff --git a/drivers/staging/media/rkisp1/rkisp1-isp.c b/drivers/staging/media/rkisp1/rkisp1-isp.c
+index ca0d088970be..328c7ea60971 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-isp.c
++++ b/drivers/staging/media/rkisp1/rkisp1-isp.c
+@@ -357,6 +357,18 @@ static int rkisp1_config_isp(struct rkisp1_device *rkisp1)
+ 		    RKISP1_CIF_ISP_PIC_SIZE_ERROR | RKISP1_CIF_ISP_FRAME_IN;
+ 	rkisp1_write(rkisp1, irq_mask, RKISP1_CIF_ISP_IMSC);
+ 
++	if (src_fmt->fmt_type == RKISP1_FMT_BAYER) {
++		rkisp1_params_disable(&rkisp1->params);
++	} else {
++		struct v4l2_mbus_framefmt *src_frm;
++
++		src_frm = rkisp1_isp_get_pad_fmt(&rkisp1->isp, NULL,
++						 RKISP1_ISP_PAD_SINK_VIDEO,
++						 V4L2_SUBDEV_FORMAT_ACTIVE);
++		rkisp1_params_configure(&rkisp1->params, sink_fmt->bayer_pat,
++					src_frm->quantization);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1142,4 +1154,11 @@ void rkisp1_isp_isr(struct rkisp1_device *rkisp1)
+ 			       RKISP1_CIF_ISP_HIST_MEASURE_RDY))
+ 			rkisp1_stats_isr(&rkisp1->stats, isp_ris);
+ 	}
++
++	/*
++	 * Then update changed configs. Some of them involve
++	 * lot of register writes. Do those only one per frame.
++	 * Do the updates in the order of the processing flow.
++	 */
++	rkisp1_params_isr(rkisp1, status);
+ }
+diff --git a/drivers/staging/media/rkisp1/rkisp1-params.c b/drivers/staging/media/rkisp1/rkisp1-params.c
+new file mode 100644
+index 000000000000..781f0ca85af1
+--- /dev/null
++++ b/drivers/staging/media/rkisp1/rkisp1-params.c
+@@ -0,0 +1,1630 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Rockchip ISP1 Driver - Params subdevice
++ *
 + * Copyright (C) 2017 Rockchip Electronics Co., Ltd.
 + */
 +
-+/*
-+ * TODO: Improve documentation, mostly regarding abbreviation and hardware
-+ * specificities. Reference: "REF_01 - ISP_user_manual, Rev 2.57" (not public)
-+ */
++#include <media/v4l2-common.h>
++#include <media/v4l2-event.h>
++#include <media/v4l2-ioctl.h>
++#include <media/videobuf2-core.h>
++#include <media/videobuf2-vmalloc.h>	/* for ISP params */
 +
-+#ifndef _UAPI_RKISP1_CONFIG_H
-+#define _UAPI_RKISP1_CONFIG_H
++#include "rkisp1-common.h"
 +
-+#include <linux/types.h>
++#define RKISP1_PARAMS_DEV_NAME	RKISP1_DRIVER_NAME "_params"
 +
-+/* Vendor specific - used for RK_ISP1 camera sub-system */
-+#define V4L2_META_FMT_RK_ISP1_PARAMS   v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 params */
-+#define V4L2_META_FMT_RK_ISP1_STAT_3A  v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A statistics */
++#define RKISP1_ISP_PARAMS_REQ_BUFS_MIN	2
++#define RKISP1_ISP_PARAMS_REQ_BUFS_MAX	8
 +
-+#define RKISP1_CIF_ISP_MODULE_DPCC		BIT(0)
-+#define RKISP1_CIF_ISP_MODULE_BLS		BIT(1)
-+#define RKISP1_CIF_ISP_MODULE_SDG		BIT(2)
-+#define RKISP1_CIF_ISP_MODULE_HST		BIT(3)
-+#define RKISP1_CIF_ISP_MODULE_LSC		BIT(4)
-+#define RKISP1_CIF_ISP_MODULE_AWB_GAIN		BIT(5)
-+#define RKISP1_CIF_ISP_MODULE_FLT		BIT(6)
-+#define RKISP1_CIF_ISP_MODULE_BDM		BIT(7)
-+#define RKISP1_CIF_ISP_MODULE_CTK		BIT(8)
-+#define RKISP1_CIF_ISP_MODULE_GOC		BIT(9)
-+#define RKISP1_CIF_ISP_MODULE_CPROC		BIT(10)
-+#define RKISP1_CIF_ISP_MODULE_AFC		BIT(11)
-+#define RKISP1_CIF_ISP_MODULE_AWB		BIT(12)
-+#define RKISP1_CIF_ISP_MODULE_IE		BIT(13)
-+#define RKISP1_CIF_ISP_MODULE_AEC		BIT(14)
-+#define RKISP1_CIF_ISP_MODULE_WDR		BIT(15)
-+#define RKISP1_CIF_ISP_MODULE_DPF		BIT(16)
-+#define RKISP1_CIF_ISP_MODULE_DPF_STRENGTH	BIT(17)
++#define RKISP1_ISP_DPCC_LINE_THRESH(n) \
++			(RKISP1_CIF_ISP_DPCC_LINE_THRESH_1 + 0x14 * (n))
++#define RKISP1_ISP_DPCC_LINE_MAD_FAC(n) \
++			(RKISP1_CIF_ISP_DPCC_LINE_MAD_FAC_1 + 0x14 * (n))
++#define RKISP1_ISP_DPCC_PG_FAC(n) \
++			(RKISP1_CIF_ISP_DPCC_PG_FAC_1 + 0x14 * (n))
++#define RKISP1_ISP_DPCC_RND_THRESH(n) \
++			(RKISP1_CIF_ISP_DPCC_RND_THRESH_1 + 0x14 * (n))
++#define RKISP1_ISP_DPCC_RG_FAC(n) \
++			(RKISP1_CIF_ISP_DPCC_RG_FAC_1 + 0x14 * (n))
++#define RKISP1_ISP_CC_COEFF(n) \
++			(RKISP1_CIF_ISP_CC_COEFF_0 + (n) * 4)
 +
-+#define RKISP1_CIF_ISP_CTK_COEFF_MAX            0x100
-+#define RKISP1_CIF_ISP_CTK_OFFSET_MAX           0x800
++static inline void
++rkisp1_param_set_bits(struct rkisp1_params *params, u32 reg, u32 bit_mask)
++{
++	u32 val;
 +
-+#define RKISP1_CIF_ISP_AE_MEAN_MAX              25
-+#define RKISP1_CIF_ISP_HIST_BIN_N_MAX           16
-+#define RKISP1_CIF_ISP_AFM_MAX_WINDOWS          3
-+#define RKISP1_CIF_ISP_DEGAMMA_CURVE_SIZE       17
++	val = rkisp1_read(params->rkisp1, reg);
++	rkisp1_write(params->rkisp1, val | bit_mask, reg);
++}
 +
-+#define RKISP1_CIF_ISP_BDM_MAX_TH               0xff
++static inline void
++rkisp1_param_clear_bits(struct rkisp1_params *params, u32 reg, u32 bit_mask)
++{
++	u32 val;
 +
-+/*
-+ * Black level compensation
-+ */
-+/* maximum value for horizontal start address */
-+#define RKISP1_CIF_ISP_BLS_START_H_MAX             0x00000fff
-+/* maximum value for horizontal stop address */
-+#define RKISP1_CIF_ISP_BLS_STOP_H_MAX              0x00000fff
-+/* maximum value for vertical start address */
-+#define RKISP1_CIF_ISP_BLS_START_V_MAX             0x00000fff
-+/* maximum value for vertical stop address */
-+#define RKISP1_CIF_ISP_BLS_STOP_V_MAX              0x00000fff
-+/* maximum is 2^18 = 262144*/
-+#define RKISP1_CIF_ISP_BLS_SAMPLES_MAX             0x00000012
-+/* maximum value for fixed black level */
-+#define RKISP1_CIF_ISP_BLS_FIX_SUB_MAX             0x00000fff
-+/* minimum value for fixed black level */
-+#define RKISP1_CIF_ISP_BLS_FIX_SUB_MIN             0xfffff000
-+/* 13 bit range (signed)*/
-+#define RKISP1_CIF_ISP_BLS_FIX_MASK                0x00001fff
++	val = rkisp1_read(params->rkisp1, reg);
++	rkisp1_write(params->rkisp1, val & ~bit_mask, reg);
++}
 +
-+/*
-+ * Automatic white balance measurments
-+ */
-+#define RKISP1_CIF_ISP_AWB_MAX_GRID                1
-+#define RKISP1_CIF_ISP_AWB_MAX_FRAMES              7
++/* ISP BP interface function */
++static void rkisp1_dpcc_config(struct rkisp1_params *params,
++			       const struct rkisp1_cif_isp_dpcc_config *arg)
++{
++	unsigned int i;
++	u32 mode;
 +
-+/*
-+ * Gamma out
-+ */
-+/* Maximum number of color samples supported */
-+#define RKISP1_CIF_ISP_GAMMA_OUT_MAX_SAMPLES       17
++	/* avoid to override the old enable value */
++	mode = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_DPCC_MODE);
++	mode &= RKISP1_CIF_ISP_DPCC_ENA;
++	mode |= arg->mode & ~RKISP1_CIF_ISP_DPCC_ENA;
++	rkisp1_write(params->rkisp1, mode, RKISP1_CIF_ISP_DPCC_MODE);
++	rkisp1_write(params->rkisp1, arg->output_mode,
++		     RKISP1_CIF_ISP_DPCC_OUTPUT_MODE);
++	rkisp1_write(params->rkisp1, arg->set_use,
++		     RKISP1_CIF_ISP_DPCC_SET_USE);
 +
-+/*
-+ * Lens shade correction
-+ */
-+#define RKISP1_CIF_ISP_LSC_GRAD_TBL_SIZE           8
-+#define RKISP1_CIF_ISP_LSC_SIZE_TBL_SIZE           8
-+/*
-+ * The following matches the tuning process,
-+ * not the max capabilities of the chip.
-+ * Last value unused.
-+ */
-+#define	RKISP1_CIF_ISP_LSC_DATA_TBL_SIZE           290
++	rkisp1_write(params->rkisp1, arg->methods[0].method,
++		     RKISP1_CIF_ISP_DPCC_METHODS_SET_1);
++	rkisp1_write(params->rkisp1, arg->methods[1].method,
++		     RKISP1_CIF_ISP_DPCC_METHODS_SET_2);
++	rkisp1_write(params->rkisp1, arg->methods[2].method,
++		     RKISP1_CIF_ISP_DPCC_METHODS_SET_3);
++	for (i = 0; i < RKISP1_CIF_ISP_DPCC_METHODS_MAX; i++) {
++		rkisp1_write(params->rkisp1, arg->methods[i].line_thresh,
++			     RKISP1_ISP_DPCC_LINE_THRESH(i));
++		rkisp1_write(params->rkisp1, arg->methods[i].line_mad_fac,
++			     RKISP1_ISP_DPCC_LINE_MAD_FAC(i));
++		rkisp1_write(params->rkisp1, arg->methods[i].pg_fac,
++			     RKISP1_ISP_DPCC_PG_FAC(i));
++		rkisp1_write(params->rkisp1, arg->methods[i].rnd_thresh,
++			     RKISP1_ISP_DPCC_RND_THRESH(i));
++		rkisp1_write(params->rkisp1, arg->methods[i].rg_fac,
++			     RKISP1_ISP_DPCC_RG_FAC(i));
++	}
 +
-+/*
-+ * Histogram calculation
-+ */
-+/* Last 3 values unused. */
-+#define RKISP1_CIF_ISP_HISTOGRAM_WEIGHT_GRIDS_SIZE 28
++	rkisp1_write(params->rkisp1, arg->rnd_offs,
++		     RKISP1_CIF_ISP_DPCC_RND_OFFS);
++	rkisp1_write(params->rkisp1, arg->ro_limits,
++		     RKISP1_CIF_ISP_DPCC_RO_LIMITS);
++}
 +
-+/*
-+ * Defect Pixel Cluster Correction
-+ */
-+#define RKISP1_CIF_ISP_DPCC_METHODS_MAX       3
++/* ISP black level subtraction interface function */
++static void rkisp1_bls_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_bls_config *arg)
++{
++	/* avoid to override the old enable value */
++	u32 new_control;
 +
-+/*
-+ * Denoising pre filter
-+ */
-+#define RKISP1_CIF_ISP_DPF_MAX_NLF_COEFFS      17
-+#define RKISP1_CIF_ISP_DPF_MAX_SPATIAL_COEFFS  6
++	new_control = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_BLS_CTRL);
++	new_control &= RKISP1_CIF_ISP_BLS_ENA;
++	/* fixed subtraction values */
++	if (!arg->enable_auto) {
++		const struct rkisp1_cif_isp_bls_fixed_val *pval =
++								&arg->fixed_val;
 +
-+/*
-+ * Measurement types
-+ */
-+#define RKISP1_CIF_ISP_STAT_AWB           BIT(0)
-+#define RKISP1_CIF_ISP_STAT_AUTOEXP       BIT(1)
-+#define RKISP1_CIF_ISP_STAT_AFM_FIN       BIT(2)
-+#define RKISP1_CIF_ISP_STAT_HIST          BIT(3)
++		switch (params->raw_type) {
++		case RKISP1_RAW_BGGR:
++			rkisp1_write(params->rkisp1,
++				     pval->r, RKISP1_CIF_ISP_BLS_D_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gr, RKISP1_CIF_ISP_BLS_C_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gb, RKISP1_CIF_ISP_BLS_B_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->b, RKISP1_CIF_ISP_BLS_A_FIXED);
++			break;
++		case RKISP1_RAW_GBRG:
++			rkisp1_write(params->rkisp1,
++				     pval->r, RKISP1_CIF_ISP_BLS_C_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gr, RKISP1_CIF_ISP_BLS_D_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gb, RKISP1_CIF_ISP_BLS_A_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->b, RKISP1_CIF_ISP_BLS_B_FIXED);
++			break;
++		case RKISP1_RAW_GRBG:
++			rkisp1_write(params->rkisp1,
++				     pval->r, RKISP1_CIF_ISP_BLS_B_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gr, RKISP1_CIF_ISP_BLS_A_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gb, RKISP1_CIF_ISP_BLS_D_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->b, RKISP1_CIF_ISP_BLS_C_FIXED);
++			break;
++		case RKISP1_RAW_RGGB:
++			rkisp1_write(params->rkisp1,
++				     pval->r, RKISP1_CIF_ISP_BLS_A_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gr, RKISP1_CIF_ISP_BLS_B_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->gb, RKISP1_CIF_ISP_BLS_C_FIXED);
++			rkisp1_write(params->rkisp1,
++				     pval->b, RKISP1_CIF_ISP_BLS_D_FIXED);
++			break;
++		default:
++			break;
++		}
 +
-+enum rkisp1_cif_isp_histogram_mode {
-+	RKISP1_CIF_ISP_HISTOGRAM_MODE_DISABLE,
-+	RKISP1_CIF_ISP_HISTOGRAM_MODE_RGB_COMBINED,
-+	RKISP1_CIF_ISP_HISTOGRAM_MODE_R_HISTOGRAM,
-+	RKISP1_CIF_ISP_HISTOGRAM_MODE_G_HISTOGRAM,
-+	RKISP1_CIF_ISP_HISTOGRAM_MODE_B_HISTOGRAM,
-+	RKISP1_CIF_ISP_HISTOGRAM_MODE_Y_HISTOGRAM
++	} else {
++		if (arg->en_windows & BIT(1)) {
++			rkisp1_write(params->rkisp1, arg->bls_window2.h_offs,
++				     RKISP1_CIF_ISP_BLS_H2_START);
++			rkisp1_write(params->rkisp1, arg->bls_window2.h_size,
++				     RKISP1_CIF_ISP_BLS_H2_STOP);
++			rkisp1_write(params->rkisp1, arg->bls_window2.v_offs,
++				     RKISP1_CIF_ISP_BLS_V2_START);
++			rkisp1_write(params->rkisp1, arg->bls_window2.v_size,
++				     RKISP1_CIF_ISP_BLS_V2_STOP);
++			new_control |= RKISP1_CIF_ISP_BLS_WINDOW_2;
++		}
++
++		if (arg->en_windows & BIT(0)) {
++			rkisp1_write(params->rkisp1, arg->bls_window1.h_offs,
++				     RKISP1_CIF_ISP_BLS_H1_START);
++			rkisp1_write(params->rkisp1, arg->bls_window1.h_size,
++				     RKISP1_CIF_ISP_BLS_H1_STOP);
++			rkisp1_write(params->rkisp1, arg->bls_window1.v_offs,
++				     RKISP1_CIF_ISP_BLS_V1_START);
++			rkisp1_write(params->rkisp1, arg->bls_window1.v_size,
++				     RKISP1_CIF_ISP_BLS_V1_STOP);
++			new_control |= RKISP1_CIF_ISP_BLS_WINDOW_1;
++		}
++
++		rkisp1_write(params->rkisp1, arg->bls_samples,
++			     RKISP1_CIF_ISP_BLS_SAMPLES);
++
++		new_control |= RKISP1_CIF_ISP_BLS_MODE_MEASURED;
++	}
++	rkisp1_write(params->rkisp1, new_control, RKISP1_CIF_ISP_BLS_CTRL);
++}
++
++/* ISP LS correction interface function */
++static void
++rkisp1_lsc_correct_matrix_config(struct rkisp1_params *params,
++				const struct rkisp1_cif_isp_lsc_config *pconfig)
++{
++	unsigned int isp_lsc_status, sram_addr, isp_lsc_table_sel, i, j, data;
++
++	isp_lsc_status = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_LSC_STATUS);
++
++	/* RKISP1_CIF_ISP_LSC_TABLE_ADDRESS_153 = ( 17 * 18 ) >> 1 */
++	sram_addr = (isp_lsc_status & RKISP1_CIF_ISP_LSC_ACTIVE_TABLE) ?
++		    RKISP1_CIF_ISP_LSC_TABLE_ADDRESS_0 :
++		    RKISP1_CIF_ISP_LSC_TABLE_ADDRESS_153;
++	rkisp1_write(params->rkisp1, sram_addr,
++		     RKISP1_CIF_ISP_LSC_R_TABLE_ADDR);
++	rkisp1_write(params->rkisp1, sram_addr,
++		     RKISP1_CIF_ISP_LSC_GR_TABLE_ADDR);
++	rkisp1_write(params->rkisp1, sram_addr,
++		     RKISP1_CIF_ISP_LSC_GB_TABLE_ADDR);
++	rkisp1_write(params->rkisp1, sram_addr,
++		     RKISP1_CIF_ISP_LSC_B_TABLE_ADDR);
++
++	/* program data tables (table size is 9 * 17 = 153) */
++	for (i = 0;
++	     i < RKISP1_CIF_ISP_LSC_SECTORS_MAX * RKISP1_CIF_ISP_LSC_SECTORS_MAX;
++	     i += RKISP1_CIF_ISP_LSC_SECTORS_MAX) {
++		/*
++		 * 17 sectors with 2 values in one DWORD = 9
++		 * DWORDs (2nd value of last DWORD unused)
++		 */
++		for (j = 0; j < RKISP1_CIF_ISP_LSC_SECTORS_MAX - 1; j += 2) {
++			data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->r_data_tbl[i + j],
++							     pconfig->r_data_tbl[i + j + 1]);
++			rkisp1_write(params->rkisp1, data,
++				     RKISP1_CIF_ISP_LSC_R_TABLE_DATA);
++
++			data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->gr_data_tbl[i + j],
++							     pconfig->gr_data_tbl[i + j + 1]);
++			rkisp1_write(params->rkisp1, data,
++				     RKISP1_CIF_ISP_LSC_GR_TABLE_DATA);
++
++			data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->gb_data_tbl[i + j],
++							     pconfig->gb_data_tbl[i + j + 1]);
++			rkisp1_write(params->rkisp1, data,
++				     RKISP1_CIF_ISP_LSC_GB_TABLE_DATA);
++
++			data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->b_data_tbl[i + j],
++							     pconfig->b_data_tbl[i + j + 1]);
++			rkisp1_write(params->rkisp1, data,
++				     RKISP1_CIF_ISP_LSC_B_TABLE_DATA);
++		}
++		data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->r_data_tbl[i + j], 0);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_R_TABLE_DATA);
++
++		data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->gr_data_tbl[i + j], 0);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_GR_TABLE_DATA);
++
++		data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->gb_data_tbl[i + j], 0);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_GB_TABLE_DATA);
++
++		data = RKISP1_CIF_ISP_LSC_TABLE_DATA(pconfig->b_data_tbl[i + j], 0);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_B_TABLE_DATA);
++	}
++	isp_lsc_table_sel = (isp_lsc_status & RKISP1_CIF_ISP_LSC_ACTIVE_TABLE) ?
++			    RKISP1_CIF_ISP_LSC_TABLE_0 :
++			    RKISP1_CIF_ISP_LSC_TABLE_1;
++	rkisp1_write(params->rkisp1, isp_lsc_table_sel,
++		     RKISP1_CIF_ISP_LSC_TABLE_SEL);
++}
++
++static void rkisp1_lsc_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_lsc_config *arg)
++{
++	unsigned int i, data;
++	u32 lsc_ctrl;
++
++	/* To config must be off , store the current status firstly */
++	lsc_ctrl = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_LSC_CTRL);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_LSC_CTRL,
++				RKISP1_CIF_ISP_LSC_CTRL_ENA);
++	rkisp1_lsc_correct_matrix_config(params, arg);
++
++	for (i = 0; i < 4; i++) {
++		/* program x size tables */
++		data = RKISP1_CIF_ISP_LSC_SECT_SIZE(arg->x_size_tbl[i * 2],
++						    arg->x_size_tbl[i * 2 + 1]);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_XSIZE_01 + i * 4);
++
++		/* program x grad tables */
++		data = RKISP1_CIF_ISP_LSC_SECT_SIZE(arg->x_grad_tbl[i * 2],
++						    arg->x_grad_tbl[i * 2 + 1]);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_XGRAD_01 + i * 4);
++
++		/* program y size tables */
++		data = RKISP1_CIF_ISP_LSC_SECT_SIZE(arg->y_size_tbl[i * 2],
++						    arg->y_size_tbl[i * 2 + 1]);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_YSIZE_01 + i * 4);
++
++		/* program y grad tables */
++		data = RKISP1_CIF_ISP_LSC_SECT_SIZE(arg->y_grad_tbl[i * 2],
++						    arg->y_grad_tbl[i * 2 + 1]);
++		rkisp1_write(params->rkisp1, data,
++			     RKISP1_CIF_ISP_LSC_YGRAD_01 + i * 4);
++	}
++
++	/* restore the lsc ctrl status */
++	if (lsc_ctrl & RKISP1_CIF_ISP_LSC_CTRL_ENA) {
++		rkisp1_param_set_bits(params,
++				      RKISP1_CIF_ISP_LSC_CTRL,
++				      RKISP1_CIF_ISP_LSC_CTRL_ENA);
++	} else {
++		rkisp1_param_clear_bits(params,
++					RKISP1_CIF_ISP_LSC_CTRL,
++					RKISP1_CIF_ISP_LSC_CTRL_ENA);
++	}
++}
++
++/* ISP Filtering function */
++static void rkisp1_flt_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_flt_config *arg)
++{
++	u32 filt_mode;
++
++	rkisp1_write(params->rkisp1,
++		     arg->thresh_bl0, RKISP1_CIF_ISP_FILT_THRESH_BL0);
++	rkisp1_write(params->rkisp1,
++		     arg->thresh_bl1, RKISP1_CIF_ISP_FILT_THRESH_BL1);
++	rkisp1_write(params->rkisp1,
++		     arg->thresh_sh0, RKISP1_CIF_ISP_FILT_THRESH_SH0);
++	rkisp1_write(params->rkisp1,
++		     arg->thresh_sh1, RKISP1_CIF_ISP_FILT_THRESH_SH1);
++	rkisp1_write(params->rkisp1, arg->fac_bl0, RKISP1_CIF_ISP_FILT_FAC_BL0);
++	rkisp1_write(params->rkisp1, arg->fac_bl1, RKISP1_CIF_ISP_FILT_FAC_BL1);
++	rkisp1_write(params->rkisp1, arg->fac_mid, RKISP1_CIF_ISP_FILT_FAC_MID);
++	rkisp1_write(params->rkisp1, arg->fac_sh0, RKISP1_CIF_ISP_FILT_FAC_SH0);
++	rkisp1_write(params->rkisp1, arg->fac_sh1, RKISP1_CIF_ISP_FILT_FAC_SH1);
++	rkisp1_write(params->rkisp1,
++		     arg->lum_weight, RKISP1_CIF_ISP_FILT_LUM_WEIGHT);
++
++	rkisp1_write(params->rkisp1,
++		     (arg->mode ? RKISP1_CIF_ISP_FLT_MODE_DNR : 0) |
++		     RKISP1_CIF_ISP_FLT_CHROMA_V_MODE(arg->chr_v_mode) |
++		     RKISP1_CIF_ISP_FLT_CHROMA_H_MODE(arg->chr_h_mode) |
++		     RKISP1_CIF_ISP_FLT_GREEN_STAGE1(arg->grn_stage1),
++		     RKISP1_CIF_ISP_FILT_MODE);
++
++	/* avoid to override the old enable value */
++	filt_mode = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_FILT_MODE);
++	filt_mode &= RKISP1_CIF_ISP_FLT_ENA;
++	if (arg->mode)
++		filt_mode |= RKISP1_CIF_ISP_FLT_MODE_DNR;
++	filt_mode |= RKISP1_CIF_ISP_FLT_CHROMA_V_MODE(arg->chr_v_mode) |
++		     RKISP1_CIF_ISP_FLT_CHROMA_H_MODE(arg->chr_h_mode) |
++		     RKISP1_CIF_ISP_FLT_GREEN_STAGE1(arg->grn_stage1);
++	rkisp1_write(params->rkisp1, filt_mode, RKISP1_CIF_ISP_FILT_MODE);
++}
++
++/* ISP demosaic interface function */
++static int rkisp1_bdm_config(struct rkisp1_params *params,
++			     const struct rkisp1_cif_isp_bdm_config *arg)
++{
++	u32 bdm_th;
++
++	/* avoid to override the old enable value */
++	bdm_th = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_DEMOSAIC);
++	bdm_th &= RKISP1_CIF_ISP_DEMOSAIC_BYPASS;
++	bdm_th |= arg->demosaic_th & ~RKISP1_CIF_ISP_DEMOSAIC_BYPASS;
++	/* set demosaic threshold */
++	rkisp1_write(params->rkisp1, bdm_th, RKISP1_CIF_ISP_DEMOSAIC);
++	return 0;
++}
++
++/* ISP GAMMA correction interface function */
++static void rkisp1_sdg_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_sdg_config *arg)
++{
++	unsigned int i;
++
++	rkisp1_write(params->rkisp1,
++		     arg->xa_pnts.gamma_dx0, RKISP1_CIF_ISP_GAMMA_DX_LO);
++	rkisp1_write(params->rkisp1,
++		     arg->xa_pnts.gamma_dx1, RKISP1_CIF_ISP_GAMMA_DX_HI);
++
++	for (i = 0; i < RKISP1_CIF_ISP_DEGAMMA_CURVE_SIZE; i++) {
++		rkisp1_write(params->rkisp1, arg->curve_r.gamma_y[i],
++			     RKISP1_CIF_ISP_GAMMA_R_Y0 + i * 4);
++		rkisp1_write(params->rkisp1, arg->curve_g.gamma_y[i],
++			     RKISP1_CIF_ISP_GAMMA_G_Y0 + i * 4);
++		rkisp1_write(params->rkisp1, arg->curve_b.gamma_y[i],
++			     RKISP1_CIF_ISP_GAMMA_B_Y0 + i * 4);
++	}
++}
++
++/* ISP GAMMA correction interface function */
++static void rkisp1_goc_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_goc_config *arg)
++{
++	unsigned int i;
++
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_CTRL,
++				RKISP1_CIF_ISP_CTRL_ISP_GAMMA_OUT_ENA);
++	rkisp1_write(params->rkisp1, arg->mode, RKISP1_CIF_ISP_GAMMA_OUT_MODE);
++
++	for (i = 0; i < RKISP1_CIF_ISP_GAMMA_OUT_MAX_SAMPLES; i++)
++		rkisp1_write(params->rkisp1, arg->gamma_y[i],
++			     RKISP1_CIF_ISP_GAMMA_OUT_Y_0 + i * 4);
++}
++
++/* ISP Cross Talk */
++static void rkisp1_ctk_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_ctk_config *arg)
++{
++	rkisp1_write(params->rkisp1, arg->coeff0, RKISP1_CIF_ISP_CT_COEFF_0);
++	rkisp1_write(params->rkisp1, arg->coeff1, RKISP1_CIF_ISP_CT_COEFF_1);
++	rkisp1_write(params->rkisp1, arg->coeff2, RKISP1_CIF_ISP_CT_COEFF_2);
++	rkisp1_write(params->rkisp1, arg->coeff3, RKISP1_CIF_ISP_CT_COEFF_3);
++	rkisp1_write(params->rkisp1, arg->coeff4, RKISP1_CIF_ISP_CT_COEFF_4);
++	rkisp1_write(params->rkisp1, arg->coeff5, RKISP1_CIF_ISP_CT_COEFF_5);
++	rkisp1_write(params->rkisp1, arg->coeff6, RKISP1_CIF_ISP_CT_COEFF_6);
++	rkisp1_write(params->rkisp1, arg->coeff7, RKISP1_CIF_ISP_CT_COEFF_7);
++	rkisp1_write(params->rkisp1, arg->coeff8, RKISP1_CIF_ISP_CT_COEFF_8);
++	rkisp1_write(params->rkisp1, arg->ct_offset_r,
++		     RKISP1_CIF_ISP_CT_OFFSET_R);
++	rkisp1_write(params->rkisp1, arg->ct_offset_g,
++		     RKISP1_CIF_ISP_CT_OFFSET_G);
++	rkisp1_write(params->rkisp1, arg->ct_offset_b,
++		     RKISP1_CIF_ISP_CT_OFFSET_B);
++}
++
++static void rkisp1_ctk_enable(struct rkisp1_params *params, bool en)
++{
++	if (en)
++		return;
++
++	/* Write back the default values. */
++	rkisp1_write(params->rkisp1, 0x80, RKISP1_CIF_ISP_CT_COEFF_0);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_COEFF_1);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_COEFF_2);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_COEFF_3);
++	rkisp1_write(params->rkisp1, 0x80, RKISP1_CIF_ISP_CT_COEFF_4);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_COEFF_5);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_COEFF_6);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_COEFF_7);
++	rkisp1_write(params->rkisp1, 0x80, RKISP1_CIF_ISP_CT_COEFF_8);
++
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_OFFSET_R);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_OFFSET_G);
++	rkisp1_write(params->rkisp1, 0, RKISP1_CIF_ISP_CT_OFFSET_B);
++}
++
++/* ISP White Balance Mode */
++static void rkisp1_awb_meas_config(struct rkisp1_params *params,
++			const struct rkisp1_cif_isp_awb_meas_config *arg)
++{
++	u32 reg_val = 0;
++	/* based on the mode,configure the awb module */
++	if (arg->awb_mode == RKISP1_CIF_ISP_AWB_MODE_YCBCR) {
++		/* Reference Cb and Cr */
++		rkisp1_write(params->rkisp1,
++			     RKISP1_CIF_ISP_AWB_REF_CR_SET(arg->awb_ref_cr) |
++			     arg->awb_ref_cb, RKISP1_CIF_ISP_AWB_REF);
++		/* Yc Threshold */
++		rkisp1_write(params->rkisp1,
++			     RKISP1_CIF_ISP_AWB_MAX_Y_SET(arg->max_y) |
++			     RKISP1_CIF_ISP_AWB_MIN_Y_SET(arg->min_y) |
++			     RKISP1_CIF_ISP_AWB_MAX_CS_SET(arg->max_csum) |
++			     arg->min_c, RKISP1_CIF_ISP_AWB_THRESH);
++	}
++
++	reg_val = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_AWB_PROP);
++	if (arg->enable_ymax_cmp)
++		reg_val |= RKISP1_CIF_ISP_AWB_YMAX_CMP_EN;
++	else
++		reg_val &= ~RKISP1_CIF_ISP_AWB_YMAX_CMP_EN;
++	rkisp1_write(params->rkisp1, reg_val, RKISP1_CIF_ISP_AWB_PROP);
++
++	/* window offset */
++	rkisp1_write(params->rkisp1,
++		     arg->awb_wnd.v_offs, RKISP1_CIF_ISP_AWB_WND_V_OFFS);
++	rkisp1_write(params->rkisp1,
++		     arg->awb_wnd.h_offs, RKISP1_CIF_ISP_AWB_WND_H_OFFS);
++	/* AWB window size */
++	rkisp1_write(params->rkisp1,
++		     arg->awb_wnd.v_size, RKISP1_CIF_ISP_AWB_WND_V_SIZE);
++	rkisp1_write(params->rkisp1,
++		     arg->awb_wnd.h_size, RKISP1_CIF_ISP_AWB_WND_H_SIZE);
++	/* Number of frames */
++	rkisp1_write(params->rkisp1,
++		     arg->frames, RKISP1_CIF_ISP_AWB_FRAMES);
++}
++
++static void
++rkisp1_awb_meas_enable(struct rkisp1_params *params,
++		       const struct rkisp1_cif_isp_awb_meas_config *arg,
++		       bool en)
++{
++	u32 reg_val = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_AWB_PROP);
++
++	/* switch off */
++	reg_val &= RKISP1_CIF_ISP_AWB_MODE_MASK_NONE;
++
++	if (en) {
++		if (arg->awb_mode == RKISP1_CIF_ISP_AWB_MODE_RGB)
++			reg_val |= RKISP1_CIF_ISP_AWB_MODE_RGB_EN;
++		else
++			reg_val |= RKISP1_CIF_ISP_AWB_MODE_YCBCR_EN;
++
++		rkisp1_write(params->rkisp1, reg_val, RKISP1_CIF_ISP_AWB_PROP);
++
++		/* Measurements require AWB block be active. */
++		rkisp1_param_set_bits(params, RKISP1_CIF_ISP_CTRL,
++				      RKISP1_CIF_ISP_CTRL_ISP_AWB_ENA);
++	} else {
++		rkisp1_write(params->rkisp1,
++			     reg_val, RKISP1_CIF_ISP_AWB_PROP);
++		rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_AWB_ENA);
++	}
++}
++
++static void
++rkisp1_awb_gain_config(struct rkisp1_params *params,
++		       const struct rkisp1_cif_isp_awb_gain_config *arg)
++{
++	rkisp1_write(params->rkisp1,
++		     RKISP1_CIF_ISP_AWB_GAIN_R_SET(arg->gain_green_r) |
++		     arg->gain_green_b, RKISP1_CIF_ISP_AWB_GAIN_G);
++
++	rkisp1_write(params->rkisp1,
++		     RKISP1_CIF_ISP_AWB_GAIN_R_SET(arg->gain_red) |
++		     arg->gain_blue, RKISP1_CIF_ISP_AWB_GAIN_RB);
++}
++
++static void rkisp1_aec_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_aec_config *arg)
++{
++	unsigned int block_hsize, block_vsize;
++	u32 exp_ctrl;
++
++	/* avoid to override the old enable value */
++	exp_ctrl = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_EXP_CTRL);
++	exp_ctrl &= RKISP1_CIF_ISP_EXP_ENA;
++	if (arg->autostop)
++		exp_ctrl |= RKISP1_CIF_ISP_EXP_CTRL_AUTOSTOP;
++	if (arg->mode == RKISP1_CIF_ISP_EXP_MEASURING_MODE_1)
++		exp_ctrl |= RKISP1_CIF_ISP_EXP_CTRL_MEASMODE_1;
++	rkisp1_write(params->rkisp1, exp_ctrl, RKISP1_CIF_ISP_EXP_CTRL);
++
++	rkisp1_write(params->rkisp1,
++		     arg->meas_window.h_offs, RKISP1_CIF_ISP_EXP_H_OFFSET);
++	rkisp1_write(params->rkisp1,
++		     arg->meas_window.v_offs, RKISP1_CIF_ISP_EXP_V_OFFSET);
++
++	block_hsize = arg->meas_window.h_size /
++		      RKISP1_CIF_ISP_EXP_COLUMN_NUM - 1;
++	block_vsize = arg->meas_window.v_size /
++		      RKISP1_CIF_ISP_EXP_ROW_NUM - 1;
++
++	rkisp1_write(params->rkisp1,
++		     RKISP1_CIF_ISP_EXP_H_SIZE_SET(block_hsize),
++		     RKISP1_CIF_ISP_EXP_H_SIZE);
++	rkisp1_write(params->rkisp1,
++		     RKISP1_CIF_ISP_EXP_V_SIZE_SET(block_vsize),
++		     RKISP1_CIF_ISP_EXP_V_SIZE);
++}
++
++static void rkisp1_cproc_config(struct rkisp1_params *params,
++				const struct rkisp1_cif_isp_cproc_config *arg)
++{
++	struct rkisp1_cif_isp_isp_other_cfg *cur_other_cfg =
++						&params->cur_params.others;
++	struct rkisp1_cif_isp_ie_config *cur_ie_config =
++						&cur_other_cfg->ie_config;
++	u32 effect = cur_ie_config->effect;
++	u32 quantization = params->quantization;
++
++	rkisp1_write(params->rkisp1, arg->contrast, RKISP1_CIF_C_PROC_CONTRAST);
++	rkisp1_write(params->rkisp1, arg->hue, RKISP1_CIF_C_PROC_HUE);
++	rkisp1_write(params->rkisp1, arg->sat, RKISP1_CIF_C_PROC_SATURATION);
++	rkisp1_write(params->rkisp1, arg->brightness,
++		     RKISP1_CIF_C_PROC_BRIGHTNESS);
++
++	if (quantization != V4L2_QUANTIZATION_FULL_RANGE ||
++	    effect != V4L2_COLORFX_NONE) {
++		rkisp1_param_clear_bits(params, RKISP1_CIF_C_PROC_CTRL,
++					RKISP1_CIF_C_PROC_YOUT_FULL |
++					RKISP1_CIF_C_PROC_YIN_FULL |
++					RKISP1_CIF_C_PROC_COUT_FULL);
++	} else {
++		rkisp1_param_set_bits(params, RKISP1_CIF_C_PROC_CTRL,
++				      RKISP1_CIF_C_PROC_YOUT_FULL |
++				      RKISP1_CIF_C_PROC_YIN_FULL |
++				      RKISP1_CIF_C_PROC_COUT_FULL);
++	}
++}
++
++static void rkisp1_hst_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_hst_config *arg)
++{
++	unsigned int block_hsize, block_vsize;
++	static const u32 hist_weight_regs[] = {
++		RKISP1_CIF_ISP_HIST_WEIGHT_00TO30,
++		RKISP1_CIF_ISP_HIST_WEIGHT_40TO21,
++		RKISP1_CIF_ISP_HIST_WEIGHT_31TO12,
++		RKISP1_CIF_ISP_HIST_WEIGHT_22TO03,
++		RKISP1_CIF_ISP_HIST_WEIGHT_13TO43,
++		RKISP1_CIF_ISP_HIST_WEIGHT_04TO34,
++		RKISP1_CIF_ISP_HIST_WEIGHT_44,
++	};
++	const u8 *weight;
++	unsigned int i;
++	u32 hist_prop;
++
++	/* avoid to override the old enable value */
++	hist_prop = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_HIST_PROP);
++	hist_prop &= RKISP1_CIF_ISP_HIST_PROP_MODE_MASK;
++	hist_prop |= RKISP1_CIF_ISP_HIST_PREDIV_SET(arg->histogram_predivider);
++	rkisp1_write(params->rkisp1, hist_prop, RKISP1_CIF_ISP_HIST_PROP);
++	rkisp1_write(params->rkisp1,
++		     arg->meas_window.h_offs,
++		     RKISP1_CIF_ISP_HIST_H_OFFS);
++	rkisp1_write(params->rkisp1,
++		     arg->meas_window.v_offs,
++		     RKISP1_CIF_ISP_HIST_V_OFFS);
++
++	block_hsize = arg->meas_window.h_size /
++		      RKISP1_CIF_ISP_HIST_COLUMN_NUM - 1;
++	block_vsize = arg->meas_window.v_size / RKISP1_CIF_ISP_HIST_ROW_NUM - 1;
++
++	rkisp1_write(params->rkisp1, block_hsize, RKISP1_CIF_ISP_HIST_H_SIZE);
++	rkisp1_write(params->rkisp1, block_vsize, RKISP1_CIF_ISP_HIST_V_SIZE);
++
++	weight = arg->hist_weight;
++	for (i = 0; i < ARRAY_SIZE(hist_weight_regs); ++i, weight += 4)
++		rkisp1_write(params->rkisp1,
++			     RKISP1_CIF_ISP_HIST_WEIGHT_SET(weight[0],
++							    weight[1],
++							    weight[2],
++							    weight[3]),
++				 hist_weight_regs[i]);
++}
++
++static void
++rkisp1_hst_enable(struct rkisp1_params *params,
++		  const struct rkisp1_cif_isp_hst_config *arg, bool en)
++{
++	if (en)	{
++		u32 hist_prop = rkisp1_read(params->rkisp1,
++					    RKISP1_CIF_ISP_HIST_PROP);
++
++		hist_prop &= ~RKISP1_CIF_ISP_HIST_PROP_MODE_MASK;
++		hist_prop |= arg->mode;
++		rkisp1_param_set_bits(params, RKISP1_CIF_ISP_HIST_PROP,
++				      hist_prop);
++	} else {
++		rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_HIST_PROP,
++					RKISP1_CIF_ISP_HIST_PROP_MODE_MASK);
++	}
++}
++
++static void rkisp1_afm_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_afc_config *arg)
++{
++	size_t num_of_win = min_t(size_t, ARRAY_SIZE(arg->afm_win),
++				  arg->num_afm_win);
++	u32 afm_ctrl = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_AFM_CTRL);
++	unsigned int i;
++
++	/* Switch off to configure. */
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_AFM_CTRL,
++				RKISP1_CIF_ISP_AFM_ENA);
++
++	for (i = 0; i < num_of_win; i++) {
++		rkisp1_write(params->rkisp1,
++			     RKISP1_CIF_ISP_AFM_WINDOW_X(arg->afm_win[i].h_offs) |
++			     RKISP1_CIF_ISP_AFM_WINDOW_Y(arg->afm_win[i].v_offs),
++			     RKISP1_CIF_ISP_AFM_LT_A + i * 8);
++		rkisp1_write(params->rkisp1,
++			     RKISP1_CIF_ISP_AFM_WINDOW_X(arg->afm_win[i].h_size +
++							 arg->afm_win[i].h_offs) |
++			     RKISP1_CIF_ISP_AFM_WINDOW_Y(arg->afm_win[i].v_size +
++							 arg->afm_win[i].v_offs),
++			     RKISP1_CIF_ISP_AFM_RB_A + i * 8);
++	}
++	rkisp1_write(params->rkisp1, arg->thres, RKISP1_CIF_ISP_AFM_THRES);
++	rkisp1_write(params->rkisp1, arg->var_shift,
++		     RKISP1_CIF_ISP_AFM_VAR_SHIFT);
++	/* restore afm status */
++	rkisp1_write(params->rkisp1, afm_ctrl, RKISP1_CIF_ISP_AFM_CTRL);
++}
++
++static void rkisp1_ie_config(struct rkisp1_params *params,
++			     const struct rkisp1_cif_isp_ie_config *arg)
++{
++	u32 eff_ctrl;
++
++	eff_ctrl = rkisp1_read(params->rkisp1, RKISP1_CIF_IMG_EFF_CTRL);
++	eff_ctrl &= ~RKISP1_CIF_IMG_EFF_CTRL_MODE_MASK;
++
++	if (params->quantization == V4L2_QUANTIZATION_FULL_RANGE)
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_YCBCR_FULL;
++
++	switch (arg->effect) {
++	case V4L2_COLORFX_SEPIA:
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_MODE_SEPIA;
++		break;
++	case V4L2_COLORFX_SET_CBCR:
++		rkisp1_write(params->rkisp1, arg->eff_tint,
++			     RKISP1_CIF_IMG_EFF_TINT);
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_MODE_SEPIA;
++		break;
++		/*
++		 * Color selection is similar to water color(AQUA):
++		 * grayscale + selected color w threshold
++		 */
++	case V4L2_COLORFX_AQUA:
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_MODE_COLOR_SEL;
++		rkisp1_write(params->rkisp1, arg->color_sel,
++			     RKISP1_CIF_IMG_EFF_COLOR_SEL);
++		break;
++	case V4L2_COLORFX_EMBOSS:
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_MODE_EMBOSS;
++		rkisp1_write(params->rkisp1, arg->eff_mat_1,
++			     RKISP1_CIF_IMG_EFF_MAT_1);
++		rkisp1_write(params->rkisp1, arg->eff_mat_2,
++			     RKISP1_CIF_IMG_EFF_MAT_2);
++		rkisp1_write(params->rkisp1, arg->eff_mat_3,
++			     RKISP1_CIF_IMG_EFF_MAT_3);
++		break;
++	case V4L2_COLORFX_SKETCH:
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_MODE_SKETCH;
++		rkisp1_write(params->rkisp1, arg->eff_mat_3,
++			     RKISP1_CIF_IMG_EFF_MAT_3);
++		rkisp1_write(params->rkisp1, arg->eff_mat_4,
++			     RKISP1_CIF_IMG_EFF_MAT_4);
++		rkisp1_write(params->rkisp1, arg->eff_mat_5,
++			     RKISP1_CIF_IMG_EFF_MAT_5);
++		break;
++	case V4L2_COLORFX_BW:
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_MODE_BLACKWHITE;
++		break;
++	case V4L2_COLORFX_NEGATIVE:
++		eff_ctrl |= RKISP1_CIF_IMG_EFF_CTRL_MODE_NEGATIVE;
++		break;
++	default:
++		break;
++	}
++
++	rkisp1_write(params->rkisp1, eff_ctrl, RKISP1_CIF_IMG_EFF_CTRL);
++}
++
++static void rkisp1_ie_enable(struct rkisp1_params *params, bool en)
++{
++	if (en) {
++		rkisp1_param_set_bits(params, RKISP1_CIF_ICCL,
++				      RKISP1_CIF_ICCL_IE_CLK);
++		rkisp1_write(params->rkisp1, RKISP1_CIF_IMG_EFF_CTRL_ENABLE,
++			     RKISP1_CIF_IMG_EFF_CTRL);
++		rkisp1_param_set_bits(params, RKISP1_CIF_IMG_EFF_CTRL,
++				      RKISP1_CIF_IMG_EFF_CTRL_CFG_UPD);
++	} else {
++		rkisp1_param_clear_bits(params, RKISP1_CIF_IMG_EFF_CTRL,
++					RKISP1_CIF_IMG_EFF_CTRL_ENABLE);
++		rkisp1_param_clear_bits(params, RKISP1_CIF_ICCL,
++					RKISP1_CIF_ICCL_IE_CLK);
++	}
++}
++
++static void rkisp1_csm_config(struct rkisp1_params *params, bool full_range)
++{
++	static const u16 full_range_coeff[] = {
++		0x0026, 0x004b, 0x000f,
++		0x01ea, 0x01d6, 0x0040,
++		0x0040, 0x01ca, 0x01f6
++	};
++	static const u16 limited_range_coeff[] = {
++		0x0021, 0x0040, 0x000d,
++		0x01ed, 0x01db, 0x0038,
++		0x0038, 0x01d1, 0x01f7,
++	};
++	unsigned int i;
++
++	if (full_range) {
++		for (i = 0; i < ARRAY_SIZE(full_range_coeff); i++)
++			rkisp1_write(params->rkisp1, full_range_coeff[i],
++				     RKISP1_CIF_ISP_CC_COEFF_0 + i * 4);
++
++		rkisp1_param_set_bits(params, RKISP1_CIF_ISP_CTRL,
++				      RKISP1_CIF_ISP_CTRL_ISP_CSM_Y_FULL_ENA |
++				      RKISP1_CIF_ISP_CTRL_ISP_CSM_C_FULL_ENA);
++	} else {
++		for (i = 0; i < ARRAY_SIZE(limited_range_coeff); i++)
++			rkisp1_write(params->rkisp1, limited_range_coeff[i],
++				     RKISP1_CIF_ISP_CC_COEFF_0 + i * 4);
++
++		rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_CSM_Y_FULL_ENA |
++					RKISP1_CIF_ISP_CTRL_ISP_CSM_C_FULL_ENA);
++	}
++}
++
++/* ISP De-noise Pre-Filter(DPF) function */
++static void rkisp1_dpf_config(struct rkisp1_params *params,
++			      const struct rkisp1_cif_isp_dpf_config *arg)
++{
++	unsigned int isp_dpf_mode, spatial_coeff, i;
++
++	switch (arg->gain.mode) {
++	case RKISP1_CIF_ISP_DPF_GAIN_USAGE_NF_GAINS:
++		isp_dpf_mode = RKISP1_CIF_ISP_DPF_MODE_USE_NF_GAIN |
++			       RKISP1_CIF_ISP_DPF_MODE_AWB_GAIN_COMP;
++		break;
++	case RKISP1_CIF_ISP_DPF_GAIN_USAGE_LSC_GAINS:
++		isp_dpf_mode = RKISP1_CIF_ISP_DPF_MODE_LSC_GAIN_COMP;
++		break;
++	case RKISP1_CIF_ISP_DPF_GAIN_USAGE_NF_LSC_GAINS:
++		isp_dpf_mode = RKISP1_CIF_ISP_DPF_MODE_USE_NF_GAIN |
++			       RKISP1_CIF_ISP_DPF_MODE_AWB_GAIN_COMP |
++			       RKISP1_CIF_ISP_DPF_MODE_LSC_GAIN_COMP;
++		break;
++	case RKISP1_CIF_ISP_DPF_GAIN_USAGE_AWB_GAINS:
++		isp_dpf_mode = RKISP1_CIF_ISP_DPF_MODE_AWB_GAIN_COMP;
++		break;
++	case RKISP1_CIF_ISP_DPF_GAIN_USAGE_AWB_LSC_GAINS:
++		isp_dpf_mode = RKISP1_CIF_ISP_DPF_MODE_LSC_GAIN_COMP |
++			       RKISP1_CIF_ISP_DPF_MODE_AWB_GAIN_COMP;
++		break;
++	case RKISP1_CIF_ISP_DPF_GAIN_USAGE_DISABLED:
++	default:
++		isp_dpf_mode = 0;
++		break;
++	}
++
++	if (arg->nll.scale_mode == RKISP1_CIF_ISP_NLL_SCALE_LOGARITHMIC)
++		isp_dpf_mode |= RKISP1_CIF_ISP_DPF_MODE_NLL_SEGMENTATION;
++	if (arg->rb_flt.fltsize == RKISP1_CIF_ISP_DPF_RB_FILTERSIZE_9x9)
++		isp_dpf_mode |= RKISP1_CIF_ISP_DPF_MODE_RB_FLTSIZE_9x9;
++	if (!arg->rb_flt.r_enable)
++		isp_dpf_mode |= RKISP1_CIF_ISP_DPF_MODE_R_FLT_DIS;
++	if (!arg->rb_flt.b_enable)
++		isp_dpf_mode |= RKISP1_CIF_ISP_DPF_MODE_B_FLT_DIS;
++	if (!arg->g_flt.gb_enable)
++		isp_dpf_mode |= RKISP1_CIF_ISP_DPF_MODE_GB_FLT_DIS;
++	if (!arg->g_flt.gr_enable)
++		isp_dpf_mode |= RKISP1_CIF_ISP_DPF_MODE_GR_FLT_DIS;
++
++	rkisp1_param_set_bits(params, RKISP1_CIF_ISP_DPF_MODE,
++			      isp_dpf_mode);
++	rkisp1_write(params->rkisp1, arg->gain.nf_b_gain,
++		     RKISP1_CIF_ISP_DPF_NF_GAIN_B);
++	rkisp1_write(params->rkisp1, arg->gain.nf_r_gain,
++		     RKISP1_CIF_ISP_DPF_NF_GAIN_R);
++	rkisp1_write(params->rkisp1, arg->gain.nf_gb_gain,
++		     RKISP1_CIF_ISP_DPF_NF_GAIN_GB);
++	rkisp1_write(params->rkisp1, arg->gain.nf_gr_gain,
++		     RKISP1_CIF_ISP_DPF_NF_GAIN_GR);
++
++	for (i = 0; i < RKISP1_CIF_ISP_DPF_MAX_NLF_COEFFS; i++) {
++		rkisp1_write(params->rkisp1, arg->nll.coeff[i],
++			     RKISP1_CIF_ISP_DPF_NULL_COEFF_0 + i * 4);
++	}
++
++	spatial_coeff = arg->g_flt.spatial_coeff[0] |
++			(arg->g_flt.spatial_coeff[1] << 8) |
++			(arg->g_flt.spatial_coeff[2] << 16) |
++			(arg->g_flt.spatial_coeff[3] << 24);
++	rkisp1_write(params->rkisp1, spatial_coeff,
++		     RKISP1_CIF_ISP_DPF_S_WEIGHT_G_1_4);
++
++	spatial_coeff = arg->g_flt.spatial_coeff[4] |
++			(arg->g_flt.spatial_coeff[5] << 8);
++	rkisp1_write(params->rkisp1, spatial_coeff,
++		     RKISP1_CIF_ISP_DPF_S_WEIGHT_G_5_6);
++
++	spatial_coeff = arg->rb_flt.spatial_coeff[0] |
++			(arg->rb_flt.spatial_coeff[1] << 8) |
++			(arg->rb_flt.spatial_coeff[2] << 16) |
++			(arg->rb_flt.spatial_coeff[3] << 24);
++	rkisp1_write(params->rkisp1, spatial_coeff,
++		     RKISP1_CIF_ISP_DPF_S_WEIGHT_RB_1_4);
++
++	spatial_coeff = arg->rb_flt.spatial_coeff[4] |
++			(arg->rb_flt.spatial_coeff[5] << 8);
++	rkisp1_write(params->rkisp1, spatial_coeff,
++		     RKISP1_CIF_ISP_DPF_S_WEIGHT_RB_5_6);
++}
++
++static void
++rkisp1_dpf_strength_config(struct rkisp1_params *params,
++			   const struct rkisp1_cif_isp_dpf_strength_config *arg)
++{
++	rkisp1_write(params->rkisp1, arg->b, RKISP1_CIF_ISP_DPF_STRENGTH_B);
++	rkisp1_write(params->rkisp1, arg->g, RKISP1_CIF_ISP_DPF_STRENGTH_G);
++	rkisp1_write(params->rkisp1, arg->r, RKISP1_CIF_ISP_DPF_STRENGTH_R);
++}
++
++static void
++rkisp1_isp_isr_other_config(struct rkisp1_params *params,
++			    const struct rkisp1_params_cfg *new_params)
++{
++	unsigned int module_en_update, module_cfg_update, module_ens;
++
++	module_en_update = new_params->module_en_update;
++	module_cfg_update = new_params->module_cfg_update;
++	module_ens = new_params->module_ens;
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_DPCC) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_DPCC)) {
++		/*update dpc config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_DPCC))
++			rkisp1_dpcc_config(params,
++					   &new_params->others.dpcc_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_DPCC) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_DPCC))
++				rkisp1_param_set_bits(params,
++						      RKISP1_CIF_ISP_DPCC_MODE,
++						      RKISP1_CIF_ISP_DPCC_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++						RKISP1_CIF_ISP_DPCC_MODE,
++						RKISP1_CIF_ISP_DPCC_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_BLS) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_BLS)) {
++		/* update bls config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_BLS))
++			rkisp1_bls_config(params,
++					  &new_params->others.bls_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_BLS) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_BLS))
++				rkisp1_param_set_bits(params,
++						      RKISP1_CIF_ISP_BLS_CTRL,
++						      RKISP1_CIF_ISP_BLS_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++							RKISP1_CIF_ISP_BLS_CTRL,
++							RKISP1_CIF_ISP_BLS_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_SDG) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_SDG)) {
++		/* update sdg config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_SDG))
++			rkisp1_sdg_config(params,
++					  &new_params->others.sdg_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_SDG) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_SDG))
++				rkisp1_param_set_bits(params,
++					RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_GAMMA_IN_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++					RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_GAMMA_IN_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_LSC) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_LSC)) {
++		/* update lsc config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_LSC))
++			rkisp1_lsc_config(params,
++					  &new_params->others.lsc_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_LSC) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_LSC))
++				rkisp1_param_set_bits(params,
++						RKISP1_CIF_ISP_LSC_CTRL,
++						RKISP1_CIF_ISP_LSC_CTRL_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++						RKISP1_CIF_ISP_LSC_CTRL,
++						RKISP1_CIF_ISP_LSC_CTRL_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_AWB_GAIN) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_AWB_GAIN)) {
++		/* update awb gains */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_AWB_GAIN))
++			rkisp1_awb_gain_config(params,
++					&new_params->others.awb_gain_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_AWB_GAIN) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_AWB_GAIN))
++				rkisp1_param_set_bits(params,
++					RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_AWB_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++					RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_AWB_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_BDM) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_BDM)) {
++		/* update bdm config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_BDM))
++			rkisp1_bdm_config(params,
++					  &new_params->others.bdm_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_BDM) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_BDM))
++				rkisp1_param_set_bits(params,
++						RKISP1_CIF_ISP_DEMOSAIC,
++						RKISP1_CIF_ISP_DEMOSAIC_BYPASS);
++			else
++				rkisp1_param_clear_bits(params,
++						RKISP1_CIF_ISP_DEMOSAIC,
++						RKISP1_CIF_ISP_DEMOSAIC_BYPASS);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_FLT) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_FLT)) {
++		/* update filter config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_FLT))
++			rkisp1_flt_config(params,
++					  &new_params->others.flt_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_FLT) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_FLT))
++				rkisp1_param_set_bits(params,
++						      RKISP1_CIF_ISP_FILT_MODE,
++						      RKISP1_CIF_ISP_FLT_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++						RKISP1_CIF_ISP_FILT_MODE,
++						RKISP1_CIF_ISP_FLT_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_CTK) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_CTK)) {
++		/* update ctk config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_CTK))
++			rkisp1_ctk_config(params,
++					  &new_params->others.ctk_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_CTK)
++			rkisp1_ctk_enable(params,
++				!!(module_ens & RKISP1_CIF_ISP_MODULE_CTK));
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_GOC) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_GOC)) {
++		/* update goc config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_GOC))
++			rkisp1_goc_config(params,
++					  &new_params->others.goc_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_GOC) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_GOC))
++				rkisp1_param_set_bits(params,
++					RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_GAMMA_OUT_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++					RKISP1_CIF_ISP_CTRL,
++					RKISP1_CIF_ISP_CTRL_ISP_GAMMA_OUT_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_CPROC) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_CPROC)) {
++		/* update cproc config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_CPROC)) {
++			rkisp1_cproc_config(params,
++					    &new_params->others.cproc_config);
++		}
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_CPROC) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_CPROC))
++				rkisp1_param_set_bits(params,
++						RKISP1_CIF_C_PROC_CTRL,
++						RKISP1_CIF_C_PROC_CTR_ENABLE);
++			else
++				rkisp1_param_clear_bits(params,
++						RKISP1_CIF_C_PROC_CTRL,
++						RKISP1_CIF_C_PROC_CTR_ENABLE);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_IE) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_IE)) {
++		/* update ie config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_IE))
++			rkisp1_ie_config(params,
++					 &new_params->others.ie_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_IE)
++			rkisp1_ie_enable(params,
++				!!(module_ens & RKISP1_CIF_ISP_MODULE_IE));
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_DPF) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_DPF)) {
++		/* update dpf  config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_DPF))
++			rkisp1_dpf_config(params,
++					  &new_params->others.dpf_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_DPF) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_DPF))
++				rkisp1_param_set_bits(params,
++						   RKISP1_CIF_ISP_DPF_MODE,
++						   RKISP1_CIF_ISP_DPF_MODE_EN);
++			else
++				rkisp1_param_clear_bits(params,
++						RKISP1_CIF_ISP_DPF_MODE,
++						RKISP1_CIF_ISP_DPF_MODE_EN);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_DPF_STRENGTH) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_DPF_STRENGTH)) {
++		/* update dpf strength config */
++		rkisp1_dpf_strength_config(params,
++				&new_params->others.dpf_strength_config);
++	}
++}
++
++static void rkisp1_isp_isr_meas_config(struct rkisp1_params *params,
++				       struct  rkisp1_params_cfg *new_params)
++{
++	unsigned int module_en_update, module_cfg_update, module_ens;
++
++	module_en_update = new_params->module_en_update;
++	module_cfg_update = new_params->module_cfg_update;
++	module_ens = new_params->module_ens;
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_AWB) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_AWB)) {
++		/* update awb config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_AWB))
++			rkisp1_awb_meas_config(params,
++					&new_params->meas.awb_meas_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_AWB)
++			rkisp1_awb_meas_enable(params,
++				&new_params->meas.awb_meas_config,
++				!!(module_ens & RKISP1_CIF_ISP_MODULE_AWB));
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_AFC) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_AFC)) {
++		/* update afc config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_AFC))
++			rkisp1_afm_config(params,
++					  &new_params->meas.afc_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_AFC) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_AFC))
++				rkisp1_param_set_bits(params,
++						      RKISP1_CIF_ISP_AFM_CTRL,
++						      RKISP1_CIF_ISP_AFM_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++							RKISP1_CIF_ISP_AFM_CTRL,
++							RKISP1_CIF_ISP_AFM_ENA);
++		}
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_HST) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_HST)) {
++		/* update hst config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_HST))
++			rkisp1_hst_config(params,
++					  &new_params->meas.hst_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_HST)
++			rkisp1_hst_enable(params,
++				&new_params->meas.hst_config,
++				!!(module_ens & RKISP1_CIF_ISP_MODULE_HST));
++	}
++
++	if ((module_en_update & RKISP1_CIF_ISP_MODULE_AEC) ||
++	    (module_cfg_update & RKISP1_CIF_ISP_MODULE_AEC)) {
++		/* update aec config */
++		if ((module_cfg_update & RKISP1_CIF_ISP_MODULE_AEC))
++			rkisp1_aec_config(params,
++					  &new_params->meas.aec_config);
++
++		if (module_en_update & RKISP1_CIF_ISP_MODULE_AEC) {
++			if (!!(module_ens & RKISP1_CIF_ISP_MODULE_AEC))
++				rkisp1_param_set_bits(params,
++						      RKISP1_CIF_ISP_EXP_CTRL,
++						      RKISP1_CIF_ISP_EXP_ENA);
++			else
++				rkisp1_param_clear_bits(params,
++							RKISP1_CIF_ISP_EXP_CTRL,
++							RKISP1_CIF_ISP_EXP_ENA);
++		}
++	}
++}
++
++void rkisp1_params_isr(struct rkisp1_device *rkisp1, u32 isp_mis)
++{
++	unsigned int frame_sequence = atomic_read(&rkisp1->isp.frame_sequence);
++	struct rkisp1_params *params = &rkisp1->params;
++	struct rkisp1_params_cfg *new_params;
++	struct rkisp1_buffer *cur_buf = NULL;
++
++	spin_lock(&params->config_lock);
++	if (!params->is_streaming) {
++		spin_unlock(&params->config_lock);
++		return;
++	}
++
++	/* get one empty buffer */
++	if (!list_empty(&params->params))
++		cur_buf = list_first_entry(&params->params,
++					   struct rkisp1_buffer, queue);
++	spin_unlock(&params->config_lock);
++
++	if (!cur_buf)
++		return;
++
++	new_params = (struct rkisp1_params_cfg *)(cur_buf->vaddr[0]);
++
++	if (isp_mis & RKISP1_CIF_ISP_FRAME) {
++		u32 isp_ctrl;
++
++		rkisp1_isp_isr_other_config(params, new_params);
++		rkisp1_isp_isr_meas_config(params, new_params);
++
++		/* update shadow register immediately */
++		isp_ctrl = rkisp1_read(params->rkisp1, RKISP1_CIF_ISP_CTRL);
++		isp_ctrl |= RKISP1_CIF_ISP_CTRL_ISP_CFG_UPD;
++		rkisp1_write(params->rkisp1, isp_ctrl, RKISP1_CIF_ISP_CTRL);
++
++		spin_lock(&params->config_lock);
++		list_del(&cur_buf->queue);
++		spin_unlock(&params->config_lock);
++
++		cur_buf->vb.sequence = frame_sequence;
++		vb2_buffer_done(&cur_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
++	}
++}
++
++static const struct rkisp1_cif_isp_awb_meas_config rkisp1_awb_params_default_config = {
++	{
++		0, 0, RKISP1_DEFAULT_WIDTH, RKISP1_DEFAULT_HEIGHT
++	},
++	RKISP1_CIF_ISP_AWB_MODE_YCBCR, 200, 30, 20, 20, 0, 128, 128
 +};
 +
-+enum rkisp1_cif_isp_awb_mode_type {
-+	RKISP1_CIF_ISP_AWB_MODE_MANUAL,
-+	RKISP1_CIF_ISP_AWB_MODE_RGB,
-+	RKISP1_CIF_ISP_AWB_MODE_YCBCR
-+};
-+
-+enum rkisp1_cif_isp_flt_mode {
-+	RKISP1_CIF_ISP_FLT_STATIC_MODE,
-+	RKISP1_CIF_ISP_FLT_DYNAMIC_MODE
-+};
-+
-+/**
-+ * enum rkisp1_cif_isp_exp_ctrl_autostop - stop modes
-+ * @RKISP1_CIF_ISP_EXP_CTRL_AUTOSTOP_0: continuous measurement
-+ * @RKISP1_CIF_ISP_EXP_CTRL_AUTOSTOP_1: stop measuring after a complete frame
-+ */
-+enum rkisp1_cif_isp_exp_ctrl_autostop {
-+	RKISP1_CIF_ISP_EXP_CTRL_AUTOSTOP_0 = 0,
-+	RKISP1_CIF_ISP_EXP_CTRL_AUTOSTOP_1 = 1,
-+};
-+
-+/**
-+ * enum rkisp1_cif_isp_exp_meas_mode - Exposure measure mode
-+ * @RKISP1_CIF_ISP_EXP_MEASURING_MODE_0: Y = 16 + 0.25R + 0.5G + 0.1094B
-+ * @RKISP1_CIF_ISP_EXP_MEASURING_MODE_1: Y = (R + G + B) x (85/256)
-+ */
-+enum rkisp1_cif_isp_exp_meas_mode {
++static const struct rkisp1_cif_isp_aec_config rkisp1_aec_params_default_config = {
 +	RKISP1_CIF_ISP_EXP_MEASURING_MODE_0,
-+	RKISP1_CIF_ISP_EXP_MEASURING_MODE_1,
++	RKISP1_CIF_ISP_EXP_CTRL_AUTOSTOP_0,
++	{
++		RKISP1_DEFAULT_WIDTH >> 2, RKISP1_DEFAULT_HEIGHT >> 2,
++		RKISP1_DEFAULT_WIDTH >> 1, RKISP1_DEFAULT_HEIGHT >> 1
++	}
 +};
 +
-+/*---------- PART1: Input Parameters ------------*/
++static const struct rkisp1_cif_isp_hst_config rkisp1_hst_params_default_config = {
++	RKISP1_CIF_ISP_HISTOGRAM_MODE_RGB_COMBINED,
++	3,
++	{
++		RKISP1_DEFAULT_WIDTH >> 2, RKISP1_DEFAULT_HEIGHT >> 2,
++		RKISP1_DEFAULT_WIDTH >> 1, RKISP1_DEFAULT_HEIGHT >> 1
++	},
++	{
++		0, /* To be filled in with 0x01 at runtime. */
++	}
++};
 +
-+struct rkisp1_cif_isp_window {
-+	__u16 h_offs;
-+	__u16 v_offs;
-+	__u16 h_size;
-+	__u16 v_size;
-+} __packed;
++static const struct rkisp1_cif_isp_afc_config rkisp1_afc_params_default_config = {
++	1,
++	{
++		{
++			300, 225, 200, 150
++		}
++	},
++	4,
++	14
++};
 +
-+/**
-+ * struct rkisp1_cif_isp_bls_fixed_val - BLS fixed subtraction values
-+ *
-+ * The values will be subtracted from the sensor
-+ * values. Therefore a negative value means addition instead of subtraction!
-+ *
-+ * @r: Fixed (signed!) subtraction value for Bayer pattern R
-+ * @gr: Fixed (signed!) subtraction value for Bayer pattern Gr
-+ * @gb: Fixed (signed!) subtraction value for Bayer pattern Gb
-+ * @b: Fixed (signed!) subtraction value for Bayer pattern B
-+ */
-+struct rkisp1_cif_isp_bls_fixed_val {
-+	__s16 r;
-+	__s16 gr;
-+	__s16 gb;
-+	__s16 b;
-+} __packed;
++static void rkisp1_params_config_parameter(struct rkisp1_params *params)
++{
++	struct rkisp1_cif_isp_hst_config hst = rkisp1_hst_params_default_config;
 +
-+/**
-+ * struct rkisp1_cif_isp_bls_config - Configuration used by black level subtraction
-+ *
-+ * @enable_auto: Automatic mode activated means that the measured values
-+ *		 are subtracted. Otherwise the fixed subtraction
-+ *		 values will be subtracted.
-+ * @en_windows: enabled window
-+ * @bls_window1: Measurement window 1 size
-+ * @bls_window2: Measurement window 2 size
-+ * @bls_samples: Set amount of measured pixels for each Bayer position
-+ *		 (A, B,C and D) to 2^bls_samples.
-+ * @fixed_val: Fixed subtraction values
-+ */
-+struct rkisp1_cif_isp_bls_config {
-+	__u8 enable_auto;
-+	__u8 en_windows;
-+	struct rkisp1_cif_isp_window bls_window1;
-+	struct rkisp1_cif_isp_window bls_window2;
-+	__u8 bls_samples;
-+	struct rkisp1_cif_isp_bls_fixed_val fixed_val;
-+} __packed;
++	spin_lock(&params->config_lock);
 +
-+/**
-+ * struct rkisp1_cif_isp_dpcc_methods_config - Methods Configuration used by DPCC
-+ *
-+ * Methods Configuration used by Defect Pixel Cluster Correction
-+ *
-+ * @method: Method enable bits
-+ * @line_thresh: Line threshold
-+ * @line_mad_fac: Line MAD factor
-+ * @pg_fac: Peak gradient factor
-+ * @rnd_thresh: Rank Neighbor Difference threshold
-+ * @rg_fac: Rank gradient factor
-+ */
-+struct rkisp1_cif_isp_dpcc_methods_config {
-+	__u32 method;
-+	__u32 line_thresh;
-+	__u32 line_mad_fac;
-+	__u32 pg_fac;
-+	__u32 rnd_thresh;
-+	__u32 rg_fac;
-+} __packed;
++	rkisp1_awb_meas_config(params, &rkisp1_awb_params_default_config);
++	rkisp1_awb_meas_enable(params, &rkisp1_awb_params_default_config,
++			       true);
 +
-+/**
-+ * struct rkisp1_cif_isp_dpcc_config - Configuration used by DPCC
-+ *
-+ * Configuration used by Defect Pixel Cluster Correction
-+ *
-+ * @mode: dpcc output mode
-+ * @output_mode: whether use hard coded methods
-+ * @set_use: stage1 methods set
-+ * @methods: methods config
-+ * @ro_limits: rank order limits
-+ * @rnd_offs: differential rank offsets for rank neighbor difference
-+ */
-+struct rkisp1_cif_isp_dpcc_config {
-+	__u32 mode;
-+	__u32 output_mode;
-+	__u32 set_use;
-+	struct rkisp1_cif_isp_dpcc_methods_config methods[RKISP1_CIF_ISP_DPCC_METHODS_MAX];
-+	__u32 ro_limits;
-+	__u32 rnd_offs;
-+} __packed;
++	rkisp1_aec_config(params, &rkisp1_aec_params_default_config);
++	rkisp1_param_set_bits(params, RKISP1_CIF_ISP_EXP_CTRL,
++			      RKISP1_CIF_ISP_EXP_ENA);
 +
-+struct rkisp1_cif_isp_gamma_corr_curve {
-+	__u16 gamma_y[RKISP1_CIF_ISP_DEGAMMA_CURVE_SIZE];
-+} __packed;
++	rkisp1_afm_config(params, &rkisp1_afc_params_default_config);
++	rkisp1_param_set_bits(params, RKISP1_CIF_ISP_AFM_CTRL,
++			      RKISP1_CIF_ISP_AFM_ENA);
 +
-+struct rkisp1_cif_isp_gamma_curve_x_axis_pnts {
-+	__u32 gamma_dx0;
-+	__u32 gamma_dx1;
-+} __packed;
++	memset(hst.hist_weight, 0x01, sizeof(hst.hist_weight));
++	rkisp1_hst_config(params, &hst);
++	rkisp1_param_set_bits(params, RKISP1_CIF_ISP_HIST_PROP,
++			      ~RKISP1_CIF_ISP_HIST_PROP_MODE_MASK |
++			      rkisp1_hst_params_default_config.mode);
 +
-+/**
-+ * struct rkisp1_cif_isp_sdg_config - Configuration used by sensor degamma
-+ *
-+ * @curve_x: gamma curve point definition axis for x
-+ * @xa_pnts: x increments
-+ */
-+struct rkisp1_cif_isp_sdg_config {
-+	struct rkisp1_cif_isp_gamma_corr_curve curve_r;
-+	struct rkisp1_cif_isp_gamma_corr_curve curve_g;
-+	struct rkisp1_cif_isp_gamma_corr_curve curve_b;
-+	struct rkisp1_cif_isp_gamma_curve_x_axis_pnts xa_pnts;
-+} __packed;
++	/* set the  range */
++	if (params->quantization == V4L2_QUANTIZATION_FULL_RANGE)
++		rkisp1_csm_config(params, true);
++	else
++		rkisp1_csm_config(params, false);
 +
-+/**
-+ * struct rkisp1_cif_isp_lsc_config - Configuration used by Lens shading correction
-+ *
-+ * refer to REF_01 for details
-+ */
-+struct rkisp1_cif_isp_lsc_config {
-+	__u32 r_data_tbl[RKISP1_CIF_ISP_LSC_DATA_TBL_SIZE];
-+	__u32 gr_data_tbl[RKISP1_CIF_ISP_LSC_DATA_TBL_SIZE];
-+	__u32 gb_data_tbl[RKISP1_CIF_ISP_LSC_DATA_TBL_SIZE];
-+	__u32 b_data_tbl[RKISP1_CIF_ISP_LSC_DATA_TBL_SIZE];
++	/* override the default things */
++	rkisp1_isp_isr_other_config(params, &params->cur_params);
++	rkisp1_isp_isr_meas_config(params, &params->cur_params);
 +
-+	__u32 x_grad_tbl[RKISP1_CIF_ISP_LSC_GRAD_TBL_SIZE];
-+	__u32 y_grad_tbl[RKISP1_CIF_ISP_LSC_GRAD_TBL_SIZE];
++	spin_unlock(&params->config_lock);
++}
 +
-+	__u32 x_size_tbl[RKISP1_CIF_ISP_LSC_SIZE_TBL_SIZE];
-+	__u32 y_size_tbl[RKISP1_CIF_ISP_LSC_SIZE_TBL_SIZE];
-+	__u16 config_width;
-+	__u16 config_height;
-+} __packed;
++/* Not called when the camera active, thus not isr protection. */
++void rkisp1_params_configure(struct rkisp1_params *params,
++			     enum rkisp1_fmt_raw_pat_type bayer_pat,
++			     enum v4l2_quantization quantization)
++{
++	params->quantization = quantization;
++	params->raw_type = bayer_pat;
++	rkisp1_params_config_parameter(params);
++}
 +
-+/**
-+ * struct rkisp1_cif_isp_ie_config - Configuration used by image effects
-+ *
-+ * @eff_mat_1: 3x3 Matrix Coefficients for Emboss Effect 1
-+ * @eff_mat_2: 3x3 Matrix Coefficients for Emboss Effect 2
-+ * @eff_mat_3: 3x3 Matrix Coefficients for Emboss 3/Sketch 1
-+ * @eff_mat_4: 3x3 Matrix Coefficients for Sketch Effect 2
-+ * @eff_mat_5: 3x3 Matrix Coefficients for Sketch Effect 3
-+ * @eff_tint: Chrominance increment values of tint (used for sepia effect)
-+ */
-+struct rkisp1_cif_isp_ie_config {
-+	__u16 effect;
-+	__u16 color_sel;
-+	__u16 eff_mat_1;
-+	__u16 eff_mat_2;
-+	__u16 eff_mat_3;
-+	__u16 eff_mat_4;
-+	__u16 eff_mat_5;
-+	__u16 eff_tint;
-+} __packed;
++/* Not called when the camera active, thus not isr protection. */
++void rkisp1_params_disable(struct rkisp1_params *params)
++{
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_DPCC_MODE,
++				RKISP1_CIF_ISP_DPCC_ENA);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_LSC_CTRL,
++				RKISP1_CIF_ISP_LSC_CTRL_ENA);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_BLS_CTRL,
++				RKISP1_CIF_ISP_BLS_ENA);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_CTRL,
++				RKISP1_CIF_ISP_CTRL_ISP_GAMMA_IN_ENA);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_CTRL,
++				RKISP1_CIF_ISP_CTRL_ISP_GAMMA_OUT_ENA);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_DEMOSAIC,
++				RKISP1_CIF_ISP_DEMOSAIC_BYPASS);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_FILT_MODE,
++				RKISP1_CIF_ISP_FLT_ENA);
++	rkisp1_awb_meas_enable(params, NULL, false);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_CTRL,
++				RKISP1_CIF_ISP_CTRL_ISP_AWB_ENA);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_EXP_CTRL,
++				RKISP1_CIF_ISP_EXP_ENA);
++	rkisp1_ctk_enable(params, false);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_C_PROC_CTRL,
++				RKISP1_CIF_C_PROC_CTR_ENABLE);
++	rkisp1_hst_enable(params, NULL, false);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_AFM_CTRL,
++				RKISP1_CIF_ISP_AFM_ENA);
++	rkisp1_ie_enable(params, false);
++	rkisp1_param_clear_bits(params, RKISP1_CIF_ISP_DPF_MODE,
++				RKISP1_CIF_ISP_DPF_MODE_EN);
++}
 +
-+/**
-+ * struct rkisp1_cif_isp_cproc_config - Configuration used by Color Processing
-+ *
-+ * @c_out_range: Chrominance pixel clipping range at output.
-+ *		 (0 for limit, 1 for full)
-+ * @y_in_range: Luminance pixel clipping range at output.
-+ * @y_out_range: Luminance pixel clipping range at output.
-+ * @contrast: 00~ff, 0.0~1.992
-+ * @brightness: 80~7F, -128~+127
-+ * @sat: saturation, 00~FF, 0.0~1.992
-+ * @hue: 80~7F, -90~+87.188
-+ */
-+struct rkisp1_cif_isp_cproc_config {
-+	__u8 c_out_range;
-+	__u8 y_in_range;
-+	__u8 y_out_range;
-+	__u8 contrast;
-+	__u8 brightness;
-+	__u8 sat;
-+	__u8 hue;
-+} __packed;
++static int rkisp1_params_enum_fmt_meta_out(struct file *file, void *priv,
++					   struct v4l2_fmtdesc *f)
++{
++	struct video_device *video = video_devdata(file);
++	struct rkisp1_params *params = video_get_drvdata(video);
 +
-+/**
-+ * struct rkisp1_cif_isp_awb_meas_config - Configuration used by auto white balance
-+ *
-+ * @awb_wnd: white balance measurement window (in pixels)
-+ *	     (from enum rkisp1_cif_isp_awb_mode_type)
-+ * @max_y: only pixels values < max_y contribute to awb measurement, set to 0
-+ *	   to disable this feature
-+ * @min_y: only pixels values > min_y contribute to awb measurement
-+ * @max_csum: Chrominance sum maximum value, only consider pixels with Cb+Cr,
-+ *	      smaller than threshold for awb measurements
-+ * @min_c: Chrominance minimum value, only consider pixels with Cb/Cr
-+ *	   each greater than threshold value for awb measurements
-+ * @frames: number of frames - 1 used for mean value calculation
-+ *	    (ucFrames=0 means 1 Frame)
-+ * @awb_ref_cr: reference Cr value for AWB regulation, target for AWB
-+ * @awb_ref_cb: reference Cb value for AWB regulation, target for AWB
-+ */
-+struct rkisp1_cif_isp_awb_meas_config {
++	if (f->index > 0 || f->type != video->queue->type)
++		return -EINVAL;
++
++	f->pixelformat = params->vdev_fmt.fmt.meta.dataformat;
++
++	return 0;
++}
++
++static int rkisp1_params_g_fmt_meta_out(struct file *file, void *fh,
++					struct v4l2_format *f)
++{
++	struct video_device *video = video_devdata(file);
++	struct rkisp1_params *params = video_get_drvdata(video);
++	struct v4l2_meta_format *meta = &f->fmt.meta;
++
++	if (f->type != video->queue->type)
++		return -EINVAL;
++
++	memset(meta, 0, sizeof(*meta));
++	meta->dataformat = params->vdev_fmt.fmt.meta.dataformat;
++	meta->buffersize = params->vdev_fmt.fmt.meta.buffersize;
++
++	return 0;
++}
++
++static int rkisp1_params_querycap(struct file *file,
++				  void *priv, struct v4l2_capability *cap)
++{
++	struct video_device *vdev = video_devdata(file);
++
++	strscpy(cap->driver, RKISP1_DRIVER_NAME, sizeof(cap->driver));
++	strscpy(cap->card, vdev->name, sizeof(cap->card));
++	strscpy(cap->bus_info, RKISP1_BUS_INFO, sizeof(cap->bus_info));
++
++	return 0;
++}
++
++/* ISP params video device IOCTLs */
++static const struct v4l2_ioctl_ops rkisp1_params_ioctl = {
++	.vidioc_reqbufs = vb2_ioctl_reqbufs,
++	.vidioc_querybuf = vb2_ioctl_querybuf,
++	.vidioc_create_bufs = vb2_ioctl_create_bufs,
++	.vidioc_qbuf = vb2_ioctl_qbuf,
++	.vidioc_dqbuf = vb2_ioctl_dqbuf,
++	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
++	.vidioc_expbuf = vb2_ioctl_expbuf,
++	.vidioc_streamon = vb2_ioctl_streamon,
++	.vidioc_streamoff = vb2_ioctl_streamoff,
++	.vidioc_enum_fmt_meta_out = rkisp1_params_enum_fmt_meta_out,
++	.vidioc_g_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
++	.vidioc_s_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
++	.vidioc_try_fmt_meta_out = rkisp1_params_g_fmt_meta_out,
++	.vidioc_querycap = rkisp1_params_querycap,
++	.vidioc_subscribe_event = v4l2_ctrl_subscribe_event,
++	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
++};
++
++static int rkisp1_params_vb2_queue_setup(struct vb2_queue *vq,
++					 unsigned int *num_buffers,
++					 unsigned int *num_planes,
++					 unsigned int sizes[],
++					 struct device *alloc_devs[])
++{
++	struct rkisp1_params *params = vq->drv_priv;
++
++	*num_buffers = clamp_t(u32, *num_buffers,
++			       RKISP1_ISP_PARAMS_REQ_BUFS_MIN,
++			       RKISP1_ISP_PARAMS_REQ_BUFS_MAX);
++
++	*num_planes = 1;
++
++	sizes[0] = sizeof(struct rkisp1_params_cfg);
++
++	INIT_LIST_HEAD(&params->params);
++	params->is_first_params = true;
++
++	return 0;
++}
++
++static void rkisp1_params_vb2_buf_queue(struct vb2_buffer *vb)
++{
++	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
++	struct rkisp1_buffer *params_buf =
++		container_of(vbuf, struct rkisp1_buffer, vb);
++	struct vb2_queue *vq = vb->vb2_queue;
++	struct rkisp1_params *params = vq->drv_priv;
++	struct rkisp1_params_cfg *new_params;
++	unsigned long flags;
++	unsigned int frame_sequence =
++		atomic_read(&params->rkisp1->isp.frame_sequence);
++
++	if (params->is_first_params) {
++		new_params = (struct rkisp1_params_cfg *)
++			(vb2_plane_vaddr(vb, 0));
++		vbuf->sequence = frame_sequence;
++		vb2_buffer_done(&params_buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
++		params->is_first_params = false;
++		params->cur_params = *new_params;
++		return;
++	}
++
++	params_buf->vaddr[0] = vb2_plane_vaddr(vb, 0);
++	spin_lock_irqsave(&params->config_lock, flags);
++	list_add_tail(&params_buf->queue, &params->params);
++	spin_unlock_irqrestore(&params->config_lock, flags);
++}
++
++static int rkisp1_params_vb2_buf_prepare(struct vb2_buffer *vb)
++{
++	if (vb2_plane_size(vb, 0) < sizeof(struct rkisp1_params_cfg))
++		return -EINVAL;
++
++	vb2_set_plane_payload(vb, 0, sizeof(struct rkisp1_params_cfg));
++
++	return 0;
++}
++
++static void rkisp1_params_vb2_stop_streaming(struct vb2_queue *vq)
++{
++	struct rkisp1_params *params = vq->drv_priv;
++	struct rkisp1_buffer *buf;
++	unsigned long flags;
++	unsigned int i;
++
++	/* stop params input firstly */
++	spin_lock_irqsave(&params->config_lock, flags);
++	params->is_streaming = false;
++	spin_unlock_irqrestore(&params->config_lock, flags);
++
++	for (i = 0; i < RKISP1_ISP_PARAMS_REQ_BUFS_MAX; i++) {
++		spin_lock_irqsave(&params->config_lock, flags);
++		if (!list_empty(&params->params)) {
++			buf = list_first_entry(&params->params,
++					       struct rkisp1_buffer, queue);
++			list_del(&buf->queue);
++			spin_unlock_irqrestore(&params->config_lock,
++					       flags);
++		} else {
++			spin_unlock_irqrestore(&params->config_lock,
++					       flags);
++			break;
++		}
++
++		if (buf)
++			vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
++		buf = NULL;
++	}
++}
++
++static int
++rkisp1_params_vb2_start_streaming(struct vb2_queue *queue, unsigned int count)
++{
++	struct rkisp1_params *params = queue->drv_priv;
++	unsigned long flags;
++
++	spin_lock_irqsave(&params->config_lock, flags);
++	params->is_streaming = true;
++	spin_unlock_irqrestore(&params->config_lock, flags);
++
++	return 0;
++}
++
++static struct vb2_ops rkisp1_params_vb2_ops = {
++	.queue_setup = rkisp1_params_vb2_queue_setup,
++	.wait_prepare = vb2_ops_wait_prepare,
++	.wait_finish = vb2_ops_wait_finish,
++	.buf_queue = rkisp1_params_vb2_buf_queue,
++	.buf_prepare = rkisp1_params_vb2_buf_prepare,
++	.start_streaming = rkisp1_params_vb2_start_streaming,
++	.stop_streaming = rkisp1_params_vb2_stop_streaming,
++
++};
++
++static struct v4l2_file_operations rkisp1_params_fops = {
++	.mmap = vb2_fop_mmap,
++	.unlocked_ioctl = video_ioctl2,
++	.poll = vb2_fop_poll,
++	.open = v4l2_fh_open,
++	.release = vb2_fop_release
++};
++
++static int rkisp1_params_init_vb2_queue(struct vb2_queue *q,
++					struct rkisp1_params *params)
++{
++	struct rkisp1_vdev_node *node;
++
++	node = container_of(q, struct rkisp1_vdev_node, buf_queue);
++
++	q->type = V4L2_BUF_TYPE_META_OUTPUT;
++	q->io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
++	q->drv_priv = params;
++	q->ops = &rkisp1_params_vb2_ops;
++	q->mem_ops = &vb2_vmalloc_memops;
++	q->buf_struct_size = sizeof(struct rkisp1_buffer);
++	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
++	q->lock = &node->vlock;
++
++	return vb2_queue_init(q);
++}
++
++static void rkisp1_init_params(struct rkisp1_params *params)
++{
++	params->vdev_fmt.fmt.meta.dataformat =
++		V4L2_META_FMT_RK_ISP1_PARAMS;
++	params->vdev_fmt.fmt.meta.buffersize =
++		sizeof(struct rkisp1_params_cfg);
++}
++
++int rkisp1_params_register(struct rkisp1_params *params,
++			   struct v4l2_device *v4l2_dev,
++			   struct rkisp1_device *rkisp1)
++{
++	struct rkisp1_vdev_node *node = &params->vnode;
++	struct video_device *vdev = &node->vdev;
++	int ret;
++
++	params->rkisp1 = rkisp1;
++	mutex_init(&node->vlock);
++	spin_lock_init(&params->config_lock);
++
++	strscpy(vdev->name, RKISP1_PARAMS_DEV_NAME, sizeof(vdev->name));
++
++	video_set_drvdata(vdev, params);
++	vdev->ioctl_ops = &rkisp1_params_ioctl;
++	vdev->fops = &rkisp1_params_fops;
++	vdev->release = video_device_release_empty;
 +	/*
-+	 * Note: currently the h and v offsets are mapped to grid offsets
++	 * Provide a mutex to v4l2 core. It will be used
++	 * to protect all fops and v4l2 ioctls.
 +	 */
-+	struct rkisp1_cif_isp_window awb_wnd;
-+	__u32 awb_mode;
-+	__u8 max_y;
-+	__u8 min_y;
-+	__u8 max_csum;
-+	__u8 min_c;
-+	__u8 frames;
-+	__u8 awb_ref_cr;
-+	__u8 awb_ref_cb;
-+	__u8 enable_ymax_cmp;
-+} __packed;
++	vdev->lock = &node->vlock;
++	vdev->v4l2_dev = v4l2_dev;
++	vdev->queue = &node->buf_queue;
++	vdev->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_META_OUTPUT;
++	vdev->vfl_dir = VFL_DIR_TX;
++	rkisp1_params_init_vb2_queue(vdev->queue, params);
++	rkisp1_init_params(params);
++	video_set_drvdata(vdev, params);
 +
-+/**
-+ * struct rkisp1_cif_isp_awb_gain_config - Configuration used by auto white balance gain
-+ *
-+ * out_data_x = ( AWB_GEAIN_X * in_data + 128) >> 8
-+ */
-+struct rkisp1_cif_isp_awb_gain_config {
-+	__u16 gain_red;
-+	__u16 gain_green_r;
-+	__u16 gain_blue;
-+	__u16 gain_green_b;
-+} __packed;
++	node->pad.flags = MEDIA_PAD_FL_SOURCE;
++	ret = media_entity_pads_init(&vdev->entity, 1, &node->pad);
++	if (ret)
++		goto err_release_queue;
++	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
++	if (ret) {
++		dev_err(&vdev->dev,
++			"failed to register %s, ret=%d\n", vdev->name, ret);
++		goto err_cleanup_media_entity;
++	}
++	return 0;
++err_cleanup_media_entity:
++	media_entity_cleanup(&vdev->entity);
++err_release_queue:
++	vb2_queue_release(vdev->queue);
++	return ret;
++}
 +
-+/**
-+ * struct rkisp1_cif_isp_flt_config - Configuration used by ISP filtering
-+ *
-+ * @mode: ISP_FILT_MODE register fields (from enum rkisp1_cif_isp_flt_mode)
-+ * @grn_stage1: ISP_FILT_MODE register fields
-+ * @chr_h_mode: ISP_FILT_MODE register fields
-+ * @chr_v_mode: ISP_FILT_MODE register fields
-+ *
-+ * refer to REF_01 for details.
-+ */
++void rkisp1_params_unregister(struct rkisp1_params *params)
++{
++	struct rkisp1_vdev_node *node = &params->vnode;
++	struct video_device *vdev = &node->vdev;
 +
-+struct rkisp1_cif_isp_flt_config {
-+	__u32 mode;
-+	__u8 grn_stage1;
-+	__u8 chr_h_mode;
-+	__u8 chr_v_mode;
-+	__u32 thresh_bl0;
-+	__u32 thresh_bl1;
-+	__u32 thresh_sh0;
-+	__u32 thresh_sh1;
-+	__u32 lum_weight;
-+	__u32 fac_sh1;
-+	__u32 fac_sh0;
-+	__u32 fac_mid;
-+	__u32 fac_bl0;
-+	__u32 fac_bl1;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_bdm_config - Configuration used by Bayer DeMosaic
-+ *
-+ * @demosaic_th: threshod for bayer demosaicing texture detection
-+ */
-+struct rkisp1_cif_isp_bdm_config {
-+	__u8 demosaic_th;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_ctk_config - Configuration used by Cross Talk correction
-+ *
-+ * @coeff: color correction matrix
-+ * @ct_offset_b: offset for the crosstalk correction matrix
-+ */
-+struct rkisp1_cif_isp_ctk_config {
-+	__u16 coeff0;
-+	__u16 coeff1;
-+	__u16 coeff2;
-+	__u16 coeff3;
-+	__u16 coeff4;
-+	__u16 coeff5;
-+	__u16 coeff6;
-+	__u16 coeff7;
-+	__u16 coeff8;
-+	__u16 ct_offset_r;
-+	__u16 ct_offset_g;
-+	__u16 ct_offset_b;
-+} __packed;
-+
-+enum rkisp1_cif_isp_goc_mode {
-+	RKISP1_CIF_ISP_GOC_MODE_LOGARITHMIC,
-+	RKISP1_CIF_ISP_GOC_MODE_EQUIDISTANT
-+};
-+
-+/**
-+ * struct rkisp1_cif_isp_goc_config - Configuration used by Gamma Out correction
-+ *
-+ * @mode: goc mode (from enum rkisp1_cif_isp_goc_mode)
-+ * @gamma_y: gamma out curve y-axis for all color components
-+ */
-+struct rkisp1_cif_isp_goc_config {
-+	__u32 mode;
-+	__u16 gamma_y[RKISP1_CIF_ISP_GAMMA_OUT_MAX_SAMPLES];
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_hst_config - Configuration used by Histogram
-+ *
-+ * @mode: histogram mode (from enum rkisp1_cif_isp_histogram_mode)
-+ * @histogram_predivider: process every stepsize pixel, all other pixels are
-+ *			  skipped
-+ * @meas_window: coordinates of the measure window
-+ * @hist_weight: weighting factor for sub-windows
-+ */
-+struct rkisp1_cif_isp_hst_config {
-+	__u32 mode;
-+	__u8 histogram_predivider;
-+	struct rkisp1_cif_isp_window meas_window;
-+	__u8 hist_weight[RKISP1_CIF_ISP_HISTOGRAM_WEIGHT_GRIDS_SIZE];
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_aec_config - Configuration used by Auto Exposure Control
-+ *
-+ * @mode: Exposure measure mode (from enum rkisp1_cif_isp_exp_meas_mode)
-+ * @autostop: stop mode (from enum rkisp1_cif_isp_exp_ctrl_autostop)
-+ * @meas_window: coordinates of the measure window
-+ */
-+struct rkisp1_cif_isp_aec_config {
-+	__u32 mode;
-+	__u32 autostop;
-+	struct rkisp1_cif_isp_window meas_window;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_afc_config - Configuration used by Auto Focus Control
-+ *
-+ * @num_afm_win: max RKISP1_CIF_ISP_AFM_MAX_WINDOWS
-+ * @afm_win: coordinates of the meas window
-+ * @thres: threshold used for minimizing the influence of noise
-+ * @var_shift: the number of bits for the shift operation at the end of the
-+ *	       calculation chain.
-+ */
-+struct rkisp1_cif_isp_afc_config {
-+	__u8 num_afm_win;
-+	struct rkisp1_cif_isp_window afm_win[RKISP1_CIF_ISP_AFM_MAX_WINDOWS];
-+	__u32 thres;
-+	__u32 var_shift;
-+} __packed;
-+
-+/**
-+ * enum rkisp1_cif_isp_dpf_gain_usage - dpf gain usage
-+ * @RKISP1_CIF_ISP_DPF_GAIN_USAGE_DISABLED: don't use any gains in preprocessing stage
-+ * @RKISP1_CIF_ISP_DPF_GAIN_USAGE_NF_GAINS: use only the noise function gains from
-+ *				    registers DPF_NF_GAIN_R, ...
-+ * @RKISP1_CIF_ISP_DPF_GAIN_USAGE_LSC_GAINS:  use only the gains from LSC module
-+ * @RKISP1_CIF_ISP_DPF_GAIN_USAGE_NF_LSC_GAINS: use the noise function gains and the
-+ *					gains from LSC module
-+ * @RKISP1_CIF_ISP_DPF_GAIN_USAGE_AWB_GAINS: use only the gains from AWB module
-+ * @RKISP1_CIF_ISP_DPF_GAIN_USAGE_AWB_LSC_GAINS: use the gains from AWB and LSC module
-+ * @RKISP1_CIF_ISP_DPF_GAIN_USAGE_MAX: upper border (only for an internal evaluation)
-+ */
-+enum rkisp1_cif_isp_dpf_gain_usage {
-+	RKISP1_CIF_ISP_DPF_GAIN_USAGE_DISABLED,
-+	RKISP1_CIF_ISP_DPF_GAIN_USAGE_NF_GAINS,
-+	RKISP1_CIF_ISP_DPF_GAIN_USAGE_LSC_GAINS,
-+	RKISP1_CIF_ISP_DPF_GAIN_USAGE_NF_LSC_GAINS,
-+	RKISP1_CIF_ISP_DPF_GAIN_USAGE_AWB_GAINS,
-+	RKISP1_CIF_ISP_DPF_GAIN_USAGE_AWB_LSC_GAINS,
-+	RKISP1_CIF_ISP_DPF_GAIN_USAGE_MAX
-+};
-+
-+/**
-+ * enum rkisp1_cif_isp_dpf_rb_filtersize - Red and blue filter sizes
-+ * @RKISP1_CIF_ISP_DPF_RB_FILTERSIZE_13x9: red and blue filter kernel size 13x9
-+ *				   (means 7x5 active pixel)
-+ * @RKISP1_CIF_ISP_DPF_RB_FILTERSIZE_9x9: red and blue filter kernel size 9x9
-+ *				   (means 5x5 active pixel)
-+ */
-+enum rkisp1_cif_isp_dpf_rb_filtersize {
-+	RKISP1_CIF_ISP_DPF_RB_FILTERSIZE_13x9,
-+	RKISP1_CIF_ISP_DPF_RB_FILTERSIZE_9x9,
-+};
-+
-+/**
-+ * enum rkisp1_cif_isp_dpf_nll_scale_mode - dpf noise level scale mode
-+ * @RKISP1_CIF_ISP_NLL_SCALE_LINEAR: use a linear scaling
-+ * @RKISP1_CIF_ISP_NLL_SCALE_LOGARITHMIC: use a logarithmic scaling
-+ */
-+enum rkisp1_cif_isp_dpf_nll_scale_mode {
-+	RKISP1_CIF_ISP_NLL_SCALE_LINEAR,
-+	RKISP1_CIF_ISP_NLL_SCALE_LOGARITHMIC,
-+};
-+
-+/**
-+ * struct rkisp1_cif_isp_dpf_nll - Noise level lookup
-+ *
-+ * @coeff: Noise level Lookup coefficient
-+ * @scale_mode: dpf noise level scale mode (from enum rkisp1_cif_isp_dpf_nll_scale_mode)
-+ */
-+struct rkisp1_cif_isp_dpf_nll {
-+	__u16 coeff[RKISP1_CIF_ISP_DPF_MAX_NLF_COEFFS];
-+	__u32 scale_mode;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_dpf_rb_flt - Red blue filter config
-+ *
-+ * @fltsize: The filter size for the red and blue pixels
-+ *	     (from enum rkisp1_cif_isp_dpf_rb_filtersize)
-+ * @spatial_coeff: Spatial weights
-+ * @r_enable: enable filter processing for red pixels
-+ * @b_enable: enable filter processing for blue pixels
-+ */
-+struct rkisp1_cif_isp_dpf_rb_flt {
-+	__u32 fltsize;
-+	__u8 spatial_coeff[RKISP1_CIF_ISP_DPF_MAX_SPATIAL_COEFFS];
-+	__u8 r_enable;
-+	__u8 b_enable;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_dpf_g_flt - Green filter Configuration
-+ *
-+ * @spatial_coeff: Spatial weights
-+ * @gr_enable: enable filter processing for green pixels in green/red lines
-+ * @gb_enable: enable filter processing for green pixels in green/blue lines
-+ */
-+struct rkisp1_cif_isp_dpf_g_flt {
-+	__u8 spatial_coeff[RKISP1_CIF_ISP_DPF_MAX_SPATIAL_COEFFS];
-+	__u8 gr_enable;
-+	__u8 gb_enable;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_dpf_gain - Noise function Configuration
-+ *
-+ * @mode: dpf gain usage  (from enum rkisp1_cif_isp_dpf_gain_usage)
-+ * @nf_r_gain: Noise function Gain that replaces the AWB gain for red pixels
-+ * @nf_b_gain: Noise function Gain that replaces the AWB gain for blue pixels
-+ * @nf_gr_gain: Noise function Gain that replaces the AWB gain
-+ *		for green pixels in a red line
-+ * @nf_gb_gain: Noise function Gain that replaces the AWB gain
-+ *		for green pixels in a blue line
-+ */
-+struct rkisp1_cif_isp_dpf_gain {
-+	__u32 mode;
-+	__u16 nf_r_gain;
-+	__u16 nf_b_gain;
-+	__u16 nf_gr_gain;
-+	__u16 nf_gb_gain;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_dpf_config - Configuration used by De-noising pre-filter
-+ *
-+ * @gain: noise function gain
-+ * @g_flt: green filter config
-+ * @rb_flt: red blue filter config
-+ * @nll: noise level lookup
-+ */
-+struct rkisp1_cif_isp_dpf_config {
-+	struct rkisp1_cif_isp_dpf_gain gain;
-+	struct rkisp1_cif_isp_dpf_g_flt g_flt;
-+	struct rkisp1_cif_isp_dpf_rb_flt rb_flt;
-+	struct rkisp1_cif_isp_dpf_nll nll;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_dpf_strength_config - strength of the filter
-+ *
-+ * @r: filter strength of the RED filter
-+ * @g: filter strength of the GREEN filter
-+ * @b: filter strength of the BLUE filter
-+ */
-+struct rkisp1_cif_isp_dpf_strength_config {
-+	__u8 r;
-+	__u8 g;
-+	__u8 b;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_isp_other_cfg - Parameters for some blocks in rockchip isp1
-+ *
-+ * @dpcc_config: Defect Pixel Cluster Correction config
-+ * @bls_config: Black Level Subtraction config
-+ * @sdg_config: sensor degamma config
-+ * @lsc_config: Lens Shade config
-+ * @awb_gain_config: Auto White balance gain config
-+ * @flt_config: filter config
-+ * @bdm_config: demosaic config
-+ * @ctk_config: cross talk config
-+ * @goc_config: gamma out config
-+ * @bls_config: black level subtraction config
-+ * @dpf_config: De-noising pre-filter config
-+ * @dpf_strength_config: dpf strength config
-+ * @cproc_config: color process config
-+ * @ie_config: image effects config
-+ */
-+struct rkisp1_cif_isp_isp_other_cfg {
-+	struct rkisp1_cif_isp_dpcc_config dpcc_config;
-+	struct rkisp1_cif_isp_bls_config bls_config;
-+	struct rkisp1_cif_isp_sdg_config sdg_config;
-+	struct rkisp1_cif_isp_lsc_config lsc_config;
-+	struct rkisp1_cif_isp_awb_gain_config awb_gain_config;
-+	struct rkisp1_cif_isp_flt_config flt_config;
-+	struct rkisp1_cif_isp_bdm_config bdm_config;
-+	struct rkisp1_cif_isp_ctk_config ctk_config;
-+	struct rkisp1_cif_isp_goc_config goc_config;
-+	struct rkisp1_cif_isp_dpf_config dpf_config;
-+	struct rkisp1_cif_isp_dpf_strength_config dpf_strength_config;
-+	struct rkisp1_cif_isp_cproc_config cproc_config;
-+	struct rkisp1_cif_isp_ie_config ie_config;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_isp_meas_cfg - Rockchip ISP1 Measure Parameters
-+ *
-+ * @awb_meas_config: auto white balance config
-+ * @hst_config: histogram config
-+ * @aec_config: auto exposure config
-+ * @afc_config: auto focus config
-+ */
-+struct rkisp1_cif_isp_isp_meas_cfg {
-+	struct rkisp1_cif_isp_awb_meas_config awb_meas_config;
-+	struct rkisp1_cif_isp_hst_config hst_config;
-+	struct rkisp1_cif_isp_aec_config aec_config;
-+	struct rkisp1_cif_isp_afc_config afc_config;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_params_cfg - Rockchip ISP1 Input Parameters Meta Data
-+ *
-+ * @module_en_update: mask the enable bits of which module should be updated
-+ * @module_ens: mask the enable value of each module, only update the module
-+ *		which correspond bit was set in module_en_update
-+ * @module_cfg_update: mask the config bits of which module should be updated
-+ * @meas: measurement config
-+ * @others: other config
-+ */
-+struct rkisp1_params_cfg {
-+	__u32 module_en_update;
-+	__u32 module_ens;
-+	__u32 module_cfg_update;
-+
-+	struct rkisp1_cif_isp_isp_meas_cfg meas;
-+	struct rkisp1_cif_isp_isp_other_cfg others;
-+} __packed;
-+
-+/*---------- PART2: Measurement Statistics ------------*/
-+
-+/**
-+ * struct rkisp1_cif_isp_awb_meas - AWB measured values
-+ *
-+ * @cnt: White pixel count, number of "white pixels" found during last
-+ *	 measurement
-+ * @mean_y_or_g: Mean value of Y within window and frames,
-+ *		 Green if RGB is selected.
-+ * @mean_cb_or_b: Mean value of Cb within window and frames,
-+ *		  Blue if RGB is selected.
-+ * @mean_cr_or_r: Mean value of Cr within window and frames,
-+ *		  Red if RGB is selected.
-+ */
-+struct rkisp1_cif_isp_awb_meas {
-+	__u32 cnt;
-+	__u8 mean_y_or_g;
-+	__u8 mean_cb_or_b;
-+	__u8 mean_cr_or_r;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_awb_stat - statistics automatic white balance data
-+ *
-+ * @awb_mean: Mean measured data
-+ */
-+struct rkisp1_cif_isp_awb_stat {
-+	struct rkisp1_cif_isp_awb_meas awb_mean[RKISP1_CIF_ISP_AWB_MAX_GRID];
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_bls_meas_val - BLS measured values
-+ *
-+ * @meas_r: Mean measured value for Bayer pattern R
-+ * @meas_gr: Mean measured value for Bayer pattern Gr
-+ * @meas_gb: Mean measured value for Bayer pattern Gb
-+ * @meas_b: Mean measured value for Bayer pattern B
-+ */
-+struct rkisp1_cif_isp_bls_meas_val {
-+	__u16 meas_r;
-+	__u16 meas_gr;
-+	__u16 meas_gb;
-+	__u16 meas_b;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_ae_stat - statistics auto exposure data
-+ *
-+ * @exp_mean: Mean luminance value of block xx
-+ * @bls_val:  BLS measured values
-+ *
-+ * Image is divided into 5x5 blocks.
-+ */
-+struct rkisp1_cif_isp_ae_stat {
-+	__u8 exp_mean[RKISP1_CIF_ISP_AE_MEAN_MAX];
-+	struct rkisp1_cif_isp_bls_meas_val bls_val;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_af_meas_val - AF measured values
-+ *
-+ * @sum: sharpness, refer to REF_01 for definition
-+ * @lum: luminance, refer to REF_01 for definition
-+ */
-+struct rkisp1_cif_isp_af_meas_val {
-+	__u32 sum;
-+	__u32 lum;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_af_stat - statistics auto focus data
-+ *
-+ * @window: AF measured value of window x
-+ *
-+ * The module measures the sharpness in 3 windows of selectable size via
-+ * register settings(ISP_AFM_*_A/B/C)
-+ */
-+struct rkisp1_cif_isp_af_stat {
-+	struct rkisp1_cif_isp_af_meas_val window[RKISP1_CIF_ISP_AFM_MAX_WINDOWS];
-+} __packed;
-+
-+/**
-+ * struct rkisp1_cif_isp_hist_stat - statistics histogram data
-+ *
-+ * @hist_bins: measured bin counters
-+ *
-+ * Measurement window divided into 25 sub-windows, set
-+ * with ISP_HIST_XXX
-+ */
-+struct rkisp1_cif_isp_hist_stat {
-+	__u16 hist_bins[RKISP1_CIF_ISP_HIST_BIN_N_MAX];
-+} __packed;
-+
-+/**
-+ * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Data
-+ *
-+ * @rkisp1_cif_isp_awb_stat: statistics data for automatic white balance
-+ * @rkisp1_cif_isp_ae_stat: statistics data for auto exposure
-+ * @rkisp1_cif_isp_af_stat: statistics data for auto focus
-+ * @rkisp1_cif_isp_hist_stat: statistics histogram data
-+ */
-+struct rkisp1_cif_isp_stat {
-+	struct rkisp1_cif_isp_awb_stat awb;
-+	struct rkisp1_cif_isp_ae_stat ae;
-+	struct rkisp1_cif_isp_af_stat af;
-+	struct rkisp1_cif_isp_hist_stat hist;
-+} __packed;
-+
-+/**
-+ * struct rkisp1_stat_buffer - Rockchip ISP1 Statistics Meta Data
-+ *
-+ * @meas_type: measurement types (RKISP1_CIF_ISP_STAT_ definitions)
-+ * @frame_id: frame ID for sync
-+ * @params: statistics data
-+ */
-+struct rkisp1_stat_buffer {
-+	__u32 meas_type;
-+	__u32 frame_id;
-+	struct rkisp1_cif_isp_stat params;
-+} __packed;
-+
-+#endif /* _UAPI_RKISP1_CONFIG_H */
++	video_unregister_device(vdev);
++	media_entity_cleanup(&vdev->entity);
++	vb2_queue_release(vdev->queue);
++}
 -- 
 2.24.0
 
