@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF478C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBFEC2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23C420882
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF6120882
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rCb6yLvY"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Yf6Cu8DG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfL0QiU (ORCPT
+        id S1726527AbfL0Qko (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 11:38:20 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40499 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0QiU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 11:38:20 -0500
-Received: by mail-ed1-f68.google.com with SMTP id b8so25721610edx.7;
-        Fri, 27 Dec 2019 08:38:18 -0800 (PST)
+        Fri, 27 Dec 2019 11:40:44 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37683 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0Qko (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 11:40:44 -0500
+Received: by mail-ed1-f65.google.com with SMTP id cy15so25734358edb.4;
+        Fri, 27 Dec 2019 08:40:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6YTB1fNIm79m/hiZxeT3tYKFD5H8aAnuxvQfJh9UTTA=;
-        b=rCb6yLvYVvl/bhWTiHwA3cx/pPDMQSYDZjENCpcrW46hTqEU+37cxTsRfQbFZWgxnQ
-         8lAZ3VnOW6o4VNL4GLpbT+x7T62C1KAFCX6q78uC1Jqr2tffxf0f3GWDIYdHlOmMn6c0
-         D2gFJ28f+y57Us0+szO7vgqbXxMi15owj96gWUV2Vsc826+PMIOSLSe3X9FX6RzD8LA9
-         VHlwek/F+/vnefGNtzo/32g1LnHSVG9grbquv7p1Qafnn7SenyEgVHxIWNyfaCLBR8LU
-         uWOlhhWEOQpoGiItymVbpilrcKbra+UJRHiyIzE1CTuloR4yCh+mMaQiU/deAi2BA+j7
-         72Ug==
+        bh=xgrOcm9k9IAQcFI+FWINNDCQ0Z4VaYkcjqiXu7nzoSs=;
+        b=Yf6Cu8DGYWlCJdHGMC0bCW0kyLJBuSPvgcu9lEwGombWcvTkBDMvNqz5BXObWo3yok
+         p5el38LSnq5WwV5xPaxH2kD1uC1zQLDc90NKaHzo5pMnK5IM3t5+g7M6Dy89kSbkesBD
+         PKuPfIb9Ne2DPhT2T1AyR9N4f1vZHB8G2afcutDR21ntb4f5EV1WNUttItuiRsGW8lO3
+         oagm92RwvJIfhFK20d9NRpGz+rCQDCS24AeDaFlUwM9TI5mAPRcuwVkhqJOw521B+iVu
+         Fw2LLTkI4p8vCWe4nn2jFEx3hCfknLrdce2dS+tW5Z5HpnuhBts1ssj/AkZzzy4Yc5KX
+         T1yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6YTB1fNIm79m/hiZxeT3tYKFD5H8aAnuxvQfJh9UTTA=;
-        b=qvaHCbLG5LYoXZaNdS8Ncx6xRv+Rxe5uZt/GX8GgeBnzHg49bEyOEsyQ/xRrzZDglj
-         LFm4iv6v7UQDagL/STCnoBcGTTl95Qr5bOnN+pMfLvYP0bHLKplUOmveW5WYZC3RbDpM
-         ZGKkgLy5LiAhtXB/UQsEz2yJR49KSbAC5sPok0QREqdrMxDd2H8u9JBwyVn88yBtSGid
-         3xrp5r3ey4nHWD4AO6GkbNrXDrQehpnSEN65V2m4yQNVrKLp4FRHdWijIZQOB0Z3xwG6
-         FZ1Xi3Td4CfAUIXAODewHWUjleykuYVvxjVENB6JghDRgI0/l6m1BZUh08brjO/T53aD
-         DeQg==
-X-Gm-Message-State: APjAAAW8DGR5vpMvw2aIrB/AuMxvR0mPFpI6dcOqVle2hDV95Wh2S54x
-        qO0bcQ3jUV+w3Iqj3LDiKueIdhDIJ01pRbbKDRY=
-X-Google-Smtp-Source: APXvYqzXINFtgDqMBlIV6U4EBXznckvgHZpZ4LhokGGqjDtkp3WySsLLrOwjy/HccteQFMutQpmQt9YGz45Q+BIy3TM=
-X-Received: by 2002:a17:906:e219:: with SMTP id gf25mr54733718ejb.51.1577464697886;
- Fri, 27 Dec 2019 08:38:17 -0800 (PST)
+        bh=xgrOcm9k9IAQcFI+FWINNDCQ0Z4VaYkcjqiXu7nzoSs=;
+        b=pmt/lep4OKT5bpw0G8jDFuhPRRjK97qYmncIp75afqTXy7JP2qiCJGgezxoMTjuq8l
+         H5lJ+M5bKY34erA7wg8f8a1YPLvNdXERLvpmJxDalOeeoJn4D+OSbPQ77SRE7xS4Tj7y
+         UjKyAz7xYbm5xHHarbTYqQpDYK0mreT4cxkEU5XfMKF/PuNVeOGBWch1iy+U1JbdW+Ig
+         15J70RRLi1FNwKwAp4AHpYTkc53ogfZwBPD5cNourVQYeCjtGtNnH9nRdzPCw5xl/HG6
+         D/8zXV0A07E9oSLYGtuX0hRBX+WrJX+2ey9BVbvdig+7EzIs8uxdglCWPtCRAAbiawKR
+         6q/w==
+X-Gm-Message-State: APjAAAXKUynsK6LQaevVZ4EID1r0LOXpT4lwRrV1UiFe9HEZhGrTCAsy
+        P9WgD5fBA3LgQ9B6lZtZwtx2jNCyneI9OCscGus=
+X-Google-Smtp-Source: APXvYqxkHYAyndioq3rkIDvgR0cbdviWKBnIZcDlDoZQCfu0BNG7PYKVTKcaxVPiAWtYOYRzgvoWo7ltBXVq83a0o5o=
+X-Received: by 2002:a50:bae1:: with SMTP id x88mr38955946ede.10.1577464842282;
+ Fri, 27 Dec 2019 08:40:42 -0800 (PST)
 MIME-Version: 1.0
-References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com> <1577428606-69855-5-git-send-email-hanjie.lin@amlogic.com>
-In-Reply-To: <1577428606-69855-5-git-send-email-hanjie.lin@amlogic.com>
+References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com> <1577428606-69855-4-git-send-email-hanjie.lin@amlogic.com>
+In-Reply-To: <1577428606-69855-4-git-send-email-hanjie.lin@amlogic.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 27 Dec 2019 17:38:07 +0100
-Message-ID: <CAFBinCD8V-Swihz+VJ780sXJtM9cXprDcGCHVuHjjCx0DEOodQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
+Date:   Fri, 27 Dec 2019 17:40:31 +0100
+Message-ID: <CAFBinCCEz-xezKatuHDPRURRWa3YNmgMObbr85GSvaT_bLFcNQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] phy: amlogic: Add Amlogic A1 USB2 PHY Driver
 To:     Hanjie Lin <hanjie.lin@amlogic.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
@@ -82,76 +82,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Hanjie,
+Hi Hanjie,
 
-sorry that it took me so long to look at this
-you can find my comments below
+overall this looks good to me and I have one question
 
 On Fri, Dec 27, 2019 at 7:37 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
 [...]
-> +static const struct clk_bulk_data meson_g12a_clocks[] = {
-> +       { .id = NULL},
-> +};
-> +
-> +static const struct clk_bulk_data meson_a1_clocks[] = {
-> +       { .id = "usb_ctrl"},
-> +       { .id = "usb_bus"},
-> +       { .id = "xtal_usb_phy"},
-> +       { .id = "xtal_usb_ctrl"},
-> +};
-nit-pick: the values in meson_g12a_clocks and meson_a1_clocks all have
-a space after the opening "{" but no space before the closing "}"
-we should be consistent here (personally I prefer the variant with
-space after "{" and before "}", but having no space in both cases is
-fine for me too)
+> +       if (priv->soc_id == MESON_SOC_A1)
+> +               value |= PHY_CTRL_R18_MPLL_DCO_CLK_SEL;
+...here we have some CLK_SEL bit
 
 [...]
->  static void dwc3_meson_g12a_usb2_set_mode(struct dwc3_meson_g12a *priv,
-> @@ -138,10 +156,13 @@ static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv)
->  {
->         int i;
->
-> -       if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
-> -               priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
-> -       else
-> -               priv->otg_phy_mode = PHY_MODE_USB_HOST;
-> +       /* only G12A supports otg mode */
+> -       priv->clk = devm_clk_get(dev, "xtal");
+> -       if (IS_ERR(priv->clk))
+> -               return PTR_ERR(priv->clk);
 > +       if (priv->soc_id == MESON_SOC_G12A) {
-> +               if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
-> +                       priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
-> +               else
-> +                       priv->otg_phy_mode = PHY_MODE_USB_HOST;
+> +               priv->clk = devm_clk_get(dev, "xtal");
+> +               if (IS_ERR(priv->clk))
+> +                       return PTR_ERR(priv->clk);
 > +       }
-can you comment on future Amlogic SoCs and how this code will look in
-the future?
-I would like to avoid having to adjust this "if" for every new SoC,
-but I don't know if the majority of the SoCs will have OTG support
-
-also one idea that just came to my mind:
-you could define in the .yaml binding that for A1 only dr_mode =
-"host" is allowed
-then you may not need extra logic in the driver at all
-
-[...]
-> -               if (i == USB2_OTG_PHY) {
-> +               if (priv->soc_id == MESON_SOC_G12A && i == USB2_OTG_PHY) {
-on GXL we have two PHYs (0 and 1), the second one is OTG capable
-on GXM we have three PHYs (0..2), the second one is OTG capable
-on G12A/G12B we have two PHYs (0 and 1), the second one is OTG capable
-
-you already wrote that there is only one USB2 PHY on the A1 SoC
-is really only the second PHY port ("usb2-phy1" instead of
-"usb2-phy0") used on A1?
-if "usb2-phy0" is correct then you don't need these checks (there are
-more checks like this below)
-
-[...]
-> -       usb_role_switch_unregister(priv->role_switch);
-> +       if (priv->soc_id == MESON_SOC_G12A)
-> +               usb_role_switch_unregister(priv->role_switch);
-I didn't expect this because in _probe usb_role_switch_register is still called
-on A1 we now call usb_role_switch_register() but we never call
-usb_role_switch_unregister()
+but here we don't need any parent/input clock?
+does this mean that the USB2 PHY on the A1 SoC doesn't have any clock
+inputs? how does it generate the correct clock for itself then?
 
 
 Martin
