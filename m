@@ -2,258 +2,145 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9932C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41176C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06AF208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9E520882
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="EqhvW37z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726509AbfL0OSR (ORCPT
+        id S1726562AbfL0O3B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 09:18:17 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:58858 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbfL0OSQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 09:18:16 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8EDE9634C86;
-        Fri, 27 Dec 2019 16:17:39 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1ikqQt-00017H-TA; Fri, 27 Dec 2019 16:17:39 +0200
-Date:   Fri, 27 Dec 2019 16:17:39 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        peter.griffin@linaro.org, ezequiel@collabora.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
- binding
-Message-ID: <20191227141739.GD861@valkosipuli.retiisi.org.uk>
-References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
- <20191227122114.23075-2-andrey.konovalov@linaro.org>
+        Fri, 27 Dec 2019 09:29:01 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:24270 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0O3A (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 09:29:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577456937;
+        s=strato-dkim-0002; d=dawncrow.de;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=tiZqlNDnvx9lg//cU6oAkJTrBDkCfS6XbGyrlQGFD5k=;
+        b=EqhvW37zOugrixABF9ybzwKK4GCDlcHu5TbInX6Ls6+QGcuY/7U/xVOYcyApprGaMm
+        f3GzytQEA9/3m8HetqBxMYQLo5Hn9KtQpUp144yf6ULrNOEmp5TVjMoAjvDE0npMlYYh
+        RyALc27w+WTC8UN9SoJLFsSY/4w0E3x8eVlnXLsqKlhUzxn2IiMMxYagvhtb9Z29n65A
+        J+GPLbTJUnm801nHbjjkiGELfAO1SYimNekmX4T/UEl7NXdoc8UkeR4rCkcnaF+NrTRe
+        WGsvXIfHkVTdysKoC2Vg+jz/shQzy0N6y+4ThexN6VqCKkkX+r8PEHa9CnFlnE8r//ol
+        rBkg==
+X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZ6bi4rK0b8tGDimOzIxQbIOZSqtgWHzDs8="
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.178.40]
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id I099d1vBREST7GW
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 27 Dec 2019 15:28:29 +0100 (CET)
+Subject: Re: [PATCH] ARM: dts: Add omap3-echo
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Adam Ford <aford173@gmail.com>
+Cc:     linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com,
+        bcousson@baylibre.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20191224161005.28083-1-nerv@dawncrow.de>
+ <20191224184503.GK35479@atomide.com>
+ <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Hentschel?= <nerv@dawncrow.de>
+Autocrypt: addr=nerv@dawncrow.de; prefer-encrypt=mutual; keydata=
+ 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
+ BZtrxq8dmex7tFXvQoJV4PIa20fGXq6S
+Message-ID: <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de>
+Date:   Fri, 27 Dec 2019 15:28:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227122114.23075-2-andrey.konovalov@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-LU
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrey,
-
-Thanks for the patchset.
-
-On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
-> Add YAML device tree binding for IMX219 CMOS image sensor, and
-> the relevant MAINTAINERS entries.
+Am 25.12.19 um 18:01 schrieb H. Nikolaus Schaller:
+> I think the am3703 is a dm3730 (omap3630) where the SGX and the
+> DSP have not passed production test and are "disabled" by eFuses.
+> This is a common procedure in silicon production to increase yield.
 > 
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> ---
->  .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
->  MAINTAINERS                                   |   8 ++
->  2 files changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> Therefore, there is a register which allows to dynamically determine
+> what components (SGX and DSP) are available on a specific SoC chip.
+> See "Table 1-6. Chip Identification" in the common
+> "AM/DM37x Multimedia Device TRM".
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> new file mode 100644
-> index 000000000000..b58aa49a7c03
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> @@ -0,0 +1,134 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
-> +
-> +maintainers:
-> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
-> +
-> +description: |-
-> +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
-> +  with an active array size of 3280H x 2464V. It is programmable through
-> +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
-> +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
-> +  4 data lanes.
-> +
-> +properties:
-> +  compatible:
-> +    const: sony,imx219
-> +
-> +  reg:
-> +    description: I2C device address
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xclk
+> Such bits exists for omap34xx and for omap36xx (aka am37xx/dm37xx).
+> 
+> That way there is no need to disable/enable sgx through device tree
+> variations and introducing more complexity by introducing more and more
+> DTS for variants (am3703.dtsi, am3715.dtsi, dm3720.dtsi, dm3730.dtsi?).
+> 
+> BTW: what about a board that is/was produced in either am3703 or dm3730
+> variants? Can they still share an omap36xx.dtsi based DTB?
+> 
+> So IMHO if there is an issue with sgx enabled on am3703 but no SGX
+> hardware available on a specific SoC, the sysc setup should somehow read
+> the bits and effectively disable all SGX related setup if it is not
+> available on the SoC. If I remember correctly, some older hwmods did
+> such things by checking SoC variant bits.
 
-There's a single clock. Does it need a name? I'd just omit it.
+I like the idea, but I'm not in the position to vote for it and I don't
+understand the sysc code enough to implement that.
 
-> +
-> +  VDIG-supply:
-> +    description:
-> +      Digital I/O voltage supply, 1.8 volts
-> +
-> +  VANA-supply:
-> +    description:
-> +      Analog voltage supply, 2.8 volts
-> +
-> +  VDDL-supply:
-> +    description:
-> +      Digital core voltage supply, 1.2 volts
-> +
-> +  xclr-gpios:
-> +    description: |-
-> +      Reference to the GPIO connected to the xclr pin, if any.
-> +      Must be released (set high) after all supplies are applied.
+Am 25.12.19 um 13:53 schrieb Adam Ford:
+> On Wed, Dec 25, 2019 at 6:05 AM André Hentschel <nerv@dawncrow.de> wrote:
+>> And then include am3703.dtsi in omap36xx.dtsi before sgx support?
+> I can see value in having a 3703 base and including that in the 36xx
+> with SGX and DSP nodes, but why not jus make SGX disabled by default.
+> Those who want/need it can enable it on a per-board basis.
+>> Or would it be better to have sgx support in a separate dtsi?
+> 
+> I am not sure how much DSP stuff is in there, but the DM3730 is the
+> AM3703 + DSP and 3D.
 
-A common name for this in camera sensors is xshutdown. I'd suggest to use
-that.
+For clarification this reduced table should help:
+     DM3730 | DM3725 | AM3715 | AM3703
+DSP    X    |   X    |        |    
+SGX    X    |        |   X    |    
 
-> +
-> +  camera-clk:
-> +    type: object
-> +
-> +    description: Clock source for imx219
-> +
-> +    properties:
-> +      clock-frequency: true
-> +
-> +    required:
-> +      - clock-frequency
-
-Hmm. The driver doesn't seem to use this for anything.
-
-There are two approaches to this; either you can get and check the
-frequency, or specify it in DT bindings, set and then check it.
-
-See e.g. Documentation/devicetree/bindings/media/i2c/nokia,smia.txt (not in
-YAML though).
-
-> +
-> +  # See ../video-interfaces.txt for more details
-> +  port:
-> +    type: object
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        properties:
-> +          clock-lanes:
-> +            const: 0
-
-If the hardware does not support lane reordering, you can omit the
-clock-lanes property as it provides no information.
-
-> +
-> +          data-lanes:
-> +            description: |-
-> +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
-> +              four-lane operation.
-> +            oneOf:
-> +              - const: [[ 1, 2 ]]
-> +              - const: [[ 1, 2, 3, 4 ]]
-> +
-> +          clock-noncontinuous:
-> +            type: boolean
-> +            description: |-
-> +              Presence of this boolean property decides whether the MIPI CSI-2
-> +              clock is continuous or non-continuous.
-
-How about: MIPI CSI-2 clock will be non-continuous if this property is
-present, otherwise it's continuous.
-
-> +
-> +        required:
-> +          - clock-lanes
-> +          - data-lanes
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - VANA-supply
-> +  - VDIG-supply
-> +  - VDDL-supply
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        imx219: sensor@10 {
-> +            compatible = "sony,imx219";
-> +            reg = <0x10>;
-> +            clocks = <&imx219_clk>;
-> +            clock-names = "xclk";
-> +            VANA-supply = <&imx219_vana>;   /* 2.8v */
-> +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
-> +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
-> +
-> +            imx219_clk: camera-clk {
-> +                compatible = "fixed-clock";
-> +                #clock-cells = <0>;
-> +                clock-frequency = <24000000>;
-> +            };
-> +
-> +            port {
-> +                imx219_0: endpoint {
-> +                    remote-endpoint = <&csi1_ep>;
-> +                    clock-lanes = <0>;
-> +                    data-lanes = <1 2>;
-> +                    clock-noncontinuous;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ffa3371bc750..f7b6c24ec081 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15350,6 +15350,14 @@ S:	Maintained
->  F:	drivers/media/i2c/imx214.c
->  F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->  
-> +SONY IMX219 SENSOR DRIVER
-> +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-Is Dave aware of this? :-)
-
-> +L:	linux-media@vger.kernel.org
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Maintained
-> +F:	drivers/media/i2c/imx219.c
-> +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> +
->  SONY IMX258 SENSOR DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
->  L:	linux-media@vger.kernel.org
-
--- 
-Regards,
-
-Sakari Ailus
+Where X is "supported"
