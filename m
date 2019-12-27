@@ -2,314 +2,226 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06822C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 304E4C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7842053B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNNZpErt"
+	by mail.kernel.org (Postfix) with ESMTP id ECA51206A4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 20:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfL0S0a (ORCPT
+        id S1727023AbfL0UBj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:26:30 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41395 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0S0a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 13:26:30 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so27744034ljc.8
-        for <devicetree@vger.kernel.org>; Fri, 27 Dec 2019 10:26:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lNP4sjt0XGHW1tW75qU+ERy0n0xK7DZ2dAFjglxzBts=;
-        b=GNNZpErtvyrGI8AyO2o+z5Rw5hPdUYlrjx2pIFfgf3pq6bhquOEh6E8cyrWpqh91jw
-         CC06KOgaKErjznAA4By4uEpxbxF4NjAmB/hgQLNvwLYw4NLy5qL/i0drRiMtTdBK4vMU
-         dUG+a0k14GxEOuXQMHQxZaezkxJyJaNABcfpGRMyASB7It9D2CGcKFdlB/7h21ZbQV+y
-         ZQOPvLz6PsM9bJsZtQnGvuV6Tnd9oKhzipcCCb2tCqeF4APrH39qHupkDsQyeqtPudgP
-         7uE9Gmg6tQMQIud+l3t3HJ6RHe61h/Mw/AXMdpWL5CRDWLKUK41Sfq54CvwhWexc/waW
-         O0EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lNP4sjt0XGHW1tW75qU+ERy0n0xK7DZ2dAFjglxzBts=;
-        b=iFDLfsvMkFBjJCFgH1grjQE3bQth8GAcaXbX7S7FIO0Ndcy5HnNjo9Zzx4X2elPJgK
-         qq5gsxSUsfL2JXREcPOuSgg8nDjW6KsmkvEMYY29ZFCqhpAtuFUlJsXp9AewzIjGEcIM
-         dWTZaJ8Y++snSF8YUlTf+t80DVCfgdcviD/8ToO7zWms2eGUXUnwYV+UIQl7gXNigR/j
-         eEfMmn6brB92ikABB0uK/8YpzTLDaebIr6cqzA90eoIaA9z1WcZL4TGZn75At0rG7ofT
-         DiSu0GoV2KfQ7GntsoTi/aV4OuctgN5RIkE6amGRR0jfTP1Z9M9iO4+soBIAtJq/cysX
-         xS5Q==
-X-Gm-Message-State: APjAAAW8OWUyLZO9azYUFg9UrxTmc21tqYj6lD7CC8CDqYgKBdfTT2hj
-        nTHFqdT85LkV2EIsj1NLm/4+Og==
-X-Google-Smtp-Source: APXvYqytPSpKME42DErgjRyyntYM6YBMk6p9pzIlwPBRvAY7yEJHtiTPxcoSHcStMHcbSFFuR/81GA==
-X-Received: by 2002:a2e:9708:: with SMTP id r8mr29214892lji.92.1577471186829;
-        Fri, 27 Dec 2019 10:26:26 -0800 (PST)
-Received: from [192.168.119.5] (office.dev.rtsoft.ru. [62.117.114.130])
-        by smtp.gmail.com with ESMTPSA id c189sm15096409lfg.75.2019.12.27.10.26.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Dec 2019 10:26:26 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
- binding
-To:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        peter.griffin@linaro.org, ezequiel@collabora.com
-References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
- <20191227122114.23075-2-andrey.konovalov@linaro.org>
- <20191227141739.GD861@valkosipuli.retiisi.org.uk>
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-Message-ID: <e3a9161a-feaf-f4a4-5122-871e68409698@linaro.org>
-Date:   Fri, 27 Dec 2019 21:26:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 27 Dec 2019 15:01:39 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46532 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbfL0UBj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 15:01:39 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 18B52283C43
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        gregkh@linuxfoundation.org, andrey.konovalov@linaro.org,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        joacim.zetterling@gmail.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org,
+        Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH v12 00/11] Rockchip ISP Driver
+Date:   Fri, 27 Dec 2019 17:01:05 -0300
+Message-Id: <20191227200116.2612137-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191227141739.GD861@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi,
 
-Thank you for reviewing the patchset, and for the pointers on improving the driver (nokia,smia.txt etc)!
-I'll write a separate email later, or just fix what you suggested in v3 (I agree with the proposed changes
-I didn't comment on in this email).
+This patchset adds support for the Image signal processor unit version 1.0 of
+the Rockchip RK3399 SoC in the staging tree.
+There are still some missing things to move it from staging (please, see
+TODO file), but the driver is already being used by several people
+(libcamera, for instance, already supports an older version of the driver)
+and adding in staging make the work flow easier for collaboration within
+the community.
+I plan to be actively working on the driver to move it out of staging asap.
 
-Just few quick answers below.
+It is also available at
+https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v12
 
-Thanks,
-Andrey
+NOTE: This series only touches MAINTAINERS file and drivers/staging/
 
-On 27.12.2019 17:17, Sakari Ailus wrote:
-> Hi Andrey,
-> 
-> Thanks for the patchset.
-> 
-> On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
->> Add YAML device tree binding for IMX219 CMOS image sensor, and
->> the relevant MAINTAINERS entries.
->>
->> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
->> ---
->>   .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
->>   MAINTAINERS                                   |   8 ++
->>   2 files changed, 142 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
->> new file mode 100644
->> index 000000000000..b58aa49a7c03
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
->> @@ -0,0 +1,134 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
->> +
->> +maintainers:
->> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
->> +
->> +description: |-
->> +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
->> +  with an active array size of 3280H x 2464V. It is programmable through
->> +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
->> +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
->> +  4 data lanes.
->> +
->> +properties:
->> +  compatible:
->> +    const: sony,imx219
->> +
->> +  reg:
->> +    description: I2C device address
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: xclk
-> 
-> There's a single clock. Does it need a name? I'd just omit it.
-> 
->> +
->> +  VDIG-supply:
->> +    description:
->> +      Digital I/O voltage supply, 1.8 volts
->> +
->> +  VANA-supply:
->> +    description:
->> +      Analog voltage supply, 2.8 volts
->> +
->> +  VDDL-supply:
->> +    description:
->> +      Digital core voltage supply, 1.2 volts
->> +
->> +  xclr-gpios:
->> +    description: |-
->> +      Reference to the GPIO connected to the xclr pin, if any.
->> +      Must be released (set high) after all supplies are applied.
-> 
-> A common name for this in camera sensors is xshutdown. I'd suggest to use
-> that.
+Major changes in V12
+--------------------
+* Cleanups
+For this version of the patchset, several cleanups were made, including renaming
+functions, variables, structs, enum and files to have the "rkisp1" prefix.
+Some print and comments were re-written, and several of them that were unecessary
+were removed.
+regs.c and all the headers besides rkisp1-common.h were removed.
+Several unecessary functions were removed, parts of the code were re-written to
+be readable, reduce indentation, and remove redundant code.
+More helper functions from the media core is being used.
+Header files were removed, except for rkisp1-common.h and rkisp1-regs.h,
+there are not that much shared code, keep then in a single place instead
+of spreading it through several header files, it is easier to navigate.
+More cleanups are still possible, but at least now we have a more organized and
+standardized code, which makes it easier to read and to maintain.
 
-Indeed, "xshutdown" is the pin name commonly used by OmniVision for their sensors.
-(In older sensors they used "pwdn" which is similar, but the polarity is reversed.)
+* An entry in Debugfs was added to keep track of errors and data loss.
 
-In their sensor datasheets Sony consistently use "xclr" for the pin and signal otherwise
-very similar to OmniVision's "xshutdown".
+* A new subdevice entity for the resizer was added.
+Previously, resizer was being implemented in the capture devices, but since
+capture devices don't have pad operations, the code was accepting unmatching
+links between ISP and the capture.
+Separating the resizer to it's own entity removed several hacks from the
+capture, besides simplifying the code, making it easier to read.
+Cropping was also moved out from the capture to the resizer subdevices.
+This also changes userspace API (as the topology changed), but now resizing is
+more explicitly represented instead of hided in the capture.
 
-Wouldn't using the signal name from the sensor by the different vendor just add more confusion
-instead?
+* Format propagation between pads was fixed.
 
->> +
->> +  camera-clk:
->> +    type: object
->> +
->> +    description: Clock source for imx219
->> +
->> +    properties:
->> +      clock-frequency: true
->> +
->> +    required:
->> +      - clock-frequency
-> 
-> Hmm. The driver doesn't seem to use this for anything.
-> 
-> There are two approaches to this; either you can get and check the
-> frequency, or specify it in DT bindings, set and then check it.
-> 
-> See e.g. Documentation/devicetree/bindings/media/i2c/nokia,smia.txt (not in
-> YAML though).
-> 
->> +
->> +  # See ../video-interfaces.txt for more details
->> +  port:
->> +    type: object
->> +    properties:
->> +      endpoint:
->> +        type: object
->> +        properties:
->> +          clock-lanes:
->> +            const: 0
-> 
-> If the hardware does not support lane reordering, you can omit the
-> clock-lanes property as it provides no information.
-> 
->> +
->> +          data-lanes:
->> +            description: |-
->> +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
->> +              four-lane operation.
->> +            oneOf:
->> +              - const: [[ 1, 2 ]]
->> +              - const: [[ 1, 2, 3, 4 ]]
->> +
->> +          clock-noncontinuous:
->> +            type: boolean
->> +            description: |-
->> +              Presence of this boolean property decides whether the MIPI CSI-2
->> +              clock is continuous or non-continuous.
-> 
-> How about: MIPI CSI-2 clock will be non-continuous if this property is
-> present, otherwise it's continuous.
+* Ascii art block diagram to remove the http link reference.
 
-This statement is more clear than the original. Thanks!
+* More items in the TODO file, including reviewing the locks.
 
->> +
->> +        required:
->> +          - clock-lanes
->> +          - data-lanes
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - VANA-supply
->> +  - VDIG-supply
->> +  - VDDL-supply
->> +  - port
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c0 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        imx219: sensor@10 {
->> +            compatible = "sony,imx219";
->> +            reg = <0x10>;
->> +            clocks = <&imx219_clk>;
->> +            clock-names = "xclk";
->> +            VANA-supply = <&imx219_vana>;   /* 2.8v */
->> +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
->> +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
->> +
->> +            imx219_clk: camera-clk {
->> +                compatible = "fixed-clock";
->> +                #clock-cells = <0>;
->> +                clock-frequency = <24000000>;
->> +            };
->> +
->> +            port {
->> +                imx219_0: endpoint {
->> +                    remote-endpoint = <&csi1_ep>;
->> +                    clock-lanes = <0>;
->> +                    data-lanes = <1 2>;
->> +                    clock-noncontinuous;
->> +                };
->> +            };
->> +        };
->> +    };
->> +
->> +...
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index ffa3371bc750..f7b6c24ec081 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -15350,6 +15350,14 @@ S:	Maintained
->>   F:	drivers/media/i2c/imx214.c
->>   F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->>   
->> +SONY IMX219 SENSOR DRIVER
->> +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
-> 
-> Is Dave aware of this? :-)
+* Fix Jacob Chen's email address, keep the original jacob2.chen@rock-chips.com
+email.
 
-Yes, he is :)
+* yaml Device Tree bindings: the txt bindings docs got replaced, so it
+can be verified with make dt_bindings_check and make dtbs_check
 
-But I forgot to add him to Cc this time. My bad..
+NOTE: the changes were focused on the main loop sensor->isp->capture, I almost
+didn't touch params and stats, mostly because I didn't setup a testing framework
+yet for those, so they have lots of space for improvements.
 
-Thanks,
-Andrey
+Commands output:
+----------------
+media-ctl -p : http://ix.io/25DG
+media-ctl --print-dot: http://col.la/rkisp1v12dot
+v4l2-compliance -m0: http://ix.io/25DI
+NOTE: there is a failure in v4l2-compliance, but comes from the sensor, not from the ISP.
 
->> +L:	linux-media@vger.kernel.org
->> +T:	git git://linuxtv.org/media_tree.git
->> +S:	Maintained
->> +F:	drivers/media/i2c/imx219.c
->> +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
->> +
->>   SONY IMX258 SENSOR DRIVER
->>   M:	Sakari Ailus <sakari.ailus@linux.intel.com>
->>   L:	linux-media@vger.kernel.org
-> 
+Testing:
+--------
+SEN_DEV=/dev/v4l-subdev3
+ISP_DEV=/dev/v4l-subdev0
+RSZ_SP_DEV=/dev/v4l-subdev2
+RSZ_MP_DEV=/dev/v4l-subdev1
+CAP_SP_DEV=/dev/video1
+CAP_MP_DEV=/dev/video0
+
+WIDTH=1280
+HEIGHT=960
+
+v4l2-ctl --set-subdev-fmt pad=0,width=$WIDTH,height=$HEIGHT,code=0x3001 -d $SEN_DEV
+
+v4l2-ctl --set-subdev-fmt pad=0,width=$WIDTH,height=$HEIGHT,code=0x3001 -d $ISP_DEV
+v4l2-ctl --set-subdev-selection pad=0,target=crop,top=0,left=0,width=$WIDTH,height=$HEIGHT -d $ISP_DEV
+
+v4l2-ctl --set-subdev-selection pad=2,target=crop,top=0,left=0,width=$WIDTH,height=$HEIGHT -d $ISP_DEV
+v4l2-ctl --set-subdev-fmt pad=2,width=$WIDTH,height=$HEIGHT,code=0x2008 -d $ISP_DEV
+
+v4l2-ctl --set-subdev-fmt pad=0,width=$WIDTH,height=$HEIGHT,code=0x2008 -d $RSZ_SP_DEV
+v4l2-ctl --set-subdev-fmt pad=1,width=$WIDTH,height=$HEIGHT,code=0x2008 -d $RSZ_SP_DEV
+
+v4l2-ctl --set-subdev-selection pad=0,target=crop,top=0,left=0,width=$WIDTH,height=$HEIGHT -d $RSZ_SP_DEV
+
+v4l2-ctl --set-subdev-fmt pad=0,width=$WIDTH,height=$HEIGHT,code=0x2008 -d $RSZ_MP_DEV
+v4l2-ctl --set-subdev-fmt pad=1,width=$WIDTH,height=$HEIGHT,code=0x2008 -d $RSZ_MP_DEV
+
+v4l2-ctl --set-subdev-selection pad=0,target=crop,top=0,left=0,width=$WIDTH,height=$HEIGHT -d $RSZ_MP_DEV
+
+v4l2-ctl -v width=$WIDTH,height=$HEIGHT,pixelformat=NV12 -d $CAP_SP_DEV
+v4l2-ctl -v width=$WIDTH,height=$HEIGHT,pixelformat=NV12 -d $CAP_MP_DEV
+
+v4l2-ctl --stream-mmap --stream-count=100 -d $CAP_SP_DEV --stream-to=/tmp/test_sp.raw
+v4l2-ctl --stream-mmap --stream-count=100 -d $CAP_MP_DEV --stream-to=/tmp/test_mp.raw
+
+ffplay -loglevel warning -v info -f rawvideo -pixel_format nv12 -video_size "1280x960" tmp/test_sp.raw
+ffplay -loglevel warning -v info -f rawvideo -pixel_format nv12 -video_size "1280x960" tmp/test_mp.raw
+
+Thanks
+Helen
+
+Ezequiel Garcia (1):
+  media: staging: phy-rockchip-dphy: add Rockchip MIPI Synopsys DPHY
+    driver
+
+Helen Koike (6):
+  media: staging: rkisp1: add Rockchip ISP1 base driver
+  media: staging: rkisp1: add streaming paths
+  media: staging: dt-bindings: add Rockchip ISP1 yaml bindings
+  media: staging: dt-bindings: add Rockchip MIPI RX D-PHY yaml bindings
+  media: staging: rkisp1: add TODO file for staging
+  MAINTAINERS: add entry for Rockchip ISP1 driver
+
+Jacob Chen (3):
+  media: staging: rkisp1: add capture device for statistics
+  media: staging: rkisp1: add output device for parameters
+  media: staging: rkisp1: add document for rkisp1 meta buffer format
+
+Jeffy Chen (1):
+  media: staging: rkisp1: add user space ABI definitions
+
+ MAINTAINERS                                   |    6 +
+ drivers/staging/media/Kconfig                 |    4 +
+ drivers/staging/media/Makefile                |    2 +
+ .../bindings/phy/rockchip-mipi-dphy.yaml      |   75 +
+ .../staging/media/phy-rockchip-dphy/Kconfig   |   11 +
+ .../staging/media/phy-rockchip-dphy/Makefile  |    2 +
+ drivers/staging/media/phy-rockchip-dphy/TODO  |    6 +
+ .../phy-rockchip-dphy/phy-rockchip-dphy.c     |  396 ++++
+ .../bindings/media/rockchip-isp1.yaml         |  193 ++
+ .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    |   23 +
+ .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      |   22 +
+ drivers/staging/media/rkisp1/Kconfig          |   13 +
+ drivers/staging/media/rkisp1/Makefile         |    8 +
+ drivers/staging/media/rkisp1/TODO             |   23 +
+ drivers/staging/media/rkisp1/rkisp1-capture.c | 1437 +++++++++++++++
+ drivers/staging/media/rkisp1/rkisp1-common.c  |   37 +
+ drivers/staging/media/rkisp1/rkisp1-common.h  |  337 ++++
+ drivers/staging/media/rkisp1/rkisp1-dev.c     |  574 ++++++
+ drivers/staging/media/rkisp1/rkisp1-isp.c     | 1164 ++++++++++++
+ drivers/staging/media/rkisp1/rkisp1-params.c  | 1630 +++++++++++++++++
+ drivers/staging/media/rkisp1/rkisp1-regs.h    | 1264 +++++++++++++
+ drivers/staging/media/rkisp1/rkisp1-resizer.c |  775 ++++++++
+ drivers/staging/media/rkisp1/rkisp1-stats.c   |  530 ++++++
+ .../staging/media/rkisp1/uapi/rkisp1-config.h |  819 +++++++++
+ 24 files changed, 9351 insertions(+)
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Kconfig
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Makefile
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/TODO
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+ create mode 100644 drivers/staging/media/rkisp1/Kconfig
+ create mode 100644 drivers/staging/media/rkisp1/Makefile
+ create mode 100644 drivers/staging/media/rkisp1/TODO
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-capture.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-common.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-common.h
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-dev.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-isp.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-params.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-regs.h
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-resizer.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1-stats.c
+ create mode 100644 drivers/staging/media/rkisp1/uapi/rkisp1-config.h
+
+-- 
+2.24.0
+
