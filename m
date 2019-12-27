@@ -2,107 +2,153 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72C0C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AEBC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1DD20828
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:25:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hfxVgJ5v"
+	by mail.kernel.org (Postfix) with ESMTP id 6BA8D208C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577428459;
+	bh=QmhOaQhmStFpEX9h7iiPOQiA3ViF2ugMgnDWtCU9Ek8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2HCqzqGJ+4Xs4EaUk3vsewNUFDnoBLkcl5e3LdhpBdQiNbpZkHVLlWG1JtdheQglh
+	 ZdEQgPJerjg8HjB9RJrhGjN1M+NKjvu7cK8P3Vxne8T6j3Y++SuIYkhNa/AVrpdKLS
+	 37hi8ytXlXVwiamy/67gJ9vsY+KWQCye4Wf6FS3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfL0GZN (ORCPT
+        id S1725936AbfL0GeS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:25:13 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44958 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfL0GZM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 01:25:12 -0500
-Received: by mail-pl1-f196.google.com with SMTP id az3so11341915plb.11
-        for <devicetree@vger.kernel.org>; Thu, 26 Dec 2019 22:25:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+EKn8We3BkGgywlh1HuV4tzBZYkzn1Xs8GUmEfUy078=;
-        b=hfxVgJ5v1cMuu2MQODqTRoZDn63VkkyCBQ9YJbz3fvFtMUcXeXKRMXXSh0abGiWK3d
-         5ptKXl8F9s+ti0PK+Pk5uPWoMEMZmrqqHAdKl6SEfafchEdU1DmX75ihmffd9x2kbx/s
-         EEcXNkU731Vt8+eVxeFk0tqx6TyLAD+disN2NMTD//X8MI89yUZi3UpCqEUfSwuFS3kF
-         SxSJaHrYR22ozQHh+Uyuz/eQVeQUtKu3Mc/Pjgz+hzoGltHQdOzuVH9qym0ma1DKpeRy
-         CA864jSbQKZDT2EKNhOy4lp7dr7k45+wPTs/ee2NL32lZvUtI3HCb+/o6oXY66a/Bte/
-         mOVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+EKn8We3BkGgywlh1HuV4tzBZYkzn1Xs8GUmEfUy078=;
-        b=Lb80yGgv7uB1lQWMOiSaZksW0YiyeXZ2ZRuM4xiudqR758DX5lFexs8dIY/AcLNTLF
-         bhmgYjItcgRx60TAyAbtd2sLkwyHCv/Ig9SLSPgMjTj8FcA0x3gVx1kkR2ful6p/kJBR
-         QYBTgwaWV/hXXEbC4Cg9DZUG/t6ca/3mJpkWBmOmIgxCepxE/5kO13ULjLPzPpHsDW1u
-         ToL+4VfhSA9tXerZoEGBJqOG5wDC9N99t5D4EX2ZkwB0nz5con6UnUsUfkTsUZaXGqG4
-         b6Uc2dp7FGOKFDc0wnAuOP3XPz1FYUD11n4E5T3Se4Oz+4gJ00IJoMi4yP7H2pbRWCv4
-         mfZw==
-X-Gm-Message-State: APjAAAV0lYCCLiRQ9ElLz0+QOhVTsQ27YLJTGgHU7av/phOSgcbiAe8/
-        xceCgQyu+YkTsZYJGbGUKxh2lQ==
-X-Google-Smtp-Source: APXvYqw2qyrZjW+qLKzs/TN5PVizOk8K27jmhhHnPigI4HLMQERBFm/IqC/GFrkiZ9PfVgEfLnXJ8w==
-X-Received: by 2002:a17:90a:aa84:: with SMTP id l4mr24319054pjq.143.1577427912269;
-        Thu, 26 Dec 2019 22:25:12 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v143sm30824367pfc.71.2019.12.26.22.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 22:25:11 -0800 (PST)
-Date:   Thu, 26 Dec 2019 22:25:09 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajeshwari <rkambl@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sanm@codeaurora.org, sivaa@codeaurora.org, manafm@codeaurora.org
-Subject: Re: [PATCH 2/2] dt-bindings: thermal: tsens: Add configuration for
- sc7180 in yaml
-Message-ID: <20191227062509.GN549437@yoga>
-References: <1577106871-19863-1-git-send-email-rkambl@codeaurora.org>
- <1577106871-19863-3-git-send-email-rkambl@codeaurora.org>
+        Fri, 27 Dec 2019 01:34:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfL0GeS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:34:18 -0500
+Received: from localhost (unknown [106.201.34.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7251220828;
+        Fri, 27 Dec 2019 06:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577428457;
+        bh=QmhOaQhmStFpEX9h7iiPOQiA3ViF2ugMgnDWtCU9Ek8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j71b1ORR5isd/iuQCkuKk+CZkf8gXZyRZKiNR9MZgAtgIb1azhbGHN4o6PHKvEBvO
+         10xvGkDVQM+Bk8xfelvhFK+bnnZKiBgkzhXwAPSNKQxR/FvxCtP3ZqX3MW4AuQTi95
+         ceEaiwYCt+BlTKfgKiJO5RABJlP+bu1JKrCSxUOg=
+Date:   Fri, 27 Dec 2019 12:04:11 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA
+ controller driver
+Message-ID: <20191227063411.GG3006@vkoul-mobl>
+References: <1576630620-1977-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1577106871-19863-3-git-send-email-rkambl@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon 23 Dec 05:14 PST 2019, Rajeshwari wrote:
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  1 file changed, 1 insertion(+)
+On 18-12-19, 09:57, Kunihiko Hayashi wrote:
+> This adds external DMA controller driver implemented in Socionext
+> UniPhier SoCs. This driver supports DMA_MEMCPY and DMA_SLAVE modes.
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index eef13b9..c0ed030 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -38,6 +38,7 @@ properties:
->            - enum:
->                - qcom,msm8996-tsens
->                - qcom,msm8998-tsens
-> +              - qcom,sc7180-tsens
->                - qcom,sdm845-tsens
->            - const: qcom,tsens-v2
->  
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+> Since this driver does not support the the way to transfer size
+> unaligned to burst width, 'src_maxburst' or 'dst_maxburst' of
+
+You mean driver does not support any unaligned bursts?
+
+> +static int uniphier_xdmac_probe(struct platform_device *pdev)
+> +{
+> +	struct uniphier_xdmac_device *xdev;
+> +	struct device *dev = &pdev->dev;
+> +	struct dma_device *ddev;
+> +	int irq;
+> +	int nr_chans;
+> +	int i, ret;
+> +
+> +	if (of_property_read_u32(dev->of_node, "dma-channels", &nr_chans))
+> +		return -EINVAL;
+> +	if (nr_chans > XDMAC_MAX_CHANS)
+> +		nr_chans = XDMAC_MAX_CHANS;
+> +
+> +	xdev = devm_kzalloc(dev, struct_size(xdev, channels, nr_chans),
+> +			    GFP_KERNEL);
+> +	if (!xdev)
+> +		return -ENOMEM;
+> +
+> +	xdev->nr_chans = nr_chans;
+> +	xdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(xdev->reg_base))
+> +		return PTR_ERR(xdev->reg_base);
+> +
+> +	ddev = &xdev->ddev;
+> +	ddev->dev = dev;
+> +	dma_cap_zero(ddev->cap_mask);
+> +	dma_cap_set(DMA_MEMCPY, ddev->cap_mask);
+> +	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
+> +	ddev->src_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
+> +	ddev->dst_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
+> +	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
+> +			   BIT(DMA_MEM_TO_MEM);
+> +	ddev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> +	ddev->max_burst = XDMAC_MAX_WORDS;
+> +	ddev->device_free_chan_resources = uniphier_xdmac_free_chan_resources;
+> +	ddev->device_prep_dma_memcpy = uniphier_xdmac_prep_dma_memcpy;
+> +	ddev->device_prep_slave_sg = uniphier_xdmac_prep_slave_sg;
+> +	ddev->device_config = uniphier_xdmac_slave_config;
+> +	ddev->device_terminate_all = uniphier_xdmac_terminate_all;
+> +	ddev->device_synchronize = uniphier_xdmac_synchronize;
+> +	ddev->device_tx_status = dma_cookie_status;
+> +	ddev->device_issue_pending = uniphier_xdmac_issue_pending;
+> +	INIT_LIST_HEAD(&ddev->channels);
+> +
+> +	for (i = 0; i < nr_chans; i++) {
+> +		ret = uniphier_xdmac_chan_init(xdev, i);
+> +		if (ret) {
+> +			dev_err(dev,
+> +				"Failed to initialize XDMAC channel %d\n", i);
+> +			return ret;
+
+so on error for channel N we leave N-1 channels initialized?
+
+> +static int uniphier_xdmac_remove(struct platform_device *pdev)
+> +{
+> +	struct uniphier_xdmac_device *xdev = platform_get_drvdata(pdev);
+> +	struct dma_device *ddev = &xdev->ddev;
+> +	struct dma_chan *chan;
+> +	int ret;
+> +
+> +	/*
+> +	 * Before reaching here, almost all descriptors have been freed by the
+> +	 * ->device_free_chan_resources() hook. However, each channel might
+> +	 * be still holding one descriptor that was on-flight at that moment.
+> +	 * Terminate it to make sure this hardware is no longer running. Then,
+> +	 * free the channel resources once again to avoid memory leak.
+> +	 */
+> +	list_for_each_entry(chan, &ddev->channels, device_node) {
+> +		ret = dmaengine_terminate_sync(chan);
+> +		if (ret)
+> +			return ret;
+> +		uniphier_xdmac_free_chan_resources(chan);
+
+terminating sounds okayish but not freeing here. .ree_chan_resources()
+should have been called already and that should ensure that termination
+is already done...
+
+-- 
+~Vinod
