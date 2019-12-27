@@ -2,331 +2,156 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEE0C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF478C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4EE20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C23C420882
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:38:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="rCb6yLvY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfL0Pqz (ORCPT
+        id S1726839AbfL0QiU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:46:55 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:59254 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726495AbfL0Pqz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:46:55 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 4D9AB634C86;
-        Fri, 27 Dec 2019 17:46:17 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1ikrof-000181-JN; Fri, 27 Dec 2019 17:46:17 +0200
-Date:   Fri, 27 Dec 2019 17:46:17 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v2 5/6] media: i2c: imx290: Add configurable link
- frequency and pixel rate
-Message-ID: <20191227154617.GH861@valkosipuli.retiisi.org.uk>
-References: <20191219182222.18961-1-manivannan.sadhasivam@linaro.org>
- <20191219182222.18961-6-manivannan.sadhasivam@linaro.org>
+        Fri, 27 Dec 2019 11:38:20 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40499 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0QiU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 11:38:20 -0500
+Received: by mail-ed1-f68.google.com with SMTP id b8so25721610edx.7;
+        Fri, 27 Dec 2019 08:38:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6YTB1fNIm79m/hiZxeT3tYKFD5H8aAnuxvQfJh9UTTA=;
+        b=rCb6yLvYVvl/bhWTiHwA3cx/pPDMQSYDZjENCpcrW46hTqEU+37cxTsRfQbFZWgxnQ
+         8lAZ3VnOW6o4VNL4GLpbT+x7T62C1KAFCX6q78uC1Jqr2tffxf0f3GWDIYdHlOmMn6c0
+         D2gFJ28f+y57Us0+szO7vgqbXxMi15owj96gWUV2Vsc826+PMIOSLSe3X9FX6RzD8LA9
+         VHlwek/F+/vnefGNtzo/32g1LnHSVG9grbquv7p1Qafnn7SenyEgVHxIWNyfaCLBR8LU
+         uWOlhhWEOQpoGiItymVbpilrcKbra+UJRHiyIzE1CTuloR4yCh+mMaQiU/deAi2BA+j7
+         72Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6YTB1fNIm79m/hiZxeT3tYKFD5H8aAnuxvQfJh9UTTA=;
+        b=qvaHCbLG5LYoXZaNdS8Ncx6xRv+Rxe5uZt/GX8GgeBnzHg49bEyOEsyQ/xRrzZDglj
+         LFm4iv6v7UQDagL/STCnoBcGTTl95Qr5bOnN+pMfLvYP0bHLKplUOmveW5WYZC3RbDpM
+         ZGKkgLy5LiAhtXB/UQsEz2yJR49KSbAC5sPok0QREqdrMxDd2H8u9JBwyVn88yBtSGid
+         3xrp5r3ey4nHWD4AO6GkbNrXDrQehpnSEN65V2m4yQNVrKLp4FRHdWijIZQOB0Z3xwG6
+         FZ1Xi3Td4CfAUIXAODewHWUjleykuYVvxjVENB6JghDRgI0/l6m1BZUh08brjO/T53aD
+         DeQg==
+X-Gm-Message-State: APjAAAW8DGR5vpMvw2aIrB/AuMxvR0mPFpI6dcOqVle2hDV95Wh2S54x
+        qO0bcQ3jUV+w3Iqj3LDiKueIdhDIJ01pRbbKDRY=
+X-Google-Smtp-Source: APXvYqzXINFtgDqMBlIV6U4EBXznckvgHZpZ4LhokGGqjDtkp3WySsLLrOwjy/HccteQFMutQpmQt9YGz45Q+BIy3TM=
+X-Received: by 2002:a17:906:e219:: with SMTP id gf25mr54733718ejb.51.1577464697886;
+ Fri, 27 Dec 2019 08:38:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219182222.18961-6-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com> <1577428606-69855-5-git-send-email-hanjie.lin@amlogic.com>
+In-Reply-To: <1577428606-69855-5-git-send-email-hanjie.lin@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Fri, 27 Dec 2019 17:38:07 +0100
+Message-ID: <CAFBinCD8V-Swihz+VJ780sXJtM9cXprDcGCHVuHjjCx0DEOodQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
+To:     Hanjie Lin <hanjie.lin@amlogic.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manivannan,
+Hello Hanjie,
 
-On Thu, Dec 19, 2019 at 11:52:21PM +0530, Manivannan Sadhasivam wrote:
-> IMX290 operates with multiple link frequency and pixel rate combinations.
-> The initial driver used a single setting for both but since we now have
-> the lane count support in place, let's add configurable link frequency
-> and pixel rate.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/media/i2c/imx290.c | 155 +++++++++++++++++++++----------------
->  1 file changed, 89 insertions(+), 66 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index a1974340e6fa..52f1e470b507 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -45,8 +45,6 @@
->  #define IMX290_HMAX_2_720 0x19C8
->  #define IMX290_HMAX_4_720 0x0CE4
->  
-> -#define IMX290_DEFAULT_LINK_FREQ 445500000
-> -
->  static const char * const imx290_supply_name[] = {
->  	"vdda",
->  	"vddd",
-> @@ -63,8 +61,6 @@ struct imx290_regval {
->  struct imx290_mode {
->  	u32 width;
->  	u32 height;
-> -	u32 pixel_rate;
-> -	u32 link_freq_index;
->  
->  	const struct imx290_regval *data;
->  	u32 data_size;
-> @@ -281,7 +277,10 @@ static const struct imx290_regval imx290_12bit_settings[] = {
->  
->  /* supported link frequencies */
->  static const s64 imx290_link_freq[] = {
-> -	IMX290_DEFAULT_LINK_FREQ,
-> +	891000000, /* 1920x1080 -  2 lane */
-> +	445500000, /* 1920x1080 -  4 lane */
-> +	594000000, /* 1280x720  -  2 lane */
-> +	297000000, /* 1280x720  -  4 lane */
+sorry that it took me so long to look at this
+you can find my comments below
 
-Please use different arrays for different lane configurations. That makes
-this a lot cleaner.
+On Fri, Dec 27, 2019 at 7:37 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+[...]
+> +static const struct clk_bulk_data meson_g12a_clocks[] = {
+> +       { .id = NULL},
+> +};
+> +
+> +static const struct clk_bulk_data meson_a1_clocks[] = {
+> +       { .id = "usb_ctrl"},
+> +       { .id = "usb_bus"},
+> +       { .id = "xtal_usb_phy"},
+> +       { .id = "xtal_usb_ctrl"},
+> +};
+nit-pick: the values in meson_g12a_clocks and meson_a1_clocks all have
+a space after the opening "{" but no space before the closing "}"
+we should be consistent here (personally I prefer the variant with
+space after "{" and before "}", but having no space in both cases is
+fine for me too)
 
-This patch should precede the one adding support for 12 bpp.
-
->  };
->  
->  /* Mode configs */
-> @@ -291,16 +290,12 @@ static const struct imx290_mode imx290_modes[] = {
->  		.height = 1080,
->  		.data = imx290_1080p_settings,
->  		.data_size = ARRAY_SIZE(imx290_1080p_settings),
-> -		.pixel_rate = 178200000,
-> -		.link_freq_index = 0,
->  	},
->  	{
->  		.width = 1280,
->  		.height = 720,
->  		.data = imx290_720p_settings,
->  		.data_size = ARRAY_SIZE(imx290_720p_settings),
-> -		.pixel_rate = 178200000,
-> -		.link_freq_index = 0,
->  	},
->  };
->  
-> @@ -509,6 +504,73 @@ static int imx290_get_fmt(struct v4l2_subdev *sd,
->  	return 0;
->  }
->  
-> +static s64 imx290_get_link_freq_index(struct imx290 *imx290)
-> +{
-> +	const struct imx290_mode *cur_mode = imx290->current_mode;
-> +	u8 index;
-> +
-> +	if (cur_mode->width == 1920)
-> +		index = imx290->nlanes / 4;
-> +	else
-> +		index = (imx290->nlanes / 4) + 2;
-> +
-> +	return index;
-> +}
-> +
-> +static s64 imx290_get_link_freq(struct imx290 *imx290)
-> +{
-> +	u8 index = imx290_get_link_freq_index(imx290);
-> +
-> +	return imx290_link_freq[index];
-> +}
-> +
-> +static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
-> +{
-> +	s64 link_freq = imx290_get_link_freq(imx290);
-> +	u8 nlanes = imx290->nlanes;
-> +
-> +	/* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
-> +	return (link_freq * 2 * nlanes / imx290->bpp);
-> +}
-> +
-> +static int imx290_write_current_format(struct imx290 *imx290,
-> +				       struct v4l2_mbus_framefmt *format)
-> +{
-> +	int ret;
-> +
-> +	switch (format->code) {
-> +	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> +		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
-> +						ARRAY_SIZE(
-> +							imx290_10bit_settings));
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set format registers\n");
-> +			return ret;
-> +		}
-> +
-> +		imx290->bpp = 10;
-> +
-> +		break;
-> +	case MEDIA_BUS_FMT_SRGGB12_1X12:
-> +		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-> +						ARRAY_SIZE(
-> +							imx290_12bit_settings));
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set format registers\n");
-> +			return ret;
-> +		}
-> +
-> +		imx290->bpp = 12;
-> +
-> +		break;
-> +	default:
-> +		dev_err(imx290->dev, "Unknown pixel format\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int imx290_set_fmt(struct v4l2_subdev *sd,
->  			  struct v4l2_subdev_pad_config *cfg,
->  		      struct v4l2_subdev_format *fmt)
-> @@ -517,6 +579,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
->  	const struct imx290_mode *mode;
->  	struct v4l2_mbus_framefmt *format;
->  	unsigned int i;
-> +	int ret = 0;
->  
->  	mutex_lock(&imx290->lock);
->  
-> @@ -542,17 +605,27 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
->  		format = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
->  	} else {
->  		format = &imx290->current_format;
-> -		__v4l2_ctrl_s_ctrl(imx290->link_freq, mode->link_freq_index);
-> -		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate, mode->pixel_rate);
-> -
->  		imx290->current_mode = mode;
-> +
-> +		/* Set current frame format */
-> +		ret = imx290_write_current_format(imx290, &fmt->format);
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set frame format\n");
-> +			goto err_out;
-> +		}
-> +
-> +		__v4l2_ctrl_s_ctrl(imx290->link_freq,
-> +				   imx290_get_link_freq_index(imx290));
-> +		__v4l2_ctrl_s_ctrl_int64(imx290->pixel_rate,
-> +					 imx290_calc_pixel_rate(imx290));
->  	}
->  
->  	*format = fmt->format;
->  
-> +err_out:
->  	mutex_unlock(&imx290->lock);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
-> @@ -569,44 +642,6 @@ static int imx290_entity_init_cfg(struct v4l2_subdev *subdev,
->  	return 0;
->  }
->  
-> -static int imx290_write_current_format(struct imx290 *imx290,
-> -				       struct v4l2_mbus_framefmt *format)
-> -{
-> -	int ret;
-> -
-> -	switch (format->code) {
-> -	case MEDIA_BUS_FMT_SRGGB10_1X10:
-> -		ret = imx290_set_register_array(imx290, imx290_10bit_settings,
-> -						ARRAY_SIZE(
-> -							imx290_10bit_settings));
-> -		if (ret < 0) {
-> -			dev_err(imx290->dev, "Could not set format registers\n");
-> -			return ret;
-> -		}
-> -
-> -		imx290->bpp = 10;
-> -
-> -		break;
-> -	case MEDIA_BUS_FMT_SRGGB12_1X12:
-> -		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-> -						ARRAY_SIZE(
-> -							imx290_12bit_settings));
-> -		if (ret < 0) {
-> -			dev_err(imx290->dev, "Could not set format registers\n");
-> -			return ret;
-> -		}
-> -
-> -		imx290->bpp = 12;
-> -
-> -		break;
-> -	default:
-> -		dev_err(imx290->dev, "Unknown pixel format\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static int imx290_set_hmax(struct imx290 *imx290, u32 val)
+[...]
+>  static void dwc3_meson_g12a_usb2_set_mode(struct dwc3_meson_g12a *priv,
+> @@ -138,10 +156,13 @@ static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv)
 >  {
->  	int ret;
-> @@ -640,13 +675,6 @@ static int imx290_start_streaming(struct imx290 *imx290)
->  		return ret;
->  	}
->  
-> -	/* Set current frame format */
-> -	ret = imx290_write_current_format(imx290, &imx290->current_format);
-> -	if (ret < 0) {
-> -		dev_err(imx290->dev, "Could not set frame format\n");
-> -		return ret;
-> -	}
-> -
->  	/* Apply default values of current mode */
->  	ret = imx290_set_register_array(imx290, imx290->current_mode->data,
->  					imx290->current_mode->data_size);
-> @@ -904,12 +932,6 @@ static int imx290_probe(struct i2c_client *client)
->  		goto free_err;
->  	}
->  
-> -	if (imx290->ep.link_frequencies[0] != IMX290_DEFAULT_LINK_FREQ) {
-> -		dev_err(dev, "Unsupported link frequency\n");
-> -		ret = -EINVAL;
-> -		goto free_err;
-> -	}
-> -
->  	/* Only CSI2 is supported for now */
->  	if (imx290->ep.bus_type != V4L2_MBUS_CSI2_DPHY) {
->  		dev_err(dev, "Unsupported bus type, should be CSI2\n");
-> @@ -976,14 +998,15 @@ static int imx290_probe(struct i2c_client *client)
->  				       &imx290_ctrl_ops,
->  				       V4L2_CID_LINK_FREQ,
->  				       ARRAY_SIZE(imx290_link_freq) - 1,
-> -				       0, imx290_link_freq);
-> +				       (imx290->nlanes / 4),
-> +				       imx290_link_freq);
->  	if (imx290->link_freq)
->  		imx290->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
->  
->  	imx290->pixel_rate = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
->  					       V4L2_CID_PIXEL_RATE, 1,
->  					       INT_MAX, 1,
-> -					       imx290_modes[0].pixel_rate);
-> +					       imx290_calc_pixel_rate(imx290));
->  
->  	v4l2_ctrl_new_std_menu_items(&imx290->ctrls, &imx290_ctrl_ops,
->  				     V4L2_CID_TEST_PATTERN,
+>         int i;
+>
+> -       if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
+> -               priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
+> -       else
+> -               priv->otg_phy_mode = PHY_MODE_USB_HOST;
+> +       /* only G12A supports otg mode */
+> +       if (priv->soc_id == MESON_SOC_G12A) {
+> +               if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
+> +                       priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
+> +               else
+> +                       priv->otg_phy_mode = PHY_MODE_USB_HOST;
+> +       }
+can you comment on future Amlogic SoCs and how this code will look in
+the future?
+I would like to avoid having to adjust this "if" for every new SoC,
+but I don't know if the majority of the SoCs will have OTG support
 
--- 
-Regards,
+also one idea that just came to my mind:
+you could define in the .yaml binding that for A1 only dr_mode =
+"host" is allowed
+then you may not need extra logic in the driver at all
 
-Sakari Ailus
+[...]
+> -               if (i == USB2_OTG_PHY) {
+> +               if (priv->soc_id == MESON_SOC_G12A && i == USB2_OTG_PHY) {
+on GXL we have two PHYs (0 and 1), the second one is OTG capable
+on GXM we have three PHYs (0..2), the second one is OTG capable
+on G12A/G12B we have two PHYs (0 and 1), the second one is OTG capable
+
+you already wrote that there is only one USB2 PHY on the A1 SoC
+is really only the second PHY port ("usb2-phy1" instead of
+"usb2-phy0") used on A1?
+if "usb2-phy0" is correct then you don't need these checks (there are
+more checks like this below)
+
+[...]
+> -       usb_role_switch_unregister(priv->role_switch);
+> +       if (priv->soc_id == MESON_SOC_G12A)
+> +               usb_role_switch_unregister(priv->role_switch);
+I didn't expect this because in _probe usb_role_switch_register is still called
+on A1 we now call usb_role_switch_register() but we never call
+usb_role_switch_unregister()
+
+
+Martin
