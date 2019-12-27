@@ -2,242 +2,409 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DEEC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 07:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F90C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 07:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1488D20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 07:22:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PndAyuXT"
+	by mail.kernel.org (Postfix) with ESMTP id F03E221D7E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 07:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726014AbfL0HWQ (ORCPT
+        id S1726014AbfL0H5A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 02:22:16 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:40174 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726329AbfL0HWQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 02:22:16 -0500
-X-UUID: 54b0d17df6c64c7fa13478ba3cf1710d-20191227
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=u+U1TrW0IsDnGyB1I5ofisWe5Qd+waMvShubc2tOoEc=;
-        b=PndAyuXTfZ6vLRP/aMAx1Dy32IAo3CXLG5zJvBTUvzrbW+vWZRE+N5XJ5V3CNSpcml5WN8IG8a6lHOSwc5ARv9N6v7HvvleWHwemRBlgzYuoCg4xZnNBQiLmmsEycAAqXRrwQLeYKGh4jGK0RmpKEs5rw1ufpmmsRziDaZiMsD8=;
-X-UUID: 54b0d17df6c64c7fa13478ba3cf1710d-20191227
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1508058154; Fri, 27 Dec 2019 15:22:07 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs07n1.mediatek.inc
- (172.21.101.16) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 27 Dec
- 2019 15:21:45 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 27 Dec 2019 15:22:36 +0800
-Message-ID: <1577431271.32039.12.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/2] memory: mtk-smi: Add bandwidth initial golden
- setting for MT6779
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Ming-Fan Chen <ming-fan.chen@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Evan Green <evgreen@chromium.org>,
-        Joerg Roedel <jroedel@suse.de>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Fri, 27 Dec 2019 15:21:11 +0800
-In-Reply-To: <1575872371-671-4-git-send-email-ming-fan.chen@mediatek.com>
-References: <1575872371-671-1-git-send-email-ming-fan.chen@mediatek.com>
-         <1575872371-671-4-git-send-email-ming-fan.chen@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 27 Dec 2019 02:57:00 -0500
+Received: from mga06.intel.com ([134.134.136.31]:42697 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbfL0H5A (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 02:57:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 23:56:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,362,1571727600"; 
+   d="scan'208";a="223718201"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 23:56:59 -0800
+Received: from [10.226.38.242] (unknown [10.226.38.242])
+        by linux.intel.com (Postfix) with ESMTP id C81D058046E;
+        Thu, 26 Dec 2019 23:56:36 -0800 (PST)
+Subject: Re: [PATCH 2/2] phy: intel: Add driver support for combo phy
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+References: <9f3df8c403bba3633391551fc601cbcd2f950959.1576824311.git.eswara.kota@linux.intel.com>
+ <09556a80a967780072ae1240c7c8356f9142de50.1576824311.git.eswara.kota@linux.intel.com>
+ <20191220104551.GV32742@smile.fi.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <bc16221c-e664-69b4-34d5-6340af1460df@linux.intel.com>
+Date:   Fri, 27 Dec 2019 15:56:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191220104551.GV32742@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTEyLTA5IGF0IDE0OjE5ICswODAwLCBNaW5nLUZhbiBDaGVuIHdyb3RlOg0K
-PiBTTUkgYmFuZHdpZHRoIGluaXRpYWwgZ29sZGVuIHNldHRpbmcgZm9yIE1UNjc3OSBtYWtlIHN1
-cmUNCj4gYmV0dGVyIHBlcmZvcm1hbmNlIG9mIG1lbW9yeSBjb250cm9sIGZvciBtdWx0aW1lZGlh
-IG1vZHVsZXMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNaW5nLUZhbiBDaGVuIDxtaW5nLWZhbi5j
-aGVuQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL21lbW9yeS9tdGstc21pLmMgfCAg
-MTQzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0NCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxNDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvbWVtb3J5L210ay1zbWkuYyBiL2RyaXZlcnMvbWVtb3J5L210ay1z
-bWkuYw0KPiBpbmRleCA0MzlkN2Q4Li42YjE4YjcxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL21l
-bW9yeS9tdGstc21pLmMNCj4gKysrIGIvZHJpdmVycy9tZW1vcnkvbXRrLXNtaS5jDQo+IEBAIC00
-MSwyMSArNDEsNDkgQEANCj4gICNkZWZpbmUgU01JX0xBUkJfTk9OU0VDX0NPTihpZCkJKDB4Mzgw
-ICsgKChpZCkgKiA0KSkNCj4gICNkZWZpbmUgRl9NTVVfRU4JCUJJVCgwKQ0KPiAgDQo+ICsjZGVm
-aW5lIFNNSV9MQVJCX0NNRF9USFJUX0NPTgkgMHgyNA0KPiArI2RlZmluZSBTTUlfTEFSQl9TV19G
-TEFHCSAweDQwDQo+ICsjZGVmaW5lIFNNSV9MQVJCX09TVERMX1BPUlQJIDB4MjAwDQo+ICsjZGVm
-aW5lIFNNSV9MQVJCX09TVERMX1BPUlR4KGlkKSAoU01JX0xBUkJfT1NURExfUE9SVCArICgoKGlk
-KSAmIDB4MWYpIDw8IDIpKQ0KPiArDQo+ICAvKiBTTUkgQ09NTU9OICovDQo+ICsjZGVmaW5lIFNN
-SV9MMUxFTgkJCTB4MTAwDQo+ICsjZGVmaW5lIFNNSV9MMUFSQjAJCQkweDEwNA0KPiArI2RlZmlu
-ZSBTTUlfTDFBUkIoaWQpCQkJKFNNSV9MMUFSQjAgKyAoKChpZCkgJiAweDcpIDw8IDIpKQ0KPiAr
-DQo+ICAjZGVmaW5lIFNNSV9CVVNfU0VMCQkJMHgyMjANCj4gICNkZWZpbmUgU01JX0JVU19MQVJC
-X1NISUZUKGxhcmJpZCkJKChsYXJiaWQpIDw8IDEpDQo+ICAvKiBBbGwgYXJlIE1NVTAgZGVmYXVs
-dGx5LiBPbmx5IHNwZWNpYWxpemUgbW11MSBoZXJlLiAqLw0KPiAgI2RlZmluZSBGX01NVTFfTEFS
-QihsYXJiaWQpCQkoMHgxIDw8IFNNSV9CVVNfTEFSQl9TSElGVChsYXJiaWQpKQ0KPiAgDQo+ICsj
-ZGVmaW5lIFNNSV9NNFVfVEgJCQkweDIzNA0KPiArI2RlZmluZSBTTUlfRklGT19USDEJCQkweDIz
-OA0KPiArI2RlZmluZSBTTUlfRklGT19USDIJCQkweDIzYw0KPiArI2RlZmluZSBTTUlfRENNCQkJ
-CTB4MzAwDQo+ICsjZGVmaW5lIFNNSV9EVU1NWQkJCTB4NDQ0DQo+ICsNCj4gKyNkZWZpbmUgU01J
-X0xBUkJfUE9SVF9OUl9NQVgJCTMyDQo+ICsjZGVmaW5lIFNNSV9MQVJCX01JU0NfTlIJCTINCj4g
-KyNkZWZpbmUgU01JX0NPTU1PTl9NSVNDX05SCQk2DQo+ICsNCj4gIGVudW0gbXRrX3NtaV9nZW4g
-ew0KPiAgCU1US19TTUlfR0VOMSwNCj4gIAlNVEtfU01JX0dFTjINCj4gIH07DQo+ICANCj4gK3N0
-cnVjdCBtdGtfc21pX3JlZ19wYWlyIHsNCj4gKwl1MTYJb2Zmc2V0Ow0KPiArCXUzMgl2YWx1ZTsN
-Cj4gK307DQo+ICsNCj4gIHN0cnVjdCBtdGtfc21pX2NvbW1vbl9wbGF0IHsNCj4gIAllbnVtIG10
-a19zbWlfZ2VuIGdlbjsNCj4gIAlib29sICAgICAgICAgICAgIGhhc19nYWxzOw0KPiAgCXUzMiAg
-ICAgICAgICAgICAgYnVzX3NlbDsgLyogQmFsYW5jZSBzb21lIGxhcmJzIHRvIGVudGVyIG1tdTAg
-b3IgbW11MSAqLw0KPiArCWJvb2wgICAgICAgICAgICAgICAgICAgICAgICAgIGhhc19id2M7DQo+
-ICsJdTggICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFyYl9ucjsNCj4gKwljb25zdCB1MTYg
-ICAgICAgICAgICAgICAgICAgICAqbDFhcmI7DQo+ICsJY29uc3Qgc3RydWN0IG10a19zbWlfcmVn
-X3BhaXIgKm1pc2M7DQo+ICB9Ow0KPiAgDQo+ICBzdHJ1Y3QgbXRrX3NtaV9sYXJiX2dlbiB7DQo+
-IEBAIC02Myw2ICs5MSw5IEBAIHN0cnVjdCBtdGtfc21pX2xhcmJfZ2VuIHsNCj4gIAl2b2lkICgq
-Y29uZmlnX3BvcnQpKHN0cnVjdCBkZXZpY2UgKik7DQo+ICAJdW5zaWduZWQgaW50CQkJbGFyYl9k
-aXJlY3RfdG9fY29tbW9uX21hc2s7DQo+ICAJYm9vbAkJCQloYXNfZ2FsczsNCj4gKwlib29sCQkJ
-CWhhc19id2M7DQo+ICsJY29uc3QgdTgJCQkoKm9zdGRsKVtTTUlfTEFSQl9QT1JUX05SX01BWF07
-DQo+ICsJY29uc3Qgc3RydWN0IG10a19zbWlfcmVnX3BhaXIJKCptaXNjKVtTTUlfTEFSQl9NSVND
-X05SXTsNCj4gIH07DQo+ICANCj4gIHN0cnVjdCBtdGtfc21pIHsNCj4gQEAgLTE2MSw2ICsxOTIs
-OCBAQCBzdGF0aWMgdm9pZCBtdGtfc21pX2xhcmJfY29uZmlnX3BvcnRfZ2VuMl9nZW5lcmFsKHN0
-cnVjdCBkZXZpY2UgKmRldikNCj4gIAlzdHJ1Y3QgbXRrX3NtaV9sYXJiICpsYXJiID0gZGV2X2dl
-dF9kcnZkYXRhKGRldik7DQo+ICAJdTMyIHJlZzsNCj4gIAlpbnQgaTsNCj4gKwljb25zdCB1OCAq
-b3N0ZGw7DQo+ICsJY29uc3Qgc3RydWN0IG10a19zbWlfcmVnX3BhaXIgKm1pc2M7DQoNCk5vcm1h
-bGx5IGRlZmluZSB0aGUgbG9jYWwgdmFyaWFibGVzIGZyb20gbG9uZyB0byBzaG9ydC4NCg0KVGhh
-dCBtZWFuczoNCisJY29uc3Qgc3RydWN0IG10a19zbWlfcmVnX3BhaXIgKm1pc2M7DQorCWNvbnN0
-IHU4ICpvc3RkbDsNCiAgICAgICAgdTMyIHJlZzsNCiAgICAgICAgaW50IGk7DQoNCj4gIA0KPiAg
-CWlmIChCSVQobGFyYi0+bGFyYmlkKSAmIGxhcmItPmxhcmJfZ2VuLT5sYXJiX2RpcmVjdF90b19j
-b21tb25fbWFzaykNCj4gIAkJcmV0dXJuOw0KPiBAQCAtMTcwLDYgKzIwMywyMCBAQCBzdGF0aWMg
-dm9pZCBtdGtfc21pX2xhcmJfY29uZmlnX3BvcnRfZ2VuMl9nZW5lcmFsKHN0cnVjdCBkZXZpY2Ug
-KmRldikNCj4gIAkJcmVnIHw9IEZfTU1VX0VOOw0KPiAgCQl3cml0ZWwocmVnLCBsYXJiLT5iYXNl
-ICsgU01JX0xBUkJfTk9OU0VDX0NPTihpKSk7DQo+ICAJfQ0KPiArDQo+ICsJaWYgKCFsYXJiLT5s
-YXJiX2dlbi0+aGFzX2J3YykNCj4gKwkJcmV0dXJuOw0KPiArDQo+ICsJZm9yIChpID0gMCwgb3N0
-ZGwgPSBsYXJiLT5sYXJiX2dlbi0+b3N0ZGxbbGFyYi0+bGFyYmlkXTsNCj4gKwkJaSA8IFNNSV9M
-QVJCX1BPUlRfTlJfTUFYOyBpKyspDQo+ICsJCXdyaXRlbF9yZWxheGVkKG9zdGRsW2ldLA0KPiAr
-CQkJICAgICAgIGxhcmItPmJhc2UgKyBTTUlfTEFSQl9PU1RETF9QT1JUeChpKSk7DQoNCnRoZSB3
-cml0ZWxfcmVsYXhlZCBjYW4gYmUgZG9uZSBpbiBvbmUgbGluZSwgaXQgaXNuJ3Qgb3ZlciA4MC4N
-Cg0KDQpvc3RkbCA9IGxhcmItPmxhcmJfZ2VuLT5vc3RkbFtsYXJiLT5sYXJiaWRdOw0KZm9yIChp
-ID0gMDsgaSA8IFNNSV9MQVJCX1BPUlRfTlJfTUFYOyBpKyspDQoJd3JpdGVsX3JlbGF4ZWQob3N0
-ZGxbaV0sIGxhcmItPmJhc2UgKyBTTUlfTEFSQl9PU1RETF9QT1JUeChpKSk7DQoNCj4gKw0KPiAr
-CWZvciAoaSA9IDAsIG1pc2MgPSBsYXJiLT5sYXJiX2dlbi0+bWlzY1tsYXJiLT5sYXJiaWRdOw0K
-PiArCQlpIDwgU01JX0xBUkJfTUlTQ19OUjsgaSsrKQ0KPiArCQl3cml0ZWxfcmVsYXhlZChtaXNj
-W2ldLnZhbHVlLA0KPiArCQkJICAgICAgIGxhcmItPmJhc2UgKyBtaXNjW2ldLm9mZnNldCk7DQoN
-CmRpdHRvLiBpdCBhbHNvIGRvbid0IG92ZXIgODAgY2hhcnMuDQoNCm1pc2MgPSBsYXJiLT5sYXJi
-X2dlbi0+bWlzY1tsYXJiLT5sYXJiaWRdOw0KZm9yIChpID0gMDsgaSA8IFNNSV9MQVJCX01JU0Nf
-TlI7IGkrKykNCgl3cml0ZWxfcmVsYXhlZChtaXNjW2ldLnZhbHVlLCBsYXJiLT5iYXNlICsgbWlz
-Y1tpXS5vZmZzZXQpOw0KDQo+ICsJd21iKCk7IC8qIG1ha2Ugc3VyZSBzZXR0aW5ncyBhcmUgd3Jp
-dHRlbiAqLw0KPiAgfQ0KPiAgDQo+ICBzdGF0aWMgdm9pZCBtdGtfc21pX2xhcmJfY29uZmlnX3Bv
-cnRfbXQ4MTczKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gQEAgLTIzOSw2ICsyODYsNTUgQEAgc3Rh
-dGljIHZvaWQgbXRrX3NtaV9sYXJiX2NvbmZpZ19wb3J0X2dlbjEoc3RydWN0IGRldmljZSAqZGV2
-KQ0KPiAgCS5sYXJiX2RpcmVjdF90b19jb21tb25fbWFzayA9IEJJVCg4KSB8IEJJVCg5KSwgICAg
-ICAvKiBiZHBzeXMgKi8NCj4gIH07DQo+ICANCj4gK3N0YXRpYyBjb25zdCB1OCBtdGtfc21pX2xh
-cmJfbXQ2Nzc5X29zdGRsW11bU01JX0xBUkJfUE9SVF9OUl9NQVhdID0gew0KPiArCXsweDI4LCAw
-eDI4LCAweDAxLCAweDI4LCAweDAxLCAweDAxLCAweDBhLCAweDBhLCAweDI4LH0sDQo+ICsJezB4
-MjgsIDB4MDEsIDB4MjgsIDB4MjgsIDB4MGEsIDB4MDEsIDB4MDEsIDB4MGQsIDB4MGQsIDB4MDcs
-DQo+ICsJIDB4MDEsIDB4MDcsIDB4MDEsIDB4MjgsfSwNCj4gKwl7MHgxOCwgMHgwMSwgMHgwOCwg
-MHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMiwNCj4gKwkgMHgwMSwgMHgw
-MX0sDQo+ICsJezB4MDEsIDB4MDMsIDB4MDIsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDQs
-IDB4MDIsIDB4MDEsDQo+ICsJIDB4MDQsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDEsIDB4MDQsIDB4
-MGIsIDB4MTMsIDB4MTQsfSwNCj4gKwl7fSwNCj4gKwl7MHgxMywgMHgwZiwgMHgwZCwgMHgwNywg
-MHgwNywgMHgwNCwgMHgwMywgMHgwMSwgMHgwMywgMHgwMSwNCj4gKwkgMHgwNSwgMHgwYywgMHgw
-MSwgMHgwMSwgMHgwOCwgMHgwNiwgMHgwMiwgMHgwMSwgMHgwOCwgMHgwOCwNCj4gKwkgMHgwMSwg
-MHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSx9LA0KPiArCXsweDAxLCAweDAxLCAweDAxLH0s
-DQo+ICsJezB4MDEsIDB4MDEsIDB4MDEsIDB4MDEsfSwNCj4gKwl7MHgwMSwgMHgwMSwgMHgwMSwg
-MHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSx9LA0KPiArCXsweDFmLCAw
-eDFhLCAweDAyLCAweDA0LCAweDFmLCAweDAyLCAweDE0LCAweDAxLCAweDFmLCAweDA0LA0KPiAr
-CSAweDA0LCAweDAxLCAweDAxLCAweDAxLCAweDAyLCAweDAyLCAweDA0LCAweDAyLCAweDAxLCAw
-eDAyLA0KPiArCSAweDA0LCAweDAyLCAweDAyLCAweDAxLH0sDQo+ICsJezB4MWYsIDB4MWEsIDB4
-MDIsIDB4MDQsIDB4MWYsIDB4MDIsIDB4MTQsIDB4MDEsIDB4MWYsIDB4MWEsDQo+ICsJIDB4MDIs
-IDB4MDQsIDB4MWYsIDB4MDIsIDB4MTQsIDB4MDEsIDB4MDEsIDB4MDIsIDB4MDIsIDB4MDQsDQo+
-ICsJIDB4MDIsIDB4MGEsIDB4MDIsIDB4MDIsIDB4MDQsIDB4MDIsIDB4MGEsIDB4MDIsIDB4MDQs
-IDB4MDIsIDB4MDQsfSwNCj4gKwl7MHgwMSwgMHgwMSwgMHgwMSwgMHgwMSwgMHgwMSx9LA0KPiAr
-fTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfc21pX3JlZ19wYWlyDQo+ICttdGtf
-c21pX2xhcmJfbXQ2Nzc5X21pc2NbXVtTTUlfTEFSQl9NSVNDX05SXSA9IHsNCj4gKwl7e1NNSV9M
-QVJCX0NNRF9USFJUX0NPTiwgMHgzNzAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0K
-DQpJIGFtIGNvbmZ1c2VkIHdoeSB3ZSBuZWVkIFNNSV9MQVJCX1NXX0ZMQUcuIERvZXMgaXQgb25s
-eSBpbmRpY2F0ZSB0aGF0DQp0aGUgc2V0dGluZyBpcyBub3QgdGhlIGRlZmF1bHQgb25lPy4gSSBn
-dWVzcyB3ZSBhbHNvIGdldCBpdCBmcm9tIHRoZQ0Kb3RoZXIgcmVnc2l0ZXIsIGxpa2UgU01JX0xB
-UkJfQ01EX1RIUlRfQ09OLg0KDQo+ICsJe3tTTUlfTEFSQl9DTURfVEhSVF9DT04sIDB4MzAwMjU2
-fSwge1NNSV9MQVJCX1NXX0ZMQUcsIDB4MX0sfSwNCj4gKwl7e1NNSV9MQVJCX0NNRF9USFJUX0NP
-TiwgMHgzNzAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0KPiArCXt9LA0KPiArCXt7
-U01JX0xBUkJfQ01EX1RIUlRfQ09OLCAweDMwMDI1Nn0sIHtTTUlfTEFSQl9TV19GTEFHLCAweDF9
-LH0sDQo+ICsJe3tTTUlfTEFSQl9DTURfVEhSVF9DT04sIDB4MzAwMjU2fSwge1NNSV9MQVJCX1NX
-X0ZMQUcsIDB4MX0sfSwNCj4gKwl7e1NNSV9MQVJCX0NNRF9USFJUX0NPTiwgMHgzMDAyNTZ9LCB7
-U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9LA0KPiArCXt7U01JX0xBUkJfQ01EX1RIUlRfQ09OLCAw
-eDMwMDI1Nn0sIHtTTUlfTEFSQl9TV19GTEFHLCAweDF9LH0sDQo+ICsJe3tTTUlfTEFSQl9DTURf
-VEhSVF9DT04sIDB4MzcwMjU2fSwge1NNSV9MQVJCX1NXX0ZMQUcsIDB4MX0sfSwNCj4gKwl7e1NN
-SV9MQVJCX0NNRF9USFJUX0NPTiwgMHgzNzAyNTZ9LCB7U01JX0xBUkJfU1dfRkxBRywgMHgxfSx9
-LA0KPiArCXt7U01JX0xBUkJfQ01EX1RIUlRfQ09OLCAweDM3MDI1Nn0sIHtTTUlfTEFSQl9TV19G
-TEFHLCAweDF9LH0sDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG10a19zbWlf
-bGFyYl9nZW4gbXRrX3NtaV9sYXJiX210Njc3OSA9IHsNCj4gKwkuY29uZmlnX3BvcnQgID0gbXRr
-X3NtaV9sYXJiX2NvbmZpZ19wb3J0X2dlbjJfZ2VuZXJhbCwNCj4gKwkubGFyYl9kaXJlY3RfdG9f
-Y29tbW9uX21hc2sgPQ0KPiArCQlCSVQoNCkgfCBCSVQoNikgfCBCSVQoMTEpIHwgQklUKDEyKSB8
-IEJJVCgxMyksDQo+ICsJCS8qIERVTU1ZIHwgSVBVMCB8IElQVTEgfCBDQ1UgfCBNRExBICovDQo+
-ICsJLmhhc19id2MgPSB0cnVlLA0KDQpEb2VzIHRoZSBsYXJiIGFsc28gaGF2ZSBoYXNfZ2Fscz8N
-Cg0KPiArCS5vc3RkbCAgID0gbXRrX3NtaV9sYXJiX210Njc3OV9vc3RkbCwNCj4gKwkubWlzYyAg
-ICA9IG10a19zbWlfbGFyYl9tdDY3NzlfbWlzYywNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgbXRrX3NtaV9sYXJiX2dlbiBtdGtfc21pX2xhcmJfbXQ4MTgzID0gew0KPiAgCS5o
-YXNfZ2FscyAgICAgICAgICAgICAgICAgICA9IHRydWUsDQo+ICAJLmNvbmZpZ19wb3J0ICAgICAg
-ICAgICAgICAgID0gbXRrX3NtaV9sYXJiX2NvbmZpZ19wb3J0X2dlbjJfZ2VuZXJhbCwNCj4gQEAg
-LTI2MCw2ICszNTYsMTAgQEAgc3RhdGljIHZvaWQgbXRrX3NtaV9sYXJiX2NvbmZpZ19wb3J0X2dl
-bjEoc3RydWN0IGRldmljZSAqZGV2KQ0KPiAgCQkuZGF0YSA9ICZtdGtfc21pX2xhcmJfbXQyNzEy
-DQo+ICAJfSwNCj4gIAl7DQo+ICsJCS5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10Njc3OS1zbWkt
-bGFyYiIsDQo+ICsJCS5kYXRhID0gJm10a19zbWlfbGFyYl9tdDY3NzkNCj4gKwl9LA0KPiArCXsN
-Cj4gIAkJLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXNtaS1sYXJiIiwNCj4gIAkJLmRh
-dGEgPSAmbXRrX3NtaV9sYXJiX210ODE4Mw0KPiAgCX0sDQo+IEBAIC0zODYsNiArNDg2LDMxIEBA
-IHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgbXRrX3NtaV9sYXJiX3N1c3BlbmQoc3RydWN0IGRl
-dmljZSAqZGV2KQ0KPiAgCS5nZW4gPSBNVEtfU01JX0dFTjIsDQo+ICB9Ow0KPiAgDQo+ICtzdGF0
-aWMgY29uc3QgdTE2IG10a19zbWlfY29tbW9uX210Njc3OV9sMWFyYltdID0gew0KPiArCTB4MTAw
-MCwgMHgxMDAwLCAweDEwMDAsIDB4MTAwMCwgMHgxMDAwLCAweDEwMDAsIDB4MTAwMCwgMHgxMDAw
-LA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdA0KPiArbXRrX3NtaV9yZWdfcGFp
-ciBtdGtfc21pX2NvbW1vbl9tdDY3NzlfbWlzY1tTTUlfQ09NTU9OX01JU0NfTlJdID0gew0KPiAr
-CXtTTUlfTDFMRU4sIDB4Yn0sDQo+ICsJe1NNSV9NNFVfVEgsIDB4ZTEwMGUxMH0sDQo+ICsJe1NN
-SV9GSUZPX1RIMSwgMHg1MDYwOTBhfSwNCj4gKwl7U01JX0ZJRk9fVEgyLCAweDUwNjA5MGF9LA0K
-PiArCXtTTUlfRENNLCAweDRmMX0sDQo+ICsJe1NNSV9EVU1NWSwgMHgxfSwNCj4gK307DQo+ICsN
-Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3NtaV9jb21tb25fcGxhdCBtdGtfc21pX2NvbW1v
-bl9tdDY3NzkgPSB7DQo+ICsJLmdlbgkJPSBNVEtfU01JX0dFTjIsDQo+ICsJLmhhc19nYWxzCT0g
-dHJ1ZSwNCj4gKwkuYnVzX3NlbAk9IEZfTU1VMV9MQVJCKDEpIHwgRl9NTVUxX0xBUkIoMikgfCBG
-X01NVTFfTEFSQig0KSB8DQo+ICsJCQkgIEZfTU1VMV9MQVJCKDUpIHwgRl9NTVUxX0xBUkIoNikg
-fCBGX01NVTFfTEFSQig3KSwNCj4gKwkuaGFzX2J3Ywk9IHRydWUsDQo+ICsJLmxhcmJfbnIJPSBB
-UlJBWV9TSVpFKG10a19zbWlfY29tbW9uX210Njc3OV9sMWFyYiksDQo+ICsJLmwxYXJiCQk9IG10
-a19zbWlfY29tbW9uX210Njc3OV9sMWFyYiwNCj4gKwkubWlzYwkJPSBtdGtfc21pX2NvbW1vbl9t
-dDY3NzlfbWlzYywNCg0KSG93IGFib3V0IGFkZCBhIG5ldyBvbmU/Og0KbWlzY19uciA9IEFSUkFZ
-X1NJWkUobXRrX3NtaV9jb21tb25fbXQ2Nzc5X21pc2MpOw0KDQpCZWNhdXNlIHdlIHNob3VsZCBt
-b3ZlIHRoZSAiYnVzX3NlbCIgaW50byB0aGlzIG1pc2Mgc3RydWN0dXJlIGxhdGVyLA0KcmlnaHQ/
-DQoNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3NtaV9jb21tb25fcGxh
-dCBtdGtfc21pX2NvbW1vbl9tdDgxODMgPSB7DQo+ICAJLmdlbiAgICAgID0gTVRLX1NNSV9HRU4y
-LA0KPiAgCS5oYXNfZ2FscyA9IHRydWUsDQo+IEBAIC00MDcsNiArNTMyLDEwIEBAIHN0YXRpYyBp
-bnQgX19tYXliZV91bnVzZWQgbXRrX3NtaV9sYXJiX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2
-KQ0KPiAgCQkuZGF0YSA9ICZtdGtfc21pX2NvbW1vbl9nZW4yLA0KPiAgCX0sDQo+ICAJew0KPiAr
-CQkuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3Nzktc21pLWNvbW1vbiIsDQo+ICsJCS5kYXRh
-ID0gJm10a19zbWlfY29tbW9uX210Njc3OSwNCj4gKwl9LA0KPiArCXsNCj4gIAkJLmNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ4MTgzLXNtaS1jb21tb24iLA0KPiAgCQkuZGF0YSA9ICZtdGtfc21p
-X2NvbW1vbl9tdDgxODMsDQo+ICAJfSwNCj4gQEAgLTQ4NCw3ICs2MTMsNyBAQCBzdGF0aWMgaW50
-IF9fbWF5YmVfdW51c2VkIG10a19zbWlfY29tbW9uX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYp
-DQo+ICB7DQo+ICAJc3RydWN0IG10a19zbWkgKmNvbW1vbiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYp
-Ow0KPiAgCXUzMiBidXNfc2VsID0gY29tbW9uLT5wbGF0LT5idXNfc2VsOw0KPiAtCWludCByZXQ7
-DQo+ICsJaW50IGksIHJldDsNCj4gIA0KPiAgCXJldCA9IG10a19zbWlfY2xrX2VuYWJsZShjb21t
-b24pOw0KPiAgCWlmIChyZXQpIHsNCj4gQEAgLTQ5NCw2ICs2MjMsMTggQEAgc3RhdGljIGludCBf
-X21heWJlX3VudXNlZCBtdGtfc21pX2NvbW1vbl9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0K
-PiAgDQo+ICAJaWYgKGNvbW1vbi0+cGxhdC0+Z2VuID09IE1US19TTUlfR0VOMiAmJiBidXNfc2Vs
-KQ0KPiAgCQl3cml0ZWwoYnVzX3NlbCwgY29tbW9uLT5iYXNlICsgU01JX0JVU19TRUwpOw0KPiAr
-DQo+ICsJaWYgKCFjb21tb24tPnBsYXQtPmhhc19id2MpDQo+ICsJCXJldHVybiAwOw0KPiArDQo+
-ICsJZm9yIChpID0gMDsgaSA8IGNvbW1vbi0+cGxhdC0+bGFyYl9ucjsgaSsrKQ0KPiArCQl3cml0
-ZWxfcmVsYXhlZChjb21tb24tPnBsYXQtPmwxYXJiW2ldLA0KPiArCQkJICAgICAgIGNvbW1vbi0+
-YmFzZSArIFNNSV9MMUFSQihpKSk7DQo+ICsNCj4gKwlmb3IgKGkgPSAwOyBpIDwgU01JX0NPTU1P
-Tl9NSVNDX05SOyBpKyspDQo+ICsJCXdyaXRlbF9yZWxheGVkKGNvbW1vbi0+cGxhdC0+bWlzY1tp
-XS52YWx1ZSwNCj4gKwkJCSAgICAgICBjb21tb24tPmJhc2UgKyBjb21tb24tPnBsYXQtPm1pc2Nb
-aV0udmFsdWUpOw0KPiArCXdtYigpOyAvKiBtYWtlIHN1cmUgc2V0dGluZ3MgYXJlIHdyaXR0ZW4g
-Ki8NCj4gIAlyZXR1cm4gMDsNCj4gIH0NCg0KSW4gdGhlIGVuZCwgQXMgdGhlIGNvbW1lbnQgaW4g
-djEsIHRoaXMgcGF0Y2ggc2hvdWxkIHNwbGl0Og0KDQphLiBhZGQgYmFzaWMgbXQ2Nzc5IHNtaS1s
-YXJiIHN1cHBvcnQob25seSBhZGQgbm9kZXMgYW5kIGNvbmZpZ19wb3J0IGxpa2UNCnRoZSBwcmV2
-aW91cyBTb0MuKQ0KDQpiLiBhZGQgYmFuZHdpZHRoIGluaXRpYWwgc2V0dHRpbmcgZm9yIG10Njc3
-OS4NCg0KYy4gTW92ZSB0aGUgYnVzX3NlbCBpbnRvIHRoZSBzbWktY29tbW9uIG1pc2Mgc2V0dGlu
-Zy4NCg0KPiAgDQoNCg==
 
+On 12/20/2019 6:45 PM, Andy Shevchenko wrote:
+> On Fri, Dec 20, 2019 at 03:28:28PM +0800, Dilip Kota wrote:
+>> Combo phy subsystem provides PHYs for various
+>> controllers like PCIe, SATA and EMAC.
+> ...
+>
+>> +#define REG_COMBO_MODE(x)	((x) * 0x200)
+> Perhaps  + 0x000
+Yes, but i think not required to add explicitly.
+>
+>> +#define REG_CLK_DISABLE(x)	((x) * 0x200 + 0x124)
+> ...
+>
+>> +static const char *const intel_iphy_names[] = {"pcie", "xpcs", "sata"};
+>> +static const unsigned long intel_iphy_clk_rate[] = {
+> names (note S)
+> rate -> rates
+Ok, will correct it to rates.
+>
+>> +	CLK_100MHZ, CLK_156_25MHZ, CLK_100MHZ
+>> +};
+> ...
+>
+>> +static ssize_t intel_cbphy_info_show(struct device *dev,
+>> +				     struct device_attribute *attr, char *buf)
+>> +{
+>> +	struct intel_combo_phy *cbphy;
+>> +	int i, off;
+>> +
+>> +	cbphy = dev_get_drvdata(dev);
+>> +
+>> +	off = sprintf(buf, "mode: %u\n", cbphy->mode);
+>> +
+>> +	off += sprintf(buf + off, "aggr mode: %s\n",
+>> +		      cbphy->aggr_mode == PHY_DL_MODE ? "Yes" : "No");
+> Can't you do
+>
+> static inline const char *yesno(bool choice)
+> {
+> 	return choice ? "Yes" : "No";
+> }
+>
+> and use it here and below?
+>
+> Somebody already shared the idea that the above helper should be available
+> globally.
+>
+>> +
+>> +	off += sprintf(buf + off, "capability: ");
+>> +	for (i = PHY_PCIE_MODE; i < PHY_MAX_MODE; i++) {
+>> +		if (BIT(i) & cbphy->phy_cap)
+>> +			off += sprintf(buf + off, "%s ", intel_iphy_names[i]);
+>> +	}
+>> +
+>> +	off += sprintf(buf + off, "\n");
+>> +
+>> +	for (i = 0; i < PHY_MAX_NUM; i++) {
+>> +		off += sprintf(buf + off, "PHY%d mode: %s, enable: %s\n",
+>> +			       i, intel_iphy_names[cbphy->iphy[i].phy_mode],
+>> +			       cbphy->iphy[i].enable ? "Yes" : "No");
+>> +	}
+>> +
+>> +	return off;
+>> +}
+> ...
+>
+>> +static struct attribute *intel_cbphy_attrs[] = {
+>> +	&dev_attr_intel_cbphy_info.attr,
+>> +	NULL,
+> Comma is redundant for terminator lines.
+>
+>> +};
+>
+>> +static int intel_cbphy_sysfs_init(struct intel_combo_phy *cbphy)
+>> +{
+>> +	return devm_device_add_groups(cbphy->dev, intel_cbphy_groups);
+>> +}
+> What the point?
+For debug purpose only... can be removed in upstream. I will clean it up 
+in next patch version.
+> Moreover, can't you use .dev_groups member of struct device_driver?
+>
+> ...
+>
+>> +		ret =  phy_cfg(sphy);
+> In several places you have extra unneeded white spaces.
+>
+> ...
+>
+>> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
+>> +			       0, PCIE_PHY_GEN_CTRL);
+> Configure your editor properly! There is plenty of room on the previous line.
+Sure, will fix at all the places.
+>
+> ...
+>
+>> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
+>> +			       1, PCIE_PHY_GEN_CTRL);
+> Ditto.
+>
+> ...
+>
+>> +static int intel_cbphy_init(struct phy *phy)
+>> +{
+>> +	struct intel_cbphy_iphy *iphy;
+>
+>> +	int ret = 0;
+> Redundant assignment. See below.
+Sure, will fix it.
+>
+>> +
+>> +	iphy = phy_get_drvdata(phy);
+>> +
+>> +	if (iphy->phy_mode == PHY_PCIE_MODE) {
+>> +		ret = intel_cbphy_iphy_cfg(iphy,
+>> +					   intel_cbphy_pcie_en_pad_refclk);
+>> +	}
+>> +
+>> +	if (!ret)
+>> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_on);
+>> +
+>> +	return ret;
+> Why not to simple do
+>
+> 	if (A) {
+> 		ret = ...;
+> 		if (ret)
+> 			return ret;
+> 	}
+>
+> 	return intel_...;
+Looks good, i will update.
+>
+> ?
+>
+>> +}
+>> +
+>> +static int intel_cbphy_exit(struct phy *phy)
+>> +{
+>> +	struct intel_cbphy_iphy *iphy;
+>> +	int ret = 0;
+>> +
+>> +	iphy = phy_get_drvdata(phy);
+>> +
+>> +	if (iphy->power_en)
+>> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_off);
+>> +
+>> +	if (!ret && iphy->phy_mode == PHY_PCIE_MODE)
+>> +		ret = intel_cbphy_iphy_cfg(iphy,
+>> +					   intel_cbphy_pcie_dis_pad_refclk);
+>> +
+>> +	return ret;
+> Ditto.
+Ok
+>
+>> +}
+> ...
+>
+>> +static int intel_cbphy_iphy_mem_resource(struct intel_cbphy_iphy *iphy)
+>> +{
+>> +	void __iomem *base;
+>> +
+>> +	base = devm_platform_ioremap_resource(iphy->pdev, 0);
+>> +	if (IS_ERR(base))
+>> +		return PTR_ERR(base);
+>> +
+>> +	iphy->app_base = base;
+>> +
+>> +	return 0;
+>> +}
+> What's the point of this helper?
+Defined as separate function for traversing memory entry from DT.
+Similarly get_clks() and get_reset() functions.
+>
+> ...
+>
+>> +static int intel_cbphy_iphy_get_clks(struct intel_cbphy_iphy *iphy)
+>> +{
+>> +	enum intel_phy_mode mode = iphy->phy_mode;
+>> +	struct device *dev = iphy->dev;
+>> +	int ret = 0;
+> Redundant. Simple return 0 explicitly at the end.
+> Ditto for other places in this patch.
+Ok, i will fix at all the places.
+>
+>> +	if (IS_ERR(iphy->freq_clk)) {
+>> +		ret = PTR_ERR(iphy->freq_clk);
+>> +		if (ret != -EPROBE_DEFER) {
+>> +			dev_err(dev, "PHY[%u:%u] No %s freq clock\n",
+>> +				COMBO_PHY_ID(iphy), PHY_ID(iphy),
+>> +				intel_iphy_names[mode]);
+>> +		}
+>> +
+>> +		return ret;
+>> +	}
+>> +
+>> +	iphy->clk_rate = intel_iphy_clk_rate[mode];
+>> +
+>> +	return ret;
+>> +}
+> ...
+>
+>> +static int intel_cbphy_iphy_dt_parse(struct intel_combo_phy *cbphy,
+>> +				     struct fwnode_handle *fwn, int idx)
+> fwn -> fwnode.
+Sure, i will replace it.
+>
+>> +{
+>> +	struct intel_cbphy_iphy *iphy = &cbphy->iphy[idx];
+>> +	struct platform_device *pdev;
+>> +	struct device *dev;
+>> +	int ret = 0;
+>> +	u32 prop;
+>> +
+>> +	iphy->id = idx;
+>> +	iphy->enable = false;
+>> +	iphy->power_en = false;
+>> +	iphy->parent = cbphy;
+>> +	iphy->np = to_of_node(fwn);
+>> +	pdev = of_find_device_by_node(iphy->np);
+> Why? Can't it be done simpler?
+There is no direct helper function to get platform device from fwnode,
+I will simplify it to get  fwnode->device-> platform device. However 
+iphy->np is no longer required.
+
+>
+>> +	if (!pdev) {
+>> +		dev_warn(cbphy->dev, "Combo-PHY%u: PHY device: %d disabled!\n",
+>> +			 cbphy->id, idx);
+>> +		return 0;
+>> +	}
+>> +	if (!(BIT(iphy->phy_mode) & cbphy->phy_cap)) {
+> Yoda style?
+
+I will correct it to ...
+
+if (!(cbphy->phy_cap & BIT(iphy->phy_node)))
+
+>
+> ...
+>
+>> +				" Mode mismatch lane0 : %u, lane1 : %u\n",
+> Extra leading space.
+Sure, i will fix it.
+>
+> ...
+>
+>> +static int intel_cbphy_dt_parse(struct intel_combo_phy *cbphy)
+>> +{
+>> +	struct device *dev = cbphy->dev;
+>> +	struct device_node *np = dev->of_node;
+> Why do you need this one? You have to device if it's OF centric driver or not.
+Used during syscon_regmap call.
+>
+>> +	struct fwnode_handle *fwn;
+> Better name is fwnode as done in plenty other drivers.
+Sure will fix it.
+>
+>> +	int i = 0, ret = 0;
+> i = 0 better to have near to its user.
+> ret = 0 is redundant assignment.
+Sure, will fix it.
+>
+>
+>> +	ret = device_property_read_u32(dev, "intel,bid", &cbphy->bid);
+>> +	if (ret) {
+>> +		dev_err(dev, "NO intel,bid provided!\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	device_for_each_child_node(dev, fwn) {
+>> +		if (i >= PHY_MAX_NUM) {
+>> +			fwnode_handle_put(fwn);
+>> +			dev_err(dev, "Error: DT child number larger than %d\n",
+>> +				PHY_MAX_NUM);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		ret = intel_cbphy_iphy_dt_parse(cbphy, fwn, i);
+>> +		if (ret) {
+>> +			fwnode_handle_put(fwn);
+>> +			return ret;
+>> +		}
+>> +
+>> +		i++;
+>> +	}
+>> +
+>> +	return intel_cbphy_dt_sanity_check(cbphy);
+>> +}
+> ...
+>
+>> +	regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
+> No error check?
+Sure, will add it.
+>
+>> +
+>> +	return 0;
+> ...
+>
+>> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+>> +	if (IS_ERR(phy_provider)) {
+>> +		dev_err(dev, "PHY[%u:%u]: register phy provider failed!\n",
+>> +			COMBO_PHY_ID(iphy), PHY_ID(iphy));
+>> +		return PTR_ERR(phy_provider);
+>> +	}
+>> +
+>> +	return 0;
+> return PTR_ERR_OR_ZERO(...);
+>
+> ...
+I will update it.
+>
+>> +	ret = of_property_read_u32(dev->of_node, "cell-index", &id);
+> You should decide either you go with OF centric API(s) or with device property
+> one as below.
+
+I missed to change to device property.
+
+I will correct it.
+
+>
+>> +	if (!device_property_read_bool(dev, "intel,cap-pcie-only"))
+>> +		cbphy->phy_cap |= PHY_XPCS_CAP | PHY_SATA_CAP;
+> ...
+>
+>> +	ret = intel_cbphy_sysfs_init(cbphy);
+>> +
+>> +	return ret;
+> return intel_...();
+Sure, will update it.
+>
+> ...
+>
+>> +static struct platform_driver intel_cbphy_driver = {
+>> +	.probe = intel_cbphy_probe,
+>> +	.driver = {
+>> +		.name = "intel-combo-phy",
+>> +		.of_match_table = of_intel_cbphy_match,
+>> +	}
+>> +};
+>> +
+>> +builtin_platform_driver(intel_cbphy_driver);
+> Can we unbound it? Is it okay to do unbind/bind cycle? Had it been tested for
+> that?
+
+Unbound can be done here, i will add the respective code.
+
+Thanks a lot for reviewing and providing the inputs.
+Regards,
+Dilip
+
+>
