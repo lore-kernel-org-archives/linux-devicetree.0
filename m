@@ -2,129 +2,157 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E5DC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD80C2D0DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5DB21744
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omqZoXv5"
+	by mail.kernel.org (Postfix) with ESMTP id 2BD8A21744
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfL0O4R (ORCPT
+        id S1726527AbfL0P3U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 09:56:17 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35847 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbfL0O4L (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 09:56:11 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r19so27313051ljg.3;
-        Fri, 27 Dec 2019 06:56:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mMhbjF4sdw6IBruolrJonIGubUPzHHDzsXDjRrBCUCg=;
-        b=omqZoXv55HazeHZKqwEAy9vcvFTlhBPYQC6HCSmTNBrPHwNytAtXuF3WcSQtxaa90G
-         EvUHS/OlVAaWcpoC8XDllYWQFJ3aZtOzm2hx4Y5lPPQBmP84hUw9PErbwaEDRCmb9tmC
-         WYL+v1QUAyBVoR7EeUZt9y/xD1lZ23voUdsIVdw9FjrPpBE3ZArDXEMEl2IRh/KP074R
-         Ofltzop5xc/MyKyl/Y/4gdBiRKciO6eN0O+7awKnAfzRlT6IE75dFE9cGAkKx2rgHqIo
-         Refr9Atqr8nik2L9BMe7df3hWgicbykPgOK84Bk8ysBkyAPbt3VeK5DHVk/+YSoI4Veb
-         w+3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mMhbjF4sdw6IBruolrJonIGubUPzHHDzsXDjRrBCUCg=;
-        b=JVIZF3JggcnIqWsM+gF30a+253nQ3xyBMOY0tkmGuSDOQnDAG+ipr4lwHVqHprwo70
-         sdvCICKAjCQNIRnI8dbrA8fu0H9gheGummn0A7Etk1+Ki9wEpF91hBHg3buejJW5Z7il
-         +w1ZRklkMjD/NtgZc2TX5FVUPY6qN+MF5vVtzen1AzuUXtQeR1g+sEkpJo9CanFB/WY/
-         vdXFY8VAQAnpRZITjNRus6ePoD2iP6+/ivXocQvhpUoQohOpJaFNUTfzbdANd8Zz78P6
-         l+gRCyhfwssMy7AMlxwLe4v9Sv5UArImLt46vbRL2Nq0XIFLhR4xgq/lOXi8fHwAcOqv
-         zKMA==
-X-Gm-Message-State: APjAAAVWLYjrO6meFAKixx4CAaSVnqjUJFJc81wqTVi3hbEgNRYiUgX+
-        b9syUdOatOc2/PJmBkxqGTIPyawk
-X-Google-Smtp-Source: APXvYqzmiNjImhddoEpTT+p+zT/wNvABFzH3OInO95NUeTFlRuU4S6budbHKhvPGsFy6LuYL3YEOMw==
-X-Received: by 2002:a05:651c:1110:: with SMTP id d16mr29527366ljo.86.1577458568951;
-        Fri, 27 Dec 2019 06:56:08 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id w1sm14583714lfe.96.2019.12.27.06.56.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Dec 2019 06:56:08 -0800 (PST)
-Subject: Re: [PATCH v5 12/19] ASoC: tegra: Add initial parent configuration
- for audio mclk
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
- <1576880825-15010-13-git-send-email-skomatineni@nvidia.com>
- <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
- <20191225175736.GC27497@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <856d8a92-0c24-6722-952c-06b86c706e97@gmail.com>
-Date:   Fri, 27 Dec 2019 17:56:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 27 Dec 2019 10:29:20 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:59162 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbfL0P3U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 10:29:20 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8AEF2634C86;
+        Fri, 27 Dec 2019 17:28:43 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1ikrXf-00017l-PU; Fri, 27 Dec 2019 17:28:43 +0200
+Date:   Fri, 27 Dec 2019 17:28:43 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, peter.griffin@linaro.org
+Subject: Re: [PATCH 3/5] media: i2c: imx290: Add RAW12 mode support
+Message-ID: <20191227152843.GF861@valkosipuli.retiisi.org.uk>
+References: <20191129190541.30315-1-manivannan.sadhasivam@linaro.org>
+ <20191129190541.30315-4-manivannan.sadhasivam@linaro.org>
+ <20191203085417.GB5282@valkosipuli.retiisi.org.uk>
+ <20191215174606.GC11427@Mani-XPS-13-9360>
 MIME-Version: 1.0
-In-Reply-To: <20191225175736.GC27497@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191215174606.GC11427@Mani-XPS-13-9360>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-25.12.2019 20:57, Mark Brown пишет:
-> On Mon, Dec 23, 2019 at 12:14:34AM +0300, Dmitry Osipenko wrote:
->> 21.12.2019 01:26, Sowjanya Komatineni пишет:
->>> Tegra PMC clock clk_out_1 is dedicated for audio mclk from Tegra30
->>> through Tegra210 and currently Tegra clock driver does initial parent
->>> configuration for audio mclk "clk_out_1" and enables them by default.
-> 
-> Please delete unneeded context from mails when replying.  Doing this
-> makes it much easier to find your reply in the message, helping ensure
-> it won't be missed by people scrolling through the irrelevant quoted
-> material.
+Hi Manivannan,
 
-Ok
-
->>> -	clk_disable_unprepare(data->clk_cdev1);
->>> -	clk_disable_unprepare(data->clk_pll_a_out0);
->>> -	clk_disable_unprepare(data->clk_pll_a);
->>> +	if (__clk_is_enabled(data->clk_cdev1))
->>> +		clk_disable_unprepare(data->clk_cdev1);
+On Sun, Dec 15, 2019 at 11:16:06PM +0530, Manivannan Sadhasivam wrote:
+> Hi Sakari,
 > 
->> The root of the problem is that you removed clocks enabling from
->> tegra_asoc_utils_init().
+> On Tue, Dec 03, 2019 at 10:54:17AM +0200, Sakari Ailus wrote:
+> > Hi Manivannan,
+> > 
+> > On Sat, Nov 30, 2019 at 12:35:39AM +0530, Manivannan Sadhasivam wrote:
+> > > IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
+> > > 12 bit formats. Since the driver already supports RAW10 mode, let's add
+> > > the missing RAW12 mode as well.
+> > > 
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  drivers/media/i2c/imx290.c | 32 ++++++++++++++++++++++++++++++++
+> > >  1 file changed, 32 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+> > > index e218c959a729..d5bb3a59ac46 100644
+> > > --- a/drivers/media/i2c/imx290.c
+> > > +++ b/drivers/media/i2c/imx290.c
+> > > @@ -75,6 +75,7 @@ struct imx290 {
+> > >  	struct clk *xclk;
+> > >  	struct regmap *regmap;
+> > >  	int nlanes;
+> > > +	u8 bpp;
+> > >  
+> > >  	struct v4l2_subdev sd;
+> > >  	struct v4l2_fwnode_endpoint ep;
+> > > @@ -98,6 +99,7 @@ struct imx290_pixfmt {
+> > >  
+> > >  static const struct imx290_pixfmt imx290_formats[] = {
+> > >  	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
+> > > +	{ MEDIA_BUS_FMT_SRGGB12_1X12 },
+> > >  };
+> > >  
+> > >  static const struct regmap_config imx290_regmap_config = {
+> > > @@ -265,6 +267,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
+> > >  	{ 0x300b, 0x00},
+> > >  };
+> > >  
+> > > +static const struct imx290_regval imx290_12bit_settings[] = {
+> > > +	{ 0x3005, 0x01 },
+> > > +	{ 0x3046, 0x01 },
+> > > +	{ 0x3129, 0x00 },
+> > > +	{ 0x317c, 0x00 },
+> > > +	{ 0x31ec, 0x0e },
+> > > +	{ 0x3441, 0x0c },
+> > > +	{ 0x3442, 0x0c },
+> > > +	{ 0x300a, 0xf0 },
+> > > +	{ 0x300b, 0x00 },
+> > > +};
+> > > +
+> > >  /* supported link frequencies */
+> > >  static const s64 imx290_link_freq[] = {
+> > >  	IMX290_DEFAULT_LINK_FREQ,
+> > > @@ -550,6 +564,21 @@ static int imx290_write_current_format(struct imx290 *imx290,
+> > >  			dev_err(imx290->dev, "Could not set format registers\n");
+> > >  			return ret;
+> > >  		}
+> > > +
+> > > +		imx290->bpp = 10;
+> > > +
+> > > +		break;
+> > > +	case MEDIA_BUS_FMT_SRGGB12_1X12:
+> > > +		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
+> > > +						ARRAY_SIZE(
+> > > +							imx290_12bit_settings));
+> > > +		if (ret < 0) {
+> > > +			dev_err(imx290->dev, "Could not set format registers\n");
+> > > +			return ret;
+> > > +		}
+> > > +
+> > > +		imx290->bpp = 12;
+> > > +
+> > >  		break;
+> > >  	default:
+> > >  		dev_err(imx290->dev, "Unknown pixel format\n");
+> > > @@ -910,6 +939,9 @@ static int imx290_probe(struct i2c_client *client)
+> > >  		goto free_err;
+> > >  	}
+> > >  
+> > > +	/* Default bits per pixel value */
+> > > +	imx290->bpp = 10;
+> > 
+> > Where is the format being initialised at the moment? Nowhere?
+> > 
+> > If that is the case, I think it should be fixed before this patch.
+> > 
 > 
->> I'm not sure why clocks should be disabled during the rate-changing,
->> probably this action is not really needed.
-> 
-> I know nothing about this particular device but this is not that
-> unusual a restriction for audio hardware, you often can't
-> robustly reconfigure the clocking for a device while it's active
-> due to issues in the hardware.  You often see issues with FIFOs
-> glitching or state machines getting stuck.  This may not be an
-> issue here but if it's something that's documented as a
-> requirement it's probably good to pay attention.
+> Sorry, I don't quite understand what you're suggesting here. The bpp
+> is initialised because that's the default bit value at power up and
+> this value is being used below in imx290_calc_pixel_rate(). I'm not sure
+> why we need to initialise the format before set_fmt!
 
-I don't know details about that hardware either, maybe it is simply not
-safe to change PLL_A rate dynamically and then CLK_SET_RATE_GATE could
-be used.
+Alternatively set_fmt needs to be called then.
 
-If nobody knows for sure, then will be better to keep
-tegra_asoc_utils_set_rate() unchanged.
+It looks like you can call VIDIOC_SUBDEV_G_FMT without the format being
+initialised first, and if that's the case, then it's a driver bug. I don't
+have the sensor so I can't test it.
+
+-- 
+Sakari Ailus
