@@ -2,115 +2,99 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E82C2D0DB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 00:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9A2C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 01:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3312080D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 00:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577408350;
-	bh=24eJ6Avn14dhmQXXO11gVGgOVubQHh7MvHAR0V0HDLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aYnekw4vKjKBJX+iiBQKXtQaMlPOyPPnxwGy8FIeyt6ZDquIvAfTHb12rXGfiZ5Ih
-	 B+IGmo5FfEYlrBlPkCd7nxvQ4LJDsf455iBQyvki9exTlcWLb1qPvklIYH+9aUZnbs
-	 c2wAessvfQBiJINTqs8JKbFBOxxg9c7/m0l3IrHw=
+	by mail.kernel.org (Postfix) with ESMTP id 132DF20CC7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 01:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K/mUbr70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfL0A7J (ORCPT
+        id S1726193AbfL0BYG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 26 Dec 2019 19:59:09 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43302 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfL0A7J (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 19:59:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b2rtFlDWT9u7yqTvQM+L2HoYozAhuvbhOAHBbpkqe5o=; b=rJE9LqGxvBqnQ69avZ18Yrp9H
-        Wbg67tXSt2jFUMHx2UKQw5x82OAOcvfSyTNeQaRAzgOWpLMpNwk8i2M1+SBp7ckOqJ2qjeQS9ecFr
-        ZpHY7u5nCsAWlwSiAkubqm7F6n6/WGrayjvT1KpeCEa9UB01CggOupVUMh368oE5RNfAo=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ikdxz-00048c-Ip; Fri, 27 Dec 2019 00:58:59 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 98563D01896; Fri, 27 Dec 2019 00:58:58 +0000 (GMT)
-Date:   Fri, 27 Dec 2019 00:58:58 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     masonccyang@mxic.com.tw, Chris Brandt <Chris.Brandt@renesas.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 0/6] spi: Add Renesas SPIBSC controller
-Message-ID: <20191227005858.GJ27497@sirena.org.uk>
-References: <TY1PR01MB156215E8668C0317FA0826B18A580@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <e6a73df5-31c4-3472-f7bc-a0984f1f5380@cogentembedded.com>
- <TY1PR01MB1562D343E1AB06DCA2973DAC8A550@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <590840ce-a250-2512-3d04-c2420d83f7da@cogentembedded.com>
- <TY1PR01MB1562B9EB96818DCA507079808A510@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <bb630141-021c-5618-f266-b98b29956fa8@cogentembedded.com>
- <TY1PR01MB1562E196AB1C582F186CC74B8A520@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <6f4c5d92-3ca4-2d1d-47c4-cbd52ad428b0@cogentembedded.com>
- <OF3F92D76C.33FFFBFC-ON482584D6.00093DAC-482584D6.0009A51D@mxic.com.tw>
- <bac1f4db-302d-0dd7-3b66-341a74f67a6b@cogentembedded.com>
+        Thu, 26 Dec 2019 20:24:06 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54538 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbfL0BYF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 26 Dec 2019 20:24:05 -0500
+Received: by mail-pj1-f67.google.com with SMTP id kx11so4057435pjb.4
+        for <devicetree@vger.kernel.org>; Thu, 26 Dec 2019 17:24:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bZGwwBs0+6wjFWF5xEm+/9dLXTyLkBQWZ94+6z/JBpE=;
+        b=K/mUbr701M92ISU0kMifSC+j0Z/biy7G5mB4E4nvDyaG4m/U43mBEDO+B/BiZFJzCq
+         5AJ9Ll+vdNnQjturr7JjSFGAmE2HYkq+cDC6gENPBqiZBsWg8XwUlQm9tO7vYA1cRHhT
+         n2HD7XydzDPqnOITnIdoZ2kD13Pvopx37unwWwVBhnyggAZFAKt+TBVS0nQr5WWMR2Wg
+         TiDA8PB57nC2x/WcKnkYvycu+NPefQY85lwEItMETKPDuAjyeIqJqjgi8yHDddraIjUM
+         yJj9Tjb0iKX9+LbxP1JXuPYAVcRrSspr0LkhFnLvhrmdtFcsjXoz0EgNAmVyV0M7PbvN
+         cqrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bZGwwBs0+6wjFWF5xEm+/9dLXTyLkBQWZ94+6z/JBpE=;
+        b=fDy8Q9GujME67lIXb3gigUWWwGBVyiWBhVieuubid1pWtJ9OQDIxEqf15McTgTsyHc
+         wCUJAvxC+w+FX1kDdh8xl56m4Hs2Qia1mlOuxByoPv3ShMfMQUyBs9ma6Lzl/EkUIeoq
+         6wf4QoGyvf9CX5KpFxJ4Qg67+X5XAPBWsoQIzuejAZJFabJZ+rkgPMMV/5H4GcLGDMxd
+         A5DIXIAEY9sgsJm9/JB2nYhPxk0Er9jBn93Yj6t9vvoAacmwfxWxgfF4Y2KpHtgn8KhV
+         qFqKKNlImjNt9VQ1jKy8apT28IfJwURZMFjpkta9bXCBsbgWC6Iq6U8tkrh7Yr3+Dj2i
+         u9Jw==
+X-Gm-Message-State: APjAAAVujqc5IF1PqgnFflS1zRKTDcu5gUIc16uI9RrLdbhg67b246Ff
+        Tz2h074hY6g551jP+Qi0RT9mXg==
+X-Google-Smtp-Source: APXvYqzh0FoNDYeUyJDwrPL52Vfp1xeNK2adiqJa8UWMQ6lp0+cUi22UsEt4mkLL5pR+BkRNYUOVXQ==
+X-Received: by 2002:a17:902:bc8c:: with SMTP id bb12mr33713668plb.218.1577409844600;
+        Thu, 26 Dec 2019 17:24:04 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id n188sm35364210pga.84.2019.12.26.17.24.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Dec 2019 17:24:03 -0800 (PST)
+Date:   Thu, 26 Dec 2019 17:23:49 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] PCI: qcom: Add support for SDM845 PCIe
+Message-ID: <20191227012349.GG1908628@ripper>
+References: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZG+WKzXzVby2T9Ro"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bac1f4db-302d-0dd7-3b66-341a74f67a6b@cogentembedded.com>
-X-Cookie: I have many CHARTS and DIAGRAMS..
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191107001642.1127561-1-bjorn.andersson@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Wed 06 Nov 16:16 PST 2019, Bjorn Andersson wrote:
 
---ZG+WKzXzVby2T9Ro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Bjorn, this still applies nicely on linux-next and works as expected.
+Could you please apply it? Or would you like me to resend it with
+people's tags picked up?
 
-On Tue, Dec 24, 2019 at 07:58:21PM +0300, Sergei Shtylyov wrote:
+Regards,
+Bjorn
 
->    It doesn't matter much what's in the renesas-soc patchwork, the patch would
-> be merged thru the linux-spi repo, and in their patchwork the status of your v17
-> patches is "New, archived"...
-
-To be fair patchwork isn't exactly used in the review process for
-SPI like it is with some other subsystems so other than automated
-updates when things get applied or superceeded the states don't
-mean a huge amount.  Like I said elsewhere in the thread I'd been
-expecting some review from other people working with this
-hardware since up until that point it had been pretty active.
-
---ZG+WKzXzVby2T9Ro
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4FV1EACgkQJNaLcl1U
-h9Dw/Qf9H6McVLuJOf7UR+8tvE28HHYofwkbY9W0uLfOPBnIsIVtKzOG2cAfPJay
-kXZ0Up1m1wHAMLGSw9Cb0NO8sweKh9ke+7V8lP9uXajisXtUbUVar3kgita+zRtB
-Qsv/8L4zPyskxKL97XySBb+28UPEcmm2evLJf+LUiL6msYQ2S9960UKZ8JYj90g3
-GDCZgbuZjGNpzy/fmQib5mG9JbpXHAzy0QSrT5X7h+hIepp/zDI+C1r+wyOzM7YE
-pNtZ9ndxtEaKGqkmW+slAJn3peHxOqvS6S1BTGANnCPfsruGKOb/XL4ItNcOpLzp
-7jHMO77S8ZX5o+nu46YjuqwYv+ziCA==
-=L9BN
------END PGP SIGNATURE-----
-
---ZG+WKzXzVby2T9Ro--
+> This adds support necessary for the two PCIe controllers found in Qualcomm
+> SDM845.
+> 
+> Bjorn Andersson (2):
+>   dt-bindings: PCI: qcom: Add support for SDM845 PCIe
+>   PCI: qcom: Add support for SDM845 PCIe controller
+> 
+>  .../devicetree/bindings/pci/qcom,pcie.txt     |  19 +++
+>  drivers/pci/controller/dwc/pcie-qcom.c        | 150 ++++++++++++++++++
+>  2 files changed, 169 insertions(+)
+> 
+> -- 
+> 2.23.0
+> 
