@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36EDC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34B7C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 737C820722
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7A520CC7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:14:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470012;
-	bh=LhXCJwhZ7SIthiaSz6eacka57FWG4LDTW51FS5XhUMc=;
+	s=default; t=1577470496;
+	bh=ToLPPtJfE+wN/2xv6SeS8tOQ77wFmdJQl3445EtNQdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q0GrI9DskLedC6Ic0ubdQFzmIzKkSbsymFzBf6PKdAUr33ofDFHfH0TBHQXwCSjwy
-	 7HU9ba7QltrCVJL4BMQw4OxDvFqiFG+iBnL85AKD69G9cV40E/YjrTEQibFm9V6ymk
-	 +hUSWjCOh+lfk6DBCJWgn9YL5xK2nEt2mgD2TF9w=
+	b=calm9JhJiOku5xVVEzLO5GzhEpNwFM+/BG/vFrXx6LegIfDNfLJ18ICBLvFg5ZsAS
+	 jbB+7uzuf1A/cWmSPRlVsIxdaRhprNT0ASzH5MjrLYtA3Gz/jaPwcANBhyukerb2Je
+	 CSJk5em7Qqy3cceYyaJqGIyEVqJPvfIB/y8gqEVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfL0SGu (ORCPT
+        id S1727495AbfL0SOz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:06:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59634 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:14:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727909AbfL0SCn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:02:43 -0500
+        id S1727491AbfL0SOy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:14:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C0C321744;
-        Fri, 27 Dec 2019 18:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF7721744;
+        Fri, 27 Dec 2019 18:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577469763;
-        bh=LhXCJwhZ7SIthiaSz6eacka57FWG4LDTW51FS5XhUMc=;
+        s=default; t=1577470494;
+        bh=ToLPPtJfE+wN/2xv6SeS8tOQ77wFmdJQl3445EtNQdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RreIoUx5kdv0A0SkkqhlwFtC/fl1qO/yqwcGbJ8Uo9usmXn8lz2i9heMDlOzBzBnS
-         ut8FG2aaYmDedTHJtv9Qi86Vw9brFMPGmn4N/mQBRJXPuOIjgXC5iM9BGVDxNTQVoH
-         gsdVMCQeVuJ7EtkXdgvmxoxHzY/fq2G4lzNGuYcc=
+        b=VzLjhrMUqAkHDOHBe8FLeS80UX9VJKxdHQ2fBYUm2KZWgLtfsvFas1B5luaJ64ALJ
+         RA/Uc/T+zH2pYqZewcGUveldXk4qzcWLQMzkTFLUv3/C9zctmKe2LW0ha13DBtZv21
+         kqjK81jtnuSpiZgbHYW+AsiKrIVRziMpD566d0Pw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 15/57] ARM: dts: Cygnus: Fix MDIO node address/size cells
-Date:   Fri, 27 Dec 2019 13:01:40 -0500
-Message-Id: <20191227180222.7076-15-sashal@kernel.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 14/38] ARM: dts: am437x-gp/epos-evm: fix panel compatible
+Date:   Fri, 27 Dec 2019 13:14:11 -0500
+Message-Id: <20191227181435.7644-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
-References: <20191227180222.7076-1-sashal@kernel.org>
+In-Reply-To: <20191227181435.7644-1-sashal@kernel.org>
+References: <20191227181435.7644-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,38 +61,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit fac2c2da3596d77c343988bb0d41a8c533b2e73c ]
+[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
 
-The MDIO node on Cygnus had an reversed #address-cells and
- #size-cells properties, correct those.
+The LCD panel on AM4 GP EVMs and ePOS boards seems to be
+osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
+the panel has changed since the early EVMs, or there has been a mistake
+with the panel type.
 
-Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
-Reported-by: Simon Horman <simon.horman@netronome.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Update the DT files accordingly.
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
+ arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 8b2c65cd61a2..b822952c29f8 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -165,8 +165,8 @@
- 		mdio: mdio@18002000 {
- 			compatible = "brcm,iproc-mdio";
- 			reg = <0x18002000 0x8>;
--			#size-cells = <1>;
--			#address-cells = <0>;
-+			#size-cells = <0>;
-+			#address-cells = <1>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index 957840cc7b78..b55c094893c6 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -79,7 +79,7 @@
+ 		};
  
- 			gphy0: ethernet-phy@0 {
+ 	lcd0: display {
+-		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
++		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+ 		label = "lcd";
+ 
+ 		panel-timing {
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index 9d35c3f07cad..21918807c9f6 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -41,7 +41,7 @@
+ 	};
+ 
+ 	lcd0: display {
+-		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
++		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+ 		label = "lcd";
+ 
+ 		panel-timing {
 -- 
 2.20.1
 
