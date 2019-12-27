@@ -2,120 +2,256 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 540ABC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C070C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:37:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A0320882
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE77206CB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:37:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Bd37sWm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfL0GhH (ORCPT
+        id S1726658AbfL0GhW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 01:37:07 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:54727 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfL0GhH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 01:37:07 -0500
-Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 27 Dec 2019
- 14:37:18 +0800
-From:   Hanjie Lin <hanjie.lin@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@baylibre.com>
-CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v3 6/6] arm64: dts: meson: a1: Enable DWC3 controller
-Date:   Fri, 27 Dec 2019 14:36:46 +0800
-Message-ID: <1577428606-69855-7-git-send-email-hanjie.lin@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com>
-References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com>
+        Fri, 27 Dec 2019 01:37:22 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11826 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfL0GhW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 01:37:22 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e05a67c0000>; Thu, 26 Dec 2019 22:36:44 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 26 Dec 2019 22:37:21 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 26 Dec 2019 22:37:21 -0800
+Received: from [10.24.192.96] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 27 Dec
+ 2019 06:37:17 +0000
+Subject: Re: [Patch V2 03/18] phy: tegra: xusb: Add usb-role-switch support
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
+ <20191219132650.GJ1440537@ulmo>
+X-Nvconfidentiality: public
+From:   Nagarjuna Kristam <nkristam@nvidia.com>
+Message-ID: <74d94004-2022-3b04-6cd9-d6b1e9eca230@nvidia.com>
+Date:   Fri, 27 Dec 2019 12:09:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.18.11.213]
+In-Reply-To: <20191219132650.GJ1440537@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1577428604; bh=bI5VIPedVxKsj8DUcsAVgjGijDib+I6V20ZeTFfznwo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Bd37sWm/MXOKGy4t4m8ch8/ipRZjZP5gjJCczchiQbBXV5KJCJG24OqbHCk3CeaYC
+         G6FZ8qg+6o28cCFymUOXnLx1svvZVdTXzmoagRR62kpLQ7nmyqZFDXNt6siOCJ3YtJ
+         pkU6vJthRrTxi2NjhVtY7aIc/YJlgOVNcL2kvIXJMghHXSnA04hnQ+FkfJm5/bhw+0
+         wUbyRUUZa1WHAjM3Tihjhsq2oAiZKFf3JfedyDL1VkKc9IgcXNYa3qa4HDQhJV0HqA
+         +W19rI953ooUFPuBTocsGde19dCbOHYM7dyXnmZaoX++ADkw2gZ/mOXNRx5OycCtOi
+         SAQXTsBOwgCig==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable DWC3 controller for Meson A1 SoC.
 
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-Signed-off-by: Yue Wang <yue.wang@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 33 +++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index bd63374a..76f787d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -7,6 +7,8 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/meson-a1-power.h>
- #include <dt-bindings/reset/amlogic,meson-a1-reset.h>
-+#include <dt-bindings/clock/a1-pll-clkc.h>
-+#include <dt-bindings/clock/a1-clkc.h>
- 
- / {
- 	compatible = "amlogic,a1";
-@@ -125,6 +127,37 @@
- 			#interrupt-cells = <3>;
- 			#address-cells = <0>;
- 		};
-+
-+		usb: usb@ffe09000 {
-+			status = "okay";
-+			compatible = "amlogic,meson-a1-usb-ctrl";
-+			reg = <0x0 0xffe09000 0x0 0xa0>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&clkc_periphs CLKID_USB_CTRL>,
-+				 <&clkc_periphs CLKID_USB_BUS>,
-+				 <&clkc_periphs CLKID_XTAL_USB_PHY>,
-+				 <&clkc_periphs CLKID_XTAL_USB_CTRL>;
-+			clock-names = "usb_ctrl", "usb_bus", "xtal_usb_phy",
-+					"xtal_usb_ctrl";
-+			resets = <&reset RESET_USBCTRL>;
-+
-+			dr_mode = "host";
-+
-+			phys = <&usb2_phy1>;
-+			phy-names = "usb2-phy1";
-+
-+			dwc3: usb@ff400000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0 0xff400000 0x0 0x100000>;
-+				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+				dr_mode = "host";
-+				snps,dis_u2_susphy_quirk;
-+				snps,quirk-frame-length-adjustment = <0x20>;
-+			};
-+		};
- 	};
- 
- 	timer {
--- 
-2.7.4
+On 19-12-2019 18:56, Thierry Reding wrote:
+> 
+> On Wed, Dec 18, 2019 at 02:46:16PM +0530, Nagarjuna Kristam wrote:
+>> If usb-role-switch property is present in USB 2 port, register
+>> usb-role-switch to receive usb role changes.
+>>
+>> Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
+>> ---
+>> V2:
+>>   - Removed dev_set_drvdata for port->dev.
+>>   - Added of_platform_depopulate during error handling and driver removal.
+>> ---
+>>   drivers/phy/tegra/Kconfig |  1 +
+>>   drivers/phy/tegra/xusb.c  | 42 ++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/phy/tegra/xusb.h  |  3 +++
+>>   3 files changed, 46 insertions(+)
+>>
+>> diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+>> index f9817c3..df07c4d 100644
+>> --- a/drivers/phy/tegra/Kconfig
+>> +++ b/drivers/phy/tegra/Kconfig
+>> @@ -2,6 +2,7 @@
+>>   config PHY_TEGRA_XUSB
+>>   	tristate "NVIDIA Tegra XUSB pad controller driver"
+>>   	depends on ARCH_TEGRA
+>> +	select USB_CONN_GPIO
+>>   	help
+>>   	  Choose this option if you have an NVIDIA Tegra SoC.
+>>   
+>> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+>> index f98ec39..dc00b42 100644
+>> --- a/drivers/phy/tegra/xusb.c
+>> +++ b/drivers/phy/tegra/xusb.c
+>> @@ -523,6 +523,7 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>   	port->dev.type = &tegra_xusb_port_type;
+>>   	port->dev.of_node = of_node_get(np);
+>>   	port->dev.parent = padctl->dev;
+>> +	port->dev.driver = padctl->dev->driver;
+>>   
+>>   	err = dev_set_name(&port->dev, "%s-%u", name, index);
+>>   	if (err < 0)
+>> @@ -541,6 +542,10 @@ static int tegra_xusb_port_init(struct tegra_xusb_port *port,
+>>   
+>>   static void tegra_xusb_port_unregister(struct tegra_xusb_port *port)
+>>   {
+>> +	if (!IS_ERR_OR_NULL(port->usb_role_sw)) {
+>> +		of_platform_depopulate(&port->dev);
+>> +		usb_role_switch_unregister(port->usb_role_sw);
+>> +	}
+>>   	device_unregister(&port->dev);
+> Nit: I prefer blank lines after blocks for readability.
+> 
+Will update
 
+>>   }
+>>   
+>> @@ -551,11 +556,42 @@ static const char *const modes[] = {
+>>   	[USB_DR_MODE_OTG] = "otg",
+>>   };
+>>   
+>> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
+>> +{
+>> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
+> I don't understand what "for role is %d" means here. I think perhaps you
+> meant to simply say "for role %d"? Also, perhaps add parentheses after
+> the "%s" to clarify that you're referring to a function.
+> 
+Yes, intention is to print role, Will update as mentioned "for role %d"
+
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tegra_xusb_setup_usb_role_switch(struct tegra_xusb_port *port)
+>> +{
+>> +	int err = 0;
+>> +	struct usb_role_switch_desc role_sx_desc = {
+>> +					.set = tegra_xusb_role_sw_set,
+>> +					.fwnode = dev_fwnode(&port->dev),
+>> +						   };
+> The indentation here is odd. Use a single tab to indent lines after the
+> opening { and put the closing } on the same column as "struct". Also,
+> the above may become more readable if you follow the "inverse Christmas
+> tree" style of declaring functions, where you order lines by their
+> length, with the longest line first, like so:
+> 
+> 	struct usb_role_switch_desc role_sx_desc = {
+> 		.fwnode = dev_fwnode(&port->dev),
+> 		.set = tegra_xusb_role_sw_set,
+> 	};
+> 	int err = 0;
+> 
+Thanks for inputs, will update accordingly.
+
+>> +
+>> +	port->usb_role_sw = usb_role_switch_register(&port->dev,
+>> +						&role_sx_desc);
+> &role_sx_desc should be aligned with &port->dev.
+> 
+Will align here and at other places wherever missed.
+
+>> +	if (IS_ERR(port->usb_role_sw)) {
+>> +		err = PTR_ERR(port->usb_role_sw);
+>> +		if (err != EPROBE_DEFER)
+>> +			dev_err(&port->dev, "Failed to register USB role SW: %d",
+> Error messages typically start with a lowercase letter (at least in this
+> driver). Also perhaps spell out "switch" above because SW could easily
+> be confused with "software".
+> 
+Will update.
+
+>> +				err);
+> Shouldn't we abort here? Consider the case where this indeed defers
+> probe. If we don't abort here, the of_platform_populate() below will be
+> called multiple times. Shouldn't it only be called when we actually
+> succeed in registering the switch?
+> 
+Yes, we should abort here, "return err;" got moved to next patch during
+re-base. Will move to current patch.
+> Also, looking at usb_role_switch_register(), I don't think it ever can
+> return -EPROBE_DEFER, so I think you can drop that check and print the
+> error unconditionally.
+> 
+> Thierry
+> 
+Will update.
+-Nagarjuna
+>> +	}
+>> +
+>> +	/* populate connector entry */
+>> +	of_platform_populate(port->dev.of_node, NULL, NULL, &port->dev);
+>> +
+>> +	return err;
+>> +}
+>> +
+>>   static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>   {
+>>   	struct tegra_xusb_port *port = &usb2->base;
+>>   	struct device_node *np = port->dev.of_node;
+>>   	const char *mode;
+>> +	int err;
+>>   
+>>   	usb2->internal = of_property_read_bool(np, "nvidia,internal");
+>>   
+>> @@ -572,6 +608,12 @@ static int tegra_xusb_usb2_port_parse_dt(struct tegra_xusb_usb2_port *usb2)
+>>   		usb2->mode = USB_DR_MODE_HOST;
+>>   	}
+>>   
+>> +	if (of_property_read_bool(np, "usb-role-switch")) {
+>> +		err = tegra_xusb_setup_usb_role_switch(port);
+>> +		if (err < 0)
+>> +			return err;
+>> +	}
+>> +
+>>   	usb2->supply = devm_regulator_get(&port->dev, "vbus");
+>>   	return PTR_ERR_OR_ZERO(usb2->supply);
+>>   }
+>> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+>> index da94fcc..9f27899 100644
+>> --- a/drivers/phy/tegra/xusb.h
+>> +++ b/drivers/phy/tegra/xusb.h
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/workqueue.h>
+>>   
+>>   #include <linux/usb/otg.h>
+>> +#include <linux/usb/role.h>
+>>   
+>>   /* legacy entry points for backwards-compatibility */
+>>   int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev);
+>> @@ -266,6 +267,8 @@ struct tegra_xusb_port {
+>>   	struct list_head list;
+>>   	struct device dev;
+>>   
+>> +	struct usb_role_switch *usb_role_sw;
+>> +
+>>   	const struct tegra_xusb_port_ops *ops;
+>>   };
+>>   
+>> -- 
+>> 2.7.4
