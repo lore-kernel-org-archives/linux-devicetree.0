@@ -2,295 +2,1054 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC51C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 11:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0B8C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 11:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7A920828
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 11:03:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KAoNsNwO"
+	by mail.kernel.org (Postfix) with ESMTP id F060B208C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 11:12:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfL0LDp (ORCPT
+        id S1726377AbfL0LMq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 06:03:45 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:59160 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0LDp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 06:03:45 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191227110342euoutp027ad7879946fedfce28ecbdd515f14468~kNYbkDbLg0344603446euoutp02Y
-        for <devicetree@vger.kernel.org>; Fri, 27 Dec 2019 11:03:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191227110342euoutp027ad7879946fedfce28ecbdd515f14468~kNYbkDbLg0344603446euoutp02Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1577444622;
-        bh=7CiodF6lhHlhDpRiOd/eKxBgSk8F/RyuGNECvUfKCw0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KAoNsNwOMlXQ0Pzi9lShO69iktQ2sUc9dsB8Rdc/raBB9TLppk8+ctMTWhHNvJ2dF
-         pUhj348RJRsAoWNGkEwJseUkiodpP5n5cpz/Cq+4wNtmBworOU9W0HShbDDnCXB5wV
-         F3M8IRr3rb/2KrMs8V0S5so6mldIdz2VbL9RICp0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191227110342eucas1p28cd23e3b2a98d7177cb1446bf78cef27~kNYbL9yew2930829308eucas1p2Y;
-        Fri, 27 Dec 2019 11:03:42 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 26.D9.61286.E05E50E5; Fri, 27
-        Dec 2019 11:03:42 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191227110341eucas1p29b093c32e47d33e641d6211f447b8d9c~kNYaf0QF50089800898eucas1p2x;
-        Fri, 27 Dec 2019 11:03:41 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191227110341eusmtrp2e4938dd116e6bede0f69e187b2b01795~kNYae_giY1700917009eusmtrp2V;
-        Fri, 27 Dec 2019 11:03:41 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-c1-5e05e50e82dc
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2C.E0.08375.D05E50E5; Fri, 27
-        Dec 2019 11:03:41 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191227110340eusmtip1fcceb1a658a39abae4f90874dfe174b6~kNYZohbVj2252922529eusmtip1G;
-        Fri, 27 Dec 2019 11:03:40 +0000 (GMT)
-Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
- double-linked list
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Chris Healy <cphealy@gmail.com>
-Message-ID: <ca3b7b5a-3706-22ab-beee-98d892af5511@samsung.com>
-Date:   Fri, 27 Dec 2019 12:03:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.3.1
+        Fri, 27 Dec 2019 06:12:46 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46028 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfL0LMq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 06:12:46 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so20358331lfa.12;
+        Fri, 27 Dec 2019 03:12:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+LJdprGsT3T6pGDW+LE3hQyqZ7oCDnXVFBRcK4X632M=;
+        b=sbbnInpbciDgd/n05BQ0waIXAEoU/KJAcRPoD0l7tOcdiOUY0MyKDHdVEyPc/ynMqR
+         PY8kL3I0kZ0uaUwv7NCf097tvdrbjTVbal/KiQWAJlKyeb1oBhKM4ZANpdR/tvgoPMBl
+         8bkdqmAj78ZvVO5yFrmVPhhaTHjb5mArt5YJcIFV3IVkPQxV492n96KQ+Ce4/rfDUoNu
+         HHTGtjV416J0rkeddRSqJB6paIWR6N/Y9SS+O8TkZ1jaGLypQlKSBJnLl7OAzDSGzPMf
+         O0hrfad9DIK/6uLynxuEtlC75gaX2j37NmD1pU456b6PqnpIdUf6LWTQNe8fiC3SKm4E
+         Xw1g==
+X-Gm-Message-State: APjAAAWuuLTifJY/RRwImHqBwO6zcr4tLOWqtvMezpKCLZfU+8mK1KwK
+        +R0LFrjaEsIolJEeQYqXFIg=
+X-Google-Smtp-Source: APXvYqw+zaPZfjZ+09jhZINIliwfriWMSMMRqkduOq61C+VjhMiyNhmxNf/uAPlYr4q7juNihL00pw==
+X-Received: by 2002:ac2:508e:: with SMTP id f14mr26517577lfm.72.1577445161000;
+        Fri, 27 Dec 2019 03:12:41 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2sm13342305ljq.38.2019.12.27.03.12.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Dec 2019 03:12:40 -0800 (PST)
+Date:   Fri, 27 Dec 2019 13:12:35 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Message-ID: <20191227111235.GA3370@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <32c4c99a-c943-b1e8-d342-2fd8e8719ff0@samsung.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUxNYRj3nnPuuafmtNfFelbGdof5mD7kj9cQhu1gM8xnSJfO0ure7B75
-        iD/Sl0pR6Os2hFtyRybdVsnmxtxu6S6X8jFFw1qURrUW6rr3HtF/v+f3PL/3+f3ePRytOsP6
-        cdG6I6Jep4lVs95M9dMR+yKfz4rwoMFuP/K2wq4gyekrSPOzJopY6q0UufrERb0c6mdJ23AP
-        TWy9bQy5b89SkJakXiXJyDUqSemr5xRpOLeHfLgbQ1IfPlGS8hEzIoUXe1gyUneFWaUSbl+5
-        jYT+16lK4UOekxJqOoxIqDV0KIXi9CKFUGnKYIXGHAclvD9rpQRjfhsrnKsyIeFR9kVGGKic
-        uZkP814eKcZGHxX1gaER3ofqazvpwzZy/Hu2iU1EaYGZyIsDvARK7p9n3ViFyxHkpoRmIm8X
-        HkSQcq9TIRcDCPIbS5TjCtNgBSM3biIYzemm5KIPQXfXR89bU/EOsP1O9ChYHAyZfZkefhoO
-        g89dHR41jYcZKM9+7NrBcTwOhdKWHe4ZBs+B1tHLyI2n433gLDJTbszjKWAr+sS4sRdeCb/M
-        vxRuTONZkGwupmXsC28/XfUYAvyIg/eOMUq2vRaqSmoZGU+FL9aqv3FmgLN2XJCMoMt+RykX
-        WQheJBUieWoZvLP/ZN1OaTwf7tb9/b3VUFp/2kMD9oHXfVNkEz5wobqAlmke0tNU8vRcMFgr
-        /q21tDroHKQ2TIhmmBDHMCGO4f/eEsSYkK8YL2mjRClYJx4LkDRaKV4XFXAwTluJXOfZPGb9
-        UYOGHAcaEOaQejIfVMOEqxSao9IJbQMCjlZP43VRinAVH6k5kSDq4/br42NFqQH5c4zalw+5
-        3rNPhaM0R8QYUTws6se7FOfl5zqbmgwoG7C2z5h+qhzniYMxNwKTnKnzlijjsyq2BazbXZb7
-        IKmzwHhqXtr2dUH1+e0bZtPa47usD5L3fl2o/t66MTDlGrkUZLa0l91rtG0KW0MvkG45X2m/
-        efnUxRUktDwMSRUjHcZJlkkni5duXVnc9Ga9/5Dl65rYnVu6Fkccs/NqRjqkCV5A6yXNHy5/
-        doGaAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRmVeSWpSXmKPExsVy+t/xu7q8T1njDDrf6VjcWneO1aK5w9bi
-        9JlTTBYH9xxnsph/BCh05et7Nour318yW5x8c5XFYvO5HlaLs01v2C06Jy5ht1h6/SKTxaG+
-        aIsH67MtWvceYbdY8XMro8WMyS/ZLH7umsfiIOSxZt4aRo/3N1rZPR5M/c/ksePuEkaPnbPu
-        snvM7pjJ6rFpVSebx4kJl5g87ncfZ/JYMu0qm0ffllWMHgd6J7N4fN4kF8AbpWdTlF9akqqQ
-        kV9cYqsUbWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJexZ+c95oKTFhUfe1ex
-        NTC26XcxcnJICJhIrPqyjqWLkYtDSGApo8Ss9cdZIBIyEienNbBC2MISf651sUEUvWaUuHbo
-        CTNIQlggTOLknwZ2EJtNwFCi6y1IESeHiECURPenz8wgDcwCv1kk/j9dzAjRvY5VYmfDSqAV
-        HBy8AnYSS8+GgTSwCKhKXPg7lxHEFhWIldi++SHYAl4BQYmTM5+AXcQpYC/xe+tvsIuYBcwk
-        5kHVMAvISzRvnQ1li0vcejKfaQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFhnrFibnF
-        pXnpesn5uZsYgeli27Gfm3cwXtoYfIhRgINRiYe3YxdLnBBrYllxZe4hRgkOZiUR3rx01jgh
-        3pTEyqrUovz4otKc1OJDjKZAz01klhJNzgemsrySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLp
-        iSWp2ampBalFMH1MHJxSDYwR9SHtaqafZDgPr35t2WbQfzN8Z/BaxvlC3p+vp+wQzIuecHXN
-        yQrxt9x2pRLV4Xrmxpe0Hrz2cdzXeDdSKE/kq1i5y1edy4qta5bcCTj35N7OJr+ju2Z4XfJl
-        mb1gcX/lWSbOnk1HD8xa1XA4nbUn6mrS1HKL3i6dfx6TDopv27H5xvcfs3qVWIozEg21mIuK
-        EwHKGG7cLQMAAA==
-X-CMS-MailID: 20191227110341eucas1p29b093c32e47d33e641d6211f447b8d9c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
-        <20191203141515.3597631-5-boris.brezillon@collabora.com>
-        <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
-        <20191216155551.083dcbaf@collabora.com>
-        <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
-        <20191216162542.261c821c@collabora.com>
-        <60f03d50-7c0f-c3d0-920f-0625c08b2171@samsung.com>
-        <1010f5fc-0672-643c-4410-e053a928cb66@samsung.com>
-        <20191224104422.25dbf980@collabora.com>
-        <20191224104936.6a7c4977@collabora.com>
-        <20191224110307.00ca841d@collabora.com>
-        <32c4c99a-c943-b1e8-d342-2fd8e8719ff0@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi All,
+Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
+the binding document to two separate documents (own documents for BD71837
+and BD71847) as they have different amount of regulators. This way we can
+better enforce the node name check for regulators. ROHM is also providing
+BD71850 - which is almost identical to BD71847 - main difference is some
+initial regulator states. The BD71850 can be driven by same driver and it
+has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
+introduce compatible for it.
 
-On 27.12.2019 11:25, Marek Szyprowski wrote:
-> On 24.12.2019 11:03, Boris Brezillon wrote:
->> On Tue, 24 Dec 2019 10:49:36 +0100
->> Boris Brezillon <boris.brezillon@collabora.com> wrote:
->>> On Tue, 24 Dec 2019 10:44:22 +0100
->>> Boris Brezillon <boris.brezillon@collabora.com> wrote:
->>>> On Tue, 24 Dec 2019 10:16:49 +0100
->>>> Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>> On 23.12.2019 10:55, Marek Szyprowski wrote:
->>>>>> On 16.12.2019 16:25, Boris Brezillon wrote:
->>>>>>> On Mon, 16 Dec 2019 16:02:36 +0100
->>>>>>> Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->>>>>>>> On 16.12.2019 15:55, Boris Brezillon wrote:
->>>>>>>>> On Mon, 16 Dec 2019 14:54:25 +0100
->>>>>>>>> Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->>>>>>>>>> On 03.12.2019 15:15, Boris Brezillon wrote:
->>>>>>>>>>> So that each element in the chain can easily access its 
->>>>>>>>>>> predecessor.
->>>>>>>>>>> This will be needed to support bus format negotiation 
->>>>>>>>>>> between elements
->>>>>>>>>>> of the bridge chain.
->>>>>>>>>>>
->>>>>>>>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
->>>>>>>>>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->>>>>>>>>>> Reviewed-by: Laurent Pinchart 
->>>>>>>>>>> <laurent.pinchart@ideasonboard.com>
->>>>>>>>>> I've noticed that this patch got merged to linux-next as commit
->>>>>>>>>> 05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks 
->>>>>>>>>> booting of
->>>>>>>>>> Samsung Exynos5250-based Arndale board. Booting stops after 
->>>>>>>>>> following
->>>>>>>>>> messages:
->>>>>>>>>>
->>>>>>>>>> [drm] Exynos DRM: using 14400000.fimd device for DMA mapping 
->>>>>>>>>> operations
->>>>>>>>>> exynos-drm exynos-drm: bound 14400000.fimd (ops 
->>>>>>>>>> fimd_component_ops)
->>>>>>>>>> exynos-drm exynos-drm: bound 14450000.mixer (ops 
->>>>>>>>>> mixer_component_ops)
->>>>>>>>>> exynos-drm exynos-drm: bound 14500000.dsi (ops 
->>>>>>>>>> exynos_dsi_component_ops)
->>>>>>>>>> exynos-drm exynos-drm: bound 14530000.hdmi (ops 
->>>>>>>>>> hdmi_component_ops)
->>>>>>>>>> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
->>>>>>>>>> [drm] No driver support for vblank timestamp query.
->>>>>>>>>> [drm] Cannot find any crtc or sizes
->>>>>>>>>> [drm] Cannot find any crtc or sizes
->>>>>>>>>> [drm] Initialized exynos 1.1.0 20180330 for exynos-drm on 
->>>>>>>>>> minor 0
->>>>>>>>>>
->>>>>>>>>> I will try to debug this and provide more information soon.
->>>>>>>>> Can you try with this diff applied?
->>>>>>>> This patch doesn't change anything.
->>>>>>> Okay. Can you do a list_for_each_entry() on both 
->>>>>>> encoder->bridge_chain
->>>>>>> and dsi->bridge_chain (dump bridge pointers in a pr_info()) 
->>>>>>> before and
->>>>>>> after the list_splice_init() call?
->>>>>> encoder->bridge_chain contains only one element. dsi->drive_chain 
->>>>>> is empty.
->>>>>>
->>>>>> Replacing that list_splice() with 
->>>>>> INIT_LIST_HEAD(&encoder->bridge_chain)
->>>>>> fixed the boot issue.
->>>> If INIT_LIST_HEAD() worked, I don't understand why replacing the
->>>> list_splice() call by a list_splice_init() (which doing a 
->>>> list_splice()
->>>> + INIT_LIST_HEAD()) didn't fix the problem. Are you sure the
->>>> list_splice_init() version doesn't work?
->>>>>> It looks that this is related with the way the
->>>>>> Exynos DSI handles bridges (in bridge and out brige?). Maybe Andrzej
->>>>>> will give a bit more detailed comment and spread some light on this.
->>>>>
->>>>> Hi Marek, Boris,
->>>>>
->>>>>
->>>>> I have not followed latest patches due to high work load, my bad. 
->>>>> Marek
->>>>> thanks from pointing
->>>>>
->>>>> About ExynosDSI bridge handling:
->>>>>
->>>>> The order of calling encoder, bridge (and consequently panel) ops
->>>>> enforced by DRM core (bridge->pre_enable, encoder->enable,
->>>>> bridge->enable) does not fit to ExynosDSI hardware initialization
->>>>> sequence, if I remember correctly it does not fit to whole MIPI DSI
->>>>> standard (I think similar situation is with eDP). As a result DSI
->>>>> drivers must use some ugly workarounds, rely on HW properly coping 
->>>>> with
->>>>> incorrect sequences, or, as in case of ExynosDSI driver, just avoid
->>>>> using encoder->bridge chaining and call bridge ops by itself when 
->>>>> suitable.
->>>> Yes, that's definitely hack-ish, and I proposed 2 solutions to address
->>>> that in previous versions of this patchset, unfortunately I didn't get
->>>> any feedback so I went for the less invasive option (keep the hack but
->>>> adapt it to the double-linked list changes), which still lead to
->>>> regressions :-/.
->>>>
->>>> Just a reminder of my 2 proposals:
->>>>
->>>> 1/ implement the bridge_ops->pre_enable/post_disable() hooks so you 
->>>> can
->>>>     split your enable/disable logic in 2 parts and make sure things 
->>>> are
->>>>     ready when the panel/next bridge tries to send DSI commands
->>>> 2/ move everything that's needed to send DSI commands out of the
->>>>     ->enable() path (maybe in runtime PM resume/suspend hooks) so you
->>>>     can call that in the DSI transfer path too
->>>>
->>>> As pointed out by Laurent, #1 doesn't work because some panel drivers
->>>> send DSI commands in their ->prepare() hook, and ->pre_enable() 
->>>> methods
->>>> are called in reverse order, meaning that the DRM panel bridge driver
->>>> would try to issue DSI commands before the DSI host controllers is 
->>>> ready
->>>> to send them. I still thing #2 is a good option.
->>>>> So proper patch converting to double-linked list should not try to
->>>>> splice ExynosDSI private bridge list with with encoder's, 
->>>>> encoder's list
->>>>> should be always empty, as Marek suggested.
->>>> That's exactly what I wanted to do: make the encoder's list empty 
->>>> after
->>>> attach() and restore it to its initial state before unregistering
->>>> the bridge, except I forgot that list_splice() doesn't call
->>>> INIT_LIST_HEAD(). It's still not clear to me why replacing the
->>>> list_splice() call by a list_splice_init() didn't work.
->>> Okay, I think I figured it out: drm_bridge_chain_xx() helpers use
->>> encoder->bridge_chain as their list head, and you'll never hit the 
->>> 'elem
->>> is list head' condition since we moved all elems from
->>> encoder->bridge_chain to exynos_dsi->bridge_chain. The only way this
->>> can work is if we stop using the helpers and implement our own list
->>> iterators.
->> Just to make it clear, calling INIT_LIST_HEAD(encoder->bridge_chain)
->> doesn't really fix the bug, it just prevents the hang (infinite loop)
->> and turn all drm_bridge_chain_xx() calls into NOPs.
->
-> Right, I've just checked it and indeed the display chain outputs 
-> nothing after such 'fix'. To get it finally working I've replaced 
-> drm_bridge_chain_*() operations for exynos_dsi 'out_bridge' by a 
-> direct calls. I will submit a patch in a few minutes. I hope that such 
-> workaround can be used now to fix the regression until a better 
-> solution is agreed.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-I've posted a 'quick & working' fix for Exynos DRM DSI driver:
+changes since v1:
+- constrains to short and long presses.
+- reworded commit message to shorten a line exceeding 75 chars
+- added 'additionalProperties: false'
+- removed 'clock-names' from example node
 
-https://lkml.org/lkml/2019/12/27/121
+ .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
+ .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
+ .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
+ .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
+ .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
+ .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
+ 6 files changed, 658 insertions(+), 252 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
 
-Best regards
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+deleted file mode 100644
+index f22d74c7a8db..000000000000
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
++++ /dev/null
+@@ -1,90 +0,0 @@
+-* ROHM BD71837 and BD71847 Power Management Integrated Circuit bindings
+-
+-BD71837MWV and BD71847MWV are programmable Power Management ICs for powering
+-single-core, dual-core, and quad-core SoCs such as NXP-i.MX 8M. They are
+-optimized for low BOM cost and compact solution footprint. BD71837MWV
+-integrates 8 Buck regulators and 7 LDOs. BD71847MWV contains 6 Buck regulators
+-and 6 LDOs.
+-
+-Datasheet for BD71837 is available at:
+-https://www.rohm.com/datasheet/BD71837MWV/bd71837mwv-e
+-Datasheet for BD71847 is available at:
+-https://www.rohm.com/datasheet/BD71847AMWV/bd71847amwv-e
+-
+-Required properties:
+- - compatible		: Should be "rohm,bd71837" for bd71837
+-				    "rohm,bd71847" for bd71847.
+- - reg			: I2C slave address.
+- - interrupt-parent	: Phandle to the parent interrupt controller.
+- - interrupts		: The interrupt line the device is connected to.
+- - clocks		: The parent clock connected to PMIC. If this is missing
+-			  32768 KHz clock is assumed.
+- - #clock-cells		: Should be 0.
+- - regulators:		: List of child nodes that specify the regulators.
+-			  Please see ../regulator/rohm,bd71837-regulator.txt
+-
+-Optional properties:
+-- clock-output-names	: Should contain name for output clock.
+-- rohm,reset-snvs-powered : Transfer BD718x7 to SNVS state at reset.
+-
+-The BD718x7 supports two different HW states as reset target states. States
+-are called as SNVS and READY. At READY state all the PMIC power outputs go
+-down and OTP is reload. At the SNVS state all other logic and external
+-devices apart from the SNVS power domain are shut off. Please refer to NXP
+-i.MX8 documentation for further information regarding SNVS state. When a
+-reset is done via SNVS state the PMIC OTP data is not reload. This causes
+-power outputs that have been under SW control to stay down when reset has
+-switched power state to SNVS. If reset is done via READY state the power
+-outputs will be returned to HW control by OTP loading. Thus the reset
+-target state is set to READY by default. If SNVS state is used the boot
+-crucial regulators must have the regulator-always-on and regulator-boot-on
+-properties set in regulator node.
+-
+-- rohm,short-press-ms	: Short press duration in milliseconds
+-- rohm,long-press-ms	: Long press duration in milliseconds
+-
+-Configure the "short press" and "long press" timers for the power button.
+-Values are rounded to what hardware supports (500ms multiple for short and
+-1000ms multiple for long). If these properties are not present the existing
+-configuration (from bootloader or OTP) is not touched.
+-
+-Example:
+-
+-	/* external oscillator node */
+-	osc: oscillator {
+-		compatible = "fixed-clock";
+-		#clock-cells = <1>;
+-		clock-frequency  = <32768>;
+-		clock-output-names = "osc";
+-	};
+-
+-	pmic: pmic@4b {
+-		compatible = "rohm,bd71837";
+-		reg = <0x4b>;
+-		interrupt-parent = <&gpio1>;
+-		interrupts = <29 GPIO_ACTIVE_LOW>;
+-		interrupt-names = "irq";
+-		#clock-cells = <0>;
+-		clocks = <&osc 0>;
+-		clock-output-names = "bd71837-32k-out";
+-		rohm,reset-snvs-powered;
+-
+-		regulators {
+-			buck1: BUCK1 {
+-				regulator-name = "buck1";
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <1300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <1250>;
+-			};
+-			// [...]
+-		};
+-	};
+-
+-	/* Clock consumer node */
+-	rtc@0 {
+-		compatible = "company,my-rtc";
+-		clock-names = "my-clock";
+-		clocks = <&pmic>;
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+new file mode 100644
+index 000000000000..aa922c560fcc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+@@ -0,0 +1,236 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/rohm,bd71837-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71837 Power Management Integrated Circuit bindings
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  BD71837MWV is programmable Power Management ICs for powering single-core,
++  dual-core, and quad-core SoCs such as NXP-i.MX 8M. It is optimized for low
++  BOM cost and compact solution footprint. BD71837MWV  integrates 8 Buck
++  regulators and 7 LDOs.
++  Datasheet for BD71837 is available at
++  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71837amwv-product
++
++properties:
++  compatible:
++    const: rohm,bd71837
++
++  reg:
++    description:
++      I2C slave address.
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#clock-cells":
++    const: 0
++
++# The BD718x7 supports two different HW states as reset target states. States
++# are called as SNVS and READY. At READY state all the PMIC power outputs go
++# down and OTP is reload. At the SNVS state all other logic and external
++# devices apart from the SNVS power domain are shut off. Please refer to NXP
++# i.MX8 documentation for further information regarding SNVS state. When a
++# reset is done via SNVS state the PMIC OTP data is not reload. This causes
++# power outputs that have been under SW control to stay down when reset has
++# switched power state to SNVS. If reset is done via READY state the power
++# outputs will be returned to HW control by OTP loading. Thus the reset
++# target state is set to READY by default. If SNVS state is used the boot
++# crucial regulators must have the regulator-always-on and regulator-boot-on
++# properties set in regulator node.
++
++  rohm,reset-snvs-powered:
++    description: |
++      Transfer PMIC to SNVS state at reset
++    type: boolean
++
++# Configure the "short press" and "long press" timers for the power button.
++# Values are rounded to what hardware supports
++# Short-press:
++#   Shortest being 10ms, next 500ms and then multiple of 500ms up to 7,5s
++# Long-press:
++#   Shortest being 10ms, next 1000ms and then multiple of 1000ms up to 15s
++# If these properties are not present the existing configuration (from
++# bootloader or OTP) is not touched.
++
++  rohm,short-press-ms:
++    description:
++      Short press duration in milliseconds
++    enum:
++      - 10
++      - 500
++      - 1000
++      - 1500
++      - 2000
++      - 2500
++      - 3000
++      - 3500
++      - 4000
++      - 4500
++      - 5000
++      - 5500
++      - 6000
++      - 6500
++      - 7000
++
++  rohm,long-press-ms:
++    description:
++      Long press duration in milliseconds
++    enum:
++      - 10
++      - 1000
++      - 2000
++      - 3000
++      - 4000
++      - 5000
++      - 6000
++      - 7000
++      - 8000
++      - 9000
++      - 10000
++      - 11000
++      - 12000
++      - 13000
++      - 14000
++
++  regulators:
++    $ref: ../regulator/rohm,bd71837-regulator.yaml
++    description:
++      List of child nodes that specify the regulators.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - "#clock-cells"
++  - regulators
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/leds/common.h>
++
++    i2c {
++      pmic: pmic@4b {
++            compatible = "rohm,bd71837";
++            reg = <0x4b>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++            #clock-cells = <0>;
++            clocks = <&osc 0>;
++            rohm,reset-snvs-powered;
++            rohm,short-press-ms = <10>;
++            rohm,long-press-ms = <2000>;
++
++            regulators {
++                buck1: BUCK1 {
++                    regulator-name = "buck1";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <900000>;
++                    rohm,dvs-idle-voltage = <850000>;
++                    rohm,dvs-suspend-voltage = <800000>;
++                };
++                buck2: BUCK2 {
++                    regulator-name = "buck2";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <1000000>;
++                    rohm,dvs-idle-voltage = <900000>;
++                };
++                buck3: BUCK3 {
++                    regulator-name = "buck3";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    rohm,dvs-run-voltage = <1000000>;
++                };
++                buck4: BUCK4 {
++                    regulator-name = "buck4";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    rohm,dvs-run-voltage = <1000000>;
++                };
++                buck5: BUCK5 {
++                    regulator-name = "buck5";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1350000>;
++                    regulator-boot-on;
++                };
++                buck6: BUCK6 {
++                    regulator-name = "buck6";
++                    regulator-min-microvolt = <3000000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                buck7: BUCK7 {
++                    regulator-name = "buck7";
++                    regulator-min-microvolt = <1605000>;
++                    regulator-max-microvolt = <1995000>;
++                    regulator-boot-on;
++                };
++                buck8: BUCK8 {
++                    regulator-name = "buck8";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <1400000>;
++                };
++
++                ldo1: LDO1 {
++                    regulator-name = "ldo1";
++                    regulator-min-microvolt = <3000000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                ldo2: LDO2 {
++                    regulator-name = "ldo2";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <900000>;
++                    regulator-boot-on;
++                };
++                ldo3: LDO3 {
++                    regulator-name = "ldo3";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo4: LDO4 {
++                    regulator-name = "ldo4";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++                ldo5: LDO5 {
++                    regulator-name = "ldo5";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo6: LDO6 {
++                    regulator-name = "ldo6";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++                ldo7_reg: LDO7 {
++                    regulator-name = "ldo7";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+new file mode 100644
+index 000000000000..402e40dfe0b8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+@@ -0,0 +1,222 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/rohm,bd71847-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71847 and BD71850 Power Management Integrated Circuit bindings
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  BD71847AMWV and BD71850MWV are programmable Power Management ICs for powering
++  single-core,  dual-core, and quad-core SoCs such as NXP-i.MX 8M. It is
++  optimized for low BOM cost and compact solution footprint. BD71847MWV and
++  BD71850MWV integrate 6 Buck regulators and 6 LDOs.
++  Datasheets are available at
++  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71847amwv-product
++  https://www.rohm.com/products/power-management/power-management-ic-for-system/industrial-consumer-applications/nxp-imx/bd71850mwv-product
++
++properties:
++  compatible:
++    enum:
++      - rohm,bd71847
++      - rohm,bd71850
++
++  reg:
++    description:
++      I2C slave address.
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#clock-cells":
++    const: 0
++
++# The BD71847 abd BD71850 support two different HW states as reset target
++# states. States are called as SNVS and READY. At READY state all the PMIC
++# power outputs go down and OTP is reload. At the SNVS state all other logic
++# and external devices apart from the SNVS power domain are shut off. Please
++# refer to NXP i.MX8 documentation for further information regarding SNVS
++# state. When a reset is done via SNVS state the PMIC OTP data is not reload.
++# This causes power outputs that have been under SW control to stay down when
++# reset has switched power state to SNVS. If reset is done via READY state the
++# power outputs will be returned to HW control by OTP loading. Thus the reset
++# target state is set to READY by default. If SNVS state is used the boot
++# crucial regulators must have the regulator-always-on and regulator-boot-on
++# properties set in regulator node.
++
++  rohm,reset-snvs-powered:
++    description:
++      Transfer PMIC to SNVS state at reset.
++    type: boolean
++
++# Configure the "short press" and "long press" timers for the power button.
++# Values are rounded to what hardware supports
++# Short-press:
++#   Shortest being 10ms, next 500ms and then multiple of 500ms up to 7,5s
++# Long-press:
++#   Shortest being 10ms, next 1000ms and then multiple of 1000ms up to 15s
++# If these properties are not present the existing # configuration (from
++# bootloader or OTP) is not touched.
++
++  rohm,short-press-ms:
++    description:
++      Short press duration in milliseconds
++    enum:
++      - 10
++      - 500
++      - 1000
++      - 1500
++      - 2000
++      - 2500
++      - 3000
++      - 3500
++      - 4000
++      - 4500
++      - 5000
++      - 5500
++      - 6000
++      - 6500
++      - 7000
++      - 7500
++
++  rohm,long-press-ms:
++    description:
++      Long press duration in milliseconds
++    enum:
++      - 10
++      - 1000
++      - 2000
++      - 3000
++      - 4000
++      - 5000
++      - 6000
++      - 7000
++      - 8000
++      - 9000
++      - 10000
++      - 11000
++      - 12000
++      - 13000
++      - 14000
++      - 15000
++
++  regulators:
++    $ref: ../regulator/rohm,bd71847-regulator.yaml
++    description:
++      List of child nodes that specify the regulators.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - "#clock-cells"
++  - regulators
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/leds/common.h>
++
++    i2c {
++      pmic: pmic@4b {
++            compatible = "rohm,bd71847";
++            reg = <0x4b>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
++            #clock-cells = <0>;
++            clocks = <&osc 0>;
++            rohm,reset-snvs-powered;
++            rohm,short-press-ms = <10>;
++            rohm,long-press-ms = <2000>;
++
++            regulators {
++                buck1: BUCK1 {
++                    regulator-name = "buck1";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <900000>;
++                    rohm,dvs-idle-voltage = <850000>;
++                    rohm,dvs-suspend-voltage = <800000>;
++                };
++                buck2: BUCK2 {
++                    regulator-name = "buck2";
++                    regulator-min-microvolt = <700000>;
++                    regulator-max-microvolt = <1300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <1250>;
++                    rohm,dvs-run-voltage = <1000000>;
++                    rohm,dvs-idle-voltage = <900000>;
++                };
++                buck3: BUCK3 {
++                    regulator-name = "buck3";
++                    regulator-min-microvolt = <550000>;
++                    regulator-max-microvolt = <1350000>;
++                    regulator-boot-on;
++                };
++                buck4: BUCK4 {
++                    regulator-name = "buck4";
++                    regulator-min-microvolt = <2600000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                buck5: BUCK5 {
++                    regulator-name = "buck5";
++                    regulator-min-microvolt = <1605000>;
++                    regulator-max-microvolt = <1995000>;
++                    regulator-boot-on;
++                };
++                buck8: BUCK6 {
++                    regulator-name = "buck6";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <1400000>;
++                };
++
++                ldo1: LDO1 {
++                    regulator-name = "ldo1";
++                    regulator-min-microvolt = <1600000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                };
++                ldo2: LDO2 {
++                    regulator-name = "ldo2";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <900000>;
++                    regulator-boot-on;
++                };
++                ldo3: LDO3 {
++                    regulator-name = "ldo3";
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo4: LDO4 {
++                    regulator-name = "ldo4";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++                ldo5: LDO5 {
++                    regulator-name = "ldo5";
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++                ldo6: LDO6 {
++                    regulator-name = "ldo6";
++                    regulator-min-microvolt = <900000>;
++                    regulator-max-microvolt = <1800000>;
++                };
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+deleted file mode 100644
+index cbce62c22b60..000000000000
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
++++ /dev/null
+@@ -1,162 +0,0 @@
+-ROHM BD71837 and BD71847 Power Management Integrated Circuit regulator bindings
+-
+-Required properties:
+- - regulator-name: should be "buck1", ..., "buck8" and "ldo1", ..., "ldo7" for
+-                   BD71837. For BD71847 names should be "buck1", ..., "buck6"
+-		   and "ldo1", ..., "ldo6"
+-
+-List of regulators provided by this controller. BD71837 regulators node
+-should be sub node of the BD71837 MFD node. See BD71837 MFD bindings at
+-Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+-Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
+-definition for each of these nodes is defined using the standard
+-binding for regulators at
+-Documentation/devicetree/bindings/regulator/regulator.txt.
+-Note that if BD71837 starts at RUN state you probably want to use
+-regulator-boot-on at least for BUCK6 and BUCK7 so that those are not
+-disabled by driver at startup. LDO5 and LDO6 are supplied by those and
+-if they are disabled at startup the voltage monitoring for LDO5/LDO6 will
+-cause PMIC to reset.
+-
+-The valid names for BD71837 regulator nodes are:
+-BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7, BUCK8
+-LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
+-
+-The valid names for BD71847 regulator nodes are:
+-BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
+-LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
+-
+-Optional properties:
+-- rohm,dvs-run-voltage		: PMIC default "RUN" state voltage in uV.
+-				  See below table for bucks which support this.
+-- rohm,dvs-idle-voltage		: PMIC default "IDLE" state voltage in uV.
+-				  See below table for bucks which support this.
+-- rohm,dvs-suspend-voltage	: PMIC default "SUSPEND" state voltage in uV.
+-				  See below table for bucks which support this.
+-- Any optional property defined in bindings/regulator/regulator.txt
+-
+-Supported default DVS states:
+-
+-BD71837:
+-buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
+------------------------------------------------------------------------------
+-1	| supported		| supported		| supported
+-----------------------------------------------------------------------------
+-2	| supported		| supported		| not supported
+-----------------------------------------------------------------------------
+-3	| supported		| not supported		| not supported
+-----------------------------------------------------------------------------
+-4	| supported		| not supported		| not supported
+-----------------------------------------------------------------------------
+-rest	| not supported		| not supported		| not supported
+-
+-BD71847:
+-buck	| dvs-run-voltage	| dvs-idle-voltage	| dvs-suspend-voltage
+------------------------------------------------------------------------------
+-1	| supported		| supported		| supported
+-----------------------------------------------------------------------------
+-2	| supported		| supported		| not supported
+-----------------------------------------------------------------------------
+-rest	| not supported		| not supported		| not supported
+-
+-Example:
+-regulators {
+-	buck1: BUCK1 {
+-		regulator-name = "buck1";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-		regulator-ramp-delay = <1250>;
+-		rohm,dvs-run-voltage = <900000>;
+-		rohm,dvs-idle-voltage = <850000>;
+-		rohm,dvs-suspend-voltage = <800000>;
+-	};
+-	buck2: BUCK2 {
+-		regulator-name = "buck2";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-		regulator-ramp-delay = <1250>;
+-		rohm,dvs-run-voltage = <1000000>;
+-		rohm,dvs-idle-voltage = <900000>;
+-	};
+-	buck3: BUCK3 {
+-		regulator-name = "buck3";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		rohm,dvs-run-voltage = <1000000>;
+-	};
+-	buck4: BUCK4 {
+-		regulator-name = "buck4";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1300000>;
+-		regulator-boot-on;
+-		rohm,dvs-run-voltage = <1000000>;
+-	};
+-	buck5: BUCK5 {
+-		regulator-name = "buck5";
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1350000>;
+-		regulator-boot-on;
+-	};
+-	buck6: BUCK6 {
+-		regulator-name = "buck6";
+-		regulator-min-microvolt = <3000000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-	};
+-	buck7: BUCK7 {
+-		regulator-name = "buck7";
+-		regulator-min-microvolt = <1605000>;
+-		regulator-max-microvolt = <1995000>;
+-		regulator-boot-on;
+-	};
+-	buck8: BUCK8 {
+-		regulator-name = "buck8";
+-		regulator-min-microvolt = <800000>;
+-		regulator-max-microvolt = <1400000>;
+-	};
+-
+-	ldo1: LDO1 {
+-		regulator-name = "ldo1";
+-		regulator-min-microvolt = <3000000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-	};
+-	ldo2: LDO2 {
+-		regulator-name = "ldo2";
+-		regulator-min-microvolt = <900000>;
+-		regulator-max-microvolt = <900000>;
+-		regulator-boot-on;
+-	};
+-	ldo3: LDO3 {
+-		regulator-name = "ldo3";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-	ldo4: LDO4 {
+-		regulator-name = "ldo4";
+-		regulator-min-microvolt = <900000>;
+-		regulator-max-microvolt = <1800000>;
+-	};
+-	ldo5: LDO5 {
+-		regulator-name = "ldo5";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-	ldo6: LDO6 {
+-		regulator-name = "ldo6";
+-		regulator-min-microvolt = <900000>;
+-		regulator-max-microvolt = <1800000>;
+-	};
+-	ldo7_reg: LDO7 {
+-		regulator-name = "ldo7";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-};
+-
+-
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+new file mode 100644
+index 000000000000..a323b1696eee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+@@ -0,0 +1,103 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd71837-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71837 Power Management Integrated Circuit regulators
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  List of regulators provided by this controller. BD71837 regulators node
++  should be sub node of the BD71837 MFD node. See BD71837 MFD bindings at
++  Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
++  Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
++  definition for each of these nodes is defined using the standard
++  binding for regulators at
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++  Note that if BD71837 starts at RUN state you probably want to use
++  regulator-boot-on at least for BUCK6 and BUCK7 so that those are not
++  disabled by driver at startup. LDO5 and LDO6 are supplied by those and
++  if they are disabled at startup the voltage monitoring for LDO5/LDO6 will
++  cause PMIC to reset.
++
++#The valid names for BD71837 regulator nodes are:
++#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7, BUCK8
++#LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
++
++patternProperties:
++  "^LDO[1-7]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single LDO regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^ldo[1-7]$"
++        description:
++          should be "ldo1", ..., "ldo7"
++
++  "^BUCK[1-8]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single BUCK regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^buck[1-8]$"
++        description:
++          should be "buck1", ..., "buck8"
++
++      rohm,dvs-run-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "RUN" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-idle-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "IDLE" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-suspend-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "SUSPEND" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++        # Supported default DVS states:
++        #
++        # BD71837:
++        # buck | dvs-run-voltage | dvs-idle-voltage | dvs-suspend-voltage
++        # ----------------------------------------------------------------
++        # 1    | supported       | supported        | supported
++        # ----------------------------------------------------------------
++        # 2    | supported       | supported        | not supported
++        # ----------------------------------------------------------------
++        # 3    | supported       | not supported    | not supported
++        # ----------------------------------------------------------------
++        # 4    | supported       | not supported    | not supported
++        # ----------------------------------------------------------------
++        # rest | not supported   | not supported    | not supported
++
++
++    required:
++      - regulator-name
++  additionalProperties: false
++additionalProperties: false
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+new file mode 100644
+index 000000000000..526fd00bcb16
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+@@ -0,0 +1,97 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd71847-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD71847 and BD71850 Power Management Integrated Circuit regulators
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description: |
++  List of regulators provided by this controller. BD71847 regulators node
++  should be sub node of the BD71847 MFD node. See BD71847 MFD bindings at
++  Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
++  Regulator nodes should be named to BUCK_<number> and LDO_<number>. The
++  definition for each of these nodes is defined using the standard
++  binding for regulators at
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++  Note that if BD71847 starts at RUN state you probably want to use
++  regulator-boot-on at least for BUCK5. LDO6 is supplied by it and it must
++  not be disabled by driver at startup. If BUCK5 is disabled at startup the
++  voltage monitoring for LDO5/LDO6 can cause PMIC to reset.
++
++#The valid names for BD71847 regulator nodes are:
++#BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6
++#LDO1, LDO2, LDO3, LDO4, LDO5, LDO6
++
++patternProperties:
++  "^LDO[1-6]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single LDO regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^ldo[1-6]$"
++        description:
++          should be "ldo1", ..., "ldo6"
++
++  "^BUCK[1-6]$":
++    type: object
++    allOf:
++      - $ref: regulator.yaml#
++    description:
++      Properties for single BUCK regulator.
++
++    properties:
++      regulator-name:
++        pattern: "^buck[1-6]$"
++        description:
++          should be "buck1", ..., "buck6"
++
++      rohm,dvs-run-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "RUN" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-idle-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "IDLE" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++      rohm,dvs-suspend-voltage:
++        allOf:
++          - $ref: "/schemas/types.yaml#/definitions/uint32"
++          - minimum: 0
++            maximum: 1300000
++        description:
++          PMIC default "SUSPEND" state voltage in uV. See below table for
++          bucks which support this. 0 means disabled.
++
++        # Supported default DVS states:
++        #
++        # BD71847:
++        # buck | dvs-run-voltage | dvs-idle-voltage | dvs-suspend-voltage
++        # ----------------------------------------------------------------
++        # 1    | supported       | supported        | supported
++        # ----------------------------------------------------------------
++        # 2    | supported       | supported        | not supported
++        # ----------------------------------------------------------------
++        # rest | not supported   | not supported    | not supported
++
++    required:
++      - regulator-name
++  additionalProperties: false
++additionalProperties: false
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.21.0
 
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
