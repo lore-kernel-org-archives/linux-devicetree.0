@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7648FC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B4AC2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C3FD2176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5479D20CC7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468989;
-	bh=Ph4eGXzhNUrMfMJ+w7vrBMob23ualE7r8SGPNrE8qdU=;
+	s=default; t=1577468998;
+	bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aXdA8Q+HVoGYdi3rsl44mvstCGag6FOC2aaAnP1zb5Z6B9Xoi+Dh12dELNRAgkn1T
-	 e5mJWE/BEBD49XmQk77L3YbdhOci3/kCM1fRxAYwgH6Oh+D6MWOaQsFAHlpd33Uik0
-	 JhBIpvoxi6OAyrYVrCCIAtmWxsdUreMOz+/Z6+RM=
+	b=QDVBbkxzkOIOX9qBPeNC+gFlV0ejFSdreDMMlJWHzL3p4yJR7Dp445UNHpwqciuc9
+	 EhvTJ8qW/HAZyTXLqNHFPhZi/Za0lFkf5oqJHuOWHCNZIQiHU7fL0cZqbk29vrRMKX
+	 L0gyqCeuwqivzuNlFsr+K05W6Wt5CUO7RWl5oGXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfL0Rto (ORCPT
+        id S1728425AbfL0RoW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:49:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42466 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728443AbfL0RoY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:24 -0500
+        id S1728421AbfL0RoW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F16B24653;
-        Fri, 27 Dec 2019 17:44:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65BE621D7E;
+        Fri, 27 Dec 2019 17:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468664;
-        bh=Ph4eGXzhNUrMfMJ+w7vrBMob23ualE7r8SGPNrE8qdU=;
+        s=default; t=1577468662;
+        bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YUGDplx58yJKvE5icCZQdeowepaj/1GRkeuS51zEe5ctSiBGn0h7nFxK0DGin2+xU
-         K5wKiBIpOc4NRzR3VN8GxVny1qvpc1SVNDnAALVhoGqgy2spp/qcDDMhYYTmNkgI0S
-         jcegMkN0BnhwE+/nBTiOWZ9u1WBvxCj8q3fFTLrs=
+        b=gTelMYU+VeBH4dRadJ//po0y5oAzqZhzkJpsu7ed/FSPGMt0tMSvd9W4M/7KQaxH6
+         i0hDR/eecanNzWNScyWI4CipXZ/K+cecHpTZvjpxTHXc88ojmkWGEwzZNXxB461sO2
+         TJYqEbM75pQDNfa/MJ290rVbj0U1hbipCqEB0UeQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Simon Horman <simon.horman@netronome.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 25/84] ARM: dts: Cygnus: Fix MDIO node address/size cells
-Date:   Fri, 27 Dec 2019 12:42:53 -0500
-Message-Id: <20191227174352.6264-25-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/84] ARM: dts: BCM5301X: Fix MDIO node address/size cells
+Date:   Fri, 27 Dec 2019 12:42:51 -0500
+Message-Id: <20191227174352.6264-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -63,36 +62,36 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit fac2c2da3596d77c343988bb0d41a8c533b2e73c ]
+[ Upstream commit 093c3f94e922d83a734fc4da08cc5814990f32c6 ]
 
-The MDIO node on Cygnus had an reversed #address-cells and
- #size-cells properties, correct those.
+The MDIO node on BCM5301X had an reversed #address-cells and
+ #size-cells properties, correct those, silencing checker warnings:
 
-Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+
 Reported-by: Simon Horman <simon.horman@netronome.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Fixes: 23f1eca6d59b ("ARM: dts: BCM5301X: Specify MDIO bus in the DT")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+ arch/arm/boot/dts/bcm5301x.dtsi | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 253df7170a4e..887a60c317e9 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -169,8 +169,8 @@
- 		mdio: mdio@18002000 {
- 			compatible = "brcm,iproc-mdio";
- 			reg = <0x18002000 0x8>;
--			#size-cells = <1>;
--			#address-cells = <0>;
-+			#size-cells = <0>;
-+			#address-cells = <1>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index bc607d11eef8..a678fb7c9e3b 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -350,8 +350,8 @@
+ 	mdio: mdio@18003000 {
+ 		compatible = "brcm,iproc-mdio";
+ 		reg = <0x18003000 0x8>;
+-		#size-cells = <1>;
+-		#address-cells = <0>;
++		#size-cells = <0>;
++		#address-cells = <1>;
+ 	};
  
- 			gphy0: ethernet-phy@0 {
+ 	mdio-bus-mux {
 -- 
 2.20.1
 
