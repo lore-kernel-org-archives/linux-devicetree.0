@@ -2,143 +2,119 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0F6C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF45C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D989B20740
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F2521582
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 15:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577460955;
+	bh=7r56deXllU1oGrb23gXCZ4pIfhEB/Z0xwJCja1MXEL4=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=qEMdVNeDF50lF2bbium1nr6SFTLEdLeldhBZ005zSQEROj8AE6cbJ5Q8ZpKsbp9kZ
+	 yF+bbVZQNkkzx3ISQLq2diPJj9EgT9dEMFD6m6rSqM2CMQJ+crtA0XuB5xFbVKoiTx
+	 ez3alyKyCxI8h/gwkLSs/NaAO95N5yICizb3DuM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfL0PaJ (ORCPT
+        id S1726379AbfL0Pfy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 10:30:09 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:59190 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbfL0PaJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 10:30:09 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 27 Dec 2019 10:35:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfL0Pfy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 10:35:54 -0500
+Received: from localhost (lfbn-lyo-1-633-204.w90-119.abo.wanadoo.fr [90.119.206.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 9CF98634C86;
-        Fri, 27 Dec 2019 17:29:32 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1ikrYT-00017t-1N; Fri, 27 Dec 2019 17:29:33 +0200
-Date:   Fri, 27 Dec 2019 17:29:33 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, peter.griffin@linaro.org
-Subject: Re: [PATCH v2 3/6] media: i2c: imx290: Add RAW12 mode support
-Message-ID: <20191227152932.GG861@valkosipuli.retiisi.org.uk>
-References: <20191219182222.18961-1-manivannan.sadhasivam@linaro.org>
- <20191219182222.18961-4-manivannan.sadhasivam@linaro.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FAC720740;
+        Fri, 27 Dec 2019 15:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577460953;
+        bh=7r56deXllU1oGrb23gXCZ4pIfhEB/Z0xwJCja1MXEL4=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=ycFG5d8GqzOqg09g3YY78naztjMaftPaJseNHozA9qOdVLhpzmJayZr5yMvzdQGkD
+         FJ+zXXFFgeMuKtTlgCxENE2LDnqVqslEdmYK4XG+W2l9PBwhuZ8jkoTlR8vKV0K8ZU
+         MRjVrRKwrch2A7BuGUTX+BaXagKluHzmx+7UyZA8=
+Date:   Fri, 27 Dec 2019 16:37:15 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+Message-ID: <20191227153715.m7o6h6lniwg2456h@hendrix.home>
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
+ <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+ <20191226103739.bz3i73gjmn5q5veu@core.my.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gfd3qq7a2xnbetqt"
 Content-Disposition: inline
-In-Reply-To: <20191219182222.18961-4-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191226103739.bz3i73gjmn5q5veu@core.my.home>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Manivannan,
 
-On Thu, Dec 19, 2019 at 11:52:19PM +0530, Manivannan Sadhasivam wrote:
-> IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
-> 12 bit formats. Since the driver already supports RAW10 mode, let's add
-> the missing RAW12 mode as well.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/media/i2c/imx290.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> index 96eea0aafd3e..b6eeca56d3c9 100644
-> --- a/drivers/media/i2c/imx290.c
-> +++ b/drivers/media/i2c/imx290.c
-> @@ -75,6 +75,7 @@ struct imx290 {
->  	struct clk *xclk;
->  	struct regmap *regmap;
->  	u8 nlanes;
-> +	u8 bpp;
->  
->  	struct v4l2_subdev sd;
->  	struct v4l2_fwnode_endpoint ep;
-> @@ -98,6 +99,7 @@ struct imx290_pixfmt {
->  
->  static const struct imx290_pixfmt imx290_formats[] = {
->  	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
-> +	{ MEDIA_BUS_FMT_SRGGB12_1X12 },
->  };
->  
->  static const struct regmap_config imx290_regmap_config = {
-> @@ -265,6 +267,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
->  	{ 0x300b, 0x00},
->  };
->  
-> +static const struct imx290_regval imx290_12bit_settings[] = {
-> +	{ 0x3005, 0x01 },
-> +	{ 0x3046, 0x01 },
-> +	{ 0x3129, 0x00 },
-> +	{ 0x317c, 0x00 },
-> +	{ 0x31ec, 0x0e },
-> +	{ 0x3441, 0x0c },
-> +	{ 0x3442, 0x0c },
-> +	{ 0x300a, 0xf0 },
-> +	{ 0x300b, 0x00 },
-> +};
-> +
->  /* supported link frequencies */
->  static const s64 imx290_link_freq[] = {
->  	IMX290_DEFAULT_LINK_FREQ,
-> @@ -550,6 +564,21 @@ static int imx290_write_current_format(struct imx290 *imx290,
->  			dev_err(imx290->dev, "Could not set format registers\n");
->  			return ret;
->  		}
-> +
-> +		imx290->bpp = 10;
-> +
-> +		break;
-> +	case MEDIA_BUS_FMT_SRGGB12_1X12:
-> +		ret = imx290_set_register_array(imx290, imx290_12bit_settings,
-> +						ARRAY_SIZE(
-> +							imx290_12bit_settings));
-> +		if (ret < 0) {
-> +			dev_err(imx290->dev, "Could not set format registers\n");
-> +			return ret;
-> +		}
-> +
-> +		imx290->bpp = 12;
-> +
->  		break;
->  	default:
->  		dev_err(imx290->dev, "Unknown pixel format\n");
-> @@ -913,6 +942,9 @@ static int imx290_probe(struct i2c_client *client)
->  		goto free_err;
->  	}
->  
-> +	/* Default bits per pixel value */
-> +	imx290->bpp = 10;
+--gfd3qq7a2xnbetqt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This has an effect on the pixel rate; please calculate the value based on
-bpp.
+On Thu, Dec 26, 2019 at 11:37:39AM +0100, Ond=C5=99ej Jirman wrote:
+> On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > > Hi,
+> > > >
+> > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > > >> H6 and R40 SoCs.
+> > > >
+> > > > Thanks again for working on this.
+> > > >
+> > > > I'll merge the DT patches when the driver will have been merged.
+> > >
+> > > I've applied patches 1 & 2.
+> > >
+> > > They are in the testing branch and will go to the linux-next branch as
+> > > soon as the kernelci passes.
+> >
+> > I just merged all the other patches (except the patch 6, for the H6,
+> > as requested by Vasily on IRC).
+>
+> Hello,
+>
+> I think you can apply H6 patch. This was just some misunderstanding
+> and H6 is working.
 
-> +
->  	mutex_init(&imx290->lock);
->  
->  	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
+Done, thanks!
+Maxime
 
--- 
-Regards,
+--gfd3qq7a2xnbetqt
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Sakari Ailus
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXgYlKwAKCRDj7w1vZxhR
+xQkMAQC/ZoYUxPX5yzTlvbMxIWHNJ1u1lQvxfppZLauJ5rHWxgD8Cx+nXvhe72Cl
+ka9ZcT3Up4uJM95blHhx4KnSXMipwgQ=
+=Fewg
+-----END PGP SIGNATURE-----
+
+--gfd3qq7a2xnbetqt--
