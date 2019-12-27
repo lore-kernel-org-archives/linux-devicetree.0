@@ -2,191 +2,258 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_ABUSE_SURBL,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DD5C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 13:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9932C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6407D20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 13:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jdISPOh5"
+	by mail.kernel.org (Postfix) with ESMTP id B06AF208C4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 14:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfL0NAk (ORCPT
+        id S1726509AbfL0OSR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 08:00:40 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:25515 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726538AbfL0NAk (ORCPT
+        Fri, 27 Dec 2019 09:18:17 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:58858 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726053AbfL0OSQ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 08:00:40 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577451639; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=elAZDYyWpHh1dEeZKdpEIhlxZZccEhpE0oQywbjr8TQ=; b=jdISPOh5v/3vGDtuhCo7x61I+0dsk7sWshA2g012ZmPCVlWA61nkzE/yDJNLbyDzEMIwmBRL
- s55eJbYxSb6Qzlwjg0H9J4LH/BCaJ6r1W7w0N22zIj74+TwNbbOBBbroS/kdLk3rhvk+45pw
- hmL261uVdjDJKJIVB/P+U8Eh5e8=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e060072.7f7729b19420-smtp-out-n01;
- Fri, 27 Dec 2019 13:00:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3BF47C447AF; Fri, 27 Dec 2019 13:00:34 +0000 (UTC)
-Received: from [10.204.79.138] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 27 Dec 2019 09:18:16 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: akdwived)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36A09C447AD;
-        Fri, 27 Dec 2019 13:00:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36A09C447AD
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akdwived@codeaurora.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: Documentation for qcom,eud
-To:     Rob Herring <robh@kernel.org>,
-        Prakruthi Deepak Heragu <pheragu@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ckadabi@codeaurora.org, tsoni@codeaurora.org,
-        rnayak@codeaurora.org, bryanh@codeaurora.org,
-        psodagud@codeaurora.org,
-        Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
-References: <1536096853-30473-1-git-send-email-pheragu@codeaurora.org>
- <1536096853-30473-2-git-send-email-pheragu@codeaurora.org>
- <20180925192507.GA19360@bogus>
-From:   "Dwivedi, Avaneesh Kumar (avani)" <akdwived@codeaurora.org>
-Message-ID: <03949a1b-ee93-ee71-ff6e-e1f045b15129@codeaurora.org>
-Date:   Fri, 27 Dec 2019 18:30:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 8EDE9634C86;
+        Fri, 27 Dec 2019 16:17:39 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1ikqQt-00017H-TA; Fri, 27 Dec 2019 16:17:39 +0200
+Date:   Fri, 27 Dec 2019 16:17:39 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        peter.griffin@linaro.org, ezequiel@collabora.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
+ binding
+Message-ID: <20191227141739.GD861@valkosipuli.retiisi.org.uk>
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+ <20191227122114.23075-2-andrey.konovalov@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20180925192507.GA19360@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191227122114.23075-2-andrey.konovalov@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Andrey,
 
-We would like to revive this thread, We also would like to address your 
-comments on this patch set.
+Thanks for the patchset.
 
-Please consider our reply against your comments so that we can proceed.
+On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
+> Add YAML device tree binding for IMX219 CMOS image sensor, and
+> the relevant MAINTAINERS entries.
+> 
+> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
+>  MAINTAINERS                                   |   8 ++
+>  2 files changed, 142 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> new file mode 100644
+> index 000000000000..b58aa49a7c03
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> @@ -0,0 +1,134 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
+> +
+> +maintainers:
+> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
+> +
+> +description: |-
+> +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
+> +  with an active array size of 3280H x 2464V. It is programmable through
+> +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
+> +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
+> +  4 data lanes.
+> +
+> +properties:
+> +  compatible:
+> +    const: sony,imx219
+> +
+> +  reg:
+> +    description: I2C device address
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: xclk
 
-On 9/26/2018 12:55 AM, Rob Herring wrote:
-> On Tue, Sep 04, 2018 at 02:34:12PM -0700, Prakruthi Deepak Heragu wrote:
->> Documentation for Embedded USB Debugger (EUD) device tree bindings.
->>
->> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
->> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
->> ---
->>   .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 41 ++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
->> new file mode 100644
->> index 0000000..a03021a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
->> @@ -0,0 +1,41 @@
->> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
->> +
->> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
->> +on chip to support the USB-based debug and trace capabilities.
-> Is it just for debug and normally bypassed?
-Yes, In normal mode EUD is bypassed.
->> +
->> +Required properties:
->> +
->> + - compatible:  Should be "qcom,msm-eud"
-> Needs to be SoC specific (though a fallback is fine).
+There's a single clock. Does it need a name? I'd just omit it.
 
-This IP will be present in all qcom SoC's that is why this is specific 
-to qcom, let us know if this is anyway problematic?
+> +
+> +  VDIG-supply:
+> +    description:
+> +      Digital I/O voltage supply, 1.8 volts
+> +
+> +  VANA-supply:
+> +    description:
+> +      Analog voltage supply, 2.8 volts
+> +
+> +  VDDL-supply:
+> +    description:
+> +      Digital core voltage supply, 1.2 volts
+> +
+> +  xclr-gpios:
+> +    description: |-
+> +      Reference to the GPIO connected to the xclr pin, if any.
+> +      Must be released (set high) after all supplies are applied.
 
->> + - interrupts:  Interrupt number
->> + - reg: Should be address and size of EUD register space
->> +
->> +Driver notifies clients for VBUS attach/detach and charger enable/disable
-> Bindings are for h/w blocks, not drivers.
-This has been addressed in patch set v3 which is pending for your review.
->
->> +events. The link between client and EUD is established via a directed
->> +graph. EUD driver has one endpoint of the graph link mentioning EUD as an
->> +output link and clients registered for these notifications from the EUD
->> +should have the other endpoint of the graph link as an input link.
-> OF graph is for describing data flows (i.e. h/w connections), not
-> clients wanting some event.
+A common name for this in camera sensors is xshutdown. I'd suggest to use
+that.
 
-Will rephrasing above description as below would work?
+> +
+> +  camera-clk:
+> +    type: object
+> +
+> +    description: Clock source for imx219
+> +
+> +    properties:
+> +      clock-frequency: true
+> +
+> +    required:
+> +      - clock-frequency
 
-"The link between event receiver and EUD is established via a directed 
-graph. Where EUD act as output link and event receiver(ex. usb 
-controller or charger h/w)  as input link"
+Hmm. The driver doesn't seem to use this for anything.
 
->> Each of
->> +these endpoints should contain a 'remote-endpoint' phandle property that
->> +points to the corresponding endpoint in the port of the remote device.
-> You don't need to describe how the graph binding works. Just what the
-> port assignments are.
+There are two approaches to this; either you can get and check the
+frequency, or specify it in DT bindings, set and then check it.
 
-patch set v3 has removed the part describing how graph binding works.
+See e.g. Documentation/devicetree/bindings/media/i2c/nokia,smia.txt (not in
+YAML though).
 
->
-> I worry this is going to collide with using the graph binding for USB
-> connectors.
+> +
+> +  # See ../video-interfaces.txt for more details
+> +  port:
+> +    type: object
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +        properties:
+> +          clock-lanes:
+> +            const: 0
 
-Can you please elaborate your query little more? USB controller has 
-input connection from EUD as well as USB connectors.
+If the hardware does not support lane reordering, you can omit the
+clock-lanes property as it provides no information.
 
-As mentioned earlier, usb controller receive event from EUD only in 
-debug mode while in normal mode USB connector supplies the event.
+> +
+> +          data-lanes:
+> +            description: |-
+> +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
+> +              four-lane operation.
+> +            oneOf:
+> +              - const: [[ 1, 2 ]]
+> +              - const: [[ 1, 2, 3, 4 ]]
+> +
+> +          clock-noncontinuous:
+> +            type: boolean
+> +            description: |-
+> +              Presence of this boolean property decides whether the MIPI CSI-2
+> +              clock is continuous or non-continuous.
 
-does that address concern?
+How about: MIPI CSI-2 clock will be non-continuous if this property is
+present, otherwise it's continuous.
 
->
->> +
->> +An example for EUD device node:
->> +
->> +	eud: qcom,msm-eud@88e0000 {
->> +		compatible = "qcom,msm-eud";
->> +		interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg = <0x88e0000 0x4000>;
->> +		port {
->> +                	eud_output: endpoint {
->> +                        	remote-endpoint = <&usb3_input>;
->> +                        };
->> +        	};
->> +	};
->> +
->> +An example for EUD client:
-> What are possible clients? Could we want to switch clients at runtime?
+> +
+> +        required:
+> +          - clock-lanes
+> +          - data-lanes
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - VANA-supply
+> +  - VDIG-supply
+> +  - VDDL-supply
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        imx219: sensor@10 {
+> +            compatible = "sony,imx219";
+> +            reg = <0x10>;
+> +            clocks = <&imx219_clk>;
+> +            clock-names = "xclk";
+> +            VANA-supply = <&imx219_vana>;   /* 2.8v */
+> +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
+> +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
+> +
+> +            imx219_clk: camera-clk {
+> +                compatible = "fixed-clock";
+> +                #clock-cells = <0>;
+> +                clock-frequency = <24000000>;
+> +            };
+> +
+> +            port {
+> +                imx219_0: endpoint {
+> +                    remote-endpoint = <&csi1_ep>;
+> +                    clock-lanes = <0>;
+> +                    data-lanes = <1 2>;
+> +                    clock-noncontinuous;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ffa3371bc750..f7b6c24ec081 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15350,6 +15350,14 @@ S:	Maintained
+>  F:	drivers/media/i2c/imx214.c
+>  F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+>  
+> +SONY IMX219 SENSOR DRIVER
+> +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-As of now clients are usb controller and charger hardware, and they are 
-fixed.
+Is Dave aware of this? :-)
 
-EUD application decide events dynamically.
+> +L:	linux-media@vger.kernel.org
+> +T:	git git://linuxtv.org/media_tree.git
+> +S:	Maintained
+> +F:	drivers/media/i2c/imx219.c
+> +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> +
+>  SONY IMX258 SENSOR DRIVER
+>  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+>  L:	linux-media@vger.kernel.org
 
->
->> +
->> +	usb3 {
->> +		port {
->> +                	usb3_input: endpoint {
->> +                        	remote-endpoint = <&eud_output>;
->> +                        };
->> +        	};
->> +	};
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Regards,
+
+Sakari Ailus
