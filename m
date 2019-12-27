@@ -3,116 +3,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5EFC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 12:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 423BFC2D0DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 12:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A66DC20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 12:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EB221582
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 12:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfL0Mjp (ORCPT
+        id S1726509AbfL0M7p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 07:39:45 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43950 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0Mjo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 07:39:44 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 02C4B28B07D;
-        Fri, 27 Dec 2019 12:39:40 +0000 (GMT)
-Date:   Fri, 27 Dec 2019 13:39:38 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Jitao Shi <jitao.shi@mediatek.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org,
+        Fri, 27 Dec 2019 07:59:45 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:33310 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726377AbfL0M7p (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 07:59:45 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 59BE2FB03;
+        Fri, 27 Dec 2019 13:59:42 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id R0-rgRbwKwjQ; Fri, 27 Dec 2019 13:59:40 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id C688E49799; Fri, 27 Dec 2019 13:59:39 +0100 (CET)
+Date:   Fri, 27 Dec 2019 13:59:39 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>
-Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
- double-linked list
-Message-ID: <20191227133938.5cf2550f@collabora.com>
-In-Reply-To: <20191224113111.GB14837@ravnborg.org>
-References: <20191203141515.3597631-1-boris.brezillon@collabora.com>
-        <CGME20191203141542eucas1p23771a9c49ef18144c832fc536bdae61a@eucas1p2.samsung.com>
-        <20191203141515.3597631-5-boris.brezillon@collabora.com>
-        <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
-        <20191216155551.083dcbaf@collabora.com>
-        <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
-        <20191216162542.261c821c@collabora.com>
-        <60f03d50-7c0f-c3d0-920f-0625c08b2171@samsung.com>
-        <1010f5fc-0672-643c-4410-e053a928cb66@samsung.com>
-        <20191224104422.25dbf980@collabora.com>
-        <20191224113111.GB14837@ravnborg.org>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] leds: lm3692x: Make sure we don't exceed the
+ maximum led current
+Message-ID: <20191227125939.GA26392@bogon.m.sigxcpu.org>
+References: <cover.1577271823.git.agx@sigxcpu.org>
+ <96dad031f3a9ff5bbc311d0ec8768b348b996bcf.1577271823.git.agx@sigxcpu.org>
+ <20191226101336.GD4033@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191226101336.GD4033@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 24 Dec 2019 12:31:11 +0100
-Sam Ravnborg <sam@ravnborg.org> wrote:
-
-> Hi Boris.
-> 
-> > Just a reminder of my 2 proposals:
+Hi,
+On Thu, Dec 26, 2019 at 11:13:36AM +0100, Pavel Machek wrote:
+> On Wed 2019-12-25 12:07:19, Guido Günther wrote:
+> 1;2802;0c> The current is given by the formular from page 12 of
+> > https://www.ti.com/lit/ds/symlink/lm36922.pdf. We use this to limit the
+> > led's max_brightness using the led-max-microamp DT property.
 > > 
-> > 1/ implement the bridge_ops->pre_enable/post_disable() hooks so you can
-> >    split your enable/disable logic in 2 parts and make sure things are
-> >    ready when the panel/next bridge tries to send DSI commands
-> > 2/ move everything that's needed to send DSI commands out of the  
-> >    ->enable() path (maybe in runtime PM resume/suspend hooks) so you  
-> >    can call that in the DSI transfer path too
-> > 
-> > As pointed out by Laurent, #1 doesn't work because some panel drivers
-> > send DSI commands in their ->prepare() hook, and ->pre_enable() methods
-> > are called in reverse order, meaning that the DRM panel bridge driver
-> > would try to issue DSI commands before the DSI host controllers is ready
-> > to send them. I still thing #2 is a good option.  
+> > The formular for the lm36923 is identical according to the data
+> sheet.
 > 
-> Jitao Shi suggested to extend panels so we had a sequence of:
+> formula?
 > 
->   prepare_power()  <= new callback,
->                    here one should NOT be allowed to send
->                    DSI commands
->   prepare()
->   enable()
+> >  static int lm3692x_probe_dt(struct lm3692x_led *led)
+> >  {
+> >  	struct fwnode_handle *child = NULL;
+> >  	struct led_init_data init_data = {};
+> > -	u32 ovp;
+> > +	u32 ovp, max_cur;
+> >  	bool exp_mode;
+> >  	int ret;
+> >  
+> > @@ -397,6 +416,10 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+> >  		return ret;
+> >  	}
+> >  
+> > +	fwnode_property_read_u32(child, "led-max-microamp", &max_cur);
+> > +	led->led_dev.max_brightness = ret ? LED_FULL :
+> > +		lm3692x_max_brightness(led, max_cur);
+> > +
 > 
->    #
->    # panel is now ready to show your favourite christmas movie
->    #
-> 
->   disable()
->   unprepare()
->   unprepare_power()  <= new callback
-> 
-> 
-> Would this help implement what you suggest above?
-> Relevant panels would then have to be updated - but this
-> is doable.
+> Umm. Should ret come from this fwnode_property_read_u32()?
 
-I didn't look at Jitao's proposal but it looks like it's addressing a
-similar issue on the DSI slave/device side: the device probably needs
-to be powered before the host can interact with it through the DSI+DPHY
-bus. I'm not entirely sure why we'd need another hook to do that since
-we already have the ->prepare() one.
+Argh...i was sure i had that fixed (and tested without setting
+led-max-microamp) but it was sitting on another branch. Thanks a lot for
+catching that!
+ -- Guido
+
+> 
+> With that fixed,
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> (Feel free to wait for Rob before resending the series, and I guess
+> you can merge it with the next one).
+> 
+> Best regards,
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
