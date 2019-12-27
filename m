@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6D6C2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B1EC2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C005520CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B5A21582
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577469483;
-	bh=HJ0ymcUkdCCjoz9nZLNfodLIvHB94KyevMzMw3Nhzz8=;
+	s=default; t=1577469973;
+	bh=ZMe5PCi44onBsQSMmx6BzVqwcH/iyoiNk7gBWQzdsZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c20E2FsmjPtepyNe6/r4oIM1Lq8vDv8FtW6RMtjQKR6pxeSshYDRTDBEfXbSSZdfM
-	 uR9hxSkES3sXBk0PP8gmUsCIbYYmOMNWvkMo5F/dlEGsI9ZP66q2O59HUMYCGVrAgX
-	 IYqSEIAsKf8VlMtkrB/n4ryeEozJJkoIeGT0heJA=
+	b=tq9eqVfZF6ZwUiCU9SDQhMESNSOHfddhaMl4BnI8t9tJTsMv/tqVK2Wj4LcO01Q2t
+	 mWk6NSa7FgPD5swzS1+wkZAtyNROiAD+Bd46Abx473KYZefFIaKFyibmZZP4SyuJhS
+	 4kTk/66q+R7ad0bAw/I1KMMZjULwu49ZA3heG9II=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfL0Rlg (ORCPT
+        id S1728263AbfL0SCx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:41:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37924 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 13:02:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727506AbfL0Rlg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:41:36 -0500
+        id S1728094AbfL0SCw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 13:02:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5329721775;
-        Fri, 27 Dec 2019 17:41:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DDE021927;
+        Fri, 27 Dec 2019 18:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468495;
-        bh=HJ0ymcUkdCCjoz9nZLNfodLIvHB94KyevMzMw3Nhzz8=;
+        s=default; t=1577469772;
+        bh=ZMe5PCi44onBsQSMmx6BzVqwcH/iyoiNk7gBWQzdsZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAh7GBGUU2igbVkSXBMyyXdEGiawjjdwywsuhfOM6+vWGP7H8gN0mRJ2OebqxYjW/
-         sNe6Rwym4m5rmsnlBjh//+C5ldb3IHuvBfE1YSMASIL9UHkCJ4UMMT4eSCfEklZLKo
-         21iTR6Q+Yk37NTTmgwTcIeD2gUdQ2MyVeapKWVio=
+        b=zPvrCdYqC5CRsXNeV1rSYi44n0lXpZsdDOsDJcCePn5+vVqOiDeDOQgMBnMYN16wO
+         eDWmCt5T7DFTXV3tQZ8GGsYoMGrp6wPS1puI3M2LGzy0TK/KcJt0oO8PkoZ9Tfx9vU
+         awx8zALydic10fwkmYqW+3gJ/VpqXvx/cL/FG/To=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Roese <sr@denx.de>, Fabio Estevam <festevam@gmail.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 030/187] ARM: dts: imx6ul: imx6ul-14x14-evk.dtsi: Fix SPI NOR probing
-Date:   Fri, 27 Dec 2019 12:38:18 -0500
-Message-Id: <20191227174055.4923-30-sashal@kernel.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 23/57] ARM: dts: am437x-gp/epos-evm: fix panel compatible
+Date:   Fri, 27 Dec 2019 13:01:48 -0500
+Message-Id: <20191227180222.7076-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
-References: <20191227174055.4923-1-sashal@kernel.org>
+In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
+References: <20191227180222.7076-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,37 +61,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Stefan Roese <sr@denx.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit 0aeb1f2b74f3402e9cdb7c0b8e2c369c9767301e ]
+[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
 
-Without this "jedec,spi-nor" compatible property, probing of the SPI NOR
-does not work on the NXP i.MX6ULL EVK. Fix this by adding this
-compatible property to the DT.
+The LCD panel on AM4 GP EVMs and ePOS boards seems to be
+osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
+the panel has changed since the early EVMs, or there has been a mistake
+with the panel type.
 
-Fixes: 7d77b8505aa9 ("ARM: dts: imx6ull: fix the imx6ull-14x14-evk configuration")
-Signed-off-by: Stefan Roese <sr@denx.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Update the DT files accordingly.
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
+ arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index c2a9dd57e56a..aa86341adaaa 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -215,7 +215,7 @@
- 	flash0: n25q256a@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		compatible = "micron,n25q256a";
-+		compatible = "micron,n25q256a", "jedec,spi-nor";
- 		spi-max-frequency = <29000000>;
- 		spi-rx-bus-width = <4>;
- 		spi-tx-bus-width = <4>;
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index afb8eb0a0a16..051823b7e5a1 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -83,7 +83,7 @@
+ 		};
+ 
+ 	lcd0: display {
+-		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
++		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+ 		label = "lcd";
+ 
+ 		panel-timing {
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index 081fa68b6f98..c4279b0b9f12 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -45,7 +45,7 @@
+ 	};
+ 
+ 	lcd0: display {
+-		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
++		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+ 		label = "lcd";
+ 
+ 		panel-timing {
 -- 
 2.20.1
 
