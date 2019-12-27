@@ -2,134 +2,313 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9697FC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6505C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A850208C4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 05:33:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D9TRMYLR"
+	by mail.kernel.org (Postfix) with ESMTP id 882C520838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 06:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfL0Fdb (ORCPT
+        id S1726265AbfL0GDT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 00:33:31 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35508 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0Fcw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 00:32:52 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so11313304plt.2
-        for <devicetree@vger.kernel.org>; Thu, 26 Dec 2019 21:32:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KhIB3J48uWNcyBCDKSxDbyte5ZCMNiiAYIqCxmaTVF8=;
-        b=D9TRMYLRO0qmQ6tzR+00FFi922Pf7WqH7oQS//ctW8vn+qc3XIO3rLm0lB7tNoyqCi
-         krg1l9HwON48ELklqViMesQEmrckOA2OXC6n3ZEW/hR4AUVQCqbb37Vz9nKeSsPsleSB
-         rkOggHA20LBrijMn+F4xV28LeXWK6aQ9VRXk8LQV/26RnVSHApcm5a1ea9M9d9okkqTJ
-         cipzvRT4XPWhvzsuhQ5C7Rg/dasMWro3SODOBKj+hFhVPl4uXMGgQXw5H7YiPTo4fQ1Z
-         pD7OmuBKX2TibrC5sY/zZZrQSPItOFbu6q1Aa3gYAr+693rAja2eroa9jdHxaQIzL2e9
-         LCCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KhIB3J48uWNcyBCDKSxDbyte5ZCMNiiAYIqCxmaTVF8=;
-        b=iPoKSKUHoefOJ8pnHzcNopzi2jq5c2McCvdcbdi7RklUdILSLQPuCRMjAe5InF9+HF
-         8gEQh5515yK8KMZG8Z4XFCxznmw0JQb7dEC7IrGO9A9AUo2q1pHcHQeqUxFajuWNz0QQ
-         X96IJInnj9gWA6t/n1Z/UDsMoQ1q6dYjGY1/cSb0zvcUSYrlmcY1G5R0fDhMLvuJjNii
-         SHHbeJZEhw+u7G5ZwEdrlIypW/3OBFeURtuW8F/qVRECO/8B03gpS7hon/G51xxN6DrF
-         WhMHp5/h9QDkioSoFmG46R9ryjxiHEAYDAvCAKRaE9SRFjXx6rXQpYvXr0eZrc1C78RG
-         E3Mg==
-X-Gm-Message-State: APjAAAVMaMtnK2K0Rc+r7ZUAaoGV3DGeZ6D2kTz+6KOjzI3vx24oF2IB
-        sXg4Kby0yZCUFPBzg8CpWf7zkw==
-X-Google-Smtp-Source: APXvYqxbwQ4iG7Pe49JtDgZwfxbh9CvzkbEyHE9tg12cbFs17Pur6LNjISOplN4QjyIyv7Q29RTndA==
-X-Received: by 2002:a17:90b:1110:: with SMTP id gi16mr23080226pjb.110.1577424772331;
-        Thu, 26 Dec 2019 21:32:52 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c22sm16789196pfo.50.2019.12.26.21.32.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Dec 2019 21:32:51 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: [PATCH v2 1/8] dt-bindings: remoteproc: Add Qualcomm PIL info binding
-Date:   Thu, 26 Dec 2019 21:32:08 -0800
-Message-Id: <20191227053215.423811-2-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191227053215.423811-1-bjorn.andersson@linaro.org>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 27 Dec 2019 01:03:19 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:48370 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726169AbfL0GDT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 01:03:19 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 36A101A0E15;
+        Fri, 27 Dec 2019 07:03:16 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 075C41A0DF4;
+        Fri, 27 Dec 2019 07:03:06 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D517D402B1;
+        Fri, 27 Dec 2019 14:02:53 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        aisheng.dong@nxp.com, l.stach@pengutronix.de, angus@akkea.ca,
+        cosmin.stoica@nxp.com, gary.bisson@boundarydevices.com,
+        leonard.crestez@nxp.com, abel.vesa@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 2/3] arm64: dts: freescale: Add i.MX8MP EVK board support
+Date:   Fri, 27 Dec 2019 13:59:44 +0800
+Message-Id: <1577426385-31273-2-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1577426385-31273-1-git-send-email-Anson.Huang@nxp.com>
+References: <1577426385-31273-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a devicetree binding for the Qualcomm periperal image loader
-relocation info region found in the IMEM.
+Add basic i.MM8MP EVK board support.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
+ arch/arm64/boot/dts/freescale/Makefile       |   1 +
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 231 +++++++++++++++++++++++++++
+ 2 files changed, 232 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-evk.dts
 
-Changes since v1:
-- New patch
-
- .../bindings/remoteproc/qcom,pil-info.yaml    | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 38e344a..a1a1a8c 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -24,6 +24,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mq-librem5-devkit.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
 new file mode 100644
-index 000000000000..715945c683ed
+index 0000000..6df3beb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
+@@ -0,0 +1,231 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2019 NXP
++ */
 +
-+title: Qualcomm peripheral image loader relocation info binding
++/dts-v1/;
 +
-+description:
-+  This document defines the binding for describing the Qualcomm peripheral
-+  image loader relocation memory region, in IMEM, which is used for post mortem
-+  debugging of remoteprocs.
++#include "imx8mp.dtsi"
 +
-+maintainers:
-+  - Bjorn Andersson <bjorn.andersson@linaro.org>
++/ {
++	model = "NXP i.MX8MPlus EVK board";
++	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 +
-+properties:
-+  compatible:
-+    const: qcom,pil-reloc-info
++	chosen {
++		stdout-path = &uart2;
++	};
 +
-+  offset:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Offset in the register map for the memory region
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x0 0x40000000 0 0xc0000000>,
++		      <0x1 0x00000000 0 0xc0000000>;
++	};
 +
-+examples:
-+  - |
-+    imem@146bf000 {
-+      compatible = "syscon", "simple-mfd";
-+      reg = <0 0x146bf000 0 0x1000>;
++	reg_usdhc2_vmmc: regulator-usdhc2 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
++		regulator-name = "VSD_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++};
 +
-+      pil-reloc {
-+        compatible ="qcom,pil-reloc-info";
-+        offset = <0x94c>;
-+      };
-+    };
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec>;
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethphy1>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy1: ethernet-phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <1>;
++			eee-broken-1000t;
++			reset-gpios = <&gpio4 2 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&snvs_pwrkey {
++	status = "okay";
++};
++
++&uart2 {
++	/* console */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usdhc2 {
++	assigned-clocks = <&clk IMX8MP_CLK_USDHC2>;
++	assigned-clock-rates = <400000000>;
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
++	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&reg_usdhc2_vmmc>;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&usdhc3 {
++	assigned-clocks = <&clk IMX8MP_CLK_USDHC3>;
++	assigned-clock-rates = <400000000>;
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++
++	pinctrl_fec: fecgrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_SAI1_RXD2__ENET1_MDC		0x3
++			MX8MP_IOMUXC_SAI1_RXD3__ENET1_MDIO		0x3
++			MX8MP_IOMUXC_SAI1_RXD4__ENET1_RGMII_RD0		0x91
++			MX8MP_IOMUXC_SAI1_RXD5__ENET1_RGMII_RD1		0x91
++			MX8MP_IOMUXC_SAI1_RXD6__ENET1_RGMII_RD2		0x91
++			MX8MP_IOMUXC_SAI1_RXD7__ENET1_RGMII_RD3		0x91
++			MX8MP_IOMUXC_SAI1_TXC__ENET1_RGMII_RXC		0x91
++			MX8MP_IOMUXC_SAI1_TXFS__ENET1_RGMII_RX_CTL	0x91
++			MX8MP_IOMUXC_SAI1_TXD0__ENET1_RGMII_TD0		0x1f
++			MX8MP_IOMUXC_SAI1_TXD1__ENET1_RGMII_TD1		0x1f
++			MX8MP_IOMUXC_SAI1_TXD2__ENET1_RGMII_TD2		0x1f
++			MX8MP_IOMUXC_SAI1_TXD3__ENET1_RGMII_TD3		0x1f
++			MX8MP_IOMUXC_SAI1_TXD4__ENET1_RGMII_TX_CTL	0x1f
++			MX8MP_IOMUXC_SAI1_TXD5__ENET1_RGMII_TXC		0x1f
++			MX8MP_IOMUXC_SAI1_RXD0__GPIO4_IO02		0x19
++		>;
++	};
++
++	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
++		fsl,pins = <
++			MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19	0x41
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX8MP_IOMUXC_UART2_RXD__UART2_DCE_RX	0x49
++			MX8MP_IOMUXC_UART2_TXD__UART2_DCE_TX	0x49
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK	0x190
++			MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD	0x1d0
++			MX8MP_IOMUXC_SD2_DATA0__USDHC2_DATA0	0x1d0
++			MX8MP_IOMUXC_SD2_DATA1__USDHC2_DATA1	0x1d0
++			MX8MP_IOMUXC_SD2_DATA2__USDHC2_DATA2	0x1d0
++			MX8MP_IOMUXC_SD2_DATA3__USDHC2_DATA3	0x1d0
++			MX8MP_IOMUXC_GPIO1_IO04__USDHC2_VSELECT	0xc1
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2grp-100mhz {
++		fsl,pins = <
++			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK	0x194
++			MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD	0x1d4
++			MX8MP_IOMUXC_SD2_DATA0__USDHC2_DATA0	0x1d4
++			MX8MP_IOMUXC_SD2_DATA1__USDHC2_DATA1	0x1d4
++			MX8MP_IOMUXC_SD2_DATA2__USDHC2_DATA2	0x1d4
++			MX8MP_IOMUXC_SD2_DATA3__USDHC2_DATA3	0x1d4
++			MX8MP_IOMUXC_GPIO1_IO04__USDHC2_VSELECT 0xc1
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2grp-200mhz {
++		fsl,pins = <
++			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK	0x196
++			MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD	0x1d6
++			MX8MP_IOMUXC_SD2_DATA0__USDHC2_DATA0	0x1d6
++			MX8MP_IOMUXC_SD2_DATA1__USDHC2_DATA1	0x1d6
++			MX8MP_IOMUXC_SD2_DATA2__USDHC2_DATA2	0x1d6
++			MX8MP_IOMUXC_SD2_DATA3__USDHC2_DATA3	0x1d6
++			MX8MP_IOMUXC_GPIO1_IO04__USDHC2_VSELECT 0xc1
++		>;
++	};
++
++	pinctrl_usdhc2_gpio: usdhc2grp-gpio {
++		fsl,pins = <
++			MX8MP_IOMUXC_SD2_CD_B__GPIO2_IO12	0x1c4
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK	0x190
++			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD	0x1d0
++			MX8MP_IOMUXC_NAND_DATA04__USDHC3_DATA0	0x1d0
++			MX8MP_IOMUXC_NAND_DATA05__USDHC3_DATA1	0x1d0
++			MX8MP_IOMUXC_NAND_DATA06__USDHC3_DATA2	0x1d0
++			MX8MP_IOMUXC_NAND_DATA07__USDHC3_DATA3	0x1d0
++			MX8MP_IOMUXC_NAND_RE_B__USDHC3_DATA4	0x1d0
++			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5	0x1d0
++			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6	0x1d0
++			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7	0x1d0
++			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE	0x190
++		>;
++	};
++
++	pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
++		fsl,pins = <
++			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK	0x194
++			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD	0x1d4
++			MX8MP_IOMUXC_NAND_DATA04__USDHC3_DATA0	0x1d4
++			MX8MP_IOMUXC_NAND_DATA05__USDHC3_DATA1	0x1d4
++			MX8MP_IOMUXC_NAND_DATA06__USDHC3_DATA2	0x1d4
++			MX8MP_IOMUXC_NAND_DATA07__USDHC3_DATA3	0x1d4
++			MX8MP_IOMUXC_NAND_RE_B__USDHC3_DATA4	0x1d4
++			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5	0x1d4
++			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6	0x1d4
++			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7	0x1d4
++			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE	0x194
++		>;
++	};
++
++	pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
++		fsl,pins = <
++			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK	0x196
++			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD	0x1d6
++			MX8MP_IOMUXC_NAND_DATA04__USDHC3_DATA0	0x1d6
++			MX8MP_IOMUXC_NAND_DATA05__USDHC3_DATA1	0x1d6
++			MX8MP_IOMUXC_NAND_DATA06__USDHC3_DATA2	0x1d6
++			MX8MP_IOMUXC_NAND_DATA07__USDHC3_DATA3	0x1d6
++			MX8MP_IOMUXC_NAND_RE_B__USDHC3_DATA4	0x1d6
++			MX8MP_IOMUXC_NAND_CE2_B__USDHC3_DATA5	0x1d6
++			MX8MP_IOMUXC_NAND_CE3_B__USDHC3_DATA6	0x1d6
++			MX8MP_IOMUXC_NAND_CLE__USDHC3_DATA7	0x1d6
++			MX8MP_IOMUXC_NAND_CE1_B__USDHC3_STROBE	0x196
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_GPIO1_IO02__WDOG1_WDOG_B	0xc6
++		>;
++	};
++};
 -- 
-2.24.0
+2.7.4
 
