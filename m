@@ -7,103 +7,168 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBFEC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E54C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF6120882
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B4D120CC7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 16:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Yf6Cu8DG"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="DwiKlg3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbfL0Qko (ORCPT
+        id S1726495AbfL0Qxy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 11:40:44 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37683 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfL0Qko (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 11:40:44 -0500
-Received: by mail-ed1-f65.google.com with SMTP id cy15so25734358edb.4;
-        Fri, 27 Dec 2019 08:40:42 -0800 (PST)
+        Fri, 27 Dec 2019 11:53:54 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43682 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0Qxy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 11:53:54 -0500
+Received: by mail-ed1-f68.google.com with SMTP id dc19so25737753edb.10;
+        Fri, 27 Dec 2019 08:53:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xgrOcm9k9IAQcFI+FWINNDCQ0Z4VaYkcjqiXu7nzoSs=;
-        b=Yf6Cu8DGYWlCJdHGMC0bCW0kyLJBuSPvgcu9lEwGombWcvTkBDMvNqz5BXObWo3yok
-         p5el38LSnq5WwV5xPaxH2kD1uC1zQLDc90NKaHzo5pMnK5IM3t5+g7M6Dy89kSbkesBD
-         PKuPfIb9Ne2DPhT2T1AyR9N4f1vZHB8G2afcutDR21ntb4f5EV1WNUttItuiRsGW8lO3
-         oagm92RwvJIfhFK20d9NRpGz+rCQDCS24AeDaFlUwM9TI5mAPRcuwVkhqJOw521B+iVu
-         Fw2LLTkI4p8vCWe4nn2jFEx3hCfknLrdce2dS+tW5Z5HpnuhBts1ssj/AkZzzy4Yc5KX
-         T1yg==
+        bh=PutLJWPd2cEOhbmgZKTEhd5XEP7OpzpWifMhut4DmqA=;
+        b=DwiKlg3avHIENCyNavhob2AMpVyTS9QSLl42Sq+4wmPxA2eGoEaW0dNQJSDgR9qVI/
+         gVpTH5X0CHsaaBqUQSIqqYyJvt9ANz4oUcUiF1HgEuaNFJ4f5fSTRM+ZdOaxipbQ+37l
+         e52TCpfVMWTs/4gfu4RQu63sv+6g+UJdbWRp+TidXrL8tOQ5ctn3zFDhXQl7NGKZtaEy
+         ejJ3rs1FslamWH8noA5P8dlPPpBQmf7bK+8qfHBl8yjGCGtAJYq7knGY0d37A9JguVRB
+         6wK1qjeq7+pJfp7csnP5t+//L8L+/RTNsK49f9NZAKBd2xrob+rD8KIBexvwXOkcSiRD
+         3zRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xgrOcm9k9IAQcFI+FWINNDCQ0Z4VaYkcjqiXu7nzoSs=;
-        b=pmt/lep4OKT5bpw0G8jDFuhPRRjK97qYmncIp75afqTXy7JP2qiCJGgezxoMTjuq8l
-         H5lJ+M5bKY34erA7wg8f8a1YPLvNdXERLvpmJxDalOeeoJn4D+OSbPQ77SRE7xS4Tj7y
-         UjKyAz7xYbm5xHHarbTYqQpDYK0mreT4cxkEU5XfMKF/PuNVeOGBWch1iy+U1JbdW+Ig
-         15J70RRLi1FNwKwAp4AHpYTkc53ogfZwBPD5cNourVQYeCjtGtNnH9nRdzPCw5xl/HG6
-         D/8zXV0A07E9oSLYGtuX0hRBX+WrJX+2ey9BVbvdig+7EzIs8uxdglCWPtCRAAbiawKR
-         6q/w==
-X-Gm-Message-State: APjAAAXKUynsK6LQaevVZ4EID1r0LOXpT4lwRrV1UiFe9HEZhGrTCAsy
-        P9WgD5fBA3LgQ9B6lZtZwtx2jNCyneI9OCscGus=
-X-Google-Smtp-Source: APXvYqxkHYAyndioq3rkIDvgR0cbdviWKBnIZcDlDoZQCfu0BNG7PYKVTKcaxVPiAWtYOYRzgvoWo7ltBXVq83a0o5o=
-X-Received: by 2002:a50:bae1:: with SMTP id x88mr38955946ede.10.1577464842282;
- Fri, 27 Dec 2019 08:40:42 -0800 (PST)
+        bh=PutLJWPd2cEOhbmgZKTEhd5XEP7OpzpWifMhut4DmqA=;
+        b=ndYCI3/fQPYhVgkEdZmaNNCFUD9dL99pDMAcWgS414N+sbh3tAnxekWXfEH9qd2ytd
+         yMG3TzJaPZS4xzAYrOsVkao0XxBno7cl8KXdXkY8GrAuf9x+jvsaMxfr39xI0n4Pv9Zc
+         FJKWEEv6s8edVEAgNRyFR0FBiQwHRZCdfpKKJO4q3rQzWX2clBIT5ghtauiwtp8JVMLx
+         V8MeLNAqmt/VdIoovQFwkO+SkmidUPWcoPntpTvZvQ3hlYsMfvbkU4yyLTvd/n6Jf46q
+         LakZLmQXAEqCHUeDwmzGiJFVj7oYPltdlQmk5Bgk8DEnTlZ7Q19fGdTit4Xe3dajNLCu
+         xOvg==
+X-Gm-Message-State: APjAAAW2fW7NZHqsCBZXwHbwZ+sZI/x9mlvX4cYZmpfBUGiMdoL+n/Lm
+        tPzay9vTgdW3gAzy1DYbiSGgFHM/pY4qoGScZJ4=
+X-Google-Smtp-Source: APXvYqygkSSfnw8HoIDr9icAV5YXJN/IAat2JIa4d06E0rVnVK5uFaStiuAG+Sxv/pJ2HevsAWvvqJm4znilTktaA3I=
+X-Received: by 2002:aa7:c80b:: with SMTP id a11mr57661239edt.240.1577465632157;
+ Fri, 27 Dec 2019 08:53:52 -0800 (PST)
 MIME-Version: 1.0
-References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com> <1577428606-69855-4-git-send-email-hanjie.lin@amlogic.com>
-In-Reply-To: <1577428606-69855-4-git-send-email-hanjie.lin@amlogic.com>
+References: <20191227094606.143637-1-jian.hu@amlogic.com> <20191227094606.143637-3-jian.hu@amlogic.com>
+In-Reply-To: <20191227094606.143637-3-jian.hu@amlogic.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Fri, 27 Dec 2019 17:40:31 +0100
-Message-ID: <CAFBinCCEz-xezKatuHDPRURRWa3YNmgMObbr85GSvaT_bLFcNQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/6] phy: amlogic: Add Amlogic A1 USB2 PHY Driver
-To:     Hanjie Lin <hanjie.lin@amlogic.com>
+Date:   Fri, 27 Dec 2019 17:53:41 +0100
+Message-ID: <CAFBinCC4Fgn3QQ6H-TWO_Xx+USonzMDZDyvJBfYp-_6=pmKdLQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] clk: meson: add support for A1 PLL clock ops
+To:     Jian Hu <jian.hu@amlogic.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Kevin Hilman <khilman@baylibre.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
         Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
+        Chandle Zou <chandle.zou@amlogic.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hanjie,
+Hi Jian,
 
-overall this looks good to me and I have one question
-
-On Fri, Dec 27, 2019 at 7:37 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+On Fri, Dec 27, 2019 at 10:46 AM Jian Hu <jian.hu@amlogic.com> wrote:
 [...]
-> +       if (priv->soc_id == MESON_SOC_A1)
-> +               value |= PHY_CTRL_R18_MPLL_DCO_CLK_SEL;
-...here we have some CLK_SEL bit
+> @@ -294,9 +298,12 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
+>  {
+>         struct clk_regmap *clk = to_clk_regmap(hw);
+>         struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+> +       int ret = 0;
+>
+> -       if (meson_parm_read(clk->map, &pll->rst) ||
+> -           !meson_parm_read(clk->map, &pll->en) ||
+> +       if (MESON_PARM_APPLICABLE(&pll->rst))
+> +               ret = meson_parm_read(clk->map, &pll->rst);
+> +
+> +       if (ret || !meson_parm_read(clk->map, &pll->en) ||
+>             !meson_parm_read(clk->map, &pll->l))
+>                 return 0;
+I had to read this part twice to understand what it's doing because I
+misunderstood what "ret" is used for (I thought that some "return ret"
+is missing)
+my proposal to make it easier to read:
+...
+if (MESON_PARM_APPLICABLE(&pll->rst) &&
+    meson_parm_read(clk->map, &pll->rst))
+  return 0;
 
-[...]
-> -       priv->clk = devm_clk_get(dev, "xtal");
-> -       if (IS_ERR(priv->clk))
-> -               return PTR_ERR(priv->clk);
-> +       if (priv->soc_id == MESON_SOC_G12A) {
-> +               priv->clk = devm_clk_get(dev, "xtal");
-> +               if (IS_ERR(priv->clk))
-> +                       return PTR_ERR(priv->clk);
+if (!meson_parm_read(clk->map, &pll->en) ||
+    !meson_parm_read(clk->map, &pll->l))
+                 return 0;
+...
+
+please let me know what you think about this
+
+> @@ -321,6 +328,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>         /* do nothing if the PLL is already enabled */
+>         if (clk_hw_is_enabled(hw))
+>                 return 0;
+> +       /*
+> +        * Compared with the previous SoCs, self-adaption module current
+> +        * is newly added for A1, keep the new power-on sequence to enable the
+> +        * PLL.
+> +        */
+> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+> +               /* Enable the pll */
+> +               meson_parm_write(clk->map, &pll->en, 1);
+> +               udelay(10);
+> +               /* Enable the pll self-adaption module current */
+> +               meson_parm_write(clk->map, &pll->current_en, 1);
+> +               udelay(40);
+> +               /* Enable lock detect module */
+> +               meson_parm_write(clk->map, &pll->l_detect, 1);
+> +               meson_parm_write(clk->map, &pll->l_detect, 0);
+> +               goto out;
 > +       }
-but here we don't need any parent/input clock?
-does this mean that the USB2 PHY on the A1 SoC doesn't have any clock
-inputs? how does it generate the correct clock for itself then?
+in all other functions you are skipping the pll->rst register by
+checking for MESON_PARM_APPLICABLE(&pll->rst)
+I like that because it's a pattern which is easy to follow
+
+do you think we can make this part consistent with that?
+I'm thinking of something like this (not compile-tested and I dropped
+all comments, just so you get the idea):
+...
+if (MESON_PARM_APPLICABLE(&pll->rst)
+  meson_parm_write(clk->map, &pll->rst, 1);
+
+meson_parm_write(clk->map, &pll->en, 1);
+
+if (MESON_PARM_APPLICABLE(&pll->rst))
+  meson_parm_write(clk->map, &pll->rst, 0);
+
+if (MESON_PARM_APPLICABLE(&pll->current_en))
+  meson_parm_write(clk->map, &pll->current_en, 1);
+
+if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
+  meson_parm_write(clk->map, &pll->l_detect, 1);
+  meson_parm_write(clk->map, &pll->l_detect, 0);
+}
+
+if (meson_clk_pll_wait_lock(hw))
+...
+
+I see two (and a half) benefits here:
+- if there's a PLL with neither the pll->current_en nor the pll->rst
+registers then you get support for this implementation for free
+- the if (MESON_PARM_APPLICABLE(...)) pattern is already used in the
+driver, but only for one register (in your example when
+MESON_PARM_APPLICABLE(&pll->current_en) exists you also modify the
+pll->l_detect register, which I did not expect)
+- only counts half: no use of "goto", which in my opinion makes it
+very easy to read (just read from top to bottom, checking each "if")
 
 
 Martin
