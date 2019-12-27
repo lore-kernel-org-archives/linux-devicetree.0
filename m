@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AAAC2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7648FC2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867A5206CB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3FD2176D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468964;
-	bh=4YIWANv+xk2ULjgUiU9TKCAH+VD5k1p14EtAPNJLawo=;
+	s=default; t=1577468989;
+	bh=Ph4eGXzhNUrMfMJ+w7vrBMob23ualE7r8SGPNrE8qdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AYgrmlhgu9ZufA0JtvazQEdzBXgsu+af/khSCuhWDfojSdj5tL34ZRtcaSh0uHLt3
-	 AajakIJqnRSv1Sd6q1SAEIONeirjzjHG8ChhMSHKBst81NWleoXXtfUQBZ4+HfH5VA
-	 S2kc7TqYDBmnCkE7g5PqTc435oKMP3w+DjgPyVS4=
+	b=aXdA8Q+HVoGYdi3rsl44mvstCGag6FOC2aaAnP1zb5Z6B9Xoi+Dh12dELNRAgkn1T
+	 e5mJWE/BEBD49XmQk77L3YbdhOci3/kCM1fRxAYwgH6Oh+D6MWOaQsFAHlpd33Uik0
+	 JhBIpvoxi6OAyrYVrCCIAtmWxsdUreMOz+/Z6+RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfL0Roc (ORCPT
+        id S1727642AbfL0Rto (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42678 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:49:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbfL0Rob (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:31 -0500
+        id S1728443AbfL0RoY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 458D721927;
-        Fri, 27 Dec 2019 17:44:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F16B24653;
+        Fri, 27 Dec 2019 17:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468670;
-        bh=4YIWANv+xk2ULjgUiU9TKCAH+VD5k1p14EtAPNJLawo=;
+        s=default; t=1577468664;
+        bh=Ph4eGXzhNUrMfMJ+w7vrBMob23ualE7r8SGPNrE8qdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wVEAZ66xZKfQ5MAnfhyiPpI2yRXycAiTA6231AL+h1glUyucPuw0lON5kxNHKy2Ds
-         IVhCg0B5ZqAXG0oGQA6MsTH+0wpQ6d7iyj41FWa2LpByoYxvL/7AetbCBA1vO0hAxO
-         zLzfO/9WsB27zaYCiubWEFi/kWejoL7mUQUrtfHE=
+        b=YUGDplx58yJKvE5icCZQdeowepaj/1GRkeuS51zEe5ctSiBGn0h7nFxK0DGin2+xU
+         K5wKiBIpOc4NRzR3VN8GxVny1qvpc1SVNDnAALVhoGqgy2spp/qcDDMhYYTmNkgI0S
+         jcegMkN0BnhwE+/nBTiOWZ9u1WBvxCj8q3fFTLrs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Wahren <wahrenst@gmx.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/84] ARM: dts: bcm283x: Fix critical trip point
-Date:   Fri, 27 Dec 2019 12:42:59 -0500
-Message-Id: <20191227174352.6264-31-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 25/84] ARM: dts: Cygnus: Fix MDIO node address/size cells
+Date:   Fri, 27 Dec 2019 12:42:53 -0500
+Message-Id: <20191227174352.6264-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -59,43 +61,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Stefan Wahren <wahrenst@gmx.net>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 30e647a764d446723a7e0fb08d209e0104f16173 ]
+[ Upstream commit fac2c2da3596d77c343988bb0d41a8c533b2e73c ]
 
-During definition of the CPU thermal zone of BCM283x SoC family there
-was a misunderstanding of the meaning "criticial trip point" and the
-thermal throttling range of the VideoCore firmware. The latter one takes
-effect when the core temperature is at least 85 degree celsius or higher
+The MDIO node on Cygnus had an reversed #address-cells and
+ #size-cells properties, correct those.
 
-So the current critical trip point doesn't make sense, because the
-thermal shutdown appears before the firmware has a chance to throttle
-the ARM core(s).
-
-Fix these unwanted shutdowns by increasing the critical trip point
-to a value which shouldn't be reached with working thermal throttling.
-
-Fixes: 0fe4d2181cc4 ("ARM: dts: bcm283x: Add CPU thermal zone with 1 trip point")
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
+Reported-by: Simon Horman <simon.horman@netronome.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm283x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 31b29646b14c..c9322a56300d 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -39,7 +39,7 @@
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index 253df7170a4e..887a60c317e9 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -169,8 +169,8 @@
+ 		mdio: mdio@18002000 {
+ 			compatible = "brcm,iproc-mdio";
+ 			reg = <0x18002000 0x8>;
+-			#size-cells = <1>;
+-			#address-cells = <0>;
++			#size-cells = <0>;
++			#address-cells = <1>;
+ 			status = "disabled";
  
- 			trips {
- 				cpu-crit {
--					temperature	= <80000>;
-+					temperature	= <90000>;
- 					hysteresis	= <0>;
- 					type		= "critical";
- 				};
+ 			gphy0: ethernet-phy@0 {
 -- 
 2.20.1
 
