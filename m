@@ -2,114 +2,84 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE09C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 11:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09B1C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 12:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B21820828
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 11:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DED620882
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 12:06:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="X98BOIzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfL0LvQ (ORCPT
+        id S1726927AbfL0MGt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 06:51:16 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:56324 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbfL0LvQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 06:51:16 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-2e-5e05f03118ce
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 90.F8.08102.130F50E5; Fri, 27 Dec 2019 12:51:13 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Fri, 27 Dec 2019 12:51:08 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "pavel@ucw.cz" <pavel@ucw.cz>
-CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v7 11/12] leds: Add common LED binding parsing support
- to LED class/core
-Thread-Topic: [PATCH v7 11/12] leds: Add common LED binding parsing support
- to LED class/core
-Thread-Index: AQHVtlJMyatI9ieot0i0jk0Qmtw3YKfE7uMAgAjrkIA=
-Date:   Fri, 27 Dec 2019 11:51:07 +0000
-Message-ID: <4f5c3d6b5e10936b3bae672021aec375c2880bf2.camel@fi.rohmeurope.com>
-References: <cover.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-         <c7abf8d15ea54fee504fbec5666d013c26d3b62a.1576745635.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191221193758.GJ32732@amd>
-In-Reply-To: <20191221193758.GJ32732@amd>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <35D7AE440FBBEF4692D77DA8C8D1C20F@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Fri, 27 Dec 2019 07:06:49 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42193 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726354AbfL0MGs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 07:06:48 -0500
+Received: by mail-il1-f196.google.com with SMTP id t2so6951899ilq.9
+        for <devicetree@vger.kernel.org>; Fri, 27 Dec 2019 04:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WmfgYIlZWxDaZizS0/2PUuLY/qX43M07m582qEI148o=;
+        b=X98BOIzumlFPEjdZ9sUuhS3iBBqL1VUK/pjvCrlYXSS/VMjrahfV6GK8V4NLfCKstl
+         FcnTl8ezBueGukai4CUwLYopsLt6rhnipVOq02y3UOM+V7ta4pYmlEnbudPT6SoSqQ0Q
+         Juv11hh4tpO9NcgZfbm1TSYgDn5hSdsHO8H24=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WmfgYIlZWxDaZizS0/2PUuLY/qX43M07m582qEI148o=;
+        b=eifL8ZitLcp3vBA8gtoJG4/qZtri9wO82M/ZiA7SQQcySN8UphERhGDYiIgDHRm3Kc
+         4m8oRE8ibC9tzypk8VxV8D8v1Bg64qSMmQ0DeAVJQ0+gMyIDPk3N1Xbw/hVswNhBWRAu
+         DmkltbwzCqxuGSs3OuXxYjHwaeuhxn/D+x85hrzGtp7ajNxfginLzTbRzPPNaWRWo6Dj
+         /pLo3x8jI2wjfO8ZZt4OEEpbKUYL2H4YA7HpB4lY2UoGlrJ4vFpVxenwCC5qLzFUL9HQ
+         mpoHAQx5JgQf3gbMpba19lrTG1dubkngtOn5tJ0by4dFQ8YPy+xYUikIGmP8Sv6si/SW
+         r6QQ==
+X-Gm-Message-State: APjAAAXYargjo1vmx7hD2vjXon9P6ZWthPJPcFquVM3LgMcoptlX4Uqe
+        2LpuJXWkdurFkOWOxIEV8FyfxMtuA3ods0IQ5xlTUg==
+X-Google-Smtp-Source: APXvYqz0avfFPQ7KqEa1gHijLD//RP3wLx7cUiHD8+e66tZOfTYRzPwEjDOnRq8Z7uRAutkXR/PIyTrnPMOIPxZ6x2s=
+X-Received: by 2002:a92:860f:: with SMTP id g15mr42716158ild.297.1577448407609;
+ Fri, 27 Dec 2019 04:06:47 -0800 (PST)
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0wTWRTHc2emM7fowFhed+sjUjVm1yxKQuJdl6gflIxGjYkaEqN0Bxhb
-        Ip3itBjdJYomPlqQYHyFhhajIqgEtMpiiW4QwQXWFyKoEVSEKBAXMSBqxMdMR4VPc+b8/7/z
-        Px/OhaThGW2E6ZJTlCUhw0SHULVlH/2/xg3qkuf1dfyGT7W0MXjfwGkGD3ubKXykq4fGxfW3
-        dTj3v0s6/LjqPIWfvm0AeOT+fgIfHi0l8Ju8Jzp8sXgU4NaaIhpXvaoA+Ma5+zQuedBC4KKS
-        Rgq3NC/Fnc0NNN5ztZ7Bn9svUIsj+XJfOeBfP9zD8L7yv/iAp5Ph/WddNN/RfoXm/31YTfDH
-        fB8IvuzcO4Yf8k9bHbJ+QkKK4Ny6Jt0izV34xwTrLXcvlVkWuu3u00oqB7xn3UAPEReP8ttP
-        Um4QAg1cG0C9TaWM9tMI0K6XhYoCIc0lIPcjRgUiuBh0Mc9Fqx6S+xuiwIs2QvWEc8mounSm
-        5jGjit5iQqsXoKZbd4MWipuFjnrXqm2WW4UqCw8SWtR1gHx5PUG/nvsZXQ90BLMANxW5cgaC
-        fZKLRv4X73Ta0hw6deUOqdWRqK/787e+CV390BVcmVTmVNbM1dDF6PlgDdDqGHQ4t4vRdpiE
-        mgp7qAIQ5RmX4BmjPeNozzjaM44+DnRnAbIJ6RkWwSnGxcpiVqxst9qUT6rd5gfaxQxfBl/q
-        ltUBAoI68BMkTJHsvRJdsiE0xZ623So4rGY5K0N01AEESVMEK1kUjU0Ttv8pyvbv0mRImaLZ
-        2V0HNxo4NWuzKGaK8nd1CoQmxDpeK+AkWbSI2zalZzjHZALq1eEhxgiHKKWJspDltJrV8zA7
-        lPtQpYlK7kIVZx2Zgk3pamgzmAML+rwnSFjvLTlBGijJLonGaHa6auVUqzVL+hHUD6IhMIWz
-        n/5X1InKs/kxp1+JIJSINwZCjXAKY5IxB+x9+7t++fIRy6qk6uczhPhrW6MoGLbrZuz8hmWZ
-        N7a0hl3ObnQNDWcL7opB8okxsPbjy8TUbH+VfI/IExOiksJz9ZSUvzLM3DN6ZtAf+0/K7oii
-        fG+ifVO2r3DdY3rBtc5ZO2rnxM/bMPvQ0EBijM01ElgUtT90b/fO1iUHOpL6V5goh1WI+4WU
-        HcJX+zfP7PMDAAA=
+References: <20191222132229.30276-1-jagan@amarulasolutions.com> <20191226093952.i2jttp7tr5hie6jl@hendrix.home>
+In-Reply-To: <20191226093952.i2jttp7tr5hie6jl@hendrix.home>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Fri, 27 Dec 2019 17:36:36 +0530
+Message-ID: <CAMty3ZA9VBj6OxaLYE21Qt01nnTYGhsS8c2JHc5esDMeWe0qYw@mail.gmail.com>
+Subject: Re: [PATCH v14 0/7] drm/sun4i: Allwinner A64 MIPI-DSI support
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiBTYXQsIDIwMTktMTItMjEgYXQgMjA6MzcgKzAxMDAsIFBhdmVsIE1hY2hlayB3cm90ZToN
-Cj4gSGkhDQo+IA0KPiA+IFF1Y2lrIGdyZXAgZm9yICdmb3JfZWFjaCcgb3IgJ2xpbnV4LGRlZmF1
-bHQtdHJpZ2dlcicgb3INCj4gDQo+IHF1aWNrLg0KPiANCj4gPiBJZiBpbml0X2RhdGEgaXMgZ292
-ZW4gYnV0IG5vIHN0YXJ0aW5nIHBvaW50IGZvciBub2RlIGxvb2t1cCAtIHRoZW4NCj4gDQo+IGlz
-IGdpdmVuLg0KPiANCj4gPiAocGFyZW50KSBkZXZpY2UncyBvd24gRFQgbm9kZSBpcyB1c2VkLiBJ
-ZiBubyBsZWQtY29tcGF0aWJsZSBpcw0KPiA+IGdpdmVuLA0KPiA+IHRoZW4gb2ZfbWF0Y2ggaXMg
-c2VhcmNoZWQgZm9yLiBJZiBuZWl0aGVyIGxlZC1jb21wYXRpYmxlIG5vdA0KPiA+IG9mX21hdGNo
-DQo+IA0KPiBub3Igb2ZfbWF0Y2guDQo+IA0KPiA+IGlzIGdpdmVuIHRoZW4gZGV2aWNlJ3Mgb3du
-IG5vZGUgb3IgcGFzc2VkIHN0YXJ0aW5nIHBvaW50IGFyZSB1c2VkDQo+ID4gYXMNCj4gPiBzdWNo
-Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRp
-bmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+IA0KDQovL3NuaXANCg0KPiA+IEBA
-IC0zMjIsNiArMzk4LDEwIEBAIGludCBsZWRfY2xhc3NkZXZfcmVnaXN0ZXJfZXh0KHN0cnVjdCBk
-ZXZpY2UNCj4gPiAqcGFyZW50LA0KPiA+ICAJCQlsZWRfY2Rldi0+bmFtZSk7DQo+ID4gIA0KPiA+
-ICAJcmV0dXJuIDA7DQo+ID4gK2Vycl9vdXQ6DQo+ID4gKwlpZiAobGVkX2NkZXYtPmZ3bm9kZV9v
-d25lZCkNCj4gPiArCQlmd25vZGVfaGFuZGxlX3B1dChmdyk7DQo+ID4gKwlyZXR1cm4gcmV0Ow0K
-PiA+ICB9DQo+IA0KPiBsZWRfY2Rldi0+Zndub2RlX293bmVkID0gZmFsc2UgaGVyZT8NCg0KSSBh
-ZGRlZCB0aGlzIGFsdGhvdWdoIHdpdGggdGhlIGN1cnJlbnQgcGF0Y2ggaXQgc2hvdWxkIG5vdCBi
-ZSByZXF1aXJlZC4NClRoZSBsZWRfY2Rldi0+Zndub2RlX293bmVkIGlzIGFueXdheXMgcmUtaW5p
-dGlhbGl6ZWQgYXQgdGhlIGJlZ2lubmluZw0Kb2YgdGhlICdsZWRfY2xhc3NkZXZfcmVnaXN0ZXJf
-ZXh0Jy4gSXQgd29uJ3QgZWF0IG1hbnkgY3ljbGVzIHRvIHplcm8gaXQNCmhlcmUgdGhvdWdoIHNv
-IHBlcmhhcHMgaXQncyBzYWZlciB0byBqdXN0IGRvIGl0Lg0KDQpJIGFtIG5vdCBzdXJlIEkgY2Fu
-IGZpbmlzaCBhbmQgdGVzdCB0aGUgcGF0Y2ggdjcgdG9kYXkuIFNvIGl0IG1heSBiZQ0KbmV4dCB5
-ZWFyIHdoZW4gSSBhbSBhYmxlIHRvIHNlbmQgaXQuLi4gU29ycnkgZm9yIHRoZSBkZWxheSENCg0K
-DQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg==
+On Thu, Dec 26, 2019 at 3:08 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Sun, Dec 22, 2019 at 06:52:22PM +0530, Jagan Teki wrote:
+> > This is v14 version for Allwinner A64 MIPI-DSI support
+> > and here is the previous version set[1]
+>
+> I applied the patches 1 to 6, and fixed checkpatch warnings in the
+> patch 5. Make sure to run it before sending patches.
+
+Looks like I missed this time, sorry but usually I would do. Thanks.
