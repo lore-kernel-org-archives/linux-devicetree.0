@@ -2,111 +2,314 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16363C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06822C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED1C20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577470655;
-	bh=rxxe1zwPlZHnF00l2eIYievunhJXNLEnNhDQ3mDUiXs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fhaFkZheRCn1AKdjBw6BCWJ4z8VYG/kz9AhrW26P9AaTQsBT12hbQGBGZnRyCk0Tu
-	 GJD2w8LXXI6H5XzEI0H61nalbjnkMmc4ohss6Q4USaIwsJRl2Mt68qrQwXNW3Nw/SO
-	 c4Ify+YA3YLezhDxF1YQVoIyo6pGndwFB0BQLtT8=
+	by mail.kernel.org (Postfix) with ESMTP id BF7842053B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 18:26:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GNNZpErt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfL0SR1 (ORCPT
+        id S1726965AbfL0S0a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 13:17:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbfL0SQA (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 13:16:00 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05D0521744;
-        Fri, 27 Dec 2019 18:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577470559;
-        bh=rxxe1zwPlZHnF00l2eIYievunhJXNLEnNhDQ3mDUiXs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZeBAyyNj69mZzs8ydoulm8wqqorqkueM45jRIXA5aF8sowe4E7N8TAw0T+bAIoWl
-         obPnw2v/9v1ZUAa5cBdm7MQ23TCZKiL1OobtAIU83Z/HiY8j6SWM2L11zzEn3qCIhs
-         UUSjKH7oxctw1a54wPyBETCtkTzCCew6YeXtpzU8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/25] ARM: dts: am437x-gp/epos-evm: fix panel compatible
-Date:   Fri, 27 Dec 2019 13:15:32 -0500
-Message-Id: <20191227181549.8040-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227181549.8040-1-sashal@kernel.org>
-References: <20191227181549.8040-1-sashal@kernel.org>
+        Fri, 27 Dec 2019 13:26:30 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41395 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfL0S0a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 13:26:30 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h23so27744034ljc.8
+        for <devicetree@vger.kernel.org>; Fri, 27 Dec 2019 10:26:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lNP4sjt0XGHW1tW75qU+ERy0n0xK7DZ2dAFjglxzBts=;
+        b=GNNZpErtvyrGI8AyO2o+z5Rw5hPdUYlrjx2pIFfgf3pq6bhquOEh6E8cyrWpqh91jw
+         CC06KOgaKErjznAA4By4uEpxbxF4NjAmB/hgQLNvwLYw4NLy5qL/i0drRiMtTdBK4vMU
+         dUG+a0k14GxEOuXQMHQxZaezkxJyJaNABcfpGRMyASB7It9D2CGcKFdlB/7h21ZbQV+y
+         ZQOPvLz6PsM9bJsZtQnGvuV6Tnd9oKhzipcCCb2tCqeF4APrH39qHupkDsQyeqtPudgP
+         7uE9Gmg6tQMQIud+l3t3HJ6RHe61h/Mw/AXMdpWL5CRDWLKUK41Sfq54CvwhWexc/waW
+         O0EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lNP4sjt0XGHW1tW75qU+ERy0n0xK7DZ2dAFjglxzBts=;
+        b=iFDLfsvMkFBjJCFgH1grjQE3bQth8GAcaXbX7S7FIO0Ndcy5HnNjo9Zzx4X2elPJgK
+         qq5gsxSUsfL2JXREcPOuSgg8nDjW6KsmkvEMYY29ZFCqhpAtuFUlJsXp9AewzIjGEcIM
+         dWTZaJ8Y++snSF8YUlTf+t80DVCfgdcviD/8ToO7zWms2eGUXUnwYV+UIQl7gXNigR/j
+         eEfMmn6brB92ikABB0uK/8YpzTLDaebIr6cqzA90eoIaA9z1WcZL4TGZn75At0rG7ofT
+         DiSu0GoV2KfQ7GntsoTi/aV4OuctgN5RIkE6amGRR0jfTP1Z9M9iO4+soBIAtJq/cysX
+         xS5Q==
+X-Gm-Message-State: APjAAAW8OWUyLZO9azYUFg9UrxTmc21tqYj6lD7CC8CDqYgKBdfTT2hj
+        nTHFqdT85LkV2EIsj1NLm/4+Og==
+X-Google-Smtp-Source: APXvYqytPSpKME42DErgjRyyntYM6YBMk6p9pzIlwPBRvAY7yEJHtiTPxcoSHcStMHcbSFFuR/81GA==
+X-Received: by 2002:a2e:9708:: with SMTP id r8mr29214892lji.92.1577471186829;
+        Fri, 27 Dec 2019 10:26:26 -0800 (PST)
+Received: from [192.168.119.5] (office.dev.rtsoft.ru. [62.117.114.130])
+        by smtp.gmail.com with ESMTPSA id c189sm15096409lfg.75.2019.12.27.10.26.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Dec 2019 10:26:26 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
+ binding
+To:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        peter.griffin@linaro.org, ezequiel@collabora.com
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+ <20191227122114.23075-2-andrey.konovalov@linaro.org>
+ <20191227141739.GD861@valkosipuli.retiisi.org.uk>
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+Message-ID: <e3a9161a-feaf-f4a4-5122-871e68409698@linaro.org>
+Date:   Fri, 27 Dec 2019 21:26:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191227141739.GD861@valkosipuli.retiisi.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Hi Sakari,
 
-[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
+Thank you for reviewing the patchset, and for the pointers on improving the driver (nokia,smia.txt etc)!
+I'll write a separate email later, or just fix what you suggested in v3 (I agree with the proposed changes
+I didn't comment on in this email).
 
-The LCD panel on AM4 GP EVMs and ePOS boards seems to be
-osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
-the panel has changed since the early EVMs, or there has been a mistake
-with the panel type.
+Just few quick answers below.
 
-Update the DT files accordingly.
+Thanks,
+Andrey
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On 27.12.2019 17:17, Sakari Ailus wrote:
+> Hi Andrey,
+> 
+> Thanks for the patchset.
+> 
+> On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
+>> Add YAML device tree binding for IMX219 CMOS image sensor, and
+>> the relevant MAINTAINERS entries.
+>>
+>> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+>> ---
+>>   .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
+>>   MAINTAINERS                                   |   8 ++
+>>   2 files changed, 142 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+>> new file mode 100644
+>> index 000000000000..b58aa49a7c03
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+>> @@ -0,0 +1,134 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
+>> +
+>> +maintainers:
+>> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
+>> +
+>> +description: |-
+>> +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
+>> +  with an active array size of 3280H x 2464V. It is programmable through
+>> +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
+>> +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
+>> +  4 data lanes.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: sony,imx219
+>> +
+>> +  reg:
+>> +    description: I2C device address
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: xclk
+> 
+> There's a single clock. Does it need a name? I'd just omit it.
+> 
+>> +
+>> +  VDIG-supply:
+>> +    description:
+>> +      Digital I/O voltage supply, 1.8 volts
+>> +
+>> +  VANA-supply:
+>> +    description:
+>> +      Analog voltage supply, 2.8 volts
+>> +
+>> +  VDDL-supply:
+>> +    description:
+>> +      Digital core voltage supply, 1.2 volts
+>> +
+>> +  xclr-gpios:
+>> +    description: |-
+>> +      Reference to the GPIO connected to the xclr pin, if any.
+>> +      Must be released (set high) after all supplies are applied.
+> 
+> A common name for this in camera sensors is xshutdown. I'd suggest to use
+> that.
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index d2450ab0a380..3293484028ad 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -79,7 +79,7 @@
- 		};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		panel-timing {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 00707aac72fc..a74b09f17a1a 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -41,7 +41,7 @@
- 	};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		panel-timing {
--- 
-2.20.1
+Indeed, "xshutdown" is the pin name commonly used by OmniVision for their sensors.
+(In older sensors they used "pwdn" which is similar, but the polarity is reversed.)
 
+In their sensor datasheets Sony consistently use "xclr" for the pin and signal otherwise
+very similar to OmniVision's "xshutdown".
+
+Wouldn't using the signal name from the sensor by the different vendor just add more confusion
+instead?
+
+>> +
+>> +  camera-clk:
+>> +    type: object
+>> +
+>> +    description: Clock source for imx219
+>> +
+>> +    properties:
+>> +      clock-frequency: true
+>> +
+>> +    required:
+>> +      - clock-frequency
+> 
+> Hmm. The driver doesn't seem to use this for anything.
+> 
+> There are two approaches to this; either you can get and check the
+> frequency, or specify it in DT bindings, set and then check it.
+> 
+> See e.g. Documentation/devicetree/bindings/media/i2c/nokia,smia.txt (not in
+> YAML though).
+> 
+>> +
+>> +  # See ../video-interfaces.txt for more details
+>> +  port:
+>> +    type: object
+>> +    properties:
+>> +      endpoint:
+>> +        type: object
+>> +        properties:
+>> +          clock-lanes:
+>> +            const: 0
+> 
+> If the hardware does not support lane reordering, you can omit the
+> clock-lanes property as it provides no information.
+> 
+>> +
+>> +          data-lanes:
+>> +            description: |-
+>> +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
+>> +              four-lane operation.
+>> +            oneOf:
+>> +              - const: [[ 1, 2 ]]
+>> +              - const: [[ 1, 2, 3, 4 ]]
+>> +
+>> +          clock-noncontinuous:
+>> +            type: boolean
+>> +            description: |-
+>> +              Presence of this boolean property decides whether the MIPI CSI-2
+>> +              clock is continuous or non-continuous.
+> 
+> How about: MIPI CSI-2 clock will be non-continuous if this property is
+> present, otherwise it's continuous.
+
+This statement is more clear than the original. Thanks!
+
+>> +
+>> +        required:
+>> +          - clock-lanes
+>> +          - data-lanes
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +  - VANA-supply
+>> +  - VDIG-supply
+>> +  - VDDL-supply
+>> +  - port
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    i2c0 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        imx219: sensor@10 {
+>> +            compatible = "sony,imx219";
+>> +            reg = <0x10>;
+>> +            clocks = <&imx219_clk>;
+>> +            clock-names = "xclk";
+>> +            VANA-supply = <&imx219_vana>;   /* 2.8v */
+>> +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
+>> +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
+>> +
+>> +            imx219_clk: camera-clk {
+>> +                compatible = "fixed-clock";
+>> +                #clock-cells = <0>;
+>> +                clock-frequency = <24000000>;
+>> +            };
+>> +
+>> +            port {
+>> +                imx219_0: endpoint {
+>> +                    remote-endpoint = <&csi1_ep>;
+>> +                    clock-lanes = <0>;
+>> +                    data-lanes = <1 2>;
+>> +                    clock-noncontinuous;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> +...
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index ffa3371bc750..f7b6c24ec081 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -15350,6 +15350,14 @@ S:	Maintained
+>>   F:	drivers/media/i2c/imx214.c
+>>   F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+>>   
+>> +SONY IMX219 SENSOR DRIVER
+>> +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
+> 
+> Is Dave aware of this? :-)
+
+Yes, he is :)
+
+But I forgot to add him to Cc this time. My bad..
+
+Thanks,
+Andrey
+
+>> +L:	linux-media@vger.kernel.org
+>> +T:	git git://linuxtv.org/media_tree.git
+>> +S:	Maintained
+>> +F:	drivers/media/i2c/imx219.c
+>> +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
+>> +
+>>   SONY IMX258 SENSOR DRIVER
+>>   M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+>>   L:	linux-media@vger.kernel.org
+> 
