@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B4AC2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B051C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5479D20CC7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C592173E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 17:50:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577468998;
-	bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
+	s=default; t=1577469024;
+	bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QDVBbkxzkOIOX9qBPeNC+gFlV0ejFSdreDMMlJWHzL3p4yJR7Dp445UNHpwqciuc9
-	 EhvTJ8qW/HAZyTXLqNHFPhZi/Za0lFkf5oqJHuOWHCNZIQiHU7fL0cZqbk29vrRMKX
-	 L0gyqCeuwqivzuNlFsr+K05W6Wt5CUO7RWl5oGXE=
+	b=qJTb48MraYlgaXpuyegCWoAbViOHDSwEJ7Sl9Vlz7RZCODDvTLVgQSlh+WOC/wR9T
+	 +VsvSqConrXzuHYircfHTFTBK7/HblOZpkgfa3JV4y656dw1UZ2raBoz1xVTnIYag6
+	 MmFa8ufpB2RPtEGkDZCxVzUv/6oEoKRbK3ju8h0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbfL0RoW (ORCPT
+        id S1728386AbfL0RoP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 12:44:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
+        Fri, 27 Dec 2019 12:44:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbfL0RoW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:44:22 -0500
+        id S1728381AbfL0RoO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:44:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65BE621D7E;
-        Fri, 27 Dec 2019 17:44:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CED7A24650;
+        Fri, 27 Dec 2019 17:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468662;
-        bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
+        s=default; t=1577468653;
+        bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gTelMYU+VeBH4dRadJ//po0y5oAzqZhzkJpsu7ed/FSPGMt0tMSvd9W4M/7KQaxH6
-         i0hDR/eecanNzWNScyWI4CipXZ/K+cecHpTZvjpxTHXc88ojmkWGEwzZNXxB461sO2
-         TJYqEbM75pQDNfa/MJ290rVbj0U1hbipCqEB0UeQ=
+        b=NxoVmaFyo2QJlww5vNGwMZPXboHWW3REWjiFWl3wuMNcN3sDo9tFSET8iJ6e9SL4Z
+         bjKbW/gXiPcA+OtCUGI6lpqDBwY1E9sFgK72d2e7KA1YzqxDHkJalhPL7asWVlT8HR
+         VNR+xzo2Sl//KU96XaZxRW0/37BU8cZaVu3EEqe4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/84] ARM: dts: BCM5301X: Fix MDIO node address/size cells
-Date:   Fri, 27 Dec 2019 12:42:51 -0500
-Message-Id: <20191227174352.6264-23-sashal@kernel.org>
+Cc:     Stefan Roese <sr@denx.de>, Fabio Estevam <festevam@gmail.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 16/84] ARM: dts: imx6ul: imx6ul-14x14-evk.dtsi: Fix SPI NOR probing
+Date:   Fri, 27 Dec 2019 12:42:44 -0500
+Message-Id: <20191227174352.6264-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
 References: <20191227174352.6264-1-sashal@kernel.org>
@@ -60,38 +61,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Stefan Roese <sr@denx.de>
 
-[ Upstream commit 093c3f94e922d83a734fc4da08cc5814990f32c6 ]
+[ Upstream commit 0aeb1f2b74f3402e9cdb7c0b8e2c369c9767301e ]
 
-The MDIO node on BCM5301X had an reversed #address-cells and
- #size-cells properties, correct those, silencing checker warnings:
+Without this "jedec,spi-nor" compatible property, probing of the SPI NOR
+does not work on the NXP i.MX6ULL EVK. Fix this by adding this
+compatible property to the DT.
 
-.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
-
-Reported-by: Simon Horman <simon.horman@netronome.com>
-Fixes: 23f1eca6d59b ("ARM: dts: BCM5301X: Specify MDIO bus in the DT")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 7d77b8505aa9 ("ARM: dts: imx6ull: fix the imx6ull-14x14-evk configuration")
+Signed-off-by: Stefan Roese <sr@denx.de>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm5301x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index bc607d11eef8..a678fb7c9e3b 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -350,8 +350,8 @@
- 	mdio: mdio@18003000 {
- 		compatible = "brcm,iproc-mdio";
- 		reg = <0x18003000 0x8>;
--		#size-cells = <1>;
--		#address-cells = <0>;
-+		#size-cells = <0>;
-+		#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 818021126559..695303435003 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -175,7 +175,7 @@
+ 	flash0: n25q256a@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		compatible = "micron,n25q256a";
++		compatible = "micron,n25q256a", "jedec,spi-nor";
+ 		spi-max-frequency = <29000000>;
+ 		reg = <0>;
  	};
- 
- 	mdio-bus-mux {
 -- 
 2.20.1
 
