@@ -2,409 +2,122 @@ Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F90C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 07:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E354C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 08:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F03E221D7E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 07:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01929206F4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 08:38:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dURDHFVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726014AbfL0H5A (ORCPT
+        id S1726270AbfL0IiF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 02:57:00 -0500
-Received: from mga06.intel.com ([134.134.136.31]:42697 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfL0H5A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 27 Dec 2019 02:57:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Dec 2019 23:56:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,362,1571727600"; 
-   d="scan'208";a="223718201"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Dec 2019 23:56:59 -0800
-Received: from [10.226.38.242] (unknown [10.226.38.242])
-        by linux.intel.com (Postfix) with ESMTP id C81D058046E;
-        Thu, 26 Dec 2019 23:56:36 -0800 (PST)
-Subject: Re: [PATCH 2/2] phy: intel: Add driver support for combo phy
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-References: <9f3df8c403bba3633391551fc601cbcd2f950959.1576824311.git.eswara.kota@linux.intel.com>
- <09556a80a967780072ae1240c7c8356f9142de50.1576824311.git.eswara.kota@linux.intel.com>
- <20191220104551.GV32742@smile.fi.intel.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <bc16221c-e664-69b4-34d5-6340af1460df@linux.intel.com>
-Date:   Fri, 27 Dec 2019 15:56:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <20191220104551.GV32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Fri, 27 Dec 2019 03:38:05 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:30978 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726169AbfL0IiF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 27 Dec 2019 03:38:05 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577435884; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=ZAwTtd+vANwBBrSFC/tu9EY6hQdene2XI7S+re+K9yg=; b=dURDHFVwivqsQsNqZLJy8Gh1vA500rSnUdaxYVHMFDrzbQfUPMBljRHDJa0s9R9EgRAlJVuc
+ iKfige7CM/PEi/jYN5A63U477ujIkyH2wiWtQ+bCdF5sxkjFq90scBPSJtKA4IoHhTmr3GS1
+ YcVA3l7bTWwin+ODCazVTTyIECc=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e05c2eb.7faf26aef880-smtp-out-n01;
+ Fri, 27 Dec 2019 08:38:03 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 55A2CC4479F; Fri, 27 Dec 2019 08:38:02 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9952DC433CB;
+        Fri, 27 Dec 2019 08:37:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9952DC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     inux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH] arm64: dts: sc7180: Add clock controller nodes
+Date:   Fri, 27 Dec 2019 14:07:47 +0530
+Message-Id: <1577435867-32254-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Add the display, video & graphics clock controller nodes supported on
+SC7180.
 
-On 12/20/2019 6:45 PM, Andy Shevchenko wrote:
-> On Fri, Dec 20, 2019 at 03:28:28PM +0800, Dilip Kota wrote:
->> Combo phy subsystem provides PHYs for various
->> controllers like PCIe, SATA and EMAC.
-> ...
->
->> +#define REG_COMBO_MODE(x)	((x) * 0x200)
-> Perhaps  + 0x000
-Yes, but i think not required to add explicitly.
->
->> +#define REG_CLK_DISABLE(x)	((x) * 0x200 + 0x124)
-> ...
->
->> +static const char *const intel_iphy_names[] = {"pcie", "xpcs", "sata"};
->> +static const unsigned long intel_iphy_clk_rate[] = {
-> names (note S)
-> rate -> rates
-Ok, will correct it to rates.
->
->> +	CLK_100MHZ, CLK_156_25MHZ, CLK_100MHZ
->> +};
-> ...
->
->> +static ssize_t intel_cbphy_info_show(struct device *dev,
->> +				     struct device_attribute *attr, char *buf)
->> +{
->> +	struct intel_combo_phy *cbphy;
->> +	int i, off;
->> +
->> +	cbphy = dev_get_drvdata(dev);
->> +
->> +	off = sprintf(buf, "mode: %u\n", cbphy->mode);
->> +
->> +	off += sprintf(buf + off, "aggr mode: %s\n",
->> +		      cbphy->aggr_mode == PHY_DL_MODE ? "Yes" : "No");
-> Can't you do
->
-> static inline const char *yesno(bool choice)
-> {
-> 	return choice ? "Yes" : "No";
-> }
->
-> and use it here and below?
->
-> Somebody already shared the idea that the above helper should be available
-> globally.
->
->> +
->> +	off += sprintf(buf + off, "capability: ");
->> +	for (i = PHY_PCIE_MODE; i < PHY_MAX_MODE; i++) {
->> +		if (BIT(i) & cbphy->phy_cap)
->> +			off += sprintf(buf + off, "%s ", intel_iphy_names[i]);
->> +	}
->> +
->> +	off += sprintf(buf + off, "\n");
->> +
->> +	for (i = 0; i < PHY_MAX_NUM; i++) {
->> +		off += sprintf(buf + off, "PHY%d mode: %s, enable: %s\n",
->> +			       i, intel_iphy_names[cbphy->iphy[i].phy_mode],
->> +			       cbphy->iphy[i].enable ? "Yes" : "No");
->> +	}
->> +
->> +	return off;
->> +}
-> ...
->
->> +static struct attribute *intel_cbphy_attrs[] = {
->> +	&dev_attr_intel_cbphy_info.attr,
->> +	NULL,
-> Comma is redundant for terminator lines.
->
->> +};
->
->> +static int intel_cbphy_sysfs_init(struct intel_combo_phy *cbphy)
->> +{
->> +	return devm_device_add_groups(cbphy->dev, intel_cbphy_groups);
->> +}
-> What the point?
-For debug purpose only... can be removed in upstream. I will clean it up 
-in next patch version.
-> Moreover, can't you use .dev_groups member of struct device_driver?
->
-> ...
->
->> +		ret =  phy_cfg(sphy);
-> In several places you have extra unneeded white spaces.
->
-> ...
->
->> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
->> +			       0, PCIE_PHY_GEN_CTRL);
-> Configure your editor properly! There is plenty of room on the previous line.
-Sure, will fix at all the places.
->
-> ...
->
->> +	combo_phy_w32_off_mask(iphy->app_base, PCIE_PHY_CLK_PAD,
->> +			       1, PCIE_PHY_GEN_CTRL);
-> Ditto.
->
-> ...
->
->> +static int intel_cbphy_init(struct phy *phy)
->> +{
->> +	struct intel_cbphy_iphy *iphy;
->
->> +	int ret = 0;
-> Redundant assignment. See below.
-Sure, will fix it.
->
->> +
->> +	iphy = phy_get_drvdata(phy);
->> +
->> +	if (iphy->phy_mode == PHY_PCIE_MODE) {
->> +		ret = intel_cbphy_iphy_cfg(iphy,
->> +					   intel_cbphy_pcie_en_pad_refclk);
->> +	}
->> +
->> +	if (!ret)
->> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_on);
->> +
->> +	return ret;
-> Why not to simple do
->
-> 	if (A) {
-> 		ret = ...;
-> 		if (ret)
-> 			return ret;
-> 	}
->
-> 	return intel_...;
-Looks good, i will update.
->
-> ?
->
->> +}
->> +
->> +static int intel_cbphy_exit(struct phy *phy)
->> +{
->> +	struct intel_cbphy_iphy *iphy;
->> +	int ret = 0;
->> +
->> +	iphy = phy_get_drvdata(phy);
->> +
->> +	if (iphy->power_en)
->> +		ret = intel_cbphy_iphy_cfg(iphy, intel_cbphy_iphy_power_off);
->> +
->> +	if (!ret && iphy->phy_mode == PHY_PCIE_MODE)
->> +		ret = intel_cbphy_iphy_cfg(iphy,
->> +					   intel_cbphy_pcie_dis_pad_refclk);
->> +
->> +	return ret;
-> Ditto.
-Ok
->
->> +}
-> ...
->
->> +static int intel_cbphy_iphy_mem_resource(struct intel_cbphy_iphy *iphy)
->> +{
->> +	void __iomem *base;
->> +
->> +	base = devm_platform_ioremap_resource(iphy->pdev, 0);
->> +	if (IS_ERR(base))
->> +		return PTR_ERR(base);
->> +
->> +	iphy->app_base = base;
->> +
->> +	return 0;
->> +}
-> What's the point of this helper?
-Defined as separate function for traversing memory entry from DT.
-Similarly get_clks() and get_reset() functions.
->
-> ...
->
->> +static int intel_cbphy_iphy_get_clks(struct intel_cbphy_iphy *iphy)
->> +{
->> +	enum intel_phy_mode mode = iphy->phy_mode;
->> +	struct device *dev = iphy->dev;
->> +	int ret = 0;
-> Redundant. Simple return 0 explicitly at the end.
-> Ditto for other places in this patch.
-Ok, i will fix at all the places.
->
->> +	if (IS_ERR(iphy->freq_clk)) {
->> +		ret = PTR_ERR(iphy->freq_clk);
->> +		if (ret != -EPROBE_DEFER) {
->> +			dev_err(dev, "PHY[%u:%u] No %s freq clock\n",
->> +				COMBO_PHY_ID(iphy), PHY_ID(iphy),
->> +				intel_iphy_names[mode]);
->> +		}
->> +
->> +		return ret;
->> +	}
->> +
->> +	iphy->clk_rate = intel_iphy_clk_rate[mode];
->> +
->> +	return ret;
->> +}
-> ...
->
->> +static int intel_cbphy_iphy_dt_parse(struct intel_combo_phy *cbphy,
->> +				     struct fwnode_handle *fwn, int idx)
-> fwn -> fwnode.
-Sure, i will replace it.
->
->> +{
->> +	struct intel_cbphy_iphy *iphy = &cbphy->iphy[idx];
->> +	struct platform_device *pdev;
->> +	struct device *dev;
->> +	int ret = 0;
->> +	u32 prop;
->> +
->> +	iphy->id = idx;
->> +	iphy->enable = false;
->> +	iphy->power_en = false;
->> +	iphy->parent = cbphy;
->> +	iphy->np = to_of_node(fwn);
->> +	pdev = of_find_device_by_node(iphy->np);
-> Why? Can't it be done simpler?
-There is no direct helper function to get platform device from fwnode,
-I will simplify it to get  fwnode->device-> platform device. However 
-iphy->np is no longer required.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
->
->> +	if (!pdev) {
->> +		dev_warn(cbphy->dev, "Combo-PHY%u: PHY device: %d disabled!\n",
->> +			 cbphy->id, idx);
->> +		return 0;
->> +	}
->> +	if (!(BIT(iphy->phy_mode) & cbphy->phy_cap)) {
-> Yoda style?
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 3676bfd..3bb7b65 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -931,6 +931,18 @@
+ 			};
+ 		};
 
-I will correct it to ...
++		gpucc: clock-controller@5090000 {
++			compatible = "qcom,sc7180-gpucc";
++			reg = <0 0x05090000 0 0x9000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
++				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
++			clock-names = "bi_tcxo", "gpll0_main", "gpll0_div";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
+ 		qspi: spi@88dc000 {
+ 			compatible = "qcom,qspi-v1";
+ 			reg = <0 0x088dc000 0 0x600>;
+@@ -1043,6 +1055,27 @@
+ 			};
+ 		};
 
-if (!(cbphy->phy_cap & BIT(iphy->phy_node)))
-
->
-> ...
->
->> +				" Mode mismatch lane0 : %u, lane1 : %u\n",
-> Extra leading space.
-Sure, i will fix it.
->
-> ...
->
->> +static int intel_cbphy_dt_parse(struct intel_combo_phy *cbphy)
->> +{
->> +	struct device *dev = cbphy->dev;
->> +	struct device_node *np = dev->of_node;
-> Why do you need this one? You have to device if it's OF centric driver or not.
-Used during syscon_regmap call.
->
->> +	struct fwnode_handle *fwn;
-> Better name is fwnode as done in plenty other drivers.
-Sure will fix it.
->
->> +	int i = 0, ret = 0;
-> i = 0 better to have near to its user.
-> ret = 0 is redundant assignment.
-Sure, will fix it.
->
->
->> +	ret = device_property_read_u32(dev, "intel,bid", &cbphy->bid);
->> +	if (ret) {
->> +		dev_err(dev, "NO intel,bid provided!\n");
->> +		return ret;
->> +	}
->> +
->> +	device_for_each_child_node(dev, fwn) {
->> +		if (i >= PHY_MAX_NUM) {
->> +			fwnode_handle_put(fwn);
->> +			dev_err(dev, "Error: DT child number larger than %d\n",
->> +				PHY_MAX_NUM);
->> +			return -EINVAL;
->> +		}
->> +
->> +		ret = intel_cbphy_iphy_dt_parse(cbphy, fwn, i);
->> +		if (ret) {
->> +			fwnode_handle_put(fwn);
->> +			return ret;
->> +		}
->> +
->> +		i++;
->> +	}
->> +
->> +	return intel_cbphy_dt_sanity_check(cbphy);
->> +}
-> ...
->
->> +	regmap_write(cbphy->hsiocfg, REG_COMBO_MODE(cbphy->bid), cb_mode);
-> No error check?
-Sure, will add it.
->
->> +
->> +	return 0;
-> ...
->
->> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->> +	if (IS_ERR(phy_provider)) {
->> +		dev_err(dev, "PHY[%u:%u]: register phy provider failed!\n",
->> +			COMBO_PHY_ID(iphy), PHY_ID(iphy));
->> +		return PTR_ERR(phy_provider);
->> +	}
->> +
->> +	return 0;
-> return PTR_ERR_OR_ZERO(...);
->
-> ...
-I will update it.
->
->> +	ret = of_property_read_u32(dev->of_node, "cell-index", &id);
-> You should decide either you go with OF centric API(s) or with device property
-> one as below.
-
-I missed to change to device property.
-
-I will correct it.
-
->
->> +	if (!device_property_read_bool(dev, "intel,cap-pcie-only"))
->> +		cbphy->phy_cap |= PHY_XPCS_CAP | PHY_SATA_CAP;
-> ...
->
->> +	ret = intel_cbphy_sysfs_init(cbphy);
->> +
->> +	return ret;
-> return intel_...();
-Sure, will update it.
->
-> ...
->
->> +static struct platform_driver intel_cbphy_driver = {
->> +	.probe = intel_cbphy_probe,
->> +	.driver = {
->> +		.name = "intel-combo-phy",
->> +		.of_match_table = of_intel_cbphy_match,
->> +	}
->> +};
->> +
->> +builtin_platform_driver(intel_cbphy_driver);
-> Can we unbound it? Is it okay to do unbind/bind cycle? Had it been tested for
-> that?
-
-Unbound can be done here, i will add the respective code.
-
-Thanks a lot for reviewing and providing the inputs.
-Regards,
-Dilip
-
->
++		videocc: clock-controller@ab00000 {
++			compatible = "qcom,sc7180-videocc";
++			reg = <0 0x0ab00000 0 0x10000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "bi_tcxo";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
++		dispcc: clock-controller@af00000 {
++			compatible = "qcom,sc7180-dispcc";
++			reg = <0 0x0af00000 0 0x200000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_DISP_GPLL0_CLK_SRC>;
++			clock-names = "bi_tcxo", "gpll0";
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++		};
++
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sc7180-pdc", "qcom,pdc";
+ 			reg = <0 0x0b220000 0 0x30000>;
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
