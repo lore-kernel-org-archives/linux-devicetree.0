@@ -2,97 +2,74 @@ Return-Path: <SRS0=t0cN=2S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C536C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 09:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65D2C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 14:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8FF21582
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 09:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UF2l6vUz"
+	by mail.kernel.org (Postfix) with ESMTP id 78A7020838
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 14:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbfL1JbK (ORCPT
+        id S1726100AbfL1ODg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Dec 2019 04:31:10 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35235 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbfL1JbK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 04:31:10 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so28189184wro.2;
-        Sat, 28 Dec 2019 01:31:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=C1Yhclh1rO03TNl8BGVnCeZSpEaHjzvQF/HLnspJXUo=;
-        b=UF2l6vUzWgQRLwbEC3+YvM5hGubotXdidH8OdLBgnmTH/RD80HhdZlD88JdaS8GAal
-         VtnLyQhrUP6hP/vSyuUkKE/khyWu3nwtzsIbGDp7hzJEFbF1NK/iqDKR0nRSmwBv/AMO
-         /6EM7FQBM+l9hk9iFl84STiLVEO7SMKoVzv8o5mrSdKOjfI+yacF3q5eEgZNZ6KbUf7x
-         BjqyI/gtQSN0bCjjgnrOsTRtl+HIjZSCxG1ywzPQpJ/DIJ3y55AvvclakTMF0FynwnVV
-         fg8B4RVWtVKXnORJHh5oEosm6UZBcRQC1Q5cDdHmxoQZIMAm0q34TUMRj3BnEtzH1MZ1
-         XzBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=C1Yhclh1rO03TNl8BGVnCeZSpEaHjzvQF/HLnspJXUo=;
-        b=h1E+Ws1DRQ2hzxla6RKx3tNGGtIZHXnGuBFcap3/7gfMvTRTsIagNEGPMFU1Q+m85X
-         elynORpRi1/elNHDOF2Zab77Nw8yzNNbG+wbtl41uGaYadgWTY0IHCZjHa61Zxlnvxy8
-         nNPQq3RANSwvS0SGwpuYvFjulA/BlWUlsN+WYGTMO1ub+P3ZBTHAgBHH42mAw8M7ezEz
-         weZ9tfYi/AsGW5EzqSs15ne31dXtE/mAUTuQuYVFBrCyEe+2NzX1zB6eAIP6FqjKlNWd
-         N6hxQ6rYoygafY7SUC1WZrbBp9ehKKAqBepWCNSFBjTmGWMDgA8Zkhh9XSUH69EuFK0n
-         HQMQ==
-X-Gm-Message-State: APjAAAXSU/iYCN8semJYWSoGXZdgQhL93Qefz9+tX6e/hML3o2jW636T
-        UWgICyU3BbGWtZUvTG/fX7Y=
-X-Google-Smtp-Source: APXvYqwlnqVc7lbLCW9DYPOLB9f1dCvRIPPtiRq05ZZxZYuTyAl2jQdy3IZk/NVFYr5tVYuZRLMSgg==
-X-Received: by 2002:a5d:4cc9:: with SMTP id c9mr53663014wrt.70.1577525468939;
-        Sat, 28 Dec 2019 01:31:08 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id w20sm13776710wmk.34.2019.12.28.01.31.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 28 Dec 2019 01:31:08 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, ulf.hansson@linaro.org,
-        linux-mmc@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] dt-bindings: mmc: remove identical phrase in disable-wp text
-Date:   Sat, 28 Dec 2019 10:30:58 +0100
-Message-Id: <20191228093059.2817-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191219145843.3823-1-jbx6244@gmail.com>
-References: <20191219145843.3823-1-jbx6244@gmail.com>
+        Sat, 28 Dec 2019 09:03:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49520 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfL1ODf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 28 Dec 2019 09:03:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id F0112B193;
+        Sat, 28 Dec 2019 14:03:33 +0000 (UTC)
+Subject: Re: [PATCH v4 0/8] ARM: Initial RTD1195 and MeLE X1000 & Horseradish
+ support
+To:     linux-realtek-soc@lists.infradead.org
+Cc:     Rob Herring <robh@kernel.org>, James Tai <james.tai@realtek.com>,
+        Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191123203759.20708-1-afaerber@suse.de>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <0b8a87e8-057a-27ff-ff10-d1c09d55a585@suse.de>
+Date:   Sat, 28 Dec 2019 15:03:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20191123203759.20708-1-afaerber@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two identical phrases in the disable-wp text,
-so remove one of them.
+Am 23.11.19 um 21:37 schrieb Andreas Färber:
+> Andreas Färber (8):
+>    dt-bindings: arm: realtek: Add RTD1195 and MeLE X1000
+>    ARM: Prepare Realtek RTD1195
+>    ARM: dts: Prepare Realtek RTD1195 and MeLE X1000
+>    ARM: dts: rtd1195: Exclude boot ROM from memory ranges
+>    ARM: dts: rtd1195: Introduce r-bus
+>    dt-bindings: arm: realtek: Add Realtek Horseradish EVB
+>    ARM: dts: rtd1195: Add Realtek Horseradish EVB
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Applied these to linux-realtek.git:
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-index b130450c3..d668d0fbe 100644
---- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-+++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-@@ -96,8 +96,7 @@ properties:
-     description:
-       When set, no physical write-protect line is present. This
-       property should only be specified when the controller has a
--      dedicated write-protect detection logic. If a GPIO is always
--      used for the write-protect detection. If a GPIO is always used
-+      dedicated write-protect detection logic. If a GPIO is always used
-       for the write-protect detection logic, it is sufficient to not
-       specify the wp-gpios property in the absence of a write-protect
-       line.
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-realtek.git/log/?h=v5.6/dt
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-realtek.git/log/?h=v5.6/soc
+
+>    ARM: realtek: Enable RTD1195 arch timer
+
+Holding this one back still.
+
+Regards,
+Andreas
+
 -- 
-2.11.0
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
