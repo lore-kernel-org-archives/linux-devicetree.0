@@ -1,116 +1,102 @@
-Return-Path: <SRS0=sOYF=2R=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=t0cN=2S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A21C2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 23:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B3EC2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 02:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7922176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 27 Dec 2019 23:06:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577487973;
-	bh=/BtCTup5LkRr84T9j0F3KGj5sfWvVprZyXCfRA8eZ88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HinMYBcCgIr96mCcjryKngfdz6P5qV0ne6/u6jPDtnxsJw/yuS0sRn5hsKnQ4aRrd
-	 Y2JxbPz/tw6ml8m5FNSLnEoXxnmnSDTnZDOcm/YDmIoAGyQtNtxYFkDgQyjaOcxJxC
-	 wkJeoO/n1Mtg4rXlmkREhOs7z5/pL/SCoic/igkk=
+	by mail.kernel.org (Postfix) with ESMTP id 6F22D207E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 02:54:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="eD08jS+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbfL0XGJ (ORCPT
+        id S1726044AbfL1CyX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 27 Dec 2019 18:06:09 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42742 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfL0XGI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 18:06:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/BtCTup5LkRr84T9j0F3KGj5sfWvVprZyXCfRA8eZ88=; b=RzzMmJyoO8yVlxtsIdXSHGQHF
-        +5VakP72EFqCzomEI4NbEP2CBE/jIeRDvu3IkO4cqKIz857XSw/sEzNEVWRVAWN/gM6vCu3SkhJmX
-        V3tTjD30Cl8Apif9uwKJh0HSIatp7dq/4ppeiNmCwju3EZEBa4PwE1Iw0dqgbKJWTJ5b0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ikyOt-0006aq-2d; Fri, 27 Dec 2019 22:48:07 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 3B9AED01A22; Fri, 27 Dec 2019 22:48:06 +0000 (GMT)
-Date:   Fri, 27 Dec 2019 22:48:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
-        josephl@nvidia.com, daniel.lezcano@linaro.org,
-        mmaddireddy@nvidia.com, markz@nvidia.com,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 12/19] ASoC: tegra: Add initial parent configuration
- for audio mclk
-Message-ID: <20191227224806.GP27497@sirena.org.uk>
-References: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
- <1576880825-15010-13-git-send-email-skomatineni@nvidia.com>
- <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
- <20191225175736.GC27497@sirena.org.uk>
- <856d8a92-0c24-6722-952c-06b86c706e97@gmail.com>
+        Fri, 27 Dec 2019 21:54:23 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:60158 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725957AbfL1CyX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 27 Dec 2019 21:54:23 -0500
+X-UUID: 6f8a195f94a94c1db1db6633e7a40227-20191228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=DuK72F7gBZXvEYq3y3vW4ZuOMFEZduG7ni5TClqn+Jw=;
+        b=eD08jS+XMS6lxdLuWJZUq3UTil5RDa6ktIO9N6cibeIztxAFTT91MQJ8FSGMYEwZRUx1ccjQdhYxp65Iiyo2l90x/StMH8+yc9K2K46nu0dKpdtVKOcwYKOL4zkpxR/J6MfJpSfAaNsl7azmsCuv/wVjc2l+pTtUsY8FVYfcUuU=;
+X-UUID: 6f8a195f94a94c1db1db6633e7a40227-20191228
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1593761629; Sat, 28 Dec 2019 10:54:16 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 28 Dec
+ 2019 10:53:43 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 28 Dec 2019 10:54:44 +0800
+Message-ID: <1577501595.21256.8.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 3/6] phy: amlogic: Add Amlogic A1 USB2 PHY Driver
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Hanjie Lin <hanjie.lin@amlogic.com>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen Boyd" <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Date:   Sat, 28 Dec 2019 10:53:15 +0800
+In-Reply-To: <1577428606-69855-4-git-send-email-hanjie.lin@amlogic.com>
+References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com>
+         <1577428606-69855-4-git-send-email-hanjie.lin@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="CKf/2jVYos1l2hij"
-Content-Disposition: inline
-In-Reply-To: <856d8a92-0c24-6722-952c-06b86c706e97@gmail.com>
-X-Cookie: I have many CHARTS and DIAGRAMS..
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-SNTS-SMTP: 7D6A139BDF8753CECA92F2F08A4142A8071CBE782207FE70DB2AA7114E397CFB2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+T24gRnJpLCAyMDE5LTEyLTI3IGF0IDE0OjM2ICswODAwLCBIYW5qaWUgTGluIHdyb3RlOg0KPiBU
+aGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIFVTQjIgUEhZIGZvdW5kIGluIHRoZSBBbWxvZ2ljIEEx
+IFNvQyBGYW1pbHkuDQo+IA0KPiBJdCBzdXBwb3J0cyBob3N0IG1vZGUgb25seS4NCj4gDQo+IFNp
+Z25lZC1vZmYtYnk6IEhhbmppZSBMaW4gPGhhbmppZS5saW5AYW1sb2dpYy5jb20+DQo+IFNpZ25l
+ZC1vZmYtYnk6IFl1ZSBXYW5nIDx5dWUud2FuZ0BhbWxvZ2ljLmNvbT4NCj4gLS0tDQo+ICBkcml2
+ZXJzL3BoeS9hbWxvZ2ljL3BoeS1tZXNvbi1nMTJhLXVzYjIuYyB8IDkzICsrKysrKysrKysrKysr
+KysrKysrKy0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspLCAy
+OSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9hbWxvZ2ljL3Bo
+eS1tZXNvbi1nMTJhLXVzYjIuYyBiL2RyaXZlcnMvcGh5L2FtbG9naWMvcGh5LW1lc29uLWcxMmEt
+dXNiMi5jDQo+IGluZGV4IDkwNjVmZmMuLmE1NjQ3NDcgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMv
+cGh5L2FtbG9naWMvcGh5LW1lc29uLWcxMmEtdXNiMi5jDQo+ICsrKyBiL2RyaXZlcnMvcGh5L2Ft
+bG9naWMvcGh5LW1lc29uLWcxMmEtdXNiMi5jDQo+IEBAIC0xNDYsMTEgKzE0NiwxNyBAQA0KWy4u
+Ll0NCj4gKwlwcml2LT5zb2NfaWQgPSAoZW51bSBtZXNvbl9zb2NfaWQpb2ZfZGV2aWNlX2dldF9t
+YXRjaF9kYXRhKCZwZGV2LT5kZXYpOw0KPiArDQo+ICAJcHJpdi0+cmVnbWFwID0gZGV2bV9yZWdt
+YXBfaW5pdF9tbWlvKGRldiwgYmFzZSwNCj4gIAkJCQkJICAgICAmcGh5X21lc29uX2cxMmFfdXNi
+Ml9yZWdtYXBfY29uZik7DQo+ICAJaWYgKElTX0VSUihwcml2LT5yZWdtYXApKQ0KPiAgCQlyZXR1
+cm4gUFRSX0VSUihwcml2LT5yZWdtYXApOw0KPiAgDQo+IC0JcHJpdi0+Y2xrID0gZGV2bV9jbGtf
+Z2V0KGRldiwgInh0YWwiKTsNCj4gLQlpZiAoSVNfRVJSKHByaXYtPmNsaykpDQo+IC0JCXJldHVy
+biBQVFJfRVJSKHByaXYtPmNsayk7DQo+ICsJaWYgKHByaXYtPnNvY19pZCA9PSBNRVNPTl9TT0Nf
+RzEyQSkgew0KPiArCQlwcml2LT5jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAieHRhbCIpOw0KPiAr
+CQlpZiAoSVNfRVJSKHByaXYtPmNsaykpDQo+ICsJCQlyZXR1cm4gUFRSX0VSUihwcml2LT5jbGsp
+Ow0KPiArCX0NCkhvdyBhYm91dCB1c2UgZGV2bV9jbGtfZ2V0X29wdGlvbmFsKCksIHRoZW4gbWFr
+ZSBpdCBhcyBvcHRpb25hbCBjbG9jaw0KYWxzbyBpbiBkdC1iaW5kaW5nDQo+ICANCg0KPiAgDQoN
+Cg==
 
---CKf/2jVYos1l2hij
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Dec 27, 2019 at 05:56:06PM +0300, Dmitry Osipenko wrote:
-> 25.12.2019 20:57, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Mon, Dec 23, 2019 at 12:14:34AM +0300, Dmitry Osipenko wrote:
-
-> >> I'm not sure why clocks should be disabled during the rate-changing,
-> >> probably this action is not really needed.
-
-> > I know nothing about this particular device but this is not that
-> > unusual a restriction for audio hardware, you often can't
-> > robustly reconfigure the clocking for a device while it's active
-
-> If nobody knows for sure, then will be better to keep
-> tegra_asoc_utils_set_rate() unchanged.
-
-Yeah, that's my instinct - unless we understand the disable it's
-safer not to do it.
-
---CKf/2jVYos1l2hij
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4GiiUACgkQJNaLcl1U
-h9Df1wf/WpeKIdsJm9CpD2g6l/HiFfNALEg3OrDmzNwzbGiCqrMSTPog6EddD3e6
-5EmfLE3DY2tSCu1nkVCtEhrfteuwqWsQQDmn6x/+iXZrGLzL0GsLVMhF0TwSgd9s
-jIySU0jRy6I/AhnYgQ5qx/UsFjBRIweMVFMeoRJBkn0bzT0T5Q7f84ROYhKZcOtz
-e7CHXFFtNBU0zJ2/VZLoILusTGzrIaNkkrZ82+6Zy76v9FyMdVM8LWMwr0V10C3O
-8fl9hvJIfXB11FSWf7jsENBla9LotrwLLivIkhsPfUxA6ZYsYjWkw1KeYCOfKwE5
-LURwVXe5lfCgCP+WY0M7dh/y2cWpAQ==
-=jKXz
------END PGP SIGNATURE-----
-
---CKf/2jVYos1l2hij--
