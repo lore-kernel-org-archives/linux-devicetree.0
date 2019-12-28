@@ -5,97 +5,98 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233C0C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 07:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E8FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 09:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E069F20838
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 07:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EED21582
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 09:31:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcVDWAGv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0Fg+5oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725957AbfL1HsH (ORCPT
+        id S1726460AbfL1JbM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Dec 2019 02:48:07 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45818 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfL1HsG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 02:48:06 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so28000611wrj.12;
-        Fri, 27 Dec 2019 23:48:05 -0800 (PST)
+        Sat, 28 Dec 2019 04:31:12 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39459 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfL1JbL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 04:31:11 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so28192930wrt.6;
+        Sat, 28 Dec 2019 01:31:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hxfnZMBs1EEg7q0rSJrZ/QwgArDGkn1GU7trZB2ysxo=;
-        b=IcVDWAGvv3NwbPgy6alH+NmPo2MqsIxTURvGL/WI5jN6mTyp3nhN4Gka3bC97hItnI
-         o3in/nW7Tja1ASm47AYQ9t36ddYobpfx+mFpH9JWOFFeELlGLsFyO+IXwNa+oEc5vsVt
-         3HjI6rwdFK18YGHlgNIoVFdZoE+vRTOAt1doILPt7GrLgp4BnhNZZNa/12TcaqQvguGR
-         qB07U74euKi0+VpI2smpmU/5oSL/fQipvYOD4rUXMwaDeD4c50oBLTgop0OQSXi+s4o1
-         oZ7dWW0xAVZGHOYk49k8cg2mPfO7rkL+9aYlwughmFJQ2ha09o/duP+vfyTKwhQs0RIN
-         hqhA==
+        bh=o9uPVfods/TVOloLC6n+hV7w8ZRoPGnL5hHWUQYyLUc=;
+        b=o0Fg+5oi5HSyrmfBEZQq8OyJEp0SmiMuZ0A6ig6Fmmz+gqe/bQgTgSi1lLY7NsLW7T
+         m4uuidhPQuD611jssxsFee3aPyYuQ92haXXnqhqFFk0cp3aaDtkfwev12eSX5kSCkc1D
+         IbpnolD1qExRXPokhFofQYFRO2h8yKPLDkj0nQ3rMe84NhDLSjigtjHPkUS8khMPg/U3
+         Moud9sMPQuEtJ2sULFizndLerwDI/znaFA77AvVMSKq2QjPpQS2qJ4nRTpfR8VERWFL0
+         0V3gezJUiyS3z9M1TcwjB+KkGgnrAD0qH39jhJJnrKTT09RqWej37cbHZ8mAGMXi1f5R
+         6aww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=hxfnZMBs1EEg7q0rSJrZ/QwgArDGkn1GU7trZB2ysxo=;
-        b=gnvcD43SYZIMc6eHxAjMV/ofCFRAN/EtS/qi8JQQmIcCu9jhg7ubWftfHX1dWX9jua
-         MYr1gQlghLFcP+2nLES/zccL9rCmSGR3MPC+WU7yZsB6x3NQX/eb6H1fLxSRhhUnx3dK
-         DRUd349LwlJVH3LNX5L0UOh+U86AmCdrVPsX4pMj4pQdLoNPV0iZcCQMXvhPgUuG+Jam
-         O9BGgdiFNDetsLDzQE7mwbMclSK3Z3Bos3Mk7TR3OjJimLSfHo+T9rnyKJWt232QD1C1
-         dyi7sNj+5cVtcH3W/1vlp1C7+2oYLZQ0JNQVKPV1JLzW8uKDtFnSG0Ocqnbjm7JK4NKU
-         XpZw==
-X-Gm-Message-State: APjAAAXvmfGi0WxDN9GkWLqB0daKKmHAkjkW8U4P6jUL7KUzA9FlH6TD
-        0r2YXI/TU/aoZ+UXdxUhFFI=
-X-Google-Smtp-Source: APXvYqzbeDGPi6mv9YGx0XuuDAd8x/X+KAyCAU9avVfvpQmcfji8fwkI4Qi+dD3S4rYyS2qlcAlAUQ==
-X-Received: by 2002:adf:e591:: with SMTP id l17mr50523032wrm.139.1577519284705;
-        Fri, 27 Dec 2019 23:48:04 -0800 (PST)
+        bh=o9uPVfods/TVOloLC6n+hV7w8ZRoPGnL5hHWUQYyLUc=;
+        b=BBxseyhe6tjCc36Tj7egsU2X0wL/KYl+AeZROKNlPlu/5MU3kwL5zr4h4T1Qd5un8e
+         14Ri1I9Ia3kVDjWSTibQltajo7I7kYIfihuWyNXLTpt4SuyOwFwamwsmgrmHpKxakJtK
+         nLOJBIXRDeS+KM7xZuyaT4qUU0yJRORIpw+1G7RU2TqKsBuW1XPuF4zqJ1IfDarqUCvL
+         XyL1PnjvhGsb45xyT46vO96em5J/gG+fQNjmXLlDUAqT9n50dOuYSSSTUq4OyQH2ebs5
+         waW4BRHL3reKydmhP0HT8ByM2q8jtlcJ8GQJG3DZ4U2FzKtCwqUHog2cBJMqbpJwsDuW
+         MEWA==
+X-Gm-Message-State: APjAAAUSnS28xbyerRp8gsTLpfvepH8y/DQgcVGn7p21G+L4hzQq5ALI
+        IXiZL9E2+kNjNAR1wTtabHA=
+X-Google-Smtp-Source: APXvYqxwhzxrrXhowjx87gKHx7n+poe0jh8A6oRsexhxdA6dIFus+27xymrwqEZwbLBvIWQomfISXQ==
+X-Received: by 2002:a5d:46c7:: with SMTP id g7mr54555918wrs.11.1577525469686;
+        Sat, 28 Dec 2019 01:31:09 -0800 (PST)
 Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id s19sm13553258wmj.33.2019.12.27.23.48.03
+        by smtp.gmail.com with ESMTPSA id w20sm13776710wmk.34.2019.12.28.01.31.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 27 Dec 2019 23:48:04 -0800 (PST)
+        Sat, 28 Dec 2019 01:31:09 -0800 (PST)
 From:   Johan Jonker <jbx6244@gmail.com>
 To:     robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, heiko@sntech.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: rockchip: rk3368-lion-haikou: remove identical &uart0 node
-Date:   Sat, 28 Dec 2019 08:47:57 +0100
-Message-Id: <20191228074757.2075-1-jbx6244@gmail.com>
+Cc:     mark.rutland@arm.com, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] dt-bindings: mmc: clarify disable-wp text
+Date:   Sat, 28 Dec 2019 10:30:59 +0100
+Message-Id: <20191228093059.2817-2-jbx6244@gmail.com>
 X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191220125520.29871-1-jbx6244@gmail.com>
-References: <20191220125520.29871-1-jbx6244@gmail.com>
+In-Reply-To: <20191228093059.2817-1-jbx6244@gmail.com>
+References: <20191219145843.3823-1-jbx6244@gmail.com>
+ <20191228093059.2817-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two identical &uart0 nodes in this dts file,
-so remove one of them.
+"disable-wp" has been removed from all Rockchip eMMC and SDIO dts nodes,
+but people still continue to submit new patches with "disable-wp" added
+to other nodes then for the SD card slot,
+what it was designed for in the first place.
+So clarify the "disable-wp" text by adding that this option should
+not be used in combination with eMMC or SDIO.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts | 6 ------
- 1 file changed, 6 deletions(-)
+ Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-index 8251f3c0d..cbde279ae 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-lion-haikou.dts
-@@ -83,12 +83,6 @@
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+index d668d0fbe..3c0df4016 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
++++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+@@ -99,7 +99,7 @@ properties:
+       dedicated write-protect detection logic. If a GPIO is always used
+       for the write-protect detection logic, it is sufficient to not
+       specify the wp-gpios property in the absence of a write-protect
+-      line.
++      line. Not used in combination with eMMC or SDIO.
  
--&uart0 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
--	status = "okay";
--};
--
- &usb_otg {
- 	dr_mode = "otg";
- 	status = "okay";
+   wp-gpios:
+     description:
 -- 
 2.11.0
 
