@@ -2,276 +2,200 @@ Return-Path: <SRS0=t0cN=2S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94471C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 19:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC78CC2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE96206A4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 19:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577560201;
-	bh=L7CUbGomVkDwLtlydzGJuK/FDNxPWB7mznp6Tztk/nI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KRcpYlsZO/aYf92yJTChLgAy4FP5OyHzc+pjPpj9HKoCg0D6xeGJsqcGIjG42mGjz
-	 mYixY3HseHlZhm8hCyPxgT1Fvu1TlH2rNUYHWf8paP6cSxKxjCqF6jzPg5cbNT+0VK
-	 kF0BiwnMdSHgg0QSBoBDkumfqJhI2l6F0KR2BzmQ=
+	by mail.kernel.org (Postfix) with ESMTP id B4A00207E0
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:11:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TBi5LQOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfL1TKA (ORCPT
+        id S1726371AbfL1ULZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Dec 2019 14:10:00 -0500
-Received: from disco-boy.misterjones.org ([51.254.78.96]:57580 "EHLO
-        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbfL1TKA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 14:10:00 -0500
-X-Greylist: delayed 758 seconds by postgrey-1.27 at vger.kernel.org; Sat, 28 Dec 2019 14:09:59 EST
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1ilHH5-0007NJ-2T; Sat, 28 Dec 2019 18:57:19 +0000
+        Sat, 28 Dec 2019 15:11:25 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42182 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfL1ULY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 15:11:24 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y19so22864356lfl.9
+        for <devicetree@vger.kernel.org>; Sat, 28 Dec 2019 12:11:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zh8S/4W0ztEaOCn11DyhGNjQj/bRNp6ULAbdfdJJfMM=;
+        b=TBi5LQOED8JDNv5C6um28CrR7N2BYkuKI4C60P7VIYXDNfqMIVHl5A3KX4mQKnuhdq
+         PSeFg48eT8NnQFPGTwh/rnYJEENx7UmiPqodxVpXgvWbsuU8BCk9qK/dqY0Wyde4hWXs
+         lJgpyIfh8aYkuDWLL1OqMNeMqjbLGCvuh4empOZoagah+sgw97WGY1RnwbM3XM7n+JXQ
+         l8/iD5mYAOkV2sz6mHUVhDUrVV5M3cxc5Rh2wuU2Vc8Vd26Ff+vYNE6FXAeiekWOxzPX
+         0w9NI/Voia8QmNPVgz8u2a3RroPJaIjR31qyOUw7LVDBgbXMpSmWDq/9CsfiEN1MQTYS
+         KJDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zh8S/4W0ztEaOCn11DyhGNjQj/bRNp6ULAbdfdJJfMM=;
+        b=BARDLZodwLlgKRqNuDLVezrMxLSr4kN6lOSlAv8FAwnIFge+U5O+yiTzVrxbw4z0Ko
+         UHVpvuDCt2Otn1thXVbKwIbm4k/iF6bPXDO2kGaWwrtLYPGaPUkeB4LfCprIkXGp9BUJ
+         +g4GXFfMHLo7qVRKQ6G99RpI84ffRefLFv9+GYaqMoETgEEKzB4lKSD2hx+Cfb58rhjU
+         MC1Fp8oTjWp0zUSJEM/dyE11/TeiITRQ6P3GEC2QPSBt1Qq//Su+zGe8talN5ybnEXVO
+         HUeoRECoiBIajX8fUPKFHGhPGJWMt5yqRzYVNlICaKAw06Ww5B24VT2/H/PPNkYrxsST
+         Bkqw==
+X-Gm-Message-State: APjAAAWLEr7SZIGOqlwqccO3vCRsYCaFkXJP0SfTzbM4c2Cyr6oXUMka
+        Brz4p/9CbGWikgWgVCcPWckjRQ==
+X-Google-Smtp-Source: APXvYqwpNVB4U4z1e7+NgxCEHqp1dDo58dJk92Bon+JiAdSe7JzBsZzsK2jl5tZLYcN6yjcxkaeZRA==
+X-Received: by 2002:a19:c7c5:: with SMTP id x188mr32486605lff.22.1577563881848;
+        Sat, 28 Dec 2019 12:11:21 -0800 (PST)
+Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
+        by smtp.gmail.com with ESMTPSA id r15sm2590064ljh.11.2019.12.28.12.11.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Dec 2019 12:11:20 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-input@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Donggeun Kim <dg77.kim@samsung.com>,
+        Minkyu Kang <mk7.kang@samsung.com>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Oskar Andero <oskar.andero@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH 1/2 v1] iio: light: Add DT bindings for GP2AP002
+Date:   Sat, 28 Dec 2019 21:11:08 +0100
+Message-Id: <20191228201109.13635-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 28 Dec 2019 18:57:18 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     James Tai <james.tai@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
- PymParticle EVB
-In-Reply-To: <20191228150553.6210-3-james.tai@realtek.com>
-References: <20191228150553.6210-1-james.tai@realtek.com>
- <20191228150553.6210-3-james.tai@realtek.com>
-Message-ID: <6750faa33ee059ec22cf1981e7483186@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: james.tai@realtek.com, linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-28 15:05, James Tai wrote:
-> Add Device Trees for Realtek RTD1319 SoC family, RTD1319 SoC and
-> Realtek PymParticle EVB.
-> 
-> Signed-off-by: James Tai <james.tai@realtek.com>
-> ---
->  arch/arm64/boot/dts/realtek/Makefile          |   2 +
->  .../boot/dts/realtek/rtd1319-pymparticle.dts  |  43 ++++
->  arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
->  arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 212 ++++++++++++++++++
->  4 files changed, 269 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
->  create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/realtek/Makefile
-> b/arch/arm64/boot/dts/realtek/Makefile
-> index ef8d8fcbaa05..c0ae96f324eb 100644
-> --- a/arch/arm64/boot/dts/realtek/Makefile
-> +++ b/arch/arm64/boot/dts/realtek/Makefile
-> @@ -9,6 +9,8 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
-> 
->  dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
-> 
-> +dtb-$(CONFIG_ARCH_REALTEK) += rtd1319-pymparticle.dtb
-> +
->  dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-bpi-m4.dtb
->  dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-lionskin.dtb
-> 
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-> b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-> new file mode 100644
-> index 000000000000..2a36d220fef6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-> @@ -0,0 +1,43 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "rtd1319.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,pymparticle", "realtek,rtd1319";
-> +	model = "Realtek PymParticle EVB";
-> +
-> +	memory@2e000 {
-> +		device_type = "memory";
-> +		reg = <0x2e000 0x3ffd2000>; /* boot ROM to 1 GiB or 2 GiB */
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:460800n8";
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +	};
-> +};
-> +
-> +/* debug console (J1) */
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +/* M.2 slot (CON8) */
-> +&uart1 {
-> +	status = "disabled";
-> +};
-> +
-> +/* GPIO connector (T1) */
-> +&uart2 {
-> +	status = "disabled";
-> +};
-> diff --git a/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-> b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-> new file mode 100644
-> index 000000000000..1dcee00009cd
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD1319 SoC
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +#include "rtd13xx.dtsi"
-> +
-> +/ {
-> +	compatible = "realtek,rtd1319";
-> +};
-> diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> new file mode 100644
-> index 000000000000..18d063feaa7e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-> @@ -0,0 +1,212 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-> +/*
-> + * Realtek RTD13xx SoC family
-> + *
-> + * Copyright (c) 2019 Realtek Semiconductor Corp.
-> + */
-> +
-> +/memreserve/	0x0000000000000000 0x000000000002e000; /* Boot ROM */
-> +/memreserve/	0x000000000002e000 0x0000000000100000; /* Boot loader */
-> +/memreserve/	0x000000000f400000 0x0000000000500000; /* Video FW */
-> +/memreserve/	0x000000000f900000 0x0000000000500000; /* Audio FW */
-> +/memreserve/	0x0000000010000000 0x0000000000014000; /* Audio FW RAM */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		rpc_comm: rpc@3f000 {
-> +			reg = <0x3f000 0x1000>;
-> +		};
-> +
-> +		rpc_ringbuf: rpc@1ffe000 {
-> +			reg = <0x1ffe000 0x4000>;
-> +		};
-> +
-> +		tee: tee@10100000 {
-> +			reg = <0x10100000 0xf00000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x100>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x200>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a55";
-> +			reg = <0x300>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		l2: l2-cache {
-> +			compatible = "cache";
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+This adds device tree bindings for the GP2AP002 light
+and proximity sensor.
 
-Nit: At some point, it'd be good to be able to describe the EL2
-virtual timer interrupt too. Not specially important, but since
-these ARMv8.2 CPUs have it...
+As with other early proximity sensors (~2010) the light
+sensor and proximity sensors were combined into a single
+component.
 
-[...]
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Cc: Donggeun Kim <dg77.kim@samsung.com>
+Cc: Minkyu Kang <mk7.kang@samsung.com>
+Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: Jonathan Bakker <xc-racer2@live.ca>
+Cc: Oskar Andero <oskar.andero@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ .../bindings/iio/light/sharp,gp2ap002.yaml    | 87 +++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
 
-> +		gic: interrupt-controller@ff100000 {
-> +			compatible = "arm,gic-v3";
-> +			reg = <0xff100000 0x10000>,
-> +			      <0xff140000 0xc0000>;
-
-Are you sure about the size of the GICR region? For 4 CPUs,
-it should be 0x80000. Here, you have a range for 6 CPUs.
-
-Has the GIC been sized for 6 CPUs? Are you missing 2 CPUs in
-the DT?
-
-         M.
+diff --git a/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+new file mode 100644
+index 000000000000..27d129e76a8b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/sharp,gp2ap002.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Sharp GP2AP002A00F and GP2AP002S00F proximity and ambient light sensors
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description: |
++  Proximity and ambient light sensor with IR LED for the proximity
++  sensing and an analog output for light intensity. The ambient light
++  sensor output is not available on the GP2AP002S00F variant.
++
++properties:
++  compatible:
++    enum:
++      - sharp,gp2ap002a00f
++      - sharp,gp2ap002s00f
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++    description: an interrupt for proximity, usually a GPIO line
++
++  vdd-supply:
++    maxItems: 1
++    description: VDD power supply a phandle to a regulator
++
++  vio-supply:
++    maxItems: 1
++    description: VIO power supply a phandle to a regulator
++
++  io-channels:
++    maxItems: 1
++    description: ALSOUT ADC channel to read the ambient light
++
++  io-channel-names:
++    const: "alsout"
++
++  sharp,proximity-far-hysteresis:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Hysteresis setting for "far" object detection, this setting is
++      device-unique and adjust the optical setting for proximity detection
++      of a "far away" object in front of the sensor.
++
++  sharp,proximity-close-hysteresis:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Hysteresis setting for "close" object detection, this setting is
++      device-unique and adjust the optical setting for proximity detection
++      of a "close" object in front of the sensor.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - sharp,proximity-far-hysteresis
++  - sharp,proximity-close-hysteresis
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      light-sensor@44 {
++        compatible = "sharp,gp2ap002a00f";
++        reg = <0x44>;
++        interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++        vdd-supply = <&vdd_regulator>;
++        vio-supply = <&vio_regulator>;
++        io-channels = <&adc_channel>;
++        io-channel-names = "alsout";
++        sharp,proximity-far-hysteresis = <0x2f>;
++        sharp,proximity-close-hysteresis = <0x0f>;
++      };
++    };
++
++...
 -- 
-Jazz is not dead. It just smells funny...
+2.21.0
+
