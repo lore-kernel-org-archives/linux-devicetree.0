@@ -2,200 +2,158 @@ Return-Path: <SRS0=t0cN=2S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC78CC2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EB0C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A00207E0
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EF720838
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TBi5LQOE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7T3UBya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfL1ULZ (ORCPT
+        id S1726596AbfL1UgC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Dec 2019 15:11:25 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42182 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfL1ULY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 15:11:24 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y19so22864356lfl.9
-        for <devicetree@vger.kernel.org>; Sat, 28 Dec 2019 12:11:22 -0800 (PST)
+        Sat, 28 Dec 2019 15:36:02 -0500
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:46823 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfL1UgC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 15:36:02 -0500
+Received: by mail-lf1-f51.google.com with SMTP id f15so22875962lfl.13;
+        Sat, 28 Dec 2019 12:36:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Zh8S/4W0ztEaOCn11DyhGNjQj/bRNp6ULAbdfdJJfMM=;
-        b=TBi5LQOED8JDNv5C6um28CrR7N2BYkuKI4C60P7VIYXDNfqMIVHl5A3KX4mQKnuhdq
-         PSeFg48eT8NnQFPGTwh/rnYJEENx7UmiPqodxVpXgvWbsuU8BCk9qK/dqY0Wyde4hWXs
-         lJgpyIfh8aYkuDWLL1OqMNeMqjbLGCvuh4empOZoagah+sgw97WGY1RnwbM3XM7n+JXQ
-         l8/iD5mYAOkV2sz6mHUVhDUrVV5M3cxc5Rh2wuU2Vc8Vd26Ff+vYNE6FXAeiekWOxzPX
-         0w9NI/Voia8QmNPVgz8u2a3RroPJaIjR31qyOUw7LVDBgbXMpSmWDq/9CsfiEN1MQTYS
-         KJDQ==
+        bh=GeV7E+EYDWs4lq2iVlZPCzJ38DjzSSsol4SHG8SoacQ=;
+        b=S7T3UByacx1Dqe422Ikbb4QTM1TwT8AHJyM4GLVuOXjS87dRXLO0AxDCgXJ+ILNS25
+         pJmk8DSKmjmmCZ3tBJ0K79jK/6UtZR+YTaWcApFFVOx0ea4YfeiN2JSWVoyIljdrVYXC
+         aeDdwzIbCWOdR5SwhpzOX0zQDXbvfAQDMIxbetAbLSdzyRYJKJXpYTAOhs0J6yCNwpKC
+         03E9ewUn0iHQGUedQd+7zrKyPwnUiO+WzEBFK2h3pz/NphwbAD700KtoRBCXYkoW3EIk
+         E/7GEq0Gg/YFvCSvv1hg38OGlgH4RXbz+yDLODsDHhGdrEEBF5/T6oD5UYy6jPU82ao1
+         3OtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Zh8S/4W0ztEaOCn11DyhGNjQj/bRNp6ULAbdfdJJfMM=;
-        b=BARDLZodwLlgKRqNuDLVezrMxLSr4kN6lOSlAv8FAwnIFge+U5O+yiTzVrxbw4z0Ko
-         UHVpvuDCt2Otn1thXVbKwIbm4k/iF6bPXDO2kGaWwrtLYPGaPUkeB4LfCprIkXGp9BUJ
-         +g4GXFfMHLo7qVRKQ6G99RpI84ffRefLFv9+GYaqMoETgEEKzB4lKSD2hx+Cfb58rhjU
-         MC1Fp8oTjWp0zUSJEM/dyE11/TeiITRQ6P3GEC2QPSBt1Qq//Su+zGe8talN5ybnEXVO
-         HUeoRECoiBIajX8fUPKFHGhPGJWMt5yqRzYVNlICaKAw06Ww5B24VT2/H/PPNkYrxsST
-         Bkqw==
-X-Gm-Message-State: APjAAAWLEr7SZIGOqlwqccO3vCRsYCaFkXJP0SfTzbM4c2Cyr6oXUMka
-        Brz4p/9CbGWikgWgVCcPWckjRQ==
-X-Google-Smtp-Source: APXvYqwpNVB4U4z1e7+NgxCEHqp1dDo58dJk92Bon+JiAdSe7JzBsZzsK2jl5tZLYcN6yjcxkaeZRA==
-X-Received: by 2002:a19:c7c5:: with SMTP id x188mr32486605lff.22.1577563881848;
-        Sat, 28 Dec 2019 12:11:21 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id r15sm2590064ljh.11.2019.12.28.12.11.19
+        bh=GeV7E+EYDWs4lq2iVlZPCzJ38DjzSSsol4SHG8SoacQ=;
+        b=r6MBJcPADtimpT7ortzL7gDy54p0n600E+I5UMnyZqFLBaNcbfQBeGFzxrobmiYjAX
+         edcwu4tb05Xa1V0MEBMD+iTb32QPy/FDH4XXC6CuOuQpWDsJ4457buopEnOstedcAP5v
+         /TMfrEHtq71TqkIZsnGJKQ6qWq5lgtI08wDe2iS//x5/MDJ9zdOVaotyPtTUQpIRarSt
+         bkPnk1o2uLZgshsZ+DcvL0Kqxbu8Bps0xOmq3lunZT4tWSFrIC7wcFfZxpaTbI7j2H4z
+         EpgfvmYCb/jMPQfAyORqWSOSsrttSKbwCbGRWsEjA8tSPDCZ2o2BVO/fR17ceyaiE5RW
+         YY2g==
+X-Gm-Message-State: APjAAAWjhHnziUnEGAx9Y5Ue/gI1BW62XGc2eFF7a+xQM2yiJKrEPfOb
+        hUNyuMSthl8p/w5wtxfk2cLdQJ6x
+X-Google-Smtp-Source: APXvYqyHBn5GX9uV3b14BH2E9cbCG+5m3RTlsPwzBzvfSrkEbdRkwN+/HE1dIC6nFaSZ4dKmpodNRQ==
+X-Received: by 2002:ac2:50cc:: with SMTP id h12mr32408017lfm.29.1577565359228;
+        Sat, 28 Dec 2019 12:35:59 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id d9sm15162614lja.73.2019.12.28.12.35.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 12:11:20 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-input@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Donggeun Kim <dg77.kim@samsung.com>,
-        Minkyu Kang <mk7.kang@samsung.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Oskar Andero <oskar.andero@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 1/2 v1] iio: light: Add DT bindings for GP2AP002
-Date:   Sat, 28 Dec 2019 21:11:08 +0100
-Message-Id: <20191228201109.13635-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Sat, 28 Dec 2019 12:35:58 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/16] NVIDIA Tegra USB2 drivers clean up
+Date:   Sat, 28 Dec 2019 23:33:42 +0300
+Message-Id: <20191228203358.23490-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the GP2AP002 light
-and proximity sensor.
+Hello,
 
-As with other early proximity sensors (~2010) the light
-sensor and proximity sensors were combined into a single
-component.
+This patch series brings the NVIDIA Tegra USB2 PHY driver into a better
+shape by refactoring code to match upstream standards, the ChipIdea/Tegra UDC
+driver also gets a minor update. Please review and apply, thanks in advance!
 
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Cc: Donggeun Kim <dg77.kim@samsung.com>
-Cc: Minkyu Kang <mk7.kang@samsung.com>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Jonathan Bakker <xc-racer2@live.ca>
-Cc: Oskar Andero <oskar.andero@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../bindings/iio/light/sharp,gp2ap002.yaml    | 87 +++++++++++++++++++
- 1 file changed, 87 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+Changelog:
 
-diff --git a/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-new file mode 100644
-index 000000000000..27d129e76a8b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-@@ -0,0 +1,87 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/sharp,gp2ap002.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sharp GP2AP002A00F and GP2AP002S00F proximity and ambient light sensors
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  Proximity and ambient light sensor with IR LED for the proximity
-+  sensing and an analog output for light intensity. The ambient light
-+  sensor output is not available on the GP2AP002S00F variant.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sharp,gp2ap002a00f
-+      - sharp,gp2ap002s00f
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: an interrupt for proximity, usually a GPIO line
-+
-+  vdd-supply:
-+    maxItems: 1
-+    description: VDD power supply a phandle to a regulator
-+
-+  vio-supply:
-+    maxItems: 1
-+    description: VIO power supply a phandle to a regulator
-+
-+  io-channels:
-+    maxItems: 1
-+    description: ALSOUT ADC channel to read the ambient light
-+
-+  io-channel-names:
-+    const: "alsout"
-+
-+  sharp,proximity-far-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Hysteresis setting for "far" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "far away" object in front of the sensor.
-+
-+  sharp,proximity-close-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Hysteresis setting for "close" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "close" object in front of the sensor.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - sharp,proximity-far-hysteresis
-+  - sharp,proximity-close-hysteresis
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      light-sensor@44 {
-+        compatible = "sharp,gp2ap002a00f";
-+        reg = <0x44>;
-+        interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-+        vdd-supply = <&vdd_regulator>;
-+        vio-supply = <&vio_regulator>;
-+        io-channels = <&adc_channel>;
-+        io-channel-names = "alsout";
-+        sharp,proximity-far-hysteresis = <0x2f>;
-+        sharp,proximity-close-hysteresis = <0x0f>;
-+      };
-+    };
-+
-+...
+v3: - The "Perform general clean up of the code" patch now cleans up couple
+      more minor crumbs.
+
+    - Added more "clean up" patches:
+
+        usb: phy: tegra: Disable VBUS regulator on tegra_usb_phy_init failure
+        usb: phy: tegra: Move utmip_pad_count checking under lock
+        usb: phy: tegra: Keep CPU interrupts enabled
+        usb: host: ehci-tegra: Remove unused fields from tegra_ehci_hcd
+
+    - I noticed that ULPI's reset is getting erroneously deasserted on
+      PHY's shutdown, this is fixed in these new patches:
+
+        usb: phy: tegra: Assert reset on ULPI close instead of deasserting it
+        usb: phy: tegra: Use device-tree notion of reset-GPIO's active-state
+
+v2: - The "usb: phy: tegra: Hook up init/shutdown callbacks" patch was
+      updated and now it does a better job in regards to checking whether
+      PHY is initialized before it is started to be used and whether there
+      is a double init/shutdown. This allows to factor out the ChipIdea's
+      driver change into a separate patch, which was requested by Peter Chen
+      in a review comment to v1. In a result there is this new patch:
+
+        usb: chipidea: tegra: Stop managing PHY's power
+
+    - Added few more new patches:
+
+        usb: phy: tegra: Use generic stub for a missing VBUS regulator
+
+      I noticed that VBUS regulator usage could be cleaned up a tad as well.
+
+        usb: ulpi: Add resource-managed variant of otg_ulpi_create()
+        usb: phy: tegra: Use devm_otg_ulpi_create()
+        usb: phy: tegra: Use u32 for hardware register variables
+
+      These patches are made in response to review comments that were made
+      by Thierry Reding to v1.
+
+      I also noticed that phy_tegra_usb isn't getting auto-loaded while it
+      should be. This is fixed in this new patch:
+
+        usb: chipidea: tegra: Add USB_TEGRA_PHY to driver's dependencies
+
+Dmitry Osipenko (16):
+  dt-binding: usb: ci-hdrc-usb2: Document NVIDIA Tegra support
+  usb: phy: tegra: Hook up init/shutdown callbacks
+  usb: phy: tegra: Perform general clean up of the code
+  usb: phy: tegra: Use relaxed versions of readl/writel
+  usb: phy: tegra: Use generic stub for a missing VBUS regulator
+  usb: ulpi: Add resource-managed variant of otg_ulpi_create()
+  usb: phy: tegra: Use devm_otg_ulpi_create()
+  usb: phy: tegra: Use u32 for hardware register variables
+  usb: phy: tegra: Assert reset on ULPI close instead of deasserting it
+  usb: phy: tegra: Use device-tree notion of reset-GPIO's active-state
+  usb: phy: tegra: Disable VBUS regulator on tegra_usb_phy_init failure
+  usb: phy: tegra: Move utmip_pad_count checking under lock
+  usb: phy: tegra: Keep CPU interrupts enabled
+  usb: chipidea: tegra: Stop managing PHY's power
+  usb: chipidea: tegra: Add USB_TEGRA_PHY to driver's dependencies
+  usb: host: ehci-tegra: Remove unused fields from tegra_ehci_hcd
+
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt  |   4 +
+ drivers/usb/chipidea/Kconfig                  |   1 +
+ drivers/usb/chipidea/ci_hdrc_tegra.c          |  15 +-
+ drivers/usb/host/ehci-tegra.c                 |   2 -
+ drivers/usb/phy/phy-tegra-usb.c               | 830 +++++++++---------
+ drivers/usb/phy/phy-ulpi.c                    |  48 +-
+ include/linux/usb/tegra_usb_phy.h             |   3 +-
+ include/linux/usb/ulpi.h                      |  11 +
+ 8 files changed, 496 insertions(+), 418 deletions(-)
+
 -- 
-2.21.0
+2.24.0
 
