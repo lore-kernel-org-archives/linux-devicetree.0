@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E577EC2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4A2C2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6A322522
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A543021775
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:36:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwCpnUa6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQlgvp4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfL1UgN (ORCPT
+        id S1727122AbfL1UgQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Dec 2019 15:36:13 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40132 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfL1UgL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 15:36:11 -0500
-Received: by mail-lj1-f195.google.com with SMTP id u1so29855163ljk.7;
-        Sat, 28 Dec 2019 12:36:10 -0800 (PST)
+        Sat, 28 Dec 2019 15:36:16 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42922 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfL1UgO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 15:36:14 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y4so15515856ljj.9;
+        Sat, 28 Dec 2019 12:36:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DQSvJsaUmtImHWDCh802bCsire4jMh+ciGTtAHkD4o4=;
-        b=EwCpnUa6Rdjkjdm1ZyUUxg/rMv6uEDVYsdvh0Lkl0Bl7C5FyodH8g818LWfJbFD6tH
-         lYo+BAvwnncDmfj4VmOnImMn/Ig9CEgtn6icquyYlruDPFcCqWV51gberfApqsN9KlKA
-         dTW5NoA+b03AuKlwYrp6Hd/6YP8KrGfrFHMPcOliZpsTg5UVlmucLMgi0N0UMvxcsXLY
-         7RiBQfzGTAG46NAG2QmutkIeO2juwDroCM9KoogpUSXFdJKx2dV/5GpL0GPQ3Tyqg/49
-         C6TJb8KzBew6go6sNElO6z8M8FdyQ4iHRU+VaHNbI6/Px1CM4kVBkmMpHPV92e9//eNO
-         pP0w==
+        bh=RdRgeWTtviiIWS4YZZN2UoUeCEyNPX48xbOaYwnMDFE=;
+        b=BQlgvp4+h+4P6TeNq6CG7AvdJCeEk0tHNz+NYb5Tuapc06JzLccU16f31SIzcIFO+G
+         Toz+8EzL8hyAMTsHESfGWgcssRgw1tHMfx/1+P/slf3tjTKVOx9O3zw4c0pvHdbxzwE9
+         k/rxMD11e1t7v0h99RG/7szgWP2e/1vlnLtq5PM5tz5flIWy1Jw4RNjYSXmTeOqP2y78
+         R0k5MTzqljN8R9w+VtArs9Cum0phF0acEm3b+OhKJuPBXdu+mjJooGTynUa+LHsVTg1x
+         piStwSqHXGdrMr9L4ISV+Qgl3IpWgNL3WiDqtSpzrnxxvoB6Mo8uyDjQ/d3+1cs5RdW9
+         nj8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DQSvJsaUmtImHWDCh802bCsire4jMh+ciGTtAHkD4o4=;
-        b=TbcH4xDlM/d8Ef3kNQn7quldq4BJymCWH8zMTYFfuLEhtGTxxLWRlH2nmUzAbGSliT
-         +9xIzkSY2IpVODwNfNZM9vDrukfcFohRF6NfaPt4WB6sJU28XveO7qb2U0Sgz3oMbSMO
-         9HW4EGXt4f8LtSMTKvrv3xbFbrf8N6+EdxWDkdPqMa6LBqfsV5sKTpsA20uL4UeXhVEv
-         bDJCIrN+vROqwEX2fS+A2c93BqMaDkGAh1CQij2iGAESG62LevIeMiPIFmPrwylM2PdL
-         GzTYOEWLyQnaoP0btj/yqB8LO1idXWYT9Quyk4VfgukoJlh+UdOjDqKq/KaHhFJkmHgq
-         FvnQ==
-X-Gm-Message-State: APjAAAUaVt3jq6KgH39q96wQ79KJDkAmZQB0FNlDWEtd7vM6nJ5fU5dz
-        0A1hwbGeKfPsl6W5zP41WPA=
-X-Google-Smtp-Source: APXvYqzjIGqhK4YdqPHmvCvzoVQBZ0IdsDUc/j3OHXgqTCCYvW/n+nvSrecbS77/mQITRrxP3namMA==
-X-Received: by 2002:a2e:9592:: with SMTP id w18mr31603259ljh.98.1577565369241;
-        Sat, 28 Dec 2019 12:36:09 -0800 (PST)
+        bh=RdRgeWTtviiIWS4YZZN2UoUeCEyNPX48xbOaYwnMDFE=;
+        b=ZrXSZIU64BCWNweAZowoGJPaIXRU63bvJvNJivBAEdp5PZ6aCZSCY+REzJv7i+7Qem
+         N7PEX/KuMz2uNf0WfRR8z7Pv/X0x6s/JkDqIp/EwqtEcUGk1AVqWyVCTREROsYbQrQbq
+         aRX3JGqA/Fpqko/HILZuQIWf9AY9qkM/kPiufvWkWCJoSKPOiW7o1L9ARwSKmb5wboBC
+         fpSwkj8ooryzaFV62as0oBj+GzUwU+gvoMvLYEcxs52TCC1+RK5xAfgkNQgZXMPT7hb8
+         f4qzC7unYmPdKU5p7UMKgtAKHCwVPX9xnRAFt6o2qEIRKfoTmvQq61R77wyOSa1OQRam
+         crTQ==
+X-Gm-Message-State: APjAAAWq71GrJlhKzHwpjTbO7tXu824/IqEN3J+g9WplwhbAlrkPADo3
+        G3mot/P0qKspXCF2ArnrvSG1wx2W
+X-Google-Smtp-Source: APXvYqxsOEdudsc0NUs5bkj2iAUJ8nKrxsiUA79PgL8QO/Oa57kSdF+Uo3CRYniuUreMYOpAgT956g==
+X-Received: by 2002:a2e:8954:: with SMTP id b20mr16099016ljk.27.1577565371815;
+        Sat, 28 Dec 2019 12:36:11 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id d9sm15162614lja.73.2019.12.28.12.36.08
+        by smtp.gmail.com with ESMTPSA id d9sm15162614lja.73.2019.12.28.12.36.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 12:36:08 -0800 (PST)
+        Sat, 28 Dec 2019 12:36:11 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -65,9 +65,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Felipe Balbi <balbi@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 11/16] usb: phy: tegra: Disable VBUS regulator on tegra_usb_phy_init failure
-Date:   Sat, 28 Dec 2019 23:33:53 +0300
-Message-Id: <20191228203358.23490-12-digetx@gmail.com>
+Subject: [PATCH v3 14/16] usb: chipidea: tegra: Stop managing PHY's power
+Date:   Sat, 28 Dec 2019 23:33:56 +0300
+Message-Id: <20191228203358.23490-15-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191228203358.23490-1-digetx@gmail.com>
 References: <20191228203358.23490-1-digetx@gmail.com>
@@ -78,56 +78,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VBUS regulator should be turned off in a case of error.
+Tegra's USB PHY driver now provides generic PHY init/shutdown callbacks
+and thus the custom PHY management could be removed from Tegra-specific
+part of the ChipIdea driver.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/usb/phy/phy-tegra-usb.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/usb/chipidea/ci_hdrc_tegra.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/usb/phy/phy-tegra-usb.c b/drivers/usb/phy/phy-tegra-usb.c
-index cc6cca4dcecb..f7e7df812f83 100644
---- a/drivers/usb/phy/phy-tegra-usb.c
-+++ b/drivers/usb/phy/phy-tegra-usb.c
-@@ -851,14 +851,14 @@ static int tegra_usb_phy_init(struct usb_phy *u_phy)
- 		dev_err(phy->u_phy.dev, "Invalid pll_u parent rate %ld\n",
- 			parent_rate);
- 		err = -EINVAL;
--		goto fail;
-+		goto disable_clk;
+diff --git a/drivers/usb/chipidea/ci_hdrc_tegra.c b/drivers/usb/chipidea/ci_hdrc_tegra.c
+index 0c9911d44ee5..7455df0ede49 100644
+--- a/drivers/usb/chipidea/ci_hdrc_tegra.c
++++ b/drivers/usb/chipidea/ci_hdrc_tegra.c
+@@ -83,13 +83,6 @@ static int tegra_udc_probe(struct platform_device *pdev)
+ 		return err;
  	}
  
- 	err = regulator_enable(phy->vbus);
- 	if (err) {
- 		dev_err(phy->u_phy.dev,
- 			"Failed to enable USB VBUS regulator: %d\n", err);
--		goto fail;
-+		goto disable_clk;
- 	}
+-	/*
+-	 * Tegra's USB PHY driver doesn't implement optional phy_init()
+-	 * hook, so we have to power on UDC controller before ChipIdea
+-	 * driver initialization kicks in.
+-	 */
+-	usb_phy_set_suspend(udc->phy, 0);
+-
+ 	/* setup and register ChipIdea HDRC device */
+ 	udc->data.name = "tegra-udc";
+ 	udc->data.flags = soc->flags;
+@@ -109,7 +102,6 @@ static int tegra_udc_probe(struct platform_device *pdev)
+ 	return 0;
  
- 	if (phy->is_ulpi_phy)
-@@ -866,7 +866,7 @@ static int tegra_usb_phy_init(struct usb_phy *u_phy)
- 	else
- 		err = utmip_pad_open(phy);
- 	if (err)
--		goto fail;
-+		goto disable_vbus;
+ fail_power_off:
+-	usb_phy_set_suspend(udc->phy, 1);
+ 	clk_disable_unprepare(udc->clk);
+ 	return err;
+ }
+@@ -119,7 +111,6 @@ static int tegra_udc_remove(struct platform_device *pdev)
+ 	struct tegra_udc *udc = platform_get_drvdata(pdev);
  
- 	err = tegra_usb_phy_power_on(phy);
- 	if (err)
-@@ -879,7 +879,11 @@ static int tegra_usb_phy_init(struct usb_phy *u_phy)
- 		ulpi_close(phy);
- 	else
- 		utmip_pad_close(phy);
--fail:
-+
-+disable_vbus:
-+	regulator_disable(phy->vbus);
-+
-+disable_clk:
- 	clk_disable_unprepare(phy->pll_u);
+ 	ci_hdrc_remove_device(udc->dev);
+-	usb_phy_set_suspend(udc->phy, 1);
+ 	clk_disable_unprepare(udc->clk);
  
- 	phy->freq = NULL;
+ 	return 0;
 -- 
 2.24.0
 
