@@ -2,365 +2,138 @@ Return-Path: <SRS0=t0cN=2S=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52208C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 15:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF99CC2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 17:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2485A208C4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 15:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808C32168B
+	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 17:25:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="lIARy5cf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbfL1PGU (ORCPT
+        id S1726132AbfL1RZp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Dec 2019 10:06:20 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:42379 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfL1PGT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 10:06:19 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBSF61DR031654, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBSF61DR031654
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Sat, 28 Dec 2019 23:06:01 +0800
-Received: from james-BS01.localdomain (172.21.190.33) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
- 14.3.468.0; Sat, 28 Dec 2019 23:06:00 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     <linux-realtek-soc@lists.infradead.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <linux-kernel@vger.kernel.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH v2 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek PymParticle EVB
-Date:   Sat, 28 Dec 2019 23:05:53 +0800
-Message-ID: <20191228150553.6210-3-james.tai@realtek.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191228150553.6210-1-james.tai@realtek.com>
-References: <20191228150553.6210-1-james.tai@realtek.com>
+        Sat, 28 Dec 2019 12:25:45 -0500
+Received: from mail-eopbgr1400115.outbound.protection.outlook.com ([40.107.140.115]:28448
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726088AbfL1RZp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 28 Dec 2019 12:25:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nIO19QNln4E/012yJVOq7I9dD9H1HUkW6MZsalO14TuvQBX101jY+M36ITfS90wO5iSI48OmPfu+F/pfGCZ0u9tQehoZFoHN3UYOVyvI30vj+h9y5LBHGAlCiFMxjakNaWRScGpr6JEI/tKthSzhZ3CTdtaA6b7CxPaXOf1P8aQ2HegoobFBW7un3uZ+NwsdvLf0Xa8PMsu7Hhf8q/T7fxaqrr5dl5PtMh7oaI2QP0KBUP+18bR2N2Z/V47XQuhkNIQjUJm1oI577d4tRFb6LEhxoE4eZPjeMiL3ndb75gc28EVBDxmVrbWn9aCiXK1uxaRQ3/uMGeznvDdLX3MKFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LmPS+eJ9uGWqI/mVfgW4UvT/VlMQsQqDzLQVek7Va+I=;
+ b=RfCEe+T5f6/AFPWdxL9ipm0PDE2c7qNqQL+hwtTeyNyuPUGJBDwyeKc6LsUR/Vy39bGDeWeL6VRRAIIwm9o28NcNoDsSCKdKAjBzYHAyejpJ+RQhBI3fi+d29lzckvVvQeUGsqBhocQcag3XBQaXhuExtUghO4RWDm6lsMCTIbz+Y+Od3mvH5XcPSCDUO0E4fQ7VKtUXge5OvEtywAUmw/CP/sQsxIHjYerqRujTNULMRZyzzewOQOhkKq5jhkPM/BQn55fRxUJMl04UV0ptygVgHqzfuAdi8H6SQCNPbrSDsIErlik3zHdB311XIT/BnmYq/NWNGhRPeT959o5vXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LmPS+eJ9uGWqI/mVfgW4UvT/VlMQsQqDzLQVek7Va+I=;
+ b=lIARy5cfEJV3yWIWn7+0IYltNVSPp694EW19EPqAocApNgYQKPL6TAR6JvDsA2f0Xmd7bzUVNswOiwLiAX2E9V9lILz1rTl34qZw09z11O0qrxSM6X3wYftYE1uiRPqj7XogMdDRYWdSJpo+EZrf8yXLy8ZXycC7ZyPwV1TeONI=
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com (52.134.248.22) by
+ OSAPR01MB2418.jpnprd01.prod.outlook.com (52.134.247.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2581.12; Sat, 28 Dec 2019 17:25:27 +0000
+Received: from OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::52c:1c46:6bf0:f01f]) by OSAPR01MB3025.jpnprd01.prod.outlook.com
+ ([fe80::52c:1c46:6bf0:f01f%4]) with mapi id 15.20.2581.007; Sat, 28 Dec 2019
+ 17:25:27 +0000
+Received: from renesas.com (173.195.53.163) by BYAPR08CA0068.namprd08.prod.outlook.com (2603:10b6:a03:117::45) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Sat, 28 Dec 2019 17:25:24 +0000
+From:   Vincent Cheng <vincent.cheng.xh@renesas.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 1/3] dt-bindings: ptp: Rename ptp-idtcm.yaml to
+ ptp-cm.yaml
+Thread-Topic: [PATCH net-next 1/3] dt-bindings: ptp: Rename ptp-idtcm.yaml to
+ ptp-cm.yaml
+Thread-Index: AQHVtJdOIeGtsyMqZEGT92+XB+h0vKfM2mOAgAMD9IA=
+Date:   Sat, 28 Dec 2019 17:25:26 +0000
+Message-ID: <20191228172447.GA3223@renesas.com>
+References: <1576558988-20837-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <1576558988-20837-2-git-send-email-vincent.cheng.xh@renesas.com>
+ <20191226192217.GA17727@bogus>
+In-Reply-To: <20191226192217.GA17727@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [173.195.53.163]
+x-clientproxiedby: BYAPR08CA0068.namprd08.prod.outlook.com
+ (2603:10b6:a03:117::45) To OSAPR01MB3025.jpnprd01.prod.outlook.com
+ (2603:1096:604:2::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vincent.cheng.xh@renesas.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6c85d20a-e9a0-432c-8408-08d78bbaedc2
+x-ms-traffictypediagnostic: OSAPR01MB2418:
+x-microsoft-antispam-prvs: <OSAPR01MB2418BE51E89410D013322E7DD2250@OSAPR01MB2418.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1303;
+x-forefront-prvs: 02652BD10A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39840400004)(136003)(396003)(366004)(346002)(376002)(189003)(199004)(33656002)(26005)(2616005)(66556008)(4326008)(64756008)(66446008)(66476007)(66946007)(316002)(8886007)(71200400001)(16526019)(6916009)(2906002)(186003)(956004)(8936002)(52116002)(7696005)(55016002)(478600001)(36756003)(1076003)(54906003)(8676002)(81166006)(81156014)(5660300002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:OSAPR01MB2418;H:OSAPR01MB3025.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UxICnll+v3dM2tvzfX53VDqTdSLWYuyN2SKCH77PuTqHFWALjJwwQguL4gsw18wSh+S70JVkJoyngfIUDByX4AAWLNukgjBWUIRmnn9VeUEtLPAHb+dJjP5ttJD2n5fcFLPRIxsIKGSs9c8Wf7TFN0IdGQk4AquRHHZO3a+LFgik/Drwla0CSW6pLAAivhN3LxmvRnb/P2BRtGANNon1DtSFKBWNVITNW9J5Jezaq0HhMNhUxecdafkPO2sYa6eQ+9GmuM2kuyFtosCkqHE7Qr8cRcL/zhQs4Eayh1BhV2wxW7VbwzIMX2jaF3wKckDb4UjLYDe9jCJsgk2bbxcTZQSK/GW4YUZV5GedRgVsZTemrvZg46XtEhT5V1frLkdjj5lVnfpReV1oPhFBiS7g8ZoCblTv1eyXNK0/y4y4ZXVrhhikCTXTNIPe1JM2euhX
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4D45D545BAB230419AA1BA58E5E16EFD@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c85d20a-e9a0-432c-8408-08d78bbaedc2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Dec 2019 17:25:26.8308
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cnhanQn9fh5Y4h8naZu/Z56VvNcJ9Ax4yHpZ2q2FLWiBu4doi6U/l2zOICgq/PX4hs9fXtIRRZQq61XRvzhV7K+2Ya+giPcIYqRikwO6Egk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2418
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add Device Trees for Realtek RTD1319 SoC family, RTD1319 SoC and
-Realtek PymParticle EVB.
-
-Signed-off-by: James Tai <james.tai@realtek.com>
----
- arch/arm64/boot/dts/realtek/Makefile          |   2 +
- .../boot/dts/realtek/rtd1319-pymparticle.dts  |  43 ++++
- arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
- arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 212 ++++++++++++++++++
- 4 files changed, 269 insertions(+)
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
- create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
- create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-
-diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
-index ef8d8fcbaa05..c0ae96f324eb 100644
---- a/arch/arm64/boot/dts/realtek/Makefile
-+++ b/arch/arm64/boot/dts/realtek/Makefile
-@@ -9,6 +9,8 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
- 
- dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
- 
-+dtb-$(CONFIG_ARCH_REALTEK) += rtd1319-pymparticle.dtb
-+
- dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-bpi-m4.dtb
- dtb-$(CONFIG_ARCH_REALTEK) += rtd1395-lionskin.dtb
- 
-diff --git a/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-new file mode 100644
-index 000000000000..2a36d220fef6
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Copyright (c) 2019 Realtek Semiconductor Corp.
-+ */
-+
-+/dts-v1/;
-+
-+#include "rtd1319.dtsi"
-+
-+/ {
-+	compatible = "realtek,pymparticle", "realtek,rtd1319";
-+	model = "Realtek PymParticle EVB";
-+
-+	memory@2e000 {
-+		device_type = "memory";
-+		reg = <0x2e000 0x3ffd2000>; /* boot ROM to 1 GiB or 2 GiB */
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:460800n8";
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+	};
-+};
-+
-+/* debug console (J1) */
-+&uart0 {
-+	status = "okay";
-+};
-+
-+/* M.2 slot (CON8) */
-+&uart1 {
-+	status = "disabled";
-+};
-+
-+/* GPIO connector (T1) */
-+&uart2 {
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd1319.dtsi b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-new file mode 100644
-index 000000000000..1dcee00009cd
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd1319.dtsi
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Realtek RTD1319 SoC
-+ *
-+ * Copyright (c) 2019 Realtek Semiconductor Corp.
-+ */
-+
-+#include "rtd13xx.dtsi"
-+
-+/ {
-+	compatible = "realtek,rtd1319";
-+};
-diff --git a/arch/arm64/boot/dts/realtek/rtd13xx.dtsi b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-new file mode 100644
-index 000000000000..18d063feaa7e
---- /dev/null
-+++ b/arch/arm64/boot/dts/realtek/rtd13xx.dtsi
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
-+/*
-+ * Realtek RTD13xx SoC family
-+ *
-+ * Copyright (c) 2019 Realtek Semiconductor Corp.
-+ */
-+
-+/memreserve/	0x0000000000000000 0x000000000002e000; /* Boot ROM */
-+/memreserve/	0x000000000002e000 0x0000000000100000; /* Boot loader */
-+/memreserve/	0x000000000f400000 0x0000000000500000; /* Video FW */
-+/memreserve/	0x000000000f900000 0x0000000000500000; /* Audio FW */
-+/memreserve/	0x0000000010000000 0x0000000000014000; /* Audio FW RAM */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		rpc_comm: rpc@3f000 {
-+			reg = <0x3f000 0x1000>;
-+		};
-+
-+		rpc_ringbuf: rpc@1ffe000 {
-+			reg = <0x1ffe000 0x4000>;
-+		};
-+
-+		tee: tee@10100000 {
-+			reg = <0x10100000 0xf00000>;
-+			no-map;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x200>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x300>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		l2: l2-cache {
-+			compatible = "cache";
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	arm_pmu: pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	osc27M: osc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <27000000>;
-+		clock-output-names = "osc27M";
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00000000 0x0002e000>, /* boot ROM */
-+			 <0xff100000 0xff100000 0x00200000>, /* GIC */
-+			 <0x98000000 0x98000000 0x00200000>; /* rbus */
-+
-+		rbus: bus@98000000 {
-+			compatible = "simple-bus";
-+			reg = <0x98000000 0x200000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x98000000 0x200000>;
-+
-+			crt: syscon@0 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x0 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x0 0x1000>;
-+			};
-+
-+			iso: syscon@7000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x7000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x7000 0x1000>;
-+			};
-+
-+			sb2: syscon@1a000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1a000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1a000 0x1000>;
-+			};
-+
-+			misc: syscon@1b000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1b000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1b000 0x1000>;
-+			};
-+
-+			scpu_wrapper: syscon@1d000 {
-+				compatible = "syscon", "simple-mfd";
-+				reg = <0x1d000 0x1000>;
-+				reg-io-width = <4>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0x0 0x1d000 0x1000>;
-+			};
-+		};
-+
-+		gic: interrupt-controller@ff100000 {
-+			compatible = "arm,gic-v3";
-+			reg = <0xff100000 0x10000>,
-+			      <0xff140000 0xc0000>;
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+	};
-+};
-+
-+&iso {
-+	uart0: serial0@800 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x800 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <432000000>;
-+		status = "disabled";
-+	};
-+};
-+
-+&misc {
-+	uart1: serial1@200 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x200 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <432000000>;
-+		status = "disabled";
-+	};
-+
-+	uart2: serial2@400 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x400 0x400>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-frequency = <432000000>;
-+		status = "disabled";
-+	};
-+};
--- 
-2.24.1
-
+T24gVGh1LCBEZWMgMjYsIDIwMTkgYXQgMDI6MjI6MTdQTSBFU1QsIFJvYiBIZXJyaW5nIHdyb3Rl
+Og0KPk9uIFR1ZSwgRGVjIDE3LCAyMDE5IGF0IDEyOjAzOjA2QU0gLTA1MDAsIHZpbmNlbnQuY2hl
+bmcueGhAcmVuZXNhcy5jb20gd3JvdGU6DQo+PiBGcm9tOiBWaW5jZW50IENoZW5nIDx2aW5jZW50
+LmNoZW5nLnhoQHJlbmVzYXMuY29tPg0KPj4gDQo+PiBSZW5lc2FzIEVsZWN0cm9uaWNzIENvcnBv
+cmF0aW9uIGNvbXBsZXRlZCBhY3F1aXNpdGlvbiBvZiBJRFQgaW4gMjAxOS4NCj4+IA0KPj4gVGhp
+cyBwYXRjaCByZW1vdmVzIElEVCByZWZlcmVuY2VzIG9yIHJlcGxhY2VzIElEVCB3aXRoIFJlbmVz
+YXMuDQo+PiBSZW5hbWVkIHB0cC1pZHRjbS55YW1sIHRvIHB0cC1jbS55YW1sLg0KPj4gDQo+PiBT
+aWduZWQtb2ZmLWJ5OiBWaW5jZW50IENoZW5nIDx2aW5jZW50LmNoZW5nLnhoQHJlbmVzYXMuY29t
+Pg0KPj4gLS0tDQo+PiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B0cC9wdHAt
+Y20ueWFtbCAgfCA2OSArKysrKysrKysrKysrKysrKysrKysrDQo+PiAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvcHRwL3B0cC1pZHRjbS55YW1sICAgICAgICAgfCA2OSAtLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tDQo+PiAgMiBmaWxlcyBjaGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspLCA2OSBkZWxldGlv
+bnMoLSkNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3B0cC9wdHAtY20ueWFtbA0KPj4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHRwL3B0cC1pZHRjbS55YW1sDQo+PiANCj4+ICsgIGNv
+bXBhdGlibGU6DQo+PiArICAgIGVudW06DQo+PiArICAgICAgIyBGb3IgU3lzdGVtIFN5bmNocm9u
+aXplcg0KPj4gKyAgICAgIC0gcmVuZXNhcyw4YTM0MDAwDQo+PiArICAgICAgLSByZW5lc2FzLDhh
+MzQwMDENCj4+ICsgICAgICAtIHJlbmVzYXMsOGEzNDAwMg0KPj4gKyAgICAgIC0gcmVuZXNhcyw4
+YTM0MDAzDQo+PiArICAgICAgLSByZW5lc2FzLDhhMzQwMDQNCj4+ICsgICAgICAtIHJlbmVzYXMs
+OGEzNDAwNQ0KPj4gKyAgICAgIC0gcmVuZXNhcyw4YTM0MDA2DQo+PiArICAgICAgLSByZW5lc2Fz
+LDhhMzQwMDcNCj4+ICsgICAgICAtIHJlbmVzYXMsOGEzNDAwOA0KPj4gKyAgICAgIC0gcmVuZXNh
+cyw4YTM0MDA5DQo+DQo+DQo+PiAtICBjb21wYXRpYmxlOg0KPj4gLSAgICBlbnVtOg0KPj4gLSAg
+ICAgICMgRm9yIFN5c3RlbSBTeW5jaHJvbml6ZXINCj4+IC0gICAgICAtIGlkdCw4YTM0MDAwDQo+
+PiAtICAgICAgLSBpZHQsOGEzNDAwMQ0KPj4gLSAgICAgIC0gaWR0LDhhMzQwMDINCj4+IC0gICAg
+ICAtIGlkdCw4YTM0MDAzDQo+PiAtICAgICAgLSBpZHQsOGEzNDAwNA0KPj4gLSAgICAgIC0gaWR0
+LDhhMzQwMDUNCj4+IC0gICAgICAtIGlkdCw4YTM0MDA2DQo+PiAtICAgICAgLSBpZHQsOGEzNDAw
+Nw0KPj4gLSAgICAgIC0gaWR0LDhhMzQwMDgNCj4+IC0gICAgICAtIGlkdCw4YTM0MDA5DQo+DQo+
+TkFLLiBZb3UgY2FuJ3QgY2hhbmdlIHRoaXMgYXMgaXQgaXMgYW4gQUJJLg0KDQpPa2F5LCB0aGFu
+ay15b3UuICBUaGlzIGhhcyBiZSByZW1vdmVkIGluIHYyIHBhdGNoIG9mIHRoZSBzZXJpZXMuDQoN
+ClZpbmNlbnQNCg==
