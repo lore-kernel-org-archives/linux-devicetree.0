@@ -1,107 +1,81 @@
-Return-Path: <SRS0=t0cN=2S=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=PS42=2T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664DBC2D0C8
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFAAC2D0C8
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 02:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F6DA222C4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 28 Dec 2019 20:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0TDwlSY"
+	by mail.kernel.org (Postfix) with ESMTP id 5917B20838
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 02:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfL1UgD (ORCPT
+        id S1726359AbfL2Cse (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 28 Dec 2019 15:36:03 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44613 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbfL1UgC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 28 Dec 2019 15:36:02 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u71so29862943lje.11;
-        Sat, 28 Dec 2019 12:36:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bvf4OSFNQcVF0tHhO08aQEMZiSb+xUsqvddNKBq6qy4=;
-        b=F0TDwlSY87vh6jALSmqg7UkSMm5ISdJeaa13aKEDsrvT040sx5AC7qCYS+MpJIT33X
-         tEYA3ffk6sOkFRI0jkRFFBACTEs/gdtdBbtB5ywo9XFiBOtsOVhjgsvFX+fD78Jicgde
-         m2LuNzmVq7zZahJv/eQhPuwXp1cskTuGpKN5+4aWOvTpmnfRsZ3Yb+gWhUgU5KGHuoFx
-         yhnMSawRXlF2wyiPyddbKEK6ckTHCXt2/08Zw1SQEyB09FpQlahikIGT2M5m7gHjqxLW
-         I0HdvleFXyNFahbVTFO21kXS39evWRmYq9kml5+SupUd+huytdDKgNdE6oIL+QEDjc8b
-         7LeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bvf4OSFNQcVF0tHhO08aQEMZiSb+xUsqvddNKBq6qy4=;
-        b=mkALFVkMNbNLO2dkwUEv/FmSmPJtHPZ9qteh2f9EaKi8ytb1/OrnhqCA32nfZ7k7aP
-         B9Yw4EqgSWmzU/fWM6bHZm6yO76qB8dx/7+p1NT5esaUoyOT0TixDSYFzueNIIUd+bvd
-         Jvhj7OGcx8rhJOFUpIBRcfy3jukyA21tLRMEmNDh1IIypSDvVs83ws8upR2xZJ02Apsm
-         5B3lTlE7oWYIQnuvQF6Jq11jVgkrCh+RoN4yaIuK7FdIjAqCdVwAdddykxyzss1VbbsP
-         0XOSCHY55yQaZ4HG1IKgrCblcPBQWYn5J5Ktd/SnflIxs3dALT0JEh7sacfDCG4ObT9Z
-         uHSA==
-X-Gm-Message-State: APjAAAV8N1KSavEfc1NyiyV3xIanJ7KKEY+LwRV+fhVQXJkJYqcOraej
-        F3XsMrvOeDtJUD8hAeR/inY=
-X-Google-Smtp-Source: APXvYqzwpxlNCNUwrML48Eq/oKgKa2QCbM5bfx5ahFqrKmJfokZr8VMZFchSLwVwScLx/tTZmlqFPg==
-X-Received: by 2002:a2e:9c0b:: with SMTP id s11mr15255011lji.11.1577565360121;
-        Sat, 28 Dec 2019 12:36:00 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id d9sm15162614lja.73.2019.12.28.12.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 12:35:59 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 01/16] dt-binding: usb: ci-hdrc-usb2: Document NVIDIA Tegra support
-Date:   Sat, 28 Dec 2019 23:33:43 +0300
-Message-Id: <20191228203358.23490-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191228203358.23490-1-digetx@gmail.com>
-References: <20191228203358.23490-1-digetx@gmail.com>
+        Sat, 28 Dec 2019 21:48:34 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56764 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfL2Cse (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 28 Dec 2019 21:48:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 96E9FAC2C;
+        Sun, 29 Dec 2019 02:48:32 +0000 (UTC)
+Subject: Re: [PATCH v2 0/2] Initial RTD1319 SoC and Realtek PymParticle EVB
+ support
+To:     James Tai <james.tai@realtek.com>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org
+References: <20191228150553.6210-1-james.tai@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <9fbe4392-5028-3718-8c97-547a46efad2a@suse.de>
+Date:   Sun, 29 Dec 2019 03:48:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191228150553.6210-1-james.tai@realtek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-NVIDIA Tegra SoCs use ChipIdea silicon IP for the USB controllers.
+Hi James,
 
-Acked-by: Peter Chen <peter.chen@nxp.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Am 28.12.19 um 16:05 schrieb James Tai:
+> Cc: Andreas Färber <afaerber@suse.de>
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-index cfc9f40ab641..51376cbe5f3d 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -15,6 +15,10 @@ Required properties:
- 	"qcom,ci-hdrc"
- 	"chipidea,usb2"
- 	"xlnx,zynq-usb-2.20a"
-+	"nvidia,tegra20-udc"
-+	"nvidia,tegra30-udc"
-+	"nvidia,tegra114-udc"
-+	"nvidia,tegra124-udc"
- - reg: base address and length of the registers
- - interrupts: interrupt for the USB controller
- 
+This time you CC'ed me only on the cover letter, so that I didn't get 
+notified of, e.g., Marc's review comments. I wonder why: realtek.yaml is 
+in MAINTAINERS, and so is dts/realtek/, so get_maintainers.pl should've 
+picked me up, even if you forgot to explicitly CC me? Please check what 
+went wrong there and make sure it doesn't happen again for the next 
+submission.
+
+Thanks,
+Andreas
+
+>   .../devicetree/bindings/arm/realtek.yaml      |   6 +
+>   arch/arm64/boot/dts/realtek/Makefile          |   2 +
+>   .../boot/dts/realtek/rtd1319-pymparticle.dts  |  43 ++++
+>   arch/arm64/boot/dts/realtek/rtd1319.dtsi      |  12 +
+>   arch/arm64/boot/dts/realtek/rtd13xx.dtsi      | 212 ++++++++++++++++++
+>   5 files changed, 275 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/realtek/rtd1319-pymparticle.dts
+>   create mode 100644 arch/arm64/boot/dts/realtek/rtd1319.dtsi
+>   create mode 100644 arch/arm64/boot/dts/realtek/rtd13xx.dtsi
+
 -- 
-2.24.0
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
