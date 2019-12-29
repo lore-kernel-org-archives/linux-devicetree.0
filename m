@@ -2,108 +2,157 @@ Return-Path: <SRS0=PS42=2T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6AFC2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 20:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66278C2D0C0
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 21:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBA220748
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 20:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE8C2071E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 21:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLXBgiKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfL2UJM (ORCPT
+        id S1726369AbfL2VSM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Dec 2019 15:09:12 -0500
-Received: from sender4-op-o18.zoho.com ([136.143.188.18]:17814 "EHLO
-        sender4-op-o18.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727117AbfL2UJM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Dec 2019 15:09:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1577650129; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=DnJNwNbmRl7RjLFhqmncyH4Re5uqGpTrX8B/4NYw6C5FrVOd6VfxhqgHcavchsn/Azb3Sf5niECx6vkziJV9TL+f1R0CimaToaRiUJmTta0r7Que3sdJhH9FniYt546pNvXABzGXxZO8xOJG/eJJPaxOdchcHk0k+jpuKlZuqdE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1577650129; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-        bh=EuONeAtWAISP85b0HoLOqO+kvuMF7nTdb489a5FgFIg=; 
-        b=nxMiFJ0bMI7EI3cUD4sgpES/5rucN3WzxNF1qFBgFZVgy9EisTcK9aLmVlko/AiqVpZPDa/0M4uXzXcMp6KwthtEmHTjDNR5uGd/pugkDRaZe0He8ttMNReRMbnEsEHijLaRZQnOHL0SfzQR+pMSUL74o5osvDaJUL/k93cUYt8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=dlrobertson.com;
-        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
-        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
-Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
-        with SMTPS id 1577650117807460.3664883416958; Sun, 29 Dec 2019 12:08:37 -0800 (PST)
-Date:   Sun, 29 Dec 2019 19:52:57 +0000
-From:   Dan Robertson <dan@dlrobertson.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, linux-iio@vger.kernel.org,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Sun, 29 Dec 2019 16:18:12 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40781 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfL2VSM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Dec 2019 16:18:12 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t14so12780802wmi.5;
+        Sun, 29 Dec 2019 13:18:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=AzclGfOCXNAFhVFAqVBZxuEHKEXk4tM/YU8j/8O1+hs=;
+        b=lLXBgiKMMyD7FokQ2U/JUSDBMZFzOQoIKCgHNI+60AGG2ilT5T2fPG8yYN3suuMKin
+         Ot4fwogQYRhL1id4XrGEOtBHY9Gn5q9jIFuhDFeEqnOr1DHcfut+J/0XHaXrCDsc3ASO
+         UMWEBAfm4VSlIr+LCTkZUb0qhrj76kPYpboGv5on7vqBrECTTvO8i1E+Xx1Pp/on0yf9
+         QGFRQ1s9tbhkRQNcZOptghoOob6+dWxH4uVGf9WtwU/LeDqkZ8ZOwePRRP87wk7QybhX
+         PAnMrPunncO6eeN33A/zL3WIKuUV2zu5LBpnasEFZi73W4YBMaFQDjlzcAfo0YcMMpXL
+         q6Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=AzclGfOCXNAFhVFAqVBZxuEHKEXk4tM/YU8j/8O1+hs=;
+        b=XJfENpoXt2Z4sn5f7DHtFeXeycwfJHXvRVCxYA3z9kV1v1ayqfb48K8FgCQvn5gqaX
+         rlKsJtmRLi5wIm5vwc8XGyjvuyPEy90uLX3msc4nzZa76/n76jXsjRR1uPRrmciTmInI
+         MWv3YbIrFmSNh0xJSm01032e07eI2XiJXkABwbOkTMqZSE5PLIZvvrBRvwm0x024mLOJ
+         N7sjjbhLzCapeNc2kRb9CAbH+RxWtKqzrUriLTb2cXghz0d0Y/uwYJh+qx1L6eGxObSa
+         IqVqqqnhAyo1DHGu13M0tk+LIgcRY00CLZMPjTJRp32xUjpSpGZcji66NdHx1F24RqDI
+         /WSw==
+X-Gm-Message-State: APjAAAW+NzcXbo2FMnQOlzg4+8eecOD9mSq0QUK67dtVWGm4Vd2DVPTn
+        9IGracs1BR2gihCRAz+8w7k=
+X-Google-Smtp-Source: APXvYqwe4j7BCJKoNmzgx6G5UOUHUdaOfUj1LA5ALQmFsCT3xRlnki75ehUVZZ75w3+5DilW8p5V+Q==
+X-Received: by 2002:a1c:48c1:: with SMTP id v184mr31728708wma.5.1577654289600;
+        Sun, 29 Dec 2019 13:18:09 -0800 (PST)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id d8sm43791504wre.13.2019.12.29.13.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Dec 2019 13:18:08 -0800 (PST)
+Date:   Sun, 29 Dec 2019 22:18:05 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Joe Perches <joe@perches.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 1/3] dt-bindings: iio: accel: bma400: add bindings
-Message-ID: <20191229195257.GA3169@nessie>
-References: <20191220160051.26321-1-dan@dlrobertson.com>
- <20191220160051.26321-2-dan@dlrobertson.com>
- <20191226230359.GA29435@bogus>
- <20191229152014.3e269c9f@archlinux>
+        devicetree <devicetree@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+Message-ID: <20191229211805.GA26718@Red>
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <20191219173321.bni4tbrhfkkphv7k@gilmour.lan>
+ <4015380d-33ef-312c-a886-6e8bf65c976a@linaro.org>
+ <20191226092751.dc3boaxsaeivuhw4@hendrix.home>
+ <20191226104419.GA26677@Red>
+ <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191229152014.3e269c9f@archlinux>
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEExFWtNZM3QSSMEksK=-opKZqxvCqyG2=3=iCo3VU6tfie64w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 03:20:14PM +0000, Jonathan Cameron wrote:
-> On Thu, 26 Dec 2019 16:03:59 -0700
-> Rob Herring <robh@kernel.org> wrote:
+On Thu, Dec 26, 2019 at 08:47:47PM +0800, Frank Lee wrote:
+> On Thu, Dec 26, 2019 at 6:44 PM Corentin Labbe
+> <clabbe.montjoie@gmail.com> wrote:
+> >
+> > On Thu, Dec 26, 2019 at 10:27:51AM +0100, Maxime Ripard wrote:
+> > > On Tue, Dec 24, 2019 at 07:30:55PM +0100, Daniel Lezcano wrote:
+> > > > On 19/12/2019 18:33, Maxime Ripard wrote:
+> > > > > Hi,
+> > > > >
+> > > > > On Thu, Dec 19, 2019 at 09:28:16AM -0800, Vasily Khoruzhick wrote:
+> > > > >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > > > >> H6 and R40 SoCs.
+> > > > >
+> > > > > Thanks again for working on this.
+> > > > >
+> > > > > I'll merge the DT patches when the driver will have been merged.
+> > > >
+> > > > I've applied patches 1 & 2.
+> > > >
+> > > > They are in the testing branch and will go to the linux-next branch as
+> > > > soon as the kernelci passes.
+> > >
+> > > I just merged all the other patches (except the patch 6, for the H6,
+> > > as requested by Vasily on IRC).
+> > >
+> >
+> > Hello
+> >
+> > Vasily asked to not apply H6 due to my test failling on h6 and since he didnt own any H6 hw.
+> > But it was failling due my fault (a failling build).
+> >
+> > So the patchset work perfect on H6 (opi1+, opi3, pineH64 both model A and B) as reported by my answer to this thread.
 > 
-> > On Fri, Dec 20, 2019 at 04:00:49PM +0000, Dan Robertson wrote:
-> > > Add devicetree binding for the Bosch BMA400 3-axes ultra-low power
-> > > accelerometer sensor.
-> > > 
-> > > Signed-off-by: Dan Robertson <dan@dlrobertson.com>
-> > > ---
-> > >  .../bindings/iio/accel/bosch,bma400.yaml      | 54 +++++++++++++++++++
-> > >  1 file changed, 54 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml b/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
-> > > new file mode 100644
-> > > index 000000000000..e87cb636b3e2
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/accel/bosch,bma400.yaml
-> > > @@ -0,0 +1,54 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/accel/bosch,bma400.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Bosch BMA400 triaxial acceleration sensor
-> > > +
-> > > +maintainers:
-> > > +  - Dan Robertson <dan@dlrobertson.com>
-> > > +
-> > > +description: |
-> > > +  Acceleration and temerature iio sensors with an i2c interface  
-> > 
-> > checkpatch reports a typo here.
-> > 
-> > Otherwise,
-> > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> Fixed up and tag added.  Thanks,
+> HI Corentin,
+> 
+> Although it is not calibrated, it should work on the R40. Can you give
+> my patch a try?
+> 
+> Thx，
+> Yangtao
+> 
 
-Thanks for fixing this. Wasn't sure if this would necessitate another patchset
-version.
+Hello
 
-Cheers,
+It works:
+uname -a
+Linux zlad 5.5.0-rc2-next-20191220+ #196 SMP PREEMPT Sun Dec 29 22:08:05 CET 2019 armv7l ARMv7 Processor rev 5 (v7l) Allwinner sun8i Family GNU/Linux
+cat /sys/devices/virtual/thermal/thermal_zone0/temp
+30736
+cat /sys/devices/virtual/thermal/thermal_zone0/type 
+cpu0-thermal
+cat /sys/devices/virtual/thermal/thermal_zone1/temp
+29380
+cat /sys/devices/virtual/thermal/thermal_zone1/type 
+gpu-thermal
 
- - Dan
+So you could add to your patch:
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Tested-on: sun8i-r40-bananapi-m2-ultra
 
+thanks
+Regards
