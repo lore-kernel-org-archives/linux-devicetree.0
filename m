@@ -2,134 +2,110 @@ Return-Path: <SRS0=PS42=2T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395B1C2D0C6
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 09:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AE3C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 11:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F07208C4
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 09:36:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q6Ollyea"
+	by mail.kernel.org (Postfix) with ESMTP id 89948208C4
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 11:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577618961;
+	bh=oVfGipAAJ2TJZ0pU2FQWz2oq6t/1REI9Q14DB8MlQag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FbJwNP+W1NnqRQ2EtSaPlGymnVpqRHdZ1SJ0LhKcGUjze3E8J87LlXW0MgCB+nOfI
+	 MYjH6QYt7KnuKz+gIHnrEatuwPBXqMFoINe7apwpNCrGS8R1bbydLm/lFDqmCJUkWC
+	 Y+OBAWM6rNv08q/dTs/u2A/6q3xGmoh5HuFMuWGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfL2Jg4 (ORCPT
+        id S1726189AbfL2L3U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Dec 2019 04:36:56 -0500
-Received: from mail-wr1-f48.google.com ([209.85.221.48]:37873 "EHLO
-        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbfL2Jg4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Dec 2019 04:36:56 -0500
-Received: by mail-wr1-f48.google.com with SMTP id w15so17581717wru.4;
-        Sun, 29 Dec 2019 01:36:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sR3nYQ6CRS7rINde7y6a1YRzAaLchoV1//sjucf9+ho=;
-        b=q6OllyeaEfYhO1LKr/NiiVewVNgwX+B+oWJas50yl5bW/RndFI5/y9/w+jXePW0l4S
-         GBlv0fzs/OFf4qCuc/AFqpuAuxVUacDlMKhOv3wO6WiaHGjfkTPJtWFu09IYd2t3Cdc5
-         VF27k4WOPwWi/OjDeLNS4oOy9fFUcZx5u06J4B5c114xjcWjsZ5mO/CmS05AISrWwq7j
-         xBHbW8Gj3gB7rqUTH16djzMyUnjx0AOQPMQPcTfqXiVPYU+RtofAJZQUUDx5pOVP1uez
-         jn9ThxJ8ROFEqLaOvFVH4ZqTIj9XXZ1AWHXOCY/SFt/LBo1v2d4KqIbAJdGx3EZ0YS1u
-         +2RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sR3nYQ6CRS7rINde7y6a1YRzAaLchoV1//sjucf9+ho=;
-        b=hNvps+2BHEqD/ZPosoAm1dlx9mYvTKOyPE8ZXaBMwg4npQZRip8XAVXM2GfekH/ckP
-         4cTZKTUqCRZIBirMLNABzbRhEgfRHRXV7sSHof7Mqc/QRhKY8v9d4MBNbK9GMZ/ZcXUV
-         lE2OGrIOtg0EmoACjo/gtBy7DWAJ1uCtdOk7HaGuH2UKMfYcKWAOiH+6ahAWy97Xfj5U
-         0fGb6H3iWhb6mseug90+3j6dm+od+HNEl0yqZW37uKTf9s9/aI5IXPbjjsEnEFQhPfm1
-         WEbcd5cdfFZcPOTgJy3HS+kpg+vBK4zdpFJKEENQuXEpP//bGhgvjbpzkfv8ek5UiDgc
-         5/RQ==
-X-Gm-Message-State: APjAAAU3poCheZpDxqKiFWUN2D+w8Zkr9UCjsLipQS5ZBSUC16azJSB1
-        BgmUM+RBo+fqfWK4j/f7tO0=
-X-Google-Smtp-Source: APXvYqyV6pl2izDJGWUN9LPMWEU0+kWnRcK+bGnJz3lIzX7VtWVTPJi+pPUSRYAA2bxTXxBZt6V/3w==
-X-Received: by 2002:adf:c746:: with SMTP id b6mr57617981wrh.298.1577612212870;
-        Sun, 29 Dec 2019 01:36:52 -0800 (PST)
-Received: from localhost (p200300E41F32DD00021F3CFFFE37B91B.dip0.t-ipconnect.de. [2003:e4:1f32:dd00:21f:3cff:fe37:b91b])
-        by smtp.gmail.com with ESMTPSA id x10sm41510531wrp.58.2019.12.29.01.36.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Dec 2019 01:36:51 -0800 (PST)
-Date:   Sun, 29 Dec 2019 10:36:43 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com,
-        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [Patch V2 03/18] phy: tegra: xusb: Add usb-role-switch support
-Message-ID: <20191229093643.GA47966@mithrandir>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
- <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
- <20191219132650.GJ1440537@ulmo>
- <74d94004-2022-3b04-6cd9-d6b1e9eca230@nvidia.com>
+        Sun, 29 Dec 2019 06:29:20 -0500
+Received: from disco-boy.misterjones.org ([51.254.78.96]:34214 "EHLO
+        disco-boy.misterjones.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfL2L3U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Dec 2019 06:29:20 -0500
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1ilWl2-00061M-EV; Sun, 29 Dec 2019 11:29:16 +0000
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
-Content-Disposition: inline
-In-Reply-To: <74d94004-2022-3b04-6cd9-d6b1e9eca230@nvidia.com>
-User-Agent: Mutt/1.13.2 (2019-12-18)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 29 Dec 2019 11:29:16 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     James Tai <james.tai@realtek.com>
+Cc:     linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
+ PymParticle EVB
+In-Reply-To: <68b6541e1f4b447cb6845d16fdab28d9@realtek.com>
+References: <20191228150553.6210-1-james.tai@realtek.com>
+ <20191228150553.6210-3-james.tai@realtek.com>
+ <6750faa33ee059ec22cf1981e7483186@kernel.org>
+ <68b6541e1f4b447cb6845d16fdab28d9@realtek.com>
+Message-ID: <718082aebcc3ab4d9169a4abbe968ec1@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: james.tai@realtek.com, linux-realtek-soc@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 2019-12-29 07:46, James Tai wrote:
+> Hi Marc,
+> 
+> Thanks for review.
+> 
+>> > +	timer {
+>> > +		compatible = "arm,armv8-timer";
+>> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+>> > +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+>> > +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+>> > +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+>> 
+>> Nit: At some point, it'd be good to be able to describe the EL2 
+>> virtual timer
+>> interrupt too. Not specially important, but since these ARMv8.2 CPUs 
+>> have it...
+> 
+> I will add the EL2 virtual timer interrupt to timer node.
 
---u3/rZRmxL6MmkK24
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If you do this, please update the binding first, as this interrupt
+is not described there yet.
 
-On Fri, Dec 27, 2019 at 12:09:22PM +0530, Nagarjuna Kristam wrote:
-> On 19-12-2019 18:56, Thierry Reding wrote:
-> > On Wed, Dec 18, 2019 at 02:46:16PM +0530, Nagarjuna Kristam wrote:
-[...]
-> > > @@ -551,11 +556,42 @@ static const char *const modes[] =3D {
-> > >   	[USB_DR_MODE_OTG] =3D "otg",
-> > >   };
-> > > +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role =
-role)
-> > > +{
-> > > +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role=
-);
-> > I don't understand what "for role is %d" means here. I think perhaps you
-> > meant to simply say "for role %d"? Also, perhaps add parentheses after
-> > the "%s" to clarify that you're referring to a function.
-> >=20
-> Yes, intention is to print role, Will update as mentioned "for role %d"
+> 
+>> > +		gic: interrupt-controller@ff100000 {
+>> > +			compatible = "arm,gic-v3";
+>> > +			reg = <0xff100000 0x10000>,
+>> > +			      <0xff140000 0xc0000>;
+>> 
+>> Are you sure about the size of the GICR region? For 4 CPUs, it should 
+>> be
+>> 0x80000. Here, you have a range for 6 CPUs.
+> 
+> The GICR region should be 0x80000 because the RTD1319 SoC have only 4 
+> CPUs.
 
-It might be better to print the name of the role here because I suspect
-very few people know the value of the role defines without looking them
-up. I thought there was already a function to return the role name for
-a given enum usb_role, but it seems like we only have name -> enum
-conversion. Might be worth adding that, but doesn't have to be as part
-of this series.
+OK. Please verify that this is actually the case, and that the last
+redistributor (at offset 0x60000) has GICR_TYPER.Last set. I have
+recently seen GICs configured for a larger number of CPUs where
+some of them were disabled in HW, and the DT was wrongly describing
+some of the redistributors only, leading to SW crashes.
 
-Thierry
+Thanks,
 
---u3/rZRmxL6MmkK24
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4Ic6YACgkQ3SOs138+
-s6F9Qg//diLO90kPs0EI/W6HXy+wcF1k8DI9KuspMV5DRFTRcqtt6dBJ+2wK3uQh
-57OWWgV/+4Fu+QLNp20OSSm1s9GM//iV43ZfoT0J/flkuRLVQNu3rjLmHJG79oQb
-pozYgHxEfEqv2uB6ZZmtIN2ev+MEjHWbl9hJ/qwuNdPQTulsDjLk9TIodV/LRGyt
-QzAUcyhLfJuEqrVXEYUuvov5Vmf8qm/nQKKoRdcnLGz7pw2o9GlnhIgpXKupD08g
-6Z6FWMM3agKXcWB8dVb3UzSbbUrVP9lx9+bOfnVy1QzvjWaRXJFeh0AmNxqdtbJX
-NpFR3eZZUkrD2N4mtOqaaiVSoa8wQq5PLOOtIE6QvBBPxk003BmntrlKi3nuxScR
-k7YpBrWwxszHiGLEpuPGS9weGV0m7nbkp0x+YEc5JuGyj/HGmyl9P2CbFoHOdBll
-YsA90b4DXW2W9k3HV/tAYcQPjRqZ9vf6goHibQWjOgCqTVMwnJHo2i9ThNr2PPUT
-/lieJb5M837w/n67TCbwDLad/xX6DnpYts2yFSttElJALSxrPooChhN7Ky8p1hrd
-6sans1bQHa9itH4JQOK3ZmQtZEiBhAfXa1VXMiKjmmRUIhhRymediKJSfMucjqkZ
-3s+MXSWnzU+ZOqrPu+yf4jceuMDf3rM3Ngb6439HS6iWyOmEd0U=
-=tuXa
------END PGP SIGNATURE-----
-
---u3/rZRmxL6MmkK24--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
