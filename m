@@ -2,253 +2,101 @@ Return-Path: <SRS0=PS42=2T=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D48C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 06:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 848A7C2D0C6
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 07:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C99421744
-	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 06:33:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="USXZNxmc"
+	by mail.kernel.org (Postfix) with ESMTP id 5855A2071E
+	for <linux-devicetree@archiver.kernel.org>; Sun, 29 Dec 2019 07:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfL2Gd3 (ORCPT
+        id S1726307AbfL2HrQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Dec 2019 01:33:29 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:56137 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfL2Gd3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Dec 2019 01:33:29 -0500
-Received: by mail-pj1-f66.google.com with SMTP id d5so6566307pjz.5
-        for <devicetree@vger.kernel.org>; Sat, 28 Dec 2019 22:33:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nqGIhwYTh0DiBSLBMDh1uZ5wGRcp0IHXwUhJAqa821o=;
-        b=USXZNxmckjGT1gFkzviu7A1+ak1urciIU+1xtmdBGP0ny/2qFn4lPJ7F+3P+KjkWz9
-         mypGG4CSY3rUakmiDqZvF0lYdz/8UogjLVzK0d5SGnOcNcwePrBRI7Z791bQXc0ZjUty
-         y+Oa8LZmZW7sWHiej6XI9Yj7NxFkJJhH4/DmZH37fZzH+TH0MVbJaBcwf+UKlBbSDaeu
-         HEEOzeXblFJOTV/smOAttBNrSAHmfbef47opWMEoQl8mvAC1F7cj+KNj0VLhQhXHon5T
-         UWPnhJwG8lS2wST10uBq4bDGhFXdvlZKVQG7v2oFVVnNpTsNd3o09aBt5IR/hl83eBx+
-         ZDPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nqGIhwYTh0DiBSLBMDh1uZ5wGRcp0IHXwUhJAqa821o=;
-        b=IGl5jeumI/E7OI960cNpqZGsaejxsUq934rNmOJ2AGXFhmix4J0S7mTd9+5nh8d7vz
-         lgcaSSOtTP8RXAvO6FsLKIHJW4rDjmY9/S5aoGD4iVAcnBJukKk2zQ9iedBXmudkh1LK
-         4p0/hBklppoXGsqwk11PMlvDn2ejZa5yGlH6oPy6UombHeOWaboMkAZJMB18W86FhHZ0
-         YWJ3ytl9J3LKbHWxpZZVyT50g8rCk6pOKKjg27anUiRoWuSxB+OdijiC24DCat09j2n2
-         QhDJ8LBdJH/b3I3g1AZfZM4jut+/U8Luzl+50ieV+Ou52t8oYGwrPaWnK3vE3S6rHjBg
-         o4EQ==
-X-Gm-Message-State: APjAAAVBWv1+3jTHyagDHENr3u2kylcqgIbZviAOIC3Il4V61kUG6Klq
-        lrqVRmOj4V0ZbkK7VMF18e2qT0NMlqs=
-X-Google-Smtp-Source: APXvYqwxEV0O6vRqHXU4ePHQt8ChvcTTjo2G9Do4DVPv3Y1n/SAqrvUsgBmIZ4Je3/ZERvOyxrHdjA==
-X-Received: by 2002:a17:902:b18e:: with SMTP id s14mr63595046plr.261.1577601208519;
-        Sat, 28 Dec 2019 22:33:28 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i9sm45974852pfk.24.2019.12.28.22.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Dec 2019 22:33:27 -0800 (PST)
-Date:   Sat, 28 Dec 2019 22:33:25 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] arm: dts: sc7180: Add A618 gpu dt blob
-Message-ID: <20191229063325.GP3755841@builder>
-References: <0101016ecc56c5c5-ab66c0ce-da45-4d8e-9cac-8f6be69001d3-000000@us-west-2.amazonses.com>
+        Sun, 29 Dec 2019 02:47:16 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:60512 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfL2HrQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Dec 2019 02:47:16 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBT7kw2Y014196, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBT7kw2Y014196
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Sun, 29 Dec 2019 15:46:58 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Sun, 29 Dec 2019 15:46:58 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Sun, 29 Dec 2019 15:46:57 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
+ RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
+ 15.01.1779.005; Sun, 29 Dec 2019 15:46:57 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v2 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek PymParticle EVB
+Thread-Topic: [PATCH v2 2/2] arm64: dts: realtek: Add RTD1319 SoC and Realtek
+ PymParticle EVB
+Thread-Index: AQHVvZBwjtzWNBJixEaMzPydnauk0qfPYAMAgAE1hnA=
+Date:   Sun, 29 Dec 2019 07:46:57 +0000
+Message-ID: <68b6541e1f4b447cb6845d16fdab28d9@realtek.com>
+References: <20191228150553.6210-1-james.tai@realtek.com>
+ <20191228150553.6210-3-james.tai@realtek.com>
+ <6750faa33ee059ec22cf1981e7483186@kernel.org>
+In-Reply-To: <6750faa33ee059ec22cf1981e7483186@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.128.25]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016ecc56c5c5-ab66c0ce-da45-4d8e-9cac-8f6be69001d3-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue 03 Dec 07:17 PST 2019, Sharat Masetty wrote:
+Hi Marc,
 
-Please update subject to "arm64: dts: qcom: sc7180: Add A618 GPU nodes"
+Thanks for review.
 
-> This patch adds the required dt nodes and properties
-> to enabled A618 GPU.
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
 > 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 116 +++++++++++++++++++++++++++++++++++
->  1 file changed, 116 insertions(+)
+> Nit: At some point, it'd be good to be able to describe the EL2 virtual timer
+> interrupt too. Not specially important, but since these ARMv8.2 CPUs have it...
+
+I will add the EL2 virtual timer interrupt to timer node.
+
+> > +		gic: interrupt-controller@ff100000 {
+> > +			compatible = "arm,gic-v3";
+> > +			reg = <0xff100000 0x10000>,
+> > +			      <0xff140000 0xc0000>;
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index c3db2e5..31223d0 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -18,6 +18,8 @@
->  #include <dt-bindings/reset/qcom,sdm845-pdc.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->  #include <dt-bindings/phy/phy-qcom-qusb2.h>
-> +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
-> +#include <dt-bindings/power/qcom-rpmpd.h>
+> Are you sure about the size of the GICR region? For 4 CPUs, it should be
+> 0x80000. Here, you have a range for 6 CPUs.
 
-Please maintain sort order of includes.
+The GICR region should be 0x80000 because the RTD1319 SoC have only 4 CPUs.
 
-> 
->  / {
->  	interrupt-parent = <&intc>;
-> @@ -733,6 +735,120 @@
->  			#power-domain-cells = <1>;
->  		};
-> 
-> +		gpu: gpu@5000000 {
-
-Please rebase this on linux-next and ensure to maintain the sort order.
-
-> +			compatible = "qcom,adreno-618.0", "qcom,adreno";
-> +			#stream-id-cells = <16>;
-> +			reg = <0 0x5000000 0 0x40000>, <0 0x509e000 0 0x1000>,
-
-Please pad addresses to 8 digits.
-
-> +				<0 0x5061000 0 0x800>;
-> +			reg-names = "kgsl_3d0_reg_memory", "cx_mem", "cx_dbgc";
-> +
-> +			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			iommus = <&adreno_smmu 0>;
-> +
-> +			operating-points-v2 = <&gpu_opp_table>;
-> +
-> +			interconnects = <&gem_noc 35 &mc_virt 512>;
-
-Please use the defines for these ports.
-
-> +
-> +			qcom,gmu = <&gmu>;
-
-You can reduce the number of empty lines above.
-
-> +
-> +			gpu_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp-800000000 {
-> +					opp-hz = /bits/ 64 <800000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +				};
-> +
-> +				opp-650000000 {
-> +					opp-hz = /bits/ 64 <650000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +				};
-> +
-> +				opp-565000000 {
-> +					opp-hz = /bits/ 64 <565000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +				};
-> +
-> +				opp-430000000 {
-> +					opp-hz = /bits/ 64 <430000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +				};
-> +
-> +                                opp-355000000 {
-
-The indentation is off here.
-
-> +					opp-hz = /bits/ 64 <355000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +				};
-> +
-> +                                opp-267000000 {
-
-And here.
-
-> +					opp-hz = /bits/ 64 <267000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +				};
-> +
-> +				opp-180000000 {
-> +					opp-hz = /bits/ 64 <180000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +				};
-> +			};
-> +		};
-> +
-> +		adreno_smmu: iommu@5040000 {
-> +			compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
-> +			reg = <0 0x5040000 0 0x10000>;
-> +			#iommu-cells = <1>;
-> +			#global-interrupts = <2>;
-> +			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>,
-> +					<GIC_SPI 364 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 365 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 366 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 367 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 368 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 369 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 370 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 371 IRQ_TYPE_EDGE_RISING>;
-> +			clocks = <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-> +				<&gcc GCC_GPU_CFG_AHB_CLK>,
-> +				<&gcc GCC_DDRSS_GPU_AXI_CLK>;
-> +
-> +			clock-names = "bus", "iface", "mem_iface_clk";
-> +			power-domains = <&gpucc CX_GDSC>;
-> +		};
-> +
-> +		gmu: gmu@506a000 {
-> +			compatible="qcom,adreno-gmu-618", "qcom,adreno-gmu";
-> +
-> +			reg = 	<0 0x506a000 0 0x31000>,
-
-Extra spaces after =
-
-> +				<0 0xb290000 0 0x10000>,
-> +				<0 0xb490000 0 0x10000>;
-> +			reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-> +
-> +			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-> +				   <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "hfi", "gmu";
-> +
-> +			clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-> +			       <&gpucc GPU_CC_CXO_CLK>,
-> +			       <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-> +			       <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-> +			clock-names = "gmu", "cxo", "axi", "memnoc";
-> +
-> +			power-domains = <&gpucc CX_GDSC>;
-> +
-> +			iommus = <&adreno_smmu 5>;
-> +
-> +			operating-points-v2 = <&gmu_opp_table>;
-
-As above, please drop a few of these empty lines.
+Thank you.
 
 Regards,
-Bjorn
-
-> +
-> +			gmu_opp_table: opp-table {
-> +				compatible = "operating-points-v2";
-> +
-> +				opp-200000000 {
-> +					opp-hz = /bits/ 64 <200000000>;
-> +					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +				};
-> +			};
-> +		};
-> +
->  		apps_smmu: iommu@15000000 {
->  			compatible = "qcom,sc7180-smmu-500", "arm,mmu-500";
->  			reg = <0 0x15000000 0 0x100000>;
-> --
-> 1.9.1
-> 
+James
