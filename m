@@ -2,172 +2,172 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0DBC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09461C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D64C2053B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:22:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577730129;
-	bh=y85qsWru3mquCSNLQMiT2SqRg6FipI5QoHdTsNtINBw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ybMiU0/OAcK0iQwzqDUCh0aOh7F6Nb1jKbWtvqaTJlsypYtBPcpfYX+kh3Cl6/HDC
-	 9sN/BVXXvpfjiL1w9Nr8NjS921zPzAXATSiQBSZKnggIDM/Zehcb8SVUfyi8XtnGn2
-	 Wp89ToM8Yp5LfyJ9P1hFclHPhVAqK/aU16X1S4bo=
+	by mail.kernel.org (Postfix) with ESMTP id C839120722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfL3SWJ (ORCPT
+        id S1727511AbfL3SZY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:22:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfL3SWI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:22:08 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96FA82053B;
-        Mon, 30 Dec 2019 18:22:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577730127;
-        bh=y85qsWru3mquCSNLQMiT2SqRg6FipI5QoHdTsNtINBw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nk/+OB8I1A/tho1qYFMzykNRkLCDzDTeOXxHgf9FZD9DK2KCX9PRy+bL9he3hBsb9
-         iwaye8QwmfpHaJpbg0eVXGj/ISakmacPgYgiPIIYuZ18eGnD/F4f9pjdHJeBFi1hcN
-         Twxtlylj+/H+7ewb3JqkfhvAZdVB1irVRMDT29cY=
-Received: by mail-qk1-f173.google.com with SMTP id t129so26808299qke.10;
-        Mon, 30 Dec 2019 10:22:07 -0800 (PST)
-X-Gm-Message-State: APjAAAVO9IQeMe9Te7MPR+m3lFnTaXT/k1PigFb0CO4wp8PvfZyLfwTv
-        6z7K8zu8iUjrqnFg2JSdWUK7qSqjFoz7XME+Pw==
-X-Google-Smtp-Source: APXvYqzqZJWNs+sslqC+8ZeBAuoujPITSyr59D77wL4ZRh24oPbPEKS5xit8eSBZTP/cXCoRZdcWY0dX3rMp4gxn/tA=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr56825281qkn.254.1577730126720;
- Mon, 30 Dec 2019 10:22:06 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1575906694.git.jsarha@ti.com> <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
- <20191219190833.GA16358@bogus> <3cf64e30-6b4d-a138-7164-54d1cdc8e05a@ti.com>
- <CAL_JsqKNFbPebM=pC+GL_DMuf5OPZF4FyJ7KGdSonDAeL_3P1A@mail.gmail.com> <15d0bd42-5bb5-ee14-9e2a-7beb55671e8a@ti.com>
-In-Reply-To: <15d0bd42-5bb5-ee14-9e2a-7beb55671e8a@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Dec 2019 11:21:55 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqK-h-dwQ+T_nATsiBAS8yuV5yp+ZD9=iT-=VBi3+2SvVQ@mail.gmail.com>
-Message-ID: <CAL_JsqK-h-dwQ+T_nATsiBAS8yuV5yp+ZD9=iT-=VBi3+2SvVQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: phy: Add lane<n>-mode property to WIZ
- (SERDES wrapper)
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Yuti Amonkar <yamonkar@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        Roger Quadros <rogerq@ti.com>
+        Mon, 30 Dec 2019 13:25:24 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39256 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727403AbfL3SZY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 13:25:24 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 045A128DFAB
+Message-ID: <c6514f8e8bf49913e3cb907ba91c0a47de39e68c.camel@collabora.com>
+Subject: Re: [PATCH v12 01/11] media: staging: phy-rockchip-dphy: add
+ Rockchip MIPI Synopsys DPHY driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        gregkh@linuxfoundation.org, andrey.konovalov@linaro.org,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        joacim.zetterling@gmail.com, kernel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 30 Dec 2019 15:25:10 -0300
+In-Reply-To: <20191227200116.2612137-2-helen.koike@collabora.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+         <20191227200116.2612137-2-helen.koike@collabora.com>
+Organization: Collabora
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 2:37 AM Jyri Sarha <jsarha@ti.com> wrote:
->
-> On 24/12/2019 23:31, Rob Herring wrote:
-> > On Fri, Dec 20, 2019 at 5:52 AM Jyri Sarha <jsarha@ti.com> wrote:
-> >>
-> >> On 19/12/2019 21:08, Rob Herring wrote:
-> >>> On Mon, Dec 09, 2019 at 06:22:11PM +0200, Jyri Sarha wrote:
-> >>>> Add property to indicate the usage of SERDES lane controlled by the
-> >>>> WIZ wrapper. The wrapper configuration has some variation depending on
-> >>>> how each lane is going to be used.
-> >>>>
-> >>>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> >>>> ---
-> >>>>  .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml    | 12 ++++++++++++
-> >>>>  1 file changed, 12 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-> >>>> index 94e3b4b5ed8e..399725f65278 100644
-> >>>> --- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-> >>>> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
-> >>>> @@ -97,6 +97,18 @@ patternProperties:
-> >>>>        Torrent SERDES should follow the bindings specified in
-> >>>>        Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
-> >>>>
-> >>>> +  "^lane[1-4]-mode$":
-> >>>> +    allOf:
-> >>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> >>>> +      - enum: [0, 1, 2, 3, 4, 5, 6]
-> >>>> +    description: |
-> >>>> +     Integer describing static lane usage for the lane indicated in
-> >>>> +     the property name. For Sierra there may be properties lane0 and
-> >>>> +     lane1, for Torrent all lane[1-4]-mode properties may be
-> >>>> +     there. The constants to indicate the lane usage are defined in
-> >>>> +     "include/dt-bindings/phy/phy.h". The lane is assumed to be unused
-> >>>> +     if its lane<n>-use property does not exist.
-> >>>
-> >>> The defines were intended to be in 'phys' cells. Does putting both lane
-> >>> and mode in the client 'phys' properties not work?
-> >>>
-> >>
-> >> Let me first check if I understood you. So you are suggesting something
-> >> like this:
-> >>
-> >> dp-phy {
-> >>         #phy-cells = <5>; /* 1 for phy-type and 4 for lanes = 5 */
-> >>         ...
-> >> };
-> >>
-> >> dp-bridge {
-> >>         ...
-> >>         phys = <&dp-phy PHY_TYPE_DP 1 1 0 0>; /* lanes 0 and 1 for DP */
-> >
-> > Yes, but I think the lanes can be a single cell mask. And I'd probably
-> > make that the first cell which is generally "which PHY" and make
-> > type/mode the 2nd cell. I'd look for other users of PHY_TYPE_ defines
-> > and match what they've done if possible.
-> >
->
-> I see. This will cause some head ache on the driver implementation side,
-> as there is no way for the phy driver to peek the lane use or type from
-> the phy client's device tree node.
+Hi Helen,
 
-Yes, there is a way. Not really fast, but use
-for_each_node_with_property(node, "phys") and filter on ones matching
-your phy's node.
+Thanks for taking care of this.
 
-> It also looks to me that the phy
-> API[1] has to be extended quite a bit before the phy client can pass the
-> lane usage information to the phy driver. It will cause some pain to
-> implement the extension without breaking the phy API and causing a nasty
-> cross dependency over all the phy client domains.
+On Fri, 2019-12-27 at 17:01 -0300, Helen Koike wrote:
+> From: Ezequiel Garcia <ezequiel@collabora.com>
+> 
+> Add driver for Rockchip MIPI Synopsys DPHY driver
+> 
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> 
+> Changes in v12:
+> - several cleanups
+> - remove "rx" from function names, as this driver only supports rx
+> 
+> Changes in v11:
+> - fix checkpatch errors
+> 
+> Changes in v10: None
+> Changes in v9:
+> - Move to staging
+> - replace memcpy by a directly assignment
+> - remove unecessary ret variable in rockchip_dphy_init
+> - s/0x1/1
+> - s/0x0/0
+> - coding style changes
+> - dphy_reg variable sizes
+> - variables from int to unsigned int
+> - rename functions to start with rk_
+> - rename dphy0 to rx
+> - fix hardcoded lane0 usage
+> - disable rx on power off
+> - general cleanups of unused variables
+> 
+> Changes in v8:
+> - Remove boiler plate license text
+> 
+> Changes in v7:
+> - Migrate dphy specific code from
+> drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
+> to drivers/phy/rockchip/phy-rockchip-dphy.c
+> - Drop support for rk3288
+> - Drop support for dphy txrx
+> - code styling and checkpatch fixes
+> 
+>  drivers/staging/media/Kconfig                 |   2 +
+>  drivers/staging/media/Makefile                |   1 +
+>  .../staging/media/phy-rockchip-dphy/Kconfig   |  11 +
+>  .../staging/media/phy-rockchip-dphy/Makefile  |   2 +
+>  drivers/staging/media/phy-rockchip-dphy/TODO  |   6 +
+>  .../phy-rockchip-dphy/phy-rockchip-dphy.c     | 396 ++++++++++++++++++
+>  6 files changed, 418 insertions(+)
+>  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Kconfig
+>  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Makefile
+>  create mode 100644 drivers/staging/media/phy-rockchip-dphy/TODO
+>  create mode 100644 drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
+> 
+> diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
+> index 642adc4c24d2..a47484473883 100644
+> --- a/drivers/staging/media/Kconfig
+> +++ b/drivers/staging/media/Kconfig
+> @@ -38,4 +38,6 @@ source "drivers/staging/media/ipu3/Kconfig"
+>  
+>  source "drivers/staging/media/soc_camera/Kconfig"
+>  
+> +source "drivers/staging/media/phy-rockchip-dphy/Kconfig"
+> +
+>  endif
+> diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
+> index 2f1711a8aeed..b0eae3906208 100644
+> --- a/drivers/staging/media/Makefile
+> +++ b/drivers/staging/media/Makefile
+> @@ -8,3 +8,4 @@ obj-$(CONFIG_TEGRA_VDE)		+= tegra-vde/
+>  obj-$(CONFIG_VIDEO_HANTRO)	+= hantro/
+>  obj-$(CONFIG_VIDEO_IPU3_IMGU)	+= ipu3/
+>  obj-$(CONFIG_SOC_CAMERA)	+= soc_camera/
+> +obj-$(CONFIG_PHY_ROCKCHIP_DPHY)		+= phy-rockchip-dphy/
+> diff --git a/drivers/staging/media/phy-rockchip-dphy/Kconfig b/drivers/staging/media/phy-rockchip-dphy/Kconfig
+> new file mode 100644
+> index 000000000000..7378bd75fa7c
+> --- /dev/null
 
-Not really a concern from a binding standpoint. Bindings shouldn't be
-designed around some OS's current design or limitations.
+Seems I overlooked the Kconfig file for this driver,
+sorry about that!
 
-There's already several cases using PHY_TYPE_* in phy cells, so I'm
-not sure what the issue is.
+> +++ b/drivers/staging/media/phy-rockchip-dphy/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Phy drivers for Rockchip platforms
+> +#
+> +config PHY_ROCKCHIP_DPHY
+> +	tristate "Rockchip MIPI Synopsys DPHY driver"
+> +	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
+> +	select GENERIC_PHY_MIPI_DPHY
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the Rockchip MIPI Synopsys DPHY.
 
-> Also, there is not much point in putting the PHY_TYPE constant to the
-> phy client's node, as normally the phy client driver will know quite
-> well what PHY_TYPE to use. E.g. a SATA driver will always select
-> PHY_TYPE_SATA and a PCIE driver will select PHY_TYPE_PCIE, etc.
+Following a more user-friendly convention, this should read
+more like:
 
-Good point. That could work as well.
+"""
+Enable this to support the Rockchip MIPI Synopsys DPHY
+associated to the Rockchip ISP module present in RK3399 SoCs.
 
-> Kishon, if we have to take this road it also starts to sound like we
-> will have to move the phy client's phandle to point to the phy wrapper
-> node, if we want to keep the actual phy driver wrapper agnostic. Then we
-> can make the wrapper to act like a proxy that forwards the phy_ops calls
-> to the actual phy driver. Luckily the per lane phy-type selection is not
-> a blocker for our j721e DisplayPort functionality.
->
-> Best regards,
-> Jyri
->
-> [1] include/linux/phy/phy.h
->
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+To compile this driver as a module, choose M here: the module
+will be called phy-rockchip-dphy. 
+"""
+
+And I believe the same improvement should be applied to the
+ISP driver Kconfig help.
+
+Thanks,
+Ezequiel
+
