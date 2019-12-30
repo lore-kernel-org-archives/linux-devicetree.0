@@ -2,171 +2,221 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B167BC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99CBC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F66207E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899B9206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:40:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vIp1GZiH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfL3QdU (ORCPT
+        id S1726674AbfL3QkO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 11:33:20 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38404 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfL3QdU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:33:20 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id D5E4C28DAE0
-Message-ID: <5be4728254c820bfaf99f385dc7b7ecb4f65d795.camel@collabora.com>
-Subject: Re: [PATCH v2 2/2] media: i2c: Add driver for Sony IMX219 sensor
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>, mchehab@kernel.org,
-        robh+dt@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        peter.griffin@linaro.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Mon, 30 Dec 2019 13:33:07 -0300
-In-Reply-To: <20191227122114.23075-3-andrey.konovalov@linaro.org>
-References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
-         <20191227122114.23075-3-andrey.konovalov@linaro.org>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 30 Dec 2019 11:40:14 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54239 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726607AbfL3QkN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:40:13 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m24so14355023wmc.3
+        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 08:40:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8tObW2Y+8fTfmFiK9yuGB6NcH5jADMC1h14qPDKuK7g=;
+        b=vIp1GZiH6LCgVBcmaNA+k0OXAJYBPhsMy3hg9p4J0BJERnzOSoYz+o3v4NSeWYuEQJ
+         eepS+mrUfiNWOhxHScGa47xys3690RvmDCR6H4rPDWooPV10I4zvUNpGs/qrehMmPB1k
+         wxz9VJBUrPpGBmCtiTCf18j4ZDHeI0DmpHMsJzpiPGtbdO9IBsYLbVYrvVCgt0sBmbaF
+         vV1p629Kia1h56cYSbis/FDzlITfY9Jk5CvNZnr/YNd7J462ptHYBHO4V25Dv0mNsWRU
+         rA8sWx2t2CBSrDCz8RZefPoxZZcVpDTRw/AKVCxEKZPna4in0Gvr6Oskadzue+n+FnSB
+         gA2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8tObW2Y+8fTfmFiK9yuGB6NcH5jADMC1h14qPDKuK7g=;
+        b=h7rWgDD3ga8BxBw0GuUBLYP4gtcc4VGO1knLmYPhWKsRXAT/NgKmoafkI3mesiOsNP
+         YOu/Nf0KUa2ThWlZuO/sPYpeRIdazWuOGrQvV3bYQpE91rdLomhrd+WQEmrLtRnzZY8p
+         YxW0Wd0XCc18ZTSzgdRezIyrA7mKCQvTyYzT+mkielKLBGXBD5digHJlV4n3C4VuQxN5
+         eq+nnagW3ibx9C+KDhCkd9mo5wNopM264Xej9Tcsqx48O5dKmCllklIEiQwoqnySgbRV
+         kncS6k7PX5KvQ6oETmtB3DG4PvtbmmlPU8ego8jQX73B2ahWnbE2nC0WXBQayVz18AHo
+         vjqA==
+X-Gm-Message-State: APjAAAWoOaLAz6A+BHwEfrGA3MvWsJJEZclC9DcIBTPMGZqK3NgSDfde
+        2tO9yllLSvDupA+3lHPw5Jh2aA==
+X-Google-Smtp-Source: APXvYqzqzuA3s5kBfdTMv9W4mAU+5EJ/XDsP+NlN8o/rGLdbAmV1nYLhd2RcBlmn2BQou0S4txsxjA==
+X-Received: by 2002:a1c:8055:: with SMTP id b82mr35748818wmd.127.1577724010564;
+        Mon, 30 Dec 2019 08:40:10 -0800 (PST)
+Received: from linaro.org ([2a00:23c5:6815:3901:a1cf:b00b:5683:ed40])
+        by smtp.gmail.com with ESMTPSA id b137sm21993094wme.26.2019.12.30.08.40.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 08:40:10 -0800 (PST)
+From:   Mike Leach <mike.leach@linaro.org>
+To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        coresight@lists.linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, robh+dt@kernel.org, maxime@cerno.tech,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, agross@kernel.org,
+        Mike Leach <mike.leach@linaro.org>
+Subject: [PATCH v7 00/15] CoreSight CTI Driver
+Date:   Mon, 30 Dec 2019 16:39:59 +0000
+Message-Id: <20191230163959.27909-1-mike.leach@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2019-12-27 at 15:21 +0300, Andrey Konovalov wrote:
-> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> 
-> Adds a driver for the 8MPix Sony IMX219 CSI2 sensor.
-> Whilst the sensor supports 2 or 4 CSI2 data lanes, this driver
-> currently only supports 2 lanes.
-> 8MPix @ 15fps, 1080P @ 30fps (cropped FOV), and 1640x1232 (2x2 binned)
-> @ 30fps are currently supported.
-> 
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> ---
->  drivers/media/i2c/Kconfig  |   12 +
->  drivers/media/i2c/Makefile |    1 +
->  drivers/media/i2c/imx219.c | 1240 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 1253 insertions(+)
->  create mode 100644 drivers/media/i2c/imx219.c
-> 
-> 
-[..]
-> +
-> +static int imx219_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct fwnode_handle *endpoint;
-> +	struct imx219 *imx219;
-> +	int ret;
-> +
-> +	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
-> +	if (!imx219)
-> +		return -ENOMEM;
-> +
-> +	imx219->dev = dev;
-> +
-> +	v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
-> +
-> +	/* Get CSI2 bus config */
-> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-> +						  NULL);
-> +	if (!endpoint) {
-> +		dev_err(dev, "endpoint node not found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &imx219->ep);
-> +	fwnode_handle_put(endpoint);
-> +	if (ret) {
-> +		dev_err(dev, "Could not parse endpoint\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Get system clock (xclk) */
-> +	imx219->xclk = devm_clk_get(dev, "xclk");
-> +	if (IS_ERR(imx219->xclk)) {
-> +		dev_err(dev, "failed to get xclk\n");
-> +		return PTR_ERR(imx219->xclk);
-> +	}
-> +
-> +	imx219->xclk_freq = clk_get_rate(imx219->xclk);
-> +	if (imx219->xclk_freq != IMX219_XCLK_FREQ) {
-> +		dev_err(dev, "xclk frequency not supported: %d Hz\n",
-> +			imx219->xclk_freq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = imx219_get_regulators(imx219);
-> +	if (ret)
-> +		return ret;
-> +
+CTIs are defined in the device tree and associated with other CoreSight
+devices. The core CoreSight code has been modified to enable the registration
+of the CTI devices on the same bus as the other CoreSight components,
+but as these are not actually trace generation / capture devices, they
+are not part of the Coresight path when generating trace.
 
-I think printing an error if you can't regulators
-(as the core will stay silent), is a good idea.
+However, the definition of the standard CoreSight device has been extended
+to include a reference to an associated CTI device, and the enable / disable
+trace path operations will auto enable/disable any associated CTI devices at
+the same time.
 
-Just got bitten by this while trying the driver with
-a RPI camera module v2, and the RKISP1 patches that
-we recently posted on this mailing list.
+Programming is at present via sysfs - a full API is provided to utilise the
+hardware capabilities. As CTI devices are unprogrammed by default, the auto
+enable describe above will have no effect until explicit programming takes
+place.
 
-(did _very_ limited testing, but working nicely so far).
+A set of device tree bindings specific to the CTI topology has been defined.
+The driver accesses these in a platform agnostic manner, so ACPI bindings
+can be added later, once they have been agreed and defined for the CTI device.
 
-> +	/* Request optional enable pin */
-> +	imx219->xclr_gpio = devm_gpiod_get_optional(dev, "xclr",
-> +						    GPIOD_OUT_HIGH);
-> +
-> +	/*
-> +	 * The sensor must be powered for imx219_identify_module()
-> +	 * to be able to read the CHIP_ID register
-> +	 */
-> +	ret = imx219_power_on(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = imx219_identify_module(imx219);
-> +	if (ret)
-> +		goto error_power_off;
-> +
-> +	/* Set default mode to max resolution */
-> +	imx219->mode = &supported_modes[0];
-> +
-> +	ret = imx219_init_controls(imx219);
-> +	if (ret)
-> +		goto error_power_off;
-> +
-> +	/* Initialize subdev */
-> +	imx219->sd.internal_ops = &imx219_internal_ops;
-> +	imx219->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +	imx219->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-> +
-> +	/* Initialize source pad */
-> +	imx219->pad.flags = MEDIA_PAD_FL_SOURCE;
-> +
-> +	ret = media_entity_pads_init(&imx219->sd.entity, 1, &imx219->pad);
-> +	if (ret)
-> +		goto error_handler_free;
-> +
-> +	ret = v4l2_async_register_subdev_sensor_common(&imx219->sd);
-> +	if (ret < 0)
-> +		goto error_media_entity;
-> +
+Documentation has been updated to describe both the CTI hardware, its use and
+programming in sysfs, and the new dts bindings required.
 
-Ditto on these last two, it's possible to get silent
-failures here, which are a bit annoying to debug.
+Tested on DB410 board and Juno board, against the Linux 5.5-rc1. 5.5-rc4 trees.
 
-Thanks,
-Ezequiel
+Changes since v6:
+NB: No functional driver changes in this set. Full set released for
+consistency, completeness and ease of use.
+1) Updates to .yaml following comments from Maxime Ripard. Correct child node
+   descriptions, fix validation, and ensure reg entries required in child
+   nodes as per DeviceTree specification.
+2) Update to Juno bindings to implement reg entry specification requirements.
+
+Changes since v5:
+1) Fixed up device tree .yaml file. Using extra compatible string for
+v8 architecture CTI connections.
+2) Ensure association code respects coresight mutex when setting cross
+referenced pointers. Add in shutdown code.
+3) Multiple minor code fixes & rationalisation. 
+
+Changes since v4:
+Multiple changes following feedback from Mathieu, Leo and Suzuki.
+1) Dropped RFC tag - wider distribution
+2) CTI bindings definition now presented as a .yaml file - tested with
+with 'dt-doc-validate' from devicetree.org/dt-schema project and in kernel
+build tree with 'make dtbs_check' per kernel docs.
+3) Sysfs links to other CoreSight devices moved out of this set into
+a following set that deals with all CoreSight devices & sysfs links.
+4) Documentation in .rst format and new directory following patchset in [1].
+Extended example provided in docs.
+5) Rationalised devicetree of_ specifics to use generic fwnode functions
+where possible to enable easier addition of ACPI support later.
+6) Other minor changes as requested in feedback from last patchset.
+
+Changes since v3:
+1) After discussion on CS mailing list, each CTI connection has a triggers<N>
+   sysfs directory with name and trigger signals listed for the connection.
+2) Initial code for creating sysfs links between CoreSight components is
+  introduced and implementation for CTI provided. This allows exploration
+  of the CoreSight topology within the sysfs infrastructure. Patches for
+  links between other CoreSight components to follow.
+3) Power management - CPU hotplug and idle omitted from this set as ongoing
+   developments may define required direction. Additional patch set to follow.
+4) Multiple fixes applied as requested by reviewers esp. Matthieu, Suzuki
+   and Leo. 
+
+Changes since v2:
+Updates to allow for new features on coresight/next and feedback from
+Mathieu and Leo.
+
+1) Rebase and restructuring to apply on top of ACPI support patch set,
+currently on coresight/next. of_coresight_cti has been renamed to
+coresight-cti-platform and device tree bindings added to this but accessed
+in a platform agnostic manner using fwnode for later ACPI support
+to be added.
+2) Split the sysfs patch info a series of functional patches.
+3) Revised the refcount and enabling support.
+4) Adopted the generic naming protocol - CTIs are either cti_cpuN or
+cti_sysM
+5) Various minor presentation /checkpatch issues highlighted in feedback.
+6) revised CPU hotplug to cover missing cases needed by ETM.
+
+Changes since v1:
+1) Significant restructuring of the source code. Adds cti-sysfs file and
+cti device tree file. Patches add per feature rather than per source
+file.
+2) CPU type power event handling for hotplug moved to CoreSight core,
+with generic registration interface provided for all CPU bound CS devices
+to use.
+3) CTI signal interconnection details in sysfs now generated dynamically
+from connection lists in driver. This to fix issue with multi-line sysfs
+output in previous version.
+4) Full device tree bindings for DB410 and Juno provided (to the extent
+that CTI information is available).
+5) AMBA driver update for UCI IDs are now upstream so no longer included
+in this set
+
+Mike Leach (15):
+  coresight: cti: Initial CoreSight CTI Driver
+  coresight: cti: Add sysfs coresight mgmt reg access.
+  coresight: cti: Add sysfs access to program function regs
+  coresight: cti: Add sysfs trigger / channel programming API
+  dt-bindings: arm: Adds CoreSight CTI hardware definitions.
+  coresight: cti: Add device tree support for v8 arch CTI
+  coresight: cti: Add device tree support for custom CTI.
+  coresight: cti: Enable CTI associated with devices.
+  coresight: cti: Add connection information to sysfs
+  dt-bindings: qcom: Add CTI options for qcom msm8916
+  dt-bindings: arm: Juno platform - add CTI entries to device tree.
+  dt-bindings: hisilicon: Add CTI bindings for hi-6220
+  docs: coresight: Update documentation for CoreSight to cover CTI.
+  docs: sysfs: coresight: Add sysfs ABI documentation for CTI
+  Update MAINTAINERS to add reviewer for CoreSight.
+
+ .../testing/sysfs-bus-coresight-devices-cti   |  221 ++++
+ .../bindings/arm/coresight-cti.yaml           |  326 +++++
+ .../devicetree/bindings/arm/coresight.txt     |    7 +
+ .../trace/coresight/coresight-ect.rst         |  211 +++
+ Documentation/trace/coresight/coresight.rst   |   13 +
+ MAINTAINERS                                   |    3 +
+ arch/arm64/boot/dts/arm/juno-base.dtsi        |  162 ++-
+ arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi     |   37 +-
+ arch/arm64/boot/dts/arm/juno-r1.dts           |   25 +
+ arch/arm64/boot/dts/arm/juno-r2.dts           |   25 +
+ arch/arm64/boot/dts/arm/juno.dts              |   25 +
+ .../boot/dts/hisilicon/hi6220-coresight.dtsi  |  130 +-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |   85 +-
+ drivers/hwtracing/coresight/Kconfig           |   21 +
+ drivers/hwtracing/coresight/Makefile          |    3 +
+ .../coresight/coresight-cti-platform.c        |  485 +++++++
+ .../hwtracing/coresight/coresight-cti-sysfs.c | 1175 +++++++++++++++++
+ drivers/hwtracing/coresight/coresight-cti.c   |  748 +++++++++++
+ drivers/hwtracing/coresight/coresight-cti.h   |  235 ++++
+ .../hwtracing/coresight/coresight-platform.c  |   21 +
+ drivers/hwtracing/coresight/coresight-priv.h  |   15 +
+ drivers/hwtracing/coresight/coresight.c       |   86 +-
+ include/dt-bindings/arm/coresight-cti-dt.h    |   37 +
+ include/linux/coresight.h                     |   27 +
+ 24 files changed, 4092 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-coresight-devices-cti
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
+ create mode 100644 Documentation/trace/coresight/coresight-ect.rst
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti-platform.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti-sysfs.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti.c
+ create mode 100644 drivers/hwtracing/coresight/coresight-cti.h
+ create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
+
+-- 
+2.17.1
 
