@@ -2,70 +2,174 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EB2C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40B3C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C72120748
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577728970;
-	bh=gRKYcl0jCq7nW7Gxn+7gNtKzmmdScmcjqsaffdi6YAc=;
-	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
-	b=r4MyEdMJkainXgH7pZZ+6mRamL7oRwqEkuHj/owb4o86p1GtjQT4xW6jcNlOvULX7
-	 DmGck+9OxzS3tQ2omFaOsOr8AdwVmN02IS0vPV1xBbpIe3xqN5V6ZiwZBmHvUjscDa
-	 MhXdoeB70c3K/upLlDj2RH+hdCyQJPtHnZ1QXoO0=
+	by mail.kernel.org (Postfix) with ESMTP id 92C23206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfL3SCr (ORCPT
+        id S1727511AbfL3SN4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:02:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfL3SCq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:02:46 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76A820718;
-        Mon, 30 Dec 2019 18:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577728966;
-        bh=gRKYcl0jCq7nW7Gxn+7gNtKzmmdScmcjqsaffdi6YAc=;
-        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
-        b=vSiG+ePNA5iMVvnrQ9qXREgzn1ME5/fjIl9LGPYvAP3NwvAh+s5VPG60KXKssWe0m
-         fNa+nIK1v43x+g+N1Luwxwz5KvAnx1yvVgvJxQEGJ7UjMCf62sTxJo9kFMtcCuRyL/
-         58qjHbTJsxzWjKYqvhI+MznhgVYhhnF4VZqAeMrs=
-Content-Type: text/plain; charset="utf-8"
+        Mon, 30 Dec 2019 13:13:56 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39130 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbfL3SN4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 13:13:56 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 5E5DD28DF09
+Message-ID: <f5e8afbbd46a25b752890880621be95971023f2e.camel@collabora.com>
+Subject: Re: [PATCH v12 02/11] media: staging: rkisp1: add Rockchip ISP1
+ base driver
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        gregkh@linuxfoundation.org, andrey.konovalov@linaro.org,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        joacim.zetterling@gmail.com, kernel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        linux-arm-kernel@lists.infradead.org,
+        Jacob Chen <jacob2.chen@rock-chips.com>,
+        Shunqian Zheng <zhengsq@rock-chips.com>,
+        Yichong Zhong <zyc@rock-chips.com>,
+        Jacob Chen <cc@rock-chips.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Allon Huang <allon.huang@rock-chips.com>
+Date:   Mon, 30 Dec 2019 15:13:41 -0300
+In-Reply-To: <20191227200116.2612137-3-helen.koike@collabora.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+         <20191227200116.2612137-3-helen.koike@collabora.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
-References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v2 0/3] Add modem Clock controller (MSS CC) driver for SC7180
-User-Agent: alot/0.8.1
-Date:   Mon, 30 Dec 2019 10:02:45 -0800
-Message-Id: <20191230180245.E76A820718@mail.kernel.org>
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2019-12-26 20:42:37)
-> [v2]
->   * Update the license for the documentation and fix minor comments in the
->     YAML bindings.
+Hi Helen,
 
-I see Sibi has comments. Please resend with those comments addressed.
+Just spotted a small thing.
+
+On Fri, 2019-12-27 at 17:01 -0300, Helen Koike wrote:
+[..]
+> +static int rkisp1_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *node = pdev->dev.of_node;
+> +       const struct rkisp1_match_data *clk_data;
+> +       const struct of_device_id *match;
+> +       struct device *dev = &pdev->dev;
+> +       struct rkisp1_device *rkisp1;
+> +       struct v4l2_device *v4l2_dev;
+> +       unsigned int i;
+> +       int ret, irq;
+> +
+> +       match = of_match_node(rkisp1_of_match, node);
+> +       rkisp1 = devm_kzalloc(dev, sizeof(*rkisp1), GFP_KERNEL);
+> +       if (!rkisp1)
+> +               return -ENOMEM;
+> +
+> +       dev_set_drvdata(dev, rkisp1);
+> +       rkisp1->dev = dev;
+> +
+> +       rkisp1_debug_init(rkisp1);
+> +
+> +       rkisp1->base_addr = devm_platform_ioremap_resource(pdev, 0);
+> +       if (IS_ERR(rkisp1->base_addr))
+> +               return PTR_ERR(rkisp1->base_addr);
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq < 0)
+> +               return irq;
+> +
+> +       ret = devm_request_irq(dev, irq, rkisp1_isr, IRQF_SHARED,
+> +                              dev_driver_string(dev), dev);
+> +       if (ret) {
+> +               dev_err(dev, "request irq failed: %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       rkisp1->irq = irq;
+> +       clk_data = match->data;
+> +
+> +       for (i = 0; i < clk_data->size; i++)
+> +               rkisp1->clks[i].id = clk_data->clks[i];
+> +       ret = devm_clk_bulk_get(dev, clk_data->size, rkisp1->clks);
+> +       if (ret)
+> +               return ret;
+> +       rkisp1->clk_size = clk_data->size;
+> +
+> +       pm_runtime_enable(&pdev->dev);
+> +
+> +       strscpy(rkisp1->media_dev.model, RKISP1_DRIVER_NAME,
+> +               sizeof(rkisp1->media_dev.model));
+> +       rkisp1->media_dev.dev = &pdev->dev;
+> +       strscpy(rkisp1->media_dev.bus_info,
+> +               "platform: " RKISP1_DRIVER_NAME,
+> +               sizeof(rkisp1->media_dev.bus_info));
+> +       media_device_init(&rkisp1->media_dev);
+> +
+> +       v4l2_dev = &rkisp1->v4l2_dev;
+> +       v4l2_dev->mdev = &rkisp1->media_dev;
+> +       strscpy(v4l2_dev->name, RKISP1_DRIVER_NAME, sizeof(v4l2_dev->name));
+> +
+> +       ret = v4l2_device_register(rkisp1->dev, &rkisp1->v4l2_dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = media_device_register(&rkisp1->media_dev);
+> +       if (ret) {
+> +               dev_err(dev, "Failed to register media device: %d\n", ret);
+> +               goto err_unreg_v4l2_dev;
+> +       }
+> +
+> +       ret = rkisp1_entities_register(rkisp1);
+> +       if (ret)
+> +               goto err_unreg_media_dev;
+> +
+> +       return 0;
+> +
+> +err_unreg_media_dev:
+> +       media_device_unregister(&rkisp1->media_dev);
+> +err_unreg_v4l2_dev:
+> +       v4l2_device_unregister(&rkisp1->v4l2_dev);
+> +       pm_runtime_disable(&pdev->dev);
+
+There's a missing call to debugfs_remove_recursive here.
+
+> +       return ret;
+> +}
+> +
+> +static int rkisp1_remove(struct platform_device *pdev)
+> +{
+> +       struct rkisp1_device *rkisp1 = platform_get_drvdata(pdev);
+> +
+> +       v4l2_async_notifier_unregister(&rkisp1->notifier);
+> +       v4l2_async_notifier_cleanup(&rkisp1->notifier);
+> +
+> +       rkisp1_isp_unregister(rkisp1);
+> +
+> +       media_device_unregister(&rkisp1->media_dev);
+> +       v4l2_device_unregister(&rkisp1->v4l2_dev);
+> +
+> +       pm_runtime_disable(&pdev->dev);
+> +
+> +       debugfs_remove_recursive(rkisp1->debug.debugfs_dir);
+> +       return 0;
+> +}
+> +
+
+Thanks,
+Ezequiel
+
 
