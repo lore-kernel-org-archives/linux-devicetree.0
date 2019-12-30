@@ -2,109 +2,126 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FCEC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98525C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A112071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E24120730
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577728386;
+	bh=qiX/ki1VZ10dHl+G3bmaxWsgUgJaJdPyetC5TOSqHeo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xFiKJoubawOtgb3hWw1BRKKpeePltwv741nhUsNlGTy7Ikyvd1XzbFFQ1RqEp989Q
+	 gJXKmQSjoLAlbVyWqmdqrxLVUfNCE46hA0zoJEN3p3Z2iPrv53wfqD0As7VESNGKTT
+	 Seew2/EDWAsbu52mWrZq2AC2q0IuskQgt6Qx/yMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfL3R3w (ORCPT
+        id S1727509AbfL3RxF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:29:52 -0500
-Received: from muru.com ([72.249.23.125]:49706 "EHLO muru.com"
+        Mon, 30 Dec 2019 12:53:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbfL3R3w (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:29:52 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 87C948027;
-        Mon, 30 Dec 2019 17:30:31 +0000 (UTC)
-Date:   Mon, 30 Dec 2019 09:29:48 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     =?utf-8?B?QW5kcsOp?= Hentschel <nerv@dawncrow.de>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Adam Ford <aford173@gmail.com>, linux@arm.linux.org.uk,
-        robh+dt@kernel.org, mark.rutland@arm.com, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: Add omap3-echo
-Message-ID: <20191230172948.GL35479@atomide.com>
-References: <20191224161005.28083-1-nerv@dawncrow.de>
- <20191224184503.GK35479@atomide.com>
- <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com>
- <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de>
+        id S1726602AbfL3RxF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:53:05 -0500
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2363207E0;
+        Mon, 30 Dec 2019 17:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577728384;
+        bh=qiX/ki1VZ10dHl+G3bmaxWsgUgJaJdPyetC5TOSqHeo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fYlbAl/999Il/xXeYC00+VWL3M154DKx/6rNFXomPd20BDV31BDm0LjotziGAJsGw
+         X2TK1VOOtFUnn7NY/8sgs5AqG4MKsV8kdTc5raNXboKso5z0AcnpUGgBNYJ6wXnUW7
+         xQAmwkL4nWfGUohfqQwBwXkzdchfKpy6l4EBiYUc=
+Received: by mail-qt1-f174.google.com with SMTP id w47so30111475qtk.4;
+        Mon, 30 Dec 2019 09:53:04 -0800 (PST)
+X-Gm-Message-State: APjAAAUJnCsrcDlgWTtA1Vl6GGY5291kjjVs4Btx12qYKEQDIy4EuqZf
+        0vn0DJwuZcxq7/pLnEyskco2w+0kErhTFRshrg==
+X-Google-Smtp-Source: APXvYqyaZydxwFW02BlCZCg9ra5E5cTvKaoWIYuHbN3644YIXtRs5mhdInVI5/ETrktTRqg3jjzf+amLHcIDIwstXic=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr49935662qtg.110.1577728383766;
+ Mon, 30 Dec 2019 09:53:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191224010020.15969-1-rjones@gateworks.com> <20191224010020.15969-2-rjones@gateworks.com>
+ <20191226232625.GA2186@bogus> <CAOMZO5Aj+PfzXrYoV8LxKStdQ-B0BLdMV16L3ya0NokozG479g@mail.gmail.com>
+In-Reply-To: <CAOMZO5Aj+PfzXrYoV8LxKStdQ-B0BLdMV16L3ya0NokozG479g@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Dec 2019 10:52:52 -0700
+X-Gmail-Original-Message-ID: <CAL_Jsq+8tpxUqzPt2wP668_GTmtaSuaBRSO_k7db4Jt06MWk9g@mail.gmail.com>
+Message-ID: <CAL_Jsq+8tpxUqzPt2wP668_GTmtaSuaBRSO_k7db4Jt06MWk9g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] dt-bindings: arm: fsl: Add Gateworks Ventana
+ i.MX6DL/Q compatibles
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Robert Jones <rjones@gateworks.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* André Hentschel <nerv@dawncrow.de> [191227 14:29]:
-> Am 25.12.19 um 18:01 schrieb H. Nikolaus Schaller:
-> > I think the am3703 is a dm3730 (omap3630) where the SGX and the
-> > DSP have not passed production test and are "disabled" by eFuses.
-> > This is a common procedure in silicon production to increase yield.
-> > 
-> > Therefore, there is a register which allows to dynamically determine
-> > what components (SGX and DSP) are available on a specific SoC chip.
-> > See "Table 1-6. Chip Identification" in the common
-> > "AM/DM37x Multimedia Device TRM".
-> > 
-> > Such bits exists for omap34xx and for omap36xx (aka am37xx/dm37xx).
-> > 
-> > That way there is no need to disable/enable sgx through device tree
-> > variations and introducing more complexity by introducing more and more
-> > DTS for variants (am3703.dtsi, am3715.dtsi, dm3720.dtsi, dm3730.dtsi?).
-> > 
-> > BTW: what about a board that is/was produced in either am3703 or dm3730
-> > variants? Can they still share an omap36xx.dtsi based DTB?
-> > 
-> > So IMHO if there is an issue with sgx enabled on am3703 but no SGX
-> > hardware available on a specific SoC, the sysc setup should somehow read
-> > the bits and effectively disable all SGX related setup if it is not
-> > available on the SoC. If I remember correctly, some older hwmods did
-> > such things by checking SoC variant bits.
-> 
-> I like the idea, but I'm not in the position to vote for it and I don't
-> understand the sysc code enough to implement that.
+On Thu, Dec 26, 2019 at 5:34 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Rob,
+>
+> On Thu, Dec 26, 2019 at 8:26 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, Dec 23, 2019 at 05:00:16PM -0800, Robert Jones wrote:
+> > > Add the compatible enum entries for Gateworks Ventana boards.
+> > >
+> > > Signed-off-by: Robert Jones <rjones@gateworks.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > index f79683a..a02e980 100644
+> > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > @@ -126,6 +126,7 @@ properties:
+> > >                - toradex,apalis_imx6q-ixora      # Apalis iMX6 Module on Ixora
+> > >                - toradex,apalis_imx6q-ixora-v1.1 # Apalis iMX6 Module on Ixora V1.1
+> > >                - variscite,dt6customboard
+> > > +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
+> >
+> > Keep entries sorted.
+>
+> Just for clarification: shouldn't the entries inside fsl.yaml match
+> the dtb file names?
 
-We can easily do both. So no worries, I can easily add SoC capabilites
-support at some point.
+No. They should match top-level compatibles. However, I'd expect a 1:1
+relationship of dtbs to top-level compatible entries.
 
-> Am 25.12.19 um 13:53 schrieb Adam Ford:
-> > On Wed, Dec 25, 2019 at 6:05 AM André Hentschel <nerv@dawncrow.de> wrote:
-> >> And then include am3703.dtsi in omap36xx.dtsi before sgx support?
-> > I can see value in having a 3703 base and including that in the 36xx
-> > with SGX and DSP nodes, but why not jus make SGX disabled by default.
-> > Those who want/need it can enable it on a per-board basis.
-> >> Or would it be better to have sgx support in a separate dtsi?
-> > 
-> > I am not sure how much DSP stuff is in there, but the DM3730 is the
-> > AM3703 + DSP and 3D.
-> 
-> For clarification this reduced table should help:
->      DM3730 | DM3725 | AM3715 | AM3703
-> DSP    X    |   X    |        |    
-> SGX    X    |        |   X    |    
-> 
-> Where X is "supported"
+> In case of the i.MX6Q based gateworks board, this should be:
+>
+> gw,imx6q-gw51xx
+> gw,imx6q-gw52xx
+> gw,imx6q-gw53xx
+> gw,imx6q-gw5400-a
+> gw,imx6q-gw54xx
+> gw,imx6q-gw551x
+> gw,imx6q-gw552x
+> gw,imx6q-gw553x
+> gw,imx6q-gw560x
+> gw,imx6q-gw5903
+> gw,imx6q-gw5904
+>
+> Please advise.
 
-And let's also add minimal dm3725.dtsi, am3715.dtsi and am3703.dtsi
-to make things simple. The device tree is supposed to describe the
-hardware, and in most cases the SoC version is fixed and need no
-dynamic detection.
+Yes, if this is 11 different boards, then yes, I'd expect 11
+permutations for the schema.
 
-André, can you please add those three dtsi files since you have at
-least one test case? :)
-
-Regards,
-
-Tony
+Rob
