@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 296AEC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03130C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F8E20722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C77F2206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vit36bm4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ue9Dh2bN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfL3QmY (ORCPT
+        id S1727178AbfL3QnQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 11:42:24 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34406 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbfL3QmY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:42:24 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t2so33186496wrr.1
-        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 08:42:21 -0800 (PST)
+        Mon, 30 Dec 2019 11:43:16 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45074 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbfL3QnQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:43:16 -0500
+Received: by mail-wr1-f65.google.com with SMTP id j42so33131298wrj.12
+        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 08:43:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Z+sAs+AYDGqWiFrN+aBgvSMMWZqMnIfoLolRJJqL6y8=;
-        b=vit36bm4NvFURpM0kIpzqYTQp0cqIddaqZ0h0ogzMOk17+46bi8SqhDTw+as8EPWx6
-         soAOOxbSwZ/zqPmin2ZIHer7117oN6l7GCQ0GDtZchdPeL81NAogpmBkQzY4yZ/nLURK
-         N3/OL0kUSWMKHyTjBA1RkhWD8H/OcIXqHR0QuH51Y9WUDfnlifYGJpyiIC+KqVpbh+4S
-         aPdjFkKnBOQkCH46+2rbb+zcRQ03OqDoF1RIbIJnuyFU97lHekvMiSrLUMIJ5WOcWaou
-         hjHaC3MiCqeYtBOTKMEEAEvWHXhDsO2pxv4Sa+V3JLrLJHYeXkzuOP2f0tpRPu0xLDhE
-         dcqg==
+        bh=YB3f30pJRu3JULH7XG/mWzUNFJ0TPVlsc2Y5J8rGS1s=;
+        b=Ue9Dh2bNnHoL9o8EcVY3qR9lIVVycoMC1u1NtH9SFNUioxB6SkJz3IKPMgaCQ/UAkt
+         0vMGRXrHWGGj2mRu9BhayYSw4X2/dkWxRAvSMi8vfzZpFyPBdLq3+Lkxlke1j/apaCN5
+         3YTqtO94MKtRyOAY00LlN6rok4TvaCzWCMRjuh99uUmQmWhucbhqQ2mRUoAzIWkeFN7f
+         r+GLhAcRUhSSXY51YjweNm7dFxMnIEWm+9t3t60t8PDJRJhgjEkoT3idhOoP753tQWCJ
+         IfI947cQ3mzLdkwDy0YYQa39vg8GFJ8zDshhST0tF8ICm8khyPlHC5dpi4TB1lv5/rff
+         1J/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Z+sAs+AYDGqWiFrN+aBgvSMMWZqMnIfoLolRJJqL6y8=;
-        b=G4ldlPTa2J+mCnd9yO3ljd7FEt4hVIVU/M43wayj+NQDJt9mUOcFdZDUHVEbNCQH3Z
-         9FThKu0BbbAcGa+zMSiXugX9q6lXkgF3ZO/jGkR59qw20Qsh8nF4hI7ewRtj/+FxaeqZ
-         v8sMoia7y5Tt7TMnuSxq5CbHw7LDNe0ie79Memiz4dcvdxV6Vk/btfN3r8+HjLlpmV/c
-         0GN4homPZWJUIAbDRrEjIuQtm8ZAjNpcK1//hSCH+DifMEIKEt1rWiZ1G+qbNf7g1+1R
-         9NmZe1aAeBYqKx87JMlu4KhEx/tqh3S+cxi0OzRXSkYaQ0BEh9SGMs5s++EhoqtZY5h1
-         Q08w==
-X-Gm-Message-State: APjAAAXkFtr89UhTLhFz2jKY40frqmiok3EQVxirGXgSIcQFensYPlnf
-        8Pse5DnLftqxKG88oi08k47snw==
-X-Google-Smtp-Source: APXvYqx9HLq2Z2XE+l63yV56fja3Rn/09iYbBY5ssmxMgvmrArYwVQRvyrQ+ZKcQlyT8e8ov8zZYDw==
-X-Received: by 2002:a5d:50d2:: with SMTP id f18mr67795642wrt.366.1577724140556;
-        Mon, 30 Dec 2019 08:42:20 -0800 (PST)
+        bh=YB3f30pJRu3JULH7XG/mWzUNFJ0TPVlsc2Y5J8rGS1s=;
+        b=FJ9vENfG2bRh2glqruU94rJeCz9X7C2HNgmIGOTGSPjzxYQFnoYe2UXDpAmWmJeX+y
+         Huzbn/SWLlEbYfk6KjCBCGQo4APXnEN9dcZtBdcf4tKjZzgPqHwY4vqjGDula4UmbYXi
+         DobSql8YOUrKrkp0izMOrHkwVl+gny8qwd2wBKff1Iww+McOEIB6wxcU1a54CcZxm5wP
+         BpXz8gphiteAyebgTHf7Sl50Bp8P8N15/9NU2iDVQwV+WhifFJz42Aq4smhM7WWfkDEQ
+         OmhwmzgFurlbsULb27oUOico1ZEv1n7dQXxDUcIxURkTRuTMZccouXFnxI89+GuU5wyE
+         JSyw==
+X-Gm-Message-State: APjAAAU4Plm66weCTfV4ghsWDb8Fgua1lx+QNOuEOxVNEohDNsrTE6Hq
+        5yxx2b/9DGGsqaQ1JnLvCm91xw==
+X-Google-Smtp-Source: APXvYqyditLM4czt6DXltQROybhVhYPGdF3xp/LxygA3E4yhhkZTRYqMwvzcOg1NkjI3oh5TgzYlTg==
+X-Received: by 2002:adf:f58a:: with SMTP id f10mr70947710wro.105.1577724193953;
+        Mon, 30 Dec 2019 08:43:13 -0800 (PST)
 Received: from linaro.org ([2a00:23c5:6815:3901:a1cf:b00b:5683:ed40])
-        by smtp.gmail.com with ESMTPSA id j12sm47001207wrt.55.2019.12.30.08.42.19
+        by smtp.gmail.com with ESMTPSA id g25sm344901wmh.3.2019.12.30.08.43.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 08:42:20 -0800 (PST)
+        Mon, 30 Dec 2019 08:43:13 -0800 (PST)
 From:   Mike Leach <mike.leach@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         coresight@lists.linaro.org
@@ -62,420 +62,159 @@ Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
         liviu.dudau@arm.com, sudeep.holla@arm.com,
         lorenzo.pieralisi@arm.com, agross@kernel.org,
         Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v7 08/15] coresight: cti: Enable CTI associated with devices.
-Date:   Mon, 30 Dec 2019 16:42:16 +0000
-Message-Id: <20191230164216.28195-2-mike.leach@linaro.org>
+Subject: [PATCH v7 10/15] dt-bindings: qcom: Add CTI options for qcom msm8916
+Date:   Mon, 30 Dec 2019 16:43:06 +0000
+Message-Id: <20191230164306.28259-2-mike.leach@linaro.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191230164216.28195-1-mike.leach@linaro.org>
-References: <20191230164216.28195-1-mike.leach@linaro.org>
+In-Reply-To: <20191230164306.28259-1-mike.leach@linaro.org>
+References: <20191230164306.28259-1-mike.leach@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The CoreSight subsystem enables a path of devices from source to sink.
-Any CTI devices associated with the path devices must be enabled at the
-same time.
-
-This patch adds an associated coresight_device element to the main
-coresight device structure, and uses this to create associations between
-the CTI and other devices based on the device tree data. The associated
-device element is used to enable CTI in conjunction with the path elements.
-
-CTI devices are reference counted so where a single CTI is associated with
-multiple elements on the path, it will be enabled on the first associated
-device enable, and disabled with the last associated device disable.
+Adds system and CPU bound CTI definitions for Qualcom msm8916 platform
+(Dragonboard DB410C).
+System CTIs 2-11 are omitted as no information available at present.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-cti.c   | 129 ++++++++++++++++++
- drivers/hwtracing/coresight/coresight-cti.h   |   1 +
- .../hwtracing/coresight/coresight-platform.c  |   1 +
- drivers/hwtracing/coresight/coresight-priv.h  |  12 ++
- drivers/hwtracing/coresight/coresight.c       |  71 +++++++++-
- include/linux/coresight.h                     |   4 +
- 6 files changed, 213 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 85 +++++++++++++++++++++++++--
+ 1 file changed, 81 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-index 77c2af247917..2be1b310e854 100644
---- a/drivers/hwtracing/coresight/coresight-cti.c
-+++ b/drivers/hwtracing/coresight/coresight-cti.c
-@@ -4,6 +4,7 @@
-  * Author: Mike Leach <mike.leach@linaro.org>
-  */
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 8686e101905c..68587968f5c0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -8,6 +8,7 @@
+ #include <dt-bindings/reset/qcom,gcc-msm8916.h>
+ #include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/thermal/thermal.h>
++#include <dt-bindings/arm/coresight-cti-dt.h>
  
-+#include <linux/property.h>
- #include "coresight-cti.h"
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -1357,7 +1358,7 @@
+ 			cpu = <&CPU3>;
+ 		};
  
- /**
-@@ -440,6 +441,131 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
- 	return err;
- }
+-		etm@85c000 {
++		etm0: etm@85c000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85c000 0x1000>;
  
-+/*
-+ * Look for a matching connection device name in the list of connections.
-+ * If found then swap in the csdev name, set trig con association pointer
-+ * and return found.
-+ */
-+static bool
-+cti_match_fixup_csdev(struct cti_device *ctidev, const char *node_name,
-+		      struct coresight_device *csdev)
-+{
-+	struct cti_trig_con *trig_con;
-+	const char *csdev_name;
+@@ -1375,7 +1376,7 @@
+ 			};
+ 		};
+ 
+-		etm@85d000 {
++		etm1: etm@85d000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85d000 0x1000>;
+ 
+@@ -1393,7 +1394,7 @@
+ 			};
+ 		};
+ 
+-		etm@85e000 {
++		etm2: etm@85e000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85e000 0x1000>;
+ 
+@@ -1411,7 +1412,7 @@
+ 			};
+ 		};
+ 
+-		etm@85f000 {
++		etm3: etm@85f000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x85f000 0x1000>;
+ 
+@@ -1429,6 +1430,82 @@
+ 			};
+ 		};
+ 
++		/* System CTIs */
++		/* CTI 0 - TMC connections */
++		cti@810000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x810000 0x1000>;
 +
-+	list_for_each_entry(trig_con, &ctidev->trig_cons, node) {
-+		if (trig_con->con_dev_name) {
-+			if (!strcmp(node_name, trig_con->con_dev_name)) {
-+				/* match: so swap in csdev name & dev */
-+				kfree(trig_con->con_dev_name);
-+				csdev_name = dev_name(&csdev->dev);
-+				trig_con->con_dev_name =
-+					kstrdup(csdev_name, GFP_KERNEL);
-+				trig_con->con_dev = csdev;
-+				return true;
-+			}
-+		}
-+	}
-+	return false;
-+}
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++		};
 +
-+/*
-+ * Search the cti list to add an associated CTI into the supplied CS device
-+ * This will set the association if CTI declared before the CS device.
-+ * (called from coresight_register() with coresight_mutex locked).
-+ */
-+void cti_add_assoc_to_csdev(struct coresight_device *csdev)
-+{
-+	struct cti_drvdata *ect_item;
-+	struct cti_device *ctidev;
-+	const char *node_name = NULL;
++		/* CTI 1 - TPIU connections */
++		cti@811000 {
++			compatible = "arm,coresight-cti", "arm,primecell";
++			reg = <0x811000 0x1000>;
 +
-+	/* protect the list */
-+	mutex_lock(&ect_mutex);
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++		};
 +
-+	/* exit if current is an ECT device.*/
-+	if ((csdev->type == CORESIGHT_DEV_TYPE_ECT) || list_empty(&ect_net))
-+		goto cti_add_done;
++		/* CTIs 2-11 - no information - not instantiated */
 +
-+	/* if we didn't find the csdev previously we used the fwnode name */
-+	node_name = cti_plat_get_node_name(dev_fwnode(csdev->dev.parent));
-+	if (!node_name)
-+		goto cti_add_done;
++		/* Core CTIs; CTIs 12-15 */
++		/* CTI - CPU-0 */
++		cti@858000 {
++			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
++				     "arm,primecell";
++			reg = <0x858000 0x1000>;
 +
-+	/* for each CTI in list... */
-+	list_for_each_entry(ect_item, &ect_net, node) {
-+		ctidev = &ect_item->ctidev;
-+		if (cti_match_fixup_csdev(ctidev, node_name, csdev)) {
-+			/*
-+			 * if we found a matching csdev then update the ECT
-+			 * association pointer for the device with this CTI.
-+			 */
-+			csdev->ect_dev = ect_item->csdev;
-+			break;
-+		}
-+	}
-+cti_add_done:
-+	mutex_unlock(&ect_mutex);
-+}
-+EXPORT_SYMBOL_GPL(cti_add_assoc_to_csdev);
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
 +
-+/*
-+ * Removing the associated devices is easier.
-+ * A CTI will not have a value for csdev->ect_dev.
-+ */
-+void cti_remove_assoc_from_csdev(struct coresight_device *csdev)
-+{
-+	struct cti_drvdata *ctidrv;
-+	struct cti_trig_con *tc;
-+	struct cti_device *ctidev;
++			cpu = <&CPU0>;
++			arm,cs-dev-assoc = <&etm0>;
 +
-+	mutex_lock(&ect_mutex);
-+	if (csdev->ect_dev) {
-+		ctidrv = csdev_to_cti_drvdata(csdev->ect_dev);
-+		ctidev = &ctidrv->ctidev;
-+		list_for_each_entry(tc, &ctidev->trig_cons, node) {
-+			if (tc->con_dev == csdev->ect_dev) {
-+				tc->con_dev = NULL;
-+				break;
-+			}
-+		}
-+		csdev->ect_dev = NULL;
-+	}
-+	mutex_unlock(&ect_mutex);
-+}
-+EXPORT_SYMBOL_GPL(cti_remove_assoc_from_csdev);
++		};
 +
-+/*
-+ * Update the cross references where the associated device was found
-+ * while we were building the connection info. This will occur if the
-+ * assoc device was registered before the CTI.
-+ */
-+static void cti_update_conn_xrefs(struct cti_drvdata *drvdata)
-+{
-+	struct cti_trig_con *tc;
-+	struct cti_device *ctidev = &drvdata->ctidev;
++		/* CTI - CPU-1 */
++		cti@859000 {
++			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
++				     "arm,primecell";
++			reg = <0x859000 0x1000>;
 +
-+	list_for_each_entry(tc, &ctidev->trig_cons, node) {
-+		if (tc->con_dev)
-+			/* set tc->con_dev->ect_dev */
-+			coresight_set_assoc_ectdev_mutex(tc->con_dev,
-+							 drvdata->csdev);
-+	}
-+}
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
 +
-+static void cti_remove_conn_xrefs(struct cti_drvdata *drvdata)
-+{
-+	struct cti_trig_con *tc;
-+	struct cti_device *ctidev = &drvdata->ctidev;
++			cpu = <&CPU1>;
++			arm,cs-dev-assoc = <&etm1>;
++		};
 +
-+	list_for_each_entry(tc, &ctidev->trig_cons, node) {
-+		if (tc->con_dev) {
-+			coresight_set_assoc_ectdev_mutex(tc->con_dev,
-+							 NULL);
-+		}
-+	}
-+}
++		/* CTI - CPU-2 */
++		cti@85a000 {
++			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
++				     "arm,primecell";
++			reg = <0x85a000 0x1000>;
 +
- /** cti ect operations **/
- int cti_enable(struct coresight_device *csdev)
- {
-@@ -474,6 +600,7 @@ static void cti_device_release(struct device *dev)
- 	struct cti_drvdata *ect_item, *ect_tmp;
- 
- 	mutex_lock(&ect_mutex);
-+	cti_remove_conn_xrefs(drvdata);
- 
- 	/* remove from the list */
- 	list_for_each_entry_safe(ect_item, ect_tmp, &ect_net, node) {
-@@ -565,6 +692,8 @@ static int cti_probe(struct amba_device *adev, const struct amba_id *id)
- 	/* add to list of CTI devices */
- 	mutex_lock(&ect_mutex);
- 	list_add(&drvdata->node, &ect_net);
-+	/* set any cross references */
-+	cti_update_conn_xrefs(drvdata);
- 	mutex_unlock(&ect_mutex);
- 
- 	/* set up release chain */
-diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
-index 469a06a1bb78..578d7e9ac67e 100644
---- a/drivers/hwtracing/coresight/coresight-cti.h
-+++ b/drivers/hwtracing/coresight/coresight-cti.h
-@@ -216,6 +216,7 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
- 		      u32 channel_idx);
- struct coresight_platform_data *
- coresight_cti_get_platform_data(struct device *dev);
-+const char *cti_plat_get_node_name(struct fwnode_handle *fwnode);
- 
- /* cti powered and enabled */
- static inline bool cti_active(struct cti_config *cfg)
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 43418a2126ff..421d4fc95f41 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -313,6 +313,7 @@ static int of_get_coresight_platform_data(struct device *dev,
- 
- 	return 0;
- }
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
 +
- #else
- static inline int
- of_get_coresight_platform_data(struct device *dev,
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 357ffef7b825..890f9a5c97c6 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -162,6 +162,16 @@ static inline int etm_readl_cp14(u32 off, unsigned int *val) { return 0; }
- static inline int etm_writel_cp14(u32 off, u32 val) { return 0; }
- #endif
- 
-+#ifdef CONFIG_CORESIGHT_CTI
-+extern void cti_add_assoc_to_csdev(struct coresight_device *csdev);
-+extern void cti_remove_assoc_from_csdev(struct coresight_device *csdev);
++			cpu = <&CPU2>;
++			arm,cs-dev-assoc = <&etm2>;
++		};
 +
-+#else
-+static inline void cti_add_assoc_to_csdev(struct coresight_device *csdev) {}
-+static inline void
-+cti_remove_assoc_from_csdev(struct coresight_device *csdev) {}
-+#endif
++		/* CTI - CPU-3 */
++		cti@85b000 {
++			compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
++				     "arm,primecell";
++			reg = <0x85b000 0x1000>;
 +
- /*
-  * Macros and inline functions to handle CoreSight UCI data and driver
-  * private data in AMBA ID table entries, and extract data values.
-@@ -204,5 +214,7 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
- void coresight_release_platform_data(struct coresight_platform_data *pdata);
- struct coresight_device *
- coresight_find_csdev_by_fwnode(struct fwnode_handle *r_fwnode);
-+void coresight_set_assoc_ectdev_mutex(struct coresight_device *csdev,
-+				      struct coresight_device *ect_csdev);
- 
- #endif
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index 39a5d9f7a395..c71553c09f8e 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -216,6 +216,44 @@ void coresight_disclaim_device(void __iomem *base)
- 	CS_LOCK(base);
- }
- 
-+/* enable or disable an associated CTI device of the supplied CS device */
-+static int
-+coresight_control_assoc_ectdev(struct coresight_device *csdev, bool enable)
-+{
-+	int ect_ret = 0;
-+	struct coresight_device *ect_csdev = csdev->ect_dev;
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
 +
-+	if (!ect_csdev)
-+		return 0;
++			cpu = <&CPU3>;
++			arm,cs-dev-assoc = <&etm3>;
++		};
 +
-+	if (enable) {
-+		if (ect_ops(ect_csdev)->enable)
-+			ect_ret = ect_ops(ect_csdev)->enable(ect_csdev);
-+	} else {
-+		if (ect_ops(ect_csdev)->disable)
-+			ect_ret = ect_ops(ect_csdev)->disable(ect_csdev);
-+	}
 +
-+	/* output warning if ECT enable is preventing trace operation */
-+	if (ect_ret)
-+		dev_info(&csdev->dev, "Associated ECT device (%s) %s failed\n",
-+			 dev_name(&ect_csdev->dev),
-+			 enable ? "enable" : "disable");
-+	return ect_ret;
-+}
-+
-+/*
-+ * Set the associated ect / cti device while holding the coresight_mutex
-+ * to avoid a race with coresight_enable that may try to use this value.
-+ */
-+void coresight_set_assoc_ectdev_mutex(struct coresight_device *csdev,
-+				      struct coresight_device *ect_csdev)
-+{
-+	mutex_lock(&coresight_mutex);
-+	csdev->ect_dev = ect_csdev;
-+	mutex_unlock(&coresight_mutex);
-+}
-+
- static int coresight_enable_sink(struct coresight_device *csdev,
- 				 u32 mode, void *data)
- {
-@@ -228,9 +266,14 @@ static int coresight_enable_sink(struct coresight_device *csdev,
- 	if (!sink_ops(csdev)->enable)
- 		return -EINVAL;
- 
--	ret = sink_ops(csdev)->enable(csdev, mode, data);
-+	ret = coresight_control_assoc_ectdev(csdev, true);
- 	if (ret)
- 		return ret;
-+	ret = sink_ops(csdev)->enable(csdev, mode, data);
-+	if (ret) {
-+		coresight_control_assoc_ectdev(csdev, false);
-+		return ret;
-+	}
- 	csdev->enable = true;
- 
- 	return 0;
-@@ -246,6 +289,7 @@ static void coresight_disable_sink(struct coresight_device *csdev)
- 	ret = sink_ops(csdev)->disable(csdev);
- 	if (ret)
- 		return;
-+	coresight_control_assoc_ectdev(csdev, false);
- 	csdev->enable = false;
- }
- 
-@@ -269,8 +313,15 @@ static int coresight_enable_link(struct coresight_device *csdev,
- 	if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_SPLIT && outport < 0)
- 		return outport;
- 
--	if (link_ops(csdev)->enable)
--		ret = link_ops(csdev)->enable(csdev, inport, outport);
-+	if (link_ops(csdev)->enable) {
-+		ret = coresight_control_assoc_ectdev(csdev, true);
-+		if (!ret) {
-+			ret = link_ops(csdev)->enable(csdev, inport, outport);
-+			if (ret)
-+				coresight_control_assoc_ectdev(csdev, false);
-+		}
-+	}
-+
- 	if (!ret)
- 		csdev->enable = true;
- 
-@@ -300,8 +351,10 @@ static void coresight_disable_link(struct coresight_device *csdev,
- 		nr_conns = 1;
- 	}
- 
--	if (link_ops(csdev)->disable)
-+	if (link_ops(csdev)->disable) {
- 		link_ops(csdev)->disable(csdev, inport, outport);
-+		coresight_control_assoc_ectdev(csdev, false);
-+	}
- 
- 	for (i = 0; i < nr_conns; i++)
- 		if (atomic_read(&csdev->refcnt[i]) != 0)
-@@ -322,9 +375,14 @@ static int coresight_enable_source(struct coresight_device *csdev, u32 mode)
- 
- 	if (!csdev->enable) {
- 		if (source_ops(csdev)->enable) {
--			ret = source_ops(csdev)->enable(csdev, NULL, mode);
-+			ret = coresight_control_assoc_ectdev(csdev, true);
- 			if (ret)
- 				return ret;
-+			ret = source_ops(csdev)->enable(csdev, NULL, mode);
-+			if (ret) {
-+				coresight_control_assoc_ectdev(csdev, false);
-+				return ret;
-+			};
- 		}
- 		csdev->enable = true;
- 	}
-@@ -347,6 +405,7 @@ static bool coresight_disable_source(struct coresight_device *csdev)
- 	if (atomic_dec_return(csdev->refcnt) == 0) {
- 		if (source_ops(csdev)->disable)
- 			source_ops(csdev)->disable(csdev, NULL);
-+		coresight_control_assoc_ectdev(csdev, false);
- 		csdev->enable = false;
- 	}
- 	return !csdev->enable;
-@@ -964,6 +1023,7 @@ static void coresight_device_release(struct device *dev)
- {
- 	struct coresight_device *csdev = to_coresight_device(dev);
- 
-+	cti_remove_assoc_from_csdev(csdev);
- 	fwnode_handle_put(csdev->dev.fwnode);
- 	kfree(csdev->refcnt);
- 	kfree(csdev);
-@@ -1246,6 +1306,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 
- 	coresight_fixup_device_conns(csdev);
- 	coresight_fixup_orphan_conns(csdev);
-+	cti_add_assoc_to_csdev(csdev);
- 
- 	mutex_unlock(&coresight_mutex);
- 
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index b3e582d96a34..193cc9dbf448 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -163,6 +163,8 @@ struct coresight_connection {
-  *		activated but not yet enabled.  Enabling for a _sink_
-  *		appens when a source has been selected for that it.
-  * @ea:		Device attribute for sink representation under PMU directory.
-+ * @ect_dev:	Associated cross trigger device. Not part of the trace data
-+ *		path or connections.
-  */
- struct coresight_device {
- 	struct coresight_platform_data *pdata;
-@@ -176,6 +178,8 @@ struct coresight_device {
- 	/* sink specific fields */
- 	bool activated;	/* true only if a sink is part of a path */
- 	struct dev_ext_attribute *ea;
-+	/* cross trigger handling */
-+	struct coresight_device *ect_dev;
- };
- 
- /*
+ 		venus: video-codec@1d00000 {
+ 			compatible = "qcom,msm8916-venus";
+ 			reg = <0x01d00000 0xff000>;
 -- 
 2.17.1
 
