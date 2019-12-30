@@ -2,57 +2,57 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE7C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE2EC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBA920730
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6E5206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:41:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iFHxPUSL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H0NrvmS6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfL3QlK (ORCPT
+        id S1727146AbfL3Qlo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 11:41:10 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44448 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbfL3QlK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:41:10 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so33162583wrm.11
-        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 08:41:07 -0800 (PST)
+        Mon, 30 Dec 2019 11:41:44 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41673 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbfL3Qln (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:41:43 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c9so33163024wrw.8
+        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 08:41:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=eLWMJdwZj01mzBzf88CpXX0Cwjf0T438tK6Cu9CHzzg=;
-        b=iFHxPUSLW6E82dvfsgwPxaHQ/YynSZ3AwmoKJ99gvQYrjD/9qpq+ho//0QU/Kdl1Mg
-         TFjAxgzHVIVHXmmy/FRYSfLbeqxPs1NmXJESJuC4ks2vLFbUHSsoqYKdxGXFC7uheJWh
-         skEX0P1u0qp8sfcZlRup6ZGVppo4HNmQYU6fP73K1aGKx+Uit3QxwxLVM5G+Eth3VEBt
-         CeGA2i0GN2rjcx6G8IDMOG57kGJclANd31blBV1PT0VYgnf/p8BM/5QA1PV+HKep0eP7
-         qIHWbGl4TkwVI+QJORMbT7V2XzO88xdPxsP30IboT36/5ghIzyWW076k3MmNT8zR534y
-         7PsQ==
+        bh=kf9f/OytBxjtXrIP5ErwMI60tdqSMUx7RaeSnlNKgCY=;
+        b=H0NrvmS69sVBBJmtChWp/QbpPYPUcItXffSNeBKKsLzJY0P9YiY7qpgyfeQu/bFPe7
+         vz5h5KQS4HbSUOV6fIF2BVG0UmMTOyNbMTGacSrMCE+76MI+hi8J2UJLeLJT2niKwZtu
+         e04ZqVeor31iemNDWBlpTqGlnR+JKV0mxDVuA2eEygtT2wmuYQkAQf2J3vjAK1Wfxim5
+         Y62oQdPNeBGsVD/CzQaD+HTxzQq2+5blK74iVKmdrcceaHKTLig30r5rDtpPYMxUf0pB
+         r0rFXebz1paY7zA5aW6xb2gc2VmGl8c+lj/fIxkNXHpTecXPuvrwwekEEgcENgXtt8GR
+         WeDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eLWMJdwZj01mzBzf88CpXX0Cwjf0T438tK6Cu9CHzzg=;
-        b=nJ6iIPN9u3n3gK4MoxqZmEdCCDlPJzdECjSdVyuhbkVvU/e/+0IcRcix3V0FzZu5eL
-         bPIAnandMTA0+8zWDVu6rgJBM67ATMuS7O5BpITNt3bFklV2vngOTOFNDhIigAWEL1OG
-         hd2+LP3A7Yaxym4/oONBV/dEp8FABhnryLKccvugd3DQC65fqCanuzh4ykgBi9WsopFB
-         LBlanbykkBpJlNCCHHeflrHKI7LzQEpeLYNHzHUxkniBmH6jcOb/2y4bnW2Y+DQP8AVK
-         SfbpFQm4w5SfjVJA6WvssoQFENUD7Mada278JnTQnfChciSowhVRt5wORqBZaiyIs8Ze
-         nKdg==
-X-Gm-Message-State: APjAAAUXCniZyrRPyC6Iu/0G7ZOWYRPw8qi3Fnrud3WY+33vNV1WqqZp
-        ZRQqcW68dNjdVhYZ5WcqDQFRHFTL61bZKQ==
-X-Google-Smtp-Source: APXvYqxfsNN2BWVnypGVt81dFlOgrx0EKyurysonOQwnT6yJkmTUncJ2tlVf64iKj+ai/rHSxFMOpg==
-X-Received: by 2002:a5d:5452:: with SMTP id w18mr53432225wrv.333.1577724066331;
-        Mon, 30 Dec 2019 08:41:06 -0800 (PST)
+        bh=kf9f/OytBxjtXrIP5ErwMI60tdqSMUx7RaeSnlNKgCY=;
+        b=DvFQKZ8d+MQU/6Istki4Rn4Qu0+hMdfGQ3kBOcsu5W3IgUJIYCF6a19WHEjh8lWJEA
+         9D8DIaNAW0oUTzTbmwMtEZo/DISnMqCAjZqyhHUSTrvCiCmB+g3K5U0R6os40yNBd8zT
+         /5zSQfTqbSgUhu/tfgQeUjKMmLtY8nwE16OtSi+pt0PJohJxcEjDZqIlr3Cau5BLhsDR
+         tvyU2rHlx/u1IoCV3nMEuZkr/j+X6Jb0vql5ufjX8e63T6HhFYqIvckTI9tKvfmO6Euo
+         tWWJyWFzBWYyR3PWsERLGCYFRnud0mzbmQNOiPSGXP13moM7SIFK4CyzfTOT2yDKiiEG
+         jAyA==
+X-Gm-Message-State: APjAAAUQpcP5gk4OZvbtlDtc0y6Lrjkd/0sabtqJy78pM13RKRBG0BxD
+        tOGerkqOiA4CDPYIwzZJ7V2kMQ==
+X-Google-Smtp-Source: APXvYqwbVJEIZc/qtK779LRzA9siZJZk0AG+qBDp5gUNnAVU8XnXvAE66zvK8OTjfYL+uc5itB0/ew==
+X-Received: by 2002:adf:bc87:: with SMTP id g7mr70860044wrh.121.1577724100571;
+        Mon, 30 Dec 2019 08:41:40 -0800 (PST)
 Received: from linaro.org ([2a00:23c5:6815:3901:a1cf:b00b:5683:ed40])
-        by smtp.gmail.com with ESMTPSA id m7sm45305580wrr.40.2019.12.30.08.41.01
+        by smtp.gmail.com with ESMTPSA id p7sm20759465wmp.31.2019.12.30.08.41.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 08:41:05 -0800 (PST)
+        Mon, 30 Dec 2019 08:41:40 -0800 (PST)
 From:   Mike Leach <mike.leach@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         coresight@lists.linaro.org
@@ -61,477 +61,449 @@ Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
         liviu.dudau@arm.com, sudeep.holla@arm.com,
         lorenzo.pieralisi@arm.com, agross@kernel.org,
         Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v7 03/15] coresight: cti: Add sysfs access to program function regs
-Date:   Mon, 30 Dec 2019 16:40:59 +0000
-Message-Id: <20191230164100.28077-1-mike.leach@linaro.org>
+Subject: [PATCH v7 05/15] dt-bindings: arm: Adds CoreSight CTI hardware definitions.
+Date:   Mon, 30 Dec 2019 16:41:37 +0000
+Message-Id: <20191230164138.28137-1-mike.leach@linaro.org>
 X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds in sysfs programming support for the CTI function register sets.
-Allows direct manipulation of channel / trigger association registers.
+Adds new coresight-cti.yaml file describing the bindings required to define
+CTI in the device trees.
+
+Adds an include file to dt-bindings/arm to define constants describing
+common signal functionality used in CoreSight and generic usage.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/Kconfig           |   9 +
- .../hwtracing/coresight/coresight-cti-sysfs.c | 361 ++++++++++++++++++
- drivers/hwtracing/coresight/coresight-cti.c   |  19 +
- drivers/hwtracing/coresight/coresight-cti.h   |   8 +
- 4 files changed, 397 insertions(+)
+ .../bindings/arm/coresight-cti.yaml           | 326 ++++++++++++++++++
+ .../devicetree/bindings/arm/coresight.txt     |   7 +
+ MAINTAINERS                                   |   2 +
+ include/dt-bindings/arm/coresight-cti-dt.h    |  37 ++
+ 4 files changed, 372 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
+ create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 45d3822c8c8c..83e841be1081 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -122,4 +122,13 @@ config CORESIGHT_CTI
- 	  halt compared to disabling sources and sinks normally in driver
- 	  software.
- 
-+config CORESIGHT_CTI_INTEGRATION_REGS
-+	bool "Access CTI CoreSight Integration Registers"
-+	depends on CORESIGHT_CTI
-+	help
-+	  This option adds support for the CoreSight integration registers on
-+	  this device. The integration registers allow the exploration of the
-+	  CTI trigger connections between this and other devices.These
-+	  registers are not used in normal operation and can leave devices in
-+	  an inconsistent state.
- endif
-diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-index 507f8eb487fe..f687e07b68b0 100644
---- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-@@ -109,6 +109,361 @@ static struct attribute *coresight_cti_mgmt_attrs[] = {
- 	NULL,
- };
- 
-+/* CTI low level programming registers */
+diff --git a/Documentation/devicetree/bindings/arm/coresight-cti.yaml b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
+new file mode 100644
+index 000000000000..e4d28cee5dfd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
+@@ -0,0 +1,326 @@
++# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
++# Copyright 2019 Linaro Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/coresight-cti.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
++title: ARM Coresight Cross Trigger Interface (CTI) device.
++
++description: |
++  The CoreSight Embedded Cross Trigger (ECT) consists of CTI devices connected
++  to one or more CoreSight components and/or a CPU, with CTIs interconnected in
++  a star topology via the Cross Trigger Matrix (CTM), which is not programmable.
++  The ECT components are not part of the trace generation data path and are thus
++  not part of the CoreSight graph described in the general CoreSight bindings
++  file coresight.txt.
++
++  The CTI component properties define the connections between the individual
++  CTI and the components it is directly connected to, consisting of input and
++  output hardware trigger signals. CTIs can have a maximum number of input and
++  output hardware trigger signals (8 each for v1 CTI, 32 each for v2 CTI). The
++  number is defined at design time, the maximum of each defined in the DEVID
++  register.
++
++  CTIs are interconnected in a star topology via the CTM, using a number of
++  programmable channels, usually 4, but again implementation defined and
++  described in the DEVID register. The star topology is not required to be
++  described in the bindings as the actual connections are software
++  programmable.
++
++  In general the connections between CTI and components via the trigger signals
++  are implementation defined, except when the CTI is connected to an ARM v8
++  architecture core and optional ETM.
++
++  In this case the ARM v8 architecture defines the required signal connections
++  between CTI and the CPU core and ETM if present. In the case of a v8
++  architecturally connected CTI an additional compatible string is used to
++  indicate this feature (arm,coresight-cti-v8-arch).
++
++  When CTI trigger connection information is unavailable then a minimal driver
++  binding can be declared with no explicit trigger signals. This will result
++  the driver detecting the maximum available triggers and channels from the
++  DEVID register and make them all available for use as a single default
++  connection. Any user / client application will require additional information
++  on the connections between the CTI and other components for correct operation.
++  This information might be found by enabling the Integration Test registers in
++  the driver (set CONFIG_CORESIGHT_CTI_INTEGRATION_TEST in Kernel
++  configuration). These registers may be used to explore the trigger connections
++  between CTI and other CoreSight components.
++
++  Certain triggers between CoreSight devices and the CTI have specific types
++  and usages. These can be defined along with the signal indexes with the
++  constants defined in <dt-bindings/arm/coresight-cti-dt.h>
++
++  For example a CTI connected to a core will usually have a DBGREQ signal. This
++  is defined in the binding as type PE_EDBGREQ. These types will appear in an
++  optional array alongside the signal indexes. Omitting types will default all
++  signals to GEN_IO.
++
++  Note that some hardware trigger signals can be connected to non-CoreSight
++  components (e.g. UART etc) depending on hardware implementation.
++
++maintainers:
++  - Mike Leach <mike.leach@linaro.org>
++
++allOf:
++  - $ref: /schemas/arm/primecell.yaml#
++
++# Need a custom select here or 'arm,primecell' will match on lots of nodes
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - arm,coresight-cti
++  required:
++    - compatible
++
++properties:
++  $nodename:
++    pattern: "^cti(@[0-9a-f]+)$"
++  compatible:
++    oneOf:
++      - items:
++        - const: arm,coresight-cti
++        - const: arm,primecell
++      - items:
++        - const: arm,coresight-cti-v8-arch
++        - const: arm,coresight-cti
++        - const: arm,primecell
++
++  reg:
++    maxItems: 1
++
++  cpu:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Handle to cpu this device is associated with. This must appear in the
++      base cti node if compatible string arm,coresight-cti-v8-arch is used,
++      or may appear in a trig-conns child node when appropriate.
++
++  arm,cti-ctm-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Defines the CTM this CTI is connected to, in large systems with multiple
++      separate CTI/CTM nets. Typically multi-socket systems where the CTM is
++      propagated between sockets.
++
++  arm,cs-dev-assoc:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      defines a phandle reference to an associated CoreSight trace device.
++      When the associated trace device is enabled, then the respective CTI
++      will be enabled. Use in a trig-conns node, or in CTI base node when
++      compatible string arm,coresight-cti-v8-arch used. If the associated
++      device has not been registered then the node name will be stored as
++      the connection name for later resolution. If the associated device is
++      not a CoreSight device or not registered then the node name will remain
++      the connection name and automatic enabling will not occur.
++
++patternProperties:
++  '^trig-conns@([0-9]+)$':
++    type: object
++    description:
++      A trigger connections child node which describes the trigger signals
++      between this CTI and another hardware device. This device may be a CPU,
++      CoreSight device, any other hardware device or simple external IO lines.
++      The connection may have both input and output triggers, or only one or the
++      other.
++
++    properties:
++
++      arm,trig-in-sigs:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of CTI trigger in signal numbers in use by a trig-conns node.
++
++      arm,trig-in-types:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of constants representing the types for the CTI trigger in
++          signals. Types in this array match to the corresponding signal in the
++          arm,trig-in-sigs array. If the -types array is smaller, or omitted
++          completely, then the types will default to GEN_IO.
++
++      arm,trig-out-sigs:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of CTI trigger out signal numbers in use by a trig-conns node.
++
++      arm,trig-out-types:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of constants representing the types for the CTI trigger out
++          signals. Types in this array match to the corresponding signal
++          in the arm,trig-out-sigs array. If the "-types" array is smaller,
++          or omitted completely, then the types will default to GEN_IO.
++
++      arm,trig-filters:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        minItems: 1
++        maxItems: 32
++        description:
++          List of CTI trigger out signals that will be blocked from becoming
++          active, unless filtering is disabled on the driver.
++
++      arm,trig-conn-name:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/string
++        description:
++          Defines a connection name that will be displayed, if the cpu or
++          arm,cs-dev-assoc properties are not being used in this connection.
++          Principle use for CTI that are connected to non-CoreSight devices, or
++          external IO.
++
++    anyOf:
++      - required:
++        - arm,trig-in-sigs
++      - required:
++        - arm,trig-out-sigs
++    oneOf:
++      - required:
++        - arm,trig-conn-name
++      - required:
++        - cpu
++      - required:
++        - arm,cs-dev-assoc
++    required:
++      - reg
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: arm,coresight-cti-v8-arch
++
++then:
++  required:
++    - cpu
++
++examples:
++  # minimum CTI definition. DEVID register used to set number of triggers.
++  - |
++    cti@20020000 {
++      compatible = "arm,coresight-cti", "arm,primecell";
++      reg = <0x20020000 0x1000>;
++
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
++    };
++  #  v8 architecturally defined CTI - CPU + ETM connections generated by the
++  #  driver according to the v8 architecture specification.
++  - |
++    cti@859000 {
++      compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
++                   "arm,primecell";
++      reg = <0x859000 0x1000>;
++
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
++
++      cpu = <&CPU1>;
++      arm,cs-dev-assoc = <&etm1>;
++    };
++  # Implementation defined CTI - CPU + ETM connections explicitly defined..
++  # Shows use of type constants from dt-bindings/arm/coresight-cti-dt.h
++  - |
++    #include <dt-bindings/arm/coresight-cti-dt.h>
++
++    cti@858000 {
++      compatible = "arm,coresight-cti", "arm,primecell";
++      reg = <0x858000 0x1000>;
++
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
++
++      arm,cti-ctm-id = <1>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      trig-conns@0 {
++            reg = <0>;
++            arm,trig-in-sigs = <4 5 6 7>;
++            arm,trig-in-types = <ETM_EXTOUT
++                                 ETM_EXTOUT
++                                 ETM_EXTOUT
++                                 ETM_EXTOUT>;
++            arm,trig-out-sigs = <4 5 6 7>;
++            arm,trig-out-types = <ETM_EXTIN
++                                  ETM_EXTIN
++                                  ETM_EXTIN
++                                  ETM_EXTIN>;
++            arm,cs-dev-assoc = <&etm0>;
++      };
++
++      trig-conns@1 {
++            reg = <1>;
++            cpu = <&CPU0>;
++            arm,trig-in-sigs = <0 1>;
++            arm,trig-in-types = <PE_DBGTRIGGER
++                                 PE_PMUIRQ>;
++            arm,trig-out-sigs=<0 1 2 >;
++            arm,trig-out-types = <PE_EDBGREQ
++                                  PE_DBGRESTART
++                                  PE_CTIIRQ>;
++
++            arm,trig-filters = <0>;
++      };
++    };
++  # Implementation defined CTI - non CoreSight component connections.
++  - |
++    cti@20110000 {
++      compatible = "arm,coresight-cti", "arm,primecell";
++      reg = <0 0x20110000 0 0x1000>;
++
++      clocks = <&soc_smc50mhz>;
++      clock-names = "apb_pclk";
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      trig-conns@0 {
++        reg = <0>;
++        arm,trig-in-sigs=<0>;
++        arm,trig-in-types=<GEN_INTREQ>;
++        arm,trig-out-sigs=<0>;
++        arm,trig-out-types=<GEN_HALTREQ>;
++        arm,trig-conn-name = "sys_profiler";
++      };
++
++      trig-conns@1 {
++        reg = <1>;
++        arm,trig-out-sigs=<2 3>;
++        arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
++        arm,trig-conn-name = "watchdog";
++      };
++
++      trig-conns@2 {
++        reg = <2>;
++        arm,trig-in-sigs=<1 6>;
++        arm,trig-in-types=<GEN_HALTREQ GEN_RESTARTREQ>;
++        arm,trig-conn-name = "g_counter";
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index d02c42d21f2f..846f6daae71b 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -45,6 +45,10 @@ its hardware characteristcs.
+ 		- Coresight Address Translation Unit (CATU)
+ 			"arm,coresight-catu", "arm,primecell";
+ 
++		- Coresight Cross Trigger Interface (CTI):
++			"arm,coresight-cti", "arm,primecell";
++			See coresight-cti.yaml for full CTI definitions.
++
+ 	* reg: physical base address and length of the register
+ 	  set(s) of the component.
+ 
+@@ -72,6 +76,9 @@ its hardware characteristcs.
+ 	* reg-names: the only acceptable values are "stm-base" and
+ 	  "stm-stimulus-base", each corresponding to the areas defined in "reg".
+ 
++* Required properties for Coresight Cross Trigger Interface (CTI)
++	See coresight-cti.yaml for full CTI definitions.
++
+ * Required properties for devices that don't show up on the AMBA bus, such as
+   non-configurable replicators and non-configurable funnels:
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bd5847e802de..77f5d28fa84b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1645,9 +1645,11 @@ R:	Suzuki K Poulose <suzuki.poulose@arm.com>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	drivers/hwtracing/coresight/*
++F:	include/dt-bindings/arm/coresight-cti-dt.h
+ F:	Documentation/trace/coresight/*
+ F:	Documentation/devicetree/bindings/arm/coresight.txt
+ F:	Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
++F:	Documentation/devicetree/bindings/arm/coresight-cti.yaml
+ F:	Documentation/ABI/testing/sysfs-bus-coresight-devices-*
+ F:	tools/perf/arch/arm/util/pmu.c
+ F:	tools/perf/arch/arm/util/auxtrace.c
+diff --git a/include/dt-bindings/arm/coresight-cti-dt.h b/include/dt-bindings/arm/coresight-cti-dt.h
+new file mode 100644
+index 000000000000..61e7bdf8ea6e
+--- /dev/null
++++ b/include/dt-bindings/arm/coresight-cti-dt.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Show a simple 32 bit value if enabled and powered.
-+ * If inaccessible & pcached_val not NULL then show cached value.
++ * This header provides constants for the defined trigger signal
++ * types on CoreSight CTI.
 + */
-+static ssize_t cti_reg32_show(struct device *dev, char *buf,
-+			      u32 *pcached_val, int reg_offset)
-+{
-+	u32 val = 0;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	struct cti_config *config = &drvdata->config;
 +
-+	spin_lock(&drvdata->spinlock);
-+	if ((reg_offset >= 0) && cti_active(config)) {
-+		CS_UNLOCK(drvdata->base);
-+		val = readl_relaxed(drvdata->base + reg_offset);
-+		if (pcached_val)
-+			*pcached_val = val;
-+		CS_LOCK(drvdata->base);
-+	} else if (pcached_val) {
-+		val = *pcached_val;
-+	}
-+	spin_unlock(&drvdata->spinlock);
-+	return scnprintf(buf, PAGE_SIZE, "%#x\n", val);
-+}
++#ifndef _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
++#define _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
 +
-+/*
-+ * Store a simple 32 bit value.
-+ * If pcached_val not NULL, then copy to here too,
-+ * if reg_offset >= 0 then write through if enabled.
-+ */
-+static ssize_t cti_reg32_store(struct device *dev, const char *buf,
-+			       size_t size, u32 *pcached_val, int reg_offset)
-+{
-+	unsigned long val;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	struct cti_config *config = &drvdata->config;
++#define GEN_IO		0
++#define GEN_INTREQ	1
++#define GEN_INTACK	2
++#define GEN_HALTREQ	3
++#define GEN_RESTARTREQ	4
++#define PE_EDBGREQ	5
++#define PE_DBGRESTART	6
++#define PE_CTIIRQ	7
++#define PE_PMUIRQ	8
++#define PE_DBGTRIGGER	9
++#define ETM_EXTOUT	10
++#define ETM_EXTIN	11
++#define SNK_FULL	12
++#define SNK_ACQCOMP	13
++#define SNK_FLUSHCOMP	14
++#define SNK_FLUSHIN	15
++#define SNK_TRIGIN	16
++#define STM_ASYNCOUT	17
++#define STM_TOUT_SPTE	18
++#define STM_TOUT_SW	19
++#define STM_TOUT_HETE	20
++#define STM_HWEVENT	21
++#define ELA_TSTART	22
++#define ELA_TSTOP	23
++#define ELA_DBGREQ	24
++#define CTI_TRIG_MAX	25
 +
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
-+
-+	spin_lock(&drvdata->spinlock);
-+	/* local store */
-+	if (pcached_val)
-+		*pcached_val = (u32)val;
-+
-+	/* write through if offset and enabled */
-+	if ((reg_offset >= 0) && cti_active(config))
-+		cti_write_single_reg(drvdata, reg_offset, val);
-+	spin_unlock(&drvdata->spinlock);
-+	return size;
-+}
-+
-+/* Standard macro for simple rw cti config registers */
-+#define cti_config_reg32_rw(name, cfgname, offset)			\
-+static ssize_t name##_show(struct device *dev,				\
-+			   struct device_attribute *attr,		\
-+			   char *buf)					\
-+{									\
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
-+	return cti_reg32_show(dev, buf,					\
-+			      &drvdata->config.cfgname, offset);	\
-+}									\
-+									\
-+static ssize_t name##_store(struct device *dev,				\
-+			    struct device_attribute *attr,		\
-+			    const char *buf, size_t size)		\
-+{									\
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
-+	return cti_reg32_store(dev, buf, size,				\
-+			       &drvdata->config.cfgname, offset);	\
-+}									\
-+static DEVICE_ATTR_RW(name)
-+
-+static ssize_t inout_sel_show(struct device *dev,
-+			      struct device_attribute *attr,
-+			      char *buf)
-+{
-+	u32 val;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+
-+	val = (u32)drvdata->config.ctiinout_sel;
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", val);
-+}
-+
-+static ssize_t inout_sel_store(struct device *dev,
-+			       struct device_attribute *attr,
-+			       const char *buf, size_t size)
-+{
-+	unsigned long val;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
-+	if (val > (CTIINOUTEN_MAX - 1))
-+		return -EINVAL;
-+
-+	spin_lock(&drvdata->spinlock);
-+	drvdata->config.ctiinout_sel = val;
-+	spin_unlock(&drvdata->spinlock);
-+	return size;
-+}
-+static DEVICE_ATTR_RW(inout_sel);
-+
-+static ssize_t inen_show(struct device *dev,
-+			 struct device_attribute *attr,
-+			 char *buf)
-+{
-+	unsigned long val;
-+	int index;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+
-+	spin_lock(&drvdata->spinlock);
-+	index = drvdata->config.ctiinout_sel;
-+	val = drvdata->config.ctiinen[index];
-+	spin_unlock(&drvdata->spinlock);
-+	return scnprintf(buf, PAGE_SIZE, "INEN%d %#lx\n", index, val);
-+}
-+
-+static ssize_t inen_store(struct device *dev,
-+			  struct device_attribute *attr,
-+			  const char *buf, size_t size)
-+{
-+	unsigned long val;
-+	int index;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	struct cti_config *config = &drvdata->config;
-+
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
-+
-+	spin_lock(&drvdata->spinlock);
-+	index = config->ctiinout_sel;
-+	config->ctiinen[index] = val;
-+
-+	/* write through if enabled */
-+	if (cti_active(config))
-+		cti_write_single_reg(drvdata, CTIINEN(index), val);
-+	spin_unlock(&drvdata->spinlock);
-+	return size;
-+}
-+static DEVICE_ATTR_RW(inen);
-+
-+static ssize_t outen_show(struct device *dev,
-+			  struct device_attribute *attr,
-+			  char *buf)
-+{
-+	unsigned long val;
-+	int index;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+
-+	spin_lock(&drvdata->spinlock);
-+	index = drvdata->config.ctiinout_sel;
-+	val = drvdata->config.ctiouten[index];
-+	spin_unlock(&drvdata->spinlock);
-+	return scnprintf(buf, PAGE_SIZE, "OUTEN%d %#lx\n", index, val);
-+}
-+
-+static ssize_t outen_store(struct device *dev,
-+			   struct device_attribute *attr,
-+			   const char *buf, size_t size)
-+{
-+	unsigned long val;
-+	int index;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	struct cti_config *config = &drvdata->config;
-+
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
-+
-+	spin_lock(&drvdata->spinlock);
-+	index = config->ctiinout_sel;
-+	config->ctiouten[index] = val;
-+
-+	/* write through if enabled */
-+	if (cti_active(config))
-+		cti_write_single_reg(drvdata, CTIOUTEN(index), val);
-+	spin_unlock(&drvdata->spinlock);
-+	return size;
-+}
-+static DEVICE_ATTR_RW(outen);
-+
-+static ssize_t intack_store(struct device *dev,
-+			    struct device_attribute *attr,
-+			    const char *buf, size_t size)
-+{
-+	unsigned long val;
-+
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
-+
-+	cti_write_intack(dev, val);
-+	return size;
-+}
-+static DEVICE_ATTR_WO(intack);
-+
-+cti_config_reg32_rw(gate, ctigate, CTIGATE);
-+cti_config_reg32_rw(asicctl, asicctl, ASICCTL);
-+cti_config_reg32_rw(appset, ctiappset, CTIAPPSET);
-+
-+static ssize_t appclear_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t size)
-+{
-+	unsigned long val;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	struct cti_config *config = &drvdata->config;
-+
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
-+
-+	spin_lock(&drvdata->spinlock);
-+
-+	/* a 1'b1 in appclr clears down the same bit in appset*/
-+	config->ctiappset &= ~val;
-+
-+	/* write through if enabled */
-+	if (cti_active(config))
-+		cti_write_single_reg(drvdata, CTIAPPCLEAR, val);
-+	spin_unlock(&drvdata->spinlock);
-+	return size;
-+}
-+static DEVICE_ATTR_WO(appclear);
-+
-+static ssize_t apppulse_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t size)
-+{
-+	unsigned long val;
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	struct cti_config *config = &drvdata->config;
-+
-+	if (kstrtoul(buf, 0, &val))
-+		return -EINVAL;
-+
-+	spin_lock(&drvdata->spinlock);
-+
-+	/* write through if enabled */
-+	if (cti_active(config))
-+		cti_write_single_reg(drvdata, CTIAPPPULSE, val);
-+	spin_unlock(&drvdata->spinlock);
-+	return size;
-+}
-+static DEVICE_ATTR_WO(apppulse);
-+
-+coresight_cti_reg(triginstatus, CTITRIGINSTATUS);
-+coresight_cti_reg(trigoutstatus, CTITRIGOUTSTATUS);
-+coresight_cti_reg(chinstatus, CTICHINSTATUS);
-+coresight_cti_reg(choutstatus, CTICHOUTSTATUS);
-+
-+/*
-+ * Define CONFIG_CORESIGHT_CTI_INTEGRATION_REGS to enable the access to the
-+ * integration control registers. Normally only used to investigate connection
-+ * data.
-+ */
-+#ifdef CONFIG_CORESIGHT_CTI_INTEGRATION_REGS
-+
-+/* macro to access RW registers with power check only (no enable check). */
-+#define coresight_cti_reg_rw(name, offset)				\
-+static ssize_t name##_show(struct device *dev,				\
-+			   struct device_attribute *attr, char *buf)	\
-+{									\
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
-+	u32 val = 0;							\
-+	pm_runtime_get_sync(dev->parent);				\
-+	spin_lock(&drvdata->spinlock);					\
-+	if (drvdata->config.hw_powered)					\
-+		val = readl_relaxed(drvdata->base + offset);		\
-+	spin_unlock(&drvdata->spinlock);				\
-+	pm_runtime_put_sync(dev->parent);				\
-+	return scnprintf(buf, PAGE_SIZE, "0x%x\n", val);		\
-+}									\
-+									\
-+static ssize_t name##_store(struct device *dev,				\
-+			    struct device_attribute *attr,		\
-+			    const char *buf, size_t size)		\
-+{									\
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
-+	unsigned long val = 0;						\
-+	if (kstrtoul(buf, 0, &val))					\
-+		return -EINVAL;						\
-+									\
-+	pm_runtime_get_sync(dev->parent);				\
-+	spin_lock(&drvdata->spinlock);					\
-+	if (drvdata->config.hw_powered)					\
-+		cti_write_single_reg(drvdata, offset, val);		\
-+	spin_unlock(&drvdata->spinlock);				\
-+	pm_runtime_put_sync(dev->parent);				\
-+	return size;							\
-+}									\
-+static DEVICE_ATTR_RW(name)
-+
-+/* macro to access WO registers with power check only (no enable check). */
-+#define coresight_cti_reg_wo(name, offset)				\
-+static ssize_t name##_store(struct device *dev,				\
-+			    struct device_attribute *attr,		\
-+			    const char *buf, size_t size)		\
-+{									\
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
-+	unsigned long val = 0;						\
-+	if (kstrtoul(buf, 0, &val))					\
-+		return -EINVAL;						\
-+									\
-+	pm_runtime_get_sync(dev->parent);				\
-+	spin_lock(&drvdata->spinlock);					\
-+	if (drvdata->config.hw_powered)					\
-+		cti_write_single_reg(drvdata, offset, val);		\
-+	spin_unlock(&drvdata->spinlock);				\
-+	pm_runtime_put_sync(dev->parent);				\
-+	return size;							\
-+}									\
-+static DEVICE_ATTR_WO(name)
-+
-+coresight_cti_reg_rw(itchout, ITCHOUT);
-+coresight_cti_reg_rw(ittrigout, ITTRIGOUT);
-+coresight_cti_reg_rw(itctrl, CORESIGHT_ITCTRL);
-+coresight_cti_reg_wo(itchinack, ITCHINACK);
-+coresight_cti_reg_wo(ittriginack, ITTRIGINACK);
-+coresight_cti_reg(ittrigin, ITTRIGIN);
-+coresight_cti_reg(itchin, ITCHIN);
-+coresight_cti_reg(itchoutack, ITCHOUTACK);
-+coresight_cti_reg(ittrigoutack, ITTRIGOUTACK);
-+
-+#endif /* CORESIGHT_CTI_INTEGRATION_REGS */
-+
-+static struct attribute *coresight_cti_regs_attrs[] = {
-+	&dev_attr_inout_sel.attr,
-+	&dev_attr_inen.attr,
-+	&dev_attr_outen.attr,
-+	&dev_attr_gate.attr,
-+	&dev_attr_asicctl.attr,
-+	&dev_attr_intack.attr,
-+	&dev_attr_appset.attr,
-+	&dev_attr_appclear.attr,
-+	&dev_attr_apppulse.attr,
-+	&dev_attr_triginstatus.attr,
-+	&dev_attr_trigoutstatus.attr,
-+	&dev_attr_chinstatus.attr,
-+	&dev_attr_choutstatus.attr,
-+#ifdef CONFIG_CORESIGHT_CTI_INTEGRATION_REGS
-+	&dev_attr_itctrl.attr,
-+	&dev_attr_ittrigin.attr,
-+	&dev_attr_itchin.attr,
-+	&dev_attr_ittrigout.attr,
-+	&dev_attr_itchout.attr,
-+	&dev_attr_itchoutack.attr,
-+	&dev_attr_ittrigoutack.attr,
-+	&dev_attr_ittriginack.attr,
-+	&dev_attr_itchinack.attr,
-+#endif
-+	NULL,
-+};
-+
-+/* sysfs groups */
- static const struct attribute_group coresight_cti_group = {
- 	.attrs = coresight_cti_attrs,
- };
-@@ -118,8 +473,14 @@ static const struct attribute_group coresight_cti_mgmt_group = {
- 	.name = "mgmt",
- };
- 
-+static const struct attribute_group coresight_cti_regs_group = {
-+	.attrs = coresight_cti_regs_attrs,
-+	.name = "regs",
-+};
-+
- const struct attribute_group *coresight_cti_groups[] = {
- 	&coresight_cti_group,
- 	&coresight_cti_mgmt_group,
-+	&coresight_cti_regs_group,
- 	NULL,
- };
-diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-index f4b47761ae74..0f88b9bc2774 100644
---- a/drivers/hwtracing/coresight/coresight-cti.c
-+++ b/drivers/hwtracing/coresight/coresight-cti.c
-@@ -149,6 +149,25 @@ static int cti_disable_hw(struct cti_drvdata *drvdata)
- 	return 0;
- }
- 
-+void cti_write_single_reg(struct cti_drvdata *drvdata, int offset, u32 value)
-+{
-+	CS_UNLOCK(drvdata->base);
-+	writel_relaxed(value, drvdata->base + offset);
-+	CS_LOCK(drvdata->base);
-+}
-+
-+void cti_write_intack(struct device *dev, u32 ackval)
-+{
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	struct cti_config *config = &drvdata->config;
-+
-+	spin_lock(&drvdata->spinlock);
-+	/* write if enabled */
-+	if (cti_active(config))
-+		cti_write_single_reg(drvdata, CTIINTACK, ackval);
-+	spin_unlock(&drvdata->spinlock);
-+}
-+
- /*
-  * Look at the HW DEVID register for some of the HW settings.
-  * DEVID[15:8] - max number of in / out triggers.
-diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
-index 0719221c7071..6f6f6773cd3b 100644
---- a/drivers/hwtracing/coresight/coresight-cti.h
-+++ b/drivers/hwtracing/coresight/coresight-cti.h
-@@ -180,7 +180,15 @@ struct cti_trig_con *cti_allocate_trig_con(struct device *dev, int in_sigs,
- 					   int out_sigs);
- int cti_enable(struct coresight_device *csdev);
- int cti_disable(struct coresight_device *csdev);
-+void cti_write_intack(struct device *dev, u32 ackval);
-+void cti_write_single_reg(struct cti_drvdata *drvdata, int offset, u32 value);
- struct coresight_platform_data *
- coresight_cti_get_platform_data(struct device *dev);
- 
-+/* cti powered and enabled */
-+static inline bool cti_active(struct cti_config *cfg)
-+{
-+	return cfg->hw_powered && cfg->hw_enabled;
-+}
-+
- #endif  /* _CORESIGHT_CORESIGHT_CTI_H */
++#endif /*_DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H */
 -- 
 2.17.1
 
