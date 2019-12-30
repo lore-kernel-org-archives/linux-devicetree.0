@@ -2,126 +2,103 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98525C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F84BC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E24120730
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95AC2071E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:56:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577728386;
-	bh=qiX/ki1VZ10dHl+G3bmaxWsgUgJaJdPyetC5TOSqHeo=;
+	s=default; t=1577728568;
+	bh=7MiGFHqZ1YA6+XYH5caumqyxTQ0RI4rEMO2Mbg2nz0U=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xFiKJoubawOtgb3hWw1BRKKpeePltwv741nhUsNlGTy7Ikyvd1XzbFFQ1RqEp989Q
-	 gJXKmQSjoLAlbVyWqmdqrxLVUfNCE46hA0zoJEN3p3Z2iPrv53wfqD0As7VESNGKTT
-	 Seew2/EDWAsbu52mWrZq2AC2q0IuskQgt6Qx/yMY=
+	b=Aiw57x8otOIbPBIpwzDvR/Z0MuLKvrVhY88j6Avs6pF8nrhq0qLBcrN8kDgFVORst
+	 t+WSESHrAZRU/T5kdoMmxGKfivhcKWhmg3ZuRRuqDyQUARFuTl3mY/f/Ucj1orpr5L
+	 bKcwlitoYkGaoGqp/vPzHA4YDnaflqgkcQ0qLnVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfL3RxF (ORCPT
+        id S1727326AbfL3R4H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:53:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56460 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 12:56:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfL3RxF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:53:05 -0500
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        id S1726602AbfL3R4H (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Dec 2019 12:56:07 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2363207E0;
-        Mon, 30 Dec 2019 17:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A108320722;
+        Mon, 30 Dec 2019 17:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577728384;
-        bh=qiX/ki1VZ10dHl+G3bmaxWsgUgJaJdPyetC5TOSqHeo=;
+        s=default; t=1577728566;
+        bh=7MiGFHqZ1YA6+XYH5caumqyxTQ0RI4rEMO2Mbg2nz0U=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fYlbAl/999Il/xXeYC00+VWL3M154DKx/6rNFXomPd20BDV31BDm0LjotziGAJsGw
-         X2TK1VOOtFUnn7NY/8sgs5AqG4MKsV8kdTc5raNXboKso5z0AcnpUGgBNYJ6wXnUW7
-         xQAmwkL4nWfGUohfqQwBwXkzdchfKpy6l4EBiYUc=
-Received: by mail-qt1-f174.google.com with SMTP id w47so30111475qtk.4;
-        Mon, 30 Dec 2019 09:53:04 -0800 (PST)
-X-Gm-Message-State: APjAAAUJnCsrcDlgWTtA1Vl6GGY5291kjjVs4Btx12qYKEQDIy4EuqZf
-        0vn0DJwuZcxq7/pLnEyskco2w+0kErhTFRshrg==
-X-Google-Smtp-Source: APXvYqyaZydxwFW02BlCZCg9ra5E5cTvKaoWIYuHbN3644YIXtRs5mhdInVI5/ETrktTRqg3jjzf+amLHcIDIwstXic=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr49935662qtg.110.1577728383766;
- Mon, 30 Dec 2019 09:53:03 -0800 (PST)
+        b=ZyNfioOc0BJs6n1P4VurKnXht6n9H55/bqbId7lwwjLYOuj1huX0o87o1aSpIEIOo
+         jpE2cI6SHjliW7MRzVXGvIIEXexnXzjSL+3pQbI/CSs9PVEC52nqNggMe2Q/AmKf3k
+         SRb+e5peP3wmT/Li0gzTjgxHPAVxXQQo3OwFXkfc=
+Received: by mail-qk1-f182.google.com with SMTP id w127so26751459qkb.11;
+        Mon, 30 Dec 2019 09:56:06 -0800 (PST)
+X-Gm-Message-State: APjAAAXxJxRQk1jKP2qf1wKNRjv0U0Hd+2rOlDJkxCJ/lDfpnyDOcuJ+
+        VUb7NeBIhJPyZyOiqiJ6JD5eM/LXOOv+tS5YgQ==
+X-Google-Smtp-Source: APXvYqycL5jUu4K0ZnwFoQ0hUtTOiQH/7swu7c5eB4jxMJ/2vkRFQXzEcmU0gS/ZjLfypiZMjlO5nEYX08my7wRarek=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr56359110qkg.152.1577728565786;
+ Mon, 30 Dec 2019 09:56:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20191224010020.15969-1-rjones@gateworks.com> <20191224010020.15969-2-rjones@gateworks.com>
- <20191226232625.GA2186@bogus> <CAOMZO5Aj+PfzXrYoV8LxKStdQ-B0BLdMV16L3ya0NokozG479g@mail.gmail.com>
-In-Reply-To: <CAOMZO5Aj+PfzXrYoV8LxKStdQ-B0BLdMV16L3ya0NokozG479g@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Dec 2019 10:52:52 -0700
-X-Gmail-Original-Message-ID: <CAL_Jsq+8tpxUqzPt2wP668_GTmtaSuaBRSO_k7db4Jt06MWk9g@mail.gmail.com>
-Message-ID: <CAL_Jsq+8tpxUqzPt2wP668_GTmtaSuaBRSO_k7db4Jt06MWk9g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] dt-bindings: arm: fsl: Add Gateworks Ventana
- i.MX6DL/Q compatibles
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Robert Jones <rjones@gateworks.com>,
+References: <20191227111235.GA3370@localhost.localdomain>
+In-Reply-To: <20191227111235.GA3370@localhost.localdomain>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 30 Dec 2019 10:55:54 -0700
+X-Gmail-Original-Message-ID: <CAL_Jsq+rEsFARDejfskLHF_zM8qi8dadLKNhq4a+MxMvfeHiNA@mail.gmail.com>
+Message-ID: <CAL_Jsq+rEsFARDejfskLHF_zM8qi8dadLKNhq4a+MxMvfeHiNA@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 5:34 PM Fabio Estevam <festevam@gmail.com> wrote:
+On Fri, Dec 27, 2019 at 4:12 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 >
-> Hi Rob,
+> Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
+> the binding document to two separate documents (own documents for BD71837
+> and BD71847) as they have different amount of regulators. This way we can
+> better enforce the node name check for regulators. ROHM is also providing
+> BD71850 - which is almost identical to BD71847 - main difference is some
+> initial regulator states. The BD71850 can be driven by same driver and it
+> has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
+> introduce compatible for it.
 >
-> On Thu, Dec 26, 2019 at 8:26 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Dec 23, 2019 at 05:00:16PM -0800, Robert Jones wrote:
-> > > Add the compatible enum entries for Gateworks Ventana boards.
-> > >
-> > > Signed-off-by: Robert Jones <rjones@gateworks.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > index f79683a..a02e980 100644
-> > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > @@ -126,6 +126,7 @@ properties:
-> > >                - toradex,apalis_imx6q-ixora      # Apalis iMX6 Module on Ixora
-> > >                - toradex,apalis_imx6q-ixora-v1.1 # Apalis iMX6 Module on Ixora V1.1
-> > >                - variscite,dt6customboard
-> > > +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
-> >
-> > Keep entries sorted.
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
 >
-> Just for clarification: shouldn't the entries inside fsl.yaml match
-> the dtb file names?
+> changes since v1:
+> - constrains to short and long presses.
+> - reworded commit message to shorten a line exceeding 75 chars
+> - added 'additionalProperties: false'
+> - removed 'clock-names' from example node
+>
+>  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
+>  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
+>  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
+>  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
+>  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
+>  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
+>  6 files changed, 658 insertions(+), 252 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
 
-No. They should match top-level compatibles. However, I'd expect a 1:1
-relationship of dtbs to top-level compatible entries.
-
-> In case of the i.MX6Q based gateworks board, this should be:
->
-> gw,imx6q-gw51xx
-> gw,imx6q-gw52xx
-> gw,imx6q-gw53xx
-> gw,imx6q-gw5400-a
-> gw,imx6q-gw54xx
-> gw,imx6q-gw551x
-> gw,imx6q-gw552x
-> gw,imx6q-gw553x
-> gw,imx6q-gw560x
-> gw,imx6q-gw5903
-> gw,imx6q-gw5904
->
-> Please advise.
-
-Yes, if this is 11 different boards, then yes, I'd expect 11
-permutations for the schema.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
