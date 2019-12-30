@@ -2,213 +2,240 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B8FC2D0D1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747E3C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80C32071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF87207E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:06:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cVHvP/m0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfL3JEc (ORCPT
+        id S1727299AbfL3JGm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:04:32 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:35468 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727272AbfL3JEb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 04:04:31 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 217D8294174
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        Jitao Shi <jitao.shi@mediatek.com>,
-        Rob Herring <robh@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ulrich Hecht <uli@fpond.eu>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v24 1/2] Documentation: bridge: Add documentation for ps8640 DT properties
-Date:   Mon, 30 Dec 2019 10:04:18 +0100
-Message-Id: <20191230090419.137141-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191230090419.137141-1-enric.balletbo@collabora.com>
-References: <20191230090419.137141-1-enric.balletbo@collabora.com>
+        Mon, 30 Dec 2019 04:06:42 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:10630 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727243AbfL3JGm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Dec 2019 04:06:42 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577696801; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=LV7xfSg7Fvcq4FbHammYw5/k3x8J77zufwq24k9cwiA=; b=cVHvP/m0V5E0uNgFLfjCYnyJ++CvjI9tyZ5Vxn2BjYZ/Au0/EZGX/Eh+9EM2hRsGP4V4m6G9
+ WVHHRkKJK/rEI0FbNDeECHeaWKL6p84EvkAkss8BD5k2hcXGmgiB1cMXcvn8xql7g+hPkPxs
+ xwSKw0Rhe3DUx6L3ZLd1ooe9UFw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e09be20.7ff4dd64b068-smtp-out-n01;
+ Mon, 30 Dec 2019 09:06:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0A029C433CB; Mon, 30 Dec 2019 09:06:39 +0000 (UTC)
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DABE9C43383;
+        Mon, 30 Dec 2019 09:06:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DABE9C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V2 5/7] clk: qcom: Add ipq6018 Global Clock Controller
+ support
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org,
+        sivaprak@codeaurora.org
+References: <1576752109-24497-1-git-send-email-sricharan@codeaurora.org>
+ <1576752109-24497-6-git-send-email-sricharan@codeaurora.org>
+ <20191227013317.C7E912080D@mail.kernel.org>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <9b2e4eae-34d2-ec3c-9111-4fa6a1276229@codeaurora.org>
+Date:   Mon, 30 Dec 2019 14:36:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191227013317.C7E912080D@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jitao Shi <jitao.shi@mediatek.com>
+Hi Stephen,
+  Thanks for the review.
 
-Add documentation for DT properties supported by
-ps8640 DSI-eDP converter.
+On 12/27/2019 7:03 AM, Stephen Boyd wrote:
+> Quoting Sricharan R (2019-12-19 02:41:47)
+>> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+>> index 3b33ef1..d0392f1 100644
+>> --- a/drivers/clk/qcom/Kconfig
+>> +++ b/drivers/clk/qcom/Kconfig
+>> @@ -95,6 +95,14 @@ config IPQ_GCC_4019
+>>           Say Y if you want to use peripheral devices such as UART, SPI,
+>>           i2c, USB, SD/eMMC, etc.
+>>  
+>> +config IPQ_GCC_6018
+>> +       tristate "IPQ6018 Global Clock Controller"
+>> +       help
+>> +         Support for global clock controller on ipq6018 devices.
+>> +         Say Y if you want to use peripheral devices such as UART, SPI,
+>> +         i2c, USB, SD/eMMC, etc. Select this for the root clock
+>> +         of ipq6018.
+> 
+> What is the root clock of ipq6018?
+> 
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Ulrich Hecht <uli@fpond.eu>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-I maintained the ack from Rob Herring and the review from Philipp
-because in essence the only thing I did is migrate to YAML format and
-check that no errors are reported via dtbs_check. Just let me know if
-you're not agree.
+	root clock is 'xo'. But i guess this statement is not correct.
+	will remove that line.
 
-Apart from this note that I removed the mode-sel property because is not
-used and I renamed sleep-gpios to powerdown-gpios.
+>> +
+>>  config IPQ_GCC_806X
+>>         tristate "IPQ806x Global Clock Controller"
+>>         help
+>> diff --git a/drivers/clk/qcom/gcc-ipq6018.c b/drivers/clk/qcom/gcc-ipq6018.c
+>> new file mode 100644
+>> index 0000000..b6f0148
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/gcc-ipq6018.c
+>> @@ -0,0 +1,4674 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/err.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <linux/reset-controller.h>
+>> +#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+>> +#include <dt-bindings/reset/qcom,gcc-ipq6018.h>
+>> +
+>> +#include "common.h"
+>> +#include "clk-regmap.h"
+>> +#include "clk-pll.h"
+>> +#include "clk-rcg.h"
+>> +#include "clk-branch.h"
+>> +#include "clk-alpha-pll.h"
+>> +#include "clk-regmap-divider.h"
+>> +#include "clk-regmap-mux.h"
+>> +#include "reset.h"
+>> +
+>> +#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
+>> +
+>> +enum {
+>> +       P_XO,
+>> +       P_BIAS_PLL,
+>> +       P_UNIPHY0_RX,
+>> +       P_UNIPHY0_TX,
+>> +       P_UNIPHY1_RX,
+>> +       P_BIAS_PLL_NSS_NOC,
+>> +       P_UNIPHY1_TX,
+>> +       P_PCIE20_PHY0_PIPE,
+>> +       P_USB3PHY_0_PIPE,
+>> +       P_GPLL0,
+>> +       P_GPLL0_DIV2,
+>> +       P_GPLL2,
+>> +       P_GPLL4,
+>> +       P_GPLL6,
+>> +       P_SLEEP_CLK,
+>> +       P_UBI32_PLL,
+>> +       P_NSS_CRYPTO_PLL,
+>> +       P_PI_SLEEP,
+>> +};
+>> +
+>> +static const struct clk_parent_data gcc_xo_gpll0_gpll0_out_main_div2[] = {
+>> +       { .fw_name = "xo", .name = "xo"},
+>> +       { .fw_name = "gpll0", .name = "gpll0"},
+>> +       { .fw_name = "gpll0_out_main_div2", .name = "gpll0_out_main_div2"},
+> 
+> Because we aren't migrating this from existing DT to new DT we should be
+> able to leave out .name in all these structs. That's the legacy fallback
+> mechanism used to migrate DT over to the new way.
+> 
 
-Changes in v24: None
-Changes in v23: None
-Changes in v22:
-- Migrate to YAML format (Maxime Ripart)
-- Remove mode-sel property.
-- Rename sleep-gpios to powerdown-gpios.
+	ok will fix it.
 
-Changes in v21: None
-Changes in v19: None
-Changes in v18: None
-Changes in v17: None
-Changes in v16: None
-Changes in v15: None
-Changes in v14: None
-Changes in v13: None
-Changes in v12: None
-Changes in v11: None
+>> +};
+>> +
+>> +static const struct parent_map gcc_xo_gpll0_gpll0_out_main_div2_map[] = {
+>> +       { P_XO, 0 },
+>> +       { P_GPLL0, 1 },
+>> +       { P_GPLL0_DIV2, 4 },
+>> +};
+>> +
+> [...]
+>> +
+>> +static int gcc_ipq6018_probe(struct platform_device *pdev)
+>> +{
+>> +       int i, ret;
+>> +       struct regmap *regmap;
+>> +       struct clk *clk;
+>> +       struct device *dev = &pdev->dev;
+>> +
+>> +       regmap = qcom_cc_map(pdev, &gcc_ipq6018_desc);
+>> +       if (IS_ERR(regmap))
+>> +               return PTR_ERR(regmap);
+>> +
+>> +       for (i = 0; i < ARRAY_SIZE(gcc_ipq6018_hws); i++) {
+>> +               clk = devm_clk_register(&pdev->dev, gcc_ipq6018_hws[i]);
+>> +               if (IS_ERR(clk))
+>> +                       return PTR_ERR(clk);
+>> +       }
+>> +
+>> +       clk_register_fixed_rate(dev, "pcie20_phy0_pipe_clk", NULL, 0, 250000000);
+> 
+> Why do we need to register this? Can it come from DT then? Also what if
+> it fails? And what if really_probe fails? Then we'll need to undo this
+> registration. Ideally this is created somewhere else.
+> 
 
- .../bindings/display/bridge/ps8640.yaml       | 112 ++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+	ok, will move this in to the actual clk list.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ps8640.yaml b/Documentation/devicetree/bindings/display/bridge/ps8640.yaml
-new file mode 100644
-index 000000000000..5dff93641bea
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ps8640.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ps8640.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MIPI DSI to eDP Video Format Converter Device Tree Bindings
-+
-+maintainers:
-+  - Nicolas Boichat <drinkcat@chromium.org>
-+  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+
-+description: |
-+  The PS8640 is a low power MIPI-to-eDP video format converter supporting
-+  mobile devices with embedded panel resolutions up to 2048 x 1536. The
-+  device accepts a single channel of MIPI DSI v1.1, with up to four lanes
-+  plus clock, at a transmission rate up to 1.5Gbit/sec per lane. The
-+  device outputs eDP v1.4, one or two lanes, at a link rate of up to
-+  3.24Gbit/sec per lane.
-+
-+properties:
-+  compatible:
-+    const: parade,ps8640
-+
-+  reg:
-+    maxItems: 1
-+    description: Base I2C address of the device.
-+
-+  powerdown-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low powerdown.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active low reset.
-+
-+  vdd12-supply:
-+    maxItems: 1
-+    description: Regulator for 1.2V digital core power.
-+
-+  vdd33-supply:
-+    maxItems: 1
-+    description: Regulator for 3.3V digital core power.
-+
-+  ports:
-+    type: object
-+    description:
-+      A node containing DSI input & output port nodes with endpoint
-+      definitions as documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+      Documentation/devicetree/bindings/graph.txt
-+    properties:
-+      port@0:
-+        type: object
-+        description: |
-+          Video port for DSI input
-+
-+      port@1:
-+        type: object
-+        description: |
-+          Video port for eDP output (panel or connector).
-+
-+    required:
-+      - port@0
-+
-+required:
-+  - compatible
-+  - reg
-+  - powerdown-gpios
-+  - reset-gpios
-+  - vdd12-supply
-+  - vdd33-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ps8640: edp-bridge@18 {
-+            compatible = "parade,ps8640";
-+            reg = <0x18>;
-+            powerdown-gpios = <&pio 116 GPIO_ACTIVE_LOW>;
-+            reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
-+            vdd12-supply = <&ps8640_fixed_1v2>;
-+            vdd33-supply = <&mt6397_vgp2_reg>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                port@0 {
-+                    reg = <0>;
-+                    ps8640_in: endpoint {
-+                        remote-endpoint = <&dsi0_out>;
-+                    };
-+                };
-+
-+                port@1 {
-+                    reg = <1>;
-+                    ps8640_out: endpoint {
-+                        remote-endpoint = <&panel_in>;
-+                   };
-+                };
-+            };
-+        };
-+    };
-+
+>> +
+>> +       /* Disable SW_COLLAPSE for USB0 GDSCR */
+>> +       regmap_update_bits(regmap, 0x3e078, BIT(0), 0x0);
+>> +       /* Enable SW_OVERRIDE for USB0 GDSCR */
+>> +       regmap_update_bits(regmap, 0x3e078, BIT(2), BIT(2));
+>> +       /* Disable SW_COLLAPSE for USB1 GDSCR */
+>> +       regmap_update_bits(regmap, 0x3f078, BIT(0), 0x0);
+>> +       /* Enable SW_OVERRIDE for USB1 GDSCR */
+>> +       regmap_update_bits(regmap, 0x3f078, BIT(2), BIT(2));
+>> +
+>> +       /* SW Workaround for UBI Huyara PLL */
+>> +       regmap_update_bits(regmap, 0x2501c, BIT(26), BIT(26));
+>> +
+>> +       clk_alpha_pll_configure(&ubi32_pll_main, regmap, &ubi32_pll_config);
+>> +
+>> +       clk_alpha_pll_configure(&nss_crypto_pll_main, regmap,
+>> +                               &nss_crypto_pll_config);
+>> +
+>> +       ret = qcom_cc_really_probe(pdev, &gcc_ipq6018_desc, regmap);
+>> +
+>> +       dev_dbg(&pdev->dev, "Registered ipq6018 clock provider");
+> 
+> Please remove this and just return the result of really_probe.
+> 
+
+ ok, will fix it
+
+Regards,
+  Sricharan
+
 -- 
-2.24.1
-
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
