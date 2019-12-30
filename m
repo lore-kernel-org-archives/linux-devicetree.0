@@ -2,314 +2,590 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C487C2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 22:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB34C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 23:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423F120722
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 22:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RjQsh5TN"
+	by mail.kernel.org (Postfix) with ESMTP id 44D0C2071E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 23:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577747970;
+	bh=+QIOFrt9etoLBiOj6uuWXf/i4xC8UpWLseW/gJpmao4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ba8OebempTvxDye8PFkVRmfg6ULBQUQ2uOJN3PV7h5VzEt8y5hot1RhFUjlY0LquS
+	 rbTit7wNkHRdUdNtGmNJiBTMaeux/XSFlAKUl71v9kTfG4qjgsql1x6GBOetC0W9QZ
+	 6NQxtVl9S+qqLJ0D1pZiKG72gOsCCAlsyAg7TMb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfL3Wb4 (ORCPT
+        id S1727740AbfL3XT3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 17:31:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60868 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727695AbfL3Wb4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 17:31:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VMKfHLqRT2R2sg5Nk4++uNSF4hBm9QlbBpbhWdr26ug=; b=RjQsh5TNuMgwnnYYgIj/heu4M
-        ayZy1FSJtnRYOsoEJ275SOfMfTJqSdoLh9krotEEcuAVlsFBb07bJ1XEZkHeI8WdW+zNx4zLwEahv
-        GkbipATHefXtqGNj8AV82A+ngRJkHJRlgeFQBpqsrI1pF2X66C6LC48NvN2wWlbXv+V76ccJqHiM6
-        y7a5Xm3wFDE8UJV/3TD0BKYkXa2TeDsWGFB+LD1bcWSLSo26Xzro5Jz6K4FL3Xq0E5n3KudwlcB+/
-        2XDR4aE+QN/sN/iUfs+CJapcEY7ZsX5/L9YQHyAz1VFcyegzdjgFj764o5ypzprXAVwSFZtenvP+1
-        kwAjWKayw==;
-Received: from [2601:1c0:6280:3f0::34d9]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1im3Zm-0006NR-Du; Mon, 30 Dec 2019 22:31:50 +0000
-Subject: Re: [PATCH v7 13/15] docs: coresight: Update documentation for
- CoreSight to cover CTI.
-To:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        coresight@lists.linaro.org, linux-doc@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com, robh+dt@kernel.org, maxime@cerno.tech,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        lorenzo.pieralisi@arm.com, agross@kernel.org, corbet@lwn.net
-References: <20191230164441.28375-1-mike.leach@linaro.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <5948ee00-c3e8-749d-2354-5089b0103cee@infradead.org>
-Date:   Mon, 30 Dec 2019 14:31:48 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Mon, 30 Dec 2019 18:19:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727695AbfL3XT3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Dec 2019 18:19:29 -0500
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F0E62071E;
+        Mon, 30 Dec 2019 23:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577747967;
+        bh=+QIOFrt9etoLBiOj6uuWXf/i4xC8UpWLseW/gJpmao4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e+xkVEwnb0yqrdPNBQpMn8GAtGWeeM/CPRZzbD39bO+Y+aleCj2J7nB4kUuTRmDqd
+         nvaBkTI0u6Q1rp4OD3Whyw1U4urFEcfDtEvJZDXV9OnoXGOpwFVcZTIMvW6kp8mFEC
+         FMJRU8M58f/kN99/wzGWFBoQgS24MVI1WIwLVnqM=
+Received: by mail-qv1-f49.google.com with SMTP id n8so12866559qvg.11;
+        Mon, 30 Dec 2019 15:19:27 -0800 (PST)
+X-Gm-Message-State: APjAAAXKHVaYzhLDfz7cg2vGg47r4ne+nPoYLXdk7PcTeOG3Pyh3gelo
+        eqdQkWnnPgpGTTvpz+xYVm+iQJjmEuLmlTEksQ==
+X-Google-Smtp-Source: APXvYqy7OhVWXHqp2fHiMMW2e9aYT9/U34/mjCdUrsJ28v5WD9uGTrdYmVUMPl+rJ2Tu5zJ8bkeOsXCdcZOkTIVaUsc=
+X-Received: by 2002:ad4:4511:: with SMTP id k17mr50807105qvu.135.1577747966279;
+ Mon, 30 Dec 2019 15:19:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191230164441.28375-1-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191107224254.15712-1-robh@kernel.org>
+In-Reply-To: <20191107224254.15712-1-robh@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Dec 2019 16:19:13 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqLn0cUzzVnYostVwdPun1Tu4Y6bx7Xgwjc4_xfVke6gYA@mail.gmail.com>
+Message-ID: <CAL_JsqLn0cUzzVnYostVwdPun1Tu4Y6bx7Xgwjc4_xfVke6gYA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Convert generic pin mux and config
+ properties to schema
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mike,
-
-Just a couple of small nits below.
-
-
-On 12/30/19 8:44 AM, Mike Leach wrote:
-> Add new document covering CTI / CTM usage in CoreSight.
-> 
-> Add section in coresight.rst introducing CTI and CTM modules with link
-> to new document.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+On Thu, Nov 7, 2019 at 3:42 PM Rob Herring <robh@kernel.org> wrote:
+>
+> As pinctrl bindings have a flexible structure and no standard child node
+> naming convention, creating a single pinctrl schema doesn't work. Instead,
+> create schemas for the pin mux and config nodes which device pinctrl schema
+> can reference.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  .../trace/coresight/coresight-ect.rst         | 211 ++++++++++++++++++
->  Documentation/trace/coresight/coresight.rst   |  13 ++
->  2 files changed, 224 insertions(+)
->  create mode 100644 Documentation/trace/coresight/coresight-ect.rst
-> 
-> diff --git a/Documentation/trace/coresight/coresight-ect.rst b/Documentation/trace/coresight/coresight-ect.rst
+>
+> We're starting to see pinctrl schema doing their own definitions for
+> generic properties, so we need to get something in place to reference.
+>
+> Maybe this could be combined into a single schema? Spliting it was
+> easier in order to just copy over the existing documentation.
+>
+> Reading thru pinctrl-bindings.txt, I'm wondering if some of it is out
+> of date. Do we let new bindings not use the generic muxing properties?
+> Do we really need to be so flexible for child node structure?
+
+Ping!
+
+>
+> Rob
+>
+>  .../bindings/pinctrl/pincfg-node.yaml         | 140 +++++++++++++
+>  .../bindings/pinctrl/pinctrl-bindings.txt     | 192 +-----------------
+>  .../bindings/pinctrl/pinmux-node.yaml         | 132 ++++++++++++
+>  3 files changed, 274 insertions(+), 190 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
 > new file mode 100644
-> index 000000000000..3e06588f24fa
+> index 000000000000..13b7ab9dd6d5
 > --- /dev/null
-> +++ b/Documentation/trace/coresight/coresight-ect.rst
-> @@ -0,0 +1,211 @@
-> +=============================================
-> +CoreSight Embedded Cross Trigger (CTI & CTM).
-> +=============================================
+> +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/pincfg-node.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +    :Author:   Mike Leach <mike.leach@linaro.org>
-> +    :Date:     November 2019
+> +title: Generic pin configuration node schema
 > +
-> +Hardware Description
-> +--------------------
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
 > +
-> +The CoreSight Cross Trigger Interface (CTI) is a hardware device that takes
-> +individual input and output hardware signals known as triggers to and from
-> +devices and interconnects them via the Cross Trigger Matrix (CTM) to other
-> +devices via numbered channels, in order to propagate events between devices.
+> +description:
+> +  Many data items that are represented in a pin configuration node are common
+> +  and generic. Pin control bindings should use the properties defined below
+> +  where they are applicable; not all of these properties are relevant or useful
+> +  for all hardware or binding structures. Each individual binding document
+> +  should state which of these generic properties, if any, are used, and the
+> +  structure of the DT nodes that contain these properties.
 > +
-> +e.g.::
+> +properties:
+> +  bias-disable:
+> +    type: boolean
+> +    description: disable any pin bias
 > +
-> + 0000000  in_trigs  :::::::
-> + 0 C   0----------->:     :             +======>(other CTI channel IO)
-> + 0  P  0<-----------:     :             v
-> + 0   U 0  out_trigs :     : Channels  *****      :::::::
-> + 0000000            : CTI :<=========>*CTM*<====>: CTI :---+
-> + #######  in_trigs  :     : (id 0-3)  *****      :::::::   v
-> + # ETM #----------->:     :                         ^   #######
-> + #     #<-----------:     :                         +---# ETR #
-> + ####### out_trigs  :::::::                             #######
+> +  bias-high-impedance:
+> +    type: boolean
+> +    description: high impedance mode ("third-state", "floating")
 > +
-> +The CTI driver enables the programming of the CTI to attach triggers to
-> +channels. When an input trigger becomes active, the attached channel will
-> +become active. Any output trigger attached to that channel will also
-> +become active. The active channel is propagated to other CTIs via the CTM,
-> +activating connected output triggers there, unless filtered by the CTI
-> +channel gate.
+> +  bias-bus-hold:
+> +    type: boolean
+> +    description: latch weakly
 > +
-> +It is also possible to activate a channel using system software directly
-> +programming registers in the CTI.
+> +  bias-pull-up:
+> +    oneOf:
+> +      - type: boolean
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: pull up the pin. Takes as optional argument on hardware
+> +      supporting it the pull strength in Ohm.
 > +
-> +The CTIs are registered by the system to be associated with CPUs and/or other
-> +CoreSight devices on the trace data path. When these devices are enabled the
-> +attached CTIs will also be enabled. By default/on power up the CTIs have
-> +no programmed trigger/channel attachments, so will not affect the system
-> +until explicitly programmed.
+> +  bias-pull-down:
+> +    oneOf:
+> +      - type: boolean
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: pull down the pin. Takes as optional argument on hardware
+> +      supporting it the pull strength in Ohm.
 > +
-> +The hardware trigger connections between CTIs and devices is implementation
-> +defined, unless the CPU/ETM combination is a v8 architecture, in which case
-> +the connections have an architecturally defined standard layout.
+> +  bias-pull-pin-default:
+> +    oneOf:
+> +      - type: boolean
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: use pin-default pull state. Takes as optional argument on
+> +      hardware supporting it the pull strength in Ohm.
 > +
-> +The hardware trigger signals can also be connected to non-CoreSight devices
-> +(e.g. UART), or be propagated off chip as hardware IO lines.
+> +  drive-push-pull:
+> +    type: boolean
+> +    description: drive actively high and low
 > +
-> +All the CTI devices are associated with a CTM. On many systems there will be a
-> +single effective CTM (one CTM, or multiple CTMs all interconnected), but it is
-> +possible that systems can have nets of CTIs+CTM that are not interconnected by
-> +a CTM to each other. On these systems a CTM index is declared to associate
-> +CTI devices that are interconnected via a given CTM.
+> +  drive-open-drain:
+> +    type: boolean
+> +    description: drive with open drain
 > +
-> +Sysfs files and directories
-> +---------------------------
+> +  drive-open-source:
+> +    type: boolean
+> +    description: drive with open source
 > +
-> +The CTI devices appear on the existing CoreSight bus alongside the other
-> +CoreSight devices::
+> +  drive-strength:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: sink or source at most X mA
 > +
-> +    >$ ls /sys/bus/coresight/devices
-> +     cti_cpu0  cti_cpu2  cti_sys0  etm0  etm2  funnel0  replicator0  tmc_etr0
-> +     cti_cpu1  cti_cpu3  cti_sys1  etm1  etm3  funnel1  tmc_etf0     tpiu0
+> +  drive-strength-microamp:
+> +    description: sink or source at most X uA
 > +
-> +The ``cti_cpu<N>`` named CTIs are associated with a CPU, and any ETM used by
-> +that core. the ``cti_sys<N>`` CTIs are general system infrastructure CTIs that
-
-              The
-
-> +can be associated with other CoreSight devices, or other system hardware
-> +capable of generating or using trigger signals.::
+> +  input-enable:
+> +    type: boolean
+> +    description: enable input on pin (no effect on output, such as
+> +      enabling an input buffer)
 > +
-> +  >$ ls /sys/bus/coresight/devices/etm0/cti_cpu0
-> +  channels  ctmid  enable  nr_trigger_cons mgmt  power  regs  subsystem
-> +  triggers0 triggers1  uevent
+> +  input-disable:
+> +    type: boolean
+> +    description: disable input on pin (no effect on output, such as
+> +      disabling an input buffer)
 > +
-> +*Key file items are:-*
-> +   * ``enable``: enables/disables the CTI.
-> +   * ``ctmid`` : associated CTM - only relevant if system has multiple CTI+CTM
-> +     clusters that are not interconnected.
-> +   * ``nr_trigger_cons`` : total connections - triggers<N> directories.
+> +  input-schmitt-enable:
+> +    type: boolean
+> +    description: enable schmitt-trigger mode
 > +
-> +*Sub-directories:-*
-> +   * ``triggers<N>``: contains list of triggers for an individual connection.
-> +   * ``channels``: Contains the channel API - CTI main programming interface.
-> +   * ``regs``: Gives access to the raw programmable CTI regs.
-> +   * ``mgmt``: the standard CoreSight management registers.
+> +  input-schmitt-disable:
+> +    type: boolean
+> +    description: disable schmitt-trigger mode
 > +
+> +  input-debounce:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: Takes the debounce time in usec as argument or 0 to disable
+> +      debouncing
 > +
-> +triggers<N> directories
-> +~~~~~~~~~~~~~~~~~~~~~~~
+> +  power-source:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: select between different power supplies
 > +
-> +Individual trigger connection information. This describes trigger signals for
-> +CoreSight and non-CoreSight connections.
+> +  low-power-enable:
+> +    type: boolean
+> +    description: enable low power mode
 > +
-> +Each triggers directory has a set of parameters describing the triggers for
-> +the connection.
+> +  low-power-disable:
+> +    type: boolean
+> +    description: disable low power mode
 > +
-> +   * ``name`` : name of connection
-> +   * ``in_signals`` : input trigger signal indexes used in this connection.
-> +   * ``in_types`` : functional types for in signals.
-> +   * ``out_signals`` : output trigger signals for this connection.
-> +   * ``out_types`` : functional types for out signals.
+> +  output-disable:
+> +    type: boolean
+> +    description: disable output on a pin (such as disable an output buffer)
 > +
-> +e.g::
+> +  output-enable:
+> +    type: boolean
+> +    description: enable output on a pin without actively driving it
+> +      (such as enabling an output buffer)
 > +
-> +    >$ ls ./cti_cpu0/triggers0/
-> +    in_signals  in_types  name  out_signals  out_types
-> +    >$ cat ./cti_cpu0/triggers0/name
-> +    cpu0
-> +    >$ cat ./cti_cpu0/triggers0/out_signals
-> +    0-2
-> +    >$ cat ./cti_cpu0/triggers0/out_types
-> +    pe_edbgreq pe_dbgrestart pe_ctiirq
-> +    >$ cat ./cti_cpu0/triggers0/in_signals
-> +    0-1
-> +    >$ cat ./cti_cpu0/triggers0/in_types
-> +    pe_dbgtrigger pe_pmuirq
+> +  output-low:
+> +    type: boolean
+> +    description: set the pin to output mode with low level
 > +
-> +If a connection has zero signals in either the 'in' or 'out' triggers then
-> +those parameters will be omitted.
+> +  output-high:
+> +    type: boolean
+> +    description: set the pin to output mode with high level
 > +
-> +Channels API Directory
-> +~~~~~~~~~~~~~~~~~~~~~~
+> +  sleep-hardware-state:
+> +    type: boolean
+> +    description: indicate this is sleep related state which will be
+> +      programmed into the registers for the sleep state.
 > +
-> +This provides an easy way to attach triggers to channels, without needing
-> +the multiple register operations that are required if manipulating the
-> +'regs' sub-dir elements directly.
-
-spell out: sub-directory
-
+> +  slew-rate:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: set the slew rate
 > +
-> +A number of files provide this API::
+> +  skew-delay:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      this affects the expected clock skew on input pins
+> +      and the delay before latching a value to an output
+> +      pin. Typically indicates how many double-inverters are
+> +      used to delay the signal.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> index fcd37e93ed4d..4613bb17ace3 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -141,196 +141,8 @@ controller device.
+>
+>  == Generic pin multiplexing node content ==
+>
+> -pin multiplexing nodes:
+> -
+> -function               - the mux function to select
+> -groups                 - the list of groups to select with this function
+> -                         (either this or "pins" must be specified)
+> -pins                   - the list of pins to select with this function (either
+> -                         this or "groups" must be specified)
+> -
+> -Example:
+> -
+> -state_0_node_a {
+> -       uart0 {
+> -               function = "uart0";
+> -               groups = "u0rxtx", "u0rtscts";
+> -       };
+> -};
+> -state_1_node_a {
+> -       spi0 {
+> -               function = "spi0";
+> -               groups = "spi0pins";
+> -       };
+> -};
+> -state_2_node_a {
+> -       function = "i2c0";
+> -       pins = "mfio29", "mfio30";
+> -};
+> -
+> -Optionally an alternative binding can be used if more suitable depending on the
+> -pin controller hardware. For hardware where there is a large number of identical
+> -pin controller instances, naming each pin and function can easily become
+> -unmaintainable. This is especially the case if the same controller is used for
+> -different pins and functions depending on the SoC revision and packaging.
+> -
+> -For cases like this, the pin controller driver may use pinctrl-pin-array helper
+> -binding with a hardware based index and a number of pin configuration values:
+> -
+> -pincontroller {
+> -       ... /* Standard DT properties for the device itself elided */
+> -       #pinctrl-cells = <2>;
+> -
+> -       state_0_node_a {
+> -               pinctrl-pin-array = <
+> -                       0 A_DELAY_PS(0) G_DELAY_PS(120)
+> -                       4 A_DELAY_PS(0) G_DELAY_PS(360)
+> -                       ...
+> -               >;
+> -       };
+> -       ...
+> -};
+> -
+> -Above #pinctrl-cells specifies the number of value cells in addition to the
+> -index of the registers. This is similar to the interrupts-extended binding with
+> -one exception. There is no need to specify the phandle for each entry as that
+> -is already known as the defined pins are always children of the pin controller
+> -node. Further having the phandle pointing to another pin controller would not
+> -currently work as the pinctrl framework uses named modes to group pins for each
+> -pin control device.
+> -
+> -The index for pinctrl-pin-array must relate to the hardware for the pinctrl
+> -registers, and must not be a virtual index of pin instances. The reason for
+> -this is to avoid mapping of the index in the dts files and the pin controller
+> -driver as it can change.
+> -
+> -For hardware where pin multiplexing configurations have to be specified for
+> -each single pin the number of required sub-nodes containing "pin" and
+> -"function" properties can quickly escalate and become hard to write and
+> -maintain.
+> -
+> -For cases like this, the pin controller driver may use the pinmux helper
+> -property, where the pin identifier is provided with mux configuration settings
+> -in a pinmux group. A pinmux group consists of the pin identifier and mux
+> -settings represented as a single integer or an array of integers.
+> -
+> -The pinmux property accepts an array of pinmux groups, each of them describing
+> -a single pin multiplexing configuration.
+> -
+> -pincontroller {
+> -       state_0_node_a {
+> -               pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
+> -       };
+> -};
+> -
+> -Each individual pin controller driver bindings documentation shall specify
+> -how pin IDs and pin multiplexing configuration are defined and assembled
+> -together in a pinmux group.
+> +See pinmux-node.yaml
+>
+>  == Generic pin configuration node content ==
+>
+> -Many data items that are represented in a pin configuration node are common
+> -and generic. Pin control bindings should use the properties defined below
+> -where they are applicable; not all of these properties are relevant or useful
+> -for all hardware or binding structures. Each individual binding document
+> -should state which of these generic properties, if any, are used, and the
+> -structure of the DT nodes that contain these properties.
+> -
+> -Supported generic properties are:
+> -
+> -pins                   - the list of pins that properties in the node
+> -                         apply to (either this, "group" or "pinmux" has to be
+> -                         specified)
+> -group                  - the group to apply the properties to, if the driver
+> -                         supports configuration of whole groups rather than
+> -                         individual pins (either this, "pins" or "pinmux" has
+> -                         to be specified)
+> -pinmux                 - the list of numeric pin ids and their mux settings
+> -                         that properties in the node apply to (either this,
+> -                         "pins" or "groups" have to be specified)
+> -bias-disable           - disable any pin bias
+> -bias-high-impedance    - high impedance mode ("third-state", "floating")
+> -bias-bus-hold          - latch weakly
+> -bias-pull-up           - pull up the pin
+> -bias-pull-down         - pull down the pin
+> -bias-pull-pin-default  - use pin-default pull state
+> -drive-push-pull                - drive actively high and low
+> -drive-open-drain       - drive with open drain
+> -drive-open-source      - drive with open source
+> -drive-strength         - sink or source at most X mA
+> -drive-strength-microamp        - sink or source at most X uA
+> -input-enable           - enable input on pin (no effect on output, such as
+> -                         enabling an input buffer)
+> -input-disable          - disable input on pin (no effect on output, such as
+> -                         disabling an input buffer)
+> -input-schmitt-enable   - enable schmitt-trigger mode
+> -input-schmitt-disable  - disable schmitt-trigger mode
+> -input-debounce         - debounce mode with debound time X
+> -power-source           - select between different power supplies
+> -low-power-enable       - enable low power mode
+> -low-power-disable      - disable low power mode
+> -output-disable         - disable output on a pin (such as disable an output
+> -                         buffer)
+> -output-enable          - enable output on a pin without actively driving it
+> -                         (such as enabling an output buffer)
+> -output-low             - set the pin to output mode with low level
+> -output-high            - set the pin to output mode with high level
+> -sleep-hardware-state   - indicate this is sleep related state which will be programmed
+> -                         into the registers for the sleep state.
+> -slew-rate              - set the slew rate
+> -skew-delay             - this affects the expected clock skew on input pins
+> -                         and the delay before latching a value to an output
+> -                         pin. Typically indicates how many double-inverters are
+> -                         used to delay the signal.
+> -
+> -For example:
+> -
+> -state_0_node_a {
+> -       cts_rxd {
+> -               pins = "GPIO0_AJ5", "GPIO2_AH4"; /* CTS+RXD */
+> -               bias-pull-up;
+> -       };
+> -};
+> -state_1_node_a {
+> -       rts_txd {
+> -               pins = "GPIO1_AJ3", "GPIO3_AH3"; /* RTS+TXD */
+> -               output-high;
+> -       };
+> -};
+> -state_2_node_a {
+> -       foo {
+> -               group = "foo-group";
+> -               bias-pull-up;
+> -       };
+> -};
+> -state_3_node_a {
+> -       mux {
+> -               pinmux = <GPIOx_PINm_MUXn>, <GPIOx_PINj_MUXk)>;
+> -               input-enable;
+> -       };
+> -};
+> -
+> -Some of the generic properties take arguments. For those that do, the
+> -arguments are described below.
+> -
+> -- pins takes a list of pin names or IDs as a required argument. The specific
+> -  binding for the hardware defines:
+> -  - Whether the entries are integers or strings, and their meaning.
+> -
+> -- pinmux takes a list of pin IDs and mux settings as required argument. The
+> -  specific bindings for the hardware defines:
+> -  - How pin IDs and mux settings are defined and assembled together in a single
+> -    integer or an array of integers.
+> -
+> -- bias-pull-up, -down and -pin-default take as optional argument on hardware
+> -  supporting it the pull strength in Ohm. bias-disable will disable the pull.
+> -
+> -- drive-strength takes as argument the target strength in mA.
+> -
+> -- drive-strength-microamp takes as argument the target strength in uA.
+> -
+> -- input-debounce takes the debounce time in usec as argument
+> -  or 0 to disable debouncing
+> -
+> -More in-depth documentation on these parameters can be found in
+> -<include/linux/pinctrl/pinconf-generic.h>
+> +See pincfg-node.yaml
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> new file mode 100644
+> index 000000000000..777623a57fd5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> @@ -0,0 +1,132 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/pinmux-node.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +   >$ ls ./cti_sys0/channels/
-> +   chan_clear         chan_inuse         chan_xtrigs_view      trigin_detach
-> +   chan_free          chan_pulse         chan_xtrigs_view_sel  trigout_attach
-> +   chan_gate_disable  chan_set           trig_filter_enable    trigout_detach
-> +   chan_gate_enable   chan_xtrigs_reset  trigin_attach         trigout_filtered
+> +title: Generic pin multiplexing node schema
 > +
-> +Most access to these elements take the form::
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
 > +
-> +  echo <chan> [<trigger>] > /<device_path>/<operation>
+> +description: |
+> +  The contents of the pin configuration child nodes are defined by the binding
+> +  for the individual pin controller device. The pin configuration nodes need not
+> +  be direct children of the pin controller device; they may be grandchildren,
+> +  for example. Whether this is legal, and whether there is any interaction
+> +  between the child and intermediate parent nodes, is again defined entirely by
+> +  the binding for the individual pin controller device.
 > +
-> +where the optional <trigger> is only needed for trigXX_attach | detach
-> +operations.
+> +  While not required to be used, there are 3 generic forms of pin muxing nodes
+> +  which pin controller devices can use.
 > +
-> +e.g.::
+> +  pin multiplexing nodes:
 > +
-> +   >$ echo 0 1 > ./cti_sys0/channels/trigout_attach
-> +   >$ echo 0 > ./cti_sys0/channels/chan_set
+> +  Example:
 > +
-> +Attaches trigout(1) to channel(0), then activates channel(0) generating a
-> +set state on cti_sys0.trigout(1)
+> +  state_0_node_a {
+> +    uart0 {
+> +      function = "uart0";
+> +      groups = "u0rxtx", "u0rtscts";
+> +    };
+> +  };
+> +  state_1_node_a {
+> +    spi0 {
+> +      function = "spi0";
+> +      groups = "spi0pins";
+> +    };
+> +  };
+> +  state_2_node_a {
+> +    function = "i2c0";
+> +    pins = "mfio29", "mfio30";
+> +  };
 > +
+> +  Optionally an alternative binding can be used if more suitable depending on the
+> +  pin controller hardware. For hardware where there is a large number of identical
+> +  pin controller instances, naming each pin and function can easily become
+> +  unmaintainable. This is especially the case if the same controller is used for
+> +  different pins and functions depending on the SoC revision and packaging.
 > +
-> +*API operations*
+> +  For cases like this, the pin controller driver may use pinctrl-pin-array helper
+> +  binding with a hardware based index and a number of pin configuration values:
 > +
-> +   * ``trigin_attach, trigout_attach``: Attach a channel to a trigger signal.
-> +   * ``trigin_detach, trigout_detach``: Detach a channel from a trigger signal.
-> +   * ``chan_set``: Set the channel - the set state will be propagated around
-> +     the CTM to other connected devices.
-> +   * ``chan_clear``: Clear the channel.
-> +   * ``chan_pulse``: Set the channel for a single CoreSight clock cycle.
-> +   * ``chan_gate_enable``: Write operation sets the CTI gate to propagate
-> +     (enable) the channel to other devices. This operation takes a channel
-> +     number. CTI gate is enabled for all channels by default at power up. Read
-> +     to list the currently enabled channels on the gate.
-> +   * ``chan_gate_disable``: Write channel number to disable gate for that
-> +     channel.
-> +   * ``chan_inuse``: Show the current channels attached to any signal
-> +   * ``chan_free``: Show channels with no attached signals.
-> +   * ``chan_xtrig_view``: write a channel number to select a channel to view,
-> +     read to show the cross triggers programmed for the selected channel.
-> +   * ``trig_filter_enable``: Defaults to enabled, disable to allow potentially
-> +     dangerous output signals to be set.
-> +   * ``trigout_filtered``: Trigger out signals that are prevented from being
-> +     set if filtering ``trig_filter_enable`` is enabled. One use is to prevent
-> +     accidental ``EDBGREQ`` signals stopping a core.
-> +   * ``chan_xtrigs_reset``: Write 1 to clear all channel / trigger programming.
-> +     Resets device hardware to default state.
+> +  pincontroller {
+> +    ... /* Standard DT properties for the device itself elided */
+> +    #pinctrl-cells = <2>;
 > +
+> +    state_0_node_a {
+> +      pinctrl-pin-array = <
+> +        0 A_DELAY_PS(0) G_DELAY_PS(120)
+> +        4 A_DELAY_PS(0) G_DELAY_PS(360)
+> +        ...
+> +        >;
+> +    };
+> +    ...
+> +  };
 > +
-> +The example below attaches input trigger index 1 to channel 2, and output
-> +trigger index 6 to the same channel. It then examines the state of the
-> +channel / trigger connections using the appropriate sysfs attributes.
+> +  Above #pinctrl-cells specifies the number of value cells in addition to the
+> +  index of the registers. This is similar to the interrupts-extended binding with
+> +  one exception. There is no need to specify the phandle for each entry as that
+> +  is already known as the defined pins are always children of the pin controller
+> +  node. Further having the phandle pointing to another pin controller would not
+> +  currently work as the pinctrl framework uses named modes to group pins for each
+> +  pin control device.
 > +
-> +The settings mean that if either input trigger 1, or channel 2 go active then
-> +trigger out 6 will go active. We then enable the CTI, and use the software
-> +channel control to activate channel 2. We see the active channel on the
-> +``choutstatus`` register and the active signal on the ``trigoutstatus``
-> +register. Finally clearing the channel removes this.
+> +  The index for pinctrl-pin-array must relate to the hardware for the pinctrl
+> +  registers, and must not be a virtual index of pin instances. The reason for
+> +  this is to avoid mapping of the index in the dts files and the pin controller
+> +  driver as it can change.
 > +
-> +e.g.::
+> +  For hardware where pin multiplexing configurations have to be specified for
+> +  each single pin the number of required sub-nodes containing "pin" and
+> +  "function" properties can quickly escalate and become hard to write and
+> +  maintain.
 > +
-> +   .../cti_sys0/channels# echo 2 1 > trigin_attach
-> +   .../cti_sys0/channels# echo 2 6 > trigout_attach
-> +   .../cti_sys0/channels# cat chan_free
-> +   0-1,3
-> +   .../cti_sys0/channels# cat chan_inuse
-> +   2
-> +   .../cti_sys0/channels# echo 2 > chan_xtrigs_view
-> +   .../cti_sys0/channels# cat chan_xtrigs_view
-> +   [2] IN: 1 OUT: 6
-> +   .../cti_sys0/# echo 1 > enable
-> +   .../cti_sys0/channels# echo 2 > chan_set
-> +   .../cti_sys0/channels# cat ../regs/choutstatus
-> +   0x4
-> +   .../cti_sys0/channels# cat ../regs/trigoutstatus
-> +   0x40
-> +   .../cti_sys0/channels# echo 2 > chan_clear
-> +   .../cti_sys0/channels# cat ../regs/trigoutstatus
-> +   0x0
-> +   .../cti_sys0/channels# cat ../regs/choutstatus
-> +   0x0
-
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-thanks.
--- 
-~Randy
-
+> +  For cases like this, the pin controller driver may use the pinmux helper
+> +  property, where the pin identifier is provided with mux configuration settings
+> +  in a pinmux group. A pinmux group consists of the pin identifier and mux
+> +  settings represented as a single integer or an array of integers.
+> +
+> +  The pinmux property accepts an array of pinmux groups, each of them describing
+> +  a single pin multiplexing configuration.
+> +
+> +  pincontroller {
+> +    state_0_node_a {
+> +      pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
+> +    };
+> +  };
+> +
+> +  Each individual pin controller driver bindings documentation shall specify
+> +  how pin IDs and pin multiplexing configuration are defined and assembled
+> +  together in a pinmux group.
+> +
+> +properties:
+> +  function:
+> +    $ref: /schemas/types.yaml#/definitions/string
+> +    description: The mux function to select
+> +
+> +  pins:
+> +    oneOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - $ref: /schemas/types.yaml#/definitions/string-array
+> +    description:
+> +      The list of pin identifiers that properties in the node apply to. The
+> +      specific binding for the hardware defines whether the entries are integers
+> +      or strings, and their meaning.
+> +
+> +  group:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description:
+> +      the group to apply the properties to, if the driver supports
+> +      configuration of whole groups rather than individual pins (either
+> +      this, "pins" or "pinmux" has to be specified)
+> +
+> +  pinmux:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description:
+> +      The list of numeric pin ids and their mux settings that properties in the
+> +      node apply to (either this, "pins" or "groups" have to be specified)
+> +
+> +  pinctrl-pin-array:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> --
+> 2.20.1
+>
