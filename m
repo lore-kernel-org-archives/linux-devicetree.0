@@ -2,112 +2,171 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACB7C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B167BC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A8B2071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:44:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577720652;
-	bh=38eu/sesVAvr+TZjCpqkTZ3maQiy3tFyzcBfQPNaq04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DXT52ZrL5ritgz9qmtFFhA5lAlzhprLYvkkeR+MP0ozOtL7bcA7xi9gAr4FHGGRY8
-	 cM+88IJwUa6d1VmmqhxX6s4vgDuqSlaSloGG+oENtiVCzjyuCdtlVLEC2n24u29H3Z
-	 PkXGykwQ3Sr19XAKPdY/5UAMfGYpnlYtdsZaoOFM=
+	by mail.kernel.org (Postfix) with ESMTP id 91F66207E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfL3PoL convert rfc822-to-8bit (ORCPT
+        id S1726607AbfL3QdU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:44:11 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:34938 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfL3PoL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 10:44:11 -0500
-Received: by mail-ed1-f65.google.com with SMTP id f8so32952131edv.2;
-        Mon, 30 Dec 2019 07:44:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BqjpB17I4FAVcCVel4kRRM5u2ZSN97epJBsAntRnbvo=;
-        b=BGn6eLF/ceEdI0HWKQ3q+meVBxDTd6TvXMlQzyPYeivJZclIvXpfkNIIqj+qDDzuYv
-         m6jGEvK4vVkZN1IKn1y9P/3Ru/yNsr1vaXaZcBXydbKN5lv4Bbbozaown/breSai8p9B
-         OBQjMa6c4axPG+fc+4XIhbcEcH6+hlVpAauTKwjTNYcP03AA0MMYVtSOv4tKWUmXWhAo
-         OmXBAqvc8Sw/DLIHQwLdxXpy/vYN2nOl2Q5xd96KZuvH03ps2tyY5dwQvBTt8WczcXpM
-         f+FbpO6CCK6USHKxGMpw8sgSWIqoqvdxJSZkL9a3Wn5Nu3/DFc+cOoHdjjc8NWalOQlq
-         siGg==
-X-Gm-Message-State: APjAAAVp6kz88B1Wr09Sb3FgDCDii+WVuf3rUYZhtbakI0kCSkawVJU3
-        LRhzkMXdl7ColV0t674FpG+L7LnN
-X-Google-Smtp-Source: APXvYqxzo56maTlSxQsNU5A2SyQb7P5FV8UkAKWQclUCoOB2bQNqmZBjZSuWqej4dQDiaLucch6EvA==
-X-Received: by 2002:a17:906:2649:: with SMTP id i9mr71611722ejc.120.1577720649214;
-        Mon, 30 Dec 2019 07:44:09 -0800 (PST)
-Received: from pi3 ([194.230.155.138])
-        by smtp.googlemail.com with ESMTPSA id t1sm5651917ejg.32.2019.12.30.07.44.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 07:44:08 -0800 (PST)
-Date:   Mon, 30 Dec 2019 16:44:05 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
- for Exynos4412
-Message-ID: <20191230154405.GC4918@pi3>
-References: <20191220115653.6487-1-a.swigon@samsung.com>
- <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
- <20191220115653.6487-5-a.swigon@samsung.com>
+        Mon, 30 Dec 2019 11:33:20 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38404 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbfL3QdU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:33:20 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id D5E4C28DAE0
+Message-ID: <5be4728254c820bfaf99f385dc7b7ecb4f65d795.camel@collabora.com>
+Subject: Re: [PATCH v2 2/2] media: i2c: Add driver for Sony IMX219 sensor
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>, mchehab@kernel.org,
+        robh+dt@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        peter.griffin@linaro.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Mon, 30 Dec 2019 13:33:07 -0300
+In-Reply-To: <20191227122114.23075-3-andrey.konovalov@linaro.org>
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+         <20191227122114.23075-3-andrey.konovalov@linaro.org>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20191220115653.6487-5-a.swigon@samsung.com>
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 12:56:50PM +0100, Artur Świgoń wrote:
-> This patch adds the following properties to the Exynos4412 DT:
->   - exynos,interconnect-parent-node: to declare connections between
->     nodes in order to guarantee PM QoS requirements between nodes;
->   - #interconnect-cells: required by the interconnect framework.
+On Fri, 2019-12-27 at 15:21 +0300, Andrey Konovalov wrote:
+> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 > 
-> Note that #interconnect-cells is always zero and node IDs are not
-> hardcoded anywhere.
+> Adds a driver for the 8MPix Sony IMX219 CSI2 sensor.
+> Whilst the sensor supports 2 or 4 CSI2 data lanes, this driver
+> currently only supports 2 lanes.
+> 8MPix @ 15fps, 1080P @ 30fps (cropped FOV), and 1640x1232 (2x2 binned)
+> @ 30fps are currently supported.
 > 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
 > ---
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-
-The order of patches is confusing. Patches 4 and 6 are split - do the
-depend on 5? I doubt but...
-
-Adjust the title to match the contents - you are not adding bindings but
-properties to bus nodes. Also the prefix is ARM: (look at recent
-commits).
-
+>  drivers/media/i2c/Kconfig  |   12 +
+>  drivers/media/i2c/Makefile |    1 +
+>  drivers/media/i2c/imx219.c | 1240 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1253 insertions(+)
+>  create mode 100644 drivers/media/i2c/imx219.c
 > 
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index 4ce3d77a6704..d9d70eacfcaf 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -90,6 +90,7 @@
->  &bus_dmc {
->  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
->  	vdd-supply = <&buck1_reg>;
-> +	#interconnect-cells = <0>;
+> 
+[..]
+> +
+> +static int imx219_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &client->dev;
+> +	struct fwnode_handle *endpoint;
+> +	struct imx219 *imx219;
+> +	int ret;
+> +
+> +	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
+> +	if (!imx219)
+> +		return -ENOMEM;
+> +
+> +	imx219->dev = dev;
+> +
+> +	v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
+> +
+> +	/* Get CSI2 bus config */
+> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> +						  NULL);
+> +	if (!endpoint) {
+> +		dev_err(dev, "endpoint node not found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &imx219->ep);
+> +	fwnode_handle_put(endpoint);
+> +	if (ret) {
+> +		dev_err(dev, "Could not parse endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Get system clock (xclk) */
+> +	imx219->xclk = devm_clk_get(dev, "xclk");
+> +	if (IS_ERR(imx219->xclk)) {
+> +		dev_err(dev, "failed to get xclk\n");
+> +		return PTR_ERR(imx219->xclk);
+> +	}
+> +
+> +	imx219->xclk_freq = clk_get_rate(imx219->xclk);
+> +	if (imx219->xclk_freq != IMX219_XCLK_FREQ) {
+> +		dev_err(dev, "xclk frequency not supported: %d Hz\n",
+> +			imx219->xclk_freq);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = imx219_get_regulators(imx219);
+> +	if (ret)
+> +		return ret;
+> +
 
-This does not look like property of Odroid but Exynos4412 or Exynos4.
+I think printing an error if you can't regulators
+(as the core will stay silent), is a good idea.
 
-Best regards,
-Krzysztof
+Just got bitten by this while trying the driver with
+a RPI camera module v2, and the RKISP1 patches that
+we recently posted on this mailing list.
+
+(did _very_ limited testing, but working nicely so far).
+
+> +	/* Request optional enable pin */
+> +	imx219->xclr_gpio = devm_gpiod_get_optional(dev, "xclr",
+> +						    GPIOD_OUT_HIGH);
+> +
+> +	/*
+> +	 * The sensor must be powered for imx219_identify_module()
+> +	 * to be able to read the CHIP_ID register
+> +	 */
+> +	ret = imx219_power_on(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = imx219_identify_module(imx219);
+> +	if (ret)
+> +		goto error_power_off;
+> +
+> +	/* Set default mode to max resolution */
+> +	imx219->mode = &supported_modes[0];
+> +
+> +	ret = imx219_init_controls(imx219);
+> +	if (ret)
+> +		goto error_power_off;
+> +
+> +	/* Initialize subdev */
+> +	imx219->sd.internal_ops = &imx219_internal_ops;
+> +	imx219->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	imx219->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> +
+> +	/* Initialize source pad */
+> +	imx219->pad.flags = MEDIA_PAD_FL_SOURCE;
+> +
+> +	ret = media_entity_pads_init(&imx219->sd.entity, 1, &imx219->pad);
+> +	if (ret)
+> +		goto error_handler_free;
+> +
+> +	ret = v4l2_async_register_subdev_sensor_common(&imx219->sd);
+> +	if (ret < 0)
+> +		goto error_media_entity;
+> +
+
+Ditto on these last two, it's possible to get silent
+failures here, which are a bit annoying to debug.
+
+Thanks,
+Ezequiel
+
