@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175CCC2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 12:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238F6C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 12:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F1B20730
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 12:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6892206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 12:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="nKEfuAB6"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="kRfxtsSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfL3MAl (ORCPT
+        id S1727441AbfL3MAq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 07:00:41 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46305 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfL3MAl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 07:00:41 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z124so17870093pgb.13
-        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 04:00:40 -0800 (PST)
+        Mon, 30 Dec 2019 07:00:46 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35937 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfL3MAq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 07:00:46 -0500
+Received: by mail-pj1-f67.google.com with SMTP id n59so8030958pjb.1
+        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 04:00:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ezrVDS5UNFy526/k6xxwjbva2ps41hVNTGiteYBwEkE=;
-        b=nKEfuAB6AxAjy1HQQ5U3+ZB9VsG0LkmLXSDo5Wyk3qnHrCDiUqy0E4kNmXeZWLT6JI
-         u0s5HnERvkbFXI3lliq4dAaCUOgywP90OlnMIvmSl7humnVVlTiMcBVuPJmXBRlxCPpa
-         +Aah8BUmEYRwB3Rie2QVCVr22m2FQwGCPF02w=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jyGtSwgFvChJP9qUZS2htQwi6EMpdKF3tyPpfkjOp/g=;
+        b=kRfxtsSQsCzNL6Ua0j2ypLxHJstPdl236RB2VNQVC5gW+22hcGhM+5D7MZFjSa1SEI
+         1dDUfqZXoBHdUi0Jan/MPE1Ngh3iDojG+N0qlf/8vYy2/R1gWj/wL2cUaBvfm1sIbiVc
+         r66m1tnlizpFIEZyZajhiQxzf1uNufYWMgR9w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ezrVDS5UNFy526/k6xxwjbva2ps41hVNTGiteYBwEkE=;
-        b=Uqeb3vyOZ97QN6FmBUhXKIlEYlS5uqxJs7PoXpi4hmJEAZFhiBMdtPxNGnWBN7Kep6
-         hPhMMMygiaadGlDBMrAF6NRMX24ScuffmhyZxKMxY9lI2fxBe9T1nnIhJzdlo3zrSS+P
-         y7XfdgWV3bXRXwZ11EzNQhnou8QLr3BBeFUJIoDHyH/ey4C0FMvPjXXEbsCAZHzJYajD
-         R34ENcWoINiRVUIHyIFqayAE+I4xqlyoGu9UCQDfyVMqu7RqFaWo0q0ApF0US1+MDpEj
-         UU6DsUZGBBUNWmaP9gXBqrxqhX0jl/d8PdMiBUWs6FTjFoeZRcyJFC1jdUNPSPwnERom
-         izgg==
-X-Gm-Message-State: APjAAAVjT8sRzorDATVSXO/njyQKlL7DhYExaCq/6DX6ZPqrRg0JFdt2
-        YECnrvnpCv3yLp+9/YMhTJmKcg==
-X-Google-Smtp-Source: APXvYqz3WmGiAkWomBOwfRYvqVaLlN3X2e+0i07536YKbLHagirtJCCzdsXri4tRkucoNaHJ33cBdQ==
-X-Received: by 2002:a63:447:: with SMTP id 68mr73426628pge.364.1577707240026;
-        Mon, 30 Dec 2019 04:00:40 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jyGtSwgFvChJP9qUZS2htQwi6EMpdKF3tyPpfkjOp/g=;
+        b=l9vWrcKh2lYSJjVBt+/8cZ4NTNmZeo68wKhZvh7Pe723m86/Yg3UsHNbkS77fjzrLn
+         4Cwv+agwznIOQaV1nok/M4N44if0DXMLjFKvqp2Q5w5/mFX8dSv1fY4Pll/CyQl2k3re
+         XWb/fAe1t0Lxcc7TSvQlVVEPVDCyPoOmU0wUtXAkUY0pMKSXICVslvsrirPTAqqqOIxS
+         G3Cn2WmBO9KDYiaG8B2gye5wRlzWwdjjWwF7FcVfc88cQeucnZyN0oKvzA7AXl8jhxSx
+         nRw013hiyLZbD93JtlqoB+uVwJm5ebTSSh79Eb0wcxEhY5g4lj9Bui2wcL7fWC2r7yhT
+         asag==
+X-Gm-Message-State: APjAAAWUDz5MqhWQNI8+cirTNnD4H9LHa/gBfRy1E3zBRkRjNWtrM6Ig
+        NdeYsxj/wbG1Q2scdufvObV04Q==
+X-Google-Smtp-Source: APXvYqyRLv5fCREtyDwQJMehOfppISQaH6t1nBy3584eULSwQjPKdOuLZiBf4pLQnKYlRI2BVoOmDA==
+X-Received: by 2002:a17:90a:930f:: with SMTP id p15mr46096254pjo.2.1577707245545;
+        Mon, 30 Dec 2019 04:00:45 -0800 (PST)
 Received: from localhost.localdomain ([49.206.202.131])
-        by smtp.gmail.com with ESMTPSA id 7sm41894122pfx.52.2019.12.30.04.00.33
+        by smtp.gmail.com with ESMTPSA id 7sm41894122pfx.52.2019.12.30.04.00.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 04:00:39 -0800 (PST)
+        Mon, 30 Dec 2019 04:00:45 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -63,12 +63,14 @@ Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Subject: [PATCH v2 1/3] ARM: dts: imx6q-icore-mipi: Use 1.5 version of i.Core MX6DL
-Date:   Mon, 30 Dec 2019 17:30:19 +0530
-Message-Id: <20191230120021.32630-1-jagan@amarulasolutions.com>
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 2/3] ARM: dts: imx6qdl-icore-1.5: Remove duplicate phy reset methods
+Date:   Mon, 30 Dec 2019 17:30:20 +0530
+Message-Id: <20191230120021.32630-2-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20191230120021.32630-1-jagan@amarulasolutions.com>
+References: <20191230120021.32630-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -76,44 +78,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The EDIMM STARTER KIT i.Core 1.5 MIPI Evaluation is based on
-the 1.5 version of the i.Core MX6 cpu module. The 1.5 version
-differs from the original one for a few details, including the
-ethernet PHY interface clock provider.
+From: Michael Trimarchi <michael@amarulasolutions.com>
 
-With this commit, the ethernet interface works properly:
-SMSC LAN8710/LAN8720 2188000.ethernet-1:00: attached PHY driver
+Engicam i.CoreM6 1.5 Quad/Dual MIPI dtsi is reusing fec node
+from Engicam i.CoreM6 dtsi but have sampe copy of phy-reset-gpio
+and phy-mode properties.
 
-While before using the 1.5 version, ethernet failed to startup
-do to un-clocked PHY interface:
-fec 2188000.ethernet eth0: could not attach to PHY
+So, drop this phy reset methods from imx6qdl-icore-1.5 dsti file.
 
-Similar fix has merged for i.Core MX6Q but missed to update for DL.
-
-Fixes: a8039f2dd089 ("ARM: dts: imx6dl: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit support")
 Cc: Jacopo Mondi <jacopo@jmondi.org>
 Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- Add Michael s-o-b
+- new patch.
 
- arch/arm/boot/dts/imx6dl-icore-mipi.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore-mipi.dts b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-index e43bccb78ab2..d8f3821a0ffd 100644
---- a/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore-mipi.dts
-@@ -8,7 +8,7 @@
- /dts-v1/;
- 
- #include "imx6dl.dtsi"
--#include "imx6qdl-icore.dtsi"
-+#include "imx6qdl-icore-1.5.dtsi"
- 
- / {
- 	model = "Engicam i.CoreM6 DualLite/Solo MIPI Starter Kit";
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi b/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
+index d91d46b5898f..0fd7f2e24d9c 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-1.5.dtsi
+@@ -25,10 +25,8 @@
+ &fec {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_enet>;
+-	phy-reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+ 	clocks = <&clks IMX6QDL_CLK_ENET>,
+ 		 <&clks IMX6QDL_CLK_ENET>,
+ 		 <&clks IMX6QDL_CLK_ENET_REF>;
+-	phy-mode = "rmii";
+ 	status = "okay";
+ };
 -- 
 2.18.0.321.gffc6fa0e3
 
