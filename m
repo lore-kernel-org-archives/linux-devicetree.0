@@ -2,83 +2,111 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6EDC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 14:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5FBC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CFE020718
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 14:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EE720663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577720130;
+	bh=S6z6M6zmJEI3nMJs7Q9Po1GayFr4iPBjeKO0Rk+zr8s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yodGm0KR41Wo11sWaCDHlw3HLd27BTVZrEqS4TL64fR2wksYThgLglSNqks5X/fbA
+	 iCJgVYqLCYPj6epQy+1lE4CXLAdmUx9nxNuHV3gnKMRCNjxNRTO6M4FrlQA8JW75Ja
+	 ukVQAsputuE+W7MW/8jXCD3G2sLVcgclzqKJL3GY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfL3Ozt (ORCPT
+        id S1727549AbfL3Pfa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 09:55:49 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:59976 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfL3Ozs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 09:55:48 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBUEtK3u018777, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBUEtK3u018777
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Dec 2019 22:55:21 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTITCAS11.realtek.com.tw (172.21.6.12) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Mon, 30 Dec 2019 22:55:20 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 30 Dec 2019 22:55:20 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Mon, 30 Dec 2019 22:55:20 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 14/14] dt-bindings: reset: rtd1295: Add SB2 reset
-Thread-Topic: [PATCH 14/14] dt-bindings: reset: rtd1295: Add SB2 reset
-Thread-Index: AQHVqT34B9KUPlrEBUCEIqQuxCatIafS76Sw
-Date:   Mon, 30 Dec 2019 14:55:20 +0000
-Message-ID: <f5affd5149364bd0b94600f631821ef4@realtek.com>
-References: <20191202182205.14629-1-afaerber@suse.de>
- <20191202182205.14629-15-afaerber@suse.de>
-In-Reply-To: <20191202182205.14629-15-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [114.37.128.25]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 30 Dec 2019 10:35:30 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44819 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfL3Pf3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 10:35:29 -0500
+Received: by mail-ed1-f65.google.com with SMTP id bx28so32873929edb.11;
+        Mon, 30 Dec 2019 07:35:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ozB2LjDdmJTikMrKED+hWYBd54PpqOChciXJdErHTK0=;
+        b=tMQKvvK4KXyQasKP29bQ5jnBCOBBMuH8W2Gs7WSNa1RUP9HhrenZonFmfptMi1uaqo
+         aPqHJJqxIwdZZxcZ5cZZcoe+6qggbcby9/vgUDVACVdiz3G8AbZ3tM9r9UyDIrB+jfGt
+         SQuMTf8RszcNp68EdncKoUv2u1j45l+qWClffOtvcOFS5B/9YlxCwCPT35JUFtRqOG9R
+         u40hu9IkiltDVfebVfL1dkG6+6XMUuNEvVLz23SAmy57m2gnKbllDVxFvxOzgjUA0UdP
+         mrcQm0PQppPZOMVli5Re6HCQVpTJaBnD24hM7+5cGal5BBxoiYwc9/sW0Cav0Ow2aSLU
+         w2FQ==
+X-Gm-Message-State: APjAAAXMyHInuMTT3l0aYuUqBj/4ZEm20s9wQ9810IcQQqYuXJwkbgrY
+        LvjXinmktCMOI4S4lpSG6PI=
+X-Google-Smtp-Source: APXvYqy7tLghMLXWt9n3EAx0fpcKuStw4S0B+WjKZ72DH9jAjvfKoRptKpBc7vrRrhRpmdcx4KxmvQ==
+X-Received: by 2002:a17:906:a48:: with SMTP id x8mr72252035ejf.188.1577720127888;
+        Mon, 30 Dec 2019 07:35:27 -0800 (PST)
+Received: from pi3 ([194.230.155.138])
+        by smtp.googlemail.com with ESMTPSA id qk16sm5661120ejb.71.2019.12.30.07.35.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2019 07:35:27 -0800 (PST)
+Date:   Mon, 30 Dec 2019 16:35:24 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kgene@kernel.org, hminas@synopsys.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, m.szyprowski@samsung.com,
+        amelie.delaunay@st.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
+ json-schema
+Message-ID: <20191230153524.GA4918@pi3>
+References: <20191219103536.25485-1-benjamin.gaignard@st.com>
+ <20191219103536.25485-2-benjamin.gaignard@st.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191219103536.25485-2-benjamin.gaignard@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBBZGQgYSBjb25zdGFudCBmb3IgcmVzZXQzIFNCMiwgYmFzZWQgb24gZG93bnN0cmVhbSBjcnRf
-c3lzX3JlZy5oLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJl
-ckBzdXNlLmRlPg0KPiAtLS0NCj4gIGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQvcmVhbHRlayxy
-dGQxMjk1LmggfCAzICsrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQ0KPiAN
-Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQvcmVhbHRlayxydGQxMjk1
-LmgNCj4gYi9pbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0L3JlYWx0ZWsscnRkMTI5NS5oDQo+IGlu
-ZGV4IDJjMGNiNmFmZTgxNi4uZGQ4OWU0YzgwMjY0IDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2R0
-LWJpbmRpbmdzL3Jlc2V0L3JlYWx0ZWsscnRkMTI5NS5oDQo+ICsrKyBiL2luY2x1ZGUvZHQtYmlu
-ZGluZ3MvcmVzZXQvcmVhbHRlayxydGQxMjk1LmgNCj4gQEAgLTc1LDYgKzc1LDkgQEANCj4gICNk
-ZWZpbmUgUlREMTI5NV9SU1ROX0NCVVNfVFgJCTMwDQo+ICAjZGVmaW5lIFJURDEyOTVfUlNUTl9T
-RFNfUEhZCQkzMQ0KPiANCj4gKy8qIHNvZnQgcmVzZXQgMyAqLw0KPiArI2RlZmluZSBSVEQxMjk1
-X1JTVE5fU0IyCQkwDQo+ICsNCj4gIC8qIHNvZnQgcmVzZXQgNCAqLw0KPiAgI2RlZmluZSBSVEQx
-Mjk1X1JTVE5fRENQSFlfQ1JUCQkwDQo+ICAjZGVmaW5lIFJURDEyOTVfUlNUTl9EQ1BIWV9BTEVS
-VF9SWAkxDQo+IC0tDQo+IDIuMTYuNA0KPiANCg0KQWNrZWQtYnk6IEphbWVzIFRhaSA8amFtZXMu
-dGFpQHJlYWx0ZWsuY29tPg0KDQo=
+On Thu, Dec 19, 2019 at 11:35:35AM +0100, Benjamin Gaignard wrote:
+> Convert DWC2 bindings to DT schema format using json-schema.
+> DWC2 is widely use but a couple of compatibles and properties
+> (vusb_d-supply,vusb_a-supply) were missing in dwc2.txt, the
+> patch add them.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> CC: Minas Harutyunyan <hminas@synopsys.com>
+> 
+> changes in version 2:
+> - put Minas Harutyunyan <hminas@synopsys.com> as maintainer
+> - remove type and description from phy property
+> - remove description from compatible items
+> - simplify samsung,s3c6400-hsotg compatible handling
+> 
+
+(...)
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +      usb@101c0000 {
+> +        compatible = "ralink,rt3050-usb, snps,dwc2";
+
+Does it pass dtbs_check? Should be two strings.
+
+Best regards,
+Krzysztof
+
+
