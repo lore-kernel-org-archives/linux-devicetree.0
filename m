@@ -2,222 +2,314 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BFAC2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 21:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C487C2D0D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 22:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F7B206DB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 21:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577740862;
-	bh=Y0AqLq/XNbflvK1k0DHevsHGRPgeSVMI95j9mnbbrk8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Fu2e+zibIEiAQAuU295KP/XrmSuInIbYZCt2rB776GLEg7RpiWn3k1XXPOW38VJBU
-	 +K2eDNHfc/PWVf16Xq3DqCTGp2gMDlGrTZJPaIwcOC4ZcX3J3jIFY0jzVPCzzqWbBB
-	 sWpu57KRt/XgFmwuNVSRHWhmLDJzn6bBXBlhYJro=
+	by mail.kernel.org (Postfix) with ESMTP id 423F120722
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 22:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RjQsh5TN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfL3VVC (ORCPT
+        id S1727740AbfL3Wb4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 16:21:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfL3VVB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 16:21:01 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA471206DB;
-        Mon, 30 Dec 2019 21:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577740860;
-        bh=Y0AqLq/XNbflvK1k0DHevsHGRPgeSVMI95j9mnbbrk8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kodXCV7m55vcLetOO0rXzH3MXdSyvRQjClDkAlskqLx39VAepFo4IbDYD0xq2SHuf
-         6oiR3Q0GJRyOXmm2HxCCA5j9sIn3L52a2st48fPmWcD/4sfkwBMMQgpQZ0t5YULDQ6
-         qS7LaxPUWtqUtlfNAKg9MwT59KJMjdY4UXM7f6zM=
-Received: by mail-qk1-f169.google.com with SMTP id j9so27557840qkk.1;
-        Mon, 30 Dec 2019 13:21:00 -0800 (PST)
-X-Gm-Message-State: APjAAAXzNjBcIih9Cv9KgPXSMQeZtbMXoy+ql7m/YVzpKlDiJP8Dh5xI
-        ifBTW4RkDMOS4mp+u03aK9myIH2F8c7AqfnThw==
-X-Google-Smtp-Source: APXvYqzjgoCnak0+Ma4cVgD5d2+nLjO/PQ4RGB+uvsgVNDeFIPB3koeQFreimo9jq1TE7N0C78mAELHvqU+ppunYi+k=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr57575374qkd.223.1577740859867;
- Mon, 30 Dec 2019 13:20:59 -0800 (PST)
+        Mon, 30 Dec 2019 17:31:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60868 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbfL3Wb4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 17:31:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VMKfHLqRT2R2sg5Nk4++uNSF4hBm9QlbBpbhWdr26ug=; b=RjQsh5TNuMgwnnYYgIj/heu4M
+        ayZy1FSJtnRYOsoEJ275SOfMfTJqSdoLh9krotEEcuAVlsFBb07bJ1XEZkHeI8WdW+zNx4zLwEahv
+        GkbipATHefXtqGNj8AV82A+ngRJkHJRlgeFQBpqsrI1pF2X66C6LC48NvN2wWlbXv+V76ccJqHiM6
+        y7a5Xm3wFDE8UJV/3TD0BKYkXa2TeDsWGFB+LD1bcWSLSo26Xzro5Jz6K4FL3Xq0E5n3KudwlcB+/
+        2XDR4aE+QN/sN/iUfs+CJapcEY7ZsX5/L9YQHyAz1VFcyegzdjgFj764o5ypzprXAVwSFZtenvP+1
+        kwAjWKayw==;
+Received: from [2601:1c0:6280:3f0::34d9]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1im3Zm-0006NR-Du; Mon, 30 Dec 2019 22:31:50 +0000
+Subject: Re: [PATCH v7 13/15] docs: coresight: Update documentation for
+ CoreSight to cover CTI.
+To:     Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        coresight@lists.linaro.org, linux-doc@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, robh+dt@kernel.org, maxime@cerno.tech,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com, agross@kernel.org, corbet@lwn.net
+References: <20191230164441.28375-1-mike.leach@linaro.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5948ee00-c3e8-749d-2354-5089b0103cee@infradead.org>
+Date:   Mon, 30 Dec 2019 14:31:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191116005240.15722-3-robh@kernel.org> <20191213212812.GA201192@google.com>
-In-Reply-To: <20191213212812.GA201192@google.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Dec 2019 14:20:48 -0700
-X-Gmail-Original-Message-ID: <CAL_Jsq+Nm952=8Fq6KQfrYxwxRJh5mCs2+8_6FgDTp4qZExS5g@mail.gmail.com>
-Message-ID: <CAL_Jsq+Nm952=8Fq6KQfrYxwxRJh5mCs2+8_6FgDTp4qZExS5g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191230164441.28375-1-mike.leach@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 2:28 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Nov 15, 2019 at 06:52:40PM -0600, Rob Herring wrote:
-> > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > their compatible strings. The simplest way to convert those to
-> > schema is just add them into the common generic PCI host schema.
-> >
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Andrew Murray <andrew.murray@arm.com>
-> > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: David Daney <david.daney@cavium.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  .../bindings/pci/arm,juno-r1-pcie.txt         |  10 --
-> >  .../bindings/pci/designware-pcie-ecam.txt     |  42 -----
-> >  .../bindings/pci/hisilicon-pcie.txt           |   4 +-
-> >  .../bindings/pci/host-generic-pci.txt         | 101 ------------
-> >  .../bindings/pci/host-generic-pci.yaml        | 150 ++++++++++++++++++
-> >  .../bindings/pci/pci-thunder-ecam.txt         |  30 ----
-> >  .../bindings/pci/pci-thunder-pem.txt          |   7 +-
-> >  .../bindings/pci/plda,xpressrich3-axi.txt     |  12 --
-> >  MAINTAINERS                                   |   2 +-
-> >  9 files changed, 155 insertions(+), 203 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/arm,juno-r1-pcie.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pci/host-generic-pci.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
-> >  delete mode 100644 Documentation/devicetree/bindings/pci/plda,xpressrich3-axi.txt
->
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.yaml
-> > ...
->
-> > +  Interrupt mapping is exactly as described in `Open Firmware Recommended
-> > +
->
-> I think there's some text missing here.
+Hi Mike,
 
-Removed now. The schemas capture in constraints what the missing text
-did in free-form.
+Just a couple of small nits below.
 
-> > +allOf:
-> > +  - $ref: /schemas/pci/pci-bus.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    description: Depends on the layout of configuration space (CAM vs ECAM
-> > +      respectively). May also have more specific compatibles.
-> > +    anyOf:
-> > +      - description:
-> > +          PCIe host controller in Arm Juno based on PLDA XpressRICH3-AXI IP
-> > +        items:
-> > +          - const: arm,juno-r1-pcie
-> > +          - const: plda,xpressrich3-axi
-> > +          - const: pci-host-ecam-generic
-> > +      - description: |
-> > +          ThunderX PCI host controller for pass-1.x silicon
-> > +
-> > +          Firmware-initialized PCI host controller to on-chip devices found on
-> > +          some Cavium ThunderX processors.  These devices have ECAM-based config
-> > +          access, but the BARs are all at fixed addresses.  We handle the fixed
-> > +          addresses by synthesizing Enhanced Allocation (EA) capabilities for
-> > +          these devices.
-> > +        const: cavium,pci-host-thunder-ecam
-> > +      - description: |
-> > +          In some cases, firmware may already have configured the Synopsys
-> > +          DesignWare PCIe controller in RC mode with static ATU window mappings
-> > +          that cover all config, MMIO and I/O spaces in a [mostly] ECAM
-> > +          compatible fashion. In this case, there is no need for the OS to
-> > +          perform any low level setup of clocks, PHYs or device registers, nor
-> > +          is there any reason for the driver to reconfigure ATU windows for
-> > +          config and/or IO space accesses at runtime.
-> > +
-> > +          In cases where the IP was synthesized with a minimum ATU window size
-> > +          of 64 KB, it cannot be supported by the generic ECAM driver, because
-> > +          it requires special config space accessors that filter accesses to
-> > +          device #1 and beyond on the first bus.
-> > +        items:
-> > +          - enum:
-> > +              - marvell,armada8k-pcie-ecam
-> > +              - socionext,synquacer-pcie-ecam
-> > +          - const: snps,dw-pcie-ecam
-> > +      - contains:
-> > +          enum:
-> > +            - pci-host-cam-generic
-> > +            - pci-host-ecam-generic
->
-> I assume the description that talks about "Synopsys DesignWare" goes
-> with "pci-host-cam-generic" and "pci-host-ecam-generic"?
 
-No, it's a catch all for all other cases.
+On 12/30/19 8:44 AM, Mike Leach wrote:
+> Add new document covering CTI / CTM usage in CoreSight.
+> 
+> Add section in coresight.rst introducing CTI and CTM modules with link
+> to new document.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  .../trace/coresight/coresight-ect.rst         | 211 ++++++++++++++++++
+>  Documentation/trace/coresight/coresight.rst   |  13 ++
+>  2 files changed, 224 insertions(+)
+>  create mode 100644 Documentation/trace/coresight/coresight-ect.rst
+> 
+> diff --git a/Documentation/trace/coresight/coresight-ect.rst b/Documentation/trace/coresight/coresight-ect.rst
+> new file mode 100644
+> index 000000000000..3e06588f24fa
+> --- /dev/null
+> +++ b/Documentation/trace/coresight/coresight-ect.rst
+> @@ -0,0 +1,211 @@
+> +=============================================
+> +CoreSight Embedded Cross Trigger (CTI & CTM).
+> +=============================================
+> +
+> +    :Author:   Mike Leach <mike.leach@linaro.org>
+> +    :Date:     November 2019
+> +
+> +Hardware Description
+> +--------------------
+> +
+> +The CoreSight Cross Trigger Interface (CTI) is a hardware device that takes
+> +individual input and output hardware signals known as triggers to and from
+> +devices and interconnects them via the Cross Trigger Matrix (CTM) to other
+> +devices via numbered channels, in order to propagate events between devices.
+> +
+> +e.g.::
+> +
+> + 0000000  in_trigs  :::::::
+> + 0 C   0----------->:     :             +======>(other CTI channel IO)
+> + 0  P  0<-----------:     :             v
+> + 0   U 0  out_trigs :     : Channels  *****      :::::::
+> + 0000000            : CTI :<=========>*CTM*<====>: CTI :---+
+> + #######  in_trigs  :     : (id 0-3)  *****      :::::::   v
+> + # ETM #----------->:     :                         ^   #######
+> + #     #<-----------:     :                         +---# ETR #
+> + ####### out_trigs  :::::::                             #######
+> +
+> +The CTI driver enables the programming of the CTI to attach triggers to
+> +channels. When an input trigger becomes active, the attached channel will
+> +become active. Any output trigger attached to that channel will also
+> +become active. The active channel is propagated to other CTIs via the CTM,
+> +activating connected output triggers there, unless filtered by the CTI
+> +channel gate.
+> +
+> +It is also possible to activate a channel using system software directly
+> +programming registers in the CTI.
+> +
+> +The CTIs are registered by the system to be associated with CPUs and/or other
+> +CoreSight devices on the trace data path. When these devices are enabled the
+> +attached CTIs will also be enabled. By default/on power up the CTIs have
+> +no programmed trigger/channel attachments, so will not affect the system
+> +until explicitly programmed.
+> +
+> +The hardware trigger connections between CTIs and devices is implementation
+> +defined, unless the CPU/ETM combination is a v8 architecture, in which case
+> +the connections have an architecturally defined standard layout.
+> +
+> +The hardware trigger signals can also be connected to non-CoreSight devices
+> +(e.g. UART), or be propagated off chip as hardware IO lines.
+> +
+> +All the CTI devices are associated with a CTM. On many systems there will be a
+> +single effective CTM (one CTM, or multiple CTMs all interconnected), but it is
+> +possible that systems can have nets of CTIs+CTM that are not interconnected by
+> +a CTM to each other. On these systems a CTM index is declared to associate
+> +CTI devices that are interconnected via a given CTM.
+> +
+> +Sysfs files and directories
+> +---------------------------
+> +
+> +The CTI devices appear on the existing CoreSight bus alongside the other
+> +CoreSight devices::
+> +
+> +    >$ ls /sys/bus/coresight/devices
+> +     cti_cpu0  cti_cpu2  cti_sys0  etm0  etm2  funnel0  replicator0  tmc_etr0
+> +     cti_cpu1  cti_cpu3  cti_sys1  etm1  etm3  funnel1  tmc_etf0     tpiu0
+> +
+> +The ``cti_cpu<N>`` named CTIs are associated with a CPU, and any ETM used by
+> +that core. the ``cti_sys<N>`` CTIs are general system infrastructure CTIs that
 
-I'll add a description to make the separation more clear. Using
-'contains' here was leftover from when I initially kept the same
-separate file structure. With it all combined to 1 schema, there's
-really no need for that and it should be 'items' list instead. The
-difference is we'll fail on 'compatible = "foo,bar-pci",
-"pci-host-ecam-generic";' whereas that is valid for 'contains'.
+              The
 
-> I hope there
-> can be generic controllers using non-Synopsys IP, but I don't know
-> quite how the description/items/contains parts are related.
+> +can be associated with other CoreSight devices, or other system hardware
+> +capable of generating or using trigger signals.::
+> +
+> +  >$ ls /sys/bus/coresight/devices/etm0/cti_cpu0
+> +  channels  ctmid  enable  nr_trigger_cons mgmt  power  regs  subsystem
+> +  triggers0 triggers1  uevent
+> +
+> +*Key file items are:-*
+> +   * ``enable``: enables/disables the CTI.
+> +   * ``ctmid`` : associated CTM - only relevant if system has multiple CTI+CTM
+> +     clusters that are not interconnected.
+> +   * ``nr_trigger_cons`` : total connections - triggers<N> directories.
+> +
+> +*Sub-directories:-*
+> +   * ``triggers<N>``: contains list of triggers for an individual connection.
+> +   * ``channels``: Contains the channel API - CTI main programming interface.
+> +   * ``regs``: Gives access to the raw programmable CTI regs.
+> +   * ``mgmt``: the standard CoreSight management registers.
+> +
+> +
+> +triggers<N> directories
+> +~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +Individual trigger connection information. This describes trigger signals for
+> +CoreSight and non-CoreSight connections.
+> +
+> +Each triggers directory has a set of parameters describing the triggers for
+> +the connection.
+> +
+> +   * ``name`` : name of connection
+> +   * ``in_signals`` : input trigger signal indexes used in this connection.
+> +   * ``in_types`` : functional types for in signals.
+> +   * ``out_signals`` : output trigger signals for this connection.
+> +   * ``out_types`` : functional types for out signals.
+> +
+> +e.g::
+> +
+> +    >$ ls ./cti_cpu0/triggers0/
+> +    in_signals  in_types  name  out_signals  out_types
+> +    >$ cat ./cti_cpu0/triggers0/name
+> +    cpu0
+> +    >$ cat ./cti_cpu0/triggers0/out_signals
+> +    0-2
+> +    >$ cat ./cti_cpu0/triggers0/out_types
+> +    pe_edbgreq pe_dbgrestart pe_ctiirq
+> +    >$ cat ./cti_cpu0/triggers0/in_signals
+> +    0-1
+> +    >$ cat ./cti_cpu0/triggers0/in_types
+> +    pe_dbgtrigger pe_pmuirq
+> +
+> +If a connection has zero signals in either the 'in' or 'out' triggers then
+> +those parameters will be omitted.
+> +
+> +Channels API Directory
+> +~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +This provides an easy way to attach triggers to channels, without needing
+> +the multiple register operations that are required if manipulating the
+> +'regs' sub-dir elements directly.
 
-The '-' are important. They separate each entry under the 'anyOf'.
+spell out: sub-directory
 
-There are a few besides the ones listed with quirks:
+> +
+> +A number of files provide this API::
+> +
+> +   >$ ls ./cti_sys0/channels/
+> +   chan_clear         chan_inuse         chan_xtrigs_view      trigin_detach
+> +   chan_free          chan_pulse         chan_xtrigs_view_sel  trigout_attach
+> +   chan_gate_disable  chan_set           trig_filter_enable    trigout_detach
+> +   chan_gate_enable   chan_xtrigs_reset  trigin_attach         trigout_filtered
+> +
+> +Most access to these elements take the form::
+> +
+> +  echo <chan> [<trigger>] > /<device_path>/<operation>
+> +
+> +where the optional <trigger> is only needed for trigXX_attach | detach
+> +operations.
+> +
+> +e.g.::
+> +
+> +   >$ echo 0 1 > ./cti_sys0/channels/trigout_attach
+> +   >$ echo 0 > ./cti_sys0/channels/chan_set
+> +
+> +Attaches trigout(1) to channel(0), then activates channel(0) generating a
+> +set state on cti_sys0.trigout(1)
+> +
+> +
+> +*API operations*
+> +
+> +   * ``trigin_attach, trigout_attach``: Attach a channel to a trigger signal.
+> +   * ``trigin_detach, trigout_detach``: Detach a channel from a trigger signal.
+> +   * ``chan_set``: Set the channel - the set state will be propagated around
+> +     the CTM to other connected devices.
+> +   * ``chan_clear``: Clear the channel.
+> +   * ``chan_pulse``: Set the channel for a single CoreSight clock cycle.
+> +   * ``chan_gate_enable``: Write operation sets the CTI gate to propagate
+> +     (enable) the channel to other devices. This operation takes a channel
+> +     number. CTI gate is enabled for all channels by default at power up. Read
+> +     to list the currently enabled channels on the gate.
+> +   * ``chan_gate_disable``: Write channel number to disable gate for that
+> +     channel.
+> +   * ``chan_inuse``: Show the current channels attached to any signal
+> +   * ``chan_free``: Show channels with no attached signals.
+> +   * ``chan_xtrig_view``: write a channel number to select a channel to view,
+> +     read to show the cross triggers programmed for the selected channel.
+> +   * ``trig_filter_enable``: Defaults to enabled, disable to allow potentially
+> +     dangerous output signals to be set.
+> +   * ``trigout_filtered``: Trigger out signals that are prevented from being
+> +     set if filtering ``trig_filter_enable`` is enabled. One use is to prevent
+> +     accidental ``EDBGREQ`` signals stopping a core.
+> +   * ``chan_xtrigs_reset``: Write 1 to clear all channel / trigger programming.
+> +     Resets device hardware to default state.
+> +
+> +
+> +The example below attaches input trigger index 1 to channel 2, and output
+> +trigger index 6 to the same channel. It then examines the state of the
+> +channel / trigger connections using the appropriate sysfs attributes.
+> +
+> +The settings mean that if either input trigger 1, or channel 2 go active then
+> +trigger out 6 will go active. We then enable the CTI, and use the software
+> +channel control to activate channel 2. We see the active channel on the
+> +``choutstatus`` register and the active signal on the ``trigoutstatus``
+> +register. Finally clearing the channel removes this.
+> +
+> +e.g.::
+> +
+> +   .../cti_sys0/channels# echo 2 1 > trigin_attach
+> +   .../cti_sys0/channels# echo 2 6 > trigout_attach
+> +   .../cti_sys0/channels# cat chan_free
+> +   0-1,3
+> +   .../cti_sys0/channels# cat chan_inuse
+> +   2
+> +   .../cti_sys0/channels# echo 2 > chan_xtrigs_view
+> +   .../cti_sys0/channels# cat chan_xtrigs_view
+> +   [2] IN: 1 OUT: 6
+> +   .../cti_sys0/# echo 1 > enable
+> +   .../cti_sys0/channels# echo 2 > chan_set
+> +   .../cti_sys0/channels# cat ../regs/choutstatus
+> +   0x4
+> +   .../cti_sys0/channels# cat ../regs/trigoutstatus
+> +   0x40
+> +   .../cti_sys0/channels# echo 2 > chan_clear
+> +   .../cti_sys0/channels# cat ../regs/trigoutstatus
+> +   0x0
+> +   .../cti_sys0/channels# cat ../regs/choutstatus
+> +   0x0
 
-arch/arm/boot/dts/alpine.dtsi
-arch/arm64/boot/dts/al/alpine-v2.dtsi
-arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-arch/arm64/boot/dts/arm/fvp-base-revc.dts
-arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-arch/xtensa/boot/dts/virt.dts
 
-Some of these might actually be Synopsys. The entry for Synopsys is
-only for the not quite compliant configured IP.
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-Note that 'pci-host-cam-generic' is unused at least by anything upstream.
+thanks.
+-- 
+~Randy
 
->
-> > +  reg:
-> > +    description:
-> > +      The Configuration Space base address and size, as accessed from the parent
-> > +      bus. The base address corresponds to the first bus in the "bus-range"
-> > +      property. If no "bus-range" is specified, this will be bus 0 (the
-> > +      default).
-> > +    maxItems: 1
-> > +
-> > +  ranges:
-> > +    description:
-> > +      As described in IEEE Std 1275-1994, but must provide at least a
-> > +      definition of non-prefetchable memory. One or both of prefetchable Memory
-> > +      and IO Space may also be provided.
-> > +    minItems: 1
-> > +    maxItems: 3
-> > +
-> > +  dma-coherent:
-> > +    description: The host controller bridges the AXI transactions into PCIe bus
-> > +      in a manner that makes the DMA operations to appear coherent to the CPUs.
->
-> The "host-generic-pci.yaml" name sounds very generic, so I'm not quite
-> sure how to read "AXI" -- that sounds like a feature of a specific
-> platform? I think "dma-coherent" itself is not platform-specific.
-
-Indeed. On second thought, just 'true' here is enough as we don't need
-individual bindings to describe common properties over and over.
-
-Rob
