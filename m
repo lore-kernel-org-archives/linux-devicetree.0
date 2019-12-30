@@ -2,295 +2,241 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486A6C2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC74C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB9B222C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:12:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZmWu2Lss"
+	by mail.kernel.org (Postfix) with ESMTP id EBC4A20748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 09:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfL3JMu (ORCPT
+        id S1727257AbfL3JZT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 04:12:50 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:46505 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727275AbfL3JMu (ORCPT
+        Mon, 30 Dec 2019 04:25:19 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:43510 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727243AbfL3JZT (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 04:12:50 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577697169; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=L9Vu5nllDxeLPVYsgWa1F5+XK4kB9hG/w0HCoJugAaA=; b=ZmWu2LssOKvgczk5I3E1sdIs55izsXMVmGlIc+ygLgaBP+TluPewtfBfZFQcl5OOC5YmLjxE
- L9Q49D4lUzetEKqFpEKipON3mg025TvlGhwBVJEWTiT5Mg31whOjMJNMtdOb8QbE9sTEh/St
- YjMdcBIWxIpVYyfq2i7jjL329Gg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e09bf8f.7f9f6b049a78-smtp-out-n03;
- Mon, 30 Dec 2019 09:12:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B0ED5C433A2; Mon, 30 Dec 2019 09:12:45 +0000 (UTC)
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 30 Dec 2019 04:25:19 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6A3ACC433CB;
-        Mon, 30 Dec 2019 09:12:41 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6A3ACC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH V2 1/7] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
- bindings
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     devicetree@vger.kernel.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        sivaprak@codeaurora.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1576752109-24497-1-git-send-email-sricharan@codeaurora.org>
- <1576752109-24497-2-git-send-email-sricharan@codeaurora.org>
- <20191229034126.GO3755841@builder>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <8dd32c3f-aee4-cedf-bad4-ea3b2864980e@codeaurora.org>
-Date:   Mon, 30 Dec 2019 14:42:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 662DD634C86;
+        Mon, 30 Dec 2019 11:24:30 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1ilrHq-0001XR-LZ; Mon, 30 Dec 2019 11:24:30 +0200
+Date:   Mon, 30 Dec 2019 11:24:30 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        peter.griffin@linaro.org, ezequiel@collabora.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
+ binding
+Message-ID: <20191230092430.GB5050@valkosipuli.retiisi.org.uk>
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+ <20191227122114.23075-2-andrey.konovalov@linaro.org>
+ <20191227141739.GD861@valkosipuli.retiisi.org.uk>
+ <e3a9161a-feaf-f4a4-5122-871e68409698@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191229034126.GO3755841@builder>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3a9161a-feaf-f4a4-5122-871e68409698@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Andrey,
 
-On 12/29/2019 9:11 AM, Bjorn Andersson wrote:
-> On Thu 19 Dec 02:41 PST 2019, Sricharan R wrote:
+On Fri, Dec 27, 2019 at 09:26:25PM +0300, Andrey Konovalov wrote:
+> Hi Sakari,
 > 
->> Add device tree binding Documentation details for ipq6018
->> pinctrl driver.
->>
->> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>
->> [V2] Splitted dt bindings and driver into different patches. Added missing bindings,
->>      and some style changes.
->>
->>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 172 +++++++++++++++++++++
->>  1 file changed, 172 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->> new file mode 100644
->> index 0000000..745a11e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->> @@ -0,0 +1,172 @@
->> +# SPDX-License-Identifier: GPL-2.0-or-later
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
->> +
->> +maintainers:
->> +  - Sricharan R <sricharan@codeaurora.org>
->> +
->> +description: |
->> +  This binding describes the Top Level Mode Multiplexer block found in the
->> +  IPQ6018 platform.
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,ipq6018-pinctrl
->> +  reg:
->> +    maxItems: 1
->> +  interrupts:
->> +    Description: Specifies the TLMM summary IRQ
->> +    maxItems: 1
->> +  interrupt-controller: true
->> +  '#interrupt-cells':
->> +    Description:
->> +      Specifies the PIN numbers and Flags, as defined in defined in
->> +      include/dt-bindings/interrupt-controller/irq.h
->> +    const: 2
->> +  gpio-controller: true
->> +  '#gpio-cells':
->> +    Description: Specifying the pin number and flags, as defined in
->> +      include/dt-bindings/gpio/gpio.h
->> +    const: 2
->> +  gpio-ranges:
->> +    Description: Documentation/devicetree/bindings/gpio/gpio.txt
->> +    maxItems: 1
->> +
->> +#PIN CONFIGURATION NODES
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    Description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +
->> +    Properties:
->> +      pins:
->> +        allOf:
->> +          $ref: /schemas/types.yaml#/definitions/string
->> +          enum:
->> +            gpio0-gpio80
->> +            sdc1_clk
->> +            sdc1_cmd
->> +            sdc1_data
->> +            sdc2_clk
->> +            sdc2_cmd
->> +            sdc2_data
->> +            qdsd_cmd
->> +            qdsd_data0
->> +            qdsd_data1
->> +            qdsd_data2
->> +            qdsd_data3
->> +        Description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +
->> +      function:
->> +        allOf:
->> +          $ref: /schemas/types.yaml#/definitions/string
->> +          enum:
->> +            adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
->> +            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
->> +            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
->> +            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
->> +            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
->> +            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
->> +            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
->> +            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
->> +            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
->> +            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
->> +            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
->> +            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
->> +            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
->> +            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
->> +            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
->> +            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
->> +            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
->> +            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
->> +            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
->> +            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
->> +            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
->> +            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
->> +            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
->> +            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
->> +            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
->> +            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst
->> +        Description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +      bias-disable:
-> 
-> Is there any way to inherit these from some common definition?
-> 
+> Thank you for reviewing the patchset, and for the pointers on improving the driver (nokia,smia.txt etc)!
+> I'll write a separate email later, or just fix what you suggested in v3 (I agree with the proposed changes
+> I didn't comment on in this email).
 
- ok, will check and if possible will inherit those.
+Ack.
 
->> +        type: boolean
->> +        Description:
->> +          The specified pins should be configured as no pull.
->> +      bias-pull-down:
->> +        type: boolean
->> +        Description:
->> +          The specified pins should be configured as pull down.
->> +      bias-pull-up:
->> +        type: boolean
->> +        Description:
->> +          The specified pins should be configured as pull up.
->> +      output-high:
->> +        type: boolean
->> +        Description:
->> +          The specified pins are configured in output mode, driven high.
->> +          This option is not available for sdc pins.
->> +      output-low:
->> +        type: boolean
->> +        Description:
->> +          The specified pins are configured in output mode, driven low.
->> +          This option is not available for sdc pins.
->> +      drive-strength:
->> +        allOf:
->> +          $ref: /schemas/types.yaml#/definitions/uint32
->> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
->> +        Description:
->> +          elects the drive strength for the specified pins, in mA.
+Please wrap the lines around 72 chars or so.
+
 > 
-> Selects?
+> Just few quick answers below.
 > 
-
- ok will fix.
-
->> +
->> +    required:
->> +      - pins
->> +      - function
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-controller
->> +  - '#interrupt-cells'
->> +  - gpio-controller
->> +  - '#gpio-cells'
->> +  - gpio-ranges
->> +
->> +example:
->> +        tlmm: pinctrl@1000000 {
->> +                compatible = "qcom,ipq6018-pinctrl";
->> +                reg = <0x1000000 0x300000>;
->> +                interrupts = <0 208 0>;
+> Thanks,
+> Andrey
 > 
-> <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>
+> On 27.12.2019 17:17, Sakari Ailus wrote:
+> > Hi Andrey,
+> > 
+> > Thanks for the patchset.
+> > 
+> > On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
+> > > Add YAML device tree binding for IMX219 CMOS image sensor, and
+> > > the relevant MAINTAINERS entries.
+> > > 
+> > > Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> > > ---
+> > >   .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
+> > >   MAINTAINERS                                   |   8 ++
+> > >   2 files changed, 142 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> > > new file mode 100644
+> > > index 000000000000..b58aa49a7c03
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> > > @@ -0,0 +1,134 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
+> > > +
+> > > +maintainers:
+> > > +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > > +
+> > > +description: |-
+> > > +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
+> > > +  with an active array size of 3280H x 2464V. It is programmable through
+> > > +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
+> > > +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
+> > > +  4 data lanes.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: sony,imx219
+> > > +
+> > > +  reg:
+> > > +    description: I2C device address
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: xclk
+> > 
+> > There's a single clock. Does it need a name? I'd just omit it.
+> > 
+> > > +
+> > > +  VDIG-supply:
+> > > +    description:
+> > > +      Digital I/O voltage supply, 1.8 volts
+> > > +
+> > > +  VANA-supply:
+> > > +    description:
+> > > +      Analog voltage supply, 2.8 volts
+> > > +
+> > > +  VDDL-supply:
+> > > +    description:
+> > > +      Digital core voltage supply, 1.2 volts
+> > > +
+> > > +  xclr-gpios:
+> > > +    description: |-
+> > > +      Reference to the GPIO connected to the xclr pin, if any.
+> > > +      Must be released (set high) after all supplies are applied.
+> > 
+> > A common name for this in camera sensors is xshutdown. I'd suggest to use
+> > that.
 > 
+> Indeed, "xshutdown" is the pin name commonly used by OmniVision for their sensors.
 
- ok.
+Some Aptina (OnSemi) devices also use xshutdown, and so does the CCS
+standard.
 
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +
->> +                uart_pins: uart_pins {
+> (In older sensors they used "pwdn" which is similar, but the polarity is reversed.)
+
+Some devices have both xshutdown and pwdn. I don't see why; they're
+controlled together in practice anyway.
+
 > 
-> s/_/- in the node name.
+> In their sensor datasheets Sony consistently use "xclr" for the pin and signal otherwise
+> very similar to OmniVision's "xshutdown".
 > 
+> Wouldn't using the signal name from the sensor by the different vendor just add more confusion
+> instead?
 
- ok.
+What matters is the functionality really. I checked the existing bindings,
+and it seems devices using "xshutdown" document reset-gpios property under
+Documentation/devicetree/bindings/media/i2c . None refers to xclr.
 
->> +                        mux {
->> +                                pins = "gpio4", "gpio5";
->> +                                function = "blsp_uart2";
+So "reset-gpios" is the right name. The vast majority are active low (i.e.
+lifting the sensor from reset requires high output) but there's at least
+one that is active high. 
+
 > 
-> Duplicate the function definition in tx and rx and drop the "mux" node.
+> > > +
+> > > +  camera-clk:
+> > > +    type: object
+> > > +
+> > > +    description: Clock source for imx219
+> > > +
+> > > +    properties:
+> > > +      clock-frequency: true
+> > > +
+> > > +    required:
+> > > +      - clock-frequency
+> > 
+> > Hmm. The driver doesn't seem to use this for anything.
+> > 
+> > There are two approaches to this; either you can get and check the
+> > frequency, or specify it in DT bindings, set and then check it.
+> > 
+> > See e.g. Documentation/devicetree/bindings/media/i2c/nokia,smia.txt (not in
+> > YAML though).
+> > 
+> > > +
+> > > +  # See ../video-interfaces.txt for more details
+> > > +  port:
+> > > +    type: object
+> > > +    properties:
+> > > +      endpoint:
+> > > +        type: object
+> > > +        properties:
+> > > +          clock-lanes:
+> > > +            const: 0
+> > 
+> > If the hardware does not support lane reordering, you can omit the
+> > clock-lanes property as it provides no information.
+> > 
+> > > +
+> > > +          data-lanes:
+> > > +            description: |-
+> > > +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
+> > > +              four-lane operation.
+> > > +            oneOf:
+> > > +              - const: [[ 1, 2 ]]
+> > > +              - const: [[ 1, 2, 3, 4 ]]
+> > > +
+> > > +          clock-noncontinuous:
+> > > +            type: boolean
+> > > +            description: |-
+> > > +              Presence of this boolean property decides whether the MIPI CSI-2
+> > > +              clock is continuous or non-continuous.
+> > 
+> > How about: MIPI CSI-2 clock will be non-continuous if this property is
+> > present, otherwise it's continuous.
 > 
+> This statement is more clear than the original. Thanks!
 
- ok.
+Perhaps:
 
-Regards,
- Sricharan
+s/will be/is/
+
+In order to keep the same tense.
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Kind regards,
+
+Sakari Ailus
