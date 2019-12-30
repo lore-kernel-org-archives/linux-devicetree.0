@@ -2,121 +2,70 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4311EC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EB2C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1170520718
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C72120748
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577728936;
-	bh=mmLEN5EVhqLVybqcxDuhfGriciuvTU6AmdSNL96/umg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=upGCGgp5ju+fhQDSTdXwn7wjTdExbaIPc8WhDsQzr00g0xtBzZJW4HhpA4j5yVBkf
-	 yNOWKKgWgW5HCE96O6jTfv2ynanIUknvFraPLeTBek7wEL8S7kgguqRpi729oHMhXN
-	 F3ctkWMrtV4VZ1UM7vlj+S2mhGONVFIQDQkZ2H9g=
+	s=default; t=1577728970;
+	bh=gRKYcl0jCq7nW7Gxn+7gNtKzmmdScmcjqsaffdi6YAc=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=r4MyEdMJkainXgH7pZZ+6mRamL7oRwqEkuHj/owb4o86p1GtjQT4xW6jcNlOvULX7
+	 DmGck+9OxzS3tQ2omFaOsOr8AdwVmN02IS0vPV1xBbpIe3xqN5V6ZiwZBmHvUjscDa
+	 MhXdoeB70c3K/upLlDj2RH+hdCyQJPtHnZ1QXoO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfL3SCP (ORCPT
+        id S1727498AbfL3SCr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 13:02:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 13:02:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfL3SCP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 13:02:15 -0500
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726602AbfL3SCq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Dec 2019 13:02:46 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D9EB20718;
-        Mon, 30 Dec 2019 18:02:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E76A820718;
+        Mon, 30 Dec 2019 18:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577728934;
-        bh=mmLEN5EVhqLVybqcxDuhfGriciuvTU6AmdSNL96/umg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Bc4RjaEDQ1ETswDQYyXiPwv76AKYwd/0t9BG0JWxVixpXvfl41zF0xXKTgUNwatnZ
-         4Ehht6ai6mWNwzzvk7vA8L2KLFoZrZ5qF1vKaUzGzu32X22nl3rbzAQgjF5kWonh2j
-         cY0epFe+rpWNCBlbvPFab1ZWvffD5T3CrOo10Li4=
-Received: by mail-qk1-f181.google.com with SMTP id x1so26747306qkl.12;
-        Mon, 30 Dec 2019 10:02:14 -0800 (PST)
-X-Gm-Message-State: APjAAAVbBY/EsJUlYQrX+g/i0j4saPAU3AqSG9l0vXC2vKGIxIgbTvPy
-        2fgda/WEIBoFcQRRjf3/sExddYS0KMSL8bvhLA==
-X-Google-Smtp-Source: APXvYqxnbEUjGyxvCU4ntE7buUgy18mz5Tni7Bm9/X322VaakU+9YenlJraMm5LyISnrzCBgzdGBaqVdjNI50V7PeH4=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr56849186qkd.223.1577728933710;
- Mon, 30 Dec 2019 10:02:13 -0800 (PST)
+        s=default; t=1577728966;
+        bh=gRKYcl0jCq7nW7Gxn+7gNtKzmmdScmcjqsaffdi6YAc=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=vSiG+ePNA5iMVvnrQ9qXREgzn1ME5/fjIl9LGPYvAP3NwvAh+s5VPG60KXKssWe0m
+         fNa+nIK1v43x+g+N1Luwxwz5KvAnx1yvVgvJxQEGJ7UjMCf62sTxJo9kFMtcCuRyL/
+         58qjHbTJsxzWjKYqvhI+MznhgVYhhnF4VZqAeMrs=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
- <20191226185132.GA31120@bogus> <62b9e7b140a96401469f7075811d0d67@codeaurora.org>
-In-Reply-To: <62b9e7b140a96401469f7075811d0d67@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 30 Dec 2019 11:02:02 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqKspnQ50Muw-jeq+uE1+vj5nuzpxmYcOSFwY+n2Gj3tXA@mail.gmail.com>
-Message-ID: <CAL_JsqKspnQ50Muw-jeq+uE1+vj5nuzpxmYcOSFwY+n2Gj3tXA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ath10k: Add new dt entries to identify
- coex support
-To:     Tamizh Chelvam <tamizhr@codeaurora.org>
-Cc:     ath10k@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
+References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v2 0/3] Add modem Clock controller (MSS CC) driver for SC7180
+User-Agent: alot/0.8.1
+Date:   Mon, 30 Dec 2019 10:02:45 -0800
+Message-Id: <20191230180245.E76A820718@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 10:07 PM <tamizhr@codeaurora.org> wrote:
->
-> Hi Rob,
->
-> Thanks for your review comments.
->
-> >> This adds new dt entries qcom,coexist-support and
-> >> qcom,coexist-gpio-pin
-> >> which will be used by ath10k driver to identify coex support
-> >> of a hardware and notify wifi firmware the gpio pin number.
-> >> This pin number information is needed for the hardware QCA4019.
-> >>
-> >> Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 6
-> >> ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> >> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> >> index 0171283..a41e936 100644
-> >> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> >> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> >> @@ -87,6 +87,10 @@ Optional properties:
-> >>      Definition: Quirk specifying that the firmware expects the 8bit
-> >> version
-> >>                  of the host capability QMI request
-> >>  - qcom,xo-cal-data: xo cal offset to be configured in xo trim
-> >> register.
-> >> +- qcom,coexist-support : should contain eithr "0" or "1" to indicate
+Quoting Taniya Das (2019-12-26 20:42:37)
+> [v2]
+>   * Update the license for the documentation and fix minor comments in the
+>     YAML bindings.
 
-typo
+I see Sibi has comments. Please resend with those comments addressed.
 
-> >> coex
-> >> +                     support by the hardware.
-> >> +- qcom,coexist-gpio-pin : gpio pin number  information to support
-> >> coex
-> >> +                      which will be used by wifi firmware.
-> >
-> > What combinations of these 2 properties are valid?
-> >
-> > Is qcom,coexist-gpio-pin required for coexist support? If so then it
-> > alone should be enough to enable/disable coexist.
-> >
-> qcom,coexist-gpio-pin is required for QCA4019 devices. And other ath10k
-> devices doesn't required that value.
-> So only added two fields to enable/disable coexist and another for
-> notifying the gpio pin info.
-
-Okay.
-
-'qcom,coexist-support' can be boolean instead. Unless you need it to
-override a default setting.
-
-Rob
