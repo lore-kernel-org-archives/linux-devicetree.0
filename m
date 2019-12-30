@@ -2,169 +2,203 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE29C2D0C0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 03:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C4AC2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 05:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA19207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 03:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02DC20663
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 05:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljUmIFIw"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WoaLppb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfL3D2R (ORCPT
+        id S1727121AbfL3FAY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 29 Dec 2019 22:28:17 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46119 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfL3D2R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 29 Dec 2019 22:28:17 -0500
-Received: by mail-il1-f194.google.com with SMTP id t17so26845775ilm.13;
-        Sun, 29 Dec 2019 19:28:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/gSpV16gqUugWiREKjeRqrw8NqwpDXSNtuIvz7v7i9E=;
-        b=ljUmIFIw0TpKNbfOsZzPy0594sjYu/WDS2ogd7eV+SZZ16rOMs8kMTDMp6r6z/HcDC
-         gqeF9js1oULvAa9uPuKoajyItsjEtWIyVR5bWaYyUdJ6TJCtRwzq4+RZVsJAoLwTgmCe
-         ULropm0NWnpv5zpmOeO+HeH1QR+jfN9rvbHK1upIzD+IeCFoYPpaQIq080RnM95H2VwG
-         TqqF12ZBn8tHuciOJ2AXNUyop1HJqJacA0AgEg+pthBgH0U4qE8OnMLggownEhd75RHg
-         8ltU/kKIbQzSd85SF6xHDqt6XgBdTXu0malc/i+gHCoLM+Bkv2aHzp4g+/NbaLl2cqwE
-         2fyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/gSpV16gqUugWiREKjeRqrw8NqwpDXSNtuIvz7v7i9E=;
-        b=N1I9eg27O08XzFzVQ/o7vFqIKqDyPv8a+JG//EYzmkzl1GT/BStW5HsFjH9t/h/dvO
-         Ynr33qAXVCm2EkRx+7mFaIB4QunFHDZooKAaB2GRPLCwRZgEYabuD9/iDa6XAGD8jNOT
-         0CaAW2yrqgSQyB+pCqLSybuOKHk/dVOUaXv+TJz1ivPjsbODhI6q79fzg6+kN4TS+ZGd
-         9jNXDFS+UK/EzxlCq0kqEqqjhH8iZibpuL7hP1flwjtbBsKleCc+qINdJOmkGZG0xCjP
-         Ld9P8N75LGhLRyNXcMCG73X2BO9oqRTAof+Vr6mI3uVnFeFKbKThrCnBzKnMHB3018BA
-         amTw==
-X-Gm-Message-State: APjAAAWRDPcxlHNtL/BsTBtor7+HF6wsmRCeK7HmLp3NIg5MT/giGjr1
-        8fVy8sJDvXHvN1yGvIaCV1hJtS62TkW8AHumQ/c=
-X-Google-Smtp-Source: APXvYqyQZm4ZquKEMpBoMyD+GpdMoP23S7ymcucZjFHMEh+UdO/8w5BBcW4WhKQqF8cH3yxedUvYcOX8n0XBNCAgQNA=
-X-Received: by 2002:a92:84d1:: with SMTP id y78mr55495168ilk.69.1577676496461;
- Sun, 29 Dec 2019 19:28:16 -0800 (PST)
+        Mon, 30 Dec 2019 00:00:24 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:36890 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725536AbfL3FAY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Dec 2019 00:00:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577682023; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
+ To: From: Sender; bh=bq9GBo1exy5H5niGUOPp3ceZeVp8DhBy57oRJt6GY54=; b=WoaLppb7fiR1d09b7Cbw5cFizvq0j/YwirkaHTWFM4Y+ukxP4BRcOCMjhz30PjIawTEyVtVn
+ jwS1lYB+7J7/fNDn33I4D97nrOeiXJSMnaVOH7QNOzogeJEdcC0VwDnMP782Eo7xKVLQa2Ok
+ njehf1rd2qjxALhBKIKL5bmQ2a4=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e09845e.7f4dc71b9f80-smtp-out-n02;
+ Mon, 30 Dec 2019 05:00:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1EE03C433A2; Mon, 30 Dec 2019 05:00:14 +0000 (UTC)
+Received: from Pillair (unknown [183.83.68.224])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: pillair)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53172C433CB;
+        Mon, 30 Dec 2019 05:00:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53172C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
+From:   <pillair@codeaurora.org>
+To:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
+Cc:     <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1577181575-25788-1-git-send-email-pillair@codeaurora.org> <20191229031416.GK3755841@builder>
+In-Reply-To: <20191229031416.GK3755841@builder>
+Subject: RE: [PATCH v3] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device node
+Date:   Mon, 30 Dec 2019 10:29:56 +0530
+Message-ID: <061701d5bece$044b6cd0$0ce24670$@codeaurora.org>
 MIME-Version: 1.0
-References: <20191121072910.31665-1-bibby.hsieh@mediatek.com> <1575426135.31411.2.camel@mtksdaap41>
-In-Reply-To: <1575426135.31411.2.camel@mtksdaap41>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Sun, 29 Dec 2019 21:28:05 -0600
-Message-ID: <CABb+yY2w_h-weh15hFkGuC-b7XLYrvkT7QVkkj1u6uS99qOnrg@mail.gmail.com>
-Subject: Re: [PATCH] soc: mediatek: cmdq: avoid racing condition with mutex
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIRwFJlApFoTZl1gTtUmtjwT7YanQH7LU55p0pBkhA=
+Content-Language: en-us
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 3, 2019 at 8:22 PM CK Hu <ck.hu@mediatek.com> wrote:
->
-> Hi, Jassi:
->
-> Are mbox_send_message() and mbox_client_txdone() thread-safe? If these
-> two are thread-safe, this bug should be fixed in mailbox core not
-> client.
->
-mbox_client_txdone should be called only when the client _knows_ the
-message has been sent.
-There is difference between knowing when tx is done, and assuming
-tx-done because there is no way of knowing it.
-Your issue arises because you immediately call mbox_client_txdone
-after mbox_send_message, which may be the only way to do it but that
-doesn't mean you shouldn't have to take any other precautions (like a
-mutex). So I think your patch is reasonable.
+Hi Bjorn,
 
-Cheers!
+Thanks for the comments.
+I will post an updated patchset v4 after the patch bringing-in
+"qcom,msa-fixed-perm" is merged/approved.
+I will address all the comments together.
 
+Thanks,
+Rakesh Pillai.
 
-> Regards,
-> CK
->
-> On Thu, 2019-11-21 at 15:29 +0800, Bibby Hsieh wrote:
-> > If cmdq client is multi thread user, racing will occur without mutex
-> > protection. It will make the C message queued in mailbox's queue
-> > always need D message's triggering.
+> -----Original Message-----
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Sent: Sunday, December 29, 2019 8:44 AM
+> To: Rakesh Pillai <pillair@codeaurora.org>
+> Cc: devicetree@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add WCN3990 WLAN
+> module device node
+> 
+> On Tue 24 Dec 01:59 PST 2019, Rakesh Pillai wrote:
+> 
+> > Add device node for the ath10k SNOC platform driver probe
+> > and add resources required for WCN3990 on sc7180 soc.
 > >
-> > Thread A              Thread B                  Thread C              Thread D...
-> > -----------------------------------------------------------------------------------
-> > mbox_send_message()
-> >       send_data()
-> >                       mbox_send_message()
-> >                               *exit
-> >                                               mbox_send_message()
-> >                                                       *exit
-> > mbox_client_txdone()
-> >       tx_tick()
-> >                       mbox_client_txdone()
-> >                               tx_tick()
-> >                                               mbox_client_txdone()
-> >                                                       tx_tick()
-> > msg_submit()
-> >       send_data()
-> >                       msg_submit()
-> >                               *exit
-> >                                               msg_submit()
-> >                                                       *exit
-> > -----------------------------------------------------------------------------------
-> >
-> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 > > ---
-> >  drivers/soc/mediatek/mtk-cmdq-helper.c | 3 +++
-> >  include/linux/soc/mediatek/mtk-cmdq.h  | 1 +
-> >  2 files changed, 4 insertions(+)
+> > This change is dependent on the below set of changes
+> > arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+> (https://lore.kernel.org/patchwork/patch/1150367/)
+> 
+> It would be clearer if you linked to the series instead, but it doesn't
+> matter at this point, this is merged already.
+> 
+> What doesn't seem to be merged is the addition of the
+> qcom,msa_fixed_perm property, so I presume I need to hold off on merging
+> this?
+> 
+> > ---
+> >  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
+> >  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 28
+> ++++++++++++++++++++++++++++
+> >  2 files changed, 33 insertions(+)
 > >
-> > diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > index 9add0fd5fa6c..9e35e0beffaa 100644
-> > --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> > @@ -81,6 +81,7 @@ struct cmdq_client *cmdq_mbox_create(struct device *dev, int index, u32 timeout)
-> >       client->client.dev = dev;
-> >       client->client.tx_block = false;
-> >       client->chan = mbox_request_channel(&client->client, index);
-> > +     mutex_init(&client->mutex);
-> >
-> >       if (IS_ERR(client->chan)) {
-> >               long err;
-> > @@ -352,9 +353,11 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
-> >               spin_unlock_irqrestore(&client->lock, flags);
-> >       }
-> >
-> > +     mutex_lock(&client->mutex);
-> >       mbox_send_message(client->chan, pkt);
-> >       /* We can send next packet immediately, so just call txdone. */
-> >       mbox_client_txdone(client->chan, 0);
-> > +     mutex_unlock(&client->mutex);
-> >
-> >       return 0;
-> >  }
-> > diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> > index a74c1d5acdf3..0f9071cd1bc7 100644
-> > --- a/include/linux/soc/mediatek/mtk-cmdq.h
-> > +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> > @@ -28,6 +28,7 @@ struct cmdq_client {
-> >       struct mbox_chan *chan;
-> >       struct timer_list timer;
-> >       u32 timeout_ms; /* in unit of microsecond */
-> > +     struct mutex mutex;
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > index 189254f..b2ca143f 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> > @@ -248,6 +248,11 @@
+> >  	status = "okay";
 > >  };
 > >
-> >  /**
->
+> > +&wifi {
+> > +	status = "okay";
+> > +	qcom,msa_fixed_perm;
+> 
+> As remarked by Rob, properties should be using - instead of _.
+> 
+> > +};
+> > +
+> >  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+> >
+> >  &qup_i2c2_default {
+> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > index 666e9b9..7efb97f 100644
+> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> > @@ -42,6 +42,12 @@
+> >  			compatible = "qcom,cmd-db";
+> >  			no-map;
+> >  		};
+> > +
+> > +		wlan_fw_mem: memory@93900000 {
+> > +			compatible = "removed-dma-pool";
+> > +			no-map;
+> > +			reg = <0 0x93900000 0 0x200000>;
+> > +		};
+> >  	};
+> >
+> >  	cpus {
+> > @@ -1119,6 +1125,28 @@
+> >  				#clock-cells = <1>;
+> >  			};
+> >  		};
+> > +
+> > +		wifi: wifi@18800000 {
+> > +			compatible = "qcom,wcn3990-wifi";
+> > +			reg = <0 0x18800000 0 0x800000>;
+> > +			reg-names = "membase";
+> > +			iommus = <&apps_smmu 0xC0 0x1>;
+> 
+> Lowercase 'c' please.
+> 
+> Regards,
+> Bjorn
+> 
+> > +			interrupts =
+> > +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0
+> */ >,
+> > +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1
+> */ >,
+> > +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2
+> */ >,
+> > +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3
+> */ >,
+> > +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4
+> */ >,
+> > +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5
+> */ >,
+> > +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6
+> */ >,
+> > +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7
+> */ >,
+> > +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8
+> */ >,
+> > +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9
+> */ >,
+> > +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10
+> */>,
+> > +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11
+> */>;
+> > +			memory-region = <&wlan_fw_mem>;
+> > +			status = "disabled";
+> > +		};
+> >  	};
+> >
+> >  	timer {
+> > --
+> > 2.7.4
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
