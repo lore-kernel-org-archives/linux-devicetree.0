@@ -2,57 +2,58 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C05CC2D0D3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC89C2D0D4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E831120718
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4EAC20730
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 16:41:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZN7KKbIg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MnYOilAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfL3Qkk (ORCPT
+        id S1726843AbfL3QlL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 11:40:40 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38297 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfL3Qkk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:40:40 -0500
-Received: by mail-wm1-f67.google.com with SMTP id u2so14599522wmc.3
-        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 08:40:38 -0800 (PST)
+        Mon, 30 Dec 2019 11:41:11 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39427 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727104AbfL3QlL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 11:41:11 -0500
+Received: by mail-wm1-f68.google.com with SMTP id 20so14583535wmj.4
+        for <devicetree@vger.kernel.org>; Mon, 30 Dec 2019 08:41:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tDhVs6CVDINJ1HNHUEVGjWNjJ7PiR8LnUgb8ARuG2ic=;
-        b=ZN7KKbIgtPp1ekgR51IoF+SME6R9Cr0LaqNEinmblhhFSXm0TRG+mKuts2PSA0XJIR
-         yqkrXoYJSH8zaP4MTVeZxu8+Mfa7lDjCdUl44E/Hl98IqMyE6sJbUICApQO9voVqHht7
-         41olQjXiASfh8zOCaxZm2XDH2txCBy6FOuGWoa59WPYcFi3MpWPoAUhKp3zUwejm2Jxy
-         O/sz4ZT/rQL9LI/Peyt1xmHnS4QNvMbHI6/Kf15TEYbMLhiJc9iab8tZiWle96eSxrZN
-         kBL2vBBIiWx0ECuTr103C35sFiqj57+zoY5d043X3pOB3mdBniNWEndn0uGkW9O9LRxm
-         LTyg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=mv6IL5A16A4t6OLofANYFq5kEZ9xSAHpSKiwiUVkqio=;
+        b=MnYOilAI3tHz4q3NX8I4XDrwnC0IayGdoF0C0rIe+NRWH2JKUXCTK/3ebhAcxmHJIL
+         MepiQpy+dSS3Kq/Em49AvjZtdWQwgY3zFaXp6rmCTjmhkTsCiEcjdLpnnC/0qQEdjlXb
+         iPPlbSfYuCZD2c0/IX6uGlwF6TKjmiwz+UXNeGGZD4DsFFweyPQ0Y2RbhIq1g0xmCczP
+         RVc034ncWnOKWZh4+qZyDn2BoDaWXqPug8qf7ID5SyKFD5/R+k8VYDvdl0Sxy5ZNOT0f
+         eIlrx0dm2ontqPMVqe0MSDkrjzfxMiud5BCu02bO5YXsnUgdZmYLa+ls6XpJXUnIBLt4
+         O85g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tDhVs6CVDINJ1HNHUEVGjWNjJ7PiR8LnUgb8ARuG2ic=;
-        b=bZgYUCBaCRfeXREV/8QtiV+t6Ptzrl5PfCWC7xiRNqBXX7TKjKoCoVbHeuarluompG
-         pqeCdeOj/+/hHuOcAWscdMQHa6aJHG6HVxrJ5usk53ODWZbROxvWgi0sQOIPDIULheYX
-         9eeMRZQStB/fCKj85mBmQrCbYor0glzuj7CpxdUoOG+sGvrn3eskVakSulazVxV6T1O9
-         80XpVzxKrplFEuG8ZFODGziIUMbCq8NKv1XobMixPfPHRkYb3XGQjt88VNNXetX6qUdv
-         VMd8z916KN3V7vCC4LZI6v1AGGplo/4F+E2wn/9LBBZvVAUocr9YUgpHVVjiQFthXaL/
-         vY2w==
-X-Gm-Message-State: APjAAAWVLOfz6eeIem7TDT/rgXYOkcCLdAcuiOTKErFksnc26sgOCQu6
-        TdSbml/PZE9Z2wbIHDirA/17HQ==
-X-Google-Smtp-Source: APXvYqz6xBOyY+kpXf3snSVcVhOxgaPBbkha9oou9FX8ajt2wCRfPBDbcclzEEM+xidfTGUx9oCh3A==
-X-Received: by 2002:a1c:4b01:: with SMTP id y1mr33726581wma.12.1577724038134;
-        Mon, 30 Dec 2019 08:40:38 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=mv6IL5A16A4t6OLofANYFq5kEZ9xSAHpSKiwiUVkqio=;
+        b=OFXG6cNlC0AO79uWZ890gzruRObCOKBww237beD4DO+LPzPcudQzuUcDs1+XSQOMiO
+         plU7i0ZFxgmAYEoM2qbdwmoPWNv86yZGgpDkEdAVhFZCIB620Dl7fG1ICY1L+usat36g
+         oFdSu0tjHYu3ykZf65APGe81HokRdCHVKklWAq9oAD6TWkdv8PwYgmTCVooiXEiGsizC
+         XlvDrhOcHqkNSvnumkGeCVwosRj8ggblHMoEZzIPUR2plOxXt0DTnMnQ/7tan3+pB4qy
+         6UXyxkkZrxPIRuPoW2bhOOLXbnFS3cXKR02zLNbpLYr+to729h6GL3rNToc27ZHpDEJP
+         uEGg==
+X-Gm-Message-State: APjAAAWELYtB8I+zkm77fPOBwlbn1cJFckYZDaRUxaPmNKxvRU05JhrN
+        F7jWXPvGRc/C7+3Y7WwlUlRSuQ==
+X-Google-Smtp-Source: APXvYqyzKX6mcyyEX+JmTW6TdWYtZtTM7xA8Io6bo/k4Tmh30Me9eghLAiQiexLDTLzjnJ4bSnbbAQ==
+X-Received: by 2002:a7b:c30b:: with SMTP id k11mr35840608wmj.36.1577724067527;
+        Mon, 30 Dec 2019 08:41:07 -0800 (PST)
 Received: from linaro.org ([2a00:23c5:6815:3901:a1cf:b00b:5683:ed40])
-        by smtp.gmail.com with ESMTPSA id b68sm21175605wme.6.2019.12.30.08.40.37
+        by smtp.gmail.com with ESMTPSA id m7sm45305580wrr.40.2019.12.30.08.41.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 08:40:37 -0800 (PST)
+        Mon, 30 Dec 2019 08:41:06 -0800 (PST)
 From:   Mike Leach <mike.leach@linaro.org>
 To:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         coresight@lists.linaro.org
@@ -61,106 +62,609 @@ Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
         liviu.dudau@arm.com, sudeep.holla@arm.com,
         lorenzo.pieralisi@arm.com, agross@kernel.org,
         Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH v7 02/15] coresight: cti: Add sysfs coresight mgmt reg access.
-Date:   Mon, 30 Dec 2019 16:40:35 +0000
-Message-Id: <20191230164035.28013-1-mike.leach@linaro.org>
+Subject: [PATCH v7 04/15] coresight: cti: Add sysfs trigger / channel programming API
+Date:   Mon, 30 Dec 2019 16:41:00 +0000
+Message-Id: <20191230164100.28077-2-mike.leach@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191230164100.28077-1-mike.leach@linaro.org>
+References: <20191230164100.28077-1-mike.leach@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adds sysfs access to the coresight management registers.
+Adds a user API to allow programming of CTI by trigger ID and
+channel number. This will take the channel and trigger ID supplied
+by the user and program the appropriate register values.
 
 Signed-off-by: Mike Leach <mike.leach@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- .../hwtracing/coresight/coresight-cti-sysfs.c | 53 +++++++++++++++++++
- drivers/hwtracing/coresight/coresight-priv.h  |  1 +
- 2 files changed, 54 insertions(+)
+ .../hwtracing/coresight/coresight-cti-sysfs.c | 349 ++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-cti.c   | 147 ++++++++
+ drivers/hwtracing/coresight/coresight-cti.h   |  32 ++
+ 3 files changed, 528 insertions(+)
 
 diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-index a832b8c6b866..507f8eb487fe 100644
+index f687e07b68b0..37e71724b67b 100644
 --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
 +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-@@ -62,11 +62,64 @@ static struct attribute *coresight_cti_attrs[] = {
+@@ -463,6 +463,349 @@ static struct attribute *coresight_cti_regs_attrs[] = {
  	NULL,
  };
  
-+/* register based attributes */
++/* CTI channel x-trigger programming */
++static int
++cti_trig_op_parse(struct device *dev, enum cti_chan_op op,
++		  enum cti_trig_dir dir, const char *buf, size_t size)
++{
++	u32 chan_idx;
++	u32 trig_idx;
++	int items, err = -EINVAL;
 +
-+/* macro to access RO registers with power check only (no enable check). */
-+#define coresight_cti_reg(name, offset)			\
-+static ssize_t name##_show(struct device *dev,				\
-+			   struct device_attribute *attr, char *buf)	\
-+{									\
-+	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);	\
-+	u32 val = 0;							\
-+	pm_runtime_get_sync(dev->parent);				\
-+	spin_lock(&drvdata->spinlock);					\
-+	if (drvdata->config.hw_powered)					\
-+		val = readl_relaxed(drvdata->base + offset);		\
-+	spin_unlock(&drvdata->spinlock);				\
-+	pm_runtime_put_sync(dev->parent);				\
-+	return scnprintf(buf, PAGE_SIZE, "0x%x\n", val);		\
-+}									\
-+static DEVICE_ATTR_RO(name)
++	/* extract chan idx and trigger idx */
++	items = sscanf(buf, "%d %d", &chan_idx, &trig_idx);
++	if (items == 2) {
++		err = cti_channel_trig_op(dev, op, dir, chan_idx, trig_idx);
++		if (!err)
++			err = size;
++	}
++	return err;
++}
 +
-+/* coresight management registers */
-+coresight_cti_reg(devaff0, CTIDEVAFF0);
-+coresight_cti_reg(devaff1, CTIDEVAFF1);
-+coresight_cti_reg(authstatus, CORESIGHT_AUTHSTATUS);
-+coresight_cti_reg(devarch, CORESIGHT_DEVARCH);
-+coresight_cti_reg(devid, CORESIGHT_DEVID);
-+coresight_cti_reg(devtype, CORESIGHT_DEVTYPE);
-+coresight_cti_reg(pidr0, CORESIGHT_PERIPHIDR0);
-+coresight_cti_reg(pidr1, CORESIGHT_PERIPHIDR1);
-+coresight_cti_reg(pidr2, CORESIGHT_PERIPHIDR2);
-+coresight_cti_reg(pidr3, CORESIGHT_PERIPHIDR3);
-+coresight_cti_reg(pidr4, CORESIGHT_PERIPHIDR4);
++static ssize_t trigin_attach_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t size)
++{
++	return cti_trig_op_parse(dev, CTI_CHAN_ATTACH, CTI_TRIG_IN,
++				 buf, size);
++}
++static DEVICE_ATTR_WO(trigin_attach);
 +
-+static struct attribute *coresight_cti_mgmt_attrs[] = {
-+	&dev_attr_devaff0.attr,
-+	&dev_attr_devaff1.attr,
-+	&dev_attr_authstatus.attr,
-+	&dev_attr_devarch.attr,
-+	&dev_attr_devid.attr,
-+	&dev_attr_devtype.attr,
-+	&dev_attr_pidr0.attr,
-+	&dev_attr_pidr1.attr,
-+	&dev_attr_pidr2.attr,
-+	&dev_attr_pidr3.attr,
-+	&dev_attr_pidr4.attr,
++static ssize_t trigin_detach_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t size)
++{
++	return cti_trig_op_parse(dev, CTI_CHAN_DETACH, CTI_TRIG_IN,
++				 buf, size);
++}
++static DEVICE_ATTR_WO(trigin_detach);
++
++static ssize_t trigout_attach_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf, size_t size)
++{
++	return cti_trig_op_parse(dev, CTI_CHAN_ATTACH, CTI_TRIG_OUT,
++				 buf, size);
++}
++static DEVICE_ATTR_WO(trigout_attach);
++
++static ssize_t trigout_detach_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf, size_t size)
++{
++	return cti_trig_op_parse(dev, CTI_CHAN_DETACH, CTI_TRIG_OUT,
++				 buf, size);
++}
++static DEVICE_ATTR_WO(trigout_detach);
++
++
++static ssize_t chan_gate_enable_store(struct device *dev,
++				      struct device_attribute *attr,
++				      const char *buf, size_t size)
++{
++	int err = 0, channel = 0;
++
++	if (kstrtoint(buf, 0, &channel))
++		return -EINVAL;
++
++	err = cti_channel_gate_op(dev, CTI_GATE_CHAN_ENABLE, channel);
++	return err ? err : size;
++}
++
++static ssize_t chan_gate_enable_show(struct device *dev,
++				     struct device_attribute *attr,
++				     char *buf)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *cfg = &drvdata->config;
++	unsigned long ctigate_bitmask = cfg->ctigate;
++	int size = 0;
++
++	if (cfg->ctigate == 0)
++		size = scnprintf(buf, PAGE_SIZE, "\n");
++	else
++		size = bitmap_print_to_pagebuf(true, buf, &ctigate_bitmask,
++					       cfg->nr_ctm_channels);
++	return size;
++}
++static DEVICE_ATTR_RW(chan_gate_enable);
++
++static ssize_t chan_gate_disable_store(struct device *dev,
++				       struct device_attribute *attr,
++				       const char *buf, size_t size)
++{
++	int err = 0, channel = 0;
++
++	if (kstrtoint(buf, 0, &channel))
++		return -EINVAL;
++
++	err = cti_channel_gate_op(dev, CTI_GATE_CHAN_DISABLE, channel);
++	return err ? err : size;
++}
++static DEVICE_ATTR_WO(chan_gate_disable);
++
++static int
++chan_op_parse(struct device *dev, enum cti_chan_set_op op, const char *buf)
++{
++	int err = 0, channel = 0;
++
++	if (kstrtoint(buf, 0, &channel))
++		return -EINVAL;
++
++	err = cti_channel_setop(dev, op, channel);
++	return err;
++
++}
++
++static ssize_t chan_set_store(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t size)
++{
++	int err = chan_op_parse(dev, CTI_CHAN_SET, buf);
++
++	return err ? err : size;
++}
++static DEVICE_ATTR_WO(chan_set);
++
++static ssize_t chan_clear_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t size)
++{
++	int err = chan_op_parse(dev, CTI_CHAN_CLR, buf);
++
++	return err ? err : size;
++}
++static DEVICE_ATTR_WO(chan_clear);
++
++static ssize_t chan_pulse_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t size)
++{
++	int err = chan_op_parse(dev, CTI_CHAN_PULSE, buf);
++
++	return err ? err : size;
++}
++static DEVICE_ATTR_WO(chan_pulse);
++
++static ssize_t trig_filter_enable_show(struct device *dev,
++				       struct device_attribute *attr,
++				       char *buf)
++{
++	u32 val;
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++
++	spin_lock(&drvdata->spinlock);
++	val = drvdata->config.trig_filter_enable;
++	spin_unlock(&drvdata->spinlock);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", val);
++}
++
++static ssize_t trig_filter_enable_store(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t size)
++{
++	unsigned long val;
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++
++	if (kstrtoul(buf, 0, &val))
++		return -EINVAL;
++
++	spin_lock(&drvdata->spinlock);
++	drvdata->config.trig_filter_enable = !!val;
++	spin_unlock(&drvdata->spinlock);
++	return size;
++}
++static DEVICE_ATTR_RW(trig_filter_enable);
++
++static ssize_t trigout_filtered_show(struct device *dev,
++				     struct device_attribute *attr,
++				     char *buf)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *cfg = &drvdata->config;
++	int size = 0, nr_trig_max = cfg->nr_trig_max;
++	unsigned long mask = cfg->trig_out_filter;
++
++	if (mask)
++		size = bitmap_print_to_pagebuf(true, buf, &mask, nr_trig_max);
++	return size;
++}
++static DEVICE_ATTR_RO(trigout_filtered);
++
++/* clear all xtrigger / channel programming */
++static ssize_t chan_xtrigs_reset_store(struct device *dev,
++				       struct device_attribute *attr,
++				       const char *buf, size_t size)
++{
++	int i;
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *config = &drvdata->config;
++
++	spin_lock(&drvdata->spinlock);
++
++	/* clear the CTI trigger / channel programming registers */
++	for (i = 0; i < config->nr_trig_max; i++) {
++		config->ctiinen[i] = 0;
++		config->ctiouten[i] = 0;
++	}
++
++	/* clear the other regs */
++	config->ctigate = GENMASK(config->nr_ctm_channels - 1, 0);
++	config->asicctl = 0;
++	config->ctiappset = 0;
++	config->ctiinout_sel = 0;
++	config->xtrig_rchan_sel = 0;
++
++	/* if enabled then write through */
++	if (cti_active(config))
++		cti_write_all_hw_regs(drvdata);
++
++	spin_unlock(&drvdata->spinlock);
++	return size;
++}
++static DEVICE_ATTR_WO(chan_xtrigs_reset);
++
++/*
++ * Write to select a channel to view, read to display the
++ * cross triggers for the selected channel.
++ */
++static ssize_t chan_xtrigs_view_store(struct device *dev,
++				      struct device_attribute *attr,
++				      const char *buf, size_t size)
++{
++	unsigned long val;
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++
++	if (kstrtoul(buf, 0, &val))
++		return -EINVAL;
++	if (val > (drvdata->config.nr_ctm_channels - 1))
++		return -EINVAL;
++
++	spin_lock(&drvdata->spinlock);
++	drvdata->config.xtrig_rchan_sel = val;
++	spin_unlock(&drvdata->spinlock);
++	return size;
++}
++
++static ssize_t chan_xtrigs_view_show(struct device *dev,
++				     struct device_attribute *attr,
++				     char *buf)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *cfg = &drvdata->config;
++	int used = 0, reg_idx;
++	int buf_sz = PAGE_SIZE;
++	u32 chan_mask = BIT(cfg->xtrig_rchan_sel);
++
++	used += scnprintf(buf, buf_sz, "[%d] IN: ", cfg->xtrig_rchan_sel);
++	for (reg_idx = 0;
++	     reg_idx < drvdata->config.nr_trig_max;
++	     reg_idx++) {
++		if (chan_mask & cfg->ctiinen[reg_idx]) {
++			used += scnprintf(buf + used, buf_sz - used, "%d ",
++					  reg_idx);
++		}
++	}
++
++	used += scnprintf(buf + used, buf_sz - used, "OUT: ");
++	for (reg_idx = 0;
++	     reg_idx < drvdata->config.nr_trig_max;
++	     reg_idx++) {
++		if (chan_mask & cfg->ctiouten[reg_idx]) {
++			used += scnprintf(buf + used, buf_sz - used, "%d ",
++					  reg_idx);
++		}
++	}
++	used += scnprintf(buf + used, buf_sz - used, "\n");
++	return used;
++}
++static DEVICE_ATTR_RW(chan_xtrigs_view);
++
++static ssize_t print_chan_list(struct device *dev,
++			       char *buf, bool inuse)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *config = &drvdata->config;
++	int size, i;
++	unsigned long inuse_bits = 0, chan_mask;
++
++	/* scan regs to get bitmap of channels in use. */
++	spin_lock(&drvdata->spinlock);
++	for (i = 0; i < config->nr_trig_max; i++) {
++		inuse_bits |= config->ctiinen[i];
++		inuse_bits |= config->ctiouten[i];
++	}
++	spin_unlock(&drvdata->spinlock);
++
++	/* inverse bits if printing free channels */
++	if (!inuse)
++		inuse_bits = ~inuse_bits;
++
++	/* list of channels, or 'none' */
++	chan_mask = GENMASK(config->nr_ctm_channels - 1, 0);
++	if (inuse_bits & chan_mask)
++		size = bitmap_print_to_pagebuf(true, buf, &inuse_bits,
++					       config->nr_ctm_channels);
++	else
++		size = scnprintf(buf, PAGE_SIZE, "\n");
++	return size;
++}
++
++static ssize_t chan_inuse_show(struct device *dev,
++			       struct device_attribute *attr,
++			       char *buf)
++{
++	return print_chan_list(dev, buf, true);
++}
++static DEVICE_ATTR_RO(chan_inuse);
++
++static ssize_t chan_free_show(struct device *dev,
++			      struct device_attribute *attr,
++			      char *buf)
++{
++	return print_chan_list(dev, buf, false);
++}
++static DEVICE_ATTR_RO(chan_free);
++
++static struct attribute *coresight_cti_channel_attrs[] = {
++	&dev_attr_trigin_attach.attr,
++	&dev_attr_trigin_detach.attr,
++	&dev_attr_trigout_attach.attr,
++	&dev_attr_trigout_detach.attr,
++	&dev_attr_trig_filter_enable.attr,
++	&dev_attr_trigout_filtered.attr,
++	&dev_attr_chan_gate_enable.attr,
++	&dev_attr_chan_gate_disable.attr,
++	&dev_attr_chan_set.attr,
++	&dev_attr_chan_clear.attr,
++	&dev_attr_chan_pulse.attr,
++	&dev_attr_chan_inuse.attr,
++	&dev_attr_chan_free.attr,
++	&dev_attr_chan_xtrigs_view.attr,
++	&dev_attr_chan_xtrigs_reset.attr,
 +	NULL,
 +};
 +
+ /* sysfs groups */
  static const struct attribute_group coresight_cti_group = {
  	.attrs = coresight_cti_attrs,
+@@ -478,9 +821,15 @@ static const struct attribute_group coresight_cti_regs_group = {
+ 	.name = "regs",
  };
  
-+static const struct attribute_group coresight_cti_mgmt_group = {
-+	.attrs = coresight_cti_mgmt_attrs,
-+	.name = "mgmt",
++static const struct attribute_group coresight_cti_channels_group = {
++	.attrs = coresight_cti_channel_attrs,
++	.name = "channels",
 +};
 +
  const struct attribute_group *coresight_cti_groups[] = {
  	&coresight_cti_group,
-+	&coresight_cti_mgmt_group,
+ 	&coresight_cti_mgmt_group,
+ 	&coresight_cti_regs_group,
++	&coresight_cti_channels_group,
  	NULL,
  };
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index 82e563cdc879..aba6b789c969 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -22,6 +22,7 @@
- #define CORESIGHT_CLAIMCLR	0xfa4
- #define CORESIGHT_LAR		0xfb0
- #define CORESIGHT_LSR		0xfb4
-+#define CORESIGHT_DEVARCH	0xfbc
- #define CORESIGHT_AUTHSTATUS	0xfb8
- #define CORESIGHT_DEVID		0xfc8
- #define CORESIGHT_DEVTYPE	0xfcc
+diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+index 0f88b9bc2774..77c2af247917 100644
+--- a/drivers/hwtracing/coresight/coresight-cti.c
++++ b/drivers/hwtracing/coresight/coresight-cti.c
+@@ -293,6 +293,153 @@ int cti_add_default_connection(struct device *dev, struct cti_drvdata *drvdata)
+ 	return ret;
+ }
+ 
++/** cti channel api **/
++/* attach/detach channel from trigger - write through if enabled. */
++int cti_channel_trig_op(struct device *dev, enum cti_chan_op op,
++			enum cti_trig_dir direction, u32 channel_idx,
++			u32 trigger_idx)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *config = &drvdata->config;
++	u32 trig_bitmask;
++	u32 chan_bitmask;
++	u32 reg_value;
++	int reg_offset;
++
++	/* ensure indexes in range */
++	if ((channel_idx >= config->nr_ctm_channels) ||
++	   (trigger_idx >= config->nr_trig_max))
++		return -EINVAL;
++
++	trig_bitmask = BIT(trigger_idx);
++
++	/* ensure registered triggers and not out filtered */
++	if (direction == CTI_TRIG_IN)	{
++		if (!(trig_bitmask & config->trig_in_use))
++			return -EINVAL;
++	} else {
++		if (!(trig_bitmask & config->trig_out_use))
++			return -EINVAL;
++
++		if ((config->trig_filter_enable) &&
++		    (config->trig_out_filter & trig_bitmask))
++			return -EINVAL;
++	}
++
++	/* update the local register values */
++	chan_bitmask = BIT(channel_idx);
++	reg_offset = (direction == CTI_TRIG_IN ? CTIINEN(trigger_idx) :
++		      CTIOUTEN(trigger_idx));
++
++	spin_lock(&drvdata->spinlock);
++
++	/* read - modify write - the trigger / channel enable value */
++	reg_value = direction == CTI_TRIG_IN ? config->ctiinen[trigger_idx] :
++		     config->ctiouten[trigger_idx];
++	if (op == CTI_CHAN_ATTACH)
++		reg_value |= chan_bitmask;
++	else
++		reg_value &= ~chan_bitmask;
++
++	/* write local copy */
++	if (direction == CTI_TRIG_IN)
++		config->ctiinen[trigger_idx] = reg_value;
++	else
++		config->ctiouten[trigger_idx] = reg_value;
++
++	/* write through if enabled */
++	if (cti_active(config))
++		cti_write_single_reg(drvdata, reg_offset, reg_value);
++	spin_unlock(&drvdata->spinlock);
++	return 0;
++}
++
++int cti_channel_gate_op(struct device *dev, enum cti_chan_gate_op op,
++			u32 channel_idx)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *config = &drvdata->config;
++	u32 chan_bitmask;
++	u32 reg_value;
++	int err = 0;
++
++	if (channel_idx >= config->nr_ctm_channels)
++		return -EINVAL;
++
++	chan_bitmask = BIT(channel_idx);
++
++	spin_lock(&drvdata->spinlock);
++	reg_value = config->ctigate;
++	switch (op) {
++	case CTI_GATE_CHAN_ENABLE:
++		reg_value |= chan_bitmask;
++		break;
++
++	case CTI_GATE_CHAN_DISABLE:
++		reg_value &= ~chan_bitmask;
++		break;
++
++	default:
++		err = -EINVAL;
++		break;
++	}
++	if (err == 0) {
++		config->ctigate = reg_value;
++		if (cti_active(config))
++			cti_write_single_reg(drvdata, CTIGATE, reg_value);
++	}
++	spin_unlock(&drvdata->spinlock);
++	return err;
++}
++
++int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
++		      u32 channel_idx)
++{
++	struct cti_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct cti_config *config = &drvdata->config;
++	u32 chan_bitmask;
++	u32 reg_value;
++	u32 reg_offset;
++	int err = 0;
++
++	if (channel_idx >= config->nr_ctm_channels)
++		return -EINVAL;
++
++	chan_bitmask = BIT(channel_idx);
++
++	spin_lock(&drvdata->spinlock);
++	reg_value = config->ctiappset;
++	switch (op) {
++	case CTI_CHAN_SET:
++		config->ctiappset |= chan_bitmask;
++		reg_value  = config->ctiappset;
++		reg_offset = CTIAPPSET;
++		break;
++
++	case CTI_CHAN_CLR:
++		config->ctiappset &= ~chan_bitmask;
++		reg_value = chan_bitmask;
++		reg_offset = CTIAPPCLEAR;
++		break;
++
++	case CTI_CHAN_PULSE:
++		config->ctiappset &= ~chan_bitmask;
++		reg_value = chan_bitmask;
++		reg_offset = CTIAPPPULSE;
++		break;
++
++	default:
++		err = -EINVAL;
++		break;
++	}
++
++	if ((err == 0) && cti_active(config))
++		cti_write_single_reg(drvdata, reg_offset, reg_value);
++	spin_unlock(&drvdata->spinlock);
++
++	return err;
++}
++
+ /** cti ect operations **/
+ int cti_enable(struct coresight_device *csdev)
+ {
+diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
+index 6f6f6773cd3b..469a06a1bb78 100644
+--- a/drivers/hwtracing/coresight/coresight-cti.h
++++ b/drivers/hwtracing/coresight/coresight-cti.h
+@@ -168,6 +168,30 @@ struct cti_drvdata {
+ 	void (*csdev_release)(struct device *dev);
+ };
+ 
++/*
++ * Channel operation types.
++ */
++enum cti_chan_op {
++	CTI_CHAN_ATTACH,
++	CTI_CHAN_DETACH,
++};
++
++enum cti_trig_dir {
++	CTI_TRIG_IN,
++	CTI_TRIG_OUT,
++};
++
++enum cti_chan_gate_op {
++	CTI_GATE_CHAN_ENABLE,
++	CTI_GATE_CHAN_DISABLE,
++};
++
++enum cti_chan_set_op {
++	CTI_CHAN_SET,
++	CTI_CHAN_CLR,
++	CTI_CHAN_PULSE,
++};
++
+ /* private cti driver fns & vars */
+ extern const struct attribute_group *coresight_cti_groups[];
+ int cti_add_default_connection(struct device *dev,
+@@ -180,8 +204,16 @@ struct cti_trig_con *cti_allocate_trig_con(struct device *dev, int in_sigs,
+ 					   int out_sigs);
+ int cti_enable(struct coresight_device *csdev);
+ int cti_disable(struct coresight_device *csdev);
++void cti_write_all_hw_regs(struct cti_drvdata *drvdata);
+ void cti_write_intack(struct device *dev, u32 ackval);
+ void cti_write_single_reg(struct cti_drvdata *drvdata, int offset, u32 value);
++int cti_channel_trig_op(struct device *dev, enum cti_chan_op op,
++			enum cti_trig_dir direction, u32 channel_idx,
++			u32 trigger_idx);
++int cti_channel_gate_op(struct device *dev, enum cti_chan_gate_op op,
++			u32 channel_idx);
++int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
++		      u32 channel_idx);
+ struct coresight_platform_data *
+ coresight_cti_get_platform_data(struct device *dev);
+ 
 -- 
 2.17.1
 
