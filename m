@@ -2,53 +2,53 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5FBC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1687C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77EE720663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87EB620730
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 15:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577720130;
-	bh=S6z6M6zmJEI3nMJs7Q9Po1GayFr4iPBjeKO0Rk+zr8s=;
+	s=default; t=1577720288;
+	bh=QVnU30Ev3eblfmYmWUuZcBZDRk2imN8YZtU8U+mDa4Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yodGm0KR41Wo11sWaCDHlw3HLd27BTVZrEqS4TL64fR2wksYThgLglSNqks5X/fbA
-	 iCJgVYqLCYPj6epQy+1lE4CXLAdmUx9nxNuHV3gnKMRCNjxNRTO6M4FrlQA8JW75Ja
-	 ukVQAsputuE+W7MW/8jXCD3G2sLVcgclzqKJL3GY=
+	b=q9yigISh1+M4YZzZyf097uQICRUXAxaqI/85kckoqX9Xc65ZdU4DI9NJsM3e4RAja
+	 L6ianLA58RwNr04SnvvajV2leVS1nGBGw+tlf0PveZ0xy8T5ObOl9C4ztQOXKz0zxp
+	 LT+udNiwhWL790ZJvJMFtc1WS9OIKicSDBbolWgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfL3Pfa (ORCPT
+        id S1727580AbfL3PiD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 10:35:30 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44819 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfL3Pf3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 10:35:29 -0500
-Received: by mail-ed1-f65.google.com with SMTP id bx28so32873929edb.11;
-        Mon, 30 Dec 2019 07:35:28 -0800 (PST)
+        Mon, 30 Dec 2019 10:38:03 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35258 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbfL3PiD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 10:38:03 -0500
+Received: by mail-ed1-f67.google.com with SMTP id f8so32937809edv.2;
+        Mon, 30 Dec 2019 07:38:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ozB2LjDdmJTikMrKED+hWYBd54PpqOChciXJdErHTK0=;
-        b=tMQKvvK4KXyQasKP29bQ5jnBCOBBMuH8W2Gs7WSNa1RUP9HhrenZonFmfptMi1uaqo
-         aPqHJJqxIwdZZxcZ5cZZcoe+6qggbcby9/vgUDVACVdiz3G8AbZ3tM9r9UyDIrB+jfGt
-         SQuMTf8RszcNp68EdncKoUv2u1j45l+qWClffOtvcOFS5B/9YlxCwCPT35JUFtRqOG9R
-         u40hu9IkiltDVfebVfL1dkG6+6XMUuNEvVLz23SAmy57m2gnKbllDVxFvxOzgjUA0UdP
-         mrcQm0PQppPZOMVli5Re6HCQVpTJaBnD24hM7+5cGal5BBxoiYwc9/sW0Cav0Ow2aSLU
-         w2FQ==
-X-Gm-Message-State: APjAAAXMyHInuMTT3l0aYuUqBj/4ZEm20s9wQ9810IcQQqYuXJwkbgrY
-        LvjXinmktCMOI4S4lpSG6PI=
-X-Google-Smtp-Source: APXvYqy7tLghMLXWt9n3EAx0fpcKuStw4S0B+WjKZ72DH9jAjvfKoRptKpBc7vrRrhRpmdcx4KxmvQ==
-X-Received: by 2002:a17:906:a48:: with SMTP id x8mr72252035ejf.188.1577720127888;
-        Mon, 30 Dec 2019 07:35:27 -0800 (PST)
+        bh=S+fvXg7v5gstlV7QHJfLUPtEMEaeWdFQQ5WmiP5N1uk=;
+        b=IpW2WB6m9qxouJ5IGy4b1DkSfOQ1rR0UoptuUwpgDinShNusMrKuiwTjRvzjNT0RBz
+         /Ht1m2RZ8WyunkhQOfMev8ndnEGxoCo+W2T9uY4K7gZ7yIQcN+C1BfFxHD3QqdkEgqqM
+         kpAmEdwsrz9O7TbaFsnqSWiVPCTZ/zU3Zi0ncyp9EfkqKJaJHRxHfX2fx6CSCpKUhuKZ
+         +zT/fXLjSYmJm8cDaw5h7G5uVDKKROq8ARGo+ffyHcuOIxz7CMw4T+/PHbu/DTiEHG8i
+         1qCOUF8AYt4CL2aiWA/4i35+mcl2BcJsFc4JvoNQcbPnTbvULRIL1w4ZZIf0yzqYyGNT
+         3/iQ==
+X-Gm-Message-State: APjAAAXvwIiaxACY0l4ECtmf2+N2rcEu7tMSDyFO6s43ZTMv7LSAIfsX
+        dwcJAsMUT+70XIfNi+bZnec=
+X-Google-Smtp-Source: APXvYqy+53yBifFTLAmU8dsdQ8hL0cLkTBJ1uEgw7SYnSKdV/so5DE1tI+/hP+QWRy6KnJjmAet0wA==
+X-Received: by 2002:a17:906:5448:: with SMTP id d8mr39256290ejp.254.1577720281504;
+        Mon, 30 Dec 2019 07:38:01 -0800 (PST)
 Received: from pi3 ([194.230.155.138])
-        by smtp.googlemail.com with ESMTPSA id qk16sm5661120ejb.71.2019.12.30.07.35.26
+        by smtp.googlemail.com with ESMTPSA id s22sm2765324ejm.43.2019.12.30.07.38.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Dec 2019 07:35:27 -0800 (PST)
-Date:   Mon, 30 Dec 2019 16:35:24 +0100
+        Mon, 30 Dec 2019 07:38:00 -0800 (PST)
+Date:   Mon, 30 Dec 2019 16:37:58 +0100
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Benjamin Gaignard <benjamin.gaignard@st.com>
 Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
@@ -57,56 +57,50 @@ Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, m.szyprowski@samsung.com,
         amelie.delaunay@st.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
- json-schema
-Message-ID: <20191230153524.GA4918@pi3>
+Subject: Re: [PATCH v2 2/2] ARM: dts: exynos: Remove unneeded "snps,dwc2"
+ from hsotg node
+Message-ID: <20191230153758.GB4918@pi3>
 References: <20191219103536.25485-1-benjamin.gaignard@st.com>
- <20191219103536.25485-2-benjamin.gaignard@st.com>
+ <20191219103536.25485-3-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191219103536.25485-2-benjamin.gaignard@st.com>
+In-Reply-To: <20191219103536.25485-3-benjamin.gaignard@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 11:35:35AM +0100, Benjamin Gaignard wrote:
-> Convert DWC2 bindings to DT schema format using json-schema.
-> DWC2 is widely use but a couple of compatibles and properties
-> (vusb_d-supply,vusb_a-supply) were missing in dwc2.txt, the
-> patch add them.
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> CC: Minas Harutyunyan <hminas@synopsys.com>
-> 
-> changes in version 2:
-> - put Minas Harutyunyan <hminas@synopsys.com> as maintainer
-> - remove type and description from phy property
-> - remove description from compatible items
-> - simplify samsung,s3c6400-hsotg compatible handling
-> 
+On Thu, Dec 19, 2019 at 11:35:36AM +0100, Benjamin Gaignard wrote:
+> Remove "snps,dwc2" from hsotg@12480000 node compatible list because
+> "samsung,s3c6400-hsotg" should be enough.
 
-(...)
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +      usb@101c0000 {
-> +        compatible = "ralink,rt3050-usb, snps,dwc2";
-
-Does it pass dtbs_check? Should be two strings.
+The more detailed compatible is almost always "enough". Some other nodes
+also have detailed+generic compatible. In this case there is a driver
+matching "snps,dwc2" so why removing it?
 
 Best regards,
 Krzysztof
 
-
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  arch/arm/boot/dts/exynos3250.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> index b016b0b68306..d4866269f4ee 100644
+> --- a/arch/arm/boot/dts/exynos3250.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> @@ -362,7 +362,7 @@
+>  		};
+>  
+>  		hsotg: hsotg@12480000 {
+> -			compatible = "samsung,s3c6400-hsotg", "snps,dwc2";
+> +			compatible = "samsung,s3c6400-hsotg";
+>  			reg = <0x12480000 0x20000>;
+>  			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&cmu CLK_USBOTG>;
+> -- 
+> 2.15.0
+> 
