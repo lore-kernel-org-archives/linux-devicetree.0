@@ -6,99 +6,117 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F84BC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4311EC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E95AC2071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 17:56:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1170520718
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 18:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577728568;
-	bh=7MiGFHqZ1YA6+XYH5caumqyxTQ0RI4rEMO2Mbg2nz0U=;
+	s=default; t=1577728936;
+	bh=mmLEN5EVhqLVybqcxDuhfGriciuvTU6AmdSNL96/umg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Aiw57x8otOIbPBIpwzDvR/Z0MuLKvrVhY88j6Avs6pF8nrhq0qLBcrN8kDgFVORst
-	 t+WSESHrAZRU/T5kdoMmxGKfivhcKWhmg3ZuRRuqDyQUARFuTl3mY/f/Ucj1orpr5L
-	 bKcwlitoYkGaoGqp/vPzHA4YDnaflqgkcQ0qLnVc=
+	b=upGCGgp5ju+fhQDSTdXwn7wjTdExbaIPc8WhDsQzr00g0xtBzZJW4HhpA4j5yVBkf
+	 yNOWKKgWgW5HCE96O6jTfv2ynanIUknvFraPLeTBek7wEL8S7kgguqRpi729oHMhXN
+	 F3ctkWMrtV4VZ1UM7vlj+S2mhGONVFIQDQkZ2H9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfL3R4H (ORCPT
+        id S1727207AbfL3SCP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 12:56:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58196 "EHLO mail.kernel.org"
+        Mon, 30 Dec 2019 13:02:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726602AbfL3R4H (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 12:56:07 -0500
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        id S1726602AbfL3SCP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 30 Dec 2019 13:02:15 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A108320722;
-        Mon, 30 Dec 2019 17:56:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D9EB20718;
+        Mon, 30 Dec 2019 18:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577728566;
-        bh=7MiGFHqZ1YA6+XYH5caumqyxTQ0RI4rEMO2Mbg2nz0U=;
+        s=default; t=1577728934;
+        bh=mmLEN5EVhqLVybqcxDuhfGriciuvTU6AmdSNL96/umg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZyNfioOc0BJs6n1P4VurKnXht6n9H55/bqbId7lwwjLYOuj1huX0o87o1aSpIEIOo
-         jpE2cI6SHjliW7MRzVXGvIIEXexnXzjSL+3pQbI/CSs9PVEC52nqNggMe2Q/AmKf3k
-         SRb+e5peP3wmT/Li0gzTjgxHPAVxXQQo3OwFXkfc=
-Received: by mail-qk1-f182.google.com with SMTP id w127so26751459qkb.11;
-        Mon, 30 Dec 2019 09:56:06 -0800 (PST)
-X-Gm-Message-State: APjAAAXxJxRQk1jKP2qf1wKNRjv0U0Hd+2rOlDJkxCJ/lDfpnyDOcuJ+
-        VUb7NeBIhJPyZyOiqiJ6JD5eM/LXOOv+tS5YgQ==
-X-Google-Smtp-Source: APXvYqycL5jUu4K0ZnwFoQ0hUtTOiQH/7swu7c5eB4jxMJ/2vkRFQXzEcmU0gS/ZjLfypiZMjlO5nEYX08my7wRarek=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr56359110qkg.152.1577728565786;
- Mon, 30 Dec 2019 09:56:05 -0800 (PST)
+        b=Bc4RjaEDQ1ETswDQYyXiPwv76AKYwd/0t9BG0JWxVixpXvfl41zF0xXKTgUNwatnZ
+         4Ehht6ai6mWNwzzvk7vA8L2KLFoZrZ5qF1vKaUzGzu32X22nl3rbzAQgjF5kWonh2j
+         cY0epFe+rpWNCBlbvPFab1ZWvffD5T3CrOo10Li4=
+Received: by mail-qk1-f181.google.com with SMTP id x1so26747306qkl.12;
+        Mon, 30 Dec 2019 10:02:14 -0800 (PST)
+X-Gm-Message-State: APjAAAVbBY/EsJUlYQrX+g/i0j4saPAU3AqSG9l0vXC2vKGIxIgbTvPy
+        2fgda/WEIBoFcQRRjf3/sExddYS0KMSL8bvhLA==
+X-Google-Smtp-Source: APXvYqxnbEUjGyxvCU4ntE7buUgy18mz5Tni7Bm9/X322VaakU+9YenlJraMm5LyISnrzCBgzdGBaqVdjNI50V7PeH4=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr56849186qkd.223.1577728933710;
+ Mon, 30 Dec 2019 10:02:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20191227111235.GA3370@localhost.localdomain>
-In-Reply-To: <20191227111235.GA3370@localhost.localdomain>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 30 Dec 2019 10:55:54 -0700
-X-Gmail-Original-Message-ID: <CAL_Jsq+rEsFARDejfskLHF_zM8qi8dadLKNhq4a+MxMvfeHiNA@mail.gmail.com>
-Message-ID: <CAL_Jsq+rEsFARDejfskLHF_zM8qi8dadLKNhq4a+MxMvfeHiNA@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1576496415-23064-1-git-send-email-tamizhr@codeaurora.org>
+ <20191226185132.GA31120@bogus> <62b9e7b140a96401469f7075811d0d67@codeaurora.org>
+In-Reply-To: <62b9e7b140a96401469f7075811d0d67@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 30 Dec 2019 11:02:02 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqKspnQ50Muw-jeq+uE1+vj5nuzpxmYcOSFwY+n2Gj3tXA@mail.gmail.com>
+Message-ID: <CAL_JsqKspnQ50Muw-jeq+uE1+vj5nuzpxmYcOSFwY+n2Gj3tXA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: ath10k: Add new dt entries to identify
+ coex support
+To:     Tamizh Chelvam <tamizhr@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 4:12 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Sun, Dec 29, 2019 at 10:07 PM <tamizhr@codeaurora.org> wrote:
 >
-> Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
-> the binding document to two separate documents (own documents for BD71837
-> and BD71847) as they have different amount of regulators. This way we can
-> better enforce the node name check for regulators. ROHM is also providing
-> BD71850 - which is almost identical to BD71847 - main difference is some
-> initial regulator states. The BD71850 can be driven by same driver and it
-> has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
-> introduce compatible for it.
+> Hi Rob,
 >
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
+> Thanks for your review comments.
 >
-> changes since v1:
-> - constrains to short and long presses.
-> - reworded commit message to shorten a line exceeding 75 chars
-> - added 'additionalProperties: false'
-> - removed 'clock-names' from example node
->
->  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
->  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
->  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
->  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
->  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
->  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
->  6 files changed, 658 insertions(+), 252 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
->  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
+> >> This adds new dt entries qcom,coexist-support and
+> >> qcom,coexist-gpio-pin
+> >> which will be used by ath10k driver to identify coex support
+> >> of a hardware and notify wifi firmware the gpio pin number.
+> >> This pin number information is needed for the hardware QCA4019.
+> >>
+> >> Signed-off-by: Tamizh Chelvam <tamizhr@codeaurora.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 6
+> >> ++++++
+> >>  1 file changed, 6 insertions(+)
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> index 0171283..a41e936 100644
+> >> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> >> @@ -87,6 +87,10 @@ Optional properties:
+> >>      Definition: Quirk specifying that the firmware expects the 8bit
+> >> version
+> >>                  of the host capability QMI request
+> >>  - qcom,xo-cal-data: xo cal offset to be configured in xo trim
+> >> register.
+> >> +- qcom,coexist-support : should contain eithr "0" or "1" to indicate
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+typo
+
+> >> coex
+> >> +                     support by the hardware.
+> >> +- qcom,coexist-gpio-pin : gpio pin number  information to support
+> >> coex
+> >> +                      which will be used by wifi firmware.
+> >
+> > What combinations of these 2 properties are valid?
+> >
+> > Is qcom,coexist-gpio-pin required for coexist support? If so then it
+> > alone should be enough to enable/disable coexist.
+> >
+> qcom,coexist-gpio-pin is required for QCA4019 devices. And other ath10k
+> devices doesn't required that value.
+> So only added two fields to enable/disable coexist and another for
+> notifying the gpio pin info.
+
+Okay.
+
+'qcom,coexist-support' can be boolean instead. Unless you need it to
+override a default setting.
+
+Rob
