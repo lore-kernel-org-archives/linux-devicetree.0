@@ -2,107 +2,120 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444C6C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 05:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BC6C2D0C3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 05:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158A12071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 05:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l6PFc2QD"
+	by mail.kernel.org (Postfix) with ESMTP id 25A7B206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 05:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfL3FP1 (ORCPT
+        id S1727118AbfL3Fx5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 00:15:27 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6044 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfL3FP1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 00:15:27 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0987e00000>; Sun, 29 Dec 2019 21:15:12 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 29 Dec 2019 21:15:26 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 29 Dec 2019 21:15:26 -0800
-Received: from [10.24.192.96] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 30 Dec
- 2019 05:15:22 +0000
-Subject: Re: [Patch V2 03/18] phy: tegra: xusb: Add usb-role-switch support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
- <1576660591-10383-4-git-send-email-nkristam@nvidia.com>
- <20191219132650.GJ1440537@ulmo>
- <74d94004-2022-3b04-6cd9-d6b1e9eca230@nvidia.com>
- <20191229093643.GA47966@mithrandir>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <ba264e94-33c9-41bb-be23-3a8cad6cef52@nvidia.com>
-Date:   Mon, 30 Dec 2019 10:47:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 30 Dec 2019 00:53:57 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:52488 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbfL3Fx5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 00:53:57 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBU5rJ3X019983, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBU5rJ3X019983
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 30 Dec 2019 13:53:19 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTITCASV02.realtek.com.tw (172.21.6.19) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Mon, 30 Dec 2019 13:53:19 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 30 Dec 2019 13:53:18 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
+ RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
+ 15.01.1779.005; Mon, 30 Dec 2019 13:53:18 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH 04/14] arm64: dts: realtek: rtd16xx: Introduce iso and misc syscon
+Thread-Topic: [PATCH 04/14] arm64: dts: realtek: rtd16xx: Introduce iso and
+ misc syscon
+Thread-Index: AQHVqT1uQqwPTFDEQkWFr30YR8TW7qfSV49w
+Date:   Mon, 30 Dec 2019 05:53:18 +0000
+Message-ID: <863ffd39a45848ad9743ce854425b77c@realtek.com>
+References: <20191202182205.14629-1-afaerber@suse.de>
+ <20191202182205.14629-5-afaerber@suse.de>
+In-Reply-To: <20191202182205.14629-5-afaerber@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191229093643.GA47966@mithrandir>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1577682912; bh=kOikX3Ohu11K+j1p0uqOpCdOHAMVO4HLaWjD7fd+RKk=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=l6PFc2QDMZvneNFEDMYXYemt1bj6X/dIC9RV9ubaz7SIvn6TuSjlmF2jYusee6qzl
-         Ar4BvNTxqASrcX4SezPxbU+lE+gHreBfXvWGevK23GUJeOotBkBGRy+HfGrRlylzEK
-         l6pKhGtyX/RdMWXOUJ6P95oKRQMYQx4DSQfFGcSAT21jkq4Hnjb7kasqFttgZvreni
-         mXKNZ8entjXiPtbfb67JLLhZDknC9K0DnOtChtpEfriQ39YGTiubIRxIuRtnWU6yaR
-         dLT595IdkfvDJENm3U4Pzo7LzWqSoKcJk+1N6kWlm59m99NFtIvSf+BKLRlPiSowkm
-         saSh+2ujydu0g==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 29-12-2019 15:06, Thierry Reding wrote:
-> On Fri, Dec 27, 2019 at 12:09:22PM +0530, Nagarjuna Kristam wrote:
->> On 19-12-2019 18:56, Thierry Reding wrote:
->>> On Wed, Dec 18, 2019 at 02:46:16PM +0530, Nagarjuna Kristam wrote:
-> [...]
->>>> @@ -551,11 +556,42 @@ static const char *const modes[] = {
->>>>    	[USB_DR_MODE_OTG] = "otg",
->>>>    };
->>>> +static int tegra_xusb_role_sw_set(struct device *dev, enum usb_role role)
->>>> +{
->>>> +	dev_dbg(dev, "%s calling notifier for role is %d\n", __func__, role);
->>> I don't understand what "for role is %d" means here. I think perhaps you
->>> meant to simply say "for role %d"? Also, perhaps add parentheses after
->>> the "%s" to clarify that you're referring to a function.
->>>
->> Yes, intention is to print role, Will update as mentioned "for role %d"
-> It might be better to print the name of the role here because I suspect
-> very few people know the value of the role defines without looking them
-> up. I thought there was already a function to return the role name for
-> a given enum usb_role, but it seems like we only have name -> enum
-> conversion. Might be worth adding that, but doesn't have to be as part
-> of this series.
-> 
-> Thierry
-
-Will add a structure to define strings for roles enums, similar to modes
-usage in this driver.
-
--Nagarjuna
+PiBHcm91cCBVQVJUMCBpbnRvIGFuIElzb2xhdGlvbiBzeXNjb24gbWZkIG5vZGUuDQo+IEdyb3Vw
+IFVBUlQxIGFuZCBVQVJUMiBpbnRvIGEgTWlzY2VsbGFuZW91cyBzeXNjb24gbWZkIG5vZGUuDQo+
+IA0KPiBDYzogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRlay5jb20+DQo+IFNpZ25lZC1vZmYt
+Ynk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT4NCj4gLS0tDQo+ICBhcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpIHwgNzANCj4gKysrKysrKysrKysrKysr
+KysrKysrLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspLCAy
+NCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jl
+YWx0ZWsvcnRkMTZ4eC5kdHNpDQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2
+eHguZHRzaQ0KPiBpbmRleCA2OWNjMGQ5NDFjOGQuLjhmOGYyYjMyOGNkMSAxMDA2NDQNCj4gLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDE2eHguZHRzaQ0KPiArKysgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC5kdHNpDQo+IEBAIC0xMTgsMzQgKzExOCwy
+MiBAQA0KPiAgCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICAJCQlyYW5nZXMgPSA8MHgwIDB4OTgw
+MDAwMDAgMHgyMDAwMDA+Ow0KPiANCj4gLQkJCXVhcnQwOiBzZXJpYWwwQDc4MDAgew0KPiAtCQkJ
+CWNvbXBhdGlibGUgPSAic25wcyxkdy1hcGItdWFydCI7DQo+IC0JCQkJcmVnID0gPDB4NzgwMCAw
+eDQwMD47DQo+IC0JCQkJcmVnLXNoaWZ0ID0gPDI+Ow0KPiArCQkJaXNvOiBzeXNjb25ANzAwMCB7
+DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7DQo+ICsJCQkJcmVn
+ID0gPDB4NzAwMCAweDEwMDA+Ow0KPiAgCQkJCXJlZy1pby13aWR0aCA9IDw0PjsNCj4gLQkJCQlp
+bnRlcnJ1cHRzID0gPEdJQ19TUEkgNjggSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+IC0JCQkJY2xv
+Y2stZnJlcXVlbmN5ID0gPDI3MDAwMDAwPjsNCj4gLQkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0K
+PiArCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkJCSNzaXplLWNlbGxzID0gPDE+Ow0K
+PiArCQkJCXJhbmdlcyA9IDwweDAgMHg3MDAwIDB4MTAwMD47DQo+ICAJCQl9Ow0KPiANCj4gLQkJ
+CXVhcnQxOiBzZXJpYWwxQDFiMjAwIHsNCj4gLQkJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBi
+LXVhcnQiOw0KPiAtCQkJCXJlZyA9IDwweDFiMjAwIDB4NDAwPjsNCj4gLQkJCQlyZWctc2hpZnQg
+PSA8Mj47DQo+ICsJCQltaXNjOiBzeXNjb25AMWIwMDAgew0KPiArCQkJCWNvbXBhdGlibGUgPSAi
+c3lzY29uIiwgInNpbXBsZS1tZmQiOw0KPiArCQkJCXJlZyA9IDwweDFiMDAwIDB4MTAwMD47DQo+
+ICAJCQkJcmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiAtCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4
+OSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gLQkJCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAw
+MDAwPjsNCj4gLQkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiAtCQkJfTsNCj4gLQ0KPiAtCQkJ
+dWFydDI6IHNlcmlhbDJAMWI0MDAgew0KPiAtCQkJCWNvbXBhdGlibGUgPSAic25wcyxkdy1hcGIt
+dWFydCI7DQo+IC0JCQkJcmVnID0gPDB4MWI0MDAgMHg0MDA+Ow0KPiAtCQkJCXJlZy1zaGlmdCA9
+IDwyPjsNCj4gLQkJCQlyZWctaW8td2lkdGggPSA8ND47DQo+IC0JCQkJaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDkwIElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiAtCQkJCWNsb2NrLWZyZXF1ZW5jeSA9
+IDw0MzIwMDAwMDA+Ow0KPiAtCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICsJCQkJI2FkZHJl
+c3MtY2VsbHMgPSA8MT47DQo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsJCQkJcmFuZ2Vz
+ID0gPDB4MCAweDFiMDAwIDB4MTAwMD47DQo+ICAJCQl9Ow0KPiAgCQl9Ow0KPiANCj4gQEAgLTE1
+OSwzICsxNDcsMzcgQEANCj4gIAkJfTsNCj4gIAl9Ow0KPiAgfTsNCj4gKw0KPiArJmlzbyB7DQo+
+ICsJdWFydDA6IHNlcmlhbDBAODAwIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWFwYi11
+YXJ0IjsNCj4gKwkJcmVnID0gPDB4ODAwIDB4NDAwPjsNCj4gKwkJcmVnLXNoaWZ0ID0gPDI+Ow0K
+PiArCQlyZWctaW8td2lkdGggPSA8ND47DQo+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSA2OCBJ
+UlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gKwkJY2xvY2stZnJlcXVlbmN5ID0gPDI3MDAwMDAwPjsN
+Cj4gKwkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gKwl9Ow0KPiArfTsNCj4gKw0KPiArJm1pc2Mg
+ew0KPiArCXVhcnQxOiBzZXJpYWwxQDIwMCB7DQo+ICsJCWNvbXBhdGlibGUgPSAic25wcyxkdy1h
+cGItdWFydCI7DQo+ICsJCXJlZyA9IDwweDIwMCAweDQwMD47DQo+ICsJCXJlZy1zaGlmdCA9IDwy
+PjsNCj4gKwkJcmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+ODkgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsJCWNsb2NrLWZyZXF1ZW5jeSA9IDw0MzIwMDAw
+MDA+Ow0KPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiArCX07DQo+ICsNCj4gKwl1YXJ0Mjog
+c2VyaWFsMkA0MDAgew0KPiArCQljb21wYXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQiOw0KPiAr
+CQlyZWcgPSA8MHg0MDAgMHg0MDA+Ow0KPiArCQlyZWctc2hpZnQgPSA8Mj47DQo+ICsJCXJlZy1p
+by13aWR0aCA9IDw0PjsNCj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDkwIElSUV9UWVBFX0xF
+VkVMX0hJR0g+Ow0KPiArCQljbG9jay1mcmVxdWVuY3kgPSA8NDMyMDAwMDAwPjsNCj4gKwkJc3Rh
+dHVzID0gImRpc2FibGVkIjsNCj4gKwl9Ow0KPiArfTsNCj4gLS0NCj4gMi4xNi40DQo+IA0KPiAN
+CkFja2VkLWJ5OiBKYW1lcyBUYWkgPGphbWVzLnRhaUByZWFsdGVrLmNvbT4NCg==
