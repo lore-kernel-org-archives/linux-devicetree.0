@@ -2,431 +2,227 @@ Return-Path: <SRS0=2Mri=2U=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D178BC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 11:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DDDC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 11:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9428320663
-	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 11:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3BA6206DB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 30 Dec 2019 11:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Ql3iwTKS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GINpgdYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726196AbfL3Luo (ORCPT
+        id S1727419AbfL3Lyr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 06:50:44 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:59948 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbfL3Lun (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 06:50:43 -0500
-Received: from zn.tnic (p200300EC2F008100794E84A6AD7DE589.dip0.t-ipconnect.de [IPv6:2003:ec:2f00:8100:794e:84a6:ad7d:e589])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1D66B1EC05DE;
-        Mon, 30 Dec 2019 12:50:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1577706641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=qJEp1zf5++y0M/fbvkAvwA4TkpQ2f7meEDTCFWylBkY=;
-        b=Ql3iwTKSBrXu9PNwzPkWQ8G5wcfRjsmkHFiqxx0il73ZhI0VMZPr3aIAkoC97eal8oB3Cj
-        sJxDJEmPXo3oImdFyyzqQk3qoJ6nDM6E2MdM48xdWp+XYW9/kK+YhiU/lU13UJzygTPT55
-        hRyP5i1FmBVydMRID5+iaEbdTZPX1lI=
-Date:   Mon, 30 Dec 2019 12:50:30 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        James Morse <james.morse@arm.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Robert Richter <rrichter@marvell.com>,
-        linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>, tsoni@codeaurora.org,
-        psodagud@codeaurora.org
-Subject: Re: [PATCH 2/2] drivers: edac: Add EDAC support for Kryo CPU caches
-Message-ID: <20191230115030.GA30767@zn.tnic>
-References: <cover.1575529553.git.saiprakash.ranjan@codeaurora.org>
- <0101016ed57a6559-46c6c649-db28-4945-a11c-7441b8e9ac5b-000000@us-west-2.amazonses.com>
+        Mon, 30 Dec 2019 06:54:47 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56764 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726196AbfL3Lyr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 06:54:47 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBUBsgdM026883;
+        Mon, 30 Dec 2019 05:54:42 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1577706882;
+        bh=qZ7AmClmWJBfPxy30yYDhId09pXcWEI0aLIuvlycsbw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GINpgdYuyuCxcLswdo/0HbfUs1IRn27j0J+tlJgG7affnnUi+LeX5LqtZePJKZPgw
+         wfK3ugvUdmIxoXLBDlWfOQfq+OwAuA2/o/au4uN+paAfZA01MT2lonoCUvPlpirkBn
+         QZ0toGtg8GQGXT1+MPTMsDdLj3LPVqZO0Qaymue4=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUBsg2n062128;
+        Mon, 30 Dec 2019 05:54:42 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 30
+ Dec 2019 05:54:41 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 30 Dec 2019 05:54:41 -0600
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBUBsd0f072579;
+        Mon, 30 Dec 2019 05:54:40 -0600
+Subject: Re: [PATCH 2/3] dt-bindings: phy: Add lane<n>-mode property to WIZ
+ (SERDES wrapper)
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        Yuti Amonkar <yamonkar@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
+        Roger Quadros <rogerq@ti.com>
+References: <cover.1575906694.git.jsarha@ti.com>
+ <fb79923b1591cc5f26b6973beb92ce503ad3f4d1.1575906694.git.jsarha@ti.com>
+ <20191219190833.GA16358@bogus> <3cf64e30-6b4d-a138-7164-54d1cdc8e05a@ti.com>
+ <CAL_JsqKNFbPebM=pC+GL_DMuf5OPZF4FyJ7KGdSonDAeL_3P1A@mail.gmail.com>
+ <15d0bd42-5bb5-ee14-9e2a-7beb55671e8a@ti.com>
+ <763b3a26-98bd-25c2-687b-e644c5bcb05b@ti.com>
+From:   Jyri Sarha <jsarha@ti.com>
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8e7506c4-9871-1a81-0477-322c0516ff99@ti.com>
+Date:   Mon, 30 Dec 2019 13:54:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0101016ed57a6559-46c6c649-db28-4945-a11c-7441b8e9ac5b-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <763b3a26-98bd-25c2-687b-e644c5bcb05b@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 05, 2019 at 09:53:18AM +0000, Sai Prakash Ranjan wrote:
-> Kryo{3,4}XX CPU cores implement RAS extensions to support
-> Error Correcting Code(ECC). Currently all Kryo{3,4}XX CPU
-> cores (gold/silver a.k.a big/LITTLE) support ECC via RAS.
-
-via RAS what? ARM64_RAS_EXTN?
-
-In any case, this needs James to look at and especially if there's some
-ARM-generic functionality in there which should be shared, of course.
-
-> This adds an interrupt based driver for those CPUs and
-
-s/This adds/Add/
-
-> provides an optional polling of error recording system
-> registers.
+On 30/12/2019 12:18, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  MAINTAINERS                   |   7 +
->  drivers/edac/Kconfig          |  20 +
->  drivers/edac/Makefile         |   1 +
->  drivers/edac/qcom_kryo_edac.c | 679 ++++++++++++++++++++++++++++++++++
->  4 files changed, 707 insertions(+)
->  create mode 100644 drivers/edac/qcom_kryo_edac.c
+> On 30/12/19 3:07 PM, Jyri Sarha wrote:
+>> On 24/12/2019 23:31, Rob Herring wrote:
+>>> On Fri, Dec 20, 2019 at 5:52 AM Jyri Sarha <jsarha@ti.com> wrote:
+>>>>
+>>>> On 19/12/2019 21:08, Rob Herring wrote:
+>>>>> On Mon, Dec 09, 2019 at 06:22:11PM +0200, Jyri Sarha wrote:
+>>>>>> Add property to indicate the usage of SERDES lane controlled by the
+>>>>>> WIZ wrapper. The wrapper configuration has some variation depending on
+>>>>>> how each lane is going to be used.
+>>>>>>
+>>>>>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/phy/ti,phy-j721e-wiz.yaml    | 12 ++++++++++++
+>>>>>>  1 file changed, 12 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>>>>>> index 94e3b4b5ed8e..399725f65278 100644
+>>>>>> --- a/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>>>>>> +++ b/Documentation/devicetree/bindings/phy/ti,phy-j721e-wiz.yaml
+>>>>>> @@ -97,6 +97,18 @@ patternProperties:
+>>>>>>        Torrent SERDES should follow the bindings specified in
+>>>>>>        Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>>>>>>
+>>>>>> +  "^lane[1-4]-mode$":
+>>>>>> +    allOf:
+>>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>> +      - enum: [0, 1, 2, 3, 4, 5, 6]
+>>>>>> +    description: |
+>>>>>> +     Integer describing static lane usage for the lane indicated in
+>>>>>> +     the property name. For Sierra there may be properties lane0 and
+>>>>>> +     lane1, for Torrent all lane[1-4]-mode properties may be
+>>>>>> +     there. The constants to indicate the lane usage are defined in
+>>>>>> +     "include/dt-bindings/phy/phy.h". The lane is assumed to be unused
+>>>>>> +     if its lane<n>-use property does not exist.
+>>>>>
+>>>>> The defines were intended to be in 'phys' cells. Does putting both lane
+>>>>> and mode in the client 'phys' properties not work?
+>>>>>
+>>>>
+>>>> Let me first check if I understood you. So you are suggesting something
+>>>> like this:
+>>>>
+>>>> dp-phy {
+>>>>         #phy-cells = <5>; /* 1 for phy-type and 4 for lanes = 5 */
+>>>>         ...
+>>>> };
+>>>>
+>>>> dp-bridge {
+>>>>         ...
+>>>>         phys = <&dp-phy PHY_TYPE_DP 1 1 0 0>; /* lanes 0 and 1 for DP */
+>>>
+>>> Yes, but I think the lanes can be a single cell mask. And I'd probably
+>>> make that the first cell which is generally "which PHY" and make
+>>> type/mode the 2nd cell. I'd look for other users of PHY_TYPE_ defines
+>>> and match what they've done if possible.
+>>>
+>>
+>> I see. This will cause some head ache on the driver implementation side,
+>> as there is no way for the phy driver to peek the lane use or type from
+>> the phy client's device tree node. It also looks to me that the phy
+>> API[1] has to be extended quite a bit before the phy client can pass the
+>> lane usage information to the phy driver. It will cause some pain to
+>> implement the extension without breaking the phy API and causing a nasty
+>> cross dependency over all the phy client domains.
+>>
+>> Also, there is not much point in putting the PHY_TYPE constant to the
+>> phy client's node, as normally the phy client driver will know quite
+>> well what PHY_TYPE to use. E.g. a SATA driver will always select
+>> PHY_TYPE_SATA and a PCIE driver will select PHY_TYPE_PCIE, etc.
+>>
+>> Kishon, if we have to take this road it also starts to sound like we
+>> will have to move the phy client's phandle to point to the phy wrapper
+>> node, if we want to keep the actual phy driver wrapper agnostic. Then we
+>> can make the wrapper to act like a proxy that forwards the phy_ops calls
+>> to the actual phy driver. Luckily the per lane phy-type selection is not
+>> a blocker for our j721e DisplayPort functionality.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c2d80079dccc..f58c93f963f6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6049,6 +6049,13 @@ L:	linux-edac@vger.kernel.org
->  S:	Maintained
->  F:	drivers/edac/qcom_edac.c
->  
-> +EDAC-KRYO-QCOM
-> +M:	Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> +L:	linux-arm-msm@vger.kernel.org
-> +L:	linux-edac@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/edac/qcom_kryo_edac.c
-> +
->  EDIROL UA-101/UA-1000 DRIVER
->  M:	Clemens Ladisch <clemens@ladisch.de>
->  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 417dad635526..cd78ac2917c9 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -508,6 +508,26 @@ config EDAC_QCOM
->  	  For debugging issues having to do with stability and overall system
->  	  health, you should probably say 'Y' here.
->  
-> +config EDAC_QCOM_KRYO
-> +	tristate "QCOM Kryo EDAC for CPU L1/L2/L3-SCU caches"
-> +	depends on ARCH_QCOM && ARM64_RAS_EXTN
-> +	help
-> +	  Support for Error detection and correction on Kryo Gold and Silver CPU
-> +	  cores with RAS extensions. Currently it detects and reports all Single
-> +	  Bit Errors (SBEs) and Double Bit Errors (DBEs).
-> +
-> +	  For debugging issues having to do with stability and overall system
-> +	  health, you should probably say 'Y' here.
-> +
-> +config EDAC_QCOM_KRYO_POLL
-> +	depends on EDAC_QCOM_KRYO
-> +	bool "Poll on Kryo ECC registers"
-> +	help
-> +	  This option chooses whether or not you want to poll on the Kryo ECC
-> +	  registers. When this is enabled, the polling rate can be set as a
-> +	  module parameter. By default, it will call the polling function every
-> +	  second.
+> WIZ is a PHY wrapper and not a PHY in itself. I'm not inclined in
+> modeling WIZ as a PHY and adding an additional level of indirection.
+> This can add more challenges w.r.t PHY sequencing and can also lead to
+> locking issues. That also doesn't accurately represent the HW bock.
+> 
 
-Why is this a separate option and why should people use that?
+Ok, then assuming the phy wrapper node's lane<n>-mode property can't be
+used and if the lane-mode information is only available at the phy
+client driver, we must somehow deliver the phy-mode information from the
+phy client driver to the phy wrapper driver.
 
-Can the polling/irq be switched automatically?
+Maybe a way for the phy wrapper driver to request the phy-mode from the
+actual phy driver, which in turn gets it from the phy client through
+phy_ops set_mode() call-back.
 
-> +
->  config EDAC_ASPEED
->  	tristate "Aspeed AST 2500 SoC"
->  	depends on MACH_ASPEED_G5
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index d77200c9680b..29edcfa6ec0e 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -85,5 +85,6 @@ obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
->  obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
->  obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
->  obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
-> +obj-$(CONFIG_EDAC_QCOM_KRYO)		+= qcom_kryo_edac.o
+Then there is the extra twist of a single phy driver serving multiple
+phy clients using different lanes, but we do not need to cross that
+bridge for the current DisplayPort functionality.
 
-What is the difference between this new driver and the qcom_edac one? Can
-functionality be shared?
-
-Should this new one be called simply kryo_edac instead?
-
->  obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
->  obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
-> diff --git a/drivers/edac/qcom_kryo_edac.c b/drivers/edac/qcom_kryo_edac.c
-> new file mode 100644
-> index 000000000000..05b60ad3cb0e
-> --- /dev/null
-> +++ b/drivers/edac/qcom_kryo_edac.c
-> @@ -0,0 +1,679 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/cpu_pm.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/smp.h>
-> +
-> +#include <asm/cputype.h>
-> +#include <asm/sysreg.h>
-> +
-> +#include "edac_device.h"
-> +#include "edac_mc.h"
-> +
-> +#define DRV_NAME		"qcom_kryo_edac"
-> +
-> +/*
-> + * ARM Cortex-A55, Cortex-A75, Cortex-A76 TRM Chapter B3.3
-
-Chapter? Where? URL?
-
-> + * ARM DSU TRM Chapter B2.3
-> + * CFI = Corrected Fault Handling interrupt, FI = Fault handling interrupt
-> + * UI = Uncorrected error recovery interrupt, ED = Error Detection
-> + */
-> +#define KRYO_ERRXCTLR_ED	BIT(0)
-> +#define KRYO_ERRXCTLR_UI	BIT(2)
-> +#define KRYO_ERRXCTLR_FI	BIT(3)
-> +#define KRYO_ERRXCTLR_CFI	BIT(8)
-> +#define KRYO_ERRXCTLR_ENABLE	(KRYO_ERRXCTLR_CFI | KRYO_ERRXCTLR_FI | \
-> +				 KRYO_ERRXCTLR_UI | KRYO_ERRXCTLR_ED)
-> +
-> +/*
-> + * ARM Cortex-A55, Cortex-A75, Cortex-A76 TRM Chapter B3.4
-> + * ARM DSU TRM Chapter B2.4
-> + */
-> +#define KRYO_ERRXFR_ED		GENMASK(1, 0)
-> +#define KRYO_ERRXFR_DE		GENMASK(3, 2)
-> +#define KRYO_ERRXFR_UI		GENMASK(5, 4)
-> +#define KRYO_ERRXFR_FI		GENMASK(7, 6)
-> +#define KRYO_ERRXFR_UE		GENMASK(9, 8)
-> +#define KRYO_ERRXFR_CFI		GENMASK(11, 10)
-> +#define KRYO_ERRXFR_CEC		GENMASK(14, 12)
-> +#define KRYO_ERRXFR_RP		BIT(15)
-> +#define KRYO_ERRXFR_SUPPORTED	(KRYO_ERRXFR_ED | KRYO_ERRXFR_DE | \
-> +				 KRYO_ERRXFR_UI | KRYO_ERRXFR_FI | \
-> +				 KRYO_ERRXFR_UE | KRYO_ERRXFR_CFI | \
-> +				 KRYO_ERRXFR_CEC | KRYO_ERRXFR_RP)
-> +
-> +/*
-> + * ARM Cortex-A55, Cortex-A75, Cortex-A76 TRM Chapter B3.5
-> + * ARM DSU TRM Chapter B2.5
-> + */
-> +#define KRYO_ERRXMISC0_CECR	GENMASK_ULL(38, 32)
-> +#define KRYO_ERRXMISC0_CECO	GENMASK_ULL(46, 40)
-> +
-> +/* ARM Cortex-A76 TRM Chapter B3.5 */
-> +#define KRYO_ERRXMISC0_UNIT	GENMASK(3, 0)
-> +#define KRYO_ERRXMISC0_LVL	GENMASK(3, 1)
-> +
-> +/* ARM Cortex-A76 TRM Chapter B3.10 has SERR bitfields 4:0
-> + * but Cortex-A55, Cortex-A75 and DSU TRM has SERR bitfields 7:0.
-> + * Since max error record is 21, we can use bitfields 4:0 for
-> + * Kryo{3,4}XX CPUs.
-> + */
-> +#define KRYO_ERRXSTATUS_SERR	GENMASK(4, 0)
-> +#define KRYO_ERRXSTATUS_DE	BIT(23)
-> +#define KRYO_ERRXSTATUS_CE	GENMASK(25, 24)
-> +#define KRYO_ERRXSTATUS_MV	BIT(26)
-> +#define KRYO_ERRXSTATUS_UE	BIT(29)
-> +#define KRYO_ERRXSTATUS_VALID	BIT(30)
-> +
-> +/* ARM Cortex-A76 TRM Chapter B3.5
-> + * IC = Instruction Cache, DC = Data Cache
-> + */
-> +#define KRYO_L1_UNIT_IC		0x1
-> +#define KRYO_L2_UNIT_TLB	0x2
-> +#define KRYO_L1_UNIT_DC		0x4
-> +#define KRYO_L2_UNIT		0x8
-> +
-> +/*
-> + * ARM Cortex-A55 TRM Chapter B2.36
-> + * ARM Cortex-A75, Cortex-A76 TRM Chapter B2.37
-> + */
-> +#define KRYO_ERR_RECORD_L1_L2	0x0
-> +#define KRYO_ERR_RECORD_L3	0x1
-> +
-> +/* ARM DSU TRM Chapter B2.10 */
-> +#define BUS_ERROR		0x12
-> +
-> +/* QCOM Kryo CPU part numbers */
-> +#define KRYO3XX_GOLD		0x802
-> +#define KRYO4XX_GOLD		0x804
-> +#define KRYO4XX_SILVER_V1	0x803
-> +#define KRYO4XX_SILVER_V2	0x805
-> +
-> +#define KRYO_EDAC_MSG_MAX	256
-> +
-> +static int poll_msec = 1000;
-> +module_param(poll_msec, int, 0444);
-> +
-> +enum {
-> +	KRYO_L1 = 0,
-> +	KRYO_L2,
-> +	KRYO_L3,
-> +};
-> +
-> +/* CE = Corrected Error, UE = Uncorrected Error, DE = Deferred Error */
-> +enum {
-> +	KRYO_L1_CE = 0,
-> +	KRYO_L1_UE,
-> +	KRYO_L1_DE,
-> +	KRYO_L2_CE,
-> +	KRYO_L2_UE,
-> +	KRYO_L2_DE,
-> +	KRYO_L3_CE,
-> +	KRYO_L3_UE,
-> +	KRYO_L3_DE,
-> +};
-> +
-> +struct error_record {
-> +	u32 error_code;
-> +	const char *error_msg;
-> +};
-> +
-> +struct error_type {
-> +	void (*fn)(struct edac_device_ctl_info *edev_ctl,
-> +		   int inst_nr, int block_nr, const char *msg);
-> +	const char *msg;
-> +};
-> +
-> +/*
-> + * ARM Cortex-A55, Cortex-A75, Cortex-A76 TRM Chapter B3.10
-> + * ARM DSU TRM Chapter B2.10
-> + */
-> +static const struct error_record serror_record[] = {
-> +	{ 0x1,	"Errors due to fault injection"		},
-> +	{ 0x2,	"ECC error from internal data buffer"	},
-> +	{ 0x6,	"ECC error on cache data RAM"		},
-> +	{ 0x7,	"ECC error on cache tag or dirty RAM"	},
-> +	{ 0x8,	"Parity error on TLB data RAM"		},
-> +	{ 0x9,	"Parity error on TLB tag RAM"		},
-> +	{ 0x12,	"Error response for a cache copyback"	},
-> +	{ 0x15,	"Deferred error not supported"		},
-> +};
-> +
-> +static const struct error_type err_type[] = {
-> +	{ edac_device_handle_ce, "Kryo L1 Corrected Error"	},
-> +	{ edac_device_handle_ue, "Kryo L1 Uncorrected Error"	},
-> +	{ edac_device_handle_ue, "Kryo L1 Deferred Error"	},
-> +	{ edac_device_handle_ce, "Kryo L2 Corrected Error"	},
-> +	{ edac_device_handle_ue, "Kryo L2 Uncorrected Error"	},
-> +	{ edac_device_handle_ue, "Kryo L2 Deferred Error"	},
-> +	{ edac_device_handle_ce, "L3 Corrected Error"		},
-> +	{ edac_device_handle_ue, "L3 Uncorrected Error"		},
-> +	{ edac_device_handle_ue, "L3 Deferred Error"		},
-> +};
-> +
-
-All that is not really needed - you can put the whole error type
-detection and dumping in kryo_check_err_type() in nicely readable
-switch-case statement. No need for the function pointers and special
-structs.
-
-> +static struct edac_device_ctl_info __percpu *edac_dev;
-> +static struct edac_device_ctl_info *drv_edev_ctl;
-> +
-> +static const char *get_error_msg(u64 errxstatus)
-> +{
-> +	const struct error_record *rec;
-> +	u32 errxstatus_serr;
-> +
-> +	errxstatus_serr = FIELD_GET(KRYO_ERRXSTATUS_SERR, errxstatus);
-> +
-> +	for (rec = serror_record; rec->error_code; rec++) {
-> +		if (errxstatus_serr == rec->error_code)
-> +			return rec->error_msg;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static void dump_syndrome_reg(int error_type, int level,
-> +			      u64 errxstatus, u64 errxmisc,
-> +			      struct edac_device_ctl_info *edev_ctl)
-> +{
-> +	char msg[KRYO_EDAC_MSG_MAX];
-> +	const char *error_msg;
-> +	int cpu;
-> +
-> +	cpu = raw_smp_processor_id();
-
-Why raw_?
-
-> +
-> +	error_msg = get_error_msg(errxstatus);
-> +	if (!error_msg)
-> +		return;
-> +
-> +	snprintf(msg, KRYO_EDAC_MSG_MAX,
-> +		 "CPU%d: %s, ERRXSTATUS_EL1:%#llx ERRXMISC0_EL1:%#llx, %s",
-> +		 cpu, err_type[error_type].msg, errxstatus, errxmisc,
-> +		 error_msg);
-> +
-> +	err_type[error_type].fn(edev_ctl, 0, level, msg);
-> +}
-
-...
-
-> +static int kryo_l1_l2_setup_irq(struct platform_device *pdev,
-> +				struct edac_device_ctl_info *edev_ctl)
-> +{
-> +	int cpu, errirq, faultirq, ret;
-> +
-> +	edac_dev = devm_alloc_percpu(&pdev->dev, *edac_dev);
-> +	if (!edac_dev)
-> +		return -ENOMEM;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		preempt_disable();
-> +		per_cpu(edac_dev, cpu) = edev_ctl;
-> +		preempt_enable();
-> +	}
-
-That sillyness doesn't belong here, if at all.
-
-...
-
-> +static void kryo_poll_cache_error(struct edac_device_ctl_info *edev_ctl)
-> +{
-> +	if (!edev_ctl)
-> +		edev_ctl = drv_edev_ctl;
-
-That's silly.
-
-> +
-> +	on_each_cpu(kryo_check_l1_l2_ecc, edev_ctl, 1);
-> +	kryo_check_l3_scu_ecc(edev_ctl);
-> +}
-
-...
-
-> +static int qcom_kryo_edac_probe(struct platform_device *pdev)
-> +{
-> +	struct edac_device_ctl_info *edev_ctl;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	qcom_kryo_edac_setup();
-
-This function needs to have a return value saying whether it did setup
-the hw properly or not and the probe function needs to return here if
-not.
+Best regards,
+Jyri
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
