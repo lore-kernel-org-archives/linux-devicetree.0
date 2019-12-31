@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3FBC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DF3C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C2E206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3882620733
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:06:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DZP420mW"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="esmTNuuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfLaNGI (ORCPT
+        id S1727183AbfLaNGN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 08:06:08 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43759 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727161AbfLaNGI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 08:06:08 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so18639759pfo.10
-        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 05:06:07 -0800 (PST)
+        Tue, 31 Dec 2019 08:06:13 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40725 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfLaNGN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 08:06:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id bg7so1204920pjb.5
+        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 05:06:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ILMGQ7TE10GrDN5X2gxz42T2rcYYzl5utH4bizVuaeo=;
-        b=DZP420mWfQnfVWlE37Mc5cOgEn4j+vFTaGXmym5C2WWLC5bTeIa5rgJQwtNJNNGWDR
-         ZJgOgh0rngjU/6G9BK3E3+O2++mKx/KQxUcIUXPxIuQhz49olxOhu3BbifgeNYXlHOzT
-         HON9n6PvwA76fYj2xGIJjx5+TNJ9pAfTXsZec=
+        bh=LFRfv913MOD9bDVjn2WmuUvuBCX9q57n4nZIprY3VlY=;
+        b=esmTNuuAHI5g0sdvenfWCCKOtxtWE8tDLrNoa4auzDAbZa4l0WWU2YmE1z+YTuH/f0
+         IaUqnQ8uilEQG51LocZpc6sUqo2rv5Q0kEf0yj2MShhPDrhiyJqmCMHdbTTF25ImV4DJ
+         CXhUToi3DDMDwcKcrKX0GuImPVYdLbeHPZgdE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ILMGQ7TE10GrDN5X2gxz42T2rcYYzl5utH4bizVuaeo=;
-        b=gqIJUN5kbM9JumcThOgX98Uk9bh7sMVafqcVTHudjLHCCJB73b7TsZyDlfU6y4OcHX
-         1gMkuSMl8uxPBh1c3Hb9XylcjLKA8jmFyKLOChSBykva4YFvSc6AIq7xkD9ehLYsrzQ5
-         C5dXF1xsKhwflBm6huWS2IzrZ61nv6ivaC4u+qUyOMgm0/+e19yQSQWHS/5FtCttxaJs
-         tAJNpmZJsdy7lUmzpHAatI7cXw4z9t8kHWDza7p4/xt35+0Rg365bKHdyoGq8/8TGsqP
-         E2ivaEEFIlZxWrfFz9dDPMA/g4jOH7W5HfZ3aJQukydc2c1Z7tnbyCdCn04H08xhHR4f
-         Xo6Q==
-X-Gm-Message-State: APjAAAWHP7MKDnhWXr6ebV60QOirl9/B3qiawKycoPnnYAumHkrnmEYC
-        S2IgqF6QvoINn82EpsysahxVPw==
-X-Google-Smtp-Source: APXvYqzYR9X9eEbz3QVs9vCw1ydwxY3WYB9x7Vgfh8FcbAGgp7o5CF2hQkexzWnq4JrUkzJbcSw0Wg==
-X-Received: by 2002:a63:d00f:: with SMTP id z15mr77454505pgf.143.1577797567531;
-        Tue, 31 Dec 2019 05:06:07 -0800 (PST)
+        bh=LFRfv913MOD9bDVjn2WmuUvuBCX9q57n4nZIprY3VlY=;
+        b=ZId5zRELSVuUSFcCYwnwLL2XJ0Q3UMNfXjy1mC1W06ybn4msAUKSaT+cGTtEwOYyvS
+         FOjJiV2jcduAl4KQxFVsJ/whCQvFtZDrDP4ZdSqaBys46ZVoQSqeuwi5YcqzoFr+VY6I
+         fBSQGP9PQxM/Alw4N4xV4LSeR+D3OcB4mMZ4Ji76rC0CZgftXJ318cXyMubzgR2MXykN
+         s+XzjL+3CVgVmWmd5RCF2hErvvfWQbb0woh/IpIyqZn+YhkB/lFt+gb270X0X1wDe5SW
+         AYxo67OKcSKZKC1F7eDd/l1C6q/kH7QO5bkulGVF+Vq6CS3GWB+ebt+p4Oa5x3uTlPp4
+         yvew==
+X-Gm-Message-State: APjAAAUMk26PYzqKriWReQNcMCwt/pXOZePlHfm7SPpA6tUcUPp6PtHV
+        79FvladIMGlSQdxhzBMUYQGk8Q==
+X-Google-Smtp-Source: APXvYqy6wcZpyDi0ZQJ1b5xgNNOeiknVdIr1W72rN6UUlfZ38jAq6za4qzzEBbhB0lGRuoIihrO2IA==
+X-Received: by 2002:a17:902:b68c:: with SMTP id c12mr40694609pls.160.1577797572591;
+        Tue, 31 Dec 2019 05:06:12 -0800 (PST)
 Received: from localhost.localdomain ([49.206.202.115])
-        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.06.02
+        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.06.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 05:06:06 -0800 (PST)
+        Tue, 31 Dec 2019 05:06:12 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
@@ -64,9 +64,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 5/9] drm/sun4i: tcon_top: Register reset, clock gates in probe
-Date:   Tue, 31 Dec 2019 18:35:24 +0530
-Message-Id: <20191231130528.20669-6-jagan@amarulasolutions.com>
+Subject: [PATCH v3 6/9] dt-bindings: sun6i-dsi: Add R40 DPHY compatible (w/ A31 fallback)
+Date:   Tue, 31 Dec 2019 18:35:25 +0530
+Message-Id: <20191231130528.20669-7-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191231130528.20669-1-jagan@amarulasolutions.com>
 References: <20191231130528.20669-1-jagan@amarulasolutions.com>
@@ -77,119 +77,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TCON TOP is processing clock gates and reset control for
-TV0, TV1 and DSI channels during bind and release the same
-during unbind component ops.
+The MIPI DSI PHY controller on Allwinner R40 is similar
+on the one on A31.
 
-The usual DSI initialization would setup all controller
-clocks along with DPHY clocking during probe.
-
-Since the actual clock gates (along with DSI clock gate)
-are initialized during ton top bind, the DPHY is failed to
-get the DSI clock during that time.
-
-To solve, this circular dependency move the reset control,
-clock gate registration from bind to probe and release the
-same from unbind to remove.
-
-This eventually give a chance DPHY to initialize the DSI
-clock gate.
+Add R40 compatible and append A31 compatible as fallback.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v3:
-- fixed comments from Chen-Yu
-- move reset control methods into probe
+- update the binding in new yaml format
 
- drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 41 +++++++++++++-------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
+ .../devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml   | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-index e0b3c5330b9a..732ac19b4371 100644
---- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-@@ -124,7 +124,22 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
- static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 			       void *data)
- {
--	struct platform_device *pdev = to_platform_device(dev);
-+	return 0;
-+}
-+
-+static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
-+				  void *data)
-+{
-+}
-+
-+static const struct component_ops sun8i_tcon_top_ops = {
-+	.bind	= sun8i_tcon_top_bind,
-+	.unbind	= sun8i_tcon_top_unbind,
-+};
-+
-+static int sun8i_tcon_top_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
- 	struct clk_hw_onecell_data *clk_data;
- 	struct sun8i_tcon_top *tcon_top;
- 	const struct sun8i_tcon_top_quirks *quirks;
-@@ -132,7 +147,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 	void __iomem *regs;
- 	int ret, i;
+diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+index 8841938050b2..0c283fe79402 100644
+--- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
++++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
+@@ -18,6 +18,7 @@ properties:
+     oneOf:
+       - const: allwinner,sun6i-a31-mipi-dphy
+       - items:
++          - const: allwinner,sun8i-r40-mipi-dphy
+           - const: allwinner,sun50i-a64-mipi-dphy
+           - const: allwinner,sun6i-a31-mipi-dphy
  
--	quirks = of_device_get_match_data(&pdev->dev);
-+	quirks = of_device_get_match_data(dev);
- 
- 	tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
- 	if (!tcon_top)
-@@ -226,22 +241,21 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
- 
- 	dev_set_drvdata(dev, tcon_top);
- 
--	return 0;
-+	return component_add(dev, &sun8i_tcon_top_ops);
- 
- err_unregister_gates:
- 	for (i = 0; i < CLK_NUM; i++)
- 		if (!IS_ERR_OR_NULL(clk_data->hws[i]))
- 			clk_hw_unregister_gate(clk_data->hws[i]);
--	clk_disable_unprepare(tcon_top->bus);
- err_assert_reset:
- 	reset_control_assert(tcon_top->rst);
- 
- 	return ret;
- }
- 
--static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
--				  void *data)
-+static int sun8i_tcon_top_remove(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
- 	struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
- 	struct clk_hw_onecell_data *clk_data = tcon_top->clk_data;
- 	int i;
-@@ -253,21 +267,8 @@ static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
- 
- 	clk_disable_unprepare(tcon_top->bus);
- 	reset_control_assert(tcon_top->rst);
--}
--
--static const struct component_ops sun8i_tcon_top_ops = {
--	.bind	= sun8i_tcon_top_bind,
--	.unbind	= sun8i_tcon_top_unbind,
--};
--
--static int sun8i_tcon_top_probe(struct platform_device *pdev)
--{
--	return component_add(&pdev->dev, &sun8i_tcon_top_ops);
--}
- 
--static int sun8i_tcon_top_remove(struct platform_device *pdev)
--{
--	component_del(&pdev->dev, &sun8i_tcon_top_ops);
-+	component_del(dev, &sun8i_tcon_top_ops);
- 
- 	return 0;
- }
 -- 
 2.18.0.321.gffc6fa0e3
 
