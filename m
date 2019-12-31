@@ -2,141 +2,423 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3232AC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651ECC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C959206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E063206DA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:59:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZRViPfeD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725770AbfLaIXy (ORCPT
+        id S1725989AbfLaI7q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:23:54 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41921 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfLaIXy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 03:23:54 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so49465455otc.8;
-        Tue, 31 Dec 2019 00:23:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=exbpjm8R+9VG0LXo53eXq/JhXDU32icBm8b7iAcsrrE=;
-        b=i3Wxe0Y8JvJoL3QnoADXcbxDv88kne5wunme+8tkCLtTL3j2tqfyp+VwrrZebF1isY
-         Brh7RO0jsJGPGoHnCMR7FQ+VylzZLWfSjPf2H0/93/PJ5a2KvZ8+6tGm96R07nrbzDwA
-         JAGaKDCw+Xb4AoX325e/FlU56e38gy0UAvhXle76xejbm/9VEn/NUBi9FfQcS5RJDs0C
-         QOmt0uq0bF6X5Lxvv3CRTZ49I4X6vZndAKjHY6AMcn/5Rp4waqjAncohIsma5JDXcPpB
-         xEaAIm5raBYfF8pplLUEAdiKXCBQ2jd3S/uqrWtlhO8rG6SBql/rTlBAz8Dp1OPJ1ExD
-         659g==
-X-Gm-Message-State: APjAAAX7REPno25mLqC2Efe1F6g9brc3bOEHL0iAY8q34RF7AenoqP9W
-        SiU/vr2MtoS3cZooeGXgAXkNol8ZnbwqI1r1KRA=
-X-Google-Smtp-Source: APXvYqyNXKUrqWbQ3GKR/KvwCtjIAXctgLXNr5s7v9TX4B69OhYh51yZVdBnhbmzbfErcyqtCy7X45zpE7TsSY5A/m4=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr79413312otd.39.1577780633088;
- Tue, 31 Dec 2019 00:23:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
- <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com> <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 31 Dec 2019 09:23:41 +0100
-Message-ID: <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 31 Dec 2019 03:59:46 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:64409 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726413AbfLaI7q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Dec 2019 03:59:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577782785; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=fnEUXNjg6yzuGIg1W17zCfHpw0SG3R4iBLoR55fQrr0=; b=ZRViPfeDQ0a9ZYzAwbgcCd7fclvYlCgX83QMOMNs/h5Wa1jJkSr57PAlh4ndje1OJ9giFObR
+ /SR7rmTAGgk95mmR04rP8+yvntqZYyl+K77jppXkjNo5m/cGkqkqPktQKHqlNPsekjRptQ8a
+ FT7A4PIkJ8X5nOvPEQFEceYvKlE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0b0e00.7f2a6613a998-smtp-out-n01;
+ Tue, 31 Dec 2019 08:59:44 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 71C59C433A2; Tue, 31 Dec 2019 08:59:44 +0000 (UTC)
+Received: from okukatla1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: okukatla)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0905BC433CB;
+        Tue, 31 Dec 2019 08:59:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0905BC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=okukatla@codeaurora.org
+From:   Odelu Kukatla <okukatla@codeaurora.org>
+To:     georgi.djakov@linaro.org, daidavid1@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@google.com,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-arm-msm-owner@vger.kernel.org,
+        Odelu Kukatla <okukatla@codeaurora.org>
+Subject: [V2, 1/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
+Date:   Tue, 31 Dec 2019 14:28:55 +0530
+Message-Id: <1577782737-32068-2-git-send-email-okukatla@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org>
+References: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+The Qualcomm SC7180 platform has several bus fabrics that could be
+controlled and tuned dynamically according to the bandwidth demand.
 
-On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
-> On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > > their compatible strings. The simplest way to convert those to
-> > > schema is just add them into the common generic PCI host schema.
-> > >
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Cc: Andrew Murray <andrew.murray@arm.com>
-> > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Cc: David Daney <david.daney@cavium.com>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> >
-> > > index 515b2f9542e5..000000000000
-> > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> > > +++ /dev/null
-> >
-> > > -Example:
-> > > -
-> > > -    pcie1: pcie@7f000000 {
-> > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> > > -        device_type = "pci";
-> > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> > > -        bus-range = <0x0 0xe>;
-> > > -        #address-cells = <3>;
-> > > -        #size-cells = <2>;
-> > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> > > -
-> > > -        #interrupt-cells = <0x1>;
-> > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-> >
-> > An all-zeroes interrupt-map-mask seems to be very common on embedded
-> > SoCs, where all devices are mapped to a single interrupt.
->
-> Indeed.
->
-> > However, schemas/pci/pci-bus.yaml says:
-> >
-> >   interrupt-map-mask:
-> >     items:
-> >       - description: PCI high address cell
-> >         minimum: 0
-> >         maximum: 0xf800
-> >       - description: PCI mid address cell
-> >         const: 0
-> >       - description: PCI low address cell
-> >         const: 0
-> >       - description: PCI IRQ cell
-> >         minimum: 1
-> >         maximum: 7
-> >
-> > and thus complains about an all-zeroes mask, e.g.
-> >
-> >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-> > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
->
-> Now fixed.
+Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+---
+ .../bindings/interconnect/qcom,bcm-voter.yaml      |   1 +
+ .../bindings/interconnect/qcom,sc7180.yaml         | 155 ++++++++++++++++++++
+ include/dt-bindings/interconnect/qcom,sc7180.h     | 161 +++++++++++++++++++++
+ 3 files changed, 317 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+ create mode 100644 include/dt-bindings/interconnect/qcom,sc7180.h
 
-Thank you, confirmed.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+index 74f0715..55c9f34 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
++++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
+@@ -19,6 +19,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - qcom,sc7180-bcm-voter
+       - qcom,sdm845-bcm-voter
+ 
+ required:
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+new file mode 100644
+index 0000000..487da5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
+@@ -0,0 +1,155 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interconnect/qcom,sc7180.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title:  Qualcomm SC7180 Network-On-Chip Interconnect
++
++maintainers:
++  - David Dai <daidavid1@codeaurora.org>
++
++description: |
++   SC7180 interconnect providers support system bandwidth requirements through
++   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
++   able to communicate with the BCM through the Resource State Coordinator (RSC)
++   associated with each execution environment. Provider nodes must point to at
++   least one RPMh device child node pertaining to their RSC and each provider
++   can map to multiple RPMh resources.
++
++properties:
++  reg:
++    maxItems: 1
++
++  compatible:
++    enum:
++      - qcom,sc7180-aggre1-noc
++      - qcom,sc7180-aggre2-noc
++      - qcom,sc7180-camnoc-virt
++      - qcom,sc7180-compute-noc
++      - qcom,sc7180-config-noc
++      - qcom,sc7180-dc-noc
++      - qcom,sc7180-gem-noc
++      - qcom,sc7180-ipa-virt
++      - qcom,sc7180-mc-virt
++      - qcom,sc7180-mmss-noc
++      - qcom,sc7180-npu-noc
++      - qcom,sc7180-qup-virt
++      - qcom,sc7180-system-noc
++
++  '#interconnect-cells':
++    const: 1
++
++  qcom,bcm-voters:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: |
++      List of phandles to qcom,bcm-voter nodes that are required by
++      this interconnect to send RPMh commands.
++
++  qcom,bcm-voter-names:
++    $ref: /schemas/types.yaml#/definitions/string-array
++    description: |
++      Names for each of the qcom,bcm-voters specified.
++
++required:
++  - compatible
++  - reg
++  - '#interconnect-cells'
++  - qcom,bcm-voters
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/interconnect/qcom,sc7180.h>
++
++      config_noc: interconnect@1500000 {
++            compatible = "qcom,sc7180-config-noc";
++            reg = <0 0x01500000 0 0x28000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      system_noc: interconnect@1620000 {
++            compatible = "qcom,sc7180-system-noc";
++            reg = <0 0x01620000 0 0x17080>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mc_virt: interconnect@1630000 {
++            compatible = "qcom,sc7180-mc-virt";
++            reg = <0 0x01630000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      qup_virt: interconnect@1650000 {
++            compatible = "qcom,sc7180-qup-virt";
++            reg = <0 0x01650000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      aggre1_noc: interconnect@16e0000 {
++            compatible = "qcom,sc7180-aggre1-noc";
++            reg = <0 0x016e0000 0 0x15080>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      aggre2_noc: interconnect@1700000 {
++            compatible = "qcom,sc7180-aggre2-noc";
++            reg = <0 0x01700000 0 0x1f880>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      compute_noc: interconnect@170e000 {
++            compatible = "qcom,sc7180-compute-noc";
++            reg = <0 0x0170e000 0 0x11880>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      mmss_noc: interconnect@1740000 {
++            compatible = "qcom,sc7180-mmss-noc";
++            reg = <0 0x01740000 0 0x1c100>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      ipa_virt: interconnect@1e00000 {
++            compatible = "qcom,sc7180-ipa-virt";
++            reg = <0 0x01e00000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      dc_noc: interconnect@9160000 {
++            compatible = "qcom,sc7180-dc-noc";
++            reg = <0 0x09160000 0 0x03200>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      gem_noc: interconnect@9680000 {
++            compatible = "qcom,sc7180-gem-noc";
++            reg = <0 0x09680000 0 0x3e200>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      npu_noc: interconnect@9990000 {
++            compatible = "qcom,sc7180-npu-noc";
++            reg = <0 0x09990000 0 0x1600>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
++
++      camnoc_virt: interconnect@ac00000 {
++            compatible = "qcom,sc7180-camnoc-virt";
++            reg = <0 0x0ac00000 0 0x4000>;
++            #interconnect-cells = <1>;
++            qcom,bcm-voters = <&apps_bcm_voter>;
++      };
+diff --git a/include/dt-bindings/interconnect/qcom,sc7180.h b/include/dt-bindings/interconnect/qcom,sc7180.h
+new file mode 100644
+index 0000000..7ed2d82
+--- /dev/null
++++ b/include/dt-bindings/interconnect/qcom,sc7180.h
+@@ -0,0 +1,161 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Qualcomm SC7180 interconnect IDs
++ *
++ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
++ */
++
++#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++#define __DT_BINDINGS_INTERCONNECT_QCOM_SC7180_H
++
++#define MASTER_A1NOC_CFG			0
++#define MASTER_QSPI			1
++#define MASTER_QUP_0			2
++#define MASTER_SDCC_2			3
++#define MASTER_EMMC			4
++#define MASTER_UFS_MEM			5
++#define SLAVE_A1NOC_SNOC			6
++#define SLAVE_SERVICE_A1NOC			7
++
++#define MASTER_A2NOC_CFG			0
++#define MASTER_QDSS_BAM			1
++#define MASTER_QUP_1			2
++#define MASTER_USB3			3
++#define MASTER_CRYPTO			4
++#define MASTER_IPA			5
++#define MASTER_QDSS_ETR			6
++#define SLAVE_A2NOC_SNOC			7
++#define SLAVE_SERVICE_A2NOC			8
++
++#define MASTER_CAMNOC_HF0_UNCOMP			0
++#define MASTER_CAMNOC_HF1_UNCOMP			1
++#define MASTER_CAMNOC_SF_UNCOMP			2
++#define SLAVE_CAMNOC_UNCOMP			3
++
++#define MASTER_NPU			0
++#define MASTER_NPU_PROC			1
++#define SLAVE_CDSP_GEM_NOC			2
++
++#define MASTER_SNOC_CNOC			0
++#define MASTER_QDSS_DAP			1
++#define SLAVE_A1NOC_CFG			2
++#define SLAVE_A2NOC_CFG			3
++#define SLAVE_AHB2PHY_SOUTH			4
++#define SLAVE_AHB2PHY_CENTER			5
++#define SLAVE_AOP			6
++#define SLAVE_AOSS			7
++#define SLAVE_BOOT_ROM			8
++#define SLAVE_CAMERA_CFG				9
++#define SLAVE_CAMERA_NRT_THROTTLE_CFG			10
++#define SLAVE_CAMERA_RT_THROTTLE_CFG			11
++#define SLAVE_CLK_CTL			12
++#define SLAVE_RBCPR_CX_CFG			13
++#define SLAVE_RBCPR_MX_CFG			14
++#define SLAVE_CRYPTO_0_CFG			15
++#define SLAVE_DCC_CFG			16
++#define SLAVE_CNOC_DDRSS			17
++#define SLAVE_DISPLAY_CFG			18
++#define SLAVE_DISPLAY_RT_THROTTLE_CFG			19
++#define SLAVE_DISPLAY_THROTTLE_CFG			20
++#define SLAVE_EMMC_CFG			21
++#define SLAVE_GLM					22
++#define SLAVE_GFX3D_CFG			23
++#define SLAVE_IMEM_CFG			24
++#define SLAVE_IPA_CFG			25
++#define SLAVE_CNOC_MNOC_CFG			26
++#define SLAVE_CNOC_MSS			27
++#define SLAVE_NPU_CFG			28
++#define SLAVE_NPU_DMA_BWMON_CFG			29
++#define SLAVE_NPU_PROC_BWMON_CFG			30
++#define SLAVE_PDM			31
++#define SLAVE_PIMEM_CFG			32
++#define SLAVE_PRNG			33
++#define SLAVE_QDSS_CFG			34
++#define SLAVE_QM_CFG			35
++#define SLAVE_QM_MPU_CFG			36
++#define SLAVE_QSPI_0			37
++#define SLAVE_QUP_0			38
++#define SLAVE_QUP_1			39
++#define SLAVE_SDCC_2			40
++#define SLAVE_SECURITY			41
++#define SLAVE_SNOC_CFG			42
++#define SLAVE_TCSR			43
++#define SLAVE_TLMM_WEST			44
++#define SLAVE_TLMM_NORTH			45
++#define SLAVE_TLMM_SOUTH			46
++#define SLAVE_UFS_MEM_CFG			47
++#define SLAVE_USB3			48
++#define SLAVE_VENUS_CFG			49
++#define SLAVE_VENUS_THROTTLE_CFG			50
++#define SLAVE_VSENSE_CTRL_CFG			51
++#define SLAVE_SERVICE_CNOC			52
++
++#define MASTER_CNOC_DC_NOC			0
++#define SLAVE_GEM_NOC_CFG			1
++#define SLAVE_LLCC_CFG			2
++
++#define MASTER_APPSS_PROC		0
++#define MASTER_SYS_TCU			1
++#define MASTER_GEM_NOC_CFG			2
++#define MASTER_COMPUTE_NOC			3
++#define MASTER_MNOC_HF_MEM_NOC			4
++#define MASTER_MNOC_SF_MEM_NOC			5
++#define MASTER_SNOC_GC_MEM_NOC			6
++#define MASTER_SNOC_SF_MEM_NOC			7
++#define MASTER_GFX3D			8
++#define SLAVE_MSS_PROC_MS_MPU_CFG			9
++#define SLAVE_GEM_NOC_SNOC			10
++#define SLAVE_LLCC			11
++#define SLAVE_SERVICE_GEM_NOC			12
++
++#define MASTER_IPA_CORE			0
++#define SLAVE_IPA_CORE			1
++
++#define MASTER_LLCC			0
++#define SLAVE_EBI1			1
++
++#define MASTER_CNOC_MNOC_CFG			0
++#define MASTER_CAMNOC_HF0			1
++#define MASTER_CAMNOC_HF1			2
++#define MASTER_CAMNOC_SF			3
++#define MASTER_MDP0			4
++#define MASTER_ROTATOR			5
++#define MASTER_VIDEO_P0			6
++#define MASTER_VIDEO_PROC			7
++#define SLAVE_MNOC_HF_MEM_NOC			8
++#define SLAVE_MNOC_SF_MEM_NOC			9
++#define SLAVE_SERVICE_MNOC			10
++
++#define MASTER_NPU_SYS			0
++#define MASTER_NPU_NOC_CFG			1
++#define SLAVE_NPU_CAL_DP0			2
++#define SLAVE_NPU_CP			3
++#define SLAVE_NPU_INT_DMA_BWMON_CFG			4
++#define SLAVE_NPU_DPM			5
++#define SLAVE_ISENSE_CFG			6
++#define SLAVE_NPU_LLM_CFG			7
++#define SLAVE_NPU_TCM			8
++#define SLAVE_NPU_COMPUTE_NOC			9
++#define SLAVE_SERVICE_NPU_NOC			10
++
++#define MASTER_QUP_CORE_0			0
++#define MASTER_QUP_CORE_1			1
++#define SLAVE_QUP_CORE_0			2
++#define SLAVE_QUP_CORE_1			3
++
++#define MASTER_SNOC_CFG			0
++#define MASTER_A1NOC_SNOC			1
++#define MASTER_A2NOC_SNOC			2
++#define MASTER_GEM_NOC_SNOC			3
++#define MASTER_PIMEM			4
++#define SLAVE_APPSS			5
++#define SLAVE_SNOC_CNOC			6
++#define SLAVE_SNOC_GEM_NOC_GC			7
++#define SLAVE_SNOC_GEM_NOC_SF			8
++#define SLAVE_IMEM			9
++#define SLAVE_PIMEM			10
++#define SLAVE_SERVICE_SNOC			11
++#define SLAVE_QDSS_STM			12
++#define SLAVE_TCU			13
++
++#endif
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
