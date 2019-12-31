@@ -2,84 +2,157 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E543AC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FFAC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2216206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727E9206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:23:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577784180;
+	bh=CRXnGizVpLhEDU5W+Mn1XPTimf2r4lvRUd9OOp3POpE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nbq35uRk+vHjw+bFx+j6VIdNDmQaMJK2nVTWkiaBuU14R57LLU/j3Ile96U7H5udI
+	 ckU+VxStI3xQaeQ3pFwfPmbue+WkurUyxWRf66VENYFgOM7Pj0EKe5Ean6AEQbFsF1
+	 4tIsPOUMNjbJLlzpsMc9+A2zmIwbsdWDi6rRlLhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725793AbfLaJQe (ORCPT
+        id S1726308AbfLaJXA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 04:16:34 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:58935 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfLaJQd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 04:16:33 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBV9G1Kv026279, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBV9G1Kv026279
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 31 Dec 2019 17:16:01 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Tue, 31 Dec 2019 17:16:01 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 31 Dec 2019 17:16:00 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Tue, 31 Dec 2019 17:16:00 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 05/14] ARM: dts: rtd1195: Add CRT syscon node
-Thread-Topic: [PATCH 05/14] ARM: dts: rtd1195: Add CRT syscon node
-Thread-Index: AQHVqT1wU1zGfnse50605xj8lgt7lKfUIyxw
-Date:   Tue, 31 Dec 2019 09:16:00 +0000
-Message-ID: <0c101eb62fe44bd3b45acc5302271ff3@realtek.com>
-References: <20191202182205.14629-1-afaerber@suse.de>
- <20191202182205.14629-6-afaerber@suse.de>
-In-Reply-To: <20191202182205.14629-6-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 31 Dec 2019 04:23:00 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33427 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfLaJW7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 04:22:59 -0500
+Received: by mail-ed1-f68.google.com with SMTP id r21so34818172edq.0;
+        Tue, 31 Dec 2019 01:22:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=zcMF0DszYjdAAeSzpwgiwYYj0Rmxb5AATwzX117pufo=;
+        b=tp4tCPQqUUtrCUnBKOQ2hDTX5hSvi6k/POqxIqU8innGP4rro8a/dWwaydpd4O9XNS
+         mnLoYBZL+FEl/mV9XqJtWs37/+cc+PaVaRPFFwRqQ66mj38Uhrvf1F3ImtD1N8oO5fH8
+         TkQEDwbGnknv+AeVr9d+S/tPP8zzZ3wX9yml4nuDFflSbsTGKQjm05Pz8TJj3GzTPQ6J
+         NmzL0QvJCJ7JWVy25EA19RQXp5XfkQtoyl/0op5sW75QKDUW3FYay1eaZRs+n6jhf5b4
+         iSjN6x1TMno7z1EXAX55WBU3y0QWzlBEMxBkrDsklk6j+YzQuBmU/yGanfGg4fU5I/qI
+         2HQA==
+X-Gm-Message-State: APjAAAXnmYGksETNYv4hFNlSnDTR19e/fjZKK0xeP+prHxu5oodin03v
+        C3L5ixW3vh2F8iFDqOVC+Dk=
+X-Google-Smtp-Source: APXvYqzgzVpvRf+8IP6z3ujB3SZIWKfFAGfLl8aejvQf9p703WelAn4funQmIQW8H6z6pzmhM0Yc6w==
+X-Received: by 2002:a17:906:1fd5:: with SMTP id e21mr44856105ejt.97.1577784177492;
+        Tue, 31 Dec 2019 01:22:57 -0800 (PST)
+Received: from pi3 ([194.230.155.138])
+        by smtp.googlemail.com with ESMTPSA id x15sm5693555edl.48.2019.12.31.01.22.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 01:22:56 -0800 (PST)
+Date:   Tue, 31 Dec 2019 10:22:54 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
+ for Exynos4412
+Message-ID: <20191231092254.GA6939@pi3>
+References: <20191220115653.6487-1-a.swigon@samsung.com>
+ <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
+ <20191220115653.6487-5-a.swigon@samsung.com>
+ <20191230154405.GC4918@pi3>
+ <2922135223b01126277ef92a53e6b294bc17bb5c.camel@samsung.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <2922135223b01126277ef92a53e6b294bc17bb5c.camel@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBQcmVwYXJlIGEgQ1JUIHN5c2NvbiBtZmQgbm9kZS4NCj4gDQo+IENjOiBKYW1lcyBUYWkgPGph
-bWVzLnRhaUByZWFsdGVrLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxh
-ZmFlcmJlckBzdXNlLmRlPg0KPiAtLS0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3J0ZDExOTUuZHRz
-aSB8IDkgKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQo+IA0K
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTE5NS5kdHNpIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvcnRkMTE5NS5kdHNpDQo+IGluZGV4IGE3NGY1MzBkYzQzOS4uYWMzNzM2NmZmN2M0
-IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9ydGQxMTk1LmR0c2kNCj4gKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvcnRkMTE5NS5kdHNpDQo+IEBAIC0xMDAsNiArMTAwLDE1IEBADQo+
-ICAJCQkjc2l6ZS1jZWxscyA9IDwxPjsNCj4gIAkJCXJhbmdlcyA9IDwweDAgMHgxODAwMDAwMCAw
-eDcwMDAwPjsNCj4gDQo+ICsJCQljcnQ6IHN5c2NvbkAwIHsNCj4gKwkJCQljb21wYXRpYmxlID0g
-InN5c2NvbiIsICJzaW1wbGUtbWZkIjsNCj4gKwkJCQlyZWcgPSA8MHgwIDB4MTAwMD47DQo+ICsJ
-CQkJcmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiArCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiAr
-CQkJCSNzaXplLWNlbGxzID0gPDE+Ow0KPiArCQkJCXJhbmdlcyA9IDwweDAgMHgwIDB4MTAwMD47
-DQo+ICsJCQl9Ow0KPiArDQo+ICAJCQlpc286IHN5c2NvbkA3MDAwIHsNCj4gIAkJCQljb21wYXRp
-YmxlID0gInN5c2NvbiIsICJzaW1wbGUtbWZkIjsNCj4gIAkJCQlyZWcgPSA8MHg3MDAwIDB4MTAw
-MD47DQo+IC0tDQo+IDIuMTYuNA0KPiANCj4gDQpBY2tlZC1ieTogSmFtZXMgVGFpIDxqYW1lcy50
-YWlAcmVhbHRlay5jb20+DQoNCg==
+On Tue, Dec 31, 2019 at 08:18:01AM +0100, Artur Świgoń wrote:
+> Hi,
+> 
+> On Mon, 2019-12-30 at 16:44 +0100, Krzysztof Kozlowski wrote:
+> > On Fri, Dec 20, 2019 at 12:56:50PM +0100, Artur Świgoń wrote:
+> > > This patch adds the following properties to the Exynos4412 DT:
+> > >   - exynos,interconnect-parent-node: to declare connections between
+> > >     nodes in order to guarantee PM QoS requirements between nodes;
+> > >   - #interconnect-cells: required by the interconnect framework.
+> > > 
+> > > Note that #interconnect-cells is always zero and node IDs are not
+> > > hardcoded anywhere.
+> > > 
+> > > Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> > > ---
+> > >  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > 
+> > The order of patches is confusing. Patches 4 and 6 are split - do the
+> > depend on 5? I doubt but...
+> 
+> Let me elaborate:
+> 
+> The order of the patches in this series is such that every subsequent
+> patch adds some functionality (and, of course, applying patches one-by-one
+> yields a working kernel at every step). Specifically for patches 04--07:
+> 
+>  -- patch 04 adds interconnect _provider_ properties for Exynos4412;
+>  -- patch 05 implements interconnect provider logic (depends on patch 04);
+>  -- patch 06 adds interconnect _consumer_ properties for Exynos4412 mixer;
+>  -- patch 07 implements interconnect consumer logic (depends on patches
+>     05 & 06);
+> 
+> My reasoning is that this order allows to e.g., merge the interconnect
+> provider for exynos-bus and leave the consumers for later (not limited to
+> the mixer). I hope this makes sense.
+
+It is wrong. The driver should not depend on DTS changes because:
+1. DTS always go through separate branch and tree, so last patch
+   will have to wait up to 3 cycles (!!!),
+2. You break backward compatibility.
+
+In certain cases dependency on DTS changes is ok:
+1. Cleaning up deprecated properties,
+2. Ignoring the backward compatibility for e.g. new platforms.
+
+None of these are applicable here.
+
+You need to rework it, put DTS changes at the end. This clearly shows
+that there is no wrong dependency.
+
+> 
+> > Adjust the title to match the contents - you are not adding bindings but
+> > properties to bus nodes. Also the prefix is ARM: (look at recent
+> > commits).
+> 
+> OK.
+> 
+> > > 
+> > > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > > index 4ce3d77a6704..d9d70eacfcaf 100644
+> > > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > > @@ -90,6 +90,7 @@
+> > >  &bus_dmc {
+> > >  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+> > >  	vdd-supply = <&buck1_reg>;
+> > > +	#interconnect-cells = <0>;
+> > 
+> > This does not look like property of Odroid but Exynos4412 or Exynos4.
+> 
+> Strangely enough, this file is where the 'exynos,parent-bus' (aka. 'devfreq')
+> properties are located (and everything in this RFC concerns devfreq).
+
+I cannot find exynos,parent-bus in exynos4412-odroid-common.dtsi. Can
+you elaborate?
+
+Best regards,
+Krzysztof
