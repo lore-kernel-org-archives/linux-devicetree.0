@@ -2,148 +2,153 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2EDC2D0DD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 18:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041C2C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 18:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF74206E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 18:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577817873;
-	bh=riXcoydcyPoxgkVe8tAVNRG3RFVXH6/h9LqbmhayhjA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FMSAjeUfb/0pmJ1gp5awMSuc16fjCXPzm0ACU1bwkOKq9MaOp3x7GxL5UcHqHtY0V
-	 TXpHqfCrKKucd7Ep9YqoMQDOwAskbEdQRg9nzLKHDmPC5RwkCQKdhXW8L6Skor7EbU
-	 daAqf4OczNYuRLZs5mB2atlyWaDiniJIv0KysIqI=
+	by mail.kernel.org (Postfix) with ESMTP id D9C3A206EE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 18:45:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H0PFzSeq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfLaSoc (ORCPT
+        id S1727075AbfLaSo7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 13:44:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726720AbfLaSoc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Dec 2019 13:44:32 -0500
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 702CD206D9;
-        Tue, 31 Dec 2019 18:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577817871;
-        bh=riXcoydcyPoxgkVe8tAVNRG3RFVXH6/h9LqbmhayhjA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a3SDFHuDqg2DCCB2Q0X8BaYq8y19qdPTiLDvhBiBjlHBY5C77eokc4FFBB6clAomZ
-         Gu/3FW9D0FxEb1QtoCY3GCipOZr0/t8uFu+74JrmigdHY8maPcdi9RSc1/egCylhza
-         7qtWv6/2Iw1anU9C/SaBUrfaUSeFAVLjIJxuF188=
-Received: by mail-qt1-f180.google.com with SMTP id l12so32033405qtq.12;
-        Tue, 31 Dec 2019 10:44:31 -0800 (PST)
-X-Gm-Message-State: APjAAAWjWiQa8FqZifv/J1/Hc+CzXaeGcrX6neLhVZCct/IZtBdcBbBe
-        4+PoxtULBlSH76APVTUApq+wq925c/Ij4frNug==
-X-Google-Smtp-Source: APXvYqwuXd/iB7mnz6sRuN1D722obsAkIzZeKSerej+GtzsT+NMn+IL6WwSpo9TnuKp7aqFc+cJ7Y327syIQMQJLlRM=
-X-Received: by 2002:ac8:5513:: with SMTP id j19mr53751443qtq.143.1577817870653;
- Tue, 31 Dec 2019 10:44:30 -0800 (PST)
+        Tue, 31 Dec 2019 13:44:59 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:44942 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbfLaSo7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 13:44:59 -0500
+Received: by mail-vs1-f68.google.com with SMTP id p6so23109957vsj.11
+        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 10:44:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d6cLOy9QnNkqPgXa2Ezsb9iiMWSyWe0a3ouJ2T5tkB4=;
+        b=H0PFzSeqntD/Hv7LYk3frEd/P6wJB6jbPZyz5Oco/Vlf4sjhQ8DDAYZqcZdO6Z6jCA
+         q439TKwr/TdeRFKeyZS+a3hX1F4Y9R00m/mxLSrVkj1ySolbO74AsF4lnjZ44Tejj9Tq
+         sRmkdMiv/dvGL4/T88FbgZkI8QjEjbCD6133fhIkLQrwsQXoe05lhj7ppCcEp2OOs/1L
+         sj2x3jTX1GmrtJDLVMc9e5cWSIHrX03Q2nA9SRJAX+p5SatDvTbfa2oS90xh4kgQcPZP
+         MzI27F8KuICqIOJbLp0Qfvf6TWNiMWH9OFIqr2FNa0Nxs0QxCRxzUXHrDtpmh+jT551/
+         m6JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d6cLOy9QnNkqPgXa2Ezsb9iiMWSyWe0a3ouJ2T5tkB4=;
+        b=V+j1dGMW4NQ/kA7rz3iNt6pibGOv9x7lRSgOn1tFE74ZGvOlO7JXlixSXuMyiMZi+S
+         dNNSSEa0oPEtiXThe2x/RVxQu3QlGfcsstc8w6QA0DF89y6wttcn0/EuryvrhLbGs0rq
+         Wp3J8nAKIVPGLpejY+vWp8b0/L0j/Pfud0T1ecvpNlMPDSgF97G3AUXJiaONMGlkcFxO
+         wzN+AmSqcoTOcx1G+IR21IywM0k4Fwtx+n+mPMOH6M7JCraitLd8I7K366F3FNt68ODJ
+         WRsXe1nZ5oCIzRpmNddTCnx569fkI1IFIgQ9cnEtLFaPorE8cs/TLejvoXiqwGfZnf0W
+         /L7A==
+X-Gm-Message-State: APjAAAUast2/GhD6Q5GH7pVDaWCkiP5DhC6IWq/MuYKKQf4f1wXYZEhY
+        HxJaMa6/E34iGXQEBU74Iblj35dcfm+z0tdejRe6SvcWSKQUVQ==
+X-Google-Smtp-Source: APXvYqwN0cl8CWWyvPT5IA5YDxvXHTq8AEet83oy71NUwKLR2lk3hd+tluQBsno3dTDkR3iYkniKP6IxDCqwxp1taRw=
+X-Received: by 2002:a05:6102:375:: with SMTP id f21mr4531364vsa.115.1577817898024;
+ Tue, 31 Dec 2019 10:44:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20191231172458.25984-1-linus.walleij@linaro.org>
-In-Reply-To: <20191231172458.25984-1-linus.walleij@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 31 Dec 2019 11:44:19 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqKcuV1dKuTD7iYdyHA3fqv3ENBVj7RXQuT+yMja4tJpxA@mail.gmail.com>
-Message-ID: <CAL_JsqKcuV1dKuTD7iYdyHA3fqv3ENBVj7RXQuT+yMja4tJpxA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Create DT bindings for [PS]ATA controllers
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     devicetree@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>
+References: <20191107224254.15712-1-robh@kernel.org>
+In-Reply-To: <20191107224254.15712-1-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 31 Dec 2019 19:44:46 +0100
+Message-ID: <CACRpkdY0ex_svj97Ri=HjGFqv55n6nk9kgd-J-44X_HUvMri2w@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Convert generic pin mux and config
+ properties to schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 10:25 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+Hm it appears the following reply was stuck (no SMTP response or something):
+
+On Thu, Nov 7, 2019 at 11:42 PM Rob Herring <robh@kernel.org> wrote:
+
+> As pinctrl bindings have a flexible structure and no standard child node
+> naming convention, creating a single pinctrl schema doesn't work. Instead,
+> create schemas for the pin mux and config nodes which device pinctrl schema
+> can reference.
 >
-> I need to create subnodes for drives connected to PATA
-> or SATA host controllers, and this needs to be supported
-> generally, so create a common YAML binding for
-> "pata-controller" or "sata-controller" that will support
-> subnodes with drives.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  .../bindings/ata/pata-sata-common.yaml        | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/pata-sata-common.yaml
->
-> diff --git a/Documentation/devicetree/bindings/ata/pata-sata-common.yaml b/Documentation/devicetree/bindings/ata/pata-sata-common.yaml
-> new file mode 100644
-> index 000000000000..d94aa20a29e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/pata-sata-common.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/ata/pata-sata-common.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common Properties for Parallel and Serial AT attachment controllers
-> +
-> +maintainers:
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +description: |
-> +  This document defines device tree properties common to most Parallel
-> +  (PATA) and Serial (SATA) AT attachment storage devices. It doesn't
-> +  constitue a device tree binding specification by itself but is meant to
-> +  be referenced by device tree bindings.
-> +
-> +  The PATA/SATA controller device tree bindings are responsible for
-> +  defining whether each property is required or optional.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^[ps]ata-controller(@.*)?$"
-> +    description:
-> +      Specifies the host controller node.
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^drive@[0-1]$":
-> +    description: |
-> +      DT nodes for drives connected on the PATA or SATA host. The master drive
-> +      will have ID number 0 and the slave drive will have ID number 1.
-> +    type: object
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-See ata/ahci-platform.txt. We already have child nodes defined as
-ports which is essentially a drive (though IIRC SATA can have a mux).
-Arguably, we could have both ports and then a drive child under that,
-but I've never seen a case of a drive needing DT properties (that
-would imply a non-standard connector). So either split this into
-separate IDE/PATA and SATA schemas or extend this to work with SATA
-ports.
+Patch applied. I am a big fan of schemas.
 
-Also, you might consider if you need a regulator property for IDE.
+I still feel like swimming in deep waters sometimes when using it
+and like I "fake it til I make it", I suppose one day I will grok the
+inner transcendental meaning of this notation. Maybe.
 
-> +
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 1
-> +        description:
-> +          The ID number of the drive, 0 for the master and 1 for the slave.
+> We're starting to see pinctrl schema doing their own definitions for
+> generic properties, so we need to get something in place to reference.
 
-Why do you need to describe the drives in DT for IDE? They are
-discoverable, right? And unlike SATA, the power to master and slave is
-shared.
+ACK.
 
-Rob
+> Maybe this could be combined into a single schema? Spliting it was
+> easier in order to just copy over the existing documentation.
+
+We can surely do that later.
+
+> Reading thru pinctrl-bindings.txt, I'm wondering if some of it is out
+> of date. Do we let new bindings not use the generic muxing properties?
+> Do we really need to be so flexible for child node structure?
+
+The bindings are quite flexible because we simply could not agree
+on a single semantic. Initially AT91, i.MX and pinctrl-single used the
+strategy of just storing u32's in the tree to be poked into registers
+to set up a certain muxing rather than strings to identify groups and
+functions.
+
+I tried to push and define the generic string-based muxing of functions
+with groups and also using strings for pin configuration.
+
+The downside of this approach is that pins need to be bundled into
+groups based on use case. This is not perfect: sometimes we get
+the wrong groups because all use cases can not be predicted when
+writing a driver. A typical example would be that a UART group
+would be four pins  [RX TX CTS RTS]. Late the author realized
+that systems actually want two groups [RX TX] [CTS RTS] so they
+can punt out the [CTS RTS] group and reuse that for e.g. GPIO
+when only RX and TX is in use.
+
+At some point I was pretty heavily pushed by
+some contributors who thought the idea to define groups
+for all use cases was vain and wanted to use enumed numerals to define
+all their settings on a per-pin basis and who felt the generic
+muxing (and generic config) was inappropriate for their use cases.
+
+This goes especially for STM32 and Rockchip IIRC but I could be
+wrong. TI followed this pattern with the k3 and dra drivers.
+
+This was something like 50% of the pin control community at the
+time, not a vocal minority but a vocal 50%.
+
+So I caved in and merged them. I could not really stand in the way
+for this vital piece of infrastructure as it essentially stops the systems
+from even booting a mainline kernel. I assumed it was the lesser
+evil.
+
+The fact of the day is that a significant portion of the pin control
+authors like the magic numbers from defined in <dt-bindings/pinctrl/*.h>
+files (sometimes corresponding to register values) and the case
+is rather lost: these will be around and there will likely also be
+more of them.
+
+I personally prefer the string based configuration (functions muxed
+to groups and abstract standard strings for configs) as the higher
+abstraction gives a better fit with the ambitions of the device tree.
+
+But it is not like the per-pin and magic numbers lack merit.
+
+Yours,
+Linus Walleij
