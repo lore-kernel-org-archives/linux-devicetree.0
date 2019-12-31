@@ -2,158 +2,141 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB088C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3232AC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1B1206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:15:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="iY7AF2Hk"
+	by mail.kernel.org (Postfix) with ESMTP id 0C959206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 08:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbfLaIPc (ORCPT
+        id S1725770AbfLaIXy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 03:15:32 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:12370 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfLaIPb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 03:15:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577780129;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=1zb1yyg45rffTMBSTY3brW53GCegT+pQHuPQHh8FR7E=;
-        b=iY7AF2HkRPj48jdFCvBJ8GBjhrR/kUJCqk5Si28roU6del0bNM/UoJEpcnWHFb00ay
-        LKTrHBlfGeQHaTEvWr6lvLfdVcvSQlWAxtHNtvfFk/puaeSQ9dukyAyP6ih/fg6LWzR6
-        zP0BfhG4xy8XPr+gWOJdBcyZjuX9lph0qHm/3exP+s2Dfo7i3UrVsCQmj33A0ApkXiKb
-        zAHKIRS33bLplgM4mVi5yRUasvbjSDrz+3N1JGTa1zVoyoowBehTqddsDTzXMKFtvRp8
-        Ha2Mq2HkNfAlaRAaQ38PD+OzP2aBkx0RtGA4zxS95CvkG2NgL4gZZGQNj7N1fwBgaw3E
-        b1HQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vswDOsxLg="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id a09dafvBV8ECFj7
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Tue, 31 Dec 2019 09:14:12 +0100 (CET)
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] ARM: dts: Add omap3-echo
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20191230172948.GL35479@atomide.com>
-Date:   Tue, 31 Dec 2019 09:14:12 +0100
-Cc:     =?utf-8?Q?Andr=C3=A9_Hentschel?= <nerv@dawncrow.de>,
-        Adam Ford <aford173@gmail.com>, linux@arm.linux.org.uk,
-        robh+dt@kernel.org, mark.rutland@arm.com, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <55E6481C-2137-4086-ACDF-5F7D86E41A21@goldelico.com>
-References: <20191224161005.28083-1-nerv@dawncrow.de> <20191224184503.GK35479@atomide.com> <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com> <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de> <20191230172948.GL35479@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 31 Dec 2019 03:23:54 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41921 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfLaIXy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 03:23:54 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so49465455otc.8;
+        Tue, 31 Dec 2019 00:23:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=exbpjm8R+9VG0LXo53eXq/JhXDU32icBm8b7iAcsrrE=;
+        b=i3Wxe0Y8JvJoL3QnoADXcbxDv88kne5wunme+8tkCLtTL3j2tqfyp+VwrrZebF1isY
+         Brh7RO0jsJGPGoHnCMR7FQ+VylzZLWfSjPf2H0/93/PJ5a2KvZ8+6tGm96R07nrbzDwA
+         JAGaKDCw+Xb4AoX325e/FlU56e38gy0UAvhXle76xejbm/9VEn/NUBi9FfQcS5RJDs0C
+         QOmt0uq0bF6X5Lxvv3CRTZ49I4X6vZndAKjHY6AMcn/5Rp4waqjAncohIsma5JDXcPpB
+         xEaAIm5raBYfF8pplLUEAdiKXCBQ2jd3S/uqrWtlhO8rG6SBql/rTlBAz8Dp1OPJ1ExD
+         659g==
+X-Gm-Message-State: APjAAAX7REPno25mLqC2Efe1F6g9brc3bOEHL0iAY8q34RF7AenoqP9W
+        SiU/vr2MtoS3cZooeGXgAXkNol8ZnbwqI1r1KRA=
+X-Google-Smtp-Source: APXvYqyNXKUrqWbQ3GKR/KvwCtjIAXctgLXNr5s7v9TX4B69OhYh51yZVdBnhbmzbfErcyqtCy7X45zpE7TsSY5A/m4=
+X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr79413312otd.39.1577780633088;
+ Tue, 31 Dec 2019 00:23:53 -0800 (PST)
+MIME-Version: 1.0
+References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
+ <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com> <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 31 Dec 2019 09:23:41 +0100
+Message-ID: <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        David Daney <david.daney@cavium.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tony,
+Hi Rob,
 
-> Am 30.12.2019 um 18:29 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * Andr=C3=A9 Hentschel <nerv@dawncrow.de> [191227 14:29]:
->> Am 25.12.19 um 18:01 schrieb H. Nikolaus Schaller:
->>> I think the am3703 is a dm3730 (omap3630) where the SGX and the
->>> DSP have not passed production test and are "disabled" by eFuses.
->>> This is a common procedure in silicon production to increase yield.
->>>=20
->>> Therefore, there is a register which allows to dynamically determine
->>> what components (SGX and DSP) are available on a specific SoC chip.
->>> See "Table 1-6. Chip Identification" in the common
->>> "AM/DM37x Multimedia Device TRM".
->>>=20
->>> Such bits exists for omap34xx and for omap36xx (aka am37xx/dm37xx).
->>>=20
->>> That way there is no need to disable/enable sgx through device tree
->>> variations and introducing more complexity by introducing more and =
-more
->>> DTS for variants (am3703.dtsi, am3715.dtsi, dm3720.dtsi, =
-dm3730.dtsi?).
->>>=20
->>> BTW: what about a board that is/was produced in either am3703 or =
-dm3730
->>> variants? Can they still share an omap36xx.dtsi based DTB?
->>>=20
->>> So IMHO if there is an issue with sgx enabled on am3703 but no SGX
->>> hardware available on a specific SoC, the sysc setup should somehow =
-read
->>> the bits and effectively disable all SGX related setup if it is not
->>> available on the SoC. If I remember correctly, some older hwmods did
->>> such things by checking SoC variant bits.
->>=20
->> I like the idea, but I'm not in the position to vote for it and I =
-don't
->> understand the sysc code enough to implement that.
->=20
-> We can easily do both. So no worries, I can easily add SoC capabilites
-> support at some point.
->=20
->> Am 25.12.19 um 13:53 schrieb Adam Ford:
->>> On Wed, Dec 25, 2019 at 6:05 AM Andr=C3=A9 Hentschel =
-<nerv@dawncrow.de> wrote:
->>>> And then include am3703.dtsi in omap36xx.dtsi before sgx support?
->>> I can see value in having a 3703 base and including that in the 36xx
->>> with SGX and DSP nodes, but why not jus make SGX disabled by =
-default.
->>> Those who want/need it can enable it on a per-board basis.
->>>> Or would it be better to have sgx support in a separate dtsi?
->>>=20
->>> I am not sure how much DSP stuff is in there, but the DM3730 is the
->>> AM3703 + DSP and 3D.
->>=20
->> For clarification this reduced table should help:
->>     DM3730 | DM3725 | AM3715 | AM3703
->> DSP    X    |   X    |        |   =20
->> SGX    X    |        |   X    |   =20
->>=20
->> Where X is "supported"
->=20
-> And let's also add minimal dm3725.dtsi, am3715.dtsi and am3703.dtsi
-> to make things simple.
+On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
+> On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > Convert the generic PCI host binding to DT schema. The derivative Juno,
+> > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
+> > > their compatible strings. The simplest way to convert those to
+> > > schema is just add them into the common generic PCI host schema.
+> > >
+> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Cc: Andrew Murray <andrew.murray@arm.com>
+> > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: David Daney <david.daney@cavium.com>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> >
+> > > index 515b2f9542e5..000000000000
+> > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+> > > +++ /dev/null
+> >
+> > > -Example:
+> > > -
+> > > -    pcie1: pcie@7f000000 {
+> > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
+> > > -        device_type = "pci";
+> > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
+> > > -        bus-range = <0x0 0xe>;
+> > > -        #address-cells = <3>;
+> > > -        #size-cells = <2>;
+> > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
+> > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
+> > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
+> > > -
+> > > -        #interrupt-cells = <0x1>;
+> > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
+> >
+> > An all-zeroes interrupt-map-mask seems to be very common on embedded
+> > SoCs, where all devices are mapped to a single interrupt.
+>
+> Indeed.
+>
+> > However, schemas/pci/pci-bus.yaml says:
+> >
+> >   interrupt-map-mask:
+> >     items:
+> >       - description: PCI high address cell
+> >         minimum: 0
+> >         maximum: 0xf800
+> >       - description: PCI mid address cell
+> >         const: 0
+> >       - description: PCI low address cell
+> >         const: 0
+> >       - description: PCI IRQ cell
+> >         minimum: 1
+> >         maximum: 7
+> >
+> > and thus complains about an all-zeroes mask, e.g.
+> >
+> >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
+> > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
+>
+> Now fixed.
 
-Well, is that "simple"?
+Thank you, confirmed.
 
-We also have to add omap3503, omap3515, omap3520, omap3530.dtsi.
-And probably am3351,2,4,6,7,8,9 variants with different capabilities
-(PRU, SGX, CAN, ZCZ ports to name some).
+Gr{oetje,eeting}s,
 
-And to be correct, there should be a different "compatible".
+                        Geert
 
-Rob asked me when reviewing the pvrsgx bindings if the img,5xx variants
-can be autodetected to reduce bindings complexity.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> The device tree is supposed to describe the
-> hardware, and in most cases the SoC version is fixed and need no
-> dynamic detection.
-
-There may be exactly the same board populated with either one since
-they are drop-in pin compatible. So this may proliferate to the
-board.dts files and u-boot can have to load different .dtb.
-
->=20
-> Andr=C3=A9, can you please add those three dtsi files since you have =
-at
-> least one test case? :)
->=20
-> Regards,
->=20
-> Tony
-
-BR,
-Nikolaus
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
