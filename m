@@ -2,171 +2,121 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73471C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 12:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA66C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39366206D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 12:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A11206E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bN0Y8juB"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JNRNyjPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbfLaM2R (ORCPT
+        id S1726674AbfLaNFm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 07:28:17 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:38084 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfLaM2R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 07:28:17 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBVCS929007216;
-        Tue, 31 Dec 2019 06:28:09 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1577795289;
-        bh=sxJZuJL2N/CVJeJNX6BpxNrxDmV+upJukPzujAe/+T0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bN0Y8juBi9wVl4KFFw/CtJsqGVzk2/cnywJZy0q5Mi29b4NDnFI7UZ3tzlkso/cqG
-         eQfHOJwOXCBu7FKjL9p8oMg6gPmTD63N/9I6u6uYSaCInFgIFMYUzdtnwYSrupYS8V
-         OksWXnPrUIb2Skni8SaHN/oZs4h+W0zivRNAp2qc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBVCS9Ir031530;
-        Tue, 31 Dec 2019 06:28:09 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 31
- Dec 2019 06:28:09 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 31 Dec 2019 06:28:09 -0600
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBVCS7UQ127507;
-        Tue, 31 Dec 2019 06:28:07 -0600
-Subject: Re: [PATCH v2 07/14] dt-bindings: phy: phy-cadence-torrent: Add clock
- bindings
-To:     Yuti Amonkar <yamonkar@cadence.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <kishon@ti.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <maxime@cerno.tech>
-CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <mparab@cadence.com>,
-        <sjakhade@cadence.com>
-References: <1577114139-14984-1-git-send-email-yamonkar@cadence.com>
- <1577114139-14984-8-git-send-email-yamonkar@cadence.com>
-From:   Jyri Sarha <jsarha@ti.com>
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b71d6012-71ac-fd0a-e4cd-8ae949e6458e@ti.com>
-Date:   Tue, 31 Dec 2019 14:28:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 31 Dec 2019 08:05:42 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36226 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfLaNFm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 08:05:42 -0500
+Received: by mail-pj1-f67.google.com with SMTP id n59so1213133pjb.1
+        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 05:05:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G8ue1C52c6GMFo3Ro49/gUAlsKHzYRxfbPWqTGCIbyw=;
+        b=JNRNyjPnuWa3Uwbq0Q5tiy7txraP03SundwCX4/YlAxMeSUJ4lClB9jb44eLtO6iRF
+         HrhyZr5cz1P8LDTX+KBc7DI8GMWWZ3FX2v3iPLpHt1LvH4grZql1KQkDA45kcp8pSkdK
+         TBDBQ2HMrNmRsko3h5ah/l328CIQUspldKC0E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G8ue1C52c6GMFo3Ro49/gUAlsKHzYRxfbPWqTGCIbyw=;
+        b=MBfhKFBMN4KIvvArxszEYilw7JFLTo9fK72qUKUPg6k61tKIqMIcy1R/AETApxGWO1
+         bi8o48c7YS3R9RJ43QijHRqYIdS6JqVZq9JDPqwrYVnaBliP+FN7kYFK0g/xLLLAGUYW
+         vHLHtcKL5D6CRKJnsdPKsPPTSqDWGOTKS6Jdcjagpb0EzCU9yU7ezavZ6wnV6xSbPaMJ
+         jSVjvLLYfiemoImxcnUUYlPVBE2vBOjF47y8kgG6rtHhet1YOtdO78lbouuDVzlRLflc
+         f1qZPHCDG8oVYSRGwZzZMYIALgDhPxBFCJEKKEUMFD1xcQDu6fBqcrcrwPhSZ2KsYiey
+         57zQ==
+X-Gm-Message-State: APjAAAWmJgfaZq9yjBDzRaN0a8t/gAw0Z4VRw+hYZdS1EPoTaN/cqlMd
+        4zBAvpWZDT7qzTYtrhjVWPmqBA==
+X-Google-Smtp-Source: APXvYqxXkYxsyd0ZyZlBKsAKlLynOFIBkeSMyKHk4J7/GJzGsj4UxrrFoX57Z2SFZ8ziy3NWHt7NsA==
+X-Received: by 2002:a17:902:bf0c:: with SMTP id bi12mr47277055plb.208.1577797541340;
+        Tue, 31 Dec 2019 05:05:41 -0800 (PST)
+Received: from localhost.localdomain ([49.206.202.115])
+        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.05.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 05:05:40 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v3 0/9] drm/sun4i: Allwinner R40 MIPI-DSI support
+Date:   Tue, 31 Dec 2019 18:35:19 +0530
+Message-Id: <20191231130528.20669-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-In-Reply-To: <1577114139-14984-8-git-send-email-yamonkar@cadence.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 23/12/2019 17:15, Yuti Amonkar wrote:
-> Add Torrent PHY reference clock bindings.This will not affect ABI as
-> the driver has never been functional, and therefore do not exist in
-> any active use case
-> 
+This is v3 version for supporting MIPI-DSI on Allwinner R40 from
+initial version[1].
 
-I think this could very well be a part of the first patch. There is no
-requirement for the driver to actually use all properties in the binding.
+The controller look similar like, Allwinner A64 but with associated
+R40 TCON TOP for DSI pipeline.
 
-> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
-> ---
->  .../devicetree/bindings/phy/phy-cadence-torrent.yaml         | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> index 3587312..907b627 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
-> @@ -17,6 +17,14 @@ properties:
->    compatible:
->      const: cdns,torrent-phy
->  
-> +  clocks:
-> +    maxItems: 1
-> +    description:
-> +      PHY reference clock. Must contain an entry in clock-names.
-> +
-> +  clock-names:
-> +    const: refclk
-> +
->    reg:
->      items:
->        - description: Offset of the DPTX PHY configuration registers.
-> @@ -46,6 +54,8 @@ properties:
->  
->  required:
->    - compatible
-> +  - clocks
-> +  - clock-names
->    - reg
->    - "#phy-cells"
->  
-> @@ -60,5 +70,7 @@ examples:
->            num_lanes = <4>;
->            max_bit_rate = <8100>;
->            #phy-cells = <0>;
-> +          clocks = <&ref_clk>;
-> +          clock-names = "refclk";
->      };
->  ...
-> 
+Changes for v3:
+- collect Rob, Chen-Yu r-b, a-b tags
+- move tcon top reset control methods into probe
+- rebase on drm-misc
+Changes for v2:
+- drop tcon top lcd clock patch
+- add TODO text while adding tcon lcd support
+- add patch for registering tcon top clock gates in probe
+- change tcon-ch0 in tcon_lcd0 to CLK_TCON_LCD0
+- change mod clock in dphy to tcon_top with index 3 
 
+[1] https://patchwork.freedesktop.org/series/62062/
+
+Any inputs?
+Jagan.
+
+Jagan Teki (9):
+  dt-bindings: display: Add TCON LCD compatible for R40
+  drm/sun4i: tcon: Add TCON LCD support for R40
+  ARM: dts: sun8i: r40: Use tcon top clock index macros
+  drm/sun4i: tcon_top: Use clock name index macros
+  drm/sun4i: tcon_top: Register reset, clock gates in probe
+  dt-bindings: sun6i-dsi: Add R40 DPHY compatible (w/ A31 fallback)
+  dt-bindings: sun6i-dsi: Document R40 MIPI-DSI controller (w/ A64
+    fallback)
+  ARM: dts: sun8i: r40: Add MIPI DSI pipeline
+  [DO NOT MERGE] ARM: dts: sun8i-r40: bananapi-m2-ultra: Enable Bananapi S070WV20-CT16
+
+ .../display/allwinner,sun6i-a31-mipi-dsi.yaml |  8 +-
+ .../bindings/display/sunxi/sun4i-drm.txt      |  1 +
+ .../phy/allwinner,sun6i-a31-mipi-dphy.yaml    |  1 +
+ .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 37 +++++++++
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 77 ++++++++++++++++++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            |  8 ++
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c        | 50 ++++++------
+ 7 files changed, 154 insertions(+), 28 deletions(-)
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.18.0.321.gffc6fa0e3
+
