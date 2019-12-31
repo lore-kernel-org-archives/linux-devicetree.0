@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4543CC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA78C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A3B205ED
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C186C20718
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 13:05:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="C1XNMIIr"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="U1gmKyx8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfLaNFx (ORCPT
+        id S1727131AbfLaNF6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 08:05:53 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36873 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfLaNFx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 08:05:53 -0500
-Received: by mail-pf1-f194.google.com with SMTP id p14so19724583pfn.4
-        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 05:05:52 -0800 (PST)
+        Tue, 31 Dec 2019 08:05:58 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36964 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfLaNF6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 08:05:58 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so1212084pjb.2
+        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 05:05:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EOyi5tzl/4nxk9xqAyclAM+URcfve5OZPh7MV8YnBrQ=;
-        b=C1XNMIIrb2O3OzCmOxnI3KLkToL36K1e3oVnIkwDhOb7qAi+rVBZHeA8Ow4beqvyc3
-         OmRIH1tZbE4YUFbem4RfF1tsmO1bJxhPU7MzEGXb5kR6yPVL68dQrzwJzF/N+TayzcL9
-         gRZfFtDZn4otpmgJFfnrf8tUKpSIthlspA4+E=
+        bh=J4bPo8ZUsPUay4xqO2AMjOfE/DZ5OrDO5jUkRoUY2VY=;
+        b=U1gmKyx8CuXnL3PQzKepsp555RKkUMBTs6zt2sWqDklR4ytbWLaYee8G1BijtxRCRg
+         gDTWkAZOJlMcS86FTxi4jnDeXF0O2vOyq/pDQrgzV01yZVIkCQReTf5nEn2xZZ7+4wJM
+         /aYKLrB4tYGlRHKShfKL0jtLnB2dUzDRnMWWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EOyi5tzl/4nxk9xqAyclAM+URcfve5OZPh7MV8YnBrQ=;
-        b=Zn+SLIqOrFlkRw9PTKpfsHXVB/vuuUxZWllzfqdNtxdWpiGFjdME3krURS5FkaAGo2
-         msFOT+d/qStnc7PTW78tB8Ewsz0y+zRiAR0GfPV9zbw+TM9Ko2X55Ww2GXJbfRSdW5lF
-         Nooa4iLscCOAKnBVrBpExjCQgTprDocqaABli3jsutPo4mcpKCwHR3nWRN2msE99Sm2K
-         XI3ZhEcHaziutbDRS5BfepMI29Qqf9sxO5I1obR6qImrpv2FXL2vLZA8lLbd0GsydkwY
-         fkP/nV0+rvyY9naW9zStWjDaMc15lfHZ5wgsLhbhcvmt3smU3lK2hnNDGxGgDjV8lXWL
-         Ie3Q==
-X-Gm-Message-State: APjAAAXnb8dGMWDG1hON+MuUFwQsrBhZTYM+4DsVO33RXxFXySNh4fp5
-        AQJJo/+rsyeUedoIOZgIMkx2Eg==
-X-Google-Smtp-Source: APXvYqyYk9aV+EnROERG9fjC1KYiBt7tIzfsFrbzcVxWJhg/zyJNc52rgXItMppvEfsBzE5giSw/mg==
-X-Received: by 2002:a62:ddd0:: with SMTP id w199mr75715315pff.1.1577797552360;
-        Tue, 31 Dec 2019 05:05:52 -0800 (PST)
+        bh=J4bPo8ZUsPUay4xqO2AMjOfE/DZ5OrDO5jUkRoUY2VY=;
+        b=BhPR2caOwXVC5x51tZSi1h2DxATPONvjdzPx3hcbf4acYQny54v4zYDgfcnWK2gCh3
+         gG3flitJ7l76lklUMXNTGKGBEMdRz3aGxAGoClD7uLkKEPRMKhQMdpbEn8IBr7q7INRy
+         eISGlgkt140piMDcLbUVBBT2hqGofjvIEbLqWty04rHoo2uv7hNvntPaaCW9dCyHrP6F
+         Ci8Q1SnyqD0dG9xZrmqcc6Jkr5uEwlfE+hA7tnIgBm+kBGYvU47K4PXRU6dFmreDNHHs
+         MVAtiNZJ3iHaxW+FNw2VPjc6lWJGWtAS1ge0dVm0VMwI7wE/FZunHDmA8htF8im4odUh
+         APWA==
+X-Gm-Message-State: APjAAAXV5rJHwIAEQv/tNa0B3S0+38TguFzlAgjCIoJZ0KIDtiChsc7s
+        MV7sLzQ7FHJJV5zSYg0Tdddskg==
+X-Google-Smtp-Source: APXvYqzGxUTLPshcgs4piIKf+BqFt92fK+2KuvQXB+m3PyXKksH8GIPO+5kN+3UoqrcAEtaSJdCpLw==
+X-Received: by 2002:a17:902:b611:: with SMTP id b17mr74759458pls.210.1577797557554;
+        Tue, 31 Dec 2019 05:05:57 -0800 (PST)
 Received: from localhost.localdomain ([49.206.202.115])
-        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.05.47
+        by smtp.gmail.com with ESMTPSA id i3sm55204089pfg.94.2019.12.31.05.05.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 05:05:51 -0800 (PST)
+        Tue, 31 Dec 2019 05:05:57 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
@@ -64,9 +64,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
-Date:   Tue, 31 Dec 2019 18:35:21 +0530
-Message-Id: <20191231130528.20669-3-jagan@amarulasolutions.com>
+Subject: [PATCH v3 3/9] ARM: dts: sun8i: r40: Use tcon top clock index macros
+Date:   Tue, 31 Dec 2019 18:35:22 +0530
+Message-Id: <20191231130528.20669-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191231130528.20669-1-jagan@amarulasolutions.com>
 References: <20191231130528.20669-1-jagan@amarulasolutions.com>
@@ -77,48 +77,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-TCON LCD0, LCD1 in allwinner R40, are used for managing
-LCD interfaces like RGB, LVDS and DSI.
+tcon_tv0, tcon_tv1 nodes have a clock names of tcon-ch0,
+tcon-ch1 which are referring tcon_top clocks via index
+numbers like 0, 1 with CLK_TCON_TV0 and CLK_TCON_TV1
+respectively.
 
-Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
-tcon top.
-
-Add support for it, in tcon driver.
+Use the macro in place of index numbers, for more code
+readability.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 ---
 Changes for v3:
 - none
 
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/sun8i-r40.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index fad72799b8df..69611d38c844 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
- 	.has_channel_1		= true,
- };
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index c9c2688db66d..3faa35d43afa 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -44,6 +44,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/sun8i-de2.h>
+ #include <dt-bindings/clock/sun8i-r40-ccu.h>
++#include <dt-bindings/clock/sun8i-tcon-top.h>
+ #include <dt-bindings/reset/sun8i-r40-ccu.h>
+ #include <dt-bindings/reset/sun8i-de2.h>
  
-+static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
-+	.supports_lvds		= true,
-+	.has_channel_0		= true,
-+	/* TODO Need to support TCON output muxing via GPIO pins */
-+	.set_mux		= sun8i_r40_tcon_tv_set_mux,
-+};
-+
- static const struct sun4i_tcon_quirks sun8i_r40_tv_quirks = {
- 	.has_channel_1		= true,
- 	.set_mux		= sun8i_r40_tcon_tv_set_mux,
-@@ -1500,6 +1507,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
- 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
- 	{ .compatible = "allwinner,sun8i-a83t-tcon-lcd", .data = &sun8i_a83t_lcd_quirks },
- 	{ .compatible = "allwinner,sun8i-a83t-tcon-tv", .data = &sun8i_a83t_tv_quirks },
-+	{ .compatible = "allwinner,sun8i-r40-tcon-lcd", .data = &sun8i_r40_lcd_quirks },
- 	{ .compatible = "allwinner,sun8i-r40-tcon-tv", .data = &sun8i_r40_tv_quirks },
- 	{ .compatible = "allwinner,sun8i-v3s-tcon", .data = &sun8i_v3s_quirks },
- 	{ .compatible = "allwinner,sun9i-a80-tcon-lcd", .data = &sun9i_a80_tcon_lcd_quirks },
+@@ -709,7 +710,7 @@
+ 			compatible = "allwinner,sun8i-r40-tcon-tv";
+ 			reg = <0x01c73000 0x1000>;
+ 			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top 0>;
++			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top CLK_TCON_TOP_TV0>;
+ 			clock-names = "ahb", "tcon-ch1";
+ 			resets = <&ccu RST_BUS_TCON_TV0>;
+ 			reset-names = "lcd";
+@@ -752,7 +753,7 @@
+ 			compatible = "allwinner,sun8i-r40-tcon-tv";
+ 			reg = <0x01c74000 0x1000>;
+ 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top 1>;
++			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top CLK_TCON_TOP_TV1>;
+ 			clock-names = "ahb", "tcon-ch1";
+ 			resets = <&ccu RST_BUS_TCON_TV1>;
+ 			reset-names = "lcd";
 -- 
 2.18.0.321.gffc6fa0e3
 
