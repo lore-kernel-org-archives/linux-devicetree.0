@@ -2,91 +2,82 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CB7C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA2C2D0DD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843EA206E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:12:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPoYQr6h"
+	by mail.kernel.org (Postfix) with ESMTP id D33CA206E6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577819702;
+	bh=UWto3XP+ZHcVrrBu2TteLJLRk/PVGGUsPg6wRnGsP+c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IwxO3UUdSv51k77CuzLRDipcGCIrZh7PiroxV8gYBGAWVI30OHnq8P2FE25XfWSPC
+	 qS/9/on0XNpe5WTl/shyij6Xh7HFIhm4EOciJJQP866r17D4MVcW9LvuEuRco/mqpu
+	 lRqO5JPiKXXiJXXArw2VaCon3DFqvyc0+T1p+Bxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfLaTMD (ORCPT
+        id S1727075AbfLaTPC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 14:12:03 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43675 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbfLaTMD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 14:12:03 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so35810629wre.10;
-        Tue, 31 Dec 2019 11:12:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ugkmn+9FfNrqX0nLEPxcXHS7THYr0ykg5MLCv/1z8zQ=;
-        b=hPoYQr6hMewVT8HtmuJwWQC8WdcrMBGE/UrhU2h5c5RnmqBdO49jlqYz8Y9MkJTNs9
-         k1WVy2CyUSgJyQmeko3i8bczYU7u1ATfoFn+nRmG0luUfq6PfNHNgE1dsaxNOMCWDqNz
-         xatqT2VOpXN/e0Oy8UVoJ3fo4Gk+LthmCCENPLQOQridmr7QnkY49h9mqPo9i4wEYPJn
-         kH7YsFPZwsQlu1tHi0hk/U5I9FazLr7NeAWxvuiCDPVCvmQXrmaAckzKEqM5NFRsP6Z7
-         IJOIiwNvOAK3vfOfgXyaTZCPLWSZ5H1a1v8nB8H/UveDGaN+72Gc9utfRL4E3RfFMK7Z
-         KuGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ugkmn+9FfNrqX0nLEPxcXHS7THYr0ykg5MLCv/1z8zQ=;
-        b=fLQHtfM/enq7gpTKuOK12fmToXVkVUkYjnLqqmzrPlLLU68Euy9IVJX1DGE2WimO9L
-         Vl+Lq1wmR+fmnOMfzhdTdSkSjNY8dptVkeYl5f6DQ4i9iBD3D3/bE8MQUsv8/aopUsJH
-         rYeDHQ7djq0GOl2p7zseUZHF2NLwkdFuIi2i+Bmg43KPdwZvU5cnHCi/M9YIL00EU4cq
-         0JUEWZ2wIEK6lSbkhul8brwraEQ23nQUezZ6+2ba/bxE7Gb8fI/8wOzqV0Mr9eQ6JWCD
-         FRipnPBOjI1Lk1jEqQXFRDYcOqEj5scS1+n8LOZhOU7CHja3+NKbkDFwfLN9l0JQMYsr
-         bEjQ==
-X-Gm-Message-State: APjAAAWmpfnMWT6woOQgo6LlCsJ/odDCV5nYf0ALZvqWV5RCf9X33guc
-        /8FSYzdd42u9xosW7EI9I/g=
-X-Google-Smtp-Source: APXvYqyF0D0ikIVwTiFMzj6mqfRpTZsJr/v++9vO8XHr7OjNm2eCLMU36XEndCzwnyitR0Cm69XkjA==
-X-Received: by 2002:adf:d183:: with SMTP id v3mr43483613wrc.180.1577819520818;
-        Tue, 31 Dec 2019 11:12:00 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id q6sm53695403wrx.72.2019.12.31.11.11.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 31 Dec 2019 11:12:00 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, heiko@sntech.de, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: rk3399-firefly: remove num-slots from &sdio0 node
-Date:   Tue, 31 Dec 2019 20:11:54 +0100
-Message-Id: <20191231191154.5587-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 31 Dec 2019 14:15:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727071AbfLaTPC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Dec 2019 14:15:02 -0500
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AF4A206DA;
+        Tue, 31 Dec 2019 19:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577819701;
+        bh=UWto3XP+ZHcVrrBu2TteLJLRk/PVGGUsPg6wRnGsP+c=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pAq7Rgix32WHI6LNSqKDVVDCW3njo46IzFAiEVoINxwiSCxTtBLBCNSWDmIMFo3Z9
+         pX+3FoZ3MZ4AcQuXprYeiS6vV26H4JR6erkzrS/66Kh00GR+L0HopVtt+F6rPkMUzT
+         VaVjacJ+dKDlq/l4XSadBsZOZf8kkpsMWsKcBALM=
+Received: by mail-qt1-f169.google.com with SMTP id k40so32087395qtk.8;
+        Tue, 31 Dec 2019 11:15:01 -0800 (PST)
+X-Gm-Message-State: APjAAAUhdfeGJP0BpTJH6RZoA9NHzOPnOYjDCbvC2uP5QrenrzRcNlFt
+        vp/4Z2BTyQAhiVxYXbZgSqyRn/v2g4XdWYr5vw==
+X-Google-Smtp-Source: APXvYqxc0cAnoLAtxMDKYY5xyGwDWOT1jbUfpXfE/kyndHP4PA+CDISAdBOM06xN+iB1TJYfS67KpcYKxPmY+HL8Sn4=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr54208175qtg.110.1577819700388;
+ Tue, 31 Dec 2019 11:15:00 -0800 (PST)
+MIME-Version: 1.0
+References: <20191231172458.25984-1-linus.walleij@linaro.org> <20191231172458.25984-2-linus.walleij@linaro.org>
+In-Reply-To: <20191231172458.25984-2-linus.walleij@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 31 Dec 2019 12:14:44 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqKm=7Gx7g=uKFtFprPMRSxS24vAq9J85YYB+9sNjJVQWg@mail.gmail.com>
+Message-ID: <CAL_JsqKm=7Gx7g=uKFtFprPMRSxS24vAq9J85YYB+9sNjJVQWg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: Convert Faraday FTIDE010 to DT schema
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, device@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The option "num-slots" was deprecated long time ago, so remove it.
+On Tue, Dec 31, 2019 at 10:25 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> This uses the new pata-sata-controller.yaml schema to
+> convert the Faraday FTIDE010 to DT schema.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: device@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../bindings/ata/faraday,ftide010.txt         | 38 --------
+>  .../bindings/ata/faraday,ftide010.yaml        | 89 +++++++++++++++++++
+>  2 files changed, 89 insertions(+), 38 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
+>  create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 1 -
- 1 file changed, 1 deletion(-)
+LGTM. Will wait for new version of patch 1.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-index 92de83dd4..7584351a1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-@@ -660,7 +660,6 @@
- 	keep-power-in-suspend;
- 	mmc-pwrseq = <&sdio_pwrseq>;
- 	non-removable;
--	num-slots = <1>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
- 	sd-uhs-sdr104;
--- 
-2.11.0
-
+Rob
