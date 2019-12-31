@@ -2,221 +2,183 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C39FC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 03:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C70C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 06:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B2920730
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 03:07:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2944206DA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 06:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+5X4jgH"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eDoRKXgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbfLaDHJ (ORCPT
+        id S1726046AbfLaGnS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 22:07:09 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33449 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfLaDHJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 22:07:09 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d139so1025845wmd.0;
-        Mon, 30 Dec 2019 19:07:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BZ0VS0hhU2Vvdywzz5wNCAdkQKdrdnQbQ4w6BurVpwQ=;
-        b=h+5X4jgHpLK5FZvMfDyI9vkbxSu9GLdeWW5Mo6g2xR7CDYmdux7e9+KX092C19gm2L
-         7HbQuwshg9KK2AZm//GhUxUYf/KixNNgz0a5Jf6Yxit6fCxR/BD+tm+AVjMj6n0mvREY
-         x94AnCE9RO8CU9yDOD12qTYg1UbvqjuhtKB0PqjtR0Gc3OXfALB1XNwWCgvKRcfoQ9Xc
-         yTbBQCGmoUxhCWK5/BVciN/13tKMozSoBdaaeZmpK6p+WG00hW5xsfHd2NyYS9NeZTDU
-         8UMJkiLV8/eKvOsxRXVkRdOkx+vFhZpHwcOZwQWUDgIPTPP5qoA8BVbhOjOIW0yk/wcs
-         FZxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BZ0VS0hhU2Vvdywzz5wNCAdkQKdrdnQbQ4w6BurVpwQ=;
-        b=ouDwTaZZAVp+m21VBTt9Dy5kag/kR4Cw/o3MJREy3+TaF7EpSObMTGIk0hYtGtrVkq
-         OrAk1bXsWBZG+fjxG4DCfWuH6L1tw4FMb6JTJm081RPuWXejH7BmNzxF5gkJllFjCDBK
-         yNW7I2sSK+lVGNDGo+VtE+Zu/y/4pCRqiGHr5X+UOcBg8PSyAiPfW+9y/dHvZJAMC5oG
-         RRHDtrD9LYto5W8joOL913M0uOkFy/feBMZMfChUMIurnsOgU+9HJk3C8AOt4R1K9Vi3
-         ofj6I1LTA2cZzZr3N96hUN4hStS2CWGJcJ2Jp0d6csWSd38RNu/rH1gcIO7ZboF5X0Up
-         TlYg==
-X-Gm-Message-State: APjAAAU1XtkX5YQANw65keG2U4kREp9QfTZC0qWEmHRDAFsFR6I04hTo
-        YCoa2qDXhJSTwbEMN9jn5DXf7AsCFnzCE0SmcCc=
-X-Google-Smtp-Source: APXvYqyAU8QpgcwQV5VZ250qmL5iw27RREeLpKMeKHWBHOiqllsZ75v5UqFZF7O1AS7iokOPdu0imlT+PeKSQz2RYV0=
-X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr1989297wmj.68.1577761625988;
- Mon, 30 Dec 2019 19:07:05 -0800 (PST)
+        Tue, 31 Dec 2019 01:43:18 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:41085 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725980AbfLaGnR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Dec 2019 01:43:17 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1577774597; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=F847wiYtiWu9zLjLzGjKkB/KIgILEIIryO4cx7acaiI=;
+ b=eDoRKXgrJ4nuFLDddi2gfURIdd98fUOTxs+YkETGbM9q/23HwLqhBK9UT2Pv9Oh9TtDPE/PW
+ hONEBvqGpcjGsSUYHWQ+X7OH+0pYC3urDVgKEug97mxo+82h/QWGff1fORF8Kes7WLRO53Hr
+ BkSyGFcLy0lvmDWKfkIl6hExAjQ=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0aee04.7fbad48cfb58-smtp-out-n01;
+ Tue, 31 Dec 2019 06:43:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2A24FC433A2; Tue, 31 Dec 2019 06:43:16 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: sthella)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 74374C43383;
+        Tue, 31 Dec 2019 06:43:15 +0000 (UTC)
 MIME-Version: 1.0
-References: <20191216121932.22967-1-zhang.lyra@gmail.com> <20191216121932.22967-4-zhang.lyra@gmail.com>
- <20191226185623.GA4463@bogus>
-In-Reply-To: <20191226185623.GA4463@bogus>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Tue, 31 Dec 2019 11:06:29 +0800
-Message-ID: <CAAfSe-vL4S-w4JVzevPYxb=LNqGQEn6quM54AjPHZUe6Gw3WTg@mail.gmail.com>
-Subject: Re: [PATCH V2 3/6] dt-bindings: clk: sprd: add bindings for sc9863a
- clock controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 31 Dec 2019 12:13:15 +0530
+From:   sthella@codeaurora.org
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, srinivas.kandagatla@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
+In-Reply-To: <20191229030140.GJ3755841@builder>
+References: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
+ <20191229030140.GJ3755841@builder>
+Message-ID: <412459f3ebb4297b2c21adbb1b9903c6@codeaurora.org>
+X-Sender: sthella@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 27 Dec 2019 at 02:56, Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 08:19:29PM +0800, Chunyan Zhang wrote:
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > add a new bindings to describe sc9863a clock compatible string.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  .../bindings/clock/sprd,sc9863a-clk.yaml      | 77 +++++++++++++++++++
-> >  1 file changed, 77 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> > new file mode 100644
-> > index 000000000000..881f0a0287e5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
-> > @@ -0,0 +1,77 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +# Copyright 2019 Unisoc Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
-> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > +
-> > +title: SC9863A Clock Control Unit Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Orson Zhai <orsonzhai@gmail.com>
-> > +  - Baolin Wang <baolin.wang7@gmail.com>
-> > +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> > +
-> > +properties:
-> > +  "#clock-cells":
-> > +    const: 1
-> > +
-> > +  compatible :
-> > +    enum:
-> > +      - sprd,sc9863a-ap-clk
-> > +      - sprd,sc9863a-pmu-gate
-> > +      - sprd,sc9863a-pll
-> > +      - sprd,sc9863a-mpll
-> > +      - sprd,sc9863a-rpll
-> > +      - sprd,sc9863a-dpll
-> > +      - sprd,sc9863a-aon-clk
-> > +      - sprd,sc9863a-apahb-gate
-> > +      - sprd,sc9863a-aonapb-gate
-> > +      - sprd,sc9863a-mm-gate
-> > +      - sprd,sc9863a-mm-clk
-> > +      - sprd,sc9863a-vspahb-gate
-> > +      - sprd,sc9863a-apapb-gate
->
-> These will probably need to be split to separate schemas for the reasons
-> below...
->
-> > +
-> > +  clocks:
-> > +    description: |
-> > +      The input parent clock(s) phandle for this clock, only list fixed
-> > +      clocks which are decleared in devicetree.
->
-> typo.
->
-> You need to define how many clocks.
-
-Ok, will add a define of maxItems.
-
->
-> > +
-> > +  clock-names:
-> > +    description: |
-> > +      Clock name strings used for driver to reference.
->
-> You need to list out the names.
->
-> > +
-> > +  reg:
-> > +    description: |
-> > +      Contain the registers base address and length. It must be configured
-> > +      only if no 'sprd,syscon' under the node.
-> > +
-> > +  sprd,syscon:
-> > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> > +    description: |
-> > +      The phandle to the syscon which is in the same address area with
-> > +      the clock, and so we can get regmap for the clocks from the
-> > +      syscon device.
->
-> It is preferred to make the clock node a child of the syscon and then
-> you don't need this property.
-
-According to the hardware topology, any clocks are not belonged to
-syscon, like described here, this phandle is only used to get virtual
-map address for clocks which have the same phsical address base with
-one syscon.
-
-In the past, clocks were defined like below:
-    apahb_gate: apahb-gate {
-      compatible = "sprd,sc9863a-apahb-gate";
-      reg = <0 0x20e00000 0 0x1000>;
-      #clock-cells = <1>;
-    };
-
-And there was also a syscon which had the same base address like below:
-ap_ahb_regs: syscon@20e00000 {
-compatible = "sprd,sc9863a-glbregs", "syscon";
-reg = <0 0x20e00000 0 0x4000>;
-};
-
-To avoid one phsical address was remapped more than one time, I think
-using the mapped address by syscon directly would be better.
-Any other suggestions are very appreciated.
-
-Thanks,
-Chunyan
-
->
-> > +
-> > +required:
-> > +  - compatible
-> > +  - '#clock-cells'
-> > +
-> > +examples:
-> > +  - |
-> > +    ap_clk: clock-controller@21500000 {
-> > +      compatible = "sprd,sc9863a-ap-clk";
-> > +      reg = <0 0x21500000 0 0x1000>;
-> > +      clocks = <&ext_32k>, <&ext_26m>;
-> > +      clock-names = "ext-32k", "ext-26m";
-> > +      #clock-cells = <1>;
-> > +    };
-> > +
-> > +  - |
-> > +    apahb_gate: apahb-gate {
-> > +      compatible = "sprd,sc9863a-apahb-gate";
-> > +      sprd,syscon = <&ap_ahb_regs>;
-> > +      #clock-cells = <1>;
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.20.1
-> >
+On 2019-12-29 08:31, Bjorn Andersson wrote:
+> On Mon 23 Dec 21:32 PST 2019, Shyam Kumar Thella wrote:
+> 
+>> QTI SDAM allows PMIC peripherals to access the shared memory that is
+>> available on QTI PMICs. Add documentation for it.
+>> 
+>> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79 
+>> ++++++++++++++++++++++
+>>  1 file changed, 79 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml 
+>> b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+>> new file mode 100644
+>> index 0000000..8961a99
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+>> @@ -0,0 +1,79 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
+>> +
+>> +maintainers:
+>> +  - Shyam Kumar Thella <sthella@codeaurora.org>
+>> +
+>> +description: |
+>> +  The SDAM provides scratch register space for the PMIC clients. This
+>> +  memory can be used by software to store information or communicate
+>> +  to/from the PBUS.
+>> +
+>> +allOf:
+>> +  - $ref: "nvmem.yaml#"
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - qcom,spmi-sdam
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  "#address-cells":
+>> +    const: 1
+>> +
+>> +  "#size-cells":
+>> +    const: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +patternProperties:
+>> +  "^.*@[0-9a-f]+$":
+>> +    type: object
+>> +
+>> +    properties:
+>> +      reg:
+>> +        maxItems: 1
+>> +        description:
+>> +          Offset and size in bytes within the storage device.
+>> +
+>> +      bits:
+>> +        maxItems: 1
+>> +        items:
+>> +          items:
+>> +            - minimum: 0
+>> +              maximum: 7
+>> +              description:
+>> +                Offset in bit within the address range specified by 
+>> reg.
+>> +            - minimum: 1
+>> +              description:
+>> +                Size in bit within the address range specified by 
+>> reg.
+>> +
+>> +    required:
+>> +      - reg
+>> +
+>> +    additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +      sdam_1: nvram@b000 {
+>> +         #address-cells = <1>;
+>> +         #size-cells = <1>;
+>> +         compatible = "qcom,spmi-sdam";
+>> +          reg = <0xb000 0x100>;
+>> +
+>> +          /* Data cells */
+>> +          restart_reason: restart@50 {
+> 
+> So this register has moved out of the PON register set? What component
+> in the system is going to reference this? Should it have a compatible,
+> in the same way as "syscon-reboot-mode" does?
+This is just an example for using data cells. It is not used in the 
+system.
+> 
+> Regards,
+> Bjorn
+> 
+>> +              reg = <0x50 0x1>;
+>> +              bits = <7 2>;
+>> +          };
+>> +      };
+>> +...
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>>  a Linux Foundation Collaborative Project
