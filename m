@@ -2,93 +2,139 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 936D5C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D373CC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11936206D9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D86206D9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 09:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fmXZX4Sf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725875AbfLaJaz (ORCPT
+        id S1726046AbfLaJdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 04:30:55 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:60036 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725770AbfLaJaz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 04:30:55 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBV9UUbh030702, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBV9UUbh030702
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Dec 2019 17:30:31 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Tue, 31 Dec 2019 17:30:30 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 31 Dec 2019 17:30:30 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
- RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
- 15.01.1779.005; Tue, 31 Dec 2019 17:30:30 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 10/14] ARM: dts: rtd1195: Add SB2 and SCPU Wrapper syscon nodes
-Thread-Topic: [PATCH 10/14] ARM: dts: rtd1195: Add SB2 and SCPU Wrapper syscon
- nodes
-Thread-Index: AQHVqT1w3e0DCQM4MUy3rWx8/bISHqfUJzhw
-Date:   Tue, 31 Dec 2019 09:30:30 +0000
-Message-ID: <0f3c6ae55b524367913a68fe3f7faa47@realtek.com>
-References: <20191202182205.14629-1-afaerber@suse.de>
- <20191202182205.14629-11-afaerber@suse.de>
-In-Reply-To: <20191202182205.14629-11-afaerber@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 31 Dec 2019 04:33:16 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33049 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfLaJdQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 04:33:16 -0500
+Received: by mail-pj1-f68.google.com with SMTP id u63so777579pjb.0;
+        Tue, 31 Dec 2019 01:33:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WLmpXZu1vud7niRdK/VtHaBa6VMJDe67/Y7KA6ocmug=;
+        b=fmXZX4SfoxETf2w1B/4tGkarGFv7V3B1rBT4L7cKOM0uOfYwVoT8NemY1iv5USjWhS
+         2N5AQOUusc+2plTic4C2yxN6eicH/4EKqjjqHv7dTKQaph+TAZvJivTy6OTaMvjpwNJd
+         T86EDvLDw4NYsfOWNxMc6c2nY+DJO/kzoaTdIQJPMB5mHxfYJR6n2xjoTGMyA90sx/8d
+         IHCcooO2LtVaEiP1cv6Cu0IPjkW21NH05Nd9Xxumh54Bmo/18y+Vp+pID4Tv/NO2+6Fi
+         Cgc+YIMb9gGc6uPRwo2Nqzsfm2pAFTg5gRhb4tRX4U08nljz7REvEg3dl5BPQP66nLqt
+         K4pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WLmpXZu1vud7niRdK/VtHaBa6VMJDe67/Y7KA6ocmug=;
+        b=GrTXsUiIZaZ4uKF0B6XprVU9AC8xwv4+IdbzzmebW9tsytHa/GdaZzJtWpcMsjFnca
+         mpszwiv3Hqs9y9ORk5UZxlOrCeTtvrM26JIn/EqOlzm3I/MbizCA3w12Z7ZcE7YDG9F/
+         QrVpIVKPuEFTIK4t6JIcN9IJx2EkbpWEcEWO325QNbrk/PojCZtOtNJlep/EcP1FR7Ed
+         jv4EhpMiasomHRyDDTx+yxGH6Aeb4R1YemM4TMPeELoLVmi945TRme81Fr99yvpnIRcT
+         uVIIm5lSpaAkbHK+xXAk9inhHV8nVyI+5keaS3l4g0HtcVvx6WFoRSFPqc9pDgdZkJPn
+         vgcQ==
+X-Gm-Message-State: APjAAAVaiYkmUMfFS4kSSyxsczRzRUjr70nSCTLVFURT+TvHgCG3aUNl
+        tcV5IPKbFcd0nShieS+z920=
+X-Google-Smtp-Source: APXvYqypGvF/jJ1bRnmW1uoYV7HZivjXfwr5oWriguEXgE6O+r9cRO5TMc5/K6ie5WKI7dxBkWODqA==
+X-Received: by 2002:a17:90a:d807:: with SMTP id a7mr5294156pjv.15.1577784795223;
+        Tue, 31 Dec 2019 01:33:15 -0800 (PST)
+Received: from ruantu.dev.localdomain ([103.103.128.212])
+        by smtp.gmail.com with ESMTPSA id h12sm39870970pfo.12.2019.12.31.01.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Dec 2019 01:33:14 -0800 (PST)
+From:   YuDong Zhang <mtwget@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, YuDong Zhang <mtwget@gmail.com>
+Subject: [PATCH] dt-bindings: iio: adc: vf610-adc: Remove redundant property from vf610_adc
+Date:   Tue, 31 Dec 2019 17:33:05 +0800
+Message-Id: <20191231093305.1629390-1-mtwget@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiBBZGQgc3lzY29uIG1mZCBub2RlcyBmb3IgU0IyIGFuZCBTQ1BVIFdyYXBwZXIgdG8gUlREMTE5
-NSBEVC4NCj4gDQo+IENjOiBKYW1lcyBUYWkgPGphbWVzLnRhaUByZWFsdGVrLmNvbT4NCj4gU2ln
-bmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0KPiAtLS0NCj4g
-IGFyY2gvYXJtL2Jvb3QvZHRzL3J0ZDExOTUuZHRzaSB8IDE4ICsrKysrKysrKysrKysrKysrKw0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy9ydGQxMTk1LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9ydGQxMTk1
-LmR0c2kNCj4gaW5kZXggMDlhY2I5OTA4M2MxLi4yMTg5NzIxMGQ5ZDAgMTAwNjQ0DQo+IC0tLSBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL3J0ZDExOTUuZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0
-cy9ydGQxMTk1LmR0c2kNCj4gQEAgLTExOSw2ICsxMTksMTUgQEANCj4gIAkJCQlyYW5nZXMgPSA8
-MHgwIDB4NzAwMCAweDEwMDA+Ow0KPiAgCQkJfTsNCj4gDQo+ICsJCQlzYjI6IHN5c2NvbkAxYTAw
-MCB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7DQo+ICsJCQkJ
-cmVnID0gPDB4MWEwMDAgMHgxMDAwPjsNCj4gKwkJCQlyZWctaW8td2lkdGggPSA8ND47DQo+ICsJ
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICsJ
-CQkJcmFuZ2VzID0gPDB4MCAweDFhMDAwIDB4MTAwMD47DQo+ICsJCQl9Ow0KPiArDQo+ICAJCQlt
-aXNjOiBzeXNjb25AMWIwMDAgew0KPiAgCQkJCWNvbXBhdGlibGUgPSAic3lzY29uIiwgInNpbXBs
-ZS1tZmQiOw0KPiAgCQkJCXJlZyA9IDwweDFiMDAwIDB4MTAwMD47DQo+IEBAIC0xMjcsNiArMTM2
-LDE1IEBADQo+ICAJCQkJI3NpemUtY2VsbHMgPSA8MT47DQo+ICAJCQkJcmFuZ2VzID0gPDB4MCAw
-eDFiMDAwIDB4MTAwMD47DQo+ICAJCQl9Ow0KPiArDQo+ICsJCQlzY3B1X3dyYXBwZXI6IHN5c2Nv
-bkAxZDAwMCB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7DQo+
-ICsJCQkJcmVnID0gPDB4MWQwMDAgMHgxMDAwPjsNCj4gKwkJCQlyZWctaW8td2lkdGggPSA8ND47
-DQo+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCQkJI3NpemUtY2VsbHMgPSA8MT47
-DQo+ICsJCQkJcmFuZ2VzID0gPDB4MCAweDFkMDAwIDB4MTAwMD47DQo+ICsJCQl9Ow0KPiAgCQl9
-Ow0KPiANCj4gIAkJZ2ljOiBpbnRlcnJ1cHQtY29udHJvbGxlckBmZjAxMTAwMCB7DQo+IC0tDQo+
-IDIuMTYuNA0KPiANCj4gDQpBY2tlZC1ieTogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRlay5j
-b20+DQoNCg==
+Remove the num-channels property that vf610_adc driver will not use.
+
+Signed-off-by: YuDong Zhang <mtwget@gmail.com>
+---
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 1 -
+ arch/arm/boot/dts/imx6ul-phytec-segin.dtsi    | 5 -----
+ arch/arm/boot/dts/imx6ul.dtsi                 | 1 -
+ arch/arm/boot/dts/imx6ull-colibri.dtsi        | 1 -
+ 4 files changed, 8 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+index f05e91841202..4394e1370d34 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+@@ -72,7 +72,6 @@ reg_vref_adc: regulator-vref-adc {
+ &adc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_adc1>;
+-	num-channels = <3>;
+ 	vref-supply = <&reg_vref_adc>;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
+index 8d5f8dc6ad58..e7198c2922c6 100644
+--- a/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
++++ b/arch/arm/boot/dts/imx6ul-phytec-segin.dtsi
+@@ -83,11 +83,6 @@ &adc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_adc1>;
+ 	vref-supply = <&reg_adc1_vref_3v3>;
+-	/*
+-	 * driver can not separate a specific channel so we request 4 channels
+-	 * here - we need only the fourth channel
+-	 */
+-	num-channels = <4>;
+ 	status = "disabled";
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index d9fdca12819b..458a301be215 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -892,7 +892,6 @@ adc1: adc@2198000 {
+ 				reg = <0x02198000 0x4000>;
+ 				interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6UL_CLK_ADC1>;
+-				num-channels = <2>;
+ 				clock-names = "adc";
+ 				fsl,adck-max-frequency = <30000000>, <40000000>,
+ 							 <20000000>;
+diff --git a/arch/arm/boot/dts/imx6ull-colibri.dtsi b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+index 9145c536d71a..1e70c9da9e36 100644
+--- a/arch/arm/boot/dts/imx6ull-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6ull-colibri.dtsi
+@@ -50,7 +50,6 @@ reg_sd1_vmmc: regulator-sd1-vmmc {
+ };
+ 
+ &adc1 {
+-	num-channels = <10>;
+ 	vref-supply = <&reg_module_3v3_avdd>;
+ };
+ 
+-- 
+2.24.1
+
