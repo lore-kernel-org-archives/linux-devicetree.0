@@ -2,233 +2,221 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47600C2D0C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 01:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C39FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 03:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064082071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 01:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3B2920730
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 03:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qC4c6LYu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+5X4jgH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfLaBGv (ORCPT
+        id S1726119AbfLaDHJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 30 Dec 2019 20:06:51 -0500
-Received: from mail-eopbgr20049.outbound.protection.outlook.com ([40.107.2.49]:8103
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727804AbfLaBGv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 30 Dec 2019 20:06:51 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eDjoCLggcxZQ5Y15a7/o2ryRZWBd08mTtXOOp3etesdlhuxwJIfSuSLDj32m9skogtkTZq8xJEVnuijZI1ynLfuj0fUKK2ETNSHdgOxR39L3es98s8tZBBAHTBU9bVbi9ZH1S0i9Xw6PYD6T6XvcZdUSpH8w4yEAzDsD9HhG8bcoqcS2Xp2l6mMb7bw6SmKszZMZFKE+TL2LJT/dkbHpGWY+09ShY6NPCt6ZYU+u1DzZSeqMO9s6+xjMan/HiWy8vTbYoP8IFopQjQTri7OyQRiD2fNr/3pgLxVuu60DoTWDmBRykamwzCVqCPYIGENQPLNKPwh67hfK2wZzTmBgWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=35HZwLSgBuUWvigbJXDtekoGlEt9la9nW6dzm0vZd1w=;
- b=GORSLviDZ1pgo9BfsZojj994Ob6CYcOWXW1LbwZnZQjWHlYRaDP1ZpMjwhcYAip6syi/AP6KuNsuzrRqO6jgrJ93oCzsYE1DItikDGAL0H42Od51wiKC4nzlFJDYLswlqCPG5HBwMXBs8SgfTmy0j+wGDnHl9JPPcFLrA+9Wr02nPbozzK/kAGZO91IudALAV6iqaP9i6eqststz9VBJSuecx7ja1xLjEkPEJNdQEYNJHgWtGvx9c1Fgpyg8xGr+pQ41xpBcqg4ltvmBvw/GNsXnHuN1z+CNSQPPS2njG57WV1ZGCucWF/BdjSBtvKCZWYBryHsysP3OjvRazsluow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=35HZwLSgBuUWvigbJXDtekoGlEt9la9nW6dzm0vZd1w=;
- b=qC4c6LYuFW7mx8SNObNUpPVwMcBcTfZaZH4KtITWGEGOYMiQ0IzXUh4hjPCxYPJDLDzSLhj4HCSJPcBQcZ9R1qbDjSgfy0ERLhOVCpRWo4SnOgpUeRV3cCFxESPBgtlFPK+pAsQ7RUiQ/pBeBM7yx6vuWtL/e5041sfGHIdjAUk=
-Received: from DB7PR04MB5178.eurprd04.prod.outlook.com (20.176.234.92) by
- DB7PR04MB5210.eurprd04.prod.outlook.com (20.176.234.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.12; Tue, 31 Dec 2019 01:06:41 +0000
-Received: from DB7PR04MB5178.eurprd04.prod.outlook.com
- ([fe80::e49e:a6b:85ca:378c]) by DB7PR04MB5178.eurprd04.prod.outlook.com
- ([fe80::e49e:a6b:85ca:378c%6]) with mapi id 15.20.2581.007; Tue, 31 Dec 2019
- 01:06:41 +0000
-From:   Jacky Bai <ping.bai@nxp.com>
-To:     Adam Ford <aford173@gmail.com>
-CC:     arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Peng Fan <peng.fan@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-Subject: RE: [PATCH V2 0/7] soc: imx: Enable additional functionality of
- i.MX8M Mini
-Thread-Topic: [PATCH V2 0/7] soc: imx: Enable additional functionality of
- i.MX8M Mini
-Thread-Index: AQHVsc8x4RTvJU9lNECpxKqRtqzo7KfEvPUAgAEe+lCAAHD1gIANO1KA
-Date:   Tue, 31 Dec 2019 01:06:41 +0000
-Message-ID: <DB7PR04MB51785654798E176507F9531487260@DB7PR04MB5178.eurprd04.prod.outlook.com>
-References: <20191213160542.15757-1-aford173@gmail.com>
- <CAHCN7xKuVCGqgRpixa9UPkWq92Gg=dm4XxAczBKAZCoMzcBVJg@mail.gmail.com>
- <DB7PR04MB5178EA739587B2DB084570B9872F0@DB7PR04MB5178.eurprd04.prod.outlook.com>
- <CAHCN7xKa1+=_K_cYXvZW3vfT1gEoYDyK=_8ERBdxvOhB3gTvww@mail.gmail.com>
-In-Reply-To: <CAHCN7xKa1+=_K_cYXvZW3vfT1gEoYDyK=_8ERBdxvOhB3gTvww@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ping.bai@nxp.com; 
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 36fc46d0-26c9-41f0-a1f9-08d78d8db1fd
-x-ms-traffictypediagnostic: DB7PR04MB5210:|DB7PR04MB5210:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB52104C40CCDD9171A5E233F587260@DB7PR04MB5210.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0268246AE7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(136003)(366004)(39860400002)(13464003)(199004)(189003)(55016002)(186003)(7696005)(8676002)(6506007)(33656002)(2906002)(71200400001)(26005)(4326008)(7416002)(6916009)(53546011)(81156014)(8936002)(478600001)(81166006)(66946007)(76116006)(64756008)(66446008)(66476007)(66556008)(86362001)(316002)(5660300002)(52536014)(54906003)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5210;H:DB7PR04MB5178.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jv2rrewI4lVubzAE6IYdaEfpmi++46+48rvl208mAhZOnYGSiGTiy7D5xtH3DkfrXxwLArWjG/L//9GMVgIbktbEmR43jzIixWvjgaJszqEGE+FRgk2YgTT2Q/fcl/0YnPFJR+h7Dxs85B84H6UrQ4mBb/Ps8JKrq6KdY8sjgNnO0gQw/qxawBHAa/702UpRTN5Jbn8DuakbInFmPH0RGjps4o2JYbuFTM0TpErR4no7XjM0YthGcHszNC3dquvH50HKQsY1Uo9ni4riI63YYCRDG+DsQ8hwMjdRQ7dQu44y5QGsSuUNFpupviTAiFMnXy3VkQ+GQWb5VgC5oDP+ByhkB0PUJfF1y38gVsLlEqpUst6jf3wMJZdosYSgflxljy9t0mS/dvsLHpJo45eNPuFYnJtkafA8HykYh1wavEFDhSt3XFIzZz8ssE+wdrvnKVwDsNYsSNV+qTuFqKiq8tO00jH9ZGzcONw+uaJMsEjfw9lJZdph8sR7o3ZuogxH
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 30 Dec 2019 22:07:09 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33449 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfLaDHJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 30 Dec 2019 22:07:09 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d139so1025845wmd.0;
+        Mon, 30 Dec 2019 19:07:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BZ0VS0hhU2Vvdywzz5wNCAdkQKdrdnQbQ4w6BurVpwQ=;
+        b=h+5X4jgHpLK5FZvMfDyI9vkbxSu9GLdeWW5Mo6g2xR7CDYmdux7e9+KX092C19gm2L
+         7HbQuwshg9KK2AZm//GhUxUYf/KixNNgz0a5Jf6Yxit6fCxR/BD+tm+AVjMj6n0mvREY
+         x94AnCE9RO8CU9yDOD12qTYg1UbvqjuhtKB0PqjtR0Gc3OXfALB1XNwWCgvKRcfoQ9Xc
+         yTbBQCGmoUxhCWK5/BVciN/13tKMozSoBdaaeZmpK6p+WG00hW5xsfHd2NyYS9NeZTDU
+         8UMJkiLV8/eKvOsxRXVkRdOkx+vFhZpHwcOZwQWUDgIPTPP5qoA8BVbhOjOIW0yk/wcs
+         FZxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BZ0VS0hhU2Vvdywzz5wNCAdkQKdrdnQbQ4w6BurVpwQ=;
+        b=ouDwTaZZAVp+m21VBTt9Dy5kag/kR4Cw/o3MJREy3+TaF7EpSObMTGIk0hYtGtrVkq
+         OrAk1bXsWBZG+fjxG4DCfWuH6L1tw4FMb6JTJm081RPuWXejH7BmNzxF5gkJllFjCDBK
+         yNW7I2sSK+lVGNDGo+VtE+Zu/y/4pCRqiGHr5X+UOcBg8PSyAiPfW+9y/dHvZJAMC5oG
+         RRHDtrD9LYto5W8joOL913M0uOkFy/feBMZMfChUMIurnsOgU+9HJk3C8AOt4R1K9Vi3
+         ofj6I1LTA2cZzZr3N96hUN4hStS2CWGJcJ2Jp0d6csWSd38RNu/rH1gcIO7ZboF5X0Up
+         TlYg==
+X-Gm-Message-State: APjAAAU1XtkX5YQANw65keG2U4kREp9QfTZC0qWEmHRDAFsFR6I04hTo
+        YCoa2qDXhJSTwbEMN9jn5DXf7AsCFnzCE0SmcCc=
+X-Google-Smtp-Source: APXvYqyAU8QpgcwQV5VZ250qmL5iw27RREeLpKMeKHWBHOiqllsZ75v5UqFZF7O1AS7iokOPdu0imlT+PeKSQz2RYV0=
+X-Received: by 2002:a7b:cb0d:: with SMTP id u13mr1989297wmj.68.1577761625988;
+ Mon, 30 Dec 2019 19:07:05 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36fc46d0-26c9-41f0-a1f9-08d78d8db1fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Dec 2019 01:06:41.0440
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Q2HNa9CRHkLnQD9BFGIlYywWUW5Lq4LK0iSGVCEj/0J01uW87qre6hLMD7+ZzUB1LaOuBB0VZ31sTeFs4erEJA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5210
+References: <20191216121932.22967-1-zhang.lyra@gmail.com> <20191216121932.22967-4-zhang.lyra@gmail.com>
+ <20191226185623.GA4463@bogus>
+In-Reply-To: <20191226185623.GA4463@bogus>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Tue, 31 Dec 2019 11:06:29 +0800
+Message-ID: <CAAfSe-vL4S-w4JVzevPYxb=LNqGQEn6quM54AjPHZUe6Gw3WTg@mail.gmail.com>
+Subject: Re: [PATCH V2 3/6] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBZGFtIEZvcmQgPGFmb3JkMTcz
-QGdtYWlsLmNvbT4NCj4gU2VudDogU3VuZGF5LCBEZWNlbWJlciAyMiwgMjAxOSAxMDo1OCBQTQ0K
-PiBUbzogSmFja3kgQmFpIDxwaW5nLmJhaUBueHAuY29tPg0KPiBDYzogYXJtLXNvYyA8bGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgUGVuZyBGYW4NCj4gPHBlbmcuZmFuQG54
-cC5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+
-IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47
-IFNhc2NoYQ0KPiBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT47IFBlbmd1dHJvbml4IEtl
-cm5lbCBUZWFtDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxmZXN0
-ZXZhbUBnbWFpbC5jb20+Ow0KPiBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgZGV2
-aWNldHJlZSA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBMaW51eCBLZXJuZWwgTWFp
-bGluZyBMaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgTGVvbmFyZCBDcmVzdGV6
-DQo+IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMiAw
-LzddIHNvYzogaW14OiBFbmFibGUgYWRkaXRpb25hbCBmdW5jdGlvbmFsaXR5IG9mDQo+IGkuTVg4
-TSBNaW5pDQo+IA0KPiBPbiBTdW4sIERlYyAyMiwgMjAxOSBhdCAyOjMzIEFNIEphY2t5IEJhaSA8
-cGluZy5iYWlAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+ID4gPiBGcm9tOiBBZGFtIEZvcmQgPGFmb3JkMTczQGdtYWlsLmNvbT4NCj4gPiA+
-IFNlbnQ6IFNhdHVyZGF5LCBEZWNlbWJlciAyMSwgMjAxOSAxMTowNyBQTQ0KPiA+ID4gVG86IGFy
-bS1zb2MgPGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz4NCj4gPiA+IENjOiBQ
-ZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT47IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT47
-IFJvYg0KPiA+ID4gSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxt
-YXJrLnJ1dGxhbmRAYXJtLmNvbT47DQo+ID4gPiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5v
-cmc+OyBTYXNjaGEgSGF1ZXINCj4gPiA+IDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPjsgUGVuZ3V0
-cm9uaXggS2VybmVsIFRlYW0NCj4gPiA+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBF
-c3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+Ow0KPiA+ID4gZGwtbGludXgtaW14IDxsaW51eC1p
-bXhAbnhwLmNvbT47IGRldmljZXRyZWUNCj4gPiA+IDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zz47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QNCj4gPiA+IDxsaW51eC1rZXJuZWxAdmdlci5r
-ZXJuZWwub3JnPjsgTGVvbmFyZCBDcmVzdGV6DQo+ID4gPiA8bGVvbmFyZC5jcmVzdGV6QG54cC5j
-b20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIFYyIDAvN10gc29jOiBpbXg6IEVuYWJsZSBh
-ZGRpdGlvbmFsDQo+ID4gPiBmdW5jdGlvbmFsaXR5IG9mIGkuTVg4TSBNaW5pDQo+ID4gPg0KPiA+
-ID4gT24gRnJpLCBEZWMgMTMsIDIwMTkgYXQgMTA6MDUgQU0gQWRhbSBGb3JkIDxhZm9yZDE3M0Bn
-bWFpbC5jb20+DQo+IHdyb3RlOg0KPiA+ID4gPg0KPiA+ID4gPiBUaGUgR1BDdjIgY29udHJvbGxl
-ciBvbiB0aGUgaS5NWDhNIE1pbmkgaXMgY29tcGF0aWJsZSB3aXRoIHRoZQ0KPiA+ID4gPiBkcml2
-ZXIgdXNlZCBmb3IgdGhlIGkuTVg4TVEgZXhjZXB0IGZvciB0aGUgcmVnaXN0ZXIgbG9jYXRpb25z
-IGFuZA0KPiBuYW1lcy4NCj4gPiA+ID4gVGhlIEdQQ3YyIGNvbnRyb2xsZXIgaXMgdXNlZCB0byBl
-bmFibGUgYWRkaXRpb25hbCBwZXJpcGVyYWxzDQo+ID4gPiA+IGN1cnJlbnRseSB1bmF2YWlsYWJs
-ZSBvbiB0aGUgaS5NWDhNIE1pbmkuICBJbiBvcmRlciB0byBtYWtlIHRoZW0NCj4gPiA+ID4gZnVu
-Y3Rpb24sIHRoZQ0KPiA+ID4gPiBHUEN2MiBuZWVkcyB0byBiZSBhZGFwdGVkIHNvIHRoZSBkcml2
-ZXJzIGNhbiBhc3NvY2lhdGUgdGhlaXIgcG93ZXINCj4gPiA+ID4gZG9tYWluIHRvIHRoZSBHUEN2
-MiB0byBlbmFibGUgdGhlbS4NCj4gPiA+ID4NCj4gPiA+ID4gVGhpcyBzZXJpZXMgbWFrZXMgb25l
-IGluY2x1ZGUgZmlsZSBzbGlnaHRseSBtb3JlIGdlbmVyaWMsIGFkZHMgdGhlDQo+ID4gPiA+IGlN
-WDhNIE1pbmkgZW50cmllcywgdXBkYXRlcyB0aGUgYmluZGluZ3MsIGFkZHMgdGhlbSB0byB0aGUg
-ZGV2aWNlDQo+ID4gPiA+IHRyZWUsIHRoZW4gYXNzb2NpYXRlcyB0aGUgbmV3IHBvd2VyIGRvbWFp
-biB0byBib3RoIHRoZSBPVEcgYW5kDQo+ID4gPiA+IFBDSWUgY29udHJvbGxlcnMuDQo+ID4gPiA+
-DQo+ID4gPiA+IFNvbWUgcGVyaXBoZXJhbHMgbWF5IG5lZWQgYWRkaXRpb25hbCBwb3dlciBkb21h
-aW4gZHJpdmVycyBpbiB0aGUNCj4gPiA+ID4gZnV0dXJlIGR1ZSB0byBsaW1pdGF0aW9ucyBvZiB0
-aGUgR1BDIGRyaXZlciwgYnV0IHRoZSBkcml2ZXJzIGZvcg0KPiA+ID4gPiBWUFUgYW5kIG90aGVy
-cyBhcmUgbm90IGF2YWlsYWJsZSB5ZXQuDQo+ID4gPg0KPiA+ID4gQmVmb3JlIEkgZG8gYSBWMyB0
-byBhZGRyZXNzIFJvYidzIGNvbW1lbnRzLCBJIGFtIHRoaW5raW5nIEknbGwgZHJvcA0KPiA+ID4g
-dGhlIGl0ZW1zIG9uIHRoZSBHUEMgdGhhdCBKYWNreSBzdWdnZXN0ZWQgd291bGQgbm90IHdvcmss
-IGFuZCB3ZQ0KPiA+ID4gZG9uJ3QgaGF2ZSBkcml2ZXJzIGZvciB0aG9zZSBvdGhlciBwZXJpcGhl
-cmFscyAoR1BVLCBWUFUsIGV0Yy4pDQo+ID4gPiBhbnl3YXkuICBNeSBtYWluIGdvYWwgaGVyZSB3
-YXMgdG8gdHJ5IGFuZCBnZXQgdGhlIFVTQiBPVEcgcG9ydHMNCj4gPiA+IHdvcmtpbmcsIHNvIEkn
-ZCBsaWtlIHRvIGVuYWJsZWQgZW5vdWdoIG9mIHRoZSBpdGVtcyBvbiB0aGUgR1BDIHRoYXQNCj4g
-PiA+IGFyZSBzaW1pbGFyIHRvIHRoZSBpLk1YOE1RIGFuZCBsZWF2ZSB0aGUgbW9yZSBjaGFsbGVu
-Z2luZyBpdGVtcw0KPiA+ID4gdW50aWwgd2UgaGF2ZSBlaXRoZXIgYSBiZXR0ZXIgZHJpdmVyIGF2
-YWlsYWJsZSBhbmQvb3IgYWN0dWFsDQo+ID4gPiBwZXJpcGhlcmFsIHN1cHBvcnQgY29taW5nLiAg
-SSBoYXZlbid0IHNlZW4gTENESUYgb3IgRFNJIGRyaXZlcnMgcHVzaGVkDQo+IHVwc3RyZWFtIHll
-dCwgc28gSSBkb3VidCB3ZSdsbCBzZWUgR1BVIG9yIFZQVSB5ZXQgdW50aWwgdGhvc2UgYXJlIGRv
-bmUuDQo+ID4gPg0KPiA+ID4gRG9lcyBhbnlvbmUgZnJvbSB0aGUgTlhQIHRlYW0gaGF2ZSBhbnkg
-b3RoZXIgY29tbWVudHMvY29uY2VybnM/DQo+ID4gPg0KPiA+DQo+ID4gSWYgeW91IGxvb2sgaW50
-byBOWFAncyByZWxlYXNlIGNvZGUsIHlvdSB3aWxsIGZpbmQgdGhhdCBpdCBpcyBub3QgZWFzeQ0K
-PiA+IHRvIGhhbmRsZSB0aGUgcG93ZXIgZG9tYWluIG1vcmUgZ2VuZXJpY2FsbHkgaW4gR1BDdjIg
-ZHJpdmVyIGZvcg0KPiA+IGlteDhtbS4gVGhhdCdzIHRoZSByZWFzb24gd2h5IHdlIHVzZSBTSVAg
-c2VydmljZSB0byBoYW5kbGUgYWxsIHRoZQ0KPiA+IHBvd2VyIGRvbWFpbiBpbiBURi1BLiB3ZSB0
-cmllZCB0byB1cHN0cmVhbSB0aGUgU0lQIHZlcnNpb24gcG93ZXINCj4gPiBkb21haW4gdGhhdCBj
-YW4gYmUgcmV1c2VkIGZvciBhbGwgaS5NWDhNLCBidXQgcmVqZWN0ZWQgYnkgQVJNIGd1eXMuDQo+
-ID4gdGhleSB0aGluayB3ZSBuZWVkIHRvIHVzZSBTQ01JIHRvIGltcGxlbWVudCBpdC4gYXMgdGhl
-cmUgaXMgbm8gU0NNSSBvdmVyDQo+IFNNQyBhdmFpbGFibGUsIHVwc3RyZWFtIGlzIG9uIHRoZSB3
-YXksIHNvIHRoZSBwb3dlciBkb21haW4gZm9yDQo+IGkuTVg4TU0vTU4gaXMgcGVuZGluZy4NCj4g
-Pg0KPiANCj4gVGhhbmsgeW91IGZvciB0aGUgYmFja2dyb3VuZC4gSSBhcHByZWNpYXRlIGl0Lg0K
-PiANCj4gPiBBY3R1YWxseSwgSSBhbSBjb25mdXNlZCB3aHkgd2UgY2FuJ3QgdXNlIFNJUCBzZXJ2
-aWNlLCBldmVuIGlmIHRoZSBTQ01JDQo+ID4gb3ZlciBTTUMgaXMgcmVhZHkgaW4gdGhlIGZ1dHVy
-ZSwgSXQgc2VlbXMgdGhlIFNNQ0MgZnVuY3Rpb24gSUQgc3RpbGwgbmVlZCB0bw0KPiBjaG9vc2Ug
-ZnJvbSBTSVAgc2VydmljZSBmdW5jdGlvbiBpZCBiYW5rLg0KPiA+DQo+ID4gQW5vdGhlciBjb25j
-ZXJuIGZvciBhZGRpbmcgcG93ZXIgZG9tYWluIHN1cHBvcnQgaW4gR1BDdjIgaXMgdGhhdCwgZWFj
-aA0KPiA+IHRpbWUgYSBuZXcgU09DIGlzIGFkZGVkLCB3ZSBuZWVkIHRvIGFkZCBodW5kcmVkIGxp
-bmVzIG9mIGNvZGUgaW4gR1BDdjINCj4gPiBkcml2ZXIuIGl0IGlzIG5vdCBhIGJlc3Qgd2F5IHRv
-IGtlZXAgZHJpdmVyIHJldXNlLiBUaGUgR1BDdjIgZHJpdmVyIGlzDQo+ID4gb3JpZ2luYWxseSB1
-c2VkIGZvciBpLk1YN0QsIHRoZW4gcmV1c2VkIGJ5IGkuTVg4TVEsIGFzIGkuTVg4TVEgaGFzDQo+
-ID4gdmVyeSBzaW1wbGUgcG93ZXIgZG9tYWluIGRlc2lnbiBhcyBpLk1YN0QuIEJ1dCBmb3IgaS5N
-WDhNTSwgaXQgaXMgbm90IHRoZQ0KPiBjYXNlLg0KPiANCj4gVGhlcmUgYXJlIHNvbWUgZW50cmll
-cyBvbiB0aGUgOE1NIHdoaWNoIGNhbiBiZSB1c2VkIHRoZSBzYW1lIHdheSBhcyB0aGUNCj4gOE1N
-LiAgSSBoYXZlIGJlZW4gYWJsZSB0byBnZXQgVVNCIE9URyB3b3JraW5nIHVzaW5nIHRoZSA4TVEn
-cyBHUEMgdGFibGUuDQo+IA0KPiBVbnRpbCBzb21ldGltZSBiZXR0ZXIgaXMgYXZhaWxhYmxlLCB3
-b3VsZCB5b3UgZW50ZXJ0YWluIGEgbGltaXRlZCB1c2Ugb2YgdGhlDQo+IDhNUSdzIEdQQyB3aGVy
-ZSB0aGUgZGV2aWNlIHRyZWUgbm9kZXMgb25seSBjb250YWluIGEgbGltaXRlZCBudW1iZXIgb2YN
-Cj4gZW50cmllcyAobGlrZSBVU0IgT1RHKSB3aGVyZSB3ZSBjYW4gcmUtdXNlIHRoZSBzaW1pbGFy
-IGZ1bmN0aW9ucyA4TVENCj4gd2l0aG91dCBleHBhbmRpbmcgdGhlIGRyaXZlciBmdW5jdGlvbnM/
-ICBJIGtub3cgaXRzIG5vdCBpZGVhbCwgYnV0IGl0IHdvdWxkIGJlDQo+IGEgdGVtcG9yYXJ5IHNv
-bHV0aW9uIHVubGVzcyB5b3UgdGhpbmsgdGhlIHVwc3RyZWFtIHBvd2VyIGRvbWFpbiBzdXBwb3J0
-IGlzDQo+IGNvbWluZyBxdWlja2x5LiAgSSBsb29rZWQgdGhyb3VnaCB0aGUgbWFpbGluZyBsaXN0
-IGhpc3RvcnkgYW5kIGl0IGxvb2tlZCBsaWtlDQo+IHRoZXJlIHdlcmUgc29tZSBhdHRlbXB0cyBh
-Ym91dA0KPiA2IG1vbnRocyBhZ28sIHRoZW4gaXQgYXBwZWFyZWQgdG8gc3RvcC4NCj4gDQo+IE9u
-Y2UgdGhlIG5ld2VyIGRyaXZlciBpcyBhdmFpbGFibGUgdXBzdHJlYW0sIHdlIGNvdWxkIHRoZW4g
-cmVtb3ZlIEdQQw0KPiByZWZlcmVuY2VzIGZyb20gdGhlIDhNTSBkZXZpY2UgdHJlZSBhbmQgcG9p
-bnQgaXQgdG8gdGhlIG5ldyBkcml2ZXIuDQo+IA0KPiBJdCB3b3VsZCBpbmNyZWFzZSBzb21lIGxp
-bWl0ZWQgZnVuY3Rpb25hbGl0eSBmb3IgdGhlIHNob3J0IHRlcm0uICBJIGtub3cNCj4gTGVvbmFy
-ZCBoYXMgYmVlbiB3b3JraW5nIG9uIHRoZSBERFJDIG1vZGlmaWNhdGlvbnMgYW5kIHBvd2VyIHJl
-ZHVjdGlvbi4NCj4gSSBoYXZlIGJlZW4gdHJ5aW5nIHRvIHVzZSB0aGVtLCBidXQgdW5zdWNjZXNz
-ZnVsIHNvIGZhci4NCj4gPg0KPiA+IFRoZXJlIGlzIGFub3RoZXIgY29uY2Vybiwgd2UgZG9uJ3Qg
-d2FudCB0byBleHBvcnQgR1BDIG1vZHVsZSB0byByaWNoIE9TDQo+IHNpZGUsIGl0IGlzIG5vdCBh
-IG11c3QuDQo+IA0KPiBXaGF0IGFib3V0IGRvaW5nIGl0IGluIHRoZSBVLUJvb3Qgc3RhZ2UgaWYg
-TGludXggaXNuJ3QgYW4gb3B0aW9uIGFuZCBBVEYgaXNuJ3QNCj4gYWNjZXB0aW5nIHRoZW0/DQoN
-Cg0KSSBoYXZlIGVuYWJsZWQgdGhlIFVTQi9QQ0lFIHBvd2VyIGRvbWFpbiBieSBkZWZhdWx0IGVh
-cmx5IGJlZm9yZSwgaWYgdXNpbmcgdGhlIGNvbW11bml0eSBBVEYsDQpJIHRoaW5rIFVTQiBjYW4g
-d29yayB3ZWxsLg0KDQpCUg0KSmFja3kgQmFpDQoNCj4gDQo+IGFkYW0NCj4gPg0KPiA+IEJSDQo+
-ID4gSmFja3kgQmFpDQo+ID4NCj4gPiA+IGFkYW0NCj4gPiA+ID4NCj4gPg0KPiA+ID4gPiBBZGFt
-IEZvcmQgKDcpOg0KPiA+ID4gPiAgIHNvYzogaW14OiBncGN2MjogUmVuYW1lIGlteDhtcS1wb3dl
-ci5oIHRvIGlteDhtLXBvd2VyLmgNCj4gPiA+ID4gICBzb2M6IGlteDogZ3BjdjI6IFVwZGF0ZSBp
-bXg4bS1wb3dlci5oIHRvIGluY2x1ZGUgaU1YOE0gTWluaQ0KPiA+ID4gPiAgIHNvYzogaW14OiBn
-cGN2MjogYWRkIHN1cHBvcnQgZm9yIGkuTVg4TSBNaW5pIFNvQw0KPiA+ID4gPiAgIGR0LWJpbmRp
-bmdzOiBpbXgtZ3BjdjI6IFVwZGF0ZSBiaW5kaW5ncyB0byBzdXBwb3J0IGkuTVg4TSBNaW5pDQo+
-ID4gPiA+ICAgYXJtNjQ6IGR0czogaW14OG1tOiBhZGQgR1BDIHBvd2VyIGRvbWFpbnMNCj4gPiA+
-ID4gICBBUk02NDogZHRzOiBpbXg4bW06IEZpeCBjbG9ja3MgYW5kIHBvd2VyIGRvbWFpbiBmb3Ig
-VVNCIE9URw0KPiA+ID4gPiAgIGFybTY0OiBkdHM6IGlteDhtbTogQWRkIFBDSWUgc3VwcG9ydA0K
-PiA+ID4gPg0KPiA+ID4gPiAgLi4uL2JpbmRpbmdzL3Bvd2VyL2ZzbCxpbXgtZ3BjdjIudHh0ICAg
-ICAgICAgIHwgICA2ICstDQo+ID4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
-bXg4bW0uZHRzaSAgICAgfCAxMjcgKysrKysrKystDQo+ID4gPiA+ICBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaSAgICAgfCAgIDIgKy0NCj4gPiA+ID4gIGRyaXZlcnMv
-c29jL2lteC9ncGN2Mi5jICAgICAgICAgICAgICAgICAgICAgICB8IDI0Ng0KPiA+ID4gKysrKysr
-KysrKysrKysrKystDQo+ID4gPiA+ICAuLi4vcG93ZXIve2lteDhtcS1wb3dlci5oID0+IGlteDht
-LXBvd2VyLmh9ICAgfCAgMTQgKw0KPiA+ID4gPiAgNSBmaWxlcyBjaGFuZ2VkLCAzODcgaW5zZXJ0
-aW9ucygrKSwgOCBkZWxldGlvbnMoLSkgIHJlbmFtZQ0KPiA+ID4gPiBpbmNsdWRlL2R0LWJpbmRp
-bmdzL3Bvd2VyL3tpbXg4bXEtcG93ZXIuaCA9PiBpbXg4bS1wb3dlci5ofSAoNTclKQ0KPiA+ID4g
-Pg0KPiA+ID4gPiAtLQ0KPiA+ID4gPiAyLjIwLjENCj4gPiA+ID4NCg==
+On Fri, 27 Dec 2019 at 02:56, Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Dec 16, 2019 at 08:19:29PM +0800, Chunyan Zhang wrote:
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > add a new bindings to describe sc9863a clock compatible string.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  .../bindings/clock/sprd,sc9863a-clk.yaml      | 77 +++++++++++++++++++
+> >  1 file changed, 77 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> > new file mode 100644
+> > index 000000000000..881f0a0287e5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> > @@ -0,0 +1,77 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +# Copyright 2019 Unisoc Inc.
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: SC9863A Clock Control Unit Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Orson Zhai <orsonzhai@gmail.com>
+> > +  - Baolin Wang <baolin.wang7@gmail.com>
+> > +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> > +
+> > +properties:
+> > +  "#clock-cells":
+> > +    const: 1
+> > +
+> > +  compatible :
+> > +    enum:
+> > +      - sprd,sc9863a-ap-clk
+> > +      - sprd,sc9863a-pmu-gate
+> > +      - sprd,sc9863a-pll
+> > +      - sprd,sc9863a-mpll
+> > +      - sprd,sc9863a-rpll
+> > +      - sprd,sc9863a-dpll
+> > +      - sprd,sc9863a-aon-clk
+> > +      - sprd,sc9863a-apahb-gate
+> > +      - sprd,sc9863a-aonapb-gate
+> > +      - sprd,sc9863a-mm-gate
+> > +      - sprd,sc9863a-mm-clk
+> > +      - sprd,sc9863a-vspahb-gate
+> > +      - sprd,sc9863a-apapb-gate
+>
+> These will probably need to be split to separate schemas for the reasons
+> below...
+>
+> > +
+> > +  clocks:
+> > +    description: |
+> > +      The input parent clock(s) phandle for this clock, only list fixed
+> > +      clocks which are decleared in devicetree.
+>
+> typo.
+>
+> You need to define how many clocks.
+
+Ok, will add a define of maxItems.
+
+>
+> > +
+> > +  clock-names:
+> > +    description: |
+> > +      Clock name strings used for driver to reference.
+>
+> You need to list out the names.
+>
+> > +
+> > +  reg:
+> > +    description: |
+> > +      Contain the registers base address and length. It must be configured
+> > +      only if no 'sprd,syscon' under the node.
+> > +
+> > +  sprd,syscon:
+> > +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> > +    description: |
+> > +      The phandle to the syscon which is in the same address area with
+> > +      the clock, and so we can get regmap for the clocks from the
+> > +      syscon device.
+>
+> It is preferred to make the clock node a child of the syscon and then
+> you don't need this property.
+
+According to the hardware topology, any clocks are not belonged to
+syscon, like described here, this phandle is only used to get virtual
+map address for clocks which have the same phsical address base with
+one syscon.
+
+In the past, clocks were defined like below:
+    apahb_gate: apahb-gate {
+      compatible = "sprd,sc9863a-apahb-gate";
+      reg = <0 0x20e00000 0 0x1000>;
+      #clock-cells = <1>;
+    };
+
+And there was also a syscon which had the same base address like below:
+ap_ahb_regs: syscon@20e00000 {
+compatible = "sprd,sc9863a-glbregs", "syscon";
+reg = <0 0x20e00000 0 0x4000>;
+};
+
+To avoid one phsical address was remapped more than one time, I think
+using the mapped address by syscon directly would be better.
+Any other suggestions are very appreciated.
+
+Thanks,
+Chunyan
+
+>
+> > +
+> > +required:
+> > +  - compatible
+> > +  - '#clock-cells'
+> > +
+> > +examples:
+> > +  - |
+> > +    ap_clk: clock-controller@21500000 {
+> > +      compatible = "sprd,sc9863a-ap-clk";
+> > +      reg = <0 0x21500000 0 0x1000>;
+> > +      clocks = <&ext_32k>, <&ext_26m>;
+> > +      clock-names = "ext-32k", "ext-26m";
+> > +      #clock-cells = <1>;
+> > +    };
+> > +
+> > +  - |
+> > +    apahb_gate: apahb-gate {
+> > +      compatible = "sprd,sc9863a-apahb-gate";
+> > +      sprd,syscon = <&ap_ahb_regs>;
+> > +      #clock-cells = <1>;
+> > +    };
+> > +
+> > +...
+> > --
+> > 2.20.1
+> >
