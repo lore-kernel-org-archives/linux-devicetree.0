@@ -2,304 +2,91 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93ED3C47409
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA4BC2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74768206E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577821154;
-	bh=MUwE3c/YmmcrZXrOMcCCK6iR8dBDMF9daNYzCy1JW1c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9y/ulaQVUwfR+tvVibpC+tPhT6IHkJFwPJn2fW0jLJ4S442we/fxnM68U6wC7TW4
-	 DFP0mzUai/Agi7/7Vy8S9E2oUMGCxgElNuLd9xHY9vsr60Ggur0ajs8CldpRDvylV8
-	 72QMNPoULLebcw5XXJL+YzFncfdkhQqXlUc+tbS4=
+	by mail.kernel.org (Postfix) with ESMTP id 8006A206DA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FxjQFh36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfLaTjI (ORCPT
+        id S1727079AbfLaT5l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 14:39:08 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:36874 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfLaTjI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 14:39:08 -0500
-Received: by mail-il1-f195.google.com with SMTP id t8so30844715iln.4;
-        Tue, 31 Dec 2019 11:39:07 -0800 (PST)
+        Tue, 31 Dec 2019 14:57:41 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38479 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbfLaT5k (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 14:57:40 -0500
+Received: by mail-wm1-f67.google.com with SMTP id u2so2525176wmc.3;
+        Tue, 31 Dec 2019 11:57:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CsU1YPkDyWBaNW9/0vlGQy7znmLLiuhBVSrYueAradc=;
+        b=FxjQFh36axpDJGsW4aYnia11mXI7/TpaVw3Gb5v7dqoalYBw0RGP9TVCpJHwmWCBZC
+         cy2Pflp8YA+u9Y8Ph8O7dh/ot2UqQpxPpmAcgWa+0NyYR8YSY6u1lOhPpPjaVq+lt3Td
+         lf/NrsQVR0XI1b/0PeD+5Vm9GEdrRNl7MDC2IRhO/802djs+MAMezDULypjQ4zvpHTcv
+         /DflrTnkyucc8ZXlVcy6FwGq1XqwZBqiJbSwNOlh8hKq/EJo7ufpJpnN5CBTuS4MfXTZ
+         33IDsVRhvmyJUduMZrfOuY19ESCtC1XBYXYW0o1YGKsbE+BXJ6I48CFNYVZQxer+JLoH
+         ycCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iqacRFuypSbp63ZFpYBf+4/J26LILeoQM9atqZZnMj4=;
-        b=Dm3z8wXCSAK62yE8DJNLSyBOSFnFuZobkbzxp+NxPbEFswOcF3FOk7RcqES+VSLAfO
-         ncFG26Xnf6pl6kGoS9YKSRhjoIJwIH2+NfHfc598lc1aDjSQtrvKDYUVfEYYeoDxeSJV
-         9IN+XlSmLby02zeVYoLwr76q2IBMggZon7Qz2M0gWCTO29jweQS893x3WfQLph9Q3G2l
-         ZpVhGf7eMiDAewEs2o6qsGC6EHyGVSesqgCF5Pa+haVk1jkxImD6m/P/CUbKhcCALPgE
-         P7hp4PVNCV0MlU2I04VuRAZ85VHmSbmaZpbhfEAf975GGDNgSezS3QRM3hQZrAI7750p
-         x9eQ==
-X-Gm-Message-State: APjAAAUbcJyYijGTSkJZngpbuQ481xIgRRJp1kJukCH1nCkCHiKwhz1C
-        TQ4jP3fe13u7VgL41OTTHECsQkc=
-X-Google-Smtp-Source: APXvYqy8tUsVbgRAfMkqZD+nQanshPlfDdft40dpazdp5aOy8X5W7JlTTiNR+OXixAxiRgiFUuOrAA==
-X-Received: by 2002:a92:3cd4:: with SMTP id j81mr66368596ilf.77.1577821146884;
-        Tue, 31 Dec 2019 11:39:06 -0800 (PST)
-Received: from xps15.herring.priv ([64.188.179.250])
-        by smtp.googlemail.com with ESMTPSA id e1sm17860074ill.47.2019.12.31.11.39.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 11:39:06 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Alan Douglas <adouglas@cadence.com>,
-        Scott Telford <stelford@cadence.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH v2 2/3] dt-bindings: PCI: Convert Cadence host to DT schema
-Date:   Tue, 31 Dec 2019 12:39:02 -0700
-Message-Id: <20191231193903.15929-2-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191231193903.15929-1-robh@kernel.org>
-References: <20191231193903.15929-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CsU1YPkDyWBaNW9/0vlGQy7znmLLiuhBVSrYueAradc=;
+        b=M0pXbKhQ2En+Cp5Tw6jxpl5W+1J9PrrMJml7D1eJk9ePTMbZcaP6/fu/G3rORX05uJ
+         euV6eJjd04QNq1YsCj73SetlSKaBGkoqMTOTcLHKXhWLwDQqiWptQZlDr2SERg4+84SP
+         Zmumd2euvLnJHeCwkc+kodd9Eg7956WbbeRpNou2H6Jjx2qLwaZV7red/ZM4iY4lbYxb
+         taxBWG9MdHM1hWg6IhuR6+PebyW5lpGpriE0tLabiafNBMSuSwMs4G4PXsrL7du0Z3s2
+         OU1oSd3ybwDOvTSxSu2vtl7Gfs2YzoktHJmrgGljUJfPlLnyxcqedFhiEK7VjC4DYTSW
+         /vXg==
+X-Gm-Message-State: APjAAAU1aDEp47VVLr3ODnXosh/aqGHnlTGYiCT/+eNgi8QCC4/ECwg8
+        L/Qioh2cX19akhoSk0i8v8g=
+X-Google-Smtp-Source: APXvYqx2NEAB3NMhC7wZ8inzFPyzFcxEskKjvfDe1exbGCNjUr8AL271HjxGRZnhu3BBR4eZw9UI1Q==
+X-Received: by 2002:a1c:a982:: with SMTP id s124mr5532358wme.132.1577822258515;
+        Tue, 31 Dec 2019 11:57:38 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id b16sm51590572wrj.23.2019.12.31.11.57.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Dec 2019 11:57:38 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, vgupta@synopsys.com,
+        devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARC: [plat-hsdk]: remove num-slots from mmc node
+Date:   Tue, 31 Dec 2019 20:57:31 +0100
+Message-Id: <20191231195731.6037-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Cadence PCIe host binding to DT schema.
+The option "num-slots" was deprecated long time ago, so remove it.
 
-The 'phy-names' definition is incomplete.
-
-'vendor-id' and 'device-id' aren't listed as those are standard PCI
-properties. They were incorrectly defined as 16-bit when they should be
-32-bits (even though only 16-bits are used).
-
-'cdns,max-outbound-regions' should really be removed. It serves no
-purpose other than bounds checking 'ranges'. If 'ranges' is wrong for
-the h/w, what's going to ensure 'cdns,max-outbound-regions' is correct.
-
-'cdns,no-bar-match-nbits' is also suspect. This probably could be
-determined from 'dma-ranges' using the sizes.
-
-Cc: Alan Douglas <adouglas@cadence.com>
-Cc: Scott Telford <stelford@cadence.com>
-Cc: Tom Joseph <tjoseph@cadence.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Andrew Murray <andrew.murray@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
-v2: no change
+ arch/arc/boot/dts/hsdk.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
- .../bindings/pci/cdns,cdns-pcie-host.txt      |  66 -----------
- .../bindings/pci/cdns,cdns-pcie-host.yaml     | 106 ++++++++++++++++++
- MAINTAINERS                                   |   2 +-
- 3 files changed, 107 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-deleted file mode 100644
-index 91de69c713a9..000000000000
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--* Cadence PCIe host controller
--
--This PCIe controller inherits the base properties defined in
--host-generic-pci.txt.
--
--Required properties:
--- compatible: Should contain "cdns,cdns-pcie-host" to identify the IP used.
--- reg: Should contain the controller register base address, PCIe configuration
--  window base address, and AXI interface region base address respectively.
--- reg-names: Must be "reg", "cfg" and "mem" respectively.
--- #address-cells: Set to <3>
--- #size-cells: Set to <2>
--- device_type: Set to "pci"
--- ranges: Ranges for the PCI memory and I/O regions
--- #interrupt-cells: Set to <1>
--- interrupt-map-mask and interrupt-map: Standard PCI properties to define the
--  mapping of the PCIe interface to interrupt numbers.
--
--Optional properties:
--- cdns,max-outbound-regions: Set to maximum number of outbound regions
--  (default 32)
--- cdns,no-bar-match-nbits: Set into the no BAR match register to configure the
--  number of least significant bits kept during inbound (PCIe -> AXI) address
--  translations (default 32)
--- vendor-id: The PCI vendor ID (16 bits, default is design dependent)
--- device-id: The PCI device ID (16 bits, default is design dependent)
--- phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
--  than one in the list.  If only one PHY listed it must manage all lanes. 
--- phy-names:  List of names to identify the PHY.
--
--Example:
--
--pcie@fb000000 {
--	compatible = "cdns,cdns-pcie-host";
--	device_type = "pci";
--	#address-cells = <3>;
--	#size-cells = <2>;
--	bus-range = <0x0 0xff>;
--	linux,pci-domain = <0>;
--	cdns,max-outbound-regions = <16>;
--	cdns,no-bar-match-nbits = <32>;
--	vendor-id = /bits/ 16 <0x17cd>;
--	device-id = /bits/ 16 <0x0200>;
--
--	reg = <0x0 0xfb000000  0x0 0x01000000>,
--	      <0x0 0x41000000  0x0 0x00001000>,
--	      <0x0 0x40000000  0x0 0x04000000>;
--	reg-names = "reg", "cfg", "mem";
--
--	ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
--		 <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
--
--	#interrupt-cells = <0x1>;
--
--	interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1
--			 0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1
--			 0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1
--			 0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
--
--	interrupt-map-mask = <0x0 0x0 0x0  0x7>;
--
--	msi-parent = <&its_pci>;
--
--	phys = <&pcie_phy0>;
--	phy-names = "pcie-phy";
--};
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-new file mode 100644
-index 000000000000..ada77e267b68
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-@@ -0,0 +1,106 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cadence PCIe host controller
-+
-+maintainers:
-+  - Alan Douglas <adouglas@cadence.com>
-+  - Scott Telford <stelford@cadence.com>
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+
-+properties:
-+  compatible:
-+    const: cdns,cdns-pcie-host
-+
-+  reg:
-+    maxItems: 3
-+
-+  reg-names:
-+    items:
-+      - const: reg
-+      - const: cfg
-+      - const: mem
-+
-+  cdns,max-outbound-regions:
-+    description: maximum number of outbound regions
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 32
-+    default: 32
-+
-+  cdns,no-bar-match-nbits:
-+    description:
-+      Set into the no BAR match register to configure the number of least
-+      significant bits kept during inbound (PCIe -> AXI) address translations
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 0
-+    maximum: 32
-+    default: 32
-+
-+  msi-parent: true
-+
-+  phys:
-+    description:
-+      One per lane if more than one in the list. If only one PHY listed it must
-+      manage all lanes.
-+    minItems: 1
-+    maxItems: 16
-+
-+  phy-names:
-+    items:
-+      - const: pcie-phy
-+    # FIXME: names when more than 1
-+
-+required:
-+  - reg
-+  - reg-names
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        pcie@fb000000 {
-+            compatible = "cdns,cdns-pcie-host";
-+            device_type = "pci";
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            bus-range = <0x0 0xff>;
-+            linux,pci-domain = <0>;
-+            cdns,max-outbound-regions = <16>;
-+            cdns,no-bar-match-nbits = <32>;
-+            vendor-id = /bits/ 16 <0x17cd>;
-+            device-id = /bits/ 16 <0x0200>;
-+
-+            reg = <0x0 0xfb000000  0x0 0x01000000>,
-+                  <0x0 0x41000000  0x0 0x00001000>,
-+                  <0x0 0x40000000  0x0 0x04000000>;
-+            reg-names = "reg", "cfg", "mem";
-+
-+            ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-+                     <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-+
-+            #interrupt-cells = <0x1>;
-+
-+            interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1>,
-+                 <0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1>,
-+                 <0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1>,
-+                 <0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
-+
-+            interrupt-map-mask = <0x0 0x0 0x0  0x7>;
-+
-+            msi-parent = <&its_pci>;
-+
-+            phys = <&pcie_phy0>;
-+            phy-names = "pcie-phy";
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1072745a8fda..b55f9dd7c47a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12595,7 +12595,7 @@ PCI DRIVER FOR CADENCE PCIE IP
- M:	Tom Joseph <tjoseph@cadence.com>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/pci/cdns,*.txt
-+F:	Documentation/devicetree/bindings/pci/cdns,*
- F:	drivers/pci/controller/pcie-cadence*
- 
- PCI DRIVER FOR FREESCALE LAYERSCAPE
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 9acbeba83..1d12808a1 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -251,7 +251,6 @@
+ 		mmc@a000 {
+ 			compatible = "altr,socfpga-dw-mshc";
+ 			reg = <0xa000 0x400>;
+-			num-slots = <1>;
+ 			fifo-depth = <16>;
+ 			card-detect-delay = <200>;
+ 			clocks = <&mmcclk_biu>, <&mmcclk_ciu>;
 -- 
-2.20.1
+2.11.0
 
