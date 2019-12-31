@@ -2,230 +2,284 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A74CC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 17:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67286C2D0DD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 17:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19655206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 17:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XpsqTVOB"
+	by mail.kernel.org (Postfix) with ESMTP id 325522072A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 17:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577813662;
+	bh=Ubol+ZGU8I4XwjYgID2dzkX13k4qieKCPvZKaGiNPk8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qgYLrWC0NLBPe3gwZeAlC63mTBi3RbdYKqJuLBKbjYsTgrw0kDzIkfvmoBX5cuwcW
+	 ELM75O4Xa3zZxu37LjiBAWpRKtEoVm4HEY6H6SoWczbmVvBIiazPIdedv9CGpNpYs1
+	 1Teto9+uOb8GH+H0lmjul9du7dal0cLpZaHu0Q70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfLaRZQ (ORCPT
+        id S1727054AbfLaReV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 12:25:16 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42203 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbfLaRZM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 12:25:12 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y19so27339092lfl.9
-        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 09:25:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nfsW3RUqmm/72dG11g9WAVGCUYY87NQrPwAvjG+FAtQ=;
-        b=XpsqTVOBlVSZBnmN/YNvyt2AnhiG8XFh3zasQySOFZgn2QK8mLXa5cQaP1lSLaAzMi
-         t8f6fhwvARcymcAanndNLA00kee16kM22/ZEpG4J8kD2MOzMCvZiRTNXuRQV2UrfFz3r
-         MHITETyi3Sjtp3Ah/3N1xjoHK4lJ95260E8DoDSuObK+fcsu5PNSn37dMBRl2qXiGjw2
-         6hPVCPeaH6Vt4udGvBt6YGI3eYoLZ06UEOJ8Xhndt8aFPxBbrAQFCmKH0lnuicaGe3vT
-         KFnFCtywlONYSenB93XFdE51/NwUjBvAlh/K2OokkRZicPVz//zQaNpsgtsqnKLlk1kS
-         XHIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nfsW3RUqmm/72dG11g9WAVGCUYY87NQrPwAvjG+FAtQ=;
-        b=Pjmz4w0EGCW+eDTdK0Rms42FxLfoTp8KJMdd5OmeamYt9KXdhdb6TtB26JvG9gQxnh
-         Jow9YGL91UQhdXkiqoeZJiiEFjlEf2aPJnFdjzIzmmoibmDy9lRLfRMew0KPj22+qTDS
-         v+bDB17M+measi3XMr2sZUWRuNwQ/z+ojtHMTYHl8tY1Qm5svqitKvRfmbVrpBPuMIiv
-         maqVFKyO9od6MV2MSOZS2PSoOJUIL8DwZaeBP3X+AsrkeBMZO/Ts+noLCoMy8EdK3FeG
-         6as2T6h1ZI90ePJabKklogvCsCHgNt/YntVajflqDAnfjYmwsq0mOku+VzNBNPnwKuzr
-         9apw==
-X-Gm-Message-State: APjAAAXHWH6Ih9afvz0V8+KxW/cwR2K25sK9yX8EnwF62n4hJcbck/sW
-        ePztcYD034LwB8tE4KMo1fT4OQ==
-X-Google-Smtp-Source: APXvYqzI2BeV4Lak3m84HE1MJwkwyNnwfHdnCTF541buzJ56jhmNHVFPPY5c+sMBNMRRo7tuNSEIQQ==
-X-Received: by 2002:ac2:51de:: with SMTP id u30mr41227104lfm.69.1577813109720;
-        Tue, 31 Dec 2019 09:25:09 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id z11sm16991572ljc.97.2019.12.31.09.25.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Dec 2019 09:25:09 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-ide@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        device@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: Convert Faraday FTIDE010 to DT schema
-Date:   Tue, 31 Dec 2019 18:24:58 +0100
-Message-Id: <20191231172458.25984-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191231172458.25984-1-linus.walleij@linaro.org>
-References: <20191231172458.25984-1-linus.walleij@linaro.org>
+        Tue, 31 Dec 2019 12:34:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbfLaReV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 31 Dec 2019 12:34:21 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB79820718
+        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 17:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577813660;
+        bh=Ubol+ZGU8I4XwjYgID2dzkX13k4qieKCPvZKaGiNPk8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TlpWPubXziGZTlzh6vZ8vAHgxyk+pmzNan+cIz7d2+X3ZGCfuwKcP3oov9j61O+9v
+         J5TeTgeeBYE+ZW6PzcHgH3nYgIKP9/fEJvg/C840KOFDofHCEcnVMrbkxn/t5qs189
+         3YqryjVxvDPo/VagOAaj1U5zSD30K+K3k/IvBwi8=
+Received: by mail-qk1-f182.google.com with SMTP id c16so28659582qko.6
+        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 09:34:19 -0800 (PST)
+X-Gm-Message-State: APjAAAVnw0rQKX7rWVdQlf4eVGUCEUyVY6YsDyO9wicBqS5q+bjS+JlG
+        tvCppg+u6/x+hH4hAClZjU+eIoRs8Klq7oGdYg==
+X-Google-Smtp-Source: APXvYqylznp1w41TRmEbV6098m/uRQMYL2IrzKtJTBmuX+S4z65S6oayY8srI9hmWTHPYp3Vxpg73ZSg3+I9IIYm53I=
+X-Received: by 2002:a37:a70b:: with SMTP id q11mr59234429qke.393.1577813658959;
+ Tue, 31 Dec 2019 09:34:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191231132126.GA13365@ravnborg.org>
+In-Reply-To: <20191231132126.GA13365@ravnborg.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 31 Dec 2019 10:34:07 -0700
+X-Gmail-Original-Message-ID: <CAL_Jsq+Agt6dOkq_E_ky7c0x-QtsWgi4os+NXZV73gtNHCAo3w@mail.gmail.com>
+Message-ID: <CAL_Jsq+Agt6dOkq_E_ky7c0x-QtsWgi4os+NXZV73gtNHCAo3w@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] dt-bindings: one binding file for all simple panels
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This uses the new pata-sata-controller.yaml schema to
-convert the Faraday FTIDE010 to DT schema.
+On Tue, Dec 31, 2019 at 6:21 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Thierry - I would appreciate feedback from you on this approach!
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: device@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- .../bindings/ata/faraday,ftide010.txt         | 38 --------
- .../bindings/ata/faraday,ftide010.yaml        | 89 +++++++++++++++++++
- 2 files changed, 89 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
- create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
+For the record, I'm in favor of this.
 
-diff --git a/Documentation/devicetree/bindings/ata/faraday,ftide010.txt b/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
-deleted file mode 100644
-index a0c64a29104d..000000000000
---- a/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--* Faraday Technology FTIDE010 PATA controller
--
--This controller is the first Faraday IDE interface block, used in the
--StorLink SL2312 and SL3516, later known as the Cortina Systems Gemini
--platform. The controller can do PIO modes 0 through 4, Multi-word DMA
--(MWDM)modes 0 through 2 and Ultra DMA modes 0 through 6.
--
--On the Gemini platform, this PATA block is accompanied by a PATA to
--SATA bridge in order to support SATA. This is why a phandle to that
--controller is compulsory on that platform.
--
--The timing properties are unique per-SoC, not per-board.
--
--Required properties:
--- compatible: should be one of
--  "cortina,gemini-pata", "faraday,ftide010"
--  "faraday,ftide010"
--- interrupts: interrupt for the block
--- reg: registers and size for the block
--
--Optional properties:
--- clocks: a SoC clock running the peripheral.
--- clock-names: should be set to "PCLK" for the peripheral clock.
--
--Required properties for "cortina,gemini-pata" compatible:
--- sata: a phande to the Gemini PATA to SATA bridge, see
--  cortina,gemini-sata-bridge.txt for details.
--
--Example:
--
--ata@63000000 {
--	compatible = "cortina,gemini-pata", "faraday,ftide010";
--	reg = <0x63000000 0x100>;
--	interrupts = <4 IRQ_TYPE_EDGE_RISING>;
--	clocks = <&gcc GEMINI_CLK_GATE_IDE>;
--	clock-names = "PCLK";
--	sata = <&sata>;
--};
-diff --git a/Documentation/devicetree/bindings/ata/faraday,ftide010.yaml b/Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
-new file mode 100644
-index 000000000000..65be218382e4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ata/faraday,ftide010.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Faraday Technology FTIDE010 PATA controller
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  This controller is the first Faraday IDE interface block, used in the
-+  StorLink SL3512 and SL3516, later known as the Cortina Systems Gemini
-+  platform. The controller can do PIO modes 0 through 4, Multi-word DMA
-+  (MWDM) modes 0 through 2 and Ultra DMA modes 0 through 6.
-+
-+  On the Gemini platform, this PATA block is accompanied by a PATA to
-+  SATA bridge in order to support SATA. This is why a phandle to that
-+  controller is compulsory on that platform.
-+
-+  The timing properties are unique per-SoC, not per-board.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: faraday,ftide010
-+      - items:
-+        - const: cortina,gemini-pata
-+        - const: faraday,ftide010
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+
-+  clock-names:
-+    const: PCLK
-+
-+  sata:
-+    description:
-+      phandle to the Gemini PATA to SATA bridge, if available
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+allOf:
-+  - $ref: pata-sata-common.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: cortina,gemini-pata
-+
-+    then:
-+      required:
-+        - sata
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/clock/cortina,gemini-clock.h>
-+
-+    pata-controller@63000000 {
-+      compatible = "cortina,gemini-pata", "faraday,ftide010";
-+      reg = <0x63000000 0x100>;
-+      interrupts = <4 IRQ_TYPE_EDGE_RISING>;
-+      clocks = <&gcc GEMINI_CLK_GATE_IDE>;
-+      clock-names = "PCLK";
-+      sata = <&sata>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      drive@0 {
-+        reg = <0>;
-+      };
-+      drive@1 {
-+        reg = <1>;
-+      };
-+    };
-+
-+...
--- 
-2.21.0
+>
+> There is an increasing number of new simple panels.
+> Common for all simple panels are that they have a
+> mandatory power-supply and some of them have backlight and / or
+> an enable gpio.
 
+This is the key part I think. It must be clear that only panels with a
+single supply meet the definition of 'simple panel'. The main
+variation for current bindings are what properties are required or
+not. Both backlight and enable gpio could be tied off on any given
+platform so they can never really be required.
+
+We'll also probably want to do a version for DSI panels which add 'reg'.
+
+> The binding file to describe these panels adds overhead
+> that really do not add value.
+> The binding are known and there is nothing gained from a specific
+> example as they all look alike.
+>
+> The following patch introduces a single panel-simple.yaml
+> and converts two ampire bindings over to the new file.
+>
+> The conversion - if applied will have following effects:
+>
+> - The maintainer for the individual file will change
+>     There is no need for many different maintainers for a simple binding.
+>     We have the same situation with the panel-simple driver in the kernel.
+>
+> - The license will change to (GPL-2.0-only OR BSD-2-Clause)
+>     There is usually only a single line copied from the original
+>     file, a line that is often copied from a datasheet.
+>     This license change should be acceptable considered what little
+>     is copied.
+>     If the license change is not OK we can use a dedicated binding
+>     file in these cases.
+>
+> This is a follow-up on Rob's big patch converting a lot of panel bindings
+> to individual files:
+>
+> "dt-bindings: display: Convert a bunch of panels to DT schema"
+> https://patchwork.ozlabs.org/patch/1197683/
+>
+> The objectives with one file for all the simple panles are:
+> - Make it simpler to add bindings for simple panels
+> - Keep the number of bindings file lower and thus easier to find a
+>   relevant file to copy from when adding new panels.
+> - Keep the binding documentation for simple panels more consistent
+> - Make it simpler to add support for new panels
+>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Yannick Fertre <yannick.fertre@st.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../panel/ampire,am-480272h3tmqw-t01h.yaml    | 42 --------------
+>  .../panel/ampire,am800480r3tmqwa1h.txt        |  7 ---
+>  .../bindings/display/panel/panel-simple.yaml  | 56 +++++++++++++++++++
+>  3 files changed, 56 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> deleted file mode 100644
+> index c6e33e7f36d0..000000000000
+> --- a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> +++ /dev/null
+> @@ -1,42 +0,0 @@
+> -# SPDX-License-Identifier: GPL-2.0
+> -%YAML 1.2
+> ----
+> -$id: http://devicetree.org/schemas/display/panel/ampire,am-480272h3tmqw-t01h.yaml#
+> -$schema: http://devicetree.org/meta-schemas/core.yaml#
+> -
+> -title: Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
+> -
+> -maintainers:
+> -  - Yannick Fertre <yannick.fertre@st.com>
+> -  - Thierry Reding <treding@nvidia.com>
+> -
+> -allOf:
+> -  - $ref: panel-common.yaml#
+> -
+> -properties:
+> -  compatible:
+> -    const: ampire,am-480272h3tmqw-t01h
+> -
+> -  power-supply: true
+> -  enable-gpios: true
+> -  backlight: true
+> -  port: true
+> -
+> -required:
+> -  - compatible
+> -
+> -additionalProperties: false
+> -
+> -examples:
+> -  - |
+> -    panel_rgb: panel {
+> -      compatible = "ampire,am-480272h3tmqw-t01h";
+> -      enable-gpios = <&gpioa 8 1>;
+> -      port {
+> -        panel_in_rgb: endpoint {
+> -          remote-endpoint = <&controller_out_rgb>;
+> -        };
+> -      };
+> -    };
+> -
+> -...
+> diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
+> deleted file mode 100644
+> index 83e2cae1cc1b..000000000000
+> --- a/Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
+> +++ /dev/null
+> @@ -1,7 +0,0 @@
+> -Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
+> -
+> -Required properties:
+> -- compatible: should be "ampire,am800480r3tmqwa1h"
+> -
+> -This binding is compatible with the simple-panel binding, which is specified
+> -in simple-panel.txt in this directory.
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> new file mode 100644
+> index 000000000000..711fac0a4d12
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/panel-simple.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Simple panels
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Sam Ravnborg <sam@ravnborg.org>
+> +
+> +description: |
+> +  This binding file is a collection of the simple (dump) panels that
+
+s/dump/dumb/
+
+> +  requires only a power-supply.
+> +  There are optionally a backlight and an enable GPIO.
+> +  If the panel is more andvanced a dedicated binding file is required.
+
+typo.
+
+I'd move this sentence down and be its own paragraph. We want it to be
+very clear to not add new properties here.
+
+> +  The panel may use a port binding for the association to the display,
+
+s/port/OF graph/
+
+> +  or it may be a direct child node of the display.
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +
+> +  compatible:
+> +    enum:
+> +    # compatible must be listed in alphabetical order, ordered by compatible.
+> +    # The description in the comment is mandatory for each compatible.
+> +
+> +    # Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
+> +    - ampire,am-480272h3tmqw-t01h
+> +    # Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
+> +    - ampire,am800480r3tmqwa1h
+> +
+> +  backlight: true
+> +  enable-gpios: true
+> +  power-supply: true
+> +  port: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - power-supply
+> +
+> +examples:
+> +  - |
+> +    panel_rgb: panel-rgb {
+> +      compatible = "ampire,am-480272h3tmqw-t01h";
+
+This will fail validation as power-supply is missing. :) I suspect we
+will have some real failures too and those will need to add
+fixed-regulator to fix.
+
+> +      port {
+> +        panel_in_rgb: endpoint {
+> +          remote-endpoint = <&ltdc_out_rgb>;
+> +        };
+> +      };
+> +    };
+> --
+> 2.20.1
+>
