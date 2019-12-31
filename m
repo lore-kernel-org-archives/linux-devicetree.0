@@ -2,153 +2,91 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041C2C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 18:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CB7C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C3A206EE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 18:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843EA206E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 19:12:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H0PFzSeq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPoYQr6h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfLaSo7 (ORCPT
+        id S1727208AbfLaTMD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 13:44:59 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44942 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfLaSo7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 13:44:59 -0500
-Received: by mail-vs1-f68.google.com with SMTP id p6so23109957vsj.11
-        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 10:44:58 -0800 (PST)
+        Tue, 31 Dec 2019 14:12:03 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43675 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfLaTMD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 14:12:03 -0500
+Received: by mail-wr1-f65.google.com with SMTP id d16so35810629wre.10;
+        Tue, 31 Dec 2019 11:12:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d6cLOy9QnNkqPgXa2Ezsb9iiMWSyWe0a3ouJ2T5tkB4=;
-        b=H0PFzSeqntD/Hv7LYk3frEd/P6wJB6jbPZyz5Oco/Vlf4sjhQ8DDAYZqcZdO6Z6jCA
-         q439TKwr/TdeRFKeyZS+a3hX1F4Y9R00m/mxLSrVkj1ySolbO74AsF4lnjZ44Tejj9Tq
-         sRmkdMiv/dvGL4/T88FbgZkI8QjEjbCD6133fhIkLQrwsQXoe05lhj7ppCcEp2OOs/1L
-         sj2x3jTX1GmrtJDLVMc9e5cWSIHrX03Q2nA9SRJAX+p5SatDvTbfa2oS90xh4kgQcPZP
-         MzI27F8KuICqIOJbLp0Qfvf6TWNiMWH9OFIqr2FNa0Nxs0QxCRxzUXHrDtpmh+jT551/
-         m6JQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ugkmn+9FfNrqX0nLEPxcXHS7THYr0ykg5MLCv/1z8zQ=;
+        b=hPoYQr6hMewVT8HtmuJwWQC8WdcrMBGE/UrhU2h5c5RnmqBdO49jlqYz8Y9MkJTNs9
+         k1WVy2CyUSgJyQmeko3i8bczYU7u1ATfoFn+nRmG0luUfq6PfNHNgE1dsaxNOMCWDqNz
+         xatqT2VOpXN/e0Oy8UVoJ3fo4Gk+LthmCCENPLQOQridmr7QnkY49h9mqPo9i4wEYPJn
+         kH7YsFPZwsQlu1tHi0hk/U5I9FazLr7NeAWxvuiCDPVCvmQXrmaAckzKEqM5NFRsP6Z7
+         IJOIiwNvOAK3vfOfgXyaTZCPLWSZ5H1a1v8nB8H/UveDGaN+72Gc9utfRL4E3RfFMK7Z
+         KuGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d6cLOy9QnNkqPgXa2Ezsb9iiMWSyWe0a3ouJ2T5tkB4=;
-        b=V+j1dGMW4NQ/kA7rz3iNt6pibGOv9x7lRSgOn1tFE74ZGvOlO7JXlixSXuMyiMZi+S
-         dNNSSEa0oPEtiXThe2x/RVxQu3QlGfcsstc8w6QA0DF89y6wttcn0/EuryvrhLbGs0rq
-         Wp3J8nAKIVPGLpejY+vWp8b0/L0j/Pfud0T1ecvpNlMPDSgF97G3AUXJiaONMGlkcFxO
-         wzN+AmSqcoTOcx1G+IR21IywM0k4Fwtx+n+mPMOH6M7JCraitLd8I7K366F3FNt68ODJ
-         WRsXe1nZ5oCIzRpmNddTCnx569fkI1IFIgQ9cnEtLFaPorE8cs/TLejvoXiqwGfZnf0W
-         /L7A==
-X-Gm-Message-State: APjAAAUast2/GhD6Q5GH7pVDaWCkiP5DhC6IWq/MuYKKQf4f1wXYZEhY
-        HxJaMa6/E34iGXQEBU74Iblj35dcfm+z0tdejRe6SvcWSKQUVQ==
-X-Google-Smtp-Source: APXvYqwN0cl8CWWyvPT5IA5YDxvXHTq8AEet83oy71NUwKLR2lk3hd+tluQBsno3dTDkR3iYkniKP6IxDCqwxp1taRw=
-X-Received: by 2002:a05:6102:375:: with SMTP id f21mr4531364vsa.115.1577817898024;
- Tue, 31 Dec 2019 10:44:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20191107224254.15712-1-robh@kernel.org>
-In-Reply-To: <20191107224254.15712-1-robh@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 31 Dec 2019 19:44:46 +0100
-Message-ID: <CACRpkdY0ex_svj97Ri=HjGFqv55n6nk9kgd-J-44X_HUvMri2w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: Convert generic pin mux and config
- properties to schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ugkmn+9FfNrqX0nLEPxcXHS7THYr0ykg5MLCv/1z8zQ=;
+        b=fLQHtfM/enq7gpTKuOK12fmToXVkVUkYjnLqqmzrPlLLU68Euy9IVJX1DGE2WimO9L
+         Vl+Lq1wmR+fmnOMfzhdTdSkSjNY8dptVkeYl5f6DQ4i9iBD3D3/bE8MQUsv8/aopUsJH
+         rYeDHQ7djq0GOl2p7zseUZHF2NLwkdFuIi2i+Bmg43KPdwZvU5cnHCi/M9YIL00EU4cq
+         0JUEWZ2wIEK6lSbkhul8brwraEQ23nQUezZ6+2ba/bxE7Gb8fI/8wOzqV0Mr9eQ6JWCD
+         FRipnPBOjI1Lk1jEqQXFRDYcOqEj5scS1+n8LOZhOU7CHja3+NKbkDFwfLN9l0JQMYsr
+         bEjQ==
+X-Gm-Message-State: APjAAAWmpfnMWT6woOQgo6LlCsJ/odDCV5nYf0ALZvqWV5RCf9X33guc
+        /8FSYzdd42u9xosW7EI9I/g=
+X-Google-Smtp-Source: APXvYqyF0D0ikIVwTiFMzj6mqfRpTZsJr/v++9vO8XHr7OjNm2eCLMU36XEndCzwnyitR0Cm69XkjA==
+X-Received: by 2002:adf:d183:: with SMTP id v3mr43483613wrc.180.1577819520818;
+        Tue, 31 Dec 2019 11:12:00 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id q6sm53695403wrx.72.2019.12.31.11.11.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 31 Dec 2019 11:12:00 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, heiko@sntech.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: rockchip: rk3399-firefly: remove num-slots from &sdio0 node
+Date:   Tue, 31 Dec 2019 20:11:54 +0100
+Message-Id: <20191231191154.5587-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hm it appears the following reply was stuck (no SMTP response or something):
+The option "num-slots" was deprecated long time ago, so remove it.
 
-On Thu, Nov 7, 2019 at 11:42 PM Rob Herring <robh@kernel.org> wrote:
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-> As pinctrl bindings have a flexible structure and no standard child node
-> naming convention, creating a single pinctrl schema doesn't work. Instead,
-> create schemas for the pin mux and config nodes which device pinctrl schema
-> can reference.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+index 92de83dd4..7584351a1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+@@ -660,7 +660,6 @@
+ 	keep-power-in-suspend;
+ 	mmc-pwrseq = <&sdio_pwrseq>;
+ 	non-removable;
+-	num-slots = <1>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+ 	sd-uhs-sdr104;
+-- 
+2.11.0
 
-Patch applied. I am a big fan of schemas.
-
-I still feel like swimming in deep waters sometimes when using it
-and like I "fake it til I make it", I suppose one day I will grok the
-inner transcendental meaning of this notation. Maybe.
-
-> We're starting to see pinctrl schema doing their own definitions for
-> generic properties, so we need to get something in place to reference.
-
-ACK.
-
-> Maybe this could be combined into a single schema? Spliting it was
-> easier in order to just copy over the existing documentation.
-
-We can surely do that later.
-
-> Reading thru pinctrl-bindings.txt, I'm wondering if some of it is out
-> of date. Do we let new bindings not use the generic muxing properties?
-> Do we really need to be so flexible for child node structure?
-
-The bindings are quite flexible because we simply could not agree
-on a single semantic. Initially AT91, i.MX and pinctrl-single used the
-strategy of just storing u32's in the tree to be poked into registers
-to set up a certain muxing rather than strings to identify groups and
-functions.
-
-I tried to push and define the generic string-based muxing of functions
-with groups and also using strings for pin configuration.
-
-The downside of this approach is that pins need to be bundled into
-groups based on use case. This is not perfect: sometimes we get
-the wrong groups because all use cases can not be predicted when
-writing a driver. A typical example would be that a UART group
-would be four pins  [RX TX CTS RTS]. Late the author realized
-that systems actually want two groups [RX TX] [CTS RTS] so they
-can punt out the [CTS RTS] group and reuse that for e.g. GPIO
-when only RX and TX is in use.
-
-At some point I was pretty heavily pushed by
-some contributors who thought the idea to define groups
-for all use cases was vain and wanted to use enumed numerals to define
-all their settings on a per-pin basis and who felt the generic
-muxing (and generic config) was inappropriate for their use cases.
-
-This goes especially for STM32 and Rockchip IIRC but I could be
-wrong. TI followed this pattern with the k3 and dra drivers.
-
-This was something like 50% of the pin control community at the
-time, not a vocal minority but a vocal 50%.
-
-So I caved in and merged them. I could not really stand in the way
-for this vital piece of infrastructure as it essentially stops the systems
-from even booting a mainline kernel. I assumed it was the lesser
-evil.
-
-The fact of the day is that a significant portion of the pin control
-authors like the magic numbers from defined in <dt-bindings/pinctrl/*.h>
-files (sometimes corresponding to register values) and the case
-is rather lost: these will be around and there will likely also be
-more of them.
-
-I personally prefer the string based configuration (functions muxed
-to groups and abstract standard strings for configs) as the higher
-abstraction gives a better fit with the ambitions of the device tree.
-
-But it is not like the per-pin and magic numbers lack merit.
-
-Yours,
-Linus Walleij
