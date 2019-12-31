@@ -2,183 +2,183 @@ Return-Path: <SRS0=+REJ=2V=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C70C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 06:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 050F1C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 07:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2944206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 06:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7F5206E4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 31 Dec 2019 07:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eDoRKXgr"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LSgRsQZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfLaGnS (ORCPT
+        id S1726396AbfLaHSH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 31 Dec 2019 01:43:18 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:41085 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725980AbfLaGnR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 31 Dec 2019 01:43:17 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577774597; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=F847wiYtiWu9zLjLzGjKkB/KIgILEIIryO4cx7acaiI=;
- b=eDoRKXgrJ4nuFLDddi2gfURIdd98fUOTxs+YkETGbM9q/23HwLqhBK9UT2Pv9Oh9TtDPE/PW
- hONEBvqGpcjGsSUYHWQ+X7OH+0pYC3urDVgKEug97mxo+82h/QWGff1fORF8Kes7WLRO53Hr
- BkSyGFcLy0lvmDWKfkIl6hExAjQ=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0aee04.7fbad48cfb58-smtp-out-n01;
- Tue, 31 Dec 2019 06:43:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2A24FC433A2; Tue, 31 Dec 2019 06:43:16 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sthella)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 74374C43383;
-        Tue, 31 Dec 2019 06:43:15 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 31 Dec 2019 12:13:15 +0530
-From:   sthella@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-In-Reply-To: <20191229030140.GJ3755841@builder>
-References: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
- <20191229030140.GJ3755841@builder>
-Message-ID: <412459f3ebb4297b2c21adbb1b9903c6@codeaurora.org>
-X-Sender: sthella@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Tue, 31 Dec 2019 02:18:07 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:45787 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfLaHSH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 31 Dec 2019 02:18:07 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191231071805euoutp0213e4f23bbd41aad38179cdd94aa0dd86~lY4kgRrFM1349813498euoutp02I
+        for <devicetree@vger.kernel.org>; Tue, 31 Dec 2019 07:18:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191231071805euoutp0213e4f23bbd41aad38179cdd94aa0dd86~lY4kgRrFM1349813498euoutp02I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1577776685;
+        bh=mxgW3OjCblyLWNF7NbGsSeLkWkVFDm7ORlqp6ibSZIo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LSgRsQZJyvAH6wRuvs0J7oByWWrJAjeRLGCjkZse14yA0BUIOJUWf5GCj8tqoghV2
+         YJ3TIadk6nI/U0AMOq4L65lpcHe8cEuignGUbaVNEftIKMJXlms6rD/sHjBxbPum9W
+         U8ADf6FxAJLPKoQA8UIWi54sCywtlyRrnVpKE7no=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191231071804eucas1p2ed176f4b629c2512ef25751c808b001b~lY4kJodxc1217212172eucas1p2B;
+        Tue, 31 Dec 2019 07:18:04 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 67.4F.61286.C26FA0E5; Tue, 31
+        Dec 2019 07:18:04 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191231071803eucas1p1f40c18c6a3fe31647f77f96b9b8aff3d~lY4i_Szi01248012480eucas1p1b;
+        Tue, 31 Dec 2019 07:18:03 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191231071803eusmtrp15bcc547f61e3c63b562bb6ebe9d437c0~lY4i9g7hY0485704857eusmtrp1Y;
+        Tue, 31 Dec 2019 07:18:03 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-9f-5e0af62c9e6e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8A.A9.08375.B26FA0E5; Tue, 31
+        Dec 2019 07:18:03 +0000 (GMT)
+Received: from AMDC3555 (unknown [106.120.51.67]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20191231071802eusmtip282c6a233e34aa05f9bff3892bef303ea~lY4iNOMhH2926629266eusmtip20;
+        Tue, 31 Dec 2019 07:18:02 +0000 (GMT)
+Message-ID: <2922135223b01126277ef92a53e6b294bc17bb5c.camel@samsung.com>
+Subject: Re: [RFC PATCH v3 4/7] arm: dts: exynos: Add interconnect bindings
+ for Exynos4412
+From:   Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        cw00.choi@samsung.com, myungjoo.ham@samsung.com,
+        inki.dae@samsung.com, sw0312.kim@samsung.com,
+        georgi.djakov@linaro.org, leonard.crestez@nxp.com,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+Date:   Tue, 31 Dec 2019 08:18:01 +0100
+In-Reply-To: <20191230154405.GC4918@pi3>
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe3Zfdh1Or1vgwUJpYmWYZondMNKiDxf6Yl/6EGqtvPi+ateX
+        DEJTMnUqplE6A8Wkhk6m86VNM0OmCzWnFS5S0V5MDHSopRZYbV7Fvv3O/znn/P8HHgqTDRE+
+        VJIqnVOrlKkKUoJ3DvyyHQ5alcQdsb9SMK1VBoKx/5gjmFrLCMG8/+kgmUc9RpKpmC7HGZut
+        RczoppYIxvhlnGDedT0mmZVSC2KqbC9FTLNlSsxM3NGRTFXlPBnlyRobi0h2cvwFyU5rrCK2
+        rSGHbV00idiy9kbErhh9o8UXJSfjudSkTE4dcuqyJLG/Kw+/3im/WVndLcpFM57FyI0COgys
+        +flYMZJQMlqHYNa0JBKKHwhsmhpSKFYQLOrK8e2R4naNyMUy+hmCJotK4G8I7DPnXSylWRh9
+        fhe5WE7HgHZ9Wuxiko6ENxOrm7O76UCwb6wRLgOMfoDBqGZ0swmnA0DfY9s0c6MPQlVeNykY
+        B8HCYJlTp5wGXrBhkrtkjPaD/I4aTGhZEsNwYaLAZ+GvtWwrsxy+W9vFAu+FocqSLZ2HWfP0
+        ZgagcxEYn1q2FkXA5Mhv0uWFOYMaukIE+TR0rLlup5zsAR8WvIQIHlDR+QgTZCkUFsgEVEBX
+        tYcwCJDXNL61m4WxhiKiHO3T7pyi/e8U7Y5rHcIakTeXwaclcHyoissK5pVpfIYqIfjqtTQj
+        cn6xoT/WZRP6+fZKH6IppHCXFu6SxMkIZSafndaHgMIUu6VhMW5xMmm8MvsWp752SZ2RyvF9
+        aA+FK7ylx+rnY2V0gjKdS+G465x6+1VEufnkouZMtqHu9SI8iUgZzCxTG2g28n6HMvpE+DBd
+        vEzK/f18a1Zr5/bnmNqmRMfP6Nxbey/0Hph9KDu3PmPW36u3fy6s/jQ8UfI10pwSU5pMmtu7
+        +fqAhx/1UQZcv4w71h2c1tFb4H8jucXQG3iUl1TE5mkGmhIc4f1mz3dZY7cVOJ+oDD2EqXnl
+        P37/AKBeAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xe7ra37jiDLY3i1psnLGe1eL6l+es
+        FvOPnGO1uPL1PZvF9L2b2Cwm3Z/AYnH+/AZ2ixV3P7JabHp8jdXi8q45bBafe48wWsw4v4/J
+        Yu2Ru+wWtxtXsFnMmPySzYHfY9OqTjaPO9f2sHnc7z7O5LF5Sb3Hxnc7mDz6tqxi9Pi8SS6A
+        PUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv4+iu
+        JpaCbcIVk2fuZmpgfMDfxcjJISFgItG1pZupi5GLQ0hgKaPEsnXXmSESEhIf199ghbCFJf5c
+        62KDKHrCKHFq6TNGkASvgIfEhe2tYLawQIzErB/32UFsNgF7ibO3vzGB2CICmhLX/34HG8Qs
+        MJVZYvesABCbRUBVYs3e8ywgNqeAhsSMpt1sILaQwE1Gicn3VCHqNSVat/9mhzhCR+LtqT6g
+        eg6gvYISf3cIQ5TISzRvnc08gVFwFpKOWQhVs5BULWBkXsUoklpanJueW2yoV5yYW1yal66X
+        nJ+7iREYo9uO/dy8g/HSxuBDjAIcjEo8vA+YuOKEWBPLiitzDzFKcDArifCaxHDGCfGmJFZW
+        pRblxxeV5qQWH2I0BXpnIrOUaHI+MH3klcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1O
+        TS1ILYLpY+LglGpgzP66/f6HJf9rs78fuTelYOGmW8W6bmnVAoYyO8Pj+vfE/MhawzPB76nw
+        nC27AlPOH7e9WdcV8vi6S0TA6h4zbz7tSy/+b7DLWnLnz4mJwbpzZNQbGbZpXHvWcvdI15HV
+        M7kS9STkFd7MfbWxIc5NVVTiXZnuynXPv4m8vrZI+fN002MGx4VOBimxFGckGmoxFxUnAgAs
+        FhlB5wIAAA==
+X-CMS-MailID: 20191231071803eucas1p1f40c18c6a3fe31647f77f96b9b8aff3d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9
+References: <20191220115653.6487-1-a.swigon@samsung.com>
+        <CGME20191220120144eucas1p119ececf161a6d45a6a194e432bbbd1f9@eucas1p1.samsung.com>
+        <20191220115653.6487-5-a.swigon@samsung.com> <20191230154405.GC4918@pi3>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2019-12-29 08:31, Bjorn Andersson wrote:
-> On Mon 23 Dec 21:32 PST 2019, Shyam Kumar Thella wrote:
+Hi,
+
+On Mon, 2019-12-30 at 16:44 +0100, Krzysztof Kozlowski wrote:
+> On Fri, Dec 20, 2019 at 12:56:50PM +0100, Artur Świgoń wrote:
+> > This patch adds the following properties to the Exynos4412 DT:
+> >   - exynos,interconnect-parent-node: to declare connections between
+> >     nodes in order to guarantee PM QoS requirements between nodes;
+> >   - #interconnect-cells: required by the interconnect framework.
+> > 
+> > Note that #interconnect-cells is always zero and node IDs are not
+> > hardcoded anywhere.
+> > 
+> > Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
+> > ---
+> >  arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
 > 
->> QTI SDAM allows PMIC peripherals to access the shared memory that is
->> available on QTI PMICs. Add documentation for it.
->> 
->> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
->> ---
->>  .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79 
->> ++++++++++++++++++++++
->>  1 file changed, 79 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml 
->> b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
->> new file mode 100644
->> index 0000000..8961a99
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
->> @@ -0,0 +1,79 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
->> +
->> +maintainers:
->> +  - Shyam Kumar Thella <sthella@codeaurora.org>
->> +
->> +description: |
->> +  The SDAM provides scratch register space for the PMIC clients. This
->> +  memory can be used by software to store information or communicate
->> +  to/from the PBUS.
->> +
->> +allOf:
->> +  - $ref: "nvmem.yaml#"
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,spmi-sdam
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  "#address-cells":
->> +    const: 1
->> +
->> +  "#size-cells":
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +patternProperties:
->> +  "^.*@[0-9a-f]+$":
->> +    type: object
->> +
->> +    properties:
->> +      reg:
->> +        maxItems: 1
->> +        description:
->> +          Offset and size in bytes within the storage device.
->> +
->> +      bits:
->> +        maxItems: 1
->> +        items:
->> +          items:
->> +            - minimum: 0
->> +              maximum: 7
->> +              description:
->> +                Offset in bit within the address range specified by 
->> reg.
->> +            - minimum: 1
->> +              description:
->> +                Size in bit within the address range specified by 
->> reg.
->> +
->> +    required:
->> +      - reg
->> +
->> +    additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +      sdam_1: nvram@b000 {
->> +         #address-cells = <1>;
->> +         #size-cells = <1>;
->> +         compatible = "qcom,spmi-sdam";
->> +          reg = <0xb000 0x100>;
->> +
->> +          /* Data cells */
->> +          restart_reason: restart@50 {
+> The order of patches is confusing. Patches 4 and 6 are split - do the
+> depend on 5? I doubt but...
+
+Let me elaborate:
+
+The order of the patches in this series is such that every subsequent
+patch adds some functionality (and, of course, applying patches one-by-one
+yields a working kernel at every step). Specifically for patches 04--07:
+
+ -- patch 04 adds interconnect _provider_ properties for Exynos4412;
+ -- patch 05 implements interconnect provider logic (depends on patch 04);
+ -- patch 06 adds interconnect _consumer_ properties for Exynos4412 mixer;
+ -- patch 07 implements interconnect consumer logic (depends on patches
+    05 & 06);
+
+My reasoning is that this order allows to e.g., merge the interconnect
+provider for exynos-bus and leave the consumers for later (not limited to
+the mixer). I hope this makes sense.
+
+> Adjust the title to match the contents - you are not adding bindings but
+> properties to bus nodes. Also the prefix is ARM: (look at recent
+> commits).
+
+OK.
+
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > index 4ce3d77a6704..d9d70eacfcaf 100644
+> > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > @@ -90,6 +90,7 @@
+> >  &bus_dmc {
+> >  	exynos,ppmu-device = <&ppmu_dmc0_3>, <&ppmu_dmc1_3>;
+> >  	vdd-supply = <&buck1_reg>;
+> > +	#interconnect-cells = <0>;
 > 
-> So this register has moved out of the PON register set? What component
-> in the system is going to reference this? Should it have a compatible,
-> in the same way as "syscon-reboot-mode" does?
-This is just an example for using data cells. It is not used in the 
-system.
-> 
-> Regards,
-> Bjorn
-> 
->> +              reg = <0x50 0x1>;
->> +              bits = <7 2>;
->> +          };
->> +      };
->> +...
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->>  a Linux Foundation Collaborative Project
+> This does not look like property of Odroid but Exynos4412 or Exynos4.
+
+Strangely enough, this file is where the 'exynos,parent-bus' (aka. 'devfreq')
+properties are located (and everything in this RFC concerns devfreq).
+
+Regards,
+-- 
+Artur Świgoń
+Samsung R&D Institute Poland
+Samsung Electronics
+
+
