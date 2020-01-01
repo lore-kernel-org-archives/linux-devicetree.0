@@ -2,178 +2,113 @@ Return-Path: <SRS0=z07g=2W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1D0C32764
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 10:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F4C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CABD20842
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 10:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577874024;
-	bh=loySFV+1No4UURYPX1PiQoRkdoL7jCSrVNRiVe2Ay7U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ezaFHbSrVYUVsMGFoBXbjQk0IAnIdkQ8qAZCP2rohKjjOfFdsc8OKV1H9jrqYoSPu
-	 nBCcxhVLvX+C+g1UCYtiZhaIryge3JlPjxu2l/XrQMcL5umOZb7ojPpj2SlG1RWv9v
-	 h+fz0Yw1MNyhcV6CFQ5p2y/hJEXFb8Gj0bUmpJt8=
+	by mail.kernel.org (Postfix) with ESMTP id 25D83206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="pCxOBBMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725790AbgAAKUX (ORCPT
+        id S1725883AbgAALZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jan 2020 05:20:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbgAAKUX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jan 2020 05:20:23 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B43C0206DB;
-        Wed,  1 Jan 2020 10:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577874022;
-        bh=loySFV+1No4UURYPX1PiQoRkdoL7jCSrVNRiVe2Ay7U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vJKdmpVoVliMKfQ9/EqIQ6l/bJQxbUA3PLLf5DtkC9ivcovKamHhsc1U7woqUmCoF
-         6u8zwmMsqKc0DuVH2MM9Kym/cp2Q/qIQpfymya7DB/eRULV4L25FoEjnM3//bKJ4yo
-         BNmlXlnCS7y6UfJme+vnPCfakKerHguIjSJOQrFg=
-Received: by mail-wr1-f44.google.com with SMTP id q10so36747687wrm.11;
-        Wed, 01 Jan 2020 02:20:21 -0800 (PST)
-X-Gm-Message-State: APjAAAXf9Q2OfIpL2rdhQuEMvyjSuH68HI6CtzpTkB1P246yGyDbXSeY
-        pWZLeN2NVz9gD0j7ymMrNxiJqnL4UkflMXasbPQ=
-X-Google-Smtp-Source: APXvYqzh5wHLqjlcU5A/ZD5QRw8rK2s/y+6ksfYFN5O7FNyf1M1xi1TNzp8b9mNSXqfr3PwCJlbHmm4GVvyZb8/RaXA=
-X-Received: by 2002:a05:6000:11c6:: with SMTP id i6mr78369163wrx.178.1577874020171;
- Wed, 01 Jan 2020 02:20:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20191215165924.28314-1-wens@kernel.org>
-In-Reply-To: <20191215165924.28314-1-wens@kernel.org>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Wed, 1 Jan 2020 18:20:08 +0800
-X-Gmail-Original-Message-ID: <CAGb2v645ZGy4M80bDNnuwg7LybqyOTkZTzwvzVbb3HrF9A687w@mail.gmail.com>
-Message-ID: <CAGb2v645ZGy4M80bDNnuwg7LybqyOTkZTzwvzVbb3HrF9A687w@mail.gmail.com>
-Subject: Re: [PATCH 00/14] media: sun4i-csi: A10/A20 CSI1 and R40 CSI0 support
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Chen-Yu Tsai <wens@kernel.org>, Maxime Ripard <mripard@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 1 Jan 2020 06:25:12 -0500
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:44952 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbgAALZM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 06:25:12 -0500
+Received: by mail-pl1-f170.google.com with SMTP id az3so16703453plb.11
+        for <devicetree@vger.kernel.org>; Wed, 01 Jan 2020 03:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xjl26WjVPVTED+/xAzYPIrEiiwgVbZ+1Lffk83rGuXg=;
+        b=pCxOBBMQfuNezDx4YUqo3tQFY05m/gmgb6vvLxTF1ZUJ9v4q6PEKGVmPi2bbETWWhT
+         pzFB4Tb9qeC4RQfaf0V5Uxb+jdQSpJg5E9QYSfKS3pOf0Z7ev/fLwfGEDFiEe0jE/q0u
+         OgCyU8qt5jPl38RFDgBoFS7stpw5HIzC4VgDU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xjl26WjVPVTED+/xAzYPIrEiiwgVbZ+1Lffk83rGuXg=;
+        b=fUOFGiuXLEJx/bUGRdwdveNDctwaGYxqxT2coPpmmX/n8vw9PXQahSf8SfdEA85LmI
+         zXVnbJVxKmYwKyUNolnTVPfwpnk4BPmqvdWOn9NTOVkx8Vnmb3k6HwP24/OXX+w6iuJX
+         7yqpsSOu0Qy7xovuf8zES07SMK7ZhLSMc5a/FiL0dNa3SqI55p+TtiHWHGTOcRYOTbrU
+         0rvloltp57eHhoxdvLXx42+cNRmyWS37JDeym6CVi95wrOAfE4W+wZK4p+QWL2RL3Czv
+         zWFPwlrM9ecF1IiJ66cPwbMcyv3rX4+yx/mqlpCwaDcA04VsiYzzSMYI323vC87gJY7F
+         2WVw==
+X-Gm-Message-State: APjAAAUuwh8WQZmvsIWGW4adXL3eTPKekkuIPgVoBd01GFtXpl27QeuA
+        2dEjuYOXqJ7VzihCuPNlE69kkQ==
+X-Google-Smtp-Source: APXvYqzpUhwfAbGzLwKIL383B6Symz9HyuWU2vN+KQyIbBQzrtLHY7UohuWPzGTkdsMfQfTFtGfikA==
+X-Received: by 2002:a17:90a:a386:: with SMTP id x6mr13658293pjp.116.1577877910967;
+        Wed, 01 Jan 2020 03:25:10 -0800 (PST)
+Received: from localhost.localdomain ([2405:201:c809:c7d5:d0fe:8978:1b04:ff94])
+        by smtp.gmail.com with ESMTPSA id y7sm51945439pfb.139.2020.01.01.03.25.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jan 2020 03:25:10 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 0/6] dt-bindings: display: Update few panel bindings with YAML
+Date:   Wed,  1 Jan 2020 16:54:38 +0530
+Message-Id: <20200101112444.16250-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+These panel bindings are owned by me, so updated all of them into
+YAML DT schema.
 
+Any inputs?
+Jagan.
 
-On Mon, Dec 16, 2019 at 12:59 AM Chen-Yu Tsai <wens@kernel.org> wrote:
->
-> From: Chen-Yu Tsai <wens@csie.org>
->
-> Hi everyone,
->
-> This series adds basic support for CSI1 on Allwinner A10/A20 and CSI0 on
-> Allwinner R40. The CSI1 block has the same structure and layout as the
-> CSI0 block. Differences include:
->
->   - Only one channel in BT.656 instead of four in CSI0
->   - 10-bit raw data input vs 8-bit in CSI0
->   - 24-bit RGB888/YUV444 input vs 16-bit RGB565/YUV422 in CSI0
->   - No ISP hardware (CSI SCLK not needed)
->
-> The CSI0 block in the Allwinner R40 SoC looks to be the same as the one
-> in the A20. The register maps line up, and they support the same
-> features. The R40 appears to support BT.1120 based on the feature
-> overview, but it is not mentioned anywhere else. Also like the A20, the
-> ISP is not mentioned, but the CSI special clock needs to be enabled for
-> the hardware to function. The manual does state that the CSI special
-> clock is the TOP clock for all CSI hardware, but currently no hardware
-> exists for us to test if CSI1 also depends on it or not.
->
-> Included are a couple of fixes for signal polarity and DRAM offset
-> handling.
->
-> Patches 1 and 2 add compatible strings for the newly supported hardware.
->
-> Patches 3 and 4 fix the polarity setting of [HV]sync and data sampling.
-> Allwinner hardware uses [HV]ref semantics instead of [HV]sync.
->
-> Patch 5 deals with the DRAM offset when the CSI hardware does DMA. The
-> hardware does DMA directly to the memory bus, thus requiring the address
-> to not be offset like when DMA is done over the system bus.
->
-> Patch 6 add support for the CSI1 hardware block. For now this simply
-> means not requiring the ISP clock.
->
-> Patches 7 and 8 add CSI1 to A10 (sun4i) and A20 (sun7i) dtsi files.
->
-> Patch 9 adds I2C pixmuxing options for the R40. Used in the last example
-> patch.
->
-> Patch 10 adds a compatible string for the R40's MBUS (memory bus).
->
-> Patch 11 adds CSI0 to the R40 dtsi file
->
-> Patches 12 through 14 are examples of cameras hooked up to boards.
->
-> Please have a look. The MBUS compatible patch is likely to conflict
-> with a DT binding conversion patch Maxime sent out.
->
-> Also, I sent out an email asking about the polarity settings for
-> [HV]sync, how to signal the use of [HV]ref instead, and how to pass
-> timings from the camera to the capture interface. So far I haven't
-> heard back. In particular I think the OV7670 driver has inverted
-> polarity settings for HSYNC. Not sure about VSYNC.
->
->
-> Regards
-> ChenYu
->
->
-> Chen-Yu Tsai (14):
->   dt-bindings: media: sun4i-csi: Add compatible for CSI1 on A10/A20
->   dt-bindings: media: sun4i-csi: Add compatible for CSI0 on R40
->   media: sun4i-csi: Fix data sampling polarity handling
->   media: sun4i-csi: Fix [HV]sync polarity handling
->   media: sun4i-csi: Deal with DRAM offset
->   media: sun4i-csi: Add support for A10 CSI1 camera sensor interface
+Jagan Teki (6):
+  dt-bindings: display: panel: Convert feiyang,fy07024di26a30d to DT
+    schema
+  dt-bindings: display: panel: Convert sitronix,st7701 to DT schema
+  MAINTAINERS: Update feiyang, st7701 panel bindings converted as YAML
+  dt-bindings: display: panel: Convert friendlyarm,hd702e to DT schema
+  dt-bindings: display: panel: Convert rocktech,rk070er9427 to DT schema
+  dt-bindings: display: panel: Convert koe,tx31d200vm0baa to DT schema
 
-Any news on these 6 patches? I believe they have the required acks.
+ .../display/panel/feiyang,fy07024di26a30d.txt | 20 ------
+ .../panel/feiyang,fy07024di26a30d.yaml        | 50 +++++++++++++++
+ .../display/panel/friendlyarm,hd702e.txt      | 32 ----------
+ .../display/panel/friendlyarm,hd702e.yaml     | 47 ++++++++++++++
+ .../display/panel/koe,tx31d200vm0baa.txt      | 25 --------
+ .../display/panel/koe,tx31d200vm0baa.yaml     | 37 +++++++++++
+ .../display/panel/rocktech,rk070er9427.txt    | 25 --------
+ .../display/panel/rocktech,rk070er9427.yaml   | 37 +++++++++++
+ .../display/panel/sitronix,st7701.txt         | 30 ---------
+ .../display/panel/sitronix,st7701.yaml        | 61 +++++++++++++++++++
+ MAINTAINERS                                   |  4 +-
+ 11 files changed, 234 insertions(+), 134 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0baa.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.yaml
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
 
-We (sunxi maintainers) will take the remain patches once these are in.
+-- 
+2.18.0.321.gffc6fa0e3
 
-ChenYu
-
->   ARM: dts: sun4i: Add CSI1 controller and pinmux options
->   ARM: dts: sun7i: Add CSI1 controller and pinmux options
->   ARM: dts: sun8i: r40: Add I2C pinmux options
->   dt-bindings: bus: sunxi: Add R40 MBUS compatible
->   ARM: dts: sun8i: r40: Add device node for CSI0
->   [DO NOT MERGE] ARM: dts: sun4i: cubieboard: Enable OV7670 camera on
->     CSI1
->   [DO NOT MERGE] ARM: dts: sun7i: cubieboard2: Enable OV7670 camera on
->     CSI1
->   [DO NOT MERGE] ARM: dts: sun8i-r40: bananapi-m2-ultra: Enable OV5640
->     camera
->
->  .../bindings/arm/sunxi/sunxi-mbus.txt         |  1 +
->  .../media/allwinner,sun4i-a10-csi.yaml        | 14 +++-
->  arch/arm/boot/dts/sun4i-a10-cubieboard.dts    | 42 ++++++++++++
->  arch/arm/boot/dts/sun4i-a10.dtsi              | 35 ++++++++++
->  arch/arm/boot/dts/sun7i-a20-cubieboard2.dts   | 42 ++++++++++++
->  arch/arm/boot/dts/sun7i-a20.dtsi              | 36 ++++++++++
->  .../boot/dts/sun8i-r40-bananapi-m2-ultra.dts  | 67 +++++++++++++++++++
->  arch/arm/boot/dts/sun8i-r40.dtsi              | 64 ++++++++++++++++++
->  .../platform/sunxi/sun4i-csi/sun4i_csi.c      | 57 ++++++++++++++--
->  .../platform/sunxi/sun4i-csi/sun4i_csi.h      |  6 +-
->  .../platform/sunxi/sun4i-csi/sun4i_dma.c      | 20 ++++--
->  11 files changed, 370 insertions(+), 14 deletions(-)
->
-> --
-> 2.24.0
->
