@@ -2,244 +2,139 @@ Return-Path: <SRS0=z07g=2W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF46AC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 17:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38568C32764
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 21:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B3B20722
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 17:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05398207E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 21:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ceG441K2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gx2UBQVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbgAARNe (ORCPT
+        id S1727355AbgAAVIh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jan 2020 12:13:34 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43482 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbgAARNe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 12:13:34 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 42417516;
-        Wed,  1 Jan 2020 18:13:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1577898811;
-        bh=KQ3iS5IRbbcyucKNKrsR3hbh54Kq0tVw/6nkdoRq6+8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ceG441K2hk/9Ez1bGbyAhJ54xegmWbBD+GXGG6wM3VsXBiTIlTXdRR9tVXza7iin8
-         hgoLyCUN0xN4R6pGvv2SsKV6pV38JdNFzktFZS/KkH7qG4Wy5C0kcMve2sv6g6AT8B
-         fvCIjcXFrX0Mo8GPwtLZ5Bg/Ww5ISIx/AsIGUy8Y=
-Date:   Wed, 1 Jan 2020 19:13:22 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>
-Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
- double-linked list
-Message-ID: <20200101171322.GE6226@pendragon.ideasonboard.com>
-References: <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
- <20191216155551.083dcbaf@collabora.com>
- <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
- <20191216162542.261c821c@collabora.com>
- <60f03d50-7c0f-c3d0-920f-0625c08b2171@samsung.com>
- <1010f5fc-0672-643c-4410-e053a928cb66@samsung.com>
- <20191224104422.25dbf980@collabora.com>
- <3a30de8e-9cc9-e3ff-a19a-45ea085ed9fc@samsung.com>
- <20191227105154.GA4769@pendragon.ideasonboard.com>
- <20191227132131.1e84ad60@collabora.com>
+        Wed, 1 Jan 2020 16:08:37 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38010 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbgAAVIh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 16:08:37 -0500
+Received: by mail-vs1-f67.google.com with SMTP id v12so24380661vsv.5
+        for <devicetree@vger.kernel.org>; Wed, 01 Jan 2020 13:08:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aky0/K6ipzZUQtU1J8iwS16GYzW4RxCCQJcReDQ16e4=;
+        b=gx2UBQVAHcOXdrGTmaE7Z7UDehfiE1XzFcVmlpCWHmrseOYxtIi6dTejHGOfwXsgJo
+         9u0voMJ32vaQ8W6rybZP5c7HyOM5Jekf5UWkvFZt+NEuD+ajbQyWov64mf8MijCyBW3a
+         VB79h0LDv+MiTbsNnmsDfI0zbvaQvsBupNZnWD2JcyipcE34o6WBFrTHEJqZBXbvIJZv
+         t2s/gkraZKZ2np2Zc1ZY6HNAqMpJv+EAuUA9g91BrfbiGhyB0DiEAyVmot5B50CZ2qmO
+         Q9LAuecYhjSY9rEn72W6okNn+wfpOyJfm/jAG+YEFGF6BjkQY3zSxmAylhLCkRJ1d+D3
+         oLBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aky0/K6ipzZUQtU1J8iwS16GYzW4RxCCQJcReDQ16e4=;
+        b=R7CcNjZ+cdf3IPF+0rqqV1Xky5LmlrjTbdFG40uUKKZfYqMDNWL5ANMkfSAwbl4z58
+         vPZOQ8W0OD8A2qDSNaOaX2vylTdmoQFf333/0PzA0akN4jk0wsUbbF/EXNZx2f4v0AzE
+         48RvwIpLenaTVTCzxdmXjJ+AD668ZTfBTf5r+zT2XugqBeT0n4SFzeQaZ4NP0yWbWX0q
+         nCN3SJUzvONLgg2lD/lyUBc2s/g4HwOQgLrtVdV2ogUF835zZwSD3eTJzJ4/Su249abn
+         gEgeX/wh/rKdX6kZGQmiyMBmk77wJT1rfdxdKc+xBg2sYigfA+mTFKzvV/4eoHTnGCww
+         50Jg==
+X-Gm-Message-State: APjAAAWKLUkTx9bvJKZchr24IJnwtyt8RqJ54lGOcXF/tcUsmowhIG+d
+        ss6EUhSWlzzy9UzvLmhXtdSwII+JoMjmUYVg1VIflFqp59M=
+X-Google-Smtp-Source: APXvYqxKINiKDhC6XhOJOfqlHXl3pNjzXtm5zBUf4t1DLw/wCQDeZPxxg4OVLsoCk6lycDFoFsWqLcEQfPWDGEe7Ryk=
+X-Received: by 2002:a05:6102:d4:: with SMTP id u20mr32339102vsp.27.1577912915852;
+ Wed, 01 Jan 2020 13:08:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191227132131.1e84ad60@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1577106871-19863-1-git-send-email-rkambl@codeaurora.org> <1577106871-19863-2-git-send-email-rkambl@codeaurora.org>
+In-Reply-To: <1577106871-19863-2-git-send-email-rkambl@codeaurora.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 2 Jan 2020 02:38:24 +0530
+Message-ID: <CAHLCerNMv-9V2R5LDqPcK42SPZGw+TuXkoJhAA5E9wkG0NEvDw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sc7180: Add critical interrupt and
+ cooling maps for TSENS in SC7180.
+To:     Rajeshwari <rkambl@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, sanm@codeaurora.org,
+        sivaa@codeaurora.org, manafm@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Boris,
+On Mon, Dec 23, 2019 at 6:46 PM Rajeshwari <rkambl@codeaurora.org> wrote:
+>
+> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 289 +++++++++++++++++++++++++++++------
+>  1 file changed, 239 insertions(+), 50 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 3676bfd..e419ca0 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -10,6 +10,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/thermal/thermal.h>
 
-On Fri, Dec 27, 2019 at 01:21:31PM +0100, Boris Brezillon wrote:
-> On Fri, 27 Dec 2019 12:51:54 +0200 Laurent Pinchart wrote:
-> > On Fri, Dec 27, 2019 at 10:42:25AM +0100, Andrzej Hajda wrote:
-> > > On 24.12.2019 10:44, Boris Brezillon wrote:  
-> > > > On Tue, 24 Dec 2019 10:16:49 +0100 Andrzej Hajda wrote:  
-> > > >> On 23.12.2019 10:55, Marek Szyprowski wrote:  
-> > > >>> On 16.12.2019 16:25, Boris Brezillon wrote:    
-> > > >>>> On Mon, 16 Dec 2019 16:02:36 +0100 Marek Szyprowski wrote:    
-> > > >>>>> On 16.12.2019 15:55, Boris Brezillon wrote:    
-> > > >>>>>> On Mon, 16 Dec 2019 14:54:25 +0100
-> > > >>>>>> Marek Szyprowski <m.szyprowski@samsung.com> wrote:    
-> > > >>>>>>> On 03.12.2019 15:15, Boris Brezillon wrote:    
-> > > >>>>>>>> So that each element in the chain can easily access its predecessor.
-> > > >>>>>>>> This will be needed to support bus format negotiation between elements
-> > > >>>>>>>> of the bridge chain.
-> > > >>>>>>>>
-> > > >>>>>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > >>>>>>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> > > >>>>>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>    
-> > > >>>>>>>
-> > > >>>>>>> I've noticed that this patch got merged to linux-next as commit
-> > > >>>>>>> 05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks booting of
-> > > >>>>>>> Samsung Exynos5250-based Arndale board. Booting stops after following
-> > > >>>>>>> messages:
-> > > >>>>>>>
-> > > >>>>>>> [drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
-> > > >>>>>>> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
-> > > >>>>>>> exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
-> > > >>>>>>> exynos-drm exynos-drm: bound 14500000.dsi (ops exynos_dsi_component_ops)
-> > > >>>>>>> exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
-> > > >>>>>>> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> > > >>>>>>> [drm] No driver support for vblank timestamp query.
-> > > >>>>>>> [drm] Cannot find any crtc or sizes
-> > > >>>>>>> [drm] Cannot find any crtc or sizes
-> > > >>>>>>> [drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 0
-> > > >>>>>>>
-> > > >>>>>>> I will try to debug this and provide more information soon.  
-> > > >>>>>>
-> > > >>>>>> Can you try with this diff applied?    
-> > > >>>>>
-> > > >>>>> This patch doesn't change anything.    
-> > > >>>>
-> > > >>>> Okay. Can you do a list_for_each_entry() on both encoder->bridge_chain
-> > > >>>> and dsi->bridge_chain (dump bridge pointers in a pr_info()) before and
-> > > >>>> after the list_splice_init() call?    
-> > > >>>
-> > > >>> encoder->bridge_chain contains only one element. dsi->drive_chain is empty.
-> > > >>>
-> > > >>> Replacing that list_splice() with INIT_LIST_HEAD(&encoder->bridge_chain) 
-> > > >>> fixed the boot issue.  
-> > > >
-> > > > If INIT_LIST_HEAD() worked, I don't understand why replacing the
-> > > > list_splice() call by a list_splice_init() (which doing a list_splice()
-> > > > + INIT_LIST_HEAD()) didn't fix the problem. Are you sure the
-> > > > list_splice_init() version doesn't work?
-> > > >  
-> > > >>> It looks that this is related with the way the 
-> > > >>> Exynos DSI handles bridges (in bridge and out brige?). Maybe Andrzej 
-> > > >>> will give a bit more detailed comment and spread some light on this.    
-> > > >>
-> > > >> Hi Marek, Boris,
-> > > >>
-> > > >> I have not followed latest patches due to high work load, my bad. Marek
-> > > >> thanks from pointing
-> > > >>
-> > > >> About ExynosDSI bridge handling:
-> > > >>
-> > > >> The order of calling encoder, bridge (and consequently panel) ops
-> > > >> enforced by DRM core (bridge->pre_enable, encoder->enable,
-> > > >> bridge->enable) does not fit to ExynosDSI hardware initialization
-> > > >> sequence, if I remember correctly it does not fit to whole MIPI DSI
-> > > >> standard (I think similar situation is with eDP). As a result DSI
-> > > >> drivers must use some ugly workarounds, rely on HW properly coping with
-> > > >> incorrect sequences, or, as in case of ExynosDSI driver, just avoid
-> > > >> using encoder->bridge chaining and call bridge ops by itself when suitable.  
-> > > >
-> > > > Yes, that's definitely hack-ish, and I proposed 2 solutions to address
-> > > > that in previous versions of this patchset, unfortunately I didn't get
-> > > > any feedback so I went for the less invasive option (keep the hack but
-> > > > adapt it to the double-linked list changes), which still lead to
-> > > > regressions :-/.
-> > > >
-> > > > Just a reminder of my 2 proposals:
-> > > >
-> > > > 1/ implement the bridge_ops->pre_enable/post_disable() hooks so you can
-> > > >    split your enable/disable logic in 2 parts and make sure things are
-> > > >    ready when the panel/next bridge tries to send DSI commands  
-> > > 
-> > > If it means 'convert exynos_dsi to bridge' I do not think it will help -
-> > > 
-> > > - pre_enable op will be still called after pre_enable op of downstream
-> > > bridge - and this is the main reason why exynos_dsi do not use encoder
-> > > bridge chain - it needs to perform some operations BEFORE (pre)enabling
-> > > downstream devices.
-> 
-> Yep, I figured that after Laurent's review.
-> 
-> > > > 2/ move everything that's needed to send DSI commands out of the  
-> > > >    ->enable() path (maybe in runtime PM resume/suspend hooks) so you  
-> > > >    can call that in the DSI transfer path too  
-> > > 
-> > > It looks like a solution for DSI protocol, where control bus is shared
-> > > with data bus, but the problem is more general - we have source and sink
-> > > connected with some local bus, which has some negotiation/enable/disable
-> > > protocol/requirements. And drm_core/bridge framework enforces us to fit
-> > > every such protocol to 'drm_bridge protocol' with few opses called in
-> > > fixed order, without clearly defined purpose of each ops. That does not
-> > > sound generic and results in multiple issues:
-> > > 
-> > > - different drivers uses different opses to perform the same thing,
-> > > 
-> > > - different drivers assumes different things about their sinks/sources
-> > > in their opses,
-> > > 
-> > > - more complicated sequences does not fit at all to this model.
-> > > 
-> > > All this results in incompatibilities between drivers which become
-> > > visible with devices used in different configurations/platforms.
-> 
-> That's true, drm_bridge_funcs semantics is rather vague and probably
-> doesn't fit all needs, but that's not the only problem we have when it
-> comes to DSI IMHO. I mean, I couldn't find any doc in drm_mipi_dsi.h
-> explaining when panel/bridge drivers are allowed to send DCS commands.
-> I was personally assuming that we were allowed to send such commands as
-> soon as mipi_dsi_attach() was called, but that's not clearly not
-> possible with VC4 and Exynos. This part should be clarified too.
-> 
-> > I fully agree with you, not defining the semantics of the bridge
-> > operations precisely was I believe a mistake, and we're paying the price
-> > now. That's OK, we "just" need to fix it :-)
-> 
-> Okay, so how do we fix that? :-)
-> 
-> I'm not a big fan of specializing the drm_bridge_funcs interface to fit
-> protocol X or protocol Y needs. Sounds like a never ending story,
-> protocol Z might require something slightly different, and we're likely
-> to end up with an interface that's not generic at all.
-> 
-> Maybe I'm wrong, but it sounds like all DSI ordering issues could be
-> addressed at the mipi_dsi_host_ops level if we define a new
-> ->enter_power_state() hook and have the DSI framework keep track of the
-> host power state (LP,HS,PD,...). The framework would then make sure we
-> are in a valid state (LP or HS) before calling dsi_host->transfer(). If
-> we have that in place, I don't think we need new hooks at the bridge
-> level, at least not for the DSI case. Please let me know if I'm missing
-> something.
 
-I'll have to review the mipi_dsi_host_ops in details to answer this, but
-I think there will be at least two potential issues.
+<snip>
 
-- The complexity on the DSI host side will increase due to the need to
-  handle both the DSI host and bridge operations. We will have to define
-  precise semantics for the bridge operations anyway to ensure they work
-  properly with the DSI host operations, and that may just defeat the
-  purpose of your proposal altogether.
+> -               cpu1-thermal {
+> +               cpu_0_1-thermal {
 
-- The issue isn't limited to ->transfer(), and DSI sink needs finer
-  control of the source for the purpose of video transfer as well. As
-  explained in another e-mail in this thread, it's not uncommon for DSI
-  sinks to first require the source to start sending H/V sync packets
-  without sending any video data, then get configured (through MIPI
-  commands or an out-of-band channel such as I2C or SPI), and finally
-  require the source to send video data.
+Is this renaming to include the cluster number really improving
+anything considering that the cpus section defines them as CPU0..CPU7?
 
--- 
-Regards,
+Leave them as-is.
 
-Laurent Pinchart
+>                         polling-delay-passive = <250>;
+>                         polling-delay = <1000>;
+>
+>                         thermal-sensors = <&tsens0 2>;
+>
+>                         trips {
+> -                               cpu1_alert0: trip-point0 {
+> +                               cpu_0_1_alert0: trip-point0 {
+
+cpu_0_1_alert0 is unnecessarily too long, IMO. Leave it as-is. Same
+for all the renames below.
+
+>                                         temperature = <90000>;
+>                                         hysteresis = <2000>;
+>                                         type = "passive";
+>                                 };
+>
+> -                               cpu1_alert1: trip-point1 {
+> +                               cpu_0_1_alert1: trip-point1 {
+>                                         temperature = <95000>;
+>                                         hysteresis = <2000>;
+>                                         type = "passive";
+>                                 };
+>
+> -                               cpu1_crit: cpu_crit {
+> +                               cpu_0_1_crit: cpu_crit {
+>                                         temperature = <110000>;
+>                                         hysteresis = <1000>;
+>                                         type = "critical";
+>                                 };
+>                         };
+
+<snip>
