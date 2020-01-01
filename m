@@ -2,226 +2,244 @@ Return-Path: <SRS0=z07g=2W=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D53C2D0DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 15:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF46AC2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 17:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E6A206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 15:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B3B20722
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 17:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="XYkhfp2Q"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ceG441K2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbgAAPPg (ORCPT
+        id S1727212AbgAARNe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jan 2020 10:15:36 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:38667 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgAAPPg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 10:15:36 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 63AF022FE5;
-        Wed,  1 Jan 2020 16:15:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1577891732;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/FBt0Zgi9W04iwgAW4q49Axs3gCKj+1g7HUQY1yOAzU=;
-        b=XYkhfp2QUOPtI0N9L170Depb7z/b9NoxaxqrMe0XdUVJGYpoRQ5kzUBqnVgb1cWjwQdpM0
-        wD4zO9D2UnU6Q8+jK8Cnh31vVQ/6HDpQazEcOyUMRvvhI8RbIKITUz+Dg1g3jSAsUt0V90
-        GmJJXaW0d4PgGZK3MOgSIBddnssrdyQ=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 01 Jan 2020 16:15:32 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
+        Wed, 1 Jan 2020 12:13:34 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:43482 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgAARNe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 12:13:34 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 42417516;
+        Wed,  1 Jan 2020 18:13:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1577898811;
+        bh=KQ3iS5IRbbcyucKNKrsR3hbh54Kq0tVw/6nkdoRq6+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ceG441K2hk/9Ez1bGbyAhJ54xegmWbBD+GXGG6wM3VsXBiTIlTXdRR9tVXza7iin8
+         hgoLyCUN0xN4R6pGvv2SsKV6pV38JdNFzktFZS/KkH7qG4Wy5C0kcMve2sv6g6AT8B
+         fvCIjcXFrX0Mo8GPwtLZ5Bg/Ww5ISIx/AsIGUy8Y=
+Date:   Wed, 1 Jan 2020 19:13:22 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
-In-Reply-To: <20191224080536.B0C99206CB@mail.kernel.org>
-References: <20191209233305.18619-1-michael@walle.cc>
- <20191209233305.18619-2-michael@walle.cc>
- <20191224080536.B0C99206CB@mail.kernel.org>
-Message-ID: <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 63AF022FE5
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         NEURAL_HAM(-0.00)[-0.785];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>
+Subject: Re: [PATCH v4 04/11] drm/bridge: Make the bridge chain a
+ double-linked list
+Message-ID: <20200101171322.GE6226@pendragon.ideasonboard.com>
+References: <4e901ab9-07d4-4238-7322-c7c5a3959513@samsung.com>
+ <20191216155551.083dcbaf@collabora.com>
+ <75a06e2a-4587-ee16-0f5d-af75fbe89793@samsung.com>
+ <20191216162542.261c821c@collabora.com>
+ <60f03d50-7c0f-c3d0-920f-0625c08b2171@samsung.com>
+ <1010f5fc-0672-643c-4410-e053a928cb66@samsung.com>
+ <20191224104422.25dbf980@collabora.com>
+ <3a30de8e-9cc9-e3ff-a19a-45ea085ed9fc@samsung.com>
+ <20191227105154.GA4769@pendragon.ideasonboard.com>
+ <20191227132131.1e84ad60@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191227132131.1e84ad60@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Boris,
 
-Hi Stephen,
-
-thanks for the review.
-
-Am 2019-12-24 09:05, schrieb Stephen Boyd:
-> Quoting Michael Walle (2019-12-09 15:33:05)
->> diff --git a/drivers/clk/clk-fsl-sai.c b/drivers/clk/clk-fsl-sai.c
->> new file mode 100644
->> index 000000000000..b92054d15ab1
->> --- /dev/null
->> +++ b/drivers/clk/clk-fsl-sai.c
->> @@ -0,0 +1,84 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Freescale SAI BCLK as a generic clock driver
->> + *
->> + * Copyright 2019 Kontron Europe GmbH
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/err.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/slab.h>
->> +
->> +#define I2S_CSR                0x00
->> +#define I2S_CR2                0x08
->> +#define CSR_BCE_BIT    28
->> +#define CR2_BCD                BIT(24)
->> +#define CR2_DIV_SHIFT  0
->> +#define CR2_DIV_WIDTH  8
->> +
->> +struct fsl_sai_clk {
->> +       struct clk_divider div;
->> +       struct clk_gate gate;
->> +       spinlock_t lock;
->> +};
->> +
->> +static void __init fsl_sai_clk_setup(struct device_node *node)
->> +{
->> +       const char *clk_name = node->name;
->> +       struct fsl_sai_clk *sai_clk;
->> +       unsigned int num_parents;
->> +       const char *parent_name;
->> +       void __iomem *base;
->> +       struct clk_hw *hw;
->> +
->> +       num_parents = of_clk_get_parent_count(node);
->> +       if (!num_parents) {
->> +               pr_err("%s: no parent found", clk_name);
->> +               return;
->> +       }
->> +
->> +       parent_name = of_clk_get_parent_name(node, 0);
+On Fri, Dec 27, 2019 at 01:21:31PM +0100, Boris Brezillon wrote:
+> On Fri, 27 Dec 2019 12:51:54 +0200 Laurent Pinchart wrote:
+> > On Fri, Dec 27, 2019 at 10:42:25AM +0100, Andrzej Hajda wrote:
+> > > On 24.12.2019 10:44, Boris Brezillon wrote:  
+> > > > On Tue, 24 Dec 2019 10:16:49 +0100 Andrzej Hajda wrote:  
+> > > >> On 23.12.2019 10:55, Marek Szyprowski wrote:  
+> > > >>> On 16.12.2019 16:25, Boris Brezillon wrote:    
+> > > >>>> On Mon, 16 Dec 2019 16:02:36 +0100 Marek Szyprowski wrote:    
+> > > >>>>> On 16.12.2019 15:55, Boris Brezillon wrote:    
+> > > >>>>>> On Mon, 16 Dec 2019 14:54:25 +0100
+> > > >>>>>> Marek Szyprowski <m.szyprowski@samsung.com> wrote:    
+> > > >>>>>>> On 03.12.2019 15:15, Boris Brezillon wrote:    
+> > > >>>>>>>> So that each element in the chain can easily access its predecessor.
+> > > >>>>>>>> This will be needed to support bus format negotiation between elements
+> > > >>>>>>>> of the bridge chain.
+> > > >>>>>>>>
+> > > >>>>>>>> Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > > >>>>>>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> > > >>>>>>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>    
+> > > >>>>>>>
+> > > >>>>>>> I've noticed that this patch got merged to linux-next as commit
+> > > >>>>>>> 05193dc38197021894b17239fafbd2eb1afe5a45. Sadly it breaks booting of
+> > > >>>>>>> Samsung Exynos5250-based Arndale board. Booting stops after following
+> > > >>>>>>> messages:
+> > > >>>>>>>
+> > > >>>>>>> [drm] Exynos DRM: using 14400000.fimd device for DMA mapping operations
+> > > >>>>>>> exynos-drm exynos-drm: bound 14400000.fimd (ops fimd_component_ops)
+> > > >>>>>>> exynos-drm exynos-drm: bound 14450000.mixer (ops mixer_component_ops)
+> > > >>>>>>> exynos-drm exynos-drm: bound 14500000.dsi (ops exynos_dsi_component_ops)
+> > > >>>>>>> exynos-drm exynos-drm: bound 14530000.hdmi (ops hdmi_component_ops)
+> > > >>>>>>> [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> > > >>>>>>> [drm] No driver support for vblank timestamp query.
+> > > >>>>>>> [drm] Cannot find any crtc or sizes
+> > > >>>>>>> [drm] Cannot find any crtc or sizes
+> > > >>>>>>> [drm] Initialized exynos 1.1.0 20180330 for exynos-drm on minor 0
+> > > >>>>>>>
+> > > >>>>>>> I will try to debug this and provide more information soon.  
+> > > >>>>>>
+> > > >>>>>> Can you try with this diff applied?    
+> > > >>>>>
+> > > >>>>> This patch doesn't change anything.    
+> > > >>>>
+> > > >>>> Okay. Can you do a list_for_each_entry() on both encoder->bridge_chain
+> > > >>>> and dsi->bridge_chain (dump bridge pointers in a pr_info()) before and
+> > > >>>> after the list_splice_init() call?    
+> > > >>>
+> > > >>> encoder->bridge_chain contains only one element. dsi->drive_chain is empty.
+> > > >>>
+> > > >>> Replacing that list_splice() with INIT_LIST_HEAD(&encoder->bridge_chain) 
+> > > >>> fixed the boot issue.  
+> > > >
+> > > > If INIT_LIST_HEAD() worked, I don't understand why replacing the
+> > > > list_splice() call by a list_splice_init() (which doing a list_splice()
+> > > > + INIT_LIST_HEAD()) didn't fix the problem. Are you sure the
+> > > > list_splice_init() version doesn't work?
+> > > >  
+> > > >>> It looks that this is related with the way the 
+> > > >>> Exynos DSI handles bridges (in bridge and out brige?). Maybe Andrzej 
+> > > >>> will give a bit more detailed comment and spread some light on this.    
+> > > >>
+> > > >> Hi Marek, Boris,
+> > > >>
+> > > >> I have not followed latest patches due to high work load, my bad. Marek
+> > > >> thanks from pointing
+> > > >>
+> > > >> About ExynosDSI bridge handling:
+> > > >>
+> > > >> The order of calling encoder, bridge (and consequently panel) ops
+> > > >> enforced by DRM core (bridge->pre_enable, encoder->enable,
+> > > >> bridge->enable) does not fit to ExynosDSI hardware initialization
+> > > >> sequence, if I remember correctly it does not fit to whole MIPI DSI
+> > > >> standard (I think similar situation is with eDP). As a result DSI
+> > > >> drivers must use some ugly workarounds, rely on HW properly coping with
+> > > >> incorrect sequences, or, as in case of ExynosDSI driver, just avoid
+> > > >> using encoder->bridge chaining and call bridge ops by itself when suitable.  
+> > > >
+> > > > Yes, that's definitely hack-ish, and I proposed 2 solutions to address
+> > > > that in previous versions of this patchset, unfortunately I didn't get
+> > > > any feedback so I went for the less invasive option (keep the hack but
+> > > > adapt it to the double-linked list changes), which still lead to
+> > > > regressions :-/.
+> > > >
+> > > > Just a reminder of my 2 proposals:
+> > > >
+> > > > 1/ implement the bridge_ops->pre_enable/post_disable() hooks so you can
+> > > >    split your enable/disable logic in 2 parts and make sure things are
+> > > >    ready when the panel/next bridge tries to send DSI commands  
+> > > 
+> > > If it means 'convert exynos_dsi to bridge' I do not think it will help -
+> > > 
+> > > - pre_enable op will be still called after pre_enable op of downstream
+> > > bridge - and this is the main reason why exynos_dsi do not use encoder
+> > > bridge chain - it needs to perform some operations BEFORE (pre)enabling
+> > > downstream devices.
 > 
-> Could this use the new way of specifying clk parents so that we don't
-> have to query DT for parent names and just let the core framework do it
-> whenever it needs to?
-
-you mean specifying parent_data with .index = 0? Seems like 
-clk_composite
-does not support this. The parent can only be specified by supplying the
-clock names.
-
-I could add that in a separate patch. What do you think about the
-following new functions, where a driver can use parent_data instead
-of parent_names.
-
-+struct clk *clk_register_composite_pdata(struct device *dev, const char 
-*name,
-+               const struct clk_parent_data *parent_data,
-+               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
-+               struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
-+               struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
-+               unsigned long flags);
-
-+struct clk_hw *clk_hw_register_composite_pdata(struct device *dev,
-+               const char *name, const struct clk_parent_data 
-*parent_data,
-+               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
-+               struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
-+               struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
-+               unsigned long flags);
-
-
->> +
->> +       sai_clk = kzalloc(sizeof(*sai_clk), GFP_KERNEL);
->> +       if (!sai_clk)
->> +               return;
->> +
->> +       base = of_iomap(node, 0);
->> +       if (base == NULL) {
->> +               pr_err("%s: failed to map register space", clk_name);
->> +               goto err;
->> +       }
->> +
->> +       spin_lock_init(&sai_clk->lock);
->> +
->> +       sai_clk->gate.reg = base + I2S_CSR;
->> +       sai_clk->gate.bit_idx = CSR_BCE_BIT;
->> +       sai_clk->gate.lock = &sai_clk->lock;
->> +
->> +       sai_clk->div.reg = base + I2S_CR2;
->> +       sai_clk->div.shift = CR2_DIV_SHIFT;
->> +       sai_clk->div.width = CR2_DIV_WIDTH;
->> +       sai_clk->div.lock = &sai_clk->lock;
->> +
->> +       /* set clock direction, we are the BCLK master */
+> Yep, I figured that after Laurent's review.
 > 
-> Should this configuration come from DT somehow?
-
-No, we are always master, because as a slave, there would be no clock
-output ;)
-
->> +       writel(CR2_BCD, base + I2S_CR2);
->> +
->> +       hw = clk_hw_register_composite(NULL, clk_name, &parent_name, 
->> 1,
->> +                                      NULL, NULL,
->> +                                      &sai_clk->div.hw, 
->> &clk_divider_ops,
->> +                                      &sai_clk->gate.hw, 
->> &clk_gate_ops,
->> +                                      CLK_SET_RATE_GATE);
->> +       if (IS_ERR(hw))
->> +               goto err;
->> +
->> +       of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
->> +
->> +       return;
->> +
->> +err:
->> +       kfree(sai_clk);
->> +}
->> +
->> +CLK_OF_DECLARE(fsl_sai_clk, "fsl,vf610-sai-clock", 
->> fsl_sai_clk_setup);
+> > > > 2/ move everything that's needed to send DSI commands out of the  
+> > > >    ->enable() path (maybe in runtime PM resume/suspend hooks) so you  
+> > > >    can call that in the DSI transfer path too  
+> > > 
+> > > It looks like a solution for DSI protocol, where control bus is shared
+> > > with data bus, but the problem is more general - we have source and sink
+> > > connected with some local bus, which has some negotiation/enable/disable
+> > > protocol/requirements. And drm_core/bridge framework enforces us to fit
+> > > every such protocol to 'drm_bridge protocol' with few opses called in
+> > > fixed order, without clearly defined purpose of each ops. That does not
+> > > sound generic and results in multiple issues:
+> > > 
+> > > - different drivers uses different opses to perform the same thing,
+> > > 
+> > > - different drivers assumes different things about their sinks/sources
+> > > in their opses,
+> > > 
+> > > - more complicated sequences does not fit at all to this model.
+> > > 
+> > > All this results in incompatibilities between drivers which become
+> > > visible with devices used in different configurations/platforms.
 > 
-> Is there a reason this can't be a platform device driver?
+> That's true, drm_bridge_funcs semantics is rather vague and probably
+> doesn't fit all needs, but that's not the only problem we have when it
+> comes to DSI IMHO. I mean, I couldn't find any doc in drm_mipi_dsi.h
+> explaining when panel/bridge drivers are allowed to send DCS commands.
+> I was personally assuming that we were allowed to send such commands as
+> soon as mipi_dsi_attach() was called, but that's not clearly not
+> possible with VC4 and Exynos. This part should be clarified too.
+> 
+> > I fully agree with you, not defining the semantics of the bridge
+> > operations precisely was I believe a mistake, and we're paying the price
+> > now. That's OK, we "just" need to fix it :-)
+> 
+> Okay, so how do we fix that? :-)
+> 
+> I'm not a big fan of specializing the drm_bridge_funcs interface to fit
+> protocol X or protocol Y needs. Sounds like a never ending story,
+> protocol Z might require something slightly different, and we're likely
+> to end up with an interface that's not generic at all.
+> 
+> Maybe I'm wrong, but it sounds like all DSI ordering issues could be
+> addressed at the mipi_dsi_host_ops level if we define a new
+> ->enter_power_state() hook and have the DSI framework keep track of the
+> host power state (LP,HS,PD,...). The framework would then make sure we
+> are in a valid state (LP or HS) before calling dsi_host->transfer(). If
+> we have that in place, I don't think we need new hooks at the bridge
+> level, at least not for the DSI case. Please let me know if I'm missing
+> something.
 
-I don't think so, the user will be a sound codec for now. I'll convert 
-it
-to a platform device, in that case I could also use the devm_ variants.
+I'll have to review the mipi_dsi_host_ops in details to answer this, but
+I think there will be at least two potential issues.
 
--michael
+- The complexity on the DSI host side will increase due to the need to
+  handle both the DSI host and bridge operations. We will have to define
+  precise semantics for the bridge operations anyway to ensure they work
+  properly with the DSI host operations, and that may just defeat the
+  purpose of your proposal altogether.
+
+- The issue isn't limited to ->transfer(), and DSI sink needs finer
+  control of the source for the purpose of video transfer as well. As
+  explained in another e-mail in this thread, it's not uncommon for DSI
+  sinks to first require the source to start sending H/V sync packets
+  without sending any video data, then get configured (through MIPI
+  commands or an out-of-band channel such as I2C or SPI), and finally
+  require the source to send video data.
+
+-- 
+Regards,
+
+Laurent Pinchart
