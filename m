@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54859C2D0DF
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E66C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284E5206E6
-	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52E0206E6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  1 Jan 2020 11:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="bRoDYVtQ"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="e76aESV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgAALZW (ORCPT
+        id S1727149AbgAALZ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jan 2020 06:25:22 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:32794 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgAALZW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 06:25:22 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c13so16726120pls.0
-        for <devicetree@vger.kernel.org>; Wed, 01 Jan 2020 03:25:21 -0800 (PST)
+        Wed, 1 Jan 2020 06:25:26 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53783 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbgAALZZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 06:25:25 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so2060257pjc.3
+        for <devicetree@vger.kernel.org>; Wed, 01 Jan 2020 03:25:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kGyS2va2MM5LlItUz13S22TtfwiSSFhRb47vRs7rcSA=;
-        b=bRoDYVtQ1NYUFDceNj0TvN7AgLnYHCKEZc9F2ihByaESmLqX4XnrdAyOdO4dIcdRNd
-         BPIkUn4kHcXhQ90ZIpwuCpprRMAd9REj4spU0ZHxdb7GuFfpFARUird/OWwD74k/7O9q
-         6R61h1eJJ/m91+hWicSXyQHEFX4LaY2hg7YyI=
+        bh=aAzFwJEYuGgvW/P9IbRhSf+XnGQckgZrqUZat3QeX28=;
+        b=e76aESV8OxAQ+1VReIRY8qExAktiTMGpxkgpQS4hc8yEWCX2XUpVgRMyQ0P+3VhGxx
+         cG+Dvzo+9tQIGq5JLT76qntE2V5+hVAB99vO8Cz1zO/6WgM+qGy/PgKfaAswdNYIsyQh
+         Bu2Vy4n7gYkG3IXYbGQsVR3lCVEYmT4YSAHDs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kGyS2va2MM5LlItUz13S22TtfwiSSFhRb47vRs7rcSA=;
-        b=lyEJwoaK3WV7Yn1rs3JhOq2dOB8wiDRBfSn+vRZ6LSpRU+Sgx6hdP44HmJtLvWPkVc
-         avm32Nm5FjeFIv9uZrHLsXSXKgBsxbkyCi45Z2TPyVa0OlD3o0rJNl/2rJU9710feDio
-         PHceC9T9yypEMjMSVOQuLWjVcCAGQz2dbqh9g9L0UMEdcEIF9vu5droHwj0tPBdYxJ+m
-         nveq+1I4MgpKvDYlVOYbleU9vJOYXrYTEp9r/Fk3osMOhlVqC2HT+L0TMHx+JNAqyTLa
-         UmL+XYVUabZLaDZGJ6jresNDytpkanZ6LOv2IieYXjdYYDJWk0TUe9m0jAO8Y+eFick1
-         rSyA==
-X-Gm-Message-State: APjAAAVIrikLF4FzjsZTnS7Gnj1h5cn5paCz82en/EzBjaHJ22LCqxYL
-        ElHcDtYVJJKFxiIZ/uQcauYNKg==
-X-Google-Smtp-Source: APXvYqx1w7BI3kSg5znfx18d2dqgKYCH7WWv2q9ctxYTFGBJxvjbzmixsUdL7wGN2fv0ZiGpf8bK6g==
-X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr64853544plk.47.1577877921397;
-        Wed, 01 Jan 2020 03:25:21 -0800 (PST)
+        bh=aAzFwJEYuGgvW/P9IbRhSf+XnGQckgZrqUZat3QeX28=;
+        b=Ei7HUjOwVQ53JDc8AfNCok6Sy+awYJvXELCmMySbBvFcJZfMH8nwCifZ4LY7dyUTGE
+         VtiJfVlYc3G0g9i8N8AqvONDuVrtUu5I4gqMrc+GRZ0MMIbw6dY0HR1iCHksyN5lUdYj
+         22tHOC+OMLr3MbJZ0q9azIzWXjatTeM7FazOM0RONtRHI8bOcDAOpW0d0w3CBbchaNr0
+         T4HP1kE2YmBE9KZ5+e7QbS0t8DaDiuum/FxV0nN93+5IIc4THuMmquBOPOKIqD+LwW7A
+         86Ok9+o1M0DVBeKD731jkbMmmfc0AEV4MNu75ZqvWZqu4Ovy2yM3CjbG2d0F4Y76196Z
+         y3Mw==
+X-Gm-Message-State: APjAAAWpeGsXogRgd0OUKI2fMA4XL5Q2tdBc9woNSpSYiHwJ6z79rYSN
+        lvreQruj9CXzQZ/nOYyrEgwTcQ==
+X-Google-Smtp-Source: APXvYqzkSctdjdd9fJlMbQsYlI1poSSJCvWf4LUQ6JA98+/eq25mxnQcgX+A0QG3VgKbw4bWIYZk/Q==
+X-Received: by 2002:a17:902:d906:: with SMTP id c6mr35495504plz.137.1577877925003;
+        Wed, 01 Jan 2020 03:25:25 -0800 (PST)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:d0fe:8978:1b04:ff94])
-        by smtp.gmail.com with ESMTPSA id y7sm51945439pfb.139.2020.01.01.03.25.18
+        by smtp.gmail.com with ESMTPSA id y7sm51945439pfb.139.2020.01.01.03.25.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 03:25:20 -0800 (PST)
+        Wed, 01 Jan 2020 03:25:24 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -61,9 +61,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/6] MAINTAINERS: Update feiyang, st7701 panel bindings converted as YAML
-Date:   Wed,  1 Jan 2020 16:54:41 +0530
-Message-Id: <20200101112444.16250-4-jagan@amarulasolutions.com>
+Subject: [PATCH 4/6] dt-bindings: display: panel: Convert friendlyarm,hd702e to DT schema
+Date:   Wed,  1 Jan 2020 16:54:42 +0530
+Message-Id: <20200101112444.16250-5-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20200101112444.16250-1-jagan@amarulasolutions.com>
 References: <20200101112444.16250-1-jagan@amarulasolutions.com>
@@ -74,36 +74,107 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The feiyang,fy07024di26a30d.txt and sitronix,st7701.txt has been
-converted to YAML schemas, update MAINTAINERS to match them again.
+Convert the friendlyarm,hd702e panel bindings to DT schema.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../display/panel/friendlyarm,hd702e.txt      | 32 -------------
+ .../display/panel/friendlyarm,hd702e.yaml     | 47 +++++++++++++++++++
+ 2 files changed, 47 insertions(+), 32 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.yaml
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8b2e6c68832d..4d6e4febd170 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5169,7 +5169,7 @@ DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
- M:	Jagan Teki <jagan@amarulasolutions.com>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-feiyang-fy07024di26a30d.c
--F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.txt
-+F:	Documentation/devicetree/bindings/display/panel/feiyang,fy07024di26a30d.yaml
- 
- DRM DRIVER FOR GRAIN MEDIA GM12U320 PROJECTORS
- M:	Hans de Goede <hdegoede@redhat.com>
-@@ -5298,7 +5298,7 @@ DRM DRIVER FOR SITRONIX ST7701 PANELS
- M:	Jagan Teki <jagan@amarulasolutions.com>
- S:	Maintained
- F:	drivers/gpu/drm/panel/panel-sitronix-st7701.c
--F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-+F:	Documentation/devicetree/bindings/display/panel/sitronix,st7701.yaml
- 
- DRM DRIVER FOR SITRONIX ST7586 PANELS
- M:	David Lechner <david@lechnology.com>
+diff --git a/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt b/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt
+deleted file mode 100644
+index 6c9156fc3478..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.txt
++++ /dev/null
+@@ -1,32 +0,0 @@
+-FriendlyELEC HD702E 800x1280 LCD panel
+-
+-HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
+-resolution. It has built in Goodix, GT9271 captive touchscreen
+-with backlight adjustable via PWM.
+-
+-Required properties:
+-- compatible: should be "friendlyarm,hd702e"
+-- power-supply: regulator to provide the supply voltage
+-
+-Optional properties:
+-- backlight: phandle of the backlight device attached to the panel
+-
+-Optional nodes:
+-- Video port for LCD panel input.
+-
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
+-
+-Example:
+-
+-	panel {
+-		compatible ="friendlyarm,hd702e", "simple-panel";
+-		backlight = <&backlight>;
+-		power-supply = <&vcc3v3_sys>;
+-
+-		port {
+-			panel_in_edp: endpoint {
+-				remote-endpoint = <&edp_out_panel>;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.yaml b/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.yaml
+new file mode 100644
+index 000000000000..0509c34d98b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0+ OR X11)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/friendlyarm,hd702e.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: FriendlyELEC HD702E 800x1280 LCD panel
++
++maintainers:
++  - Jagan Teki <jagan@amarulasolutions.com>
++  - Thierry Reding <thierry.reding@gmail.com>
++  - Sam Ravnborg <sam@ravnborg.org>
++
++description: |
++  HD702E lcd is FriendlyELEC developed eDP LCD panel with 800x1280
++  resolution. It has built in Goodix, GT9271 captive touchscreen
++  with backlight adjustable via PWM.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: friendlyarm,hd702e
++
++  power-supply:
++    description: regulator to provide the supply voltage
++
++required:
++  - compatible
++  - power-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    panel {
++            compatible ="friendlyarm,hd702e", "simple-panel";
++            backlight = <&backlight>;
++            power-supply = <&vcc3v3_sys>;
++
++            port {
++                    panel_in_edp: endpoint {
++                            remote-endpoint = <&edp_out_panel>;
++                    };
++            };
++    };
 -- 
 2.18.0.321.gffc6fa0e3
 
