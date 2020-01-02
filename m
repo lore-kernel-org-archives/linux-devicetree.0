@@ -2,129 +2,207 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2914CC3276C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669D9C3276E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4D321655
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:52:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="pt+8L1kf"
+	by mail.kernel.org (Postfix) with ESMTP id 3C488217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 22:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578004975;
+	bh=X1sDydLqSX2i4y9/WNq55HXF+1lcahFGVi3B3JmDeCE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LG786/BW9YX4eniIovNyIfL5xuojBuE1Gm6BI3y+htMQQfh841DkaDkmrR0J8L26V
+	 VDnsBvnALvnQC7wud54z1Wj61fw2psIQtJL7oqZGVAqNT0txd6JCWg9Xi6oWU5wTtV
+	 V3dpkwJiuFUhYUDnKLczdlFgQeOSKmvV5eO+22ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725876AbgABVw5 (ORCPT
+        id S1731167AbgABWmu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:52:57 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40993 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgABVw5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 16:52:57 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c26so40227853eds.8;
-        Thu, 02 Jan 2020 13:52:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hvu2XgZLIAybTxeXvSxciwNCDI/QTjrV4RLf06zuwtk=;
-        b=pt+8L1kfxsX0Xxqv1s32vYhKZ0Ehx0enq8/6v/tV9pcIelS/duSghfq9QbBGzbWmtr
-         K7ef23N6Wc1GG6zhr+FtBE1UzCgHZq33Wc4wop1pvAc0TwGWv6IyTQHw32qhdqEP0NTI
-         RnZKGzNyx4U9n+jtQVCpKI7TxoG5iNG8RtI7ULvxf1ivAPLvjrDrXBBi1/FZpnmJgHsI
-         5RWeO7GsrQe5v/h+OB2aOQVQYgU49ciDf8wFuizGVYTXnMFnbftDO+wSVmKi1/AUdeii
-         V1F8yfXoAWRUvHuq6Q8MfmZLQ5ENJYt5dIwrFo/vJ99osCuIDlsOPQJL7iKy/RNKzMS1
-         CAcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hvu2XgZLIAybTxeXvSxciwNCDI/QTjrV4RLf06zuwtk=;
-        b=AYeGr3qZIx31mf9/1D+6lYyfebdJ+vSK7GUc3jXfa5gaeJQW7B6ZaS5SSGh9YR13BB
-         uSgcfyqaIp0w0Nes6Y4iOVuHc0zH8q5bJIwCqmKSn383UwDO/X3FIhA7ETAgPcxDDixB
-         Vd/hps4755cdHl3jISKCyXOJWiY2i9xNrDEWHe1XN4pgDh1xka8sgUc4b4RMUXksKyJZ
-         BWXXyyA0CJ8ULFhCNgP0HPsO9kWvojxD28MOUnbsPOu9IkKu0mIDAwTBZg9hZitNBrMv
-         FeCDJwHAWhY4x2y6F1WkqePmcbdYOQvdng5K7AepVOCx5k7XwslZam3KCNRSln3abRGh
-         XZSA==
-X-Gm-Message-State: APjAAAXgNreoetF5FFeQ4Lny+ziJ1aoiNDdTZ1wMNO+JoeXlfX21QG78
-        kQbWO8G7aS98GaW+khZRJXZ4tFv1K7BJwkIW4ANnYA==
-X-Google-Smtp-Source: APXvYqyLuGqANpkEmw72e7jynDm+fNMM49TQnwz/BBk2Zt26OUL6Fve8YN1sQTqqR68Jp8kkufLSn3wjnTCMkt89RHE=
-X-Received: by 2002:aa7:d6d1:: with SMTP id x17mr53418384edr.57.1578001975370;
- Thu, 02 Jan 2020 13:52:55 -0800 (PST)
+        Thu, 2 Jan 2020 17:42:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730957AbgABWmp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jan 2020 17:42:45 -0500
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75157222C3;
+        Thu,  2 Jan 2020 22:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578004964;
+        bh=X1sDydLqSX2i4y9/WNq55HXF+1lcahFGVi3B3JmDeCE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u7Tl+fXnDkklH/8QPf1heNJVzkOJ3TaUcSY9VoqunoijYHfPC40fXtDmCAIEZOfGH
+         UT7ccdfQEQrCPns7STxeE3O8NMhJKJCAwsVBVtihW0+DDjp0SXo4+UCEX0O2kWb04S
+         pP2xETmMH+P+54UFb0Ws5HkduJ1Ewrss6SqZuZNs=
+Received: by mail-qk1-f169.google.com with SMTP id t129so32487319qke.10;
+        Thu, 02 Jan 2020 14:42:44 -0800 (PST)
+X-Gm-Message-State: APjAAAWwKL+VUZ+/7s7nOTVBO0lvFQ/eKPWTJmy2MBeIXFum9bpf1l+X
+        4OVEtcj6Yai7JTqRPXmipBDXq/KEQHQREM9boA==
+X-Google-Smtp-Source: APXvYqwHjJixw+g5oo7LgzM37cf5twPti8tRxdrwCGh+tDfV93Rz9uc+7Jw8lKgm9/CqOO54nJLkoJK64EKW6TgtHaM=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr63515899qkl.119.1578004963560;
+ Thu, 02 Jan 2020 14:42:43 -0800 (PST)
 MIME-Version: 1.0
-References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com>
- <1577428606-69855-5-git-send-email-hanjie.lin@amlogic.com>
- <CAFBinCD8V-Swihz+VJ780sXJtM9cXprDcGCHVuHjjCx0DEOodQ@mail.gmail.com> <d66abc21-1440-503b-3515-6c495bf0db80@amlogic.com>
-In-Reply-To: <d66abc21-1440-503b-3515-6c495bf0db80@amlogic.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 2 Jan 2020 22:52:44 +0100
-Message-ID: <CAFBinCAEO=c+5oZrUmW=YhqD5tQkm0NUSbgwxHYqL2UgcK4c5Q@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
-To:     Hanjie Lin <hanjie.lin@amlogic.com>
-Cc:     Rob Herring <robh@kernel.org>, Victor Wan <victor.wan@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
+References: <20191216121932.22967-1-zhang.lyra@gmail.com> <20191216121932.22967-4-zhang.lyra@gmail.com>
+ <20191226185623.GA4463@bogus> <CAAfSe-vL4S-w4JVzevPYxb=LNqGQEn6quM54AjPHZUe6Gw3WTg@mail.gmail.com>
+In-Reply-To: <CAAfSe-vL4S-w4JVzevPYxb=LNqGQEn6quM54AjPHZUe6Gw3WTg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 2 Jan 2020 15:42:23 -0700
+X-Gmail-Original-Message-ID: <CAL_JsqKu5KwogNzr2wjtDFjWLH1cLOLBi0FK5ZZipdKS-MWVMQ@mail.gmail.com>
+Message-ID: <CAL_JsqKu5KwogNzr2wjtDFjWLH1cLOLBi0FK5ZZipdKS-MWVMQ@mail.gmail.com>
+Subject: Re: [PATCH V2 3/6] dt-bindings: clk: sprd: add bindings for sc9863a
+ clock controller
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        linux-usb@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        devicetree@vger.kernel.org, Liang Yang <liang.yang@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Carlo Caione <carlo@caione.org>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Jerome Brunet <jbrunet@baylibre.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Hanjie,
-
-On Thu, Jan 2, 2020 at 1:30 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
-[...]
-> >> -               if (i == USB2_OTG_PHY) {
-> >> +               if (priv->soc_id == MESON_SOC_G12A && i == USB2_OTG_PHY) {
-> > on GXL we have two PHYs (0 and 1), the second one is OTG capable
-> > on GXM we have three PHYs (0..2), the second one is OTG capable
-> > on G12A/G12B we have two PHYs (0 and 1), the second one is OTG capable
+On Mon, Dec 30, 2019 at 8:07 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> On Fri, 27 Dec 2019 at 02:56, Rob Herring <robh@kernel.org> wrote:
 > >
-> > you already wrote that there is only one USB2 PHY on the A1 SoC
-> > is really only the second PHY port ("usb2-phy1" instead of
-> > "usb2-phy0") used on A1?
-> > if "usb2-phy0" is correct then you don't need these checks (there are
-> > more checks like this below)
->
-> Actually, A1 have same phys("usb2-phy0", "usb2-phy1", "usb3-phy0") and register base with G12A.
-> But A1 driver is designed to support host mode with usb2-phy1 only.
-OK, thank you for clarifying this interesting decision made by the HW team
-
-...]
-> >> -       usb_role_switch_unregister(priv->role_switch);
-> >> +       if (priv->soc_id == MESON_SOC_G12A)
-> >> +               usb_role_switch_unregister(priv->role_switch);
-> > I didn't expect this because in _probe usb_role_switch_register is still called
-> > on A1 we now call usb_role_switch_register() but we never call
-> > usb_role_switch_unregister()
+> > On Mon, Dec 16, 2019 at 08:19:29PM +0800, Chunyan Zhang wrote:
+> > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > >
+> > > add a new bindings to describe sc9863a clock compatible string.
+> > >
+> > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > > ---
+> > >  .../bindings/clock/sprd,sc9863a-clk.yaml      | 77 +++++++++++++++++++
+> > >  1 file changed, 77 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> > > new file mode 100644
+> > > index 000000000000..881f0a0287e5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+> > > @@ -0,0 +1,77 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +# Copyright 2019 Unisoc Inc.
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/clock/sprd,sc9863a-clk.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: SC9863A Clock Control Unit Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Orson Zhai <orsonzhai@gmail.com>
+> > > +  - Baolin Wang <baolin.wang7@gmail.com>
+> > > +  - Chunyan Zhang <zhang.lyra@gmail.com>
+> > > +
+> > > +properties:
+> > > +  "#clock-cells":
+> > > +    const: 1
+> > > +
+> > > +  compatible :
+> > > +    enum:
+> > > +      - sprd,sc9863a-ap-clk
+> > > +      - sprd,sc9863a-pmu-gate
+> > > +      - sprd,sc9863a-pll
+> > > +      - sprd,sc9863a-mpll
+> > > +      - sprd,sc9863a-rpll
+> > > +      - sprd,sc9863a-dpll
+> > > +      - sprd,sc9863a-aon-clk
+> > > +      - sprd,sc9863a-apahb-gate
+> > > +      - sprd,sc9863a-aonapb-gate
+> > > +      - sprd,sc9863a-mm-gate
+> > > +      - sprd,sc9863a-mm-clk
+> > > +      - sprd,sc9863a-vspahb-gate
+> > > +      - sprd,sc9863a-apapb-gate
 > >
+> > These will probably need to be split to separate schemas for the reasons
+> > below...
+> >
+> > > +
+> > > +  clocks:
+> > > +    description: |
+> > > +      The input parent clock(s) phandle for this clock, only list fixed
+> > > +      clocks which are decleared in devicetree.
+> >
+> > typo.
+> >
+> > You need to define how many clocks.
 >
-> Actually, usb_role_switch_register() can be called only in G12A.
+> Ok, will add a define of maxItems.
 >
-> dwc3_meson_g12a_probe()
->          ...
->          if (priv->soc_id != MESON_SOC_G12A)
->                  goto setup_pm_runtime;
-I completely missed that, thank you for clarifying it
-
+> >
+> > > +
+> > > +  clock-names:
+> > > +    description: |
+> > > +      Clock name strings used for driver to reference.
+> >
+> > You need to list out the names.
+> >
+> > > +
+> > > +  reg:
+> > > +    description: |
+> > > +      Contain the registers base address and length. It must be configured
+> > > +      only if no 'sprd,syscon' under the node.
+> > > +
+> > > +  sprd,syscon:
+> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> > > +    description: |
+> > > +      The phandle to the syscon which is in the same address area with
+> > > +      the clock, and so we can get regmap for the clocks from the
+> > > +      syscon device.
+> >
+> > It is preferred to make the clock node a child of the syscon and then
+> > you don't need this property.
 >
-> Same with second suggestion, this different SoC extra logic could avoided by add constraints
-> to .yaml.
-> I will do this in next version.
-that would be awesome if it works out!
+> According to the hardware topology, any clocks are not belonged to
+> syscon, like described here, this phandle is only used to get virtual
+> map address for clocks which have the same phsical address base with
+> one syscon.
+>
+> In the past, clocks were defined like below:
+>     apahb_gate: apahb-gate {
+>       compatible = "sprd,sc9863a-apahb-gate";
+>       reg = <0 0x20e00000 0 0x1000>;
+>       #clock-cells = <1>;
+>     };
+>
+> And there was also a syscon which had the same base address like below:
+> ap_ahb_regs: syscon@20e00000 {
+> compatible = "sprd,sc9863a-glbregs", "syscon";
+> reg = <0 0x20e00000 0 0x4000>;
+> };
+>
+> To avoid one phsical address was remapped more than one time, I think
+> using the mapped address by syscon directly would be better.
+> Any other suggestions are very appreciated.
 
+I'm only suggesting you change the location of the node and get the
+syscon by getting the parent node. IOW, do this:
 
-Martin
+ap_ahb_regs: syscon@20e00000 {
+    compatible = "sprd,sc9863a-glbregs", "syscon";
+    reg = <0 0x20e00000 0 0x4000>;
+
+    apahb_gate: apahb-gate {
+        compatible = "sprd,sc9863a-apahb-gate";
+        #clock-cells = <1>;
+    };
+};
+
+Now, if there is a sub range of registers for the clocks that are
+contiguous, then apahb-gate should have a 'reg' property too (and
+ranges in the parent). Linux will not use that, but it's a more
+complete description of the h/w.
+
+Rob
