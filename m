@@ -2,563 +2,129 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48250C2D0DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2914CC3276C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06333222C3
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4D321655
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:52:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="R1W6cXF5"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="pt+8L1kf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbgABVnU (ORCPT
+        id S1725876AbgABVw5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 16:43:20 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:28027 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgABVnU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 16:43:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578001394;
-        s=strato-dkim-0002; d=dawncrow.de;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=2ybO91+sIGWWiqva4k0hPFQJ3Ojd56EgxL+m2iZs7b8=;
-        b=R1W6cXF5XlBVP+V7tWepYs/Liou8oFfkqw8MRClBFgotgsmUEJrKjw1XVFdbI92UFZ
-        dehbcmoir9pwRPpEYGgaxBwdrwhYA3/X/VRhdlSrnIZFf14QCWD+JbgWnQ+kf/V2V6bd
-        hQlJ9zHYtCdzl0JUZXzywHM9FY3GHNG8nkxblDOrQjYwK3Sl7UNX+AY6qBKAqHWDeglG
-        38QHdngONDaHJRMvRKhFTdzQE8QSo8ktTcA+WgLYGROgnXg245/JCCU8/iQiZ1HMF4XW
-        5aBTGeUKBCoHlbyu1ber6zyfj+BPiRT35XVgMuO4s191v4S8iEVOycpfN56CN+A0hTBJ
-        /ddQ==
-X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZGGjY6ptdusOaLnXzn3ovD+FrFdXyk="
-X-RZG-CLASS-ID: mo00
-Received: from tesla.fritz.box
-        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
-        with ESMTPSA id I099d1w02LhALOJ
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 2 Jan 2020 22:43:10 +0100 (CET)
-From:   =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>
-To:     linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com,
-        bcousson@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] ARM: dts: Add omap3-echo
-Date:   Thu,  2 Jan 2020 22:43:04 +0100
-Message-Id: <20200102214304.8225-2-nerv@dawncrow.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200102214304.8225-1-nerv@dawncrow.de>
-References: <20200102214304.8225-1-nerv@dawncrow.de>
+        Thu, 2 Jan 2020 16:52:57 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40993 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbgABVw5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 16:52:57 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c26so40227853eds.8;
+        Thu, 02 Jan 2020 13:52:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hvu2XgZLIAybTxeXvSxciwNCDI/QTjrV4RLf06zuwtk=;
+        b=pt+8L1kfxsX0Xxqv1s32vYhKZ0Ehx0enq8/6v/tV9pcIelS/duSghfq9QbBGzbWmtr
+         K7ef23N6Wc1GG6zhr+FtBE1UzCgHZq33Wc4wop1pvAc0TwGWv6IyTQHw32qhdqEP0NTI
+         RnZKGzNyx4U9n+jtQVCpKI7TxoG5iNG8RtI7ULvxf1ivAPLvjrDrXBBi1/FZpnmJgHsI
+         5RWeO7GsrQe5v/h+OB2aOQVQYgU49ciDf8wFuizGVYTXnMFnbftDO+wSVmKi1/AUdeii
+         V1F8yfXoAWRUvHuq6Q8MfmZLQ5ENJYt5dIwrFo/vJ99osCuIDlsOPQJL7iKy/RNKzMS1
+         CAcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hvu2XgZLIAybTxeXvSxciwNCDI/QTjrV4RLf06zuwtk=;
+        b=AYeGr3qZIx31mf9/1D+6lYyfebdJ+vSK7GUc3jXfa5gaeJQW7B6ZaS5SSGh9YR13BB
+         uSgcfyqaIp0w0Nes6Y4iOVuHc0zH8q5bJIwCqmKSn383UwDO/X3FIhA7ETAgPcxDDixB
+         Vd/hps4755cdHl3jISKCyXOJWiY2i9xNrDEWHe1XN4pgDh1xka8sgUc4b4RMUXksKyJZ
+         BWXXyyA0CJ8ULFhCNgP0HPsO9kWvojxD28MOUnbsPOu9IkKu0mIDAwTBZg9hZitNBrMv
+         FeCDJwHAWhY4x2y6F1WkqePmcbdYOQvdng5K7AepVOCx5k7XwslZam3KCNRSln3abRGh
+         XZSA==
+X-Gm-Message-State: APjAAAXgNreoetF5FFeQ4Lny+ziJ1aoiNDdTZ1wMNO+JoeXlfX21QG78
+        kQbWO8G7aS98GaW+khZRJXZ4tFv1K7BJwkIW4ANnYA==
+X-Google-Smtp-Source: APXvYqyLuGqANpkEmw72e7jynDm+fNMM49TQnwz/BBk2Zt26OUL6Fve8YN1sQTqqR68Jp8kkufLSn3wjnTCMkt89RHE=
+X-Received: by 2002:aa7:d6d1:: with SMTP id x17mr53418384edr.57.1578001975370;
+ Thu, 02 Jan 2020 13:52:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com>
+ <1577428606-69855-5-git-send-email-hanjie.lin@amlogic.com>
+ <CAFBinCD8V-Swihz+VJ780sXJtM9cXprDcGCHVuHjjCx0DEOodQ@mail.gmail.com> <d66abc21-1440-503b-3515-6c495bf0db80@amlogic.com>
+In-Reply-To: <d66abc21-1440-503b-3515-6c495bf0db80@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 2 Jan 2020 22:52:44 +0100
+Message-ID: <CAFBinCAEO=c+5oZrUmW=YhqD5tQkm0NUSbgwxHYqL2UgcK4c5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
+To:     Hanjie Lin <hanjie.lin@amlogic.com>
+Cc:     Rob Herring <robh@kernel.org>, Victor Wan <victor.wan@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-usb@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        devicetree@vger.kernel.org, Liang Yang <liang.yang@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Carlo Caione <carlo@caione.org>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is the first generation Amazon Echo from 2016.
-Audio support is not yet implemented.
+Hello Hanjie,
 
-Signed-off-by: André Hentschel <nerv@dawncrow.de>
----
+On Thu, Jan 2, 2020 at 1:30 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+[...]
+> >> -               if (i == USB2_OTG_PHY) {
+> >> +               if (priv->soc_id == MESON_SOC_G12A && i == USB2_OTG_PHY) {
+> > on GXL we have two PHYs (0 and 1), the second one is OTG capable
+> > on GXM we have three PHYs (0..2), the second one is OTG capable
+> > on G12A/G12B we have two PHYs (0 and 1), the second one is OTG capable
+> >
+> > you already wrote that there is only one USB2 PHY on the A1 SoC
+> > is really only the second PHY port ("usb2-phy1" instead of
+> > "usb2-phy0") used on A1?
+> > if "usb2-phy0" is correct then you don't need these checks (there are
+> > more checks like this below)
+>
+> Actually, A1 have same phys("usb2-phy0", "usb2-phy1", "usb3-phy0") and register base with G12A.
+> But A1 driver is designed to support host mode with usb2-phy1 only.
+OK, thank you for clarifying this interesting decision made by the HW team
 
-v2: Don't disable sgx, as the previous patch changes dtsi files accordingly
-v3: Include dm3725.dtsi
+...]
+> >> -       usb_role_switch_unregister(priv->role_switch);
+> >> +       if (priv->soc_id == MESON_SOC_G12A)
+> >> +               usb_role_switch_unregister(priv->role_switch);
+> > I didn't expect this because in _probe usb_role_switch_register is still called
+> > on A1 we now call usb_role_switch_register() but we never call
+> > usb_role_switch_unregister()
+> >
+>
+> Actually, usb_role_switch_register() can be called only in G12A.
+>
+> dwc3_meson_g12a_probe()
+>          ...
+>          if (priv->soc_id != MESON_SOC_G12A)
+>                  goto setup_pm_runtime;
+I completely missed that, thank you for clarifying it
 
-I have local patches for the microphone array, but cleaning that up will take some time.
-Audio output seems to be even harder work...
-You can find a tutorial on how to boot the Echo here:
-https://labs.f-secure.com/archive/alexa-are-you-listening/
+>
+> Same with second suggestion, this different SoC extra logic could avoided by add constraints
+> to .yaml.
+> I will do this in next version.
+that would be awesome if it works out!
 
- arch/arm/boot/dts/Makefile       |   1 +
- arch/arm/boot/dts/omap3-echo.dts | 462 +++++++++++++++++++++++++++++++
- 2 files changed, 463 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-echo.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b21b3a64641a..923dabc09203 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -685,6 +685,7 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
- 	omap3-devkit8000.dtb \
- 	omap3-devkit8000-lcd43.dtb \
- 	omap3-devkit8000-lcd70.dtb \
-+	omap3-echo.dtb \
- 	omap3-evm.dtb \
- 	omap3-evm-37xx.dtb \
- 	omap3-gta04a3.dtb \
-diff --git a/arch/arm/boot/dts/omap3-echo.dts b/arch/arm/boot/dts/omap3-echo.dts
-new file mode 100644
-index 000000000000..f892e85d0ffc
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-echo.dts
-@@ -0,0 +1,462 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019 André Hentschel <nerv@dawncrow.de>
-+ */
-+/dts-v1/;
-+
-+#include "dm3725.dtsi"
-+
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Amazon Echo (first generation)";
-+	compatible = "amazon,omap3-echo", "ti,omap3630", "ti,omap3";
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vdd1_reg>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0xc600000>; /* 198 MB */
-+	};
-+
-+	vcc5v: fixedregulator0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc3v3: fixedregulator1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc1v8: fixedregulator2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio1 21 GPIO_ACTIVE_LOW>;
-+		post-power-on-delay-ms = <40>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&button_pins>;
-+
-+		mute-button {
-+			label = "mute";
-+			linux,code = <KEY_MUTE>;
-+			gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;	/* GPIO_70 */
-+			wakeup-source;
-+		};
-+
-+		help-button {
-+			label = "help";
-+			linux,code = <KEY_HELP>;
-+			gpios = <&gpio3 8 GPIO_ACTIVE_LOW>;	/* GPIO_72 */
-+			wakeup-source;
-+		};
-+	};
-+
-+	rotary: rotary-encoder {
-+		compatible = "rotary-encoder";
-+		gpios = <
-+			&gpio3  5 GPIO_ACTIVE_HIGH /* GPIO_69 */
-+			&gpio3 12 GPIO_ACTIVE_HIGH /* GPIO_76 */
-+		>;
-+		linux,axis = <REL_X>;
-+		rotary-encoder,relative-axis;
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+
-+	tps: tps@2d {
-+		reg = <0x2d>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+
-+	lp5523A: lp5523A@32 {
-+		compatible = "national,lp5523";
-+		label = "q1";
-+		reg = <0x32>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+		enable-gpio = <&gpio4 13 GPIO_ACTIVE_HIGH>; /* GPIO_109 */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523B: lp5523B@33 {
-+		compatible = "national,lp5523";
-+		label = "q3";
-+		reg = <0x33>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523C: lp5523C@34 {
-+		compatible = "national,lp5523";
-+		label = "q4";
-+		reg = <0x34>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+
-+	lp5523D: lp552D@35 {
-+		compatible = "national,lp5523";
-+		label = "q2";
-+		reg = <0x35>;
-+		clock-mode = /bits/ 8 <0>; /* LP55XX_CLOCK_AUTO */
-+
-+		chan0 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan1 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan2 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan3 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan4 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan5 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan6 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan7 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+		chan8 {
-+			led-cur = /bits/ 8 <12>;
-+			max-cur = /bits/ 8 <15>;
-+		};
-+	};
-+};
-+
-+#include "tps65910.dtsi"
-+
-+&omap3_pmx_core {
-+	tps_pins: pinmux_tps_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21e0, PIN_INPUT_PULLUP | PIN_OFF_INPUT_PULLUP | PIN_OFF_OUTPUT_LOW | PIN_OFF_WAKEUPENABLE | MUX_MODE0) /* sys_nirq.sys_nirq */ 
-+		>;
-+	};
-+
-+	button_pins: pinmux_button_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x20dc, PIN_INPUT | MUX_MODE4)	/* dss_data0.gpio_70 */
-+			OMAP3_CORE1_IOPAD(0x20e0, PIN_INPUT | MUX_MODE4)	/* dss_data2.gpio_72 */
-+		>;
-+	};
-+
-+	mmc1_pins: pinmux_mmc1_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2144, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_clk.sdmmc1_clk */
-+			OMAP3_CORE1_IOPAD(0x2146, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_cmd.sdmmc1_cmd */
-+			OMAP3_CORE1_IOPAD(0x2148, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat0.sdmmc1_dat0 */
-+			OMAP3_CORE1_IOPAD(0x214a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat1.sdmmc1_dat1 */
-+			OMAP3_CORE1_IOPAD(0x214c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat2.sdmmc1_dat2 */
-+			OMAP3_CORE1_IOPAD(0x214e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc1_dat3.sdmmc1_dat3 */
-+		>;
-+	};
-+
-+	mmc2_pins: pinmux_mmc2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2158, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_clk.sdmmc2_clk */
-+			OMAP3_CORE1_IOPAD(0x215a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_cmd.sdmmc2_cmd */
-+			OMAP3_CORE1_IOPAD(0x215c, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat0.sdmmc2_dat0 */
-+			OMAP3_CORE1_IOPAD(0x215e, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat1.sdmmc2_dat1 */
-+			OMAP3_CORE1_IOPAD(0x2160, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat2.sdmmc2_dat2 */
-+			OMAP3_CORE1_IOPAD(0x2162, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat3.sdmmc2_dat3 */
-+			OMAP3_CORE1_IOPAD(0x2164, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat4.sdmmc2_dat4 */
-+			OMAP3_CORE1_IOPAD(0x2166, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat5.sdmmc2_dat5 */
-+			OMAP3_CORE1_IOPAD(0x2168, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat6.sdmmc2_dat6 */
-+			OMAP3_CORE1_IOPAD(0x216a, PIN_INPUT_PULLUP | MUX_MODE0)		/* sdmmc2_dat7.sdmmc2_dat7 */
-+		>;
-+	};
-+};
-+
-+&omap3_pmx_core2 {
-+	mmc3_pins: pinmux_mmc3_pins {
-+		pinctrl-single,pins = <
-+			OMAP3630_CORE2_IOPAD(0x25d8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_clk.sdmmc3_clk */
-+			OMAP3630_CORE2_IOPAD(0x25da, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_ctl.sdmmc3_cmd */
-+			OMAP3630_CORE2_IOPAD(0x25e2, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d3.sdmmc3_dat3 */
-+			OMAP3630_CORE2_IOPAD(0x25e4, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d4.sdmmc3_dat0 */
-+			OMAP3630_CORE2_IOPAD(0x25e6, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d5.sdmmc3_dat1 */
-+			OMAP3630_CORE2_IOPAD(0x25e8, PIN_INPUT_PULLUP | MUX_MODE2)	/* etk_d6.sdmmc3_dat2 */
-+		>;
-+	};
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	bus-width = <8>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&vmmc_reg>;
-+};
-+
-+&mmc3 {
-+	status = "okay";
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc3_pins>;
-+	non-removable;
-+	disable-wp;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	vmmc-supply = <&vcc3v3>;
-+	vqmmc-supply = <&vcc1v8>;
-+};
-+
-+
-+&tps {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&tps_pins>;
-+
-+	interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+	interrupt-parent = <&intc>;
-+
-+	ti,en-ck32k-xtal;
-+	ti,system-power-controller;
-+
-+	vcc1-supply = <&vcc5v>;
-+	vcc2-supply = <&vcc5v>;
-+	vcc3-supply = <&vcc5v>;
-+	vcc4-supply = <&vcc5v>;
-+	vcc5-supply = <&vcc5v>;
-+	vcc6-supply = <&vcc5v>;
-+	vcc7-supply = <&vcc5v>;
-+	vccio-supply = <&vcc5v>;
-+
-+	regulators {
-+
-+		vio_reg: regulator@1 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd1_reg: regulator@2 {
-+			regulator-name = "vdd_mpu";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		vdd2_reg: regulator@3 {
-+			regulator-name = "vdd_dsp";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd3_reg: regulator@4 {
-+			regulator-name = "vdd_core";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig1_reg: regulator@5 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <2700000>;
-+			regulator-always-on;
-+		};
-+
-+		vdig2_reg: regulator@6 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vpll_reg: regulator@7 {
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <2500000>;
-+			regulator-always-on;
-+		};
-+
-+		vdac_reg: regulator@8 {
-+			regulator-min-microvolt = <1100000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux1_reg: regulator@9 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2850000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux2_reg: regulator@10 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vaux33_reg: regulator@11 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vmmc_reg: regulator@12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
--- 
-2.17.1
-
+Martin
