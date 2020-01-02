@@ -2,127 +2,220 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5808DC3276D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 07:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D559C3276D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2444521835
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 07:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="APZhCqey"
+	by mail.kernel.org (Postfix) with ESMTP id 53FA821734
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577952571;
+	bh=yKk4Yxcs8PbwJF1fYpOt/+cGZY0MXBz9tOWOoJQKoDM=;
+	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
+	b=J7vAn6z8OUCxZ1G8gut9FztP8FH2oRxmYOYfs1+QcMTViGrObTKXSPRe5Iys8DLG9
+	 GfHB9rSwO3L/tP0LPpXAdjYEHCWx01VRbcDhBQvijFaJ2I5DziCCDlveZkqwdMq0AS
+	 sxjRbB2uWwAPo9wBCPNOAg8QjxcBnV243QQunaXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgABH5e (ORCPT
+        id S1727753AbgABIJa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 02:57:34 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54293 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbgABH5d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 02:57:33 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b19so4835210wmj.4
-        for <devicetree@vger.kernel.org>; Wed, 01 Jan 2020 23:57:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UanL6Xg19x3IJk9ON7AVf5trQLWWaJ2V1mNFz4i2lZQ=;
-        b=APZhCqey6B4qED7ETGokXrNnEuOyR9M5iVHr7TkJbN/kb8pcr8dKqESIq+m5v4Pbka
-         LbMt4U7DquYpX6+tWDKArajARZhgiWeg/xAh+/G3yG81hHEclX6mo0LKYKUazrx1+vQ0
-         x12VU1OnfcIX3RqaGrvFyq1zr+Db2M5rYFdsqixq/cr20JaHii0Trkkq5LnQQ2IL0gr1
-         PB70YfwF0+1nwPKzATao4i0beOSWDbcOEEOZ9BeGrZl2MX7fm4bfcVegCMLWctshM6kk
-         eHHZoEL/LoYpD/LUPTsSRQVcrnaPlp+ZEFwaeYieogUeXpQzp0H2sSPylvgcXqDPZf6B
-         M/+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UanL6Xg19x3IJk9ON7AVf5trQLWWaJ2V1mNFz4i2lZQ=;
-        b=JdWHLREGC0oitLwQV5J1A+nE2Zl7U4YETOqsh2C4IFGWKct7LGUkeOe/4nrsUHCXZE
-         jt+LEUiBGNMHjsF4zHha2a0J/p95v8O7RzCS52Z74xh8gCyAiQAFMDVOnL34tl8FzyDn
-         mG2xZ/UX56iyOZgleLZ27XJNOpQXVShzn60d6GmdRjOWZ/aTXplOs9gK9zUqwwpmO/aB
-         QtQrpQSHDM1S8Ke0ExPEoPzxQiHwu4veF56dvVJ8yPkBRzX5URTuFjeYl6RUkJ+KDiUt
-         DGnrh7LQQKo5zHYx9DXYWpCRh7EbnIfKgThtMngRaegPmhwJR24yPCNu+fSGqP+MkLWf
-         qvXA==
-X-Gm-Message-State: APjAAAVGyTwP5NP1houLBDjVgY6vLGVvu+O/3sQrt1jkxerdXLeflFXR
-        7CDr1aEZKY+yL3cOD5GV8lhflg==
-X-Google-Smtp-Source: APXvYqwwGNguWVcv79X0HETbGo9RlTIwQoUP0B3nLtlPehl4xsbv/YUXMNe/5ajm92azqw8ypm1rvg==
-X-Received: by 2002:a7b:c934:: with SMTP id h20mr12871982wml.103.1577951851625;
-        Wed, 01 Jan 2020 23:57:31 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id f1sm55533281wru.6.2020.01.01.23.57.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jan 2020 23:57:30 -0800 (PST)
-Date:   Thu, 2 Jan 2020 07:57:43 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 7/7] iio: position: Add support for Azoteq IQS624/625
- angle sensors
-Message-ID: <20200102075743.GA3591@dell>
-References: <1575851866-18919-1-git-send-email-jeff@labundy.com>
- <1575851866-18919-8-git-send-email-jeff@labundy.com>
- <20191215165328.789e8a16@archlinux>
- <20200101225058.GC14339@labundy.com>
+        Thu, 2 Jan 2020 03:09:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33880 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727714AbgABIJa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jan 2020 03:09:30 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EE2C215A4;
+        Thu,  2 Jan 2020 08:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577952569;
+        bh=yKk4Yxcs8PbwJF1fYpOt/+cGZY0MXBz9tOWOoJQKoDM=;
+        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
+        b=nsBAoR7hGS+zpj6oHxmL46hoZd5ZxIZJWuwShLiZjfIcQS+x0LObrojJVAd5yJiDp
+         TYsrrNT0w2qKObbn4of2dK+/TgxmvbHdKPQB048voAuK474SI8iv/oInhXAZ37oU4z
+         vUGgygKBlgwWUIosCB8XanFDY9Q9kpGan8ALu/nI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200101225058.GC14339@labundy.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
+References: <20191209233305.18619-1-michael@walle.cc> <20191209233305.18619-2-michael@walle.cc> <20191224080536.B0C99206CB@mail.kernel.org> <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+To:     Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
+User-Agent: alot/0.8.1
+Date:   Thu, 02 Jan 2020 00:09:28 -0800
+Message-Id: <20200102080929.0EE2C215A4@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 01 Jan 2020, Jeff LaBundy wrote:
+Quoting Michael Walle (2020-01-01 07:15:32)
+>=20
+> Hi Stephen,
+>=20
+> thanks for the review.
+>=20
+> Am 2019-12-24 09:05, schrieb Stephen Boyd:
+> > Quoting Michael Walle (2019-12-09 15:33:05)
+> >> diff --git a/drivers/clk/clk-fsl-sai.c b/drivers/clk/clk-fsl-sai.c
+> >> new file mode 100644
+> >> index 000000000000..b92054d15ab1
+> >> --- /dev/null
+> >> +++ b/drivers/clk/clk-fsl-sai.c
+> >> @@ -0,0 +1,84 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Freescale SAI BCLK as a generic clock driver
+> >> + *
+> >> + * Copyright 2019 Kontron Europe GmbH
+> >> + */
+> >> +
+> >> +#include <linux/clk-provider.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/slab.h>
+> >> +
+> >> +#define I2S_CSR                0x00
+> >> +#define I2S_CR2                0x08
+> >> +#define CSR_BCE_BIT    28
+> >> +#define CR2_BCD                BIT(24)
+> >> +#define CR2_DIV_SHIFT  0
+> >> +#define CR2_DIV_WIDTH  8
+> >> +
+> >> +struct fsl_sai_clk {
+> >> +       struct clk_divider div;
+> >> +       struct clk_gate gate;
+> >> +       spinlock_t lock;
+> >> +};
+> >> +
+> >> +static void __init fsl_sai_clk_setup(struct device_node *node)
+> >> +{
+> >> +       const char *clk_name =3D node->name;
+> >> +       struct fsl_sai_clk *sai_clk;
+> >> +       unsigned int num_parents;
+> >> +       const char *parent_name;
+> >> +       void __iomem *base;
+> >> +       struct clk_hw *hw;
+> >> +
+> >> +       num_parents =3D of_clk_get_parent_count(node);
+> >> +       if (!num_parents) {
+> >> +               pr_err("%s: no parent found", clk_name);
+> >> +               return;
+> >> +       }
+> >> +
+> >> +       parent_name =3D of_clk_get_parent_name(node, 0);
+> >=20
+> > Could this use the new way of specifying clk parents so that we don't
+> > have to query DT for parent names and just let the core framework do it
+> > whenever it needs to?
+>=20
+> you mean specifying parent_data with .index =3D 0? Seems like=20
+> clk_composite
+> does not support this. The parent can only be specified by supplying the
+> clock names.
+>=20
+> I could add that in a separate patch. What do you think about the
+> following new functions, where a driver can use parent_data instead
+> of parent_names.
 
-> Hi Jonathan,
-> 
-> Thank you for your continued support on this project.
-> 
-> On Sun, Dec 15, 2019 at 04:53:28PM +0000, Jonathan Cameron wrote:
-> > On Mon, 9 Dec 2019 00:38:41 +0000
-> > Jeff LaBundy <jeff@labundy.com> wrote:
-> > 
-> > > This patch adds support for the Azoteq IQS624 and IQS625 angular position
-> > > sensors, capable of reporting the angle of a rotating shaft down to 1 and
-> > > 10 degrees of accuracy, respectively.
-> > > 
-> > > This patch also introduces a home for linear and angular position sensors.
-> > > Unlike resolvers, they are typically contactless and use the Hall effect.
-> > > 
-> > > Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> > 
-> > Looks good
-> > 
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > 
-> > My current assumption is that Lee will take this lot via an immutable branch
-> > in MFD once it's ready.  Shout if a different path makes sense.
-> 
-> Same here. @Lee, please let us know if you disagree.
+I started doing this in
+https://lkml.kernel.org/r/20190830150923.259497-1-sboyd@kernel.org but I
+never got around to the composite clks. Sounds fine to add this new API
+for your use case.
 
-That's fine.
+>=20
+> +struct clk *clk_register_composite_pdata(struct device *dev, const char =
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> *name,
+> +               const struct clk_parent_data *parent_data,
+> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
+> +               struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
+> +               struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
+> +               unsigned long flags);
+>=20
+> +struct clk_hw *clk_hw_register_composite_pdata(struct device *dev,
+> +               const char *name, const struct clk_parent_data=20
+> *parent_data,
+> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
+> +               struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
+> +               struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
+> +               unsigned long flags);
+>=20
+>=20
+> >> +
+> >> +       sai_clk =3D kzalloc(sizeof(*sai_clk), GFP_KERNEL);
+> >> +       if (!sai_clk)
+> >> +               return;
+> >> +
+> >> +       base =3D of_iomap(node, 0);
+> >> +       if (base =3D=3D NULL) {
+> >> +               pr_err("%s: failed to map register space", clk_name);
+> >> +               goto err;
+> >> +       }
+> >> +
+> >> +       spin_lock_init(&sai_clk->lock);
+> >> +
+> >> +       sai_clk->gate.reg =3D base + I2S_CSR;
+> >> +       sai_clk->gate.bit_idx =3D CSR_BCE_BIT;
+> >> +       sai_clk->gate.lock =3D &sai_clk->lock;
+> >> +
+> >> +       sai_clk->div.reg =3D base + I2S_CR2;
+> >> +       sai_clk->div.shift =3D CR2_DIV_SHIFT;
+> >> +       sai_clk->div.width =3D CR2_DIV_WIDTH;
+> >> +       sai_clk->div.lock =3D &sai_clk->lock;
+> >> +
+> >> +       /* set clock direction, we are the BCLK master */
+> >=20
+> > Should this configuration come from DT somehow?
+>=20
+> No, we are always master, because as a slave, there would be no clock
+> output ;)
+
+Got it.
+
+>=20
+> >> +       writel(CR2_BCD, base + I2S_CR2);
+> >> +
+> >> +       hw =3D clk_hw_register_composite(NULL, clk_name, &parent_name,=
+=20
+> >> 1,
+> >> +                                      NULL, NULL,
+> >> +                                      &sai_clk->div.hw,=20
+> >> &clk_divider_ops,
+> >> +                                      &sai_clk->gate.hw,=20
+> >> &clk_gate_ops,
+> >> +                                      CLK_SET_RATE_GATE);
+> >> +       if (IS_ERR(hw))
+> >> +               goto err;
+> >> +
+> >> +       of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
+> >> +
+> >> +       return;
+> >> +
+> >> +err:
+> >> +       kfree(sai_clk);
+> >> +}
+> >> +
+> >> +CLK_OF_DECLARE(fsl_sai_clk, "fsl,vf610-sai-clock",=20
+> >> fsl_sai_clk_setup);
+> >=20
+> > Is there a reason this can't be a platform device driver?
+>=20
+> I don't think so, the user will be a sound codec for now. I'll convert=20
+> it
+> to a platform device, in that case I could also use the devm_ variants.
+>=20
+
+Awesome. Thanks!
+
