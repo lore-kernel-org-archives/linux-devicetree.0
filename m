@@ -2,215 +2,86 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DA0C3276F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0FCC2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C299F2465B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9BF20866
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgABOMy (ORCPT
+        id S1728460AbgABOc5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:12:54 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:36506 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728449AbgABOMx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:12:53 -0500
-Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id lSCn2100L5USYZQ01SCnTk; Thu, 02 Jan 2020 15:12:51 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1in1DT-0006OY-Do; Thu, 02 Jan 2020 15:12:47 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1in1DT-000072-CB; Thu, 02 Jan 2020 15:12:47 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
+        Thu, 2 Jan 2020 09:32:57 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:48084 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728425AbgABOc5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:32:57 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 002EWdLl015008, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 002EWdLl015008
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 2 Jan 2020 22:32:39 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTITCASV02.realtek.com.tw (172.21.6.19) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Thu, 2 Jan 2020 22:32:39 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 2 Jan 2020 22:32:39 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
+ RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
+ 15.01.1779.005; Thu, 2 Jan 2020 22:32:39 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Chris Brandt <chris.brandt@renesas.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/3] drm: tiny: st7735r: Add support for Okaya RH128128T
-Date:   Thu,  2 Jan 2020 15:12:46 +0100
-Message-Id: <20200102141246.370-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200102141246.370-1-geert+renesas@glider.be>
-References: <20200102141246.370-1-geert+renesas@glider.be>
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [RFC 03/11] arm64: dts: realtek: rtd129x: Add chip info node
+Thread-Topic: [RFC 03/11] arm64: dts: realtek: rtd129x: Add chip info node
+Thread-Index: AQHVkedK7O6Ji1Cvt0Gs/gwTj0NGGKfXzwow
+Date:   Thu, 2 Jan 2020 14:32:39 +0000
+Message-ID: <55c8692a0650426db7b78d5ce77ed08f@realtek.com>
+References: <20191103013645.9856-1-afaerber@suse.de>
+ <20191103013645.9856-4-afaerber@suse.de>
+In-Reply-To: <20191103013645.9856-4-afaerber@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [114.37.143.250]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the Okaya RH128128T display to the st7735r driver.
-
-The RH128128T is a 128x128 1.44" TFT display driven by a Sitronix
-ST7715R TFT Controller/Driver.  The latter is very similar to the
-ST7735R, and can be handled by the existing st7735r driver.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpu/drm/tiny/st7735r.c | 65 ++++++++++++++++++++++++++++------
- 1 file changed, 55 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/tiny/st7735r.c b/drivers/gpu/drm/tiny/st7735r.c
-index 3f4487c716848cf8..05d162e76d8481e5 100644
---- a/drivers/gpu/drm/tiny/st7735r.c
-+++ b/drivers/gpu/drm/tiny/st7735r.c
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * DRM driver for Sitronix ST7735R panels
-+ * DRM driver for Sitronix ST7715R/ST7735R panels
-  *
-  * Copyright 2017 David Lechner <david@lechnology.com>
-+ * Copyright (C) 2019 Glider bvba
-  */
- 
- #include <linux/backlight.h>
-@@ -10,6 +11,7 @@
- #include <linux/dma-buf.h>
- #include <linux/gpio/consumer.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/property.h>
- #include <linux/spi/spi.h>
- #include <video/mipi_display.h>
-@@ -37,12 +39,28 @@
- #define ST7735R_MY	BIT(7)
- #define ST7735R_MX	BIT(6)
- #define ST7735R_MV	BIT(5)
-+#define ST7735R_RGB	BIT(3)
-+
-+struct st7735r_cfg {
-+	const struct drm_display_mode mode;
-+	unsigned int left_offset;
-+	unsigned int top_offset;
-+	unsigned int write_only:1;
-+	unsigned int rgb:1;		/* RGB (vs. BGR) */
-+};
-+
-+struct st7735r_priv {
-+	struct mipi_dbi_dev dbidev;	/* Must be first for .release() */
-+	unsigned int rgb:1;
-+};
- 
- static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
- 				      struct drm_crtc_state *crtc_state,
- 				      struct drm_plane_state *plane_state)
- {
- 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(pipe->crtc.dev);
-+	struct st7735r_priv *priv = container_of(dbidev, struct st7735r_priv,
-+						 dbidev);
- 	struct mipi_dbi *dbi = &dbidev->dbi;
- 	int ret, idx;
- 	u8 addr_mode;
-@@ -87,6 +105,10 @@ static void jd_t18003_t01_pipe_enable(struct drm_simple_display_pipe *pipe,
- 		addr_mode = ST7735R_MY | ST7735R_MV;
- 		break;
- 	}
-+
-+	if (priv->rgb)
-+		addr_mode |= ST7735R_RGB;
-+
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_ADDRESS_MODE, addr_mode);
- 	mipi_dbi_command(dbi, MIPI_DCS_SET_PIXEL_FORMAT,
- 			 MIPI_DCS_PIXEL_FMT_16BIT);
-@@ -116,8 +138,17 @@ static const struct drm_simple_display_pipe_funcs jd_t18003_t01_pipe_funcs = {
- 	.prepare_fb	= drm_gem_fb_simple_display_pipe_prepare_fb,
- };
- 
--static const struct drm_display_mode jd_t18003_t01_mode = {
--	DRM_SIMPLE_MODE(128, 160, 28, 35),
-+static const struct st7735r_cfg jd_t18003_t01_cfg = {
-+	.mode		= { DRM_SIMPLE_MODE(128, 160, 28, 35) },
-+	/* Cannot read from Adafruit 1.8" display via SPI */
-+	.write_only	= true,
-+};
-+
-+static const struct st7735r_cfg rh128128t_cfg = {
-+	.mode		= { DRM_SIMPLE_MODE(128, 128, 25, 26) },
-+	.left_offset	= 2,
-+	.top_offset	= 3,
-+	.rgb		= true,
- };
- 
- DEFINE_DRM_GEM_CMA_FOPS(st7735r_fops);
-@@ -136,13 +167,14 @@ static struct drm_driver st7735r_driver = {
- };
- 
- static const struct of_device_id st7735r_of_match[] = {
--	{ .compatible = "jianda,jd-t18003-t01" },
-+	{ .compatible = "jianda,jd-t18003-t01", .data = &jd_t18003_t01_cfg },
-+	{ .compatible = "okaya,rh128128t", .data = &rh128128t_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, st7735r_of_match);
- 
- static const struct spi_device_id st7735r_id[] = {
--	{ "jd-t18003-t01", 0 },
-+	{ "jd-t18003-t01", (uintptr_t)&jd_t18003_t01_cfg },
- 	{ },
- };
- MODULE_DEVICE_TABLE(spi, st7735r_id);
-@@ -150,17 +182,26 @@ MODULE_DEVICE_TABLE(spi, st7735r_id);
- static int st7735r_probe(struct spi_device *spi)
- {
- 	struct device *dev = &spi->dev;
-+	const struct st7735r_cfg *cfg;
- 	struct mipi_dbi_dev *dbidev;
-+	struct st7735r_priv *priv;
- 	struct drm_device *drm;
- 	struct mipi_dbi *dbi;
- 	struct gpio_desc *dc;
- 	u32 rotation = 0;
- 	int ret;
- 
--	dbidev = kzalloc(sizeof(*dbidev), GFP_KERNEL);
--	if (!dbidev)
-+	cfg = of_device_get_match_data(&spi->dev);
-+	if (!cfg)
-+		cfg = (void *)spi_get_device_id(spi)->driver_data;
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
- 		return -ENOMEM;
- 
-+	dbidev = &priv->dbidev;
-+	priv->rgb = cfg->rgb;
-+
- 	dbi = &dbidev->dbi;
- 	drm = &dbidev->drm;
- 	ret = devm_drm_dev_init(dev, drm, &st7735r_driver);
-@@ -193,10 +234,14 @@ static int st7735r_probe(struct spi_device *spi)
- 	if (ret)
- 		return ret;
- 
--	/* Cannot read from Adafruit 1.8" display via SPI */
--	dbi->read_commands = NULL;
-+	if (cfg->write_only)
-+		dbi->read_commands = NULL;
-+
-+	dbidev->left_offset = cfg->left_offset;
-+	dbidev->top_offset = cfg->top_offset;
- 
--	ret = mipi_dbi_dev_init(dbidev, &jd_t18003_t01_pipe_funcs, &jd_t18003_t01_mode, rotation);
-+	ret = mipi_dbi_dev_init(dbidev, &jd_t18003_t01_pipe_funcs, &cfg->mode,
-+				rotation);
- 	if (ret)
- 		return ret;
- 
--- 
-2.17.1
-
+QWRkIFN0YW5sZXkgQ2hhbmcgZm9yIHJldmlldy4NCg0KPiBBZGQgYSBEVCBub2RlIGZvciBjaGlw
+IGlkZW50aWZpY2F0aW9uLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxh
+ZmFlcmJlckBzdXNlLmRlPg0KPiAtLS0NCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9y
+dGQxMjl4LmR0c2kgfCA1ICsrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCsp
+DQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yZWFsdGVrL3J0ZDEyOXgu
+ZHRzaQ0KPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVhbHRlay9ydGQxMjl4LmR0c2kNCj4gaW5k
+ZXggNDQzMzExNDQ3NmY1Li4xNWE3YzI0OTE1NWQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvcmVhbHRlay9ydGQxMjl4LmR0c2kNCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9yZWFsdGVrL3J0ZDEyOXguZHRzaQ0KPiBAQCAtODQsNiArODQsMTEgQEANCj4gIAkJCXN0YXR1
+cyA9ICJkaXNhYmxlZCI7DQo+ICAJCX07DQo+IA0KPiArCQljaGlwLWluZm9AOTgwMWEyMDAgew0K
+PiArCQkJY29tcGF0aWJsZSA9ICJyZWFsdGVrLHJ0ZDExOTUtY2hpcCI7DQo+ICsJCQlyZWcgPSA8
+MHg5ODAxYTIwMCAweDg+Ow0KPiArCQl9Ow0KPiArDQo+ICAJCXVhcnQxOiBzZXJpYWxAOTgwMWIy
+MDAgew0KPiAgCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWFwYi11YXJ0IjsNCj4gIAkJCXJlZyA9
+IDwweDk4MDFiMjAwIDB4MTAwPjsNCj4gLS0NCj4gMi4xNi40DQo+IA0KPiANCj4gX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gbGludXgtcmVhbHRlay1z
+b2MgbWFpbGluZyBsaXN0DQo+IGxpbnV4LXJlYWx0ZWstc29jQGxpc3RzLmluZnJhZGVhZC5vcmcN
+Cj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yZWFs
+dGVrLXNvYw0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZv
+cmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
