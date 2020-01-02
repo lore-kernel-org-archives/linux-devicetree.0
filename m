@@ -2,70 +2,162 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01062C2D0DF
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 01:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52350C2D0DE
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 02:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56162253D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 01:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F21D215A4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 02:06:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="XwQN52HF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbgABB1U (ORCPT
+        id S1727579AbgABCGC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jan 2020 20:27:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:43514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgABB1U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Jan 2020 20:27:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D369ADA7;
-        Wed,  1 Jan 2020 17:27:19 -0800 (PST)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6DA593F703;
-        Wed,  1 Jan 2020 17:27:18 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 1/3] ARM: dts: sun8i: R40: Upgrade GICC reg size to 8K
-Date:   Thu,  2 Jan 2020 01:26:55 +0000
-Message-Id: <20200102012657.9278-2-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20200102012657.9278-1-andre.przywara@arm.com>
-References: <20200102012657.9278-1-andre.przywara@arm.com>
+        Wed, 1 Jan 2020 21:06:02 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38588 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbgABCGC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 21:06:02 -0500
+Received: by mail-io1-f68.google.com with SMTP id v3so37078389ioj.5
+        for <devicetree@vger.kernel.org>; Wed, 01 Jan 2020 18:06:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UHVPj5/UF7FmXw5E/6Coz8EOtDK8UfYd1n1yDId2PbU=;
+        b=XwQN52HFHiN4fB5kwYTv9zn1C76bI0Iz71wHNgvVewPn60QLGI/53rhJcn0f8qP7wG
+         sYdC1zIp6TQZ1YvNlqMDGXJ9S/iB8GP3sVWi03ibUV1M0gGPnF9lkzJYdq5Sihm1aCxD
+         JQsB5mHL8hEMMmYlnX96DExdAaIOIfSU1FKTs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UHVPj5/UF7FmXw5E/6Coz8EOtDK8UfYd1n1yDId2PbU=;
+        b=RPFKjT5cdWEJ5xtY460IuR8k5xO3aH91UkfuZYUbhuLTDkzFqJYepOAx63N461poK7
+         Ux/qyV6RPYjHMJzVT6kc/NaSOZCLawSN65zlS6v11N4XrUQtuVQ6ftY+aUQFgmI/6saN
+         pm9Ny9beKjVM1ZMbWKj1Izz7COXgQcfs7OpoOb5RQGCIJnQ1EZKhGZ3lcyJz7FVPq84X
+         SUFV6RMl/BXfJXNP75b74PqR4JqAatbqxCvNvxvW+83CY9iLGyt+yncL3MSFTRH/CAGL
+         ogtn647YQO4AyBpYZNqucx7fnGH3km9hFI9o0sm3jwAJXgJ0WDmTQN3nTdEsh9+iYj9F
+         B7Ww==
+X-Gm-Message-State: APjAAAUCCtYJYfny1nkZmIOQTWtijBdk5SsJSWFCK4h+ja803vv3cXzP
+        /OSiugJeRu8mEp+Ee+r2pHM1DqRklCAfTqAW8t3ifQ==
+X-Google-Smtp-Source: APXvYqwGWLjQw3gcajosmfzURd5ps+qyn12aquFWSg8sHauYhmdDjIpsc9fULZuWJKPuLIwEScJP+9CPNw9R1+t3PaY=
+X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr64525970jad.136.1577930761321;
+ Wed, 01 Jan 2020 18:06:01 -0800 (PST)
+MIME-Version: 1.0
+References: <20191217102930.26102-1-mtwget@gmail.com>
+In-Reply-To: <20191217102930.26102-1-mtwget@gmail.com>
+From:   Matt Ranostay <matt.ranostay@konsulko.com>
+Date:   Thu, 2 Jan 2020 10:05:49 +0800
+Message-ID: <CAJCx=gnyF69PxHVh38nP1AYwi=Tt4J9bYYR-w00uGODUfCrKyg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
+ Dynament Premier series single gas sensor
+To:     YuDong Zhang <mtwget@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The GIC used in the R40 SoC is an ARM GIC-400 with virtualization support,
-so let's advertise the full 8K region of the GICC MMIO frame to enable
-KVM's usage of the GIC (as we do already for all other SoCs).
+On Tue, Dec 17, 2019 at 6:29 PM YuDong Zhang <mtwget@gmail.com> wrote:
+>
+> Dynament Premier series single gas sensor.
+>
+> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
+> ---
+>  .../iio/chemical/dynament,premier.yaml        | 39 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  MAINTAINERS                                   |  1 +
+>  3 files changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+> new file mode 100644
+> index 000000000000..e2bbae4dd086
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Dynament Premier series single gas sensor
+> +
+> +maintainers:
+> +  - YuDong Zhang <mtwget@gmail.com>
+> +
+> +description: |
+> +  single gas sensor capable of measuring gas concentration of dust
+> +  particles, multi-gas sensor are not supported.
+> +
+> +  Specifications about the sensor can be found at:
+> +    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
 
-Tested by running KVM on a Bananapi M2 Berry.
+Typo of sample?
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- arch/arm/boot/dts/sun8i-r40.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- Matt
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 82ea0b5b0710..768dffb37117 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -831,7 +831,7 @@
- 		gic: interrupt-controller@1c81000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x01c81000 0x1000>,
--			      <0x01c82000 0x1000>,
-+			      <0x01c82000 0x2000>,
- 			      <0x01c84000 0x2000>,
- 			      <0x01c86000 0x2000>;
- 			interrupt-controller;
--- 
-2.14.5
-
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - dynament,premier
+> +
+> +  vcc-supply:
+> +    description: regulator that provides power to the sensor
+> +
+> +required:
+> +  - compatible
+> +
+> +examples:
+> +  - |
+> +    serial {
+> +      single-gas-sensor {
+> +        compatible = "dynament,premier";
+> +        vcc-supply = <&reg_vcc5v0>;
+> +      };
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 6046f4555852..5afca0586c41 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -261,6 +261,8 @@ patternProperties:
+>      description: Dragino Technology Co., Limited
+>    "^dserve,.*":
+>      description: dServe Technology B.V.
+> +  "^dynament,.*":
+> +    description: Dynament, Ltd.
+>    "^ea,.*":
+>      description: Embedded Artists AB
+>    "^ebs-systart,.*":
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ae228ac7adc9..4842a0afe32b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5796,6 +5796,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
+>  M:     YuDong Zhang <mtwget@gmail.com>
+>  S:     Maintained
+>  F:     drivers/iio/chemical/premier.c
+> +F:     Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
+>
+>  DYNAMIC DEBUG
+>  M:     Jason Baron <jbaron@akamai.com>
+> --
+> 2.24.1
+>
