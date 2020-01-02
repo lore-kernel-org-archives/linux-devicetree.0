@@ -2,159 +2,109 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33F9C2D0DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26A1C2D0DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8697720866
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9121E217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdiUCeOP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ETMcyAji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgABIou (ORCPT
+        id S1727825AbgABIru (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:44:50 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42070 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727756AbgABIot (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 03:44:49 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so56084251otd.9;
-        Thu, 02 Jan 2020 00:44:49 -0800 (PST)
+        Thu, 2 Jan 2020 03:47:50 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34464 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgABIrt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 03:47:49 -0500
+Received: by mail-wr1-f67.google.com with SMTP id t2so38513623wrr.1
+        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 00:47:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
-        b=gdiUCeOPqScjXzrbvIh+ShMJdMtOIFx3qiDxl8Rnx0tRID+ljoSEDWZXifZyy+UDoK
-         ZbP+uX2yH0Lua7XN3AMGacK2rVrdEAdaFX09Pn8/uzG3t01jvXUKjmInkQIVS+QHIezD
-         VXX6JM5ur/SC4XeH73Y6MZ2pf8t8dk3hLl6vy6PahZF9tKuqXwq53iy00PMcaIcImJvz
-         a0qOXjUw9jKbNkcQk34Ejg4DCSj/O8c7yFs5z0bZaMFOy6CrljgugPlFvg6n+X9/iQEw
-         F/xgEeo5JX2ZN4LVxKsTrzXDRQO8ty7llvBlWTz/fa7rkDg9PweY+jOm9fuFBl4kD2F5
-         0bPg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=J3vpyuDp2fSfI1qhxZyNCpDspi8gOZ6c6sySzOGZgtI=;
+        b=ETMcyAjibH5n172XygOMVaHuPRax3MGgc0BbFkqXLH7/36LaaNc+EKQY40lSeUgVnw
+         6DuzTkMGXI7AbpR3gcRRGCyQqMjctZG9PfzGuk61Z/vgxcx0hscCfUbkpF6rMqH7Navk
+         jAVbh1eLBI73S2OfF+vlXQp9PdynXWk+FuRgIfYaVVQ5368gwxaFwa7Q0yf6be0xmAGH
+         PGQtdhh/jBmqLbKtV7B3CKbvvPo6D0NlNbSAfN0UT89zLBGbkD5tkFIqiU1OVytEkBpq
+         ThjtAIVCMfTLXIZWymFgmebd2zdU/3g83MrZexOvp5Y/mrYGMmtVK0yBKC3H8O6Cgi13
+         njxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RJXFVlyRwTqj9HkStatG/uviJjFGvZJlZBeqka9UDNY=;
-        b=RL2nRiSN6pm26gySagtnGSBdpJFox4fSSxM0bkFoFZhavUAvTp9lk1wV+v1BmsvU4y
-         789IjyZYuEBkldfyMvSe82ptq4Lcp0Wsg2j0oscyzeCrYS8hv4+hfVjdZnzMlIcBW03a
-         h5lCgvSY1Is6zfofSLM4K9HIq6mkmTUl8feVUM64lK0hdZUKfXqujfqRtc6UExvz14QJ
-         BfE6oQKFx+/piAnrLsyCrDo1atLPQioJzpHU1HFty4u66VHPjAHTVhU7JrblJDLITEV/
-         tqpyPEomO13AUAPaKlaAL5QNremkrs2coRdNVtfzkEOLGD5WUGDZASA8BwD2ZCs/r8Qy
-         B8CA==
-X-Gm-Message-State: APjAAAVOTxiJbxzCAeuNrYa9Mxeo9kOw8qLrwofBhvqOmJNZlIl3R6fR
-        q2Fe0897JKIDyKcwvobKAl+o5lNXp87uZ9B2bok=
-X-Google-Smtp-Source: APXvYqzOhzS82AptAf2MZPwDekJw6thW0D54iQ6Qt4TuLUMBcVXdHaCHrtJnYpVCXcsxnGiGCP9GyLgDg6gsrK4LUGE=
-X-Received: by 2002:a9d:5c02:: with SMTP id o2mr83617674otk.176.1577954688818;
- Thu, 02 Jan 2020 00:44:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191213084748.11210-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAL_JsqLSYroDZGWksJJ=E+01X=3Tji4+GmK8s3i+d2BJphqiLQ@mail.gmail.com>
- <CA+V-a8uKBuVUQvkoJ9pJYX97Qy3JazTyLCy-2T35gOX77AP8vg@mail.gmail.com> <20191219233129.GA5484@bogus>
-In-Reply-To: <20191219233129.GA5484@bogus>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Jan 2020 08:44:23 +0000
-Message-ID: <CA+V-a8vjwqkH5rYsy_rsHF93d91izsaEwmFXNpYqk3_=_Asd2g@mail.gmail.com>
-Subject: Re: [v2 3/6] of: address: add support to parse PCI outbound-ranges
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=J3vpyuDp2fSfI1qhxZyNCpDspi8gOZ6c6sySzOGZgtI=;
+        b=DmRXRBJcEXP1tM+CAkfYT5gEfwomWXH3+gC7EHqVmQACb6X/JvUZiahxVTQWnRK3Pk
+         mouNpkLUAXjdYB4H2IpiGmvzTNckaQMg5HNGsdk60ZiRfUJoNUHsovU8e9hpHkxd3D7W
+         GomprfJXh+0/QBGj/wBbXxizz4qKBIT6DEZWO0X73J3yBAbuKhwC/Qmz1OUClgbYEvhG
+         5o5NOsRTROafK7UBFRfzg3SglGJCESwDwBMwnDQc6i0m/nv1ui0wdfgujFL3kgCOrVUq
+         qIOmMqzxSxqkqwxgCzW9WUK0xKlidiS1igQbvRSjnTN5YPmcnLmIJM7FkhM6BzfiVuym
+         9Mpw==
+X-Gm-Message-State: APjAAAW2BEhPxCxyEDs2mnOQ2odcOrA/qEADASwsHFr80EYOzrF33x42
+        1o/D2tNHFwFLeQoOXzonwZS3QA==
+X-Google-Smtp-Source: APXvYqylKev69ahCZ35+EK+4UPvdRjneJYVaHT074cYq27+Fas8yAzV9sioz80p55eadrTDO/VC0Sg==
+X-Received: by 2002:adf:dd8a:: with SMTP id x10mr81603053wrl.117.1577954867937;
+        Thu, 02 Jan 2020 00:47:47 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id a16sm54987960wrt.37.2020.01.02.00.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 00:47:47 -0800 (PST)
+Date:   Thu, 2 Jan 2020 08:47:59 +0000
+From:   Lee Jones <lee.jones@linaro.org>
 To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com, Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: bd718x7: Yamlify and add BD71850
+Message-ID: <20200102084759.GB22390@dell>
+References: <20191217084824.GA26539@localhost.localdomain>
+ <20191226221654.GA30474@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191226221654.GA30474@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, 26 Dec 2019, Rob Herring wrote:
 
-On Thu, Dec 19, 2019 at 11:31 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 16, 2019 at 08:49:23AM +0000, Lad, Prabhakar wrote:
-> > Hi Rob,
-> >
-> > Thank you for the review.
-> >
-> > On Fri, Dec 13, 2019 at 8:37 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Dec 13, 2019 at 2:48 AM Lad Prabhakar
-> > > <prabhakar.csengg@gmail.com> wrote:
-> > > >
-> > > > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > this patch adds support to parse PCI outbound-ranges, the
-> > > > outbound-regions are similar to pci ranges except it doesn't
-> > > > have pci address, below is the format for bar-ranges:
-> > > >
-> > > > outbound-ranges = <flags upper32_cpuaddr lower32_cpuaddr
-> > > >                    upper32_size lower32_size>;
-> > >
-> > > You can't just make up a new ranges property. Especially one that
-> > > doesn't follow how 'ranges' works. We already have 'dma-ranges' to
-> > > translate device to memory addresses.
-> > >
-> > > Explain the problem or feature you need, not the solution you came up
-> > > with. Why do you need this and other endpoint bindings haven't?
-> > >
-> > rcar SoC's supports multiple outbound region for mapping the PCI address
-> > locally to the system. This lead to discussion where there exist controllers
-> > which support regions for high/low priority transfer and similarly regions
-> > for large/small memory allocations, as a result a new ranges property was
-> > added, where we can specify the flags which would indicate how the outbound
-> > region can be used during requests.
->
-> What are the flags?
+> On Tue, Dec 17, 2019 at 10:48:24AM +0200, Matti Vaittinen wrote:
+> > Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
+> > the binding document to two separate documents (own for BD71837 and BD71847)
+> > as they have different amount of regulators. This way we can better enforce
+> > the node name check for regulators. ROHM is also providing BD71850 - which
+> > is almost identical to BD71847 - main difference is some initial regulator
+> > states. The BD71850 can be driven by same driver and it has same buck/LDO
+> > setup as BD71847 - add it to BD71847 binding document and introduce
+> > compatible for it.
+> > 
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> > 
+> > Oh dear how bad I am with yaml...
+> 
+> Looks pretty good overall.
+> 
+> I hope 'yamlify' doesn't catch on. :)
 
-below are the flags which were discussed in first version of the
-series, but since the driver is
-currently using just PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC flag I'll be
-dropping them in
-next version (suggested by Kishon) and rest will be added as and when
-required by the driver.
+Adopted.
 
- * @PCI_EPC_WINDOW_FLAG_MULTI_ALLOC: Indicates multiple chunks of memory can be
- *                                  allocated from same window
- * @PCI_EPC_WINDOW_FLAG_NON_MULTI_ALLOC: Indicates only single memory allocation
- *                                      is possible on the window
- * @PCI_EPC_WINDOW_FLAG_LARGE_ALLOC: Window is used for large memory allocation
- * @PCI_EPC_WINDOW_FLAG_SMALL_ALLOC: Window is used for small memory allocation
- * @PCI_EPC_WINDOW_FLAG_HIGH_PRI_ALLOC: Window is used for high priority data
- *                                     transfers
- * @PCI_EPC_WINDOW_FLAG_LOW_PRI_ALLOC: Window is used for low priority data
- *                                    transfers
-
-Cheers,
---Prabhakar
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
