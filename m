@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CC0C3276C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5321C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC94822314
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD84222C3
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:55:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HAA0qFXP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aOCg3jZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgABOzM (ORCPT
+        id S1728659AbgABOzJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:55:12 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46966 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728652AbgABOzM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:55:12 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y8so17887241pll.13
-        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 06:55:11 -0800 (PST)
+        Thu, 2 Jan 2020 09:55:09 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36780 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728641AbgABOzF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:55:05 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x184so22156281pfb.3
+        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 06:55:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qQ3dPyVIYOxnnD+V93y32YHWB9TyUbtp8D+2BSxgJjI=;
-        b=HAA0qFXPm/feR1Ew/vwtwclzWPyBuVhbCMyKzSfk+mFTqf+hLc7gq+QlFGuYOyr/fc
-         CyhSu4o6NwWWTPcJn1t2qjZtoHIo/vbiZMrudIJlV8u+ikmzs+30YbcYs29LU9vFfW+z
-         Aj/dyGVA8AvnEZbqp9vnD5aC85GvONjy0ss2CPjOPdNZpVYplhIQ/0G8/CDQd/Nqhu+z
-         X5J60RFDye1a+qyv691H9YIKYuRP1iZ8kowTd4C+3hR6y834ctBesFJfkPWsqH3PI6s9
-         caxkCijpZALFHNzbuvTe5hO4OcCoNKHJuloha4Q4Q5eQMOKxmCa5Bw8qwYHZOyVQqYmT
-         SVNQ==
+        bh=eKeVu2oWXHPKcwPZ0buj2l0Dr4vKizCXYv05Mdip8Hc=;
+        b=aOCg3jZT5CYlpjXjebRIQsZa+VwXZzFX1CHogqR1kDbwM739xnyKPnNsiU0ptp3MHs
+         vYNvseYPu6YsagozpbIM+kpO23j4wCrPMT6ASiFLWD+ZaIV5n7iHk/fpS6a0OrPjqDVB
+         wLSsrxtnlhLWi2/A8IUrPe8e747GUP8eJM/bQwrN0xzPid2xkGtLIe4SNXhd2UmBeDXb
+         rJ1hS2kHlqSKjfitfC0rWgXOX4GVmoT2jexzlI3Hm/HRdJShXdVFreaxXnF1jCjUnBxQ
+         eDpled0SOGTiaEhhrhFfcpDsaF0de9fkEsolCKoKzyU4ULTQtRoo1ow8VgIgfk78uBZq
+         oWzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qQ3dPyVIYOxnnD+V93y32YHWB9TyUbtp8D+2BSxgJjI=;
-        b=JQ8pvNa5ator/zBjrimi/zjreEesh/VIS7LJw0PxIi5StUdKeh67pLyl5H0LT6FM0q
-         Uk0RehFdQk2vzC+/VdPI2W/9chIyhSisHh0qVW3ywUU2253TuhBqDd6dR9ep13nJmQ7u
-         zpHN4uTNlecwlbxrcxN3HWLZ/CBpCOx2UkkeEtZkXwxFscaugiYkIZy3QquiHZ75tC+J
-         UUOyxk6i3AEVWln1a0NdbAkU0GdLQI9GwYXlU4iDztb2hRU0szRqnuX0NYOIzgxJJbxo
-         Rthd5JNVCt6G/j48TGAhKJ9VtI/m+Amah30lE5o8R/y5kffJlF2CK9+h5ldPzzUMze6h
-         C71w==
-X-Gm-Message-State: APjAAAUb/OpFwSzrpyM6xIEwb2Mh4I2eskWHOhMRBUTUoNt36pi5yPEs
-        m0BQEoAut3k6mosgyTvCqtnvDYyED22dgA==
-X-Google-Smtp-Source: APXvYqwQggvFSNCdOyWo4GIOGfBb4EPNOjBCZx/+BM2YzYiNE/19lee99UQH/FwKdi2eQNwxfET3Yw==
-X-Received: by 2002:a17:902:8c91:: with SMTP id t17mr83625707plo.225.1577976911485;
-        Thu, 02 Jan 2020 06:55:11 -0800 (PST)
+        bh=eKeVu2oWXHPKcwPZ0buj2l0Dr4vKizCXYv05Mdip8Hc=;
+        b=sUDRgxWLFPnIJl4yVS0fRu+Q6PeTkw5l8lW6L2XpmfYaQT6iI2vAfQ2HggIzSC8KQi
+         /JGxhGJLciU+L3Q/136bpmaHDWKP4G2f/i2bkITabh8g5FRJ0SekoycXzOhkFwjispaH
+         0XgEQGHABF9fMNIIPe35XTKbOEcJSdu7F1IRW5HMBHpds8ldZwsX4ZIOjnNMPVIhoghU
+         2a2MchworoVa/MqJhpkDXpTk8Mt6EfvPMqjl/AtZdRVnw+OWpw0TcXWtnydTF8U7WTqZ
+         O+ieEQGuEmqk+LNghKrcKNgZLnOX9gVacifB7tAGfbdfWPkDJwB9JlLB7tOk3EylSSH+
+         y4Vw==
+X-Gm-Message-State: APjAAAV1kWcXvB3JiuvWPNh6L9hcxeFHoFSRu/q/gOyMUIpWGNdzQOni
+        WuNFv6LEeo2KzYqOIAwsv6BNYw==
+X-Google-Smtp-Source: APXvYqxB4xjsUOgn8YNPlgmgcM4Aw1ezSDGoiNG8NiNNvB6RvRNGaCPhPTEpWobjPT0hyB0c+LByXw==
+X-Received: by 2002:a63:111e:: with SMTP id g30mr92154214pgl.251.1577976904992;
+        Thu, 02 Jan 2020 06:55:04 -0800 (PST)
 Received: from localhost ([103.195.202.148])
-        by smtp.gmail.com with ESMTPSA id d65sm64405487pfa.159.2020.01.02.06.55.10
+        by smtp.gmail.com with ESMTPSA id a28sm63716786pfh.119.2020.01.02.06.55.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 06:55:11 -0800 (PST)
+        Thu, 02 Jan 2020 06:55:04 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         bjorn.andersson@linaro.org, swboyd@chromium.org,
         sivaa@codeaurora.org, Andy Gross <agross@kernel.org>
 Cc:     devicetree@vger.kernel.org
-Subject: [PATCH v3 9/9] arm64: dts: msm8998: thermal: Add critical interrupt support
-Date:   Thu,  2 Jan 2020 20:24:34 +0530
-Message-Id: <445b152a10e51c29590659ce717f505d56a98d9e.1577976221.git.amit.kucheria@linaro.org>
+Subject: [PATCH v3 7/9] arm64: dts: sdm845: thermal: Add critical interrupt support
+Date:   Thu,  2 Jan 2020 20:24:32 +0530
+Message-Id: <a86be6121986d1c37b34f791532cd65ec13f1e00.1577976221.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1577976221.git.amit.kucheria@linaro.org>
 References: <cover.1577976221.git.amit.kucheria@linaro.org>
@@ -76,34 +76,35 @@ X-Mailing-List: devicetree@vger.kernel.org
 Register critical interrupts for each of the two tsens controllers
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Link: https://lore.kernel.org/r/3686bd40c99692feb955e936b608b080e2cb1826.1568624011.git.amit.kucheria@linaro.org
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 10 ++++++----
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++----
  1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index fc7838ea9a01..4b786b8651a9 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -817,8 +817,9 @@
- 			reg = <0x010ab000 0x1000>, /* TM */
- 			      <0x010aa000 0x1000>; /* SROT */
- 			#qcom,sensors = <14>;
--			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index ddb1f23c936f..8986553cf2eb 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2950,8 +2950,9 @@
+ 			reg = <0 0x0c263000 0 0x1ff>, /* TM */
+ 			      <0 0x0c222000 0 0x1ff>; /* SROT */
+ 			#qcom,sensors = <13>;
+-			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
 -			interrupt-names = "uplow";
-+			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow", "critical";
  			#thermal-sensor-cells = <1>;
  		};
  
-@@ -827,8 +828,9 @@
- 			reg = <0x010ae000 0x1000>, /* TM */
- 			      <0x010ad000 0x1000>; /* SROT */
+@@ -2960,8 +2961,9 @@
+ 			reg = <0 0x0c265000 0 0x1ff>, /* TM */
+ 			      <0 0x0c223000 0 0x1ff>; /* SROT */
  			#qcom,sensors = <8>;
--			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
 -			interrupt-names = "uplow";
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 430 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "uplow", "critical";
  			#thermal-sensor-cells = <1>;
  		};
