@@ -2,308 +2,95 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DC2C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349B3C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4DA2253D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:48:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iMSp8Aq+"
+	by mail.kernel.org (Postfix) with ESMTP id EFECE20866
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbgABTsN (ORCPT
+        id S1728320AbgABTvN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 14:48:13 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:44653 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727951AbgABTsM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 14:48:12 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577994492; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=zCeVTXfeHOc9Puc7jwFcPwhAJ0vkF2Yg4hc25BMVGUs=; b=iMSp8Aq+HTdeXIUef7N+p3EM2OMZeJSZ4GjqE8fncEO0K3Yq+69OJw/AFO3fPnrA+k2/NXFG
- Qbqu+ESW2qDgMDGSa3S/JpMNiqP287kuVpPJN1KBkAPHlHuKhlmkdOuleaapFVdvbJNU9Iu/
- Cxx0EeZFGoK2YgubMIM/lhESHlc=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0e48f6.7fe16d085f48-smtp-out-n03;
- Thu, 02 Jan 2020 19:48:06 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E7229C4479D; Thu,  2 Jan 2020 19:48:04 +0000 (UTC)
-Received: from [192.168.1.250] (75-31-75-218.lightspeed.sntcca.sbcglobal.net [75.31.75.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: daidavid1)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6A7A8C43383;
-        Thu,  2 Jan 2020 19:48:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6A7A8C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
-Subject: Re: [PATCH v1 1/4] dt-bindings: interconnect: Update Qualcomm SDM845
- DT bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
-        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
-        seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
- <1576475925-20601-2-git-send-email-daidavid1@codeaurora.org>
- <20191226184526.GA18040@bogus>
-From:   David Dai <daidavid1@codeaurora.org>
-Message-ID: <5ee5c85e-64e3-9494-b033-5b6dec4a5152@codeaurora.org>
-Date:   Thu, 2 Jan 2020 11:48:02 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 2 Jan 2020 14:51:13 -0500
+Received: from muru.com ([72.249.23.125]:49978 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728260AbgABTvN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jan 2020 14:51:13 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 942208087;
+        Thu,  2 Jan 2020 19:51:52 +0000 (UTC)
+Date:   Thu, 2 Jan 2020 11:51:08 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?utf-8?B?QW5kcsOp?= Hentschel <nerv@dawncrow.de>,
+        Adam Ford <aford173@gmail.com>, linux@arm.linux.org.uk,
+        robh+dt@kernel.org, mark.rutland@arm.com, bcousson@baylibre.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: Add omap3-echo
+Message-ID: <20200102195108.GF16702@atomide.com>
+References: <20191224161005.28083-1-nerv@dawncrow.de>
+ <20191224184503.GK35479@atomide.com>
+ <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com>
+ <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de>
+ <20191230172948.GL35479@atomide.com>
+ <55E6481C-2137-4086-ACDF-5F7D86E41A21@goldelico.com>
 MIME-Version: 1.0
-In-Reply-To: <20191226184526.GA18040@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55E6481C-2137-4086-ACDF-5F7D86E41A21@goldelico.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Thanks for your time.
+* H. Nikolaus Schaller <hns@goldelico.com> [191231 08:16]:
+> > Am 30.12.2019 um 18:29 schrieb Tony Lindgren <tony@atomide.com>:
+> > And let's also add minimal dm3725.dtsi, am3715.dtsi and am3703.dtsi
+> > to make things simple.
+> 
+> Well, is that "simple"?
 
-On 12/26/2019 10:45 AM, Rob Herring wrote:
-> On Sun, Dec 15, 2019 at 09:58:42PM -0800, David Dai wrote:
->> Redefine the Network-on-Chip devices to more accurately describe
->> the interconnect topology on Qualcomm's SDM845 platform. Each
->> interconnect device can communicate with different instances of the
->> RPMh hardware which are described as RSCs(Resource State Coordinators).
->>
->> As part of updating the DT bindings, convert the existing sdm845 bindings
->> to DT schema format using json-schema.
-> Too many things in one patch. Convert to schema in one patch and then
-> add new stuff in separate patch(es).
+Well simple from "adding support for a new device in most case" point
+of view yes..
 
-Ok.
+> We also have to add omap3503, omap3515, omap3520, omap3530.dtsi.
+> And probably am3351,2,4,6,7,8,9 variants with different capabilities
+> (PRU, SGX, CAN, ZCZ ports to name some).
+> 
+> And to be correct, there should be a different "compatible".
 
->> Signed-off-by: David Dai <daidavid1@codeaurora.org>
->> ---
->>   .../bindings/interconnect/qcom,bcm-voter.yaml      |  45 +++++++++
->>   .../bindings/interconnect/qcom,sdm845.txt          |  24 -----
->>   .../bindings/interconnect/qcom,sdm845.yaml         | 108 +++++++++++++++++++++
->>   3 files changed, 153 insertions(+), 24 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->>   create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> new file mode 100644
->> index 0000000..74f0715
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,bcm-voter.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/interconnect/qcom,bcm-voter.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm BCM-Voter Interconnect
->> +
->> +maintainers:
->> +  - David Dai <daidavid1@codeaurora.org>
->> +
->> +description: |
->> +    The Bus Clock Manager (BCM) is a dedicated hardware accelerator
->> +    that manages shared system resources by aggregating requests
->> +    from multiple Resource State Coordinators (RSC). Interconnect
->> +    providers are able to vote for aggregated thresholds values from
->> +    consumers by communicating through their respective RSCs.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - qcom,sdm845-bcm-voter
->> +
->> +required:
->> +  - compatible
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    apps_rsc: interconnect@179c0000 {
->> +        compatible = "qcom,rpmh-rsc";
->> +
->> +        apps_bcm_voter: bcm_voter {
->> +            compatible = "qcom,sdm845-bcm-voter";
->> +        };
->> +    };
->> +
->> +    disp_rsc: interconnect@179d0000 {
->> +        compatible = "qcom,rpmh-rsc";
->> +
->> +        disp_bcm_voter: bcm_voter {
->> +            compatible = "qcom,sdm845-bcm-voter";
->> +        };
->> +    };
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->> deleted file mode 100644
->> index 5c4f1d9..0000000
->> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
->> +++ /dev/null
->> @@ -1,24 +0,0 @@
->> -Qualcomm SDM845 Network-On-Chip interconnect driver binding
->> ------------------------------------------------------------
->> -
->> -SDM845 interconnect providers support system bandwidth requirements through
->> -RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
->> -able to communicate with the BCM through the Resource State Coordinator (RSC)
->> -associated with each execution environment. Provider nodes must reside within
->> -an RPMh device node pertaining to their RSC and each provider maps to a single
->> -RPMh resource.
->> -
->> -Required properties :
->> -- compatible : shall contain only one of the following:
->> -			"qcom,sdm845-rsc-hlos"
->> -- #interconnect-cells : should contain 1
->> -
->> -Examples:
->> -
->> -apps_rsc: rsc {
->> -	rsc_hlos: interconnect {
->> -		compatible = "qcom,sdm845-rsc-hlos";
->> -		#interconnect-cells = <1>;
->> -	};
->> -};
->> -
->> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
->> new file mode 100644
->> index 0000000..1aec321
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
->> @@ -0,0 +1,108 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/interconnect/qcom,sdm845.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title:  Qualcomm SDM845 Network-On-Chip Interconnect
->> +
->> +maintainers:
->> +  - David Dai <daidavid1@codeaurora.org>
->> +
->> +description: |
->> +   SDM845 interconnect providers support system bandwidth requirements through
->> +   RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
->> +   able to communicate with the BCM through the Resource State Coordinator (RSC)
->> +   associated with each execution environment. Provider nodes must point to at
->> +   least one RPMh device child node pertaining to their RSC and each provider
->> +   can map to multiple RPMh resources.
->> +
->> +properties:
->> +  reg:
->> +    maxItems: 1
->> +
->> +  compatible:
->> +    enum:
->> +      - qcom,sdm845-aggre1-noc
->> +      - qcom,sdm845-aggre2-noc
->> +      - qcom,sdm845-config-noc
->> +      - qcom,sdm845-dc-noc
->> +      - qcom,sdm845-gladiator-noc
->> +      - qcom,sdm845-mem-noc
->> +      - qcom,sdm845-mmss-noc
->> +      - qcom,sdm845-system-noc
->> +
->> +  '#interconnect-cells':
->> +    const: 1
->> +
->> +  qcom,bcm-voters:
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array
->> +    description: |
->> +      List of phandles to qcom,bcm-voter nodes that are required by
->> +      this interconnect to send RPMh commands.
->> +
->> +  qcom,bcm-voter-names:
->> +    $ref: /schemas/types.yaml#/definitions/string-array
-> Don't need a type for *-names.
+..and yes the number of permutations quickly gets out of control :)
 
-Ok.
+The SoC specific compatibles should be there though. So everybody,
+please keep adding them as we encounter the missing ones.
 
->> +    description: |
->> +      Names for each of the qcom,bcm-voters specified.
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#interconnect-cells'
->> +  - qcom,bcm-voters
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +      #include <dt-bindings/interconnect/qcom,sdm845.h>
->> +
->> +      mem_noc: interconnect@1380000 {
->> +             compatible = "qcom,sdm845-mem-noc";
->> +             reg = <0 0x01380000 0 0x27200>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      dc_noc: interconnect@14e0000 {
->> +             compatible = "qcom,sdm845-dc-noc";
->> +             reg = <0 0x014e0000 0 0x400>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      config_noc: interconnect@1500000 {
->> +             compatible = "qcom,sdm845-config-noc";
->> +             reg = <0 0x01500000 0 0x5080>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      system_noc: interconnect@1620000 {
->> +             compatible = "qcom,sdm845-system-noc";
->> +             reg = <0 0x01620000 0 0x18080>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      aggre1_noc: interconnect@16e0000 {
->> +             compatible = "qcom,sdm845-aggre1-noc";
->> +             reg = <0 0x016e0000 0 0xd080>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      aggre2_noc: interconnect@1700000 {
->> +             compatible = "qcom,sdm845-aggre2-noc";
->> +             reg = <0 0x01700000 0 0x3b100>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
->> +
->> +      mmss_noc: interconnect@1740000 {
->> +             compatible = "qcom,sdm845-mmss-noc";
->> +             reg = <0 0x01740000 0 0x1c1000>;
->> +             #interconnect-cells = <1>;
->> +             qcom,bcm-voters = <&apps_bcm_voter>;
->> +      };
-> Examples are just examples, not an enumeration of all possible nodes.
->
-> Also, when is qcom,bcm-voters more than 1 phandle.
-The mmss_noc could potentially support more than one bcm-voter, I'll 
-reduce the number of examples and show the simple case and an example 
-with multiple bcm-voters.
->
-> Rob
+Note that we don't seem to have much any feature detection for the
+newer TI parts. At least am4 and dra7 already rely on
+of_machine_is_compatible() checks for omap_hwmod_43xx_data.c and
+omap_hwmod_7xx_data.c.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Rob asked me when reviewing the pvrsgx bindings if the img,5xx variants
+> can be autodetected to reduce bindings complexity.
+
+Yes also dynamic detection is needed, and we do have that working
+for many SoCs. The use in ti-sysc driver is still missing though,
+and newer SoCs never had feature detection added.
+
+> > The device tree is supposed to describe the
+> > hardware, and in most cases the SoC version is fixed and need no
+> > dynamic detection.
+> 
+> There may be exactly the same board populated with either one since
+> they are drop-in pin compatible. So this may proliferate to the
+> board.dts files and u-boot can have to load different .dtb.
+
+Yeah. I'm afraid we're already depending for bootloader picking
+the right dtb for many cases, such as capes etc.
+
+Regards,
+
+Tony
