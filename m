@@ -2,164 +2,129 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A7BC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 20:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22025C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CF9217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 20:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E533121582
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 21:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JsNErjk5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=dawncrow.de header.i=@dawncrow.de header.b="peHvGjwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgABU6B (ORCPT
+        id S1725837AbgABVPi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 15:58:01 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34475 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgABU6B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 15:58:01 -0500
-Received: by mail-pl1-f194.google.com with SMTP id x17so18265725pln.1
-        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 12:58:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z7uC44Oc18ogP4OWB3WNFZwzRSBSoy1k7HBWtdwE8fA=;
-        b=JsNErjk57TLzLekTAMi+u1tOjxdWFRum7WeAJHfQfCWI6HiRPLEhsyaBJRIkqcKhwI
-         5N1i+XRLxrK414tYy5J4YcfhB4y+d8u8yKSI87iOCVIcmvVsdqzy1JAZ5Qh8j8LkEBA/
-         K4fSCr8i6klwM4mLEYCf+Voh5Upglfzcm3aYBWQKPVcK2Qu7JjCm5myQDLR/WOlLNHfU
-         DMRYFntzqhXZqRM1V0aXfa9l8Y9oQi+i+9lpSR9dAnkzkmg3Hb9sdrdaGWiuQU80H8gm
-         DM3pYAk9NPBmaRYF0+zqpe+rjmpDZ5vIu6HWn3qtSuBRIqGghibp/TnPy8JRYD9xvZeH
-         s2yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z7uC44Oc18ogP4OWB3WNFZwzRSBSoy1k7HBWtdwE8fA=;
-        b=SvK8WtmBFTmm8VihjiSiGQdXXwEiq9JkJtiQW739UQtRkFD2I1M99GBAc3XtpTAw35
-         tRqGgUOaVqWDoZEFT9VZHyoUOJVnwlnV/rh3DTOEkXxYcUaRbhDsCC5ci2IA5cZPOAbx
-         7yujAgKd17p+g+BkV21fcyIww5ehEvb7gh3YT9v9ydzDFNDBxkkp+w7RwI2BlBBfIviZ
-         zbQaTunBZvAFmpqlkQQ0flD8GmaEvvYsx+ez5/k6YxS6NRGIY5rDMJwwOdsR4Ef5jN04
-         hr2umi1YNIdwGw0t2PshYYCAKGRVGQuKjBRK1Un7FmPnd2HjA50uhsDw/nFkph0qvJk9
-         XJyg==
-X-Gm-Message-State: APjAAAX0yLqnAHOEhLTZz7AJq0xMW8hIdyIRmg3mcAPZvAQr5td4x7ZQ
-        NjtsaiVAiPtipfR0eWW9sFI86A==
-X-Google-Smtp-Source: APXvYqxh595qK4nZVB6EAkAq+RZs+ImBx7ezIU9NnHSyFGp1aQZBBUantfvrW7qXuXykQ+z4/i/9Mw==
-X-Received: by 2002:a17:90a:3945:: with SMTP id n5mr21913490pjf.34.1577998680994;
-        Thu, 02 Jan 2020 12:58:00 -0800 (PST)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a28sm64401061pfh.119.2020.01.02.12.57.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 12:58:00 -0800 (PST)
-Date:   Thu, 2 Jan 2020 12:57:57 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] soc: qcom: apr: Add avs/audio tracking
- functionality
-Message-ID: <20200102205757.GH988120@minitux>
-References: <20191230050008.8143-1-sibis@codeaurora.org>
- <20191230050008.8143-4-sibis@codeaurora.org>
+        Thu, 2 Jan 2020 16:15:38 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:17938 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgABVPi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 16:15:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1577999732;
+        s=strato-dkim-0002; d=dawncrow.de;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=/RFRtxHgJLOW/mYZm857emXRQ5DE6ixRmmVFe1r78O0=;
+        b=peHvGjwldR76mFL7oUTcumXgJHztJ62GDQeYa6TAd5JbEqXM8kYSVHCmXtIi3OS9gS
+        M0++9D8RGBOVvFgl9mKwIW4Ke5K/ROR9xIODA1feP6lkyV2D34pLOz1miJEnXnTD5Irx
+        Hai4bE/qXZ2rnlOBx5x2+HLuJ1/utgKLQ8RfQKDgd/5hzFqEGDOC7+YSbC4zf/DaTZNo
+        lEc8I5NvysLpLJbpaXXHRWCn+3m1X2fsTCbHoiJiTwyVhmZRgpBlQNGdBRaPckA5DA22
+        fh+Omkxj+rk8tyq17unH4ws45yFTOuXOoWPSfPdQs+kl30J8N1WXqBeTNJkW+fWCcmZS
+        Ba1g==
+X-RZG-AUTH: ":ImkWY2CseuihIZy6ZWWciR6unPhpN+aXzZ6bi4rK0b8tGDimOzIxQbIOZSqtgWHzDs8="
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.178.40]
+        by smtp.strato.de (RZmta 46.1.3 DYNA|AUTH)
+        with ESMTPSA id I099d1w02LFDLMy
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 2 Jan 2020 22:15:13 +0100 (CET)
+Subject: Re: [PATCH v2 1/2] ARM: dts: Move interconnect target module for
+ omap3 sgx to separate dtsi files
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux@arm.linux.org.uk, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, bcousson@baylibre.com,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191230202037.28836-1-nerv@dawncrow.de>
+ <20200102193359.GE16702@atomide.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Hentschel?= <nerv@dawncrow.de>
+Autocrypt: addr=nerv@dawncrow.de; prefer-encrypt=mutual; keydata=
+ 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
+ BZtrxq8dmex7tFXvQoJV4PIa20fGXq6S
+Message-ID: <9e39831c-bfa8-d497-7d3e-ff6ec04b8e52@dawncrow.de>
+Date:   Thu, 2 Jan 2020 22:15:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191230050008.8143-4-sibis@codeaurora.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200102193359.GE16702@atomide.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-LU
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun 29 Dec 21:00 PST 2019, Sibi Sankar wrote:
-> diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
-[..]
-> -static void of_register_apr_devices(struct device *dev)
-> +static void of_apr_add_pd_lookups(struct device *dev)
->  {
-> +	const char *service_name, *service_path;
->  	struct apr *apr = dev_get_drvdata(dev);
->  	struct device_node *node;
-> +	int ret;
-> +
-> +	for_each_child_of_node(dev->of_node, node) {
-> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
-> +						    0, &service_name);
-> +		if (ret < 0)
-> +			continue;
+Am 02.01.20 um 20:33 schrieb Tony Lindgren:
+> * André Hentschel <nerv@dawncrow.de> [191230 20:22]:
+>> Only dm3730 and am3715 come with SGX support
+> 
+> AFAIK dm3730 is just a marketing name for a catalog version of
+> omap3630. So using omap36xx.dtsi is correct and we should not
+> change that.
+> 
+> Can you please just add a minimal dm3725.dtsi that your board dts
+> can include and avoid disabling sgx in the board specific file?
+> That is assuming you have dm3725 with dsp and isp but no sgx.
 
-While this implies that the qcom,protection-domain property is
-missing...
+I removed the sgx disable part already in 2/2.
+Consulting my table:
+     DM3730 | DM3725 | AM3715 | AM3703
+DSP    X    |   X    |        |    
+SGX    X    |        |   X    |    
+Where X is "supported"
 
-> +
-> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
-> +						    1, &service_path);
-> +		if (ret < 0)
-> +			continue;
+So including omap63xx.dtsi seems right after this patch moves the
+sgx part to separate dtsi. Or do you want to have the sxg
+disabling in the dm3725.dtsi?
 
-...this would imply that it's there but the format is wrong. I think you
-should log this and propagate the error.
+> You can read the detected SoC with:
+> 
+> # cat /sys/bus/soc/devices/soc0/machine
 
-> +
-> +		ret = pdr_add_lookup(&apr->pdr, service_name, service_path);
-> +		if (ret && ret != -EALREADY)
-> +			dev_err(dev, "pdr add lookup failed: %d\n", ret);
-
-So we have a DT that denotes that PDR is required, but we failed to
-register a lookup (for some reason). That would imply that apr is not
-going to work. I think you should propagate this and make apr_probe()
-fail to make this obvious.
-
-> +	}
-> +}
-> +
-> +static void of_register_apr_devices(struct device *dev, const char *svc_path)
-> +{
-> +	struct apr *apr = dev_get_drvdata(dev);
-> +	struct device_node *node;
-> +	const char *service_path;
-> +	int ret;
->  
->  	for_each_child_of_node(dev->of_node, node) {
->  		struct apr_device_id id = { {0} };
-
-I think you should add a comment here describing what's actually going
-on. Something along the lines of:
-
-/*
- * This function is called with svc_path NULL during apr_probe(), in
- * which case we register any apr devices without a
- * qcom,protection-domain specified.
- *
- * Then as the protection domains becomes available (if applicable) this
- * function is again called, but with svc_path representing the service
- * becoming available. In this case we register any apr devices with a
- * matching qcom,protection-domain.
- */
-
->  
-> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
-> +						    1, &service_path);
-> +		if (svc_path) {
-> +			/* skip APR services that are PD independent */
-> +			if (ret)
-> +				continue;
-> +
-> +			/* skip APR services whose PD paths don't match */
-> +			if (strcmp(service_path, svc_path))
-> +				continue;
-> +		} else {
-> +			/* skip APR services whose PD lookups are registered */
-> +			if (ret == 0)
-> +				continue;
-> +		}
-> +
-
-Regards,
-Bjorn
+# cat /sys/bus/soc/devices/soc0/machine
+DM3725
+# cat /sys/bus/soc/devices/soc0/revision 
+ES1.2
