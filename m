@@ -2,220 +2,119 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D559C3276D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C44C2D0DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FA821734
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:09:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1577952571;
-	bh=yKk4Yxcs8PbwJF1fYpOt/+cGZY0MXBz9tOWOoJQKoDM=;
-	h=In-Reply-To:References:From:Cc:To:Subject:Date:List-ID:From;
-	b=J7vAn6z8OUCxZ1G8gut9FztP8FH2oRxmYOYfs1+QcMTViGrObTKXSPRe5Iys8DLG9
-	 GfHB9rSwO3L/tP0LPpXAdjYEHCWx01VRbcDhBQvijFaJ2I5DziCCDlveZkqwdMq0AS
-	 sxjRbB2uWwAPo9wBCPNOAg8QjxcBnV243QQunaXg=
+	by mail.kernel.org (Postfix) with ESMTP id 1300B217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="K14Npc1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbgABIJa (ORCPT
+        id S1727767AbgABIoD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727714AbgABIJa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jan 2020 03:09:30 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EE2C215A4;
-        Thu,  2 Jan 2020 08:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577952569;
-        bh=yKk4Yxcs8PbwJF1fYpOt/+cGZY0MXBz9tOWOoJQKoDM=;
-        h=In-Reply-To:References:From:Cc:To:Subject:Date:From;
-        b=nsBAoR7hGS+zpj6oHxmL46hoZd5ZxIZJWuwShLiZjfIcQS+x0LObrojJVAd5yJiDp
-         TYsrrNT0w2qKObbn4of2dK+/TgxmvbHdKPQB048voAuK474SI8iv/oInhXAZ37oU4z
-         vUGgygKBlgwWUIosCB8XanFDY9Q9kpGan8ALu/nI=
+        Thu, 2 Jan 2020 03:44:03 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16404 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727756AbgABIoD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 03:44:03 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0028Z1nj022070;
+        Thu, 2 Jan 2020 09:43:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=OS+yDpqq7SyVkVspEB/RBh0yAJda6QqIhoTkhDJ6UBk=;
+ b=K14Npc1SGCwL4TFz2snFFL7TQ9itMUDnjpjXZy6l8L2FA7qqeesT/oGwUz5v7nseBZRI
+ fx7wsI++iFevb4UCN/gF4GGCIdSYlHKAzUs7QoR0J7YMd5iMQ6NrpORi9i09n6j7IfjL
+ GDe6dfemNZmY652wtVyO0IPfDx/0+uW8qYW/G32NCVjLYXg6fkycaJSdWOpGfBoYNwH7
+ XkrccgRpLoDH9YzjiKczOSA2hyHbppdqt2/Ko1jtmiMyJmG3m+BxWs955A5d9vrNkNZM
+ FVzgGqYyF9hG0/nn9hUhK6DGsxVtCvOOH53u4yR2clZ41+rYCWruXZLzS05rv2pO+A1o Hw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2x5wd6a3g7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jan 2020 09:43:42 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 52C3710002A;
+        Thu,  2 Jan 2020 09:43:41 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1C5F92A6E01;
+        Thu,  2 Jan 2020 09:43:41 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 2 Jan
+ 2020 09:43:40 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 2 Jan 2020 09:43:40 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "hminas@synopsys.com" <hminas@synopsys.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
+ json-schema
+Thread-Topic: [PATCH v2 1/2] dt-bindings: usb: Convert DWC2 bindings to
+ json-schema
+Thread-Index: AQHVtlgPPJ7kqTKWikGryQVd+VmeDKfS0A0AgARD9IA=
+Date:   Thu, 2 Jan 2020 08:43:40 +0000
+Message-ID: <b9b1b18f-b331-de6a-1622-ad43143eb56f@st.com>
+References: <20191219103536.25485-1-benjamin.gaignard@st.com>
+ <20191219103536.25485-2-benjamin.gaignard@st.com> <20191230153524.GA4918@pi3>
+In-Reply-To: <20191230153524.GA4918@pi3>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <37C7D06533EBC444B8B03560F4795446@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
-References: <20191209233305.18619-1-michael@walle.cc> <20191209233305.18619-2-michael@walle.cc> <20191224080536.B0C99206CB@mail.kernel.org> <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-To:     Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
-User-Agent: alot/0.8.1
-Date:   Thu, 02 Jan 2020 00:09:28 -0800
-Message-Id: <20200102080929.0EE2C215A4@mail.kernel.org>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-02_02:2019-12-30,2020-01-02 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Michael Walle (2020-01-01 07:15:32)
->=20
-> Hi Stephen,
->=20
-> thanks for the review.
->=20
-> Am 2019-12-24 09:05, schrieb Stephen Boyd:
-> > Quoting Michael Walle (2019-12-09 15:33:05)
-> >> diff --git a/drivers/clk/clk-fsl-sai.c b/drivers/clk/clk-fsl-sai.c
-> >> new file mode 100644
-> >> index 000000000000..b92054d15ab1
-> >> --- /dev/null
-> >> +++ b/drivers/clk/clk-fsl-sai.c
-> >> @@ -0,0 +1,84 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Freescale SAI BCLK as a generic clock driver
-> >> + *
-> >> + * Copyright 2019 Kontron Europe GmbH
-> >> + */
-> >> +
-> >> +#include <linux/clk-provider.h>
-> >> +#include <linux/err.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_address.h>
-> >> +#include <linux/slab.h>
-> >> +
-> >> +#define I2S_CSR                0x00
-> >> +#define I2S_CR2                0x08
-> >> +#define CSR_BCE_BIT    28
-> >> +#define CR2_BCD                BIT(24)
-> >> +#define CR2_DIV_SHIFT  0
-> >> +#define CR2_DIV_WIDTH  8
-> >> +
-> >> +struct fsl_sai_clk {
-> >> +       struct clk_divider div;
-> >> +       struct clk_gate gate;
-> >> +       spinlock_t lock;
-> >> +};
-> >> +
-> >> +static void __init fsl_sai_clk_setup(struct device_node *node)
-> >> +{
-> >> +       const char *clk_name =3D node->name;
-> >> +       struct fsl_sai_clk *sai_clk;
-> >> +       unsigned int num_parents;
-> >> +       const char *parent_name;
-> >> +       void __iomem *base;
-> >> +       struct clk_hw *hw;
-> >> +
-> >> +       num_parents =3D of_clk_get_parent_count(node);
-> >> +       if (!num_parents) {
-> >> +               pr_err("%s: no parent found", clk_name);
-> >> +               return;
-> >> +       }
-> >> +
-> >> +       parent_name =3D of_clk_get_parent_name(node, 0);
-> >=20
-> > Could this use the new way of specifying clk parents so that we don't
-> > have to query DT for parent names and just let the core framework do it
-> > whenever it needs to?
->=20
-> you mean specifying parent_data with .index =3D 0? Seems like=20
-> clk_composite
-> does not support this. The parent can only be specified by supplying the
-> clock names.
->=20
-> I could add that in a separate patch. What do you think about the
-> following new functions, where a driver can use parent_data instead
-> of parent_names.
-
-I started doing this in
-https://lkml.kernel.org/r/20190830150923.259497-1-sboyd@kernel.org but I
-never got around to the composite clks. Sounds fine to add this new API
-for your use case.
-
->=20
-> +struct clk *clk_register_composite_pdata(struct device *dev, const char =
-
-> *name,
-> +               const struct clk_parent_data *parent_data,
-> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
-> +               struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
-> +               struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
-> +               unsigned long flags);
->=20
-> +struct clk_hw *clk_hw_register_composite_pdata(struct device *dev,
-> +               const char *name, const struct clk_parent_data=20
-> *parent_data,
-> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
-> +               struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
-> +               struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
-> +               unsigned long flags);
->=20
->=20
-> >> +
-> >> +       sai_clk =3D kzalloc(sizeof(*sai_clk), GFP_KERNEL);
-> >> +       if (!sai_clk)
-> >> +               return;
-> >> +
-> >> +       base =3D of_iomap(node, 0);
-> >> +       if (base =3D=3D NULL) {
-> >> +               pr_err("%s: failed to map register space", clk_name);
-> >> +               goto err;
-> >> +       }
-> >> +
-> >> +       spin_lock_init(&sai_clk->lock);
-> >> +
-> >> +       sai_clk->gate.reg =3D base + I2S_CSR;
-> >> +       sai_clk->gate.bit_idx =3D CSR_BCE_BIT;
-> >> +       sai_clk->gate.lock =3D &sai_clk->lock;
-> >> +
-> >> +       sai_clk->div.reg =3D base + I2S_CR2;
-> >> +       sai_clk->div.shift =3D CR2_DIV_SHIFT;
-> >> +       sai_clk->div.width =3D CR2_DIV_WIDTH;
-> >> +       sai_clk->div.lock =3D &sai_clk->lock;
-> >> +
-> >> +       /* set clock direction, we are the BCLK master */
-> >=20
-> > Should this configuration come from DT somehow?
->=20
-> No, we are always master, because as a slave, there would be no clock
-> output ;)
-
-Got it.
-
->=20
-> >> +       writel(CR2_BCD, base + I2S_CR2);
-> >> +
-> >> +       hw =3D clk_hw_register_composite(NULL, clk_name, &parent_name,=
-=20
-> >> 1,
-> >> +                                      NULL, NULL,
-> >> +                                      &sai_clk->div.hw,=20
-> >> &clk_divider_ops,
-> >> +                                      &sai_clk->gate.hw,=20
-> >> &clk_gate_ops,
-> >> +                                      CLK_SET_RATE_GATE);
-> >> +       if (IS_ERR(hw))
-> >> +               goto err;
-> >> +
-> >> +       of_clk_add_hw_provider(node, of_clk_hw_simple_get, hw);
-> >> +
-> >> +       return;
-> >> +
-> >> +err:
-> >> +       kfree(sai_clk);
-> >> +}
-> >> +
-> >> +CLK_OF_DECLARE(fsl_sai_clk, "fsl,vf610-sai-clock",=20
-> >> fsl_sai_clk_setup);
-> >=20
-> > Is there a reason this can't be a platform device driver?
->=20
-> I don't think so, the user will be a sound codec for now. I'll convert=20
-> it
-> to a platform device, in that case I could also use the devm_ variants.
->=20
-
-Awesome. Thanks!
-
+DQpPbiAxMi8zMC8xOSA0OjM1IFBNLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPiBPbiBU
+aHUsIERlYyAxOSwgMjAxOSBhdCAxMTozNTozNUFNICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3
+cm90ZToNCj4+IENvbnZlcnQgRFdDMiBiaW5kaW5ncyB0byBEVCBzY2hlbWEgZm9ybWF0IHVzaW5n
+IGpzb24tc2NoZW1hLg0KPj4gRFdDMiBpcyB3aWRlbHkgdXNlIGJ1dCBhIGNvdXBsZSBvZiBjb21w
+YXRpYmxlcyBhbmQgcHJvcGVydGllcw0KPj4gKHZ1c2JfZC1zdXBwbHksdnVzYl9hLXN1cHBseSkg
+d2VyZSBtaXNzaW5nIGluIGR3YzIudHh0LCB0aGUNCj4+IHBhdGNoIGFkZCB0aGVtLg0KPj4NCj4+
+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5j
+b20+DQo+PiAtLS0NCj4+IENDOiBNaW5hcyBIYXJ1dHl1bnlhbiA8aG1pbmFzQHN5bm9wc3lzLmNv
+bT4NCj4+DQo+PiBjaGFuZ2VzIGluIHZlcnNpb24gMjoNCj4+IC0gcHV0IE1pbmFzIEhhcnV0eXVu
+eWFuIDxobWluYXNAc3lub3BzeXMuY29tPiBhcyBtYWludGFpbmVyDQo+PiAtIHJlbW92ZSB0eXBl
+IGFuZCBkZXNjcmlwdGlvbiBmcm9tIHBoeSBwcm9wZXJ0eQ0KPj4gLSByZW1vdmUgZGVzY3JpcHRp
+b24gZnJvbSBjb21wYXRpYmxlIGl0ZW1zDQo+PiAtIHNpbXBsaWZ5IHNhbXN1bmcsczNjNjQwMC1o
+c290ZyBjb21wYXRpYmxlIGhhbmRsaW5nDQo+Pg0KPiAoLi4uKQ0KPg0KPj4gK3JlcXVpcmVkOg0K
+Pj4gKyAgLSBjb21wYXRpYmxlDQo+PiArICAtIHJlZw0KPj4gKyAgLSBpbnRlcnJ1cHRzDQo+PiAr
+ICAtIGNsb2Nrcw0KPj4gKyAgLSBjbG9jay1uYW1lcw0KPj4gKw0KPj4gK2FkZGl0aW9uYWxQcm9w
+ZXJ0aWVzOiBmYWxzZQ0KPj4gKw0KPj4gK2V4YW1wbGVzOg0KPj4gKyAgLSB8DQo+PiArICAgICAg
+dXNiQDEwMWMwMDAwIHsNCj4+ICsgICAgICAgIGNvbXBhdGlibGUgPSAicmFsaW5rLHJ0MzA1MC11
+c2IsIHNucHMsZHdjMiI7DQo+IERvZXMgaXQgcGFzcyBkdGJzX2NoZWNrPyBTaG91bGQgYmUgdHdv
+IHN0cmluZ3MuDQoNCkJhZCBjb3B5L3Bhc3QgZnJvbSB0aGUgb3JpZ2luYWwgdGV4dCBmaWxlLg0K
+DQpZb3UgYXJlIHJpZ2h0IGl0IHNob3VsZCB0d28gc3RyaW5ncyBhbmQgZHQgY2hlY2sgdG9vbHMg
+ZG9uJ3QgZGV0ZWN0IA0KYmVjYXVzZSB0aGV5IHNlZSBpdCBhcyBhIGRpZmZlcmVudCBjb21wYXRp
+YmxlLg0KDQpCZW5qYW1pbg0KDQo+DQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQo+DQo+
