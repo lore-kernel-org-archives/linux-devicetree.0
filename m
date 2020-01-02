@@ -2,178 +2,89 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4794C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 09:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC7EC2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 09:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF6721734
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 09:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457F521835
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 09:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577957520;
+	bh=z7XbupEIA871TaOOa9+yiI0sdqgjfYz8rikslwugDPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tpriuc4siLJrUk96ElN64+n6Ekqovocdx6KKeI80ebGoO8k80/icoiH74voGNiu5v
+	 N68G+Uy24rGtWiCURdPl6ounYztKnv9FWLZWx/aJ9MLBWNvXH8X0yod0vA7RtnVhKd
+	 AdID/Z+cNJoOH6poXvMJjEVXUhLvtu7bUi+XrErE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgABJAv (ORCPT
+        id S1727801AbgABJb7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 04:00:51 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33104 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbgABJAv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 04:00:51 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so34359847otp.0;
-        Thu, 02 Jan 2020 01:00:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fJFkq9fgXdJc4mnZ6lqzSDTJfkkupEPzyOJabLJ6bv0=;
-        b=p9REWqXekPXmYokjLl1uoSbL2yEYUA760udBkAGj7QaMc2CMdnUp3Sp7l4JN3F/L1E
-         gx88GBSlLdA+b1KYILzao0whKbxsROSjfoI5Tn1mSE72r5ju6DBQZNpj8B3TtY0gX5OQ
-         QEFt6W24tZmfLVj6jouITo1kJUJ16t+J+ItAQcWF7M7h2bTkZs+9BTQU2hbSxBMbpVSE
-         95Rx2g+nwVAxaNmn1UJZXb6/jFKDEEBmRkKR7+hS9XWhbD/fz+QWqLPeebkFJmMwK7Cn
-         IquoomnRu8APPSUQwRTBE784spVhGUOgzHg0ozjj4Kr8qEkkd6+VfZTWNdcYaLqarHpY
-         1VuA==
-X-Gm-Message-State: APjAAAWxe0o82Jq1isZ1o13NMwZiNc84fLncW6Z4Kweov910MnE8fgLr
-        1ma176CKHPSx5Mqg6dQ1bvTRs2EYlf2urUtV/Kw=
-X-Google-Smtp-Source: APXvYqyUfUGFNgz0xNB0ytdDk3m9k6lvN2rSLQrWuplzu38HrzYAPZJ4cUcexs15+gohZobI23e99dHh/W90fK4UCfA=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr92750494otm.297.1577955650175;
- Thu, 02 Jan 2020 01:00:50 -0800 (PST)
+        Thu, 2 Jan 2020 04:31:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57690 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727924AbgABJb7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jan 2020 04:31:59 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADE36217F4;
+        Thu,  2 Jan 2020 09:31:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577957519;
+        bh=z7XbupEIA871TaOOa9+yiI0sdqgjfYz8rikslwugDPc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ubsJsZ17xJUrhg1PKhxQTkfB5sALfgzZl8fOri0JDQjveIQDoWt3nI2j5l7jMjldx
+         v47TqhJihiPYqmgocaKNrG/HqR4EFN5/N6Fwbh6oGjztirkdCNJAOT/dIfsvo+zCSi
+         Bi1bjxYxiwUsa2sSd3AMa6fzz57A8Ct77ack0AcI=
+Date:   Thu, 2 Jan 2020 10:31:56 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: R40: Upgrade GICC reg size to 8K
+Message-ID: <20200102093156.wrcuqxwbfs2vmwof@gilmour.lan>
+References: <20200102012657.9278-1-andre.przywara@arm.com>
+ <20200102012657.9278-2-andre.przywara@arm.com>
 MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
- <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
- <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
- <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
- <CAMuHMdU0K3n4CandL2RKrVmzmbBMt2Mw3WWM4JZoZcK3h8yZNA@mail.gmail.com> <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 2 Jan 2020 10:00:39 +0100
-Message-ID: <CAMuHMdUq9FD8MU2iF4FPwLND+jrD5f-h8Wnp1A3=HwHmHg+nmg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2mnyeiclhklvtj5r"
+Content-Disposition: inline
+In-Reply-To: <20200102012657.9278-2-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Tue, Dec 31, 2019 at 6:10 PM Rob Herring <robh@kernel.org> wrote:
-> On Tue, Dec 31, 2019 at 7:31 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, Dec 31, 2019 at 9:23 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
-> > > > On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> > > > > > Convert the generic PCI host binding to DT schema. The derivative Juno,
-> > > > > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> > > > > > their compatible strings. The simplest way to convert those to
-> > > > > > schema is just add them into the common generic PCI host schema.
-> > > > > >
-> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > > > Cc: Andrew Murray <andrew.murray@arm.com>
-> > > > > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> > > > > > Cc: Will Deacon <will@kernel.org>
-> > > > > > Cc: David Daney <david.daney@cavium.com>
-> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > >
-> > > > > > index 515b2f9542e5..000000000000
-> > > > > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> > > > > > +++ /dev/null
-> > > > >
-> > > > > > -Example:
-> > > > > > -
-> > > > > > -    pcie1: pcie@7f000000 {
-> > > > > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> > > > > > -        device_type = "pci";
-> > > > > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> > > > > > -        bus-range = <0x0 0xe>;
-> > > > > > -        #address-cells = <3>;
-> > > > > > -        #size-cells = <2>;
-> > > > > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> > > > > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> > > > > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> > > > > > -
-> > > > > > -        #interrupt-cells = <0x1>;
-> > > > > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
-> > > > >
-> > > > > An all-zeroes interrupt-map-mask seems to be very common on embedded
-> > > > > SoCs, where all devices are mapped to a single interrupt.
-> > > >
-> > > > Indeed.
-> > > >
-> > > > > However, schemas/pci/pci-bus.yaml says:
-> > > > >
-> > > > >   interrupt-map-mask:
-> > > > >     items:
-> > > > >       - description: PCI high address cell
-> > > > >         minimum: 0
-> > > > >         maximum: 0xf800
-> > > > >       - description: PCI mid address cell
-> > > > >         const: 0
-> > > > >       - description: PCI low address cell
-> > > > >         const: 0
-> > > > >       - description: PCI IRQ cell
-> > > > >         minimum: 1
-> > > > >         maximum: 7
-> > > > >
-> > > > > and thus complains about an all-zeroes mask, e.g.
-> > > > >
-> > > > >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-> > > > > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
-> > > >
-> > > > Now fixed.
-> > >
-> > > Thank you, confirmed.
-> >
-> > And with latest renesas-drivers, I started seeing:
-> >
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:0: [0, 0, 0, 1] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:1: [5, 0, 113, 4] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:2: [2048, 0, 0, 1] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:3: [5, 0, 113, 4] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:4: [4096, 0, 0, 2] is too short
-> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
-> > interrupt-map:5: [5, 0, 113, 4] is too short
-> >
-> > Looks like interrupt-map is split incorrectly: shouldn't each entry have 8
-> > cells?
+--2mnyeiclhklvtj5r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jan 02, 2020 at 01:26:55AM +0000, Andre Przywara wrote:
+> The GIC used in the R40 SoC is an ARM GIC-400 with virtualization support,
+> so let's advertise the full 8K region of the GICC MMIO frame to enable
+> KVM's usage of the GIC (as we do already for all other SoCs).
 >
-> That must be with a current dtc which now splits the array before each
-> phandle. That works for phandle+args, but not *-map properties. :( I
+> Tested by running KVM on a Bananapi M2 Berry.
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
-Ah, that explains it: renesas-drivers does include your for-next branch.
-At first I was a bit puzzled, as the messages weren't introduced by a
-dt-schema repo update...
+Applied, thanks!
+Maxime
 
-> was trying to avoid a bunch of dts updates to add brackets. I think
-> for now, I'll just drop the interrupt-map size constraint. It's not
-> all that accurate anyways as it doesn't look at cell sizes.
+--2mnyeiclhklvtj5r
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Too late, I've already applied grouping to the Renesas ARM DTS files ;-)
+-----BEGIN PGP SIGNATURE-----
 
-Gr{oetje,eeting}s,
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg24jAAKCRDj7w1vZxhR
+xUQbAQClk/beo71p82R7czCIU5RsEyXUGoVfxFTJLmi4mlFOtgD9EYpUhFz6weme
+ZRkbXJRgAgmcJQqGp60CsXc/CLTcrg8=
+=whv3
+-----END PGP SIGNATURE-----
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--2mnyeiclhklvtj5r--
