@@ -2,138 +2,72 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393A6C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 16:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0872CC2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 17:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D15120866
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 16:34:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="gelJmfqD"
+	by mail.kernel.org (Postfix) with ESMTP id D9809206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 17:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgABQew (ORCPT
+        id S1727720AbgABR1i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 11:34:52 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44019 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbgABQew (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 11:34:52 -0500
-Received: by mail-io1-f66.google.com with SMTP id n21so37227340ioo.10
-        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 08:34:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n02NZb1q13MC+D+YIZeKacRc8gevOmHNy1haOLJb4io=;
-        b=gelJmfqDyUmjwBH/XMMX/bBXaKDVC6YTmAj8rPELVV13MZipjbHUb7JPhFkSuDop1U
-         ByiLKjmlDBsd8mhMeRa6Is5L7PN0Wzk2rxFBkZqRfzxyPP1Bgn9Y5J2iih8/libglJ22
-         dOtjW3gXu4mZCdjaMzxLU4AnQWrng2RGMawBo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n02NZb1q13MC+D+YIZeKacRc8gevOmHNy1haOLJb4io=;
-        b=seDI8tKqYv7WirhI8ZwHz2N2GS6h2DbFidNI5hSe5TPIDER2cGtXaZqbLRSfleFnSW
-         6JzXOQ1j5oRJNOO46mYT4DvA0gqJge2xgY1YWGLTEfI6LMASGnWUMz2wPueO/uqfqWX6
-         4+OePA+dwOvdEawc8QLMij0a7W9ntLGaHrrVK0wMX1wQfzxvtbn+v7fkRNEvmFo1JJXE
-         yAKn1LbeZzLCS5Duvb7dX39v/hEgzWmMZsv9a0rU7L75VQHi4lTIyo1pnx+nhItgSucS
-         4/mSCs9ZsCAr0RSDRCA6V1uomjlLvded0GYjWuGAhl/ECsh7zlDBzDnfKRb1oouECsEq
-         5fHA==
-X-Gm-Message-State: APjAAAV5WtfNf4MO0oXELyuZjEMRgon6LDWsa1IqChNGQ5cJ53oUPpDJ
-        OLSm3h4HBnsroRKKKbx0XTr/v0amVqwSJXogzVI7WQ==
-X-Google-Smtp-Source: APXvYqz8y/GovnsF0D2tm3lNOpYaS0G7+35htjGwpcyBgB9MdOWIe9CYMW8Ole+deE4SlX9aakNc01/kDuMb4EgOvMg=
-X-Received: by 2002:a02:b897:: with SMTP id p23mr67001302jam.58.1577982891338;
- Thu, 02 Jan 2020 08:34:51 -0800 (PST)
+        Thu, 2 Jan 2020 12:27:38 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:58615 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbgABR1i (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 12:27:38 -0500
+Received: from localhost ([31.212.60.142]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MdwRi-1jKkJE2ym6-00b3zf; Thu, 02 Jan 2020 18:27:18 +0100
+Date:   Thu, 2 Jan 2020 18:27:17 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        rpi-receiver@htl-steyr.ac.at, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] iio: srf04: add support for power management
+Message-ID: <20200102172715.jjdw7ehymawixpds@arbad>
 MIME-Version: 1.0
-References: <20191231130528.20669-1-jagan@amarulasolutions.com>
- <20191231130528.20669-3-jagan@amarulasolutions.com> <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
- <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com> <20200102154703.3prgwcjyo36g5g5u@gilmour.lan>
-In-Reply-To: <20200102154703.3prgwcjyo36g5g5u@gilmour.lan>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 2 Jan 2020 22:04:40 +0530
-Message-ID: <CAMty3ZB_6GyK=hhJU-8yAQiom1Uq25ojFbKaGrK1fmW8SnDV_A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Provags-ID: V03:K1:VGGLwN4dWju6C54bbKZOEM379zMZFML5+TBBQoMMgfDkbX3PL1e
+ R7ndM1JPTz8diJ+550ugcqzKP7TXG3Xh3583mZYfKHXiwI5F8dxfJA28+T2oLB/Jr/sZDAl
+ jar9YVhaP05bkJubaE7oBD7UxORZ3OajROVlMQyL52C4OGR0KWwrvYkrecZ+9ippvUjDrg9
+ 98MtRpRLJxDIvylVILUnw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZRoMXqNpmrY=:JGlqggv2fcoZkFnWil8TeN
+ Nv60ECKRxfMQtG+aetJfpxultl+08d9lw63USsDHKAmNPjP9YtZgg3J6kl9oXPiUEsErilfob
+ JqmNmd+mVQmC9EuQvWhcqcgZ8UguQ6sNW+81E9PSRoq2/Dt8HGQjgq9RG33MyCmngeCzvotSC
+ J8553XKp0haclSs+LZ+PMHorKzXkPWRRGSYETI9Dctb4J5XvmtkLLjhejxvb/qQRDLrqP2Bzv
+ 1J6fVnnW54bSlfw4wmyn4PvPbrUDnUaiqF/+TdU7//cvYRqlG8xav2ogMf8Ifi1LULUdkmw11
+ eGfShHqMcG7R77BmAFqyaFRFTGrRlqwfY7krz01bffS7JILm/oW9TRDDA8QEGCjibzfSe8BAy
+ +KgqhegNE0ZjpeS3Uk0Ro7DcaObycEb3a1SSWyPXRTZlwEEq3mbvRQRokJ0Zv4AKVNSlSjCtF
+ nqz1vYe/moDXncCIb0JE6+ORNepRg4eDMM0zQD9owKDWw5A+fHcsWXQNhYMHKt6YKP2e2a08P
+ WO4ov3RwgiPWiPHOH744CCxeWaZzu87lxLKX8Klg9mpmH7Ti9vI7tYDiu36kVUBueqqqAlwo4
+ 5kzzQjKDzNTS3QgPdkQiqa7HlpyYpihTbALaQ9vKs/2rcEQTR7iVKxFzvw7kxxYH/lY5vPk+h
+ cbdIQkyYz39QDITe20g+BHEJKTwdMtpGwKHiJbQjoRaiGmsb11pgy6+qG0vMnLGr1VoidFexx
+ 5UPAZ/vQstvDGmIXe5JCAJc29+dt3wBfqoGHqLtopChQxQsmEIrIQLvKoF84fLC6h0vTPeJR+
+ kUWZpLZeufqpWHAfML5T8sbscDKeGEe1NVXogI9OMLF5zGSZtlgDnZZ+0cqxvJ1YjFxjmsTX4
+ mPI9+jePWjxEgOTqSkDQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 9:17 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Thu, Jan 02, 2020 at 09:10:31PM +0530, Jagan Teki wrote:
-> > On Thu, Jan 2, 2020 at 4:24 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Tue, Dec 31, 2019 at 06:35:21PM +0530, Jagan Teki wrote:
-> > > > TCON LCD0, LCD1 in allwinner R40, are used for managing
-> > > > LCD interfaces like RGB, LVDS and DSI.
-> > > >
-> > > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
-> > > > tcon top.
-> > > >
-> > > > Add support for it, in tcon driver.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > > Changes for v3:
-> > > > - none
-> > > >
-> > > >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > index fad72799b8df..69611d38c844 100644
-> > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> > > > @@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
-> > > >       .has_channel_1          = true,
-> > > >  };
-> > > >
-> > > > +static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
-> > > > +     .supports_lvds          = true,
-> > > > +     .has_channel_0          = true,
-> > > > +     /* TODO Need to support TCON output muxing via GPIO pins */
-> > > > +     .set_mux                = sun8i_r40_tcon_tv_set_mux,
-> > >
-> > > What is this muking about? And why is it a TODO?
-> >
-> > Muxing similar like how TCON TOP handle TV0, TV1 I have reused the
-> > same so-that it would configure de port selection via
-> > sun8i_tcon_top_de_config
-> >
-> > TCON output muxing have gpio with GPIOD and GPIOH bits, which select
-> > which of LCD or TV TCON outputs to the LCD function pins. I have
-> > marked these has TODO for further support as mentioned by Chen-Yu in
-> > v1[1].
->
-> It should be in the commit log.
+This patchset adds support for power management for the srf04 iio driver.
+It was suggested by Franz for the purpose of saving energy on battery driven
+vehicles.
 
-Make sense.
+Andreas Klinger (2):
+  dt-bindings: devantech-srf04.yaml: add pm feature
+  iio: srf04: add power management feature
 
->
-> What's the plan to support that when needed? And that means that the
-> LCD and TV outputs are mutually exclusive? We should at the very least
-> check that both aren't enabled at the same time.
+ .../bindings/iio/proximity/devantech-srf04.yaml    |  16 ++++
+ drivers/iio/proximity/srf04.c                      | 104 ++++++++++++++++++++-
+ 2 files changed, 119 insertions(+), 1 deletion(-)
 
-Yes, LCD or TV within the outselect seems to be mutually exclusive.
-Like LCD0 or TV0 can output to GPIOD incase of TV0_OUTSEL and LCD1 or
-TV1 can output to GPIOH incase of TV1_OUTSEL. I think checking them
-before configuring TCON_TOP_PORT_SEL_REG would make sense, let me know
-if you have any suggestions?
+-- 
+2.11.0
