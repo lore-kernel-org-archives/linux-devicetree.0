@@ -2,241 +2,96 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F368C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 17:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28613C3276C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F616217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 17:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0866E20848
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgABR3B (ORCPT
+        id S1728278AbgABT2U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 12:29:01 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:54221 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbgABR3A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 12:29:00 -0500
-Received: from localhost ([31.212.60.142]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MKsSj-1j1huT06wf-00LJ2m; Thu, 02 Jan 2020 18:28:44 +0100
-Date:   Thu, 2 Jan 2020 18:28:43 +0100
-From:   Andreas Klinger <ak@it-klinger.de>
-To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        rpi-receiver@htl-steyr.ac.at, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] iio: srf04: add power management feature
-Message-ID: <20200102172841.iv2ej5gtnufkqmll@arbad>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:kpxqvnxU/14xcISH9Vs4iYpjFPgF+e9DupLuJTMB0sPPmTuFfud
- S2LZ5n1tFEL4LNDrnQGsnwWfvD1DTBBTHAFY4jzWpNEZgi7RGMExP4uWPF1R5edYZFUgY1I
- zMoTuZHxzLMrJEgBaH8ucLa+YbFz1sdexbtBlGslHM5d/6Jk8cYU96QI+tlL3vRBAxhfiHL
- QbAU13R5vtI94dXfD8urQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HWY5LQvu8DU=:1ozE28T7Iwzi4a3NmLbjh2
- PFOus3z0uNkvKELjeyyQhBgBjDebgZNUsr80G+IYss1EUb1ZPeJ5qt8VCIWVa7MJgIsmt5OwO
- e/H/VJoX0kx+QFbRxup1BAiFKcfwqg8zpS6C1N7tZl0aIqHpSoCyOfM1i5c1teIRsBkpnesmP
- q1WhrP8UIY0v2b4/90+KvDMusmByRBSiB4gPPv494hoRLek0Pmb15iZ1N/EY96eZlPO63BoBs
- XcwAdixWdsyntr1lp+FoWjMS8FIjctm5QjdE6yVyvTzzLu0bJqEfjlbiJ8XTD/DFmruX7EtwI
- o+pPsYHuR61NQbeutVHPmc658Gjbsp30JKCk6pIwsCv0lIOaNU6HF8VWllz4kt7DKs8/RUoJe
- vQrTfogUZQjpEUDXVSu7Mntxh3uOU60VIcb/u4uLh0VsozcvUc8/MaVqk4izsUVaTYteZFpmP
- So40h6UwKr9ropaiBJasLm7/PawRSleyIRL7pBUnRjiB3RrXJ953D5yTnaSxs/4MDFbtmEebD
- /0GCZHrT2i7ZSQKQ4wFbiWECCl3dUEhfytdfYK90CgbcIol3QRjj9u+DdjqwJ7vp4U03R76UU
- Sx8AJ4aRUkFBmu03qdAt4fvixrMNtlZ1RTR+wswHf6aI4pqiVjk+y2VnbPXPvLsHo+HWkAPZ/
- cY6oZ1R09MrI800KjDJCStTpp3ABX4/Vr745AZeV+6MU0lWne+MmudfYRpNeHpOTxdro1+cRe
- SPrk3rFQgNFuhawm+JtNuiw913tnMR7/J0H4sDnJk3svuO9l1D/Wlbh3U5vQAV7oaDRA2fV4Y
- bhhkKcjYOZzkPR3Kcv1xIleYZalVfHnmb9mJXjOvc3/c4F4TNSiF00O0uA0jSZ2+bI2eoejqq
- Iwhh19GB/BOijlT5HTAA==
+        Thu, 2 Jan 2020 14:28:20 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36920 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728427AbgABT2T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 14:28:19 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 002JGwPg012566;
+        Thu, 2 Jan 2020 14:28:07 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x6nem86ya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jan 2020 14:28:07 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 002JQsGU025112;
+        Thu, 2 Jan 2020 19:28:06 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04wdc.us.ibm.com with ESMTP id 2x5xp6txh9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jan 2020 19:28:06 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 002JS5nb60752140
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 Jan 2020 19:28:05 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B721BE051;
+        Thu,  2 Jan 2020 19:28:05 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB75EBE04F;
+        Thu,  2 Jan 2020 19:28:04 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.103.158])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  2 Jan 2020 19:28:04 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au,
+        andrew@aj.id.au, eajames@linux.ibm.com
+Subject: [PATCH v4 11/12] ARM: dts: aspeed: witherspoon: Enable XDMA Engine
+Date:   Thu,  2 Jan 2020 13:27:55 -0600
+Message-Id: <1577993276-2184-12-git-send-email-eajames@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1577993276-2184-1-git-send-email-eajames@linux.ibm.com>
+References: <1577993276-2184-1-git-send-email-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-02_06:2020-01-02,2020-01-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 mlxscore=0 spamscore=0 suspectscore=1 impostorscore=0
+ mlxlogscore=715 adultscore=0 lowpriorityscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001020156
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add suspend and resume operations for being used by optional power
-management.
+Enable the XDMA engine node.
 
-The suspend function is switching off an GPIO which can be used by the
-hardware to switch power off. The resume function is switching the GPIO on
-and sleeps an adjustable time to give the device a chance to be up and
-running.
-
-If activated the driver gets into autosuspend after some time of
-inactivity.
-
-Suggested-by: Franz Parzer <rpi-receiver@htl-steyr.ac.at>
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- drivers/iio/proximity/srf04.c | 104 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 103 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-index 01eb8cc63076..b19d910298d6 100644
---- a/drivers/iio/proximity/srf04.c
-+++ b/drivers/iio/proximity/srf04.c
-@@ -45,6 +45,7 @@
- #include <linux/sched.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
-+#include <linux/pm_runtime.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- 
-@@ -56,6 +57,7 @@ struct srf04_data {
- 	struct device		*dev;
- 	struct gpio_desc	*gpiod_trig;
- 	struct gpio_desc	*gpiod_echo;
-+	struct gpio_desc	*gpiod_power;
- 	struct mutex		lock;
- 	int			irqnr;
- 	ktime_t			ts_rising;
-@@ -63,6 +65,7 @@ struct srf04_data {
- 	struct completion	rising;
- 	struct completion	falling;
- 	const struct srf04_cfg	*cfg;
-+	int			startup_time_ms;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+index 569dad93e162..1a28b86f00ea 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+@@ -658,4 +658,9 @@ &video {
+ 	memory-region = <&video_engine_memory>;
  };
  
- static const struct srf04_cfg srf04_cfg = {
-@@ -97,6 +100,9 @@ static int srf04_read(struct srf04_data *data)
- 	u64 dt_ns;
- 	u32 time_ns, distance_mm;
- 
-+	if (data->gpiod_power)
-+		pm_runtime_get_sync(data->dev);
-+
- 	/*
- 	 * just one read-echo-cycle can take place at a time
- 	 * ==> lock against concurrent reading calls
-@@ -110,6 +116,11 @@ static int srf04_read(struct srf04_data *data)
- 	udelay(data->cfg->trigger_pulse_us);
- 	gpiod_set_value(data->gpiod_trig, 0);
- 
-+	if (data->gpiod_power) {
-+		pm_runtime_mark_last_busy(data->dev);
-+		pm_runtime_put_autosuspend(data->dev);
-+	}
-+
- 	/* it should not take more than 20 ms until echo is rising */
- 	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
- 	if (ret < 0) {
-@@ -268,6 +279,26 @@ static int srf04_probe(struct platform_device *pdev)
- 		return PTR_ERR(data->gpiod_echo);
- 	}
- 
-+#ifdef CONFIG_PM
-+	data->gpiod_power = devm_gpiod_get_optional(dev, "power",
-+								GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpiod_power)) {
-+		dev_err(dev, "failed to get power-gpios: err=%ld\n",
-+						PTR_ERR(data->gpiod_power));
-+		return PTR_ERR(data->gpiod_power);
-+	}
-+	if (data->gpiod_power) {
-+
-+		if (of_property_read_u32(dev->of_node, "startup-time-ms",
-+						&data->startup_time_ms))
-+			data->startup_time_ms = 100;
-+		dev_dbg(dev, "using power gpio: startup-time-ms=%d\n",
-+							data->startup_time_ms);
-+	}
-+#else
-+	data->gpiod_power = NULL;
-+#endif
-+
- 	if (gpiod_cansleep(data->gpiod_echo)) {
- 		dev_err(data->dev, "cansleep-GPIOs not supported\n");
- 		return -ENODEV;
-@@ -296,14 +327,85 @@ static int srf04_probe(struct platform_device *pdev)
- 	indio_dev->channels = srf04_chan_spec;
- 	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
- 
--	return devm_iio_device_register(dev, indio_dev);
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(data->dev, "iio_device_register: %d\n", ret);
-+		return ret;
-+	}
-+
-+	if (data->gpiod_power) {
-+		pm_runtime_set_autosuspend_delay(data->dev, 1000);
-+		pm_runtime_use_autosuspend(data->dev);
-+
-+		ret = pm_runtime_set_active(data->dev);
-+		if (ret) {
-+			dev_err(data->dev, "pm_runtime_set_active: %d\n", ret);
-+			iio_device_unregister(indio_dev);
-+		}
-+
-+		pm_runtime_enable(data->dev);
-+		pm_runtime_idle(data->dev);
-+	}
-+
-+	return ret;
- }
- 
-+static int srf04_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct srf04_data *data = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	if (data->gpiod_power) {
-+		pm_runtime_disable(data->dev);
-+		pm_runtime_set_suspended(data->dev);
-+	}
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int srf04_pm_runtime_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = container_of(dev,
-+						struct platform_device, dev);
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct srf04_data *data = iio_priv(indio_dev);
-+
-+	gpiod_set_value(data->gpiod_power, 0);
-+
-+	return 0;
-+}
-+
-+static int srf04_pm_runtime_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = container_of(dev,
-+						struct platform_device, dev);
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct srf04_data *data = iio_priv(indio_dev);
-+
-+	gpiod_set_value(data->gpiod_power, 1);
-+	msleep(data->startup_time_ms);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops srf04_pm_ops = {
-+	SET_RUNTIME_PM_OPS(srf04_pm_runtime_suspend,
-+				srf04_pm_runtime_resume, NULL)
++&xdma {
++	status = "okay";
++	memory = <0x9f000000 0x01000000>;
 +};
-+#endif
 +
- static struct platform_driver srf04_driver = {
- 	.probe		= srf04_probe,
-+	.remove		= srf04_remove,
- 	.driver		= {
- 		.name		= "srf04-gpio",
- 		.of_match_table	= of_srf04_match,
-+#ifdef CONFIG_PM
-+		.pm		= &srf04_pm_ops,
-+#endif
- 	},
- };
- 
+ #include "ibm-power9-dual.dtsi"
 -- 
-2.11.0
+2.24.0
+
