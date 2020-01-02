@@ -2,342 +2,193 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F74C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 12:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EA0C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 12:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F1621835
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 12:32:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FfoReYX4"
+	by mail.kernel.org (Postfix) with ESMTP id 973E120863
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 12:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgABMcC (ORCPT
+        id S1728290AbgABMjC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 07:32:02 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51545 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728260AbgABMcC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 07:32:02 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1577968321; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/E8TT9+0U3inh8FEr3+mV0x6CJy/08wdLhWGuFRpWjs=; b=FfoReYX42bpdP69nWl9Qou+fL4StmXYs8XEx1K/jJQXLZrHu7Q0+berSQDYC6Rj9k7KYcXsr
- nxy56wy9tzy4gNt98XmgoNOdw9+VqgoKvi7ziAHTbqGaN+U6HmmciC8hmYY13BJamadsX1bt
- GclcB854sS+1w6U7461G66uUG1k=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0de2c0.7fee5968c768-smtp-out-n01;
- Thu, 02 Jan 2020 12:32:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3C61CC447A4; Thu,  2 Jan 2020 12:31:59 +0000 (UTC)
-Received: from [10.206.25.108] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5625C43383;
-        Thu,  2 Jan 2020 12:31:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5625C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V2] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD
- card
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <1576288475-7606-1-git-send-email-vbadigan@codeaurora.org>
- <20191217222119.GW228856@google.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <0dbc37f0-41dc-77fd-9bd4-0e4d81cbf6f7@codeaurora.org>
-Date:   Thu, 2 Jan 2020 18:01:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 2 Jan 2020 07:39:02 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50995 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbgABMjC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 07:39:02 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1imzki-0006Kg-KQ; Thu, 02 Jan 2020 13:39:00 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:c097:3b50:f886:b2e] (unknown [IPv6:2a03:f580:87bc:d400:c097:3b50:f886:b2e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 8131749A134;
+        Thu,  2 Jan 2020 12:38:59 +0000 (UTC)
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20191210163204.28225-1-dmurphy@ti.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXzuQENBFxSzJYBCAC58uHRFEjVVE3J
+ 31eyEQT6H1zSFCccTMPO/ewwAnotQWo98Bc67ecmprcnjRjSUKTbyY/eFxS21JnC4ZB0pJKx
+ MNwK6zq71wLmpseXOgjufuG3kvCgwHLGf/nkBHXmSINHvW00eFK/kJBakwHEbddq8Dr4ewmr
+ G7yr8d6A3CSn/qhOYWhIxNORK3SVo4Io7ExNX/ljbisGsgRzsWvY1JlN4sabSNEr7a8YaqTd
+ 2CfFe/5fPcQRGsfhAbH2pVGigr7JddONJPXGE7XzOrx5KTwEv19H6xNe+D/W3FwjZdO4TKIo
+ vcZveSDrFWOi4o2Te4O5OB/2zZbNWPEON8MaXi9zABEBAAGJA3IEGAEKACYWIQTBQAugs5ie
+ b7x9W1wrXuIRxYrqVAUCXFLMlgIbAgUJAeKNmgFACRArXuIRxYrqVMB0IAQZAQoAHRYhBJrx
+ JF84Dn3PPNRrhVrGIaOR5J0gBQJcUsyWAAoJEFrGIaOR5J0grw4H/itil/yryJCvzi6iuZHS
+ suSHHOiEf+UQHib1MLP96LM7FmDabjVSmJDpH4TsMu17A0HTG+bPMAdeia0+q9FWSvSHYW8D
+ wNhfkb8zojpa37qBpVpiNy7r6BKGSRSoFOv6m/iIoRJuJ041AEKao6djj/FdQF8OV1EtWKRO
+ +nE2bNuDCcwHkhHP+FHExdzhKSmnIsMjGpGwIQKN6DxlJ7fN4W7UZFIQdSO21ei+akinBo4K
+ O0uNCnVmePU1UzrwXKG2sS2f97A+sZE89vkc59NtfPHhofI3JkmYexIF6uqLA3PumTqLQ2Lu
+ bywPAC3YNphlhmBrG589p+sdtwDQlpoH9O7NeBAAg/lyGOUUIONrheii/l/zR0xxr2TDE6tq
+ 6HZWdtjWoqcaky6MSyJQIeJ20AjzdV/PxMkd8zOijRVTnlK44bcfidqFM6yuT1bvXAO6NOPy
+ pvBRnfP66L/xECnZe7s07rXpNFy72XGNZwhj89xfpK4a9E8HQcOD0mNtCJaz7TTugqBOsQx2
+ 45VPHosmhdtBQ6/gjlf2WY9FXb5RyceeSuK4lVrz9uZB+fUHBge/giOSsrqFo/9fWAZsE67k
+ 6Mkdbpc7ZQwxelcpP/giB9N+XAfBsffQ8q6kIyuFV4ILsIECCIA4nt1rYmzphv6t5J6PmlTq
+ TzW9jNzbYANoOFAGnjzNRyc9i8UiLvjhTzaKPBOkQfhStEJaZrdSWuR/7Tt2wZBBoNTsgNAw
+ A+cEu+SWCvdX7vNpsCHMiHtcEmVt5R0Tex1Ky87EfXdnGR2mDi6Iyxi3MQcHez3C61Ga3Baf
+ P8UtXR6zrrrlX22xXtpNJf4I4Z6RaLpB/avIXTFXPbJ8CUUbVD2R2mZ/jyzaTzgiABDZspbS
+ gw17QQUrKqUog0nHXuaGGA1uvreHTnyBWx5P8FP7rhtvYKhw6XdJ06ns+2SFcQv0Bv6PcSDK
+ aRXmnW+OsDthn84x1YkfGIRJEPvvmiOKQsFEiB4OUtTX2pheYmZcZc81KFfJMmE8Z9+LT6Ry
+ uSS5AQ0EXFLNDgEIAL14qAzTMCE1PwRrYJRI/RSQGAGF3HLdYvjbQd9Ozzg02K3mNCF2Phb1
+ cjsbMk/V6WMxYoZCEtCh4X2GjQG2GDDW4KC9HOa8cTmr9Vcno+f+pUle09TMzWDgtnH92WKx
+ d0FIQev1zDbxU7lk1dIqyOjjpyhmR8Put6vgunvuIjGJ/GapHL/O0yjVlpumtmow6eME2muc
+ TeJjpapPWBGcy/8VU4LM8xMeMWv8DtQML5ogyJxZ0Smt+AntIzcF9miV2SeYXA3OFiojQstF
+ vScN7owL1XiQ3UjJotCp6pUcSVgVv0SgJXbDo5Nv87M2itn68VPfTu2uBBxRYqXQovsR++kA
+ EQEAAYkCPAQYAQoAJhYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUs0OAhsMBQkB4o0iAAoJ
+ ECte4hHFiupUbioQAJ40bEJmMOF28vFcGvQrpI+lfHJGk9zSrh4F4SlJyOVWV1yWyUAINr8w
+ v1aamg2nAppZ16z4nAnGU/47tWZ4P8blLVG8x4SWzz3D7MCy1FsQBTrWGLqWldPhkBAGp2VH
+ xDOK4rLhuQWx3H5zd3kPXaIgvHI3EliWaQN+u2xmTQSJN75I/V47QsaPvkm4TVe3JlB7l1Fg
+ OmSvYx31YC+3slh89ayjPWt8hFaTLnB9NaW9bLhs3E2ESF9Dei0FRXIt3qnFV/hnETsx3X4h
+ KEnXxhSRDVeURP7V6P/z3+WIfddVKZk5ZLHi39fJpxvsg9YLSfStMJ/cJfiPXk1vKdoa+FjN
+ 7nGAZyF6NHTNhsI7aHnvZMDavmAD3lK6CY+UBGtGQA3QhrUc2cedp1V53lXwor/D/D3Wo9wY
+ iSXKOl4fFCh2Peo7qYmFUaDdyiCxvFm+YcIeMZ8wO5udzkjDtP4lWKAn4tUcdcwMOT5d0I3q
+ WATP4wFI8QktNBqF3VY47HFwF9PtNuOZIqeAquKezywUc5KqKdqEWCPx9pfLxBAh3GW2Zfjp
+ lP6A5upKs2ktDZOC2HZXP4IJ1GTk8hnfS4ade8s9FNcwu9m3JlxcGKLPq5DnIbPVQI1UUR4F
+ QyAqTtIdSpeFYbvH8D7pO4lxLSz2ZyBMk+aKKs6GL5MqEci8OcFW
+Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
+ config
+Message-ID: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+Date:   Thu, 2 Jan 2020 13:38:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191217222119.GW228856@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20191210163204.28225-1-dmurphy@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR
+Content-Type: multipart/mixed; boundary="coBL95FV6eyGNpCrrK4NMQqNOfZpzPW3X";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Message-ID: <4a2e80f0-13c5-df7b-65af-25f86ca48f2a@pengutronix.de>
+Subject: Re: [PATCH v2] can: tcan4x5x: Turn on the power before parsing the
+ config
+References: <20191210163204.28225-1-dmurphy@ti.com>
+In-Reply-To: <20191210163204.28225-1-dmurphy@ti.com>
 
-On 12/18/2019 3:51 AM, Matthias Kaehlcke wrote:
-> On Sat, Dec 14, 2019 at 07:24:34AM +0530, Veerabhadrarao Badiganti wrote:
->> Add sdhc instances for supporting eMMC and SD-card on sc7180.
->> The regulators should be in HPM state for proper functionality of
->> eMMC and SD-card. Updating corresponding regulators accordingly.
->>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> The patch doesn't apply against qcom/for-next, looks like you need to
-> rebase it.
->
->> ---
->>
->> This depends on the patch series (dt support for sc7180):
->> https://lkml.org/lkml/2019/11/8/149
->> Also depends on documentation commit 2078158 (Present on mmc-next)
->>
->> Changes since V1:
->> 	- Updated the regulator min, max voltages as per
->> 	  eMMC/SD-card voltage requirements
->> 	- Enabled IOMMU for eMMC and SD-card.
->> 	- Added pull and drive strength to SD-card cd-gpio.
->> 	- Incorporated review comments by Matthias Kaehlcke.
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
->>   2 files changed, 183 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> index 189254f..b6d4dc1 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> @@ -7,6 +7,7 @@
->>   
->>   /dts-v1/;
->>   
->> +#include <dt-bindings/gpio/gpio.h>
->>   #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
->>   #include "sc7180.dtsi"
->>   #include "pm6150.dtsi"
->> @@ -101,9 +102,9 @@
->>   		};
->>   
->>   		vreg_l12a_1p8: ldo12 {
->> -			regulator-min-microvolt = <1696000>;
->> -			regulator-max-microvolt = <1952000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <1800000>;
->> +			regulator-max-microvolt = <1800000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   
->>   		vreg_l13a_1p8: ldo13 {
->> @@ -143,9 +144,9 @@
->>   		};
->>   
->>   		vreg_l19a_2p9: ldo19 {
->> -			regulator-min-microvolt = <2696000>;
->> -			regulator-max-microvolt = <3304000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <2960000>;
->> +			regulator-max-microvolt = <2960000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   	};
->>   
->> @@ -189,9 +190,9 @@
->>   		};
->>   
->>   		vreg_l6c_2p9: ldo6 {
->> -			regulator-min-microvolt = <2696000>;
->> -			regulator-max-microvolt = <3304000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <1800000>;
->> +			regulator-max-microvolt = <2950000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   
->>   		vreg_l7c_3p0: ldo7 {
->> @@ -207,9 +208,9 @@
->>   		};
->>   
->>   		vreg_l9c_2p9: ldo9 {
->> -			regulator-min-microvolt = <2952000>;
->> -			regulator-max-microvolt = <3304000>;
->> -			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
->> +			regulator-min-microvolt = <2960000>;
->> +			regulator-max-microvolt = <2960000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   
->>   		vreg_l10c_3p3: ldo10 {
->> @@ -400,3 +401,25 @@
->>   			bias-pull-up;
->>   		};
->>   };
->> +
->> +&sdhc_1 {
->> +	status = "ok";
->> +
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&sdc1_on>;
->> +	pinctrl-1 = <&sdc1_off>;
->> +	vmmc-supply = <&vreg_l19a_2p9>;
->> +	vqmmc-supply = <&vreg_l12a_1p8>;
->> +};
->> +
->> +&sdhc_2 {
->> +	status = "ok";
->> +
->> +	pinctrl-names = "default","sleep";
->> +	pinctrl-0 = <&sdc2_on>;
->> +	pinctrl-1 = <&sdc2_off>;
->> +	vmmc-supply  = <&vreg_l9c_2p9>;
->> +	vqmmc-supply = <&vreg_l6c_2p9>;
->> +
->> +	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
->> +};
-> You are adding these entries to the pinctrl section, they belong
-> above the "/* PINCTRL - additions to nodes defined in sc7180.dtsi */"
-> comment.
->
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 666e9b9..16de9b8 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -182,6 +182,32 @@
->>   			#power-domain-cells = <1>;
->>   		};
->>   
->> +		sdhc_1: sdhci@7c4000 {
->> +			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
->> +			reg = <0 0x7c4000 0 0x1000>;
->> +			reg-names = "hc_mem";
->> +
->> +			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
->> +					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
->> +			interrupt-names = "hc_irq", "pwr_irq";
->> +
->> +			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
->> +					<&gcc GCC_SDCC1_AHB_CLK>;
->> +			clock-names = "core", "iface";
->> +
->> +			iommus = <&apps_smmu 0x60 0x0>;
->> +
->> +			bus-width = <8>;
->> +			non-removable;
->> +
->> +			mmc-ddr-1_8v;
->> +			mmc-hs200-1_8v;
->> +			mmc-hs400-1_8v;
->> +			mmc-hs400-enhanced-strobe;
->> +
->> +			status = "disabled";
->> +		};
->> +
->>   		qupv3_id_0: geniqup@8c0000 {
->>   			compatible = "qcom,geni-se-qup";
->>   			reg = <0 0x008c0000 0 0x6000>;
->> @@ -897,6 +923,128 @@
->>   					function = "qup15";
->>   				};
->>   			};
->> +
->> +			sdc1_on: sdc1-on {
->> +				clk {
-> judging from some other nodes the convention seems to be to call the
-> nodes 'pinconf-<name>'.
->
->> +					pins = "sdc1_clk";
->> +					bias-disable;
->> +					drive-strength = <16>;
->> +				};
->> +
->> +				cmd {
->> +					pins = "sdc1_cmd";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
->> +
->> +				data {
->> +					pins = "sdc1_data";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
-> cmd and data have the same configuration, in theory you could combine
-> them in a single node. Not sure if it's strictly required, in this case
-> with just two pins it doesn't make a big difference.
+--coBL95FV6eyGNpCrrK4NMQqNOfZpzPW3X
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-Though both have same configuration, each corresponds to different bit 
-fields in register
+On 12/10/19 5:32 PM, Dan Murphy wrote:
+> The parse config function now performs action on the device either
+> reading or writing and a reset.  If the regulator is managed it needs
+> to be turned on.  So turn on the regulator if available if the parsing
+> fails then turn off the regulator.
 
-for updating drive-strengths and pull.  It configures the right bit 
-field based on pin name.
+Another BTW:
+Consider converting the switching of the vsup to runtime_pm.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pinctrl/qcom/pinctrl-sc7180.c?h=v5.5-rc4#n1093
+Yet another one:
+Why do you disable the clocks in the error path of tcan4x5x_can_probe(),
+but never enable them?
 
-So separate pins needed for cmd and data here.
+> out_clk:
+> 	if (!IS_ERR(mcan_class->cclk)) {
+> 		clk_disable_unprepare(mcan_class->cclk);
+> 		clk_disable_unprepare(mcan_class->hclk);
+> 	}
 
->> +
->> +				rclk {
->> +					pins = "sdc1_rclk";
->> +					bias-pull-down;
->> +				};
->> +			};
->> +
->> +			sdc1_off: sdc1-off {
->> +				clk {
->> +					pins = "sdc1_clk";
->> +					bias-disable;
->> +					drive-strength = <2>;
->> +				};
->> +
->> +				cmd {
->> +					pins = "sdc1_cmd";
->> +					bias-pull-up;
->> +					drive-strength = <2>;
->> +				};
->> +
->> +				data {
->> +					pins = "sdc1_data";
->> +					bias-pull-up;
->> +					drive-strength = <2>;
->> +				};
->> +
->> +				rclk {
->> +					pins = "sdc1_rclk";
->> +					bias-pull-down;
->> +				};
->> +			};
->> +
->> +			sdc2_on: sdc2_on {
-> nit: sdc2_on: sdc2-on
->
->> +				clk {
->> +					pins = "sdc2_clk";
->> +					bias-disable;
->> +					drive-strength = <16>;
->> +				};
->> +
->> +				cmd {
->> +					pins = "sdc2_cmd";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
->> +
->> +				data {
->> +					pins = "sdc2_data";
->> +					bias-pull-up;
->> +					drive-strength = <10>;
->> +				};
->> +
->> +				sd-cd {
->> +					pins = "gpio69";
->> +					bias-pull-up;
->> +					drive-strength = <2>;
->> +				};
->> +			};
->> +
->> +			sdc2_off: sdc2_off {
-> nit: sdc2_off: sdc2-off
+- please move the clock handling from the m_can.c to the individual
+  driver
+- please move the clock handling to runtime_pm in the individual driver
+- remove the obsolete m_can_class_get_clocks()
+- make runtime_pm mandatory
 
-Will incorporate the rest of the changes that you commented.
+regards,
+Marc
 
-Thanks,
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
 
-Veera
 
+--coBL95FV6eyGNpCrrK4NMQqNOfZpzPW3X--
+
+--gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl4N5F8ACgkQWsYho5Hk
+nSDtHgf9Fuf8bub7UBmK2jcLUq6z/osEin6/bLXyIr4fp7ynFdmK8UMLrrCnmmhQ
+JRcv0H+M4b8en91CE/9mBWOC+ZJ8+YVuZvAVyKd8EKzTM5zR87mo7BCDySZ07cFH
+qH3aBrn2Sq8++79T9d/1UmA0rPQ43bLvnZg3w7BqOF1ZZzmQ/D81QkccYCXh91Kd
+RFOmwWUtgY2C5KBOIcI0kiU+bwVvHablhfJKeZMw90v/bGdDbAFCXo7YakTfkyNF
+BXQ5h8bkij7OEKv8esC+8VtIivy8hwLzabGMB/ewwN5xI2tGAvMX49TFiEM/t51H
+DQH+BxTY9wB5TrnqdiXl0hBYdzr3pw==
+=7WTX
+-----END PGP SIGNATURE-----
+
+--gZi7TfwV0CRbGkF9I4vj7UoxElcfrKbDR--
