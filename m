@@ -2,113 +2,162 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CABC3276D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 13:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AE8C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 13:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A297820863
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 13:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AAE215A4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 13:53:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpAs5Ymn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgABN0v (ORCPT
+        id S1728389AbgABNxz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 08:26:51 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:49300 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728437AbgABN0u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 08:26:50 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 02 Jan 2020 18:55:47 +0530
-Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 02 Jan 2020 18:55:37 +0530
-Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
-        id 2B18F34ED; Thu,  2 Jan 2020 18:55:36 +0530 (IST)
-From:   Dikshita Agarwal <dikshita@codeaurora.org>
-To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org,
-        Dikshita Agarwal <dikshita@codeaurora.org>
-Subject: [PATCH V3 3/4] venus: core: add sc7180 DT compatible and resource struct
-Date:   Thu,  2 Jan 2020 18:55:00 +0530
-Message-Id: <1577971501-3732-4-git-send-email-dikshita@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
-References: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
+        Thu, 2 Jan 2020 08:53:55 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34952 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728342AbgABNxz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 08:53:55 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so5721278wmb.0;
+        Thu, 02 Jan 2020 05:53:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UWP8T2dSY7on4bhuJvvJczYvJx5ExaoKE13WYmlRLaE=;
+        b=BpAs5Ymn625eA/7UDL2mngUe6FHCqNi1N5DPpTwF++MjAalqhYw13VZ121XTxdW3bc
+         k8XUmRiv8I/FedSc6Z4suNRUXX70I53CVZXDmBIbOaN3+WvwJfRqxu7CJTqxlJQOsX5w
+         oKyuAo9tHeP2XALMiOaRJIyKsgirGl96iFYh7ACCMujtTGqKdCQC48ImRJ7UsqB4u5EY
+         QxpwwRl5coiAMuozQqicMQxMsvRhOk5KPvqUUulgtNY3GOZoKevSI3F2UMdYeZs/y4u8
+         CvHPtK7IZk6u9KQbPqjOuZ5w6eiaHGTfIdy8WzjjtuOZ6viGLVL30rkCth30aDrWxMX2
+         QlAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UWP8T2dSY7on4bhuJvvJczYvJx5ExaoKE13WYmlRLaE=;
+        b=dmh+oSGhA+dWujlajUY8HMRwoW+akNUJQ6VvdPPI0QUjSH9EKRPQbItGVlNdueMz2V
+         NCuxQoL13TA6LmAm2FjKrVyEYO+ImAW1Z1HR3NKhawGnwU2/AQDtloCNav7i8dlXnGyc
+         IByiLM7fIRBtaFMVXV8CQD/jkM+ynCEohwFyqN1Ap4al73ST+SJLrNozcbl2dI78LBKs
+         wXCEEOGkm3odDIIXYPn85ROUiRutGwMTIY5tIkw0u8XwH9pJnLVD+McGVDCtxkdrZU2W
+         I+hUCHsEwkcSeK3uyyzGmtsGRkLZP1hY0BaO/9y/JdcMAZXrD3GmQ+ZvVs8G/54UT4Zq
+         0YfQ==
+X-Gm-Message-State: APjAAAUMKEttCUSmxcW4V9uV74v2ZTV3WMVzqbfFOU2zJXdZwWr4zuLi
+        k/9TtMJEOd2feH2Sv4d+wD3OZFxXsog=
+X-Google-Smtp-Source: APXvYqxufgSY0u9Yp9j7987C/5ccAx6l5mQEkU9dAfV0VueShs93vukz+XU6wUh2h1CSSgsoa0ZKlw==
+X-Received: by 2002:a1c:4d18:: with SMTP id o24mr14415612wmh.35.1577973232941;
+        Thu, 02 Jan 2020 05:53:52 -0800 (PST)
+Received: from localhost.localdomain ([46.216.160.87])
+        by smtp.gmail.com with ESMTPSA id a184sm8755176wmf.29.2020.01.02.05.53.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 05:53:52 -0800 (PST)
+Received: from [127.0.0.1] (helo=jeknote.loshitsa1.net)
+        by localhost.localdomain with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <jekhor@gmail.com>)
+        id 1in0v8-00055Z-WC; Thu, 02 Jan 2020 16:53:51 +0300
+Date:   Thu, 2 Jan 2020 16:53:35 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] power: supply: bq25890_charger: Add support of
+ BQ25892 and BQ25896 chips
+Message-ID: <20200102135335.GA13218@jeknote.loshitsa1.net>
+References: <20200101224627.12093-1-jekhor@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200101224627.12093-1-jekhor@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This add DT compatible string and resource structure for sc7180.
+On Thu, Jan 02, 2020 at 01:46:25AM +0300, Yauhen Kharuzhy wrote:
+> Support BQ25892 and BQ25896 chips by this driver. They shared one chip
+> ID 0, so distinquish them by device revisions (2 for 25896 and 1 for
+> 25892).
+> 
+> Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
+> ---
+>  drivers/power/supply/bq25890_charger.c | 97 ++++++++++++++++++++------
+>  1 file changed, 76 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/supply/bq25890_charger.c
+> index 9d1ec8d677de..a3dcd4eb1287 100644
+> --- a/drivers/power/supply/bq25890_charger.c
+> +++ b/drivers/power/supply/bq25890_charger.c
+> @@ -25,12 +25,20 @@
+>  #define BQ25895_ID			7
+>  #define BQ25896_ID			0
+>  
+> +enum bq25890_chip_version {
+> +	BQ25890,
+> +	BQ25892,
+> +	BQ25895,
+> +	BQ25896,
+> +};
+> +
+...
+> +static int bq25890_get_chip_version(struct bq25890_device *bq)
+> +{
+> +	int id, rev;
+> +
+> +	id = bq25890_field_read(bq, F_PN);
+> +	if (id < 0) {
+> +		dev_err(bq->dev, "Cannot read chip ID.\n");
+> +		return id;
+> +	}
+> +
+> +	rev = bq25890_field_read(bq, F_DEV_REV);
+> +	if (rev < 0) {
+> +		dev_err(bq->dev, "Cannot read chip revision.\n");
+> +		return id;
+> +	}
+> +
+> +	switch (id) {
+> +	case BQ25890_ID:
+> +		bq->chip_version = BQ25890;
+> +		break;
+> +
+> +	/* BQ25892 and BQ25896 share same ID 0 */
+> +	case BQ25896_ID:
+> +		switch (rev) {
+> +		case 0:
+Sorry, typo here: should be 2 for 25896, I will fix this in v2.
 
-Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
----
- drivers/media/platform/qcom/venus/core.c | 45 ++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+> +			bq->chip_version = BQ25896;
+> +			break;
+> +		case 1:
+> +			bq->chip_version = BQ25892;
+> +			break;
+> +		default:
+> +			dev_err(bq->dev,
+> +				"Unknown device revision %d, assume BQ25892\n",
+> +				rev);
+> +			bq->chip_version = BQ25892;
+> +		}
+> +		break;
+> +
+> +	case BQ25895_ID:
+> +		bq->chip_version = BQ25895;
+> +		break;
+> +
+> +	default:
+> +		dev_err(bq->dev, "Unknown chip ID %d\n", id);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
+...
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index c7525d9..194b10b9 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -521,11 +521,56 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
- 	.fwname = "qcom/venus-5.2/venus.mdt",
- };
- 
-+static const struct freq_tbl sc7180_freq_table[] = {
-+	{  0, 500000000 },
-+	{  0, 434000000 },
-+	{  0, 340000000 },
-+	{  0, 270000000 },
-+	{  0, 150000000 },
-+};
-+
-+static const struct bw_tbl sc7180_bw_table_enc[] = {
-+	{  972000,  750000, 0, 0, 0 },	/* 3840x2160@30 */
-+	{  489600,  451000, 0, 0, 0 },	/* 1920x1080@60 */
-+	{  244800,  234000, 0, 0, 0 },	/* 1920x1080@30 */
-+};
-+
-+static const struct bw_tbl sc7180_bw_table_dec[] = {
-+	{ 1036800, 1386000, 0, 1875000, 0 },	/* 4096x2160@30 */
-+	{  489600,  865000, 0, 1146000, 0 },	/* 1920x1080@60 */
-+	{  244800,  530000, 0,  583000, 0 },	/* 1920x1080@30 */
-+};
-+
-+static const struct venus_resources sc7180_res = {
-+	.freq_tbl = sc7180_freq_table,
-+	.freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
-+	.bw_tbl_enc = sc7180_bw_table_enc,
-+	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
-+	.bw_tbl_dec = sc7180_bw_table_dec,
-+	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
-+	.codec_freq_data = sdm845_codec_freq_data,
-+	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
-+	.clks = {"core", "iface", "bus" },
-+	.clks_num = 3,
-+	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
-+	.vcodec_clks_num = 2,
-+	.vcodec_pmdomains = { "venus", "vcodec0" },
-+	.vcodec_pmdomains_num = 2,
-+	.vcodec_num = 1,
-+	.hfi_version = HFI_VERSION_4XX,
-+	.vmem_id = VIDC_RESOURCE_NONE,
-+	.vmem_size = 0,
-+	.vmem_addr = 0,
-+	.dma_mask = 0xe0000000 - 1,
-+	.fwname = "qcom/venus-5.4/venus.mdt",
-+};
-+
- static const struct of_device_id venus_dt_match[] = {
- 	{ .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
- 	{ .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
- 	{ .compatible = "qcom,sdm845-venus", .data = &sdm845_res, },
- 	{ .compatible = "qcom,sdm845-venus-v2", .data = &sdm845_res_v2, },
-+	{ .compatible = "qcom,sc7180-venus", .data = &sc7180_res, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, venus_dt_match);
 -- 
-1.9.1
-
+Yauhen Kharuzhy
