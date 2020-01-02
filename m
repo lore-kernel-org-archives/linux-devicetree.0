@@ -2,116 +2,99 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91942C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E668C3276D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670F8215A4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:40:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AP5Xweqg"
+	by mail.kernel.org (Postfix) with ESMTP id 5F734215A4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgABOkx (ORCPT
+        id S1728529AbgABOqo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:40:53 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39573 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgABOkx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:40:53 -0500
-Received: by mail-lj1-f194.google.com with SMTP id l2so40907202lja.6;
-        Thu, 02 Jan 2020 06:40:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YTVCjk10X6IDkXlg3Lj964r6euM3rxVqLQ0GPKfUCcY=;
-        b=AP5XweqgaDQb81JEDXXKrNOcYIEC2i4tvtdZSUGy93+DHN8A7ffo9TybljSB9VJ4j3
-         oZiC3JWlslj+PMJ13KpRrBZjp0emO2GobVqk+FEpnz5lFn8yuNZ+jFhEbwIMK73UeZB1
-         P0WN+b7kW6c8faslew/p/cfGYho0JQNrarwEKGJFRRB9bBNHI9/9YGZXVqzP1gMLeQQC
-         uwtOqNfEhpzbW6cUHtOSJ+bIzsO+UIoGEBAAxhZSmD/mI0CykOjgaCZixZZlYtfdKQ4T
-         iFUw53maeqLsVUL3PHWSSunz0Dv4NC0WQxDaawkoHV6HvLHzG0qBidaxdKLFxkN+F3YC
-         IR2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YTVCjk10X6IDkXlg3Lj964r6euM3rxVqLQ0GPKfUCcY=;
-        b=LDuOcCxuIzJfZfPczf0dw4MAMxSmY8cy+2o79sBX1ERxzauk7Arga1GNQDMYqV8xJC
-         jHSFxqu8nhYMIeSpl1QKsUc/BypJtUQD0nc4gR3AuXjFjJBRbskhvSYU2kIumnSIa98R
-         jw6p9wcywLai6Vv4Bny0KS7zzJ37MIZDxBoJhl3V+A5KAr2FcGxVVODVugTBp9XKYs9Z
-         OQCl3CfhB/Kn5pJCzfVBaZJgOnTN2sh1Z/faJb0NTgtt9API0MPCco5Fm6TIphxcqY4M
-         nn8lg/jbhHiIyD/qYjqYzlRvguu5dvZcgsC8XknkUiToAKV74qN4bhi2yZoTJ7ohQ4Sj
-         fV8w==
-X-Gm-Message-State: APjAAAXQMfUwgsT+mXc7VcLE0VR6TczStRajVrtvWbBcelMdRiVfkcMy
-        N01fvBmjEyZcLgEuM+Id3UPxKcs1
-X-Google-Smtp-Source: APXvYqxW/kfrNuZymj/mH11dgfiJX4D4dMU5VfflYEafTsK943BzpUc401lim/Fq7EUQMnVZaeZkrg==
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr49355528ljk.201.1577976050485;
-        Thu, 02 Jan 2020 06:40:50 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id g15sm18239966ljl.10.2020.01.02.06.40.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Jan 2020 06:40:49 -0800 (PST)
-Subject: Re: [PATCH v3 13/16] usb: phy: tegra: Keep CPU interrupts enabled
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Chen <Peter.Chen@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191228203358.23490-1-digetx@gmail.com>
- <20191228203358.23490-14-digetx@gmail.com>
- <20191230203648.GA24135@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ad1a2b09-12b0-112e-1556-6faf6a01c330@gmail.com>
-Date:   Thu, 2 Jan 2020 17:40:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 2 Jan 2020 09:46:44 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:45008 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728425AbgABOqn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:46:43 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 94B52803D7;
+        Thu,  2 Jan 2020 15:46:37 +0100 (CET)
+Date:   Thu, 2 Jan 2020 15:46:36 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Chris Brandt <chris.brandt@renesas.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/3] dt-bindings: display: sitronix, st7735r: Add Okaya
+ rh128128t
+Message-ID: <20200102144636.GA10075@ravnborg.org>
+References: <20200102141246.370-1-geert+renesas@glider.be>
+ <20200102141246.370-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <20191230203648.GA24135@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102141246.370-2-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
+        a=FF-hTYSRAwVgkRfqy0oA:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
+        a=6VlIyEUom7LUIeUMNQJH:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-30.12.2019 23:36, Michał Mirosław пишет:
-> On Sat, Dec 28, 2019 at 11:33:55PM +0300, Dmitry Osipenko wrote:
->> There is no good reason for disabling of CPU interrupts in order to
->> protect the utmip_pad_count modification.
+Hi Geert.
+
+On Thu, Jan 02, 2020 at 03:12:44PM +0100, Geert Uytterhoeven wrote:
+> Document support for the Okaya RH128128T display, which is a 128x128
+> 1.44" TFT display driven by a Sitronix ST7715R TFT Controller/Driver.
 > 
-> Since there are sleeping functions called outside of the locked sections,
-> this should be a mutex instead. OTOH if the spin_lock is to protect register
-> write against IRQ handler, then the patch is wrong.
+> ST7715R and ST7735R are very similar.  Their major difference is that
+> the former is restricted to displays of up to 132x132 pixels, while the
+> latter supports displays up to 132x162 pixels.
 > 
-> [...]
->> -	spin_unlock_irqrestore(&utmip_pad_lock, flags);
->> +	spin_unlock(&utmip_pad_lock);
->>  
->>  	clk_disable_unprepare(phy->pad_clk);
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/display/sitronix,st7735r.txt          | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+> index cd5c7186890a2be7..87ebdcb294e29798 100644
+> --- a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+While touching the bindings file, can I convince you to convert it to
+meta-schema format (.yaml)?
 
-Hello Michał,
 
-This spinlock isn't for protecting from the IRQ handler, it's used
-solely to protect modification of the registers that are shared by all
-USB controllers.
+> @@ -4,7 +4,9 @@ This binding is for display panels using a Sitronix ST7735R controller in SPI
+>  mode.
+>  
+>  Required properties:
+> -- compatible:	"jianda,jd-t18003-t01", "sitronix,st7735r"
+> +- compatible:	Must be one of the following combinations:
+> +		  - "jianda,jd-t18003-t01", "sitronix,st7735r"
+> +		  - "okaya,rh128128t", "sitronix,st7715r"
 
-It's possible to use mutex instead of spinlock here, but it doesn't
-bring any benefits because mutex is more useful when protected code
-could block for a long time due to sleep or whatever, while spinlock is
-much more efficient when protected code doesn't sleep and takes no more
-than dozens microseconds to execute (which is the case here).
+It would be nice if there was a "description" for each pair of
+compatible that identified the actual panel.
+In your case "Okaya RH128128T 1.44" 128x128 TFT display"
+It can be looked up in git history - but better to have it in the
+binding file.
 
-In this particular case of the Tegra USB PHY driver, the chance of
-getting a block on taking the utmip_pad_lock is zero unless USB
-controller drivers will start to use asynchronous probing. So this patch
-does a very minor clean-up change and nothing more.
+	Sam
