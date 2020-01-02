@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F0EC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 20:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A7BC2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 20:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64FB6217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 20:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CF9217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 20:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A2qNSC7I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JsNErjk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725851AbgABUpU (ORCPT
+        id S1725861AbgABU6B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 15:45:20 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36980 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbgABUpU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 15:45:20 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c23so18254943plz.4
-        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 12:45:20 -0800 (PST)
+        Thu, 2 Jan 2020 15:58:01 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34475 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgABU6B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 15:58:01 -0500
+Received: by mail-pl1-f194.google.com with SMTP id x17so18265725pln.1
+        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 12:58:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=x8QkG4SdFkSgEYfSb7GaqP99wYtYdPzolhab2BOnIpE=;
-        b=A2qNSC7IXjOEgdBiWwVv86G5ZXe3JwWAwkn+V0Jdgh3j0YtyJo05Z3zSa+GnK0y2/q
-         jYV3jVHWvGSWrJ0D881Pl0syy3z+UVRkEc7IimElWUtQhf592kCmj15LCdmXMiJQw5VT
-         NF0IbHa3Fca8h0G1YIe5Z9jp7TQCzvwKyP+4zGbBjdvT5xjCHl9GY3daZQoU2fhiIgB9
-         9l0II7DcwQBveUrJ4A6Ha6oC7N2ji2+CfklPz0mcKCuYk8oXlUWejPuAXsN3gN+TbwlE
-         kivQ8Eolbedy+CcpdGNsImA6s25gX7F8fKaxCeHzHoo3iwANpNxyEODqbdtFuXzIqCY/
-         dWRw==
+        bh=z7uC44Oc18ogP4OWB3WNFZwzRSBSoy1k7HBWtdwE8fA=;
+        b=JsNErjk57TLzLekTAMi+u1tOjxdWFRum7WeAJHfQfCWI6HiRPLEhsyaBJRIkqcKhwI
+         5N1i+XRLxrK414tYy5J4YcfhB4y+d8u8yKSI87iOCVIcmvVsdqzy1JAZ5Qh8j8LkEBA/
+         K4fSCr8i6klwM4mLEYCf+Voh5Upglfzcm3aYBWQKPVcK2Qu7JjCm5myQDLR/WOlLNHfU
+         DMRYFntzqhXZqRM1V0aXfa9l8Y9oQi+i+9lpSR9dAnkzkmg3Hb9sdrdaGWiuQU80H8gm
+         DM3pYAk9NPBmaRYF0+zqpe+rjmpDZ5vIu6HWn3qtSuBRIqGghibp/TnPy8JRYD9xvZeH
+         s2yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x8QkG4SdFkSgEYfSb7GaqP99wYtYdPzolhab2BOnIpE=;
-        b=ij+LxOy2DtuE+uxPVZLtDWE5viHIaAUsOT1jrnslR4OHa1atMVpIB0/YfdIGIg+3El
-         bzEeX9TXIHmudqTPRGx7w5/bj8Nke7+B8F8tqShe74YZwnTx0kHaJ6d5TbLWOxR6Su0T
-         EZ+4uyH7SuSD5t5CGQkW3/kDWxGspo9ILRDeNXsuewIR7CyQ9gs367K37EwfeVCAfzdA
-         Ny/KjIvJ9GUAsz8h9FDnOE2pBYPc+GGx1HSGKWESRwMifwbKeEw5kO2Hl0pylwf2Rba2
-         fK6NmBpTBkDPBggtGdVhFL4B+WPlk1fTfKJEWs35haND0QBSq0eS9f8COoIeAkbpzJvj
-         P19A==
-X-Gm-Message-State: APjAAAV9/3Ed4AeaJuI6OpwJv34W5tUs9oPzDSd9YI6sIdOJB/InJhzY
-        V1+9gCjFho1Vm25PJlzbo+Wzow==
-X-Google-Smtp-Source: APXvYqwbTOCZtcj+2l8BtMHXecMX/UIggMzx29jYjJHRMZzxwOvsEpw4lSPUYuTS4Zpj3z1VR+o7Jg==
-X-Received: by 2002:a17:902:788e:: with SMTP id q14mr86822023pll.305.1577997919400;
-        Thu, 02 Jan 2020 12:45:19 -0800 (PST)
+        bh=z7uC44Oc18ogP4OWB3WNFZwzRSBSoy1k7HBWtdwE8fA=;
+        b=SvK8WtmBFTmm8VihjiSiGQdXXwEiq9JkJtiQW739UQtRkFD2I1M99GBAc3XtpTAw35
+         tRqGgUOaVqWDoZEFT9VZHyoUOJVnwlnV/rh3DTOEkXxYcUaRbhDsCC5ci2IA5cZPOAbx
+         7yujAgKd17p+g+BkV21fcyIww5ehEvb7gh3YT9v9ydzDFNDBxkkp+w7RwI2BlBBfIviZ
+         zbQaTunBZvAFmpqlkQQ0flD8GmaEvvYsx+ez5/k6YxS6NRGIY5rDMJwwOdsR4Ef5jN04
+         hr2umi1YNIdwGw0t2PshYYCAKGRVGQuKjBRK1Un7FmPnd2HjA50uhsDw/nFkph0qvJk9
+         XJyg==
+X-Gm-Message-State: APjAAAX0yLqnAHOEhLTZz7AJq0xMW8hIdyIRmg3mcAPZvAQr5td4x7ZQ
+        NjtsaiVAiPtipfR0eWW9sFI86A==
+X-Google-Smtp-Source: APXvYqxh595qK4nZVB6EAkAq+RZs+ImBx7ezIU9NnHSyFGp1aQZBBUantfvrW7qXuXykQ+z4/i/9Mw==
+X-Received: by 2002:a17:90a:3945:: with SMTP id n5mr21913490pjf.34.1577998680994;
+        Thu, 02 Jan 2020 12:58:00 -0800 (PST)
 Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e19sm12210518pjr.10.2020.01.02.12.45.18
+        by smtp.gmail.com with ESMTPSA id a28sm64401061pfh.119.2020.01.02.12.57.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jan 2020 12:45:18 -0800 (PST)
-Date:   Thu, 2 Jan 2020 12:45:16 -0800
+        Thu, 02 Jan 2020 12:58:00 -0800 (PST)
+Date:   Thu, 2 Jan 2020 12:57:57 -0800
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Sibi Sankar <sibis@codeaurora.org>
 Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
         tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] soc: qcom: Introduce Protection Domain Restart
- helpers
-Message-ID: <20200102204516.GG988120@minitux>
+Subject: Re: [PATCH v3 3/3] soc: qcom: apr: Add avs/audio tracking
+ functionality
+Message-ID: <20200102205757.GH988120@minitux>
 References: <20191230050008.8143-1-sibis@codeaurora.org>
- <20191230050008.8143-2-sibis@codeaurora.org>
+ <20191230050008.8143-4-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191230050008.8143-2-sibis@codeaurora.org>
+In-Reply-To: <20191230050008.8143-4-sibis@codeaurora.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -78,344 +78,88 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On Sun 29 Dec 21:00 PST 2019, Sibi Sankar wrote:
+> diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
 [..]
-> diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-[..]
-> +static int servreg_locator_new_server(struct qmi_handle *qmi,
-> +				      struct qmi_service *svc)
-> +{
-> +	struct pdr_handle *pdr = container_of(qmi, struct pdr_handle,
-> +					      servloc_client);
-> +	struct pdr_service *pds, *tmp;
-> +
-> +	/* Create a Local client port for QMI communication */
-> +	pdr->servloc_addr.sq_family = AF_QIPCRTR;
-> +	pdr->servloc_addr.sq_node = svc->node;
-> +	pdr->servloc_addr.sq_port = svc->port;
-> +
-> +	mutex_lock(&pdr->locator_lock);
-> +	pdr->locator_available = true;
-> +	mutex_unlock(&pdr->locator_lock);
-> +
-> +	/* Service pending lookup requests */
-> +	mutex_lock(&pdr->list_lock);
-> +	list_for_each_entry_safe(pds, tmp, &pdr->lookups, node) {
-
-No need to make this _safe, as you're not modifying the list in the
-loop.
-
-> +		if (pds->need_servreg_lookup)
-> +			schedule_work(&pdr->servloc_work);
-> +	}
-> +	mutex_unlock(&pdr->list_lock);
-> +
-> +	return 0;
-> +}
-[..]
-> +static void pdr_servreg_link_create(struct pdr_handle *pdr,
-> +				    struct pdr_service *pds)
-> +{
-> +	struct pdr_service *pds_iter, *tmp;
-> +	bool link_exists = false;
-> +
-> +	/* Check if a QMI link to SERVREG instance already exists */
-> +	mutex_lock(&pdr->list_lock);
-> +	list_for_each_entry_safe(pds_iter, tmp, &pdr->lookups, node) {
-> +		if (pds_iter->instance == pds->instance &&
-
-Flip this condition around and continue if it's not a match, to save
-indentation and to split the two expressions into two distinct checks.
-
-> +		    strcmp(pds_iter->service_path, pds->service_path)) {
-
-Isn't this just saying:
-	if (pds_iter == pds)
-		continue;
-
-With the purpose of link_exists to be !empty(set(lookups) - pds) ? 
-
-But if I read pdr_add_lookup() correctly it's possible that a client
-could call pdr_add_lookup() more than once before pdr_servloc_work() is
-scheduled, in which case "set(lookup) - pds" isn't empty and as such you
-won't add the lookup?
-
-> +			link_exists = true;
-> +			pds->service_connected = pds_iter->service_connected;
-> +			if (pds_iter->service_connected)
-> +				pds->need_servreg_register = true;
-> +			else
-> +				pds->need_servreg_remove = true;
-> +			queue_work(pdr->servreg_wq, &pdr->servreg_work);
-> +			break;
-> +		}
-> +	}
-[..]
-> +static void pdr_servloc_work(struct work_struct *work)
-> +{
-> +	struct pdr_handle *pdr = container_of(work, struct pdr_handle,
-> +					      servloc_work);
-> +	struct pdr_service *pds, *tmp;
+> -static void of_register_apr_devices(struct device *dev)
+> +static void of_apr_add_pd_lookups(struct device *dev)
+>  {
+> +	const char *service_name, *service_path;
+>  	struct apr *apr = dev_get_drvdata(dev);
+>  	struct device_node *node;
 > +	int ret;
 > +
-> +	/* Bail out early if PD Mapper is not up */
-> +	mutex_lock(&pdr->locator_lock);
-> +	if (!pdr->locator_available) {
-> +		mutex_unlock(&pdr->locator_lock);
-> +		pr_warn("PDR: SERVICE LOCATOR service not available\n");
-> +		return;
-> +	}
-> +	mutex_unlock(&pdr->locator_lock);
-> +
-> +	mutex_lock(&pdr->list_lock);
-> +	list_for_each_entry_safe(pds, tmp, &pdr->lookups, node) {
-
-As written right now you don't need _safe here, because in the only case
-you're modifying the list you end up exiting the loop.
-
-> +		if (!pds->need_servreg_lookup)
+> +	for_each_child_of_node(dev->of_node, node) {
+> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
+> +						    0, &service_name);
+> +		if (ret < 0)
 > +			continue;
-> +
-> +		pds->need_servreg_lookup = false;
-> +		mutex_unlock(&pdr->list_lock);
 
-You should probably just hold on to list_lock over this entire loop.
+While this implies that the qcom,protection-domain property is
+missing...
 
 > +
-> +		ret = pdr_locate_service(pdr, pds);
-> +		if (ret < 0) {
-> +			if (ret == -ENXIO)
-> +				pds->state = SERVREG_LOCATOR_UNKNOWN_SERVICE;
-> +			else if (ret == -EAGAIN)
-> +				pds->state = SERVREG_LOCATOR_DB_UPDATED;
+> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
+> +						    1, &service_path);
+> +		if (ret < 0)
+> +			continue;
 
-Isn't this something that we should recover from?
+...this would imply that it's there but the format is wrong. I think you
+should log this and propagate the error.
 
-> +			else
-> +				pds->state = SERVREG_LOCATOR_ERR;
 > +
-> +			pr_err("PDR: service lookup for %s failed: %d\n",
-> +			       pds->service_name, ret);
-> +
-> +			/* Remove from lookup list */
-> +			mutex_lock(&pdr->list_lock);
-> +			list_del(&pds->node);
+> +		ret = pdr_add_lookup(&apr->pdr, service_name, service_path);
+> +		if (ret && ret != -EALREADY)
+> +			dev_err(dev, "pdr add lookup failed: %d\n", ret);
 
-What should I do in my driver when this happens?
+So we have a DT that denotes that PDR is required, but we failed to
+register a lookup (for some reason). That would imply that apr is not
+going to work. I think you should propagate this and make apr_probe()
+fail to make this obvious.
 
-> +			mutex_unlock(&pdr->list_lock);
+> +	}
+> +}
 > +
-> +			/* Notify Lookup failed */
-> +			mutex_lock(&pdr->status_lock);
-> +			pdr->status(pdr, pds);
-> +			mutex_unlock(&pdr->status_lock);
-> +			kfree(pds);
+> +static void of_register_apr_devices(struct device *dev, const char *svc_path)
+> +{
+> +	struct apr *apr = dev_get_drvdata(dev);
+> +	struct device_node *node;
+> +	const char *service_path;
+> +	int ret;
+>  
+>  	for_each_child_of_node(dev->of_node, node) {
+>  		struct apr_device_id id = { {0} };
+
+I think you should add a comment here describing what's actually going
+on. Something along the lines of:
+
+/*
+ * This function is called with svc_path NULL during apr_probe(), in
+ * which case we register any apr devices without a
+ * qcom,protection-domain specified.
+ *
+ * Then as the protection domains becomes available (if applicable) this
+ * function is again called, but with svc_path representing the service
+ * becoming available. In this case we register any apr devices with a
+ * matching qcom,protection-domain.
+ */
+
+>  
+> +		ret = of_property_read_string_index(node, "qcom,protection-domain",
+> +						    1, &service_path);
+> +		if (svc_path) {
+> +			/* skip APR services that are PD independent */
+> +			if (ret)
+> +				continue;
+> +
+> +			/* skip APR services whose PD paths don't match */
+> +			if (strcmp(service_path, svc_path))
+> +				continue;
 > +		} else {
-> +			pdr_servreg_link_create(pdr, pds);
+> +			/* skip APR services whose PD lookups are registered */
+> +			if (ret == 0)
+> +				continue;
 > +		}
 > +
-> +		return;
-
-There might be more pds entries with need_servreg_lookup in the list,
-shouldn't we allow this to continue?
-
-This would though imply that you should hold onto the list_lock over the
-entire loop, which I think looks fine.
-
-> +	}
-> +	mutex_unlock(&pdr->list_lock);
-> +}
-> +
-> +/**
-> + * pdr_add_lookup() - register a tracking request for a PD
-> + * @pdr:		PDR client handle
-> + * @service_name:	service name of the tracking request
-> + * @service_path:	service path of the tracking request
-> + *
-> + * Registering a pdr lookup allows for tracking the life cycle of the PD.
-> + *
-> + * Return: 0 on success, negative errno on failure.
-> + */
-> +int pdr_add_lookup(struct pdr_handle *pdr, const char *service_name,
-> +		   const char *service_path)
-> +{
-> +	struct pdr_service *pds, *pds_iter, *tmp;
-> +	int ret;
-> +
-> +	if (!service_name || strlen(service_name) > SERVREG_NAME_LENGTH ||
-> +	    !service_path || strlen(service_path) > SERVREG_NAME_LENGTH)
-> +		return -EINVAL;
-> +
-> +	pds = kzalloc(sizeof(*pds), GFP_KERNEL);
-> +	if (!pds)
-> +		return -ENOMEM;
-> +
-> +	pds->service = SERVREG_NOTIFIER_SERVICE;
-> +	strcpy(pds->service_name, service_name);
-> +	strcpy(pds->service_path, service_path);
-> +	pds->need_servreg_lookup = true;
-> +
-> +	mutex_lock(&pdr->list_lock);
-> +	list_for_each_entry_safe(pds_iter, tmp, &pdr->lookups, node) {
-
-No _safe
-
-> +		if (!strcmp(pds_iter->service_path, service_path)) {
-> +			mutex_unlock(&pdr->list_lock);
-> +			ret = -EALREADY;
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	list_add(&pds->node, &pdr->lookups);
-> +	mutex_unlock(&pdr->list_lock);
-> +
-> +	schedule_work(&pdr->servloc_work);
-> +
-> +	return 0;
-> +err:
-> +	kfree(pds);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(pdr_add_lookup);
-> +
-> +/**
-> + * pdr_restart_pd() - restart PD
-> + * @pdr:		PDR client handle
-> + * @service_path:	service path of restart request
-> + *
-> + * Restarts the PD tracked by the PDR client handle for a given service path.
-> + *
-> + * Return: 0 on success, negative errno on failure.
-> + */
-> +int pdr_restart_pd(struct pdr_handle *pdr, const char *service_path)
-> +{
-> +	struct servreg_restart_pd_req req;
-> +	struct servreg_restart_pd_resp resp;
-> +	struct pdr_service *pds = NULL, *pds_iter, *tmp;
-> +	struct qmi_txn txn;
-> +	int ret;
-> +
-> +	if (!service_path || strlen(service_path) > SERVREG_NAME_LENGTH)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&pdr->list_lock);
-> +	list_for_each_entry_safe(pds_iter, tmp, &pdr->lookups, node) {
-> +		if (!pds_iter->service_connected)
-> +			continue;
-> +
-> +		if (!strcmp(pds_iter->service_path, service_path)) {
-> +			pds = pds_iter;
-> +			break;
-> +		}
-> +	}
-> +	mutex_unlock(&pdr->list_lock);
-> +
-> +	if (!pds)
-
-Given that you may only call pdr_restart_pd() on something created by
-first calling pdr_add_lookup(), how about returning the struct
-pdr_service from pdr_add_lookup() instead and then have the client pass
-that as an argument to this function.
-
-Most clients doesn't care about pdr_restart_pd() so they would only have
-to IS_ERR(pdr_add_lookup()) anyways, and the ones that care can carry
-the returned pointer.
-
-
-Note that the struct pdr_service doesn't have to be defined in a way
-that it's possible to dereference by clients.
-
-> +		return -EINVAL;
-> +
-> +	/* Prepare req message */
-> +	strcpy(req.service_path, pds->service_path);
-> +
-> +	ret = qmi_txn_init(&pdr->servreg_client, &txn,
-> +			   servreg_restart_pd_resp_ei,
-> +			   &resp);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = qmi_send_request(&pdr->servreg_client, &pdr->servreg_addr,
-> +			       &txn, SERVREG_RESTART_PD_REQ,
-> +			       SERVREG_RESTART_PD_REQ_MAX_LEN,
-> +			       servreg_restart_pd_req_ei, &req);
-> +	if (ret < 0) {
-> +		qmi_txn_cancel(&txn);
-> +		return ret;
-> +	}
-> +
-> +	ret = qmi_txn_wait(&txn, 5 * HZ);
-> +	if (ret < 0) {
-> +		pr_err("PDR: %s PD restart txn wait failed: %d\n",
-> +		       pds->service_path, ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Check response if PDR is disabled */
-> +	if (resp.resp.result == QMI_RESULT_FAILURE_V01 &&
-> +	    resp.resp.error == QMI_ERR_DISABLED_V01) {
-> +		pr_err("PDR: %s PD restart is disabled: 0x%x\n",
-> +		       pds->service_path, resp.resp.error);
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	/* Check the response for other error case*/
-> +	if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
-> +		pr_err("PDR: %s request for PD restart failed: 0x%x\n",
-> +		       pds->service_path, resp.resp.error);
-> +		return -EREMOTEIO;
-> +	}
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(pdr_restart_pd);
-[..]
-> +/**
-> + * struct pdr_service - context to track lookups/restarts
-> + * @service_name:		name of the service running on the PD
-> + * @service_path:		service path of the PD
-> + * @service_data_valid:		indicates if service_data field has valid data
-> + * @service_data:		service data provided by servreg_locator service
-> + * @need_servreg_lookup:	state flag for tracking servreg lookup requests
-> + * @need_servreg_register:	state flag for tracking pending servreg register
-> + * @need_servreg_remove:	state flag for tracking pending servreg remove
-> + * @service_connected:		current state of servreg_notifier qmi service
-> + * @state:			current state of PD
-> + * @service:			servreg_notifer service type
-> + * @instance:			instance id of the @service
-> + * @priv:			handle for client's use
-> + * @node:			list_head for house keeping
-> + */
-> +struct pdr_service {
-
-This is primarily internal bookkeeping, how about not exposing it to the
-clients? This would imply that status() would have to be called with
-pdr_service->priv and pdr_service->state as arguments instead.
-
-> +	char service_name[SERVREG_NAME_LENGTH + 1];
-> +	char service_path[SERVREG_NAME_LENGTH + 1];
-> +
-> +	u8 service_data_valid;
-> +	u32 service_data;
-> +
-> +	bool need_servreg_lookup;
-> +	bool need_servreg_register;
-> +	bool need_servreg_remove;
-> +	bool service_connected;
-> +	int state;
-> +
-> +	unsigned int instance;
-> +	unsigned int service;
-> +
-> +	void *priv;
-> +	struct list_head node;
-> +};
-> +
-[..]
-> +	void (*status)(struct pdr_handle *pdr, struct pdr_service *pds);
-> +};
 
 Regards,
 Bjorn
