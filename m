@@ -2,162 +2,99 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52350C2D0DE
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 02:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E8FC2D0DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 04:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F21D215A4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 02:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47AE420863
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 04:02:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="XwQN52HF"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OF+6jTOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbgABCGC (ORCPT
+        id S1727549AbgABECU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 1 Jan 2020 21:06:02 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38588 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbgABCGC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 21:06:02 -0500
-Received: by mail-io1-f68.google.com with SMTP id v3so37078389ioj.5
-        for <devicetree@vger.kernel.org>; Wed, 01 Jan 2020 18:06:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UHVPj5/UF7FmXw5E/6Coz8EOtDK8UfYd1n1yDId2PbU=;
-        b=XwQN52HFHiN4fB5kwYTv9zn1C76bI0Iz71wHNgvVewPn60QLGI/53rhJcn0f8qP7wG
-         sYdC1zIp6TQZ1YvNlqMDGXJ9S/iB8GP3sVWi03ibUV1M0gGPnF9lkzJYdq5Sihm1aCxD
-         JQsB5mHL8hEMMmYlnX96DExdAaIOIfSU1FKTs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UHVPj5/UF7FmXw5E/6Coz8EOtDK8UfYd1n1yDId2PbU=;
-        b=RPFKjT5cdWEJ5xtY460IuR8k5xO3aH91UkfuZYUbhuLTDkzFqJYepOAx63N461poK7
-         Ux/qyV6RPYjHMJzVT6kc/NaSOZCLawSN65zlS6v11N4XrUQtuVQ6ftY+aUQFgmI/6saN
-         pm9Ny9beKjVM1ZMbWKj1Izz7COXgQcfs7OpoOb5RQGCIJnQ1EZKhGZ3lcyJz7FVPq84X
-         SUFV6RMl/BXfJXNP75b74PqR4JqAatbqxCvNvxvW+83CY9iLGyt+yncL3MSFTRH/CAGL
-         ogtn647YQO4AyBpYZNqucx7fnGH3km9hFI9o0sm3jwAJXgJ0WDmTQN3nTdEsh9+iYj9F
-         B7Ww==
-X-Gm-Message-State: APjAAAUCCtYJYfny1nkZmIOQTWtijBdk5SsJSWFCK4h+ja803vv3cXzP
-        /OSiugJeRu8mEp+Ee+r2pHM1DqRklCAfTqAW8t3ifQ==
-X-Google-Smtp-Source: APXvYqwGWLjQw3gcajosmfzURd5ps+qyn12aquFWSg8sHauYhmdDjIpsc9fULZuWJKPuLIwEScJP+9CPNw9R1+t3PaY=
-X-Received: by 2002:a05:6638:72c:: with SMTP id j12mr64525970jad.136.1577930761321;
- Wed, 01 Jan 2020 18:06:01 -0800 (PST)
+        Wed, 1 Jan 2020 23:02:20 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31821 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727509AbgABECU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 1 Jan 2020 23:02:20 -0500
+X-UUID: 0d51fe1358bb42918202e6427289dd1e-20200102
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=7wLu6VmQu6UVnJpXdVr9q3D+QkDfPwKQ1g0hCwiH1Ys=;
+        b=OF+6jTOYqwUOPpGkuq6ORXT6gs8ikO70KJiIOI+FD1Ln9wHuEwZEHXvE7mwPhmGM3XBnk23xLUXuS0rPvCrSpCyeD4b0NoBBGFFNCZ86ok5xbBYt5oju6Nknuy0hUUi2YPQ3EHFIMxrtx5e46lzsWVLaPaHALbi8bjpjNl4RGBo=;
+X-UUID: 0d51fe1358bb42918202e6427289dd1e-20200102
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1752573210; Thu, 02 Jan 2020 12:02:13 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 2 Jan 2020 12:01:43 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 2 Jan 2020 12:01:32 +0800
+From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH v6, 00/14] add drm support for MT8183
+Date:   Thu, 2 Jan 2020 12:00:10 +0800
+Message-ID: <1577937624-14313-1-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-References: <20191217102930.26102-1-mtwget@gmail.com>
-In-Reply-To: <20191217102930.26102-1-mtwget@gmail.com>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Thu, 2 Jan 2020 10:05:49 +0800
-Message-ID: <CAJCx=gnyF69PxHVh38nP1AYwi=Tt4J9bYYR-w00uGODUfCrKyg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
- Dynament Premier series single gas sensor
-To:     YuDong Zhang <mtwget@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 6:29 PM YuDong Zhang <mtwget@gmail.com> wrote:
->
-> Dynament Premier series single gas sensor.
->
-> Signed-off-by: YuDong Zhang <mtwget@gmail.com>
-> ---
->  .../iio/chemical/dynament,premier.yaml        | 39 +++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
->  MAINTAINERS                                   |  1 +
->  3 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> new file mode 100644
-> index 000000000000..e2bbae4dd086
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/chemical/dynament,premier.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Dynament Premier series single gas sensor
-> +
-> +maintainers:
-> +  - YuDong Zhang <mtwget@gmail.com>
-> +
-> +description: |
-> +  single gas sensor capable of measuring gas concentration of dust
-> +  particles, multi-gas sensor are not supported.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.dynament.com/_webedit/uploaded-files/All%20Files/SIL%20Data/tds0045_1.44.pdf, read chapter 1.5.2 Read live data simple
+VGhpcyBzZXJpZXMgYXJlIGJhc2VkIG9uIDUuNS1yYzEgYW5kIHByb3ZpZCAxNCBwYXRjaA0KdG8g
+c3VwcG9ydCBtZWRpYXRlayBTT0MgTVQ4MTgzDQoNCkNoYW5nZSBzaW5jZSB2NQ0KLSBmaXggcmV2
+aWV3ZWQgaXNzdWUgaW4gdjUNCg0KQ2hhbmdlIHNpbmNlIHY0DQotIGZpeCByZXZpZXdlZCBpc3N1
+ZSBpbiB2NA0KDQpDaGFuZ2Ugc2luY2UgdjMNCi0gZml4IHJldmlld2VkIGlzc3VlIGluIHYzDQot
+IGZpeCB0eXBlIGVycm9yIGluIHYzDQotIGZpeCBjb25mbGljdCB3aXRoIGlvbW11IHBhdGNoDQoN
+CkNoYW5nZSBzaW5jZSB2Mg0KLSBmaXggcmV2aWV3ZWQgaXNzdWUgaW4gdjINCi0gYWRkIG11dGV4
+IG5vZGUgaW50byBkdHMgZmlsZQ0KDQpDaGFuZ2VzIHNpbmNlIHYxOg0KLSBmaXggcmV2aWV3ZWQg
+aXNzdWUgaW4gdjENCi0gYWRkIGR0cyBmb3IgbXQ4MTgzIGRpc3BsYXkgbm9kZXMNCi0gYWRqdXN0
+IGRpc3BsYXkgY2xvY2sgY29udHJvbCBmbG93IGluIHBhdGNoIDIyDQotIGFkZCB2bWFwIHN1cHBv
+cnQgZm9yIG1lZGlhdGVrIGRybSBpbiBwYXRjaCAyMw0KLSBmaXggcGFnZSBvZmZzZXQgaXNzdWUg
+Zm9yIG1tYXAgZnVuY3Rpb24gaW4gcGF0Y2ggMjQNCi0gZW5hYmxlIGFsbG93X2ZiX21vZGlmaWVy
+cyBmb3IgbWVkaWF0ZWsgZHJtIGluIHBhdGNoIDI1DQoNCllvbmdxaWFuZyBOaXUgKDE0KToNCiAg
+YXJtNjQ6IGR0czogYWRkIGRpc3BsYXkgbm9kZXMgZm9yIG10ODE4Mw0KICBkcm0vbWVkaWF0ZWs6
+IG1vdmUgZHNpL2RwaSBzZWxlY3QgaW5wdXQgaW50byBtdGtfZGRwX3NlbF9pbg0KICBkcm0vbWVk
+aWF0ZWs6IG1ha2Ugc291dCBzZWxlY3QgZnVuY3Rpb24gIGZvcm1hdCBzYW1lIHdpdGggc2VsZWN0
+IGlucHV0DQogIGRybS9tZWRpYXRlazogYWRkIG1tc3lzIHByaXZhdGUgZGF0YSBmb3IgZGRwIHBh
+dGggY29uZmlnDQogIGRybS9tZWRpYXRlazogbW92ZSByZG1hIHNvdXQgZnJvbSBtdGtfZGRwX21v
+dXRfZW4gaW50bw0KICAgIG10a19kZHBfc291dF9zZWwNCiAgZHJtL21lZGlhdGVrOiBhZGQgY29u
+bmVjdGlvbiBmcm9tIE9WTDAgdG8gT1ZMXzJMMA0KICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25uZWN0
+aW9uIGZyb20gUkRNQTAgdG8gQ09MT1IwDQogIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24g
+ZnJvbSBSRE1BMSB0byBEU0kwDQogIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBP
+VkxfMkwwIHRvIFJETUEwDQogIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBPVkxf
+MkwxIHRvIFJETUExDQogIGRybS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBESVRIRVIw
+IHRvIERTSTANCiAgZHJtL21lZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUEwIHRvIERT
+STANCiAgZHJtL21lZGlhdGVrOiBhZGQgZmlmb19zaXplIGludG8gcmRtYSBwcml2YXRlIGRhdGEN
+CiAgZHJtL21lZGlhdGVrOiBhZGQgc3VwcG9ydCBmb3IgbWVkaWF0ZWsgU09DIE1UODE4Mw0KDQog
+YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSB8IDEwMyArKysrKysrKysr
+Kw0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgfCAgMTggKysNCiBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jIHwgIDI3ICsrLQ0KIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyAgfCAgIDQgKw0KIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jICAgfCAyOTEgKysrKysrKysrKysrKysrKysrKysr
+KystLS0tLS0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5oICAgfCAg
+IDcgKw0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgfCAgNTEgKysr
+KysrDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggICB8ICAgMyArDQog
+OCBmaWxlcyBjaGFuZ2VkLCA0MzQgaW5zZXJ0aW9ucygrKSwgNzAgZGVsZXRpb25zKC0pDQoNCi0t
+IA0KMS44LjEuMS5kaXJ0eQ0K
 
-Typo of sample?
-
-- Matt
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - dynament,premier
-> +
-> +  vcc-supply:
-> +    description: regulator that provides power to the sensor
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    serial {
-> +      single-gas-sensor {
-> +        compatible = "dynament,premier";
-> +        vcc-supply = <&reg_vcc5v0>;
-> +      };
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index 6046f4555852..5afca0586c41 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -261,6 +261,8 @@ patternProperties:
->      description: Dragino Technology Co., Limited
->    "^dserve,.*":
->      description: dServe Technology B.V.
-> +  "^dynament,.*":
-> +    description: Dynament, Ltd.
->    "^ea,.*":
->      description: Embedded Artists AB
->    "^ebs-systart,.*":
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ae228ac7adc9..4842a0afe32b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5796,6 +5796,7 @@ DYNAMENT PREMIER SERIES SINGLE GAS SENSOR DRIVER
->  M:     YuDong Zhang <mtwget@gmail.com>
->  S:     Maintained
->  F:     drivers/iio/chemical/premier.c
-> +F:     Documentation/devicetree/bindings/iio/chemical/dynament,premier.yaml
->
->  DYNAMIC DEBUG
->  M:     Jason Baron <jbaron@akamai.com>
-> --
-> 2.24.1
->
