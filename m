@@ -4,282 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CFAC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C41BC3276C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4D620848
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC812084D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:40:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="T9StJhSk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w5yDnx3d"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="CsMdcshB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgABP0p (ORCPT
+        id S1728748AbgABPko (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:26:45 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:54343 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728561AbgABP0p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 10:26:45 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id C956522008;
-        Thu,  2 Jan 2020 10:26:43 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 02 Jan 2020 10:26:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=t3ubyuab2VlswOR9/ymEdLAoVp9
-        ly3n1q2XwluYw9jc=; b=T9StJhSkG0u+LtZXX0qZIGwMh4bMpTVZVssW7rCFJ8I
-        sz9caqTAqae3XB60lCrIMpUpSX8iYrTkOxqkN8ysTXu2GXBGqhmhdFwfC5IV+m3W
-        oli7Ibp+wNlqleJI2CAhGzh03emecRMfUXB2aJfAExYKJ0PjD4xvSQThF1UbuDbT
-        M3y/e3SDD5NpgIXv5dkry5HD090OGsrd1yacITbEb6xLELOt66ZOOqQLB3nX6Pxj
-        N2uxKsJGAypMlFgOY8JXqecOIMkuQg9R19VFsxcLVztMUC3J6IaAI3i0oJ1ySuaZ
-        LVGu0DuB8kk5pU/RV0UOf65+kDYmoyJoaxjIWeFX5GA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=t3ubyu
-        ab2VlswOR9/ymEdLAoVp9ly3n1q2XwluYw9jc=; b=w5yDnx3dZCi5yiKUmkwE4B
-        DSLQxUSPxGQw/Z4WFS9/tmUtODpBrTOxq4KT+yTZc/zixI2MH2SPlt8YzEJURGn8
-        97cP36AAo3M5Hm5+lOqbvg77cIxmDxqrMfSprhHSvV/8J5zOD4tDmDmNCUEXdgI2
-        XudcGRQLn1OCmue2bjyPekUq0dZeWdefZsG6IO5vKB5FPAxMe6KvIP4kyJ9I/1fq
-        a6L2AB41KpbH6hwpbT/gMKCGbfTbSQgBUwoTdHSddV6FAj/nthCiJH/q+6+k9b7M
-        Jin+QCdIuOeTolqzgtspI8Eac0FVIfXwmmSJxoNnl1BmXhUJbHOG1axHD0EzSqmQ
-        ==
-X-ME-Sender: <xms:swsOXrwTDgylDG_GwbNh9PYU0c0YxSKdZc9NFgLpRutgRlfwgvujqw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeguddgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucfr
-    rghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlh
-    hushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:swsOXptw0wrxT0i1PrFHbR8AzuqWHYbJflHkvY0h0CfENhi1JaUX9g>
-    <xmx:swsOXi3oJJb1JwTP39vHxuL7Hm30LFELB9ZsF0E2nPhpvjFTHWHh1Q>
-    <xmx:swsOXt5WhaS8ljqtmJj2ARrrRYJNlokFMhEG-kzdrVyYc21gncmmsg>
-    <xmx:swsOXmxoj6zrfsjg31x45I_qk9qUJkEUxtvnfA2juQcFUENjv6nGGA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5E99B3060741;
-        Thu,  2 Jan 2020 10:26:43 -0500 (EST)
-Date:   Thu, 2 Jan 2020 16:26:41 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] dt-bindings: usb: Convert Allwinner A80 USB PHY
- controller to a schema
-Message-ID: <20200102152641.kgckxlcq7u7xjjrl@gilmour.lan>
-References: <20191219084332.944123-1-maxime@cerno.tech>
- <CAGb2v643z-GwEgOV_OS96ESihDgGNOwp2s7eyJr68QFyPNqd_Q@mail.gmail.com>
- <20191220080310.w2xtgzxend5bmv2q@gilmour.lan>
- <CAGb2v65+zpc1_0K2Co4uOUrfshzmVCf1Rc6Ob2YtmdmdsNTAvQ@mail.gmail.com>
- <20200102120222.yl7vlposk4b7hbu7@gilmour.lan>
- <CAGb2v66pixivryxffXWceLknFLErRJH3BQgtQUQSeyQq-FO=ng@mail.gmail.com>
+        Thu, 2 Jan 2020 10:40:44 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39030 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728734AbgABPkn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 10:40:43 -0500
+Received: by mail-il1-f193.google.com with SMTP id x5so34362648ila.6
+        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 07:40:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3572HIPczR9cTuPFxrESBoTgrX4d6H7x5Q/kXXuy428=;
+        b=CsMdcshBDPMrQufZIZxdudBJtg7H5PXirvxIzG5GX86qw5BbrHfL3WRLl1u9msmugU
+         4nlFujipIJd3har00SH658ONwyUzVLsynUhsbUkj7VjUYMY7VSo+tJ+VQS+oXCOGBFNH
+         WPaOFGHhMYzcCPVHv/6ulHwsoyYUumKyKR21c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3572HIPczR9cTuPFxrESBoTgrX4d6H7x5Q/kXXuy428=;
+        b=juf9jjoVyL7kRoBGyJe+jZU8pLE/hSDzjvlYhey2r25CCJnrZXJ+s1fzijd15/wKeG
+         jihHxdMz/RfubPD9mszEDl85s6svfPpID9AAYWw39qkk6zc2+Vv/Er3qrYaLpwm/lC/Y
+         qzGar1vl55IpN+dyKYqhxT5rBX8pBu92ijZ55jN1jxavgEfztHJEy0H+9Min/TptvuM3
+         WCI1xIT+s1ToMv/ooYk1/O2sW8aXZSziJy3Lr6m5hjNfVqYrvj1MX1vn2TmkjiPki7e4
+         z4u8rnVb8LCd8R4J/p2NBD0E7zGocW5zM9On5rcN160mRKCJ+cYZ3tTwmJ95rCpd5R8S
+         IvZw==
+X-Gm-Message-State: APjAAAXCbwOPN2KmG0WAgL9NqDmJTWuNJdV9kNYWDFUTfnwkqyADS0Dz
+        5EWWJfUMG/cF2VITqHV4/gZyaelLddW7gxb7z8Ox8g==
+X-Google-Smtp-Source: APXvYqyktr3CqCCGml7EeAho4GJqaINKtZEGl5yX5r/Y5VF4lK9Mx3hwHRBbOa/ZWlGpatq+4kooSat9lPiBhJb0M/8=
+X-Received: by 2002:a92:c647:: with SMTP id 7mr71931846ill.28.1577979642064;
+ Thu, 02 Jan 2020 07:40:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vnza7bcg3bx47puo"
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66pixivryxffXWceLknFLErRJH3BQgtQUQSeyQq-FO=ng@mail.gmail.com>
+References: <20191231130528.20669-1-jagan@amarulasolutions.com>
+ <20191231130528.20669-3-jagan@amarulasolutions.com> <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
+In-Reply-To: <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Thu, 2 Jan 2020 21:10:31 +0530
+Message-ID: <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---vnza7bcg3bx47puo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jan 02, 2020 at 08:31:40PM +0800, Chen-Yu Tsai wrote:
-> On Thu, Jan 2, 2020 at 8:02 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> >
-> > Hi,
-> >
-> > On Fri, Dec 20, 2019 at 04:10:03PM +0800, Chen-Yu Tsai wrote:
-> > > On Fri, Dec 20, 2019 at 4:03 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Thu, Dec 19, 2019 at 11:24:52PM +0800, Chen-Yu Tsai wrote:
-> > > > > On Thu, Dec 19, 2019 at 4:43 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > >
-> > > > > > The Allwinner A80 SoCs have a USB PHY controller that is used by Linux,
-> > > > > > with a matching Device Tree binding.
-> > > > > >
-> > > > > > Now that we have the DT validation in place, let's convert the device tree
-> > > > > > bindings for that controller over to a YAML schemas.
-> > > > > >
-> > > > > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > > > > ---
-> > > > > >  .../phy/allwinner,sun9i-a80-usb-phy.yaml      | 135 ++++++++++++++++++
-> > > > > >  .../devicetree/bindings/phy/sun9i-usb-phy.txt |  37 -----
-> > > > > >  2 files changed, 135 insertions(+), 37 deletions(-)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > > > >  delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..ded7d6f0a119
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > > > > @@ -0,0 +1,135 @@
-> > > > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > > > +%YAML 1.2
-> > > > > > +---
-> > > > > > +$id: http://devicetree.org/schemas/phy/allwinner,sun9i-a80-usb-phy.yaml#
-> > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > > +
-> > > > > > +title: Allwinner A80 USB PHY Device Tree Bindings
-> > > > > > +
-> > > > > > +maintainers:
-> > > > > > +  - Chen-Yu Tsai <wens@csie.org>
-> > > > > > +  - Maxime Ripard <mripard@kernel.org>
-> > > > > > +
-> > > > > > +properties:
-> > > > > > +  "#phy-cells":
-> > > > > > +    const: 0
-> > > > > > +
-> > > > > > +  compatible:
-> > > > > > +    const: allwinner,sun9i-a80-usb-phy
-> > > > > > +
-> > > > > > +  reg:
-> > > > > > +    maxItems: 1
-> > > > > > +
-> > > > > > +  clocks:
-> > > > > > +    anyOf:
-> > > > > > +      - description: Main PHY Clock
-> > > > > > +
-> > > > > > +      - items:
-> > > > > > +          - description: Main PHY clock
-> > > > > > +          - description: HSIC 12MHz clock
-> > > > > > +          - description: HSIC 480MHz clock
-> > > > > > +
-> > > > > > +  clock-names:
-> > > > > > +    oneOf:
-> > > > > > +      - const: phy
-> > > > > > +
-> > > > > > +      - items:
-> > > > > > +          - const: phy
-> > > > > > +          - const: hsic_12M
-> > > > > > +          - const: hsic_480M
-> > > > > > +
-> > > > > > +  resets:
-> > > > > > +    anyOf:
-> > > > > > +      - description: Normal USB PHY reset
-> > > > > > +
-> > > > > > +      - items:
-> > > > > > +          - description: Normal USB PHY reset
-> > > > > > +          - description: HSIC Reset
-> > > > > > +
-> > > > > > +  reset-names:
-> > > > > > +    oneOf:
-> > > > > > +      - const: phy
-> > > > > > +
-> > > > > > +      - items:
-> > > > > > +          - const: phy
-> > > > > > +          - const: hsic
-> > > > > > +
-> > > > > > +  phy_type:
-> > > > > > +    const: hsic
-> > > > > > +    description:
-> > > > > > +      When absent, the PHY type will be assumed to be normal USB.
-> > > > > > +
-> > > > > > +  phy-supply:
-> > > > > > +    description:
-> > > > > > +      Regulator that powers VBUS
-> > > > > > +
-> > > > > > +required:
-> > > > > > +  - "#phy-cells"
-> > > > > > +  - compatible
-> > > > > > +  - reg
-> > > > > > +  - clocks
-> > > > > > +  - clock-names
-> > > > > > +  - resets
-> > > > > > +  - reset-names
-> > > > > > +
-> > > > > > +additionalProperties: false
-> > > > > > +
-> > > > > > +if:
-> > > > > > +  properties:
-> > > > > > +    phy_type:
-> > > > > > +      const: hsic
-> > > > > > +
-> > > > > > +  required:
-> > > > > > +    - phy_type
-> > > > > > +
-> > > > > > +then:
-> > > > > > +  properties:
-> > > > > > +    clocks:
-> > > > > > +      maxItems: 3
-> > > > > > +
-> > > > > > +    clock-names:
-> > > > > > +      maxItems: 3
-> > > > > > +
-> > > > > > +    resets:
-> > > > > > +      maxItems: 2
-> > > > > > +
-> > > > > > +    reset-names:
-> > > > > > +      maxItems: 2
-> > > > >
-> > > > > So this is slightly incorrect. If phy_type == "hsic", then the
-> > > > > "phy" clock and reset should not be needed. I say should because
-> > > > > no boards actually came with HSIC implemented. The A80 Optimus
-> > > > > board had the HSIC lines on one of the GPIO headers, but I never
-> > > > > had any HSIC chips lol.
-> > > >
-> > > > This isn't what the previous binding was saying though :/
-> > >
-> > > From the original binding:
-> > >
-> > > - clock-names : depending on the "phy_type" property,
-> > >   * "phy" for normal USB
-> > >   * "hsic_480M", "hsic_12M" for HSIC
-> > > - resets : a list of phandle + reset specifier pairs
-> > > - reset-names : depending on the "phy_type" property,
-> > >   * "phy" for normal USB
-> > >   * "hsic" for HSIC
-> > >
-> > > It is recommended to list all clocks and resets available.
-> > > The driver will only use those matching the phy_type.
-> >
-> > I'm not quite sure how we want to fix this then, or even what there's
-> > to fix.
-> >
-> > The previous binding is saying that we need either phy or hsic, and
-> > that we should ideally set both. The DT are following that
-> > recommendation, and we have either one item for the clocks (phy), or
-> > three (phy + 2 HSIC clocks). resets is in a similar situation.
-> >
-> > The binding allows to have either one or three, and enforce that in
-> > HSIC we have three (but leaves the option open to have either 1 or 3
-> > in the normal phy type).
-> >
-> > As far as I can see, we cover what the binding was saying. Am I
-> > missing something?
+On Thu, Jan 2, 2020 at 4:24 PM Maxime Ripard <mripard@kernel.org> wrote:
 >
-> I guess you're right. Lets just keep why you've done already.
-> Sorry for the noise.
+> On Tue, Dec 31, 2019 at 06:35:21PM +0530, Jagan Teki wrote:
+> > TCON LCD0, LCD1 in allwinner R40, are used for managing
+> > LCD interfaces like RGB, LVDS and DSI.
+> >
+> > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
+> > tcon top.
+> >
+> > Add support for it, in tcon driver.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Changes for v3:
+> > - none
+> >
+> >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > index fad72799b8df..69611d38c844 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > @@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+> >       .has_channel_1          = true,
+> >  };
+> >
+> > +static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
+> > +     .supports_lvds          = true,
+> > +     .has_channel_0          = true,
+> > +     /* TODO Need to support TCON output muxing via GPIO pins */
+> > +     .set_mux                = sun8i_r40_tcon_tv_set_mux,
+>
+> What is this muking about? And why is it a TODO?
 
-Is that a Reviewed-by ? :)
+Muxing similar like how TCON TOP handle TV0, TV1 I have reused the
+same so-that it would configure de port selection via
+sun8i_tcon_top_de_config
 
-Maxime
+TCON output muxing have gpio with GPIOD and GPIOH bits, which select
+which of LCD or TV TCON outputs to the LCD function pins. I have
+marked these has TODO for further support as mentioned by Chen-Yu in
+v1[1].
 
---vnza7bcg3bx47puo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg4LsQAKCRDj7w1vZxhR
-xR6SAQDvqLC0h+09wIbderWyKg+USHYEopIVTFTMBgcuOvhXVgEAua5wcziPRm30
-+Ws7KYnlYb9VRZusKakxeTqUbHw2qQM=
-=wtW2
------END PGP SIGNATURE-----
-
---vnza7bcg3bx47puo--
+[1] https://patchwork.freedesktop.org/patch/310210/?series=62062&rev=1
