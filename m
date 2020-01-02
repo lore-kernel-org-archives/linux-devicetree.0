@@ -2,180 +2,126 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C52F1C2D0DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C11C47409
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920B121655
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E4F21835
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvrNbulz"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rdW5FCjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgABIsO (ORCPT
+        id S1727870AbgABIu6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:48:14 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37927 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727757AbgABIsO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 03:48:14 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d7so51705596otf.5;
-        Thu, 02 Jan 2020 00:48:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
-        b=XvrNbulzxprjJqi8RpScnA140KqOgH0A3KIwDYeZHKhtNqXpKqoIH3DkDmMCVQ4mUL
-         UwesBRnFDTc16aXYRWU9fFLStptClVcntJFNz6OyMjwF05UXavP3leAtsROoVh410vm+
-         jUwytle5bVp/DrZEhUKPxt7VGX15m/li3nhKMCPQHhUUfTMLo4HrwFfUuHyhLRmPJosc
-         ZVN+FIUAGNI58UFohnNWgK+pW61uPy/3SkM8oE8zY+MwPijr+Ibg7angTkInKzlKJqfa
-         UB5p84iBYkGvBSTVKgL5bpv2MgeEExqeZUGno4Xaoq9OwJaoN+NtTQiaOofpO6zyJYpl
-         4DsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lYK3JQAmW07FRU5GuNZTgBOd+vjFiils6tG0VLmuyGE=;
-        b=ZQJ5XERqKOsE6PBlyf4fn+oUgSy18oD4/lCAZ7FkaLqy/4xf7DqL24c5KGhfLEPeEI
-         pYCVqpqndrHqQQ4Aja+Q6Su+voHcPL1Jpp+RJdnqUKGOXv0ECmRojDjWvmU/CdvFD8BS
-         jAqi1HuHGJ0aSqIsaNiF9gXJ+PD371Ue6xBmeMCEfKQqbJjeT+U0eM4TNEClUdeUMoh7
-         BMb+EWppXnvZU896LYdY6PCegsR/fnlPmM9hRFY5XahtHdRoHWnNLXDbBR8ovsbf+GGM
-         y9t74z1csZvLCMOTTVhu0zxptnEw2hLGwdXh4TO47RlgppCEEDNt7bhaIc/vPAJ6Ywnm
-         IeNg==
-X-Gm-Message-State: APjAAAU2uebq3i4Wcz6805ZKdpsDJJG8ZUJzM9lPpX4r/CfU0UBg1uCs
-        NIdb79qFbpEPQbOjsViEc4ToDt9FIWLoMeRZo0k=
-X-Google-Smtp-Source: APXvYqxeuKbXHxGtyzku07WE9C0N/ua7Tl5Z8JOlkhllIuUswqzYTzv/m5bf/QtdXNVE3v+FavUIVxFQjdB8xF8hNl8=
-X-Received: by 2002:a05:6830:1188:: with SMTP id u8mr91290992otq.274.1577954893533;
- Thu, 02 Jan 2020 00:48:13 -0800 (PST)
+        Thu, 2 Jan 2020 03:50:58 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58184 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727817AbgABIu5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 03:50:57 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0028mjoQ007721;
+        Thu, 2 Jan 2020 09:50:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=LRdbeTk9U+whaEXucHpmJKJIXLSTzy8TN4eCF8nKnlk=;
+ b=rdW5FCjvJZp4jjB8Zq169+SO5I2yDOHHeVn9ffeFn0qfFuJbIkdLiqX37tZHl1losuIT
+ K8xlccRILYvzn4OG7G7rjKj9+f8hSg0OvrEcF/fTaT4mLeehR26aGdvHRfq2WZEALEka
+ d/WbwqX9C1YmDYto0kEaZ4KI7p68kBKNvvoZIvPXOTGaR3ggaYNWtAiYZVsjuZngvvv/
+ uDH/MdR8jQjnoIRHltOPNuJH+7E76GyPeoZUIHGL/4PCFQ93dw7Dag2CC92UTRR4OQdu
+ iYX04ChjY3jCq4AXgjpEU3puzFoNxPJvBMGcTjJHvhaez7pErnf08R9ypcmjMgTQr563 Ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2x5wd6a4bv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 02 Jan 2020 09:50:41 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 897E8100034;
+        Thu,  2 Jan 2020 09:50:40 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 666FF21ED5A;
+        Thu,  2 Jan 2020 09:50:40 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 2 Jan
+ 2020 09:50:39 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Thu, 2 Jan 2020 09:50:39 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "hminas@synopsys.com" <hminas@synopsys.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: exynos: Remove unneeded "snps,dwc2" from
+ hsotg node
+Thread-Topic: [PATCH v2 2/2] ARM: dts: exynos: Remove unneeded "snps,dwc2"
+ from hsotg node
+Thread-Index: AQHVtlgQQnPVTv47G0+aNYZYg4bX66fS0MUAgARFMYA=
+Date:   Thu, 2 Jan 2020 08:50:39 +0000
+Message-ID: <bbc7e34c-75c2-dfe0-70f3-0685e8e54fed@st.com>
+References: <20191219103536.25485-1-benjamin.gaignard@st.com>
+ <20191219103536.25485-3-benjamin.gaignard@st.com> <20191230153758.GB4918@pi3>
+In-Reply-To: <20191230153758.GB4918@pi3>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <189E2F8963AD1C41B89EA1A9DC82B15E@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191219233525.GA9478@bogus>
-In-Reply-To: <20191219233525.GA9478@bogus>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 2 Jan 2020 08:47:47 +0000
-Message-ID: <CA+V-a8vO_3P3vDFVuKLJAK7v99E7qKVAei0Kmba8tKist7mAaw@mail.gmail.com>
-Subject: Re: [v2 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2020-01-02_02:2019-12-30,2020-01-02 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thank you for the review.
-
-On Thu, Dec 19, 2019 at 11:35 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Dec 13, 2019 at 08:47:46AM +0000, Lad Prabhakar wrote:
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> >
-> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/pci/rcar-pci-ep.txt        | 37 ++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
->
-> Please make this a DT schema.
->
-sure will do.
-
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > new file mode 100644
-> > index 0000000..7f0a97e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > @@ -0,0 +1,37 @@
-> > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > +
-> > +Required properties:
-> > +         "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
->
-> Normal ordering is: renesas,r8a774c0-pcie-ep
->
-> > +         "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > +                                  RZ/G2 compatible device.
-> > +
-> > +         When compatible with the generic version, nodes must list the
-> > +         SoC-specific version corresponding to the platform first
-> > +         followed by the generic version.
-> > +
-> > +- reg: base address and length of the PCIe controller registers.
-> > +- outbound-ranges: outbound windows base address and length including the flags.
-> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
->
-> How many?
->
-should be one.
-
-> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
-> > +      clock.
-> > +- clock-names: from common clock binding: should be "pcie".
-> > +
-> > +Optional Property:
-> > +- max-functions: Maximum number of functions that can be configured (default 1).
-> > +
-> > +Example:
-> > +
-> > +SoC-specific DT Entry:
-> > +
-> > +     pcie_ep: pcie_ep@fe000000 {
->
-> pcie-ep@
->
-will fix that.
-
-Cheers,
---Prabhakar
-
-> > +             compatible = "renesas,pcie-ep-r8a774c0", "renesas,pcie-rcar-gen2";
-> > +             reg = <0 0xfe000000 0 0x80000>;
-> > +             outbound-ranges = <0xa 0x0 0xfe100000 0 0x000100000
-> > +                                0xa 0x0 0xfe200000 0 0x000200000
-> > +                                0x6 0x0 0x30000000 0 0x008000000
-> > +                                0x6 0x0 0x38000000 0 0x008000000>;
-> > +             clocks = <&cpg CPG_MOD 319>;
-> > +             clock-names = "pcie";
-> > +             power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> > +             resets = <&cpg 319>;
-> > +     };
-> > --
-> > 2.7.4
-> >
+DQpPbiAxMi8zMC8xOSA0OjM3IFBNLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPiBPbiBU
+aHUsIERlYyAxOSwgMjAxOSBhdCAxMTozNTozNkFNICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3
+cm90ZToNCj4+IFJlbW92ZSAic25wcyxkd2MyIiBmcm9tIGhzb3RnQDEyNDgwMDAwIG5vZGUgY29t
+cGF0aWJsZSBsaXN0IGJlY2F1c2UNCj4+ICJzYW1zdW5nLHMzYzY0MDAtaHNvdGciIHNob3VsZCBi
+ZSBlbm91Z2guDQo+IFRoZSBtb3JlIGRldGFpbGVkIGNvbXBhdGlibGUgaXMgYWxtb3N0IGFsd2F5
+cyAiZW5vdWdoIi4gU29tZSBvdGhlciBub2Rlcw0KPiBhbHNvIGhhdmUgZGV0YWlsZWQrZ2VuZXJp
+YyBjb21wYXRpYmxlLiBJbiB0aGlzIGNhc2UgdGhlcmUgaXMgYSBkcml2ZXINCj4gbWF0Y2hpbmcg
+InNucHMsZHdjMiIgc28gd2h5IHJlbW92aW5nIGl0Pw0KDQpGaXJzdCBiZWNhdXNlLCB1bmxpa2Ug
+dGhlIG90aGVycyBkd2MyIGRldmljZXMsIHRoaXMgY29tcGF0aWJsZSB3YXNuJ3QgDQpkZXNjcmli
+ZSBpbiB0aGUgYmluZGluZ3MgZmlsZQ0KDQpzbyBJIGhhZCB0byBpbnZlc3RpZ2F0ZWQgaG93IGl0
+IHNob3VsZCB3b3JrIGFuZCwgb24gc2Ftc3VuZyBEVCBmaWxlcywgDQpvbmx5ICJzYW1zdW5nLHMz
+YzY0MDAtaHNvdGciLg0KDQogRnJvbSBkcml2ZXIgY29kZSBwb2ludCBvZiB2aWV3IHRoYXQgc2Vl
+bXMgY29oZXJlbnQgKHdlIGRvIHRoZSBzYW1lIGZvciANCnN0bTMyKS4NCg0KV2l0aCB0aGF0IGlu
+IG1pbmQgSSBoYXZlIGRlY2lkZWQgdG8gcmVtb3ZlICJzbnBzLGR3YzIiIGZyb20gZXh5bm9zIERU
+IA0KZmlsZSByYXRoZXIgdGhhbiBhZGQgaXQgZXZlcnl3aGVyZSBlbHNlLg0KDQpCZW5qYW1pbg0K
+DQo+DQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQo+DQo+PiBTaWduZWQtb2ZmLWJ5OiBC
+ZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPj4gLS0tDQo+PiAg
+IGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRzaSB8IDIgKy0NCj4+ICAgMSBmaWxlIGNo
+YW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4
+eW5vczMyNTAuZHRzaQ0KPj4gaW5kZXggYjAxNmIwYjY4MzA2Li5kNDg2NjI2OWY0ZWUgMTAwNjQ0
+DQo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3MzMjUwLmR0c2kNCj4+ICsrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRzaQ0KPj4gQEAgLTM2Miw3ICszNjIsNyBAQA0K
+Pj4gICAJCX07DQo+PiAgIA0KPj4gICAJCWhzb3RnOiBoc290Z0AxMjQ4MDAwMCB7DQo+PiAtCQkJ
+Y29tcGF0aWJsZSA9ICJzYW1zdW5nLHMzYzY0MDAtaHNvdGciLCAic25wcyxkd2MyIjsNCj4+ICsJ
+CQljb21wYXRpYmxlID0gInNhbXN1bmcsczNjNjQwMC1oc290ZyI7DQo+PiAgIAkJCXJlZyA9IDww
+eDEyNDgwMDAwIDB4MjAwMDA+Ow0KPj4gICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTQxIElS
+UV9UWVBFX0xFVkVMX0hJR0g+Ow0KPj4gICAJCQljbG9ja3MgPSA8JmNtdSBDTEtfVVNCT1RHPjsN
+Cj4+IC0tIA0KPj4gMi4xNS4wDQo+Pg==
