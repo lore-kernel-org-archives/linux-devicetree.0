@@ -2,95 +2,126 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 349B3C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49156C3276C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFECE20866
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2CB21655
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 19:58:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mShZz6nU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgABTvN (ORCPT
+        id S1728575AbgABT6J (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 14:51:13 -0500
-Received: from muru.com ([72.249.23.125]:49978 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728260AbgABTvN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jan 2020 14:51:13 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 942208087;
-        Thu,  2 Jan 2020 19:51:52 +0000 (UTC)
-Date:   Thu, 2 Jan 2020 11:51:08 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?B?QW5kcsOp?= Hentschel <nerv@dawncrow.de>,
-        Adam Ford <aford173@gmail.com>, linux@arm.linux.org.uk,
-        robh+dt@kernel.org, mark.rutland@arm.com, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: Add omap3-echo
-Message-ID: <20200102195108.GF16702@atomide.com>
-References: <20191224161005.28083-1-nerv@dawncrow.de>
- <20191224184503.GK35479@atomide.com>
- <60412339-53BF-4DC1-8AF6-4FB0E75D429C@goldelico.com>
- <53e6cbbd-1094-cba2-4942-981502a738d4@dawncrow.de>
- <20191230172948.GL35479@atomide.com>
- <55E6481C-2137-4086-ACDF-5F7D86E41A21@goldelico.com>
+        Thu, 2 Jan 2020 14:58:09 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:44553 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728260AbgABT6J (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 14:58:09 -0500
+Received: by mail-pl1-f193.google.com with SMTP id az3so18190760plb.11
+        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 11:58:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=//zj6SbVl4l4Dy70+h80nhCy3QhRZVce+ij1LDk6fWU=;
+        b=mShZz6nUhFXPyEo1K5ViUN6WbTJXV2K56ZHN7OIK01/63zdSt50PHxsOHSh4ofAHEw
+         YwpZczPI8Pw8t29hmvO1YumXXRwTLV9kn6FE8iQ8BgS7pVkIsRr/kCzB7PCguX0x8AiZ
+         OLJyIJOnAHIskWV0r/9znRQ45gl++mEAlIkUkCsLr2C+MTDCrr+Ct2L1IR5SiuAMVgIz
+         qYU5quV0fKHK4frCf5hgRlAFImCjPFy8yJiOZ6+fgid5pWWJmJqdzvKCOOjlpdlUw7Ma
+         bK6bZGlWTWauS61aM1nTnSbw6R8zPGih8yjTY56Ce5MInrB+NBrvh1g2ZbIYe1Rldw54
+         /HbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=//zj6SbVl4l4Dy70+h80nhCy3QhRZVce+ij1LDk6fWU=;
+        b=rEbEl83dwBFCTO9pAwD9fDGsXSLmh4KG8O1lAcE1oS20oKLEfJMO95jsRV3Rwcqk51
+         Qq0BKvDJndEvlj0SqH+MXgjE5G2dbPY6n/sE7LKtIIdqmVlar1h4GMMfrMVHBb0cQzA4
+         64tOjfKxavST9c1ZrJjNn1bZIUQ9HjO1LQVuqFqTW5v4JP53N+d6daFcv/GCDP2MB4Sp
+         v6PuNX4nAZEwfJZw4GGLNqN+QH93Rz65y5AI1DaRZVaz/DQKuo+r2E954f6xLEhcBxBF
+         +OHlfAwuEuyKOlW3afXzqa8otP1e4Xa3oCWJa48vuGa6qM606HPJgrY5tVFVOXEfnaZQ
+         x0fg==
+X-Gm-Message-State: APjAAAVIuY6+4ZKkLm360hjMrgJsKd0DAJAY3sZ8SgKDPdDkAQLc/agP
+        bmXlNcQa29qBqycNfC39zJh9JQ==
+X-Google-Smtp-Source: APXvYqwdxMXn05Qla4baD33J5OtsqHVuSY0QhHbQcUXhxugasbUiogtjvkASblvhYNf+o3NUIqXtZQ==
+X-Received: by 2002:a17:90a:9bc3:: with SMTP id b3mr22055052pjw.76.1577995088582;
+        Thu, 02 Jan 2020 11:58:08 -0800 (PST)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j14sm59138415pgs.57.2020.01.02.11.58.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 11:58:07 -0800 (PST)
+Date:   Thu, 2 Jan 2020 11:58:05 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, sivaa@codeaurora.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 7/9] arm64: dts: sdm845: thermal: Add critical
+ interrupt support
+Message-ID: <20200102195805.GF988120@minitux>
+References: <cover.1577976221.git.amit.kucheria@linaro.org>
+ <a86be6121986d1c37b34f791532cd65ec13f1e00.1577976221.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55E6481C-2137-4086-ACDF-5F7D86E41A21@goldelico.com>
+In-Reply-To: <a86be6121986d1c37b34f791532cd65ec13f1e00.1577976221.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [191231 08:16]:
-> > Am 30.12.2019 um 18:29 schrieb Tony Lindgren <tony@atomide.com>:
-> > And let's also add minimal dm3725.dtsi, am3715.dtsi and am3703.dtsi
-> > to make things simple.
+On Thu 02 Jan 06:54 PST 2020, Amit Kucheria wrote:
+
+> Register critical interrupts for each of the two tsens controllers
 > 
-> Well, is that "simple"?
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Link: https://lore.kernel.org/r/3686bd40c99692feb955e936b608b080e2cb1826.1568624011.git.amit.kucheria@linaro.org
 
-Well simple from "adding support for a new device in most case" point
-of view yes..
-
-> We also have to add omap3503, omap3515, omap3520, omap3530.dtsi.
-> And probably am3351,2,4,6,7,8,9 variants with different capabilities
-> (PRU, SGX, CAN, ZCZ ports to name some).
-> 
-> And to be correct, there should be a different "compatible".
-
-..and yes the number of permutations quickly gets out of control :)
-
-The SoC specific compatibles should be there though. So everybody,
-please keep adding them as we encounter the missing ones.
-
-Note that we don't seem to have much any feature detection for the
-newer TI parts. At least am4 and dra7 already rely on
-of_machine_is_compatible() checks for omap_hwmod_43xx_data.c and
-omap_hwmod_7xx_data.c.
-
-> Rob asked me when reviewing the pvrsgx bindings if the img,5xx variants
-> can be autodetected to reduce bindings complexity.
-
-Yes also dynamic detection is needed, and we do have that working
-for many SoCs. The use in ti-sysc driver is still missing though,
-and newer SoCs never had feature detection added.
-
-> > The device tree is supposed to describe the
-> > hardware, and in most cases the SoC version is fixed and need no
-> > dynamic detection.
-> 
-> There may be exactly the same board populated with either one since
-> they are drop-in pin compatible. So this may proliferate to the
-> board.dts files and u-boot can have to load different .dtb.
-
-Yeah. I'm afraid we're already depending for bootloader picking
-the right dtb for many cases, such as capes etc.
+I was under the impression that this series was already picked up, so I
+merged the three dts patches last week (it's a nop until the driver is
+updated anyways).
 
 Regards,
+Bjorn
 
-Tony
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index ddb1f23c936f..8986553cf2eb 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2950,8 +2950,9 @@
+>  			reg = <0 0x0c263000 0 0x1ff>, /* TM */
+>  			      <0 0x0c222000 0 0x1ff>; /* SROT */
+>  			#qcom,sensors = <13>;
+> -			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-names = "uplow";
+> +			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow", "critical";
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> @@ -2960,8 +2961,9 @@
+>  			reg = <0 0x0c265000 0 0x1ff>, /* TM */
+>  			      <0 0x0c223000 0 0x1ff>; /* SROT */
+>  			#qcom,sensors = <8>;
+> -			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
+> -			interrupt-names = "uplow";
+> +			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "uplow", "critical";
+>  			#thermal-sensor-cells = <1>;
+>  		};
+>  
+> -- 
+> 2.20.1
+> 
