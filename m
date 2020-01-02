@@ -2,126 +2,178 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C11C47409
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4794C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 09:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E4F21835
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 08:50:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rdW5FCjv"
+	by mail.kernel.org (Postfix) with ESMTP id AAF6721734
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 09:00:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgABIu6 (ORCPT
+        id S1727852AbgABJAv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 03:50:58 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58184 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727817AbgABIu5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 03:50:57 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0028mjoQ007721;
-        Thu, 2 Jan 2020 09:50:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=LRdbeTk9U+whaEXucHpmJKJIXLSTzy8TN4eCF8nKnlk=;
- b=rdW5FCjvJZp4jjB8Zq169+SO5I2yDOHHeVn9ffeFn0qfFuJbIkdLiqX37tZHl1losuIT
- K8xlccRILYvzn4OG7G7rjKj9+f8hSg0OvrEcF/fTaT4mLeehR26aGdvHRfq2WZEALEka
- d/WbwqX9C1YmDYto0kEaZ4KI7p68kBKNvvoZIvPXOTGaR3ggaYNWtAiYZVsjuZngvvv/
- uDH/MdR8jQjnoIRHltOPNuJH+7E76GyPeoZUIHGL/4PCFQ93dw7Dag2CC92UTRR4OQdu
- iYX04ChjY3jCq4AXgjpEU3puzFoNxPJvBMGcTjJHvhaez7pErnf08R9ypcmjMgTQr563 Ig== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2x5wd6a4bv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 02 Jan 2020 09:50:41 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 897E8100034;
-        Thu,  2 Jan 2020 09:50:40 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 666FF21ED5A;
-        Thu,  2 Jan 2020 09:50:40 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 2 Jan
- 2020 09:50:39 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Thu, 2 Jan 2020 09:50:39 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "hminas@synopsys.com" <hminas@synopsys.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: exynos: Remove unneeded "snps,dwc2" from
- hsotg node
-Thread-Topic: [PATCH v2 2/2] ARM: dts: exynos: Remove unneeded "snps,dwc2"
- from hsotg node
-Thread-Index: AQHVtlgQQnPVTv47G0+aNYZYg4bX66fS0MUAgARFMYA=
-Date:   Thu, 2 Jan 2020 08:50:39 +0000
-Message-ID: <bbc7e34c-75c2-dfe0-70f3-0685e8e54fed@st.com>
-References: <20191219103536.25485-1-benjamin.gaignard@st.com>
- <20191219103536.25485-3-benjamin.gaignard@st.com> <20191230153758.GB4918@pi3>
-In-Reply-To: <20191230153758.GB4918@pi3>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <189E2F8963AD1C41B89EA1A9DC82B15E@st.com>
-Content-Transfer-Encoding: base64
+        Thu, 2 Jan 2020 04:00:51 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33104 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgABJAv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 04:00:51 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so34359847otp.0;
+        Thu, 02 Jan 2020 01:00:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fJFkq9fgXdJc4mnZ6lqzSDTJfkkupEPzyOJabLJ6bv0=;
+        b=p9REWqXekPXmYokjLl1uoSbL2yEYUA760udBkAGj7QaMc2CMdnUp3Sp7l4JN3F/L1E
+         gx88GBSlLdA+b1KYILzao0whKbxsROSjfoI5Tn1mSE72r5ju6DBQZNpj8B3TtY0gX5OQ
+         QEFt6W24tZmfLVj6jouITo1kJUJ16t+J+ItAQcWF7M7h2bTkZs+9BTQU2hbSxBMbpVSE
+         95Rx2g+nwVAxaNmn1UJZXb6/jFKDEEBmRkKR7+hS9XWhbD/fz+QWqLPeebkFJmMwK7Cn
+         IquoomnRu8APPSUQwRTBE784spVhGUOgzHg0ozjj4Kr8qEkkd6+VfZTWNdcYaLqarHpY
+         1VuA==
+X-Gm-Message-State: APjAAAWxe0o82Jq1isZ1o13NMwZiNc84fLncW6Z4Kweov910MnE8fgLr
+        1ma176CKHPSx5Mqg6dQ1bvTRs2EYlf2urUtV/Kw=
+X-Google-Smtp-Source: APXvYqyUfUGFNgz0xNB0ytdDk3m9k6lvN2rSLQrWuplzu38HrzYAPZJ4cUcexs15+gohZobI23e99dHh/W90fK4UCfA=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr92750494otm.297.1577955650175;
+ Thu, 02 Jan 2020 01:00:50 -0800 (PST)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-02_02:2019-12-30,2020-01-02 signatures=0
+References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
+ <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
+ <CAL_Jsq+24qYqN6u1o93gkGm13GZeSRQM4uor0170HeFbLdU-xQ@mail.gmail.com>
+ <CAMuHMdXBVyutji67Ladvoh3NhrPNTYfAKS4pmOQcOouZGokYvQ@mail.gmail.com>
+ <CAMuHMdU0K3n4CandL2RKrVmzmbBMt2Mw3WWM4JZoZcK3h8yZNA@mail.gmail.com> <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqLOtT478wXZv8hshvpsdHESnDCNuwDBNj264tNu-oyVUQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 2 Jan 2020 10:00:39 +0100
+Message-ID: <CAMuHMdUq9FD8MU2iF4FPwLND+jrD5f-h8Wnp1A3=HwHmHg+nmg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        David Daney <david.daney@cavium.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQpPbiAxMi8zMC8xOSA0OjM3IFBNLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPiBPbiBU
-aHUsIERlYyAxOSwgMjAxOSBhdCAxMTozNTozNkFNICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3
-cm90ZToNCj4+IFJlbW92ZSAic25wcyxkd2MyIiBmcm9tIGhzb3RnQDEyNDgwMDAwIG5vZGUgY29t
-cGF0aWJsZSBsaXN0IGJlY2F1c2UNCj4+ICJzYW1zdW5nLHMzYzY0MDAtaHNvdGciIHNob3VsZCBi
-ZSBlbm91Z2guDQo+IFRoZSBtb3JlIGRldGFpbGVkIGNvbXBhdGlibGUgaXMgYWxtb3N0IGFsd2F5
-cyAiZW5vdWdoIi4gU29tZSBvdGhlciBub2Rlcw0KPiBhbHNvIGhhdmUgZGV0YWlsZWQrZ2VuZXJp
-YyBjb21wYXRpYmxlLiBJbiB0aGlzIGNhc2UgdGhlcmUgaXMgYSBkcml2ZXINCj4gbWF0Y2hpbmcg
-InNucHMsZHdjMiIgc28gd2h5IHJlbW92aW5nIGl0Pw0KDQpGaXJzdCBiZWNhdXNlLCB1bmxpa2Ug
-dGhlIG90aGVycyBkd2MyIGRldmljZXMsIHRoaXMgY29tcGF0aWJsZSB3YXNuJ3QgDQpkZXNjcmli
-ZSBpbiB0aGUgYmluZGluZ3MgZmlsZQ0KDQpzbyBJIGhhZCB0byBpbnZlc3RpZ2F0ZWQgaG93IGl0
-IHNob3VsZCB3b3JrIGFuZCwgb24gc2Ftc3VuZyBEVCBmaWxlcywgDQpvbmx5ICJzYW1zdW5nLHMz
-YzY0MDAtaHNvdGciLg0KDQogRnJvbSBkcml2ZXIgY29kZSBwb2ludCBvZiB2aWV3IHRoYXQgc2Vl
-bXMgY29oZXJlbnQgKHdlIGRvIHRoZSBzYW1lIGZvciANCnN0bTMyKS4NCg0KV2l0aCB0aGF0IGlu
-IG1pbmQgSSBoYXZlIGRlY2lkZWQgdG8gcmVtb3ZlICJzbnBzLGR3YzIiIGZyb20gZXh5bm9zIERU
-IA0KZmlsZSByYXRoZXIgdGhhbiBhZGQgaXQgZXZlcnl3aGVyZSBlbHNlLg0KDQpCZW5qYW1pbg0K
-DQo+DQo+IEJlc3QgcmVnYXJkcywNCj4gS3J6eXN6dG9mDQo+DQo+PiBTaWduZWQtb2ZmLWJ5OiBC
-ZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPj4gLS0tDQo+PiAg
-IGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRzaSB8IDIgKy0NCj4+ICAgMSBmaWxlIGNo
-YW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4
-eW5vczMyNTAuZHRzaQ0KPj4gaW5kZXggYjAxNmIwYjY4MzA2Li5kNDg2NjI2OWY0ZWUgMTAwNjQ0
-DQo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3MzMjUwLmR0c2kNCj4+ICsrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRzaQ0KPj4gQEAgLTM2Miw3ICszNjIsNyBAQA0K
-Pj4gICAJCX07DQo+PiAgIA0KPj4gICAJCWhzb3RnOiBoc290Z0AxMjQ4MDAwMCB7DQo+PiAtCQkJ
-Y29tcGF0aWJsZSA9ICJzYW1zdW5nLHMzYzY0MDAtaHNvdGciLCAic25wcyxkd2MyIjsNCj4+ICsJ
-CQljb21wYXRpYmxlID0gInNhbXN1bmcsczNjNjQwMC1oc290ZyI7DQo+PiAgIAkJCXJlZyA9IDww
-eDEyNDgwMDAwIDB4MjAwMDA+Ow0KPj4gICAJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTQxIElS
-UV9UWVBFX0xFVkVMX0hJR0g+Ow0KPj4gICAJCQljbG9ja3MgPSA8JmNtdSBDTEtfVVNCT1RHPjsN
-Cj4+IC0tIA0KPj4gMi4xNS4wDQo+Pg==
+Hi Rob,
+
+On Tue, Dec 31, 2019 at 6:10 PM Rob Herring <robh@kernel.org> wrote:
+> On Tue, Dec 31, 2019 at 7:31 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Dec 31, 2019 at 9:23 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Tue, Dec 31, 2019 at 12:30 AM Rob Herring <robh@kernel.org> wrote:
+> > > > On Thu, Dec 12, 2019 at 7:41 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
+> > > > > > Convert the generic PCI host binding to DT schema. The derivative Juno,
+> > > > > > PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
+> > > > > > their compatible strings. The simplest way to convert those to
+> > > > > > schema is just add them into the common generic PCI host schema.
+> > > > > >
+> > > > > > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > > > > > Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > > > Cc: Andrew Murray <andrew.murray@arm.com>
+> > > > > > Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> > > > > > Cc: Will Deacon <will@kernel.org>
+> > > > > > Cc: David Daney <david.daney@cavium.com>
+> > > > > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > > >
+> > > > > > index 515b2f9542e5..000000000000
+> > > > > > --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
+> > > > > > +++ /dev/null
+> > > > >
+> > > > > > -Example:
+> > > > > > -
+> > > > > > -    pcie1: pcie@7f000000 {
+> > > > > > -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
+> > > > > > -        device_type = "pci";
+> > > > > > -        reg = <0x0 0x7f000000 0x0 0xf00000>;
+> > > > > > -        bus-range = <0x0 0xe>;
+> > > > > > -        #address-cells = <3>;
+> > > > > > -        #size-cells = <2>;
+> > > > > > -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
+> > > > > > -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
+> > > > > > -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
+> > > > > > -
+> > > > > > -        #interrupt-cells = <0x1>;
+> > > > > > -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
+> > > > >
+> > > > > An all-zeroes interrupt-map-mask seems to be very common on embedded
+> > > > > SoCs, where all devices are mapped to a single interrupt.
+> > > >
+> > > > Indeed.
+> > > >
+> > > > > However, schemas/pci/pci-bus.yaml says:
+> > > > >
+> > > > >   interrupt-map-mask:
+> > > > >     items:
+> > > > >       - description: PCI high address cell
+> > > > >         minimum: 0
+> > > > >         maximum: 0xf800
+> > > > >       - description: PCI mid address cell
+> > > > >         const: 0
+> > > > >       - description: PCI low address cell
+> > > > >         const: 0
+> > > > >       - description: PCI IRQ cell
+> > > > >         minimum: 1
+> > > > >         maximum: 7
+> > > > >
+> > > > > and thus complains about an all-zeroes mask, e.g.
+> > > > >
+> > > > >     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
+> > > > > pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
+> > > >
+> > > > Now fixed.
+> > >
+> > > Thank you, confirmed.
+> >
+> > And with latest renesas-drivers, I started seeing:
+> >
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:0: [0, 0, 0, 1] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:1: [5, 0, 113, 4] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:2: [2048, 0, 0, 1] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:3: [5, 0, 113, 4] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:4: [4096, 0, 0, 2] is too short
+> >     arch/arm/boot/dts/r8a7791-koelsch.dt.yaml: pci@ee0d0000:
+> > interrupt-map:5: [5, 0, 113, 4] is too short
+> >
+> > Looks like interrupt-map is split incorrectly: shouldn't each entry have 8
+> > cells?
+>
+> That must be with a current dtc which now splits the array before each
+> phandle. That works for phandle+args, but not *-map properties. :( I
+
+Ah, that explains it: renesas-drivers does include your for-next branch.
+At first I was a bit puzzled, as the messages weren't introduced by a
+dt-schema repo update...
+
+> was trying to avoid a bunch of dts updates to add brackets. I think
+> for now, I'll just drop the interrupt-map size constraint. It's not
+> all that accurate anyways as it doesn't look at cell sizes.
+
+Too late, I've already applied grouping to the Renesas ARM DTS files ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
