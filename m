@@ -2,99 +2,115 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E668C3276D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD29C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F734215A4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499D3206DA
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 14:54:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BWwaYA6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgABOqo (ORCPT
+        id S1728556AbgABOyn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 09:46:44 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:45008 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgABOqn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:46:43 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 94B52803D7;
-        Thu,  2 Jan 2020 15:46:37 +0100 (CET)
-Date:   Thu, 2 Jan 2020 15:46:36 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        Chris Brandt <chris.brandt@renesas.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/3] dt-bindings: display: sitronix, st7735r: Add Okaya
- rh128128t
-Message-ID: <20200102144636.GA10075@ravnborg.org>
-References: <20200102141246.370-1-geert+renesas@glider.be>
- <20200102141246.370-2-geert+renesas@glider.be>
+        Thu, 2 Jan 2020 09:54:43 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:54874 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgABOym (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 09:54:42 -0500
+Received: by mail-pj1-f68.google.com with SMTP id kx11so3342191pjb.4
+        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 06:54:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VtDUTQjwQa4iJtNbmp2oh8w540jx+9fBWmE0OFJWN5s=;
+        b=BWwaYA6vNRkCdYaWQy6Xo1X1nAgYmYYaM7X09iTP5li6SWvSHs5nZvbJsVKpQvMHtf
+         zdojI0OK6raZEtT6w9mR+8Iv9LXNaDdjuqH+91QIsfVVe4MvXLCFAurL+c7CCjzyENzQ
+         kwzjzxbnG8sqoqAZ914QuEGjIGupcxixZHb9tgEYMcr6CiV6QCbTwgQbluB/1DdDAksf
+         OCqWkgsX6l21elKxZdelw+vznZzdX4Cr6nfppWMGyohTlMS4ijaU1KN9VwnRizKqOgU/
+         rh07FXy3kdW819H5vP4skfEhulDJhhdsrEt/19qEEVo1mx67TB66sZsNrrdwPSRFcQPf
+         z9WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VtDUTQjwQa4iJtNbmp2oh8w540jx+9fBWmE0OFJWN5s=;
+        b=YQwmPqTQA0G09+2mk1qdlkcbkK6/mfdibvG83ldHDJ4yFpzcQmoWXf23AudZrZRyiD
+         Np0cKS2yUiC1wRBKooXaJmxsjIMBun+SmLoX5V2pBijCfYXQHgr0/C6yjHSguXgTFGIM
+         ZwYf+5mNTbK+DB01bBqWmP+2Qe5D763FTdNHhQrH+CvGaVWW+P/JQLiEbA3ga/cJmORa
+         eul/H5jwcu6uIxAtYMtuY5FZdOcrOS76SFLr7juko26/W+aJv4qUSpueWRQnC+mVRWsp
+         rQxeQpwdgUTbMJ0HDzRVbsY1wF+C+Xud6udMYfV8PCR0DHW2ThzhXdOeJmo9f27v5PhY
+         mrgw==
+X-Gm-Message-State: APjAAAX8QwoFNWc7ucix288KxFhlb+OY37WRrpGakb38KeTTsoqteZUL
+        hkaoBQtF4nWdNuZ+EqsQFjKQIA==
+X-Google-Smtp-Source: APXvYqx/t9weau/82TBMzffkI1Rt4tlViNW0WGABJ+oSXsGqWDmmqCdMRwpjK0DHHZU1ry16gVuZxg==
+X-Received: by 2002:a17:902:bf49:: with SMTP id u9mr32469865pls.199.1577976880635;
+        Thu, 02 Jan 2020 06:54:40 -0800 (PST)
+Received: from localhost ([103.195.202.148])
+        by smtp.gmail.com with ESMTPSA id q25sm65113198pfg.41.2020.01.02.06.54.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 06:54:40 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, swboyd@chromium.org,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>
+Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/9] thermal: tsens: Handle critical interrupts
+Date:   Thu,  2 Jan 2020 20:24:25 +0530
+Message-Id: <cover.1577976221.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102141246.370-2-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=FF-hTYSRAwVgkRfqy0oA:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
-        a=6VlIyEUom7LUIeUMNQJH:22
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert.
+TSENS IP v2.x supports critical interrupts and v2.3+ adds watchdog support
+in case the FSM is stuck. Enable support in the driver.
 
-On Thu, Jan 02, 2020 at 03:12:44PM +0100, Geert Uytterhoeven wrote:
-> Document support for the Okaya RH128128T display, which is a 128x128
-> 1.44" TFT display driven by a Sitronix ST7715R TFT Controller/Driver.
-> 
-> ST7715R and ST7735R are very similar.  Their major difference is that
-> the former is restricted to displays of up to 132x132 pixels, while the
-> latter supports displays up to 132x162 pixels.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  .../devicetree/bindings/display/sitronix,st7735r.txt          | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-> index cd5c7186890a2be7..87ebdcb294e29798 100644
-> --- a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
-While touching the bindings file, can I convince you to convert it to
-meta-schema format (.yaml)?
+This series was generated on top of linux-next from 20191202 to capture
+const changes for msm8976 that is queued currently.
+
+Changes from v2:
+- Handle old DTBs w/o critical irq in the same way as fix sent for 5.5
+
+Changes from v1:
+- Make tsens_features non-const to allow run time detection of features
+- Pass tsens_sensor around as a const
+- Fix a bug to release dev pointer in success path
+- Address review comments from Bjorn and Stephen (thanks for the review)
+- Add msm8998 and msm8996 DTSI changes for critical interrupts
 
 
-> @@ -4,7 +4,9 @@ This binding is for display panels using a Sitronix ST7735R controller in SPI
->  mode.
->  
->  Required properties:
-> -- compatible:	"jianda,jd-t18003-t01", "sitronix,st7735r"
-> +- compatible:	Must be one of the following combinations:
-> +		  - "jianda,jd-t18003-t01", "sitronix,st7735r"
-> +		  - "okaya,rh128128t", "sitronix,st7715r"
+Amit Kucheria (9):
+  drivers: thermal: tsens: De-constify struct tsens_features
+  drivers: thermal: tsens: Pass around struct tsens_sensor as a constant
+  drivers: thermal: tsens: use simpler variables
+  drivers: thermal: tsens: Release device in success path
+  drivers: thermal: tsens: Add critical interrupt support
+  drivers: thermal: tsens: Add watchdog support
+  arm64: dts: sdm845: thermal: Add critical interrupt support
+  arm64: dts: msm8996: thermal: Add critical interrupt support
+  arm64: dts: msm8998: thermal: Add critical interrupt support
 
-It would be nice if there was a "description" for each pair of
-compatible that identified the actual panel.
-In your case "Okaya RH128128T 1.44" 128x128 TFT display"
-It can be looked up in git history - but better to have it in the
-binding file.
+ arch/arm64/boot/dts/qcom/msm8996.dtsi |  10 +-
+ arch/arm64/boot/dts/qcom/msm8998.dtsi |  10 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi  |  10 +-
+ drivers/thermal/qcom/tsens-8960.c     |   4 +-
+ drivers/thermal/qcom/tsens-common.c   | 188 +++++++++++++++++++++++---
+ drivers/thermal/qcom/tsens-v0_1.c     |   6 +-
+ drivers/thermal/qcom/tsens-v1.c       |   6 +-
+ drivers/thermal/qcom/tsens-v2.c       |  24 +++-
+ drivers/thermal/qcom/tsens.c          |  24 +++-
+ drivers/thermal/qcom/tsens.h          | 104 ++++++++++++--
+ 10 files changed, 330 insertions(+), 56 deletions(-)
 
-	Sam
+-- 
+2.20.1
+
