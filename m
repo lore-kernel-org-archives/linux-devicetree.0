@@ -2,148 +2,136 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534D8C2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 11:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BB0C2D0DC
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F5F217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 11:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5296F21655
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 11:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577964642;
+	bh=/3LP6kQ4cTJYiGwewWnUFXG3M77l9nXB/nSInDBy1G4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=z6si3vqK0pXttpbz3gwN0BVNOQdZV6jjia/hr03NcddBKdc8LbJBdSPyLMO/nqeqS
+	 0hju1S1+8O3EZNT9r+9H2IdU3KdszNE3goVEvXkBp7zHbkN1KHtnVWDx2hE/Bb6T3D
+	 rXxPjRad3/+efc/SbmXCPG9Pj/xolxDlC/QZGBNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgABLXK (ORCPT
+        id S1728219AbgABLam (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 06:23:10 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60237 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728135AbgABLXK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 06:23:10 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1imyZF-0007nt-2o; Thu, 02 Jan 2020 12:23:05 +0100
-Message-ID: <f0af767b9dd18247a011856b66f3a6cc716d9e6a.camel@pengutronix.de>
-Subject: Re: [PATCH 2/2] reset: Add Broadcom STB RESCAL reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org, Jim Quinlan <jim2101024@gmail.com>,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 02 Jan 2020 12:23:04 +0100
-In-Reply-To: <22a0e4a9-96b3-8ecd-b699-4e4aad017b5d@gmail.com>
-References: <20191210195903.24127-1-f.fainelli@gmail.com>
-         <20191210195903.24127-3-f.fainelli@gmail.com>
-         <89d2d00058e34e7571fc0f50ce487cf54414cd49.camel@pengutronix.de>
-         <469c7b73-b028-1691-d5f0-0ceb3007da1c@gmail.com>
-         <9fd20d18a8773cd8886d9cb0424791b2f79b3e25.camel@pengutronix.de>
-         <22a0e4a9-96b3-8ecd-b699-4e4aad017b5d@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 2 Jan 2020 06:30:42 -0500
+Received: from mail-lf1-f50.google.com ([209.85.167.50]:46290 "EHLO
+        mail-lf1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728135AbgABLal (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 06:30:41 -0500
+Received: by mail-lf1-f50.google.com with SMTP id f15so29671403lfl.13;
+        Thu, 02 Jan 2020 03:30:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=d3dulXjQFXVkZX4ZQNVnL00Ue1i2kbFWKIQHBA/xvtE=;
+        b=Ufs1HBNV8DbSoFNg9hHko7POoRf9xSir2oprEOboSNzyqghhVX9IwG5eMU+j66N1Od
+         JMeTy5zH8D7kozKgZ7xHJgzqymMCvwDCtej1ZP6egJxsGvS46KHVCUH9khqP3f7HIDUQ
+         0cAL6Pb2pBP6himB+ATXRXkFmYwbUeiM1JvMtroe5tDJGI8gCsbszfGvE2ign4GZLe3K
+         LZqlBLj6iaTjPguSlMA5WAEfi/V7ywj/jSgKz4v+PKdqBrozdJPYjMFMl7E85BzdGOZK
+         ZJRTcf3QRA2sZJAnSRH98C6J10qo0Su0lMUUsHMiTccC/IcSqRThjfbZUgtCSOGzZCxy
+         gbfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=d3dulXjQFXVkZX4ZQNVnL00Ue1i2kbFWKIQHBA/xvtE=;
+        b=NEO6srMLlM/Cw8ex9D90vsZlooVfZp81XJpUf2dLAKH2a+OshLUX2EgWthZSHOcUyQ
+         0nol/lOmnaMESzCtMb2UjNjxvJnlw3ASeOvuym/CBz2l3X5cwWQ9KxRZgJJzpE1hwNgv
+         j+2RDDhVQlzH4qmZ06Mk1UGeu2dcg3H0D/o3g3YfHM0OpRYW0JtxyZBWOZGyWB975mro
+         Z3ur4OeXN4seg8xr4jYyEvrjgEBs/6laYK1yE5gKpqf+a99flrJ/6MHrQ2tRk+Ux5oS7
+         Le9h82JGUA4vKxG5EBMLoakwj5egeyJ28qhHcgXxsjZKSQDLF3OzetEA/r2VyiTDRNxO
+         NHAA==
+X-Gm-Message-State: APjAAAV2E4r5STVbWWYzGBicIm+Itt2r3J8mFhGthkhg3UaHuh5kVbMI
+        NsMuVZdW5WL0/5UROujbDJM=
+X-Google-Smtp-Source: APXvYqydhz/yS3LGeOOAz21CKMjo5DUc3Su4P1UZuXNmhprFWKWkuDmBSprupL8KRIAruZLi6LRbTQ==
+X-Received: by 2002:ac2:5605:: with SMTP id v5mr48019847lfd.136.1577964639485;
+        Thu, 02 Jan 2020 03:30:39 -0800 (PST)
+Received: from saruman (88-113-215-33.elisa-laajakaista.fi. [88.113.215.33])
+        by smtp.gmail.com with ESMTPSA id i9sm22970376lfd.6.2020.01.02.03.30.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jan 2020 03:30:38 -0800 (PST)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCHv1 2/2] usb: gadget: add udc driver for max3420
+In-Reply-To: <CABb+yY00xOZw2uw6oK3N6RBcOurJjhiPXHs0ShCSVauwZn6TNw@mail.gmail.com>
+References: <20191210003135.32427-1-jassisinghbrar@gmail.com> <87eexclkj0.fsf@gmail.com> <CABb+yY00xOZw2uw6oK3N6RBcOurJjhiPXHs0ShCSVauwZn6TNw@mail.gmail.com>
+Date:   Thu, 02 Jan 2020 13:31:22 +0200
+Message-ID: <874kxeksc5.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Florian,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-12-30 at 11:05 -0800, Florian Fainelli wrote:
-> On 12/12/19 2:01 AM, Philipp Zabel wrote:
-[...]
-> > > > > +	reg = readl(base + BRCM_RESCAL_START);
-> > > > > +	writel(reg | BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
-> > > > > +	reg = readl(base + BRCM_RESCAL_START);
-> > > > > +	if (!(reg & BRCM_RESCAL_START_BIT)) {
-> > > > > +		dev_err(data->dev, "failed to start sata/pcie rescal\n");
-> > 
-> > Is this something that can actually happen?
-> 
-> Have not seen it happen but if we have bogus hardware, we would rather
-> get an informative log from the reset controller than a not so
-> informative one from the consumer drivers about e.g.: SATA or PCIe link
-> down (which could be for various other reasons). If you want this
-> demoted to a debug print, let me know.
 
-Ok, that is not necessary. I was just surprised that you don't trust
-register writes to work.
+Hi,
 
-> > [...]
-> > > > > +	reg = readl(base + BRCM_RESCAL_START);
-> > > > > +	writel(reg ^ BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
-> > > > 
-> > > > Please use &= ~BRCM_RESCAL_START_BIT instead.
-> > > 
-> > > I think the idea was to avoid unconditionally clearing it, but based on
-> > > the documentation, I don't see this being harmful, Jim?
-> > 
-> > Unless the bit is self-clearing, I can't see how this XOR could ever set
-> > the bit instead of clearing it.
-> > And even if it would, I don't understand how that can be indented.
-> > Wouldn't that restart the reset/calibration sequence?
-> The bit is not self clearing, but it can be cleared when the
-> reset/calibration procedure is successfully finished, so this seems to
-> do what it is intended for, in that, if you read the bit as 1, XOR would
-> let you clear it.
+Jassi Brar <jassisinghbrar@gmail.com> writes:
+>> > +static void __max3420_start(struct max3420_udc *udc)
+>> > +{
+>> > +     u8 val;
+>> > +
+>> > +     /* Need this delay if bus-powered */
+>> > +     msleep_interruptible(250);
+>>
+>> should you check if you're bus powered?
+>>
+> for some reason, even for self-powered, it helped reliability.
 
-I'm with you so far ...
+Perhaps update the comment, in that case? It would be better if we had
+a proper explanation for this sleep here.
 
-> If you read it as 0, XOR would leave it cleared.
+>> > +static int max3420_thread(void *dev_id)
+>>
+>> Why do you need this thread? Sure you can't live without it?
+>>
+> All the slow spi-bus transfers are handled at one place here without
+> blocking any api call. IMO it is cleaner and easier to manage.
 
-... but I don't understand this part. If BRCM_RESCAL_START is read as 0
-at this point, we end up writing (0 ^ 1) == 1.
+Fair enough, I won't complain. But it looks odd :-p
 
-> Would you want a comment above to explain that?
+=2D-=20
+balbi
 
-Yes, please.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> > > > > +	reg = readl(base + BRCM_RESCAL_START);
-> > > > > +	dev_dbg(data->dev, "sata/pcie rescal success\n");
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > 
-> > > > This whole function looks a lot like it doesn't just deassert a reset
-> > > > line, but actually issues a complete reset procedure of some kind. Do
-> > > > you have some insight on what actually happens in the hardware when the
-> > > > start bit is triggered? I suspect this should be implemented with the
-> > > > .reset operation.
-> > > 
-> > > This hardware block is controlling the reset and calibration process of
-> > > the SATA/PCIe combo PHY analog front end, but is not technically part of
-> > > the PCIe or SATA PHY proper, it stands on its own, both functionally and
-> > > from a register space perspective. The motivation for modelling this as
-> > > a reset controller is that it does a reset (and a calibration) and this
-> > > is a shared reset line among 2/3 instances of another block. If you
-> > > think we should model this differently, please let us know.
-> > 
-> > Thank you for the explanation. I agree the "reset and calibration
-> > sequence" property is close enough to a pure reset sequence to warrant
-> > describing this as as reset controller.
-> > The correct way would be to use the .reset callback though, if you can
-> > have the drivers use reset_control_reset().
-> 
-> This should be doable, let me try to update the drivers accordingly. It
-> sounds a bit silly to have to have kind of knowledge pushed down to the
-> consumer drivers though...
+-----BEGIN PGP SIGNATURE-----
 
-There are cases where the abstraction doesn't fit perfectly, but usually
-it is the consumer driver that knows best whether the hardware just
-needs to be made responsive by deasserting the reset line, or whether
-triggering a reset procedure is required to initialize some internal
-state.
-
-regards
-Philipp
-
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl4N1IoACgkQzL64meEa
+mQYumA//SLi6nGyho7AKjNXUijFlpjaeLmciwptf1cywEjRc8vdVq699u6H+Z+yr
+bQq3iGahlsfYszmsGWsGUYauJyY3+gxBVJb7xmPMpzrzmM3bchdNGLyIJBDfoKoX
+OJSMSbll3C5cKEM+hImwnp4ikEoKp4yGdHaPKxH0RKfHMLfIWaOf5Q1NeTOnF1K7
+6Rw+8S97fVMwy8zL/roatNlC3Y6dSYjD4ahU3WVXL5CrC9IYhpIYomZ7+MzQ0iWN
+tDsT+QsLpBEIJaMMT9WCfnymCAKbvTvRq2S07SSbZMXx6g8TQtkGhA8E8zglt7hZ
+0tsCHi2kLBmKTKzOZ+/VEFFQaAuMFC6G3nMl70Pf5LIiYTQTUu3BBO1E1YwIGNOr
+ukWKCmBC48/wig/C/juMKotiP8gg8V1OX9rnHQjsHXq4jfj2DCu9bOBD3a5/bokn
+uwtC+ULssM4B7JqASQXygzsM1eN9daLGIqKdI10lnruPW2YuSXqEoYFQx0tDiZdD
+bqEmo+9UMBNVzH7ehawJ90FixIgrnxsFbd6vwuNGqUF09UDKzKRkEIljah2gkyK4
+Xfpo53Q4Y1QEAayrtycA05Wpilwf3sTAVg6cu0LvMsbbDcCw7kPMhjEC9HJA2Z2T
+HY3SbjksbpEqiqH3k4bVnall6ltCYdBOlFqXx70Aao0CCZhDP1E=
+=sA7L
+-----END PGP SIGNATURE-----
+--=-=-=--
