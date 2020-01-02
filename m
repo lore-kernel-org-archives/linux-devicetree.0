@@ -2,62 +2,45 @@ Return-Path: <SRS0=DK2V=2X=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B0AC2D0DC
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FB9C3276D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B91215A4
-	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:43:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Mtxy2+o0"
+	by mail.kernel.org (Postfix) with ESMTP id 0812820866
+	for <linux-devicetree@archiver.kernel.org>; Thu,  2 Jan 2020 15:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1577980028;
+	bh=T8OrAG+EbDBgprNjNPQUw5artBgkO7vYeVQWzwTXJoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E5UTGtmb6MpnATtJuSKtz9y2b7cGzXwrTr1AldVU8O8ow8VUGwfcFQtfmgABujTSB
+	 7X3xCnSxb+3iGYlCrpk02H36GjpgEcbEcGK7Ks8SO2CI5BUBKwdGI+3Y2e97XQxTlL
+	 G3Y4dVgoGyMx+2gd7MCRP5y/f4JyTs9LSf9Jyv3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgABPnt (ORCPT
+        id S1728706AbgABPrH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 10:43:49 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:42593 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbgABPns (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 10:43:48 -0500
-Received: by mail-io1-f65.google.com with SMTP id n11so31923833iom.9
-        for <devicetree@vger.kernel.org>; Thu, 02 Jan 2020 07:43:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tocxIO5F9WiGwdyi59k65eYp6LMpmfQ5nQn9VUEVPqU=;
-        b=Mtxy2+o0bGr/YIkhtVJRxWVKb9Ts8KHINjjApSRDlUQUw8j5A3XxCYZ8CKfnITE+FA
-         /KkxbNERhd0WMLvxeqjJLVICjFaIgydE1Rc8bRMLYlyYjj3njZG1bjNacTARHK5oNFaw
-         jbDX9RRTa4yi7hWnPb7e0E5g/8zfiz+SWjmiI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tocxIO5F9WiGwdyi59k65eYp6LMpmfQ5nQn9VUEVPqU=;
-        b=clRDpP7T5g/txphpIWfpSFFaK8G1BcnPZUbFnC6wxgnakvbOdn1AcZOrowsoLYXXr4
-         i/H+eZS0cgV6GigAgMoCCFSgu8HzvGXev0IHt6yAzNcPszeNtxEl5mmUSVrxflVBkp19
-         0Bp+tfRFU4C0VfAp7pFM8V0PvGOHTDEd2T7+f/9xOIYbfu+1K++47Ln5QZg/5wpQbZGv
-         e25mJDRjKlcmgssEVNQiYrLCuY3RewoZHDjCBB2P2VM3H5a8mif8xDbaJe+7Qgx2oBBU
-         FJ7qPZQFv3Dw4sQmiqcGrYl4iBEJyVgSsJiC1zcwzAmmP8uyyeQOaVX+bRiNlyHpckQc
-         rZag==
-X-Gm-Message-State: APjAAAVctH1lT+zcUpZFOOZMLfxRZSEBexxY9HgkcSr1BGp7ZZtXyAwv
-        Pd4Vl++NFoGWFoh3lXQHRxNq5Kn9qXhv2Oos4RITbQ==
-X-Google-Smtp-Source: APXvYqygOqKSlxE+0TT0WUiiUg0DLdEp+in8oQr92U8mxkGOhOUcB0XCaUZGiQdDnqZWvyQeVmWXtdoyza5Z2wi099Q=
-X-Received: by 2002:a6b:f716:: with SMTP id k22mr44050760iog.297.1577979828013;
- Thu, 02 Jan 2020 07:43:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20191231130528.20669-1-jagan@amarulasolutions.com>
- <20191231130528.20669-7-jagan@amarulasolutions.com> <20200102110347.v7lsnmmsbp66r3ia@gilmour.lan>
-In-Reply-To: <20200102110347.v7lsnmmsbp66r3ia@gilmour.lan>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 2 Jan 2020 21:13:37 +0530
-Message-ID: <CAMty3ZAwaqE31=rCiub3bRZBOa68ck5Ld=A7kVsQjssps9TCxg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/9] dt-bindings: sun6i-dsi: Add R40 DPHY compatible
- (w/ A31 fallback)
-To:     Maxime Ripard <mripard@kernel.org>
+        Thu, 2 Jan 2020 10:47:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728692AbgABPrH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jan 2020 10:47:07 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35EAD2084D;
+        Thu,  2 Jan 2020 15:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1577980026;
+        bh=T8OrAG+EbDBgprNjNPQUw5artBgkO7vYeVQWzwTXJoY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mHJuZfunqyFIUSm59iEc056NpuILkoQ6oFP5/CcZbxEABe9Tdw4bbJCYvITmXyHsw
+         bJX8BeH0sfhUJJwGDpFLnr+tY+l5ystDQV6TB3pT2zp9BLkgh8POz+fsfDNMEfa4QM
+         uSBNPxcMQXEIcuBWHU0bY5f7VafWFZrL+q5RUiaA=
+Date:   Thu, 2 Jan 2020 16:47:03 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,55 +53,89 @@ Cc:     Chen-Yu Tsai <wens@csie.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-sunxi <linux-sunxi@googlegroups.com>,
         linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
+Message-ID: <20200102154703.3prgwcjyo36g5g5u@gilmour.lan>
+References: <20191231130528.20669-1-jagan@amarulasolutions.com>
+ <20191231130528.20669-3-jagan@amarulasolutions.com>
+ <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
+ <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p6isxbjx5q73zube"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 4:33 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Tue, Dec 31, 2019 at 06:35:25PM +0530, Jagan Teki wrote:
-> > The MIPI DSI PHY controller on Allwinner R40 is similar
-> > on the one on A31.
+
+--p6isxbjx5q73zube
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jan 02, 2020 at 09:10:31PM +0530, Jagan Teki wrote:
+> On Thu, Jan 2, 2020 at 4:24 PM Maxime Ripard <mripard@kernel.org> wrote:
 > >
-> > Add R40 compatible and append A31 compatible as fallback.
+> > On Tue, Dec 31, 2019 at 06:35:21PM +0530, Jagan Teki wrote:
+> > > TCON LCD0, LCD1 in allwinner R40, are used for managing
+> > > LCD interfaces like RGB, LVDS and DSI.
+> > >
+> > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
+> > > tcon top.
+> > >
+> > > Add support for it, in tcon driver.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > > Changes for v3:
+> > > - none
+> > >
+> > >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > index fad72799b8df..69611d38c844 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > @@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+> > >       .has_channel_1          = true,
+> > >  };
+> > >
+> > > +static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
+> > > +     .supports_lvds          = true,
+> > > +     .has_channel_0          = true,
+> > > +     /* TODO Need to support TCON output muxing via GPIO pins */
+> > > +     .set_mux                = sun8i_r40_tcon_tv_set_mux,
 > >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Changes for v3:
-> > - update the binding in new yaml format
-> >
-> >  .../devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml   | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-> > index 8841938050b2..0c283fe79402 100644
-> > --- a/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-> > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun6i-a31-mipi-dphy.yaml
-> > @@ -18,6 +18,7 @@ properties:
-> >      oneOf:
-> >        - const: allwinner,sun6i-a31-mipi-dphy
-> >        - items:
-> > +          - const: allwinner,sun8i-r40-mipi-dphy
-> >            - const: allwinner,sun50i-a64-mipi-dphy
-> >            - const: allwinner,sun6i-a31-mipi-dphy
+> > What is this muking about? And why is it a TODO?
 >
-> This isn't doing what you say it does.
+> Muxing similar like how TCON TOP handle TV0, TV1 I have reused the
+> same so-that it would configure de port selection via
+> sun8i_tcon_top_de_config
 >
-> Here you're stating that there's two valid values, one that is a
-> single element allwinner,sun6i-a31-mipi-dphy, and another which is a
-> list of three elements allwinner,sun8i-r40-mipi-dphy,
-> allwinner,sun50i-a64-mipi-dphy and allwinner,sun6i-a31-mipi-dphy, in
-> that order.
+> TCON output muxing have gpio with GPIOD and GPIOH bits, which select
+> which of LCD or TV TCON outputs to the LCD function pins. I have
+> marked these has TODO for further support as mentioned by Chen-Yu in
+> v1[1].
 
-I got it Maxime, thanks for pointing this.
+It should be in the commit log.
 
->
-> Did you run make dtbs_check and dt_bindings_check?
+What's the plan to support that when needed? And that means that the
+LCD and TV outputs are mutually exclusive? We should at the very least
+check that both aren't enabled at the same time.
 
-I sure I didn't, thanks for the clue.
+Maxime
 
-Will do this on another patch as well.
+--p6isxbjx5q73zube
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Jagan.
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXg4QdwAKCRDj7w1vZxhR
+xV8pAQDW62BjjYRqQWaS/MCrLYV0sOBGYFlSj2Kk1hrJLyStbAEAugmjPCknAQNc
+AuBKfBeWbLwThyU6B5QE39I7erhWOwQ=
+=omNK
+-----END PGP SIGNATURE-----
+
+--p6isxbjx5q73zube--
