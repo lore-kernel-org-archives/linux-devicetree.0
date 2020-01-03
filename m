@@ -2,128 +2,70 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243EFC3276C
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 01:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5323C3276F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 02:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3BB21D56
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 01:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578013562;
-	bh=7Mz+8C3KOvFM/2cxI8YSBIlRapQ8pT2pkdX2krEQZDo=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=M89agzlzSbA+dhfWi2hcecEbQ+KXq9TmGBUJDuJf/06pUf5r96Eq/atnm0sA3aOOP
-	 5OQClS0YHmiPxsgunsLvDYY4MnYmQtKd2txaXv0v25Ys0CCzotLBJFEs3h29L/1LR6
-	 NCiTtvYV1c8uX/wTDmWyk04qkOI9lkDD9n04e+ig=
+	by mail.kernel.org (Postfix) with ESMTP id 9626E2085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 02:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbgACBF5 (ORCPT
+        id S1727220AbgACC6w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 20:05:57 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51618 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbgACBF4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 20:05:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=g+wWEWkvQoOBjR0Vk+qKtSqMF6zrj4x2Z/l+Cp7rLrk=; b=gkz3Vsnvjmb4
-        07YbcVXSq587LPHvfPabZsFchQF/+BWmFSW1JYHXpNAfLOY5E/3TULMJUWKhSQ/wYtLqJtzZIQ3Pq
-        IYSP34ZlY9hZtHGPYft0kAT4klybAev7RHVFNvHAbn2i7WwAyy8zlzvrCRREpVGSxGsCPrgBnshml
-        OJiTE=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1inBPU-0003Na-G3; Fri, 03 Jan 2020 01:05:52 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 07C5FD057C6; Fri,  3 Jan 2020 01:05:52 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Applied "spi: Document Octal mode as valid SPI bus width" to the spi tree
-In-Reply-To: <20200102102118.23318-1-vigneshr@ti.com>
-Message-Id: <applied-20200102102118.23318-1-vigneshr@ti.com>
-X-Patchwork-Hint: ignore
-Date:   Fri,  3 Jan 2020 01:05:52 +0000 (GMT)
+        Thu, 2 Jan 2020 21:58:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51422 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbgACC6w (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jan 2020 21:58:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id E348EAE4B;
+        Fri,  3 Jan 2020 02:58:50 +0000 (UTC)
+Subject: Re: [PATCH 00/14] ARM: dts: realtek: Introduce syscon
+To:     James Tai <james.tai@realtek.com>
+Cc:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191202182205.14629-1-afaerber@suse.de>
+ <0f4d6872-b764-1c5e-9c2a-4e4e415a4877@suse.de>
+ <996a6968f411467cb987a14a0764726d@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <f1f3fc5f-ae6c-b803-cb02-d06d60c442ce@suse.de>
+Date:   Fri, 3 Jan 2020 03:58:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <996a6968f411467cb987a14a0764726d@realtek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The patch
+Hi James,
 
-   spi: Document Octal mode as valid SPI bus width
+Am 31.12.19 um 10:47 schrieb James Tai:
+>> I'm waiting for your Acked-by of the blocks & numbers in these patches.
+>> Other Realtek engineers are also invited to respond, of course.
+> 
+> I have reviewed these patches.
 
-has been applied to the spi tree at
+Thanks - does anything need changes in patch 01 or is that ack'ed, too?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+Regards,
+Andreas
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 09b6636cea4f8e419d7cca4155e8695e462535a6 Mon Sep 17 00:00:00 2001
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Date: Thu, 2 Jan 2020 15:51:18 +0530
-Subject: [PATCH] spi: Document Octal mode as valid SPI bus width
-
-SPI core supports Octal SPI controllers which have 8 IO lines.
-Therefore document 8 as a valid option for spi-tx{rx}-bus-width
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20200102102118.23318-1-vigneshr@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/spi-controller.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-controller.yaml b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-index 732339275848..1e0ca6ccf64b 100644
---- a/Documentation/devicetree/bindings/spi/spi-controller.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-controller.yaml
-@@ -111,7 +111,7 @@ patternProperties:
-       spi-rx-bus-width:
-         allOf:
-           - $ref: /schemas/types.yaml#/definitions/uint32
--          - enum: [ 1, 2, 4 ]
-+          - enum: [ 1, 2, 4, 8 ]
-           - default: 1
-         description:
-           Bus width to the SPI bus used for MISO.
-@@ -123,7 +123,7 @@ patternProperties:
-       spi-tx-bus-width:
-         allOf:
-           - $ref: /schemas/types.yaml#/definitions/uint32
--          - enum: [ 1, 2, 4 ]
-+          - enum: [ 1, 2, 4, 8 ]
-           - default: 1
-         description:
-           Bus width to the SPI bus used for MOSI.
 -- 
-2.20.1
-
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
