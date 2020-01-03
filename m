@@ -2,85 +2,84 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643C8C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 06:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D059C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 06:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1FD2084D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 06:04:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B36722314
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 06:44:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bTBT50Qw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgACGEv (ORCPT
+        id S1726313AbgACGoP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 01:04:51 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54096 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgACGEv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 01:04:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B688BADD2;
-        Fri,  3 Jan 2020 06:04:49 +0000 (UTC)
-From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-To:     linux-realtek-soc@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        James Tai <james.tai@realtek.com>,
+        Fri, 3 Jan 2020 01:44:15 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:2077 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725890AbgACGoP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 01:44:15 -0500
+X-UUID: dccba4411d2f4006b8c35a4d53a4318a-20200103
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=GEl2IJWtVb7X+Ga7VN/59GHFWgKdMGNmXSnRT3bIOoQ=;
+        b=bTBT50Qw/+ulUSRpqsjyMDZXu/TpSdDXJKmnm5n1P802GGBzYpYXwHrYY+Eh259BiSIADUKfj3Zu5ErTOVi4KJ2zEkFuA5AV03NsYzo99gl4tXSHZNjUCNRCk0T2rWn+9Dl9+GG85Us8vp9JZY76J+HMkMRlmnBX7HjxHcOj2XQ=;
+X-UUID: dccba4411d2f4006b8c35a4d53a4318a-20200103
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 905780266; Fri, 03 Jan 2020 14:44:11 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 3 Jan 2020 14:43:44 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 3 Jan 2020 14:44:09 +0800
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
-Date:   Fri,  3 Jan 2020 07:04:40 +0100
-Message-Id: <20200103060441.1109-1-afaerber@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michael Kao <michael.kao@mediatek.com>
+Subject: [PATCH v3,5/8] arm64: dts: mt8183: Increase polling frequency for CPU thermal zone
+Date:   Fri, 3 Jan 2020 14:44:04 +0800
+Message-ID: <20200103064407.19861-6-michael.kao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200103064407.19861-1-michael.kao@mediatek.com>
+References: <20200103064407.19861-1-michael.kao@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Reserve memory regions for RPC and TEE.
-
-Fixes: e5a9e237608d ("arm64: dts: realtek: Add RTD1619 SoC and Realtek Mjolnir EVB")
-Cc: James Tai <james.tai@realtek.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- arch/arm64/boot/dts/realtek/rtd16xx.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-index 3c70a0da329e..4dc6c9f13c43 100644
---- a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-+++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-@@ -14,6 +14,25 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		rpc_comm: rpc@2f000 {
-+			reg = <0x2f000 0x1000>;
-+		};
-+
-+		rpc_ringbuf: rpc@1ffe000 {
-+			reg = <0x1ffe000 0x4000>;
-+		};
-+
-+		tee: tee@10100000 {
-+			reg = <0x10100000 0xf00000>;
-+			no-map;
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.16.4
+RnJvbTogTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+DQoNCkV2YWx1YXRlIHRo
+ZSB0aGVybWFsIHpvbmUgZXZlcnkgNTAwbXMgd2hpbGUgbm90IGNvb2xpbmcgYW5kIGV2ZXJ5DQox
+MDBtcyB3aGVuIHBhc3NpdmUgY29vbGluZyBpcyBwZXJmb3JtZWQuDQoNClNpZ25lZC1vZmYtYnk6
+IE1hdHRoaWFzIEthZWhsY2tlIDxta2FAY2hyb21pdW0ub3JnPg0KU2lnbmVkLW9mZi1ieTogTWlj
+aGFlbCBLYW8gPG1pY2hhZWwua2FvQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGFyY2gvYXJtNjQvYm9v
+dC9kdHMvbWVkaWF0ZWsvbXQ4MTgzLmR0c2kgfCA0ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBp
+bnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9i
+b290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
+ZWsvbXQ4MTgzLmR0c2kNCmluZGV4IDc4NTc1YzMxODNhNC4uMDQyZWY0OGYzZWZlIDEwMDY0NA0K
+LS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0KKysrIGIvYXJj
+aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaQ0KQEAgLTYwNSw4ICs2MDUsOCBA
+QA0KIA0KIAkJdGhlcm1hbC16b25lcyB7DQogCQkJY3B1X3RoZXJtYWw6IGNwdV90aGVybWFsIHsN
+Ci0JCQkJcG9sbGluZy1kZWxheS1wYXNzaXZlID0gPDEwMDA+Ow0KLQkJCQlwb2xsaW5nLWRlbGF5
+ID0gPDEwMDA+Ow0KKwkJCQlwb2xsaW5nLWRlbGF5LXBhc3NpdmUgPSA8MTAwPjsNCisJCQkJcG9s
+bGluZy1kZWxheSA9IDw1MDA+Ow0KIAkJCQl0aGVybWFsLXNlbnNvcnMgPSA8JnRoZXJtYWwgMD47
+DQogCQkJCXN1c3RhaW5hYmxlLXBvd2VyID0gPDUwMDA+Ow0KIA0KLS0gDQoyLjE4LjANCg==
 
