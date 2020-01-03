@@ -2,124 +2,111 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FCDC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C30C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 14:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173FE222C3
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF9622314
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 14:05:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KdowJ11A"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Fp8+LQo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgACNob (ORCPT
+        id S1727598AbgACOF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 08:44:31 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:17698 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727835AbgACNob (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 08:44:31 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578059071; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=UlpiOoJT8j543QirBk1cXC1jCPY25M9dD9qGZjatIyI=; b=KdowJ11A7RK5XXg3xPyHITpwe/Y4qxP/yjYjtJUE9j1e9XT65GYx0Q4aLnWy1HpgA0pd+mMg
- GlTG3OaUPGaOKcYDhf55Hd6PRIjWCh3nIcONFJZ9/i9jIL1Tuhg2hKRoFY8WskdMUW8Qfu4D
- u2mfXsdaVsz3ixQZBjdqArQAV9o=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0f453b.7f7749dea7a0-smtp-out-n01;
- Fri, 03 Jan 2020 13:44:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E2B55C433CB; Fri,  3 Jan 2020 13:44:26 +0000 (UTC)
-Received: from govinds-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: govinds)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54B3FC4479C;
-        Fri,  3 Jan 2020 13:44:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54B3FC4479C
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=govinds@codeaurora.org
-From:   Govind Singh <govinds@codeaurora.org>
-To:     robh@kernel.org, devicetree@vger.kernel.org,
-        ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org,
-        Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v3 2/2] ath10k: Don't call SCM interface for statically mapped msa region
-Date:   Fri,  3 Jan 2020 19:14:14 +0530
-Message-Id: <20200103134414.15457-3-govinds@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200103134414.15457-1-govinds@codeaurora.org>
-References: <20200103134414.15457-1-govinds@codeaurora.org>
+        Fri, 3 Jan 2020 09:05:27 -0500
+Received: from mail-eopbgr00123.outbound.protection.outlook.com ([40.107.0.123]:9536
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727523AbgACOF1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jan 2020 09:05:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZOk+pt1CgMNFBDt/TXw5Q7hq8PV+BZBofjSNudgBmbSwrpXY+4AAN8cZ/di8CNhOEBwhux2KqPxLzjti7uEge4ajuhhw1kgcTblpHLgeO60UGAfdoZL3e+RiTlctyOZ+K9dAYgL5q8TWE3Z8q0+o6/ER1o0mNJe+2TiMGIe7XKKZrHvrhpptryaX0+IQRxAf2xHbP7TGkW/fafK1IU+fnxL13gam0W3dvNUzIWqjuXPPCfhgNGvsrd13pFjrBbnOEbGZRzPsHfyyF0uOwePBfOLmQwirmrmZEb7fv9oYvZqq7Thf36qLftLJAOeRXHqAKusFKszWQQNglYaushZw2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fOHmy3lI7yQ7oANwracM9mVnnZP6mcW47IG7reiXjdg=;
+ b=Y9WtomckQSuF5/cmmJL3Nzb2tH61C07Rj5wq5XaForyb5l4eA0K+O3+6bpcpQK421Y/HwKbBPV6wz270S8lx5MB803vpyvjy6solMQQ8yqxHgZAMrFVqjEybCrEKuDWNypkAGaJ0C4hAdgZ0JN5cBKFCfQFgcOD7UZMBwIG1ALwahnkbYYDbgYDFgLA4G/SAUWjBuKHBPxifYidhuAGoFzcsnVVuVSi9AWPXDwzqaPenEcFLUZEDyAWoVRErybcRLpG3tSdM2bfRzx4CcbkTmv39vdMaQTU7fyCjqE+sSboURjEaWvp4zgu4V/e7PC/apyRuetbWPwOboyMehHUGjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fOHmy3lI7yQ7oANwracM9mVnnZP6mcW47IG7reiXjdg=;
+ b=Fp8+LQo3ZRi/f3HKqGM34rKIvVCpDFCmuHTmvkErLjBlZC8vcFdthrsPc1zp6GHixq0gN+nxfYcpvQkEkDLJ+a5HuyeJB8s+g5cRCd8z8RsAFseu9ObMhjdegu7vJP7tZpWtXhb8jfKNrXKGm/O1NuEUwnxX+Smt/U93+UTlfGs=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3561.eurprd02.prod.outlook.com (52.134.68.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.13; Fri, 3 Jan 2020 14:05:23 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2581.013; Fri, 3 Jan 2020
+ 14:05:23 +0000
+Received: from [192.168.13.3] (213.112.138.4) by HE1PR1001CA0015.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:3:f7::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.10 via Frontend Transport; Fri, 3 Jan 2020 14:05:23 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Biwen Li <biwen.li@nxp.com>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [RESEND v6,1/3] dt-bindings: i2c: support property idle-state
+Thread-Topic: [RESEND v6,1/3] dt-bindings: i2c: support property idle-state
+Thread-Index: AQHVuw9TtcGAyqD9p0aoW4HpuyVYKafZB4QA
+Date:   Fri, 3 Jan 2020 14:05:23 +0000
+Message-ID: <63bc0f29-5214-022b-99af-d585e5800f39@axentia.se>
+References: <20191225103624.48342-1-biwen.li@nxp.com>
+In-Reply-To: <20191225103624.48342-1-biwen.li@nxp.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.4]
+x-clientproxiedby: HE1PR1001CA0015.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:3:f7::25) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5ee2adb-55f1-4775-3bd5-08d79055f9f2
+x-ms-traffictypediagnostic: DB3PR0202MB3561:
+x-microsoft-antispam-prvs: <DB3PR0202MB3561C64E1765A891B100AC70BC230@DB3PR0202MB3561.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2331;
+x-forefront-prvs: 0271483E06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(396003)(346002)(376002)(39830400003)(136003)(189003)(199004)(316002)(508600001)(16576012)(54906003)(8676002)(31686004)(110136005)(8936002)(81166006)(2906002)(81156014)(4326008)(53546011)(16526019)(71200400001)(186003)(26005)(52116002)(4001150100001)(956004)(36756003)(31696002)(86362001)(64756008)(6486002)(66556008)(66476007)(66446008)(2616005)(66946007)(558084003)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3561;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Mb/PAmrhlglG+vlC264ZjoP/9Lne/5LOlo1ckd3EJRw9r83BR56shVi1RPTTZ7JSLsCMArZK7YDvF81YL3l2eGfNKXXTMHNmyXJpJ5I+UbF4I6cWNwutNkRj/TyFIUKIuI+Mz8xobR8bdS50/IIl+R4AmfPLwc44hl0PHhlVqPh74XFguBACWpfSmW1jpDZiD1TvNi9M+KKKAtuuGMpg6ayap5f2brt7EYeciJhP/Sll8tCPRd89kTV9Couh342TvSXCqOW0j7fj3dNcjqyGTq72pmXSRQTz9oGU+5gZH65UlmVUecqAXGQGzc75qMGQOz4IZiKl/UQxxZgePJbMASNlSpBqYUGSmr1S9zcI3OTcqQhuuQ6UAytcNc+rLKaT8mQsi6d6smaMibjZ8CmBrveY50ZMmDTic4fZ/bhckTKyD3o/RduW+jECN/WETgCY
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2E99B8D1319CBA45A7B401B0C4209CF4@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5ee2adb-55f1-4775-3bd5-08d79055f9f2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 14:05:23.8255
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JmbTfiO8CABMBnb9j6SMCf5bZvcJxkPrYU0kOnxD6s+/cGyBgU17JHlsDK+GH9kU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3561
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For some targets ex: QCS404, SCM permissions for MSA region is
-statically configured in TrustZone fw. Add SCM call disable option
-for such targets to avoid duplicate permissions.
-
-Testing: Tested on WCN3990 HW
-Tested FW: WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- drivers/net/wireless/ath/ath10k/qmi.c | 9 +++++++++
- drivers/net/wireless/ath/ath10k/qmi.h | 1 +
- 2 files changed, 10 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index 637f83ef65f8..1b91de70c8d6 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -84,6 +84,9 @@ static int ath10k_qmi_setup_msa_permissions(struct ath10k_qmi *qmi)
- 	int ret;
- 	int i;
- 
-+	if (qmi->msa_fixed_perm)
-+		return 0;
-+
- 	for (i = 0; i < qmi->nr_mem_region; i++) {
- 		ret = ath10k_qmi_map_msa_permission(qmi, &qmi->mem_region[i]);
- 		if (ret)
-@@ -102,6 +105,9 @@ static void ath10k_qmi_remove_msa_permission(struct ath10k_qmi *qmi)
- {
- 	int i;
- 
-+	if (qmi->msa_fixed_perm)
-+		return;
-+
- 	for (i = 0; i < qmi->nr_mem_region; i++)
- 		ath10k_qmi_unmap_msa_permission(qmi, &qmi->mem_region[i]);
- }
-@@ -1018,6 +1024,9 @@ static int ath10k_qmi_setup_msa_resources(struct ath10k_qmi *qmi, u32 msa_size)
- 		qmi->msa_mem_size = msa_size;
- 	}
- 
-+	if (of_property_read_bool(dev->of_node, "qcom,msa-fixed-perm"))
-+		qmi->msa_fixed_perm = true;
-+
- 	ath10k_dbg(ar, ATH10K_DBG_QMI, "msa pa: %pad , msa va: 0x%p\n",
- 		   &qmi->msa_pa,
- 		   qmi->msa_va);
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.h b/drivers/net/wireless/ath/ath10k/qmi.h
-index 40aafb875ed0..dc257375f161 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.h
-+++ b/drivers/net/wireless/ath/ath10k/qmi.h
-@@ -104,6 +104,7 @@ struct ath10k_qmi {
- 	bool fw_ready;
- 	char fw_build_timestamp[MAX_TIMESTAMP_LEN + 1];
- 	struct ath10k_qmi_cal_data cal_data[MAX_NUM_CAL_V01];
-+	bool msa_fixed_perm;
- };
- 
- int ath10k_qmi_wlan_enable(struct ath10k *ar,
--- 
-2.22.0
+T24gMjAxOS0xMi0yNSAxMTozNiwgQml3ZW4gTGkgd3JvdGU6DQo+IFRoaXMgc3VwcG9ydHMgcHJv
+cGVydHkgaWRsZS1zdGF0ZQ0KPiANCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
+cm5lbC5vcmc+DQo+IFNpZ25lZC1vZmYtYnk6IEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPg0K
+DQpQdXNoZWQgdG8gaTJjLW11eC9mb3ItbmV4dA0KDQpDaGVlcnMsDQpQZXRlcg0K
