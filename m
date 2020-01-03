@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A35C32767
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3750AC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CADF32085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096482085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AB9YzoSX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IF3w5TDJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgACSTg (ORCPT
+        id S1728186AbgACST1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:19:36 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45654 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgACSTe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:19:34 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so19306231pls.12;
-        Fri, 03 Jan 2020 10:19:33 -0800 (PST)
+        Fri, 3 Jan 2020 13:19:27 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35373 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728335AbgACST0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:19:26 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s7so5027681pjc.0;
+        Fri, 03 Jan 2020 10:19:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XKrfYN5NKMOM4AZeJYolb/pgmT2FewkRG32XrCjhEHA=;
-        b=AB9YzoSX4kLj6oVOxtPoVAWAM3o/gxxjctKo6bsf3DpMOmGcon5fI8XiEbAqIdnaWQ
-         qBSuyxmf085UoiuIdLMX9Xu+gC1R/CKCTV+9GPYuk4APr/nEOlm42uSs7FLZ8kHVFVbJ
-         JABkupYvmapibVtxXpG33Ma6ovFe+nY1kdeOxlvIuT7+8rlN0YMocTMGtAjKdXZPu3+C
-         tcHjhR8zCACWGCYodMzwHcwBvyoaYHSkOQZfZRPtC9q3fEZQnxiSZxMPSHbjmSN53Omi
-         ZNdaMo2R5szNob1POcSV9wMKGHYRndfhFI4AIYRSAuW+W+lStxDEZvnAXinDexePRsd/
-         Pz9w==
+        bh=jJrtiyNSy3kb+yNwZbjKaE7PnY4m0t7haj0Vxh+WdWs=;
+        b=IF3w5TDJT3EvdRJsjP6OD/+zJ+QmTMVrbgmWYoi7USPJrBxUNPuyL1a6OPWgI6Zz5o
+         GMFh758d9cRk2hNIP7WWG1ov8XkjLkVMcbB2d+ZYHmBGDh19QM6O8oRbaVad/Gy66F/j
+         P6SvV6Nwxu6UMeWrkumDZ8jIZGyxUmSx43wG39TvtRElJ5IGnu5RSgDivRznblPRqZVk
+         s28ex+kfYRozfE1g9yhDq24aNCgz5yfuiFI9Du+QKZYiys5q08mFAl334dpGWap33cHV
+         L/3yR8j0vD4tMYH7RHB+To4ekVJk0cAMph16tkWZ+36wg/vnPZitqrG+8YEJsGNmAHPX
+         rOWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=XKrfYN5NKMOM4AZeJYolb/pgmT2FewkRG32XrCjhEHA=;
-        b=OH+Bjzqh7JpA1RhrZGMPQt3nm1r/UmNxy1fN+1Q2stxCXDRegwtY58WQPKhPnZH+F6
-         fqTbbyNLFJmPEhbaPkWHpxsgZ8zSjJbwR/SxEQzItsfiPvEsUycgwZJ3oVLKJ9EZSr7T
-         XCpe/Oy2FTIg3v+1dlkaDwYXnu6pN9uE5SVTQ7knSjbjPdD80z/wBHs2u2AxnTbOSKx4
-         MaSojccw2eKMYO+coRizzIJziCvVFPX82qiroE7UjPwY4mg7XjBY0K4NmE9B2OJHdTL1
-         CWbXsPNlIdjIpnyAKzk0bAYVjHI+4m+nDSC1sLo25TyK63/YL9/xOUwd537P3kMF3Kvq
-         6L0w==
-X-Gm-Message-State: APjAAAUcBsDPk/EgrDHF3Ypqu/ZX/gWkZkVsEoLm7NiEein/kCwo4NmK
-        /bD/sBtlDZ8KO2ilwA1qppzZpZKmewg=
-X-Google-Smtp-Source: APXvYqwN4mS+x4iXXe2BYRodbaGWWgNcazdDbzVKpkcxaQB7XSvvF6Fo6S2mUjs7pPnRfC6hJTDTmw==
-X-Received: by 2002:a17:902:343:: with SMTP id 61mr41120721pld.332.1578075573151;
-        Fri, 03 Jan 2020 10:19:33 -0800 (PST)
+        bh=jJrtiyNSy3kb+yNwZbjKaE7PnY4m0t7haj0Vxh+WdWs=;
+        b=WLA204vFhkFZx4c4eWtxvUcwyIOWynw4UFQWcne2hL9SDWKSsQXYtJBxu+sdDwck0S
+         C9hqWLwbhNjcXicFp5c0YDSqVIygwoRWQgAnfwB2kvBIaQ3hfgbFrnq8HNk/GJUPEL9F
+         57c+ASTvRJTNm53k5Blrgev++tHMoKhW42FtjnZBC+Rtf7WyHuQmwkLm14NhszbKUhpJ
+         444OZ7imrrIa92DabFMR5B5pSf1Vo+L4jUJSGWVsCLv9+yGPdYTXRtrgj/X6QNm7nmAZ
+         AKJx1/Ezzno6xNb3fIJEjVVipMmoS+zgRnp1MBb2zDc3ZmxmHW0r7o3J2dTXWnrqA8Zr
+         GXvw==
+X-Gm-Message-State: APjAAAWq9EFGmRtj8YUt8FA2e2WXp9TAgLDPVPD+1ETEO/oiYJCxytTn
+        mwZ620lKauLh0/EP/uMTHrOYU2NGs3A=
+X-Google-Smtp-Source: APXvYqxH/68+orJAzPv+vk/PwqogoP5Pi0YsbIQQhS/k97ZYQ1t+hsn+rDs2wbKLJSqIanNZTJjgKw==
+X-Received: by 2002:a17:902:b210:: with SMTP id t16mr42466097plr.65.1578075565871;
+        Fri, 03 Jan 2020 10:19:25 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.31
+        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 10:19:32 -0800 (PST)
+        Fri, 03 Jan 2020 10:19:25 -0800 (PST)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         DEVICE TREE BINDINGS),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
         ARM ARCHITECTURE)
-Subject: [PATCH v4 06/13] dt-bindings: Add Broadcom STB USB PHY binding document
-Date:   Fri,  3 Jan 2020 13:18:04 -0500
-Message-Id: <20200103181811.22939-7-alcooperx@gmail.com>
+Subject: [PATCH v4 02/13] phy: usb: Get all drivers that use USB clks using correct enable/disable
+Date:   Fri,  3 Jan 2020 13:18:00 -0500
+Message-Id: <20200103181811.22939-3-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103181811.22939-1-alcooperx@gmail.com>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
@@ -79,109 +79,102 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for bcm7216 and bcm7211
+The BRCM USB Phy, ohci, ehci and xhci drivers all use the USB clocks
+but not all drivers use the clk_prepare_enable/clk_disable_unprepare
+versions to enable/disable the clocks. This change gets all drivers
+using the prepare version.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/phy/brcm,brcmstb-usb-phy.txt     | 69 +++++++++++++++----
- 1 file changed, 56 insertions(+), 13 deletions(-)
+ drivers/phy/broadcom/phy-brcm-usb.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-index 24a0d06acd1d..698aacbdcfc4 100644
---- a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-@@ -1,30 +1,49 @@
- Broadcom STB USB PHY
+diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
+index f5c1f2983a1d..217e3702ef4e 100644
+--- a/drivers/phy/broadcom/phy-brcm-usb.c
++++ b/drivers/phy/broadcom/phy-brcm-usb.c
+@@ -74,8 +74,8 @@ static int brcm_usb_phy_init(struct phy *gphy)
+ 	 */
+ 	mutex_lock(&priv->mutex);
+ 	if (priv->init_count++ == 0) {
+-		clk_enable(priv->usb_20_clk);
+-		clk_enable(priv->usb_30_clk);
++		clk_prepare_enable(priv->usb_20_clk);
++		clk_prepare_enable(priv->usb_30_clk);
+ 		brcm_usb_init_common(&priv->ini);
+ 	}
+ 	mutex_unlock(&priv->mutex);
+@@ -106,8 +106,8 @@ static int brcm_usb_phy_exit(struct phy *gphy)
+ 	mutex_lock(&priv->mutex);
+ 	if (--priv->init_count == 0) {
+ 		brcm_usb_uninit_common(&priv->ini);
+-		clk_disable(priv->usb_20_clk);
+-		clk_disable(priv->usb_30_clk);
++		clk_disable_unprepare(priv->usb_20_clk);
++		clk_disable_unprepare(priv->usb_30_clk);
+ 	}
+ 	mutex_unlock(&priv->mutex);
+ 	phy->inited = false;
+@@ -360,8 +360,8 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
+ 	if (priv->has_eohci)
+ 		brcm_usb_uninit_eohci(&priv->ini);
+ 	brcm_usb_uninit_common(&priv->ini);
+-	clk_disable(priv->usb_20_clk);
+-	clk_disable(priv->usb_30_clk);
++	clk_disable_unprepare(priv->usb_20_clk);
++	clk_disable_unprepare(priv->usb_30_clk);
  
- Required properties:
-- - compatible: brcm,brcmstb-usb-phy
-- - reg: two offset and length pairs.
--	The first pair specifies a manditory set of memory mapped
--	registers used for general control of the PHY.
--	The second pair specifies optional registers used by some of
--	the SoCs that support USB 3.x
-- - #phy-cells: Shall be 1 as it expects one argument for setting
--	       the type of the PHY. Possible values are:
--	       - PHY_TYPE_USB2 for USB1.1/2.0 PHY
--	       - PHY_TYPE_USB3 for USB3.x PHY
-+- compatible: should be one of
-+	"brcm,brcmstb-usb-phy"
-+	"brcm,bcm7216-usb-phy"
-+	"brcm,bcm7211-usb-phy"
-+
-+- reg and reg-names properties requirements are specific to the
-+  compatible string.
-+  "brcm,brcmstb-usb-phy":
-+    - reg: 1 or 2 offset and length pairs. One for the base CTRL registers
-+           and an optional pair for systems with USB 3.x support
-+    - reg-names: not specified
-+  "brcm,bcm7216-usb-phy":
-+    - reg: 3 offset and length pairs for CTRL, XHCI_EC and XHCI_GBL
-+           registers
-+    - reg-names: "ctrl", "xhci_ec", "xhci_gbl"
-+  "brcm,bcm7211-usb-phy":
-+    - reg: 5 offset and length pairs for CTRL, XHCI_EC, XHCI_GBL,
-+           USB_PHY and USB_MDIO registers and an optional pair
-+	   for the BDC registers
-+    - reg-names: "ctrl", "xhci_ec", "xhci_gbl", "usb_phy", "usb_mdio", "bdc_ec"
-+
-+- #phy-cells: Shall be 1 as it expects one argument for setting
-+	      the type of the PHY. Possible values are:
-+	      - PHY_TYPE_USB2 for USB1.1/2.0 PHY
-+	      - PHY_TYPE_USB3 for USB3.x PHY
+ 	phy_provider = devm_of_phy_provider_register(dev, brcm_usb_phy_xlate);
  
- Optional Properties:
- - clocks : clock phandles.
- - clock-names: String, clock name.
-+- interrupts: wakeup interrupt
-+- interrupt-names: "wakeup"
- - brcm,ipp: Boolean, Invert Port Power.
-   Possible values are: 0 (Don't invert), 1 (Invert)
- - brcm,ioc: Boolean, Invert Over Current detection.
-   Possible values are: 0 (Don't invert), 1 (Invert)
--NOTE: one or both of the following two properties must be set
--- brcm,has-xhci: Boolean indicating the phy has an XHCI phy.
--- brcm,has-eohci: Boolean indicating the phy has an EHCI/OHCI phy.
- - dr_mode: String, PHY Device mode.
-   Possible values are: "host", "peripheral ", "drd" or "typec-pd"
-   If this property is not defined, the phy will default to "host" mode.
-+- brcm,syscon-piarbctl: phandle to syscon for handling config registers
-+NOTE: one or both of the following two properties must be set
-+- brcm,has-xhci: Boolean indicating the phy has an XHCI phy.
-+- brcm,has-eohci: Boolean indicating the phy has an EHCI/OHCI phy.
-+
+@@ -381,8 +381,8 @@ static int brcm_usb_phy_suspend(struct device *dev)
+ 	struct brcm_usb_phy_data *priv = dev_get_drvdata(dev);
  
- Example:
+ 	if (priv->init_count) {
+-		clk_disable(priv->usb_20_clk);
+-		clk_disable(priv->usb_30_clk);
++		clk_disable_unprepare(priv->usb_20_clk);
++		clk_disable_unprepare(priv->usb_30_clk);
+ 	}
+ 	return 0;
+ }
+@@ -391,8 +391,8 @@ static int brcm_usb_phy_resume(struct device *dev)
+ {
+ 	struct brcm_usb_phy_data *priv = dev_get_drvdata(dev);
  
-@@ -41,3 +60,27 @@ usbphy_0: usb-phy@f0470200 {
- 	clocks = <&usb20>, <&usb30>;
- 	clock-names = "sw_usb", "sw_usb3";
- };
-+
-+usb-phy@29f0200 {
-+	reg = <0x29f0200 0x200>,
-+		<0x29c0880 0x30>,
-+		<0x29cc100 0x534>,
-+		<0x2808000 0x24>,
-+		<0x2980080 0x8>;
-+	reg-names = "ctrl",
-+		"xhci_ec",
-+		"xhci_gbl",
-+		"usb_phy",
-+		"usb_mdio";
-+	brcm,ioc = <0x0>;
-+	brcm,ipp = <0x0>;
-+	compatible = "brcm,bcm7211-usb-phy";
-+	interrupts = <0x30>;
-+	interrupt-parent = <&vpu_intr1_nosec_intc>;
-+	interrupt-names = "wake";
-+	#phy-cells = <0x1>;
-+	brcm,has-xhci;
-+	syscon-piarbctl = <&syscon_piarbctl>;
-+	clocks = <&scmi_clk 256>;
-+	clock-names = "sw_usb";
-+};
+-	clk_enable(priv->usb_20_clk);
+-	clk_enable(priv->usb_30_clk);
++	clk_prepare_enable(priv->usb_20_clk);
++	clk_prepare_enable(priv->usb_30_clk);
+ 	brcm_usb_init_ipp(&priv->ini);
+ 
+ 	/*
+@@ -405,13 +405,13 @@ static int brcm_usb_phy_resume(struct device *dev)
+ 			brcm_usb_init_eohci(&priv->ini);
+ 		} else if (priv->has_eohci) {
+ 			brcm_usb_uninit_eohci(&priv->ini);
+-			clk_disable(priv->usb_20_clk);
++			clk_disable_unprepare(priv->usb_20_clk);
+ 		}
+ 		if (priv->phys[BRCM_USB_PHY_3_0].inited) {
+ 			brcm_usb_init_xhci(&priv->ini);
+ 		} else if (priv->has_xhci) {
+ 			brcm_usb_uninit_xhci(&priv->ini);
+-			clk_disable(priv->usb_30_clk);
++			clk_disable_unprepare(priv->usb_30_clk);
+ 		}
+ 	} else {
+ 		if (priv->has_xhci)
+@@ -419,8 +419,8 @@ static int brcm_usb_phy_resume(struct device *dev)
+ 		if (priv->has_eohci)
+ 			brcm_usb_uninit_eohci(&priv->ini);
+ 		brcm_usb_uninit_common(&priv->ini);
+-		clk_disable(priv->usb_20_clk);
+-		clk_disable(priv->usb_30_clk);
++		clk_disable_unprepare(priv->usb_20_clk);
++		clk_disable_unprepare(priv->usb_30_clk);
+ 	}
+ 
+ 	return 0;
 -- 
 2.17.1
 
