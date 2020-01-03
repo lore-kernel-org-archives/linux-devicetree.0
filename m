@@ -2,45 +2,46 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97719C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C30C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69FD4215A4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27843215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hJvuimDQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="waxetS0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbgACNoW (ORCPT
+        id S1727836AbgACNo2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 08:44:22 -0500
+        Fri, 3 Jan 2020 08:44:28 -0500
 Received: from mail26.static.mailgun.info ([104.130.122.26]:17698 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727598AbgACNoW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 08:44:22 -0500
+        by vger.kernel.org with ESMTP id S1727527AbgACNo2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 08:44:28 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578059062; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=kdGb5TcHjJlYgNPD8+3CYz77uIafQ2H7Cpz0eIy/mHc=; b=hJvuimDQYzbPz7Mx0YSs6bKDOQg3ZzdDRVlISHVV6wKYDYXR28/FFXMOFdPh1HQjUtAP7AOh
- WX5wDOz+TT3cNr4EWMjMsGeet979os0F3Qh9WjNAkUpCtzzEGHjI1u+JEFdcH5Zhoyz6GUto
- ogF0AvpPjCTXsR3RsctAAoCWSbw=
+ s=smtp; t=1578059067; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=fNO2KuVzmU5dgBshcB7p+blPOPhtX1gtLSdkDstJNHs=; b=waxetS0GGtWvAHCP5S2re7eJdHz+hNIScM0BbVvrbn6hxEwxr//EN/h5CWQJgMVpCmzdTl1L
+ BQsyhQJbYCa+fl6AXWUN8OXP0Xh6Cw/E+Jc6x4vdVvGQ3ClHd30zh/ONcc43Qv3B7CEpUZrE
+ DjcIQwVVTh0vxKdAR7kTYCKBSe8=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e0f4535.7f39f1c1f148-smtp-out-n03;
- Fri, 03 Jan 2020 13:44:21 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e0f4538.7f5cddc45340-smtp-out-n03;
+ Fri, 03 Jan 2020 13:44:24 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 993B5C4479F; Fri,  3 Jan 2020 13:44:20 +0000 (UTC)
+        id 2BAEAC433CB; Fri,  3 Jan 2020 13:44:23 +0000 (UTC)
 Received: from govinds-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: govinds)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6668FC43383;
-        Fri,  3 Jan 2020 13:44:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6668FC43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D70E0C433A2;
+        Fri,  3 Jan 2020 13:44:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D70E0C433A2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=govinds@codeaurora.org
 From:   Govind Singh <govinds@codeaurora.org>
@@ -48,10 +49,12 @@ To:     robh@kernel.org, devicetree@vger.kernel.org,
         ath10k@lists.infradead.org
 Cc:     linux-wireless@vger.kernel.org,
         Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH v3 0/2] Don't call SCM interface for statically mapped msa region
-Date:   Fri,  3 Jan 2020 19:14:12 +0530
-Message-Id: <20200103134414.15457-1-govinds@codeaurora.org>
+Subject: [PATCH v3 1/2] dt: bindings: add dt entry flag to skip SCM call for msa region
+Date:   Fri,  3 Jan 2020 19:14:13 +0530
+Message-Id: <20200103134414.15457-2-govinds@codeaurora.org>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200103134414.15457-1-govinds@codeaurora.org>
+References: <20200103134414.15457-1-govinds@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -59,24 +62,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For some targets ex: SC7180/QCS404, SCM permissions for MSA region is
-statically configured in TrustZone fw. Add SCM call disable option
-for such targets to avoid duplicate permissions.
+Add boolean context flag to disable SCM call for statically
+mapped msa region.
 
-Change since v2:
-   rename flag to "qcom,msa-fixed-perm".
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
+---
+ .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Change since v1:
-    Added devicetree list for review.
-
-Govind Singh (2):
-  dt: bindings: add dt entry flag to skip SCM call for msa region
-  ath10k: Don't call SCM interface for statically mapped msa region
-
- .../devicetree/bindings/net/wireless/qcom,ath10k.txt     | 4 ++++
- drivers/net/wireless/ath/ath10k/qmi.c                    | 9 +++++++++
- drivers/net/wireless/ath/ath10k/qmi.h                    | 1 +
- 3 files changed, 14 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+index 017128394a3e..633366dc33da 100644
+--- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
++++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+@@ -88,6 +88,9 @@ Optional properties:
+ 		    of the host capability QMI request
+ - qcom,xo-cal-data: xo cal offset to be configured in xo trim register.
+ 
++- qcom,msa-fixed-perm: Boolean context flag to disable SCM call for statically
++		       mapped msa region.
++
+ Example (to supply PCI based wifi block details):
+ 
+ In this example, the node is defined as child node of the PCI controller.
+@@ -185,4 +188,5 @@ wifi@18000000 {
+ 		vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
+ 		memory-region = <&wifi_msa_mem>;
+ 		iommus = <&apps_smmu 0x0040 0x1>;
++		qcom,msa-fixed-perm;
+ };
 -- 
 2.22.0
