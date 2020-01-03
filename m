@@ -2,134 +2,180 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4889C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 16:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C37C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 16:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB5C21734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 16:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D24021734
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 16:29:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tfxrTNAl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qqjelQ0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgACQ0i (ORCPT
+        id S1728021AbgACQ3t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 11:26:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41535 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbgACQ0i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 11:26:38 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so42952679wrw.8
-        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 08:26:36 -0800 (PST)
+        Fri, 3 Jan 2020 11:29:49 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45933 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgACQ3p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 11:29:45 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 59so61796322otp.12;
+        Fri, 03 Jan 2020 08:29:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=89mFA8e7Xc7aCGnee/vBVuK6j5IjAiZj3SvE/aRAZkU=;
-        b=tfxrTNAlbO1a4huM8IDy6tBKcl5I9hIGs22EGye9w5UqqHWTreoNTQ8QYcvb7YXmnN
-         35WIII5O06Ed79JL1L2aWb4w4vlKdqPa68lhyM/kYS76+BuF0TNXQ3JdF6VKtsRVcIxt
-         namNuW/NRTfnECEKBlixtu8EePuaeEnnCl+L1sqFgUij9RjLaFDsjrGZMqb0/B5JH6p1
-         AwiiURZ7VLU5sgapnHFWxQ1B2ucVV3FT9uJwtXplth4sy+9CkpmwaKmoyLNSHWcsxFij
-         MIDfBHJ+jR49lz5qMC9uZDHOTy31/xy7TXDvyNMEwMvBHQrgYoKqOPdIi02WnBU2luMd
-         KTFA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TP17Q6SBM8RfPS7JEf89IxBEEl+82WJKOot5C8K9N98=;
+        b=qqjelQ0+Kba+Pvu7W6JzOzsWlxmU4Ap+PUQ1JAnf1w4z9lOX0l2NhJIYieVbWYkq+i
+         tZnhI+JcVeUs9DSAbecaKFqKLjENQC/bJXsXocYpxG/SaqscK8CFG6Q3VMOkAPlGS+vG
+         NXTkv9j3ucpnFzf2QRu0uiA74wdEuNrJJ6QSBTmxAcPD9TmNe9mnDfArKRMUVuVuQ3Ou
+         fgGlmjc677XGKTIEGhvglgnnFTTlb2s+aE66EfKRY8Pqg2Hop+iVfDEArN2O7oDnkG69
+         whfs/9FCtOBgZogqFllOd00fE8JMvYZwHR0GoFtWLyKVfcYf2bfe+Iok4a+DPiocc2+J
+         udBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=89mFA8e7Xc7aCGnee/vBVuK6j5IjAiZj3SvE/aRAZkU=;
-        b=VFXj+FcrANkyf3tUSv88abOJF6vttLV4E8We3dPEJI5Etp1QxB1vnX+wcWswERppUr
-         hgtUdtCI/ayuoh6GwOUH0gszNyPI0TXWO+K9ugtBYxB7HdMmpwCmPGDyto4L19acfnBb
-         CBbdxJsJzQwVcHvl1id+52B7WlIsjSorKMPHG7Zse3AEG14zKh786vuH70ckrPEUms6/
-         dKODPTNKRruHibjKb1/lumLlYyu6J29BtIuxlj1mf/bMIY/Macr27uJO6TK0cbeCuva2
-         vxZLBArWAKVYI1NHaqCflQ0GEc2srKek9XKIe0y/UELFVy/LwgzodS3Um5lyQiosXZVS
-         IpzA==
-X-Gm-Message-State: APjAAAVDiX/1XJU7CIzBVRbZphbbKkG0UhGJB1nGHqEaBlwwZh7SOMgE
-        XypHpCjuL74aOPvcgrP3EeScPQ==
-X-Google-Smtp-Source: APXvYqwPg2MhuwqZ0oIndjKJulvZt5tg9dwauR6SSxBiZJ9j/GpPtJP4TrTegUABwWAZ4oYoiSU4Og==
-X-Received: by 2002:adf:e591:: with SMTP id l17mr82260400wrm.139.1578068796095;
-        Fri, 03 Jan 2020 08:26:36 -0800 (PST)
-Received: from radium.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id x14sm12564234wmj.42.2020.01.03.08.26.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 08:26:35 -0800 (PST)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        matthias.bgg@gmail.com, Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH 2/2] iommu/mediatek: add support for MT8167
-Date:   Fri,  3 Jan 2020 17:26:32 +0100
-Message-Id: <20200103162632.109553-2-fparent@baylibre.com>
-X-Mailer: git-send-email 2.25.0.rc0
-In-Reply-To: <20200103162632.109553-1-fparent@baylibre.com>
-References: <20200103162632.109553-1-fparent@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TP17Q6SBM8RfPS7JEf89IxBEEl+82WJKOot5C8K9N98=;
+        b=n67tly/MuUa+QJzx6r6wRj3UjMjFGYsqhcaOF4/Jv0FdZRlWx2msUs+TU1ov+iVI09
+         6WmvFUYa30E/27cV/iNJWbfSYJcwEEDu+kCjRfWGDi69zy1+mskFUuJy5g426Vgtw4op
+         BZCuPUkxsG5j4Jt5/fvK72ppgrO8Q42zW6H+M8457ip7vrEavXDylZq+qwBtLkBsZL5C
+         LIZLXDn8KwbYUyJXe7WYP8a8LlKxI8g6bGr72LyQoC6X5QFwbsMFCoXS8qkD32jLOPtZ
+         mC+B/DH89buEEpOlWnlzY1nv3STrw/8SFvQVznHNsh5yGiRbbvKzCYuDAVUZQ5zu2pq+
+         dwrw==
+X-Gm-Message-State: APjAAAUYnGrofmNCPsXeS//AZLximddfqiySLWnLERM7JuK2/oVVkFv7
+        Xcvs4oA51ZVoVKIS885+WI+ptCp+LrK43z1wXeM=
+X-Google-Smtp-Source: APXvYqyx0qfOGlCgf+mbqVx1RA3NJa/iWXu/notHG2jRzI1XyQlklOpJtiW2znnOyK1gz/QnIOAs/YVhOvNs6/K2WcU=
+X-Received: by 2002:a9d:5c02:: with SMTP id o2mr92142289otk.176.1578068984784;
+ Fri, 03 Jan 2020 08:29:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191213084748.11210-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20191213084748.11210-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 3 Jan 2020 16:29:18 +0000
+Message-ID: <CA+V-a8uZqwfbYNec7bPWf5RuZP-zVkAyAz8SMueJic5wU0zyBw@mail.gmail.com>
+Subject: Re: [v2 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
+ endpoint controller
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the IOMMU on MT8167
+Hi Kishon/Rob,
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
- drivers/iommu/mtk_iommu.c | 11 ++++++++++-
- drivers/iommu/mtk_iommu.h |  1 +
- 2 files changed, 11 insertions(+), 1 deletion(-)
+On Fri, Dec 13, 2019 at 8:48 AM Lad Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> This patch adds the bindings for the R-Car PCIe endpoint driver.
+>
+> Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/pci/rcar-pci-ep.txt        | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> new file mode 100644
+> index 0000000..7f0a97e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+> @@ -0,0 +1,37 @@
+> +* Renesas R-Car PCIe Endpoint Controller DT description
+> +
+> +Required properties:
+> +           "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
+> +           "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
+> +                                    RZ/G2 compatible device.
+> +
+> +           When compatible with the generic version, nodes must list the
+> +           SoC-specific version corresponding to the platform first
+> +           followed by the generic version.
+> +
+> +- reg: base address and length of the PCIe controller registers.
+> +- outbound-ranges: outbound windows base address and length including the flags.
+> +- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
+> +- clocks: from common clock binding: clock specifiers for the PCIe controller
+> +        clock.
+> +- clock-names: from common clock binding: should be "pcie".
+> +
+> +Optional Property:
+> +- max-functions: Maximum number of functions that can be configured (default 1).
+> +
+> +Example:
+> +
+> +SoC-specific DT Entry:
+> +
+> +       pcie_ep: pcie_ep@fe000000 {
+> +               compatible = "renesas,pcie-ep-r8a774c0", "renesas,pcie-rcar-gen2";
+> +               reg = <0 0xfe000000 0 0x80000>;
+> +               outbound-ranges = <0xa 0x0 0xfe100000 0 0x000100000
+> +                                  0xa 0x0 0xfe200000 0 0x000200000
+> +                                  0x6 0x0 0x30000000 0 0x008000000
+> +                                  0x6 0x0 0x38000000 0 0x008000000>;
+> +               clocks = <&cpg CPG_MOD 319>;
+> +               clock-names = "pcie";
+> +               power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> +               resets = <&cpg 319>;
+> +       };
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 6fc1f5ecf91e..5fc6178a82dc 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -569,7 +569,8 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 		F_INT_PRETETCH_TRANSATION_FIFO_FAULT;
- 	writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
- 
--	if (data->plat_data->m4u_plat == M4U_MT8173)
-+	if (data->plat_data->m4u_plat == M4U_MT8173 ||
-+	    data->plat_data->m4u_plat == M4U_MT8167)
- 		regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
- 	else
- 		regval = lower_32_bits(data->protect_base) |
-@@ -782,6 +783,13 @@ static const struct mtk_iommu_plat_data mt2712_data = {
- 	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
- };
- 
-+static const struct mtk_iommu_plat_data mt8167_data = {
-+	.m4u_plat     = M4U_MT8167,
-+	.has_4gb_mode = true,
-+	.reset_axi    = true,
-+	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
-+};
-+
- static const struct mtk_iommu_plat_data mt8173_data = {
- 	.m4u_plat     = M4U_MT8173,
- 	.has_4gb_mode = true,
-@@ -798,6 +806,7 @@ static const struct mtk_iommu_plat_data mt8183_data = {
- 
- static const struct of_device_id mtk_iommu_of_ids[] = {
- 	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
-+	{ .compatible = "mediatek,mt8167-m4u", .data = &mt8167_data},
- 	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
- 	{ .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
- 	{}
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index ea949a324e33..cb8fd5970cd4 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -30,6 +30,7 @@ struct mtk_iommu_suspend_reg {
- enum mtk_iommu_plat {
- 	M4U_MT2701,
- 	M4U_MT2712,
-+	M4U_MT8167,
- 	M4U_MT8173,
- 	M4U_MT8183,
- };
--- 
-2.25.0.rc0
+Now that I have dropped "outbound-ranges", do the below bindings look good ?
 
+- reg-names: Must include the following names
+ - "apb-base" - Controller base
+ - "memory0" - memory window 0 used by the host to map the pci address locally
+ - "memory1" - memory window 1 used by the host to map the pci address locally
+- "memory2" - memory window 2 used by the host to map the pci address locally
+- "memory3" - memory window 3 used by the host to map the pci address locally
+
+    pcie-ep: pcie_ep@fe000000 {
+        compatible = "renesas,pcie-r8a774c0", "renesas,pcie-rcar-gen2";
+        reg = <0 0xfe000000 0 0x80000>,
+            <0x0 0xfe100000 0 0x100000>,
+            <0x0 0xfe200000 0 0x200000>,
+            <0x0 0x30000000 0 0x8000000>,
+            <0x0 0x38000000 0 0x8000000>;
+        reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
+        clocks = <&cpg CPG_MOD 319>;
+        clock-names = "pcie";
+        power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+        resets = <&cpg 319>;
+    };
+
+Cheers,
+--Prabhakar
