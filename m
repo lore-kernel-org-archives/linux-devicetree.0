@@ -2,146 +2,209 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E5C32767
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF3DC47409
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5D9227BF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xY0zM+Ce"
+	by mail.kernel.org (Postfix) with ESMTP id D0F4E21D7D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgACJ1a (ORCPT
+        id S1726640AbgACJ1c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:27:30 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38336 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgACJ1a (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:27:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TFFNUpBqrHSpyurnMmcanTS7uqHtMMP0ooKKfVEFBeA=; b=xY0zM+CeBrM/vokDa80g5TsP7
-        yMjSfuLAZNBHGfXQAzrjsYJ7w7huIQs1MR7Sp6VCRFpgEoFjmC42WtfI2jiFoR+fNbT2+o4r6OucS
-        USrfgGGAkKAXCVf5z+KrasALMVjdLAyuj4TLWWDQ6GDTbr2tSUhQ+opAE/GdtWclzCiNsBGSgK9qD
-        IbxETDnQrTZ/gXelOAW1D92iDqK/VA14h1U21WvcBBR62Yuu9GVlznsWuOvF6vYfw/a2sjtt3cfXD
-        MAZEPTQwzcLobUe3JwBAFGRdwewng1VE1RWSosx2GOa/uR4DOMv257cO0pmpE3wNKKTBPDKhgLrDu
-        N+7y8Bs/Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33388)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1inJEp-0001FV-9X; Fri, 03 Jan 2020 09:27:23 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1inJEk-00030q-7h; Fri, 03 Jan 2020 09:27:18 +0000
-Date:   Fri, 3 Jan 2020 09:27:18 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Message-ID: <20200103092718.GB25745@shell.armlinux.org.uk>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191223120730.GO25745@shell.armlinux.org.uk>
- <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
+        Fri, 3 Jan 2020 04:27:32 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41909 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbgACJ1b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:27:31 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1inJEt-0000N6-Co; Fri, 03 Jan 2020 10:27:27 +0100
+Message-ID: <a121d715fbed1f8ab935d465a4f0cbb8071790d5.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] reset: Add Broadcom STB RESCAL reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Jim Quinlan <jim2101024@gmail.com>,
+        Jim Quinlan <im2101024@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Fri, 03 Jan 2020 10:27:26 +0100
+In-Reply-To: <20200102231435.21703-3-f.fainelli@gmail.com>
+References: <20200102231435.21703-1-f.fainelli@gmail.com>
+         <20200102231435.21703-3-f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 07:01:50AM +0000, Madalin Bucur (OSS) wrote:
-> > -----Original Message-----
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Sent: Monday, December 23, 2019 2:08 PM
-> > To: Madalin Bucur <madalin.bucur@nxp.com>
-> > Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
-> > f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
-> > devicetree@vger.kernel.org
-> > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-> > 
-> > On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
-> > > 10GBase-R could be used as a common nominator but just as well 10G and
-> > > remove the rest while we're at it. There are/may be differences in
-> > > features, differences in the way the HW is configured (the most
-> > > important aspect) and one should be able to determine what interface
-> > > type is in use to properly configure the HW. SFI does not have the CDR
-> > > function in the PMD, relying on the PMA signal conditioning vs the XFI
-> > > that requires this in the PMD.
-> > 
-> > I've now found a copy of INF-8077i on the net, which seems to be the
-> > document that defines XFI. The definition in there seems to be very
-> > similar to SFI in that it is an electrical specification, not a
-> > protocol specification, and, just like SFI, it defines the electrical
-> > characteristics at the cage, not at the serdes. Therefore, the effects
-> > of the board layout come into play to achieve compliance with XFI.
+Hi Florian,
+
+just a few small nitpicks:
+
+On Thu, 2020-01-02 at 15:14 -0800, Florian Fainelli wrote:
+> From: Jim Quinlan <jim2101024@gmail.com>
 > 
-> I think we're missing the point here: we need to start from the device
-> tree and that is supposed to describe the board, the hardware, not to
-> configure the software. Please re-read the paragraph above in this key:
-> the device tree needs to describe the HW features, those electrical
-> properties you are discussing above. The fact that we use a certain
-> protocol over it, by choice in software, does not change the HW and it
-> should not change the device tree describing it.
-
-phy_interface_t does *NOT* describe the electrical properties of the
-link; it describes the protocol. The protocol for 10GBASE-R, SFI and
-XFI are *all* the same. Therefore, phy_interface_t does *not*
-distinguish between these.
-
-Yes, DT may need to describe the electrical properties. That needs to
-be done independently of the phy_interface_t and therefore phy-mode
-definition.
-
-Just like it is done for SATA interfaces that need the eye mask
-(electrical properties of the serdes) adjusted for the board.
-
-> > Just like SFI, XFI can be used with multiple different underlying
-> > protocols. I quote:
-> > 
-> >   "The XFI interface is designed to support SONET OC-192,
-> >   IEEE.Std-802.3ae, 10GFC and G.709(OTU-2) applications."
-> > 
-> > Therefore, to describe 10GBASE-R as "XFI" is most definitely incorrect.
-> > 10GBASE-R is just _one_ protocol that can be run over XFI, but it is
-> > not the only one.
+> On BCM7216 there is a special purpose reset controller named RESCAL
+> (reset calibration) which is necessary for SATA and PCIe0/1 to operate
+> correctly. This commit adds support for such a reset controller to be
+> available.
 > 
-> Exactly why the chip to chip interface described by the device tree needs
-> to be xfi not 10GBASE-R,
+> Signed-off-by: Jim Quinlan <im2101024@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/reset/Kconfig                |   7 ++
+>  drivers/reset/Makefile               |   1 +
+>  drivers/reset/reset-brcmstb-rescal.c | 110 +++++++++++++++++++++++++++
+>  3 files changed, 118 insertions(+)
+>  create mode 100644 drivers/reset/reset-brcmstb-rescal.c
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 12f5c897788d..b7cc0a2049d9 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -49,6 +49,13 @@ config RESET_BRCMSTB
+>  	  This enables the reset controller driver for Broadcom STB SoCs using
+>  	  a SUN_TOP_CTRL_SW_INIT style controller.
+>  
+> +config RESET_BRCMSTB_RESCAL
+> +	bool "Broadcom STB RESCAL reset controller"
+> +	default ARCH_BRCMSTB || COMPILE_TEST
+> +	help
+> +	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
+> +	  BCM7216.
+> +
+>  config RESET_HSDK
+>  	bool "Synopsys HSDK Reset Driver"
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 00767c03f5f2..1e4291185c52 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+>  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+> +obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+> diff --git a/drivers/reset/reset-brcmstb-rescal.c b/drivers/reset/reset-brcmstb-rescal.c
+> new file mode 100644
+> index 000000000000..e1c038e62855
+> --- /dev/null
+> +++ b/drivers/reset/reset-brcmstb-rescal.c
+> @@ -0,0 +1,110 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (C) 2018-2020 Broadcom */
+> +
+> +#include <linux/device.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#define BRCM_RESCAL_START	0x0
+> +#define  BRCM_RESCAL_START_BIT	BIT(0)
+> +#define BRCM_RESCAL_CTRL	0x4
+> +#define BRCM_RESCAL_STATUS	0x8
+> +#define  BRCM_RESCAL_STATUS_BIT	BIT(0)
+> +
+> +struct brcm_rescal_reset {
+> +	void __iomem	*base;
 
-Sorry no.
+You could replace the tab before *base with a space for consistency.
 
-Merely specifying "xfi" does not tell you what you need to do to achieve
-XFI compliance at the point defined in INF8077i.  Plus, XFI can also be
-protocols _other_ than 10GBASE-R.
+> +	struct device *dev;
+> +	struct reset_controller_dev rcdev;
+> +};
+> +
+> +static int brcm_rescal_reset_set(struct reset_controller_dev *rcdev,
+> +				 unsigned long id)
+> +{
+> +	struct brcm_rescal_reset *data =
+> +		container_of(rcdev, struct brcm_rescal_reset, rcdev);
+> +	void __iomem *base = data->base;
+> +	u32 reg;
+> +	int ret;
+> +
+> +	reg = readl(base + BRCM_RESCAL_START);
+> +	writel(reg | BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
+> +	reg = readl(base + BRCM_RESCAL_START);
+> +	if (!(reg & BRCM_RESCAL_START_BIT)) {
+> +		dev_err(data->dev, "failed to start SATA/PCIe rescal\n");
+> +		return -EIO;
+> +	}
+> +
+> +	ret = readl_poll_timeout(base + BRCM_RESCAL_STATUS, reg,
+> +				 !(reg & BRCM_RESCAL_STATUS_BIT), 100, 1000);
+> +	if (ret) {
+> +		dev_err(data->dev, "time out on SATA/PCIe rescal\n");
+> +		return -ETIMEDOUT;
 
-Claiming that "XFI" properly defines the interface is utter rubbish. It
-does not. XFI defines the electrical characteristics *only* and not
-the underlying protocol. It is not limited to 10GBASE-R, but includes
-other protocols as well.
+Just return ret here, readl_poll_timeout() already returns -ETIMEDOUT.
 
-XFI is not a phy interface type.  Sorry.
+> +	}
+> +
+> +	reg = readl(base + BRCM_RESCAL_START);
+> +	writel(reg & ~BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
+> +	(void)readl(base + BRCM_RESCAL_START);
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Is this final read actually necessary (if so, why)?
+
+> +
+> +	dev_dbg(data->dev, "SATA/PCIe rescal success\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int brcm_rescal_reset_xlate(struct reset_controller_dev *rcdev,
+> +				   const struct of_phandle_args *reset_spec)
+> +{
+> +	/* This is needed if #reset-cells == 0. */
+> +	return 0;
+> +}
+> +
+> +static const struct reset_control_ops brcm_rescal_reset_ops = {
+> +	.reset = brcm_rescal_reset_set,
+> +};
+> +
+> +static int brcm_rescal_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct brcm_rescal_reset *data;
+> +	struct resource *res;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	data->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(data->base))
+> +		return PTR_ERR(data->base);
+> +
+> +	platform_set_drvdata(pdev, data);
+
+This can be dropped.
+
+regards
+Philipp
+
