@@ -7,57 +7,61 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FE0C2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBF1C32771
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2192464B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03CC20866
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578071560;
-	bh=Bq3wSGweNgUnUR2ScgkLGNaGTFe493jXCOPTmwaWkAQ=;
+	s=default; t=1578071612;
+	bh=YExA720C2zKhWsisoqLbN/UbWLsHxMgSyDoDzqvYOYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=faQ1jNReiX486exADmLFbAIb6Cqj79OBnE+RapIqtAVgoQPc6EyqKPEFJEzfCCutA
-	 +PEX5v+0cfVQuRJjBCo54zGvHnCJ02YjZfZ2u8LgCFp0N+jDx60djcFLM8jQfMTEVF
-	 kGshPdiyRmwUe7yMk8pKV+k+VXJ1zW6F082LGwX0=
+	b=zamyUyBtVe2Bkq+m7Kg0VlTUC3gOR046HaRLzfHxdqrqBC4aV6wbmB1oQDBeYCCDY
+	 UBFpyfZcT32SUUWK1A4qht61vBv5Pwug/yhe4msfnk/Aya43rU6GFdu5iLRPPVY3mX
+	 vBlbl/WpQidIIS4diQr5faPN7/EU5wZlt693oEWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbgACRMN (ORCPT
+        id S1728281AbgACRMl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:12:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46414 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 12:12:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728191AbgACRMM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:12:12 -0500
+        id S1728259AbgACRMk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:12:40 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1544F215A4;
-        Fri,  3 Jan 2020 17:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BB6320866;
+        Fri,  3 Jan 2020 17:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578071531;
-        bh=Bq3wSGweNgUnUR2ScgkLGNaGTFe493jXCOPTmwaWkAQ=;
+        s=default; t=1578071559;
+        bh=YExA720C2zKhWsisoqLbN/UbWLsHxMgSyDoDzqvYOYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QUj3CD1Iz1tYjBpeeYY40qAazySGz44Eepq4NFeLl1wD3gLnnShAHmeTo48UMEZBz
-         gR7Of2G+8ZjlLIsfqNzyPz20R52boqeB1/dsVM7Lf0n82h+CzAmSorq+npjp7pKnzJ
-         Gj9f8OjA5S4bfIKmfFHJoUlhllwIipvss8e6x428=
+        b=mxsRs5JSRASe0LR8ZJjnkZ/nhak9Ww7c3pgSwMgZ7h5DePeHBXgztz8Mtw/EUuYew
+         dSzvY8/DtzFqNGLErbcqiAjEibf9J1Trqn0XPfleVmuVlesSqmsPJDJmO0x45vPVZ6
+         hSoGxVr40Hf6/jJpHMFSMjCs7hp6Kb/XSsXzP25U=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 05/19] thermal: exynos: Rename Samsung and Exynos to lowercase
-Date:   Fri,  3 Jan 2020 18:11:17 +0100
-Message-Id: <20200103171131.9900-6-krzk@kernel.org>
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH 09/19] phy: exynos: Rename Exynos to lowercase
+Date:   Fri,  3 Jan 2020 18:11:21 +0100
+Message-Id: <20200103171131.9900-10-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103171131.9900-1-krzk@kernel.org>
 References: <20200103171131.9900-1-krzk@kernel.org>
@@ -66,106 +70,195 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix up inconsistent usage of upper and lowercase letters in "Samsung"
-and "Exynos" names.
+Fix up inconsistent usage of upper and lowercase letters in "Exynos"
+name.
 
-"SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
-names.  Therefore they should be written with lowercase letters starting
-with capital letter.
+"EXYNOS" is not an abbreviation but a regular trademarked name.
+Therefore it should be written with lowercase letters starting with
+capital letter.
 
 The lowercase "Exynos" name is promoted by its manufacturer Samsung
 Electronics Co., Ltd., in advertisement materials and on website.
 
-Although advertisement materials usually use uppercase "SAMSUNG", the
-lowercase version is used in all legal aspects (e.g. on Wikipedia and in
-privacy/legal statements on
-https://www.samsung.com/semiconductor/privacy-global/).
-
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- Documentation/driver-api/thermal/exynos_thermal.rst | 6 +++---
- drivers/thermal/samsung/Kconfig                     | 2 +-
- drivers/thermal/samsung/exynos_tmu.c                | 4 ++--
- include/dt-bindings/thermal/thermal_exynos.h        | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/phy/samsung-phy.txt | 6 +++---
+ drivers/phy/allwinner/phy-sun4i-usb.c                 | 2 +-
+ drivers/phy/samsung/Kconfig                           | 8 ++++----
+ drivers/phy/samsung/phy-exynos-dp-video.c             | 4 ++--
+ drivers/phy/samsung/phy-exynos-mipi-video.c           | 4 ++--
+ drivers/phy/samsung/phy-exynos-pcie.c                 | 2 +-
+ drivers/phy/samsung/phy-exynos5-usbdrd.c              | 6 +++---
+ drivers/phy/samsung/phy-samsung-usb2.c                | 2 +-
+ 8 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/driver-api/thermal/exynos_thermal.rst b/Documentation/driver-api/thermal/exynos_thermal.rst
-index d4e4a5b75805..764df4ab584d 100644
---- a/Documentation/driver-api/thermal/exynos_thermal.rst
-+++ b/Documentation/driver-api/thermal/exynos_thermal.rst
-@@ -4,7 +4,7 @@ Kernel driver exynos_tmu
+diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+index 1c40ccd40ce4..7510830a79bd 100644
+--- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
++++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+@@ -1,4 +1,4 @@
+-Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY
++Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY
+ -------------------------------------------------
  
- Supported chips:
+ Required properties:
+@@ -27,7 +27,7 @@ the PHY specifier identifies the PHY and its meaning is as follows:
+ supports additional fifth PHY:
+   4 - MIPI CSIS 2.
  
--* ARM SAMSUNG EXYNOS4, EXYNOS5 series of SoC
-+* ARM Samsung Exynos4, Exynos5 series of SoC
+-Samsung EXYNOS SoC series Display Port PHY
++Samsung Exynos SoC series Display Port PHY
+ -------------------------------------------------
  
-   Datasheet: Not publicly available
+ Required properties:
+@@ -38,7 +38,7 @@ Required properties:
+ 		      control pmu registers for power isolation.
+ - #phy-cells : from the generic PHY bindings, must be 0;
  
-@@ -14,7 +14,7 @@ Authors: Amit Daniel <amit.daniel@samsung.com>
- TMU controller Description:
- ---------------------------
+-Samsung S5P/EXYNOS SoC series USB PHY
++Samsung S5P/Exynos SoC series USB PHY
+ -------------------------------------------------
  
--This driver allows to read temperature inside SAMSUNG EXYNOS4/5 series of SoC.
-+This driver allows to read temperature inside Samsung Exynos4/5 series of SoC.
- 
- The chip only exposes the measured 8-bit temperature code value
- through a register.
-@@ -43,7 +43,7 @@ The three equations are:
-        Trimming info for 85 degree Celsius (stored at TRIMINFO register)
-        Temperature code measured at 85 degree Celsius which is unchanged
- 
--TMU(Thermal Management Unit) in EXYNOS4/5 generates interrupt
-+TMU(Thermal Management Unit) in Exynos4/5 generates interrupt
- when temperature exceeds pre-defined levels.
- The maximum number of configurable threshold is five.
- The threshold levels are defined as follows::
-diff --git a/drivers/thermal/samsung/Kconfig b/drivers/thermal/samsung/Kconfig
-index fe0d2ba51392..f4eff5a41a84 100644
---- a/drivers/thermal/samsung/Kconfig
-+++ b/drivers/thermal/samsung/Kconfig
-@@ -5,7 +5,7 @@ config EXYNOS_THERMAL
- 	depends on HAS_IOMEM
+ Required properties:
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index 856927382248..7e09ad6a0b42 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -7,7 +7,7 @@
+  * Based on code from
+  * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
+  *
+- * Modelled after: Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
++ * Modelled after: Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY driver
+  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+  * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+  */
+diff --git a/drivers/phy/samsung/Kconfig b/drivers/phy/samsung/Kconfig
+index 290a6c70f570..3b39bec101b2 100644
+--- a/drivers/phy/samsung/Kconfig
++++ b/drivers/phy/samsung/Kconfig
+@@ -3,23 +3,23 @@
+ # Phy drivers for Samsung platforms
+ #
+ config PHY_EXYNOS_DP_VIDEO
+-	tristate "EXYNOS SoC series Display Port PHY driver"
++	tristate "Exynos SoC series Display Port PHY driver"
+ 	depends on OF
+ 	depends on ARCH_EXYNOS || COMPILE_TEST
+ 	default ARCH_EXYNOS
+ 	select GENERIC_PHY
  	help
- 	  If you say yes here you get support for the TMU (Thermal Management
--	  Unit) driver for SAMSUNG EXYNOS series of SoCs. This driver initialises
-+	  Unit) driver for Samsung Exynos series of SoCs. This driver initialises
- 	  the TMU, reports temperature and handles cooling action if defined.
- 	  This driver uses the Exynos core thermal APIs and TMU configuration
- 	  data from the supported SoCs.
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index 8193b66a3f83..fd4a17812f33 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * exynos_tmu.c - Samsung EXYNOS TMU (Thermal Management Unit)
-+ * exynos_tmu.c - Samsung Exynos TMU (Thermal Management Unit)
-  *
-  *  Copyright (C) 2014 Samsung Electronics
-  *  Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-@@ -1186,7 +1186,7 @@ static struct platform_driver exynos_tmu_driver = {
+-	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
++	  Support for Display Port PHY found on Samsung Exynos SoCs.
  
- module_platform_driver(exynos_tmu_driver);
+ config PHY_EXYNOS_MIPI_VIDEO
+-	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
++	tristate "S5P/Exynos SoC series MIPI CSI-2/DSI PHY driver"
+ 	depends on HAS_IOMEM
+ 	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
+ 	select GENERIC_PHY
+ 	default y if ARCH_S5PV210 || ARCH_EXYNOS
+ 	help
+ 	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
+-	  and EXYNOS SoCs.
++	  and Exynos SoCs.
  
--MODULE_DESCRIPTION("EXYNOS TMU Driver");
-+MODULE_DESCRIPTION("Exynos TMU Driver");
- MODULE_AUTHOR("Donggeun Kim <dg77.kim@samsung.com>");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:exynos-tmu");
-diff --git a/include/dt-bindings/thermal/thermal_exynos.h b/include/dt-bindings/thermal/thermal_exynos.h
-index 642e4e7f4084..52fcb51dda3c 100644
---- a/include/dt-bindings/thermal/thermal_exynos.h
-+++ b/include/dt-bindings/thermal/thermal_exynos.h
+ config PHY_EXYNOS_PCIE
+ 	bool "Exynos PCIe PHY driver"
+diff --git a/drivers/phy/samsung/phy-exynos-dp-video.c b/drivers/phy/samsung/phy-exynos-dp-video.c
+index 6c607df1dc9a..2b670ef91deb 100644
+--- a/drivers/phy/samsung/phy-exynos-dp-video.c
++++ b/drivers/phy/samsung/phy-exynos-dp-video.c
 @@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0+ */
+ // SPDX-License-Identifier: GPL-2.0-only
  /*
-- * thermal_exynos.h - Samsung EXYNOS TMU device tree definitions
-+ * thermal_exynos.h - Samsung Exynos TMU device tree definitions
+- * Samsung EXYNOS SoC series Display Port PHY driver
++ * Samsung Exynos SoC series Display Port PHY driver
   *
-  *  Copyright (C) 2014 Samsung Electronics
-  *  Lukasz Majewski <l.majewski@samsung.com>
+  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+  * Author: Jingoo Han <jg1.han@samsung.com>
+@@ -115,5 +115,5 @@ static struct platform_driver exynos_dp_video_phy_driver = {
+ module_platform_driver(exynos_dp_video_phy_driver);
+ 
+ MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
+-MODULE_DESCRIPTION("Samsung EXYNOS SoC DP PHY driver");
++MODULE_DESCRIPTION("Samsung Exynos SoC DP PHY driver");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/phy/samsung/phy-exynos-mipi-video.c b/drivers/phy/samsung/phy-exynos-mipi-video.c
+index bb51195f189f..c1df1ef3ee3c 100644
+--- a/drivers/phy/samsung/phy-exynos-mipi-video.c
++++ b/drivers/phy/samsung/phy-exynos-mipi-video.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
++ * Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY driver
+  *
+  * Copyright (C) 2013,2016 Samsung Electronics Co., Ltd.
+  * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
+@@ -364,6 +364,6 @@ static struct platform_driver exynos_mipi_video_phy_driver = {
+ };
+ module_platform_driver(exynos_mipi_video_phy_driver);
+ 
+-MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC MIPI CSI-2/DSI PHY driver");
++MODULE_DESCRIPTION("Samsung S5P/Exynos SoC MIPI CSI-2/DSI PHY driver");
+ MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/phy/samsung/phy-exynos-pcie.c b/drivers/phy/samsung/phy-exynos-pcie.c
+index 659e7ae0a6cf..7e28b1aea0d1 100644
+--- a/drivers/phy/samsung/phy-exynos-pcie.c
++++ b/drivers/phy/samsung/phy-exynos-pcie.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Samsung EXYNOS SoC series PCIe PHY driver
++ * Samsung Exynos SoC series PCIe PHY driver
+  *
+  * Phy provider for PCIe controller on Exynos SoC series
+  *
+diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+index e510732afb8b..eb06ce9f748f 100644
+--- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
++++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Samsung EXYNOS5 SoC series USB DRD PHY driver
++ * Samsung Exynos5 SoC series USB DRD PHY driver
+  *
+  * Phy provider for USB 3.0 DRD controller on Exynos5 SoC series
+  *
+@@ -33,7 +33,7 @@
+ #define EXYNOS5_FSEL_24MHZ		0x5
+ #define EXYNOS5_FSEL_50MHZ		0x7
+ 
+-/* EXYNOS5: USB 3.0 DRD PHY registers */
++/* Exynos5: USB 3.0 DRD PHY registers */
+ #define EXYNOS5_DRD_LINKSYSTEM			0x04
+ 
+ #define LINKSYSTEM_FLADJ_MASK			(0x3f << 1)
+@@ -958,7 +958,7 @@ static struct platform_driver exynos5_usb3drd_phy = {
+ };
+ 
+ module_platform_driver(exynos5_usb3drd_phy);
+-MODULE_DESCRIPTION("Samsung EXYNOS5 SoCs USB 3.0 DRD controller PHY driver");
++MODULE_DESCRIPTION("Samsung Exynos5 SoCs USB 3.0 DRD controller PHY driver");
+ MODULE_AUTHOR("Vivek Gautam <gautam.vivek@samsung.com>");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("platform:exynos5_usb3drd_phy");
+diff --git a/drivers/phy/samsung/phy-samsung-usb2.c b/drivers/phy/samsung/phy-samsung-usb2.c
+index 090aa02e02de..a3ed3ff04690 100644
+--- a/drivers/phy/samsung/phy-samsung-usb2.c
++++ b/drivers/phy/samsung/phy-samsung-usb2.c
+@@ -255,7 +255,7 @@ static struct platform_driver samsung_usb2_phy_driver = {
+ };
+ 
+ module_platform_driver(samsung_usb2_phy_driver);
+-MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC USB PHY driver");
++MODULE_DESCRIPTION("Samsung S5P/Exynos SoC USB PHY driver");
+ MODULE_AUTHOR("Kamil Debski <k.debski@samsung.com>");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("platform:samsung-usb2-phy");
 -- 
 2.17.1
 
