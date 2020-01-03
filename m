@@ -2,106 +2,143 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0BCC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CABC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 10:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C1C2053B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cG4ow4LH"
+	by mail.kernel.org (Postfix) with ESMTP id 65C6B20672
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 10:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgACJv0 (ORCPT
+        id S1727221AbgACKAZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:51:26 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44521 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbgACJvV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:51:21 -0500
-Received: by mail-qk1-f196.google.com with SMTP id w127so33315442qkb.11
-        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 01:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m2l4ZP00y1MciphnLaoZDMF/+IkQks5KZaGyrGhDRiA=;
-        b=cG4ow4LHRj767jnNAQOpyl17Q+p40TAAcPfpSpHHXDGlrwj62Hpbce+n9FDrk+qkc/
-         hF5ZyqmmFsJTtYTiw79voWF6jUJzD3jMMLxaKlR24Yfx0wH19vRA84WzFpBPdLB301Wn
-         oDHYiFn+x4VsG0+cQjGtKP+AgiFhJEl2gny+42Vv2QuoSuDmtZTYXxHfkb2SYQSXio5l
-         4izdl3cbPeqe/fUEgmo7jINRJHhXeZzjP7rcRM1zIfCdONmAYkusOFVw3KH4tD5KGrsX
-         B2TTgSy+6TGCiaGzC+uIdpJ7YevNhC6HmCAOCMdMswOZwgLLOkvTEExLz90pSslcmLhv
-         3Jtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m2l4ZP00y1MciphnLaoZDMF/+IkQks5KZaGyrGhDRiA=;
-        b=ubJcttr1MmQFL+WJRezPGWq2JuulJxZTMgx/3id/5YR+enR1MsPfWwHSHLVqdwsz0z
-         VciiLATJAQMufV9tVzctv2y7ENnSmU6Nb+XXsKIomUBngqJxC08SItK+NAOXmK3DZbin
-         he76po2Tj0JLYUwQEuwsi/b5uduv0kJrZDnNbm9SRa6JMJzS0NbdkDGRZQb5zGK+7Jdo
-         pvz8E2c8TpASMg9zSIkIiW+4xmF9TINn0Zy44n6iTCdsIRvgNjXIHbNaUtK5uYuG7G8d
-         0lyBbU99ZrTMSPvZ6oXKNKeXsURscWfj/MhEkzm+/csxl3E9UHXCk1uxO37mcJVmS9XA
-         BJUA==
-X-Gm-Message-State: APjAAAUi2i8INnl7yvnTZzhUdjIYi2B30LTNpy240709huMAS7XSrPyf
-        MKK1g1aYt9IcbTZ7dBdw3aHMUcnH6y2qioOELlWTVg==
-X-Google-Smtp-Source: APXvYqzAZelvEL1bp9L+Dip8BtcvxrfIeDBmaKGivW0X8lJb2LdaJs31IH9b2gpMP+zcFkudxHBKRdWDiyhDv4QqwCw=
-X-Received: by 2002:a37:6255:: with SMTP id w82mr71281142qkb.330.1578045080489;
- Fri, 03 Jan 2020 01:51:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be>
-In-Reply-To: <20191230133852.5890-1-geert+renesas@glider.be>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 3 Jan 2020 10:51:09 +0100
-Message-ID: <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com>
-Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 3 Jan 2020 05:00:25 -0500
+Received: from mga01.intel.com ([192.55.52.88]:2331 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725972AbgACKAZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jan 2020 05:00:25 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Jan 2020 02:00:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,390,1571727600"; 
+   d="scan'208";a="394288544"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga005.jf.intel.com with ESMTP; 03 Jan 2020 02:00:22 -0800
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     p.zabel@pengutronix.de, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v6 1/2] dt-bindings: reset: Add YAML schemas for the Intel Reset controller
+Date:   Fri,  3 Jan 2020 18:00:17 +0800
+Message-Id: <ab84cc2ada92e4512ff18b11d6f1f752e5821b67.1578021776.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 30 gru 2019 o 14:38 Geert Uytterhoeven <geert+renesas@glider.be>
-napisa=C5=82(a):
->
->         Hi all,
->
-> As GPIO hogs are configured at GPIO controller initialization time,
-> adding/removing GPIO hogs in Device Tree overlays currently does not
-> work.  Hence this patch series adds support for that, by registering an
-> of_reconfig notifier, as is already done for platform, i2c, and SPI
-> devices.
->
-> Perhaps this would be better served through a pinctrl-gpio driver?
-> Pinctrl is already working fine with DT overlays, as the pinctrl-*
-> properties are part of the slave device node, and thus looked up at
-> slave device node attachment time, not at pin controller initialization
-> time.
->
-> In my particular use case (talking to SPI devices connected to a PMOD
-> connector on the RSK+RZA1 development board), the GPIO performs board
-> level muxing of a.o. the SPI MOSI/MISO/SCK signals.  Hence the hog
-> really needs to be active only while talking to the SPI device, so the
-> muxing could (in theory) be done upon demand.
-> But how to describe that in DT, and implement it (using Runtime PM?)?
->
+Add YAML schemas for the reset controller on Intel
+Gateway SoC.
 
-I may be missing the whole picture, but from your description this
-sounds like a job for the mux framework. Maybe we could make runtime
-PM aware of muxing for this type of use-cases?
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes on v6:
+	No changes
 
-Bart
+Changes on v5:
+	Add Reviewed-by: Rob Herring <robh@kernel.org>
+	Rebase patches on v5.5-rc1 kernel
+
+Changes on v4:
+	Address Rob review comments
+	  Drop oneOf and items for 'compatible'
+	  Add maxItems for 'reg' and 'intel,global-reset'
+
+Changes on v3:
+	Fix DTC warnings
+	Add support to legacy xrx200 SoC
+	Change file name to intel,rcu-gw.yaml
+
+ .../devicetree/bindings/reset/intel,rcu-gw.yaml    | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+
+diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+new file mode 100644
+index 000000000000..246dea8a2ec9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/reset/intel,rcu-gw.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: System Reset Controller on Intel Gateway SoCs
++
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
++
++properties:
++  compatible:
++    enum:
++      - intel,rcu-lgm
++      - intel,rcu-xrx200
++
++  reg:
++    description: Reset controller registers.
++    maxItems: 1
++
++  intel,global-reset:
++    description: Global reset register offset and bit offset.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - maxItems: 2
++
++  "#reset-cells":
++    minimum: 2
++    maximum: 3
++    description: |
++      First cell is reset request register offset.
++      Second cell is bit offset in reset request register.
++      Third cell is bit offset in reset status register.
++      For LGM SoC, reset cell count is 2 as bit offset in
++      reset request and reset status registers is same. Whereas
++      3 for legacy SoCs as bit offset differs.
++
++required:
++  - compatible
++  - reg
++  - intel,global-reset
++  - "#reset-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    rcu0: reset-controller@e0000000 {
++        compatible = "intel,rcu-lgm";
++        reg = <0xe0000000 0x20000>;
++        intel,global-reset = <0x10 30>;
++        #reset-cells = <2>;
++    };
++
++    pwm: pwm@e0d00000 {
++        status = "disabled";
++        compatible = "intel,lgm-pwm";
++        reg = <0xe0d00000 0x30>;
++        clocks = <&cgu0 1>;
++        #pwm-cells = <2>;
++        resets = <&rcu0 0x30 21>;
++    };
+-- 
+2.11.0
+
