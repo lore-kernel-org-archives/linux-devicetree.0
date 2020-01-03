@@ -2,193 +2,114 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C67FC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 04:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3D1C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 04:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1566921D56
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 04:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BEA222C3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 04:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="FsdfYR4C"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="THuwtRoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgACEOB (ORCPT
+        id S1726481AbgACE6f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 23:14:01 -0500
-Received: from mail-dm6nam10on2079.outbound.protection.outlook.com ([40.107.93.79]:6243
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726282AbgACEOB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jan 2020 23:14:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WIhLCk/r9h3KrF+4yLXhDnPwY7pFEoPwfBSXiUPHceta582u2VKljg6M1u4t4bmacQXjnfc+8lep4avuNFHV4Ex76iWkdu6RsplcFNBhvslk6mOOxRrPFhb/r7D1bmWul1Y6KYGErOjmY4X/pO487OETicj15FuBaOrHrGbVWWBc4ej2HmynsRaTiEqlvSn0P6Wirh/6FUl0mAkZqfVSjWg8W5YQczWPBSQYORPM0KYD+7kQyksW781knKUXDiHLw2f4iINbMmc3dgXwSfGCB7JH4wTb0BzDR2uMtLFIoShxW9pjZxz4K3iViNK7za/NbCnVeCK7gKKq53QhGH+78A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fZnzEye4mDUndjZtkD5HwLujVqlcczl4F5lMO8haL74=;
- b=QRZknZv5Q0kyfOKRdOJHjdl+vlP3otDZ5U2BjVHX35V1Wetf+Su+BYPWp4FRKu9thaUmfxDk2oVZOqokzy+8v2h6PfXAiE1LyCfHzuAOKWQkbk7bK5EvuoYm7ClK8OzmCay1TyGz/2U23tETiGH5BZ0WXPiHSazvLgmJXSQ1Sa1aN5wOi5RMUCIcK2O+ZMkOd0ruK9gOYLDeQba/gg4KpVolofaKugtIrtMCeBN38en5m4Cpe329B11o5Senl5iIqtzfagNvVT6Z5PS7B3pMTsoV16hJQgO7bhcNEZEWi6M6xd/4lYM4GFIm7Hjtoz71tTpB9lhnwpSDQ9kZJISSfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fZnzEye4mDUndjZtkD5HwLujVqlcczl4F5lMO8haL74=;
- b=FsdfYR4Co+hyTCYfie8YMp4jfDkt2PLKi+B/eDb1VVruEy2NOumOqvVpUZ19UBbM62oawVidUyf5TjEFDJgXiYi48+br0ZaZuK53f7C/x9VAgSz4QQ8GUNqLz51k6JkZ+SRW0t5NjFh7/nduzx/age9avCwdyzLU2lCg1CvUtY4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3799.namprd13.prod.outlook.com (20.180.12.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.4; Fri, 3 Jan 2020 04:13:58 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
- 04:13:58 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com,
-        palmer@dabbelt.com
-Cc:     aou@eecs.berkeley.edu, bmeng.cn@gmail.com, green.wan@sifive.com,
-        allison@lohutok.net, alexios.zavras@intel.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de, bp@suse.de,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v2 2/2] riscv: cacheinfo: Add support to determine no. of L2 cache way enabled
-Date:   Fri,  3 Jan 2020 09:43:21 +0530
-Message-Id: <1578024801-39039-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578024801-39039-1-git-send-email-yash.shah@sifive.com>
-References: <1578024801-39039-1-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR0101CA0043.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1a::29) To CH2PR13MB3368.namprd13.prod.outlook.com
- (2603:10b6:610:2c::26)
+        Thu, 2 Jan 2020 23:58:35 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:34599 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725890AbgACE6f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 2 Jan 2020 23:58:35 -0500
+X-UUID: 6c54cfae75dd4b99ba4a743768849a37-20200103
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rdFrZ9Jcx8qzNQWZZwmRMxMHx3C9rWLkOXwKIpvFHjM=;
+        b=THuwtRoKArpk5CFwi9K4tY1xk6K9CouAoQKYCUPz+JPvdomUfDwXjc5OzCGAMoscm5qJHZOnG45OvT4PwmK5a+uUiPGPQBgAFuT4LRCrKi34GIi2vgr7giqta/LrPk7fQC1ZraTT6rv48f4sy7+zuumr1PS6OALhFaRpAd/JC5M=;
+X-UUID: 6c54cfae75dd4b99ba4a743768849a37-20200103
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 627967508; Fri, 03 Jan 2020 12:58:25 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 3 Jan 2020 12:57:12 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 3 Jan 2020 12:58:48 +0800
+Message-ID: <1578027500.30178.0.camel@mtksdaap41>
+Subject: Re: [RESEND PATCH v6 00/17] add drm support for MT8183
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 3 Jan 2020 12:58:20 +0800
+In-Reply-To: <1578021148-32413-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1578021148-32413-1-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR0101CA0043.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2602.12 via Frontend Transport; Fri, 3 Jan 2020 04:13:54 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [114.143.65.226]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 56f3fe2c-9d14-4168-6fc7-08d790035b4b
-X-MS-TrafficTypeDiagnostic: CH2PR13MB3799:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR13MB379937E117ED4C2B320ADF2C8C230@CH2PR13MB3799.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 0271483E06
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39840400004)(346002)(396003)(366004)(376002)(136003)(189003)(199004)(6666004)(36756003)(1006002)(66946007)(66476007)(66556008)(107886003)(44832011)(52116002)(7416002)(4326008)(2906002)(6506007)(86362001)(81156014)(81166006)(8936002)(6486002)(2616005)(26005)(8676002)(16526019)(186003)(478600001)(316002)(6512007)(956004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3799;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: b88KAMvOpL755393EADJczhZy8TAJpSv4vUrKsJa/9HoVe1A7VvA9D+192gwY3tBK69KyE9j8rT6T/l9xFL2UDPncKrdXgnWgWqsJFuIc2EnfyZYQ4Lj1/xqV9IhBCfD8Vno69Hg/YHXATr2K/3f/aYBtpDr29P+LOlfFUUsfye5wTz+6BYkRHyPrhyN37ZZd4252L9fo1n+cc9e0u9wdu3cWUG1Hy4ijFQuDaZL7Z2N9zUIvDAXQGbOzCXs+C/5S5P+b7tD9BmB583u0FhGqaWLBMxAml8Tz97KJ7D1nbJDFQ4aKVoTUYMHbWSZb5DlHsv+l9xhvDlPnY6OzTlGxN6MMh+rzUvGRyl/fXxvQM3rI7G7lDDUSKFDA1VXjyyol2VXOuJRCxBv4q0n7KvqGbT4xgd9UN2KARabyFWG7CfAn3/qmN80TXnFlrGBEiKM
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56f3fe2c-9d14-4168-6fc7-08d790035b4b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2020 04:13:58.8635
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wtecBjbv1HI++3ZHvdV98HS6ZxvFBMhgis+OP4x2XeE79T+Ww6n8AeuK+b5I/p4ZDGrWhRKWys2/mjmcqPqr8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3799
+X-TM-SNTS-SMTP: FB3FFA3455567347BB4B802EBF6FC3E22F76B49220CCA2C99D4FD73A8E25E2142000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In order to determine the number of L2 cache ways enabled at runtime,
-implement a private attribute using cache_get_priv_group() in cacheinfo
-framework. Reading this attribute ("number_of_ways_enabled") will return
-the number of enabled L2 cache ways at runtime.
-
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/include/asm/sifive_l2_cache.h |  2 ++
- arch/riscv/kernel/cacheinfo.c            | 31 +++++++++++++++++++++++++++++++
- drivers/soc/sifive/sifive_l2_cache.c     |  5 +++++
- 3 files changed, 38 insertions(+)
-
-diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
-index 04f6748..217a42f 100644
---- a/arch/riscv/include/asm/sifive_l2_cache.h
-+++ b/arch/riscv/include/asm/sifive_l2_cache.h
-@@ -10,6 +10,8 @@
- extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
- extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
- 
-+int sifive_l2_largest_wayenabled(void);
-+
- #define SIFIVE_L2_ERR_TYPE_CE 0
- #define SIFIVE_L2_ERR_TYPE_UE 1
- 
-diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-index 4c90c07..29bdb21 100644
---- a/arch/riscv/kernel/cacheinfo.c
-+++ b/arch/riscv/kernel/cacheinfo.c
-@@ -7,6 +7,7 @@
- #include <linux/cpu.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <asm/sifive_l2_cache.h>
- 
- static void ci_leaf_init(struct cacheinfo *this_leaf,
- 			 struct device_node *node,
-@@ -16,6 +17,36 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
- 	this_leaf->type = type;
- }
- 
-+#ifdef CONFIG_SIFIVE_L2
-+static ssize_t number_of_ways_enabled_show(struct device *dev,
-+					   struct device_attribute *attr,
-+					   char *buf)
-+{
-+	return sprintf(buf, "%u\n", sifive_l2_largest_wayenabled());
-+}
-+
-+static DEVICE_ATTR_RO(number_of_ways_enabled);
-+
-+static struct attribute *priv_attrs[] = {
-+	&dev_attr_number_of_ways_enabled.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group priv_attr_group = {
-+	.attrs = priv_attrs,
-+};
-+
-+const struct attribute_group *
-+cache_get_priv_group(struct cacheinfo *this_leaf)
-+{
-+	/* We want to use private group for L2 cache only */
-+	if (this_leaf->level == 2)
-+		return &priv_attr_group;
-+	else
-+		return NULL;
-+}
-+#endif /* CONFIG_SIFIVE_L2 */
-+
- static int __init_cache_level(unsigned int cpu)
- {
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
-index a9ffff3..f1a5f2c 100644
---- a/drivers/soc/sifive/sifive_l2_cache.c
-+++ b/drivers/soc/sifive/sifive_l2_cache.c
-@@ -107,6 +107,11 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
- }
- EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
- 
-+int sifive_l2_largest_wayenabled(void)
-+{
-+	return readl(l2_base + SIFIVE_L2_WAYENABLE);
-+}
-+
- static irqreturn_t l2_int_handler(int irq, void *device)
- {
- 	unsigned int add_h, add_l;
--- 
-2.7.4
+SGksIFlvbmdxaWFuZzoNCg0KVGhpcyAnUkVTRU5EIHY2JyBpcyBkaWZmZXJlbnQgd2l0aCB2Niwg
+c28gSSB0aGluayB5b3Ugc2hvdWxkIGNhbGwgdGhpcw0KdjcuDQoNClJlZ2FyZHMsDQpDSw0KDQpP
+biBGcmksIDIwMjAtMDEtMDMgYXQgMTE6MTIgKzA4MDAsIFlvbmdxaWFuZyBOaXUgd3JvdGU6DQo+
+IFRoaXMgc2VyaWVzIGFyZSBiYXNlZCBvbiA1LjUtcmMxIGFuZCBwcm92aWQgMTcgcGF0Y2gNCj4g
+dG8gc3VwcG9ydCBtZWRpYXRlayBTT0MgTVQ4MTgzDQo+IA0KPiBDaGFuZ2Ugc2luY2UgdjUNCj4g
+LSBmaXggcmV2aWV3ZWQgaXNzdWUgaW4gdjUNCj4gYmFzZSBodHRwczovL3BhdGNod29yay5rZXJu
+ZWwub3JnL3Byb2plY3QvbGludXgtbWVkaWF0ZWsvbGlzdC8/c2VyaWVzPTIxMzIxOQ0KPiANCj4g
+Q2hhbmdlIHNpbmNlIHY0DQo+IC0gZml4IHJldmlld2VkIGlzc3VlIGluIHY0DQo+IA0KPiBDaGFu
+Z2Ugc2luY2UgdjMNCj4gLSBmaXggcmV2aWV3ZWQgaXNzdWUgaW4gdjMNCj4gLSBmaXggdHlwZSBl
+cnJvciBpbiB2Mw0KPiAtIGZpeCBjb25mbGljdCB3aXRoIGlvbW11IHBhdGNoDQo+IA0KPiBDaGFu
+Z2Ugc2luY2UgdjINCj4gLSBmaXggcmV2aWV3ZWQgaXNzdWUgaW4gdjINCj4gLSBhZGQgbXV0ZXgg
+bm9kZSBpbnRvIGR0cyBmaWxlDQo+IA0KPiBDaGFuZ2VzIHNpbmNlIHYxOg0KPiAtIGZpeCByZXZp
+ZXdlZCBpc3N1ZSBpbiB2MQ0KPiAtIGFkZCBkdHMgZm9yIG10ODE4MyBkaXNwbGF5IG5vZGVzDQo+
+IC0gYWRqdXN0IGRpc3BsYXkgY2xvY2sgY29udHJvbCBmbG93IGluIHBhdGNoIDIyDQo+IC0gYWRk
+IHZtYXAgc3VwcG9ydCBmb3IgbWVkaWF0ZWsgZHJtIGluIHBhdGNoIDIzDQo+IC0gZml4IHBhZ2Ug
+b2Zmc2V0IGlzc3VlIGZvciBtbWFwIGZ1bmN0aW9uIGluIHBhdGNoIDI0DQo+IC0gZW5hYmxlIGFs
+bG93X2ZiX21vZGlmaWVycyBmb3IgbWVkaWF0ZWsgZHJtIGluIHBhdGNoIDI1DQo+IA0KPiBZb25n
+cWlhbmcgTml1ICgxNyk6DQo+ICAgZHQtYmluZGluZ3M6IG1lZGlhdGVrOiBhZGQgcmRtYV9maWZv
+X3NpemUgZGVzY3JpcHRpb24gZm9yIG10ODE4Mw0KPiAgICAgZGlzcGxheQ0KPiAgIGFybTY0OiBk
+dHM6IGFkZCBkaXNwbGF5IG5vZGVzIGZvciBtdDgxODMNCj4gICBkcm0vbWVkaWF0ZWs6IG1vdmUg
+ZHNpL2RwaSBzZWxlY3QgaW5wdXQgaW50byBtdGtfZGRwX3NlbF9pbg0KPiAgIGRybS9tZWRpYXRl
+azogbWFrZSBzb3V0IHNlbGVjdCBmdW5jdGlvbiBmb3JtYXQgc2FtZSB3aXRoIHNlbGVjdCBpbnB1
+dA0KPiAgIGRybS9tZWRpYXRlazogYWRkIG1tc3lzIHByaXZhdGUgZGF0YSBmb3IgZGRwIHBhdGgg
+Y29uZmlnDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgcHJpdmF0ZSBkYXRhIGZvciByZG1hMSB0byBk
+cGkwIGNvbm5lY3Rpb24NCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBwcml2YXRlIGRhdGEgZm9yIHJk
+bWExIHRvIGRzaTAgY29ubmVjdGlvbg0KPiAgIGRybS9tZWRpYXRlazogbW92ZSByZG1hIHNvdXQg
+ZnJvbSBtdGtfZGRwX21vdXRfZW4gaW50bw0KPiAgICAgbXRrX2RkcF9zb3V0X3NlbA0KPiAgIGRy
+bS9tZWRpYXRlazogYWRkIGNvbm5lY3Rpb24gZnJvbSBPVkwwIHRvIE9WTF8yTDANCj4gICBkcm0v
+bWVkaWF0ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gUkRNQTAgdG8gQ09MT1IwDQo+ICAgZHJtL21l
+ZGlhdGVrOiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUExIHRvIERTSTANCj4gICBkcm0vbWVkaWF0
+ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gT1ZMXzJMMCB0byBSRE1BMA0KPiAgIGRybS9tZWRpYXRl
+azogYWRkIGNvbm5lY3Rpb24gZnJvbSBPVkxfMkwxIHRvIFJETUExDQo+ICAgZHJtL21lZGlhdGVr
+OiBhZGQgY29ubmVjdGlvbiBmcm9tIERJVEhFUjAgdG8gRFNJMA0KPiAgIGRybS9tZWRpYXRlazog
+YWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMCB0byBEU0kwDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQg
+Zmlmb19zaXplIGludG8gcmRtYSBwcml2YXRlIGRhdGENCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBz
+dXBwb3J0IGZvciBtZWRpYXRlayBTT0MgTVQ4MTgzDQo+IA0KPiAgLi4uL2JpbmRpbmdzL2Rpc3Bs
+YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgICAgfCAgMTMgKw0KPiAgYXJjaC9hcm02NC9i
+b290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSAgICAgICAgICAgfCAgOTggKysrKysrKw0KPiAg
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jICAgICAgICAgICAgfCAgMTgg
+KysNCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgICAgICAgICAg
+IHwgIDI1ICstDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgICAg
+ICAgICAgICB8ICAgNCArDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAu
+YyAgICAgICAgICAgICB8IDI4OCArKysrKysrKysrKysrKysrLS0tLS0NCj4gIGRyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5oICAgICAgICAgICAgIHwgICA3ICsNCj4gIGRyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgICAgICAgIHwgIDQ5ICsrKysN
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICAgICAgICAgICAgIHwg
+ICAzICsNCj4gIDkgZmlsZXMgY2hhbmdlZCwgNDM1IGluc2VydGlvbnMoKyksIDcwIGRlbGV0aW9u
+cygtKQ0KPiANCg0K
 
