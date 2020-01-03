@@ -2,209 +2,445 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF3DC47409
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E46C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F4E21D7D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689E322314
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:31:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L02vFofQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgACJ1c (ORCPT
+        id S1726313AbgACJbl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:27:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41909 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727453AbgACJ1b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:27:31 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1inJEt-0000N6-Co; Fri, 03 Jan 2020 10:27:27 +0100
-Message-ID: <a121d715fbed1f8ab935d465a4f0cbb8071790d5.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] reset: Add Broadcom STB RESCAL reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Jim Quinlan <jim2101024@gmail.com>,
-        Jim Quinlan <im2101024@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        Fri, 3 Jan 2020 04:31:41 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57742 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACJbk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:31:40 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0039VRsV060166;
+        Fri, 3 Jan 2020 03:31:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578043887;
+        bh=VZlXfOZjW4WM1kw+MMvIIMERV96FbgypkxC7+mbaDqA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=L02vFofQpV0UhY7L5BpMLdJbsgZ6DsKBeAN/uX00J7plQFB9b7xwn+g988sNEHgt1
+         5o3sLHEiA7sMtS3Uyg7Nh6NJT64+lprA7W7aMkoI9/YMb0gQ62yupHphA32k1CPy8K
+         YpCQK67iWJi/1A+XVoxcgdFHzvwuIU5IB98lw9cE=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0039VRHq010004
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 3 Jan 2020 03:31:27 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 3 Jan
+ 2020 03:31:26 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 3 Jan 2020 03:31:26 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0039VMtB017205;
+        Fri, 3 Jan 2020 03:31:23 -0600
+Subject: Re: [PATCH v3 07/13] phy: usb: Add support for new Synopsis USB
+ controller on the 7216
+To:     Al Cooper <alcooperx@gmail.com>, <linux-kernel@vger.kernel.org>
+CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 03 Jan 2020 10:27:26 +0100
-In-Reply-To: <20200102231435.21703-3-f.fainelli@gmail.com>
-References: <20200102231435.21703-1-f.fainelli@gmail.com>
-         <20200102231435.21703-3-f.fainelli@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+References: <20191210132132.41509-1-alcooperx@gmail.com>
+ <20191210132132.41509-8-alcooperx@gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <8576406d-2b90-684f-0c5e-44937c3b030a@ti.com>
+Date:   Fri, 3 Jan 2020 15:03:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20191210132132.41509-8-alcooperx@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Florian,
+Hi,
 
-just a few small nitpicks:
+On 10/12/19 6:51 PM, Al Cooper wrote:
+> The 7216 has the new USB XHCI controller from Synopsis. While
+> this new controller and the PHY are similar to the STB versions,
+> the major differences are:
+> 
+> - Many of the registers and fields in the CTRL block have been
+>   removed or changed.
+> - A new set of Synopsis control registers, BCHP_USB_XHCI_GBL, were
+>   added.
 
-On Thu, 2020-01-02 at 15:14 -0800, Florian Fainelli wrote:
-> From: Jim Quinlan <jim2101024@gmail.com>
+Is it not Synopsys?
+
+Thanks
+Kishon
+
+> - MDIO functionality has been replaced with direct access registers
+>   in the BCHP_USB_XHCI_GBL block.
+> - Power up PHY defaults that had to be changed by MDIO in previous
+>   chips will now power up with the correct defaults.
 > 
-> On BCM7216 there is a special purpose reset controller named RESCAL
-> (reset calibration) which is necessary for SATA and PCIe0/1 to operate
-> correctly. This commit adds support for such a reset controller to be
-> available.
+> A new init module was created for this new Synopsis USB controller.
+> A new compatible string was added and the driver will dispatch
+> into one of two init modules based on it. A "reg-names" field was
+> added so the driver can more easily get optional registers.
+> A DT bindings document was also added for this driver.
 > 
-> Signed-off-by: Jim Quinlan <im2101024@gmail.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
->  drivers/reset/Kconfig                |   7 ++
->  drivers/reset/Makefile               |   1 +
->  drivers/reset/reset-brcmstb-rescal.c | 110 +++++++++++++++++++++++++++
->  3 files changed, 118 insertions(+)
->  create mode 100644 drivers/reset/reset-brcmstb-rescal.c
+>  drivers/phy/broadcom/Makefile                 |   2 +-
+>  .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 171 ++++++++++++++++++
+>  drivers/phy/broadcom/phy-brcm-usb-init.h      |   2 +
+>  drivers/phy/broadcom/phy-brcm-usb.c           |  70 +++++--
+>  4 files changed, 227 insertions(+), 18 deletions(-)
+>  create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
 > 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 12f5c897788d..b7cc0a2049d9 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -49,6 +49,13 @@ config RESET_BRCMSTB
->  	  This enables the reset controller driver for Broadcom STB SoCs using
->  	  a SUN_TOP_CTRL_SW_INIT style controller.
+> diff --git a/drivers/phy/broadcom/Makefile b/drivers/phy/broadcom/Makefile
+> index f453c7d3ffff..88523e2be861 100644
+> --- a/drivers/phy/broadcom/Makefile
+> +++ b/drivers/phy/broadcom/Makefile
+> @@ -8,7 +8,7 @@ obj-$(CONFIG_PHY_NS2_USB_DRD)		+= phy-bcm-ns2-usbdrd.o
+>  obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
+>  obj-$(CONFIG_PHY_BRCM_USB)		+= phy-brcm-usb-dvr.o
 >  
-> +config RESET_BRCMSTB_RESCAL
-> +	bool "Broadcom STB RESCAL reset controller"
-> +	default ARCH_BRCMSTB || COMPILE_TEST
-> +	help
-> +	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
-> +	  BCM7216.
-> +
->  config RESET_HSDK
->  	bool "Synopsys HSDK Reset Driver"
->  	depends on HAS_IOMEM
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 00767c03f5f2..1e4291185c52 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
->  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
->  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
->  obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
-> +obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
->  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
->  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
->  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
-> diff --git a/drivers/reset/reset-brcmstb-rescal.c b/drivers/reset/reset-brcmstb-rescal.c
+> -phy-brcm-usb-dvr-objs := phy-brcm-usb.o phy-brcm-usb-init.o
+> +phy-brcm-usb-dvr-objs := phy-brcm-usb.o phy-brcm-usb-init.o phy-brcm-usb-init-synopsis.o
+>  
+>  obj-$(CONFIG_PHY_BCM_SR_PCIE)		+= phy-bcm-sr-pcie.o
+>  obj-$(CONFIG_PHY_BCM_SR_USB)		+= phy-bcm-sr-usb.o
+> diff --git a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
 > new file mode 100644
-> index 000000000000..e1c038e62855
+> index 000000000000..57663492b228
 > --- /dev/null
-> +++ b/drivers/reset/reset-brcmstb-rescal.c
-> @@ -0,0 +1,110 @@
+> +++ b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
+> @@ -0,0 +1,171 @@
 > +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (C) 2018-2020 Broadcom */
+> +/* Copyright (c) 2018, Broadcom */
 > +
-> +#include <linux/device.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
+> +/*
+> + * This module contains USB PHY initialization for power up and S3 resume
+> + * for newer Synopsis based USB hardware first used on the bcm7216.
+> + */
 > +
-> +#define BRCM_RESCAL_START	0x0
-> +#define  BRCM_RESCAL_START_BIT	BIT(0)
-> +#define BRCM_RESCAL_CTRL	0x4
-> +#define BRCM_RESCAL_STATUS	0x8
-> +#define  BRCM_RESCAL_STATUS_BIT	BIT(0)
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
 > +
-> +struct brcm_rescal_reset {
-> +	void __iomem	*base;
-
-You could replace the tab before *base with a space for consistency.
-
-> +	struct device *dev;
-> +	struct reset_controller_dev rcdev;
-> +};
+> +#include <linux/soc/brcmstb/brcmstb.h>
+> +#include "phy-brcm-usb-init.h"
 > +
-> +static int brcm_rescal_reset_set(struct reset_controller_dev *rcdev,
-> +				 unsigned long id)
+> +/* Register definitions for the USB CTRL block */
+> +#define USB_CTRL_SETUP			0x00
+> +#define   USB_CTRL_SETUP_STRAP_IPP_SEL_MASK		0x02000000
+> +#define   USB_CTRL_SETUP_SCB2_EN_MASK			0x00008000
+> +#define   USB_CTRL_SETUP_SCB1_EN_MASK			0x00004000
+> +#define   USB_CTRL_SETUP_SOFT_SHUTDOWN_MASK		0x00000200
+> +#define   USB_CTRL_SETUP_IPP_MASK			0x00000020
+> +#define   USB_CTRL_SETUP_IOC_MASK			0x00000010
+> +#define USB_CTRL_USB_PM			0x04
+> +#define   USB_CTRL_USB_PM_USB_PWRDN_MASK		0x80000000
+> +#define   USB_CTRL_USB_PM_SOFT_RESET_MASK		0x40000000
+> +#define   USB_CTRL_USB_PM_BDC_SOFT_RESETB_MASK		0x00800000
+> +#define   USB_CTRL_USB_PM_XHC_SOFT_RESETB_MASK		0x00400000
+> +#define USB_CTRL_USB_PM_STATUS		0x08
+> +#define USB_CTRL_USB_DEVICE_CTL1	0x10
+> +#define   USB_CTRL_USB_DEVICE_CTL1_PORT_MODE_MASK	0x00000003
+> +
+> +
+> +static void xhci_soft_reset(struct brcm_usb_init_params *params,
+> +			int on_off)
 > +{
-> +	struct brcm_rescal_reset *data =
-> +		container_of(rcdev, struct brcm_rescal_reset, rcdev);
-> +	void __iomem *base = data->base;
+> +	void __iomem *ctrl = params->ctrl_regs;
+> +
+> +	/* Assert reset */
+> +	if (on_off)
+> +		USB_CTRL_UNSET(ctrl, USB_PM, XHC_SOFT_RESETB);
+> +	/* De-assert reset */
+> +	else
+> +		USB_CTRL_SET(ctrl, USB_PM, XHC_SOFT_RESETB);
+> +}
+> +
+> +static void usb_init_ipp(struct brcm_usb_init_params *params)
+> +{
+> +	void __iomem *ctrl = params->ctrl_regs;
 > +	u32 reg;
-> +	int ret;
+> +	u32 orig_reg;
 > +
-> +	reg = readl(base + BRCM_RESCAL_START);
-> +	writel(reg | BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
-> +	reg = readl(base + BRCM_RESCAL_START);
-> +	if (!(reg & BRCM_RESCAL_START_BIT)) {
-> +		dev_err(data->dev, "failed to start SATA/PCIe rescal\n");
-> +		return -EIO;
-> +	}
+> +	pr_debug("%s\n", __func__);
 > +
-> +	ret = readl_poll_timeout(base + BRCM_RESCAL_STATUS, reg,
-> +				 !(reg & BRCM_RESCAL_STATUS_BIT), 100, 1000);
-> +	if (ret) {
-> +		dev_err(data->dev, "time out on SATA/PCIe rescal\n");
-> +		return -ETIMEDOUT;
-
-Just return ret here, readl_poll_timeout() already returns -ETIMEDOUT.
-
-> +	}
+> +	orig_reg = reg = brcm_usb_readl(USB_CTRL_REG(ctrl, SETUP));
+> +	if (params->ipp != 2)
+> +		/* override ipp strap pin (if it exits) */
+> +		reg &= ~(USB_CTRL_MASK(SETUP, STRAP_IPP_SEL));
 > +
-> +	reg = readl(base + BRCM_RESCAL_START);
-> +	writel(reg & ~BRCM_RESCAL_START_BIT, base + BRCM_RESCAL_START);
-> +	(void)readl(base + BRCM_RESCAL_START);
-
-Is this final read actually necessary (if so, why)?
-
+> +	/* Override the default OC and PP polarity */
+> +	reg &= ~(USB_CTRL_MASK(SETUP, IPP) | USB_CTRL_MASK(SETUP, IOC));
+> +	if (params->ioc)
+> +		reg |= USB_CTRL_MASK(SETUP, IOC);
+> +	if (params->ipp == 1)
+> +		reg |= USB_CTRL_MASK(SETUP, IPP);
+> +	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
 > +
-> +	dev_dbg(data->dev, "SATA/PCIe rescal success\n");
-> +
-> +	return 0;
+> +	/*
+> +	 * If we're changing IPP, make sure power is off long enough
+> +	 * to turn off any connected devices.
+> +	 */
+> +	if ((reg ^ orig_reg) & USB_CTRL_MASK(SETUP, IPP))
+> +		msleep(50);
 > +}
 > +
-> +static int brcm_rescal_reset_xlate(struct reset_controller_dev *rcdev,
-> +				   const struct of_phandle_args *reset_spec)
+> +static void usb_init_common(struct brcm_usb_init_params *params)
 > +{
-> +	/* This is needed if #reset-cells == 0. */
-> +	return 0;
+> +	u32 reg;
+> +	void __iomem *ctrl = params->ctrl_regs;
+> +
+> +	pr_debug("%s\n", __func__);
+> +
+> +	USB_CTRL_UNSET(ctrl, USB_PM, USB_PWRDN);
+> +	/* 1 millisecond - for USB clocks to settle down */
+> +	usleep_range(1000, 2000);
+> +
+> +	if (USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE)) {
+> +		reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> +		reg &= ~USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
+> +		reg |= params->mode;
+> +		brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> +	}
+> +	switch (params->mode) {
+> +	case USB_CTLR_MODE_HOST:
+> +		USB_CTRL_UNSET(ctrl, USB_PM, BDC_SOFT_RESETB);
+> +		break;
+> +	default:
+> +		USB_CTRL_UNSET(ctrl, USB_PM, BDC_SOFT_RESETB);
+> +		USB_CTRL_SET(ctrl, USB_PM, BDC_SOFT_RESETB);
+> +		break;
+> +	}
 > +}
 > +
-> +static const struct reset_control_ops brcm_rescal_reset_ops = {
-> +	.reset = brcm_rescal_reset_set,
+> +static void usb_init_xhci(struct brcm_usb_init_params *params)
+> +{
+> +	pr_debug("%s\n", __func__);
+> +
+> +	xhci_soft_reset(params, 0);
+> +}
+> +
+> +static void usb_uninit_common(struct brcm_usb_init_params *params)
+> +{
+> +	void __iomem *ctrl = params->ctrl_regs;
+> +
+> +	pr_debug("%s\n", __func__);
+> +
+> +	USB_CTRL_SET(ctrl, USB_PM, USB_PWRDN);
+> +
+> +}
+> +
+> +static void usb_uninit_xhci(struct brcm_usb_init_params *params)
+> +{
+> +
+> +	pr_debug("%s\n", __func__);
+> +
+> +	xhci_soft_reset(params, 1);
+> +}
+> +
+> +static int usb_get_dual_select(struct brcm_usb_init_params *params)
+> +{
+> +	void __iomem *ctrl = params->ctrl_regs;
+> +	u32 reg = 0;
+> +
+> +	pr_debug("%s\n", __func__);
+> +
+> +	reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> +	reg &= USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
+> +	return reg;
+> +}
+> +
+> +static void usb_set_dual_select(struct brcm_usb_init_params *params, int mode)
+> +{
+> +	void __iomem *ctrl = params->ctrl_regs;
+> +	u32 reg;
+> +
+> +	pr_debug("%s\n", __func__);
+> +
+> +	reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> +	reg &= ~USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
+> +	reg |= mode;
+> +	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> +}
+> +
+> +
+> +static const struct brcm_usb_init_ops bcm7216_ops = {
+> +	.init_ipp = usb_init_ipp,
+> +	.init_common = usb_init_common,
+> +	.init_xhci = usb_init_xhci,
+> +	.uninit_common = usb_uninit_common,
+> +	.uninit_xhci = usb_uninit_xhci,
+> +	.get_dual_select = usb_get_dual_select,
+> +	.set_dual_select = usb_set_dual_select,
 > +};
 > +
-> +static int brcm_rescal_reset_probe(struct platform_device *pdev)
+> +void brcm_usb_dvr_init_7216(struct brcm_usb_init_params *params)
 > +{
-> +	struct brcm_rescal_reset *data;
-> +	struct resource *res;
 > +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
+> +	pr_debug("%s\n", __func__);
 > +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->base))
-> +		return PTR_ERR(data->base);
+> +	params->family_name = "7216";
+> +	params->ops = &bcm7216_ops;
+> +}
+> diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.h b/drivers/phy/broadcom/phy-brcm-usb-init.h
+> index 7701872d1136..db6851c55335 100644
+> --- a/drivers/phy/broadcom/phy-brcm-usb-init.h
+> +++ b/drivers/phy/broadcom/phy-brcm-usb-init.h
+> @@ -43,6 +43,7 @@ struct brcm_usb_init_ops {
+>  struct  brcm_usb_init_params {
+>  	void __iomem *ctrl_regs;
+>  	void __iomem *xhci_ec_regs;
+> +	void __iomem *xhci_gbl_regs;
+>  	int ioc;
+>  	int ipp;
+>  	int mode;
+> @@ -55,6 +56,7 @@ struct  brcm_usb_init_params {
+>  };
+>  
+>  void brcm_usb_dvr_init_7445(struct brcm_usb_init_params *params);
+> +void brcm_usb_dvr_init_7216(struct brcm_usb_init_params *params);
+>  
+>  static inline u32 brcm_usb_readl(void __iomem *addr)
+>  {
+> diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
+> index 9d93c5599511..64379ede480e 100644
+> --- a/drivers/phy/broadcom/phy-brcm-usb.c
+> +++ b/drivers/phy/broadcom/phy-brcm-usb.c
+> @@ -241,6 +241,15 @@ static const struct attribute_group brcm_usb_phy_group = {
+>  	.attrs = brcm_usb_phy_attrs,
+>  };
+>  
+> +static const struct of_device_id brcm_usb_dt_ids[] = {
+> +	{
+> +		.compatible = "brcm,bcm7216-usb-phy",
+> +		.data = &brcm_usb_dvr_init_7216,
+> +	},
+> +	{ .compatible = "brcm,brcmstb-usb-phy" },
+> +	{ /* sentinel */ }
+> +};
 > +
-> +	platform_set_drvdata(pdev, data);
-
-This can be dropped.
-
-regards
-Philipp
-
+>  static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
+>  				 struct brcm_usb_phy_data *priv,
+>  				 struct device_node *dn)
+> @@ -316,13 +325,16 @@ static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
+>  
+>  static int brcm_usb_phy_probe(struct platform_device *pdev)
+>  {
+> -	struct resource *res;
+> +	struct resource *res_ctrl;
+> +	struct resource *res_xhciec = NULL;
+> +	struct resource *res_xhcigbl = NULL;
+>  	struct device *dev = &pdev->dev;
+>  	struct brcm_usb_phy_data *priv;
+>  	struct phy_provider *phy_provider;
+>  	struct device_node *dn = pdev->dev.of_node;
+>  	int err;
+>  	const char *mode;
+> +	const struct of_device_id *match;
+>  
+>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+> @@ -331,30 +343,59 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
+>  
+>  	priv->ini.family_id = brcmstb_get_family_id();
+>  	priv->ini.product_id = brcmstb_get_product_id();
+> -	brcm_usb_dvr_init_7445(&priv->ini);
+> +
+> +	match = of_match_node(brcm_usb_dt_ids, dev->of_node);
+> +	if (match && match->data) {
+> +		void (*dvr_init)(struct brcm_usb_init_params *params);
+> +
+> +		dvr_init = match->data;
+> +		(*dvr_init)(&priv->ini);
+> +	} else {
+> +		brcm_usb_dvr_init_7445(&priv->ini);
+> +	}
+> +
+>  	dev_dbg(dev, "Best mapping table is for %s\n",
+>  		priv->ini.family_name);
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res) {
+> -		dev_err(dev, "can't get USB_CTRL base address\n");
+> -		return -EINVAL;
+> +
+> +	/* Newer DT node has reg-names. xhci_ec and xhci_gbl are optional. */
+> +	res_ctrl = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
+> +	if (res_ctrl != NULL) {
+> +		res_xhciec = platform_get_resource_byname(pdev,
+> +							  IORESOURCE_MEM,
+> +							  "xhci_ec");
+> +		res_xhcigbl = platform_get_resource_byname(pdev,
+> +							   IORESOURCE_MEM,
+> +							   "xhci_gbl");
+> +	} else {
+> +		/* Older DT node without reg-names, use index */
+> +		res_ctrl = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		if (res_ctrl == NULL) {
+> +			dev_err(dev, "can't get CTRL base address\n");
+> +			return -EINVAL;
+> +		}
+> +		res_xhciec = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>  	}
+> -	priv->ini.ctrl_regs = devm_ioremap_resource(dev, res);
+> +	priv->ini.ctrl_regs = devm_ioremap_resource(dev, res_ctrl);
+>  	if (IS_ERR(priv->ini.ctrl_regs)) {
+>  		dev_err(dev, "can't map CTRL register space\n");
+>  		return -EINVAL;
+>  	}
+> -
+> -	/* The XHCI EC registers are optional */
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	if (res) {
+> +	if (res_xhciec) {
+>  		priv->ini.xhci_ec_regs =
+> -			devm_ioremap_resource(dev, res);
+> +			devm_ioremap_resource(dev, res_xhciec);
+>  		if (IS_ERR(priv->ini.xhci_ec_regs)) {
+>  			dev_err(dev, "can't map XHCI EC register space\n");
+>  			return -EINVAL;
+>  		}
+>  	}
+> +	if (res_xhcigbl) {
+> +		priv->ini.xhci_gbl_regs =
+> +			devm_ioremap_resource(dev, res_xhcigbl);
+> +		if (IS_ERR(priv->ini.xhci_gbl_regs)) {
+> +			dev_err(dev, "can't map XHCI Global register space\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+>  
+>  	of_property_read_u32(dn, "brcm,ipp", &priv->ini.ipp);
+>  	of_property_read_u32(dn, "brcm,ioc", &priv->ini.ioc);
+> @@ -480,11 +521,6 @@ static const struct dev_pm_ops brcm_usb_phy_pm_ops = {
+>  	SET_LATE_SYSTEM_SLEEP_PM_OPS(brcm_usb_phy_suspend, brcm_usb_phy_resume)
+>  };
+>  
+> -static const struct of_device_id brcm_usb_dt_ids[] = {
+> -	{ .compatible = "brcm,brcmstb-usb-phy" },
+> -	{ /* sentinel */ }
+> -};
+> -
+>  MODULE_DEVICE_TABLE(of, brcm_usb_dt_ids);
+>  
+>  static struct platform_driver brcm_usb_driver = {
+> 
