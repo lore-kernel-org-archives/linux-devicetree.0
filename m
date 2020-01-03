@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FCEC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5EEC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F0A2253D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF3F22B48
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVFHRSw8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjeSC5yC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgACSX3 (ORCPT
+        id S1728334AbgACSX6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:23:29 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46567 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728186AbgACSX3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:23:29 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n9so15998202pff.13;
-        Fri, 03 Jan 2020 10:23:28 -0800 (PST)
+        Fri, 3 Jan 2020 13:23:58 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52224 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728352AbgACSX6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:23:58 -0500
+Received: by mail-pj1-f65.google.com with SMTP id a6so4888024pjh.2;
+        Fri, 03 Jan 2020 10:23:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cP4O5HQxWBWdNHWUBu7fjBgX89WEj3h8sDc3dazrh6U=;
-        b=nVFHRSw8rqYv6sX4aY/506NYHDPHwqwXZvGZQym2cI6u02JgpgFiwWjnz+1OT9WFdL
-         ESUtc/XxldpQq9XOA9WX/NQuJfnZg7rKvEpG4B3UAzOCiaeUEl9EFi4tWR+QtMfKftxs
-         fhHJrDwqtQuXc6XFPRnd2muXFLeaCiFkj2Qgl/UObZ6mpqhB+bJO2u+xw6i7OTBfE2Ht
-         T0Kroi9TKS+E0r4u2yReKhDvpcBmUzrfitcDtHYepCvxrREaVcEvsbV+0EqhJvc+3hvI
-         FhRENoWK0cauYirBlP5zRXbTdlnXLYE4ibhGg3Ye4fev25HY635uYs9Whoa/ebpV1Pg1
-         5D6g==
+        bh=j7kOKPDQDw1zeyU8TnZElYrUJvJ6w804h05dax3iIbg=;
+        b=NjeSC5yC8msDOvA2BMSUTEisw7/C8jzej0myGinxaIKnx+t50s4UjEH+Ia3bJi4XQ6
+         PZtv5e6m+zqvWVkaPiHqZJZRcTRofTotNr2NOdvQpEP+V/7r/FQ9oAvzT30GQaxssunn
+         3N5pxD08R8CQVLX9jXrKpyuHcU9ZFZAIP+8enxpXCBpThcJnpQOGj4PBmoTw/49JJTXb
+         9MaB0up71Re/wNF+wO9GukF52nuCI6QCcKBE9mySYBS3K+pL4+k3oEFmLoZvVJATXLTb
+         7r6uHUmT+Uwd6xEqs5t2sCSt7nYCHI3WX91m8BMNWxFWvrZOF2zJNLHD9dRsCJzuJp2l
+         hXtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=cP4O5HQxWBWdNHWUBu7fjBgX89WEj3h8sDc3dazrh6U=;
-        b=aGxD9UAdajmCSSkeKXCnpjUuj+CfF6keRLqZHd97cW6WN7e3XhYbF+05uwvfj5Pyug
-         KC+5ILKMBQy2e5wumwJBb4ckKlZkWkBfIcbtuqHlHdZ3lWBlpyUR1kU390jQgrhkp84X
-         +HL0swgJNgmNgzwO3DpYC8e3ccriXCEJOso/n1v+U1k3upcF0uvEzVpfjUESgigun96a
-         j6LNDo1ppbVCja9NFDtVC+4Nhd3t+QoOknOcyJA68dK79O2xu41lOAmyMpO4+7kuVmFj
-         VgMOzEYFgpme7ZHRIXbH51L+aU8sBrf4Wue/Qqfan7NyokXazOvZEEUekdPysOjJdtey
-         AWug==
-X-Gm-Message-State: APjAAAUdJBzRbrdPs3e3ouNX8AMjCkYT/ydRDBpne0VmQZByhn441wZ8
-        b9klOquu3cx+LxKUQL4AzPQ=
-X-Google-Smtp-Source: APXvYqxN4UbSLP8zK9l/mCrwMMQKbN6VMrU895v9J1l+ZKogL4G5P6f8GiwgrhZEzwN7j5dzjLHDFQ==
-X-Received: by 2002:a63:554c:: with SMTP id f12mr99728330pgm.23.1578075808313;
-        Fri, 03 Jan 2020 10:23:28 -0800 (PST)
+        bh=j7kOKPDQDw1zeyU8TnZElYrUJvJ6w804h05dax3iIbg=;
+        b=YzfnykXntETeNBcsdrYAxXRwxhqHze4C6VpNYxnA+ucxrVn2POO3ImrStT7Z9zgr87
+         nnhk3M5t/gsLoRpLfQIUmfncoRTQ0uN05MjHIQ4AYKuLkROdbF/e6zr5eZRHazSzZLHG
+         pKgJ5PEVjIU+vRBfEUTutzkhX/fkFS2Eq5fJ4AzazaRnpdMpOrojUOzZo0tD8hjv1WHz
+         m9w8HJ7Qvn/eUXQGT26n1GdFGSqvCbNsQT5p4w5uZxvkatgUiIffZHiNooP1rh3tO+Yg
+         965e111aWLqJCq/HsLBeahz3fI+NZl4BoAqBSFdW+WywMkXPpwACFYcJyDsJS38crPKP
+         eYrQ==
+X-Gm-Message-State: APjAAAVB2GBtrkBxTtR5BXG74H9e+Ynmppqb4yfpBOccCe/K0JA67ETN
+        lWCQDq37WUXYbHgi/oSk6OM=
+X-Google-Smtp-Source: APXvYqyo/AL9CqQe5VsL7pLhw6Dn5lZfjPml0O2X2NmZsJmoG0IZtwg5WEFUWKE84Gs2NvetepUpVg==
+X-Received: by 2002:a17:902:8d8c:: with SMTP id v12mr70521559plo.336.1578075837265;
+        Fri, 03 Jan 2020 10:23:57 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id o19sm16199737pjr.2.2020.01.03.10.23.26
+        by smtp.googlemail.com with ESMTPSA id b17sm57504093pfb.146.2020.01.03.10.23.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 10:23:27 -0800 (PST)
-Subject: Re: [PATCH v4 02/13] phy: usb: Get all drivers that use USB clks
- using correct enable/disable
+        Fri, 03 Jan 2020 10:23:56 -0800 (PST)
+Subject: Re: [PATCH v4 03/13] phy: usb: Put USB phys into IDDQ on suspend to
+ save power in S2 mode
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -71,7 +71,7 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
- <20200103181811.22939-3-alcooperx@gmail.com>
+ <20200103181811.22939-4-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -127,12 +127,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <4b6475e7-e6c5-4c22-935c-a8ee6e04a732@gmail.com>
-Date:   Fri, 3 Jan 2020 10:23:26 -0800
+Message-ID: <c8c825b8-0407-f63b-527f-91c442bbc3d9@gmail.com>
+Date:   Fri, 3 Jan 2020 10:23:55 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200103181811.22939-3-alcooperx@gmail.com>
+In-Reply-To: <20200103181811.22939-4-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -142,10 +142,11 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 1/3/20 10:18 AM, Al Cooper wrote:
-> The BRCM USB Phy, ohci, ehci and xhci drivers all use the USB clocks
-> but not all drivers use the clk_prepare_enable/clk_disable_unprepare
-> versions to enable/disable the clocks. This change gets all drivers
-> using the prepare version.
+> Currently the Phy driver will put the USB phys into the max
+> power saving mode (IDDQ) when there is no corresponding XHCI, EHCI
+> or OHCI client (through rmmod, unbind or if the driver is not
+> builtin). This change will also put the Phys into IDDQ mode
+> on suspend so that S2 will get the additional power savings.
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
 
