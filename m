@@ -7,49 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5982AC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A65C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F8C22B48
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E14622B48
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578071523;
-	bh=oHfzo/HLcd7ztLldtrLgjwS2veYiZ28vrLG8OXZd81w=;
+	s=default; t=1578071545;
+	bh=CzIa2N9KGP+EU0AOPbMu7y5bL3h/GE34GGQxLaUQRxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1DIkmtN7lv13HvGP7ihACRLHXEtHDdIg4GholYPlHN1ULGt3ha01rxXuKdV7CiCt
-	 joe1NCpLIndGhfLrxcS0BtwulTljaxRVHg611l9RMHzTP4EJXR+VFjA1sZqUGQGbpg
-	 K3+fUftMmYpN5UCtHtouCkdJivEz5z5mNtHIO3mw=
+	b=gDQZaLGewn0RHv7uCch9MWZui4xda6JvHY1bKmFoHzBJDpGI5YJpwPujTLd66GgP4
+	 bBTA4zf14Z1IFk6aY2RWDl1VGqoBoNDjVFQKcVS6cpIZ11J7t6EmA4kb0RPe+4aAZI
+	 qanzSfzOHiFRGqVKQk3j/vskC4N/P/xjgCo2HD94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgACRL5 (ORCPT
+        id S1728225AbgACRMT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:11:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45736 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 12:12:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbgACRL5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:11:57 -0500
+        id S1728216AbgACRMS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:12:18 -0500
 Received: from localhost.localdomain (unknown [194.230.155.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAEB2222C4;
-        Fri,  3 Jan 2020 17:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCD77215A4;
+        Fri,  3 Jan 2020 17:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578071515;
-        bh=oHfzo/HLcd7ztLldtrLgjwS2veYiZ28vrLG8OXZd81w=;
+        s=default; t=1578071537;
+        bh=CzIa2N9KGP+EU0AOPbMu7y5bL3h/GE34GGQxLaUQRxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJ9Op1zA+9pJQNZkUkInlCEshQY/V6WoQ9+9MEs8jml3Fhh/K5nomk4G76m9gSmho
-         n17ofdnP5LB91FHwJHw6UL7QzMjKxBGhj1huMFGLue+ICj54cjlSgH1t4jRJfua8Oa
-         IySeD80y/GRYiH+25XQAFySwjL9L18/KYOhX4aJs=
+        b=XzfXWud9ou17ogSUbC65mr/HJKbT5kLK8tCal03+UL6i3M+4DpZL63h/M7cGaFNE8
+         GMTzc2LARA27yR6uu8A1cpLrs2ct4R0zt7e2+bRo+08fySLCjwOnVlExkQWY6tWKdU
+         TtGKvU0O5Y9evv3B9//vsqdJC31jiNwGS9FkfBP0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 02/19] ARM: dts: samsung: Rename Samsung and Exynos to lowercase
-Date:   Fri,  3 Jan 2020 18:11:14 +0100
-Message-Id: <20200103171131.9900-3-krzk@kernel.org>
+Subject: [PATCH 06/19] media: samsung: Rename Samsung and Exynos to lowercase
+Date:   Fri,  3 Jan 2020 18:11:18 +0100
+Message-Id: <20200103171131.9900-7-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103171131.9900-1-krzk@kernel.org>
 References: <20200103171131.9900-1-krzk@kernel.org>
@@ -75,288 +79,128 @@ https://www.samsung.com/semiconductor/privacy-global/).
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts      | 2 +-
- arch/arm/boot/dts/exynos5250-smdk5250.dts     | 4 ++--
- arch/arm/boot/dts/exynos5250.dtsi             | 8 ++++----
- arch/arm/boot/dts/exynos5260-xyref5260.dts    | 4 ++--
- arch/arm/boot/dts/exynos5260.dtsi             | 2 +-
- arch/arm/boot/dts/exynos5410-smdk5410.dts     | 4 ++--
- arch/arm/boot/dts/exynos5410.dtsi             | 6 +++---
- arch/arm/boot/dts/exynos5420-arndale-octa.dts | 2 +-
- arch/arm/boot/dts/exynos5420-cpus.dtsi        | 2 +-
- arch/arm/boot/dts/exynos5420-smdk5420.dts     | 4 ++--
- arch/arm/boot/dts/exynos5420.dtsi             | 6 +++---
- arch/arm/boot/dts/exynos5422-cpus.dtsi        | 2 +-
- arch/arm/boot/dts/exynos5800.dtsi             | 6 +++---
- arch/arm/boot/dts/s3c2416-smdk2416.dts        | 2 +-
- arch/arm/boot/dts/s3c6410-smdk6410.dts        | 4 ++--
- 15 files changed, 29 insertions(+), 29 deletions(-)
+ .../devicetree/bindings/media/exynos-jpeg-codec.txt         | 2 +-
+ Documentation/devicetree/bindings/media/exynos5-gsc.txt     | 2 +-
+ Documentation/devicetree/bindings/media/samsung-fimc.txt    | 2 +-
+ .../devicetree/bindings/media/samsung-mipi-csis.txt         | 2 +-
+ Documentation/media/v4l-drivers/fimc.rst                    | 6 +++---
+ Documentation/media/v4l-drivers/tuners.rst                  | 2 +-
+ drivers/media/platform/exynos4-is/media-dev.c               | 2 +-
+ drivers/media/platform/s3c-camif/camif-core.c               | 2 +-
+ 8 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 3eddf5dbcf7b..f8ebc620f42d 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -15,7 +15,7 @@
- #include "exynos5250.dtsi"
+diff --git a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+index 38941db23dd2..ce9a22689e53 100644
+--- a/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
++++ b/Documentation/devicetree/bindings/media/exynos-jpeg-codec.txt
+@@ -1,4 +1,4 @@
+-Samsung S5P/EXYNOS SoC series JPEG codec
++Samsung S5P/Exynos SoC series JPEG codec
  
- / {
--	model = "Insignal Arndale evaluation board based on EXYNOS5250";
-+	model = "Insignal Arndale evaluation board based on Exynos5250";
- 	compatible = "insignal,arndale", "samsung,exynos5250", "samsung,exynos5";
+ Required properties:
  
- 	memory@40000000 {
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 6dc96948a9cc..5c42df024adf 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+diff --git a/Documentation/devicetree/bindings/media/exynos5-gsc.txt b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
+index bc963a6d305a..1872688fa408 100644
+--- a/Documentation/devicetree/bindings/media/exynos5-gsc.txt
++++ b/Documentation/devicetree/bindings/media/exynos5-gsc.txt
 @@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG SMDK5250 board device tree source
-+ * Samsung SMDK5250 board device tree source
-  *
-  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-@@ -12,7 +12,7 @@
- #include "exynos5250.dtsi"
+ * Samsung Exynos5 G-Scaler device
  
- / {
--	model = "SAMSUNG SMDK5250 board based on EXYNOS5250";
-+	model = "Samsung SMDK5250 board based on Exynos5250";
- 	compatible = "samsung,smdk5250", "samsung,exynos5250", "samsung,exynos5";
+-G-Scaler is used for scaling and color space conversion on EXYNOS5 SoCs.
++G-Scaler is used for scaling and color space conversion on Exynos5 SoCs.
  
- 	aliases {
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index ec983283f573..b6135af7ef39 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -1,16 +1,16 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG EXYNOS5250 SoC device tree source
-+ * Samsung Exynos5250 SoC device tree source
-  *
-  * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  *
-- * SAMSUNG EXYNOS5250 SoC device nodes are listed in this file.
-- * EXYNOS5250 based board files can include this file and provide
-+ * Samsung Exynos5250 SoC device nodes are listed in this file.
-+ * Exynos5250 based board files can include this file and provide
-  * values for board specfic bindings.
-  *
-  * Note: This file does not include device nodes for all the controllers in
-- * EXYNOS5250 SoC. As device tree coverage for EXYNOS5250 increases,
-+ * Exynos5250 SoC. As device tree coverage for Exynos5250 increases,
-  * additional nodes can be added to this file.
-  */
+ Required properties:
+ - compatible: should be one of
+diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+index 48c599dacbdf..f91b9dc80eb3 100644
+--- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
++++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+@@ -1,4 +1,4 @@
+-Samsung S5P/EXYNOS SoC Camera Subsystem (FIMC)
++Samsung S5P/Exynos SoC Camera Subsystem (FIMC)
+ ----------------------------------------------
  
-diff --git a/arch/arm/boot/dts/exynos5260-xyref5260.dts b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-index 36a2b77eeb9d..0dc2ec16aa0a 100644
---- a/arch/arm/boot/dts/exynos5260-xyref5260.dts
-+++ b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG XYREF5260 board device tree source
-+ * Samsung XYREF5260 board device tree source
-  *
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-@@ -10,7 +10,7 @@
- #include "exynos5260.dtsi"
+ The S5P/Exynos SoC Camera subsystem comprises of multiple sub-devices
+diff --git a/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt b/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt
+index be45f0b1a449..a4149c9434ea 100644
+--- a/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt
++++ b/Documentation/devicetree/bindings/media/samsung-mipi-csis.txt
+@@ -1,4 +1,4 @@
+-Samsung S5P/EXYNOS SoC series MIPI CSI-2 receiver (MIPI CSIS)
++Samsung S5P/Exynos SoC series MIPI CSI-2 receiver (MIPI CSIS)
+ -------------------------------------------------------------
  
- / {
--	model = "SAMSUNG XYREF5260 board based on EXYNOS5260";
-+	model = "Samsung XYREF5260 board based on Exynos5260";
- 	compatible = "samsung,xyref5260", "samsung,exynos5260", "samsung,exynos5";
+ Required properties:
+diff --git a/Documentation/media/v4l-drivers/fimc.rst b/Documentation/media/v4l-drivers/fimc.rst
+index 74585ba48b7f..2783aef65c01 100644
+--- a/Documentation/media/v4l-drivers/fimc.rst
++++ b/Documentation/media/v4l-drivers/fimc.rst
+@@ -2,7 +2,7 @@
  
- 	memory@20000000 {
-diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
-index b0811dbbb362..154df70128f3 100644
---- a/arch/arm/boot/dts/exynos5260.dtsi
-+++ b/arch/arm/boot/dts/exynos5260.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG EXYNOS5260 SoC device tree source
-+ * Samsung Exynos5260 SoC device tree source
-  *
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-index dffa5e3ed90c..5282b5deca86 100644
---- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
-+++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG SMDK5410 board device tree source
-+ * Samsung SMDK5410 board device tree source
-  *
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-@@ -10,7 +10,7 @@
- #include "exynos5410.dtsi"
- #include <dt-bindings/interrupt-controller/irq.h>
- / {
--	model = "Samsung SMDK5410 board based on EXYNOS5410";
-+	model = "Samsung SMDK5410 board based on Exynos5410";
- 	compatible = "samsung,smdk5410", "samsung,exynos5410", "samsung,exynos5";
+ .. include:: <isonum.txt>
  
- 	memory@40000000 {
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-index a4b03d4c3de5..2eab80bf5f3a 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -1,12 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG EXYNOS5410 SoC device tree source
-+ * Samsung Exynos5410 SoC device tree source
-  *
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  *
-- * SAMSUNG EXYNOS5410 SoC device nodes are listed in this file.
-- * EXYNOS5410 based board files can include this file and provide
-+ * Samsung Exynos5410 SoC device nodes are listed in this file.
-+ * Exynos5410 based board files can include this file and provide
-  * values for board specfic bindings.
-  */
+-The Samsung S5P/EXYNOS4 FIMC driver
++The Samsung S5P/Exynos4 FIMC driver
+ ===================================
  
-diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-index 592d7b45ecc8..ee28d30f5476 100644
---- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-+++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-@@ -15,7 +15,7 @@
- #include <dt-bindings/clock/samsung,s2mps11.h>
+ Copyright |copy| 2012 - 2013 Samsung Electronics Co., Ltd.
+@@ -19,7 +19,7 @@ drivers/media/platform/exynos4-is directory.
+ Supported SoCs
+ --------------
  
- / {
--	model = "Insignal Arndale Octa evaluation board based on EXYNOS5420";
-+	model = "Insignal Arndale Octa evaluation board based on Exynos5420";
- 	compatible = "insignal,arndale-octa", "samsung,exynos5420", "samsung,exynos5";
+-S5PC100 (mem-to-mem only), S5PV210, EXYNOS4210
++S5PC100 (mem-to-mem only), S5PV210, Exynos4210
  
- 	memory@20000000 {
-diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-index 0ee6e92a3c29..58d1c54cf925 100644
---- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG EXYNOS5420 SoC cpu device tree source
-+ * Samsung Exynos5420 SoC cpu device tree source
-  *
-  * Copyright (c) 2015 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-index 8240e5186972..e3f2afe8359a 100644
---- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-+++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG SMDK5420 board device tree source
-+ * Samsung SMDK5420 board device tree source
-  *
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-@@ -12,7 +12,7 @@
- #include <dt-bindings/gpio/gpio.h>
+ Supported features
+ ------------------
+@@ -65,7 +65,7 @@ Media device interface
+ ~~~~~~~~~~~~~~~~~~~~~~
  
- / {
--	model = "Samsung SMDK5420 board based on EXYNOS5420";
-+	model = "Samsung SMDK5420 board based on Exynos5420";
- 	compatible = "samsung,smdk5420", "samsung,exynos5420", "samsung,exynos5";
+ The driver supports Media Controller API as defined at :ref:`media_controller`.
+-The media device driver name is "SAMSUNG S5P FIMC".
++The media device driver name is "Samsung S5P FIMC".
  
- 	memory@20000000 {
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index f66a2d1b3428..b672080e7469 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -1,12 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG EXYNOS5420 SoC device tree source
-+ * Samsung Exynos5420 SoC device tree source
-  *
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  *
-- * SAMSUNG EXYNOS5420 SoC device nodes are listed in this file.
-- * EXYNOS5420 based board files can include this file and provide
-+ * Samsung Exynos5420 SoC device nodes are listed in this file.
-+ * Exynos5420 based board files can include this file and provide
-  * values for board specfic bindings.
-  */
+ The purpose of this interface is to allow changing assignment of FIMC instances
+ to the SoC peripheral camera input at runtime and optionally to control internal
+diff --git a/Documentation/media/v4l-drivers/tuners.rst b/Documentation/media/v4l-drivers/tuners.rst
+index 7509be888909..d7924141c544 100644
+--- a/Documentation/media/v4l-drivers/tuners.rst
++++ b/Documentation/media/v4l-drivers/tuners.rst
+@@ -18,7 +18,7 @@ These differ mainly by the bandswitch byte.
+ Tuner Manufacturers
+ -------------------
  
-diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-index e4a5857c135f..1b8605cf2407 100644
---- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG EXYNOS5422 SoC cpu device tree source
-+ * Samsung Exynos5422 SoC cpu device tree source
-  *
-  * Copyright (c) 2015 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-diff --git a/arch/arm/boot/dts/exynos5800.dtsi b/arch/arm/boot/dts/exynos5800.dtsi
-index b4fd53496450..dfb99ab53c3e 100644
---- a/arch/arm/boot/dts/exynos5800.dtsi
-+++ b/arch/arm/boot/dts/exynos5800.dtsi
-@@ -1,12 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG EXYNOS5800 SoC device tree source
-+ * Samsung Exynos5800 SoC device tree source
-  *
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-  *		http://www.samsung.com
-  *
-- * SAMSUNG EXYNOS5800 SoC device nodes are listed in this file.
-- * EXYNOS5800 based board files can include this file and provide
-+ * Samsung Exynos5800 SoC device nodes are listed in this file.
-+ * Exynos5800 based board files can include this file and provide
-  * values for board specfic bindings.
-  */
+-- SAMSUNG Tuner identification: (e.g. TCPM9091PD27)
++- Samsung Tuner identification: (e.g. TCPM9091PD27)
  
-diff --git a/arch/arm/boot/dts/s3c2416-smdk2416.dts b/arch/arm/boot/dts/s3c2416-smdk2416.dts
-index cb371bf72f64..811bfdef4e9b 100644
---- a/arch/arm/boot/dts/s3c2416-smdk2416.dts
-+++ b/arch/arm/boot/dts/s3c2416-smdk2416.dts
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * SAMSUNG SMDK2416 board device tree source
-+ * Samsung SMDK2416 board device tree source
-  *
-  * Copyright (c) 2013 Heiko Stuebner <heiko@sntech.de>
-  */
-diff --git a/arch/arm/boot/dts/s3c6410-smdk6410.dts b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-index 3bf6c450a26e..96267f5f02a8 100644
---- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-@@ -4,7 +4,7 @@
-  *
-  * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
-  *
-- * Device tree source file for SAMSUNG SMDK6410 board which is based on
-+ * Device tree source file for Samsung SMDK6410 board which is based on
-  * Samsung's S3C6410 SoC.
-  */
+ .. code-block:: none
  
-@@ -16,7 +16,7 @@
- #include "s3c6410.dtsi"
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 9aaf3b8060d5..96e336b19cc3 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1439,7 +1439,7 @@ static int fimc_md_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&fmd->pipelines);
+ 	fmd->pdev = pdev;
  
- / {
--	model = "SAMSUNG SMDK6410 board based on S3C6410";
-+	model = "Samsung SMDK6410 board based on S3C6410";
- 	compatible = "samsung,mini6410", "samsung,s3c6410";
+-	strscpy(fmd->media_dev.model, "SAMSUNG S5P FIMC",
++	strscpy(fmd->media_dev.model, "Samsung S5P FIMC",
+ 		sizeof(fmd->media_dev.model));
+ 	fmd->media_dev.ops = &fimc_md_ops;
+ 	fmd->media_dev.dev = dev;
+diff --git a/drivers/media/platform/s3c-camif/camif-core.c b/drivers/media/platform/s3c-camif/camif-core.c
+index c6fbcd7036d6..92f43c0cbc0c 100644
+--- a/drivers/media/platform/s3c-camif/camif-core.c
++++ b/drivers/media/platform/s3c-camif/camif-core.c
+@@ -304,7 +304,7 @@ static int camif_media_dev_init(struct camif_dev *camif)
+ 	int ret;
  
- 	memory@50000000 {
+ 	memset(md, 0, sizeof(*md));
+-	snprintf(md->model, sizeof(md->model), "SAMSUNG S3C%s CAMIF",
++	snprintf(md->model, sizeof(md->model), "Samsung S3C%s CAMIF",
+ 		 ip_rev == S3C6410_CAMIF_IP_REV ? "6410" : "244X");
+ 	strscpy(md->bus_info, "platform", sizeof(md->bus_info));
+ 	md->hw_revision = ip_rev;
 -- 
 2.17.1
 
