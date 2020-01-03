@@ -2,150 +2,122 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7945C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D57C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8119821734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C3C2253D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:19:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="GKrQtN0u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3aWBB0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgACRYt (ORCPT
+        id S1728255AbgACSTX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:24:49 -0500
-Received: from mout.gmx.net ([212.227.17.20]:50553 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbgACRYt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:24:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1578072273;
-        bh=qghX+QZQz0amY4J6exmjXYni20BbeHit7yiZbXpzCH4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=GKrQtN0uzXgE0oKJ3P2lSxrNhQ20i/QswZ0TwsdKaa5wZ+kFUVjn9nppsEc12SIut
-         PHmepwD+ZpsPTjhI/WhADT4FYKbn3s+VJgTR7pMK4+5nU+mqoKu2pfiZwvbpylExlI
-         z9n81bCyzYnSFupzfQvg8+sIF4Qdm4ijbf74U+tM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([37.4.249.154]) by mail.gmx.com
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MYeR1-1jHHkI1YSh-00Vjmh; Fri, 03 Jan 2020 18:24:33 +0100
-From:   Stefan Wahren <wahrenst@gmx.net>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Fri, 3 Jan 2020 13:19:23 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39552 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgACSTX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:19:23 -0500
+Received: by mail-pf1-f195.google.com with SMTP id q10so23861636pfs.6;
+        Fri, 03 Jan 2020 10:19:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=/bkVpKLcARihH63b9lhuj6u+KHSXhqLrTec8GSi2HiQ=;
+        b=U3aWBB0eAPUe5/1UmDixtix7tccIYAwaS17+7kxEE/IPIq1dTHL4znhs+SfRfybZ+3
+         GV3s0wALIainuvKZqN6MlT0jug76jR1lo/R4e++MEmgSTJ7qhU3VcsDC3rsB7myoGjjb
+         kWiBDQxKsYtAQGHqscCgLdcTdbGv1GSrAELRwmzyj47s9WdqcL6qOZrEcweQL/k9SCiV
+         7Lrj/y/qIqJa4XIUx+7JpEnUOXK4Hx+Pwc0qbsktlPvrETHhpFmyROOE+6juFjchrJ98
+         07kWC6B/RR0Eu4BCizRJ+ET24shStGA4Jj2yMSJ0y5nL1jUyeaI5e5FJ21AVm0+wI1h6
+         ZRLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/bkVpKLcARihH63b9lhuj6u+KHSXhqLrTec8GSi2HiQ=;
+        b=KobQPiM0EIWfpVQaaunf99tfjTiGHYXASieCxgqEXX00+qWBZKHEsaS64/ADpTtiSs
+         yi8ok/jcirkwsEJF8u8X2Uj+XrvH55Ly6N3sB7iLja8EoOqmcszpmfVp0QCmrtCUc2Bs
+         LXzTbiUjlDIie1NQtsPK0wKtmm+NtLEki9vsya5Kwv3MGeS3PSo4vWML48sCgsmbVcTi
+         RCgkTlMVB+zZd34RHw3Ca4Jg/oeKrSfkK/yBj5uQ2h1MfKcUDvq9KYmbTHvnrwhmh/R6
+         FvnuoX8XanfUw1+eUdzddTONJ1UWdFWiQytv3cxGXHBr38xg8zpm+43fsh5NNWUg5Xci
+         6oWw==
+X-Gm-Message-State: APjAAAUL285XhJTUuUxiUldv+70jQU4NdBzxAMbbS+NW/xgTVVJJSbtB
+        cXuhRF6B/4CQeK0EvpdB8SP/1/HQ2sE=
+X-Google-Smtp-Source: APXvYqwAf9b3wmXwzbSi1jvr+9Q5jQiDl+xXarqGzrWNzpwlxn5PP+a7oVWcFRe1BR53uq/8uLsjJw==
+X-Received: by 2002:aa7:9829:: with SMTP id q9mr88211919pfl.231.1578075562347;
+        Fri, 03 Jan 2020 10:19:22 -0800 (PST)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 10:19:21 -0800 (PST)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V2 1/4] dt-bindings: Add Broadcom AVS RO thermal
-Date:   Fri,  3 Jan 2020 18:23:53 +0100
-Message-Id: <1578072236-31820-2-git-send-email-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578072236-31820-1-git-send-email-wahrenst@gmx.net>
-References: <1578072236-31820-1-git-send-email-wahrenst@gmx.net>
-X-Provags-ID: V03:K1:DS97MUMU4JfP2Uj8qPbJqu6pgKli1UXiEGkkZQ6zYhvTxMTqFHl
- 7G3s/jafuIr6u+H/o34IJS1rpDSikd4TjamNe2SMEM7IRZLsEOk3zK70RqhdmAqQxUdbUxA
- vYrcHp2KDuRGwLW8uraQpi/mGPTOqcL6BLkCzt/eq2UoXQWTDNOInFeCT8hAGsrFKDaM16o
- 0aP5OtLHQ2offJIBlzMKw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mJjmYR9lwEM=:IphzPXGuGbTDRm1zeeTUJj
- eatyE7V06qoKafaLN3e1ml9GfzqeQicUGpa1fXlzWYy4YD+c+c2cvbmlRn5aPSTSp9teWUtaQ
- 8urjoOYL4PMfxCQopopTAZyNIgWEm2inIy+PRegrrRQRE4BB1mueCkUNhVmKIezmE0UEory22
- Z6UJljlvSvNzQpZtlBwpTZxTCq+sFKF1kEbjWjxIJepxRHGmUnRMqUq32YVOGi9IhM0bsmoj7
- XymwR+vhk67VOujJ16IzU9u9hR4UPirmRcdw1eJkwi1a10m3vv7ufM13C2lUkKt8guh9ox4qd
- Mgi7+d45NjksvW9yuEQ3XilMD8cE+Bh7exor8nUUyugESzJEXn3wXaofh42LWDvQcyZbI94rX
- tpy4uWpN/ZsfH7/LRSYLw7IjXYoz9Lvj9zTSfBzwf1uQTstvpXbENOfzhTivyZCjGSJKVvayT
- OjEdLnAl2jVgqiRtaumaNPHKAnugdEYVGB7xBnEs8hyKxmQCcQDnabcAq50nqDUDUlWntScKV
- qtU1izIf4i8bcu2nH4Hioss3Q/XKmhBOavnVr54El+dGLSHukjueCly+gpXeL63vQGSMD0T8g
- vHiQElQdwQe/Kfz3MTMyYspYX+wtj6pTYKzzzxfA1diWkb01qVZVFL47vrjRpl2i2+mqmL5CA
- O5YjjQFoqJ5jh6iKjJzZFFcXiKq6Nkh0Lvuj9xR4dkRs8bPIRxYErL98BOxZ8gdXkelpJ8gtl
- Jqil4YB/pe6WtVntq7Nq7n4JuMhBbJsDI0T52q2PNzsmAPfp6Eh+C99EJ1xK9Hy2ByjratgEW
- j0MIKIrpj6zv6jRSsrtDE3L/iyNNJM7fzktSGUyZavkkeutx7kd/n4Iuk/VEIax4+9uEs0JXs
- MPcgIznD47m1mLQTSwdlPUEDiGB0pZhj7SD8Xk+7mMRBlOtE6Fnu5sILbzNgPGPiJd59DND/N
- Jc6/VSsZZTe0FMizoG1Yf1QJ6N7C/LUOEt6a0Lo6ppCwirhGe6f9WOdok/xUlahp5zhNCSXrA
- Fe4EB69FuFG3myHPXO0qi3Cn1ZKcrXx6Usu1kt5eySnBrQguKM5pk0VbXR/w99uXpEk/Usqy2
- 30/b4RvZuI0YZe4e3NfjakjzNwAqBjEKkaOLeI0qjHGaucjSyD8pC1Kx6dDHSVmf438sLihUn
- t0PhzYxyVP5T9oxvYZBp/Tq285gWcXkg2CFwr9XYo/miQaeC9iTEbmcq2YGUEEGn+2kTeWSzx
- uPn/eBL0DHRVVQ64kDcaK6ZjI6Xk3MBMyCzCUJg==
-Content-Transfer-Encoding: quoted-printable
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE), Srinath Mannam <srinath.mannam@broadcom.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE)
+Subject: [PATCH v4 00/13] phy: usb: Updates to Broadcom STB USB PHY driver
+Date:   Fri,  3 Jan 2020 13:17:58 -0500
+Message-Id: <20200103181811.22939-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Since the BCM2711 doesn't have a AVS TMON block, the thermal information
-must be retrieved from the AVS ring oscillator block. This block is part
-of the AVS monitor which contains a bunch of raw sensors.
+This patchset contains various updates to the Broadcom STB USB Driver.
+The updates include:
+- Add support for 7216 and 7211 Broadcom SoCs which use the new
+  Synopsys USB Controller.
+- Add support for USB Wake
+- Add various bug fixes.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- .../bindings/thermal/brcm,avs-ro-thermal.yaml      | 45 +++++++++++++++++=
-+++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-ro-=
-thermal.yaml
 
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal=
-.yaml b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-new file mode 100644
-index 0000000..7dce05e
-=2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/brcm,avs-ro-thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom AVS ring oscillator thermal
-+
-+maintainers:
-+  - Stefan Wahren <wahrenst@gmx.net>
-+
-+description: |+
-+  The thermal node should be the child of a syscon node with the
-+  required property:
-+
-+  - compatible: Should be one of the following:
-+                "brcm,bcm2711-avs-monitor", "syscon", "simple-mfd"
-+
-+  Refer to the the bindings described in
-+  Documentation/devicetree/bindings/mfd/syscon.txt
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm2711-thermal
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+        avs-monitor@7d5d2000 {
-+                compatible =3D "brcm,bcm2711-avs-monitor",
-+                             "syscon", "simple-mfd";
-+                reg =3D <0x7d5d2000 0xf00>;
-+
-+                thermal: thermal {
-+                        compatible =3D "brcm,bcm2711-thermal";
-+                        #thermal-sensor-cells =3D <0>;
-+                };
-+        };
-+...
-=2D-
-2.7.4
+v4 - Fix mispelling, change Synopsis to Synopsys. Also add
+     "Reviewed-by: Rob Herring" to bindings patch. There are no
+     functional code changes in v4.
+
+v3 - Rebase to v5.5-rc1
+
+v2 - Changes based on review feedback
+   - Add vendor prefix to DT property "syscon-piarbctl"
+   - Use standard "wakeup" instead of "wake" for DT "interrupt-names"
+
+Al Cooper (13):
+  phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
+  phy: usb: Get all drivers that use USB clks using correct
+    enable/disable
+  phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
+  phy: usb: Add "wake on" functionality
+  phy: usb: Restructure in preparation for adding 7216 USB support
+  dt-bindings: Add Broadcom STB USB PHY binding document
+  phy: usb: Add support for new Synopsys USB controller on the 7216
+  phy: usb: Add support for new Synopsys USB controller on the 7211b0
+  phy: usb: fix driver to defer on clk_get defer
+  phy: usb: PHY's MDIO registers not accessible without device installed
+  phy: usb: bdc: Fix occasional failure with BDC on 7211
+  phy: usb: USB driver is crashing during S3 resume on 7216
+  phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
+
+ .../bindings/phy/brcm,brcmstb-usb-phy.txt     |  69 ++-
+ drivers/phy/broadcom/Makefile                 |   2 +-
+ .../phy/broadcom/phy-brcm-usb-init-synopsys.c | 414 ++++++++++++++++++
+ drivers/phy/broadcom/phy-brcm-usb-init.c      | 226 +++++-----
+ drivers/phy/broadcom/phy-brcm-usb-init.h      | 148 ++++++-
+ drivers/phy/broadcom/phy-brcm-usb.c           | 269 ++++++++++--
+ 6 files changed, 943 insertions(+), 185 deletions(-)
+ create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c
+
+-- 
+2.17.1
 
