@@ -2,125 +2,306 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D2DC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 14:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD1C32767
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 14:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C5812085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 14:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Cei77W7y"
+	by mail.kernel.org (Postfix) with ESMTP id EBDCA222C3
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 14:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbgACOJq (ORCPT
+        id S1727848AbgACOm7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 09:09:46 -0500
-Received: from mail-eopbgr20117.outbound.protection.outlook.com ([40.107.2.117]:49125
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727523AbgACOJq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 09:09:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hDVNu0jAvGZtgqvtBMPHyssmUzt8teKYJVp9EogUGixCQrnudS/t+0+pyI7PfngXq5tUtlX9TCKxlbbJbIkrh1EnELJpxZ5YEEL3jzrjcbPoR3Lo1zqCMUZeYJIqk/MpdroiaBtUYWpJ+j6JEOboanttgFNYdkZScNmeeVS2mOYP2N0L6W6swTDfKDJ4oezy3kSKWts/+phMoTXxzSGLkc2Ob+DKtSiemIO30uW/iK/p6yZ4WbFU8LYFnWqaX4BwFZ6R05QkXIHx3BibOepG8eiEdVbcz7QoWhWRrt8TxeSIKYRgtL2m+SknL8xLPdS7V70LMr9DbQpEd2fxQby+jQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cShSEfCVVMryirvGQoXMoi9ICBV4ncbKW0T5GKBLZus=;
- b=dElmaKIiQvEGBUK+VDZRneQK+ccX/L9zZh5NvDWpfmSktdhMOoXLCANWt5LLi8MTls601n5ogvG3qA1LU/18sAR4KfTxjj7CmdUMU6aE9HmQeczsKmKS+gJkkW2vk7/Bii75tOdP94oIKYNaEqEXts4c1CFZVu0nmJC29fEZ5hZmgf7MECIYz5SvXjOUY03+F/lmVEpdTWl/nNexifltHY2nxGNIBk2hICNQKwS9EaVv56FJpeDGZuN9GeHPlA/gQzr0387I8tdEuXqI8No3sMKuklXWQdxM8LL+kiMS8VPD0CQlfAI4PNLz0aIIGlDZp5QMBV0MTSaw5SEiiOosJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cShSEfCVVMryirvGQoXMoi9ICBV4ncbKW0T5GKBLZus=;
- b=Cei77W7yw4M15hwooHm/dgMVLUoc9C7Ux2bJw3BzxkKj7B8frWzgVrjFOWkvWuumWd0mVVraj3L1VxDjyEQVD9uty0A+mo8/PktIs7g+/HCq89jEbbF6HE+O2ftOqIlIButsx+Ste4rNBox8P9nNik4x6Mi547/zqjMCN6SBzRg=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3339.eurprd02.prod.outlook.com (52.134.71.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2581.11; Fri, 3 Jan 2020 14:09:41 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::cd85:a8a5:da14:db13%7]) with mapi id 15.20.2581.013; Fri, 3 Jan 2020
- 14:09:41 +0000
-Received: from [192.168.13.3] (213.112.138.4) by HE1PR0301CA0009.eurprd03.prod.outlook.com (2603:10a6:3:76::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend Transport; Fri, 3 Jan 2020 14:09:40 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RESEND v6,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata
- E-00013
-Thread-Topic: [RESEND v6,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata
- E-00013
-Thread-Index: AQHVuw9Ujcuz4BtLx0O84aN221u8IqfZCL8A
-Date:   Fri, 3 Jan 2020 14:09:41 +0000
-Message-ID: <d91b3dfa-e0dc-9697-b69b-463ee7a92945@axentia.se>
-References: <20191225103624.48342-1-biwen.li@nxp.com>
- <20191225103624.48342-3-biwen.li@nxp.com>
-In-Reply-To: <20191225103624.48342-3-biwen.li@nxp.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.4]
-x-clientproxiedby: HE1PR0301CA0009.eurprd03.prod.outlook.com
- (2603:10a6:3:76::19) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67fbf095-bcfb-4623-c957-08d790569384
-x-ms-traffictypediagnostic: DB3PR0202MB3339:
-x-microsoft-antispam-prvs: <DB3PR0202MB33398336D02189BCBE551728BC230@DB3PR0202MB3339.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0271483E06
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(346002)(376002)(366004)(39830400003)(199004)(189003)(66946007)(81166006)(2906002)(8676002)(4001150100001)(31696002)(31686004)(86362001)(8936002)(36756003)(81156014)(4326008)(66446008)(64756008)(66556008)(66476007)(6486002)(16576012)(316002)(956004)(2616005)(16526019)(186003)(508600001)(53546011)(4744005)(71200400001)(5660300002)(52116002)(110136005)(54906003)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3339;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i53TtIKP7BRTfZoEB6SdimBIu/OYXiZRPG5SE04Aqy64RFZALU8ajFp5jpoQKEYiVkGqb/44Z8L91jTWhJPodarLrqrpR2UVfvcTi+9qMJVLcZ8ZjDeHTvnSfIox4KLvNkgRS4f428WnRAttYfk5k9U+pNtOtYxa9jmSc7AHpH2eFsbBQCPaGI8c7b/HCCYObL7CnuhnsO4nGZKf0lRxRmON12HrQg38uwHf/7/k8l8o8PoZUXN8GgFwQe0OfNrfwgkPuvB5q4pX51SMampluE+OEkJm+TngsF690gRmx1Nz7oFFBlTpJH+MYGOpyeHdwN4m8nNVzr8niUGSqBZfWSst6kwutNyDPX+izIPC2lNERWiDSM6v7Od1PRXTUscihhqfORW1tVjKNLXeEHVoMwwTqzG4EzC7yxYuHRNMrufh9DjF7enHQTBigwZOqu8B
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0182C24504F98C44BE63F353BF72716F@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 3 Jan 2020 09:42:59 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35430 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727527AbgACOm7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jan 2020 09:42:59 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5F487ACB1;
+        Fri,  3 Jan 2020 14:42:54 +0000 (UTC)
+Date:   Fri, 3 Jan 2020 15:42:53 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v9 09/12] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Message-ID: <20200103144253.y6fnw44oe7asyniz@pathway.suse.cz>
+References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+ <20191003123219.11237-10-sakari.ailus@linux.intel.com>
+ <20200102222041.GA29067@roeck-us.net>
+ <20200103112145.GM19828@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67fbf095-bcfb-4623-c957-08d790569384
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 14:09:41.4563
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4VvNziGgr53XnubFZ7BZRx+NvnF+jpN6bgDU7CmU0HEFBYrokHQRHNSoc4G1N2sP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3339
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103112145.GM19828@paasikivi.fi.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gMjAxOS0xMi0yNSAxMTozNiwgQml3ZW4gTGkgd3JvdGU6DQo+IFNwZWNpZnkgYSBjaGFubmVs
-IHplcm8gaW4gaWRsZSBzdGF0ZSB0bw0KPiBhdm9pZCBlbnRlcnJpbmcgdHJpLXN0YXRlZCBzdGF0
-ZSBmb3IgUENBOTU0Ny4NCj4gQWJvdXQgRS0wMDAxMzoNCj4gCS0gRGVzY3JpcHRpb246IEkyQzEg
-YW5kIEkyQzMgYnVzZXMNCj4gCSAgYXJlIG1pc3NpbmcgcHVsbC11cC4NCj4gCS0gSW1wYWN0OiBX
-aGVuIHRoZSBQQ0E5NTR4IGRldmljZSBpcyB0cmktc3RhdGVkLCB0aGUgSTJDIGJ1cw0KPiAJICB3
-aWxsIGZsb2F0LiBUaGlzIG1ha2VzIHRoZSBJMkMgYnVzIGFuZCBpdHMgYXNzb2NpYXRlZA0KPiAJ
-ICBkb3duc3RyZWFtIGRldmljZXMgaW5hY2Nlc3NpYmxlLg0KPiAJLSBIYXJkd2FyZSBmaXg6IFBv
-cHVsYXRlIHJlc2lzdG9ycyBSMTg5IGFuZCBSMTkwIGZvciBJMkMxDQo+IAkgIGFuZCByZXNpc3Rv
-cnMgUjIyOCBhbmQgUjIyOSBmb3IgSTJDMy4NCj4gCS0gU29mdHdhcmUgZml4OiBSZW1vdmUgdGhl
-IHRyaS1zdGF0ZSBvcHRpb24gZnJvbSB0aGUgUENBOTU0eA0KPiAJICBkcml2ZXIoUENBOTU0eCBh
-bHdheXMgb24gZW5hYmxlIHN0YXR1cywgc3BlY2lmeSBhDQo+IAkgIGNoYW5uZWwgemVybyBpbiBk
-dHMgdG8gZml4IHRoZSBlcnJhdGEgRS0wMDAxMykuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCaXdl
-biBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NCg0KRm9yIHRoaXMgcGF0Y2gsIGdldF9tYWludGFpbmVy
-LnBsIHN1Z2dlc3RzIGEgZmV3IG1vcmUgcmVjaXBpZW50cyB0aGF0DQp5b3UgbmVlZCB0byBzZWVr
-IHJldmlld3MvYWNrcyBmcm9tLg0KDQpDaGVlcnMsDQpQZXRlcg0K
+On Fri 2020-01-03 13:21:45, Sakari Ailus wrote:
+> Hi Guenter,
+> 
+> On Thu, Jan 02, 2020 at 02:20:41PM -0800, Guenter Roeck wrote:
+> > Hi,
+> > 
+> > On Thu, Oct 03, 2019 at 03:32:16PM +0300, Sakari Ailus wrote:
+> > > Instead of implementing our own means of discovering parent nodes, node
+> > > names or counting how many parents a node has, use the newly added
+> > > functions in the fwnode API to obtain that information.
+> > > 
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > > ---
+> > 
+> > This patch results in a lockdep splat when running one of my qemu
+> > emulations. See below for log and bisect results. A complete log
+> > is available at
+> > https://kerneltests.org/builders/qemu-arm-master/builds/1408/steps/qemubuildcommand/logs/stdio
+> > 
+> > Guenter
+> 
+> Thank you for reporting this.
+> 
+> I looked into the issue, and indeed I can conform the patch introduces this
+> as it takes the devtree_lock for printing the name of the fwnode. There is
+
+I guess that you meant "is not".
+
+
+> however chance of a deadlock in practice as the code in mm/slub.c does not
+> deal with fwnodes (in which case acquiring devtree_lock could be possible),
+> maybe for other reasons as well. The patch however introduces an unpleasant
+> source of such warnings.
+
+I agree that it is a false positive. alloc/free is called in OF code
+under devtree_lock. But OF code is not called from alloc/free (slub.c)
+and it should not happen.
+
+lockdep sees the cycle only because the chains are connected via
+printk() and logbuf_lock.
+
+
+> One approach to address this could be not allocating memory while holding
+> devtree_lock spinlock. That seems entirely feasible. But could also
+> releasing memory cause something to be printed, effectively causing the
+> same problem?
+
+I expect that &n->list_lock)->rlock will be needed in kfree() as well.
+
+Anyway, IMHO, allocation outside devtree_lock spinlock would create hairy
+and tricky code.
+
+The number of needed "cache_entries" need to be counted under
+devtree_lock before the allocation. It means that we would need to
+take and release the lock twice. It might create a bunch of possible
+races. For example, when new entries are added in the mean time. Or
+when this function is called twice in parallel.
+
+
+> Perhaps a safest way to fix this could be returning to use dn->full_name
+> for printing node names, in which case the devtree_lock would no longer be
+> taken for printing names. The effect would be though that there would be
+> again one more user for the full_name field, information that can be
+> reconstructed from the node's parents.
+
+Would this avoid using devtree_lock in all %pO? modifiers?
+
+Removing the lock usage in vsprintf() would make sense
+from two reasons:
+
+  + It would allow to use %pOF from inside drivers/of/
+    code called under devtree_lock. The current implementation
+    would cause a deadlock because of the recursion.
+
+  + There is a huge effort to make printk() lockless. Any lock
+    in vsprintf() is just a call for troubles. We probably should
+    not have allowed this in the first place.
+
+
+Finally, this problem will be gone when printk uses a lockless
+ringbuffer. I hope that it will happen either for-5.6 or 5.7.
+The most tricky part, the ringbuffer itself is in good shape now, see
+https://lkml.kernel.org/r/20191128015235.12940-1-john.ogness@linutronix.de
+
+Temporary solution would be to disable lockdep in vsprintf() code.
+But I would really prefer to avoid the lock in vsprintf() at all.
+
+Best Regards,
+Petr
+
+> > ---
+> > ======================================================
+> > WARNING: possible circular locking dependency detected
+> > 5.5.0-rc4-00066-g738d2902773e #1 Not tainted
+> > ------------------------------------------------------
+> > swapper/0/1 is trying to acquire lock:
+> > c1313b00 (logbuf_lock){-.-.}, at: vprintk_emit+0x68/0x2d4
+> > 
+> > but task is already holding lock:
+> > ef030b90 (&(&n->list_lock)->rlock){..-.}, at: free_debug_processing+0x38/0x418
+> > 
+> > which lock already depends on the new lock.
+> > 
+> > 
+> > the existing dependency chain (in reverse order) is:
+> > 
+> > -> #2 (&(&n->list_lock)->rlock){..-.}:
+> >        ___slab_alloc.constprop.23+0x12c/0x798
+> >        __slab_alloc.constprop.22+0x44/0x70
+> >        __kmalloc+0x384/0x41c
+> >        of_populate_phandle_cache+0xcc/0x148
+> >        of_core_init+0x8/0xbc
+> >        driver_init+0x1c/0x2c
+> >        kernel_init_freeable+0xac/0x1b4
+> >        kernel_init+0x8/0x118
+> >        ret_from_fork+0x14/0x20
+> >        0x0
+> > 
+> > -> #1 (devtree_lock){....}:
+> >        of_get_parent+0x18/0x34
+> >        of_fwnode_get_parent+0x34/0x40
+> >        fwnode_count_parents+0x28/0x58
+> >        fwnode_full_name_string+0x18/0xa0
+> >        device_node_string+0x490/0x4f0
+> >        pointer+0x440/0x4d8
+> >        vsnprintf+0x1bc/0x3d8
+> >        vscnprintf+0xc/0x24
+> >        vprintk_store+0x34/0x204
+> >        vprintk_emit+0x94/0x2d4
+> >        vprintk_default+0x20/0x28
+> >        printk+0x30/0x54
+> >        exynos4_pm_init_power_domain+0x220/0x258
+> >        do_one_initcall+0x8c/0x440
+> >        kernel_init_freeable+0x150/0x1b4
+> >        kernel_init+0x8/0x118
+> >        ret_from_fork+0x14/0x20
+> >        0x0
+> > 
+> > -> #0 (logbuf_lock){-.-.}:
+> >        lock_acquire+0xec/0x290
+> >        _raw_spin_lock+0x38/0x48
+> >        vprintk_emit+0x68/0x2d4
+> >        vprintk_default+0x20/0x28
+> >        printk+0x30/0x54
+> >        unwind_frame+0x6a8/0x6fc
+> >        walk_stackframe+0x2c/0x38
+> >        __save_stack_trace+0x84/0x8c
+> >        stack_trace_save+0x3c/0x5c
+> >        set_track+0x40/0x9c
+> >        free_debug_processing+0x1a4/0x418
+> >        __slab_free+0x2d4/0x510
+> >        kmem_cache_free+0x44c/0x49c
+> >        rcu_core+0x348/0x994
+> >        __do_softirq+0x164/0x668
+> >        irq_exit+0x16c/0x170
+> >        __handle_domain_irq+0x80/0xec
+> >        gic_handle_irq+0x58/0x9c
+> >        __irq_svc+0x70/0xb0
+> >        raid6_neon8_gen_syndrome_real+0x264/0x39c
+> >        raid6_neon8_gen_syndrome_real+0x264/0x39c
+> > 
+> > other info that might help us debug this:
+> > 
+> > Chain exists of:
+> >   logbuf_lock --> devtree_lock --> &(&n->list_lock)->rlock
+> > 
+> >  Possible unsafe locking scenario:
+> > 
+> >        CPU0                    CPU1
+> >        ----                    ----
+> >   lock(&(&n->list_lock)->rlock);
+> >                                lock(devtree_lock);
+> >                                lock(&(&n->list_lock)->rlock);
+> >   lock(logbuf_lock);
+> > 
+> >  *** DEADLOCK ***
+> > 
+> > 2 locks held by swapper/0/1:
+> >  #0: c131466c (rcu_callback){....}, at: rcu_core+0x304/0x994
+> >  #1: ef030b90 (&(&n->list_lock)->rlock){..-.}, at: free_debug_processing+0x38/0x418
+> > 
+> > stack backtrace:
+> > CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc4-00066-g738d2902773e #1
+> > Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
+> > [<c0113264>] (unwind_backtrace) from [<c010e448>] (show_stack+0x10/0x14)
+> > [<c010e448>] (show_stack) from [<c0c9b754>] (dump_stack+0xa4/0xd0)
+> > [<c0c9b754>] (dump_stack) from [<c018cbd8>] (check_noncircular+0x258/0x274)
+> > [<c018cbd8>] (check_noncircular) from [<c019043c>] (__lock_acquire+0x1870/0x2860)
+> > [<c019043c>] (__lock_acquire) from [<c018e088>] (lock_acquire+0xec/0x290)
+> > [<c018e088>] (lock_acquire) from [<c0cbf278>] (_raw_spin_lock+0x38/0x48)
+> > [<c0cbf278>] (_raw_spin_lock) from [<c01a1f84>] (vprintk_emit+0x68/0x2d4)
+> > [<c01a1f84>] (vprintk_emit) from [<c01a2210>] (vprintk_default+0x20/0x28)
+> > [<c01a2210>] (vprintk_default) from [<c01a2844>] (printk+0x30/0x54)
+> > [<c01a2844>] (printk) from [<c0113210>] (unwind_frame+0x6a8/0x6fc)
+> > [<c0113210>] (unwind_frame) from [<c010ddf0>] (walk_stackframe+0x2c/0x38)
+> > [<c010ddf0>] (walk_stackframe) from [<c010df54>] (__save_stack_trace+0x84/0x8c)
+> > [<c010df54>] (__save_stack_trace) from [<c01c2d40>] (stack_trace_save+0x3c/0x5c)
+> > [<c01c2d40>] (stack_trace_save) from [<c02ae258>] (set_track+0x40/0x9c)
+> > [<c02ae258>] (set_track) from [<c02b06a8>] (free_debug_processing+0x1a4/0x418)
+> > [<c02b06a8>] (free_debug_processing) from [<c02b0bf0>] (__slab_free+0x2d4/0x510)
+> > [<c02b0bf0>] (__slab_free) from [<c02b17ac>] (kmem_cache_free+0x44c/0x49c)
+> > [<c02b17ac>] (kmem_cache_free) from [<c01bd608>] (rcu_core+0x348/0x994)
+> > [<c01bd608>] (rcu_core) from [<c010230c>] (__do_softirq+0x164/0x668)
+> > [<c010230c>] (__do_softirq) from [<c0131310>] (irq_exit+0x16c/0x170)
+> > [<c0131310>] (irq_exit) from [<c01a3740>] (__handle_domain_irq+0x80/0xec)
+> > [<c01a3740>] (__handle_domain_irq) from [<c0630828>] (gic_handle_irq+0x58/0x9c)
+> > [<c0630828>] (gic_handle_irq) from [<c0101a70>] (__irq_svc+0x70/0xb0)
+> > Exception stack(0xef19bd30 to 0xef19bd78)
+> > bd20:                                     c0d43e50 c0d43e60 ef19bebc c0d43e70
+> > bd40: c0d43e20 c0d43e10 00000400 00000430 00000440 00000450 00000460 00000470
+> > bd60: c0d43e40 ef19bd80 c0d43e30 c0625c00 20000013 ffffffff
+> > [<c0101a70>] (__irq_svc) from [<c0625c00>] (raid6_neon8_gen_syndrome_real+0x264/0x39c)
+> > 
+> > ---
+> > Bisect:
+> > 
+> > # bad: [738d2902773e30939a982c8df7a7f94293659810] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+> > # good: [219d54332a09e8d8741c1e1982f5eae56099de85] Linux 5.4
+> > git bisect start 'HEAD' 'v5.4'
+> > # bad: [8c39f71ee2019e77ee14f88b1321b2348db51820] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+> > git bisect bad 8c39f71ee2019e77ee14f88b1321b2348db51820
+> > # good: [3b397c7ccafe0624018cb09fc96729f8f6165573] Merge tag 'regmap-v5.5' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap
+> > git bisect good 3b397c7ccafe0624018cb09fc96729f8f6165573
+> > # bad: [89d57dddd7d319ded00415790a0bb3c954b7e386] Merge tag 'media/v5.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
+> > git bisect bad 89d57dddd7d319ded00415790a0bb3c954b7e386
+> > # good: [9e7a03233e02afd3ee061e373355f34d7254f1e6] Merge tag 'pm-5.5-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+> > git bisect good 9e7a03233e02afd3ee061e373355f34d7254f1e6
+> > # good: [09578eacaaa44149738267083ccc050990409f86] Merge tag 'asoc-v5.5-2' of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-linus
+> > git bisect good 09578eacaaa44149738267083ccc050990409f86
+> > # good: [1c7ae4a51298d52a21f63b2214657982036c7498] media: ad5820: Add support for of-autoload
+> > git bisect good 1c7ae4a51298d52a21f63b2214657982036c7498
+> > # good: [99cf8a7074c4ce3ff3685cd389f54e7bd4bbf510] media: dt-bindings: Fix building error for dt_binding_check
+> > git bisect good 99cf8a7074c4ce3ff3685cd389f54e7bd4bbf510
+> > # good: [782b59711e1561ee0da06bc478ca5e8249aa8d09] Merge branch 'acpi-mm'
+> > git bisect good 782b59711e1561ee0da06bc478ca5e8249aa8d09
+> > # good: [0ca40f41d795fd91811e44506bb73d0b9ca33bdd] Merge branch 'patchwork' into v4l_for_linus
+> > git bisect good 0ca40f41d795fd91811e44506bb73d0b9ca33bdd
+> > # bad: [a00351687f8a05773c1c57be80a5bbca68fa9ae8] software node: remove DEV_PROP_MAX
+> > git bisect bad a00351687f8a05773c1c57be80a5bbca68fa9ae8
+> > # good: [9af7706492f985867d070861fe39fee0fe41326f] lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
+> > git bisect good 9af7706492f985867d070861fe39fee0fe41326f
+> > # bad: [83abc5a77f3b028b8c845c39ce4053119e1de35b] lib/vsprintf: OF nodes are first and foremost, struct device_nodes
+> > git bisect bad 83abc5a77f3b028b8c845c39ce4053119e1de35b
+> > # bad: [a92eb7621b9fb2c28a588ce333d226f56fab6a85] lib/vsprintf: Make use of fwnode API to obtain node names and separators
+> > git bisect bad a92eb7621b9fb2c28a588ce333d226f56fab6a85
+> > # good: [1586c5ae2f9310235b5e70abe712c73fc32eb98f] lib/vsprintf: Add a note on re-using %pf or %pF
+> > git bisect good 1586c5ae2f9310235b5e70abe712c73fc32eb98f
+> > # first bad commit: [a92eb7621b9fb2c28a588ce333d226f56fab6a85] lib/vsprintf: Make use of fwnode API to obtain node names and separators
+> 
+> -- 
+> Kind regards,
+> 
+> Sakari Ailus
