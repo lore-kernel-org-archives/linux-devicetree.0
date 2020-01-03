@@ -2,367 +2,466 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24B7C32767
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 12:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F249AC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9662A215A4
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 12:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDE820866
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:06:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yzySYAYM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0CdI635"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgACMxU (ORCPT
+        id S1727590AbgACNGs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 07:53:20 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40714 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbgACMxU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 07:53:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XHNeXrzfdTabvPC6P9Ns9gJ0I7CWIRDHSAxEUCf0ziI=; b=yzySYAYMg7BLL2qA4r5dfDIsD
-        Bm8t4sooBRs+lwHa8+qisSFKWq4ZUN2hGtYZBlT9pp/LXwJS+MS5jhSaphnHRDJDI2vuVo9TEebV9
-        SMkqU+YToBObG4HrxDXdy1kt1qIOZQWpdBCROiVGSkEC8RwJODheqxbMtAGx+JemkP3ex9HJkKzg9
-        QKJFxHrcM24jv/qHj0ebfdYoobEEJao1h54VnvGrBVa52z0K3y2wklHhpbBxuliy46yTT7dbw8cyl
-        iejN/n3fseJphaUbzvmw4GsolEQBQlk4fbQO+I87qv9XxVlJVYi+RbE4IakG7O/Bp5q1lZvYPmnke
-        VqZ0hnMkA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33452)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1inMS1-00028k-GW; Fri, 03 Jan 2020 12:53:13 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1inMRy-00038z-FA; Fri, 03 Jan 2020 12:53:10 +0000
-Date:   Fri, 3 Jan 2020 12:53:10 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Message-ID: <20200103125310.GE25745@shell.armlinux.org.uk>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191223120730.GO25745@shell.armlinux.org.uk>
- <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200103092718.GB25745@shell.armlinux.org.uk>
- <20200103094204.GA18808@shell.armlinux.org.uk>
- <DB8PR04MB698591AAC029ADE9F7FFF69BEC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
+        Fri, 3 Jan 2020 08:06:48 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45284 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727350AbgACNGs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 08:06:48 -0500
+Received: by mail-io1-f66.google.com with SMTP id i11so41229722ioi.12;
+        Fri, 03 Jan 2020 05:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V+qdmDgxgEPMsz57xTHA6VdoazcNKQL6d/5Wwiwwim4=;
+        b=C0CdI635CL9rN1RHUdHKmFkGEuFls43eY9uyBINNf1ndYezCLV11uyKd2PtMyjlwip
+         9pVQ+U9ScF6kLgcZIfiL+GNNyBjEHRJRp9ss4DjD1mw9uevlIT2Hh1tjMX9U5Q4vW16Y
+         Lddf0ZJtZK7IT03DgoaisIx2RqYRDqOsitKeHZGZmH9e9dn7ijN3f0gj3E1+XYMZeEJT
+         sNMQvcD2tR8nQcbnWjOQgSjVb0bhjjB5phYEMuqqxCD9tY1/UN2Af8fEt+Uo0GI2D1Rp
+         IMnOUEt1NRPKZ5dVG0yuz2R9AwaKj6btAelX71VCV7LROyKqAwVrAhYHQNLkqW+Zf7Yo
+         c+NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V+qdmDgxgEPMsz57xTHA6VdoazcNKQL6d/5Wwiwwim4=;
+        b=lHYvACrJP2Pa/rVgUd1Xb5kSdUoyV3sw5CpB8IB3A2GsNTjbJPlG849eZBeUIu2w3H
+         BQzOhIJbLN+YsK6MrBxbwIUHnj/ljSHjSat5ivmbTutCB5MAzATsu47EmqagotIomYju
+         FzfJDDrXE6NAa9tSclq3XwgiYKrS1EDVt/ePaWjriSYPbxiXZj+wVLHRkDlo+n7cflgo
+         jUNhlUs0x0Ce/vDJh8meccSIXFcxee22AdthVvBNymhgcLWlBFereeRMHSfZXbe/FCwy
+         R3A+8ytN774YJtDdQqSPu1wl/i3hRgzXDH+hnPgzE+M1PK05Y50GgLPGHpvv2IRDD6VE
+         NIzA==
+X-Gm-Message-State: APjAAAXFF0RpNmF7t39wMJnTis6Pi20JjBg/RanwVsv4CKWhsdcNRZjl
+        bcEBBeyceMSZK6uXAR9mHWJmhENZegP21a2x0Is=
+X-Google-Smtp-Source: APXvYqxh8JwK1srBzrNja5n2/Ej2uZPNuUAwpGIYyQmX0UBrkmYUfW5G4LAJTJluAFRIlksh5fFBiPofW4dQ1ux5Mgo=
+X-Received: by 2002:a02:c611:: with SMTP id i17mr70920406jan.28.1578056806939;
+ Fri, 03 Jan 2020 05:06:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB8PR04MB698591AAC029ADE9F7FFF69BEC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191210132132.41509-1-alcooperx@gmail.com> <20191210132132.41509-8-alcooperx@gmail.com>
+ <8576406d-2b90-684f-0c5e-44937c3b030a@ti.com>
+In-Reply-To: <8576406d-2b90-684f-0c5e-44937c3b030a@ti.com>
+From:   Alan Cooper <alcooperx@gmail.com>
+Date:   Fri, 3 Jan 2020 08:06:35 -0500
+Message-ID: <CAOGqxeVfaTxLGei2ZV+x_8ZbdQn7As96aqoCWXzh+E2-rhWV2w@mail.gmail.com>
+Subject: Re: [PATCH v3 07/13] phy: usb: Add support for new Synopsis USB
+ controller on the 7216
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 12:03:44PM +0000, Madalin Bucur (OSS) wrote:
-> > -----Original Message-----
-> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> > Sent: Friday, January 3, 2020 11:42 AM
-> > To: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>
-> > Cc: devicetree@vger.kernel.org; davem@davemloft.net;
-> > netdev@vger.kernel.org; andrew@lunn.ch; f.fainelli@gmail.com;
-> > hkallweit1@gmail.com; shawnguo@kernel.org
-> > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-> > 
-> > On Fri, Jan 03, 2020 at 09:27:18AM +0000, Russell King - ARM Linux admin
-> > wrote:
-> > > Merely specifying "xfi" does not tell you what you need to do to achieve
-> > > XFI compliance at the point defined in INF8077i.  Plus, XFI can also be
-> > > protocols _other_ than 10GBASE-R.
-> > >
-> > > Claiming that "XFI" properly defines the interface is utter rubbish. It
-> > > does not. XFI defines the electrical characteristics *only* and not
-> > > the underlying protocol. It is not limited to 10GBASE-R, but includes
-> > > other protocols as well.
-> > 
-> > Let me quote from INF-8077i, which is the XFP MSA, the document
-> > responsible for defining XFI:
-> > 
-> > 3.1 INTRODUCTION
-> >    XFI signaling is based on high speed low voltage logic, with nominal
-> > 100
-> >    Ohms differential impedance and AC coupled in the module. XFI was de-
-> >    veloped with the primary goal of low power and low Electro-Magnetic-In-
-> > 
-> >    terference (EMI). To satisfy this requirement the nominal differential
-> > signal   levels are 500 mV p-p with edge speed control to reduce EMI.
-> > 
-> > 3.2 XFI APPLICATIONS DEFINITION
-> >    The application reference model for XFI, which connects a high speed
-> >    ASIC/SERDES to the XFP module is shown in Figure 4. The XFI interface
-> >    is designed to support SONET OC-192, IEEE.Std-802.3ae, 10GFC and
-> >    G.709(OTU-2) applications. The SERDES is required to meet the applica-
-> >    tion requirements for jitter generation and transfer when interfaced
-> > with a
-> >    compliant XFP module through an XFP compliant channel. Modules or
-> > 
-> >    hosts designed only for 10 Gigabit Ethernet or 10GFC are not required
-> > to
-> >    meet more stringent Telecom jitter requirements. XFI supported data
-> >    rates are listed in Table 5. XFP compliant module are not required to
-> > sup-
-> >    port all the rates listed in Table 5 in simultaneously.
-> > 
-> >    Standard                            Description           Nominal Bit
-> > Rate     Units
-> >    OC-192/SDH-64                         SONET                     9.95
-> > Gigabaud
-> >    IEEE std-802.3ae             10 Gb/s Ethernet LAN PHY           10.31
-> > Gigabaud
-> >    INCITS/T11 Project 1413-D             10GFC                     10.52
-> > Gigabaud
-> >    ITU G.709(OTU-2)                 OC-192 Over FEC                10.70
-> > Gigabaud
-> >    Emerging                     10Gb/s Ethernet Over G.709         11.09
-> > Gigabaud
-> > 
-> > So here, we can clearly see that it's possible to run SONET, 10GBASE-R,
-> > 10G Fiberchannel, OC-192, and G.709 over XFI, so XFI does not describe
-> > _just_ ethernet. If we're going to be configuring a serdes to output
-> > XFI, we need to know a lot more than just "XFI".
-> > 
-> >    XFI Compliance points are defined as the following:
-> > 
-> >    •   A: SerDes transmitter output at ASIC/SerDes package pin on a DUT
-> >        board 3.6 and A.1
-> >    •   B: Host system SerDes output across the host board and connector
-> >        at the Host Compliance Test Card 3.7.1 and A.2
-> >    •   B': XFP transmitter input across the Module Compliance Test Board
-> >        3.8.1 and A.3.
-> >    •   C: Host system input at the Host Compliance Test Card input 3.7.2
-> >        and A.2
-> >    •   C': XFP module output across the Module Compliance Test Board
-> >        3.8.2 and A.3.
-> > 
-> >    •   D: ASIC/SerDes input package pin on the DUT board 3.6.2 and A.1.
-> > 
-> >    ASIC/SerDes compliance points are informative.
-> > 
-> > So the electrical points that count are B, B', C and C'. A and D
-> > are merely "informative".  Hence, compliance with XFI is required
-> > to take the entire platform into account, not just the output of
-> > the serdes/asic.  That means the performance of the PCB needs to
-> > be described in DT if you want to achieve compliance with XFI.
-> > phy_interface_t can't do that.
-> > 
-> > So, let me re-iterate: neither XFI nor SFI are suitable for
-> > phy_interface_t. XFI defines merely a group of possible protocols
-> > and an electrical specification. It doesn't tell you which of those
-> > protocols you should be using.
-> 
-> The disconnect is you are focused on phy_interface_t and I'm looking at
-> the device tree as there's where one starts (actually at the device tree
-> binding document). Your concern is with configuring the HW to use a certain
-> PCS setting, thus 10GBASE-R, while I'm concerned with the fact the device
-> tree must not configure software but describe HW. So let's do some archeology
-> on the matter, to try to understand where this is coming from.
-> 
-> A device tree entry that described the electrical interface between the chip
-> harboring an Ethernet MAC bloc and another chip that served the purpose of an
-> Ethernet PHY was needed. In the past this parameter was "phy-connection-type".
-> We find it detailed in kernel v3.0 in 
-> Documentation/devicetree/bindings/net/fsl-tsec-phy.txt:52
-> 
->   - phy-connection-type : a string naming the controller/PHY interface type,
->     i.e., "mii" (default), "rmii", "gmii", "rgmii", "rgmii-id", "sgmii",
->     "tbi", or "rtbi".  This property is only really needed if the connection
->     is of type "rgmii-id", as all other connection types are detected by
->     hardware.
-> 
-> Later, in kernel version v4.0 we find it described in 
-> Documentation/devicetree/bindings/net/ethernet.txt:16
-> 
-> - phy-mode: string, operation mode of the PHY interface; supported values are
->   "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
->   "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
->   standard property;
-> - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
-> 
-> Now (v5.5-rc3) we find it moved to
-> Documentation/devicetree/bindings/net/ethernet-controller.yaml:57:
-> 
->   phy-connection-type:
->     description:
->       Operation mode of the PHY interface
->     enum:
->       # There is not a standard bus between the MAC and the PHY,
->       # something proprietary is being used to embed the PHY in the
->       # MAC.
->       - internal
->       - mii
->       - gmii
->       - sgmii
->       - qsgmii
->       - tbi
->       - rev-mii
->       - rmii
-> 
->       # RX and TX delays are added by the MAC when required
->       - rgmii
-> 
->       # RGMII with internal RX and TX delays provided by the PHY,
->       # the MAC should not add the RX or TX delays in this case
->       - rgmii-id
-> 
->       # RGMII with internal RX delay provided by the PHY, the MAC
->       # should not add an RX delay in this case
->       - rgmii-rxid
-> 
->       # RGMII with internal TX delay provided by the PHY, the MAC
->       # should not add an TX delay in this case
->       - rgmii-txid
->       - rtbi
->       - smii
->       - xgmii 
->       - trgmii
->       - 1000base-x
->       - 2500base-x
->       - rxaui
->       - xaui
-> 
->       # 10GBASE-KR, XFI, SFI
->       - 10gbase-kr
->       - usxgmii
-> 
->   phy-mode:
->     $ref: "#/properties/phy-connection-type"
-> 
-> At each step, it was changed a bit. It started by describing the actual MII
-> connection (RGMII, SGMII, XGMII). Later is was changed to denote "operation
-> mode" of the interface. There is no reference here to PCS configuration (it
-> could not be as the device tree does not configure but describes the HW). I
-> see no reference about this device tree entry describing the protocol only
-> (I'm referring to your second reply on this here). If the device tree binding
-> does not describe the protocol only, but when it's parsed in software, into
-> the phy_interface_t it describes only the protocol and not the actual interface
-> type("mode"), then we have a disconnect here. This type is described as:
-> 
-> /* Interface Mode definitions */
-> typedef enum {
->         PHY_INTERFACE_MODE_NA,
->         PHY_INTERFACE_MODE_INTERNAL,
->         PHY_INTERFACE_MODE_MII,
->         PHY_INTERFACE_MODE_GMII,
->         PHY_INTERFACE_MODE_SGMII,
->         PHY_INTERFACE_MODE_TBI,
->         PHY_INTERFACE_MODE_REVMII,
->         PHY_INTERFACE_MODE_RMII,
->         PHY_INTERFACE_MODE_RGMII,
->         PHY_INTERFACE_MODE_RGMII_ID,
->         PHY_INTERFACE_MODE_RGMII_RXID,
->         PHY_INTERFACE_MODE_RGMII_TXID,
->         PHY_INTERFACE_MODE_RTBI,
->         PHY_INTERFACE_MODE_SMII,
->         PHY_INTERFACE_MODE_XGMII,
-> ...
-> } phy_interface_t;
-> 
-> 
-> So we can notice that is in sync with the device tree binding document.
-> Please note the RGMII, RGMII_ID, RGMII_RXID, RGMII_TXID. The only
-> difference there is in the delays on the electrical connections between
-> the chips. Take a step back, look at the list of existing entries, at
-> the history of this and see if it maps to one story or another.
+On Fri, Jan 3, 2020 at 4:31 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi,
+>
+> On 10/12/19 6:51 PM, Al Cooper wrote:
+> > The 7216 has the new USB XHCI controller from Synopsis. While
+> > this new controller and the PHY are similar to the STB versions,
+> > the major differences are:
+> >
+> > - Many of the registers and fields in the CTRL block have been
+> >   removed or changed.
+> > - A new set of Synopsis control registers, BCHP_USB_XHCI_GBL, were
+> >   added.
+>
+> Is it not Synopsys?
 
-You have the author of the SFP/phylink layers disagreeing with you,
-and you have one of the maintainers of phylib also disagreeing with
-you.
+Yes, I'll send a v4 of patches 7 and 8
 
-You seem to grasp at straws to justify your position. Initially, you
-were stating that XFI/SFI are defined by the MSAs and using that as
-a justification. Now, when I state what the MSAs say, you then go off
-and try to justify your position with some 3rd party description of
-what the various bits of 10GBASE-*R mean. Now you're trying to make
-out that your position is justified by the omission of the term "PCS"
-in the kernel's documentation.
 
-I am well aware that DT describes the hardware; I am not a newbie to
-kernel development, but have been involved with it for near on 27
-years as ARM maintainer, getting into the details of platform
-support. So please stop telling me that DT describes the hardware.
-I totally accept that.
-
-What I don't accept is the idea that "XFI" needs to be a PHY interface
-mode when there's a hell of a lot more to it than just three letters.
-
-If it was that simple, then we could use "SATA" to support all SATA
-connections, but we can't. Just like "XFI" or "SFI", sata is a
-single channel serdes connection with electrical performance
-requirements defined at a certain point. In the case of eSATA, they
-are defined at the connector. In order to achieve those performance
-requirements, we need to specify the electrical parameters in DT to
-achieve compliance. As an example, here is what is required for the
-cubox-i4:
-
-&sata {
-        status = "okay";
-        fsl,transmit-level-mV = <1104>;
-        fsl,transmit-boost-mdB = <0>;
-        fsl,transmit-atten-16ths = <9>;
-        fsl,no-spread-spectrum;
-};
-
-These parameters configure the interface to produce a waveform at
-the serdes output that, when modified by the characteristics of the
-PCB layout, result in compliance with the eSATA connection at the
-connector - which is what is required.
-
-XFI and SFI are no different; these are electrical specifications.
-The correct set of electrical parameters to meet the specification
-is more than just three letters, and it will be board specific.
-Hence, on their own, they are completely meaningless.
-
-We have already ascertained that "XFI" and "SFI" do nothing to
-describe the format of the protocol - that protocol being one of
-10GBASE-W, 10GBASE-R, fibrechannel or G.709.
-
-So, "XFI" or "SFI" as a phy_interface_t is meaningless. As a phy-mode,
-it is meaningless. As a phy-connection-type, it is meaningless.
-
-You claim that I'm looking at it from a phy_interface_t perspective.
-Sorry, but that is where you are mistaken. I'm looking at it from a
-high level, both from the software-protocol point of view and the
-hardware-electrical point of view.
-
-XFI and SFI are electrical specifications only. They do not come
-close to specifying the protocol. They don't uniquely specify the
-baud rate of the data on the link. They don't uniquely specify the
-format of that data. You can't have two "XFI" configured devices,
-one using XFI/10GBASE-R connected to another using XFI/10GBASE-W
-have a working system.
-
-What I might be willing to accept is if we were to introduce
-XFI_10GBASER, XFI_10GBASEW, XFI_10GFC, XFI_G709 and their SFI
-counterparts - but, there would remain one HUGE problem with that,
-which is the total lack of specification of the board characteristics
-required to achieve XFI electrical compliance.
-
-As I've stated many times, "XFI" and "SFI" are electrical
-specifications which include the platform PCB layout. The platform
-part of it needs to be described in DT as well, and you can't do
-that by just a simple three-letter "XFI" or "SFI" neumonic. Just like
-my SATA example above, it takes much more.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+On Fri, Jan 3, 2020 at 4:31 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi,
+>
+> On 10/12/19 6:51 PM, Al Cooper wrote:
+> > The 7216 has the new USB XHCI controller from Synopsis. While
+> > this new controller and the PHY are similar to the STB versions,
+> > the major differences are:
+> >
+> > - Many of the registers and fields in the CTRL block have been
+> >   removed or changed.
+> > - A new set of Synopsis control registers, BCHP_USB_XHCI_GBL, were
+> >   added.
+>
+> Is it not Synopsys?
+>
+> Thanks
+> Kishon
+>
+> > - MDIO functionality has been replaced with direct access registers
+> >   in the BCHP_USB_XHCI_GBL block.
+> > - Power up PHY defaults that had to be changed by MDIO in previous
+> >   chips will now power up with the correct defaults.
+> >
+> > A new init module was created for this new Synopsis USB controller.
+> > A new compatible string was added and the driver will dispatch
+> > into one of two init modules based on it. A "reg-names" field was
+> > added so the driver can more easily get optional registers.
+> > A DT bindings document was also added for this driver.
+> >
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> > ---
+> >  drivers/phy/broadcom/Makefile                 |   2 +-
+> >  .../phy/broadcom/phy-brcm-usb-init-synopsis.c | 171 ++++++++++++++++++
+> >  drivers/phy/broadcom/phy-brcm-usb-init.h      |   2 +
+> >  drivers/phy/broadcom/phy-brcm-usb.c           |  70 +++++--
+> >  4 files changed, 227 insertions(+), 18 deletions(-)
+> >  create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
+> >
+> > diff --git a/drivers/phy/broadcom/Makefile b/drivers/phy/broadcom/Makefile
+> > index f453c7d3ffff..88523e2be861 100644
+> > --- a/drivers/phy/broadcom/Makefile
+> > +++ b/drivers/phy/broadcom/Makefile
+> > @@ -8,7 +8,7 @@ obj-$(CONFIG_PHY_NS2_USB_DRD)         += phy-bcm-ns2-usbdrd.o
+> >  obj-$(CONFIG_PHY_BRCM_SATA)          += phy-brcm-sata.o
+> >  obj-$(CONFIG_PHY_BRCM_USB)           += phy-brcm-usb-dvr.o
+> >
+> > -phy-brcm-usb-dvr-objs := phy-brcm-usb.o phy-brcm-usb-init.o
+> > +phy-brcm-usb-dvr-objs := phy-brcm-usb.o phy-brcm-usb-init.o phy-brcm-usb-init-synopsis.o
+> >
+> >  obj-$(CONFIG_PHY_BCM_SR_PCIE)                += phy-bcm-sr-pcie.o
+> >  obj-$(CONFIG_PHY_BCM_SR_USB)         += phy-bcm-sr-usb.o
+> > diff --git a/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
+> > new file mode 100644
+> > index 000000000000..57663492b228
+> > --- /dev/null
+> > +++ b/drivers/phy/broadcom/phy-brcm-usb-init-synopsis.c
+> > @@ -0,0 +1,171 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2018, Broadcom */
+> > +
+> > +/*
+> > + * This module contains USB PHY initialization for power up and S3 resume
+> > + * for newer Synopsis based USB hardware first used on the bcm7216.
+> > + */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/io.h>
+> > +
+> > +#include <linux/soc/brcmstb/brcmstb.h>
+> > +#include "phy-brcm-usb-init.h"
+> > +
+> > +/* Register definitions for the USB CTRL block */
+> > +#define USB_CTRL_SETUP                       0x00
+> > +#define   USB_CTRL_SETUP_STRAP_IPP_SEL_MASK          0x02000000
+> > +#define   USB_CTRL_SETUP_SCB2_EN_MASK                        0x00008000
+> > +#define   USB_CTRL_SETUP_SCB1_EN_MASK                        0x00004000
+> > +#define   USB_CTRL_SETUP_SOFT_SHUTDOWN_MASK          0x00000200
+> > +#define   USB_CTRL_SETUP_IPP_MASK                    0x00000020
+> > +#define   USB_CTRL_SETUP_IOC_MASK                    0x00000010
+> > +#define USB_CTRL_USB_PM                      0x04
+> > +#define   USB_CTRL_USB_PM_USB_PWRDN_MASK             0x80000000
+> > +#define   USB_CTRL_USB_PM_SOFT_RESET_MASK            0x40000000
+> > +#define   USB_CTRL_USB_PM_BDC_SOFT_RESETB_MASK               0x00800000
+> > +#define   USB_CTRL_USB_PM_XHC_SOFT_RESETB_MASK               0x00400000
+> > +#define USB_CTRL_USB_PM_STATUS               0x08
+> > +#define USB_CTRL_USB_DEVICE_CTL1     0x10
+> > +#define   USB_CTRL_USB_DEVICE_CTL1_PORT_MODE_MASK    0x00000003
+> > +
+> > +
+> > +static void xhci_soft_reset(struct brcm_usb_init_params *params,
+> > +                     int on_off)
+> > +{
+> > +     void __iomem *ctrl = params->ctrl_regs;
+> > +
+> > +     /* Assert reset */
+> > +     if (on_off)
+> > +             USB_CTRL_UNSET(ctrl, USB_PM, XHC_SOFT_RESETB);
+> > +     /* De-assert reset */
+> > +     else
+> > +             USB_CTRL_SET(ctrl, USB_PM, XHC_SOFT_RESETB);
+> > +}
+> > +
+> > +static void usb_init_ipp(struct brcm_usb_init_params *params)
+> > +{
+> > +     void __iomem *ctrl = params->ctrl_regs;
+> > +     u32 reg;
+> > +     u32 orig_reg;
+> > +
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     orig_reg = reg = brcm_usb_readl(USB_CTRL_REG(ctrl, SETUP));
+> > +     if (params->ipp != 2)
+> > +             /* override ipp strap pin (if it exits) */
+> > +             reg &= ~(USB_CTRL_MASK(SETUP, STRAP_IPP_SEL));
+> > +
+> > +     /* Override the default OC and PP polarity */
+> > +     reg &= ~(USB_CTRL_MASK(SETUP, IPP) | USB_CTRL_MASK(SETUP, IOC));
+> > +     if (params->ioc)
+> > +             reg |= USB_CTRL_MASK(SETUP, IOC);
+> > +     if (params->ipp == 1)
+> > +             reg |= USB_CTRL_MASK(SETUP, IPP);
+> > +     brcm_usb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
+> > +
+> > +     /*
+> > +      * If we're changing IPP, make sure power is off long enough
+> > +      * to turn off any connected devices.
+> > +      */
+> > +     if ((reg ^ orig_reg) & USB_CTRL_MASK(SETUP, IPP))
+> > +             msleep(50);
+> > +}
+> > +
+> > +static void usb_init_common(struct brcm_usb_init_params *params)
+> > +{
+> > +     u32 reg;
+> > +     void __iomem *ctrl = params->ctrl_regs;
+> > +
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     USB_CTRL_UNSET(ctrl, USB_PM, USB_PWRDN);
+> > +     /* 1 millisecond - for USB clocks to settle down */
+> > +     usleep_range(1000, 2000);
+> > +
+> > +     if (USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE)) {
+> > +             reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> > +             reg &= ~USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
+> > +             reg |= params->mode;
+> > +             brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> > +     }
+> > +     switch (params->mode) {
+> > +     case USB_CTLR_MODE_HOST:
+> > +             USB_CTRL_UNSET(ctrl, USB_PM, BDC_SOFT_RESETB);
+> > +             break;
+> > +     default:
+> > +             USB_CTRL_UNSET(ctrl, USB_PM, BDC_SOFT_RESETB);
+> > +             USB_CTRL_SET(ctrl, USB_PM, BDC_SOFT_RESETB);
+> > +             break;
+> > +     }
+> > +}
+> > +
+> > +static void usb_init_xhci(struct brcm_usb_init_params *params)
+> > +{
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     xhci_soft_reset(params, 0);
+> > +}
+> > +
+> > +static void usb_uninit_common(struct brcm_usb_init_params *params)
+> > +{
+> > +     void __iomem *ctrl = params->ctrl_regs;
+> > +
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     USB_CTRL_SET(ctrl, USB_PM, USB_PWRDN);
+> > +
+> > +}
+> > +
+> > +static void usb_uninit_xhci(struct brcm_usb_init_params *params)
+> > +{
+> > +
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     xhci_soft_reset(params, 1);
+> > +}
+> > +
+> > +static int usb_get_dual_select(struct brcm_usb_init_params *params)
+> > +{
+> > +     void __iomem *ctrl = params->ctrl_regs;
+> > +     u32 reg = 0;
+> > +
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> > +     reg &= USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
+> > +     return reg;
+> > +}
+> > +
+> > +static void usb_set_dual_select(struct brcm_usb_init_params *params, int mode)
+> > +{
+> > +     void __iomem *ctrl = params->ctrl_regs;
+> > +     u32 reg;
+> > +
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> > +     reg &= ~USB_CTRL_MASK(USB_DEVICE_CTL1, PORT_MODE);
+> > +     reg |= mode;
+> > +     brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
+> > +}
+> > +
+> > +
+> > +static const struct brcm_usb_init_ops bcm7216_ops = {
+> > +     .init_ipp = usb_init_ipp,
+> > +     .init_common = usb_init_common,
+> > +     .init_xhci = usb_init_xhci,
+> > +     .uninit_common = usb_uninit_common,
+> > +     .uninit_xhci = usb_uninit_xhci,
+> > +     .get_dual_select = usb_get_dual_select,
+> > +     .set_dual_select = usb_set_dual_select,
+> > +};
+> > +
+> > +void brcm_usb_dvr_init_7216(struct brcm_usb_init_params *params)
+> > +{
+> > +
+> > +     pr_debug("%s\n", __func__);
+> > +
+> > +     params->family_name = "7216";
+> > +     params->ops = &bcm7216_ops;
+> > +}
+> > diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.h b/drivers/phy/broadcom/phy-brcm-usb-init.h
+> > index 7701872d1136..db6851c55335 100644
+> > --- a/drivers/phy/broadcom/phy-brcm-usb-init.h
+> > +++ b/drivers/phy/broadcom/phy-brcm-usb-init.h
+> > @@ -43,6 +43,7 @@ struct brcm_usb_init_ops {
+> >  struct  brcm_usb_init_params {
+> >       void __iomem *ctrl_regs;
+> >       void __iomem *xhci_ec_regs;
+> > +     void __iomem *xhci_gbl_regs;
+> >       int ioc;
+> >       int ipp;
+> >       int mode;
+> > @@ -55,6 +56,7 @@ struct  brcm_usb_init_params {
+> >  };
+> >
+> >  void brcm_usb_dvr_init_7445(struct brcm_usb_init_params *params);
+> > +void brcm_usb_dvr_init_7216(struct brcm_usb_init_params *params);
+> >
+> >  static inline u32 brcm_usb_readl(void __iomem *addr)
+> >  {
+> > diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
+> > index 9d93c5599511..64379ede480e 100644
+> > --- a/drivers/phy/broadcom/phy-brcm-usb.c
+> > +++ b/drivers/phy/broadcom/phy-brcm-usb.c
+> > @@ -241,6 +241,15 @@ static const struct attribute_group brcm_usb_phy_group = {
+> >       .attrs = brcm_usb_phy_attrs,
+> >  };
+> >
+> > +static const struct of_device_id brcm_usb_dt_ids[] = {
+> > +     {
+> > +             .compatible = "brcm,bcm7216-usb-phy",
+> > +             .data = &brcm_usb_dvr_init_7216,
+> > +     },
+> > +     { .compatible = "brcm,brcmstb-usb-phy" },
+> > +     { /* sentinel */ }
+> > +};
+> > +
+> >  static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
+> >                                struct brcm_usb_phy_data *priv,
+> >                                struct device_node *dn)
+> > @@ -316,13 +325,16 @@ static int brcm_usb_phy_dvr_init(struct platform_device *pdev,
+> >
+> >  static int brcm_usb_phy_probe(struct platform_device *pdev)
+> >  {
+> > -     struct resource *res;
+> > +     struct resource *res_ctrl;
+> > +     struct resource *res_xhciec = NULL;
+> > +     struct resource *res_xhcigbl = NULL;
+> >       struct device *dev = &pdev->dev;
+> >       struct brcm_usb_phy_data *priv;
+> >       struct phy_provider *phy_provider;
+> >       struct device_node *dn = pdev->dev.of_node;
+> >       int err;
+> >       const char *mode;
+> > +     const struct of_device_id *match;
+> >
+> >       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >       if (!priv)
+> > @@ -331,30 +343,59 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
+> >
+> >       priv->ini.family_id = brcmstb_get_family_id();
+> >       priv->ini.product_id = brcmstb_get_product_id();
+> > -     brcm_usb_dvr_init_7445(&priv->ini);
+> > +
+> > +     match = of_match_node(brcm_usb_dt_ids, dev->of_node);
+> > +     if (match && match->data) {
+> > +             void (*dvr_init)(struct brcm_usb_init_params *params);
+> > +
+> > +             dvr_init = match->data;
+> > +             (*dvr_init)(&priv->ini);
+> > +     } else {
+> > +             brcm_usb_dvr_init_7445(&priv->ini);
+> > +     }
+> > +
+> >       dev_dbg(dev, "Best mapping table is for %s\n",
+> >               priv->ini.family_name);
+> > -     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -     if (!res) {
+> > -             dev_err(dev, "can't get USB_CTRL base address\n");
+> > -             return -EINVAL;
+> > +
+> > +     /* Newer DT node has reg-names. xhci_ec and xhci_gbl are optional. */
+> > +     res_ctrl = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
+> > +     if (res_ctrl != NULL) {
+> > +             res_xhciec = platform_get_resource_byname(pdev,
+> > +                                                       IORESOURCE_MEM,
+> > +                                                       "xhci_ec");
+> > +             res_xhcigbl = platform_get_resource_byname(pdev,
+> > +                                                        IORESOURCE_MEM,
+> > +                                                        "xhci_gbl");
+> > +     } else {
+> > +             /* Older DT node without reg-names, use index */
+> > +             res_ctrl = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +             if (res_ctrl == NULL) {
+> > +                     dev_err(dev, "can't get CTRL base address\n");
+> > +                     return -EINVAL;
+> > +             }
+> > +             res_xhciec = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> >       }
+> > -     priv->ini.ctrl_regs = devm_ioremap_resource(dev, res);
+> > +     priv->ini.ctrl_regs = devm_ioremap_resource(dev, res_ctrl);
+> >       if (IS_ERR(priv->ini.ctrl_regs)) {
+> >               dev_err(dev, "can't map CTRL register space\n");
+> >               return -EINVAL;
+> >       }
+> > -
+> > -     /* The XHCI EC registers are optional */
+> > -     res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > -     if (res) {
+> > +     if (res_xhciec) {
+> >               priv->ini.xhci_ec_regs =
+> > -                     devm_ioremap_resource(dev, res);
+> > +                     devm_ioremap_resource(dev, res_xhciec);
+> >               if (IS_ERR(priv->ini.xhci_ec_regs)) {
+> >                       dev_err(dev, "can't map XHCI EC register space\n");
+> >                       return -EINVAL;
+> >               }
+> >       }
+> > +     if (res_xhcigbl) {
+> > +             priv->ini.xhci_gbl_regs =
+> > +                     devm_ioremap_resource(dev, res_xhcigbl);
+> > +             if (IS_ERR(priv->ini.xhci_gbl_regs)) {
+> > +                     dev_err(dev, "can't map XHCI Global register space\n");
+> > +                     return -EINVAL;
+> > +             }
+> > +     }
+> >
+> >       of_property_read_u32(dn, "brcm,ipp", &priv->ini.ipp);
+> >       of_property_read_u32(dn, "brcm,ioc", &priv->ini.ioc);
+> > @@ -480,11 +521,6 @@ static const struct dev_pm_ops brcm_usb_phy_pm_ops = {
+> >       SET_LATE_SYSTEM_SLEEP_PM_OPS(brcm_usb_phy_suspend, brcm_usb_phy_resume)
+> >  };
+> >
+> > -static const struct of_device_id brcm_usb_dt_ids[] = {
+> > -     { .compatible = "brcm,brcmstb-usb-phy" },
+> > -     { /* sentinel */ }
+> > -};
+> > -
+> >  MODULE_DEVICE_TABLE(of, brcm_usb_dt_ids);
+> >
+> >  static struct platform_driver brcm_usb_driver = {
+> >
