@@ -2,30 +2,29 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AC2C2D0C2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB34BC2D0CE
 	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7412464B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9414F22314
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="Iz0kLaNy"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="WLDR4/A6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgACJtY (ORCPT
+        id S1727526AbgACJtM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:49:24 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:23766 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgACJtO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:49:14 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+        Fri, 3 Jan 2020 04:49:12 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:52158 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACJtM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:49:12 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
   Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Codrin.Ciubotariu@microchip.com";
   x-sender="Codrin.Ciubotariu@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -33,38 +32,38 @@ Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
   a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
   include:servers.mcsv.net include:mktomail.com
   include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
   envelope-from="Codrin.Ciubotariu@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: QGRPuk8gB/8sMupB7q64mmJk3yuh2lpLS21WykBpz3SQ52ZRhjM8lHko16ERwejTa5mAUKwx50
- /0W68Q1IKfazcR7odV491XUep2DTX9b28ZqLRziwwp7M/NJu36hAVSlJuBuxm+8T3FUe4o9Z9p
- kZLLhDR0Lr0N69D9nwYA64v7TfHiUm4MOdl+09aJq2e16KJHw3U5XcVJ3WADTwd7EVppzDJYS8
- 0esV2tvwXb7OWPAofQf+3yHEc5dfjpuGvNbpA+J/59MOZplG0zly5cAMsOh+GcpJfUrASst9jF
- APo=
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: laCIMzLXLze96kd4VhHX6aAt3e5ZbvFMKe3aO06WOw2p8iUFOAlwBPNbUauYDosCAjQCGnR7wQ
+ ARB6vUhe2yWnpXYi5XaINQwoEUl9rCRMEwR7yX3BHJvNnXOHBJ0tNTxFNv4svFrNTF1U22Eivg
+ IIH85XoEPh3zN7xNg7vqZg4iyurHCuI598Ze6IT1ch8SUvxkGpWaA0lkTdkEskUvfHP6bUSi57
+ zzbknqBbAog7SGKuoTZmXmt7DrAX55rPIRroWV2Rd/qso9XWhdQkzVqifAn8QGJuZSqj9kAwcn
+ 8ZQ=
 X-IronPort-AV: E=Sophos;i="5.69,390,1571727600"; 
-   d="scan'208";a="60069284"
+   d="scan'208";a="61520572"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Jan 2020 02:49:13 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Jan 2020 02:49:10 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 3 Jan 2020 02:49:12 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ 15.1.1713.5; Fri, 3 Jan 2020 02:49:09 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Fri, 3 Jan 2020 02:49:13 -0700
+ Transport; Fri, 3 Jan 2020 02:49:09 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HnSfnsFAGirEDmN0Fc4V7aXR1HJVSmnW3TqlMR5TiKRSmDRkeNxvnWnEj4dxTVnM1n5wfjyc66rrW+6Ffx++lWNk/AMDglstvogVi3bWGO+IVwMZiJWvdds2jWGVWJ2NKjFveVntOzNNxgVPGoL/wxNz4DqbdmoMGjOfegUM4Ga+rr2kcNhEbMI3PZxKQmYp3zM571L5PO/g+8p649PvKznqoen5h58yc8fQJSVl3AD2q7ngGktlw2hhEKiO2tfEq0F1cfmbNxMRn4p5V3JbOK0kg7nxlAMQBgiUY45pAIdnkyz14bFNveteH/xyujnbbI4VPDbztZccIFBMFk8mBQ==
+ b=G5qnkw6ChLO/q1W0CMWKfi+wGSKTB0lT7udALraBIFQEqnaEY0AK8VXztreGEK4ujkP3NWQlNdswW9AFHksT57xOMBzoVYDgPsr8IQdcO9d5KhNkFImPLe1KUmAkG18OhCFcL0YOYpnQ6vWdhOxiZd9Ss8bKjys/fZOyYlpWOy0/pPfUe2/aczifVWJB3ferM0RfR248bi3aO4obK+TOPS9RrMR9FYrrpKod3GLwr0+1awWA/W6+AFDkZsWnbyGoFbIRlmf1Uo16vete6DUGYwENssY0QQ7eA7ub2mx6f0fUtIK9mSD1f5GzS8AkdLd8OQvssbN3r/BTgrW239HG7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f6bwmnCiDUsQGEXgrGEXUCfuT+rLtPs6FYZ31p5mIOY=;
- b=ZqmsCmFEIWkTtyPSKm3WqN9gbH/MT06uQ9/dgqrJdJsRrpRgc5owvih0Ap+ur+PZ9YWeUa3BSJeHV55azYKgNJd2CWc0UYMw+w3y2/i3dXzJmQvEph5xrXigv5cCzHzKLxCBk+fqloRK+enqSfZutQYpt4r5nqH3XuU8cjhw1gqNM1peCzZjEQgUSyB13YpAPqGv4P0osAX01NXaFfMlla7dnYtWVCRV3kRbnPkEEssc/gyDYMnPXv1j7VuchYUXde9+mJjAr6kdAtSw0KTCb7HOJpuEbv1JvWGcc7KD18t5gJudrfEZIcG3WhTLLH9mpjFYZPPX4uh0BZGTLv32Ag==
+ bh=eSqMQROnt3CzAluTR8YEXw2FiBiHCpR/t9YCxkUfkjU=;
+ b=H170zifAI8FPJYvB5rimVBwgUEA2FfAZQwNz3b1UDf02BR7gr4XdrtKy9ue97YuJFQMwLIbYtrwOryRgGdEL7SfMbHfAShOnUU4e9D0985YrU6wY3buiH6rKwJ9Y4M3r9oJOkfZMiRCw4oyKjMVU3D+naCCSpzf881N3MgAxdpPs+wClsou/c9td/TJ7wdQJgOLGlKbYq86eYoLa01jQLiwSgv3N5CXn2505u5QPU2mXjxDLcA0Txx62SidwORUnM+6YYqCPFDnOO1wnXsDr1JUP3PV9GNO+B1F8SuxnUH7rrv+ugwq7peAAN+sWzLmiBk4B5eBWagg8UhXHbWHoZw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -72,16 +71,16 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f6bwmnCiDUsQGEXgrGEXUCfuT+rLtPs6FYZ31p5mIOY=;
- b=Iz0kLaNyZhJT8datfs4hmeA5PA8PwuLkQCP+oYqLoQaU4LH3zhWJPA8JfGfmogLZpA9lSWDijeSyEyuSKaLQFdzP4I11AIKN0MYaQWQ5G6NC8mCPytqsR4ytfHMa/1v1arZl3gziBpJAkPSzxot6WPL5+DZM0dQuZRDx+DWuzEA=
+ bh=eSqMQROnt3CzAluTR8YEXw2FiBiHCpR/t9YCxkUfkjU=;
+ b=WLDR4/A6tBnniE8OnpA14OLtYNyVNXZUJ1tktTxbxt2UvRi7/Lh1rEwmYlLmHM9Ot9bMIwx8sbsgp9fl4FlQVf/G0eeenuw6ljTTfHwmqVKAjkT1DloeRq6wKzyTDwH/lmREFb8JM/yCFz2W5D5dqMEkUYhY+LkZ8hpr6XBNS7I=
 Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
  BY5PR11MB4322.namprd11.prod.outlook.com (10.255.89.90) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.10; Fri, 3 Jan 2020 09:49:10 +0000
+ 15.20.2602.10; Fri, 3 Jan 2020 09:49:07 +0000
 Received: from BY5PR11MB4497.namprd11.prod.outlook.com
  ([fe80::6189:c32:b55b:b3fd]) by BY5PR11MB4497.namprd11.prod.outlook.com
  ([fe80::6189:c32:b55b:b3fd%5]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
- 09:49:10 +0000
+ 09:49:07 +0000
 From:   <Codrin.Ciubotariu@microchip.com>
 To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -89,11 +88,13 @@ To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
 CC:     <kamel.bouhara@bootlin.com>, <wsa@the-dreams.de>,
         <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
         <Ludovic.Desroches@microchip.com>, <robh@kernel.org>
-Subject: [PATCH v2 6/6] ARM: at91/dt: sama5d2: add i2c gpio pinctrl
-Thread-Topic: [PATCH v2 6/6] ARM: at91/dt: sama5d2: add i2c gpio pinctrl
-Thread-Index: AQHVwhsLFgQ03HwbOEOfeRBM/f7rHw==
-Date:   Fri, 3 Jan 2020 09:49:09 +0000
-Message-ID: <20200103094821.13185-7-codrin.ciubotariu@microchip.com>
+Subject: [PATCH v2 1/6] dt-bindings: i2c: at91: document optional bus recovery
+ properties
+Thread-Topic: [PATCH v2 1/6] dt-bindings: i2c: at91: document optional bus
+ recovery properties
+Thread-Index: AQHVwhsK1Px6bcqwdEqfvaNsF/8nOQ==
+Date:   Fri, 3 Jan 2020 09:49:06 +0000
+Message-ID: <20200103094821.13185-2-codrin.ciubotariu@microchip.com>
 References: <20200103094821.13185-1-codrin.ciubotariu@microchip.com>
 In-Reply-To: <20200103094821.13185-1-codrin.ciubotariu@microchip.com>
 Accept-Language: en-US
@@ -102,28 +103,28 @@ X-MS-Has-Attach:
 X-MS-TNEF-Correlator: 
 x-originating-ip: [188.25.143.200]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d5fd67e0-952d-430e-0831-08d790322eeb
+x-ms-office365-filtering-correlation-id: a01c8265-bbff-47cf-172c-08d790322d53
 x-ms-traffictypediagnostic: BY5PR11MB4322:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB43223ACB4A390F181DC51C57E7230@BY5PR11MB4322.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-microsoft-antispam-prvs: <BY5PR11MB4322A2A5F3ACA9E15DD660FCE7230@BY5PR11MB4322.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
 x-forefront-prvs: 0271483E06
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(136003)(39860400002)(396003)(346002)(189003)(199004)(36756003)(478600001)(4326008)(6512007)(6486002)(110136005)(54906003)(316002)(5660300002)(186003)(66946007)(66446008)(64756008)(66476007)(66556008)(8676002)(86362001)(6506007)(1076003)(8936002)(76116006)(26005)(81166006)(2906002)(91956017)(71200400001)(81156014)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4322;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microchip.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: k8x9WlqxGlivoSvKONm587fmmHlCKPDnGQTxdGQv53xHbv/lLahsP8qRNjHNQtlNeY1Qn0pDbhkVkKeXiDNy0Ymn2WovVNGF9C80HA6S4pIxSlchDVk7TEqOKzKi+uIhV2k6xr3vzqw44FQsHnXA2XggLHt/wotzId5lOu7On8vqLceteMOk4u2MVA7TphjwfTv4jPnUHPivcywivK5giAJcBzD6JUWHb+btEIWJHky0zwk4tpZ/6O3JQawJ84rRlspHcSZZQYQSGK8grzE0inXI5+v+7vt9WYDHsVTYHhYKaU7eU1/JHqNZG1bbxju5sTWNFUZZFLJ+/Xvr6DvOwz7ichhQY2RscWzr1o4+YgN6p8rIIVZZwRgnso7iNq+NVH1htAJkNpuzpZj1Nl7EW86ZGOkzAZrgqxpEV0atbSIF0Y62y9cyoS5qcUyXaGi/
+x-microsoft-antispam-message-info: Ee87BVI0pWJdIJ0CF8fVeeS4l9WoCMwcuxssagLlTIhbMq5d0u0HRRmuQaJMp5WfTwg7ud+U5WmBbp3OYBCEdpZmDlQIhnIiC68wLD4TDaveACjBzz5AUT+q1c8pJd2xWq7D0R9LRVOp6Fvr/YzDcWs5RnZT+azJ0X5wtsO5ln37cN40ocwLm/kno1WcLNYGDyVmVNdoTypqneilSGaUgIV7Jq5YxQhi7+uR/3IPl1ytYz+7xud552pOCH6i17e3DiKX8BYO73YgV4xhgGDkOE+yjsAVu+ByV3PgewU+9H1pDz++0Poj8WZO8PMf4tk9X0ncoYOUB3hP8AfQT8n5ioODiuPFmgkd+3fSeY/sB1Ja3aY6PS4DEV2B7McqpxLS0tcAn3Hg8zSgWimO1NFWHG+lcE40slYst8awRLCYfSJ2UhRDzYiifzOZbEX/UrUt
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5fd67e0-952d-430e-0831-08d790322eeb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 09:49:09.3501
+X-MS-Exchange-CrossTenant-Network-Message-Id: a01c8265-bbff-47cf-172c-08d790322d53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 09:49:06.7555
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pPUfn8DfI9sJCI8j/KwJT/xpRF6DD+BeRp2ci/JsBYiGmzW0Btpq6HLs2KqH9LkFaisN2cJ7JQNJfprlJvU/+FeNdxAOzVWvwHZSGS9QEgU=
+X-MS-Exchange-CrossTenant-userprincipalname: FnJ2aEYC9Y2LxQbi1QywsbZV6RGo/eeur8fnI7Cq1ZXFh0PLZqbKTkPInX+YWWKF/TveYz2d4fGlmVkaAcNp7QVFaaezW6+77qUza7QSaI8=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4322
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -132,182 +133,51 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 
-Add the i2c gpio pinctrls to support the i2c bus recovery
+The at91 I2C controller can support bus recovery by re-assigning SCL
+and SDA to gpios. Add the optional pinctrl and gpio properties to do
+so.
 
 Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
 ---
 
 Changes in v2:
- - new changes;
+ - none
 
- arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts   | 33 +++++++++++++++++++--
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 33 +++++++++++++++++++--
- 2 files changed, 60 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/=
-at91-sama5d2_ptc_ek.dts
-index ba7f3e646c26..b3cd651ecda0 100644
---- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-@@ -180,8 +180,11 @@
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documenta=
+tion/devicetree/bindings/i2c/i2c-at91.txt
+index 2210f4359c45..551ddabb566b 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+@@ -20,8 +20,13 @@ Optional properties:
+   capable I2C controllers.
+ - i2c-sda-hold-time-ns: TWD hold time, only available for "atmel,sama5d4-i=
+2c"
+   and "atmel,sama5d2-i2c".
++- scl-gpios: specify the gpio related to SCL pin
++- sda-gpios: specify the gpio related to SDA pin
++- pinctrl: add extra pinctrl to configure i2c pins to gpio function for i2=
+c
++  bus recovery, call it "gpio" state
+ - Child nodes conforming to i2c bus binding
 =20
- 			i2c0: i2c@f8028000 {
- 				dmas =3D <0>, <0>;
--				pinctrl-names =3D "default";
-+				pinctrl-names =3D "default", "gpio";
- 				pinctrl-0 =3D <&pinctrl_i2c0_default>;
-+				pinctrl-1 =3D <&pinctrl_i2c0_gpio>;
-+				sda-gpios =3D <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
-+				scl-gpios =3D <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
- 				status =3D "okay";
- 			};
-=20
-@@ -198,8 +201,11 @@
- 					#address-cells =3D <1>;
- 					#size-cells =3D <0>;
- 					clocks =3D <&pmc PMC_TYPE_PERIPHERAL 19>;
--					pinctrl-names =3D "default";
-+					pinctrl-names =3D "default", "gpio";
- 					pinctrl-0 =3D <&pinctrl_flx0_default>;
-+					pinctrl-1 =3D <&pinctrl_flx0_gpio>;
-+					sda-gpios =3D <&pioA PIN_PB28 GPIO_ACTIVE_HIGH>;
-+					scl-gpios =3D <&pioA PIN_PB29 GPIO_ACTIVE_HIGH>;
- 					atmel,fifo-size =3D <16>;
- 					status =3D "okay";
- 				};
-@@ -226,8 +232,11 @@
-=20
- 			i2c1: i2c@fc028000 {
- 				dmas =3D <0>, <0>;
--				pinctrl-names =3D "default";
-+				pinctrl-names =3D "default", "gpio";
- 				pinctrl-0 =3D <&pinctrl_i2c1_default>;
-+				pinctrl-1 =3D <&pinctrl_i2c1_gpio>;
-+				sda-gpios =3D <&pioA PIN_PC6 GPIO_ACTIVE_HIGH>;
-+				scl-gpios =3D <&pioA PIN_PC7 GPIO_ACTIVE_HIGH>;
- 				status =3D "okay";
-=20
- 				at24@50 {
-@@ -244,18 +253,36 @@
- 					bias-disable;
- 				};
-=20
-+				pinctrl_flx0_gpio: flx0_gpio {
-+					pinmux =3D <PIN_PB28__GPIO>,
-+						 <PIN_PB29__GPIO>;
-+					bias-pull-up;
-+				};
 +
- 				pinctrl_i2c0_default: i2c0_default {
- 					pinmux =3D <PIN_PD21__TWD0>,
- 						 <PIN_PD22__TWCK0>;
- 					bias-disable;
- 				};
+ Examples :
 =20
-+				pinctrl_i2c0_gpio: i2c0_gpio {
-+					pinmux =3D <PIN_PD21__GPIO>,
-+						 <PIN_PD22__GPIO>;
-+					bias-pull-up;
-+				};
-+
- 				pinctrl_i2c1_default: i2c1_default {
- 					pinmux =3D <PIN_PC6__TWD1>,
- 						 <PIN_PC7__TWCK1>;
- 					bias-disable;
- 				};
+ i2c0: i2c@fff84000 {
+@@ -56,6 +61,11 @@ i2c0: i2c@f8034600 {
+ 	clocks =3D <&flx0>;
+ 	atmel,fifo-size =3D <16>;
+ 	i2c-sda-hold-time-ns =3D <336>;
++	pinctrl-names =3D "default", "gpio";
++	pinctrl-0 =3D <&pinctrl_i2c0>;
++	pinctrl-1 =3D <&pinctrl_i2c0_gpio>;
++	sda-gpios =3D <&pioA 30 GPIO_ACTIVE_HIGH>;
++	scl-gpios =3D <&pioA 31 GPIO_ACTIVE_HIGH>;
 =20
-+				pinctrl_i2c1_gpio: i2c1_gpio {
-+					pinmux =3D <PIN_PC6__GPIO>,
-+						 <PIN_PC7__GPIO>;
-+					bias-pull-up;
-+				};
-+
- 				pinctrl_key_gpio_default: key_gpio_default {
- 					pinmux =3D <PIN_PA10__GPIO>;
- 					bias-pull-up;
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dt=
-s/at91-sama5d2_xplained.dts
-index 9d0a7fbea725..500e49eeb8cc 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -129,8 +129,11 @@
-=20
- 			i2c0: i2c@f8028000 {
- 				dmas =3D <0>, <0>;
--				pinctrl-names =3D "default";
-+				pinctrl-names =3D "default", "gpio";
- 				pinctrl-0 =3D <&pinctrl_i2c0_default>;
-+				pinctrl-1 =3D <&pinctrl_i2c0_gpio>;
-+				sda-gpios =3D <&pioA PIN_PD21 GPIO_ACTIVE_HIGH>;
-+				scl-gpios =3D <&pioA PIN_PD22 GPIO_ACTIVE_HIGH>;
- 				i2c-sda-hold-time-ns =3D <350>;
- 				status =3D "okay";
-=20
-@@ -331,8 +334,11 @@
- 					#address-cells =3D <1>;
- 					#size-cells =3D <0>;
- 					clocks =3D <&pmc PMC_TYPE_PERIPHERAL 23>;
--					pinctrl-names =3D "default";
-+					pinctrl-names =3D "default", "gpio";
- 					pinctrl-0 =3D <&pinctrl_flx4_default>;
-+					pinctrl-1 =3D <&pinctrl_flx4_gpio>;
-+					sda-gpios =3D <&pioA PIN_PD12 GPIO_ACTIVE_HIGH>;
-+					scl-gpios =3D <&pioA PIN_PD13 GPIO_ACTIVE_HIGH>;
- 					atmel,fifo-size =3D <16>;
- 					i2c-analog-filter;
- 					i2c-digital-filter;
-@@ -343,11 +349,14 @@
-=20
- 			i2c1: i2c@fc028000 {
- 				dmas =3D <0>, <0>;
--				pinctrl-names =3D "default";
-+				pinctrl-names =3D "default", "gpio";
- 				pinctrl-0 =3D <&pinctrl_i2c1_default>;
- 				i2c-analog-filter;
- 				i2c-digital-filter;
- 				i2c-digital-filter-width-ns =3D <35>;
-+				pinctrl-1 =3D <&pinctrl_i2c1_gpio>;
-+				sda-gpios =3D <&pioA PIN_PD4 GPIO_ACTIVE_HIGH>;
-+				scl-gpios =3D <&pioA PIN_PD5 GPIO_ACTIVE_HIGH>;
- 				status =3D "okay";
-=20
- 				at24@54 {
-@@ -441,18 +450,36 @@
- 					bias-disable;
- 				};
-=20
-+				pinctrl_flx4_gpio: flx4_gpio {
-+					pinmux =3D <PIN_PD12__GPIO>,
-+						 <PIN_PD13__GPIO>;
-+					bias-pull-up;
-+				};
-+
- 				pinctrl_i2c0_default: i2c0_default {
- 					pinmux =3D <PIN_PD21__TWD0>,
- 						 <PIN_PD22__TWCK0>;
- 					bias-disable;
- 				};
-=20
-+				pinctrl_i2c0_gpio: i2c0_gpio {
-+					pinmux =3D <PIN_PD21__GPIO>,
-+						 <PIN_PD22__GPIO>;
-+					bias-pull-up;
-+				};
-+
- 				pinctrl_i2c1_default: i2c1_default {
- 					pinmux =3D <PIN_PD4__TWD1>,
- 						 <PIN_PD5__TWCK1>;
- 					bias-disable;
- 				};
-=20
-+				pinctrl_i2c1_gpio: i2c1_gpio {
-+					pinmux =3D <PIN_PD4__GPIO>,
-+						 <PIN_PD5__GPIO>;
-+					bias-pull-up;
-+				};
-+
- 				pinctrl_i2s0_default: i2s0_default {
- 					pinmux =3D <PIN_PC1__I2SC0_CK>,
- 						 <PIN_PC2__I2SC0_MCK>,
+ 	wm8731: wm8731@1a {
+ 		compatible =3D "wm8731";
 --=20
 2.20.1
