@@ -2,263 +2,96 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBF1C32771
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA35DC2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03CC20866
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578071612;
-	bh=YExA720C2zKhWsisoqLbN/UbWLsHxMgSyDoDzqvYOYk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zamyUyBtVe2Bkq+m7Kg0VlTUC3gOR046HaRLzfHxdqrqBC4aV6wbmB1oQDBeYCCDY
-	 UBFpyfZcT32SUUWK1A4qht61vBv5Pwug/yhe4msfnk/Aya43rU6GFdu5iLRPPVY3mX
-	 vBlbl/WpQidIIS4diQr5faPN7/EU5wZlt693oEWU=
+	by mail.kernel.org (Postfix) with ESMTP id AA22220866
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 17:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CROChRXS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgACRMl (ORCPT
+        id S1728049AbgACRRZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 12:12:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Fri, 3 Jan 2020 12:17:25 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:46722 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbgACRMk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 12:12:40 -0500
-Received: from localhost.localdomain (unknown [194.230.155.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB6320866;
-        Fri,  3 Jan 2020 17:12:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578071559;
-        bh=YExA720C2zKhWsisoqLbN/UbWLsHxMgSyDoDzqvYOYk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mxsRs5JSRASe0LR8ZJjnkZ/nhak9Ww7c3pgSwMgZ7h5DePeHBXgztz8Mtw/EUuYew
-         dSzvY8/DtzFqNGLErbcqiAjEibf9J1Trqn0XPfleVmuVlesSqmsPJDJmO0x45vPVZ6
-         hSoGxVr40Hf6/jJpHMFSMjCs7hp6Kb/XSsXzP25U=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 09/19] phy: exynos: Rename Exynos to lowercase
-Date:   Fri,  3 Jan 2020 18:11:21 +0100
-Message-Id: <20200103171131.9900-10-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200103171131.9900-1-krzk@kernel.org>
-References: <20200103171131.9900-1-krzk@kernel.org>
+        id S1727952AbgACRRZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jan 2020 12:17:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=6DWrB1umXlgJmXfg/wK6IDqVDNHFHyv/eiqcp2/lHpg=; b=CROChRXS3rMrORIX6bjd5yfAep
+        b5cz1zo4a2An628AzQ9qFS3uxXAVRedSDfGonVwm2E4oVnVV5V7iY+H8pB6kOp6qKZ/fTGMhJu/+z
+        +9KnFhCrhNLLVc+pKHgaG9VuB+PaiZ6fI43OsKCkvySJelZ3kaK9z1i/nap662VrEJ44=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1inQZb-0000Yu-Ri; Fri, 03 Jan 2020 18:17:19 +0100
+Date:   Fri, 3 Jan 2020 18:17:19 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20200103171719.GM1397@lunn.ch>
+References: <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191223120730.GO25745@shell.armlinux.org.uk>
+ <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
+ <20200103092718.GB25745@shell.armlinux.org.uk>
+ <20200103094204.GA18808@shell.armlinux.org.uk>
+ <DB8PR04MB698591AAC029ADE9F7FFF69BEC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
+ <20200103125310.GE25745@shell.armlinux.org.uk>
+ <20200103133523.GA22988@lunn.ch>
+ <DB8PR04MB6985AD897CC0159E324DF992EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB8PR04MB6985AD897CC0159E324DF992EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Fix up inconsistent usage of upper and lowercase letters in "Exynos"
-name.
+> There are many things pushed down to u-boot so the Linux driver has less
+> work to do, that's one of the reasons there is little left there.
 
-"EXYNOS" is not an abbreviation but a regular trademarked name.
-Therefore it should be written with lowercase letters starting with
-capital letter.
+I prefer barebox. Which is a problem, since it sounds like Ethernet
+will be broken on your boards if i swap to it.
 
-The lowercase "Exynos" name is promoted by its manufacturer Samsung
-Electronics Co., Ltd., in advertisement materials and on website.
+If you are going to offload setting up the hardware, please do it to
+firmware. That is independent of the bootloader. The Marvell SoCs do
+this for their low level SERDES setup, making SMC calls into the
+firmware.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/phy/samsung-phy.txt | 6 +++---
- drivers/phy/allwinner/phy-sun4i-usb.c                 | 2 +-
- drivers/phy/samsung/Kconfig                           | 8 ++++----
- drivers/phy/samsung/phy-exynos-dp-video.c             | 4 ++--
- drivers/phy/samsung/phy-exynos-mipi-video.c           | 4 ++--
- drivers/phy/samsung/phy-exynos-pcie.c                 | 2 +-
- drivers/phy/samsung/phy-exynos5-usbdrd.c              | 6 +++---
- drivers/phy/samsung/phy-samsung-usb2.c                | 2 +-
- 8 files changed, 17 insertions(+), 17 deletions(-)
+https://patchwork.kernel.org/cover/10880297/
 
-diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-index 1c40ccd40ce4..7510830a79bd 100644
---- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-@@ -1,4 +1,4 @@
--Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY
-+Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY
- -------------------------------------------------
- 
- Required properties:
-@@ -27,7 +27,7 @@ the PHY specifier identifies the PHY and its meaning is as follows:
- supports additional fifth PHY:
-   4 - MIPI CSIS 2.
- 
--Samsung EXYNOS SoC series Display Port PHY
-+Samsung Exynos SoC series Display Port PHY
- -------------------------------------------------
- 
- Required properties:
-@@ -38,7 +38,7 @@ Required properties:
- 		      control pmu registers for power isolation.
- - #phy-cells : from the generic PHY bindings, must be 0;
- 
--Samsung S5P/EXYNOS SoC series USB PHY
-+Samsung S5P/Exynos SoC series USB PHY
- -------------------------------------------------
- 
- Required properties:
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 856927382248..7e09ad6a0b42 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -7,7 +7,7 @@
-  * Based on code from
-  * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
-  *
-- * Modelled after: Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
-+ * Modelled after: Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY driver
-  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-  * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-  */
-diff --git a/drivers/phy/samsung/Kconfig b/drivers/phy/samsung/Kconfig
-index 290a6c70f570..3b39bec101b2 100644
---- a/drivers/phy/samsung/Kconfig
-+++ b/drivers/phy/samsung/Kconfig
-@@ -3,23 +3,23 @@
- # Phy drivers for Samsung platforms
- #
- config PHY_EXYNOS_DP_VIDEO
--	tristate "EXYNOS SoC series Display Port PHY driver"
-+	tristate "Exynos SoC series Display Port PHY driver"
- 	depends on OF
- 	depends on ARCH_EXYNOS || COMPILE_TEST
- 	default ARCH_EXYNOS
- 	select GENERIC_PHY
- 	help
--	  Support for Display Port PHY found on Samsung EXYNOS SoCs.
-+	  Support for Display Port PHY found on Samsung Exynos SoCs.
- 
- config PHY_EXYNOS_MIPI_VIDEO
--	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
-+	tristate "S5P/Exynos SoC series MIPI CSI-2/DSI PHY driver"
- 	depends on HAS_IOMEM
- 	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
- 	select GENERIC_PHY
- 	default y if ARCH_S5PV210 || ARCH_EXYNOS
- 	help
- 	  Support for MIPI CSI-2 and MIPI DSI DPHY found on Samsung S5P
--	  and EXYNOS SoCs.
-+	  and Exynos SoCs.
- 
- config PHY_EXYNOS_PCIE
- 	bool "Exynos PCIe PHY driver"
-diff --git a/drivers/phy/samsung/phy-exynos-dp-video.c b/drivers/phy/samsung/phy-exynos-dp-video.c
-index 6c607df1dc9a..2b670ef91deb 100644
---- a/drivers/phy/samsung/phy-exynos-dp-video.c
-+++ b/drivers/phy/samsung/phy-exynos-dp-video.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung EXYNOS SoC series Display Port PHY driver
-+ * Samsung Exynos SoC series Display Port PHY driver
-  *
-  * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-  * Author: Jingoo Han <jg1.han@samsung.com>
-@@ -115,5 +115,5 @@ static struct platform_driver exynos_dp_video_phy_driver = {
- module_platform_driver(exynos_dp_video_phy_driver);
- 
- MODULE_AUTHOR("Jingoo Han <jg1.han@samsung.com>");
--MODULE_DESCRIPTION("Samsung EXYNOS SoC DP PHY driver");
-+MODULE_DESCRIPTION("Samsung Exynos SoC DP PHY driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/phy/samsung/phy-exynos-mipi-video.c b/drivers/phy/samsung/phy-exynos-mipi-video.c
-index bb51195f189f..c1df1ef3ee3c 100644
---- a/drivers/phy/samsung/phy-exynos-mipi-video.c
-+++ b/drivers/phy/samsung/phy-exynos-mipi-video.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung S5P/EXYNOS SoC series MIPI CSIS/DSIM DPHY driver
-+ * Samsung S5P/Exynos SoC series MIPI CSIS/DSIM DPHY driver
-  *
-  * Copyright (C) 2013,2016 Samsung Electronics Co., Ltd.
-  * Author: Sylwester Nawrocki <s.nawrocki@samsung.com>
-@@ -364,6 +364,6 @@ static struct platform_driver exynos_mipi_video_phy_driver = {
- };
- module_platform_driver(exynos_mipi_video_phy_driver);
- 
--MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC MIPI CSI-2/DSI PHY driver");
-+MODULE_DESCRIPTION("Samsung S5P/Exynos SoC MIPI CSI-2/DSI PHY driver");
- MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki@samsung.com>");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/phy/samsung/phy-exynos-pcie.c b/drivers/phy/samsung/phy-exynos-pcie.c
-index 659e7ae0a6cf..7e28b1aea0d1 100644
---- a/drivers/phy/samsung/phy-exynos-pcie.c
-+++ b/drivers/phy/samsung/phy-exynos-pcie.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung EXYNOS SoC series PCIe PHY driver
-+ * Samsung Exynos SoC series PCIe PHY driver
-  *
-  * Phy provider for PCIe controller on Exynos SoC series
-  *
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index e510732afb8b..eb06ce9f748f 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Samsung EXYNOS5 SoC series USB DRD PHY driver
-+ * Samsung Exynos5 SoC series USB DRD PHY driver
-  *
-  * Phy provider for USB 3.0 DRD controller on Exynos5 SoC series
-  *
-@@ -33,7 +33,7 @@
- #define EXYNOS5_FSEL_24MHZ		0x5
- #define EXYNOS5_FSEL_50MHZ		0x7
- 
--/* EXYNOS5: USB 3.0 DRD PHY registers */
-+/* Exynos5: USB 3.0 DRD PHY registers */
- #define EXYNOS5_DRD_LINKSYSTEM			0x04
- 
- #define LINKSYSTEM_FLADJ_MASK			(0x3f << 1)
-@@ -958,7 +958,7 @@ static struct platform_driver exynos5_usb3drd_phy = {
- };
- 
- module_platform_driver(exynos5_usb3drd_phy);
--MODULE_DESCRIPTION("Samsung EXYNOS5 SoCs USB 3.0 DRD controller PHY driver");
-+MODULE_DESCRIPTION("Samsung Exynos5 SoCs USB 3.0 DRD controller PHY driver");
- MODULE_AUTHOR("Vivek Gautam <gautam.vivek@samsung.com>");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:exynos5_usb3drd_phy");
-diff --git a/drivers/phy/samsung/phy-samsung-usb2.c b/drivers/phy/samsung/phy-samsung-usb2.c
-index 090aa02e02de..a3ed3ff04690 100644
---- a/drivers/phy/samsung/phy-samsung-usb2.c
-+++ b/drivers/phy/samsung/phy-samsung-usb2.c
-@@ -255,7 +255,7 @@ static struct platform_driver samsung_usb2_phy_driver = {
- };
- 
- module_platform_driver(samsung_usb2_phy_driver);
--MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC USB PHY driver");
-+MODULE_DESCRIPTION("Samsung S5P/Exynos SoC USB PHY driver");
- MODULE_AUTHOR("Kamil Debski <k.debski@samsung.com>");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:samsung-usb2-phy");
--- 
-2.17.1
+> Ideally this dependency should be removed but then we'd need to make
+> a clearer distinction. As you've noticed, currently I don't even
+> need to distinguish XFI from SFI because for basic scenarios the
+> code does the same thing.  Problem is, if I select a common
+> denominator now, and later I need to make this distinction, I'll
+> need to update device trees, code, etc. Just like "xgmii" was just
+> fine as a placeholder until recently. I'd rather use a correct
+> description now.
 
+So it seems like you need two properties. You need a property to tell
+your bootloader how to configure the electrical properties of the
+SERDES, XFI, SFI, etc.
+
+And you need a property to configure the protocol running over the
+SERDES, which is phy-mode.
+
+	Andrew
