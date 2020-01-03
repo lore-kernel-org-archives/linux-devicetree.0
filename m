@@ -2,249 +2,113 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE715C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 10:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED1BC32767
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 11:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80174206DB
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 10:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F4C222C4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 11:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578048714;
-	bh=xgCqWC9gMvYtoY+vNfhgrpAK9WwuqpgEvs1GflowvdE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=klSrlGiWFzcW1NnHuZYhxLfzHCqCUd0S+oXAlEM2FsFTbkkRkUejUKy9MtKvykgRS
-	 cIuF77mNzY4HYBHHRNS63HX+yxA11Wa3pBo0Lko8DHfO1B6LTHc1I0IzpzTq/3ripn
-	 e8r37g57NKCDavAXg0eu4LXQkqk92m1+bskw43x0=
+	s=default; t=1578050221;
+	bh=ZTWVLu1rOPLzy39EvIOvq5YGL+FAy+FCK8lZiKvt53o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jtxlXbreyUWi2ylFyYGwHnmkJZjB1+9JNI8e1oREgmg5thI9GnSg/5mCf7ni1XXEV
+	 MIAIlvs5QUc2YwJJ07XtaFctPTPPSKgmdPK6j+jkATkHMHNDuhz0lMvO1wyu1qbVcw
+	 LGdu58hhu/t1VN8TQjZsJDUQAST+SKZTevRTJrFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgACKvy (ORCPT
+        id S1727457AbgACLRB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 05:51:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727220AbgACKvx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 05:51:53 -0500
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16A1E222C3
-        for <devicetree@vger.kernel.org>; Fri,  3 Jan 2020 10:51:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578048712;
-        bh=xgCqWC9gMvYtoY+vNfhgrpAK9WwuqpgEvs1GflowvdE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zrDCCB+ukMN6zESqhRipK1VWve6wiprPFMaZMROg7bxZgibByIKzw/fROISff30WB
-         Es9WRWSB5LHfectabqcjtDJ46vsIzVEEt/cmRYrplXtZHb+sJRZQuCJ9qzWfms8Fcu
-         jlKtrGeUDFouS0JMkCUVzMmCkRqWyyrlnKx4GizI=
-Received: by mail-wr1-f50.google.com with SMTP id g17so42004317wro.2
-        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 02:51:52 -0800 (PST)
-X-Gm-Message-State: APjAAAVDxHoyEj/a3FAcGWugJcM1iUfPEaeDrFu/3gGJKvLIdeuK2JX9
-        oQkKOsjV5QI05D0DurWcsEtoZ+LyHI7smR40cvM=
-X-Google-Smtp-Source: APXvYqxr9XPHqQfkTDnCjdV5SYfOp0JHGElgFTkLIVUUHmsexTwkpsAxHVcuWUJ2D7X9tCsBgct67+zsdoterXKR1nY=
-X-Received: by 2002:adf:cf12:: with SMTP id o18mr88985838wrj.361.1578048710506;
- Fri, 03 Jan 2020 02:51:50 -0800 (PST)
+        Fri, 3 Jan 2020 06:17:01 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36290 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgACLRB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 06:17:01 -0500
+Received: by mail-ed1-f68.google.com with SMTP id j17so41375831edp.3;
+        Fri, 03 Jan 2020 03:16:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4Cz1bHF5KTHAkw4Fc68MgiqMwjrbDHHdLD3F5Ae3Ezo=;
+        b=U2kTEpxLUAwEzsGJfscFLX4v3GZNYiWttCWG/tuuKQMPovjtkmn1KZLDYMoeQut83F
+         yHhvVzsyVrme/DdSeVPB/7jDi84eVMOwNp6Lzie1s0Z8V+V6y+zLiXcX2764dV70CUjk
+         KdQb8IahE44EdKgNppBWj+oLPApaDTZvOhsRG6Q4BA8WlwNRh6/hdR6HgpEN7PGnKIOu
+         xu455aZUdKO2ePCYERlWuyToYZbY9K6iOjyb9VTX0Q1JAI8KwDb6HZo975d/ujcXcV37
+         cO6r1vGJoYj6sCAX/nMFBhOT2r3N44Cz68blkwriz9rjdWlTjUBmxXMpsyw4tYLHEm4s
+         5yYw==
+X-Gm-Message-State: APjAAAXqMiq1fl11ua07wVnr/ulIpyQwhT/RiLUlPMIrzcPuOxbTjEJb
+        bPXRnBAvD55+rzReCCq9cRQ=
+X-Google-Smtp-Source: APXvYqwm0Aou1t/E4yDsF/8shNlUmMED7vothBxjbyR0PYteuXhZsEv8NzzR+qZMCInWvdpwvwuN7A==
+X-Received: by 2002:a17:906:a88e:: with SMTP id ha14mr91081234ejb.169.1578050218870;
+        Fri, 03 Jan 2020 03:16:58 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id y4sm7699793ejr.41.2020.01.03.03.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jan 2020 03:16:58 -0800 (PST)
+Date:   Fri, 3 Jan 2020 12:16:55 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "hminas@synopsys.com" <hminas@synopsys.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: exynos: Remove unneeded "snps,dwc2"
+ from hsotg node
+Message-ID: <20200103111655.GA1605@pi3>
+References: <20191219103536.25485-1-benjamin.gaignard@st.com>
+ <20191219103536.25485-3-benjamin.gaignard@st.com>
+ <20191230153758.GB4918@pi3>
+ <bbc7e34c-75c2-dfe0-70f3-0685e8e54fed@st.com>
 MIME-Version: 1.0
-References: <20191219084332.944123-1-maxime@cerno.tech> <CAGb2v643z-GwEgOV_OS96ESihDgGNOwp2s7eyJr68QFyPNqd_Q@mail.gmail.com>
- <20191220080310.w2xtgzxend5bmv2q@gilmour.lan> <CAGb2v65+zpc1_0K2Co4uOUrfshzmVCf1Rc6Ob2YtmdmdsNTAvQ@mail.gmail.com>
- <20200102120222.yl7vlposk4b7hbu7@gilmour.lan> <CAGb2v66pixivryxffXWceLknFLErRJH3BQgtQUQSeyQq-FO=ng@mail.gmail.com>
- <20200102152641.kgckxlcq7u7xjjrl@gilmour.lan>
-In-Reply-To: <20200102152641.kgckxlcq7u7xjjrl@gilmour.lan>
-From:   Chen-Yu Tsai <wens@kernel.org>
-Date:   Fri, 3 Jan 2020 18:51:38 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65NBnua8V1r8OD6V67NtyHmnq0TUTTutJ+7MthrWDYjLQ@mail.gmail.com>
-Message-ID: <CAGb2v65NBnua8V1r8OD6V67NtyHmnq0TUTTutJ+7MthrWDYjLQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: usb: Convert Allwinner A80 USB PHY
- controller to a schema
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Chen-Yu Tsai <wens@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bbc7e34c-75c2-dfe0-70f3-0685e8e54fed@st.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 11:26 PM Maxime Ripard <maxime@cerno.tech> wrote:
+On Thu, Jan 02, 2020 at 08:50:39AM +0000, Benjamin GAIGNARD wrote:
+> 
+> On 12/30/19 4:37 PM, Krzysztof Kozlowski wrote:
+> > On Thu, Dec 19, 2019 at 11:35:36AM +0100, Benjamin Gaignard wrote:
+> >> Remove "snps,dwc2" from hsotg@12480000 node compatible list because
+> >> "samsung,s3c6400-hsotg" should be enough.
+> > The more detailed compatible is almost always "enough". Some other nodes
+> > also have detailed+generic compatible. In this case there is a driver
+> > matching "snps,dwc2" so why removing it?
+> 
+> First because, unlike the others dwc2 devices, this compatible wasn't 
+> describe in the bindings file
+> 
+> so I had to investigated how it should work and, on samsung DT files, 
+> only "samsung,s3c6400-hsotg".
+> 
+>  From driver code point of view that seems coherent (we do the same for 
+> stm32).
+> 
+> With that in mind I have decided to remove "snps,dwc2" from exynos DT 
+> file rather than add it everywhere else.
 >
-> On Thu, Jan 02, 2020 at 08:31:40PM +0800, Chen-Yu Tsai wrote:
-> > On Thu, Jan 2, 2020 at 8:02 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Fri, Dec 20, 2019 at 04:10:03PM +0800, Chen-Yu Tsai wrote:
-> > > > On Fri, Dec 20, 2019 at 4:03 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > On Thu, Dec 19, 2019 at 11:24:52PM +0800, Chen-Yu Tsai wrote:
-> > > > > > On Thu, Dec 19, 2019 at 4:43 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > > > > > >
-> > > > > > > The Allwinner A80 SoCs have a USB PHY controller that is used by Linux,
-> > > > > > > with a matching Device Tree binding.
-> > > > > > >
-> > > > > > > Now that we have the DT validation in place, let's convert the device tree
-> > > > > > > bindings for that controller over to a YAML schemas.
-> > > > > > >
-> > > > > > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > > > > > > ---
-> > > > > > >  .../phy/allwinner,sun9i-a80-usb-phy.yaml      | 135 ++++++++++++++++++
-> > > > > > >  .../devicetree/bindings/phy/sun9i-usb-phy.txt |  37 -----
-> > > > > > >  2 files changed, 135 insertions(+), 37 deletions(-)
-> > > > > > >  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > > > > >  delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
-> > > > > > >
-> > > > > > > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > > > > > new file mode 100644
-> > > > > > > index 000000000000..ded7d6f0a119
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > > > > > > @@ -0,0 +1,135 @@
-> > > > > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > > > > +%YAML 1.2
-> > > > > > > +---
-> > > > > > > +$id: http://devicetree.org/schemas/phy/allwinner,sun9i-a80-usb-phy.yaml#
-> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > > > +
-> > > > > > > +title: Allwinner A80 USB PHY Device Tree Bindings
-> > > > > > > +
-> > > > > > > +maintainers:
-> > > > > > > +  - Chen-Yu Tsai <wens@csie.org>
-> > > > > > > +  - Maxime Ripard <mripard@kernel.org>
-> > > > > > > +
-> > > > > > > +properties:
-> > > > > > > +  "#phy-cells":
-> > > > > > > +    const: 0
-> > > > > > > +
-> > > > > > > +  compatible:
-> > > > > > > +    const: allwinner,sun9i-a80-usb-phy
-> > > > > > > +
-> > > > > > > +  reg:
-> > > > > > > +    maxItems: 1
-> > > > > > > +
-> > > > > > > +  clocks:
-> > > > > > > +    anyOf:
-> > > > > > > +      - description: Main PHY Clock
-> > > > > > > +
-> > > > > > > +      - items:
-> > > > > > > +          - description: Main PHY clock
-> > > > > > > +          - description: HSIC 12MHz clock
-> > > > > > > +          - description: HSIC 480MHz clock
-> > > > > > > +
-> > > > > > > +  clock-names:
-> > > > > > > +    oneOf:
-> > > > > > > +      - const: phy
-> > > > > > > +
-> > > > > > > +      - items:
-> > > > > > > +          - const: phy
-> > > > > > > +          - const: hsic_12M
-> > > > > > > +          - const: hsic_480M
-> > > > > > > +
-> > > > > > > +  resets:
-> > > > > > > +    anyOf:
-> > > > > > > +      - description: Normal USB PHY reset
-> > > > > > > +
-> > > > > > > +      - items:
-> > > > > > > +          - description: Normal USB PHY reset
-> > > > > > > +          - description: HSIC Reset
-> > > > > > > +
-> > > > > > > +  reset-names:
-> > > > > > > +    oneOf:
-> > > > > > > +      - const: phy
-> > > > > > > +
-> > > > > > > +      - items:
-> > > > > > > +          - const: phy
-> > > > > > > +          - const: hsic
-> > > > > > > +
-> > > > > > > +  phy_type:
-> > > > > > > +    const: hsic
-> > > > > > > +    description:
-> > > > > > > +      When absent, the PHY type will be assumed to be normal USB.
-> > > > > > > +
-> > > > > > > +  phy-supply:
-> > > > > > > +    description:
-> > > > > > > +      Regulator that powers VBUS
-> > > > > > > +
-> > > > > > > +required:
-> > > > > > > +  - "#phy-cells"
-> > > > > > > +  - compatible
-> > > > > > > +  - reg
-> > > > > > > +  - clocks
-> > > > > > > +  - clock-names
-> > > > > > > +  - resets
-> > > > > > > +  - reset-names
-> > > > > > > +
-> > > > > > > +additionalProperties: false
-> > > > > > > +
-> > > > > > > +if:
-> > > > > > > +  properties:
-> > > > > > > +    phy_type:
-> > > > > > > +      const: hsic
-> > > > > > > +
-> > > > > > > +  required:
-> > > > > > > +    - phy_type
-> > > > > > > +
-> > > > > > > +then:
-> > > > > > > +  properties:
-> > > > > > > +    clocks:
-> > > > > > > +      maxItems: 3
-> > > > > > > +
-> > > > > > > +    clock-names:
-> > > > > > > +      maxItems: 3
-> > > > > > > +
-> > > > > > > +    resets:
-> > > > > > > +      maxItems: 2
-> > > > > > > +
-> > > > > > > +    reset-names:
-> > > > > > > +      maxItems: 2
-> > > > > >
-> > > > > > So this is slightly incorrect. If phy_type == "hsic", then the
-> > > > > > "phy" clock and reset should not be needed. I say should because
-> > > > > > no boards actually came with HSIC implemented. The A80 Optimus
-> > > > > > board had the HSIC lines on one of the GPIO headers, but I never
-> > > > > > had any HSIC chips lol.
-> > > > >
-> > > > > This isn't what the previous binding was saying though :/
-> > > >
-> > > > From the original binding:
-> > > >
-> > > > - clock-names : depending on the "phy_type" property,
-> > > >   * "phy" for normal USB
-> > > >   * "hsic_480M", "hsic_12M" for HSIC
-> > > > - resets : a list of phandle + reset specifier pairs
-> > > > - reset-names : depending on the "phy_type" property,
-> > > >   * "phy" for normal USB
-> > > >   * "hsic" for HSIC
-> > > >
-> > > > It is recommended to list all clocks and resets available.
-> > > > The driver will only use those matching the phy_type.
-> > >
-> > > I'm not quite sure how we want to fix this then, or even what there's
-> > > to fix.
-> > >
-> > > The previous binding is saying that we need either phy or hsic, and
-> > > that we should ideally set both. The DT are following that
-> > > recommendation, and we have either one item for the clocks (phy), or
-> > > three (phy + 2 HSIC clocks). resets is in a similar situation.
-> > >
-> > > The binding allows to have either one or three, and enforce that in
-> > > HSIC we have three (but leaves the option open to have either 1 or 3
-> > > in the normal phy type).
-> > >
-> > > As far as I can see, we cover what the binding was saying. Am I
-> > > missing something?
-> >
-> > I guess you're right. Lets just keep why you've done already.
-> > Sorry for the noise.
->
-> Is that a Reviewed-by ? :)
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Actually fine with me, although I would be happy if Rob or Mark could
+confirm that it is a preferred approach.
 
-:)
+Rob, Mark, could you share your thoughts?
+
+Best regards,
+Krzysztof
+
