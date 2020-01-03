@@ -2,157 +2,126 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7618C00523
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 08:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30CEC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89CFE2253D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 08:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA84721734
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LtAAygdW"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="HVHMul+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbgACIa0 (ORCPT
+        id S1725972AbgACJAc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 03:30:26 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5527 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgACIaZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 03:30:25 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e0efb910000>; Fri, 03 Jan 2020 00:30:09 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 03 Jan 2020 00:30:24 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 03 Jan 2020 00:30:24 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 3 Jan
- 2020 08:30:24 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 3 Jan 2020 08:30:24 +0000
-Received: from jckuo-lt.nvidia.com (Not Verified[10.19.108.118]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e0efb9d0010>; Fri, 03 Jan 2020 00:30:23 -0800
-From:   JC Kuo <jckuo@nvidia.com>
-To:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
-        <robh@kernel.org>, <jonathanh@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH v1 1/2] soc/tegra: fuse: Add Tegra194 support
-Date:   Fri, 3 Jan 2020 16:30:17 +0800
-Message-ID: <20200103083018.10575-2-jckuo@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200103083018.10575-1-jckuo@nvidia.com>
-References: <20200103083018.10575-1-jckuo@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 3 Jan 2020 04:00:32 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:49319 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgACJAb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:00:31 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C6944230E1;
+        Fri,  3 Jan 2020 10:00:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1578042029;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cxest8tMtRZIdMS9+HLvWHLoP9WwYOR1xCl5Hh5xNZQ=;
+        b=HVHMul+06/ZqJth5tKFXAnG5dpRCq4qhYeW3NtIHl/pcOfI7lniaAEVLNvdgIL4ZRV/eMq
+        9pHtaXe2W30cM+5iMTQ3BfdBfegn/YY2xoQlPYHJQPRSOMvWYZOuIsf63p8cyeDFz5Hra6
+        pPajyaQkEQJ0mLNgU90PDN65qrDSUZI=
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578040209; bh=dijRJwgAKWW5MfcZeD2dYrl92h15fEfjCaIfZ783sXs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=LtAAygdWP549eZLLtmF5fnZLE6/Z8VxWLQd3X8EAawl+UAmWYhQx6RIbTu50tpK+A
-         Iylj6LvVJgMXCLfNh6ppKTO2y1o9LIwW8zl/1EMohIalkb5NXX+AdX2BiZ2xWa5h0J
-         f4ZlSPOPm3bzjrz/QZaAt6bPUGuuSXtPMjOtTqVe67tJKu7qVAYPtn3QGmL1IE+wZ9
-         1Q9ZmnyYaZdpbA18ufZ3qvbUqZF+u4LJRDN10lLIKOuRE+I3nxGJoEvKbAtnVnDdJZ
-         QpzG0p97wZtRMILHjOhBMAv3WL5ObET3NmkoaUGb47mvm8jQ3zFhEfYjKgGzmkevVF
-         JEW94jV2qanYw==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 03 Jan 2020 10:00:27 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
+In-Reply-To: <20200102080929.0EE2C215A4@mail.kernel.org>
+References: <20191209233305.18619-1-michael@walle.cc>
+ <20191209233305.18619-2-michael@walle.cc>
+ <20191224080536.B0C99206CB@mail.kernel.org>
+ <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
+ <20200102080929.0EE2C215A4@mail.kernel.org>
+Message-ID: <6b092a602b3b8cf09160b1dcb4a282e6@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: C6944230E1
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.273];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds Tegra194 fuse/apbmisc support.
+Hi Stephen,
 
-Signed-off-by: JC Kuo <jckuo@nvidia.com>
----
- drivers/soc/tegra/fuse/fuse-tegra.c    |  3 +++
- drivers/soc/tegra/fuse/fuse-tegra30.c  | 29 ++++++++++++++++++++++++++
- drivers/soc/tegra/fuse/fuse.h          |  4 ++++
- drivers/soc/tegra/fuse/tegra-apbmisc.c |  1 +
- 4 files changed, 37 insertions(+)
+>> >> +       parent_name = of_clk_get_parent_name(node, 0);
+>> >
+>> > Could this use the new way of specifying clk parents so that we don't
+>> > have to query DT for parent names and just let the core framework do it
+>> > whenever it needs to?
+>> 
+>> you mean specifying parent_data with .index = 0? Seems like
+>> clk_composite
+>> does not support this. The parent can only be specified by supplying 
+>> the
+>> clock names.
+>> 
+>> I could add that in a separate patch. What do you think about the
+>> following new functions, where a driver can use parent_data instead
+>> of parent_names.
+> 
+> I started doing this in
+> https://lkml.kernel.org/r/20190830150923.259497-1-sboyd@kernel.org but 
+> I
+> never got around to the composite clks. Sounds fine to add this new API
+> for your use case.
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index 606abbe55bba..802717b9f6a3 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -49,6 +49,9 @@ static struct tegra_fuse *fuse = &(struct tegra_fuse) {
- };
- 
- static const struct of_device_id tegra_fuse_match[] = {
-+#ifdef CONFIG_ARCH_TEGRA_194_SOC
-+	{ .compatible = "nvidia,tegra194-efuse", .data = &tegra194_fuse_soc },
-+#endif
- #ifdef CONFIG_ARCH_TEGRA_186_SOC
- 	{ .compatible = "nvidia,tegra186-efuse", .data = &tegra186_fuse_soc },
- #endif
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c b/drivers/soc/tegra/fuse/fuse-tegra30.c
-index b8daaf5b7291..f68f4e1c215d 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra30.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
-@@ -320,3 +320,32 @@ const struct tegra_fuse_soc tegra186_fuse_soc = {
- 	.num_lookups = ARRAY_SIZE(tegra186_fuse_lookups),
- };
- #endif
-+
-+#if defined(CONFIG_ARCH_TEGRA_194_SOC)
-+static const struct nvmem_cell_lookup tegra194_fuse_lookups[] = {
-+	{
-+		.nvmem_name = "fuse",
-+		.cell_name = "xusb-pad-calibration",
-+		.dev_id = "3520000.padctl",
-+		.con_id = "calibration",
-+	}, {
-+		.nvmem_name = "fuse",
-+		.cell_name = "xusb-pad-calibration-ext",
-+		.dev_id = "3520000.padctl",
-+		.con_id = "calibration-ext",
-+	},
-+};
-+
-+static const struct tegra_fuse_info tegra194_fuse_info = {
-+	.read = tegra30_fuse_read,
-+	.size = 0x300,
-+	.spare = 0x280,
-+};
-+
-+const struct tegra_fuse_soc tegra194_fuse_soc = {
-+	.init = tegra30_fuse_init,
-+	.info = &tegra194_fuse_info,
-+	.lookups = tegra194_fuse_lookups,
-+	.num_lookups = ARRAY_SIZE(tegra194_fuse_lookups),
-+};
-+#endif
-diff --git a/drivers/soc/tegra/fuse/fuse.h b/drivers/soc/tegra/fuse/fuse.h
-index 0f74c2c34af0..94a059e577a1 100644
---- a/drivers/soc/tegra/fuse/fuse.h
-+++ b/drivers/soc/tegra/fuse/fuse.h
-@@ -108,4 +108,8 @@ extern const struct tegra_fuse_soc tegra210_fuse_soc;
- extern const struct tegra_fuse_soc tegra186_fuse_soc;
- #endif
- 
-+#ifdef CONFIG_ARCH_TEGRA_194_SOC
-+extern const struct tegra_fuse_soc tegra194_fuse_soc;
-+#endif
-+
- #endif
-diff --git a/drivers/soc/tegra/fuse/tegra-apbmisc.c b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-index a2fd6ccd48f9..7e608f682391 100644
---- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
-+++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
-@@ -63,6 +63,7 @@ u32 tegra_read_ram_code(void)
- static const struct of_device_id apbmisc_match[] __initconst = {
- 	{ .compatible = "nvidia,tegra20-apbmisc", },
- 	{ .compatible = "nvidia,tegra186-misc", },
-+	{ .compatible = "nvidia,tegra194-misc", },
- 	{},
- };
- 
--- 
-2.17.1
+Yeah took me a while to figure out what you've meant by the "new way" ;)
+Anyway, I've posted a v3 of this series with the new composite clock 
+API.
 
+> 
+>> 
+>> +struct clk *clk_register_composite_pdata(struct device *dev, const 
+>> char
+>> *name,
+>> +               const struct clk_parent_data *parent_data,
+>> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
+>> +               struct clk_hw *rate_hw, const struct clk_ops 
+>> *rate_ops,
+>> +               struct clk_hw *gate_hw, const struct clk_ops 
+>> *gate_ops,
+>> +               unsigned long flags);
+
+num_parents was missing here. added that in the v3.
+
+-michael
