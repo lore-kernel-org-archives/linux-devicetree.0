@@ -2,150 +2,165 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099AAC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DE7C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02D921734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D362022314
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:49:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ECEROtfh"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="NwEdZrfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgACJmM (ORCPT
+        id S1727478AbgACJtL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:42:12 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38526 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgACJmL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:42:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hSd+k6iEqKzmVNrZP+DHV8Hbt5OZ637hPUdUGMwBIcY=; b=ECEROtfhmTzdfVvRP6/P7P38t
-        YLZuVw7ZpfleLYEmPUhvtbGyVDEH2cxEaLM+er9zuOJkxxxGO6OBr2ELCJw7TW1tAud0NiyeCXlii
-        ZWI5eo1yUb0Hq/b2x5YnCmlXheqmrbf2EuI4spM019wIwiD+tzOGU7didPvNiV3tuQDtxihOscWS1
-        5eOLFv8uNWfu1Me75HI/FZtzEPhhKzUUYm5irjkLrxjmJe/vyo9HWYcg79MDAAnp7hslJUGNDYaBX
-        hDjKlc+uiJl41DmOk9V7FUDY2LI1MlyWhVIB7Jv2Ji/P4Ckz0bpAEK9pUvhu8kdTU1vZusq5Uf4Ps
-        O8wlbLr5w==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:57482)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1inJT4-0001Jq-Io; Fri, 03 Jan 2020 09:42:06 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1inJT2-00031p-VS; Fri, 03 Jan 2020 09:42:04 +0000
-Date:   Fri, 3 Jan 2020 09:42:04 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Message-ID: <20200103094204.GA18808@shell.armlinux.org.uk>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191223120730.GO25745@shell.armlinux.org.uk>
- <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200103092718.GB25745@shell.armlinux.org.uk>
+        Fri, 3 Jan 2020 04:49:11 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:46936 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgACJtK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:49:10 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: lt1iGyig/hzavnR2EK27QnIpAGY4nevCHUp1wkPyz7h8hBlQvGYx4Jz0+bmNKn78B/BwrLPQQC
+ +7LTF/XLFEjalYlrLfpjogcT58ctyCubK3TI1QeCz3e2JbEaEga6qRauV/S5RpPxlPEGnfOK8u
+ Hyv8rQf3v6gq/nxNBOuJVtRSJp/dcDwcJpNNpQNTahMnHEfo9cEJEoh4Wfg4YoQWk5T9VGBhgE
+ hVddm0DS2jyYQQ9rV5dpJJFZY9fcp1CMVwR4cbaCvBDXi+EWVvZl7U2UDW3uOCWL5bUo9LPcgd
+ mOM=
+X-IronPort-AV: E=Sophos;i="5.69,390,1571727600"; 
+   d="scan'208";a="62108718"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Jan 2020 02:49:09 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 3 Jan 2020 02:49:09 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 3 Jan 2020 02:49:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VSAzN+aJsjopcTYfmc6OieQt205m9FnDfGKH+ODM3meKd3fpiKwqvhaud5ZDUWH1zHBZ5fwKMKTtBoZbB6pV/Zi2s6RLuTTfp3GgvSNRCsoWxrE4wdSUbZRCKohr9tuq/JgQ6UNZ44gR78U0fvoVtSAGsdwP3FHBU/ei84ri2DZTTbf2qyJv9yGzDRIRtci2OxKc7cQ0iJ6SR9am6S27anu4nxQveQIVJidGHu60O73F5HB8+2PN81xppgaZ/2SrmiiKGhkThcaYlifPvmZbcfI9pJFKzZRcDrCYQxRT0SGLzgvJ7mZvh+i6ISrhjXEWZgPijMhF3t1LHW40Yyqdxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tSoxW5u6A/VO0Yp3B5/E7fMNKvUBbbFfgkOXZYFAi/A=;
+ b=RbG2OkUUjck6Uhh5/HggHTsDuVVCQSJQVgvW4OZeCSWTrBpv+uneYTD6yAvqZRtr9Q4hcq3DFdDhpukJStzRi5DrN8dlX5Iq4N7KfkNZhIO8RG+47AlTHWaV2efOyHx8uqQwYyeCIkn2AuFLf2IWSDeu2AqIU0uSHAhWyDRAnWLfI1gR5bKa12zEW5S3DH3zNmzdtwu4VQkSjLSB9PZjoPPKgfz658+xkd8Vy4m/iY0tf+ogF4BYSWrLpm8+WrUytTxeNI8FNA8sGg4ug9Iu+bvEd6ctvhGs0MNx19bQmHedAlKfZDAPIZqclAVuyOetaYJHLSsLzWgQQLBt2utzVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tSoxW5u6A/VO0Yp3B5/E7fMNKvUBbbFfgkOXZYFAi/A=;
+ b=NwEdZrfCKDyX/X93qfz0HGCg7OL2OTGap4fgBI+FFdfB+yNK2s//AHdsDBx+x3S3141OQ8qalFye3d3T149lVe/2j/g1X/RkUuBUgfJcV20pMiPyGOZR+8aQ5Q1pdSDb5MRl+MunzAtlLm/q2YNti6moFE0py97/WGW8F2Onfjo=
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com (52.132.255.220) by
+ BY5PR11MB4322.namprd11.prod.outlook.com (10.255.89.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.10; Fri, 3 Jan 2020 09:49:06 +0000
+Received: from BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::6189:c32:b55b:b3fd]) by BY5PR11MB4497.namprd11.prod.outlook.com
+ ([fe80::6189:c32:b55b:b3fd%5]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
+ 09:49:06 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <kamel.bouhara@bootlin.com>, <wsa@the-dreams.de>,
+        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <Ludovic.Desroches@microchip.com>, <robh@kernel.org>,
+        <Codrin.Ciubotariu@microchip.com>
+Subject: [PATCH v2 0/6] i2c bus recovery for Microchip SoCs
+Thread-Topic: [PATCH v2 0/6] i2c bus recovery for Microchip SoCs
+Thread-Index: AQHVwhsJN8+B8BrAj0ahyw6tlDm+jg==
+Date:   Fri, 3 Jan 2020 09:49:06 +0000
+Message-ID: <20200103094821.13185-1-codrin.ciubotariu@microchip.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.25.143.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: dfbb639c-0e07-459c-94a6-08d790322c5b
+x-ms-traffictypediagnostic: BY5PR11MB4322:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR11MB4322091B9189AC94058D6000E7230@BY5PR11MB4322.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0271483E06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(366004)(376002)(136003)(39860400002)(396003)(346002)(189003)(199004)(36756003)(478600001)(4326008)(6512007)(6486002)(110136005)(54906003)(316002)(5660300002)(107886003)(186003)(66946007)(66446008)(64756008)(66476007)(66556008)(8676002)(86362001)(6506007)(1076003)(8936002)(76116006)(26005)(81166006)(2906002)(91956017)(71200400001)(81156014)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB4322;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Az6ffLFFZinIRtC8Xae2ZvfoGwcoqEU3mU+1MkkA9+MkmwipojhvxBb5KLx8Fc8hO3xTgkpkTlOEu6Mt7qkTpBXR1TbsitqjxpWt0i2YT2R/7Z1AZtwFjBltDefMLTTCU2pUNA/jKxUF7RgMQgEhxm4hx1eTF+MkIbTIo6kXOVplIVIHsKTJLHdZab4ffN27OhRu6cEOudJk/HWt7fE8+wZ6QUJ+V+Oi4m6Hsyq5pAhbcUuMDHcsdseYilhM6vDkmlrFC80H/VedZKOCkbZZr/V6jyBc4e32I3KRqxSTmMx/lPtzausffoOmeCr2xgfjpNNNVZ6EnT3GPNQDmBXncLymzc8W6roF0sCoksysvq/jQS2J4yi/soLE+LXKB+wuzTDovG9Km8eJ2pZ7OM5XFpYuxQk5vtYNUIQHlGluta6JgSptsZtRk15rrV3K/Zxh
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200103092718.GB25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfbb639c-0e07-459c-94a6-08d790322c5b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2020 09:49:06.1829
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: eBEaXFFTSSX3RFMt67Xm90CoNaxSCdDnBAa2QnXD3n1oZW6IlZHEpEN0RjgNh8hd0HgouJwfb67M1JnzlfUxVXUT7GkwGVZBeBynJRw0FOU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4322
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 03, 2020 at 09:27:18AM +0000, Russell King - ARM Linux admin wrote:
-> Merely specifying "xfi" does not tell you what you need to do to achieve
-> XFI compliance at the point defined in INF8077i.  Plus, XFI can also be
-> protocols _other_ than 10GBASE-R.
-> 
-> Claiming that "XFI" properly defines the interface is utter rubbish. It
-> does not. XFI defines the electrical characteristics *only* and not
-> the underlying protocol. It is not limited to 10GBASE-R, but includes
-> other protocols as well.
+This patch series introduce the i2c bus recovery mechanism
+for the Microchip SoCs. Some SoCs have hardware support for
+recovery, while for those who don't the i2c-gpio bus recovery
+mechanism is used. Updated the corresponding dts to add i2c
+gpio pinctrl. The bus recovery is configured for the sama5d2/3/4
+xplained and sama5d27 som1 EK boards in dts.
 
-Let me quote from INF-8077i, which is the XFP MSA, the document
-responsible for defining XFI:
+Changes in v2:
+ - integrated the HW CLEAR command patch;
+ - call i2c_recover_bus() after an error occurs, if SDA is down;
+ - added i2c gpio pinctrl in sama5d2 xplained and sama5d27 som1 EK
+   boards;
 
-3.1 INTRODUCTION
-   XFI signaling is based on high speed low voltage logic, with nominal 100
-   Ohms differential impedance and AC coupled in the module. XFI was de-
-   veloped with the primary goal of low power and low Electro-Magnetic-In-
 
-   terference (EMI). To satisfy this requirement the nominal differential signal   levels are 500 mV p-p with edge speed control to reduce EMI.
+Codrin Ciubotariu (1):
+  i2c: at91: Send bus clear command if SCL is down
 
-3.2 XFI APPLICATIONS DEFINITION
-   The application reference model for XFI, which connects a high speed
-   ASIC/SERDES to the XFP module is shown in Figure 4. The XFI interface
-   is designed to support SONET OC-192, IEEE.Std-802.3ae, 10GFC and
-   G.709(OTU-2) applications. The SERDES is required to meet the applica-
-   tion requirements for jitter generation and transfer when interfaced with a
-   compliant XFP module through an XFP compliant channel. Modules or
+Kamel Bouhara (5):
+  dt-bindings: i2c: at91: document optional bus recovery properties
+  i2c: at91: implement i2c bus recovery
+  ARM: at91/dt: sama5d3: add i2c gpio pinctrl
+  ARM: at91/dt: sama5d4: add i2c gpio pinctrl
+  ARM: at91/dt: sama5d2: add i2c gpio pinctrl
 
-   hosts designed only for 10 Gigabit Ethernet or 10GFC are not required to
-   meet more stringent Telecom jitter requirements. XFI supported data
-   rates are listed in Table 5. XFP compliant module are not required to sup-
-   port all the rates listed in Table 5 in simultaneously.
+ .../devicetree/bindings/i2c/i2c-at91.txt      |  10 ++
+ arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts     |  33 +++++-
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts   |  33 +++++-
+ arch/arm/boot/dts/sama5d3.dtsi                |  33 +++++-
+ arch/arm/boot/dts/sama5d4.dtsi                |  33 +++++-
+ drivers/i2c/busses/i2c-at91-core.c            |   9 ++
+ drivers/i2c/busses/i2c-at91-master.c          | 101 ++++++++++++++++++
+ drivers/i2c/busses/i2c-at91.h                 |  15 ++-
+ 8 files changed, 254 insertions(+), 13 deletions(-)
 
-   Standard                            Description           Nominal Bit Rate     Units
-   OC-192/SDH-64                         SONET                     9.95         Gigabaud
-   IEEE std-802.3ae             10 Gb/s Ethernet LAN PHY           10.31        Gigabaud
-   INCITS/T11 Project 1413-D             10GFC                     10.52        Gigabaud
-   ITU G.709(OTU-2)                 OC-192 Over FEC                10.70        Gigabaud
-   Emerging                     10Gb/s Ethernet Over G.709         11.09        Gigabaud
-
-So here, we can clearly see that it's possible to run SONET, 10GBASE-R,
-10G Fiberchannel, OC-192, and G.709 over XFI, so XFI does not describe
-_just_ ethernet. If we're going to be configuring a serdes to output
-XFI, we need to know a lot more than just "XFI".
-
-   XFI Compliance points are defined as the following:
-
-   •   A: SerDes transmitter output at ASIC/SerDes package pin on a DUT
-       board 3.6 and A.1
-   •   B: Host system SerDes output across the host board and connector
-       at the Host Compliance Test Card 3.7.1 and A.2
-   •   B': XFP transmitter input across the Module Compliance Test Board
-       3.8.1 and A.3.
-   •   C: Host system input at the Host Compliance Test Card input 3.7.2
-       and A.2
-   •   C': XFP module output across the Module Compliance Test Board
-       3.8.2 and A.3.
-
-   •   D: ASIC/SerDes input package pin on the DUT board 3.6.2 and A.1.
-
-   ASIC/SerDes compliance points are informative.
-
-So the electrical points that count are B, B', C and C'. A and D
-are merely "informative".  Hence, compliance with XFI is required
-to take the entire platform into account, not just the output of
-the serdes/asic.  That means the performance of the PCB needs to
-be described in DT if you want to achieve compliance with XFI.
-phy_interface_t can't do that.
-
-So, let me re-iterate: neither XFI nor SFI are suitable for
-phy_interface_t. XFI defines merely a group of possible protocols
-and an electrical specification. It doesn't tell you which of those
-protocols you should be using.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+--=20
+2.20.1
