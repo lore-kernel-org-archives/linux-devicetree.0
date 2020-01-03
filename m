@@ -4,136 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C20C00523
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 23:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 853B3C00523
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 23:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20F4421835
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 23:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7E921835
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 23:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578094847;
-	bh=YVTFAYz3giJ1u1dlO2paEJHjx80aSYUSc3WheWccZmA=;
+	s=default; t=1578095074;
+	bh=Mg3TQ5nbJqbt3keDFCXdnTMad0SO85xjOLMwAZ4VpnU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pqR9qAMxiHSmsmhfbjCNbC+H8qGfSuLcZF1tROY5iQulZa2bmT+2zZTDNB1TebDjU
-	 9jkaENEXbvZl2WyDwHsccT+oIoVnxnCO2VQfFilAg/jvABZ3vdqqQJ+kUE8S2Bwpt4
-	 9T8/kBkdkNuiEAeOM9xNB8/sJ1l2/O3Qm7aKCX+k=
+	b=WQp91vIjONn+qNrc9XCiwqhCS+Nfb9ga0wBTBtTKCVWPI4Z/o7CUZqHubWvCcIqeq
+	 P5HnZ027rCiX4wzmdHdncKEL+E+AJs4lKcFifWVe/9ZfLDB96ThSssEaJFkZMgbryR
+	 yZJ1n8ZxYcYJfIJnJ9mnzk/jojejpThtsidZfsAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgACXkq (ORCPT
+        id S1726426AbgACXo3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 18:40:46 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:47079 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgACXkq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 18:40:46 -0500
-Received: by mail-il1-f195.google.com with SMTP id t17so37905099ilm.13
-        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 15:40:45 -0800 (PST)
+        Fri, 3 Jan 2020 18:44:29 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42365 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726232AbgACXo2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 18:44:28 -0500
+Received: by mail-io1-f65.google.com with SMTP id n11so36307885iom.9
+        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 15:44:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1G7HBZ/lx4jhuYMngmAkk5nXPN0Gyvary5PxJkGPU+Q=;
-        b=Dy1iwl8WsKgFyzG9DwhenZI8ZHAOra43UkcMgDq6tcRVEdrX7lyONiKOe8MC40IueP
-         s3oSuJfpWQR9F/FsC7X4lezyVPC87AMRp7ITnIb1ccjCMNMc355JuWlGJ84HM66/W2Zt
-         svCFFUplL+h0pQ2fQuk9/gUhTcPOTWMPhw1eryXCyoNB9AVS111KBW4HmT+lKKZ2RVas
-         mDVL4xUXHzYeUsJpJtAntLBOS2ph2cioM4uCUUc3hZ6H/q+d9Npl8G0LgFt2yNFsEfyr
-         bPtsEIhMimO7UCCNYUosc/+FjFGEeN46jUlG4JVbZNFqBG8XHL94q567g7gRMJcXDuIc
-         Ubdw==
-X-Gm-Message-State: APjAAAU7T9pGemQkLLaUNnfqNhUOQOBe89zIKHOac1ycr6khrjG7MaaK
-        886D8P7nra7pWJzokpSpIMcyMkg=
-X-Google-Smtp-Source: APXvYqw7W4c/f6DUBNnEuyApBNDK9f253G0/u2MWf2ZK+hu5EVzd5Dp3+jGzkXwcB9B4SFWUtcdNHw==
-X-Received: by 2002:a92:d982:: with SMTP id r2mr54471996iln.98.1578094845270;
-        Fri, 03 Jan 2020 15:40:45 -0800 (PST)
+        bh=oHVJcbfywZ2wbBBx9DgqhrtkzwrTvD4xChukN5BH1kY=;
+        b=lMWC3bqnp/G+F5aao0hvnM0CFWxW/e5+KFopvb4G/vt3dfXYZN5p/W/7smVdjyH1KN
+         aaG6DEBVMgdNl/WiMWlFxwf4uwUS/0k98yzjfUnth08JjU8ZxD28Oh1BqUcj7ge7yK1A
+         Xbi3WC7sJ6k3nholZYaUfvcDYqeworfKHgrmwIWt0SjjK9YcwMqX0dm6F6f2CBmgMeEA
+         lDoPikM6pEzGthUt+Ssb+PXbVfjXUcpbQqbtdBk3MdzIbYewiI/1H4LrRVmlxNfEYDhe
+         EjHlYefsO4Jxd1zRzJH/p3pPjFgYeI1r5FkYpSN9+Pu7OU0B+k0M7FqctcmXw0/eUm8H
+         fv6g==
+X-Gm-Message-State: APjAAAW4cJm3eJCHLHKXtRGHyvBgarszgWpT338Y/gZSsmC98p6DTak6
+        LZdoUXxC4OPrqwNbzqT7vopDus4=
+X-Google-Smtp-Source: APXvYqxx0UPQ6FXGCVdlngczDosQ5mi5dvzBtakaTjr5txj920MgEDzwP8nA4Z3xTbiRTt2RPb1QaQ==
+X-Received: by 2002:a02:cd0d:: with SMTP id g13mr73709023jaq.110.1578095067718;
+        Fri, 03 Jan 2020 15:44:27 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id u80sm17932418ili.77.2020.01.03.15.40.44
+        by smtp.gmail.com with ESMTPSA id j17sm21563730ild.45.2020.01.03.15.44.26
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 15:40:44 -0800 (PST)
+        Fri, 03 Jan 2020 15:44:26 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 2219a5
+        id 2219b7
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 16:40:42 -0700
-Date:   Fri, 3 Jan 2020 16:40:42 -0700
+        Fri, 03 Jan 2020 16:44:25 -0700
+Date:   Fri, 3 Jan 2020 16:44:25 -0700
 From:   Rob Herring <robh@kernel.org>
 To:     Khouloud Touil <ktouil@baylibre.com>
 Cc:     bgolaszewski@baylibre.com, mark.rutland@arm.com,
         srinivas.kandagatla@linaro.org, baylibre-upstreaming@groups.io,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-i2c@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: nvmem: new optional property
+Subject: Re: [PATCH v3 3/4] dt-bindings: at24: remove the optional property
  write-protect-gpios
-Message-ID: <20200103234042.GA14976@bogus>
+Message-ID: <20200103234425.GA17746@bogus>
 References: <20191219115141.24653-1-ktouil@baylibre.com>
- <20191219115141.24653-2-ktouil@baylibre.com>
+ <20191219115141.24653-4-ktouil@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191219115141.24653-2-ktouil@baylibre.com>
+In-Reply-To: <20191219115141.24653-4-ktouil@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 12:51:38PM +0100, Khouloud Touil wrote:
-> Several memories have a write-protect pin, that when pulled high, it
-> blocks the write operation.
-
-Subject doesn't match the actual property name.
-
+On Thu, Dec 19, 2019 at 12:51:40PM +0100, Khouloud Touil wrote:
+> NVMEM framework is an interface for the at24 EEPROMs as well as for
+> other drivers, instead of passing the wp-gpios over the different
+> drivers each time, it would be better to pass it over the NVMEM
+> subsystem once and for all.
 > 
-> On some boards, this pin is connected to a GPIO and pulled high by
-> default, which forces the user to manually change its state before
-> writing.
-> 
-> Instead of modifying all the memory drivers to check this pin, make
-> the NVMEM subsystem check if the write-protect GPIO being passed
-> through the nvmem_config or defined in the device tree and pull it
-> low whenever writing to the memory.
-> 
-> Add a new optional property to the device tree binding document, which
-> allows to specify the GPIO line to which the write-protect pin is
-> connected.
+> Removing the optional property form the device tree binding document.
 > 
 > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/devicetree/bindings/nvmem/nvmem.yaml | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  Documentation/devicetree/bindings/eeprom/at24.yaml | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/nvmem.yaml b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-> index 1c75a059206c..b43c6c65294e 100644
-> --- a/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-> +++ b/Documentation/devicetree/bindings/nvmem/nvmem.yaml
-> @@ -34,6 +34,14 @@ properties:
->      description:
->        Mark the provider as read only.
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> index e8778560d966..75de83708146 100644
+> --- a/Documentation/devicetree/bindings/eeprom/at24.yaml
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> @@ -145,10 +145,7 @@ properties:
+>        over reads to the next slave address. Please consult the manual of
+>        your device.
 >  
-> +  wp-gpios:
-> +    description:
-> +      GPIO to which the write-protect pin of the chip is connected.
-> +      The write-protect GPIO is asserted, when it's driven high
-> +      (logical '1') to block the write operation. It's deasserted,
-> +      when it's driven low (logical '0') to allow writing.
-> +    maxItems: 1
-> +
->  patternProperties:
->    "^.*@[0-9a-f]+$":
->      type: object
-> @@ -63,9 +71,12 @@ patternProperties:
+> -  wp-gpios:
+> -    description:
+> -      GPIO to which the write-protect pin of the chip is connected.
+> -    maxItems: 1
+> +  wp-gpios: true
 >  
->  examples:
->    - |
-> +      #include <dt-bindings/gpio/gpio.h>
-> +
->        qfprom: eeprom@700000 {
->            #address-cells = <1>;
->            #size-cells = <1>;
-> +          wp-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
->  
->            /* ... */
->  
+>    address-width:
+>      allOf:
+> @@ -181,7 +178,6 @@ examples:
+>            compatible = "microchip,24c32", "atmel,24c32";
+>            reg = <0x52>;
+>            pagesize = <32>;
+> -          wp-gpios = <&gpio1 3 0>;
+
+This is still valid, why is it being removed?
+
+>            num-addresses = <8>;
+>        };
+>      };
 > -- 
 > 2.17.1
 > 
