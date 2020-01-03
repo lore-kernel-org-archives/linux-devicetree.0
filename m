@@ -2,91 +2,281 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4B7C00523
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 22:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EDEC00523
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 23:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EDD24650
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 22:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389AD24649
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 23:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578091488;
-	bh=IIWl5Kz23+z1rT84VFyxnh9pgrS4jE5ggnaKO8oPehY=;
+	s=default; t=1578093528;
+	bh=vROKDr8ou9KC9ShWiJhEJm1fxvNK1FpW7pX42/uvUGA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ba0gzW+f7hV0sYPtMlO3jP5hVXqJ+77UmnHls5lLuITaelfZUnBqQAA3kPqLeagc8
-	 uxtFJiELB50rKk64ClKA1vkVFjek8MGw8x4r5vjcdUBTT+5hcislciCYcpaz7HigCM
-	 RMEf8E3rraE8u8ID2HlLZVxWK7ly35R9XQcpOrik=
+	b=U/lRnREvv7UU91+QtpLRJRpcKKBwazwvHeuWpAo0v8/MvphUTC0z5a2PouuyJ2nB3
+	 ZR0OlqoG1PWCPnfa0YMQr0CMxjp5c0i0BP9DSfLoCrOwXBGwcHtIWtQu/Df/yWsjVi
+	 MFxVPC0dM10XuUIuAq3Oa+TMPWCXvM1UFaB2bNjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgACWor (ORCPT
+        id S1726170AbgACXSr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 17:44:47 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41443 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgACWor (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 17:44:47 -0500
-Received: by mail-il1-f193.google.com with SMTP id f10so37860533ils.8
-        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 14:44:46 -0800 (PST)
+        Fri, 3 Jan 2020 18:18:47 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33861 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726052AbgACXSr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 18:18:47 -0500
+Received: by mail-il1-f196.google.com with SMTP id s15so37973691iln.1
+        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 15:18:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1X+uA4KwbOlDW43uh4WTk3rfWonQFJL9jlxrD4of9Dk=;
-        b=jJ/iCPiVUxJtR8MAeB4dIHYDttVidShUSMYPMuO0hI+bHeNYuuaWQ7nW93vLnusT3q
-         nXSzLT9e7jzM3dt5NvWFZYOLKZzojmR/SxcY/p8ZUGLhqw5kKv/k0SUB8XZkpftOHVrY
-         B+nltYvMj50lXLyvATLzLORPX/pQbj0TIZjs0/qMvAZc6jjWDbH8ASgoYMTGBc93kaiI
-         Kqt1Z+pkofA+nB5DvEv2q3vMkxOhQ9aVDAs7iTrG60gqWloKZdyE0MiydLS3g+iFCpYq
-         roRmw2cEc10Euc8FOjCaXZmq1EQeFIibgBdVMPH/wtpoRf3WByz6te8U3SzBXqIGHkin
-         Vb6w==
-X-Gm-Message-State: APjAAAUouKiz8E0Gh4QRggmCWTXmT3Ov+1yTRaE/gZI1jMl1ubBixP3P
-        psqcfqicH50l9rIFSSmkAUCtWxE=
-X-Google-Smtp-Source: APXvYqxjEOASWxUkvlJVPYr8fAWZ10kUnqfcwSIlhUoyKNnBwhyRO5ij73QRvIxox/DNObMQFTzjPw==
-X-Received: by 2002:a92:459b:: with SMTP id z27mr74100153ilj.104.1578091486518;
-        Fri, 03 Jan 2020 14:44:46 -0800 (PST)
+        bh=YCaxbEJ1CW2jND/UvSNmsdGdR3TnCMQc7c+abO1Ak4E=;
+        b=SVKPQ8y2gTwGzAQMXEFvoqoIt+ipCSxntHJSuvKdAMEGuZVYenBXknCVCwVKJKEQwd
+         HaakVz+TNbRRUDOEm08dmStrH0b3zDFvwEB7VMpN+xYyX2Y0a603dPPUyk6QjFRHEGVL
+         q0ADDmm/RQ/MlyKCt2bsSnLkJ6xdwWiJ7MFfPZQucOxNIyurImOJqbuU/5RuzmO2CYq0
+         R/Y+MupBs+Ll2/Geq4pt8GaRvegYHrHLRH/kTh0rtBAqF0rBcfxqycshIJNB1HArF6iM
+         GP6HwytjZRlCeNCkmNopszhUybPV5w9DRSULX9xUYN3z0+oSp4Uf5OFz8to3pF05Bzo+
+         702w==
+X-Gm-Message-State: APjAAAWkWXuG1yMFkDL6xo1v+DtU0fgvGOFdgnJFF3XnuXcpu8En1id8
+        EV1d2T2CktREwzlZE+Wj5Y1V/68=
+X-Google-Smtp-Source: APXvYqyUUdR4W5End0xPQY++zFowdCZLn25oJJbeOqFyaQJpGqjpEnqcs0wZ0eZyEEku5n4ToLAqJQ==
+X-Received: by 2002:a92:468c:: with SMTP id d12mr75892017ilk.24.1578093525991;
+        Fri, 03 Jan 2020 15:18:45 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t25sm14985304ios.78.2020.01.03.14.44.44
+        by smtp.gmail.com with ESMTPSA id m90sm17471792ilh.56.2020.01.03.15.18.43
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 14:44:45 -0800 (PST)
+        Fri, 03 Jan 2020 15:18:43 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
         id 2219a5
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 15:44:43 -0700
-Date:   Fri, 3 Jan 2020 15:44:43 -0700
+        Fri, 03 Jan 2020 16:18:42 -0700
+Date:   Fri, 3 Jan 2020 16:18:42 -0700
 From:   Rob Herring <robh@kernel.org>
 To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        shawnguo@kernel.org, heiko@sntech.de, sam@ravnborg.org,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] dt-bindings: Add an entry for Monolithic Power
- System, MPS
-Message-ID: <20200103224443.GA25756@bogus>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20200103231842.GA25920@bogus>
 References: <20191226222930.8882-1-sravanhome@gmail.com>
- <20191226222930.8882-2-sravanhome@gmail.com>
+ <20191226222930.8882-3-sravanhome@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191226222930.8882-2-sravanhome@gmail.com>
+In-Reply-To: <20191226222930.8882-3-sravanhome@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 26 Dec 2019 23:29:27 +0100, Saravanan Sekar wrote:
-> Add an entry for Monolithic Power System, MPS
+On Thu, Dec 26, 2019 at 11:29:28PM +0100, Saravanan Sekar wrote:
+> Add device tree binding information for mpq7920 regulator driver.
+> Example bindings for mpq7920 are added.
 > 
 > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+>  .../bindings/regulator/mpq7920.yaml           | 143 ++++++++++++++++++
 
-Acked-by: Rob Herring <robh@kernel.org>
+Convention is use the compatible string: mps,mpq7920.yaml
+
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> new file mode 100644
+> index 000000000000..54e9177dfd1b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mpq7920.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/mpq7920.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Monolithic Power System MPQ7920 PMIC
+> +
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "pmic@[0-9a-f]{1,2}"
+> +  compatible:
+> +    enum:
+> +      - mps,mpq7920
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  mps,time-slot:
+> +    description:
+> +      each regulator output shall be delayed during power on/off sequence which
+> +      based on configurable time slot value, must be one of following corresponding
+> +      value 0.5ms, 2ms, 8ms, 16ms
+
+These values map to 0-3?
+
+This value is how long each time slot is?
+
+> +    allOf:
+> +      - $ref: "/schemas/types.yaml#/definitions/uint8"
+> +      - enum: [ 0, 1, 2, 3 ]
+> +      - default: 0
+
+Only $ref needs to be under the allOf, so move enum and default to same 
+level as allOf.
+
+> +
+> +  mps,fixed-on-time:
+> +     description:
+> +       select power on sequence with fixed time output delay mentioned in
+> +       time-slot reg for all the regulators.
+> +     type: boolean
+> +
+> +  mps,fixed-off-time:
+> +     description:
+> +        select power off sequence with fixed time output delay mentioned in
+> +        time-slot reg for all the regulators.
+> +     type: boolean
+> +
+> +  mps,inc-off-time:
+> +     description: |
+> +        mutually exclusive to mps,fixed-off-time an array of 8, linearly increase
+> +        output delay during power off sequence based on factor of time slot/interval
+> +        for each regulator.
+> +     allOf:
+> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       - minimum: 0
+> +       - maximum: 15
+> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
+
+Each value corresponds to a regulator? Why not a per regulator property?
+
+> +
+> +  mps,inc-on-time:
+> +     description: |
+> +        mutually exclusive to mps,fixed-on-time an array of 8, linearly increase
+> +        output delay during power on sequence based on factor of time slot/interval
+> +        for each regulator.
+> +     allOf:
+> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       - minimum: 0
+> +       - maximum: 15
+> +       - default: [ 0, 6, 0, 6, 7, 7, 7, 9 ]
+> +
+> +  mps,switch-freq:
+> +     description: |
+> +        switching frequency must be one of following corresponding value
+> +        1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
+
+Seems like this should be a common property.
+
+> +     allOf:
+> +       - $ref: "/schemas/types.yaml#/definitions/uint8"
+> +       - enum: [ 0, 1, 2, 3 ]
+> +       - default: 2
+> +
+> +  mps,buck-softstart:
+> +     description: |
+> +        An array of 4 contains soft start time of each buck, must be one of
+> +        following corresponding values 150us, 300us, 610us, 920us
+> +     allOf:
+> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       - enum: [ 0, 1, 2, 3 ]
+
+As this is an array, should be:
+
+items:
+  enum: ...
+
+Constraints on the size of the array?
+
+Though again, why not a per regulator property? Also, a fairly common 
+thing for buck regulators?
+
+> +       - default: [ 1, 1, 1, 1 ]
+> +
+> +  mps,buck-ovp:
+> +     description: |
+> +        An array of 4 contains over voltage protection of each buck, must be
+> +        one of above values
+> +     allOf:
+> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       - enum: [ 0, 1 ]
+> +       - default: [ 1, 1, 1, 1 ]
+> +
+> +  mps,buck-phase-delay:
+> +     description: |
+> +        An array of 4 contains phase delay of each buck must be one of above values
+> +        corresponding to 0deg, 90deg, 180deg, 270deg
+> +     allOf:
+> +       - $ref: "/schemas/types.yaml#/definitions/uint8-array"
+> +       - enum: [ 0, 1, 2, 3 ]
+> +       - default: [ 0, 0, 1, 1 ]
+> +
+> +  regulators:
+> +    type: object
+> +    description:
+> +      list of regulators provided by this controller, must be named
+> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+> +      The valid names for regulators are
+> +      buck1, buck2, buck3, buck4, ldortc, ldo2, ldo3, ldo4, ldo5
+
+You need buck[1-4] and ldo(rtc|[2-5]) child nodes defined here which 
+reference regulators.yaml.
+
+> +
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@69 {
+> +          compatible = "mps,mpq7920";
+> +          reg = <0x69>;
+> +
+> +          mps,switch-freq = <1>;
+> +          mps,buck-softstart = /bits/ 8 <1 2 1 3>;
+> +          mps,buck-ovp = /bits/ 8 <1 0 1 1>;
+> +
+> +          regulators {
+> +            buck1 {
+> +             regulator-name = "buck1";
+> +             regulator-min-microvolt = <400000>;
+> +             regulator-max-microvolt = <3587500>;
+> +             regulator-min-microamp  = <460000>;
+> +             regulator-max-microamp  = <7600000>;
+> +             regulator-boot-on;
+> +            };
+> +
+> +            ldo2 {
+> +             regulator-name = "ldo2";
+> +             regulator-min-microvolt = <650000>;
+> +             regulator-max-microvolt = <3587500>;
+> +            };
+> +         };
+> +       };
+> +     };
+> +...
+> -- 
+> 2.17.1
+> 
