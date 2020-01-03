@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B82C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F9C2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B916F227BF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5A12085B
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:20:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VohmIwVu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvn8VQQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgACSUJ (ORCPT
+        id S1728324AbgACSTZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:20:09 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44311 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728355AbgACSTc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:19:32 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so23751311pgl.11;
-        Fri, 03 Jan 2020 10:19:32 -0800 (PST)
+        Fri, 3 Jan 2020 13:19:25 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45162 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728186AbgACSTY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:19:24 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b9so23745600pgk.12;
+        Fri, 03 Jan 2020 10:19:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pRdo21w7/SaS3AubZ64uXtmdqPS8AL7saL+u9hGzjGw=;
-        b=VohmIwVumk0NhLQlFp6GN8LqZbk5sX/IsUZyNTVLHhNmiV4UnbjCvrD8opx9HZ87+m
-         cjxqDEiJt2OytwI2o3IVbFtskuKwyVDiNffiq5RyrBMM61p/ycWbgXz0YEvVR9IBp28h
-         t1OsCn0u32jcgI0cTGDvKiX60d6Gnq1JlVGcE9afrTlhHUH/avWnVVOrR9488uPB5QcJ
-         h8h/kWTTirAUGw2PCBbALr6PqlGc30hBGnw/w7j5NYgGQMgmjhi9GMBIXOhHxcwjw6ZP
-         2NUk/Ymto4KsKGu4WLfEQqhP/p5lQFGaRqQ5OrlO8IVO4VF1c2BPWDJmSri4hxg3y5zw
-         I4yw==
+        bh=tYlVqZ98Bu0+Zyby+yVvjjOxtu1K1h5EceYqcDfe5rc=;
+        b=lvn8VQQPryslAlAHQl3hUtYuJXvZ9Y1WILN0Zz+1vsgCXscv5EucXwDjK8aaqf6Ypo
+         WklVZ/WY2JlhyF+W1raJUzIGT84DRNJHQWiywq6zzdr7LYNThIIk8o/4NU/38gIllC6S
+         /H2fGrY2rqDbMow1oe9kF+WghEViQBDvEGAS3Kf1Vd9hBfj4JSjpHKeJT4yA5+S1uWe3
+         3Kzh84p4KLeE6gObffByyJLZ+mZkeddWvOHgZ3FQZnhxEfPODedMbnbe1JhEoPo58KuC
+         kg8hQowUYQj38KhtDFZc3/48d7fbiZ8OG5fIfnbDF86fXS3fb5yHr4rpLsCSHY6XBD2P
+         PAhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pRdo21w7/SaS3AubZ64uXtmdqPS8AL7saL+u9hGzjGw=;
-        b=Wqap3Iab3yp3YE6D9kG81qLHYSDCEWCwruPxvDBSSbUTV0Hdzewzp549kv/WajyPY9
-         BAcH6Gf92ZNPkf7gqVjKBDbxA7zV9GYxn3B4XkddYUJHVZPIa/+Os8Ruu88xONCpnPam
-         MoF/pALB81FPC4oagjFYSIACOUeVAtdncL16ooSX5Y8ymeXBiOccWeuXsBMZZ4bouMfD
-         iSG/kJ4SGwzFrl/mgenKI/cb1n6P45r4j6mXYANxD2jytRz87lAo/Jl7diuwOE24K6V6
-         iZwkEZQ072DnqiCQwhFxTSPfQ2Y+k7BMSh+DtZ//sLmod0/owmO+89IxkID8QaHBwz21
-         V0Ug==
-X-Gm-Message-State: APjAAAUoOE1jRdVpODmeyaR2fZeFYN60aKiM98gWKLDVuBaV9js/zP/d
-        2SK0AsE+wUoYT1jZLVqI1VzrpsOpypg=
-X-Google-Smtp-Source: APXvYqwiC3b5I1z2IAMzWJCZta24FSghJaWZCMfpVUfjPRKIyoBegTbhonWYbUnZjbgMCu0XGUEbuw==
-X-Received: by 2002:a63:2355:: with SMTP id u21mr95532243pgm.179.1578075571404;
-        Fri, 03 Jan 2020 10:19:31 -0800 (PST)
+        bh=tYlVqZ98Bu0+Zyby+yVvjjOxtu1K1h5EceYqcDfe5rc=;
+        b=WTZKkf9SheTVUfL3ggh44z88bpaAsPA5glNuvka62N7M8NREdhpLvW9PqFDklWnwCP
+         BGl5gTuJWfDoUJ4/HJHPhvc5+3UNngb+xTrTmgwpzVnEtBL0MocFWbC8DYJj6iyGtwiq
+         NGgOaoM5pGSu6kQyoqudwIAzG/1G+W/FveXGREfc7Jtg1IQVvji2GlqhrZPc+ir8dWvW
+         FubqoESVGcdRWs9rsSr3abmWp417XmSc6S6Lmu7yG0W9/tx5dxOvVej5w5B99Uwx7pQo
+         5Ej22pfnF7LvMhUWy/knVnLraxUE4tVrI//XtAyvApvXC+KNyshW28Hfa7BCNolDHe5S
+         1uxg==
+X-Gm-Message-State: APjAAAVd6DpuhX9olDOmiQaj+5CdlKT/Nz5FhKZaTfSyZ38QfCUV1NnT
+        Xxr0X8DjoknJhG6JcB+fGJWkhn2BkL4=
+X-Google-Smtp-Source: APXvYqziYoHS89wTJewUzgzZaqX8iJKL/Zjafxp+UgLnpYBcRz0TG/9E6onzqbJFwBDyQss9P38a4w==
+X-Received: by 2002:a63:b64a:: with SMTP id v10mr99872698pgt.145.1578075564094;
+        Fri, 03 Jan 2020 10:19:24 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.29
+        by smtp.gmail.com with ESMTPSA id j8sm41783602pfe.182.2020.01.03.10.19.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 10:19:30 -0800 (PST)
+        Fri, 03 Jan 2020 10:19:23 -0800 (PST)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -68,9 +68,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         DEVICE TREE BINDINGS),
         linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
         ARM ARCHITECTURE)
-Subject: [PATCH v4 05/13] phy: usb: Restructure in preparation for adding 7216 USB support
-Date:   Fri,  3 Jan 2020 13:18:03 -0500
-Message-Id: <20200103181811.22939-6-alcooperx@gmail.com>
+Subject: [PATCH v4 01/13] phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
+Date:   Fri,  3 Jan 2020 13:17:59 -0500
+Message-Id: <20200103181811.22939-2-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200103181811.22939-1-alcooperx@gmail.com>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
@@ -79,615 +79,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The driver is being restructured in preparation for adding support
-for the new Synopsys USB conroller on the 7216. Since all the bugs
-and work-arounds in previous STB chips are supposed to be fixed,
-most of the code in phy-brcm-usb-init.c is not needed. Instead of
-adding more complexity to the already complicated phy-brcm-usb-init.c
-module, the driver will be restructured to use a vector table to
-dispatch into different C modules for the different controllers.
-
-There was also some general cleanup done including some ipp setup
-code that was incorrect.
+When the EHCI controller received a 512 byte USB packet that
+had to be broken into 2 256 byte bursts across the SCB bus AND
+there was a following 512 byte USB packet, the second burst of
+data from the first packet was sometimes being lost. If the
+burst size was changed to 128 bytes via the EBR_SCB_SIZE field
+in the USB_CTRL_EBRIDGE register we'd see the 4th 128 byte burst
+of the first packet being lost. This problem became much worse
+if other threads were running that accessed memory, like a memcpy
+test. Setting the EBR_SCB_SIZE to 512, which prevents breaking
+the EHCI USB packet (max size of 512 bytes) into bursts, fixed
+the problem.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/phy/broadcom/phy-brcm-usb-init.c | 191 ++++++++++-------------
- drivers/phy/broadcom/phy-brcm-usb-init.h | 140 +++++++++++++++--
- drivers/phy/broadcom/phy-brcm-usb.c      |   6 +-
- 3 files changed, 214 insertions(+), 123 deletions(-)
+ drivers/phy/broadcom/phy-brcm-usb-init.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.c b/drivers/phy/broadcom/phy-brcm-usb-init.c
-index 58882c10396a..80d6f54d276e 100644
+index 91b5b09589d6..bd473d12ab28 100644
 --- a/drivers/phy/broadcom/phy-brcm-usb-init.c
 +++ b/drivers/phy/broadcom/phy-brcm-usb-init.c
-@@ -129,10 +129,6 @@ enum {
- 	USB_CTRL_SELECTOR_COUNT,
- };
- 
--#define USB_CTRL_REG(base, reg)	((void __iomem *)base + USB_CTRL_##reg)
--#define USB_XHCI_EC_REG(base, reg) ((void __iomem *)base + USB_XHCI_EC_##reg)
--#define USB_CTRL_MASK(reg, field) \
--	USB_CTRL_##reg##_##field##_MASK
- #define USB_CTRL_MASK_FAMILY(params, reg, field)			\
- 	(params->usb_reg_bits_map[USB_CTRL_##reg##_##field##_SELECTOR])
- 
-@@ -143,13 +139,6 @@ enum {
- 	usb_ctrl_unset_family(params, USB_CTRL_##reg,	\
- 		USB_CTRL_##reg##_##field##_SELECTOR)
- 
--#define USB_CTRL_SET(base, reg, field)	\
--	usb_ctrl_set(USB_CTRL_REG(base, reg),		\
--		     USB_CTRL_##reg##_##field##_MASK)
--#define USB_CTRL_UNSET(base, reg, field)	\
--	usb_ctrl_unset(USB_CTRL_REG(base, reg),		\
--		       USB_CTRL_##reg##_##field##_MASK)
--
- #define MDIO_USB2	0
- #define MDIO_USB3	BIT(31)
- 
-@@ -405,26 +394,14 @@ usb_reg_bits_map_table[BRCM_FAMILY_COUNT][USB_CTRL_SELECTOR_COUNT] = {
- 	},
- };
- 
--static inline u32 brcmusb_readl(void __iomem *addr)
--{
--	return readl(addr);
--}
--
--static inline void brcmusb_writel(u32 val, void __iomem *addr)
--{
--	writel(val, addr);
--}
--
- static inline
- void usb_ctrl_unset_family(struct brcm_usb_init_params *params,
- 			   u32 reg_offset, u32 field)
- {
- 	u32 mask;
--	void __iomem *reg;
- 
- 	mask = params->usb_reg_bits_map[field];
--	reg = params->ctrl_regs + reg_offset;
--	brcmusb_writel(brcmusb_readl(reg) & ~mask, reg);
-+	brcm_usb_ctrl_unset(params->ctrl_regs + reg_offset, mask);
- };
- 
- static inline
-@@ -432,45 +409,27 @@ void usb_ctrl_set_family(struct brcm_usb_init_params *params,
- 			 u32 reg_offset, u32 field)
- {
- 	u32 mask;
--	void __iomem *reg;
- 
- 	mask = params->usb_reg_bits_map[field];
--	reg = params->ctrl_regs + reg_offset;
--	brcmusb_writel(brcmusb_readl(reg) | mask, reg);
-+	brcm_usb_ctrl_set(params->ctrl_regs + reg_offset, mask);
- };
- 
--static inline void usb_ctrl_set(void __iomem *reg, u32 field)
--{
--	u32 value;
--
--	value = brcmusb_readl(reg);
--	brcmusb_writel(value | field, reg);
--}
--
--static inline void usb_ctrl_unset(void __iomem *reg, u32 field)
--{
--	u32 value;
--
--	value = brcmusb_readl(reg);
--	brcmusb_writel(value & ~field, reg);
--}
--
- static u32 brcmusb_usb_mdio_read(void __iomem *ctrl_base, u32 reg, int mode)
- {
- 	u32 data;
- 
- 	data = (reg << 16) | mode;
--	brcmusb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
-+	brcm_usb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
- 	data |= (1 << 24);
--	brcmusb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
-+	brcm_usb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
- 	data &= ~(1 << 24);
- 	/* wait for the 60MHz parallel to serial shifter */
- 	usleep_range(10, 20);
--	brcmusb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
-+	brcm_usb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
- 	/* wait for the 60MHz parallel to serial shifter */
- 	usleep_range(10, 20);
- 
--	return brcmusb_readl(USB_CTRL_REG(ctrl_base, MDIO2)) & 0xffff;
-+	return brcm_usb_readl(USB_CTRL_REG(ctrl_base, MDIO2)) & 0xffff;
- }
- 
- static void brcmusb_usb_mdio_write(void __iomem *ctrl_base, u32 reg,
-@@ -479,14 +438,14 @@ static void brcmusb_usb_mdio_write(void __iomem *ctrl_base, u32 reg,
- 	u32 data;
- 
- 	data = (reg << 16) | val | mode;
--	brcmusb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
-+	brcm_usb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
- 	data |= (1 << 25);
--	brcmusb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
-+	brcm_usb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
- 	data &= ~(1 << 25);
- 
- 	/* wait for the 60MHz parallel to serial shifter */
- 	usleep_range(10, 20);
--	brcmusb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
-+	brcm_usb_writel(data, USB_CTRL_REG(ctrl_base, MDIO));
- 	/* wait for the 60MHz parallel to serial shifter */
- 	usleep_range(10, 20);
- }
-@@ -713,12 +672,12 @@ static void brcmusb_usb3_otp_fix(struct brcm_usb_init_params *params)
- 
- 	if (params->family_id != 0x74371000 || !xhci_ec_base)
- 		return;
--	brcmusb_writel(0xa20c, USB_XHCI_EC_REG(xhci_ec_base, IRAADR));
--	val = brcmusb_readl(USB_XHCI_EC_REG(xhci_ec_base, IRADAT));
-+	brcm_usb_writel(0xa20c, USB_XHCI_EC_REG(xhci_ec_base, IRAADR));
-+	val = brcm_usb_readl(USB_XHCI_EC_REG(xhci_ec_base, IRADAT));
- 
- 	/* set cfg_pick_ss_lock */
- 	val |= (1 << 27);
--	brcmusb_writel(val, USB_XHCI_EC_REG(xhci_ec_base, IRADAT));
-+	brcm_usb_writel(val, USB_XHCI_EC_REG(xhci_ec_base, IRADAT));
- 
- 	/* Reset USB 3.0 PHY for workaround to take effect */
- 	USB_CTRL_UNSET(params->ctrl_regs, USB30_CTL1, PHY3_RESETB);
-@@ -751,7 +710,7 @@ static void brcmusb_xhci_soft_reset(struct brcm_usb_init_params *params,
-  *   - default chip/rev.
-  * NOTE: The minor rev is always ignored.
-  */
--static enum brcm_family_type brcmusb_get_family_type(
-+static enum brcm_family_type get_family_type(
- 	struct brcm_usb_init_params *params)
- {
- 	int last_type = -1;
-@@ -779,7 +738,7 @@ static enum brcm_family_type brcmusb_get_family_type(
- 	return last_type;
- }
- 
--void brcm_usb_init_ipp(struct brcm_usb_init_params *params)
-+static void usb_init_ipp(struct brcm_usb_init_params *params)
- {
- 	void __iomem *ctrl = params->ctrl_regs;
- 	u32 reg;
-@@ -795,7 +754,7 @@ void brcm_usb_init_ipp(struct brcm_usb_init_params *params)
- 			USB_CTRL_SET_FAMILY(params, USB30_CTL1, USB3_IPP);
- 	}
- 
--	reg = brcmusb_readl(USB_CTRL_REG(ctrl, SETUP));
-+	reg = brcm_usb_readl(USB_CTRL_REG(ctrl, SETUP));
- 	orig_reg = reg;
- 	if (USB_CTRL_MASK_FAMILY(params, SETUP, STRAP_CC_DRD_MODE_ENABLE_SEL))
- 		/* Never use the strap, it's going away. */
-@@ -803,8 +762,8 @@ void brcm_usb_init_ipp(struct brcm_usb_init_params *params)
- 					      SETUP,
- 					      STRAP_CC_DRD_MODE_ENABLE_SEL));
- 	if (USB_CTRL_MASK_FAMILY(params, SETUP, STRAP_IPP_SEL))
-+		/* override ipp strap pin (if it exits) */
- 		if (params->ipp != 2)
--			/* override ipp strap pin (if it exits) */
- 			reg &= ~(USB_CTRL_MASK_FAMILY(params, SETUP,
- 						      STRAP_IPP_SEL));
- 
-@@ -812,54 +771,26 @@ void brcm_usb_init_ipp(struct brcm_usb_init_params *params)
- 	reg &= ~(USB_CTRL_MASK(SETUP, IPP) | USB_CTRL_MASK(SETUP, IOC));
- 	if (params->ioc)
- 		reg |= USB_CTRL_MASK(SETUP, IOC);
--	if (params->ipp == 1 && ((reg & USB_CTRL_MASK(SETUP, IPP)) == 0))
-+	if (params->ipp == 1)
- 		reg |= USB_CTRL_MASK(SETUP, IPP);
--	brcmusb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
-+	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
- 
- 	/*
- 	 * If we're changing IPP, make sure power is off long enough
- 	 * to turn off any connected devices.
- 	 */
--	if (reg != orig_reg)
-+	if ((reg ^ orig_reg) & USB_CTRL_MASK(SETUP, IPP))
- 		msleep(50);
- }
- 
--int brcm_usb_init_get_dual_select(struct brcm_usb_init_params *params)
--{
--	void __iomem *ctrl = params->ctrl_regs;
--	u32 reg = 0;
--
--	if (USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1, PORT_MODE)) {
--		reg = brcmusb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
--		reg &= USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1,
--					PORT_MODE);
--	}
--	return reg;
--}
--
--void brcm_usb_init_set_dual_select(struct brcm_usb_init_params *params,
--				   int mode)
--{
--	void __iomem *ctrl = params->ctrl_regs;
--	u32 reg;
--
--	if (USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1, PORT_MODE)) {
--		reg = brcmusb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
--		reg &= ~USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1,
--					PORT_MODE);
--		reg |= mode;
--		brcmusb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
--	}
--}
--
--void brcm_usb_init_common(struct brcm_usb_init_params *params)
-+static void usb_init_common(struct brcm_usb_init_params *params)
- {
- 	u32 reg;
- 	void __iomem *ctrl = params->ctrl_regs;
- 
- 	/* Clear any pending wake conditions */
--	reg = brcmusb_readl(USB_CTRL_REG(ctrl, USB_PM_STATUS));
--	brcmusb_writel(reg, USB_CTRL_REG(ctrl, USB_PM_STATUS));
-+	reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_PM_STATUS));
-+	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_PM_STATUS));
- 
- 	/* Take USB out of power down */
- 	if (USB_CTRL_MASK_FAMILY(params, PLL_CTL, PLL_IDDQ_PWRDN)) {
-@@ -885,7 +816,7 @@ void brcm_usb_init_common(struct brcm_usb_init_params *params)
- 	/* Block auto PLL suspend by USB2 PHY (Sasi) */
- 	USB_CTRL_SET(ctrl, PLL_CTL, PLL_SUSPEND_EN);
- 
--	reg = brcmusb_readl(USB_CTRL_REG(ctrl, SETUP));
-+	reg = brcm_usb_readl(USB_CTRL_REG(ctrl, SETUP));
- 	if (params->selected_family == BRCM_FAMILY_7364A0)
- 		/* Suppress overcurrent indication from USB30 ports for A0 */
- 		reg |= USB_CTRL_MASK_FAMILY(params, SETUP, OC3_DISABLE);
-@@ -901,16 +832,16 @@ void brcm_usb_init_common(struct brcm_usb_init_params *params)
- 		reg |= USB_CTRL_MASK_FAMILY(params, SETUP, SCB1_EN);
- 	if (USB_CTRL_MASK_FAMILY(params, SETUP, SCB2_EN))
- 		reg |= USB_CTRL_MASK_FAMILY(params, SETUP, SCB2_EN);
--	brcmusb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
-+	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
- 
- 	brcmusb_memc_fix(params);
- 
- 	if (USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1, PORT_MODE)) {
--		reg = brcmusb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-+		reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
- 		reg &= ~USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1,
- 					PORT_MODE);
- 		reg |= params->mode;
--		brcmusb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-+		brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
- 	}
- 	if (USB_CTRL_MASK_FAMILY(params, USB_PM, BDC_SOFT_RESETB)) {
- 		switch (params->mode) {
-@@ -932,7 +863,7 @@ void brcm_usb_init_common(struct brcm_usb_init_params *params)
- 	}
- }
- 
--void brcm_usb_init_eohci(struct brcm_usb_init_params *params)
-+static void usb_init_eohci(struct brcm_usb_init_params *params)
- {
- 	u32 reg;
- 	void __iomem *ctrl = params->ctrl_regs;
-@@ -948,10 +879,10 @@ void brcm_usb_init_eohci(struct brcm_usb_init_params *params)
- 		USB_CTRL_SET(ctrl, EBRIDGE, ESTOP_SCB_REQ);
- 
- 	/* Setup the endian bits */
--	reg = brcmusb_readl(USB_CTRL_REG(ctrl, SETUP));
-+	reg = brcm_usb_readl(USB_CTRL_REG(ctrl, SETUP));
- 	reg &= ~USB_CTRL_SETUP_ENDIAN_BITS;
- 	reg |= USB_CTRL_MASK_FAMILY(params, SETUP, ENDIAN);
--	brcmusb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
-+	brcm_usb_writel(reg, USB_CTRL_REG(ctrl, SETUP));
- 
+@@ -42,6 +42,7 @@
+ #define   USB_CTRL_PLL_CTL_PLL_IDDQ_PWRDN_MASK		0x80000000 /* option */
+ #define USB_CTRL_EBRIDGE		0x0c
+ #define   USB_CTRL_EBRIDGE_ESTOP_SCB_REQ_MASK		0x00020000 /* option */
++#define   USB_CTRL_EBRIDGE_EBR_SCB_SIZE_MASK		0x00000f80 /* option */
+ #define USB_CTRL_OBRIDGE		0x10
+ #define   USB_CTRL_OBRIDGE_LS_KEEP_ALIVE_MASK		0x08000000
+ #define USB_CTRL_MDIO			0x14
+@@ -176,6 +177,7 @@ static const struct id_to_type id_to_type_table[] = {
+ 	{ 0x33900000, BRCM_FAMILY_3390A0 },
+ 	{ 0x72500010, BRCM_FAMILY_7250B0 },
+ 	{ 0x72600000, BRCM_FAMILY_7260A0 },
++	{ 0x72550000, BRCM_FAMILY_7260A0 },
+ 	{ 0x72680000, BRCM_FAMILY_7271A0 },
+ 	{ 0x72710000, BRCM_FAMILY_7271A0 },
+ 	{ 0x73640000, BRCM_FAMILY_7364A0 },
+@@ -948,6 +950,17 @@ void brcm_usb_init_eohci(struct brcm_usb_init_params *params)
  	if (params->selected_family == BRCM_FAMILY_7271A0)
  		/* Enable LS keep alive fix for certain keyboards */
-@@ -962,14 +893,14 @@ void brcm_usb_init_eohci(struct brcm_usb_init_params *params)
- 		 * Make the burst size 512 bytes to fix a hardware bug
- 		 * on the 7255a0. See HW7255-24.
- 		 */
--		reg = brcmusb_readl(USB_CTRL_REG(ctrl, EBRIDGE));
-+		reg = brcm_usb_readl(USB_CTRL_REG(ctrl, EBRIDGE));
- 		reg &= ~USB_CTRL_MASK(EBRIDGE, EBR_SCB_SIZE);
- 		reg |= 0x800;
--		brcmusb_writel(reg, USB_CTRL_REG(ctrl, EBRIDGE));
-+		brcm_usb_writel(reg, USB_CTRL_REG(ctrl, EBRIDGE));
- 	}
- }
- 
--void brcm_usb_init_xhci(struct brcm_usb_init_params *params)
-+static void usb_init_xhci(struct brcm_usb_init_params *params)
- {
- 	void __iomem *ctrl = params->ctrl_regs;
- 
-@@ -997,7 +928,7 @@ void brcm_usb_init_xhci(struct brcm_usb_init_params *params)
- 	brcmusb_usb3_otp_fix(params);
- }
- 
--void brcm_usb_uninit_common(struct brcm_usb_init_params *params)
-+static void usb_uninit_common(struct brcm_usb_init_params *params)
- {
- 	if (USB_CTRL_MASK_FAMILY(params, USB_PM, USB_PWRDN))
- 		USB_CTRL_SET_FAMILY(params, USB_PM, USB_PWRDN);
-@@ -1006,17 +937,47 @@ void brcm_usb_uninit_common(struct brcm_usb_init_params *params)
- 		USB_CTRL_SET_FAMILY(params, PLL_CTL, PLL_IDDQ_PWRDN);
- }
- 
--void brcm_usb_uninit_eohci(struct brcm_usb_init_params *params)
-+static void usb_uninit_eohci(struct brcm_usb_init_params *params)
- {
- }
- 
--void brcm_usb_uninit_xhci(struct brcm_usb_init_params *params)
-+static void usb_uninit_xhci(struct brcm_usb_init_params *params)
- {
- 	brcmusb_xhci_soft_reset(params, 1);
- 	USB_CTRL_SET(params->ctrl_regs, USB30_PCTL, PHY3_IDDQ_OVERRIDE);
- }
- 
--void brcm_usb_wake_enable(struct brcm_usb_init_params *params,
-+static int usb_get_dual_select(struct brcm_usb_init_params *params)
-+{
-+	void __iomem *ctrl = params->ctrl_regs;
-+	u32 reg = 0;
+ 		USB_CTRL_SET(ctrl, OBRIDGE, LS_KEEP_ALIVE);
 +
-+	pr_debug("%s\n", __func__);
-+	if (USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1, PORT_MODE)) {
-+		reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-+		reg &= USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1,
-+					PORT_MODE);
++	if (params->family_id == 0x72550000) {
++		/*
++		 * Make the burst size 512 bytes to fix a hardware bug
++		 * on the 7255a0. See HW7255-24.
++		 */
++		reg = brcmusb_readl(USB_CTRL_REG(ctrl, EBRIDGE));
++		reg &= ~USB_CTRL_MASK(EBRIDGE, EBR_SCB_SIZE);
++		reg |= 0x800;
++		brcmusb_writel(reg, USB_CTRL_REG(ctrl, EBRIDGE));
 +	}
-+	return reg;
-+}
-+
-+static void usb_set_dual_select(struct brcm_usb_init_params *params, int mode)
-+{
-+	void __iomem *ctrl = params->ctrl_regs;
-+	u32 reg;
-+
-+	pr_debug("%s\n", __func__);
-+
-+	if (USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1, PORT_MODE)) {
-+		reg = brcm_usb_readl(USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-+		reg &= ~USB_CTRL_MASK_FAMILY(params, USB_DEVICE_CTL1,
-+					PORT_MODE);
-+		reg |= mode;
-+		brcm_usb_writel(reg, USB_CTRL_REG(ctrl, USB_DEVICE_CTL1));
-+	}
-+}
-+
-+static void usb_wake_enable(struct brcm_usb_init_params *params,
- 			  int enable)
- {
- 	void __iomem *ctrl = params->ctrl_regs;
-@@ -1027,13 +988,29 @@ void brcm_usb_wake_enable(struct brcm_usb_init_params *params,
- 		USB_CTRL_UNSET(ctrl, USB_PM, RMTWKUP_EN);
  }
  
--void brcm_usb_set_family_map(struct brcm_usb_init_params *params)
-+static const struct brcm_usb_init_ops bcm7445_ops = {
-+	.init_ipp = usb_init_ipp,
-+	.init_common = usb_init_common,
-+	.init_eohci = usb_init_eohci,
-+	.init_xhci = usb_init_xhci,
-+	.uninit_common = usb_uninit_common,
-+	.uninit_eohci = usb_uninit_eohci,
-+	.uninit_xhci = usb_uninit_xhci,
-+	.get_dual_select = usb_get_dual_select,
-+	.set_dual_select = usb_set_dual_select,
-+	.wake_enable = usb_wake_enable,
-+};
-+
-+void brcm_usb_dvr_init_7445(struct brcm_usb_init_params *params)
- {
- 	int fam;
- 
--	fam = brcmusb_get_family_type(params);
-+	pr_debug("%s\n", __func__);
-+
-+	fam = get_family_type(params);
- 	params->selected_family = fam;
- 	params->usb_reg_bits_map =
- 		&usb_reg_bits_map_table[fam][0];
- 	params->family_name = family_names[fam];
-+	params->ops = &bcm7445_ops;
- }
-diff --git a/drivers/phy/broadcom/phy-brcm-usb-init.h b/drivers/phy/broadcom/phy-brcm-usb-init.h
-index f473e0c51f0b..7701872d1136 100644
---- a/drivers/phy/broadcom/phy-brcm-usb-init.h
-+++ b/drivers/phy/broadcom/phy-brcm-usb-init.h
-@@ -13,6 +13,33 @@
- 
- struct  brcm_usb_init_params;
- 
-+#define USB_CTRL_REG(base, reg)	((void __iomem *)base + USB_CTRL_##reg)
-+#define USB_XHCI_EC_REG(base, reg) ((void __iomem *)base + USB_XHCI_EC_##reg)
-+#define USB_CTRL_MASK(reg, field) \
-+	USB_CTRL_##reg##_##field##_MASK
-+#define USB_CTRL_SET(base, reg, field)	\
-+	brcm_usb_ctrl_set(USB_CTRL_REG(base, reg),	\
-+			  USB_CTRL_##reg##_##field##_MASK)
-+#define USB_CTRL_UNSET(base, reg, field)	\
-+	brcm_usb_ctrl_unset(USB_CTRL_REG(base, reg),		\
-+			    USB_CTRL_##reg##_##field##_MASK)
-+
-+struct  brcm_usb_init_params;
-+
-+struct brcm_usb_init_ops {
-+	void (*init_ipp)(struct brcm_usb_init_params *params);
-+	void (*init_common)(struct brcm_usb_init_params *params);
-+	void (*init_eohci)(struct brcm_usb_init_params *params);
-+	void (*init_xhci)(struct brcm_usb_init_params *params);
-+	void (*uninit_common)(struct brcm_usb_init_params *params);
-+	void (*uninit_eohci)(struct brcm_usb_init_params *params);
-+	void (*uninit_xhci)(struct brcm_usb_init_params *params);
-+	int  (*get_dual_select)(struct brcm_usb_init_params *params);
-+	void (*set_dual_select)(struct brcm_usb_init_params *params, int mode);
-+	void (*wake_enable)(struct brcm_usb_init_params *params,
-+			    int enable);
-+};
-+
- struct  brcm_usb_init_params {
- 	void __iomem *ctrl_regs;
- 	void __iomem *xhci_ec_regs;
-@@ -24,20 +51,107 @@ struct  brcm_usb_init_params {
- 	int selected_family;
- 	const char *family_name;
- 	const u32 *usb_reg_bits_map;
-+	const struct brcm_usb_init_ops *ops;
- };
- 
--void brcm_usb_set_family_map(struct brcm_usb_init_params *params);
--int brcm_usb_init_get_dual_select(struct brcm_usb_init_params *params);
--void brcm_usb_init_set_dual_select(struct brcm_usb_init_params *params,
--				   int mode);
--
--void brcm_usb_init_ipp(struct brcm_usb_init_params *ini);
--void brcm_usb_init_common(struct brcm_usb_init_params *ini);
--void brcm_usb_init_eohci(struct brcm_usb_init_params *ini);
--void brcm_usb_init_xhci(struct brcm_usb_init_params *ini);
--void brcm_usb_uninit_common(struct brcm_usb_init_params *ini);
--void brcm_usb_uninit_eohci(struct brcm_usb_init_params *ini);
--void brcm_usb_uninit_xhci(struct brcm_usb_init_params *ini);
--void brcm_usb_wake_enable(struct brcm_usb_init_params *params, int enable);
-+void brcm_usb_dvr_init_7445(struct brcm_usb_init_params *params);
-+
-+static inline u32 brcm_usb_readl(void __iomem *addr)
-+{
-+	/*
-+	 * MIPS endianness is configured by boot strap, which also reverses all
-+	 * bus endianness (i.e., big-endian CPU + big endian bus ==> native
-+	 * endian I/O).
-+	 *
-+	 * Other architectures (e.g., ARM) either do not support big endian, or
-+	 * else leave I/O in little endian mode.
-+	 */
-+	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(__BIG_ENDIAN))
-+		return __raw_readl(addr);
-+	else
-+		return readl_relaxed(addr);
-+}
-+
-+static inline void brcm_usb_writel(u32 val, void __iomem *addr)
-+{
-+	/* See brcmnand_readl() comments */
-+	if (IS_ENABLED(CONFIG_MIPS) && IS_ENABLED(__BIG_ENDIAN))
-+		__raw_writel(val, addr);
-+	else
-+		writel_relaxed(val, addr);
-+}
-+
-+static inline void brcm_usb_ctrl_unset(void __iomem *reg, u32 mask)
-+{
-+	brcm_usb_writel(brcm_usb_readl(reg) & ~(mask), reg);
-+};
-+
-+static inline void brcm_usb_ctrl_set(void __iomem *reg, u32 mask)
-+{
-+	brcm_usb_writel(brcm_usb_readl(reg) | (mask), reg);
-+};
-+
-+static inline void brcm_usb_init_ipp(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->init_ipp)
-+		ini->ops->init_ipp(ini);
-+}
-+
-+static inline void brcm_usb_init_common(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->init_common)
-+		ini->ops->init_common(ini);
-+}
-+
-+static inline void brcm_usb_init_eohci(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->init_eohci)
-+		ini->ops->init_eohci(ini);
-+}
-+
-+static inline void brcm_usb_init_xhci(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->init_xhci)
-+		ini->ops->init_xhci(ini);
-+}
-+
-+static inline void brcm_usb_uninit_common(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->uninit_common)
-+		ini->ops->uninit_common(ini);
-+}
-+
-+static inline void brcm_usb_uninit_eohci(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->uninit_eohci)
-+		ini->ops->uninit_eohci(ini);
-+}
-+
-+static inline void brcm_usb_uninit_xhci(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->uninit_xhci)
-+		ini->ops->uninit_xhci(ini);
-+}
-+
-+static inline void brcm_usb_wake_enable(struct brcm_usb_init_params *ini,
-+	int enable)
-+{
-+	if (ini->ops->wake_enable)
-+		ini->ops->wake_enable(ini, enable);
-+}
-+
-+static inline int brcm_usb_get_dual_select(struct brcm_usb_init_params *ini)
-+{
-+	if (ini->ops->get_dual_select)
-+		return ini->ops->get_dual_select(ini);
-+	return 0;
-+}
-+
-+static inline void brcm_usb_set_dual_select(struct brcm_usb_init_params *ini,
-+	int mode)
-+{
-+	if (ini->ops->set_dual_select)
-+		ini->ops->set_dual_select(ini, mode);
-+}
- 
- #endif /* _USB_BRCM_COMMON_INIT_H */
-diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-index cca04d60f2d2..9d93c5599511 100644
---- a/drivers/phy/broadcom/phy-brcm-usb.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb.c
-@@ -207,7 +207,7 @@ static ssize_t dual_select_store(struct device *dev,
- 	res = name_to_value(&brcm_dual_mode_to_name[0],
- 			    ARRAY_SIZE(brcm_dual_mode_to_name), buf, &value);
- 	if (!res) {
--		brcm_usb_init_set_dual_select(&priv->ini, value);
-+		brcm_usb_set_dual_select(&priv->ini, value);
- 		res = len;
- 	}
- 	mutex_unlock(&sysfs_lock);
-@@ -222,7 +222,7 @@ static ssize_t dual_select_show(struct device *dev,
- 	int value;
- 
- 	mutex_lock(&sysfs_lock);
--	value = brcm_usb_init_get_dual_select(&priv->ini);
-+	value = brcm_usb_get_dual_select(&priv->ini);
- 	mutex_unlock(&sysfs_lock);
- 	return sprintf(buf, "%s\n",
- 		value_to_name(&brcm_dual_mode_to_name[0],
-@@ -331,7 +331,7 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
- 
- 	priv->ini.family_id = brcmstb_get_family_id();
- 	priv->ini.product_id = brcmstb_get_product_id();
--	brcm_usb_set_family_map(&priv->ini);
-+	brcm_usb_dvr_init_7445(&priv->ini);
- 	dev_dbg(dev, "Best mapping table is for %s\n",
- 		priv->ini.family_name);
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ void brcm_usb_init_xhci(struct brcm_usb_init_params *params)
 -- 
 2.17.1
 
