@@ -2,126 +2,146 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30CEC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E5C32767
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA84721734
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C5D9227BF
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 09:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="HVHMul+0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xY0zM+Ce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725972AbgACJAc (ORCPT
+        id S1727443AbgACJ1a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 04:00:32 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:49319 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgACJAb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:00:31 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C6944230E1;
-        Fri,  3 Jan 2020 10:00:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1578042029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cxest8tMtRZIdMS9+HLvWHLoP9WwYOR1xCl5Hh5xNZQ=;
-        b=HVHMul+06/ZqJth5tKFXAnG5dpRCq4qhYeW3NtIHl/pcOfI7lniaAEVLNvdgIL4ZRV/eMq
-        9pHtaXe2W30cM+5iMTQ3BfdBfegn/YY2xoQlPYHJQPRSOMvWYZOuIsf63p8cyeDFz5Hra6
-        pPajyaQkEQJ0mLNgU90PDN65qrDSUZI=
+        Fri, 3 Jan 2020 04:27:30 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38336 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgACJ1a (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 04:27:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TFFNUpBqrHSpyurnMmcanTS7uqHtMMP0ooKKfVEFBeA=; b=xY0zM+CeBrM/vokDa80g5TsP7
+        yMjSfuLAZNBHGfXQAzrjsYJ7w7huIQs1MR7Sp6VCRFpgEoFjmC42WtfI2jiFoR+fNbT2+o4r6OucS
+        USrfgGGAkKAXCVf5z+KrasALMVjdLAyuj4TLWWDQ6GDTbr2tSUhQ+opAE/GdtWclzCiNsBGSgK9qD
+        IbxETDnQrTZ/gXelOAW1D92iDqK/VA14h1U21WvcBBR62Yuu9GVlznsWuOvF6vYfw/a2sjtt3cfXD
+        MAZEPTQwzcLobUe3JwBAFGRdwewng1VE1RWSosx2GOa/uR4DOMv257cO0pmpE3wNKKTBPDKhgLrDu
+        N+7y8Bs/Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33388)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1inJEp-0001FV-9X; Fri, 03 Jan 2020 09:27:23 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1inJEk-00030q-7h; Fri, 03 Jan 2020 09:27:18 +0000
+Date:   Fri, 3 Jan 2020 09:27:18 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+Message-ID: <20200103092718.GB25745@shell.armlinux.org.uk>
+References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
+ <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
+ <20191219172834.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
+ <20191223120730.GO25745@shell.armlinux.org.uk>
+ <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 03 Jan 2020 10:00:27 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/2] clk: fsl-sai: new driver
-In-Reply-To: <20200102080929.0EE2C215A4@mail.kernel.org>
-References: <20191209233305.18619-1-michael@walle.cc>
- <20191209233305.18619-2-michael@walle.cc>
- <20191224080536.B0C99206CB@mail.kernel.org>
- <91275d33d6a7c9978a2c70545fde38cd@walle.cc>
- <20200102080929.0EE2C215A4@mail.kernel.org>
-Message-ID: <6b092a602b3b8cf09160b1dcb4a282e6@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C6944230E1
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         NEURAL_HAM(-0.00)[-0.273];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Stephen,
-
->> >> +       parent_name = of_clk_get_parent_name(node, 0);
->> >
->> > Could this use the new way of specifying clk parents so that we don't
->> > have to query DT for parent names and just let the core framework do it
->> > whenever it needs to?
->> 
->> you mean specifying parent_data with .index = 0? Seems like
->> clk_composite
->> does not support this. The parent can only be specified by supplying 
->> the
->> clock names.
->> 
->> I could add that in a separate patch. What do you think about the
->> following new functions, where a driver can use parent_data instead
->> of parent_names.
+On Fri, Jan 03, 2020 at 07:01:50AM +0000, Madalin Bucur (OSS) wrote:
+> > -----Original Message-----
+> > From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> > Sent: Monday, December 23, 2019 2:08 PM
+> > To: Madalin Bucur <madalin.bucur@nxp.com>
+> > Cc: davem@davemloft.net; netdev@vger.kernel.org; andrew@lunn.ch;
+> > f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org;
+> > devicetree@vger.kernel.org
+> > Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
+> > 
+> > On Thu, Dec 19, 2019 at 06:32:51PM +0000, Madalin Bucur wrote:
+> > > 10GBase-R could be used as a common nominator but just as well 10G and
+> > > remove the rest while we're at it. There are/may be differences in
+> > > features, differences in the way the HW is configured (the most
+> > > important aspect) and one should be able to determine what interface
+> > > type is in use to properly configure the HW. SFI does not have the CDR
+> > > function in the PMD, relying on the PMA signal conditioning vs the XFI
+> > > that requires this in the PMD.
+> > 
+> > I've now found a copy of INF-8077i on the net, which seems to be the
+> > document that defines XFI. The definition in there seems to be very
+> > similar to SFI in that it is an electrical specification, not a
+> > protocol specification, and, just like SFI, it defines the electrical
+> > characteristics at the cage, not at the serdes. Therefore, the effects
+> > of the board layout come into play to achieve compliance with XFI.
 > 
-> I started doing this in
-> https://lkml.kernel.org/r/20190830150923.259497-1-sboyd@kernel.org but 
-> I
-> never got around to the composite clks. Sounds fine to add this new API
-> for your use case.
+> I think we're missing the point here: we need to start from the device
+> tree and that is supposed to describe the board, the hardware, not to
+> configure the software. Please re-read the paragraph above in this key:
+> the device tree needs to describe the HW features, those electrical
+> properties you are discussing above. The fact that we use a certain
+> protocol over it, by choice in software, does not change the HW and it
+> should not change the device tree describing it.
 
-Yeah took me a while to figure out what you've meant by the "new way" ;)
-Anyway, I've posted a v3 of this series with the new composite clock 
-API.
+phy_interface_t does *NOT* describe the electrical properties of the
+link; it describes the protocol. The protocol for 10GBASE-R, SFI and
+XFI are *all* the same. Therefore, phy_interface_t does *not*
+distinguish between these.
 
+Yes, DT may need to describe the electrical properties. That needs to
+be done independently of the phy_interface_t and therefore phy-mode
+definition.
+
+Just like it is done for SATA interfaces that need the eye mask
+(electrical properties of the serdes) adjusted for the board.
+
+> > Just like SFI, XFI can be used with multiple different underlying
+> > protocols. I quote:
+> > 
+> >   "The XFI interface is designed to support SONET OC-192,
+> >   IEEE.Std-802.3ae, 10GFC and G.709(OTU-2) applications."
+> > 
+> > Therefore, to describe 10GBASE-R as "XFI" is most definitely incorrect.
+> > 10GBASE-R is just _one_ protocol that can be run over XFI, but it is
+> > not the only one.
 > 
->> 
->> +struct clk *clk_register_composite_pdata(struct device *dev, const 
->> char
->> *name,
->> +               const struct clk_parent_data *parent_data,
->> +               struct clk_hw *mux_hw, const struct clk_ops *mux_ops,
->> +               struct clk_hw *rate_hw, const struct clk_ops 
->> *rate_ops,
->> +               struct clk_hw *gate_hw, const struct clk_ops 
->> *gate_ops,
->> +               unsigned long flags);
+> Exactly why the chip to chip interface described by the device tree needs
+> to be xfi not 10GBASE-R,
 
-num_parents was missing here. added that in the v3.
+Sorry no.
 
--michael
+Merely specifying "xfi" does not tell you what you need to do to achieve
+XFI compliance at the point defined in INF8077i.  Plus, XFI can also be
+protocols _other_ than 10GBASE-R.
+
+Claiming that "XFI" properly defines the interface is utter rubbish. It
+does not. XFI defines the electrical characteristics *only* and not
+the underlying protocol. It is not limited to 10GBASE-R, but includes
+other protocols as well.
+
+XFI is not a phy interface type.  Sorry.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
