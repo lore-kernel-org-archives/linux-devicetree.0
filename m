@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A14BC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20A2C32767
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85D7227BF
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A027B2253D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 18:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oz9c6gKz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRv98STr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgACSZH (ORCPT
+        id S1728279AbgACSZg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 13:25:07 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46837 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbgACSZH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:25:07 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z124so23745671pgb.13;
-        Fri, 03 Jan 2020 10:25:06 -0800 (PST)
+        Fri, 3 Jan 2020 13:25:36 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45566 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbgACSZf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 13:25:35 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b9so23751804pgk.12;
+        Fri, 03 Jan 2020 10:25:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p8VA764gYevhnnAu+SzPmPPi0bKhyv5mqU193VydJNM=;
-        b=oz9c6gKzyuXb7TSdIsC8e79CRRIPQff4C3re8x0RF99lkOCg33wKc7MhRYb0KJUyne
-         Rlz4WKZx4Ko9XVYtGuJ7tkvZeeH2STF3yJffoV/EoO2tSBAPF/fmRl9c+KSLmpEt2sQj
-         eWQeISenCgT6LuNPLsfOjSck0hmNh+uDQucR37Rc3gQHi4ek9FiMi9qZbCxRxguX2bk6
-         HPHdKC43Hzvxxj1MF+12pmYgfOGoe+q1mwDTmspbcnscoALtguMrcYrIH6b9SOTbDNHQ
-         XZLIAccVKfzZ0+5xmE+vVvQ5jUXErjeA5LF70tNk/3Cm6kY+bfJCrUJJFKOW/BGJP5Kp
-         jpqA==
+        bh=OgjF/ZJLgLMtlGvLvKDvSVpSDP/EZIpvMDAwIoFZjyQ=;
+        b=mRv98STrbZ86Bcbjlk3Y2kkclAJq6Va/ggjOsaBaPFkLL+PfThkUg8eD7kqFFduH4y
+         ARpMzMCo4PxH09bBrgV4kAxMUPTWVBz979TbHwU+8u9u2iyQvL7glh7sWcKqB6AfKBaq
+         73sgsMmU8dDnnq14A9t6XJwInlhVg2HgiDzgTMijP9K3Co7KU/ySWyCgOdFuhz5+/Wo9
+         lOHUJYq9u6jlgevCVlGohuM2rOfXotb0R1pmDy0LzPdrOY83CTQjDMsbmXroNdPfkxSe
+         ybUK4j8vFhPo2kXz04rba590UeFarbni/91VA9xeGdjCN4x99so0xNx/kRh9uCE3RZ/i
+         xmpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=p8VA764gYevhnnAu+SzPmPPi0bKhyv5mqU193VydJNM=;
-        b=qfRD6vKZfWj4Sr2kha6ex5PeiCwRqEQyKHM/PECMxU8r1NcsdZ25Qg/mT1tiIk7KN0
-         gO5jbHtmsqv1Q9J3QvYBuCrk4U8M0q0bteNarvqgjjrC7+2P1PLDRc15UbG9AzL88tmp
-         vNBUovMRzHMu4IOUFKNFEt6XT02588r7EbNTv4ZWrj94fTa9dFRUdoE7VT2vyxu3NK18
-         zfo4egS8ZsTsbRDeo7Rg/ujiOArIc/yvsSGmyW9PdUqYn0YkH55C+g7VSUfzh5JP1tFI
-         oZ7XqutOsQMw8/pOUPLWW9vw/rL5M9n24fSfcRwGXvtWOLu5GM62GZGb94ob0+g+VktK
-         EsrQ==
-X-Gm-Message-State: APjAAAXnYvP+CqZoGzK/TmBQOg6z04qBHEb/MtD8FoaawdcxhUtO69W4
-        6tEcBl8qnRm+Bv3Zfr4Q0nk=
-X-Google-Smtp-Source: APXvYqyHFHMXcvMBBFcZUzqiOmYPLviXW/oMJojrzsGtQF/eUdhEP5RXv/BY99Xv3mAT9vKGxz87Xw==
-X-Received: by 2002:a63:e0c:: with SMTP id d12mr93821789pgl.3.1578075906442;
-        Fri, 03 Jan 2020 10:25:06 -0800 (PST)
+        bh=OgjF/ZJLgLMtlGvLvKDvSVpSDP/EZIpvMDAwIoFZjyQ=;
+        b=nh8bh26D4VZSJ+MlmIMXkVbBBeBTAfNhrftmBUgdYUI8lNBgPDyH+96/cQ8uKy/9iL
+         IX1HPu6HoDxMmSfGJ2KcjslP+lDHdKcKe8DMsnyGg/TbqotMBZTl3KhcZAHjZvWLlEy6
+         J6EPtnctytcsc4AuwwAXvJ89ujYOQN9TdDWJIIo6/nmJD5tRJCwZEtH3PUN5nCxHyyKh
+         6DMd3jziQf7T40b2yH0Y1tEqTZYtX3bTJWEOHTYZJfR//NyJV5knhjP0nmrQ5PQ9PD0S
+         +vYjd4veFEroXzkN43k41ufRJMtWFaF7+Dh0mOlbKpV0/mEtctsQ6LVrVgFkWU15dnjJ
+         rG1g==
+X-Gm-Message-State: APjAAAXxt1+w6r2kIfJ+Wwry95mge/MoHxk6Dr+WbUD7utnRyDIg39gh
+        +v4Y5zUuUvmLfBvbb4LgaQ3Atrex
+X-Google-Smtp-Source: APXvYqz75Y5kLxvU2knYYphHLE278A/hMH0Dt26vaI+ihj3sz1gyRyelUGJQ2Dme87ZbfOfuhEP4bg==
+X-Received: by 2002:a65:6916:: with SMTP id s22mr94992357pgq.244.1578075934854;
+        Fri, 03 Jan 2020 10:25:34 -0800 (PST)
 Received: from [10.67.50.49] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id m6sm15446465pjv.23.2020.01.03.10.25.05
+        by smtp.googlemail.com with ESMTPSA id k21sm60220385pgt.22.2020.01.03.10.25.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Jan 2020 10:25:05 -0800 (PST)
-Subject: Re: [PATCH v4 05/13] phy: usb: Restructure in preparation for adding
- 7216 USB support
+        Fri, 03 Jan 2020 10:25:34 -0800 (PST)
+Subject: Re: [PATCH v4 06/13] dt-bindings: Add Broadcom STB USB PHY binding
+ document
 To:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
 Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -71,7 +71,7 @@ Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
         "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
 References: <20200103181811.22939-1-alcooperx@gmail.com>
- <20200103181811.22939-6-alcooperx@gmail.com>
+ <20200103181811.22939-7-alcooperx@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -127,12 +127,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
  TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
  G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <098800a0-ee52-4120-a8ef-12df319f1d4a@gmail.com>
-Date:   Fri, 3 Jan 2020 10:25:04 -0800
+Message-ID: <3215ec80-c28a-d80e-38b1-2c7a320721b8@gmail.com>
+Date:   Fri, 3 Jan 2020 10:25:33 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200103181811.22939-6-alcooperx@gmail.com>
+In-Reply-To: <20200103181811.22939-7-alcooperx@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -142,18 +142,10 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 On 1/3/20 10:18 AM, Al Cooper wrote:
-> The driver is being restructured in preparation for adding support
-> for the new Synopsys USB conroller on the 7216. Since all the bugs
-> and work-arounds in previous STB chips are supposed to be fixed,
-> most of the code in phy-brcm-usb-init.c is not needed. Instead of
-> adding more complexity to the already complicated phy-brcm-usb-init.c
-> module, the driver will be restructured to use a vector table to
-> dispatch into different C modules for the different controllers.
-> 
-> There was also some general cleanup done including some ipp setup
-> code that was incorrect.
+> Add support for bcm7216 and bcm7211
 > 
 > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
