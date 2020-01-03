@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 441A6C00523
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 07:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16991C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 07:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C82521D7D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 07:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B54E21D7D
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 07:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="L8wPdO/2"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="XQtTcmZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbgACHlg (ORCPT
+        id S1726180AbgACH6I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 02:41:36 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:26211 "EHLO rere.qmqm.pl"
+        Fri, 3 Jan 2020 02:58:08 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:2573 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbgACHlg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 02:41:36 -0500
+        id S1725890AbgACH6I (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 3 Jan 2020 02:58:08 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47pxg13slBz7s;
-        Fri,  3 Jan 2020 08:41:33 +0100 (CET)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47py251QD8z7s;
+        Fri,  3 Jan 2020 08:58:05 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1578037293; bh=jJL9+zGNXcRs81d3ivI4BPhkQdaALU3ctyQK3i4Um/Q=;
+        t=1578038285; bh=zkjL1hrrT7myfigooh6KuldpzOYUcI60uVQjI24wYgU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L8wPdO/2vvTaAoS0uO5cVkP8nXH43R2KrAZMpISMr4sWLAh+lNZ9C/JgDtmgio0yA
-         qdsOKZ6w3W/MVyIJ+2AwtXK/ELPJOedW0QC5/Hb57CK26txY5JaQ68nt8x5J4Zu/8x
-         Ja9fR40k8aLIKIAT+6ww8i/JXcVxw0Ul3j/vZ3ng0tgeUY6wcv5HdU6uSntao8tftZ
-         hoGcpwse0WRP6oo7wW0OZZA22Rsa7WdqtYM+bPPNlg1qAFsPGI/fNX8mmwBSaYOcHd
-         eXJ7lMvWQVpC/qmdGWq8ceALjnZoa+QoLZLJHFFRv7nyX2j139R2UxAbdl3PGuB6KC
-         tFRw5CYk7VggQ==
+        b=XQtTcmZehlZS0vz8AgGQh39LrS0ZLMZt+Cu2ZBfahf4+0srsdcEM/v4U8O0M9+z0R
+         2TyHJE4T9+Iri+aNHvZwbg5ZK5iD19iDcrrih4GqSgMf7iYahVDOLLGll5UlwMNjZ6
+         Cpze4GbbHQvWUHh6wJYaRZ1JnlmcMfbxQsEF2S0HmQRXDptkx8X/H61byUAx5rFzSg
+         6wg9jXnR6E4UiZw6gT3W+FTeNgXSw4Hlo+XGpBDZwyuW52fQDClh82sswT5NRMZTQ8
+         pt3udMMRzshnrNsy1v28z2GL3WCU1G0HPIKWO8cz1ZSbWU6JPzzlFsVc3MpqThhwVg
+         KVWqhQ0aByorQ==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Fri, 3 Jan 2020 08:41:32 +0100
+Date:   Fri, 3 Jan 2020 08:58:04 +0100
 From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
 To:     Dmitry Osipenko <digetx@gmail.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -46,60 +46,64 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org,
         linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 13/16] usb: phy: tegra: Keep CPU interrupts enabled
-Message-ID: <20200103074132.GB14228@qmqm.qmqm.pl>
+Subject: Re: [PATCH v3 10/16] usb: phy: tegra: Use device-tree notion of
+ reset-GPIO's active-state
+Message-ID: <20200103075803.GC14228@qmqm.qmqm.pl>
 References: <20191228203358.23490-1-digetx@gmail.com>
- <20191228203358.23490-14-digetx@gmail.com>
- <20191230203648.GA24135@qmqm.qmqm.pl>
- <ad1a2b09-12b0-112e-1556-6faf6a01c330@gmail.com>
+ <20191228203358.23490-11-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-2
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ad1a2b09-12b0-112e-1556-6faf6a01c330@gmail.com>
+In-Reply-To: <20191228203358.23490-11-digetx@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 05:40:48PM +0300, Dmitry Osipenko wrote:
-> 30.12.2019 23:36, Michał Mirosław пишет:
-> > On Sat, Dec 28, 2019 at 11:33:55PM +0300, Dmitry Osipenko wrote:
-> >> There is no good reason for disabling of CPU interrupts in order to
-> >> protect the utmip_pad_count modification.
-> > 
-> > Since there are sleeping functions called outside of the locked sections,
-> > this should be a mutex instead. OTOH if the spin_lock is to protect register
-> > write against IRQ handler, then the patch is wrong.
-> > 
-> > [...]
-> >> -	spin_unlock_irqrestore(&utmip_pad_lock, flags);
-> >> +	spin_unlock(&utmip_pad_lock);
-> >>  
-> >>  	clk_disable_unprepare(phy->pad_clk);
-> 
-> Hello Michał,
-> 
-> This spinlock isn't for protecting from the IRQ handler, it's used
-> solely to protect modification of the registers that are shared by all
-> USB controllers.
-> 
-> It's possible to use mutex instead of spinlock here, but it doesn't
-> bring any benefits because mutex is more useful when protected code
-> could block for a long time due to sleep or whatever, while spinlock is
-> much more efficient when protected code doesn't sleep and takes no more
-> than dozens microseconds to execute (which is the case here).
-> 
-> In this particular case of the Tegra USB PHY driver, the chance of
-> getting a block on taking the utmip_pad_lock is zero unless USB
-> controller drivers will start to use asynchronous probing. So this patch
-> does a very minor clean-up change and nothing more.
+On Sat, Dec 28, 2019 at 11:33:52PM +0300, Dmitry Osipenko wrote:
+[...]
+>  static int ulpi_open(struct tegra_usb_phy *phy)
+>  {
+> -	int err;
+> -
+> -	err = gpio_direction_output(phy->reset_gpio, 0);
+> -	if (err) {
+> -		dev_err(phy->u_phy.dev,
+> -			"ULPI reset GPIO %d direction not deasserted: %d\n",
+> -			phy->reset_gpio, err);
+> -		return err;
+> -	}
+> +	gpiod_set_value_cansleep(phy->reset_gpio, 1);
+>  
+>  	return 0;
+>  }
 
-I was concerned that this change allows the kernel to switch away to
-another task, but I can see now that spin_lock() does disable preemtion.
-So it looks OK after all. Would be nice to see the explanation in the
-commit message (that the spinlock is only used to serialize probe()s).
+The message now removed seems inverted to the meaning of the code. Is
+this a bug, or the reset really should be asserted here? I can see that
+it is deasserted in phy_power_up, but that goes before or after ulpi_open()?
+After the change below, the reset is asserted at probe() time now.
+
+[...]
+> -		err = devm_gpio_request(&pdev->dev, tegra_phy->reset_gpio,
+> -					"ulpi_phy_reset_b");
+> +		gpiod = devm_gpiod_get_from_of_node(&pdev->dev, np,
+> +						    "nvidia,phy-reset-gpio",
+> +						    0, GPIOD_OUT_HIGH,
+> +						    "ulpi_phy_reset_b");
+> +		err = PTR_ERR_OR_ZERO(gpiod);
+>  		if (err) {
+> -			dev_err(&pdev->dev, "Request failed for GPIO %d: %d\n",
+> -				tegra_phy->reset_gpio, err);
+> +			dev_err(&pdev->dev,
+> +				"Request failed for reset GPIO: %d\n", err);
+>  			return err;
+>  		}
+> +		tegra_phy->reset_gpio = gpiod;
+
+A nice extension to kernel's printf - "%pe" format - has just landed in
+Linus' master tree.
 
 Best Regards,
-Michał Mirosław
+Micha� Miros�aw
