@@ -2,93 +2,81 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B05BC2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97719C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF112085B
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FD4215A4
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 13:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RZnmy0Rk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hJvuimDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgACNfc (ORCPT
+        id S1727670AbgACNoW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 08:35:32 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:46510 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbgACNfc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 3 Jan 2020 08:35:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+G47s2y2Sg2fK9dxyGmLkDMSg3BWEgjGRsQXMWhTH40=; b=RZnmy0RktlxTOiaci5ujm5SkgM
-        sj9PqJ5OSEpfxJWoVYB36/1Pl6K0jTQm3po3dG6SDD8Wfw9xjvt9SjWyCEuP5swCXyGVEtTEwFnUY
-        FZ4JorisTE3hwC/tQNR9wyWBUIZYUMnkwi/R/PVkF7QxC5R6JPCQGGwhmmsAQMOmAZmE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1inN6p-0006JX-TD; Fri, 03 Jan 2020 14:35:23 +0100
-Date:   Fri, 3 Jan 2020 14:35:23 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Message-ID: <20200103133523.GA22988@lunn.ch>
-References: <1576768881-24971-1-git-send-email-madalin.bucur@oss.nxp.com>
- <1576768881-24971-2-git-send-email-madalin.bucur@oss.nxp.com>
- <20191219172834.GC25745@shell.armlinux.org.uk>
- <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191223120730.GO25745@shell.armlinux.org.uk>
- <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200103092718.GB25745@shell.armlinux.org.uk>
- <20200103094204.GA18808@shell.armlinux.org.uk>
- <DB8PR04MB698591AAC029ADE9F7FFF69BEC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200103125310.GE25745@shell.armlinux.org.uk>
+        Fri, 3 Jan 2020 08:44:22 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17698 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727598AbgACNoW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 08:44:22 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578059062; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=kdGb5TcHjJlYgNPD8+3CYz77uIafQ2H7Cpz0eIy/mHc=; b=hJvuimDQYzbPz7Mx0YSs6bKDOQg3ZzdDRVlISHVV6wKYDYXR28/FFXMOFdPh1HQjUtAP7AOh
+ WX5wDOz+TT3cNr4EWMjMsGeet979os0F3Qh9WjNAkUpCtzzEGHjI1u+JEFdcH5Zhoyz6GUto
+ ogF0AvpPjCTXsR3RsctAAoCWSbw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e0f4535.7f39f1c1f148-smtp-out-n03;
+ Fri, 03 Jan 2020 13:44:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 993B5C4479F; Fri,  3 Jan 2020 13:44:20 +0000 (UTC)
+Received: from govinds-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: govinds)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6668FC43383;
+        Fri,  3 Jan 2020 13:44:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6668FC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=govinds@codeaurora.org
+From:   Govind Singh <govinds@codeaurora.org>
+To:     robh@kernel.org, devicetree@vger.kernel.org,
+        ath10k@lists.infradead.org
+Cc:     linux-wireless@vger.kernel.org,
+        Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH v3 0/2] Don't call SCM interface for statically mapped msa region
+Date:   Fri,  3 Jan 2020 19:14:12 +0530
+Message-Id: <20200103134414.15457-1-govinds@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103125310.GE25745@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> What I might be willing to accept is if we were to introduce
-> XFI_10GBASER, XFI_10GBASEW, XFI_10GFC, XFI_G709 and their SFI
-> counterparts - but, there would remain one HUGE problem with that,
-> which is the total lack of specification of the board characteristics
-> required to achieve XFI electrical compliance.
+For some targets ex: SC7180/QCS404, SCM permissions for MSA region is
+statically configured in TrustZone fw. Add SCM call disable option
+for such targets to avoid duplicate permissions.
 
-Hi Russell
+Change since v2:
+   rename flag to "qcom,msa-fixed-perm".
 
-The four RGMII variants are precedents for mixing protocol and
-'electrical' properties, in terms of clock delays. But having four
-RGMII variants has been a pain point, implementations getting it
-wrong, etc.
+Change since v1:
+    Added devicetree list for review.
 
-So i would avoid mixing them in one property. I would prefer we keep
-phy-mode as a protocol property, and we define additional DT
-properties to describe the electrical parts of the SERDES interface.
+Govind Singh (2):
+  dt: bindings: add dt entry flag to skip SCM call for msa region
+  ath10k: Don't call SCM interface for statically mapped msa region
 
-Madalin, what electrical properties do you actually need in DT?  I
-guess you need to know if it is using XFI or SFI. But that is only the
-start. Do you want to place all the other properties in DT as well, or
-are they in a board specific firmware blobs, and you just need to know
-if you should use the XFI blob or the SFI blob?
+ .../devicetree/bindings/net/wireless/qcom,ath10k.txt     | 4 ++++
+ drivers/net/wireless/ath/ath10k/qmi.c                    | 9 +++++++++
+ drivers/net/wireless/ath/ath10k/qmi.h                    | 1 +
+ 3 files changed, 14 insertions(+)
 
-We can probably define a vendor neutral DT property for XFI vs SFI,
-but i expect all the other electrical properties are going to be
-vendor specific.
-
-       Andrew
+-- 
+2.22.0
