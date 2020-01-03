@@ -2,125 +2,124 @@ Return-Path: <SRS0=7PY0=2Y=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A283FC2D0CE
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 03:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5DBC2D0CE
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 04:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7924821D7D
-	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 03:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AADF21D56
+	for <linux-devicetree@archiver.kernel.org>; Fri,  3 Jan 2020 04:13:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="HyvnAvTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgACDyy (ORCPT
+        id S1726643AbgACENq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 2 Jan 2020 22:54:54 -0500
-Received: from mga01.intel.com ([192.55.52.88]:43296 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgACDyy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 2 Jan 2020 22:54:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Jan 2020 19:54:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,389,1571727600"; 
-   d="scan'208";a="209975425"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 02 Jan 2020 19:54:54 -0800
-Received: from [10.226.39.29] (unknown [10.226.39.29])
-        by linux.intel.com (Postfix) with ESMTP id 52AE1580277;
-        Thu,  2 Jan 2020 19:54:52 -0800 (PST)
-Subject: Re: [PATCH v5 2/2] reset: intel: Add system reset controller driver
-To:     Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     robh@kernel.org, martin.blumenstingl@googlemail.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-References: <a58894158cba812e6d35df165252772b07c8a0b6.1576202050.git.eswara.kota@linux.intel.com>
- <decb025c9bd0ddc1da96801e57242bc8f5ce35d0.1576202050.git.eswara.kota@linux.intel.com>
- <fe55d2c00eda2d1b94e69fe2df05114ba88b5128.camel@pengutronix.de>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <ad18d120-e943-57ff-de58-4812fc415cd0@linux.intel.com>
-Date:   Fri, 3 Jan 2020 11:54:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 2 Jan 2020 23:13:46 -0500
+Received: from mail-dm6nam10on2082.outbound.protection.outlook.com ([40.107.93.82]:6080
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726282AbgACENq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 2 Jan 2020 23:13:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b/7o3GRkxdrPoYCV/lTOXzNXhPFpxr6FdTcJRydNv2fXBCduCzCnPxMcC+IGokARN/mz2FgQiFH/vJwuOQuAo4/DZvL9mEy5YBDjvdxo+mcTiQwZx5ga5bq5a9fY+Mzu+fjsiHsUOax3bDXydIwRvf9e+Biyxifjn/RwVLu3ayprgu/cMIYgawEFK01YwD0WviwuBcFvOYpGJkRJdJ9xnvvB1SrGSrxSKF5jsgM+Xmr3+RL8gyMrCh9REHvuoUGpaIaFEvw4kDOPa4d4Cwvk7q+UvukNdMGE5ysRI6YNdK5V/pSJuW898Q43J5sAq+owz5dg0QtkdEjIa4p/JGpQQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gnUyZxf21pTXDbhbFq6hPBwVzqAmqnWJkAmySXJP/yA=;
+ b=j/0Lif8k55CRMGKaoCfeBwW1hmpsTJwgln36Uq4j7bDq769XSfNtbTWk4nCfIzfwbsKT3A+/KqxaSZ/5jdzHWV7zLzdpB5zaICZb6QyNFahCNm0MCkH33orK75GfpXMueKJLEd5j6R6IkACYhG4Fao2yDupJDwSN1uN9/Gt2OQGpnCn9trvYzoDbGlgZlquG2leuTrnoCXAtOMyfArQ6oF/yjD25C4yGtr/U50XyarOv9OB/F4MDnWY5gpu+cGSTTd/zuYdyB4AAvmy8kCHVuoGmukFB0ZbkgbDlPhDT/asQf295HO/1wEOD8uO7Y5WhucL1ukc8rUKDYGMVsuxYKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gnUyZxf21pTXDbhbFq6hPBwVzqAmqnWJkAmySXJP/yA=;
+ b=HyvnAvTyKTnRAxYq5xUDc1eti5XAuXzJ4uywMTvapjp44jMIwthUgO5pgG0dgXRWIgVWBpP+SuiFUFtCBqAs+ngy17IbEAhRHqyL35tgXiLHbDMW5fTozI63hOH5R1OL5B8RNMbV9W/wl+znyGPJYPrz0+pGuK8sJE3LUz2qTHI=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3799.namprd13.prod.outlook.com (20.180.12.212) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.4; Fri, 3 Jan 2020 04:13:43 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2602.012; Fri, 3 Jan 2020
+ 04:13:42 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com
+Cc:     aou@eecs.berkeley.edu, bmeng.cn@gmail.com, green.wan@sifive.com,
+        allison@lohutok.net, alexios.zavras@intel.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, bp@suse.de,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v2 0/2] L2 ccache DT and cacheinfo support to read no. of L2 cache ways enabled
+Date:   Fri,  3 Jan 2020 09:43:19 +0530
+Message-Id: <1578024801-39039-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BM1PR0101CA0043.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:1a::29) To CH2PR13MB3368.namprd13.prod.outlook.com
+ (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-In-Reply-To: <fe55d2c00eda2d1b94e69fe2df05114ba88b5128.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Received: from dhananjayk-PowerEdge-R620.open-silicon.com (114.143.65.226) by BM1PR0101CA0043.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2602.12 via Frontend Transport; Fri, 3 Jan 2020 04:13:37 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [114.143.65.226]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e74f147d-eb60-4aad-2f82-08d790035175
+X-MS-TrafficTypeDiagnostic: CH2PR13MB3799:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CH2PR13MB37992115458293098E2A5F578C230@CH2PR13MB3799.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0271483E06
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(39840400004)(346002)(396003)(366004)(376002)(136003)(189003)(199004)(6666004)(36756003)(1006002)(66946007)(66476007)(66556008)(107886003)(44832011)(4744005)(52116002)(7416002)(4326008)(2906002)(6506007)(86362001)(81156014)(81166006)(8936002)(6486002)(2616005)(26005)(8676002)(16526019)(186003)(478600001)(316002)(6512007)(956004)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3799;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: x27SO/YN/D1Jys8B7AnTZ44KSVH1C+1Hhx6siSHkgWju+QJ9jWM6IcH+qL5FZLEdEycol1Sgg/7xxXYKAswaMWcHSTVz5xdAwx9bdTPR+EAR9frluU4mYzQCegE+/CRbY258rXoeTh2bSNwYypJtK+RFuZkjtL+KckYZjeM/sSsS3r8m4aPaP4sBYaI3jo3vikZ8hex7cqSRZ/jjKHjWP2R4ISvrtt3wu26idOtCQNpAmX5FYxdLsW5p3T1wEQj49davMCsYJOqWiDWOXyuQHPQoTdYILlKBq3Ra2mws+NgqdKOO3IRdNLnl97U8MVz78mflKK6bLWHb1IkQ6yKY/8ttSCBStnerJHTW77JWkyTIT1jPnViFuq4ChQ4QYN5v/Z+CGWPl1fpZZWkkbQqseuwWN4hLlJAoLlaM4GfQRQVkZmorggxjCXDq8n7fPI6l
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e74f147d-eb60-4aad-2f82-08d790035175
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2020 04:13:42.6548
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +BOsII4CpAy71CVXIXhoe76S7ngdxw/SUSC9naQBkU/iQnNTmE4gAQLyvcs3jzbijwiihqw3pwIupyA35CM5hA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3799
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The patchset includes the patch to implement a private attribute named
+"number_of_ways_enabled" in the cacheinfo framework. Reading this
+attribute returns the number of L2 cache ways enabled at runtime,
+The patchset also include the patch to add DT node for SiFive L2 cache
+controller.
 
-On 1/2/2020 7:43 PM, Philipp Zabel wrote:
-> On Mon, 2019-12-16 at 14:55 +0800, Dilip Kota wrote:
->> Add driver for the reset controller present on Intel
->> Gateway SoCs for performing reset management of the
->> devices present on the SoC. Driver also registers a
->> reset handler to peform the entire device reset.
->>
->> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->> ---
->> Changes on v5:
->> 	Rebase patches on v5.5-rc1 kernel
->>
->> Changes on v4:
->> 	No Change
->>
->> Changes on v3:
->> 	Address review comments:
->> 		Remove intel_reset_device() as not supported
->> 	reset-intel-syscon.c renamed to reset-intel-gw.c
->> 	Remove syscon and add regmap logic
->> 	Add support to legacy xrx200 SoC
->> 	Use bitfield helper functions for bit operations.
->> 	Change config RESET_INTEL_SYSCON-> RESET_INTEL_GW
->>   drivers/reset/Kconfig          |   9 ++
->>   drivers/reset/Makefile         |   1 +
->>   drivers/reset/reset-intel-gw.c | 262 +++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 272 insertions(+)
->>   create mode 100644 drivers/reset/reset-intel-gw.c
-[...]
->> +					set == !!(val & BIT(stat_bit)),
->> +					20, timeout);
->> +}
->> +
->> +static int intel_assert_device(struct reset_controller_dev *rcdev,
->> +			       unsigned long id)
->> +{
->> +	struct intel_reset_data *data = to_reset_data(rcdev);
->> +	int ret;
->> +
->> +	ret = intel_set_clr_bits(data, id, true, 200);
-> timeout doesn't have to be a parameter to intel_set_clr_bits.
-Agree, not required to be a parameter.
-Will update in the next patch version.
->
-> [...]
->> +struct intel_reset_soc xrx200_data = {
->> +	.legacy =		true,
->> +	.reset_cell_count =	3,
->> +};
->> +
->> +struct intel_reset_soc lgm_data = {
->> +	.legacy =		false,
->> +	.reset_cell_count =	2,
->> +};
-> Please make these two static const, otherwise this looks fine to me.
-My miss, could have taken care.
+This patchset is based on Linux v5.5-rc3 and tested on HiFive Unleashed
+board.
 
-I will update them in the next patch version.
+Changes in v2:
+- Rebase the series on v5.5-rc3
+- Remove the reserved-memory node from DT
 
-Thanks Philipp for your time in reviewing the patch and giving the inputs.
+Yash Shah (2):
+  riscv: dts: Add DT support for SiFive L2 cache controller
+  riscv: cacheinfo: Add support to determine no. of L2 cache way enabled
 
-Regards,
-Dilip
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 15 +++++++++++++++
+ arch/riscv/include/asm/sifive_l2_cache.h   |  2 ++
+ arch/riscv/kernel/cacheinfo.c              | 31 ++++++++++++++++++++++++++++++
+ drivers/soc/sifive/sifive_l2_cache.c       |  5 +++++
+ 4 files changed, 53 insertions(+)
 
->
-> regards
-> Philipp
->
+-- 
+2.7.4
+
