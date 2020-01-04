@@ -2,439 +2,158 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EF7C32770
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 16:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C7AC32770
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 16:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B5921734
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 16:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DD024653
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 16:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StP7poFB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfPnMBLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgADQY3 (ORCPT
+        id S1726054AbgADQ4w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 11:24:29 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:36543 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgADQY3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 11:24:29 -0500
-Received: by mail-qv1-f68.google.com with SMTP id m14so1521459qvl.3;
-        Sat, 04 Jan 2020 08:24:28 -0800 (PST)
+        Sat, 4 Jan 2020 11:56:52 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37632 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgADQ4w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 11:56:52 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so5963796pjb.2;
+        Sat, 04 Jan 2020 08:56:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uXako0AnT0RegInd6xVh0Iv1Ln66l+hGQ3lCKJKtXKo=;
-        b=StP7poFBXzCTQ1bVkvrqLHj5lM4JPdP26Tm6/OrAw6mhMaIXMtBtku+TMZHagUQE43
-         04EUb6k726jfy++5vPreYcFqTwpe/4hVqCIbOOpXbim9DFGrOYT2MC4/Qi62Z/a65aF7
-         PQaoTTqICcdMOtAOM634184Ad9ms398XbBOKJRCNrpVJbYT2N1FQX8/siEbVIpiRY8ZE
-         3CU7cfrnqSAg2k8PghjuaCsEDSWBP3E2Z7qHZJA1Lsx3t2bbKjYJ6z2ocE14NtkJNG4M
-         KWq7omkXhGRltGUdfafx+1S587MCH+BaVXhzPSMwVi7T0OPUs56o1MEWQBR8N/fPREVG
-         aXMQ==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9Y8nVeWGgj2uUKifSXncV7kkGBqBgYJeiJmGWBRSYbQ=;
+        b=cfPnMBLK1wOt5+DsZJASYMhu232nGiIYRrX75rh23EBpvzERRLn3ouMulKdjJmpot5
+         0H2a/saVe4VJ7vfWY80ApCYpAPAxpbmi4LqKRbUYtb71dvJxtRIHCNWLnFQzKvGNdF8l
+         7h9F7rN506+wtIBOOA8UtR78HufdklH7n3vMV7Vy2s++qFZlF9KJQHtu9TLMkKvOdpsW
+         6pvTFwQgHFHv0EfPKnUa/4O3sY7CRPmFVU3BGXtyChDgkLTZbwKvhCsF2hegr+H3lIez
+         yg9AnPQz0BL4DuyulOYIV5DBRXyKj3rdkkANCFO7IyBT0BQbXTMYYShc0hr3/o4+hhpf
+         2MHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uXako0AnT0RegInd6xVh0Iv1Ln66l+hGQ3lCKJKtXKo=;
-        b=TH1Sh6/0x6PurJXm7Z6L8wRIO9X+5duF/KkMXdFrLKumaaYrU3Ex4pqc/0Vwu57ofs
-         84qaKYT5QN89qn+QnjSNnMDP1LHhGZxD2iQDI0w6yrc1JNVWO/oUIdWFxRpw0U1vw8w3
-         vRjnl0JMYrSrcfq4jVZaiVENAU6lTDFCUDSq6Ck+02qAnN4iGbrKnU8UKp+BrXy9ULTt
-         Y+zUKMkGzBkWGF5o0j/C03EgFrLushSTjgTxkl6n25Fpa+RwuEtqTb0HD1H0IS/G+mzq
-         270Hv86HKN63/BVgL46BXP8Uy7foebsRsJpGwO4xWtXHrbUKklnnk1SVNvAaA7Fghxql
-         aocw==
-X-Gm-Message-State: APjAAAWq53PXIlSmE1LFqgMSVlwZjRYmGoN2aRMRmU6/+q3gFYMStoJk
-        s51Ee5mGZJgXvkwwNh4RcMoyz1XoY4hIdn1Yi3M=
-X-Google-Smtp-Source: APXvYqxVVs/nTtOtlPS+vDJ38ZXY5t9BlpKReMUDHf4R4YD3baOf1rx5WDqQkwj0xJKxxOhWb+2lJq5V6XrBtSKRwjc=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr67981576qvu.136.1578155067642;
- Sat, 04 Jan 2020 08:24:27 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9Y8nVeWGgj2uUKifSXncV7kkGBqBgYJeiJmGWBRSYbQ=;
+        b=V4TjDpdguy1caXThk3ycb4qiRdQZHDwkhA+IP4g+nPI30AZPaELJzflvP8A2EP20Vt
+         xiGr4CJOsLtNJLOOcZwD1xrLg1eBQh/XjP1nlAmfShdOPM91KI6pHW7CiGCmwVW6rChv
+         0UeBVCATJiGcXnqubXjVydmdpd7d3ir2Hwsx5yLz4urOy2hCXB1pe47Uon4uwvqitMoT
+         UTg4XF2VLLVB1lPDnc9XER8GQZWVafPJMygz1y4dx7cVg9MKrp+Y+q/xxbsa01V+c5eE
+         tYgf3+1bgVB6EEg+IVhGhFcxrlpu78OXsZuqBDXUacYlrlW/19oJzf50HWmHC1OSpmHj
+         o+8A==
+X-Gm-Message-State: APjAAAVqLxoyzFFyoxbuuWi35rT7SQWyUKeN2pyeRN4LSBLt34SUniUj
+        vzsUz/JQu7SWPQkQh84NKIw=
+X-Google-Smtp-Source: APXvYqypji4ySRrO2P1UJKiwiNe24+N7reVangsvdU/0ECpr7r7RQGeh7TYaOphnoWP5PiBsEp8cjQ==
+X-Received: by 2002:a17:90a:26ab:: with SMTP id m40mr34056119pje.42.1578157012007;
+        Sat, 04 Jan 2020 08:56:52 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id g67sm70518134pfb.66.2020.01.04.08.56.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Jan 2020 08:56:51 -0800 (PST)
+Subject: Re: [PATCH 1/2] [PATCH v8 1/2] dt-bindings: mediatek: mt8183: Add
+ #reset-cells
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
+        wim@linux-watchdog.org, p.zabel@pengutronix.de,
+        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com
+Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
+References: <1578044245-26939-1-git-send-email-jiaxin.yu@mediatek.com>
+ <1578044245-26939-2-git-send-email-jiaxin.yu@mediatek.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8bed8f3e-7a20-2d34-9a33-805c707ff410@roeck-us.net>
+Date:   Sat, 4 Jan 2020 08:56:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200104063505.219030-1-anarsoul@gmail.com> <20200104063505.219030-4-anarsoul@gmail.com>
- <20200104083734.hmeapykk7gninukf@gilmour.lan>
-In-Reply-To: <20200104083734.hmeapykk7gninukf@gilmour.lan>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Sat, 4 Jan 2020 08:24:01 -0800
-Message-ID: <CA+E=qVdZGktgAwEUeUkqYaU=pWe-Ogjnf90=z7YcyrXn74h+9w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: a64: enable DVFS
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1578044245-26939-2-git-send-email-jiaxin.yu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jan 4, 2020 at 12:37 AM Maxime Ripard <mripard@kernel.org> wrote:
->
-> Hi!
->
-> On Fri, Jan 03, 2020 at 10:35:05PM -0800, Vasily Khoruzhick wrote:
-> > Add CPU regulator, CPU clock, operation points and thermal trip points
-> > to enable DVFS on A64
-> >
-> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > ---
-> >  .../allwinner/sun50i-a64-amarula-relic.dts    |   4 +
-> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts |   4 +
-> >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   |   4 +
-> >  .../dts/allwinner/sun50i-a64-olinuxino.dts    |   4 +
-> >  .../dts/allwinner/sun50i-a64-orangepi-win.dts |   4 +
-> >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  |   4 +
-> >  .../dts/allwinner/sun50i-a64-pinebook.dts     |   4 +
-> >  .../allwinner/sun50i-a64-sopine-baseboard.dts |   4 +
-> >  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi |   4 +
-> >  .../boot/dts/allwinner/sun50i-a64-teres-i.dts |   4 +
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 102 ++++++++++++++++++
-> >  11 files changed, 142 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > index 5634245d11db..43f6ac0beed6 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > @@ -65,6 +65,10 @@ wifi_pwrseq: wifi-pwrseq {
-> >       };
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &csi {
-> >       status = "okay";
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > index 208373efee49..cbcab80de8c5 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-> > @@ -108,6 +108,10 @@ &codec_analog {
-> >       status = "okay";
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &dai {
-> >       status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> > index 9b9d9157128c..6708acf94d01 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-> > @@ -87,6 +87,10 @@ wifi_pwrseq: wifi_pwrseq {
-> >       };
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &de {
-> >       status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> > index 01a9a52edae4..f94e60eb4ec2 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> > @@ -87,6 +87,10 @@ wifi_pwrseq: wifi_pwrseq {
-> >       };
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &de {
-> >       status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-> > index f54a415f2e3b..2793afba4884 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-> > @@ -123,6 +123,10 @@ &codec_analog {
-> >       status = "okay";
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &dai {
-> >       status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> > index 409523cb0950..04aa452d4400 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-> > @@ -84,6 +84,10 @@ &codec_analog {
-> >       status = "okay";
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &dai {
-> >       status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > index 78c82a665c84..365d85c16deb 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-> > @@ -98,6 +98,10 @@ &codec_analog {
-> >       status = "okay";
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &dai {
-> >       status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > index 920103ec0046..e760e8efdf3e 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > @@ -100,6 +100,10 @@ &codec_analog {
-> >       status = "okay";
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &dai {
-> >       status = "okay";
-> >  };
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-> > index 9d20e13f0c02..3d8e2d452ce1 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-> > @@ -51,6 +51,10 @@ &codec_analog {
-> >       cpvdd-supply = <&reg_eldo1>;
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &mmc0 {
-> >       pinctrl-names = "default";
-> >       pinctrl-0 = <&mmc0_pins>;
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > index 970415106dcf..28edcef8bed1 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > @@ -104,6 +104,10 @@ &de {
-> >       status = "okay";
-> >  };
-> >
-> > +&cpu0 {
-> > +     cpu-supply = <&reg_dcdc2>;
-> > +};
-> > +
-> >  &ehci1 {
-> >       status = "okay";
-> >  };
->
-> Did you test it on all those boards (and if so, how were the OPP
-> tested), or was it done simply by looking at the schematics?
+On 1/3/20 1:37 AM, Jiaxin Yu wrote:
+> Add #reset-cells property and update example
+> 
+> Change-Id: If3f4f0170d417819facff1fd0a0e5e3c6cc9944d
 
-I tested it only on Pine64-LTS and Pinebook. But all these boards use
-AXP803 which always uses DCDC2 as CPU regulator.
+No Change-Id in upstream kernel code, please.
 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > index 5e3f16c3b706..7f37c8cd1b6e 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -80,6 +80,52 @@ simplefb_hdmi: framebuffer-hdmi {
-> >               };
-> >       };
-> >
-> > +     cpu0_opp_table: opp_table0 {
-> > +             compatible = "operating-points-v2";
-> > +             opp-shared;
-> > +
-> > +             opp-648000000 {
-> > +                     opp-hz = /bits/ 64 <648000000>;
-> > +                     opp-microvolt = <1040000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +             opp-816000000 {
-> > +                     opp-hz = /bits/ 64 <816000000>;
-> > +                     opp-microvolt = <1100000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
->
-> Nit: having new lines between the nodes would be great
+Guenter
 
-Will do.
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>   .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
+>   .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
+>   2 files changed, 39 insertions(+)
+>   create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+> 
+> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
+> new file mode 100644
+> index 000000000000..9e7ee762f076
+> --- /dev/null
+> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Yong Liang <yong.liang@mediatek.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +
+> +#define MT2712_TOPRGU_INFRA_SW_RST				0
+> +#define MT2712_TOPRGU_MM_SW_RST					1
+> +#define MT2712_TOPRGU_MFG_SW_RST				2
+> +#define MT2712_TOPRGU_VENC_SW_RST				3
+> +#define MT2712_TOPRGU_VDEC_SW_RST				4
+> +#define MT2712_TOPRGU_IMG_SW_RST				5
+> +#define MT2712_TOPRGU_INFRA_AO_SW_RST				8
+> +#define MT2712_TOPRGU_USB_SW_RST				9
+> +#define MT2712_TOPRGU_APMIXED_SW_RST				10
+> +
+> +#define MT2712_TOPRGU_SW_RST_NUM				11
+> +
+> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
+> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
+> index 8804e34ebdd4..a1bbd41e0d12 100644
+> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
+> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
+> @@ -78,4 +78,21 @@
+>   #define MT8183_INFRACFG_AO_I2C7_SW_RST				126
+>   #define MT8183_INFRACFG_AO_I2C8_SW_RST				127
+>   
+> +#define MT8183_INFRACFG_SW_RST_NUM				128
+> +
+> +#define MT8183_TOPRGU_MM_SW_RST					1
+> +#define MT8183_TOPRGU_MFG_SW_RST				2
+> +#define MT8183_TOPRGU_VENC_SW_RST				3
+> +#define MT8183_TOPRGU_VDEC_SW_RST				4
+> +#define MT8183_TOPRGU_IMG_SW_RST				5
+> +#define MT8183_TOPRGU_MD_SW_RST					7
+> +#define MT8183_TOPRGU_CONN_SW_RST				9
+> +#define MT8183_TOPRGU_CONN_MCU_SW_RST				12
+> +#define MT8183_TOPRGU_IPU0_SW_RST				14
+> +#define MT8183_TOPRGU_IPU1_SW_RST				15
+> +#define MT8183_TOPRGU_AUDIO_SW_RST				17
+> +#define MT8183_TOPRGU_CAMSYS_SW_RST				18
+> +
+> +#define MT8183_TOPRGU_SW_RST_NUM				19
+> +
+>   #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
+> 
 
-> > +             opp-912000000 {
-> > +                     opp-hz = /bits/ 64 <912000000>;
-> > +                     opp-microvolt = <1120000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +             opp-960000000 {
-> > +                     opp-hz = /bits/ 64 <960000000>;
-> > +                     opp-microvolt = <1160000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +             opp-1008000000 {
-> > +                     opp-hz = /bits/ 64 <1008000000>;
-> > +                     opp-microvolt = <1200000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +             opp-1056000000 {
-> > +                     opp-hz = /bits/ 64 <1056000000>;
-> > +                     opp-microvolt = <1240000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +             opp-1104000000 {
-> > +                     opp-hz = /bits/ 64 <1104000000>;
-> > +                     opp-microvolt = <1260000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +             opp-1152000000 {
-> > +                     opp-hz = /bits/ 64 <1152000000>;
-> > +                     opp-microvolt = <1300000>;
-> > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > +             };
-> > +     };
-> > +
->
-> What frequency is setup by U-Boot?
-
-It's 816 MHz
-
-> If it's 1008 MHz as usual, then having the OPP above that frequency by
-> default means that a board that doesn't set cpu-supply (or doesn't set
-> it up properly) will be unstable, since it will increase the
-> frequency, but not the voltage, and the voltage isn't enough for that
-> new frequency.
->
-> The way we've done it so far on the SoCs in a similar situation (A33,
-> A83t) is only to list the OPP below the frequency set up by U-Boot in
-> the DTSI, and list the frequencies above that in the boards that add
-> cpu-supply.
->
-> Given that it seems that we need to have them listed on number of
-> boards, I guess we could add a separate DTSI that would be included
-> only by the boards setting cpu-supply?
-
-Currently all the A64 boards that we support use AXP803, so I'm not
-sure whether we actually need that. We can just define CPU regulator
-for them and use default OPP and that's exactly what I did.
-
-> >       cpus {
-> >               #address-cells = <1>;
-> >               #size-cells = <0>;
-> > @@ -90,6 +136,10 @@ cpu0: cpu@0 {
-> >                       reg = <0>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2>;
-> > +                     clocks = <&ccu CLK_CPUX>;
-> > +                     clock-names = "cpu";
-> > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > +                     #cooling-cells = <2>;
-> >               };
-> >
-> >               cpu1: cpu@1 {
-> > @@ -98,6 +148,10 @@ cpu1: cpu@1 {
-> >                       reg = <1>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2>;
-> > +                     clocks = <&ccu CLK_CPUX>;
-> > +                     clock-names = "cpu";
-> > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > +                     #cooling-cells = <2>;
-> >               };
-> >
-> >               cpu2: cpu@2 {
-> > @@ -106,6 +160,10 @@ cpu2: cpu@2 {
-> >                       reg = <2>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2>;
-> > +                     clocks = <&ccu CLK_CPUX>;
-> > +                     clock-names = "cpu";
-> > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > +                     #cooling-cells = <2>;
-> >               };
-> >
-> >               cpu3: cpu@3 {
-> > @@ -114,6 +172,10 @@ cpu3: cpu@3 {
-> >                       reg = <3>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2>;
-> > +                     clocks = <&ccu CLK_CPUX>;
-> > +                     clock-names = "cpu";
-> > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > +                     #cooling-cells = <2>;
-> >               };
-> >
-> >               L2: l2-cache {
-> > @@ -218,6 +280,46 @@ cpu_thermal: cpu0-thermal {
-> >                       polling-delay-passive = <0>;
-> >                       polling-delay = <0>;
-> >                       thermal-sensors = <&ths 0>;
-> > +
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip = <&cpu_alert0>;
-> > +                                     cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                             map1 {
-> > +                                     trip = <&cpu_alert1>;
-> > +                                     cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
-> > +
-> > +                     trips {
-> > +                             cpu_alert0: cpu_alert0 {
-> > +                                     /* milliCelsius */
-> > +                                     temperature = <75000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "passive";
-> > +                             };
-> > +
-> > +                             cpu_alert1: cpu_alert1 {
-> > +                                     /* milliCelsius */
-> > +                                     temperature = <90000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "hot";
-> > +                             };
-> > +
-> > +                             cpu_crit: cpu_crit {
-> > +                                     /* milliCelsius */
-> > +                                     temperature = <110000>;
-> > +                                     hysteresis = <2000>;
-> > +                                     type = "critical";
-> > +                             };
-> > +                     };
-> >               };
->
-> Where are those tripping points coming from?
-
-These are taken from A33 dtsi. I couldn't find any recommended
-throttling and critical temp in A64 user manual [1].
-
-[1] http://linux-sunxi.org/images/b/b4/Allwinner_A64_User_Manual_V1.1.pdf
-
-> Thanks!
-> Maxime
