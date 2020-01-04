@@ -2,158 +2,151 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C7AC32770
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 16:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AC3C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 17:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DD024653
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 16:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfPnMBLK"
+	by mail.kernel.org (Postfix) with ESMTP id 3280A2464E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 17:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbgADQ4w (ORCPT
+        id S1726118AbgADR1X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 11:56:52 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37632 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbgADQ4w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 11:56:52 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m13so5963796pjb.2;
-        Sat, 04 Jan 2020 08:56:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9Y8nVeWGgj2uUKifSXncV7kkGBqBgYJeiJmGWBRSYbQ=;
-        b=cfPnMBLK1wOt5+DsZJASYMhu232nGiIYRrX75rh23EBpvzERRLn3ouMulKdjJmpot5
-         0H2a/saVe4VJ7vfWY80ApCYpAPAxpbmi4LqKRbUYtb71dvJxtRIHCNWLnFQzKvGNdF8l
-         7h9F7rN506+wtIBOOA8UtR78HufdklH7n3vMV7Vy2s++qFZlF9KJQHtu9TLMkKvOdpsW
-         6pvTFwQgHFHv0EfPKnUa/4O3sY7CRPmFVU3BGXtyChDgkLTZbwKvhCsF2hegr+H3lIez
-         yg9AnPQz0BL4DuyulOYIV5DBRXyKj3rdkkANCFO7IyBT0BQbXTMYYShc0hr3/o4+hhpf
-         2MHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9Y8nVeWGgj2uUKifSXncV7kkGBqBgYJeiJmGWBRSYbQ=;
-        b=V4TjDpdguy1caXThk3ycb4qiRdQZHDwkhA+IP4g+nPI30AZPaELJzflvP8A2EP20Vt
-         xiGr4CJOsLtNJLOOcZwD1xrLg1eBQh/XjP1nlAmfShdOPM91KI6pHW7CiGCmwVW6rChv
-         0UeBVCATJiGcXnqubXjVydmdpd7d3ir2Hwsx5yLz4urOy2hCXB1pe47Uon4uwvqitMoT
-         UTg4XF2VLLVB1lPDnc9XER8GQZWVafPJMygz1y4dx7cVg9MKrp+Y+q/xxbsa01V+c5eE
-         tYgf3+1bgVB6EEg+IVhGhFcxrlpu78OXsZuqBDXUacYlrlW/19oJzf50HWmHC1OSpmHj
-         o+8A==
-X-Gm-Message-State: APjAAAVqLxoyzFFyoxbuuWi35rT7SQWyUKeN2pyeRN4LSBLt34SUniUj
-        vzsUz/JQu7SWPQkQh84NKIw=
-X-Google-Smtp-Source: APXvYqypji4ySRrO2P1UJKiwiNe24+N7reVangsvdU/0ECpr7r7RQGeh7TYaOphnoWP5PiBsEp8cjQ==
-X-Received: by 2002:a17:90a:26ab:: with SMTP id m40mr34056119pje.42.1578157012007;
-        Sat, 04 Jan 2020 08:56:52 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g67sm70518134pfb.66.2020.01.04.08.56.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Jan 2020 08:56:51 -0800 (PST)
-Subject: Re: [PATCH 1/2] [PATCH v8 1/2] dt-bindings: mediatek: mt8183: Add
- #reset-cells
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
-        wim@linux-watchdog.org, p.zabel@pengutronix.de,
-        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com
-Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
-References: <1578044245-26939-1-git-send-email-jiaxin.yu@mediatek.com>
- <1578044245-26939-2-git-send-email-jiaxin.yu@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8bed8f3e-7a20-2d34-9a33-805c707ff410@roeck-us.net>
-Date:   Sat, 4 Jan 2020 08:56:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 4 Jan 2020 12:27:23 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:50512 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgADR1X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 12:27:23 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 3BDD120030;
+        Sat,  4 Jan 2020 18:27:19 +0100 (CET)
+Date:   Sat, 4 Jan 2020 18:27:17 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] drm/panel: Add DT bindings for Novatek NT35510-based
+ panels
+Message-ID: <20200104172717.GB8724@ravnborg.org>
+References: <20191225115610.14518-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1578044245-26939-2-git-send-email-jiaxin.yu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191225115610.14518-1-linus.walleij@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=j8Cu_9a8AAAA:8
+        a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8
+        a=_oycOFcioCRde9wpaXwA:9 a=CjuIK1q_8ugA:10 a=A2jcf3dkIZPIRbEE90CI:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=cvBusfyB2V15izCimMoJ:22
+        a=sptkURWiP4Gy88Gu7hUp:22 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/3/20 1:37 AM, Jiaxin Yu wrote:
-> Add #reset-cells property and update example
+Hi Linus.
+
+On Wed, Dec 25, 2019 at 12:56:09PM +0100, Linus Walleij wrote:
+> This adds device tree bindings for the Novatek NT35510-based
+> family of panels. Since several such panels are in existence
+> we define bindings common for all, and define the compatible
+> string for one certain panel (Hydis HVA40WV1).
 > 
-> Change-Id: If3f4f0170d417819facff1fd0a0e5e3c6cc9944d
-
-No Change-Id in upstream kernel code, please.
-
-Guenter
-
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> As other panels are discovered and investigated, we can add
+> more compatibles to the binding.
+> 
+> Cc: Stephan Gerhold <stephan@gerhold.net>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->   .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
->   .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
->   2 files changed, 39 insertions(+)
->   create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+>  .../display/panel/novatek-nt35510.yaml        | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/novatek-nt35510.yaml
 > 
-> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
+> diff --git a/Documentation/devicetree/bindings/display/panel/novatek-nt35510.yaml b/Documentation/devicetree/bindings/display/panel/novatek-nt35510.yaml
 > new file mode 100644
-> index 000000000000..9e7ee762f076
+> index 000000000000..a4a6b5adf15b
 > --- /dev/null
-> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Yong Liang <yong.liang@mediatek.com>
-> + */
+> +++ b/Documentation/devicetree/bindings/display/panel/novatek-nt35510.yaml
+> @@ -0,0 +1,53 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/novatek-nt35510.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
-> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +title: Novatek NT35510-based display panels
 > +
-> +#define MT2712_TOPRGU_INFRA_SW_RST				0
-> +#define MT2712_TOPRGU_MM_SW_RST					1
-> +#define MT2712_TOPRGU_MFG_SW_RST				2
-> +#define MT2712_TOPRGU_VENC_SW_RST				3
-> +#define MT2712_TOPRGU_VDEC_SW_RST				4
-> +#define MT2712_TOPRGU_IMG_SW_RST				5
-> +#define MT2712_TOPRGU_INFRA_AO_SW_RST				8
-> +#define MT2712_TOPRGU_USB_SW_RST				9
-> +#define MT2712_TOPRGU_APMIXED_SW_RST				10
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
 > +
-> +#define MT2712_TOPRGU_SW_RST_NUM				11
+> +allOf:
+> +  - $ref: panel-common.yaml#
 > +
-> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
-> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
-> index 8804e34ebdd4..a1bbd41e0d12 100644
-> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
-> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
-> @@ -78,4 +78,21 @@
->   #define MT8183_INFRACFG_AO_I2C7_SW_RST				126
->   #define MT8183_INFRACFG_AO_I2C8_SW_RST				127
->   
-> +#define MT8183_INFRACFG_SW_RST_NUM				128
-> +
-> +#define MT8183_TOPRGU_MM_SW_RST					1
-> +#define MT8183_TOPRGU_MFG_SW_RST				2
-> +#define MT8183_TOPRGU_VENC_SW_RST				3
-> +#define MT8183_TOPRGU_VDEC_SW_RST				4
-> +#define MT8183_TOPRGU_IMG_SW_RST				5
-> +#define MT8183_TOPRGU_MD_SW_RST					7
-> +#define MT8183_TOPRGU_CONN_SW_RST				9
-> +#define MT8183_TOPRGU_CONN_MCU_SW_RST				12
-> +#define MT8183_TOPRGU_IPU0_SW_RST				14
-> +#define MT8183_TOPRGU_IPU1_SW_RST				15
-> +#define MT8183_TOPRGU_AUDIO_SW_RST				17
-> +#define MT8183_TOPRGU_CAMSYS_SW_RST				18
-> +
-> +#define MT8183_TOPRGU_SW_RST_NUM				19
-> +
->   #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
-> 
+> +properties:
+> +  compatible:
+> +    const: hydis,hva40wv1
+compatible fail to match filename - which is common practice.
+And hydis is not a known vendor-prefix.
 
+
+> +    description: This indicates the panel manufacturer of the panel
+> +      that is in turn using the NT35510 panel driver. The compatible
+> +      string determines how the NT35510 panel driver shall be configured
+> +      to work with the indicated panel.
+The description is just a general description of what compatible is used
+for.
+Please drop it as it does not provide anything specific for the panel.
+
+	Sam
+
+> +  reg: true
+> +  reset-gpios: true
+> +  vdd-supply:
+> +     description: regulator that supplies the vdd voltage
+> +  vddi-supply:
+> +     description: regulator that supplies the vddi voltage
+> +  backlight: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    dsi@a0351000 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        panel {
+> +            compatible = "hydis,hva40wv1";
+> +            reg = <0>;
+> +            vdd-supply = <&ab8500_ldo_aux4_reg>;
+> +            vddi-supply = <&ab8500_ldo_aux6_reg>;
+> +            reset-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
+> +            backlight = <&gpio_bl>;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
