@@ -2,109 +2,155 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4369EC32770
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9B2C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2415424650
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657112464E
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578151310;
+	bh=Y7L88PCTUdeR29N/KZb0qXw8Sim4EahW7H2Nh1Q54qk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yR9+JHiLFFuROAOEHIkmXvJ9a/jOAzDg/aUPNPs4vZVlaxSmwDpiCTkyHGT2PIJOx
+	 vOsdjl04midnk8IIm65R3/t7voqECRjjvYQ+C4ZxTsqo6tnfWudm2vcR7L14Ez7WF7
+	 UnvPG6qjdren72MkOYcjwbeUOxR5Bqe9zY6pWqB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgADPSj (ORCPT
+        id S1726167AbgADPVq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:18:39 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:38724 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgADPSj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 10:18:39 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 4 Jan 2020 10:21:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbgADPVq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Jan 2020 10:21:46 -0500
+Received: from localhost.localdomain (unknown [194.230.155.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id EC59B80622;
-        Sat,  4 Jan 2020 16:18:35 +0100 (CET)
-Date:   Sat, 4 Jan 2020 16:18:34 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC8D2464E;
+        Sat,  4 Jan 2020 15:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578151305;
+        bh=Y7L88PCTUdeR29N/KZb0qXw8Sim4EahW7H2Nh1Q54qk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=df4GISARj1IPmd74Ka2Y0gJovuqv1YPjFUbPDMoGbRVrTZPESYqMSNUICPVE/5V4m
+         fYddVW0ZVE5imK6jc+V8RlJahRCRWbfwXV8twb1nm8zMr07AvFsJd4ICRSyzsR4XXq
+         3iRzwo49M9TdG+vf4VUhXPK3wmYTJGkUIdSoCk6c=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 3/3] drm/panel: simple: Add Satoz SAT050AT40H12R2
- panel support
-Message-ID: <20200104151834.GD17768@ravnborg.org>
-References: <20191224141905.22780-1-miquel.raynal@bootlin.com>
- <20191224141905.22780-3-miquel.raynal@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224141905.22780-3-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=P-IC7800AAAA:8
-        a=6d4WGEFEbrAP5ViGYu4A:9 a=CjuIK1q_8ugA:10 a=d3PnA9EDa4IxuAV0gXij:22
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v2 02/20] arm64: dts: exynos: Rename Samsung and Exynos to lowercase
+Date:   Sat,  4 Jan 2020 16:20:49 +0100
+Message-Id: <20200104152107.11407-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200104152107.11407-1-krzk@kernel.org>
+References: <20200104152107.11407-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Miquel.
+Fix up inconsistent usage of upper and lowercase letters in "Samsung"
+and "Exynos" names.
 
-On Tue, Dec 24, 2019 at 03:19:05PM +0100, Miquel Raynal wrote:
-> Add support for the Satoz SAT050AT40H12R2 RGB panel.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
-> 
-> Changes since v2:
-> * Dropped two uneeded lines which would fail the build.
-> 
-> Changes since v1:
-> * Switched to display_timing's instead of display_mode.
-> 
->  drivers/gpu/drm/panel/panel-simple.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index ac6f6b5d200d..cc1595c5633a 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2559,6 +2559,29 @@ static const struct panel_desc samsung_ltn140at29_301 = {
->  	},
->  };
->  
-> +static const struct display_timing satoz_sat050at40h12r2_timing = {
-> +	.pixelclock = { 33300000, 33300000, 50000000 },
-> +	.hactive = {800, 800, 800},
-> +	.hfront_porch = {16, 210, 354},
-> +	.hback_porch = {46, 46, 46},
-> +	.hsync_len = {1, 1, 40},
-> +	.vactive = {480, 480, 480},
-> +	.vfront_porch = {7, 22, 147},
-> +	.vback_porch = {23, 23, 23},
-> +	.vsync_len = {1, 1, 20},
-> +};
-> +
-> +static const struct panel_desc satoz_sat050at40h12r2 = {
-> +	.timings = &satoz_sat050at40h12r2_timing,
-> +	.num_timings = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 108,
-> +		.height = 65,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +};
-Please add connector_type as well.
-This is mandatory for all new panels.
+"SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
+names.  Therefore they should be written with lowercase letters starting
+with capital letter.
 
-	Sam
+The lowercase "Exynos" name is promoted by its manufacturer Samsung
+Electronics Co., Ltd., in advertisement materials and on website.
+
+Although advertisement materials usually use uppercase "SAMSUNG", the
+lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+privacy/legal statements on
+https://www.samsung.com/semiconductor/privacy-global/).
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 +-
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts         | 2 +-
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts        | 2 +-
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts       | 4 ++--
+ arch/arm64/boot/dts/exynos/exynos7.dtsi               | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+index 6f90b0e62cba..250fc01de78d 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos5433 TM2 board device tree source
++ * Samsung Exynos5433 TM2 board device tree source
+  *
+  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+  *
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+index dda5d2746a74..fdd0796b29d4 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos5433 TM2 board device tree source
++ * Samsung Exynos5433 TM2 board device tree source
+  *
+  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+  *
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+index 1e207ce8b97b..089fc7a1af67 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos5433 TM2E board device tree source
++ * Samsung Exynos5433 TM2E board device tree source
+  *
+  * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+  *
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 080e0f56e108..7af288fa9475 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG Exynos7 Espresso board device tree source
++ * Samsung Exynos7 Espresso board device tree source
+  *
+  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+@@ -13,7 +13,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+-	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
++	model = "Samsung Exynos7 Espresso board based on Exynos7";
+ 	compatible = "samsung,exynos7-espresso", "samsung,exynos7";
+ 
+ 	aliases {
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index 3a00ef0a17ff..5558045637ac 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * SAMSUNG EXYNOS7 SoC device tree source
++ * Samsung Exynos7 SoC device tree source
+  *
+  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+  *		http://www.samsung.com
+-- 
+2.17.1
+
