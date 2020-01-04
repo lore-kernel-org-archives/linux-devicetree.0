@@ -7,87 +7,89 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3CC33C99
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F602C32771
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC39D24653
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758F9222C4
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578172321;
-	bh=Kc8R8PG2XjwdyEZc6dNj6JgJPNj/Pco8HHi++eEHxk0=;
+	s=default; t=1578172498;
+	bh=aQkYv/od3M6ELDfON77dEIQpB8tvF3HasO5wg5XVGWE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E7EotG/xWFTmM2KrRYsqXDBX21VxjU68QBRpH7xF8hpSXoz6NkDtYX8FicfdvATHz
-	 eAqKKxUASjdWK6/g5eoMIeHBdUeur7xErshqTbSkICPGe017cYODbYGsZVFFXw93W6
-	 KgOWcW4VhHenK4JEsJqLS78aCi205k9uxgp4Ho1Y=
+	b=PlsAbh6j0Donbr8jARYAUuoj2584//MupmnKXmKlWLLdPFwawTBuAqDrWlYcF2dG8
+	 atrBZZ69QoBXvIcJ+lsbssZfjFsmPXf1TAYjr5XfSEphX05K/DwdWIUGFiX1bpc1uU
+	 0xZaLlnauPsdvKfOhGfluzaGt46hg5zATWyHd9Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgADVMA (ORCPT
+        id S1726167AbgADVO4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 16:12:00 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40774 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgADVMA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 16:12:00 -0500
-Received: by mail-il1-f193.google.com with SMTP id c4so39391109ilo.7
-        for <devicetree@vger.kernel.org>; Sat, 04 Jan 2020 13:11:59 -0800 (PST)
+        Sat, 4 Jan 2020 16:14:56 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40838 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726320AbgADVO4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 16:14:56 -0500
+Received: by mail-io1-f68.google.com with SMTP id x1so44731330iop.7
+        for <devicetree@vger.kernel.org>; Sat, 04 Jan 2020 13:14:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=B0Hpin+TA8PZ/UPU++QRg3TQKcelVhxJf7UGPi4P5JQ=;
-        b=UKtP5CMmLykimSvkjNwIll1Y5/POdjSUVi5Ndkuh+fM/HSMA1hX6yBGwyyoA4dOLzI
-         FAA+KloEPphDNjr+z7F3Vzo7xjHopmSDWymWTGU6AJ+fFVswzQgsBjNtrYPrQfPpxr7V
-         YnNkLTa+x5l8HvCGdgj8aj83wLLq70LqKmz3NfkPD8q3hYWVIsmu5eWzIiwPtzw/Uk2y
-         3rZpngPNUETCXVcSUcotKPZS4J9EyR8mxn+mjk086YUxkIJPuHABfhdVaasnoxXcD2CA
-         /5grfm6J4NRHDmsA1e+21ytP/LQgtOP8d0P8oX7MEuu+Ogdf1cJJkZiDeqHBxNrBAj07
-         TP2w==
-X-Gm-Message-State: APjAAAU3uZP4auvaTFa5UMltA+cEGWTGKQ0rSwgMEWcalqS/+E8qAXXp
-        743pyiPICs009hvnWRqMOc8Upxk=
-X-Google-Smtp-Source: APXvYqx21ThfQ1h9h7abilqU2m++evTAY/OkctOZPuXojbdngnNtwb9r8RG5EdtlBNFtM2hDOmTRIQ==
-X-Received: by 2002:a92:b11:: with SMTP id b17mr80688407ilf.202.1578172318715;
-        Sat, 04 Jan 2020 13:11:58 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l6WjYhwErffAfIJqKX4almlPavimz+egXrq1mO0xKZc=;
+        b=Tkf2VnEppwfj+atxiYL54NZ5v78+8Lv+dVZ/kqY8Yum7WGbb2WJyR+T2ncqcM/D0GC
+         aXeKODKGhwiB/b+IvvGjQDqaQ5CLgUUMZ4mDEkPbJx5iLYe1UqViUKnSV50ZZAqUgU8J
+         moBQZVdvdBPOT20s2hHQzfEkcBQfxsfdfOCqF66xQdGUlxxKKw41zKZYR0pascBBVMsk
+         74ABbWIf76dtMXK7NAW5iBvyBTedB/upAJ1BZh/FNx8I8AOtZkpy0LePeWn4zmaQLbmT
+         5Tu2qRroXqOlXkEilWpAGKlr0MscNYHr+EsFhD8dJEHMfMdChHoiaQvjWSnM2XwHrLD9
+         nEQg==
+X-Gm-Message-State: APjAAAXGPVL56BvTddL1QaPVurNu2j5wixwK77Xa8txyJLThnARUollr
+        lLYqxi62AFGgS+P+I0+YFVk9/4c=
+X-Google-Smtp-Source: APXvYqwiQ78D4omiFPxFH9UaYD37ADaV7tVKsxe/jSBLRGXYJkGXUvtW9vz5y7zn09CdznB5pkg2BQ==
+X-Received: by 2002:a02:b14c:: with SMTP id s12mr73996903jah.67.1578172495283;
+        Sat, 04 Jan 2020 13:14:55 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id a22sm10942550ioq.52.2020.01.04.13.11.57
+        by smtp.gmail.com with ESMTPSA id m22sm16077322ion.1.2020.01.04.13.14.53
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 13:11:58 -0800 (PST)
+        Sat, 04 Jan 2020 13:14:54 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 2219b7
+        id 2219a3
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Sat, 04 Jan 2020 14:11:57 -0700
-Date:   Sat, 4 Jan 2020 14:11:57 -0700
+        Sat, 04 Jan 2020 14:14:53 -0700
+Date:   Sat, 4 Jan 2020 14:14:53 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/9] dt: bindings: lm3692x: Add led-max-microamp
- property
-Message-ID: <20200104211157.GA21511@bogus>
-References: <cover.1578134779.git.agx@sigxcpu.org>
- <015c9818d17d81783614da2b89ec46283468765b.1578134779.git.agx@sigxcpu.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        rnayak@codeaurora.org, swboyd@chromium.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        dianders@chromium.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: rpmpd: Convert rpmpd bindings
+ to yaml
+Message-ID: <20200104211453.GA26611@bogus>
+References: <20191220064823.6115-1-sibis@codeaurora.org>
+ <20191220064823.6115-2-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <015c9818d17d81783614da2b89ec46283468765b.1578134779.git.agx@sigxcpu.org>
+In-Reply-To: <20191220064823.6115-2-sibis@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat,  4 Jan 2020 11:54:21 +0100, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
-> This can be used to limit the current per LED strip.
+On Fri, 20 Dec 2019 12:18:22 +0530, Sibi Sankar wrote:
+> Convert RPM/RPMH power-domain bindings to yaml.
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../devicetree/bindings/power/qcom,rpmpd.txt  | 150 ----------------
+>  .../devicetree/bindings/power/qcom,rpmpd.yaml | 170 ++++++++++++++++++
+>  2 files changed, 170 insertions(+), 150 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
