@@ -2,117 +2,64 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC86C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9F5C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67FD21734
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDAD21734
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 15:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgADPeT (ORCPT
+        id S1726080AbgADPrW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 10:34:19 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:44994 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbgADPeT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 10:34:19 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1inlRQ-0002gZ-Ba; Sat, 04 Jan 2020 16:34:16 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from roc-pc (p508F384D.dip0.t-ipconnect.de [80.143.56.77])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 004FYFYc009264
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 4 Jan 2020 16:34:15 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-To:     linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Markus Reichl <m.reichl@fivetechno.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] arm64: dts: rockchip: Enable mp8859 regulator on rk3399-roc-pc
-Date:   Sat,  4 Jan 2020 16:32:49 +0100
-Message-Id: <20200104153321.6584-6-m.reichl@fivetechno.de>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200104153321.6584-1-m.reichl@fivetechno.de>
-References: <20200104153321.6584-1-m.reichl@fivetechno.de>
+        Sat, 4 Jan 2020 10:47:22 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:40286 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgADPrW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 10:47:22 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id AA7928051F;
+        Sat,  4 Jan 2020 16:47:19 +0100 (CET)
+Date:   Sat, 4 Jan 2020 16:47:18 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     dri-devel@lists.freedesktop.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        christoph.muellner@theobroma-systems.com, maxime@cerno.tech,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: Add vendor prefix for Leadtek
+ Technology
+Message-ID: <20200104154718.GF17768@ravnborg.org>
+References: <20191224112641.30647-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578152058;3e281e32;
-X-HE-SMSGID: 1inlRQ-0002gZ-Ba
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191224112641.30647-1-heiko@sntech.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=NXpJzYs8AAAA:8
+        a=O-uEg4RdhEyDnFRNVxwA:9 a=CjuIK1q_8ugA:10 a=cwV61pgf2j4Cq8VD9hE_:22
+        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The rk3399-roc-pc uses a MP8859 DC/DC converter for 12V supply.
-This supplies 5V only in default state after booting.
-Now we can control the output voltage via I2C interface.
-Add a node for the driver to reach 12V.
+On Tue, Dec 24, 2019 at 12:26:39PM +0100, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> 
+> Shenzhen Leadtek Technology Co., Ltd. produces for example display
+> and touch panels.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
- .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 32 +++++++++++--------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+Applied to drm-misc-next.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 8e01b04144b7..9f225e9c3d54 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -110,20 +110,6 @@ vcc_vbus_typec0: vcc-vbus-typec0 {
- 		regulator-max-microvolt = <5000000>;
- 	};
- 
--	/*
--	 * should be placed inside mp8859, but not until mp8859 has
--	 * its own dt-binding.
--	 */
--	dc_12v: mp8859-dcdc1 {
--		compatible = "regulator-fixed";
--		regulator-name = "dc_12v";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-min-microvolt = <12000000>;
--		regulator-max-microvolt = <12000000>;
--		vin-supply = <&vcc_vbus_typec0>;
--	};
--
- 	/* switched by pmic_sleep */
- 	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
- 		compatible = "regulator-fixed";
-@@ -546,6 +532,24 @@ fusb0: usb-typec@22 {
- 		vbus-supply = <&vcc_vbus_typec0>;
- 		status = "okay";
- 	};
-+
-+	mp8859: regulator@66 {
-+		compatible = "mps,mp8859";
-+		reg = <0x66>;
-+		dc_12v: mp8859_dcdc {
-+			regulator-name = "dc_12v";
-+			regulator-min-microvolt = <12000000>;
-+			regulator-max-microvolt = <12000000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			vin-supply = <&vcc_vbus_typec0>;
-+
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+				regulator-suspend-microvolt = <12000000>;
-+			};
-+		};
-+	};
- };
- 
- &i2s0 {
--- 
-2.24.1
-
+	Sam
