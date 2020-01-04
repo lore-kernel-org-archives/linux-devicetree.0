@@ -2,154 +2,149 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA73C00523
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CA7C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F940222C3
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578096601;
-	bh=d9NUujIqWfkarIJ1UVYE4+Ixa0Pe1GIKYKYTdt/XZ6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kO5DHRqz8rzHk30GLhEhhh5Echk4sM5kEwWzDeoyZ+5cGxBMxp4cEdbx/92QMEdZc
-	 hB5scURm0R+pulO00oQ1ZgP1KKme1LtLYkg8BCCHNLlgOhqqS7rkvqxGAlgmoIP4YL
-	 RloKd7PWVFPMIyuJ7XIKBeWDd07HZWvi1Z05/SwE=
+	by mail.kernel.org (Postfix) with ESMTP id E1C9D222C3
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:21:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gRnVfA7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgADAKB (ORCPT
+        id S1727161AbgADAVk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:10:01 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32868 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgADAKA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 19:10:00 -0500
-Received: by mail-io1-f65.google.com with SMTP id z8so43076995ioh.0
-        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 16:10:00 -0800 (PST)
+        Fri, 3 Jan 2020 19:21:40 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42506 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727142AbgADAVk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 19:21:40 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y4so31054064ljj.9
+        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 16:21:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a25MTBnzC/TY/vt8zz8+qKKJTGhY6mCF1CmPfY1tykI=;
+        b=gRnVfA7FDAgs73jNy22XumTxemh0aYDjK9B1YAV7aDhmr0DazAVJiMp4WVw1bkv31/
+         bcATx1sRwYkcsu4O0LQVmlmjSHW5VtsN8kArTfZitHm7x//5M6K3YcSNLlNrU4k2nXBM
+         yt6DH6rszExsqnVul0yZCOGTl1phucIVvqvK/Gcklh4kjZC6VQ1xu9ZmRNx0Ik5oj39W
+         PUCHY1sxyw3q0Pr498xt9akwnDTU17FpPWdhZ0+b30zgWzvbnxDXRO1SyZ+eSC73LL7M
+         4bTSAi5L7Qao6/+sTppkChYPciZ16A05vGdttDOmIm7Rn2KAj85O40F9gtCbP1HMl69m
+         XGZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XfXHkBnCjci39X5Yh6SUYp5n6eoGbtDoP20HblyPxEY=;
-        b=iZ+YRnMezl5o/mMuzmXmh0S4IHFLwTRLDthPS5sPu8wfbZnTxKwKuzplTe5j1V79SN
-         NWNChS0wEcjBhw4vUTqt95I9gortUME4sd4LBYElygQRrjpmDIcQHDyFLUOphoi8i1bh
-         eld2Gy1WB1pEmK6DvGVVGKCB/vMsoo5ETJIolOow7VZqmbBSM8QC4NuPHZklsyWOpRnU
-         oppT3tVpixOfYAVymoD3hk1zBteCD1IDs+WIzkv7/FvPbrLCk7hZ6Xlpokm5qgbCOYaF
-         w1C+80kkv89I52mGU4Vs12a3Eocvjl/0RetuvBgo0EchRLYwXQqxZ73cYs2oRVltnZQV
-         Kf2Q==
-X-Gm-Message-State: APjAAAXsb/CjLBb6zmB6nRT9bmIr+Y7mroO0dAAYxnSOoxXq8JandY0K
-        +eqUod8/6NWysjiXfc61YygyBkI=
-X-Google-Smtp-Source: APXvYqyOvA986AVKNMoMIopT3swAVJuQKyGl5JWwJ/ApErx3H7eRlz1Vjf4lcj5cqkJ7p6u+N0qxbQ==
-X-Received: by 2002:a6b:8f0c:: with SMTP id r12mr63168486iod.233.1578096599455;
-        Fri, 03 Jan 2020 16:09:59 -0800 (PST)
-Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id n5sm21351264ili.28.2020.01.03.16.09.58
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 16:09:58 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219a5
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 17:09:57 -0700
-Date:   Fri, 3 Jan 2020 17:09:57 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: display: Add Satoz panel
-Message-ID: <20200104000957.GA17750@bogus>
-References: <20191224141905.22780-1-miquel.raynal@bootlin.com>
- <20191224141905.22780-2-miquel.raynal@bootlin.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a25MTBnzC/TY/vt8zz8+qKKJTGhY6mCF1CmPfY1tykI=;
+        b=YfBXipBy/NauTEol2kkYpazm6iofvNoMZibMrklpZ7Q7xwXKKqTIYVyupNqm1adslY
+         B8P3ITZkCe7Muc+tQr3npK8Q0Zb+34PXkRmvCcN7NPF72Imq+OFOoToR9n1lw72BTVk6
+         yFN9VTH78yPclwTbr4OUk5mTf33tyLlCgyq4+Fv2itM3mfCdv7LnM4TT/2Ix5KWH9Ylq
+         q/jfcQAnTLM5k+pxUDJ5M27Y0ntnLkmfiszKTvLwt+k6KMRDRnOxPwEoQtsEX1YZrqNH
+         R16zhlfoBMzjEa80+Ikt0bIG4Zoot57JCELqBymvEPeL+TKL9269oib0DEg9sykEG8Ke
+         Tspw==
+X-Gm-Message-State: APjAAAVq+5dWnMWb1pPUB5vXqY9RWjzryuhHoHwBTEfsGsVAFU0BPHwK
+        oNNsW1AlSBHp62sBUFyvQFM2FDGYJfF5WInoA0U8HA==
+X-Google-Smtp-Source: APXvYqxHT5NBcGXP7l31r/rUzGwxDXqF6xPcQ35bsC0BAshJRd7O7pJFod6OutyDNvKjGim9p9LsFYX1ulkLOKLmCGs=
+X-Received: by 2002:a2e:85cd:: with SMTP id h13mr51946653ljj.191.1578097298469;
+ Fri, 03 Jan 2020 16:21:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191224141905.22780-2-miquel.raynal@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-7-geert+renesas@glider.be> <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
+ <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com>
+In-Reply-To: <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 4 Jan 2020 01:21:27 +0100
+Message-ID: <CACRpkdZwos9Dtt9E3OkxWf4rqMALNTge5NGduzGm-7MhQyLZuQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 24, 2019 at 03:19:04PM +0100, Miquel Raynal wrote:
-> Satoz is a Chinese TFT manufacturer.
-> Website: http://www.sat-sz.com/English/index.html
-> 
-> Add (simple) bindings for its SAT050AT40H12R2 5.0 inch LCD panel.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
-> 
-> Changes since v2:
-> * None.
-> 
-> Changes since v1:
-> * New patch
-> 
->  .../display/panel/satoz,sat050at40h12r2.yaml  | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml
+On Thu, Dec 12, 2019 at 3:48 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Dec 12, 2019 at 3:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
+> > > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
+> > > +them into a new gpio_chip, which can be assigned to a group or user using
+> > > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
+> > > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
+> > > +GPIO controller, and no longer needs to care about which GPIOs to grab and
+> > > +which not, reducing the attack surface.
+> > > +
+> > > +Aggregated GPIO controllers are instantiated and destroyed by writing to
+> > > +write-only attribute files in sysfs.
+> >
+> > I suppose virtual machines will have a lengthy config file where
+> > they specify which GPIO lines to pick and use for their GPIO
+> > aggregator, and that will all be fine, the VM starts and the aggregator
+> > is there and we can start executing.
+> >
+> > I would perhaps point out a weakness as with all sysfs and with the current
+> > gpio sysfs: if a process creates an aggregator device, and then that
+> > process crashes, what happens when you try to restart the process and
+> > run e.g. your VM again?
+> >
+> > Time for a hard reboot? Or should we add some design guidelines for
+> > these machines so that they can cleanly tear down aggregators
+> > previously created by the crashed VM?
+>
+> No, the VM does not create the aggregator.
+>
+> The idea is for the user to create one or more aggregators, set up
+> permissions on /dev/gpiochipX, and launch the VM, passing the aggregated
+> /dev/gpiochipX as parameters.
+> If the VM crashes, just launch it again.
+>
+> Destroying the aggregators is a manual and independent process, after
+> the VM has exited.
 
-Note that this may become obsolete if we move all simple panels to a 
-single schema.
+I'm thinking about someone making some industrial application for some
+control of a machinery say a robotic arm.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml b/Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml
-> new file mode 100644
-> index 000000000000..567b32a544f3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml
-> @@ -0,0 +1,27 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/satoz,sat050at40h12r2#
+And do make sure this VM is only controlling these GPIOs related to
+this robotic arm, they create a GPIO aggregator. And we care about
+cases like that since we provide this security argument.
 
-Missing '.yaml'
+Surely that machine will be rebooted.
 
-Run 'make dt_binding_check' which will check this and other things.
+Surely they don't have a printed paper with all the commands lying
+at the console, and asking whoever powers it back on to manually
+type it all in again. That feels a bit 1981.
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Satoz SAT050AT40H12R2 panel
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +
-> +description: |+
-> +  LCD 5.0 inch 800x480 RGB panel.
+So they will have a script for this I suppose. Possibly in some
+initscript so it is set up on boot. And this script echos stuff
+all over the place to set up the aggregator.
 
-Any public spec for this panel?
+Is this the use case you're thinking of?
 
-> +
-> +  This binding is compatible with the simple-panel binding, which is specified
-> +  in simple-panel.txt in this directory.
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    contains:
+I just like to have the whole picture here.
 
-Drop 'contains'. It must be exactly the below string, not the below 
-string and *any* other strings.
-
-> +      const: satoz,sat050at40h12r2
-> +
-> +required:
-> +  - compatible
-> -- 
-> 2.20.1
-> 
+Yours,
+Linus Walleij
