@@ -2,246 +2,90 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D71C32771
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F80DC00523
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C71924649
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578098643;
-	bh=idQUNlbmoxDsTYMKuX4PhLGQ3+A5EzdFV2CMmcoRj9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0bl3itAtgdEuxhT216yxLCwm/USuj4bGs051LbKiYRGFMq5jriFbqztayoqs+/4qE
-	 RM6ChiX18AyS0jCj9qlH9jX1/72gPR+hY1h75mP4TaJooFD53SpfH18brH9z1hJOSV
-	 +5LHE+CuduYo2iybHWoYo+NBOcr4cj7pfoKjzs5c=
+	by mail.kernel.org (Postfix) with ESMTP id D955021835
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 00:57:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Tbg87j3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbgADAoA (ORCPT
+        id S1727152AbgADA5Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 3 Jan 2020 19:44:00 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39309 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgADAoA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 19:44:00 -0500
-Received: by mail-io1-f67.google.com with SMTP id c16so13283992ioh.6
-        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 16:43:59 -0800 (PST)
+        Fri, 3 Jan 2020 19:57:24 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44164 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbgADA5X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 3 Jan 2020 19:57:23 -0500
+Received: by mail-io1-f66.google.com with SMTP id b10so43123150iof.11
+        for <devicetree@vger.kernel.org>; Fri, 03 Jan 2020 16:57:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=b+wuHQ8PY87+3MWTpA3gpEZGOy/6vHnLCLuwEt2do7E=;
+        b=Tbg87j3PPOxRwH8JxWZAOHbZ7f4QtLAtll1DFSLqMkgtkejmVljEyaZAvUYGhd+4g6
+         zNJwD/wKPRtFOJIwq6Oy5+IdNFZE7zFUJ2QtI1zd28eXSHAMDryCVQz5J1bCTzZ9sGs0
+         FqjJgTYnvuFhY9CfAadApuFM4em8tVji3+AdPj/2PygzSbhGkLtlv9IcAPacjhO/l4m4
+         tmF1V94guhSb3MwEsU8ucXTsrzCWuKoXGykSExUKKf5XLKGJB3aDJL2H9Abfig6Mj003
+         gvSBb3KisEINE5XZjcHD+2K2xqgIyX9buiTs7ljvpXPrsQxq4CR7GcX7C11bK7WK+40D
+         FQMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KVOAVEbJI4by8dHylpbGdlYjAc7ICQ7+bWPH7m8U5UI=;
-        b=HrG50xdW/zKAAQFfb8wTPbEFlz/dW6+vyO+WPjUGaCD03lntOP3g1XXw7xEc/n61N0
-         stsgsXsUz9MFGjGdX42VoRgEGo7EAzpWKDHA3rMtRiUFuy0A2ri4wagGgt6eNADjB82K
-         9isPAlk26zmhkrdrqpanPaJnPJLPmfl/qAXYp/XJRsQGTu1B435WnpF39CEMDDEJTdyZ
-         ZWsbbU6x6pI0iEtO9Q35Vp6JBHGfEktTGsZ2jvYwe4IMJ6QM0VJ+86JeOBoL0Hh9GDOW
-         Jcb2f4p3l0E/BzG3QxegAH53uVX1FmfmYYCtBTzLljAdfaK3wFk5xwKxnYG22LqrYJV0
-         KvoA==
-X-Gm-Message-State: APjAAAUX5Qbu4LlZk5HkSw7twj4Pl6z4PuwOgfAVrxU2bgJwEDrwoOCb
-        Eg8226lFnlhzKR2dgWRb7+VeX6Y=
-X-Google-Smtp-Source: APXvYqzgDOS5xreKu5ex83lShAN4DYVy23XOKRAbN9DTNXciTmMINL2kkjy+ThE18rpWTLE7MNMxUQ==
-X-Received: by 2002:a5d:884c:: with SMTP id t12mr61956076ios.171.1578098638967;
-        Fri, 03 Jan 2020 16:43:58 -0800 (PST)
-Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id i13sm15255051ioi.67.2020.01.03.16.43.57
-        for <devicetree@vger.kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=b+wuHQ8PY87+3MWTpA3gpEZGOy/6vHnLCLuwEt2do7E=;
+        b=GwGusNGbMSRMd3WV6Fz2UtFuX6htisyDfLhPE58r8UfXVyOkc5M1jx9fez0b0AES2g
+         LCiCuufcnw5F1Drp+4dxQ8MZ44vzda7Cd8jv8aV+eqM+9Lc11z/wZD8Bc3gNBK08ogab
+         1Z0s5EkwsLnyLJbDy+gUcILG0DAQLLFZYYZeDjZHMxgTyezWEsKllmbTgVBk5+1GbMDj
+         6NE1OIts5behre2BX7GQchS32YhUCgJv9bfpSQ/6KpAtCKdf0dJP7cVtWqm8fwEeMRDU
+         t7d4AnILlfFn3/2XOslNeMYK/3Bo2xWsbwElbSMT4KlEDjJvioZGMqaLqwfm65D8TOPG
+         XTxQ==
+X-Gm-Message-State: APjAAAUy7kDJvpu+gvoA0zZnds5Vujl6615SYTkEHlGFShZ70WbGho4h
+        dwq/aerVUAtN9ymJ4BV1o4n1Gw==
+X-Google-Smtp-Source: APXvYqxoKvk5Vn7dmhmcyOPjvml/ezHr0AEAtcLVuPk5lZbITAeIHwlh1dJ9a+dwdwHhO3WBbhK4ig==
+X-Received: by 2002:a02:778d:: with SMTP id g135mr73473365jac.115.1578099443247;
+        Fri, 03 Jan 2020 16:57:23 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id f72sm21519402ilg.84.2020.01.03.16.57.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jan 2020 16:43:58 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219a5
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Fri, 03 Jan 2020 17:43:57 -0700
-Date:   Fri, 3 Jan 2020 17:43:57 -0700
-From:   Rob Herring <robh@kernel.org>
-To:     Dikshita Agarwal <dikshita@codeaurora.org>
-Cc:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [PATCH V3 2/4] dt-bindings: media: venus: Add sc7180 DT schema
-Message-ID: <20200104004357.GA16614@bogus>
-References: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
- <1577971501-3732-3-git-send-email-dikshita@codeaurora.org>
+        Fri, 03 Jan 2020 16:57:22 -0800 (PST)
+Date:   Fri, 3 Jan 2020 16:57:21 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Yash Shah <yash.shah@sifive.com>
+cc:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, bmeng.cn@gmail.com, green.wan@sifive.com,
+        allison@lohutok.net, alexios.zavras@intel.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de, bp@suse.de,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+Subject: Re: [PATCH v2 1/2] riscv: dts: Add DT support for SiFive L2 cache
+ controller
+In-Reply-To: <1578024801-39039-2-git-send-email-yash.shah@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.2001031657090.283180@viisi.sifive.com>
+References: <1578024801-39039-1-git-send-email-yash.shah@sifive.com> <1578024801-39039-2-git-send-email-yash.shah@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577971501-3732-3-git-send-email-dikshita@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 06:54:59PM +0530, Dikshita Agarwal wrote:
-> Add new qcom,sc7180-venus DT binding schema.
+On Fri, 3 Jan 2020, Yash Shah wrote:
+
+> Add the L2 cache controller DT node in SiFive FU540 soc-specific DT file
 > 
-> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
-> ---
->  .../bindings/media/qcom,venus-sc7180.yaml          | 136 +++++++++++++++++++++
->  1 file changed, 136 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
-> new file mode 100644
-> index 0000000..b78952c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/qcom,venus-sc7180.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/media/qcom,venus-sc7180.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm Venus video encode and decode accelerators
-> +
-> +maintainers:
-> +  - Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> +
-> +description: |
-> +  The Venus IP is a video encode and decode accelerator present
-> +  on Qualcomm platforms
-> +
-> +properties:
-> +  compatible:
-> +    const: "qcom,sc7180-venus"
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
-No need for quotes.
+Thanks, queued for v5.5-rc.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 2
-> +
-> +  power-domain-names:
-> +    maxItems: 2
 
-You can drop maxItems. Implied by size of 'items'.
-
-> +    items:
-> +      - const: venus
-> +      - const: vcodec0
-> +
-> +  clocks:
-> +    maxItems: 5
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: iface
-> +      - const: bus
-> +      - const: vcodec0_core
-> +      - const: vcodec0_bus
-> +
-> +  iommus:
-> +    minItems: 1
-> +    maxItems: 20
-
-As I said on the other Venus schemas, can you really have 20 IOMMUs 
-attached? This is a single SoC, you should know how many are attached.
-
-Rob
-
-> +
-> +  memory-region:
-> +    maxItems: 1
-> +
-> +  video-core0:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: "venus-decoder"
-> +
-> +    required:
-> +      - compatible
-> +
-> +    additionalProperties: false
-> +
-> +  video-core1:
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: "venus-encoder"
-> +
-> +    required:
-> +      - compatible
-> +
-> +    additionalProperties: false
-> +
-> +  video-firmware:
-> +    type: object
-> +
-> +    description: |
-> +      Firmware subnode is needed when the platform does not
-> +      have TrustZone.
-> +
-> +    properties:
-> +      iommus:
-> +        minItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - power-domains
-> +  - power-domain-names
-> +  - clocks
-> +  - clock-names
-> +  - iommus
-> +  - memory-region
-> +  - video-core0
-> +  - video-core1
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        #include <dt-bindings/clock/qcom,videocc-sc7180.h>
-> +
-> +		venus: video-codec@aa00000 {
-> +			compatible = "qcom,sc7180-venus";
-> +			reg = <0 0x0aa00000 0 0xff000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +			power-domains = <&videocc VENUS_GDSC>,
-> +					<&videocc VCODEC0_GDSC>;
-> +			power-domain-names = "venus", "vcodec0";
-> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-> +				 <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-> +				 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-> +			clock-names = "core", "iface", "bus",
-> +				"vcodec0_core", "vcodec0_bus";
-> +			iommus = <&apps_smmu 0x0c00 0x60>;
-> +			memory-region = <&venus_mem>;
-> +
-
-> +			interconnects = <&mmss_noc MASTER_VIDEO_P0 &mc_virt SLAVE_EBI1>,
-> +					<&gem_noc MASTER_APPSS_PROC &config_noc SLAVE_VENUS_CFG>;
-> +			interconnect-names = "video-mem", "cpu-cfg";
-
-Not documented.
-
-> +
-> +			video-core0 {
-> +				compatible = "venus-decoder";
-> +			};
-> +
-> +			video-core1 {
-> +				compatible = "venus-encoder";
-> +			};
-> +
-> +		};
-> -- 
-> 1.9.1
-> 
+- Paul
