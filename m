@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B506C2D0C2
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 10:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE35BC32770
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 10:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBB12464E
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 10:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860CF24650
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 10:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgADKyj (ORCPT
+        id S1726837AbgADKy7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 05:54:39 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:40198 "EHLO honk.sigxcpu.org"
+        Sat, 4 Jan 2020 05:54:59 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:40210 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbgADKyh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Jan 2020 05:54:37 -0500
+        id S1726264AbgADKyj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Jan 2020 05:54:39 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 73106FB04;
-        Sat,  4 Jan 2020 11:54:36 +0100 (CET)
+        by honk.sigxcpu.org (Postfix) with ESMTP id F205FFB05;
+        Sat,  4 Jan 2020 11:54:37 +0100 (CET)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sxeO-DSmmnyC; Sat,  4 Jan 2020 11:54:34 +0100 (CET)
+        with ESMTP id iYnawKQ_PTCn; Sat,  4 Jan 2020 11:54:35 +0100 (CET)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 3E6AD49AAC; Sat,  4 Jan 2020 11:54:26 +0100 (CET)
+        id 5B95949AAF; Sat,  4 Jan 2020 11:54:26 +0100 (CET)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
@@ -35,9 +35,9 @@ To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/9] dt: bindings: lm3692x: Add led-max-microamp property
-Date:   Sat,  4 Jan 2020 11:54:21 +0100
-Message-Id: <015c9818d17d81783614da2b89ec46283468765b.1578134779.git.agx@sigxcpu.org>
+Subject: [PATCH v3 8/9] leds: lm3692x: Split out lm3692x_leds_disable
+Date:   Sat,  4 Jan 2020 11:54:24 +0100
+Message-Id: <33b134d8ddefe4b4855b5c3bffdbafbfe6087a51.1578134779.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1578134779.git.agx@sigxcpu.org>
 References: <cover.1578134779.git.agx@sigxcpu.org>
@@ -49,35 +49,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This can be used to limit the current per LED strip.
+Move the relevant parts out of lm3692x_remove() and
+call it from there. No functional change.
 
 Signed-off-by: Guido Günther <agx@sigxcpu.org>
 Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/leds/leds-lm3692x.c | 42 +++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-index 197e3fd2ae87..b8939fdd19d6 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-@@ -37,6 +37,8 @@ Optional child properties:
- 	- label : see Documentation/devicetree/bindings/leds/common.txt (deprecated)
- 	- linux,default-trigger :
- 	   see Documentation/devicetree/bindings/leds/common.txt
-+	- led-max-microamp :
-+	   see Documentation/devicetree/bindings/leds/common.txt
- 
- Example:
- 
-@@ -58,6 +60,7 @@ led-controller@36 {
- 		function = LED_FUNCTION_BACKLIGHT;
- 		color = <LED_COLOR_ID_WHITE>;
- 		linux,default-trigger = "backlight";
-+		led-max-microamp = <20000>;
- 	};
+diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+index 2b8f87b829ae..075dc4b6b3b6 100644
+--- a/drivers/leds/leds-lm3692x.c
++++ b/drivers/leds/leds-lm3692x.c
+@@ -288,6 +288,30 @@ static int lm3692x_leds_enable(struct lm3692x_led *led)
+ 	return ret;
  }
  
++static int lm3692x_leds_disable(struct lm3692x_led *led)
++{
++	int ret;
++
++	ret = regmap_update_bits(led->regmap, LM3692X_EN, LM3692X_DEVICE_EN, 0);
++	if (ret) {
++		dev_err(&led->client->dev, "Failed to disable regulator: %d\n",
++			ret);
++		return ret;
++	}
++
++	if (led->enable_gpio)
++		gpiod_direction_output(led->enable_gpio, 0);
++
++	if (led->regulator) {
++		ret = regulator_disable(led->regulator);
++		if (ret)
++			dev_err(&led->client->dev,
++				"Failed to disable regulator: %d\n", ret);
++	}
++
++	return ret;
++}
++
+ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
+ 				enum led_brightness brt_val)
+ {
+@@ -474,23 +498,9 @@ static int lm3692x_remove(struct i2c_client *client)
+ 	struct lm3692x_led *led = i2c_get_clientdata(client);
+ 	int ret;
+ 
+-	ret = regmap_update_bits(led->regmap, LM3692X_EN, LM3692X_DEVICE_EN, 0);
+-	if (ret) {
+-		dev_err(&led->client->dev, "Failed to disable regulator: %d\n",
+-			ret);
++	ret = lm3692x_leds_disable(led);
++	if (ret)
+ 		return ret;
+-	}
+-
+-	if (led->enable_gpio)
+-		gpiod_direction_output(led->enable_gpio, 0);
+-
+-	if (led->regulator) {
+-		ret = regulator_disable(led->regulator);
+-		if (ret)
+-			dev_err(&led->client->dev,
+-				"Failed to disable regulator: %d\n", ret);
+-	}
+-
+ 	mutex_destroy(&led->lock);
+ 
+ 	return 0;
 -- 
 2.23.0
 
