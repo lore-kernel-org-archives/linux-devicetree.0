@@ -2,111 +2,159 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4647DC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 12:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F81C2D0C2
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 14:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB7024649
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 12:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C520124654
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 14:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578147618;
+	bh=XsnHsHj53JhaNYFbo6CFsI3eeVhtmBQ3PCkV9VTU9Hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZhJiEcTxivzP7hN0SqjWLwsvIIg+FcQPQz/E1nprvMyLMglWf/nHAYFcjg+g5EDgJ
+	 c+NJalbVcwlzsqb+3x7YNOl+KAkF8clK49uGSlczJ+0QH04ZVhnK/F8J7bQugnTQ1E
+	 StYyNs0bIKcHBqOb6q3R+yqY9GA5FnV3P12IiY6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725812AbgADMDJ (ORCPT
+        id S1725940AbgADOUS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 07:03:09 -0500
-Received: from mga01.intel.com ([192.55.52.88]:39773 "EHLO mga01.intel.com"
+        Sat, 4 Jan 2020 09:20:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgADMDJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 4 Jan 2020 07:03:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Jan 2020 04:03:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,394,1571727600"; 
-   d="scan'208";a="245137670"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Jan 2020 04:03:06 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1ini93-0009yX-NR; Sat, 04 Jan 2020 20:03:05 +0800
-Date:   Sat, 4 Jan 2020 20:02:28 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Sricharan R <sricharan@codeaurora.org>
-Cc:     kbuild-all@lists.01.org, sricharan@codeaurora.org,
-        agross@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-soc@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org,
-        sivaprak@codeaurora.org
-Subject: [RFC PATCH] clk: qcom: lpass_core_axim_clk_src can be static
-Message-ID: <20200104120228.brohuapo4d632jcq@f53c9c00458a>
-References: <1578050744-3761-3-git-send-email-sricharan@codeaurora.org>
+        id S1725924AbgADOUR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 4 Jan 2020 09:20:17 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8872922B48;
+        Sat,  4 Jan 2020 14:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578147617;
+        bh=XsnHsHj53JhaNYFbo6CFsI3eeVhtmBQ3PCkV9VTU9Hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cuQWj+ghg2SnHa/Geq6Fb5zpTiTpIcRhG/BSO2FF5F/yFYZSkTuL+Apmr7vFf6BDm
+         rMmn4RFiatdKPi4Ag0vnuMCM1mM7EP6naB3Dv0Cpl3hnzhOUCQF2+VWph0ZvQ5mBEv
+         I9e2N5Iet/IQV+5fTulEYEb94y0ai+vY/g7U0P2k=
+Date:   Sat, 4 Jan 2020 15:20:14 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Subject: Re: [PATCH v3 2/9] drm/sun4i: tcon: Add TCON LCD support for R40
+Message-ID: <20200104142014.o6znmngwjw7o46dl@gilmour.lan>
+References: <20191231130528.20669-1-jagan@amarulasolutions.com>
+ <20191231130528.20669-3-jagan@amarulasolutions.com>
+ <20200102105424.kmte7aooh2gkrcnu@gilmour.lan>
+ <CAMty3ZA0e8eJZWvAh0x=KGAZVL3apdao3COvR6j3-ckv0cdvcg@mail.gmail.com>
+ <20200102154703.3prgwcjyo36g5g5u@gilmour.lan>
+ <CAMty3ZB_6GyK=hhJU-8yAQiom1Uq25ojFbKaGrK1fmW8SnDV_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zomtrfc34zk3phes"
 Content-Disposition: inline
-In-Reply-To: <1578050744-3761-3-git-send-email-sricharan@codeaurora.org>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAMty3ZB_6GyK=hhJU-8yAQiom1Uq25ojFbKaGrK1fmW8SnDV_A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-Fixes: ac86608aeb82 ("clk: qcom: Add ipq6018 Global Clock Controller support")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- gcc-ipq6018.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+--zomtrfc34zk3phes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/clk/qcom/gcc-ipq6018.c b/drivers/clk/qcom/gcc-ipq6018.c
-index a3597f46ad017..3f9c2f61a5d93 100644
---- a/drivers/clk/qcom/gcc-ipq6018.c
-+++ b/drivers/clk/qcom/gcc-ipq6018.c
-@@ -2620,7 +2620,7 @@ static const struct freq_tbl ftbl_lpass_core_axim_clk_src[] = {
- 	{ }
- };
- 
--struct clk_rcg2 lpass_core_axim_clk_src = {
-+static struct clk_rcg2 lpass_core_axim_clk_src = {
- 	.cmd_rcgr = 0x1F020,
- 	.freq_tbl = ftbl_lpass_core_axim_clk_src,
- 	.hid_width = 5,
-@@ -2639,7 +2639,7 @@ static const struct freq_tbl ftbl_lpass_snoc_cfg_clk_src[] = {
- 	{ }
- };
- 
--struct clk_rcg2 lpass_snoc_cfg_clk_src = {
-+static struct clk_rcg2 lpass_snoc_cfg_clk_src = {
- 	.cmd_rcgr = 0x1F040,
- 	.freq_tbl = ftbl_lpass_snoc_cfg_clk_src,
- 	.hid_width = 5,
-@@ -2658,7 +2658,7 @@ static const struct freq_tbl ftbl_lpass_q6_axim_clk_src[] = {
- 	{ }
- };
- 
--struct clk_rcg2 lpass_q6_axim_clk_src = {
-+static struct clk_rcg2 lpass_q6_axim_clk_src = {
- 	.cmd_rcgr = 0x1F008,
- 	.freq_tbl = ftbl_lpass_q6_axim_clk_src,
- 	.hid_width = 5,
-@@ -2671,13 +2671,13 @@ struct clk_rcg2 lpass_q6_axim_clk_src = {
- 	},
- };
- 
--struct freq_tbl ftbl_rbcpr_wcss_clk_src[] = {
-+static struct freq_tbl ftbl_rbcpr_wcss_clk_src[] = {
- 	F(24000000, P_XO, 1, 0, 0),
- 	F(50000000, P_GPLL0, 16, 0, 0),
- 	{ }
- };
- 
--struct clk_rcg2 rbcpr_wcss_clk_src = {
-+static struct clk_rcg2 rbcpr_wcss_clk_src = {
- 	.cmd_rcgr = 0x3a00c,
- 	.freq_tbl = ftbl_rbcpr_wcss_clk_src,
- 	.hid_width = 5,
+Hi,
+
+On Thu, Jan 02, 2020 at 10:04:40PM +0530, Jagan Teki wrote:
+> On Thu, Jan 2, 2020 at 9:17 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Thu, Jan 02, 2020 at 09:10:31PM +0530, Jagan Teki wrote:
+> > > On Thu, Jan 2, 2020 at 4:24 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > On Tue, Dec 31, 2019 at 06:35:21PM +0530, Jagan Teki wrote:
+> > > > > TCON LCD0, LCD1 in allwinner R40, are used for managing
+> > > > > LCD interfaces like RGB, LVDS and DSI.
+> > > > >
+> > > > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
+> > > > > tcon top.
+> > > > >
+> > > > > Add support for it, in tcon driver.
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > ---
+> > > > > Changes for v3:
+> > > > > - none
+> > > > >
+> > > > >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++++
+> > > > >  1 file changed, 8 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > index fad72799b8df..69611d38c844 100644
+> > > > > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > > > > @@ -1470,6 +1470,13 @@ static const struct sun4i_tcon_quirks sun8i_a83t_tv_quirks = {
+> > > > >       .has_channel_1          = true,
+> > > > >  };
+> > > > >
+> > > > > +static const struct sun4i_tcon_quirks sun8i_r40_lcd_quirks = {
+> > > > > +     .supports_lvds          = true,
+> > > > > +     .has_channel_0          = true,
+> > > > > +     /* TODO Need to support TCON output muxing via GPIO pins */
+> > > > > +     .set_mux                = sun8i_r40_tcon_tv_set_mux,
+> > > >
+> > > > What is this muking about? And why is it a TODO?
+> > >
+> > > Muxing similar like how TCON TOP handle TV0, TV1 I have reused the
+> > > same so-that it would configure de port selection via
+> > > sun8i_tcon_top_de_config
+> > >
+> > > TCON output muxing have gpio with GPIOD and GPIOH bits, which select
+> > > which of LCD or TV TCON outputs to the LCD function pins. I have
+> > > marked these has TODO for further support as mentioned by Chen-Yu in
+> > > v1[1].
+> >
+> > It should be in the commit log.
+>
+> Make sense.
+>
+> > What's the plan to support that when needed? And that means that the
+> > LCD and TV outputs are mutually exclusive? We should at the very least
+> > check that both aren't enabled at the same time.
+>
+> Yes, LCD or TV within the outselect seems to be mutually exclusive.
+> Like LCD0 or TV0 can output to GPIOD incase of TV0_OUTSEL and LCD1 or
+> TV1 can output to GPIOH incase of TV1_OUTSEL. I think checking them
+> before configuring TCON_TOP_PORT_SEL_REG would make sense, let me know
+> if you have any suggestions?
+
+Making sure in atomic_check that TV and LCD are not used at the same
+time, and then in encoders mode_set / enable mux the pins to our
+encoders would be my first guess.
+
+Maxime
+
+--zomtrfc34zk3phes
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhCfHgAKCRDj7w1vZxhR
+xQw+AQC+UAAD2DuXR7nMr0l0A/3NybkZVTKykyr2HbVJa1arrgEAuPLgwEfGu61X
+lS7E6DoCPkU97rnULAbmAOLQBZyMjws=
+=D1UE
+-----END PGP SIGNATURE-----
+
+--zomtrfc34zk3phes--
