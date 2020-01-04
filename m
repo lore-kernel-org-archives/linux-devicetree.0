@@ -2,273 +2,90 @@ Return-Path: <SRS0=ng1M=2Z=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1762C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2DFC32771
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDE402465B
-	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0295222C4
+	for <linux-devicetree@archiver.kernel.org>; Sat,  4 Jan 2020 21:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578174807;
-	bh=59WQX3vQEjYmVfbDo/GUZ1nR2qnK+9Kej+iupAOxHoU=;
+	s=default; t=1578174931;
+	bh=4rwrxHDZMaoY+4FKFXNSyCF1nY3IjkSJN4OoMAEv1iw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pxF0nqV8bUXKv6f7k3P0F42Cg0qDlATl3rqlDSle+WbxeimHe4En7kTyw0zd5cu+N
-	 plHmWgzRD708f5/zW/QYUKsCtmEfXyJ/bWdDarIThkEhBpAuRjlYT086o6cGKbv+DM
-	 9modSbHO2CLgA81Zu6RKxV5syuV9UJAUiwWRjIqE=
+	b=ajq8kSVI+IweS9fHcL1FaLlJr5WoGb/dzow/MGOdZFqJx/r7PHp9+iEjlmVHDe8OV
+	 WH73qzk5NDGB2+VaNPo20W/S5DrCqBIpyGKyNoNPCtPvDJHbH3YVvm5TFsFSihhsoE
+	 dWTCGeQP7+FPsn0qweNzsUnqtih7wtfO8oF1FG0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgADVx0 (ORCPT
+        id S1726307AbgADVz2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 16:53:26 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35369 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgADVx0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 16:53:26 -0500
-Received: by mail-il1-f193.google.com with SMTP id g12so39433319ild.2
-        for <devicetree@vger.kernel.org>; Sat, 04 Jan 2020 13:53:26 -0800 (PST)
+        Sat, 4 Jan 2020 16:55:28 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39985 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgADVz2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 16:55:28 -0500
+Received: by mail-il1-f194.google.com with SMTP id c4so39430736ilo.7
+        for <devicetree@vger.kernel.org>; Sat, 04 Jan 2020 13:55:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UMQ6SzTkDLHhnu1QumBptfeZocUfO6/rt1OW+mwTDDs=;
-        b=rmr7Bs3IztLQSlpmxTrN6xcaJElaePIgnkyz3oI61YWRPE9+VX1vZn4xcrOgrjqIki
-         oA172l28TmZa/K7lL1D5qG7vfTqAmxY3l9PQbQwGXd9YoxD3QzW1E2i9SdWYwi+e1Xyg
-         9Dh5SNmmoOL4vct07wTYxI5Fga5hXKoP8pt4uw3Gbj3iGXvI6kcQrX1BcYZrKfykqP56
-         9oln3sb1orI9uWCJD1ic4urgEakltHqlBIwl12DjQftTEzTk+4U7JJi5C/lJczCNiiOZ
-         SdlIJDwDE6c7BBkz3oZBGP+TkmFpbh2zvAr9Hp5wbDdMCm3m2IQtaXn2ckQzJPxugWHW
-         boYA==
-X-Gm-Message-State: APjAAAXUe4+2Hd5X5sEfwGHj7hFHriQAtl1kIxtfHwRZNpjOs7H/+rzb
-        LIp8+qSDlQrSvnRSnmctcWoZ7ns=
-X-Google-Smtp-Source: APXvYqwoxy/uwuP8tRgSqUu5o9GhWOfR9y31/MQi4E9QnJ91stwTeAXKJS4hfSsGugRqhBF/Lpz+xA==
-X-Received: by 2002:a92:1090:: with SMTP id 16mr77894875ilq.298.1578174805520;
-        Sat, 04 Jan 2020 13:53:25 -0800 (PST)
+        bh=K/EnumApSDmaO9XbzKzz36+u0K1L2iTuLSdvygNUnhs=;
+        b=fAjbDygA6BhbJG2PDp9fh+mNtx1z5SPm8UFB8jd9PQp6curtECLFQT7grU8cf4bh/o
+         Cic0m1+kgsYkgqIWJOh4I8WbVFLXqNGZsqY1XeLb+dcd9O3of0fV/O+amUWt1XpEInH9
+         zWypCfUrtn3RCpbJcGpcy3B6NmMrFj2+Tl74HLEV/ASG2wc6BZbW+MxP75bCMa02L0nn
+         smhJUTMTA1QqrTiPPiNCc6yLhP0dEpfon8RIjIwhmiaJgdmlX6Z77iYNb3lfzswDDSyj
+         9p0G4GVt6LcPsng/zCLd7TlQBPmi882WLZ5Qf3Kod7leCZ0Dh/zi8ZfGs0U/89hj+ndk
+         qNvA==
+X-Gm-Message-State: APjAAAXnJcDLBLtokg4VEftnrkrQl0uTyQpXSve0KITGcjqsDjjs08Du
+        vrbKPJ8yPOQHgwHqF0Ks2Z1L+UM=
+X-Google-Smtp-Source: APXvYqxqrQZmgMxo7zfFDRN46F79/y1MX/r9OZiLrqLHAMfdzTGESQkN3C2OGhV7k8NQfaV+CmH8sw==
+X-Received: by 2002:a92:914a:: with SMTP id t71mr83927556ild.293.1578174926916;
+        Sat, 04 Jan 2020 13:55:26 -0800 (PST)
 Received: from rob-hp-laptop ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id l4sm15632634ioa.9.2020.01.04.13.53.23
+        by smtp.gmail.com with ESMTPSA id e1sm22285863ill.47.2020.01.04.13.55.25
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Jan 2020 13:53:24 -0800 (PST)
+        Sat, 04 Jan 2020 13:55:26 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 2219b7
+        id 2219a3
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Sat, 04 Jan 2020 14:53:22 -0700
-Date:   Sat, 4 Jan 2020 14:53:22 -0700
+        Sat, 04 Jan 2020 14:55:24 -0700
+Date:   Sat, 4 Jan 2020 14:55:24 -0700
 From:   Rob Herring <robh@kernel.org>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, peter.griffin@linaro.org,
-        ezequiel@collabora.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
- binding
-Message-ID: <20200104215322.GA548@bogus>
-References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
- <20191227122114.23075-2-andrey.konovalov@linaro.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, ulf.hansson@linaro.org,
+        linux-mmc@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: remove identical phrase in
+ disable-wp text
+Message-ID: <20200104215524.GA28188@bogus>
+References: <20191219145843.3823-1-jbx6244@gmail.com>
+ <20191228093059.2817-1-jbx6244@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191227122114.23075-2-andrey.konovalov@linaro.org>
+In-Reply-To: <20191228093059.2817-1-jbx6244@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
-> Add YAML device tree binding for IMX219 CMOS image sensor, and
-> the relevant MAINTAINERS entries.
+On Sat, 28 Dec 2019 10:30:58 +0100, Johan Jonker wrote:
+> There are two identical phrases in the disable-wp text,
+> so remove one of them.
 > 
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 > ---
->  .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
->  MAINTAINERS                                   |   8 ++
->  2 files changed, 142 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> new file mode 100644
-> index 000000000000..b58aa49a7c03
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> @@ -0,0 +1,134 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
-> +
-> +maintainers:
-> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
-> +
-> +description: |-
-> +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
-> +  with an active array size of 3280H x 2464V. It is programmable through
-> +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
-> +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
-> +  4 data lanes.
-> +
-> +properties:
-> +  compatible:
-> +    const: sony,imx219
-> +
-> +  reg:
-> +    description: I2C device address
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: xclk
-> +
-> +  VDIG-supply:
-> +    description:
-> +      Digital I/O voltage supply, 1.8 volts
-> +
-> +  VANA-supply:
-> +    description:
-> +      Analog voltage supply, 2.8 volts
-> +
-> +  VDDL-supply:
-> +    description:
-> +      Digital core voltage supply, 1.2 volts
-> +
-> +  xclr-gpios:
-> +    description: |-
-> +      Reference to the GPIO connected to the xclr pin, if any.
-> +      Must be released (set high) after all supplies are applied.
-> +
-> +  camera-clk:
-> +    type: object
-> +
-> +    description: Clock source for imx219
 
-This clock is external to the sensor, so a node for a fixed clock should 
-be too.
+Applied, thanks.
 
-> +
-> +    properties:
-> +      clock-frequency: true
-> +
-> +    required:
-> +      - clock-frequency
-> +
-> +  # See ../video-interfaces.txt for more details
-> +  port:
-> +    type: object
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        properties:
-> +          clock-lanes:
-> +            const: 0
-> +
-> +          data-lanes:
-> +            description: |-
-> +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
-> +              four-lane operation.
-> +            oneOf:
-> +              - const: [[ 1, 2 ]]
-> +              - const: [[ 1, 2, 3, 4 ]]
-
-Not sure if this actually works. If it does, it exposes how we encode 
-the DT yaml format which we don't want to do here.
-
-It should be:
-
-oneOf:
-  - items:
-      - const: 1
-      - const: 2
-  - items:
-      - const: 1
-      - const: 2
-      - const: 3
-      - const: 4
-
-Really, I think you shouldn't need the 2nd case as that should be the 
-default.
-
-> +
-> +          clock-noncontinuous:
-> +            type: boolean
-> +            description: |-
-> +              Presence of this boolean property decides whether the MIPI CSI-2
-> +              clock is continuous or non-continuous.
-> +
-> +        required:
-> +          - clock-lanes
-> +          - data-lanes
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - VANA-supply
-> +  - VDIG-supply
-> +  - VDDL-supply
-> +  - port
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        imx219: sensor@10 {
-> +            compatible = "sony,imx219";
-> +            reg = <0x10>;
-> +            clocks = <&imx219_clk>;
-> +            clock-names = "xclk";
-> +            VANA-supply = <&imx219_vana>;   /* 2.8v */
-> +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
-> +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
-> +
-> +            imx219_clk: camera-clk {
-> +                compatible = "fixed-clock";
-> +                #clock-cells = <0>;
-> +                clock-frequency = <24000000>;
-> +            };
-> +
-> +            port {
-> +                imx219_0: endpoint {
-> +                    remote-endpoint = <&csi1_ep>;
-> +                    clock-lanes = <0>;
-> +                    data-lanes = <1 2>;
-> +                    clock-noncontinuous;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ffa3371bc750..f7b6c24ec081 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15350,6 +15350,14 @@ S:	Maintained
->  F:	drivers/media/i2c/imx214.c
->  F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->  
-> +SONY IMX219 SENSOR DRIVER
-> +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
-> +L:	linux-media@vger.kernel.org
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Maintained
-> +F:	drivers/media/i2c/imx219.c
-> +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
-> +
->  SONY IMX258 SENSOR DRIVER
->  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
->  L:	linux-media@vger.kernel.org
-> -- 
-> 2.17.1
-> 
+Rob
