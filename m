@@ -2,141 +2,118 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7516C33C9A
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 17:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EABC33C99
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 18:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F6920801
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 17:15:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="ArDX4N2t"
+	by mail.kernel.org (Postfix) with ESMTP id 25BE921734
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 18:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578248913;
+	bh=4x9vC91olmd60ycX0+AK25GUmB4k/f+cxqTH4tCuww8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wJ6YHr2AhPGjwlGC5RINNE1YI0VWf/onJu6R+FyTMNHPXOqqgknpxhJTG/+nUxMum
+	 0LIsJDLkUXdd06DgEx0vT6gcc/A+TlZPYPARO7ZZB3PC1xoYMQdIkEd75wlKaze+J/
+	 gHkfeQcgA9dRm3jlSM5iSNh4UQr3UyaWnf+ptElE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgAERPW (ORCPT
+        id S1726401AbgAES2a (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 12:15:22 -0500
-Received: from mail-eopbgr50058.outbound.protection.outlook.com ([40.107.5.58]:20546
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726368AbgAERPV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 5 Jan 2020 12:15:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lh0acTE/mUSJWKbmvNWMUBMeckDCArKoUBPMMgZNqupcjOdt/OWhsHwTN59NHPCEn7eCjFEnlqV9F0TlZ+yNp7HSwL69NERd4nM2pwdjPUA3nvjzLJCjSmNHxn56vJEWjxGKUGIn01fONxkNEcEBOfIMukN686aUL4r335J3dOwtVNwQn7UIfGphlBmOhGbOZdSz4esGHf+Fzrz70WEWGao6FCUZ8ofq8bykdXlK5Iddt4jz2I2CQFIYjvRZrN+L95beKYy4POXYejEI5BwS/EpvWwn0INn07wrwn2so/JW/WQWvSsPIz7IevHBtDZ4qq7rR5mp9jMuABKFlScq9zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5z2HDUCZKRBu+cdxcWPz1poDh9abrENnh/M6Z33WMSw=;
- b=mjRKokRjQrmLTctcKdocpUHJ+TCGuTAn+OzBpECFuNGkmJbMhffA0rjQ9f5AcaiRPSn2ctk9kqo2JzAtYm6vKsBMA6bDyhAMxDgKVrF7IPvw2oULumQqKmelz2HYxcXTforNCqlvrWTRuSUY1O+D2Ohc2Y1toJxUAIKOaEYir8ycM8//8WXbuhtxG2ExpOtMAR2ZZY6AepqjyUvctSaXUqyI6UWXBmjV9Y+ae8OS1IRAAOmAqNPPJwhPpUjNQqPBby2qBEAEojrEVPquPGQJXTUHI8DYFtJ8x4+LXhxX/TK+qXFQAIEwVwvXJaTBBBAo6WxvA2wW1LYY8ebljlWFMg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5z2HDUCZKRBu+cdxcWPz1poDh9abrENnh/M6Z33WMSw=;
- b=ArDX4N2tPkA3wlcbSbf/AhAjQssE/rwgFcQHEhyPYxCcvBSHO0vnqksQ/IEZ/wYoMTcMGrqrF4adaYpMwK5BWO50C2+3/xbYdCFU3t8QoxIAqz5PGyFKh4TqhaZ0KNOPYTDIewzS6KyzyZGR/nCGlJkNOuKA5EL/DIm77qbewJs=
-Received: from AM6PR05MB5224.eurprd05.prod.outlook.com (20.177.196.210) by
- AM6PR05MB4917.eurprd05.prod.outlook.com (20.177.36.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11; Sun, 5 Jan 2020 17:15:16 +0000
-Received: from AM6PR05MB5224.eurprd05.prod.outlook.com
- ([fe80::44ac:7bce:8f7c:3e6d]) by AM6PR05MB5224.eurprd05.prod.outlook.com
- ([fe80::44ac:7bce:8f7c:3e6d%3]) with mapi id 15.20.2602.012; Sun, 5 Jan 2020
- 17:15:16 +0000
-From:   Vadim Pasternak <vadimp@mellanox.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "vijaykhemka@fb.com" <vijaykhemka@fb.com>
-CC:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [RFC PATCH hwmon-next v1 2/5] hwmon: (pmbus/core) Add support for
- Intel IMVP9 specification
-Thread-Topic: [RFC PATCH hwmon-next v1 2/5] hwmon: (pmbus/core) Add support
- for Intel IMVP9 specification
-Thread-Index: AQHVw7caoz8ATu4i5UC27i3RYk3A16fcQjwAgAALVmA=
-Date:   Sun, 5 Jan 2020 17:15:16 +0000
-Message-ID: <AM6PR05MB5224334DACD40B34C32DF1E7A23D0@AM6PR05MB5224.eurprd05.prod.outlook.com>
-References: <20200105105833.30196-1-vadimp@mellanox.com>
- <20200105105833.30196-3-vadimp@mellanox.com>
- <0be6b849-939d-49a7-476e-62bf201fdd93@roeck-us.net>
-In-Reply-To: <0be6b849-939d-49a7-476e-62bf201fdd93@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vadimp@mellanox.com; 
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d9ad567d-708b-491c-988a-08d79202d588
-x-ms-traffictypediagnostic: AM6PR05MB4917:
-x-microsoft-antispam-prvs: <AM6PR05MB4917A49CBC5A36E4C50244BCA23D0@AM6PR05MB4917.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 027367F73D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(13464003)(189003)(199004)(76116006)(66946007)(66476007)(66446008)(66556008)(53546011)(6506007)(64756008)(86362001)(71200400001)(5660300002)(8936002)(52536014)(55016002)(9686003)(26005)(478600001)(7696005)(110136005)(8676002)(33656002)(186003)(4326008)(81156014)(81166006)(316002)(2906002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4917;H:AM6PR05MB5224.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2f9+w3M+KwJS/RQG63Pl7dQddqViiIIC3aujqmAEDs6hxDW1S6yu3QfU7AduadMcqLau5mcszR/8l4D3C7auONTr14RkdheiLuFDqn1dxRnJx7ekh1bXbSq/SanZbM49l4hTGjwecHpVDmr4Rp8o044xf7wmwZbz1+AosNAZnpxb+cN0lyOQ5FMuUo5DYuKybl/yq6lBHuRUDa7jhqti/zoCC6+L2oggBUeq2xNGSXG1WFAB8Su3WiYvx46LS0xA+v5fykOLebA8FI4yexfAIGS4ikADtRBrWIibyMSEZDtGW25/SDqpZfg7XbxpAcVBwc6W4SdlroLIcP8CufTzXOi6GAFfqM9lJoigkd+w61c53gfPbXYiIFZD/77qEE39RPuo6mA9ifzlFdYO1Th4EDYXdW8hHddnswRnkjMMbhlWUYBmIwSbB2nv83wOO9cEOAhnPEhO+JF1iNd62Wp560ojOTETk0M7SilpvLrFVDtCNYVk3yjAkamk5GWJZ0MN
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 5 Jan 2020 13:28:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726368AbgAES2a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Jan 2020 13:28:30 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF62720866;
+        Sun,  5 Jan 2020 18:28:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578248909;
+        bh=4x9vC91olmd60ycX0+AK25GUmB4k/f+cxqTH4tCuww8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ExslCVI9aoGZEoasCewn+2z26EUJkgrLLXM4mFo8p8VKKO7R4I9kE/qBe2X93uG7+
+         0bJdwQHlBwBT4aWDlPxzeDFTmH9rYUI0dEUnKrqJpPnb7WMtNDTnVhzLw4bSjv80gp
+         bAcvqQfIGqLI7Rr/sj2DMWDyXkPLl41LK1Aghwio=
+Date:   Sun, 5 Jan 2020 19:28:26 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?QW5kcsOp?= Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 3/3] ARM: dts: sun8i: R40: Add SPI controllers nodes and
+ pinmuxes
+Message-ID: <20200105182826.rnscz5d5pbtb72g2@gilmour.lan>
+References: <20200102012657.9278-1-andre.przywara@arm.com>
+ <20200102012657.9278-4-andre.przywara@arm.com>
+ <20200102095711.dkd2cnbyitz6mvyx@gilmour.lan>
+ <20200102104158.06d9baa0@donnerap.cambridge.arm.com>
+ <20200104100422.z7iz4jiyj7kdvbtw@gilmour.lan>
+ <42aabc62-4885-38fc-a6e5-0f057843d364@arm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9ad567d-708b-491c-988a-08d79202d588
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2020 17:15:16.5333
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yX8jm0MoCvxnXUmo84VSkIH6wnh7ZVR6UBXnt0Z8YYs8mWm6An2ZiZ0Wleoj4352ABTtTigW1hmg6J0sJNu8kA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4917
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <42aabc62-4885-38fc-a6e5-0f057843d364@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayA8
-Z3JvZWNrN0BnbWFpbC5jb20+IE9uIEJlaGFsZiBPZiBHdWVudGVyIFJvZWNrDQo+IFNlbnQ6IFN1
-bmRheSwgSmFudWFyeSAwNSwgMjAyMCA2OjI2IFBNDQo+IFRvOiBWYWRpbSBQYXN0ZXJuYWsgPHZh
-ZGltcEBtZWxsYW5veC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IHZpamF5a2hlbWthQGZi
-LmNvbQ0KPiBDYzogbGludXgtaHdtb25Admdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCBod21vbi1uZXh0IHYxIDIvNV0g
-aHdtb246IChwbWJ1cy9jb3JlKSBBZGQgc3VwcG9ydA0KPiBmb3IgSW50ZWwgSU1WUDkgc3BlY2lm
-aWNhdGlvbg0KPiANCj4gT24gMS81LzIwIDI6NTggQU0sIFZhZGltIFBhc3Rlcm5hayB3cm90ZToN
-Cj4gPiBFeHRlbmQgInZybV92ZXJzaW9uIiB3aXRoIHN1cHBvcnQgZm9yIEludGVsIElNVlA5IHNw
-ZWNpZmljYXRpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBWYWRpbSBQYXN0ZXJuYWsgPHZh
-ZGltcEBtZWxsYW5veC5jb20+DQo+ID4gLS0tDQo+ID4gICBkcml2ZXJzL2h3bW9uL3BtYnVzL3Bt
-YnVzLmggICAgICB8IDIgKy0NCj4gPiAgIGRyaXZlcnMvaHdtb24vcG1idXMvcG1idXNfY29yZS5j
-IHwgNCArKysrDQo+ID4gICAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaHdtb24vcG1idXMvcG1idXMu
-aCBiL2RyaXZlcnMvaHdtb24vcG1idXMvcG1idXMuaA0KPiA+IGluZGV4IDJiZGViZDBlYTljMS4u
-YzZiMjQwMWYxYzZjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaHdtb24vcG1idXMvcG1idXMu
-aA0KPiA+ICsrKyBiL2RyaXZlcnMvaHdtb24vcG1idXMvcG1idXMuaA0KPiA+IEBAIC0zNzcsNyAr
-Mzc3LDcgQEAgZW51bSBwbWJ1c19zZW5zb3JfY2xhc3NlcyB7DQo+ID4gICAjZGVmaW5lIFBNQlVT
-X1BBR0VfVklSVFVBTAlCSVQoMzEpDQo+ID4NCj4gPiAgIGVudW0gcG1idXNfZGF0YV9mb3JtYXQg
-eyBsaW5lYXIgPSAwLCBkaXJlY3QsIHZpZCB9OyAtZW51bQ0KPiA+IHZybV92ZXJzaW9uIHsgdnIx
-MSA9IDAsIHZyMTIsIHZyMTMgfTsNCj4gPiArZW51bSB2cm1fdmVyc2lvbiB7IHZyMTEgPSAwLCB2
-cjEyLCB2cjEzLCBpbXZwOSB9Ow0KPiA+DQo+ID4gICBzdHJ1Y3QgcG1idXNfZHJpdmVyX2luZm8g
-ew0KPiA+ICAgCWludCBwYWdlczsJCS8qIFRvdGFsIG51bWJlciBvZiBwYWdlcyAqLw0KPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2h3bW9uL3BtYnVzL3BtYnVzX2NvcmUuYw0KPiA+IGIvZHJpdmVy
-cy9od21vbi9wbWJ1cy9wbWJ1c19jb3JlLmMNCj4gPiBpbmRleCA5ODIyNmU4NGIzNTEuLmE5Yjdi
-NTU1Y2Y2ZSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2h3bW9uL3BtYnVzL3BtYnVzX2NvcmUu
-Yw0KPiA+ICsrKyBiL2RyaXZlcnMvaHdtb24vcG1idXMvcG1idXNfY29yZS5jDQo+ID4gQEAgLTcw
-OSw2ICs3MDksMTAgQEAgc3RhdGljIGxvbmcgcG1idXNfcmVnMmRhdGFfdmlkKHN0cnVjdCBwbWJ1
-c19kYXRhDQo+ICpkYXRhLA0KPiA+ICAgCQlpZiAodmFsID49IDB4MDEpDQo+ID4gICAJCQlydiA9
-IDUwMCArICh2YWwgLSAxKSAqIDEwOw0KPiA+ICAgCQlicmVhazsNCj4gPiArCWNhc2UgaW12cDk6
-DQo+ID4gKwkJaWYgKHZhbCA+PSAweDAxKQ0KPiA+ICsJCQlydiA9IDIwMCArICh2YWwgLSAxKSAq
-IDEwOw0KPiA+ICsJCWJyZWFrOw0KPiANCj4gVGhlcmUgaXMgYWxzbyBJbnRlbCBWUjE0LCBhbmQg
-dGhlcmUgaXMgc29tZSBpbmRpY2F0aW9uIHRoYXQgaXQgaXMgaWRlbnRpY2FsIHRvIGltdnA5Lg0K
-PiBJZiB0aGF0IGlzIHRoZSBjYXNlLCBJIHdvdWxkIHByZWZlciB0byB1c2UgZXhpc3RpbmcgdGVy
-bWlub2xvZ3kuDQo+IFVuZm9ydHVuYXRlbHksIEludGVsIGlzIGEgYml0IGNsb3NlLWxpcHBlZCBh
-Ym91dCBib3RoLiBJZiB5b3UgaGF2ZSBhY2Nlc3MgdG8NCj4gZG9jdW1lbnRhdGlvbiwgY2FuIHlv
-dSBjaGVjayA/DQoNClN1cmUsIEknbGwgY2hlY2sgaXQgd2l0aCBvdXIgaHcgZ3V5cy4NCg0KPiAN
-Cj4gVGhhbmtzLA0KPiBHdWVudGVyDQo+IA0KPiA+ICAgCX0NCj4gPiAgIAlyZXR1cm4gcnY7DQo+
-ID4gICB9DQo+ID4NCg0K
+On Sun, Jan 05, 2020 at 04:40:58PM +0000, Andr=E9 Przywara wrote:
+> On 04/01/2020 10:04, Maxime Ripard wrote:
+> >> But more importantly: what are the guidelines for using this tag? I
+> >> understand the desire to provide every possible pin description on
+> >> one hand, but wanting to avoid having *all of them* in *each* .dtb
+> >> on the other.
+> >
+> > Pin groups will take a lot of space in the dtb, and the DT parsing
+> > will take some measurable time,
+>
+> Really? Where is that? In Linux, or in U-Boot, possibly with the caches
+> off? I am just curious. AFAIK there are some inefficient algorithms in
+> libfdt (which trade performance for a smaller memory footprint), but I
+> thought those would be called only very rarely.
+
+The last time I measured it was in U-Boot (and for the FIT image, not
+an actual DT), but the parsing time for a FIT image with a kernel and
+DTB was around 100ms.
+
+(and adding the PSCI and simplefb nodes was in the same order of
+magnitude).
+
+Boot time was very sensitive, and I had to remove both.
+
+> >> And should there be a dtc command line option to ignore those tags,
+> >> or even to apply this tag (virtually) to every node?
+> >
+> > Most of the nodes are (reference) leaves in a DT though. Pretty much
+> > all the device nodes have no references pointing to them, just like
+> > most of the buses, the CPU nodes, etc. And I'm pretty sure you want to
+> > keep them :)
+>
+> Yeah, that was a New-Year's brain-fart of mine ;-)
+>
+> While I was changing the patch I figured that it gets quite lengthy.
+> Also looking at the a20.dtsi, I see that *all* pin groups have this tag
+> now. Wouldn't it be easier to introduce *one* tag that applies that to
+> all children of a node?
+
+I don't really know, I'm not sure the proliferation of tags would be a
+good thing either, and I'm not the dtc maintainer, so I don't really
+have a say in this :)
+
+> Another thing I was wondering about: Would we gain something by not
+> compiling nodes which have status =3D "disabled"? This is mentioned as a
+> generic property in the DT spec, although it says there that the exact
+> meaning is device dependent. But it sound still worthwhile, especially
+> since we would avoid more pin groups to be compiled in.
+
+I guess that would be good too, but the semantics are a bit different
+so we'd need a different tag.
+
+Maxime
