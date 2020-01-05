@@ -2,112 +2,160 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09780C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 14:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D09C33C9A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0521207FD
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 14:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2A4215A4
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:03:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EafbpNEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgAEOFk convert rfc822-to-8bit (ORCPT
+        id S1726307AbgAEQDh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 09:05:40 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:37252 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgAEOFj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 5 Jan 2020 09:05:39 -0500
-Received: from p508fce23.dip0.t-ipconnect.de ([80.143.206.35] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1io6X0-0007kM-Qo; Sun, 05 Jan 2020 15:05:26 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 00/11] Add PX30 LVDS support
-Date:   Sun, 05 Jan 2020 15:05:26 +0100
-Message-ID: <1885398.klecWcqSHf@phil>
-In-Reply-To: <20191224143900.23567-1-miquel.raynal@bootlin.com>
-References: <20191224143900.23567-1-miquel.raynal@bootlin.com>
+        Sun, 5 Jan 2020 11:03:37 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44518 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgAEQDh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 11:03:37 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 195so24943288pfw.11;
+        Sun, 05 Jan 2020 08:03:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CPJ0Y8yXATlIXd/jcLnbOF2ROr1PvEXWZgMBa/iQ9gY=;
+        b=EafbpNEvNLQYoa0aXwGyY0O6Fe61ubpdkjAbsDqy9Z0axdhta/3jH6daqBhdOTarPo
+         /9xWtLnJp8g5ETbg17VeDptISt3h3a+RRJnTZHcIbAFq3vfPHTPzshd4US+XH7Mv7Lhr
+         6CqMFRSgrqDZI2L5BxZ95aWyd7BrDUx+hW755WDSJbSF0DwsZgCReimvPXC0siHFxkHr
+         MaQuV5ib1ZOE1IknkH5/Mvy/Bdt1JIw1mwftkeHRftkhFxyfRMf0CgI8J9P4UZ5OLna3
+         k57ZhBL7+zPR9GcdHqR/9g6IFds8BL+Igqqv0qwO0YUFC0ySRbW+44TlA7RuAHoDaZXK
+         EA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CPJ0Y8yXATlIXd/jcLnbOF2ROr1PvEXWZgMBa/iQ9gY=;
+        b=mKDaNMT8bB6TRF9/5mXxL+hxdwf6tKIv5wUp/r1uAyRuYeR0JS8KJCRGh/YCdSum7Y
+         sK+yyVvNLrHHNQf7iWDmupIMh9I50iSEVYeDT0mbP2lVZxALmxackJAiZsumqfxGifc0
+         Z79y9h7CoYSj/iADjhFSaELaxz6GALP16atkid+q/6loDUEdi+PjRL8+C514ntqIqPiK
+         38i/1zhDvr2q1a8wOQ6djYLY2ULczs8p+dwJmO+8cFYvOMTlGRgrJRTR6PKF0OjeTFDK
+         2O7kBCekRSYRZ49iedpLYXdxPoqvqKHdz/kO745BHEOZFZQRodmQBlUTImUVoZsEvMAy
+         rcug==
+X-Gm-Message-State: APjAAAV8kQkf538/JCVwP/rNrnrn5I40OnT893rXgM8MUHSc2HO1Yifw
+        DwLDYkyZH8V8x51+3saEC3ognTxX
+X-Google-Smtp-Source: APXvYqzcSpCck+UT7Ghj0TTpKooK3mxXF2TL6BlY/Ym3WQqS3quDsYxlB+fmZ6ccumqgXJB13vgDbg==
+X-Received: by 2002:a63:1d1a:: with SMTP id d26mr101185769pgd.98.1578240216049;
+        Sun, 05 Jan 2020 08:03:36 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k1sm70554993pgk.90.2020.01.05.08.03.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2020 08:03:35 -0800 (PST)
+Subject: Re: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
+ device list supported by driver
+To:     Vadim Pasternak <vadimp@mellanox.com>, robh+dt@kernel.org,
+        vijaykhemka@fb.com
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200105105833.30196-1-vadimp@mellanox.com>
+ <20200105105833.30196-6-vadimp@mellanox.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <567ebd26-529e-6b2a-2f07-cfaf0f2217a9@roeck-us.net>
+Date:   Sun, 5 Jan 2020 08:03:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20200105105833.30196-6-vadimp@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Dienstag, 24. Dezember 2019, 15:38:49 CET schrieb Miquel Raynal:
-> Hello,
+On 1/5/20 2:58 AM, Vadim Pasternak wrote:
+> Extends driver with support of the additional devices:
+> Texas Instruments Dual channel DCAP+ multiphase controllers: TPS53688,
+> SN1906016.
+> Infineon Multi-phase Digital VR Controller Sierra devices
+> XDPE12286C, XDPE12284C, XDPE12283C, XDPE12254C and XDPE12250C.
 > 
-> This series aims at supporting LVDS on PX30.
+> Extend Kconfig with added devices.
 > 
-> A first couple of patches update the documentation with the new
-> compatible and the presence of a PHY. Then, the existing Rockchip
-> driver is cleaned and extended to support PX30 specificities. Finally,
-> the PX30 DTSI is updated with CRTC routes, the DSI DPHY and the LVDS
-> IP itself.
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>   drivers/hwmon/pmbus/Kconfig    |  5 +++--
+>   drivers/hwmon/pmbus/tps53679.c | 14 ++++++++++++++
+>   2 files changed, 17 insertions(+), 2 deletions(-)
 > 
-> Cheers,
-> Miquèl
+> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> index 59859979571d..9e3d197d5322 100644
+> --- a/drivers/hwmon/pmbus/Kconfig
+> +++ b/drivers/hwmon/pmbus/Kconfig
+> @@ -200,10 +200,11 @@ config SENSORS_TPS40422
+>   	  be called tps40422.
+>   
+>   config SENSORS_TPS53679
+> -	tristate "TI TPS53679"
+> +	tristate "TI TPS53679, TPS53688, SN1906016, Infineon XDPE122xxx family"
+>   	help
+>   	  If you say yes here you get hardware monitoring support for TI
+> -	  TPS53679.
+> +	  TPS53679, PS53688, SN1906016 and Infineon XDPE12286C, XDPE12284C,
+
+TPS53688. For the others, for some I can't even determine if they exist
+in the first place (eg SN1906016, XPDE12250C) or how they would differ
+from other variants (eg XPDE12284C vs. XPDE12284A).
+And why would they all use the same bit map in the VOUT_MODE register,
+the same number of PMBus pages (phases), and the same attributes in each
+page ?
+
+Thanks,
+Guenter
+
+> +	  XDPE12283C, XDPE12254C, XDPE12250C devices.
+>   
+>   	  This driver can also be built as a module. If so, the module will
+>   	  be called tps53679.
+> diff --git a/drivers/hwmon/pmbus/tps53679.c b/drivers/hwmon/pmbus/tps53679.c
+> index 7ce2fca4acde..f38eb116735b 100644
+> --- a/drivers/hwmon/pmbus/tps53679.c
+> +++ b/drivers/hwmon/pmbus/tps53679.c
+> @@ -89,6 +89,13 @@ static int tps53679_probe(struct i2c_client *client,
+>   
+>   static const struct i2c_device_id tps53679_id[] = {
+>   	{"tps53679", 0},
+> +	{"tps53688", 0},
+> +	{"sn1906016", 0},
+> +	{"xdpe12283c", 0},
+> +	{"xdpe12250c", 0},
+> +	{"xdpe12254c", 0},
+> +	{"xdpe12284c", 0},
+> +	{"xdpe12286c", 0},
+
+Alphabetic order, please.
+
+>   	{}
+>   };
+>   
+> @@ -96,6 +103,13 @@ MODULE_DEVICE_TABLE(i2c, tps53679_id);
+>   
+>   static const struct of_device_id __maybe_unused tps53679_of_match[] = {
+>   	{.compatible = "ti,tps53679"},
+> +	{.compatible = "ti,tps53688"},
+> +	{.compatible = "ti,sn1906016"},
+> +	{.compatible = "infineon,xdpe12283c"},
+> +	{.compatible = "infineon,xdpe12250c"},
+> +	{.compatible = "infineon,xdpe12254c"},
+> +	{.compatible = "infineon,xdpe12284c"},
+> +	{.compatible = "infineon,xdpe12286c"},
+>   	{}
+>   };
+>   MODULE_DEVICE_TABLE(of, tps53679_of_match);
 > 
-> Changes since v1:
-> * Added Rob's Ack.
-> * Used "must" instead of "should" in the bindings.
-> * Precised that phy-names is an optional property in the case of
->   PX30.
-> * Renamed the WRITE_EN macro into HIWORD_UPDATE to be aligned with
->   other files.
-> * Removed extra configuration, not needed for generic panels (see
->   Sandy Huang answer).
-> * Dropped the display-subsystem routes (useless).
-> * Merged two patches to avoid phandle interdependencies in graphs and
->   intermediate build errors.
-> 
-> Miquel Raynal (11):
->   dt-bindings: display: rockchip-lvds: Declare PX30 compatible
->   dt-bindings: display: rockchip-lvds: Document PX30 PHY
->   drm/rockchip: lvds: Fix indentation of a #define
->   drm/rockchip: lvds: Harmonize function names
->   drm/rockchip: lvds: Change platform data
->   drm/rockchip: lvds: Create an RK3288 specific probe function
->   drm/rockchip: lvds: Helpers should return decent values
->   drm/rockchip: lvds: Pack functions together
-
-applied patches 1-8 to drm-misc-next
-
->   drm/rockchip: lvds: Add PX30 support
-
-drm-misc-next is currently still at 5.4-rc4, so I'll need to find out how
-to get newer kernel changes in there, as right now we're missing
-the PHY_MODE_LVDS constant.
-
-
-Heiko
-
->   arm64: dts: rockchip: Add PX30 DSI DPHY
->   arm64: dts: rockchip: Add PX30 LVDS
-> 
->  .../display/rockchip/rockchip-lvds.txt        |   4 +
->  arch/arm64/boot/dts/rockchip/px30.dtsi        |  48 ++
->  drivers/gpu/drm/rockchip/rockchip_lvds.c      | 486 ++++++++++++------
->  drivers/gpu/drm/rockchip/rockchip_lvds.h      |  19 +-
->  4 files changed, 401 insertions(+), 156 deletions(-)
-> 
-> 
-
-
-
 
