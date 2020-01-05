@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66EFC32767
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44E4C32771
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D9C222C4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF8F20866
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 00:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbgAEAKj (ORCPT
+        id S1726478AbgAEAKr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 4 Jan 2020 19:10:39 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:37699 "EHLO
+        Sat, 4 Jan 2020 19:10:47 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:42031 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgAEAKj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 19:10:39 -0500
+        with ESMTP id S1726643AbgAEAKq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 4 Jan 2020 19:10:46 -0500
 X-Originating-IP: 195.189.32.242
 Received: from pc.localdomain (unknown [195.189.32.242])
         (Authenticated sender: contact@artur-rojek.eu)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 71EC31C0004;
-        Sun,  5 Jan 2020 00:10:35 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 664F31C000A;
+        Sun,  5 Jan 2020 00:10:43 +0000 (UTC)
 From:   Artur Rojek <contact@artur-rojek.eu>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -33,10 +33,12 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 1/5] IIO: Ingenic JZ47xx: Add xlate cb to retrieve correct channel idx
-Date:   Sun,  5 Jan 2020 01:16:35 +0100
-Message-Id: <20200105001639.142061-1-contact@artur-rojek.eu>
+Subject: [PATCH 5/5] input: joystick: Add ADC attached joystick driver.
+Date:   Sun,  5 Jan 2020 01:16:39 +0100
+Message-Id: <20200105001639.142061-5-contact@artur-rojek.eu>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200105001639.142061-1-contact@artur-rojek.eu>
+References: <20200105001639.142061-1-contact@artur-rojek.eu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -44,49 +46,287 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Provide an of_xlate callback in order to retrieve the correct channel
-specifier index from the IIO channels array.
+Add a driver for joystick devices connected to ADC controllers
+supporting the Industrial I/O subsystem.
 
 Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
 Tested-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/iio/adc/ingenic-adc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/input/joystick/Kconfig        |  10 ++
+ drivers/input/joystick/Makefile       |   1 +
+ drivers/input/joystick/adc-joystick.c | 230 ++++++++++++++++++++++++++
+ 3 files changed, 241 insertions(+)
+ create mode 100644 drivers/input/joystick/adc-joystick.c
 
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-index 39c0a609fc94..7a24bc1dabe1 100644
---- a/drivers/iio/adc/ingenic-adc.c
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -383,6 +383,21 @@ static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
- 	}
- }
+diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
+index 940b744639c7..efbc20ec5099 100644
+--- a/drivers/input/joystick/Kconfig
++++ b/drivers/input/joystick/Kconfig
+@@ -42,6 +42,16 @@ config JOYSTICK_A3D
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called a3d.
  
-+static int ingenic_adc_of_xlate(struct iio_dev *iio_dev,
-+				const struct of_phandle_args *iiospec)
++config JOYSTICK_ADC
++	tristate "Simple joystick connected over ADC"
++	depends on IIO
++	select IIO_BUFFER_CB
++	help
++	  Say Y here if you have a simple joystick connected over ADC.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called adc-joystick.
++
+ config JOYSTICK_ADI
+ 	tristate "Logitech ADI digital joysticks and gamepads"
+ 	select GAMEPORT
+diff --git a/drivers/input/joystick/Makefile b/drivers/input/joystick/Makefile
+index 8656023f6ef5..58232b3057d3 100644
+--- a/drivers/input/joystick/Makefile
++++ b/drivers/input/joystick/Makefile
+@@ -6,6 +6,7 @@
+ # Each configuration option enables a list of files.
+ 
+ obj-$(CONFIG_JOYSTICK_A3D)		+= a3d.o
++obj-$(CONFIG_JOYSTICK_ADC)		+= adc-joystick.o
+ obj-$(CONFIG_JOYSTICK_ADI)		+= adi.o
+ obj-$(CONFIG_JOYSTICK_AMIGA)		+= amijoy.o
+ obj-$(CONFIG_JOYSTICK_AS5011)		+= as5011.o
+diff --git a/drivers/input/joystick/adc-joystick.c b/drivers/input/joystick/adc-joystick.c
+new file mode 100644
+index 000000000000..0dfc4218dafa
+--- /dev/null
++++ b/drivers/input/joystick/adc-joystick.c
+@@ -0,0 +1,230 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Input driver for joysticks connected over ADC.
++ * Copyright (c) 2019-2020 Artur Rojek <contact@artur-rojek.eu>
++ */
++#include <linux/ctype.h>
++#include <linux/input.h>
++#include <linux/iio/iio.h>
++#include <linux/iio/consumer.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++
++struct adc_joystick_axis {
++	u32 code;
++	s32 range[2];
++	s32 fuzz;
++	s32 flat;
++};
++
++struct adc_joystick {
++	struct input_dev *input;
++	struct iio_cb_buffer *buffer;
++	struct adc_joystick_axis *axes;
++	struct iio_channel *chans;
++	int num_chans;
++};
++
++static int adc_joystick_handle(const void *data, void *private)
 +{
-+	int i;
++	struct adc_joystick *joy = private;
++	enum iio_endian endianness;
++	int bytes, msb, val, i;
++	bool sign;
 +
-+	if (!iiospec->args_count)
++	/* Assume all channels have the same storage size. */
++	bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
++
++	for (i = 0; i < joy->num_chans; ++i) {
++		endianness = joy->chans[i].channel->scan_type.endianness;
++		msb = joy->chans[i].channel->scan_type.realbits - 1;
++		sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
++
++		switch (bytes) {
++		case 1:
++			val = ((const u8 *)data)[i];
++			break;
++		case 2:
++			val = ((const u16 *)data)[i];
++			if (endianness == IIO_BE)
++				val = be16_to_cpu(val);
++			else if (endianness == IIO_LE)
++				val = le16_to_cpu(val);
++			break;
++		default:
++			return -EINVAL;
++		}
++
++		val >>= joy->chans[i].channel->scan_type.shift;
++		if (sign)
++			val = sign_extend32(val, msb);
++		else
++			val &= GENMASK(msb, 0);
++		input_report_abs(joy->input, joy->axes[i].code, val);
++	}
++
++	input_sync(joy->input);
++
++	return 0;
++}
++
++static int adc_joystick_open(struct input_dev *dev)
++{
++	struct adc_joystick *joy = input_get_drvdata(dev);
++	int ret;
++
++	ret = iio_channel_start_all_cb(joy->buffer);
++	if (ret)
++		dev_err(dev->dev.parent, "Unable to start callback buffer");
++
++	return ret;
++}
++
++static void adc_joystick_close(struct input_dev *dev)
++{
++	struct adc_joystick *joy = input_get_drvdata(dev);
++
++	iio_channel_stop_all_cb(joy->buffer);
++}
++
++static void adc_joystick_disable(void *data)
++{
++	iio_channel_release_all_cb(data);
++}
++
++static int adc_joystick_set_axes(struct device *dev, struct adc_joystick *joy)
++{
++	struct adc_joystick_axis *axes;
++	struct fwnode_handle *child;
++	int num_axes, i = 0;
++
++	num_axes = device_get_child_node_count(dev);
++	if (!num_axes) {
++		dev_err(dev, "Unable to find child nodes");
 +		return -EINVAL;
++	}
 +
-+	for (i = 0; i < iio_dev->num_channels; ++i)
-+		if (iio_dev->channels[i].channel == iiospec->args[0])
-+			return i;
++	if (num_axes != joy->num_chans) {
++		dev_err(dev, "Got %d child nodes for %d channels",
++			num_axes, joy->num_chans);
++		return -EINVAL;
++	}
 +
++	axes = devm_kmalloc_array(dev, num_axes, sizeof(*axes), GFP_KERNEL);
++	if (!axes)
++		return -ENOMEM;
++
++	device_for_each_child_node(dev, child) {
++		if (fwnode_property_read_u32(child, "linux,abs-code",
++					     &axes[i].code)) {
++			dev_err(dev, "linux,abs-code invalid or missing");
++			goto err;
++		}
++
++		if (fwnode_property_read_u32_array(child, "linux,abs-range",
++						   axes[i].range, 2)) {
++			dev_err(dev, "linux,abs-range invalid or missing");
++			goto err;
++		}
++
++		fwnode_property_read_u32(child, "linux,abs-fuzz",
++					 &axes[i].fuzz);
++		fwnode_property_read_u32(child, "linux,abs-flat",
++					 &axes[i].flat);
++
++		input_set_abs_params(joy->input, axes[i].code, axes[i].range[0],
++				     axes[i].range[1], axes[i].fuzz,
++				     axes[i].flat);
++		input_set_capability(joy->input, EV_ABS, axes[i].code);
++
++		++i;
++	}
++
++	joy->axes = axes;
++
++	return 0;
++
++err:
++	fwnode_handle_put(child);
 +	return -EINVAL;
 +}
 +
- static void ingenic_adc_clk_cleanup(void *data)
- {
- 	clk_unprepare(data);
-@@ -392,6 +407,7 @@ static const struct iio_info ingenic_adc_info = {
- 	.write_raw = ingenic_adc_write_raw,
- 	.read_raw = ingenic_adc_read_raw,
- 	.read_avail = ingenic_adc_read_avail,
-+	.of_xlate = ingenic_adc_of_xlate,
- };
- 
- static const struct iio_chan_spec ingenic_channels[] = {
++static int adc_joystick_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct adc_joystick *joy;
++	struct input_dev *input;
++	int ret;
++
++	joy = devm_kzalloc(dev, sizeof(*joy), GFP_KERNEL);
++	if (!joy)
++		return -ENOMEM;
++
++	joy->chans = devm_iio_channel_get_all(dev);
++	if (IS_ERR(joy->chans)) {
++		ret = PTR_ERR(joy->chans);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "Unable to get IIO channels");
++		return ret;
++	}
++
++	/* Count how many channels we got. NULL terminated. */
++	while (joy->chans[joy->num_chans].indio_dev)
++		joy->num_chans++;
++
++	input = devm_input_allocate_device(dev);
++	if (!input) {
++		dev_err(dev, "Unable to allocate input device");
++		return -ENOMEM;
++	}
++
++	joy->input = input;
++	input->name = pdev->name;
++	input->id.bustype = BUS_HOST;
++	input->open = adc_joystick_open;
++	input->close = adc_joystick_close;
++
++	ret = adc_joystick_set_axes(dev, joy);
++	if (ret)
++		return ret;
++
++	input_set_drvdata(input, joy);
++	ret = input_register_device(input);
++	if (ret) {
++		dev_err(dev, "Unable to register input device: %d", ret);
++		return ret;
++	}
++
++	joy->buffer = iio_channel_get_all_cb(dev, adc_joystick_handle, joy);
++	if (IS_ERR(joy->buffer)) {
++		dev_err(dev, "Unable to allocate callback buffer");
++		return PTR_ERR(joy->buffer);
++	}
++
++	ret = devm_add_action_or_reset(dev, adc_joystick_disable, joy->buffer);
++	if (ret)
++		dev_err(dev, "Unable to add action");
++
++	return ret;
++}
++
++static const struct of_device_id adc_joystick_of_match[] = {
++	{ .compatible = "adc-joystick", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
++
++static struct platform_driver adc_joystick_driver = {
++	.driver = {
++		.name = "adc-joystick",
++		.of_match_table = of_match_ptr(adc_joystick_of_match),
++	},
++	.probe = adc_joystick_probe,
++};
++module_platform_driver(adc_joystick_driver);
++
++MODULE_DESCRIPTION("Input driver for joysticks connected over ADC");
++MODULE_AUTHOR("Artur Rojek <contact@artur-rojek.eu>");
++MODULE_LICENSE("GPL");
 -- 
 2.24.1
 
