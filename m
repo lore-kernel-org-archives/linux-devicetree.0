@@ -2,109 +2,127 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9A2C33C9B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF46DC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF11920866
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9354221734
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:26:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GC2QuZEp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLH43rsw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726427AbgAEQV6 (ORCPT
+        id S1726307AbgAEQ0L (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 11:21:58 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:62095 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726212AbgAEQV6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 11:21:58 -0500
-X-UUID: 1c4584dc076e48ba9fe56e4ce46a89de-20200106
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=MzAzWbVEUq48P3SOZR+RXx8/tm9pMvJf+JHH3AnJI74=;
-        b=GC2QuZEpl6mxXTsYrsmFPIC252dkMGDfS6EGrTc3yWUAuHzsH88eml2TcnHytuG2hN1lbtGMF7j2HCY4TKZb1lmLvqjzL2jN4PrVLXrx+LqWZ/EEPwY6QhBfxdeSuo3ctDGDEkj+96Dy/PqzzQ9yslIoWw3rvRy/t5aK3aSaBVM=;
-X-UUID: 1c4584dc076e48ba9fe56e4ce46a89de-20200106
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <jiaxin.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1812103755; Mon, 06 Jan 2020 00:21:50 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 6 Jan 2020 00:21:23 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 6 Jan 2020 00:20:51 +0800
-From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
-To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
-CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
-        Jiaxin Yu <jiaxin.yu@mediatek.com>
-Subject: [PATCH v9 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
-Date:   Mon, 6 Jan 2020 00:21:40 +0800
-Message-ID: <1578241301-14618-2-git-send-email-jiaxin.yu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1578241301-14618-1-git-send-email-jiaxin.yu@mediatek.com>
-References: <1578241301-14618-1-git-send-email-jiaxin.yu@mediatek.com>
+        Sun, 5 Jan 2020 11:26:11 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41961 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgAEQ0L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 11:26:11 -0500
+Received: by mail-pg1-f193.google.com with SMTP id x8so25721216pgk.8;
+        Sun, 05 Jan 2020 08:26:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ycBkhnR+ukyeX9iH7WIPjBDwNZCXA2qetamPgs9JgyQ=;
+        b=GLH43rswJGGg/TkYciKlluFXsAB0XVF48Q3ZHaQHlLB6qDWCG2gdVAJ0JUvewt/mEf
+         6Lu3UCybiuTFeWerhzwDW8KUVB12fwpYPA2W4G1VsKwi2CNzpAU9kq1JA6E/tMUyvICi
+         R9LYPaPTWoXfhit/c9fyCw/vtAQESr5yM/gzYmeEvbSsbO5jE+hmQX2rKfTCsBQ2Z/Bs
+         3wMoCiCz1mCbk39b1tjxpfcxAt1DU0g9MLc7rJ/9TdFcss5fHK6p4ykNwu9o6YHywjBb
+         xeWlAtsmDc/dejwQqwsoryU2/4VYtMalAT0hg2pz4eYvphIS0DgheeDnSc1kj56/02D1
+         J+yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ycBkhnR+ukyeX9iH7WIPjBDwNZCXA2qetamPgs9JgyQ=;
+        b=cZB/XPYLUMMSOqdN9Uhxap/BAzKCy5tKkvHCMSaLSaQu38rZ81VqMNTEUE6v7qQ2Yq
+         CBBNcbi/oZOfuCt+CcXQ8dkl56NlG4dZDZlcjOcGP7OZ/H7ClFv4vznQY3Pip6uqMwGj
+         crubYrNqmMsbwNzVm7LTtP2N8bCIrozSkOXuwZuyn+s4tlqr4/jiNg7U+CxAaBRtzNf/
+         O40qo0T+ZxmTlnoFNGvnfJ1oQvYdkL+DiBrk6myEw8Ho6sAc7A6pGiKjqqx8xpan5K5C
+         g0UxqzAfjntMP8XgTYfGF4dXVj+bVYS5czapDGUGlGIYeNnfb8dPn5jYOC0o5fT45v7l
+         Ps+w==
+X-Gm-Message-State: APjAAAWACK+pRIdDrCX+cZG8SJg1vyKAAGlClyo5a4uW/iy2PcDk0NXg
+        6sqOVYjkt33r0iHRcO2B3X12riS3
+X-Google-Smtp-Source: APXvYqzHYHQwYzS0cDDrO8CCxE7QsPig3jbh4pWtQ3c5f4xgcVyHRsw6cT4sv/mz3hu2v2dXilsOWw==
+X-Received: by 2002:a63:b642:: with SMTP id v2mr104671005pgt.126.1578241570304;
+        Sun, 05 Jan 2020 08:26:10 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h11sm67972149pgv.38.2020.01.05.08.26.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2020 08:26:09 -0800 (PST)
+Subject: Re: [RFC PATCH hwmon-next v1 2/5] hwmon: (pmbus/core) Add support for
+ Intel IMVP9 specification
+To:     Vadim Pasternak <vadimp@mellanox.com>, robh+dt@kernel.org,
+        vijaykhemka@fb.com
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200105105833.30196-1-vadimp@mellanox.com>
+ <20200105105833.30196-3-vadimp@mellanox.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <0be6b849-939d-49a7-476e-62bf201fdd93@roeck-us.net>
+Date:   Sun, 5 Jan 2020 08:26:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200105105833.30196-3-vadimp@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkICNyZXNldC1jZWxscyBwcm9wZXJ0eSBhbmQgdXBkYXRlIGV4YW1wbGUNCg0KU2lnbmVkLW9m
-Zi1ieTogeW9uZy5saWFuZyA8eW9uZy5saWFuZ0BtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5
-OiBKaWF4aW4gWXUgPGppYXhpbi55dUBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTogWWluZ2pv
-ZSBDaGVuIDx5aW5nam9lLmNoZW5AbWVkaWF0ZWsuY29tPg0KUmV2aWV3ZWQtYnk6IFBoaWxpcHAg
-WmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+DQotLS0NCiAuLi4vcmVzZXQtY29udHJvbGxl
-ci9tdDI3MTItcmVzZXRzLmggICAgICAgICAgfCAyMiArKysrKysrKysrKysrKysrKysrDQogLi4u
-L3Jlc2V0LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oICAgICAgICAgIHwgMTcgKysrKysrKysr
-KysrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAx
-MDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMu
-aA0KDQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210
-MjcxMi1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDI3
-MTItcmVzZXRzLmgNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAuLjll
-N2VlNzYyZjA3Ng0KLS0tIC9kZXYvbnVsbA0KKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNl
-dC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KQEAgLTAsMCArMSwyMiBAQA0KKy8qIFNQRFgt
-TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQorLyoNCisgKiBDb3B5cmlnaHQgKGMpIDIw
-MTkgTWVkaWFUZWsgSW5jLg0KKyAqIEF1dGhvcjogWW9uZyBMaWFuZyA8eW9uZy5saWFuZ0BtZWRp
-YXRlay5jb20+DQorICovDQorDQorI2lmbmRlZiBfRFRfQklORElOR1NfUkVTRVRfQ09OVFJPTExF
-Ul9NVDI3MTINCisjZGVmaW5lIF9EVF9CSU5ESU5HU19SRVNFVF9DT05UUk9MTEVSX01UMjcxMg0K
-Kw0KKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9JTkZSQV9TV19SU1QJCQkJMA0KKyNkZWZpbmUgTVQy
-NzEyX1RPUFJHVV9NTV9TV19SU1QJCQkJCTENCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfTUZHX1NX
-X1JTVAkJCQkyDQorI2RlZmluZSBNVDI3MTJfVE9QUkdVX1ZFTkNfU1dfUlNUCQkJCTMNCisjZGVm
-aW5lIE1UMjcxMl9UT1BSR1VfVkRFQ19TV19SU1QJCQkJNA0KKyNkZWZpbmUgTVQyNzEyX1RPUFJH
-VV9JTUdfU1dfUlNUCQkJCTUNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfSU5GUkFfQU9fU1dfUlNU
-CQkJCTgNCisjZGVmaW5lIE1UMjcxMl9UT1BSR1VfVVNCX1NXX1JTVAkJCQk5DQorI2RlZmluZSBN
-VDI3MTJfVE9QUkdVX0FQTUlYRURfU1dfUlNUCQkJCTEwDQorDQorI2RlZmluZSBNVDI3MTJfVE9Q
-UkdVX1NXX1JTVF9OVU0JCQkJMTENCisNCisjZW5kaWYgIC8qIF9EVF9CSU5ESU5HU19SRVNFVF9D
-T05UUk9MTEVSX01UMjcxMiAqLw0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVz
-ZXQtY29udHJvbGxlci9tdDgxODMtcmVzZXRzLmggYi9pbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0
-LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oDQppbmRleCA4ODA0ZTM0ZWJkZDQuLmExYmJkNDFl
-MGQxMiAxMDA2NDQNCi0tLSBhL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9t
-dDgxODMtcmVzZXRzLmgNCisrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxl
-ci9tdDgxODMtcmVzZXRzLmgNCkBAIC03OCw0ICs3OCwyMSBAQA0KICNkZWZpbmUgTVQ4MTgzX0lO
-RlJBQ0ZHX0FPX0kyQzdfU1dfUlNUCQkJCTEyNg0KICNkZWZpbmUgTVQ4MTgzX0lORlJBQ0ZHX0FP
-X0kyQzhfU1dfUlNUCQkJCTEyNw0KIA0KKyNkZWZpbmUgTVQ4MTgzX0lORlJBQ0ZHX1NXX1JTVF9O
-VU0JCQkJMTI4DQorDQorI2RlZmluZSBNVDgxODNfVE9QUkdVX01NX1NXX1JTVAkJCQkJMQ0KKyNk
-ZWZpbmUgTVQ4MTgzX1RPUFJHVV9NRkdfU1dfUlNUCQkJCTINCisjZGVmaW5lIE1UODE4M19UT1BS
-R1VfVkVOQ19TV19SU1QJCQkJMw0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9WREVDX1NXX1JTVAkJ
-CQk0DQorI2RlZmluZSBNVDgxODNfVE9QUkdVX0lNR19TV19SU1QJCQkJNQ0KKyNkZWZpbmUgTVQ4
-MTgzX1RPUFJHVV9NRF9TV19SU1QJCQkJCTcNCisjZGVmaW5lIE1UODE4M19UT1BSR1VfQ09OTl9T
-V19SU1QJCQkJOQ0KKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9DT05OX01DVV9TV19SU1QJCQkJMTIN
-CisjZGVmaW5lIE1UODE4M19UT1BSR1VfSVBVMF9TV19SU1QJCQkJMTQNCisjZGVmaW5lIE1UODE4
-M19UT1BSR1VfSVBVMV9TV19SU1QJCQkJMTUNCisjZGVmaW5lIE1UODE4M19UT1BSR1VfQVVESU9f
-U1dfUlNUCQkJCTE3DQorI2RlZmluZSBNVDgxODNfVE9QUkdVX0NBTVNZU19TV19SU1QJCQkJMTgN
-CisNCisjZGVmaW5lIE1UODE4M19UT1BSR1VfU1dfUlNUX05VTQkJCQkxOQ0KKw0KICNlbmRpZiAg
-LyogX0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQ4MTgzICovDQotLSANCjIuMTguMA0K
+On 1/5/20 2:58 AM, Vadim Pasternak wrote:
+> Extend "vrm_version" with support for Intel IMVP9 specification.
+> 
+> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> ---
+>   drivers/hwmon/pmbus/pmbus.h      | 2 +-
+>   drivers/hwmon/pmbus/pmbus_core.c | 4 ++++
+>   2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+> index 2bdebd0ea9c1..c6b2401f1c6c 100644
+> --- a/drivers/hwmon/pmbus/pmbus.h
+> +++ b/drivers/hwmon/pmbus/pmbus.h
+> @@ -377,7 +377,7 @@ enum pmbus_sensor_classes {
+>   #define PMBUS_PAGE_VIRTUAL	BIT(31)
+>   
+>   enum pmbus_data_format { linear = 0, direct, vid };
+> -enum vrm_version { vr11 = 0, vr12, vr13 };
+> +enum vrm_version { vr11 = 0, vr12, vr13, imvp9 };
+>   
+>   struct pmbus_driver_info {
+>   	int pages;		/* Total number of pages */
+> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+> index 98226e84b351..a9b7b555cf6e 100644
+> --- a/drivers/hwmon/pmbus/pmbus_core.c
+> +++ b/drivers/hwmon/pmbus/pmbus_core.c
+> @@ -709,6 +709,10 @@ static long pmbus_reg2data_vid(struct pmbus_data *data,
+>   		if (val >= 0x01)
+>   			rv = 500 + (val - 1) * 10;
+>   		break;
+> +	case imvp9:
+> +		if (val >= 0x01)
+> +			rv = 200 + (val - 1) * 10;
+> +		break;
+
+There is also Intel VR14, and there is some indication that it is identical
+to imvp9. If that is the case, I would prefer to use existing terminology.
+Unfortunately, Intel is a bit close-lipped about both. If you have access
+to documentation, can you check ?
+
+Thanks,
+Guenter
+
+>   	}
+>   	return rv;
+>   }
+> 
 
