@@ -2,160 +2,99 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D09C33C9A
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822C4C33C9A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2A4215A4
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D44020866
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EafbpNEv"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EtntGBPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgAEQDh (ORCPT
+        id S1726307AbgAEQV5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 11:03:37 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44518 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgAEQDh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 11:03:37 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 195so24943288pfw.11;
-        Sun, 05 Jan 2020 08:03:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CPJ0Y8yXATlIXd/jcLnbOF2ROr1PvEXWZgMBa/iQ9gY=;
-        b=EafbpNEvNLQYoa0aXwGyY0O6Fe61ubpdkjAbsDqy9Z0axdhta/3jH6daqBhdOTarPo
-         /9xWtLnJp8g5ETbg17VeDptISt3h3a+RRJnTZHcIbAFq3vfPHTPzshd4US+XH7Mv7Lhr
-         6CqMFRSgrqDZI2L5BxZ95aWyd7BrDUx+hW755WDSJbSF0DwsZgCReimvPXC0siHFxkHr
-         MaQuV5ib1ZOE1IknkH5/Mvy/Bdt1JIw1mwftkeHRftkhFxyfRMf0CgI8J9P4UZ5OLna3
-         k57ZhBL7+zPR9GcdHqR/9g6IFds8BL+Igqqv0qwO0YUFC0ySRbW+44TlA7RuAHoDaZXK
-         EA0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CPJ0Y8yXATlIXd/jcLnbOF2ROr1PvEXWZgMBa/iQ9gY=;
-        b=mKDaNMT8bB6TRF9/5mXxL+hxdwf6tKIv5wUp/r1uAyRuYeR0JS8KJCRGh/YCdSum7Y
-         sK+yyVvNLrHHNQf7iWDmupIMh9I50iSEVYeDT0mbP2lVZxALmxackJAiZsumqfxGifc0
-         Z79y9h7CoYSj/iADjhFSaELaxz6GALP16atkid+q/6loDUEdi+PjRL8+C514ntqIqPiK
-         38i/1zhDvr2q1a8wOQ6djYLY2ULczs8p+dwJmO+8cFYvOMTlGRgrJRTR6PKF0OjeTFDK
-         2O7kBCekRSYRZ49iedpLYXdxPoqvqKHdz/kO745BHEOZFZQRodmQBlUTImUVoZsEvMAy
-         rcug==
-X-Gm-Message-State: APjAAAV8kQkf538/JCVwP/rNrnrn5I40OnT893rXgM8MUHSc2HO1Yifw
-        DwLDYkyZH8V8x51+3saEC3ognTxX
-X-Google-Smtp-Source: APXvYqzcSpCck+UT7Ghj0TTpKooK3mxXF2TL6BlY/Ym3WQqS3quDsYxlB+fmZ6ccumqgXJB13vgDbg==
-X-Received: by 2002:a63:1d1a:: with SMTP id d26mr101185769pgd.98.1578240216049;
-        Sun, 05 Jan 2020 08:03:36 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k1sm70554993pgk.90.2020.01.05.08.03.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2020 08:03:35 -0800 (PST)
-Subject: Re: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
- device list supported by driver
-To:     Vadim Pasternak <vadimp@mellanox.com>, robh+dt@kernel.org,
-        vijaykhemka@fb.com
-Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200105105833.30196-1-vadimp@mellanox.com>
- <20200105105833.30196-6-vadimp@mellanox.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <567ebd26-529e-6b2a-2f07-cfaf0f2217a9@roeck-us.net>
-Date:   Sun, 5 Jan 2020 08:03:33 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 5 Jan 2020 11:21:57 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:25312 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726260AbgAEQV5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 11:21:57 -0500
+X-UUID: d33768b93e4a4a14b11dd0a43b439f77-20200106
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=XD8Uu4BnHuTQ0SAQN7pYtOUZCXAex4eTN2QKMTQnF0E=;
+        b=EtntGBPKPZWdsMUun3mpEEKOeNz60Ds74oRphGnyFg6fY/czRggA5L6OzGq5i0Ys0BH5C7wfF2bDNxUR/LWhMrKz56r4pqNVrb3+lsX6IHQyGkmN88f90AyKkvXUMIZhruhA0BIoa78kEd2bI60Jb2V9lmNMyAFDLgql5Mi3rcY=;
+X-UUID: d33768b93e4a4a14b11dd0a43b439f77-20200106
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1540074764; Mon, 06 Jan 2020 00:21:49 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 6 Jan 2020 00:21:24 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 6 Jan 2020 00:20:50 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
+        Jiaxin Yu <jiaxin.yu@mediatek.com>
+Subject: [PATCH v9 0/2] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Mon, 6 Jan 2020 00:21:39 +0800
+Message-ID: <1578241301-14618-1-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <20200105105833.30196-6-vadimp@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/5/20 2:58 AM, Vadim Pasternak wrote:
-> Extends driver with support of the additional devices:
-> Texas Instruments Dual channel DCAP+ multiphase controllers: TPS53688,
-> SN1906016.
-> Infineon Multi-phase Digital VR Controller Sierra devices
-> XDPE12286C, XDPE12284C, XDPE12283C, XDPE12254C and XDPE12250C.
-> 
-> Extend Kconfig with added devices.
-> 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> ---
->   drivers/hwmon/pmbus/Kconfig    |  5 +++--
->   drivers/hwmon/pmbus/tps53679.c | 14 ++++++++++++++
->   2 files changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-> index 59859979571d..9e3d197d5322 100644
-> --- a/drivers/hwmon/pmbus/Kconfig
-> +++ b/drivers/hwmon/pmbus/Kconfig
-> @@ -200,10 +200,11 @@ config SENSORS_TPS40422
->   	  be called tps40422.
->   
->   config SENSORS_TPS53679
-> -	tristate "TI TPS53679"
-> +	tristate "TI TPS53679, TPS53688, SN1906016, Infineon XDPE122xxx family"
->   	help
->   	  If you say yes here you get hardware monitoring support for TI
-> -	  TPS53679.
-> +	  TPS53679, PS53688, SN1906016 and Infineon XDPE12286C, XDPE12284C,
-
-TPS53688. For the others, for some I can't even determine if they exist
-in the first place (eg SN1906016, XPDE12250C) or how they would differ
-from other variants (eg XPDE12284C vs. XPDE12284A).
-And why would they all use the same bit map in the VOUT_MODE register,
-the same number of PMBus pages (phases), and the same attributes in each
-page ?
-
-Thanks,
-Guenter
-
-> +	  XDPE12283C, XDPE12254C, XDPE12250C devices.
->   
->   	  This driver can also be built as a module. If so, the module will
->   	  be called tps53679.
-> diff --git a/drivers/hwmon/pmbus/tps53679.c b/drivers/hwmon/pmbus/tps53679.c
-> index 7ce2fca4acde..f38eb116735b 100644
-> --- a/drivers/hwmon/pmbus/tps53679.c
-> +++ b/drivers/hwmon/pmbus/tps53679.c
-> @@ -89,6 +89,13 @@ static int tps53679_probe(struct i2c_client *client,
->   
->   static const struct i2c_device_id tps53679_id[] = {
->   	{"tps53679", 0},
-> +	{"tps53688", 0},
-> +	{"sn1906016", 0},
-> +	{"xdpe12283c", 0},
-> +	{"xdpe12250c", 0},
-> +	{"xdpe12254c", 0},
-> +	{"xdpe12284c", 0},
-> +	{"xdpe12286c", 0},
-
-Alphabetic order, please.
-
->   	{}
->   };
->   
-> @@ -96,6 +103,13 @@ MODULE_DEVICE_TABLE(i2c, tps53679_id);
->   
->   static const struct of_device_id __maybe_unused tps53679_of_match[] = {
->   	{.compatible = "ti,tps53679"},
-> +	{.compatible = "ti,tps53688"},
-> +	{.compatible = "ti,sn1906016"},
-> +	{.compatible = "infineon,xdpe12283c"},
-> +	{.compatible = "infineon,xdpe12250c"},
-> +	{.compatible = "infineon,xdpe12254c"},
-> +	{.compatible = "infineon,xdpe12284c"},
-> +	{.compatible = "infineon,xdpe12286c"},
->   	{}
->   };
->   MODULE_DEVICE_TABLE(of, tps53679_of_match);
-> 
+VGhpcyBzZXJpZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzLCBhbmQg
+YXVkaW8gd2lsbCB1c2UgaXQgaW4gDQptYWNoaW5lIGRyaXZlciBkdXJpbmcgYm9vdHVwLCB0aGV5
+IGRlcGVuZCBvbiB0aGUgZm9yLW5leHQuDQoNCnY5IGNoYW5nZXM6DQoJMS4gUmVtb3ZlIENoYW5n
+ZS1JZCBpbiBjb21tZW50Lg0KDQp2OCBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBjYXN0OiAoc3RydWN0
+IG10a193ZHRfZGF0YSAqKQ0KDQp2NyBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBubyB1c2UgY29kZS4N
+Cg0KdjYgY2hhbmdlczoNCgkxLiBTaW1wbGlmeSB0b3BydWdfcmVzZXRfYXNzZXJ0KCkgJiB0b3By
+dWdfcmVzZXRfZGVhc3NlcnQoKS4NCgkyLiBBZGQgbWVtYmVycyBmb3IgbXQyNzEyX2RhdGEgJiBt
+dDgxODNfZGF0YS4NCg0KdjUgY2hhbmdlczoNCgkxLiBBZGQgU2lnbmVkLW9mZi1ieSB0YWcgYW5k
+IFJldmlld2VkLWJ5IHRhZy4NCg0KdjQgY2hhbmdlczoNCgkxLiBGaXhlZCB3cm9uZyBzaWduZWQt
+b2ZmIGFzIGNvcnJlY3QgbWFpbCBzdWZmaXguDQoJMi4gRml4ZWQgcGF0Y2ggc3ViamVjdCB0aGF0
+IGFkZCBwYXRjaCB2ZXJzaW9uLg0KDQp2MyBjaGFuZ2VzOg0KCTEuIGh0dHBzOi8vcGF0Y2h3b3Jr
+Lmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyODMvIGFuZCANCgkgICBodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3BhdGNoLzExMTY0MzA1LyBoYXMgYmVlbiBtZXJnZWQuDQoJMi4gQ2hhbmdlIHRo
+ZSBuYW1lIG9mIG10a193ZHRfY29tcGF0aWJsZSB0byBtdGtfd2R0X2RhdGEuDQoJMy4gUmVtb3Zl
+IHRvcHJndV9yZXNldCBzdHJ1Y3QgYW5kIHVzZSBtdGtfd2R0X2RldiBpbnN0ZWFkLg0KCTQuIEdl
+dCB0aGUgdmFsdWUgb2Ygc3dfcnN0X251bSBmcm9tIC5oIGZpbGUuDQoJNS4gQWRkZGQgbXQyNzEy
+LXJlc2V0cy5oIGZvciBtdDI3MTIuDQoJNi4gSW1wcm92ZSBjb21taXQgbWVzc2FnZS4NCg0KdjIg
+Y2hhbmdlczoNCgkxLiByZW1vdmUgIldJUCIgdGhhdCBpbiB0aGUgdGl0bGUgb2YgcGF0Y2hlcw0K
+CTIuIGFkZCBoeXBlciBsaW5rIGZvciB0aGUgcGF0Y2ggdGhhdCBkZXBlbmRzIG9uDQoJMy4gcGF0
+Y2h3b3JrIGxpc3Q6DQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQy
+ODUvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTUvDQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTkvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyODMvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQzMDUvDQoNCnYxIGNoYW5nZXM6DQoJMS4gcGF0Y2h3b3JrIGxp
+c3Q6DQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQxNzMvDQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQxODEvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQxODUvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQxODcvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTExNjQxNzUvDQoNCkppYXhpbiBZdSAoMik6DQogIGR0LWJpbmRpbmdzOiBtZWRpYXRl
+azogbXQ4MTgzOiBBZGQgI3Jlc2V0LWNlbGxzDQogIHdhdGNoZG9nOiBtdGtfd2R0OiBtdDgxODM6
+IEFkZCByZXNldCBjb250cm9sbGVyDQoNCiBkcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYyAgICAg
+ICAgICAgICAgICAgICAgfCAxMDUgKysrKysrKysrKysrKysrKystDQogLi4uL3Jlc2V0LWNvbnRy
+b2xsZXIvbXQyNzEyLXJlc2V0cy5oICAgICAgICAgIHwgIDIyICsrKysNCiAuLi4vcmVzZXQtY29u
+dHJvbGxlci9tdDgxODMtcmVzZXRzLmggICAgICAgICAgfCAgMTcgKysrDQogMyBmaWxlcyBjaGFu
+Z2VkLCAxNDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJlc2V0cy5oDQoN
+Ci0tIA0KMi4xOC4wDQo=
 
