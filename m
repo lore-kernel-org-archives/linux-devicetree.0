@@ -2,247 +2,169 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BD7C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC083C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B711B2077B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A8220866
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 16:44:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="cnuZaxs/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbgAEQlK (ORCPT
+        id S1726264AbgAEQo3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 11:41:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:37902 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgAEQlJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 5 Jan 2020 11:41:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7E12331B;
-        Sun,  5 Jan 2020 08:41:08 -0800 (PST)
-Received: from [192.168.3.111] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E2BD3F534;
-        Sun,  5 Jan 2020 08:41:07 -0800 (PST)
-Subject: Re: [PATCH 3/3] ARM: dts: sun8i: R40: Add SPI controllers nodes and
- pinmuxes
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-References: <20200102012657.9278-1-andre.przywara@arm.com>
- <20200102012657.9278-4-andre.przywara@arm.com>
- <20200102095711.dkd2cnbyitz6mvyx@gilmour.lan>
- <20200102104158.06d9baa0@donnerap.cambridge.arm.com>
- <20200104100422.z7iz4jiyj7kdvbtw@gilmour.lan>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
- 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
- i4aIXCH3Wv6K
-Organization: ARM Ltd.
-Message-ID: <42aabc62-4885-38fc-a6e5-0f057843d364@arm.com>
-Date:   Sun, 5 Jan 2020 16:40:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200104100422.z7iz4jiyj7kdvbtw@gilmour.lan>
-Content-Type: text/plain; charset=windows-1252
+        Sun, 5 Jan 2020 11:44:29 -0500
+Received: from mail-eopbgr00050.outbound.protection.outlook.com ([40.107.0.50]:44674
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726260AbgAEQo3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Jan 2020 11:44:29 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aGjIbKYya/sGGEdFgLgfyjUFVzdpVjPVTnD1Wj9JzwNfJj2vx3jOPfqTP/ct9VUs2PsKusQ81zmReu9EojS3nnhW0I+om4ZL1AIchzvYWFBgh37lxunIXPS56I7lL2O0MM8W8uuBm4WV2074HWd8kyqiay3E+BwxDpg6HukTSbOAF0e5+CgKPi0+222q2+p2MoUCAMxqBdCPvFNO9c283nuIkAX8W2aQ/PK8yIP2YzG3mVZMXHCH/B0mNHyth1YhH50ljaOkCThHfIvHYUdUJTN3gJVq+7oPqjFnhY/tqEqf8w0/+1i0rACXiQM1eTk8x4UpkvsfLSvZtUrNxkFP6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tGqmw+9HtyH42UYUn5yzS3oDCuMZRjTZuF/PBk+x9UE=;
+ b=l5AiskCGHHm4ctTqW3tyq31m4HA8mOf86PB6hSTKQH+lLDLKonZs53I3odWd4Gkq4ZhsKi5k9911n8L/DPnxU+joxCmbxuM/6xTZ4K0/bJJ4SaNpmVI5Nhr+fp20NsEeda8p4ssRtso+IME0M8EILdQlXH5Va6DNUazBDYoHbeeJ20mr1pUzpGKgfDiB+szqqtHWuE6PR1Cn61Pdq9TKieFzpR9tZ9X6XIYkFcy8W7l3vRw8E/i3N5f7xqI62mr0a3mDNAkspizLpQInJNwD/4rc8dPeL6dc/IzmSWhSkAysOxzhQ4HSik7a5laPx1dnPRLpGcE+Kp88oJVc5Oddgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tGqmw+9HtyH42UYUn5yzS3oDCuMZRjTZuF/PBk+x9UE=;
+ b=cnuZaxs/KANCTPK6wCXzRvuvUrA4wjdyC+nAO5AQEGsEEhh0cZP4PuXIoRwjMQUzkOWvpRYhYM5+fBuhQRHf1Q8sXujyCOPtcIxMX4rXQNfX4dh3smkwFwN9rbDSzzUW4v+1ncubaPOwvs6AvDbpwRFiQmRYnLnz0NUabIdYqas=
+Received: from AM6PR05MB5224.eurprd05.prod.outlook.com (20.177.196.210) by
+ AM6PR05MB5942.eurprd05.prod.outlook.com (20.179.1.90) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11; Sun, 5 Jan 2020 16:44:25 +0000
+Received: from AM6PR05MB5224.eurprd05.prod.outlook.com
+ ([fe80::44ac:7bce:8f7c:3e6d]) by AM6PR05MB5224.eurprd05.prod.outlook.com
+ ([fe80::44ac:7bce:8f7c:3e6d%3]) with mapi id 15.20.2602.012; Sun, 5 Jan 2020
+ 16:44:25 +0000
+From:   Vadim Pasternak <vadimp@mellanox.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "vijaykhemka@fb.com" <vijaykhemka@fb.com>
+CC:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
+ device list supported by driver
+Thread-Topic: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
+ device list supported by driver
+Thread-Index: AQHVw7ccUo77+1Sy70mxGafA8mf8l6fcO+2AgAAG1qA=
+Date:   Sun, 5 Jan 2020 16:44:25 +0000
+Message-ID: <AM6PR05MB5224F444CBAC5A0503AFBB83A23D0@AM6PR05MB5224.eurprd05.prod.outlook.com>
+References: <20200105105833.30196-1-vadimp@mellanox.com>
+ <20200105105833.30196-6-vadimp@mellanox.com>
+ <567ebd26-529e-6b2a-2f07-cfaf0f2217a9@roeck-us.net>
+In-Reply-To: <567ebd26-529e-6b2a-2f07-cfaf0f2217a9@roeck-us.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vadimp@mellanox.com; 
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d085004f-6ab0-4c7f-3f59-08d791fe8621
+x-ms-traffictypediagnostic: AM6PR05MB5942:
+x-microsoft-antispam-prvs: <AM6PR05MB59420B4CA5C9667302B8853AA23D0@AM6PR05MB5942.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 027367F73D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(366004)(346002)(396003)(376002)(199004)(189003)(13464003)(2906002)(86362001)(110136005)(55016002)(52536014)(8936002)(54906003)(478600001)(9686003)(8676002)(316002)(81156014)(81166006)(53546011)(6506007)(7696005)(66446008)(66476007)(186003)(33656002)(4326008)(26005)(71200400001)(5660300002)(66556008)(66946007)(64756008)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB5942;H:AM6PR05MB5224.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: abCznKD28NJ701iOij0ekbuyY95/8LPe0UPRsD7ylp7FsKnkzyduTWVOn69TdyJ/qq00vvvJh6ZXy4z8zPi39uYyUp92Cy1JGIvNSOGWoNZsKr2j/6O/SghMgE0p70x/d9vUOA77Wq2Vo+AFrtQltT5SLWbjR6xxlYgIzU58qeajBTc65En66TPjoJEQtO9704V073Z24/SWXOZjjlvqxU7RZCj0cj6XLNBaeU0Fd5XAzm8Jc7/1+giAvhV0sf0MCXjMbkVAYJMCRJ//Lc2br3eQmMBxJCZ6ViL0UsZFxuvPTjUoI70jFdNz3CJ3KLQHaB7+wru2ZRaRp8ZOm470OvWtvHmgvdyH4UmohcPaO8KBmdW7o7+27qMIueYE3wfARrxqsWnwu2BpNboAF33Lvp9tGVZOwXelgefP71V0Bo9Ez4pr5bkhlirg4aqm+qdCvdl6pkEMNo5OVpspmw+Xnyje8obLm0CZ6K1lHmCLUbdl7hvNS41WWSgxA0GsFsCj
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d085004f-6ab0-4c7f-3f59-08d791fe8621
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jan 2020 16:44:25.2841
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 81ujzwFpKUJWDOymnx3vnchn1D+a+jvXCQpqbY8AQL/3pt30pO/7s1tQvJis+8P0i3XF6Oce5/eAyCkec1fyVw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5942
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 04/01/2020 10:04, Maxime Ripard wrote:
-
-Hi,
-
-> On Thu, Jan 02, 2020 at 10:41:58AM +0000, Andre Przywara wrote:
->> On Thu, 2 Jan 2020 10:57:11 +0100
->> Maxime Ripard <mripard@kernel.org> wrote:
->>> On Thu, Jan 02, 2020 at 01:26:57AM +0000, Andre Przywara wrote:
->>>> The Allwinner R40 SoC contains four SPI controllers, using the newer
->>>> sun6i design (but at the legacy addresses).
->>>> The controller seems to be fully compatible to the A64 one, so no driver
->>>> changes are necessary.
->>>> The first three controller can be used on two sets of pins, but SPI3 is
->>>> only routed to one set on Port A.
->>>>
->>>> Tested by connecting a SPI flash to a Bananapi M2 Berry on the SPI0
->>>> PortC header pins.
->>>>
->>>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
->>>> ---
->>>>  arch/arm/boot/dts/sun8i-r40.dtsi | 89 ++++++++++++++++++++++++++++++++++++++++
->>>>  1 file changed, 89 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
->>>> index 8dcbc4465fbb..af437391dcf4 100644
->>>> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
->>>> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
->>>> @@ -418,6 +418,41 @@
->>>>  				bias-pull-up;
->>>>  			};
->>>>
->>>> +			spi0_pc_pins: spi0-pc-pins {
->>>> +				pins = "PC0", "PC1", "PC2", "PC23";
->>>> +				function = "spi0";
->>>> +			};
->>>> +
->>>> +			spi0_pi_pins: spi0-pi-pins {
->>>> +				pins = "PI10", "PI11", "PI12", "PI13", "PI14";
->>>> +				function = "spi0";
->>>> +			};
->>>
->>> This split doesn't really work though :/
->>>
->>> The PC pins group has MOSI, MISO, CLK and CS0, while the PI pins group
->>> has CS0, CLK, MOSI, MISO and CS1.
->>>
->>> Meaning that if a board uses a GPIO CS pin, we can't really express
->>> that
->>
->> Does that actually work? I dimly remember checking our sunxi driver
->> a while ago and I wasn't sure that would be functional there.
-> 
-> It's something generic that should be handled by the core iirc. We
-> might be missing the few things to enable it though, but that's
-> irrelevant to the DT itself.
-
-Agreed, I just remembered that I checked this a while ago and found that
-we always control the SS_LEVEL bit, but never anything else. But indeed
-irrelevant for this.
-
-> 
->>> and any board using the PI pins for its SPI bus will try to
->>> claim CS0 and CS1, no matter how many devices are connected on the bus
->>> (and if there's one, there might be something else connected to PI14).
->>
->> True.
->>
->>> And you can't have a board using CS1 with the PC signals either.
->>>
->>> You should split away the CS pins into separate groups, like we're
->>> doing with the A20 for example.
->>
->> Ah, yeah, makes sense, thanks for the pointer.
->>
->>> And please add /omit-if-no-ref/ to those groups.
->>
->> I was a bit reluctant to do this:
->>
->> First there does not seem to be any good documentation about it,
->> neither in the official DT spec nor in dtc, even though I think I
->> understand what it does ;-)
-> 
-> If a node doesn't have a phandle pointing to it, it will be ignored at
-> compilation time.
-
-That's what I figured ;-)
-
->> Second it seems to break in U-Boot atm. Looks like applying your dtc
->> patch fixes that, though. Do you know if U-Boot allows
->> cherry-picking dtc patches? If yes, I could post your patch.
-> 
-> I know I did it for libfdt at some point, so I guess dtc would work
-> too, but I'm not really sure. Rockchip is also using it iirc, so
-> there's interest in supporting it in U-Boot anyway.
-
-OK, will post it.
-
->> But more importantly: what are the guidelines for using this tag? I
->> understand the desire to provide every possible pin description on
->> one hand, but wanting to avoid having *all of them* in *each* .dtb
->> on the other.
-> 
-> Pin groups will take a lot of space in the dtb, and the DT parsing
-> will take some measurable time,
-
-Really? Where is that? In Linux, or in U-Boot, possibly with the caches
-off? I am just curious. AFAIK there are some inefficient algorithms in
-libfdt (which trade performance for a smaller memory footprint), but I
-thought those would be called only very rarely.
-
-> so if we can get rid of the unused pin
-> groups, that's great :)
-
-I see it is preferable over creating a separate copy of the .dts file.
-
->> But how does this play along with overlays? Shouldn't at least those
->> interface pins that are exposed on headers stay in each .dtb? Can we
->> actually make this decision in the SoC .dtsi file?
-> 
-> If the DT is compiled with overlays, that property is ignored iirc and
-> the node will be output in the compiled DT, because while if you don't
-> have overlays support you can tell if something points to that node,
-> you can't with overlays since those references might be stored
-> elsewhere.
-
-Yeah, Chen-Yu mentioned that already. Thanks for the info, I missed that.
-
->> And should there be a dtc command line option to ignore those tags,
->> or even to apply this tag (virtually) to every node?
-> 
-> Most of the nodes are (reference) leaves in a DT though. Pretty much
-> all the device nodes have no references pointing to them, just like
-> most of the buses, the CPU nodes, etc. And I'm pretty sure you want to
-> keep them :)
-
-Yeah, that was a New-Year's brain-fart of mine ;-)
-
-While I was changing the patch I figured that it gets quite lengthy.
-Also looking at the a20.dtsi, I see that *all* pin groups have this tag
-now. Wouldn't it be easier to introduce *one* tag that applies that to
-all children of a node?
-
-Another thing I was wondering about: Would we gain something by not
-compiling nodes which have status = "disabled"? This is mentioned as a
-generic property in the DT spec, although it says there that the exact
-meaning is device dependent. But it sound still worthwhile, especially
-since we would avoid more pin groups to be compiled in.
-
-Cheers,
-Andre.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VlbnRlciBSb2VjayA8
+Z3JvZWNrN0BnbWFpbC5jb20+IE9uIEJlaGFsZiBPZiBHdWVudGVyIFJvZWNrDQo+IFNlbnQ6IFN1
+bmRheSwgSmFudWFyeSAwNSwgMjAyMCA2OjA0IFBNDQo+IFRvOiBWYWRpbSBQYXN0ZXJuYWsgPHZh
+ZGltcEBtZWxsYW5veC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IHZpamF5a2hlbWthQGZi
+LmNvbQ0KPiBDYzogbGludXgtaHdtb25Admdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCBod21vbi1uZXh0IHYxIDUvNV0g
+aHdtb246IChwbWJ1cy90cHM1MzY3OSkgRXh0ZW5kDQo+IGRldmljZSBsaXN0IHN1cHBvcnRlZCBi
+eSBkcml2ZXINCj4gDQo+IE9uIDEvNS8yMCAyOjU4IEFNLCBWYWRpbSBQYXN0ZXJuYWsgd3JvdGU6
+DQo+ID4gRXh0ZW5kcyBkcml2ZXIgd2l0aCBzdXBwb3J0IG9mIHRoZSBhZGRpdGlvbmFsIGRldmlj
+ZXM6DQo+ID4gVGV4YXMgSW5zdHJ1bWVudHMgRHVhbCBjaGFubmVsIERDQVArIG11bHRpcGhhc2Ug
+Y29udHJvbGxlcnM6IFRQUzUzNjg4LA0KPiA+IFNOMTkwNjAxNi4NCj4gPiBJbmZpbmVvbiBNdWx0
+aS1waGFzZSBEaWdpdGFsIFZSIENvbnRyb2xsZXIgU2llcnJhIGRldmljZXMgWERQRTEyMjg2QywN
+Cj4gPiBYRFBFMTIyODRDLCBYRFBFMTIyODNDLCBYRFBFMTIyNTRDIGFuZCBYRFBFMTIyNTBDLg0K
+PiA+DQo+ID4gRXh0ZW5kIEtjb25maWcgd2l0aCBhZGRlZCBkZXZpY2VzLg0KPiA+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogVmFkaW0gUGFzdGVybmFrIDx2YWRpbXBAbWVsbGFub3guY29tPg0KPiA+IC0t
+LQ0KPiA+ICAgZHJpdmVycy9od21vbi9wbWJ1cy9LY29uZmlnICAgIHwgIDUgKysrLS0NCj4gPiAg
+IGRyaXZlcnMvaHdtb24vcG1idXMvdHBzNTM2NzkuYyB8IDE0ICsrKysrKysrKysrKysrDQo+ID4g
+ICAyIGZpbGVzIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4N
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9od21vbi9wbWJ1cy9LY29uZmlnIGIvZHJpdmVycy9o
+d21vbi9wbWJ1cy9LY29uZmlnDQo+ID4gaW5kZXggNTk4NTk5Nzk1NzFkLi45ZTNkMTk3ZDUzMjIg
+MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9od21vbi9wbWJ1cy9LY29uZmlnDQo+ID4gKysrIGIv
+ZHJpdmVycy9od21vbi9wbWJ1cy9LY29uZmlnDQo+ID4gQEAgLTIwMCwxMCArMjAwLDExIEBAIGNv
+bmZpZyBTRU5TT1JTX1RQUzQwNDIyDQo+ID4gICAJICBiZSBjYWxsZWQgdHBzNDA0MjIuDQo+ID4N
+Cj4gPiAgIGNvbmZpZyBTRU5TT1JTX1RQUzUzNjc5DQo+ID4gLQl0cmlzdGF0ZSAiVEkgVFBTNTM2
+NzkiDQo+ID4gKwl0cmlzdGF0ZSAiVEkgVFBTNTM2NzksIFRQUzUzNjg4LCBTTjE5MDYwMTYsIElu
+ZmluZW9uIFhEUEUxMjJ4eHgNCj4gZmFtaWx5Ig0KPiA+ICAgCWhlbHANCj4gPiAgIAkgIElmIHlv
+dSBzYXkgeWVzIGhlcmUgeW91IGdldCBoYXJkd2FyZSBtb25pdG9yaW5nIHN1cHBvcnQgZm9yIFRJ
+DQo+ID4gLQkgIFRQUzUzNjc5Lg0KPiA+ICsJICBUUFM1MzY3OSwgUFM1MzY4OCwgU04xOTA2MDE2
+IGFuZCBJbmZpbmVvbiBYRFBFMTIyODZDLA0KPiBYRFBFMTIyODRDLA0KPiANCj4gVFBTNTM2ODgu
+IEZvciB0aGUgb3RoZXJzLCBmb3Igc29tZSBJIGNhbid0IGV2ZW4gZGV0ZXJtaW5lIGlmIHRoZXkg
+ZXhpc3QgaW4gdGhlDQo+IGZpcnN0IHBsYWNlIChlZyBTTjE5MDYwMTYsIFhQREUxMjI1MEMpIG9y
+IGhvdyB0aGV5IHdvdWxkIGRpZmZlciBmcm9tIG90aGVyDQo+IHZhcmlhbnRzIChlZyBYUERFMTIy
+ODRDIHZzLiBYUERFMTIyODRBKS4NCj4gQW5kIHdoeSB3b3VsZCB0aGV5IGFsbCB1c2UgdGhlIHNh
+bWUgYml0IG1hcCBpbiB0aGUgVk9VVF9NT0RFIHJlZ2lzdGVyLCB0aGUNCj4gc2FtZSBudW1iZXIg
+b2YgUE1CdXMgcGFnZXMgKHBoYXNlcyksIGFuZCB0aGUgc2FtZSBhdHRyaWJ1dGVzIGluIGVhY2gg
+cGFnZSA/DQoNCkhpIEd1ZW50ZXIsDQoNClRoYW5rIHlvdSBmb3IgcmVwbHkuDQoNCk9uIG91ciBu
+ZXcgc3lzdGVtIHdlIGhhdmUgZGV2aWNlIFhQREUxMjI4NEMgZXF1aXBwZWQuDQpJIHRlc3RlZCB0
+aGlzIGRldmljZS4NCg0KSW5maW5lb24gZGF0YXNoZWV0IHJlZmVycyBhbGwgdGhlc2UgZGV2aWNl
+IGFzIFhEUEUxMjJ4eEMNCmZhbWlseSBhbmQgaXQgZG9lc24ndCBzcGVjaWZ5IGFueSBkaWZmZXJl
+bmNlcyBpbiByZWdpc3RlciBtYXANCmJldHdlZW4gdGhlc2UgZGV2aWNlcy4NClRvbW9ycm93IHdl
+J2xsIGhhdmUgZ3V5cyBmcm9tIEluZmluZW9uIGluIG91ciBsYWIgYW5kIEknbGwNCnZlcmlmeSBp
+ZiB0aGVyZSBpcyBhbnkgZGlmZmVyZW5jZS4NCklmIHllcywgSSdsbCBsZWF2ZSBvbmx5IFhQREUx
+MjI4NEMuDQoNCj4gDQo+IFRoYW5rcywNCj4gR3VlbnRlcg0KPiANCj4gPiArCSAgWERQRTEyMjgz
+QywgWERQRTEyMjU0QywgWERQRTEyMjUwQyBkZXZpY2VzLg0KPiA+DQo+ID4gICAJICBUaGlzIGRy
+aXZlciBjYW4gYWxzbyBiZSBidWlsdCBhcyBhIG1vZHVsZS4gSWYgc28sIHRoZSBtb2R1bGUgd2ls
+bA0KPiA+ICAgCSAgYmUgY2FsbGVkIHRwczUzNjc5Lg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L2h3bW9uL3BtYnVzL3RwczUzNjc5LmMNCj4gPiBiL2RyaXZlcnMvaHdtb24vcG1idXMvdHBzNTM2
+NzkuYyBpbmRleCA3Y2UyZmNhNGFjZGUuLmYzOGViMTE2NzM1Yg0KPiA+IDEwMDY0NA0KPiA+IC0t
+LSBhL2RyaXZlcnMvaHdtb24vcG1idXMvdHBzNTM2NzkuYw0KPiA+ICsrKyBiL2RyaXZlcnMvaHdt
+b24vcG1idXMvdHBzNTM2NzkuYw0KPiA+IEBAIC04OSw2ICs4OSwxMyBAQCBzdGF0aWMgaW50IHRw
+czUzNjc5X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50DQo+ID4gKmNsaWVudCwNCj4gPg0KPiA+ICAg
+c3RhdGljIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkIHRwczUzNjc5X2lkW10gPSB7DQo+ID4g
+ICAJeyJ0cHM1MzY3OSIsIDB9LA0KPiA+ICsJeyJ0cHM1MzY4OCIsIDB9LA0KPiA+ICsJeyJzbjE5
+MDYwMTYiLCAwfSwNCj4gPiArCXsieGRwZTEyMjgzYyIsIDB9LA0KPiA+ICsJeyJ4ZHBlMTIyNTBj
+IiwgMH0sDQo+ID4gKwl7InhkcGUxMjI1NGMiLCAwfSwNCj4gPiArCXsieGRwZTEyMjg0YyIsIDB9
+LA0KPiA+ICsJeyJ4ZHBlMTIyODZjIiwgMH0sDQo+IA0KPiBBbHBoYWJldGljIG9yZGVyLCBwbGVh
+c2UuDQo+IA0KPiA+ICAgCXt9DQo+ID4gICB9Ow0KPiA+DQo+ID4gQEAgLTk2LDYgKzEwMywxMyBA
+QCBNT0RVTEVfREVWSUNFX1RBQkxFKGkyYywgdHBzNTM2NzlfaWQpOw0KPiA+DQo+ID4gICBzdGF0
+aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBfX21heWJlX3VudXNlZCB0cHM1MzY3OV9vZl9t
+YXRjaFtdID0gew0KPiA+ICAgCXsuY29tcGF0aWJsZSA9ICJ0aSx0cHM1MzY3OSJ9LA0KPiA+ICsJ
+ey5jb21wYXRpYmxlID0gInRpLHRwczUzNjg4In0sDQo+ID4gKwl7LmNvbXBhdGlibGUgPSAidGks
+c24xOTA2MDE2In0sDQo+ID4gKwl7LmNvbXBhdGlibGUgPSAiaW5maW5lb24seGRwZTEyMjgzYyJ9
+LA0KPiA+ICsJey5jb21wYXRpYmxlID0gImluZmluZW9uLHhkcGUxMjI1MGMifSwNCj4gPiArCXsu
+Y29tcGF0aWJsZSA9ICJpbmZpbmVvbix4ZHBlMTIyNTRjIn0sDQo+ID4gKwl7LmNvbXBhdGlibGUg
+PSAiaW5maW5lb24seGRwZTEyMjg0YyJ9LA0KPiA+ICsJey5jb21wYXRpYmxlID0gImluZmluZW9u
+LHhkcGUxMjI4NmMifSwNCj4gPiAgIAl7fQ0KPiA+ICAgfTsNCj4gPiAgIE1PRFVMRV9ERVZJQ0Vf
+VEFCTEUob2YsIHRwczUzNjc5X29mX21hdGNoKTsNCj4gPg0KDQo=
