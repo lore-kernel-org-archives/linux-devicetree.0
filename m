@@ -2,114 +2,100 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650E7C33C9A
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 20:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794D9C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 22:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF832077B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 20:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578254416;
-	bh=lwYHLf05sKcCVdLUCH2JXzQ3MgAvyUcSQT+vbpbmaAo=;
-	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
-	b=EV+XTsXE1Nx0Ds7QgvTawRKNQPSQw/1EQAz3k9cRxxMfTyThNtJPoQNnsO3D6PoYl
-	 172Iaw86SrlpXPpIcmnT7mBAscmnBwJ2yJrmiay/aM5pO3fynU8m+BdmfBRK26O79u
-	 OPOS42a7kvrhLS35EAyBQ6p7BPCPSkMYXYGrgzRc=
+	by mail.kernel.org (Postfix) with ESMTP id 4158020801
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 22:55:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XD5cg7/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgAEUAP (ORCPT
+        id S1727146AbgAEWzS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 15:00:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgAEUAP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 5 Jan 2020 15:00:15 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4904320678;
-        Sun,  5 Jan 2020 20:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578254414;
-        bh=lwYHLf05sKcCVdLUCH2JXzQ3MgAvyUcSQT+vbpbmaAo=;
-        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
-        b=qY3aprjtZjQVCAAxDJfvnctITRhhfl5W0ouZf0avGD0xHixzPcIDUiPz9Z/NjaKPc
-         8hemFhtZHD3qiDaCJW19l7J2UHnAKmuVuMLWM8RLmuJDs8w2dtAhBcn6eJjbQbK+pt
-         MFTyjSeNS4WTXxnSIOfNvJfD4viwE2pPdh2dxlBE=
-Content-Type: text/plain; charset="utf-8"
+        Sun, 5 Jan 2020 17:55:18 -0500
+Received: from mail-pl1-f182.google.com ([209.85.214.182]:36065 "EHLO
+        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgAEWzS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 17:55:18 -0500
+Received: by mail-pl1-f182.google.com with SMTP id a6so20389465plm.3;
+        Sun, 05 Jan 2020 14:55:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KYZvTD2Hhh9EDNEJ70SbgSydilCYXoX3qCEplTAXj14=;
+        b=XD5cg7/r3P8qQCucl/gndiwqIjS5znNNVdz19MjDNA4/TB8iId/DnArS3P95qUJWwP
+         0P6M52KfsLItmS1CPvHlFmVsXyz+DiRA3B1kW98Fq8oV7Lv0I6L0JyISSdBxXNBUbtNW
+         Kr3+ZeGpZQL4lTCQh957BOnzV0tORkMIAQCJ/bKoQdv3K361uCj+h17ZyHGogMrY1DQK
+         3LlyBuXYaREuVjwgidHwTgs9+dEU7G80BGHbteHKFi+iVN9UxOChW0UsQ60ILkOA2j14
+         ZFvSzvZfxBxFUDRqsAao5BMNqIcm5yQ+9x7+xgug6u/nEkE2X2nC9DURQDMp8EKyjcZ4
+         ipQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KYZvTD2Hhh9EDNEJ70SbgSydilCYXoX3qCEplTAXj14=;
+        b=Xco87EgT5ATklCUsPtSB66JnJLNbJmW56s8NVubAJJF+W9gqNzIiwIqBTAW7A27s/T
+         QL5u557bJNh5Eb4KHP+02stXsbJtoCQwAWwefdEJUdxz5/bDgxmIKIiyYaAAObolIsgY
+         wGcHbMuN8Kdm6Bn8lADvSNENZRtRfW66XQhFKwH1YsRi0EciFZbh1uAPHLGikwuTg1TW
+         09Nnl/t3WIesXaxtLsMQXEMlPOInBIz3NcauscxY1RL3/J4tvNdhLGsHzjBat/f0Huz0
+         j00vWgkrQZJu70eJwH7iMMoN9VRHxCvUJrpz6uISftL5YlDHoJjiJw4glEXYvDeUjA8e
+         lCyA==
+X-Gm-Message-State: APjAAAU1zMzTHnDhzps1IL5oiUyfuuJw7DrG0QuiFQJ7HEPRM7uHO+Fy
+        ej2MlvKIb6QEGlIUNaYPEUg=
+X-Google-Smtp-Source: APXvYqzIJXzFUCwK9ttAIpKMaBqM5ShRKNUggVw8BaaQEFinm6E0J2rkJqLVuxpaOs277pQoJqo/yw==
+X-Received: by 2002:a17:902:441:: with SMTP id 59mr38342671ple.190.1578264917901;
+        Sun, 05 Jan 2020 14:55:17 -0800 (PST)
+Received: from localhost.localdomain (S0106d80d17472dbd.wp.shawcable.net. [24.79.253.190])
+        by smtp.gmail.com with ESMTPSA id q22sm77059940pfg.170.2020.01.05.14.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 14:55:17 -0800 (PST)
+From:   jassisinghbrar@gmail.com
+To:     balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: [PATCH v2 0/2] Max3420 udc driver
+Date:   Sun,  5 Jan 2020 16:55:09 -0600
+Message-Id: <20200105225509.21590-1-jassisinghbrar@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <55183b0a7c466528361802fabef65a57f969d07b.1574922435.git.shubhrajyoti.datta@xilinx.com>
-References: <cover.1574922435.git.shubhrajyoti.datta@xilinx.com> <55183b0a7c466528361802fabef65a57f969d07b.1574922435.git.shubhrajyoti.datta@xilinx.com>
-Cc:     gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        shubhrajyoti.datta@gmail.com, devicetree@vger.kernel.org,
-        soren.brinkmann@xilinx.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-To:     devel@driverdev.osuosl.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shubhrajyoti.datta@gmail.com
-Subject: Re: [PATCH v3 07/10] clk: clock-wizard: Update the fixed factor divisors
-From:   Stephen Boyd <sboyd@kernel.org>
-User-Agent: alot/0.8.1
-Date:   Sun, 05 Jan 2020 12:00:13 -0800
-Message-Id: <20200105200014.4904320678@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting shubhrajyoti.datta@gmail.com (2019-11-27 22:36:14)
-> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->=20
-> Update the fixed factor clock registration to register the divisors.
->=20
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
->  drivers/clk/clk-xlnx-clock-wizard.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-c=
-lock-wizard.c
-> index 4c6155b..75ea745 100644
-> --- a/drivers/clk/clk-xlnx-clock-wizard.c
-> +++ b/drivers/clk/clk-xlnx-clock-wizard.c
-> @@ -491,9 +491,11 @@ static int clk_wzrd_probe(struct platform_device *pd=
-ev)
->         u32 reg, reg_f, mult;
->         unsigned long rate;
->         const char *clk_name;
-> +       void __iomem *ctrl_reg;
->         struct clk_wzrd *clk_wzrd;
->         struct resource *mem;
->         int outputs;
-> +       unsigned long flags =3D 0;
->         struct device_node *np =3D pdev->dev.of_node;
-> =20
->         clk_wzrd =3D devm_kzalloc(&pdev->dev, sizeof(*clk_wzrd), GFP_KERN=
-EL);
-> @@ -564,19 +566,22 @@ static int clk_wzrd_probe(struct platform_device *p=
-dev)
->                 goto err_disable_clk;
->         }
-> =20
-> -       /* register div */
-> -       reg =3D (readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
-> -                       WZRD_DIVCLK_DIVIDE_MASK) >> WZRD_DIVCLK_DIVIDE_SH=
-IFT;
-> +       outputs =3D of_property_count_strings(np, "clock-output-names");
-> +       if (outputs =3D=3D 1)
-> +               flags =3D CLK_SET_RATE_PARENT;
+From: Jassi Brar <jaswinder.singh@linaro.org>
 
-What does the number of clk outputs have to do with the ability to
-change the rate of a parent clk? The commit text doesn't inform me of
-what this is for either. Please help us understand.
+Changes since v1:
+ # No functional changes, just cosmetic changes as suggested in review.
+   o prepend everything with MAX3420_
+   o avoid CaMeLcAsE
+   o use GENMASK some more
+   o reorder struct max3420_ep and struct max3420_udc members
+   o added some comments
+   o changed license in dt-bindings
+   o changed interrupt property to names
 
->         clk_name =3D kasprintf(GFP_KERNEL, "%s_mul_div", dev_name(&pdev->=
-dev));
->         if (!clk_name) {
->                 ret =3D -ENOMEM;
->                 goto err_rm_int_clk;
->         }
-> =20
+Jassi Brar (2):
+  dt-bindings: max3421-udc: add dt bindings for MAX3420 UDC
+  usb: gadget: add udc driver for max3420
+
+ .../bindings/usb/maxim,max3420-udc.yaml       |   69 +
+ drivers/usb/gadget/udc/Kconfig                |   10 +
+ drivers/usb/gadget/udc/Makefile               |    1 +
+ drivers/usb/gadget/udc/max3420_udc.c          | 1333 +++++++++++++++++
+ 4 files changed, 1413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3420-udc.yaml
+ create mode 100644 drivers/usb/gadget/udc/max3420_udc.c
+
+-- 
+2.20.1
+
