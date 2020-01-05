@@ -2,101 +2,91 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 247C8C00523
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 23:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3E8C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 23:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE0EB2085B
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 23:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578265651;
-	bh=NIcC9yFq1/Q2UYS/x0ix+xDhGk3NlKlVY0V2e+tLt84=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kv/gPpLRjbs1w/4sBgnpWEcJZDrXBEHmIQhZRBjhQyEFqqUBBN/s0/U909x7xcwch
-	 rGMuDWwe5uCZ8bkNvY5W7Rco9nSQusQSQrhXTCZ3dXYXTBmhQEid58jYo6bwoHWAfL
-	 9ni+SpgT8H0H3QMx7fL183JJgraauPF9jRJ/QdW4=
+	by mail.kernel.org (Postfix) with ESMTP id 5760421734
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 23:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgAEXH0 (ORCPT
+        id S1727161AbgAEXrL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 18:07:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbgAEXH0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 5 Jan 2020 18:07:26 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0E024650;
-        Sun,  5 Jan 2020 23:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578265645;
-        bh=NIcC9yFq1/Q2UYS/x0ix+xDhGk3NlKlVY0V2e+tLt84=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mTuzOEG1v2XD5AOW+hjT5FuSDWWwZlUxoAVTusAUrGOF7s1qGcROgx9zS5N5h7+V9
-         RNX9M4Hxyr4pZdrnetQw3m5DS4M6YygWax278j5/2doAcjmPs57vZvumAqpv4Ht0mG
-         qmL5REZHAPGbWwpSAK0Wl9Au+ymmkEOnm0mLYV/c=
-Received: by mail-qt1-f171.google.com with SMTP id d18so38484298qtj.10;
-        Sun, 05 Jan 2020 15:07:25 -0800 (PST)
-X-Gm-Message-State: APjAAAV1AJLzQMpJTXAg4nLA0LUipj+W+kIF+pilK+evGMbVzZib922W
-        IkXg+A9dqBeSzia3z6vfgBaYGjiKzY3/ZBzyzg==
-X-Google-Smtp-Source: APXvYqzdbTAKT6nfHNwFQzuY7xtfF7ulpPWWAYYDIujT3O2LaFFOnWL38RxCqg7Xtw+EYlScp1qm1OFzBcyrooIJl1g=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr58902700qtj.300.1578265644230;
- Sun, 05 Jan 2020 15:07:24 -0800 (PST)
-MIME-Version: 1.0
-References: <1577782737-32068-1-git-send-email-okukatla@codeaurora.org>
- <1577782737-32068-2-git-send-email-okukatla@codeaurora.org>
- <20200104220142.GA28701@bogus> <20200104230830.GA27471@darkstar.musicnaut.iki.fi>
-In-Reply-To: <20200104230830.GA27471@darkstar.musicnaut.iki.fi>
-From:   Rob Herring <robh@kernel.org>
-Date:   Sun, 5 Jan 2020 16:07:13 -0700
-X-Gmail-Original-Message-ID: <CAL_JsqLExx1puQxWjT2CpiwttOZtaDay6yU=jwF1D2SGbzB4tg@mail.gmail.com>
-Message-ID: <CAL_JsqLExx1puQxWjT2CpiwttOZtaDay6yU=jwF1D2SGbzB4tg@mail.gmail.com>
-Subject: Re: [V2, 1/3] dt-bindings: interconnect: Add Qualcomm SC7180 DT bindings
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Odelu Kukatla <okukatla@codeaurora.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        David Dai <daidavid1@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        evgreen@google.com, Andy Gross <agross@kernel.org>,
+        Sun, 5 Jan 2020 18:47:11 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39398 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgAEXrL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 18:47:11 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 824451C2453; Mon,  6 Jan 2020 00:47:09 +0100 (CET)
+Date:   Mon, 6 Jan 2020 00:47:08 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] leds: lm3692x: Allow to set ovp and brigthness
+ mode
+Message-ID: <20200105234708.GA7598@amd>
+References: <cover.1578134779.git.agx@sigxcpu.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+In-Reply-To: <cover.1578134779.git.agx@sigxcpu.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jan 4, 2020 at 4:09 PM Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
->
-> Hi,
->
-> On Sat, Jan 04, 2020 at 03:01:42PM -0700, Rob Herring wrote:
-> > On Tue, Dec 31, 2019 at 02:28:55PM +0530, Odelu Kukatla wrote:
-> > > diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-> > > new file mode 100644
-> > > index 0000000..487da5e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/interconnect/qcom,sc7180.yaml
-> > > @@ -0,0 +1,155 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> >
-> > Dual license new bindings:
-> >
-> > (GPL-2.0-only OR BSD-2-Clause)
->
-> Just curious, is that mandatory for any new bindings?
 
-Yes.
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+Hi!
+
+> Overvoltage protection and brightness mode are currently hardcoded
+> as 29V and disabled in the driver. Make these configurable via DT.
+>=20
+> Besides addressing review comments v3 folds in the patches to
+> disable the chip and turn of the regulator on brightness 0 from
+>=20
+>   https://lore.kernel.org/linux-leds/20191226101419.GE4033@amd/T/#t
+>=20
+> Besides addressing review comments v2 also allows to limit the maximum led
+> current.
+
+> Patches are against next-20191220.
+
+I applied everything but the "exponential" changes and the last
+one. I'll apply the last one if I get version that applies on top of
+leds tree.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4SdXwACgkQMOfwapXb+vJaMQCgwV3gy5DFAEFexXL3O3QhZr1C
+264An3kUacGLDJhhGUg/OGlcCubROOow
+=E8m6
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
