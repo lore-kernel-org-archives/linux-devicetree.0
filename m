@@ -2,165 +2,88 @@ Return-Path: <SRS0=vpWr=22=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094F9C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 10:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C8BC33C9A
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 10:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6C620866
-	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 10:47:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qLOUeExA"
+	by mail.kernel.org (Postfix) with ESMTP id 2F06B21775
+	for <linux-devicetree@archiver.kernel.org>; Sun,  5 Jan 2020 10:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgAEKrF (ORCPT
+        id S1726192AbgAEK6l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 05:47:05 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:50601 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726820AbgAEKrE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 05:47:04 -0500
-X-UUID: 956b424299534f9d9808071009038d3d-20200105
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=RY4rn8CmqW4ONHcTdtNSN9a7ZN574snyp8h6PCSTtUE=;
-        b=qLOUeExAXd+yK9T1kacJqisI5jLs+u3zP3Xsf+M2opY8PucXx9hMvgO26ts5OlpX9umQfVcYT3NPCaFr7OQvaoxbzgdmVYlWfxJPEt4HHSLGPQLmgKh/l/QAcgw00eHi88mOmytnQekujfHGlFyRp7lAwCSbE1ck0FzT3dl6Z+c=;
-X-UUID: 956b424299534f9d9808071009038d3d-20200105
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <chao.hao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1787353791; Sun, 05 Jan 2020 18:46:57 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Sun, 5 Jan 2020 18:46:32 +0800
-Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Sun, 5 Jan 2020 18:45:27 +0800
-From:   Chao Hao <chao.hao@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Chao Hao <chao.hao@mediatek.com>,
-        Jun Yan <jun.yan@mediatek.com>,
-        Cui Zhang <zhang.cui@mediatek.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Anan Sun <anan.sun@mediatek.com>
-Subject: [PATCH v2 09/19] iommu/mediatek: Add mtk_iommu_pgtable structure
-Date:   Sun, 5 Jan 2020 18:45:13 +0800
-Message-ID: <20200105104523.31006-10-chao.hao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200105104523.31006-1-chao.hao@mediatek.com>
-References: <20200105104523.31006-1-chao.hao@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 5 Jan 2020 05:58:41 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:45654 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726092AbgAEK6l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 05:58:41 -0500
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from vadimp@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 5 Jan 2020 12:58:39 +0200
+Received: from r-build-lowlevel.mtr.labs.mlnx. (r-build-lowlevel.mtr.labs.mlnx [10.209.0.190])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 005AwYmQ020934;
+        Sun, 5 Jan 2020 12:58:39 +0200
+From:   Vadim Pasternak <vadimp@mellanox.com>
+To:     linux@roeck-us.net, robh+dt@kernel.org, vijaykhemka@fb.com
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Vadim Pasternak <vadimp@mellanox.com>
+Subject: [RFC PATCH hwmon-next v1 4/5] dt-bindings: Add TI and Infineon VR Controllers as trivial devices
+Date:   Sun,  5 Jan 2020 10:58:32 +0000
+Message-Id: <20200105105833.30196-5-vadimp@mellanox.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200105105833.30196-1-vadimp@mellanox.com>
+References: <20200105105833.30196-1-vadimp@mellanox.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-U3RhcnQgd2l0aCB0aGlzIHBhdGNoLCB3ZSB3aWxsIGNoYW5nZSB0aGUgU1cgYXJjaGl0ZWN0dXJl
-DQp0byBzdXBwb3J0IG11bHRpcGxlIGRvbWFpbnMuIFNXIGFyY2hpdGVjdHVyZSB3aWxsIGhhcyBh
-IGJpZyBjaGFuZ2UsDQpzbyB3ZSBuZWVkIHRvIG1vZGlmeSBhIGxpdHRsZSBiaXQgYnkgbW9yZSB0
-aGFuIG9uZSBwYXRjaC4NClRoZSBuZXcgU1cgb3ZlcmFsbCBhcmNoaXRlY3R1cmUgaXMgYXMgYmVs
-b3c6DQoNCgkJCQlpb21tdTAgICBpb21tdTENCgkJCQkgIHwJICAgIHwNCgkJCQkgIC0tLS0tLS0t
-LS0tDQoJCQkJCXwNCgkJCQltdGtfaW9tbXVfcGd0YWJsZQ0KCQkJCQl8DQoJCQktLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCgkJCXwJCSAgICAgfAkJCSB8DQoJCW10
-a19pb21tdV9kb21haW4xICAgbXRrX2lvbW11X2RvbWFpbjIgIG10a19pb21tdV9kb21haW4zDQoJ
-CQl8ICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgIHwNCgkJaW9tbXVfZ3Jv
-dXAxICAgICAgICAgaW9tbXVfZ3JvdXAyICAgICAgICAgICBpb21tdV9ncm91cDMNCgkJCXwgICAg
-ICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgfA0KCQlpb21tdV9kb21haW4xICAg
-ICAgIGlvbW11X2RvbWFpbjIJICAgIGlvbW11X2RvbWFpbjMNCgkJCXwgICAgICAgICAgICAgICAg
-ICAgIHwgICAgICAgICAgICAgICAgICAgfA0KCQlpb3ZhIHJlZ2lvbjEobm9ybWFsKSAgaW92YSBy
-ZWdpb24yKENDVSkgICAgaW92YSByZWdpb24zKFZQVSkNCg0KRm9yIGN1cnJlbnQgc3RydWN0dXJl
-LCBubyBtYXR0ZXIgaG93IG1hbnkgaW9tbXVzIHRoZXJlIGFyZSwNCnRoZXkgdXNlIHRoZSBzYW1l
-IHBhZ2UgdGFibGUgdG8gc2ltcGxpZnkgdGhlIHVzYWdlIG9mIG1vZHVsZS4NCkluIG9yZGVyIHRv
-IG1ha2UgdGhlIHNvZnR3YXJlIGFyY2hpdGVjdHVyZSBtb3JlIGV4cGxpY2l0LCB0aGlzDQpwYXRj
-aCB3aWxsIGNyZWF0ZSBhIGdsb2JhbCBtdGtfaW9tbXVfcGd0YWJsZSBzdHJ1Y3R1cmUgdG8gZGVz
-Y3JpYmUNCnBhZ2UgdGFibGUgYW5kIGFsbCB0aGUgaW9tbXVzIHVzZSBpdC4NClRoZSBkaWFncmFt
-IGlzIGFzIGJlbG93Og0KDQoJbXRrX2lvbW11X2RhdGExKE1NKSAgICAgICBtdGtfaW9tbXVfZGF0
-YTIoQVBVKQ0KCQl8CQkJICAgfA0KCQl8CQkJICAgfA0KCQktLS0tLS1tdGtfaW9tbXVfcGd0YWJs
-ZS0tLS0tDQoNCldlIG5lZWQgdG8gY3JlYXRlIGdsb2JhbCBtdGtfaW9tbXVfcGd0YWJsZSB0byBp
-bmNsdWRlIGFsbCB0aGUgaW92YQ0KcmVnaW9ucyBmaXJzdGx5IGFuZCBzcGVjaWFsIGlvdmEgcmVn
-aW9ucyBieSBkaXZpZGVkIGJhc2VkIG9uIGl0LA0Kc28gdGhlIGluZm9ybWF0aW9uIG9mIHBndGFi
-bGUgbmVlZHMgdG8gYmUgY3JlYXRlZCBpbiBkZXZpY2VfZ3JvdXAuDQoNClNpZ25lZC1vZmYtYnk6
-IENoYW8gSGFvIDxjaGFvLmhhb0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2lvbW11L210
-a19pb21tdS5jIHwgODQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQog
-ZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCB8ICAxICsNCiAyIGZpbGVzIGNoYW5nZWQsIDg1IGlu
-c2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMgYi9k
-cml2ZXJzL2lvbW11L210a19pb21tdS5jDQppbmRleCA3ODI5ZDFmZDA4ZGQuLjUwYzZhMDFlYjUx
-NyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCisrKyBiL2RyaXZlcnMv
-aW9tbXUvbXRrX2lvbW11LmMNCkBAIC0xMTcsNiArMTE3LDEyIEBAIHN0cnVjdCBtdGtfaW9tbXVf
-ZG9tYWluIHsNCiAJc3RydWN0IGlvbW11X2RvbWFpbgkJZG9tYWluOw0KIH07DQogDQorc3RydWN0
-IG10a19pb21tdV9wZ3RhYmxlIHsNCisJc3RydWN0IGlvX3BndGFibGVfY2ZnCWNmZzsNCisJc3Ry
-dWN0IGlvX3BndGFibGVfb3BzCSppb3A7DQorfTsNCisNCitzdGF0aWMgc3RydWN0IG10a19pb21t
-dV9wZ3RhYmxlICpzaGFyZV9wZ3RhYmxlOw0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaW9tbXVfb3Bz
-IG10a19pb21tdV9vcHM7DQogDQogLyoNCkBAIC0xNjQsNiArMTcwLDExIEBAIHN0YXRpYyBzdHJ1
-Y3QgbXRrX2lvbW11X2RhdGEgKm10a19pb21tdV9nZXRfbTR1X2RhdGEodm9pZCkNCiAJcmV0dXJu
-IE5VTEw7DQogfQ0KIA0KK3N0YXRpYyBzdHJ1Y3QgbXRrX2lvbW11X3BndGFibGUgKm10a19pb21t
-dV9nZXRfcGd0YWJsZSh2b2lkKQ0KK3sNCisJcmV0dXJuIHNoYXJlX3BndGFibGU7DQorfQ0KKw0K
-IHN0YXRpYyBzdHJ1Y3QgbXRrX2lvbW11X2RvbWFpbiAqdG9fbXRrX2RvbWFpbihzdHJ1Y3QgaW9t
-bXVfZG9tYWluICpkb20pDQogew0KIAlyZXR1cm4gY29udGFpbmVyX29mKGRvbSwgc3RydWN0IG10
-a19pb21tdV9kb21haW4sIGRvbWFpbik7DQpAQCAtMzE2LDYgKzMyNywxMyBAQCBzdGF0aWMgaW50
-IG10a19pb21tdV9kb21haW5fZmluYWxpc2Uoc3RydWN0IG10a19pb21tdV9kb21haW4gKmRvbSkN
-CiB7DQogCXN0cnVjdCBtdGtfaW9tbXVfZGF0YSAqZGF0YSA9IG10a19pb21tdV9nZXRfbTR1X2Rh
-dGEoKTsNCiANCisJaWYgKGRhdGEtPnBndGFibGUpIHsNCisJCWRvbS0+Y2ZnID0gZGF0YS0+cGd0
-YWJsZS0+Y2ZnOw0KKwkJZG9tLT5pb3AgPSBkYXRhLT5wZ3RhYmxlLT5pb3A7DQorCQlkb20tPmRv
-bWFpbi5wZ3NpemVfYml0bWFwID0gZGF0YS0+cGd0YWJsZS0+Y2ZnLnBnc2l6ZV9iaXRtYXA7DQor
-CQlyZXR1cm4gMDsNCisJfQ0KKw0KIAlkb20tPmNmZyA9IChzdHJ1Y3QgaW9fcGd0YWJsZV9jZmcp
-IHsNCiAJCS5xdWlya3MgPSBJT19QR1RBQkxFX1FVSVJLX0FSTV9OUyB8DQogCQkJSU9fUEdUQUJM
-RV9RVUlSS19OT19QRVJNUyB8DQpAQCAtMzM5LDYgKzM1Nyw2MSBAQCBzdGF0aWMgaW50IG10a19p
-b21tdV9kb21haW5fZmluYWxpc2Uoc3RydWN0IG10a19pb21tdV9kb21haW4gKmRvbSkNCiAJcmV0
-dXJuIDA7DQogfQ0KIA0KK3N0YXRpYyBzdHJ1Y3QgbXRrX2lvbW11X3BndGFibGUgKmNyZWF0ZV9w
-Z3RhYmxlKHN0cnVjdCBtdGtfaW9tbXVfZGF0YSAqZGF0YSkNCit7DQorCXN0cnVjdCBtdGtfaW9t
-bXVfcGd0YWJsZSAqcGd0YWJsZTsNCisNCisJcGd0YWJsZSA9IGt6YWxsb2Moc2l6ZW9mKCpwZ3Rh
-YmxlKSwgR0ZQX0tFUk5FTCk7DQorCWlmICghcGd0YWJsZSkNCisJCXJldHVybiBFUlJfUFRSKC1F
-Tk9NRU0pOw0KKw0KKwlwZ3RhYmxlLT5jZmcgPSAoc3RydWN0IGlvX3BndGFibGVfY2ZnKSB7DQor
-CQkucXVpcmtzID0gSU9fUEdUQUJMRV9RVUlSS19BUk1fTlMgfA0KKwkJCUlPX1BHVEFCTEVfUVVJ
-UktfTk9fUEVSTVMgfA0KKwkJCUlPX1BHVEFCTEVfUVVJUktfVExCSV9PTl9NQVAgfA0KKwkJCUlP
-X1BHVEFCTEVfUVVJUktfQVJNX01US19FWFQsDQorCQkucGdzaXplX2JpdG1hcCA9IG10a19pb21t
-dV9vcHMucGdzaXplX2JpdG1hcCwNCisJCS5pYXMgPSAzMiwNCisJCS5vYXMgPSAzNCwNCisJCS50
-bGIgPSAmbXRrX2lvbW11X2ZsdXNoX29wcywNCisJCS5pb21tdV9kZXYgPSBkYXRhLT5kZXYsDQor
-CX07DQorDQorCXBndGFibGUtPmlvcCA9IGFsbG9jX2lvX3BndGFibGVfb3BzKEFSTV9WN1MsICZw
-Z3RhYmxlLT5jZmcsIGRhdGEpOw0KKwlpZiAoIXBndGFibGUtPmlvcCkgew0KKwkJZGV2X2Vycihk
-YXRhLT5kZXYsICJGYWlsZWQgdG8gYWxsb2MgaW8gcGd0YWJsZVxuIik7DQorCQlyZXR1cm4gRVJS
-X1BUUigtRUlOVkFMKTsNCisJfQ0KKw0KKwlkZXZfaW5mbyhkYXRhLT5kZXYsICIlcyBjcmVhdGUg
-cGd0YWJsZSBkb25lXG4iLCBfX2Z1bmNfXyk7DQorDQorCXJldHVybiBwZ3RhYmxlOw0KK30NCisN
-CitzdGF0aWMgaW50IG10a19pb21tdV9hdHRhY2hfcGd0YWJsZShzdHJ1Y3QgbXRrX2lvbW11X2Rh
-dGEgKmRhdGEsDQorCQkJCSAgICBzdHJ1Y3QgZGV2aWNlICpkZXYpDQorew0KKwlzdHJ1Y3QgbXRr
-X2lvbW11X3BndGFibGUgKnBndGFibGUgPSBtdGtfaW9tbXVfZ2V0X3BndGFibGUoKTsNCisNCisJ
-LyogY3JlYXRlIHNoYXJlIHBndGFibGUgKi8NCisJaWYgKCFwZ3RhYmxlKSB7DQorCQlwZ3RhYmxl
-ID0gY3JlYXRlX3BndGFibGUoZGF0YSk7DQorCQlpZiAoSVNfRVJSKHBndGFibGUpKSB7DQorCQkJ
-ZGV2X2VycihkYXRhLT5kZXYsICJGYWlsZWQgdG8gY3JlYXRlIHBndGFibGVcbiIpOw0KKwkJCXJl
-dHVybiAtRU5PTUVNOw0KKwkJfQ0KKw0KKwkJc2hhcmVfcGd0YWJsZSA9IHBndGFibGU7DQorCX0N
-CisNCisJLyogYmluZGluZyB0byBwZ3RhYmxlICovDQorCWRhdGEtPnBndGFibGUgPSBwZ3RhYmxl
-Ow0KKw0KKwlkZXZfaW5mbyhkYXRhLT5kZXYsICJtNHUlZCBhdHRhY2hfcGd0YWJsZSBkb25lIVxu
-IiwgZGF0YS0+bTR1X2lkKTsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KIHN0YXRpYyBzdHJ1Y3Qg
-aW9tbXVfZG9tYWluICptdGtfaW9tbXVfZG9tYWluX2FsbG9jKHVuc2lnbmVkIHR5cGUpDQogew0K
-IAlzdHJ1Y3QgbXRrX2lvbW11X2RvbWFpbiAqZG9tOw0KQEAgLTUwMiwxMCArNTc1LDIxIEBAIHN0
-YXRpYyB2b2lkIG10a19pb21tdV9yZW1vdmVfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldikNCiBz
-dGF0aWMgc3RydWN0IGlvbW11X2dyb3VwICptdGtfaW9tbXVfZGV2aWNlX2dyb3VwKHN0cnVjdCBk
-ZXZpY2UgKmRldikNCiB7DQogCXN0cnVjdCBtdGtfaW9tbXVfZGF0YSAqZGF0YSA9IG10a19pb21t
-dV9nZXRfbTR1X2RhdGEoKTsNCisJc3RydWN0IG10a19pb21tdV9wZ3RhYmxlICpwZ3RhYmxlOw0K
-KwlpbnQgcmV0ID0gMDsNCiANCiAJaWYgKCFkYXRhKQ0KIAkJcmV0dXJuIEVSUl9QVFIoLUVOT0RF
-Vik7DQogDQorCXBndGFibGUgPSBkYXRhLT5wZ3RhYmxlOw0KKwlpZiAoIXBndGFibGUpIHsNCisJ
-CXJldCA9IG10a19pb21tdV9hdHRhY2hfcGd0YWJsZShkYXRhLCBkZXYpOw0KKwkJaWYgKHJldCkg
-ew0KKwkJCWRldl9lcnIoZGF0YS0+ZGV2LCAiRmFpbGVkIHRvIGRldmljZV9ncm91cFxuIik7DQor
-CQkJcmV0dXJuIE5VTEw7DQorCQl9DQorCX0NCisNCiAJLyogQWxsIHRoZSBjbGllbnQgZGV2aWNl
-cyBhcmUgaW4gdGhlIHNhbWUgbTR1IGlvbW11LWdyb3VwICovDQogCWlmICghZGF0YS0+bTR1X2dy
-b3VwKSB7DQogCQlkYXRhLT5tNHVfZ3JvdXAgPSBpb21tdV9ncm91cF9hbGxvYygpOw0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmggYi9kcml2ZXJzL2lvbW11L210a19pb21t
-dS5oDQppbmRleCAyYjIwN2RjYWRkMDYuLmEzYzU5OGY5OWVkNSAxMDA2NDQNCi0tLSBhL2RyaXZl
-cnMvaW9tbXUvbXRrX2lvbW11LmgNCisrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCkBA
-IC02MSw2ICs2MSw3IEBAIHN0cnVjdCBtdGtfaW9tbXVfZGF0YSB7DQogCXN0cnVjdCBjbGsJCQkq
-YmNsazsNCiAJcGh5c19hZGRyX3QJCQlwcm90ZWN0X2Jhc2U7IC8qIHByb3RlY3QgbWVtb3J5IGJh
-c2UgKi8NCiAJc3RydWN0IG10a19pb21tdV9zdXNwZW5kX3JlZwlyZWc7DQorCXN0cnVjdCBtdGtf
-aW9tbXVfcGd0YWJsZQkqcGd0YWJsZTsNCiAJc3RydWN0IG10a19pb21tdV9kb21haW4JCSptNHVf
-ZG9tOw0KIAlzdHJ1Y3QgaW9tbXVfZ3JvdXAJCSptNHVfZ3JvdXA7DQogCWJvb2wgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgZW5hYmxlXzRHQjsNCi0tIA0KMi4xOC4wDQo=
+Add Texas Instruments Dual channel DCAP+ multiphase controllers:
+TPS53679, TPS53688, SN1906016 and Infineon Multi-phase Digital VR
+controllers XDPE12286C, XDPE12284C, XDPE12283C, XDPE12254C, XDPE12250C
+as trivial devices.
+
+Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+---
+ Documentation/devicetree/bindings/trivial-devices.yaml | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 765fd1c170df..dbd71d01ede0 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -104,6 +104,16 @@ properties:
+           - infineon,slb9645tt
+             # Infineon TLV493D-A1B6 I2C 3D Magnetic Sensor
+           - infineon,tlv493d-a1b6
++            # Infineon Multi-phase Digital VR Controller xdpe12283c
++          - infineon,xdpe12283c
++            # Infineon Multi-phase Digital VR Controller xdpe12250c
++          - infineon,xdpe12250c
++            # Infineon Multi-phase Digital VR Controller xdpe12254c
++          - infineon,xdpe12254c
++            # Infineon Multi-phase Digital VR Controller xdpe12284c
++          - infineon,xdpe12284c
++            # Infineon Multi-phase Digital VR Controller xdpe12286c
++          - infineon,xdpe12286c
+             # Inspur Power System power supply unit version 1
+           - inspur,ipsps1
+             # Intersil ISL29028 Ambient Light and Proximity Sensor
+@@ -354,6 +364,12 @@ properties:
+           - ti,tmp103
+             # Digital Temperature Sensor
+           - ti,tmp275
++            # TI Dual channel DCAP+ multiphase controller TPS53679
++          - ti,tps53679
++            # TI Dual channel DCAP+ multiphase controller TPS53688
++          - ti,tps53688
++            # TI Dual channel DCAP+ multiphase controller SN1906016
++          - ti,sn1906016
+             # Winbond/Nuvoton H/W Monitor
+           - winbond,w83793
+             # i2c trusted platform module (TPM)
+-- 
+2.11.0
 
