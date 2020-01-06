@@ -6,121 +6,84 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB99C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FECC33CA1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F0D20731
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 810982072C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:22:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pyrjEmMh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sSm9hD3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbgAFXTg (ORCPT
+        id S1727024AbgAFXV7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:19:36 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33241 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727233AbgAFXTg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 18:19:36 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so44676658lji.0
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 15:19:34 -0800 (PST)
+        Mon, 6 Jan 2020 18:21:59 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35219 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgAFXV7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 18:21:59 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 15so37535959lfr.2
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 15:21:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4ifLICUP3yJ2Jc69aKyPrFElbdfNiE/0Qf5WDAsEJ7k=;
-        b=pyrjEmMhzxyrQ1hUcrahOg9m+TH53ZbznItKyNMvrY/fK9J7ew5E739goWY8PcP9KE
-         osp4+WXa6IXcUIoxC6oD/scn2Onhm9/F5WLSauRcFyqPnaJoVvPfFzwD+F5P8GTeBsbs
-         IKj8xSuE8o4iWnYrwVGJXJHOyotZUEfxCkQMHSfKpuSQQzPqiDDzL5OlFx4j1FOnf8l4
-         spxkANE2K6lr2bophpOyTCu3bGpeqx808DpHV/jZSnQMRLbigYYQh4wpTK5LTFz8AmWZ
-         F6FWtkrhW3/4vcP+x1KiWc0xlIsBb724CeRwPedJKwiQ92ZcHTft0Qj0PMSU3GQvHilz
-         fvxw==
+        bh=q9R5SEqk2RoVPGepo5eJYJ7/siY1dXTcAAns3GhcGVQ=;
+        b=sSm9hD3qn1idlUngR9PmqFvVyQGsUEJNg330Oqc++mHytoNqHENjqV1D2Lzd/Dc9n9
+         1kuq1LbiQDJ599KZDnQUitiLKphm6TL1rgNH84K9nVPWOyQHSMBfNW9K1P+1/6YhXli1
+         p8hVsTK/I12hW+IgKfiXAaj7M61eWYJDnB5gJesbKLSZOAqeIMm/hne5jEUMtae/QErZ
+         0QdmbGPsBE/Vg822ItQ08dREH8m/OujqwmNz09/wyiU8G4XJkFxW9Q1Krpl681Tb4o/C
+         FDzC7dPiIuM/jmosglsxzHARgZrz4vcL8iHvXEBngRt5OZsFkqqk3NWHmDIw93dc3zal
+         2K2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4ifLICUP3yJ2Jc69aKyPrFElbdfNiE/0Qf5WDAsEJ7k=;
-        b=P2iOaHDUeTv3DOwc2EbXMKurK45LQW/NzlKCz9QtDBbPNgMQzITqHD0y6yVfWeGVx+
-         dyXpS17KBz8BlQX6JM4kgwnaULUI5AsQJVJRnO1wqAwl/KwWhXCukzWvMr84P/nDaW0D
-         nFikMF1aeLQtcmyjdhODQIKgc8YT51tw2s28qgdO9fyfLpE7fxBZrwzVdUHbYVeGPHmO
-         0aeN5TcGRPr85HgQc8b14ZX2fQi22QfFqfhxWQFvTzdYJ1b5qRlUR9lPaWtFmYlHkIgZ
-         iP3jNdE5ja/W+97bI1q+9fvBQUkkoCauRzIuG/MmByV8O1Ku0cH9vFi0UxbtZWQwtDHp
-         oS0A==
-X-Gm-Message-State: APjAAAWSf8381A/O1L5pjOi1xhetHXD+f59chKeXCMWU9cDqwjEgAzts
-        n9LoojxK9BGLF1TPiiUZMQwjYW82nJMjgBe34OaCNg==
-X-Google-Smtp-Source: APXvYqxVrJvf9BPRKtKqrWl9CB2TzK8f78daLojWiACCChF+prk4cqTGQs5ip21no8hv5sSnLvVrxbWEWln/dkHJOQk=
-X-Received: by 2002:a2e:86d6:: with SMTP id n22mr50504659ljj.77.1578352774218;
- Mon, 06 Jan 2020 15:19:34 -0800 (PST)
+        bh=q9R5SEqk2RoVPGepo5eJYJ7/siY1dXTcAAns3GhcGVQ=;
+        b=qbqaaeZh51i7wQp89G7AY2iYXCA3oSRwm+s44c/ReIxZXm+JjlxTixT3/VJ2Xhd3iT
+         dv4DQQ+cbQKxQVcagXNoJrivuAt7lOyvo9ktUjPtgDoh0NOwdskN/hOEdIx8PdC7+meS
+         4FiW7e9Hl0IoohDGUKfW18uaPRPWm4l9n2ZXPgiXG4bTH4Oq4MqaPtgMDWoQb60QnWx3
+         ecbRHkiRYwJ3r5JBMSFtwzd8ETyXJ4lGYZ6//MMZ0mk09QSTlbPTJCl6dQyK7OxHYjU/
+         Jz5831UgzZvZyW009zxSGlzViw4sH5GMZZ5Yb6olxESb2DokFsL7UP/CB0jUip8Ptn/0
+         jVXw==
+X-Gm-Message-State: APjAAAU90m/Dmh5CgtQdSUMYQTenjed1rBbgEMEjxUdKdK0Zrxf8EvON
+        J0E/SH8VBcs3QO6PkaKpLtZ9Dw29i4z3NObd4T+iyA==
+X-Google-Smtp-Source: APXvYqwoQAUkjQTsYoTFkqOnBlmMjpIRMA39LMGXRMH2D2HpRAwvznYtNOJozI8Qe4FpKNBY4J96Oe1eX0Er0+Qxwy4=
+X-Received: by 2002:ac2:55a8:: with SMTP id y8mr57292729lfg.117.1578352916846;
+ Mon, 06 Jan 2020 15:21:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191217121642.28534-1-srinivas.kandagatla@linaro.org> <20191217121642.28534-10-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20191217121642.28534-10-srinivas.kandagatla@linaro.org>
+References: <20191218062024.25475-1-rahul.tanwar@linux.intel.com>
+In-Reply-To: <20191218062024.25475-1-rahul.tanwar@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 00:19:23 +0100
-Message-ID: <CACRpkdbQCc3AUgj81JLfzeUDt4XyVWLTzwkhAQS+0PSskL4ggA@mail.gmail.com>
-Subject: Re: [PATCH v5 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
+Date:   Tue, 7 Jan 2020 00:21:46 +0100
+Message-ID: <CACRpkdbTAcKitq8SPKU5D+11x_W45+g5Rs8PQ_TutjYVB5NVNQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: intel: Update to use generic bindings
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        yixin.zhu@linux.intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 1:17 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+On Wed, Dec 18, 2019 at 7:20 AM Rahul Tanwar
+<rahul.tanwar@linux.intel.com> wrote:
 
-> This patch adds support to wcd934x gpio block found in
-> WCD9340/WC9341 Audio codecs.
+> Kernel 5.5 adds generic pin mux & cfg node schema. Update pinctrl bindings
+> for LGM to use these newly added schemas. Also, rename filename to match
+> the compatible string.
 >
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 
-This looks mostly finished, some minor comments.
+Thanks a lot for fixing this Rahul!
 
-> +config GPIO_WCD934X
-> +       tristate "Qualcomm Technologies Inc WCD9340/WCD9341 gpio controller driver"
-> +       depends on MFD_WCD934X && OF_GPIO
-> +       select GPIO_GENERIC
-
-You're not using GPIO_GENERIC so select GPIOLIB instead.
-
-> +#include <linux/module.h>
-> +#include <linux/gpio.h>
-
-Don't use this legacy header, use
-<linux/gpio/driver.h>
-
-> +static int wcd_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct wcd_gpio_data *data;
-> +       struct gpio_chip *chip;
-> +
-> +       data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->map = dev_get_regmap(dev->parent, NULL);
-> +       if (!data->map) {
-> +               dev_err(dev, "%s: failed to get regmap\n", __func__);
-> +               return  -EINVAL;
-> +       }
-> +
-> +       chip = &data->chip;
-> +       chip->direction_input  = wcd_gpio_direction_input;
-> +       chip->direction_output = wcd_gpio_direction_output;
-> +       chip->get = wcd_gpio_get;
-> +       chip->set = wcd_gpio_set;
-
-If you can, please implement .get_direction(), see other drivers
-under gpio for examples.
+Patch applied.
 
 Yours,
 Linus Walleij
