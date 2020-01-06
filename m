@@ -2,70 +2,67 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DC8C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 17:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60084C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 17:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA5272081E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 17:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369692081E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 17:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="qLgX2AGs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="sb3amGNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgAFRMX (ORCPT
+        id S1726526AbgAFRM4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:12:23 -0500
-Received: from vern.gendns.com ([98.142.107.122]:54934 "EHLO vern.gendns.com"
+        Mon, 6 Jan 2020 12:12:56 -0500
+Received: from vern.gendns.com ([98.142.107.122]:55024 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbgAFRMX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 12:12:23 -0500
-X-Greylist: delayed 1460 seconds by postgrey-1.27 at vger.kernel.org; Mon, 06 Jan 2020 12:12:22 EST
+        id S1726524AbgAFRM4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jan 2020 12:12:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Gd1okxm5mNyxuAUIvuHeiOrruEoAV61d7/a5N+284jc=; b=qLgX2AGskDf+/YeIbS8utXjQ6s
-        Gs3XXQkuzcfq9uwT4s5myPh/61JxR3YRaY6q0UqtfNvzc4MfVY87U1U4YbNMUG9jYOtxoXdSKVygR
-        Ezygo8MGVoEZ7jKVzh9Hu0rdSwDnhMzOdjUBtEOMuvscbUAKUjAH1ONjDIurZhwikGP+WMNTy86Do
-        /imjNqDQV/6/bK75hj3QkYxyqpWpsBjz82WGDAWrLLQuP989IHP9KUlHAb1wk4F0c0TbKkVyiVZCj
-        iev4LeOmVDe9l465Gvu625HAu21K+Fry3ZDTJtTYvkHH1EZTRF63U0U9Y43UKVlKhC31eN+W9a4Hb
-        EVh78ASg==;
-Received: from [2600:1700:4830:165f::fb2] (port=55314)
+        bh=fHCqKA80u5NASV1pLYpW+PomktqDzS5QR7r7N/IPo38=; b=sb3amGNiUMrG1Mw6I+zMFN1zVA
+        hrKr9c5nliKBR1ayEo3c9fXAYHrBczY0oOc8ALP754zGq32oWLDRzDKS7wvHsgCj7b7w+VahOf3FH
+        GGpQYXUEJrNH5MPcPfrUzBJRG7AJoFftYfCJlpXKbEkBQ6/UnxU1bQWYZHigdMrVEImNIC/SoZjB7
+        7Olxxsq8zzeQKNKjvgr0cjXsyv0kSLah4I0Tb0D/Krv0TrW3idm6vxy2VV5hzcSICwg28s+xSBIzq
+        EXEoE7kJ7CtoUuYF0OQbVq538RUnaxp7wZkEQSMAAvMRARbBX0E1oembH6gYiGsR6ovjtmnm446fW
+        UxyXzHZw==;
+Received: from [2600:1700:4830:165f::fb2] (port=55016)
         by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.92)
         (envelope-from <david@lechnology.com>)
-        id 1ioVvP-00063C-3R; Mon, 06 Jan 2020 12:12:19 -0500
-Subject: Re: [PATCH 3/3] drm: tiny: st7735r: Add support for Okaya RH128128T
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
+        id 1ioVXp-0002In-F0; Mon, 06 Jan 2020 11:47:57 -0500
+Subject: Re: [PATCH 1/3] dt-bindings: display: sitronix, st7735r: Add Okaya
+ rh128128t
+To:     Sam Ravnborg <sam@ravnborg.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
         Chris Brandt <chris.brandt@renesas.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>
+        dri-devel@lists.freedesktop.org
 References: <20200102141246.370-1-geert+renesas@glider.be>
- <20200102141246.370-4-geert+renesas@glider.be>
- <20200105091303.GB29102@ravnborg.org>
- <CAMuHMdUL3tCZzCDyJkmqYT5n+-t+Z-Ubo4=+NJpHpZU1w5C07g@mail.gmail.com>
+ <20200102141246.370-2-geert+renesas@glider.be>
+ <20200102144636.GA10075@ravnborg.org>
 From:   David Lechner <david@lechnology.com>
-Message-ID: <893b059c-fd7d-3c21-384c-da33af595ffb@lechnology.com>
-Date:   Mon, 6 Jan 2020 11:12:17 -0600
+Message-ID: <a324b889-4fd1-fd93-dd70-61a6a57713a1@lechnology.com>
+Date:   Mon, 6 Jan 2020 10:47:55 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUL3tCZzCDyJkmqYT5n+-t+Z-Ubo4=+NJpHpZU1w5C07g@mail.gmail.com>
+In-Reply-To: <20200102144636.GA10075@ravnborg.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,89 +81,51 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/6/20 3:28 AM, Geert Uytterhoeven wrote:
-> Hi Sam,
+On 1/2/20 8:46 AM, Sam Ravnborg wrote:
+> Hi Geert.
 > 
-> On Sun, Jan 5, 2020 at 10:13 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->> Good to see we add more functionality to the smallest driver in DRM.
->> The patch triggered a few comments - see below.
->> Some comments relates to the original driver - and not your changes.
-> 
-> Thanks for your comments!
-> 
->> On Thu, Jan 02, 2020 at 03:12:46PM +0100, Geert Uytterhoeven wrote:
->>> Add support for the Okaya RH128128T display to the st7735r driver.
->>>
->>> The RH128128T is a 128x128 1.44" TFT display driven by a Sitronix
->>> ST7715R TFT Controller/Driver.  The latter is very similar to the
->>> ST7735R, and can be handled by the existing st7735r driver.
+> On Thu, Jan 02, 2020 at 03:12:44PM +0100, Geert Uytterhoeven wrote:
+>> Document support for the Okaya RH128128T display, which is a 128x128
+>> 1.44" TFT display driven by a Sitronix ST7715R TFT Controller/Driver.
 >>
->> As a general comment - it would have eased review if this was split
->> in two patches.
->> One patch to introduce the infrastructure to deal with another set of
->> controller/display and one patch introducing the new combination.
-> 
-> I had thought about that, but didn't pursue as the new combination is
-> just 7 added lines.  If you prefer a split, I can do that.
-> 
->>> --- a/drivers/gpu/drm/tiny/st7735r.c
->>> +++ b/drivers/gpu/drm/tiny/st7735r.c
->>> @@ -1,8 +1,9 @@
->>>   // SPDX-License-Identifier: GPL-2.0+
->>>   /*
->>> - * DRM driver for Sitronix ST7735R panels
->>> + * DRM driver for Sitronix ST7715R/ST7735R panels
+>> ST7715R and ST7735R are very similar.  Their major difference is that
+>> the former is restricted to displays of up to 132x132 pixels, while the
+>> latter supports displays up to 132x162 pixels.
 >>
->> This comment could describe the situation a little better.
->> This is a sitronix st7735r controller with a jianda jd-t18003-t01
->> display.
->> Or a sitronix st7715r controller with a okaya rh128128t display.
-> 
-> Indeed. It is currently limited to two controller/display combos.
-> But I expect more combos to be added over time.
-> Hence does it make sense to describe all of that in the top comments?
-> 
->>> @@ -37,12 +39,28 @@
->>>   #define ST7735R_MY   BIT(7)
->>>   #define ST7735R_MX   BIT(6)
->>>   #define ST7735R_MV   BIT(5)
->>> +#define ST7735R_RGB  BIT(3)
->>> +
->>> +struct st7735r_cfg {
->>> +     const struct drm_display_mode mode;
->>> +     unsigned int left_offset;
->>> +     unsigned int top_offset;
->>> +     unsigned int write_only:1;
->>> +     unsigned int rgb:1;             /* RGB (vs. BGR) */
->>> +};
->>> +
->>> +struct st7735r_priv {
->>> +     struct mipi_dbi_dev dbidev;     /* Must be first for .release() */
->>> +     unsigned int rgb:1;
->>> +};
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>>   .../devicetree/bindings/display/sitronix,st7735r.txt          | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
 >>
->> The structs here uses "st7735r" as the generic prefix.
->> But the rest of this file uses "jd_t18003_t01" as the generic prefix.
->>
->> It would help readability if the same prefix is used for the common
->> stuff everywhere.
+>> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+>> index cd5c7186890a2be7..87ebdcb294e29798 100644
+>> --- a/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+>> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+> While touching the bindings file, can I convince you to convert it to
+> meta-schema format (.yaml)?
 > 
-> Agreed.
-> So I think it makes most sense to rename jd_t18003_t01_pipe_{enable,funcs}
-> to sh7735r_pipe_{enable,funcs}?
-> If needed, the display-specific parts (e.g. gamma parameters) could be
-> factored out in st7735r_cfg later, if neeeded.
+> 
+>> @@ -4,7 +4,9 @@ This binding is for display panels using a Sitronix ST7735R controller in SPI
+>>   mode.
+>>   
+>>   Required properties:
+>> -- compatible:	"jianda,jd-t18003-t01", "sitronix,st7735r"
+>> +- compatible:	Must be one of the following combinations:
+>> +		  - "jianda,jd-t18003-t01", "sitronix,st7735r"
+>> +		  - "okaya,rh128128t", "sitronix,st7715r"
+> 
+> It would be nice if there was a "description" for each pair of
+> compatible that identified the actual panel.
+> In your case "Okaya RH128128T 1.44" 128x128 TFT display"
+> It can be looked up in git history - but better to have it in the
+> binding file.
+> 
+> 	Sam
+> 
 
-IIRC, the original intention here is that functions/structs with the
-jd_t18003_t01_ prefix are specific to the panel, not the controller.
-E.g. things like power settings and gamma curves.
+It would be nice to have the Adafruit part name in here too while we
+are at it. I had to dig really deep to find what the actual display
+panel was.
 
-The idea is that it is much easier to write and understand the init sequence
-as a function rather than trying to make a generic function that can parse
-a any possible init sequence from a data structure.
-
-This new panel really has all of the same settings as the existing one?
-
-Having a separate pipe enable function for the new panel would also eliminate
-the need for the extra private rgb data.
-
+https://www.adafruit.com/product/358
+https://www.adafruit.com/product/618
