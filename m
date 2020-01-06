@@ -6,62 +6,63 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB56C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAEAC32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A51321775
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3810321734
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578301455;
-	bh=2T/IcjbkOHO/nbGiktbih+oHmImSaEhme8PH3bc9v8Y=;
+	s=default; t=1578301479;
+	bh=R3lW9glk35yqVg/VMUPlgtgKJaOq6vpMeSYGhqpP9W4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IoVjtfIxyF3kFvyVOmQX+p/yLaHu/p8ghIJ0lgotTsTKDwLqkxPHxfgteifLMX/u9
-	 8iDSsEK3+IoS51f626obO+dgImZQQ3AmVBphRY/iqdPFZCZSlWN7vT7uuCXPzXRbBh
-	 an6b0SRuQuQS5ukDvzZMU7aDp8PNVarQyh0n4kx4=
+	b=bQci7SCuroNCSzX09l0HAaXyxxVtOF3hxCOlHNmGs5Ks4BC7Swl6g+R2NIxTcJq6u
+	 A7XaMYVRCVd9MxZ5JxkPuSaQA70Hej7K0Q22H9B2Ln1cpXLlCjSOK/MAo4ysrZtU5Y
+	 017InaESxbs26bJrcn6L6MI9NQ5bzAXyeJJurQPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725996AbgAFJEO (ORCPT
+        id S1726303AbgAFJEi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:04:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40806 "EHLO mail.kernel.org"
+        Mon, 6 Jan 2020 04:04:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725446AbgAFJEO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:04:14 -0500
+        id S1725996AbgAFJEi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:04:38 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DAA320848;
-        Mon,  6 Jan 2020 09:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE63420848;
+        Mon,  6 Jan 2020 09:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578301454;
-        bh=2T/IcjbkOHO/nbGiktbih+oHmImSaEhme8PH3bc9v8Y=;
+        s=default; t=1578301478;
+        bh=R3lW9glk35yqVg/VMUPlgtgKJaOq6vpMeSYGhqpP9W4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RUllN6QNxoHcL8Cko5cs4rKDUfBh/YoFXNgjsBdaFLjVdCxObwFVN9jvjFfKa/dBt
-         u6lTWHglQil3QW8a4vASyONSrILmvmCSDeL/QSYrEvKNDe5h8nm3Flb82YHAks7Fzb
-         qtLlNhW30qVIdnc3Ik6xwK70jZ0tM7YsahduBerQ=
-Date:   Mon, 6 Jan 2020 10:04:11 +0100
+        b=RwJnsuwNw5lvNc/hFugCS7jH+AyWz2EosczmYU1b8bPv1vbkOR4XE2DCDW3aAClCw
+         aXWledUZ14t5ahd869zvO3QR59ypBL0kpmWBIeeO86x93qf+tzi96P+OmpwjCZDIdI
+         SFh4KFbMsLJBSkt6GcPjGzpaekhawhtF/FIYXQAg=
+Date:   Mon, 6 Jan 2020 10:04:36 +0100
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Chen-Yu Tsai <wens@kernel.org>
 Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: sunxi: Use macros for references to CCU clocks
-Message-ID: <20200106090411.hw4udmcnib6nqk7w@gilmour.lan>
-References: <20200106085933.9102-1-wens@kernel.org>
+Subject: Re: [PATCH] arm64: dts: allwinner: sun50i-a64: Use macros for newly
+ exported clocks
+Message-ID: <20200106090436.lz7kndaozhjwwpux@gilmour.lan>
+References: <20200106090030.9165-1-wens@kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sc3mdfowvd7zmesw"
+        protocol="application/pgp-signature"; boundary="z7uhvbuxo4svguyf"
 Content-Disposition: inline
-In-Reply-To: <20200106085933.9102-1-wens@kernel.org>
+In-Reply-To: <20200106090030.9165-1-wens@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---sc3mdfowvd7zmesw
+--z7uhvbuxo4svguyf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Jan 06, 2020 at 04:59:33PM +0800, Chen-Yu Tsai wrote:
+On Mon, Jan 06, 2020 at 05:00:30PM +0800, Chen-Yu Tsai wrote:
 > From: Chen-Yu Tsai <wens@csie.org>
 >
 > A few clocks from the CCU were exported later, and references to them in
@@ -75,15 +76,15 @@ On Mon, Jan 06, 2020 at 04:59:33PM +0800, Chen-Yu Tsai wrote:
 Applied, thanks!
 Maxime
 
---sc3mdfowvd7zmesw
+--z7uhvbuxo4svguyf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhL4CwAKCRDj7w1vZxhR
-xZOwAP4n9OEN+HnYL9FmZxQz44MnBDFImasSN5aYsXQVAUR5+AD/QZVKLL8yTKn6
-tjghlB4J0hPcflW0X9vDCXzc5YD+zQ0=
-=fo7i
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhL4IwAKCRDj7w1vZxhR
+xWXbAP9Ors18Np2z+FcY5vnpLSAVawSLtt6//SNXrjCIJVWkyAD/Zm/E8yIG+xZN
+5azAfdesLHweGYLYYFn1bz6nco+2vQM=
+=tHnk
 -----END PGP SIGNATURE-----
 
---sc3mdfowvd7zmesw--
+--z7uhvbuxo4svguyf--
