@@ -2,68 +2,79 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8212EC33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C33CC33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5122072C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4DB2072C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgAFVFN (ORCPT
+        id S1726695AbgAFVRB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:05:13 -0500
-Received: from muru.com ([72.249.23.125]:50352 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbgAFVFN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 16:05:13 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 7509E80AA;
-        Mon,  6 Jan 2020 21:05:53 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 13:05:09 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Matwey V. Kornilov" <matwey@sai.msu.ru>
-Cc:     Robert Nelson <robertcnelson@gmail.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Mon, 6 Jan 2020 16:17:01 -0500
+Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:46734 "EHLO
+        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726683AbgAFVRB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 16:17:01 -0500
+Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
+        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1ioZk6-0001Pq-NQ; Mon, 06 Jan 2020 22:16:54 +0100
+X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
+        linuxbbg.five-lan.de
+Received: from roc-pc (pD9E89450.dip0.t-ipconnect.de [217.232.148.80])
+        (authenticated bits=0)
+        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 006LGrhM032119
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 6 Jan 2020 22:16:53 +0100
+From:   Markus Reichl <m.reichl@fivetechno.de>
+To:     linux-rockchip@lists.infradead.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
-Message-ID: <20200106210509.GF5885@atomide.com>
-References: <20200106130909.7697-1-matwey@sai.msu.ru>
- <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
- <CAJs94EbUL6o9sM+pwxwpqHVDkFqy7wFRirET-Vq3SNVd3grUsA@mail.gmail.com>
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     Markus Reichl <m.reichl@fivetechno.de>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/5] regulator: mp8859: add driver for DC/DC converter used on rk3399-roc-pc board
+Date:   Mon,  6 Jan 2020 22:16:23 +0100
+Message-Id: <20200106211633.2882-1-m.reichl@fivetechno.de>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJs94EbUL6o9sM+pwxwpqHVDkFqy7wFRirET-Vq3SNVd3grUsA@mail.gmail.com>
+X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578345420;0ad3f49f;
+X-HE-SMSGID: 1ioZk6-0001Pq-NQ
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* Matwey V. Kornilov <matwey@sai.msu.ru> [200106 20:48]:
-> пн, 6 янв. 2020 г. в 23:44, Robert Nelson <robertcnelson@gmail.com>:
-> >
-> > On Mon, Jan 6, 2020 at 7:10 AM Matwey V. Kornilov <matwey@sai.msu.ru> wrote:
-> > >
-> > > BeagleBone Black series is equipped with 512MB RAM
-> > > whereas only 256MB is included from am335x-bone-common.dtsi
-> >
-> > FYI: While all versions from the factory are 512MB, some 3rd parties
-> > offered 1GB reballing upgrades..
+On rk3399-roc-pc board a voltage regulator MP8859 from Monolithic Power Systems
+is used to supply the 12V power line. This delivers 5V as a default value after
+boot. The voltage is controllable via I2C.
+Add a basic driver to set and get the voltage of the MP8859 and add a matching
+node with fixed 12V in the DT of the board. 
 
-So what's the conclusion, is it safe to bump the default size to
-512MB then?
+Markus Reichl (5):
+  regulator: mp8859: add driver
+  regulator: mp8859: add config option and build entry
+  dt-bindings: add vendor Monolithic Power Systems
+  dt-bindings: regulator: add MPS mp8859 voltage regulator
+  arm64: dts: rockchip: Enable mp8859 regulator on rk3399-roc-pc
 
-The custom ones could use their own dts file if bootloader is not
-setting the RAM.
+ .../devicetree/bindings/regulator/mp8859.txt  |  22 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../boot/dts/rockchip/rk3399-roc-pc.dtsi      |  32 ++--
+ drivers/regulator/Kconfig                     |  11 ++
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/mp8859.c                    | 156 ++++++++++++++++++
+ 6 files changed, 210 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mp8859.txt
+ create mode 100644 drivers/regulator/mp8859.c
 
-Regards,
+-- 
+2.24.1
 
-Tony
