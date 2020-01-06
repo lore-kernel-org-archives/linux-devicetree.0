@@ -2,120 +2,126 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84948C32767
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B79DC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662AA20848
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C306E218AC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z8VCJpO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgAFFOc (ORCPT
+        id S1726536AbgAFFXk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 00:14:32 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:32358 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725446AbgAFFOc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 00:14:32 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 06 Jan 2020 10:44:28 +0530
-Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 06 Jan 2020 10:44:04 +0530
-Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
-        id AEB2827C8; Mon,  6 Jan 2020 10:44:03 +0530 (IST)
-From:   Harigovindan P <harigovi@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: [v2] drm/msm: add support for 2.4.1 DSI version for sc7180 soc
-Date:   Mon,  6 Jan 2020 10:43:49 +0530
-Message-Id: <1578287629-26709-1-git-send-email-harigovi@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 6 Jan 2020 00:23:40 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47620 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFFXk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 00:23:40 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0065NTJd030572;
+        Sun, 5 Jan 2020 23:23:29 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578288209;
+        bh=rTz3tg0hukG6B7Zkj7d+S6fA37E2Q8Ph5uLJXD8dxww=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Z8VCJpO4Wx34j08zAwzjmyhePKALEpr4bj3GwgpRjcRFPVp76bd559eS49h8VZxmS
+         4U1Ho4mtD6bMRORY1fxKDFpheE9ys9SEpOCSR1Hha/WVIWU7zMJdDnnXKILPuPH6pM
+         41CKR/CFZ7kNK1wEh+Fct/bmbHghJNsdH+2xFZ94=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0065NT2p076205;
+        Sun, 5 Jan 2020 23:23:29 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 5 Jan
+ 2020 23:23:28 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 5 Jan 2020 23:23:28 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0065NPAk105709;
+        Sun, 5 Jan 2020 23:23:26 -0600
+Subject: Re: [PATCH v4 00/13] phy: usb: Updates to Broadcom STB USB PHY driver
+To:     Al Cooper <alcooperx@gmail.com>, <linux-kernel@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200103181811.22939-1-alcooperx@gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <76cf24f1-4d72-2dec-ef80-36d6d3744ebe@ti.com>
+Date:   Mon, 6 Jan 2020 10:55:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200103181811.22939-1-alcooperx@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modify commit text to indicate DSI version and SOC detail
 
-Changes in v1:
-	-Modify commit text to indicate DSI version and SOC detail(Jeffrey Hugo).
-	-Splitting visionox panel driver code out into a
-	 different patch(set), since panel drivers are merged into
-	 drm-next via a different tree(Rob Clark).
-Changes in v2:
-	-Update commit text accordingly(Matthias Kaehlcke).
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
----
- drivers/gpu/drm/msm/dsi/dsi_cfg.c | 21 +++++++++++++++++++++
- drivers/gpu/drm/msm/dsi/dsi_cfg.h |  1 +
- 2 files changed, 22 insertions(+)
+On 03/01/20 11:47 PM, Al Cooper wrote:
+> This patchset contains various updates to the Broadcom STB USB Driver.
+> The updates include:
+> - Add support for 7216 and 7211 Broadcom SoCs which use the new
+>   Synopsys USB Controller.
+> - Add support for USB Wake
+> - Add various bug fixes.
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-index b7b7c1a..7b967dd 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-@@ -133,6 +133,10 @@ static const char * const dsi_sdm845_bus_clk_names[] = {
- 	"iface", "bus",
- };
- 
-+static const char * const dsi_sc7180_bus_clk_names[] = {
-+	"iface", "bus",
-+};
-+
- static const struct msm_dsi_config sdm845_dsi_cfg = {
- 	.io_offset = DSI_6G_REG_SHIFT,
- 	.reg_cfg = {
-@@ -147,6 +151,20 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
- 	.num_dsi = 2,
- };
- 
-+static const struct msm_dsi_config sc7180_dsi_cfg = {
-+	.io_offset = DSI_6G_REG_SHIFT,
-+	.reg_cfg = {
-+		.num = 1,
-+		.regs = {
-+			{"vdda", 21800, 4 },	/* 1.2 V */
-+		},
-+	},
-+	.bus_clk_names = dsi_sc7180_bus_clk_names,
-+	.num_bus_clks = ARRAY_SIZE(dsi_sc7180_bus_clk_names),
-+	.io_start = { 0xae94000 },
-+	.num_dsi = 1,
-+};
-+
- const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
- 	.link_clk_enable = dsi_link_clk_enable_v2,
- 	.link_clk_disable = dsi_link_clk_disable_v2,
-@@ -201,6 +219,9 @@ static const struct msm_dsi_cfg_handler dsi_cfg_handlers[] = {
- 		&msm8998_dsi_cfg, &msm_dsi_6g_v2_host_ops},
- 	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_2_1,
- 		&sdm845_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-+	{MSM_DSI_VER_MAJOR_6G, MSM_DSI_6G_VER_MINOR_V2_4_1,
-+		&sc7180_dsi_cfg, &msm_dsi_6g_v2_host_ops},
-+
- };
- 
- const struct msm_dsi_cfg_handler *msm_dsi_cfg_get(u32 major, u32 minor)
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.h b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-index e2b7a7d..9919536 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.h
-@@ -19,6 +19,7 @@
- #define MSM_DSI_6G_VER_MINOR_V1_4_1	0x10040001
- #define MSM_DSI_6G_VER_MINOR_V2_2_0	0x20000000
- #define MSM_DSI_6G_VER_MINOR_V2_2_1	0x20020001
-+#define MSM_DSI_6G_VER_MINOR_V2_4_1	0x20040001
- 
- #define MSM_DSI_V2_VER_MINOR_8064	0x0
- 
--- 
-2.7.4
+merged, thanks!
 
+-Kishon
+> 
+> 
+> v4 - Fix mispelling, change Synopsis to Synopsys. Also add
+>      "Reviewed-by: Rob Herring" to bindings patch. There are no
+>      functional code changes in v4.
+> 
+> v3 - Rebase to v5.5-rc1
+> 
+> v2 - Changes based on review feedback
+>    - Add vendor prefix to DT property "syscon-piarbctl"
+>    - Use standard "wakeup" instead of "wake" for DT "interrupt-names"
+> 
+> Al Cooper (13):
+>   phy: usb: EHCI DMA may lose a burst of DMA data for 7255xA0 family
+>   phy: usb: Get all drivers that use USB clks using correct
+>     enable/disable
+>   phy: usb: Put USB phys into IDDQ on suspend to save power in S2 mode
+>   phy: usb: Add "wake on" functionality
+>   phy: usb: Restructure in preparation for adding 7216 USB support
+>   dt-bindings: Add Broadcom STB USB PHY binding document
+>   phy: usb: Add support for new Synopsys USB controller on the 7216
+>   phy: usb: Add support for new Synopsys USB controller on the 7211b0
+>   phy: usb: fix driver to defer on clk_get defer
+>   phy: usb: PHY's MDIO registers not accessible without device installed
+>   phy: usb: bdc: Fix occasional failure with BDC on 7211
+>   phy: usb: USB driver is crashing during S3 resume on 7216
+>   phy: usb: Add support for wake and USB low power mode for 7211 S2/S5
+> 
+>  .../bindings/phy/brcm,brcmstb-usb-phy.txt     |  69 ++-
+>  drivers/phy/broadcom/Makefile                 |   2 +-
+>  .../phy/broadcom/phy-brcm-usb-init-synopsys.c | 414 ++++++++++++++++++
+>  drivers/phy/broadcom/phy-brcm-usb-init.c      | 226 +++++-----
+>  drivers/phy/broadcom/phy-brcm-usb-init.h      | 148 ++++++-
+>  drivers/phy/broadcom/phy-brcm-usb.c           | 269 ++++++++++--
+>  6 files changed, 943 insertions(+), 185 deletions(-)
+>  create mode 100644 drivers/phy/broadcom/phy-brcm-usb-init-synopsys.c
+> 
