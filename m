@@ -2,105 +2,98 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50FA5C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E74C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1691421775
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6C721734
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578301235;
-	bh=vQyBywdReqFFBKgdcXyrug3COE2qkfjhTUa8UfiyK4o=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1kicl3wEyCvknWNVJgnPkcwL/MlcI0h6cJ+mUNnhYDH7nl+m8/f8giDYXzFe1jvUa
-	 /3Q0XB0MDgp6v3T7aZuOe+xjvz5Jg2eucHVymESXRajr8sVw1C+f+/72voC/z1IDDH
-	 VghEWds/vmLUT8AffECYXVsxDYycOc2kudNDBH7Q=
+	s=default; t=1578301428;
+	bh=3AZoB5lzq7P9xtp5x7IB8Ry3pqmrEZMSxIru7I6Mayw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BV9TR4OkXc6qwyDno8zsdfn61VHnpW7NvAoAaHPB2CqeR6GTu0MpXfe2StjDNPfu8
+	 EShyxw2hZSBDHBsfAkFxT8pMxCIOtB3a04N0sjxKnQJsJymidQhPbARmmmcY+tuaQ8
+	 8h/86QVYlsf/6v9wxsLQVdvAYyP+FVZnmFEAFGas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbgAFJAe (ORCPT
+        id S1726180AbgAFJDs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:00:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37370 "EHLO mail.kernel.org"
+        Mon, 6 Jan 2020 04:03:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgAFJAe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 04:00:34 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
+        id S1725446AbgAFJDs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:03:48 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17F320848;
-        Mon,  6 Jan 2020 09:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 180B420848;
+        Mon,  6 Jan 2020 09:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578301234;
-        bh=vQyBywdReqFFBKgdcXyrug3COE2qkfjhTUa8UfiyK4o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=w46tN5kAiqSuaX0ajqvmx8wQw/Nx2eAOWF4NO+0j4/P9Y8otmSdz/PqG2VV15OIOP
-         zD19L0rsREe3T8cVPZYxFKXNPElV4HTcQxAkDQ0jlI3/NY/LGJaM8I9BzvVeUiOyCa
-         NAAjcCvEwgIfcdvZQrAPxykh4kpMcCSl8nqUm1/4=
-Received: by wens.tw (Postfix, from userid 1000)
-        id A9E705FC12; Mon,  6 Jan 2020 17:00:32 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        s=default; t=1578301427;
+        bh=3AZoB5lzq7P9xtp5x7IB8Ry3pqmrEZMSxIru7I6Mayw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TFdhnAj6rBK3Po0t2XoT3/A4g80GoPtZw8KMSnGYkUvUlhLmhQZl+8pWIy0S3Pai3
+         VMDuZpbn0KigLOlyW851x3P+wJOgnmiNJE7iKhdOW8wV3EFzHzvu4EVZM1N9iKn3Di
+         XkpfD3pQ26VjyK8eUkv8vLThmC399+j6YbVaVCWI=
+Date:   Mon, 6 Jan 2020 10:03:44 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: allwinner: sun50i-a64: Use macros for newly exported clocks
-Date:   Mon,  6 Jan 2020 17:00:30 +0800
-Message-Id: <20200106090030.9165-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.1
+Subject: Re: [PATCH] arm64: dts: allwinner: h5: Add Libre Computer ALL-H5-CC
+ H5 board
+Message-ID: <20200106090344.wlqwlhnshj7c5j6q@gilmour.lan>
+References: <20200106085820.7082-1-wens@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wopthskqafqpdmgu"
+Content-Disposition: inline
+In-Reply-To: <20200106085820.7082-1-wens@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
 
-A few clocks from the CCU were exported later, and references to them in
-the device tree were using raw numbers.
+--wopthskqafqpdmgu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Now that the DT binding header changes are in as well, switch to the
-macros for more clarity.
+On Mon, Jan 06, 2020 at 04:58:20PM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> The Libre Computer ALL-H5-CC board is an upgraded version of the
+> ALL-H3-CC. Changes include:
+>
+>   - Gigabit Ethernet via external RTL8211E Ethernet PHY
+>   - 16 MiB SPI NOR flash memory
+>   - PoE tap header
+>   - Line out jack removed
+>
+> Only H5 variant test samples were made available, and the vendor is not
+> certain whether other SoC variants would be made or not. Furthermore the
+> board is a minor upgrade compared to the ALL-H3-CC. Thus the device tree
+> simply includes the one for the ALL-H3-CC, and adds the changes on top.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Applied, thanks!
+Maxime
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 92688b89c2a4..293059ffbbf6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -590,7 +590,7 @@ pio: pinctrl@1c20800 {
- 			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 58>, <&osc24M>, <&rtc 0>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
-@@ -1091,7 +1091,7 @@ hdmi_phy: hdmi-phy@1ef0000 {
- 			compatible = "allwinner,sun50i-a64-hdmi-phy";
- 			reg = <0x01ef0000 0x10000>;
- 			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
--				 <&ccu 7>;
-+				 <&ccu CLK_PLL_VIDEO0>;
- 			clock-names = "bus", "mod", "pll-0";
- 			resets = <&ccu RST_BUS_HDMI0>;
- 			reset-names = "phy";
-@@ -1121,7 +1121,8 @@ r_intc: interrupt-controller@1f00c00 {
- 		r_ccu: clock@1f01400 {
- 			compatible = "allwinner,sun50i-a64-r-ccu";
- 			reg = <0x01f01400 0x100>;
--			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>, <&ccu 11>;
-+			clocks = <&osc24M>, <&rtc 0>, <&rtc 2>,
-+				 <&ccu CLK_PLL_PERIPH0>;
- 			clock-names = "hosc", "losc", "iosc", "pll-periph";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
--- 
-2.24.1
+--wopthskqafqpdmgu
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhL38AAKCRDj7w1vZxhR
+xQN7AQDvYzlQWw3vCLjwH1x+5WWoSKJTHRA94foaIILZoivGfAEApMPC1Zqmqddk
+ZuBHerNDSThxQgHT2dRhQg380OuJKQM=
+=CUUd
+-----END PGP SIGNATURE-----
+
+--wopthskqafqpdmgu--
