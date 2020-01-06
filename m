@@ -2,185 +2,146 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0383C2D0DA
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FD7C33C9B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 11:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDAA2072E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7686F2081E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 11:00:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vrdRIz6y"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Yk/Jylho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgAFKlJ (ORCPT
+        id S1725787AbgAFLAR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:41:09 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36004 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbgAFKlJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 05:41:09 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so49094014wru.3
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 02:41:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3bXFRQu8lj+WQUwlwlbKSwipiEqS+MjRPPJ9XeWese4=;
-        b=vrdRIz6yMXntCHbGKk6DLX8nRdC2s9MClySUsgKcs0PNChYa+PzrsQCsY0FSyT424L
-         HkuLf4TroqTH6d7CF98rNtCJYaREjP1adusVUB025LSv4dbLSPfECaxArigAYZCRTR0k
-         gfGTxFZl+dNEAUCJ5LZ0S5cBQUaGnfirD6cPG2jYKB9aftDEwEtk130YuboS631aXAaL
-         Dlh4yrigX+WF34FguH+4hx3NLaKYAjms7sY2yvI1KoGtKHnQYU/0xZEEsAnEC2Hdw7if
-         2VBUAJygXfdE3Z/wfyACux6RaPNQJmF8ML1o6egVKHgPBAZM0KMkjzJMo8aIBO0KaZ1g
-         bBBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3bXFRQu8lj+WQUwlwlbKSwipiEqS+MjRPPJ9XeWese4=;
-        b=EOSHHgPPRh95IXh6Ud6KCvFOG32Js0D6WwE0bSAwYYpb3g1tz7ge5ZFMU5T9cT/Z9R
-         v3iojxCJugO4UU3DWwd3fZo8VHFD2aJ4IWKZwOi9pE7/pPzWDCouQ5/g0lQpZN5qq91X
-         BW1L+Xl3w850ayo2RTs39X+VQnRdZX7PK8oc1uHJ/WONCUcODF6JOM/wWEoCycrtok7w
-         kSj75OMHDKvSSAD6U3q6cdY4IzqKa/OWz89jYOSGQ32bPZ5tVAhEldG96LagWIyhaelc
-         oKVDIn8N59i1J74LYJ9F7LPxfDFwjtJpH3tgojPh5F7wT7P+dWFrW6o51KiMIqtT6Oph
-         4w1Q==
-X-Gm-Message-State: APjAAAU2+ePQnyz7G1maKCFjU+r58EuNh94F+2JDC0REFhuLIdd/DEcS
-        i47n1CyfHyNWdnZDI9EWUVnTfA==
-X-Google-Smtp-Source: APXvYqzRyIBQ3Rp6lF0uTHOmc9XY7WyzrE9RG3jWtWqvsPrbmc2wFKfr9L2n/8xw4+xTwRP+kteckQ==
-X-Received: by 2002:adf:f88c:: with SMTP id u12mr107357159wrp.323.1578307266307;
-        Mon, 06 Jan 2020 02:41:06 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 18sm22186795wmf.1.2020.01.06.02.41.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 02:41:05 -0800 (PST)
-Subject: Re: [PATCH v5 1/4] drm/bridge: Add a drm_bridge_state object
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>
-References: <20191219101151.28039-1-narmstrong@baylibre.com>
- <20191219101151.28039-2-narmstrong@baylibre.com>
- <20200106110354.0a5cbc10@collabora.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <fe3825d2-3663-21fc-90e4-6eb9846ea7a4@baylibre.com>
-Date:   Mon, 6 Jan 2020 11:41:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 6 Jan 2020 06:00:17 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60418 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbgAFLAR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 06:00:17 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006B08kv032657;
+        Mon, 6 Jan 2020 05:00:08 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578308408;
+        bh=rHHxnSNmoG0TpKHhfoDpiR+hC+hKper1pj6PfPbJugE=;
+        h=From:To:CC:Subject:Date;
+        b=Yk/JylhoNEEZ1OJCrK62AF0JJi+msYodaFoAFR1AV9PpL2hFsaL63sszFRaEgDeuS
+         i9UXt8qVwI+QqsvxTBs+PjT4ufL6a3WvSRuvHn7t6Br7a2u8qOuwH84oHNsfh3Mm9J
+         5fDm/m7c0ulC3/o66C1T+kUd0pXrBVPjXghOReko=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006B086O062609
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 6 Jan 2020 05:00:08 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
+ 2020 05:00:07 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 6 Jan 2020 05:00:07 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006B00Jp007044;
+        Mon, 6 Jan 2020 05:00:01 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
+CC:     <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
+        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>, <tony@atomide.com>,
+        <faiz_abbas@ti.com>
+Subject: [PATCH v4 00/11] Port am335x and am437x devices to sdhci-omap
+Date:   Mon, 6 Jan 2020 16:31:22 +0530
+Message-ID: <20200106110133.13791-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <20200106110354.0a5cbc10@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/01/2020 11:03, Boris Brezillon wrote:
-> Hi Neil,
-> 
-> On Thu, 19 Dec 2019 11:11:48 +0100
-> Neil Armstrong <narmstrong@baylibre.com> wrote:
-> 
->> +/**
->> + * drm_atomic_helper_duplicate_bridge_state() - Default duplicate state helper
->> + * @bridge: bridge containing the state to duplicate
->> + *
->> + * Default implementation of &drm_bridge_funcs.atomic_duplicate().
->> + *
->> + * RETURNS:
->> + * a valid state object or NULL if the allocation fails.
->> + */
->> +struct drm_bridge_state *
->> +drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge)
->> +{
->> +	struct drm_bridge_state *new;
->> +
->> +	if (WARN_ON(!bridge->base.state))
->> +		return NULL;
->> +
->> +	new = kzalloc(sizeof(*new), GFP_KERNEL);
->> +	if (new)
->> +		__drm_atomic_helper_bridge_duplicate_state(bridge, new);
->> +
->> +	return new;
->> +}
->> +EXPORT_SYMBOL(drm_atomic_helper_bridge_duplicate_state);
-> 
-> IIRC, Laurent suggested to make those functions private. I'd also
-> recommend changing the names to
-> drm_atomic_*default*_bridge_<action>_state() and dropping the kernel doc
-> header since making them static means they're no longer helper
-> functions.
-> 
-> Regards,
-> 
-> Boris
-> 
+The following add driver patches for porting TI's am335x and am437x devices to
+the sdhci-omap driver.
 
-Ack, time for a v6 !
+Patches 1-4 Add Support for external DMA to the sdhci driver.
 
-Neil
+Patches 5-7 refactor the sdhci_set_timeout() function and use it disable
+data timeout interrupt for erase commands
+
+Patches 8-9 port the ti,needs-special-reset property from omap_hsmmc driver.
+
+Patches 10-11 add new compatibles for am335x and am43xx devices to the
+sdhci-omap driver.
+
+DT changes will be posted as a separate series.
+
+Tested on: am335x-evm, am335x-boneblack, am335x-bonegreen-wireless,
+am335x-sk, am335x-bone, am437x-idk, am43xx-gp-evm, am43xx-epos-evm.
+
+I need some help with testing all other am335x variants and SDIO cards.
+
+Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
+
+RESEND ALERT: I sent these patches from a new computer yesterday but non
+of them appeared in any of the mailing lists. Apologies if you receive a
+duplicate series. Please ignore the previous one.
+
+v4:
+1. Made the factoring out of initialize_data, block_info and mrqs_done as a
+   separate patch
+2. Replaced the patch introducing the quirk to disable DTO during erase
+   operations to a set_timeout() callback in sdhci-omap
+3. Ported the ti,needs-special-reset property from omap_hsmmc to sdhci-omap.
+4. Minor style changes.
+
+v3:
+1. Dropped patch 1 because the tasklet was removed by Adrian in an
+   earlier series.
+2. Added dma bindings in sdhci-omap as optional properties.
+3. Rebased on top of latest mainline.
+
+v2:
+1. sdhci is using two bottom halves. One threaded_rq for card detect and a
+   tasklet for finishing mmc requests. Patch 1 removes the tasklet and
+   moves its function to the threaded_irq. This enables me to
+   terminate_sync() in sdhci_request_done()
+
+2. Factored out common code for between the normal adn external dma case
+
+3. Using existing API sdhci_data_timeout_irq for disabling DTO during
+   erase commands.
+
+4. Fixed subject line for dt-bindings patch.
+
+Chunyan Zhang (3):
+  dt-bindings: sdhci-omap: Add properties for using external dma
+  mmc: sdhci: add support for using external DMA devices
+  mmc: sdhci-omap: Add using external dma
+
+Faiz Abbas (8):
+  mmc: sdhci: Factor out some operations set to their own functions
+  mmc: sdhci: Convert sdhci_set_timeout_irq() to non-static
+  mmc: sdhci: Refactor sdhci_set_timeout()
+  mmc: sdhci-omap: Disable data timeout interrupt during erase
+  dt-bindings: sdhci-omap: Add documentation for ti,needs-special-reset
+    property
+  mmc: sdhci-omap: Add ti,needs-special-reset property
+  dt-bindings: sdhci-omap: Add am335x and am437x specific bindings
+  mmc: sdhci-omap: Add am335x and am437x specific compatibles
+
+ .../devicetree/bindings/mmc/sdhci-omap.txt    |  12 +
+ drivers/mmc/host/Kconfig                      |   4 +
+ drivers/mmc/host/sdhci-omap.c                 |  61 ++-
+ drivers/mmc/host/sdhci.c                      | 355 +++++++++++++++---
+ drivers/mmc/host/sdhci.h                      |  10 +
+ 5 files changed, 384 insertions(+), 58 deletions(-)
+
+-- 
+2.19.2
+
