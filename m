@@ -2,131 +2,158 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0C1C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 163CEC33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBEC2071A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1BCD2081E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="STrhbIBz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tor+9VLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgAFNHg (ORCPT
+        id S1726437AbgAFNOV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:07:36 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44454 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAFNHg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 08:07:36 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006D7Yn9077362;
-        Mon, 6 Jan 2020 07:07:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578316054;
-        bh=2FPkOHiFuw/3/5ZGEe10aNDQIAJ+xq/iTHCqalfTlKc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=STrhbIBz+g6kjPb4Wn6hEgD+iT+uMkw6lIak+vqr+Js9KfeSOSPZVtSEx0Jwdb7Vv
-         Gw1EnOsdYVu0phCCci9UcpJ0MjNiJNQgQdy/it/Sk/k8NzTsZXQYCWXuM/75hig0Zo
-         GbrqgcFGS1sCM1kStkhFaBmC0W02VdBlFyMDRRf0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006D7YXZ021571;
-        Mon, 6 Jan 2020 07:07:34 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
- 2020 07:07:34 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 6 Jan 2020 07:07:33 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006D7WHZ020291;
-        Mon, 6 Jan 2020 07:07:32 -0600
-Subject: Re: [PATCH v5 0/3] phy: cadence: j721e-wiz: Add Type-C plug flip
- support
-To:     <kishon@ti.com>
-CC:     <aniljoy@cadence.com>, <adouglas@cadence.com>, <nsekhar@ti.com>,
-        <jsarha@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200106130622.29703-1-rogerq@ti.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <6390dd78-92bd-711b-f153-ae73c959a665@ti.com>
-Date:   Mon, 6 Jan 2020 15:07:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 6 Jan 2020 08:14:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56265 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgAFNOV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 08:14:21 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so14898830wmj.5;
+        Mon, 06 Jan 2020 05:14:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LrWoGYPQhmVuVZJ2chuTv8wabYF1cEdpWPnR/3AObmI=;
+        b=Tor+9VLbD7Zc0d9dWTQ0qbqi2gIK9SgGkqe6Px5lL21j9bsRAy4aai5nJAi0j4r9g9
+         wpYhaVOZc6YfHSwHCk/Z0G62gebtmK3ONeAvqNVFuAtZFuL6urTbCd43yMF2jD0y3Hcq
+         F3/0Ysb8OfXt5KCdVi5aTAzN8g6MkrQ1Dq43XhiOHE9vhora4MjjcqS5hutXVTzDnLUm
+         l6dsW8sqYjGIi3B1nM59QyeUY1UPo4TYMkKAbnrGsa8yWYrtWaC/1yYERtl9i5gCk8tX
+         ZjgAdNwQ3cZV4ivBs6lzf8W/O/NiUEsusmmpoWSWiJTtVJop3LNc8q415YJkw9/bD9YF
+         26SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LrWoGYPQhmVuVZJ2chuTv8wabYF1cEdpWPnR/3AObmI=;
+        b=qTPtss7oLqaxOC7DGUmaszTy3CnjvjcWab1he6IDyruXHo8R6+GRvcCcGpAoNPCvPv
+         1eWVIiWPIBiFZAsNPGzs4Ta3zUWKrTN/Khtkp3UPdyFd1OYil0xGe60p8PJimMU/3iG/
+         qokRWNht6TpL6yPdGZVFUDfAjBrbKcvyO9V+Q7UR/ZPjNyOm5r2BO5X0djMc2Cytw8tR
+         1Z+SQiUPVb9WNAavAEcbKk9BH3vCuzQ0K//XEyU6VxrxmH2symJtVDPRs3UW0z5Uc4J8
+         XcgLBDGeRWc3u0t9hMYGJk3uh03I7z1Y0gZUXBJ663FwnAx4myu9VszcmMNYMDB+26Q9
+         UTbg==
+X-Gm-Message-State: APjAAAUplyfk8B0wt++79EP6NlKAj66UDaxPrFgpoZaajKNl2LuSI0nZ
+        T0s8x8Ey1VpVPJFI/WYHivo=
+X-Google-Smtp-Source: APXvYqxNvAqB5fDsO76GWUOtJXB7v4lpojthI3YAMdCJtc4OE+SxwUanVxHbhH7I6AagyWwIAy6qGQ==
+X-Received: by 2002:a1c:5f41:: with SMTP id t62mr36486858wmb.42.1578316458683;
+        Mon, 06 Jan 2020 05:14:18 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id v62sm22970179wmg.3.2020.01.06.05.14.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 05:14:17 -0800 (PST)
+Date:   Mon, 6 Jan 2020 14:14:16 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2 3/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20200106131416.GD1955714@ulmo>
+References: <20200103124404.20662-1-vidyas@nvidia.com>
+ <20200103124404.20662-4-vidyas@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106130622.29703-1-rogerq@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="veXX9dWIonWZEC6h"
+Content-Disposition: inline
+In-Reply-To: <20200103124404.20662-4-vidyas@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
+--veXX9dWIonWZEC6h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 06/01/2020 15:06, Roger Quadros wrote:
-> Hi,
-> 
-> On J721e platform, the 2 lanes of SERDES PHY are used to achieve
-> USB Type-C plug flip support without any additional MUX component
-> by using a lane swap feature.
-> 
-> However, the driver needs to know the Type-C plug orientation before
-> it can decide whether to swap the lanes or not. This is achieved via a
-> GPIO named DIR.
-> 
-> Another constraint is that the lane swap must happen only when the PHY
-> is in inactive state. This is achieved by sampling the GPIO and
-> programming the lane swap before bringing the PHY out of reset.
-> 
-> This series adds support to read the GPIO and accordingly program
-> the Lane swap for Type-C plug flip support.
-> 
-> Series must be applied on top of
-> https://patchwork.kernel.org/cover/11293671/
-> 
-> cheers,
-> -roger
-> 
-> Changelog:
-v5
-  - rebased on phy/next
+On Fri, Jan 03, 2020 at 06:14:02PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V2:
+> * Addressed Bjorn's review comments
+> * Made changes as part of addressing review comments for other patches
+>=20
+>  drivers/pci/controller/dwc/Kconfig         |  30 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 782 ++++++++++++++++++++-
+>  2 files changed, 796 insertions(+), 16 deletions(-)
+>=20
+[...]
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/con=
+troller/dwc/pcie-tegra194.c
+> index cbe95f0ea0ca..6621ac79efee 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+[...]
+> @@ -1427,8 +1620,553 @@ static int tegra_pcie_config_rp(struct tegra_pcie=
+_dw *pcie)
+[...]
+> +static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
+> +				struct platform_device *pdev)
+> +{
+[...]
+> +	ret =3D devm_request_irq(dev, pcie->pex_rst_irq,
+> +			       tegra_pcie_ep_pex_rst_irq,
+> +			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> +			       name, (void *)pcie);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to request IRQ for PERST: %d\n", ret);
+> +		return ret;
+> +	}
+> +	disable_irq(pcie->pex_rst_irq);
 
-> v4
-> - fixes in dt-binding document
->    - fix typo
->    - change to typec-dir-debounce-ms and add min/max/default values
->    - drop reference to uint32 type
-> - fixes in driver
->    - change to updated typec-dir-debounce-ms property
->    - add limit checks and use default value if not specified
-> 
-> v3
-> - Rebase on v2 of PHY series and update DT binding to yaml
-> 
-> v2
-> - revise commit log of patch 1
-> - use regmap_field in patch 3
-> 
-> 
-> Roger Quadros (3):
->    phy: cadence: Sierra: add phy_reset hook
->    dt-bindings: phy: ti,phy-j721e-wiz: Add Type-C dir GPIO
->    phy: ti: j721e-wiz: Manage typec-gpio-dir
-> 
->   .../bindings/phy/ti,phy-j721e-wiz.yaml        | 17 ++++++
->   drivers/phy/cadence/phy-cadence-sierra.c      | 10 +++
->   drivers/phy/ti/phy-j721e-wiz.c                | 61 +++++++++++++++++++
->   3 files changed, 88 insertions(+)
-> 
+I just came across this while reviewing another patch: it looks like a
+better way to handle "disabled by default" interrupts is to do this:
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+	irq_set_status_flags(rtc->irq, IRQ_NOAUTOEN);
+
+before calling devm_request_irq(). See here for an example:
+
+	http://patchwork.ozlabs.org/patch/1217944/
+
+Thierry
+
+--veXX9dWIonWZEC6h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4TMqgACgkQ3SOs138+
+s6GNwg//eoYbBqRW7zBR5KGrZcKbRD3VPCZru7iK4ARTdjfc4up0xfWPooDjX0ns
+a/jL8FztSb++YHsLIWsH3B4/IguatB0jQrajT6Dduco7gPifJuJz6S2IyTufgba7
+FzAgJQX4sFkqa7fIpZhJASjSpyMg9907eSXM/FEKqjcmE8w3/xHKrpFV/uGWDOC0
+9r2fAX7432kmmKaiIPWlMLo/CjSvuaOb1GHHkxBZmh+pV7zvCfyw3o8h3+6sdyJB
+MSGuG17DCT9/MgBfSEQCO4ZqKbB8LcnsIgOyDsEp9h6iKPjdLvOV5aiGbn5I7Ett
+SdOsISrYFgcl6jVIhz+osfOmadoBWpJAYvRMVJH1BKQ0RqKRXtMk6lC95k96WdNm
+iw1tUajyBQzSdPN02Uu+IamwacrYv1VP/35HHF5E0qWpE/HcUOAVp0ASPaG9WlI5
+OlIBc6Ysh7G4de/bberj5eZ012GtEVdE+uetC+G4Mx3BDhhIjHNOYFGGbkQb5dRB
+yQTA792ZrYow2jYkz9WbnB5MXtYrZDAwA0J1lSSsNqUfq16X1jq31mmCmS7jlOS2
+HZr3LkEaKLcqqWQXMke1MA4xLB0RcOJd2jFFPUYztBZKRbZ+/sFnquP1qk5rtAnt
+jUgJNeQ15mLQE2GwhmUQbUSLI3PCVr6FBfWY8XsndLkfAZU4jWw=
+=JFHB
+-----END PGP SIGNATURE-----
+
+--veXX9dWIonWZEC6h--
