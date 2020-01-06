@@ -2,308 +2,207 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9455EC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C653BC32767
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C7524676
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CCE0215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 05:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bW9YONBi"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Su0gWFZw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgAFFZT (ORCPT
+        id S1726338AbgAFFa5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 00:25:19 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:60140 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725908AbgAFFZT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 00:25:19 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578288318; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=mze9oFHUpNa6Z+8qwqijLBz6OSr9etD6jEGkkwSvmwE=; b=bW9YONBieSoHE+oC2blkqEGJliA8He0uFYkavc4z8iaoeoagQa+/S7qF8ioBVlVyP/M/LRP9
- nPhZcKVbNhTRlwUzwqbVz0/XT/dVN+QevUztkAsi+cAtNPEPotrj2YUsXc9vIg9ra+MoCTh6
- OC6KKXfwuF8uIxFQM8gc4E5Y2QQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e12c4ba.7fdadccfca08-smtp-out-n02;
- Mon, 06 Jan 2020 05:25:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5EE42C433A2; Mon,  6 Jan 2020 05:25:13 +0000 (UTC)
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B91DC433CB;
-        Mon,  6 Jan 2020 05:25:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B91DC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
- bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        agross@kernel.org, sivaprak@codeaurora.org,
-        linux-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org>
- <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
- <20200104005834.GA22707@bogus>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <3a98d701-3400-dc46-167c-214a68ff9c04@codeaurora.org>
-Date:   Mon, 6 Jan 2020 10:55:01 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 6 Jan 2020 00:30:57 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:46734 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgAFFa5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 00:30:57 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0065UmVp123951;
+        Sun, 5 Jan 2020 23:30:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578288648;
+        bh=l3SBppAnhj+nCRQvU2uA5pxuogA04+AgYwbbsVVv9EM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Su0gWFZwb1VAtWnyYa8HXAL1JszTInCplgf/dDL9xJPzE7pH17mZ4oM/r/leuMq66
+         zVbFl+Xt5DO/OIyDsfr/QW1sNISV8QDFE5w3oOf30WW4gRBjpBg2A7qPO/1WUwL4mS
+         yI19JtuZ88IHVI1KWSddXZicOL2BILYM02NnlBpI=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0065Ump6048897
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 5 Jan 2020 23:30:48 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 5 Jan
+ 2020 23:30:48 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 5 Jan 2020 23:30:48 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0065Uiu9120958;
+        Sun, 5 Jan 2020 23:30:45 -0600
+Subject: Re: [PATCH v2 01/14] dt-bindings: phy: Convert Cadence MHDP PHY
+ bindings to YAML.
+To:     Yuti Amonkar <yamonkar@cadence.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <maxime@cerno.tech>
+CC:     <jsarha@ti.com>, <tomi.valkeinen@ti.com>, <praneeth@ti.com>,
+        <mparab@cadence.com>, <sjakhade@cadence.com>
+References: <1577114139-14984-1-git-send-email-yamonkar@cadence.com>
+ <1577114139-14984-2-git-send-email-yamonkar@cadence.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <5b1c3157-2584-c9c2-0823-ce4a5c709492@ti.com>
+Date:   Mon, 6 Jan 2020 11:02:50 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200104005834.GA22707@bogus>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1577114139-14984-2-git-send-email-yamonkar@cadence.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-  Thanks for the review.
+Hi,
 
-On 1/4/2020 6:28 AM, Rob Herring wrote:
-> On Fri, Jan 03, 2020 at 05:19:33PM +0530, Sricharan R wrote:
->> Add device tree binding Documentation details for ipq6018
->> pinctrl driver.
->>
->> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
->> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
->> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  [v3] Fixed the example dt node, inherited properties
->>
->>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 166 +++++++++++++++++++++
->>  1 file changed, 166 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->> new file mode 100644
->> index 0000000..e959c5f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
->> @@ -0,0 +1,166 @@
->> +# SPDX-License-Identifier: GPL-2.0-or-later
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
->> +
->> +maintainers:
->> +  - Sricharan R <sricharan@codeaurora.org>
->> +
->> +description: |
->> +  This binding describes the Top Level Mode Multiplexer block found in the
->> +  IPQ6018 platform.
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,ipq6018-pinctrl
-> 
-> A blank line after each property schema is preferred.
+On 23/12/19 8:45 PM, Yuti Amonkar wrote:
+> - Convert the MHDP PHY devicetree bindings to yaml schemas.
+> - Rename DP PHY to have generic Torrent PHY nomrnclature.
+> - Rename compatible string from "cdns,dp-phy" to "cdns,torrent-phy".
+>   This will not affect ABI as the driver has never been functional,
+>   and therefore do not exist in any active use case
 
- ok.
+Since the Torrent SERDES is similar in design to Sierra SERDES, can we
+make the binding look similar too.
+
+For example, with the current binding here, it might not be possible to
+specify multi-link. Sierra has a subnode for every link.
+
+Thanks
+Kishon
 
 > 
->> +  reg:
->> +    maxItems: 1
->> +  interrupts:
->> +    Description: Specifies the TLMM summary IRQ
->> +    maxItems: 1
->> +  interrupt-controller: true
->> +  '#interrupt-cells':
->> +    Description:
->> +      Specifies the PIN numbers and Flags, as defined in defined in
->> +      include/dt-bindings/interrupt-controller/irq.h
->> +    const: 2
->> +  gpio-controller: true
->> +  '#gpio-cells':
->> +    Description: Specifying the pin number and flags, as defined in
->> +      include/dt-bindings/gpio/gpio.h
->> +    const: 2
->> +  gpio-ranges:
->> +    Description: Documentation/devicetree/bindings/gpio/gpio.txt
->> +    maxItems: 1
->> +
->> +#PIN CONFIGURATION NODES
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    Description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +
->> +    Properties:
+> Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+> ---
+>  .../devicetree/bindings/phy/phy-cadence-dp.txt     | 30 ----------
+>  .../bindings/phy/phy-cadence-torrent.yaml          | 64 ++++++++++++++++++++++
+>  2 files changed, 64 insertions(+), 30 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
 > 
-> Did you run 'make dt_binding_check' and is dt-schema up to date? This 
-> isn't valid json-schema which is case sensitive.
-
- ok, will run the checks and will fix it.
-
+> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-dp.txt b/Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+> deleted file mode 100644
+> index 7f49fd54e..0000000
+> --- a/Documentation/devicetree/bindings/phy/phy-cadence-dp.txt
+> +++ /dev/null
+> @@ -1,30 +0,0 @@
+> -Cadence MHDP DisplayPort SD0801 PHY binding
+> -===========================================
+> -
+> -This binding describes the Cadence SD0801 PHY hardware included with
+> -the Cadence MHDP DisplayPort controller.
+> -
+> --------------------------------------------------------------------------------
+> -Required properties (controller (parent) node):
+> -- compatible	: Should be "cdns,dp-phy"
+> -- reg		: Defines the following sets of registers in the parent
+> -		  mhdp device:
+> -			- Offset of the DPTX PHY configuration registers
+> -			- Offset of the SD0801 PHY configuration registers
+> -- #phy-cells	: from the generic PHY bindings, must be 0.
+> -
+> -Optional properties:
+> -- num_lanes	: Number of DisplayPort lanes to use (1, 2 or 4)
+> -- max_bit_rate	: Maximum DisplayPort link bit rate to use, in Mbps (2160,
+> -		  2430, 2700, 3240, 4320, 5400 or 8100)
+> --------------------------------------------------------------------------------
+> -
+> -Example:
+> -	dp_phy: phy@f0fb030a00 {
+> -		compatible = "cdns,dp-phy";
+> -		reg = <0xf0 0xfb030a00 0x0 0x00000040>,
+> -		      <0xf0 0xfb500000 0x0 0x00100000>;
+> -		num_lanes = <4>;
+> -		max_bit_rate = <8100>;
+> -		#phy-cells = <0>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> new file mode 100644
+> index 0000000..3587312
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+> @@ -0,0 +1,64 @@
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/phy-cadence-torrent.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Cadence Torrent SD0801 PHY binding for DisplayPort
+> +
+> +description:
+> +  This binding describes the Cadence SD0801 PHY hardware included with
+> +  the Cadence MHDP DisplayPort controller.
+> +
+> +maintainers:
+> +  - Swapnil Jakhade <sjakhade@cadence.com>
+> +  - Yuti Amonkar <yamonkar@cadence.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: cdns,torrent-phy
+> +
+> +  reg:
+> +    items:
+> +      - description: Offset of the DPTX PHY configuration registers.
+> +      - description: Offset of the SD0801 PHY configuration registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dptx_phy
+> +      - const: sd0801_phy
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  num_lanes:
+> +    description:
+> +      Number of DisplayPort lanes.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [1, 2, 4]
+> +
+> +  max_bit_rate:
+> +    description:
+> +      Maximum DisplayPort link bit rate to use, in Mbps
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - enum: [2160, 2430, 2700, 3240, 4320, 5400, 8100]
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dp_phy: phy@f0fb030a00 {
+> +          compatible = "cdns,torrent-phy";
+> +          reg = <0xf0 0xfb030a00 0x0 0x00000040>,
+> +                <0xf0 0xfb500000 0x0 0x00100000>;
+> +          num_lanes = <4>;
+> +          max_bit_rate = <8100>;
+> +          #phy-cells = <0>;
+> +    };
+> +...
 > 
->> +      pins:
->> +        allOf:
->> +          $ref: /schemas/types.yaml#/definitions/string
-> 
-> Also not valid as allOf is a list.
-> 
-
- ok, will fix
->> +          enum:
->> +            gpio0-gpio80
-> 
-> As is 'enum'...
-
- ok.
-
-> 
->> +            sdc1_clk
->> +            sdc1_cmd
->> +            sdc1_data
->> +            sdc2_clk
->> +            sdc2_cmd
->> +            sdc2_data
->> +            qdsd_cmd
->> +            qdsd_data0
->> +            qdsd_data1
->> +            qdsd_data2
->> +            qdsd_data3
->> +        Description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +
->> +      function:
->> +        allOf:
->> +          $ref: /schemas/types.yaml#/definitions/string
->> +          enum:
->> +            adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
->> +            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
->> +            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
->> +            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
->> +            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
->> +            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
->> +            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
->> +            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
->> +            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
->> +            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
->> +            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
->> +            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
->> +            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
->> +            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
->> +            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
->> +            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
->> +            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
->> +            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
->> +            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
->> +            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
->> +            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
->> +            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
->> +            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
->> +            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
->> +            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
->> +            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst
->> +        Description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +      bias-disable:
->> +        allOf:
->> +          $ref: /schemas/pinctrl/pincfg-node.yaml
-> 
-> While you should have this reference, it is at the wrong level. The node 
-> needs to reference this schema, not the properties.
-> 
-
-  ok, will fix here and below properties as well.
-
-Regards,
- Sricharan
-
-
-
->> +        Description:
->> +          The specified pins should be configured as no pull.
->> +      bias-pull-down:
->> +        allOf:
->> +          $ref: /schemas/pinctrl/pincfg-node.yaml
->> +        Description:
->> +          The specified pins should be configured as pull down.
->> +      bias-pull-up:
->> +        allOf:
->> +          $ref: /schemas/pinctrl/pincfg-node.yaml
->> +        Description:
->> +          The specified pins should be configured as pull up.
->> +      output-high:
->> +        allOf:
->> +          $ref: /schemas/pinctrl/pincfg-node.yaml
->> +        Description:
->> +          The specified pins are configured in output mode, driven high.
->> +          This option is not available for sdc pins.
->> +      output-low:
->> +        allOf:
->> +          $ref: /schemas/pinctrl/pincfg-node.yaml
->> +        Description:
->> +          The specified pins are configured in output mode, driven low.
->> +          This option is not available for sdc pins.
->> +      drive-strength:
->> +        allOf:
->> +          $ref: /schemas/types.yaml#/definitions/uint32
->> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
->> +        Description:
->> +          Selects the drive strength for the specified pins, in mA.
->> +
->> +    required:
->> +      - pins
->> +      - function
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-controller
->> +  - '#interrupt-cells'
->> +  - gpio-controller
->> +  - '#gpio-cells'
->> +  - gpio-ranges
->> +
->> +example:
->> +        tlmm: pinctrl@1000000 {
->> +                compatible = "qcom,ipq6018-pinctrl";
->> +                reg = <0x01000000 0x300000>;
->> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
->> +                gpio-controller;
->> +                #gpio-cells = <2>;
->> +                gpio-ranges = <&tlmm 0 80>;
->> +                interrupt-controller;
->> +                #interrupt-cells = <2>;
->> +
->> +                serial_3_pins: serial3-pinmux {
->> +                        pins = "gpio44", "gpio45";
->> +                        function = "blsp2_uart";
->> +                        drive-strength = <8>;
->> +                        bias-pull-down;
->> +                };
->> +       };
->> -- 
->> 1.9.1
->>
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
