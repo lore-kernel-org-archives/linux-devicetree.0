@@ -2,231 +2,156 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC7DC33C9A
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 01:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC45C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0634721734
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 01:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A386721734
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="stOruzXe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPDci3wO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbgAFBxG (ORCPT
+        id S1727330AbgAFCWj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:53:06 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36823 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727303AbgAFBxF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 20:53:05 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n12so35359318lfe.3
-        for <devicetree@vger.kernel.org>; Sun, 05 Jan 2020 17:53:03 -0800 (PST)
+        Sun, 5 Jan 2020 21:22:39 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32884 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbgAFCWi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 21:22:38 -0500
+Received: by mail-pf1-f194.google.com with SMTP id z16so26256055pfk.0;
+        Sun, 05 Jan 2020 18:22:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iD+50azB+tBKY9G51G0/uhlJUSlWLQtRjkrA1mNR5YY=;
-        b=stOruzXeJyJ/iE3IWrf9S/Cd2tR8jd2uiRl9BelOJJzATVGY+EwgRN7zdChxXra/3a
-         WzLGlNiBdQS7iHYgL9imf5adLfJgc0JD9VzJhNPhOxlwoKhZ18ygZMVCpX3b/Cgco9yu
-         Mo1AiiazwDJf+MxlfxwzeFnHBsWtJXQhIB9sqb5l9lHXz8QmcsegEsMqNoJV/CxscDhM
-         gFkNRUd6U/ThpkgZyI70UTPBhxkMV4YoNFq/h5X4QVysEI8w/o4ADhUJHb8h2TNbb5gB
-         BLoacIOt9Al3CKrbwv/46H7MnBZbRX5QeUWswo0xBE/o43u2daBvCQzoCjNi9rhIC//t
-         HD3Q==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ipcsI+jZ4hrMnV7t9N2jVs66amx0u2G0uIwSlpjDd4Y=;
+        b=lPDci3wOl0yBaSZhnSt8JF1e1tCFoPAb4SE1gSvn6yb8TH4Qf2eBJIevhzA4jJ9kQT
+         jXw8T+0T3DMv9vCc2d3KtMCh0cO0Fh3AtQ1mQp9HnN/WUU9k/IdOqfebWK3ki2Q8kU9A
+         0vSiiZnGpAU22FAwvbSz30yaL+XhXV/sC2lPOgMXd/5FUrKk2Rv2WM/IE6luBBwj6F/Z
+         7T7Q8MrIX9nWS6DUTuRfhnWMeVdWUdb8jFSOYhvdy+lFddRukrLhwFNVoj+Cbm+s5OSp
+         8RzUEI23DO/jQmdHBuFs7xSyPCkTupn1Z1TeuBWqkz7VO3ghWsUkOECPzQHZlnUQi9cb
+         Ar6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=iD+50azB+tBKY9G51G0/uhlJUSlWLQtRjkrA1mNR5YY=;
-        b=GeY9Da6o6dLwXAT8PzhK6+u/r31Aq+mTPtEzCIWGo9Mhq43X4ahVeakx1LB2rJa9B/
-         LHjS6YgD53fzITsFpfbi20NjKf+7fFsL+PcIMxDpVAGanLV06ynkBW9oOmyZC00juI9g
-         buOLQbGOLSJKsEkbaTWWQLb1109AY8N4vbCYdVX0fQZ3okDlWySCL3CRYM7q+SsvFTk7
-         ZnnSHNnk4Fhi26KCP6wA36E8uCztN/1R8QNOLZRdc2UUMc6fWn1kp5gsR5hZIVtoqgfp
-         2z7sbExGXzs/RkwYpjgriJ1BVhJRlSr/NZInvEiSJCt4NzBsHphibwTJkN26aPSSkHlr
-         b9iw==
-X-Gm-Message-State: APjAAAUUEe6JmP6DxVY5je7u2H7p2tLBZ+Un3i64TQ3O3GLKGf7tLuZh
-        kCQzBaY7trPDqnuH1zSuZ3ouDqsOeBXxBw==
-X-Google-Smtp-Source: APXvYqyQsSVL56NAprHy8ONdVeBhui2YsYjZVSScZMAt+kEwr25M7JfCOcTjn2UDxwdNN0NSjx24ug==
-X-Received: by 2002:ac2:5582:: with SMTP id v2mr15879998lfg.183.1578275582860;
-        Sun, 05 Jan 2020 17:53:02 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id v26sm28389374lfq.73.2020.01.05.17.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jan 2020 17:53:02 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-ide@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/2 v2] dt-bindings: Convert Faraday FTIDE010 to DT schema
-Date:   Mon,  6 Jan 2020 02:52:56 +0100
-Message-Id: <20200106015256.13194-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        bh=ipcsI+jZ4hrMnV7t9N2jVs66amx0u2G0uIwSlpjDd4Y=;
+        b=HYv1hBLq10RYm2LWE5rZh2CihTyn0dCuifN/4m5rriCzvsdPs1eRK1yF6jAbEZipeb
+         J35sXVaggq6/6xxE57zbkveSU/HrLDbiL2ybwyda4DfdiqbMoYSTg0hW5ibTq/vUJKjC
+         0qhm5on26KYeiywb02pLa5vyQ8Eav059sCTJQaxN8j+9SJBy87VEgYIK35L4u4cfUPZW
+         DWcHbZy6nHjXGRzI3Crx9F3R93HXCwhEEcpx5G230ugIuXlM0Yo1Nx+G6FjPpRcwaqtx
+         MK4GD13UflYdNBUnNiV0YRYnAAwS1OqTlu7bLmGNhPpKgm9sijmFtRnVolh2BpOsGN31
+         kDGg==
+X-Gm-Message-State: APjAAAU5hNmAx2PiOr+GerKwvz10AvPG7/ELu7unEdi9YKAQLeBDZeac
+        K1IyAA7cZ+IUabnUfve/BtQ=
+X-Google-Smtp-Source: APXvYqz1BDCSkSXVrUu4zC2a82wSvLK/YKFS/9RPAe5p+u2Z0wTdw9lddOQIFWy8lwM33vK+qK2FoA==
+X-Received: by 2002:a62:e509:: with SMTP id n9mr4122196pff.159.1578277358154;
+        Sun, 05 Jan 2020 18:22:38 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q22sm77320323pfg.170.2020.01.05.18.22.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Jan 2020 18:22:37 -0800 (PST)
+Subject: Re: [PATCH v9 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
+        wim@linux-watchdog.org, p.zabel@pengutronix.de,
+        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com
+Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
+References: <1578241301-14618-1-git-send-email-jiaxin.yu@mediatek.com>
+ <1578241301-14618-2-git-send-email-jiaxin.yu@mediatek.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <04f9dbd7-4d96-cdbf-0bb2-9c34e8d84dc9@roeck-us.net>
+Date:   Sun, 5 Jan 2020 18:22:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1578241301-14618-2-git-send-email-jiaxin.yu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This uses the new pata-sata-controller.yaml schema to
-convert the Faraday FTIDE010 to DT schema.
+On 1/5/20 8:21 AM, Jiaxin Yu wrote:
+> Add #reset-cells property and update example
+> 
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>   .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
+>   .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
+>   2 files changed, 39 insertions(+)
+>   create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+> 
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Rename the node for the example controller to "ide@"
-- Rename the drives to ports, so ide-port@0 etc instead of
-  drive@0.
----
- .../bindings/ata/faraday,ftide010.txt         | 38 --------
- .../bindings/ata/faraday,ftide010.yaml        | 89 +++++++++++++++++++
- 2 files changed, 89 insertions(+), 38 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
- create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
+Repeating Rob's question from v8: What happened to the bindings document ?
 
-diff --git a/Documentation/devicetree/bindings/ata/faraday,ftide010.txt b/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
-deleted file mode 100644
-index a0c64a29104d..000000000000
---- a/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
-+++ /dev/null
-@@ -1,38 +0,0 @@
--* Faraday Technology FTIDE010 PATA controller
--
--This controller is the first Faraday IDE interface block, used in the
--StorLink SL2312 and SL3516, later known as the Cortina Systems Gemini
--platform. The controller can do PIO modes 0 through 4, Multi-word DMA
--(MWDM)modes 0 through 2 and Ultra DMA modes 0 through 6.
--
--On the Gemini platform, this PATA block is accompanied by a PATA to
--SATA bridge in order to support SATA. This is why a phandle to that
--controller is compulsory on that platform.
--
--The timing properties are unique per-SoC, not per-board.
--
--Required properties:
--- compatible: should be one of
--  "cortina,gemini-pata", "faraday,ftide010"
--  "faraday,ftide010"
--- interrupts: interrupt for the block
--- reg: registers and size for the block
--
--Optional properties:
--- clocks: a SoC clock running the peripheral.
--- clock-names: should be set to "PCLK" for the peripheral clock.
--
--Required properties for "cortina,gemini-pata" compatible:
--- sata: a phande to the Gemini PATA to SATA bridge, see
--  cortina,gemini-sata-bridge.txt for details.
--
--Example:
--
--ata@63000000 {
--	compatible = "cortina,gemini-pata", "faraday,ftide010";
--	reg = <0x63000000 0x100>;
--	interrupts = <4 IRQ_TYPE_EDGE_RISING>;
--	clocks = <&gcc GEMINI_CLK_GATE_IDE>;
--	clock-names = "PCLK";
--	sata = <&sata>;
--};
-diff --git a/Documentation/devicetree/bindings/ata/faraday,ftide010.yaml b/Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
-new file mode 100644
-index 000000000000..f7b9b625c0f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
-@@ -0,0 +1,89 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ata/faraday,ftide010.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Faraday Technology FTIDE010 PATA controller
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  This controller is the first Faraday IDE interface block, used in the
-+  StorLink SL3512 and SL3516, later known as the Cortina Systems Gemini
-+  platform. The controller can do PIO modes 0 through 4, Multi-word DMA
-+  (MWDM) modes 0 through 2 and Ultra DMA modes 0 through 6.
-+
-+  On the Gemini platform, this PATA block is accompanied by a PATA to
-+  SATA bridge in order to support SATA. This is why a phandle to that
-+  controller is compulsory on that platform.
-+
-+  The timing properties are unique per-SoC, not per-board.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - const: faraday,ftide010
-+      - items:
-+        - const: cortina,gemini-pata
-+        - const: faraday,ftide010
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+
-+  clock-names:
-+    const: PCLK
-+
-+  sata:
-+    description:
-+      phandle to the Gemini PATA to SATA bridge, if available
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+allOf:
-+  - $ref: pata-sata-common.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: cortina,gemini-pata
-+
-+    then:
-+      required:
-+        - sata
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/clock/cortina,gemini-clock.h>
-+
-+    ide@63000000 {
-+      compatible = "cortina,gemini-pata", "faraday,ftide010";
-+      reg = <0x63000000 0x100>;
-+      interrupts = <4 IRQ_TYPE_EDGE_RISING>;
-+      clocks = <&gcc GEMINI_CLK_GATE_IDE>;
-+      clock-names = "PCLK";
-+      sata = <&sata>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      ide-port@0 {
-+        reg = <0>;
-+      };
-+      ide-port@1 {
-+        reg = <1>;
-+      };
-+    };
-+
-+...
--- 
-2.21.0
+Guenter
+
+> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
+> new file mode 100644
+> index 000000000000..9e7ee762f076
+> --- /dev/null
+> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Yong Liang <yong.liang@mediatek.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +
+> +#define MT2712_TOPRGU_INFRA_SW_RST				0
+> +#define MT2712_TOPRGU_MM_SW_RST					1
+> +#define MT2712_TOPRGU_MFG_SW_RST				2
+> +#define MT2712_TOPRGU_VENC_SW_RST				3
+> +#define MT2712_TOPRGU_VDEC_SW_RST				4
+> +#define MT2712_TOPRGU_IMG_SW_RST				5
+> +#define MT2712_TOPRGU_INFRA_AO_SW_RST				8
+> +#define MT2712_TOPRGU_USB_SW_RST				9
+> +#define MT2712_TOPRGU_APMIXED_SW_RST				10
+> +
+> +#define MT2712_TOPRGU_SW_RST_NUM				11
+> +
+> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
+> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
+> index 8804e34ebdd4..a1bbd41e0d12 100644
+> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
+> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
+> @@ -78,4 +78,21 @@
+>   #define MT8183_INFRACFG_AO_I2C7_SW_RST				126
+>   #define MT8183_INFRACFG_AO_I2C8_SW_RST				127
+>   
+> +#define MT8183_INFRACFG_SW_RST_NUM				128
+> +
+> +#define MT8183_TOPRGU_MM_SW_RST					1
+> +#define MT8183_TOPRGU_MFG_SW_RST				2
+> +#define MT8183_TOPRGU_VENC_SW_RST				3
+> +#define MT8183_TOPRGU_VDEC_SW_RST				4
+> +#define MT8183_TOPRGU_IMG_SW_RST				5
+> +#define MT8183_TOPRGU_MD_SW_RST					7
+> +#define MT8183_TOPRGU_CONN_SW_RST				9
+> +#define MT8183_TOPRGU_CONN_MCU_SW_RST				12
+> +#define MT8183_TOPRGU_IPU0_SW_RST				14
+> +#define MT8183_TOPRGU_IPU1_SW_RST				15
+> +#define MT8183_TOPRGU_AUDIO_SW_RST				17
+> +#define MT8183_TOPRGU_CAMSYS_SW_RST				18
+> +
+> +#define MT8183_TOPRGU_SW_RST_NUM				19
+> +
+>   #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
+> 
 
