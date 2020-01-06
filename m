@@ -2,140 +2,89 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC1CC33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 17:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5544C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 18:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A20F82146E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 17:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79C92072A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 18:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UaFPkDcs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LM3saJbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgAFRqr (ORCPT
+        id S1726643AbgAFSFz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 12:46:47 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36518 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726448AbgAFRqq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 12:46:46 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x184so27285183pfb.3;
-        Mon, 06 Jan 2020 09:46:45 -0800 (PST)
+        Mon, 6 Jan 2020 13:05:55 -0500
+Received: from mail-il1-f173.google.com ([209.85.166.173]:46180 "EHLO
+        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbgAFSFy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 13:05:54 -0500
+Received: by mail-il1-f173.google.com with SMTP id t17so43262335ilm.13
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 10:05:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EiXC/MriP+cdpOhem11vYI94GWNz0CCSOZkGZBL2d9U=;
-        b=UaFPkDcsmqcQKqX3+FYyaP9kZ89B9Q3kyv4mqMnp/Jm8+bImb4IYLtjvkl80f8bXUh
-         1f8UPPP63XiKkYuEnJaX9ZtGFspbz/vMd06l0aTs+BN8Jo/W/5gXW/IXAUSbZm0CHq7J
-         8JTR+1I5hdf9CRStbAS5cAUI/wAcG8hFXl+HxcAJZLUe5c80zANFiwcOfx9/mICBeypY
-         MXEDARX/OLFgTLuELG4sdsv4aV06RkdtQ9AB4nwrNDzw+FUUKopybwhrQyccBhDNcQEZ
-         SGeOiBSMvTGMHOnbiCYU+UqKqCiou19nibQ1jnRZCEwYMsoz4KmGd3IyouMy8hWypYJW
-         cO7Q==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=oMgY/4Zj2ZMKH4fOP631QHQbax0u8j2cAdva9Wh7vB4=;
+        b=LM3saJbhvfalyxq1/tbruKHFUda406JcV4ciTLXCLrscnL7zdj3W8BYbCWPyb8kQEH
+         bh4c4396yTx120YxPvO6F6OJs2u0Nnd+BvEeTf+/4r9GBl/esm3gRv7VUTpngWayc77r
+         x5o3Y0SjdSypENmP+Jyk8Ue28fqbYL1zSVLW44H6kzK9yVYykVP5rClyZNuqtgRZG7jZ
+         WvIwtEauCDaeA3DL3TZwnBe0ioKZcDjXkFYkEGewTnDv5bd+B6g+P+rurFUnH42G7DJM
+         tYemzomiv9mPKcl48jk4b3VDYg+I7f9RJZwAnnFgs1PXZ62uOVx5AClmNjcR9qT5BWEN
+         kBwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EiXC/MriP+cdpOhem11vYI94GWNz0CCSOZkGZBL2d9U=;
-        b=iZl5DPTplBWMac7Oih7oQMc2K/wu8t2eTqZ4J3QwIYlM4X6l6pEki6qMGo92bl6r1E
-         afOwrojtCjjOr5icJtygmBfvfB5WHBbd8l8NyJuyQaz47EcdsML2n+QZxOD/C954H0cv
-         v93E1pi7zyGYlXvCj9SJKiDEr7khjrjfHMli+ghjcD5yW+QpgeIFJh/u2HHTFogGvJuA
-         lMn/9g+vzUJ5hNs2GL5HwYqjP+BsMBxK+lBI73hG2j6TeBmvYjNKagr42mXGYM1LqZ7q
-         SJ5j2K2D1ZPSYBnjlOBPxvbnGW3iIJJVtaeyF3fDHBaWZeb8BFztJi2Gr1/KGfFsXA4M
-         Xhvw==
-X-Gm-Message-State: APjAAAWinLYsFcR8O/6UwQRQ+sg89MdwefneO2sSxAeDF2TZQlWCziIR
-        fvEFMoO+tH3ajQ3NRxycSnY=
-X-Google-Smtp-Source: APXvYqzsNn60tFIDS08//elWhClHXWYYTqFBsfumM81M+fXB1pfEhQnuBltx+uVuXKE/434H9TCGeg==
-X-Received: by 2002:aa7:96f9:: with SMTP id i25mr111741807pfq.161.1578332805413;
-        Mon, 06 Jan 2020 09:46:45 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id l2sm59166879pff.59.2020.01.06.09.46.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 06 Jan 2020 09:46:44 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        wens@csie.org, anarsoul@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        megous@megous.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and thermal zones
-Date:   Mon,  6 Jan 2020 17:46:39 +0000
-Message-Id: <20200106174639.20862-2-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200106174639.20862-1-tiny.windzz@gmail.com>
-References: <20200106174639.20862-1-tiny.windzz@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=oMgY/4Zj2ZMKH4fOP631QHQbax0u8j2cAdva9Wh7vB4=;
+        b=inCX58SEbCcgzf3iNRO8AEBwOT1VwEtp5vNN9AK7+3XHIS4/RHmf6aqvxkaGsvNtO6
+         z91SjMLGElXYpKAdXCsDmIRJ5fbWFHoU06aHfB1Rr/TTivVsWL9/KxY7NAhgdQALSVzv
+         ZBXE246V8QHDrPGga15AvtcSJDpp1fsRP8iqCovn+ataUJuy+aCjyr6CYp3SUe1d8aAE
+         4+QNyVpFvvs5/jJQHFIRCOyJ1rfXIlGinkt1Cx5U0Z/TX+ksIk1prErKcGHRunxr3lSc
+         NhITAJQQ4jKtqNaGeYUxMfrtb8KadOCsI/iWh8OZtSAtMJ2yTJMRB9862y91A9GD/RBQ
+         +osw==
+X-Gm-Message-State: APjAAAXlQoS4/9ELTqdwBMb2Puxfr5TeC7MIdB1Ngbmgfts7xf/jhQDF
+        FgNf0Hm1w79ZvV28nMZFVETU+M1z9TlSb6i053FO+0V2xI0=
+X-Google-Smtp-Source: APXvYqzilRhjsBsE/4L+L9Z1Vpq0WAyh/6fmUuRiciaCegmVR/HvHOTQJWVnsjoVn6UTB5E7XmKubatSwwt0Kn9lMy0=
+X-Received: by 2002:a92:ca8b:: with SMTP id t11mr91772277ilo.227.1578333954194;
+ Mon, 06 Jan 2020 10:05:54 -0800 (PST)
+MIME-Version: 1.0
+From:   Daniele Alessandrelli <daniele.alessandrelli@gmail.com>
+Date:   Mon, 6 Jan 2020 18:05:43 +0000
+Message-ID: <CAA2QUqKK+XcR5oqpZPrMNnQmgk=BV7s05UR7Efc2kCcYUs8=2w@mail.gmail.com>
+Subject: [RFC] MAX_RESERVED_REGIONS hard-coded value
+To:     Miles Chen <miles.chen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There are two sensors, sensor0 for CPU, sensor1 for GPU.
+Hi,
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Tested-on: sun8i-r40-bananapi-m2-ultra
----
- arch/arm/boot/dts/sun8i-r40.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+I'm using a Device Tree with more then 32 reserved memory regions and
+I'm seeing the following error while booting the Kernel:
+[    0.000000] OF: reserved mem: not enough space all defined regions.
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index 421dfbbfd7ee..8ccda5cb873f 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -46,6 +46,7 @@
- #include <dt-bindings/clock/sun8i-r40-ccu.h>
- #include <dt-bindings/reset/sun8i-r40-ccu.h>
- #include <dt-bindings/reset/sun8i-de2.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -109,6 +110,22 @@
- 		status = "disabled";
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal: cpu0-thermal {
-+			/* milliseconds */
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&ths 0>;
-+		};
-+
-+		gpu_thermal: gpu-thermal {
-+			/* milliseconds */
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
-+			thermal-sensors = <&ths 1>;
-+		};
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -421,6 +438,17 @@
- 			clocks = <&osc24M>;
- 		};
- 
-+		ths: thermal-sensor@1c24c00 {
-+			compatible = "allwinner,sun8i-r40-ths";
-+			reg = <0x01c24c00 0x100>;
-+			clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-+			clock-names = "bus", "mod";
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&ccu RST_BUS_THS>;
-+			/* TODO: add nvmem-cells for calibration */
-+			#thermal-sensor-cells = <1>;
-+		};
-+
- 		uart0: serial@1c28000 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01c28000 0x400>;
--- 
-2.17.1
+My understanding is that this is due to the hard-coded value of
+MAX_RESERVED_REGIONS in drivers/of/of_reserved_mem.c
 
+Googling around, I found this old discussion [1] in which Miles
+suggests to add a CONFIG_MAX_OF_RESERVED_REGIONS kconfig option to
+configure MAX_RESERVED_REGIONS. Rob replied to Miles' email saying
+that he would prefer MAX_RESERVED_REGIONS to be dynamic. However,
+later in the thread, it looks like making MAX_RESERVED_REGIONS dynamic
+poses some implementation issues [2]. At that point the discussion
+seemed to have stopped.
+
+Is there any chance for the patch proposed by Miles to be reconsidered?
+
+Regards,
+Daniele
+
+[1] https://lkml.org/lkml/2018/11/21/423
+[2] https://lkml.org/lkml/2018/11/28/275
