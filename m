@@ -2,100 +2,88 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A61FC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F162C33C9B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C31215A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:38:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="D1o966Mx"
+	by mail.kernel.org (Postfix) with ESMTP id 6370321734
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgAFJiR (ORCPT
+        id S1726155AbgAFJos (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:38:17 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37338 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgAFJiR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:38:17 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so17607615ioc.4
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 01:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=k2+obkL6rebOtdriVSVT+QmM5oPrNk9dBLg/jYY+wfo=;
-        b=D1o966MxyHxQctJ7rWTwJMt3NjGv7Dvvox7er9lgSNNvWFHHGJwcWONCfWtZi6gN+G
-         sRs4vR0DB2EcpFyAOnNBrO6Ga7QtFeR72FBTF9427T+497Qzcfm+8pl2pbBszlc9JvVQ
-         5lkYYgLVWA+odDpMbgsGqK5RaUIs7BmqtrPT75mjcq5Cps8QL2hw57ZZN4r24h+9vHFL
-         a+0FUA2QZ2/EndxTc3PDJardW9IZ7lhDOn+2+dkqYDe/IvqXD733Uy0eoMyHFCObNslD
-         T6Kj74zvZbASdqOn7QT7jqwZ2Hbx2etpk6CtUIx5rIfvpbv2lv5teqA/qj36BoqxsUw4
-         LIzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k2+obkL6rebOtdriVSVT+QmM5oPrNk9dBLg/jYY+wfo=;
-        b=dfOKFzhjPYSaPNDDqveZ3bM9hzNwDDZeP0pbTEWOKiP2ZzreD2V7mhtmY7a2+03Z74
-         5zbDBssky4wHPiEZ2sAfcSWayItqWGuC6rXvNuVDu7Q5HcE4xC/6+L1gnz+I+R+7n5S9
-         5oqllM2qiL9wLDnzTRFy2OKwVcHCJUE9zvdlIqfS6UMjWQ8+5kCMy/Cbs39Y+0ZVmUG7
-         lfgf3TVH8OUrB0LGrZX6DdaGDk6KKIWlHxOUoLu7d6rriA43NIPMSoQINbCSWU2urQ6V
-         JMPBz1QHTgVa+V6xiw7CSfYKd93kTIpj0LfQXkqSemFFpL3uqvh+qp1FL7usAu8FvrsA
-         a8Aw==
-X-Gm-Message-State: APjAAAUhEAUD3UiwG1YmNu+aKMaiUwlYZYepbukRi/MlfjcxyO5/Pvzv
-        JgP+J0zD1zHEPNytiI7SC3xxbk5qw4XfwUI0DG5Gnw==
-X-Google-Smtp-Source: APXvYqzE32XYz3+At4KghXnJsLBu7odv7vp28Pnk5lZat2Vp4MBrZzHnDvUV6gAXMdReOEfzJCGFp0QdxKmkLf29OSM=
-X-Received: by 2002:a5d:9dd9:: with SMTP id 25mr58696986ioo.287.1578303496369;
- Mon, 06 Jan 2020 01:38:16 -0800 (PST)
+        Mon, 6 Jan 2020 04:44:48 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:33898 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbgAFJor (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jan 2020 04:44:47 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 99DCAFB03;
+        Mon,  6 Jan 2020 10:44:45 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2JLKIb8Jk-A7; Mon,  6 Jan 2020 10:44:44 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 03BB649C60; Mon,  6 Jan 2020 10:44:43 +0100 (CET)
+Date:   Mon, 6 Jan 2020 10:44:43 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] leds: lm3692x: Allow to set ovp and brigthness
+ mode
+Message-ID: <20200106094443.GB13043@bogon.m.sigxcpu.org>
+References: <cover.1578134779.git.agx@sigxcpu.org>
+ <20200105234708.GA7598@amd>
 MIME-Version: 1.0
-References: <20200106045833.1725-1-masahiroy@kernel.org>
-In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Jan 2020 10:38:05 +0100
-Message-ID: <CAMRc=MeTC8X9wDV7bowEvjPxjUNH8hXSJC79iy9s9W9Yn6Fh8A@mail.gmail.com>
-Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code check
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        alsa-devel@alsa-project.org, linux-acpi@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        linux-crypto@vger.kernel.org,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200105234708.GA7598@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-pon., 6 sty 2020 o 06:00 Masahiro Yamada <masahiroy@kernel.org> napisa=C5=
-=82(a):
->
-> 'PTR_ERR(p) =3D=3D -E*' is a stronger condition than IS_ERR(p).
-> Hence, IS_ERR(p) is unneeded.
->
-> The semantic patch that generates this commit is as follows:
->
-> // <smpl>
-> @@
-> expression ptr;
-> constant error_code;
-> @@
-> -IS_ERR(ptr) && (PTR_ERR(ptr) =3D=3D - error_code)
-> +PTR_ERR(ptr) =3D=3D - error_code
-> // </smpl>
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Hi,
+On Mon, Jan 06, 2020 at 12:47:08AM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > Overvoltage protection and brightness mode are currently hardcoded
+> > as 29V and disabled in the driver. Make these configurable via DT.
+> > 
+> > Besides addressing review comments v3 folds in the patches to
+> > disable the chip and turn of the regulator on brightness 0 from
+> > 
+> >   https://lore.kernel.org/linux-leds/20191226101419.GE4033@amd/T/#t
+> > 
+> > Besides addressing review comments v2 also allows to limit the maximum led
+> > current.
+> 
+> > Patches are against next-20191220.
+> 
+> I applied everything but the "exponential" changes and the last
+> one. I'll apply the last one if I get version that applies on top of
+> leds tree.
 
-For GPIO:
+Thanks! Can I do anything to get the exponential part in? Is it because
+you want the exponential mode to move to the backlight binding?
 
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cheers,
+ -- Guido
+
+> 
+> Best regards,
+> 									Pavel
+> 
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
+
