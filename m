@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9ACC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A520AC33C9A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B2E20656
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79C6820656
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578300177;
-	bh=taWgwUhGcd/iS2EKymh/retvbso5JBoh7oLw2x9VN+k=;
+	s=default; t=1578300178;
+	bh=eabKL18AAzpQs7KMk7cqLiDvGMendqJwGmYVKRn/npc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mHXxfJqEiKGLgrkxPZQdaq14ETpm0bRx9lNn9+KJtL1jfe7PT70ksoRvMm2jGQVhC
-	 a7szBX6gjrSr+ARBS4vO0j3DlATjUrnkfi687+H7niYqO1xjYzuNAb5JUT+oRkvf0m
-	 Jghfz7Gafhi2w04oNiDQVIurxO9wlpVWDbjQDiNE=
+	b=puu0wSg8Gvssmga0T1bnGAXIPRLULZ+TngI8VB/NKJPaF6sz/Z7XrBQ/XpAf15J55
+	 bPEM9Hu3+cOAocJ1g+1WBIAOICvsfOBhtNc/hCkz3iT29US0KvEPVKvPxaNhON1vFS
+	 N+5SltKsxqwssQXUUeILhJvACdRAu20e6/GjHePo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgAFImq (ORCPT
+        id S1726487AbgAFImq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Mon, 6 Jan 2020 03:42:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgAFImq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1726454AbgAFImq (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Mon, 6 Jan 2020 03:42:46 -0500
 Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5B42468B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C33B24650;
         Mon,  6 Jan 2020 08:42:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1578300165;
-        bh=taWgwUhGcd/iS2EKymh/retvbso5JBoh7oLw2x9VN+k=;
+        bh=eabKL18AAzpQs7KMk7cqLiDvGMendqJwGmYVKRn/npc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkn9GuTFR3efBa3mRAcOm7wiqlxsEGy3SAuaE3IUBLv624JXbGADf6hm/yjtOQDT3
-         t0KauMUuQgELciro4AUY1eh4eNEbPLg1q9C2Yv4XgUr959yZpg6sfRFAU1l8/HXp23
-         xRvswfjmhczIMoiuTLpdk9LZf4SRlvohsI89XFRM=
+        b=pXwgWqOLaJDHrV6gn7hPWU3tYmP03Kj7jWrjjfrxSrXL4FWxVbPRsJb70RgiflMH9
+         BobgEdByqkaNjxeyRIx914goQAcOnICbepYLASF/nDWFRITne3EjYZ9MPoQxn3o7MO
+         vIsjK25aMT5HAXTY/MArWQn7dRAwPSheLdvNQjGg=
 Received: by wens.tw (Postfix, from userid 1000)
-        id 6DDE65FD7A; Mon,  6 Jan 2020 16:42:41 +0800 (CST)
+        id 68F155FD69; Mon,  6 Jan 2020 16:42:41 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
 Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/7] [DO NOT MERGE] ARM: dts: sun7i: cubieboard2: Enable OV7670 camera on CSI1
-Date:   Mon,  6 Jan 2020 16:42:39 +0800
-Message-Id: <20200106084240.1076-7-wens@kernel.org>
+Subject: [PATCH v2 5/7] [DO NOT MERGE] ARM: dts: sun4i: cubieboard: Enable OV7670 camera on CSI1
+Date:   Mon,  6 Jan 2020 16:42:38 +0800
+Message-Id: <20200106084240.1076-6-wens@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200106084240.1076-1-wens@kernel.org>
 References: <20200106084240.1076-1-wens@kernel.org>
@@ -62,7 +62,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The Cubieboard2 has CSI1 pins exposed on one of its GPIO headers.
+The Cubieboard has CSI1 pins exposed on one of its GPIO headers.
 Combined with I2C1 on the same header, a connected OV7670 based
 camera module can be used. Power is provided via the 5V rail on
 the same header. The module has onboard LDOs for the sensor's
@@ -73,14 +73,14 @@ everything up.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 42 +++++++++++++++++++++
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts | 42 ++++++++++++++++++++++
  1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index b8203e4ef21c..0ff1593041eb 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -100,6 +100,25 @@ &cpu0 {
+diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+index 6ca02e824acc..29bfec8fad5b 100644
+--- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
++++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+@@ -101,6 +101,25 @@ &cpu0 {
  	cpu-supply = <&reg_dcdc2>;
  };
  
@@ -106,7 +106,7 @@ index b8203e4ef21c..0ff1593041eb 100644
  &de {
  	status = "okay";
  };
-@@ -142,6 +161,29 @@ axp209: pmic@34 {
+@@ -143,6 +162,29 @@ axp209: pmic@34 {
  
  &i2c1 {
  	status = "okay";
