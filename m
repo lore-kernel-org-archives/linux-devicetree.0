@@ -2,107 +2,102 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAA8C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 11:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB63C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 11:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39DB2072C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 11:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X+hT3DMz"
+	by mail.kernel.org (Postfix) with ESMTP id 7F6B620731
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 11:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgAFLBx (ORCPT
+        id S1726290AbgAFLJb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 06:01:53 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59324 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgAFLBx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 06:01:53 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006B1XRc071248;
-        Mon, 6 Jan 2020 05:01:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578308493;
-        bh=nU+R+AekjGPCatJkEq8nQWWY1T+REa1/hMCEdVGRCCc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=X+hT3DMz/bkpeDE+VqcQlceMQm5S3vHwDDQpanDpzzFVrwY3Nz6F9Ow8EBW4zWq+4
-         H9izaNKRBa4JTUY/WNKcWXTRkcIZA57EWQ0fsBQ96q7pr5SVwpEdJTQ3O+A3IUF6VX
-         01C32fVNBxvmPkSVZnSqMBetzsGMaYAd6RFgvN30=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 006B1Xqh102683
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 6 Jan 2020 05:01:33 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
- 2020 05:01:32 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 6 Jan 2020 05:01:33 -0600
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006B00K2007044;
-        Mon, 6 Jan 2020 05:01:26 -0600
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <ulf.hansson@linaro.org>, <tony@atomide.com>,
-        <faiz_abbas@ti.com>
-Subject: [PATCH v4 11/11] mmc: sdhci-omap: Add am335x and am437x specific compatibles
-Date:   Mon, 6 Jan 2020 16:31:33 +0530
-Message-ID: <20200106110133.13791-12-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20200106110133.13791-1-faiz_abbas@ti.com>
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
+        Mon, 6 Jan 2020 06:09:31 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:50070 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbgAFLJb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jan 2020 06:09:31 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ioQG8-0004XS-2c; Mon, 06 Jan 2020 12:09:20 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 00/11] Add PX30 LVDS support
+Date:   Mon, 06 Jan 2020 12:09:19 +0100
+Message-ID: <2064471.Uj1soXtvLx@diego>
+In-Reply-To: <1885398.klecWcqSHf@phil>
+References: <20191224143900.23567-1-miquel.raynal@bootlin.com> <1885398.klecWcqSHf@phil>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for new compatible for TI's am335x and am437x devices.
+Am Sonntag, 5. Januar 2020, 15:05:26 CET schrieb Heiko Stuebner:
+> Am Dienstag, 24. Dezember 2019, 15:38:49 CET schrieb Miquel Raynal:
+> > Hello,
+> > 
+> > This series aims at supporting LVDS on PX30.
+> > 
+> > A first couple of patches update the documentation with the new
+> > compatible and the presence of a PHY. Then, the existing Rockchip
+> > driver is cleaned and extended to support PX30 specificities. Finally,
+> > the PX30 DTSI is updated with CRTC routes, the DSI DPHY and the LVDS
+> > IP itself.
+> > 
+> > Cheers,
+> > Miquèl
+> > 
+> > Changes since v1:
+> > * Added Rob's Ack.
+> > * Used "must" instead of "should" in the bindings.
+> > * Precised that phy-names is an optional property in the case of
+> >   PX30.
+> > * Renamed the WRITE_EN macro into HIWORD_UPDATE to be aligned with
+> >   other files.
+> > * Removed extra configuration, not needed for generic panels (see
+> >   Sandy Huang answer).
+> > * Dropped the display-subsystem routes (useless).
+> > * Merged two patches to avoid phandle interdependencies in graphs and
+> >   intermediate build errors.
+> > 
+> > Miquel Raynal (11):
+> >   dt-bindings: display: rockchip-lvds: Declare PX30 compatible
+> >   dt-bindings: display: rockchip-lvds: Document PX30 PHY
+> >   drm/rockchip: lvds: Fix indentation of a #define
+> >   drm/rockchip: lvds: Harmonize function names
+> >   drm/rockchip: lvds: Change platform data
+> >   drm/rockchip: lvds: Create an RK3288 specific probe function
+> >   drm/rockchip: lvds: Helpers should return decent values
+> >   drm/rockchip: lvds: Pack functions together
+> 
+> applied patches 1-8 to drm-misc-next
+> 
+> >   drm/rockchip: lvds: Add PX30 support
+> 
+> drm-misc-next is currently still at 5.4-rc4, so I'll need to find out how
+> to get newer kernel changes in there, as right now we're missing
+> the PHY_MODE_LVDS constant.
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- drivers/mmc/host/sdhci-omap.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+applied now to drm-misc-next as well, after drm-misc maintainers did the
+requested back-merge to get that constant.
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 34df30edd450..4d7026daa8cd 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -919,6 +919,14 @@ static const struct sdhci_omap_data k2g_data = {
- 	.offset = 0x200,
- };
- 
-+static const struct sdhci_omap_data am335_data = {
-+	.offset = 0x200,
-+};
-+
-+static const struct sdhci_omap_data am437_data = {
-+	.offset = 0x200,
-+};
-+
- static const struct sdhci_omap_data dra7_data = {
- 	.offset = 0x200,
- 	.flags	= SDHCI_OMAP_REQUIRE_IODELAY,
-@@ -927,6 +935,8 @@ static const struct sdhci_omap_data dra7_data = {
- static const struct of_device_id omap_sdhci_match[] = {
- 	{ .compatible = "ti,dra7-sdhci", .data = &dra7_data },
- 	{ .compatible = "ti,k2g-sdhci", .data = &k2g_data },
-+	{ .compatible = "ti,am335-sdhci", .data = &am335_data },
-+	{ .compatible = "ti,am437-sdhci", .data = &am437_data },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, omap_sdhci_match);
--- 
-2.19.2
+Heiko
+
 
