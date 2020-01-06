@@ -2,111 +2,105 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3847CC32767
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 03:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FA6C32767
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 04:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C7102072C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 03:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DF02072C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 04:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gGXhHvdn"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M9Ly0bcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgAFDWS (ORCPT
+        id S1727446AbgAFEBw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 22:22:18 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:5236 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727307AbgAFDWS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 22:22:18 -0500
-X-UUID: 57f54413a2e74625b881579fa3447eab-20200106
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=RDSho2ud9PkHmo+SliyxkimBGlr7TcmW+AJEdhiBnZU=;
-        b=gGXhHvdn6IEqW4MMtZ/uMz9roTigWtx+W6NAewHZn4n1fkM06PCs0Aq2Q63g/wxau/QPEXq37eRvjUyxYcA9kWY12WDVwE0qukyU5Nj2RMMSzNdO+y+IVHkAlKif3yQ1tJzo8YlGWkRaJXuf387J9hLh2dvhw+0ZBtv4L/B+pTE=;
-X-UUID: 57f54413a2e74625b881579fa3447eab-20200106
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 359625338; Mon, 06 Jan 2020 11:22:09 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 6 Jan 2020 11:22:09 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by mtkcas08.mediatek.inc
- (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 6 Jan
- 2020 11:20:16 +0800
-Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 6 Jan 2020 11:19:00 +0800
-Message-ID: <1578280829.5196.4.camel@mtksdaap41>
-Subject: Re: [PATCH 2/2] iommu/mediatek: add support for MT8167
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Fabien Parent <fparent@baylibre.com>
-CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <joro@8bytes.org>, <robh+dt@kernel.org>
-Date:   Mon, 6 Jan 2020 11:20:29 +0800
-In-Reply-To: <20200103162632.109553-2-fparent@baylibre.com>
-References: <20200103162632.109553-1-fparent@baylibre.com>
-         <20200103162632.109553-2-fparent@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Sun, 5 Jan 2020 23:01:52 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:37870 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727432AbgAFEBw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 23:01:52 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00641irn089874;
+        Sun, 5 Jan 2020 22:01:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578283304;
+        bh=eTr4yhhqW0CfHfnymOfIOUGthh33hsgdifkzOrGmJ7s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=M9Ly0bcMxv3kWxdTv/LU9QxUFnYw4pMqkgXlFY5KzUks5UGBBeS0/cWE3jze51CHD
+         CN/CJcn7kixvvyQoEzTV+OFdLLh1w4bZCSWXqWA9pUmJEXLpC2YUTl7MdUoFUhaC7A
+         6DMu5JIsCWD8+vryOoPgg4BPHUKuOEJWsaxn4loY=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00641iPr046902
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 5 Jan 2020 22:01:44 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Sun, 5 Jan
+ 2020 22:01:43 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Sun, 5 Jan 2020 22:01:43 -0600
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00641eVP092091;
+        Sun, 5 Jan 2020 22:01:41 -0600
+Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-main: Add missing power-domains
+ for smmu
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>
+References: <20191122100356.20622-1-lokeshvutla@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <14a3898b-f91b-861e-0091-7e445c087ec0@ti.com>
+Date:   Mon, 6 Jan 2020 09:30:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191122100356.20622-1-lokeshvutla@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIEZhYmllbjoNCg0KT24gRnJpLCAyMDIwLTAxLTAzIGF0IDE3OjI2ICswMTAwLCBGYWJpZW4g
-UGFyZW50IHdyb3RlOg0KPiBBZGQgc3VwcG9ydCBmb3IgdGhlIElPTU1VIG9uIE1UODE2Nw0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogRmFiaWVuIFBhcmVudCA8ZnBhcmVudEBiYXlsaWJyZS5jb20+DQo+
-IC0tLQ0KPiAgZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYyB8IDExICsrKysrKysrKystDQo+ICBk
-cml2ZXJzL2lvbW11L210a19pb21tdS5oIHwgIDEgKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMSBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9p
-b21tdS9tdGtfaW9tbXUuYyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmMNCj4gaW5kZXggNmZj
-MWY1ZWNmOTFlLi41ZmM2MTc4YTgyZGMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRr
-X2lvbW11LmMNCj4gKysrIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KPiBAQCAtNTY5LDcg
-KzU2OSw4IEBAIHN0YXRpYyBpbnQgbXRrX2lvbW11X2h3X2luaXQoY29uc3Qgc3RydWN0IG10a19p
-b21tdV9kYXRhICpkYXRhKQ0KPiAgCQlGX0lOVF9QUkVURVRDSF9UUkFOU0FUSU9OX0ZJRk9fRkFV
-TFQ7DQo+ICAJd3JpdGVsX3JlbGF4ZWQocmVndmFsLCBkYXRhLT5iYXNlICsgUkVHX01NVV9JTlRf
-TUFJTl9DT05UUk9MKTsNCj4gIA0KPiAtCWlmIChkYXRhLT5wbGF0X2RhdGEtPm00dV9wbGF0ID09
-IE00VV9NVDgxNzMpDQo+ICsJaWYgKGRhdGEtPnBsYXRfZGF0YS0+bTR1X3BsYXQgPT0gTTRVX01U
-ODE3MyB8fA0KPiArCSAgICBkYXRhLT5wbGF0X2RhdGEtPm00dV9wbGF0ID09IE00VV9NVDgxNjcp
-DQoNCkkgZG8gbm90IGxpa2UgdG8gdXNlIG00dV9wbGF0IGZvciB0aGUgdmFyaWFudCBvZiBlYWNo
-IFNvQy4gSWYgeW91IHVzZQ0KbTR1X3BsYXQsIHlvdSBjb3VsZCBkcm9wIGhhc180Z2JfbW9kZSwg
-cmVzZXRfYXhpLCBsYXJiaWRfcmVtYXAgYmVjYXVzZQ0KeW91IGNvdWxkIHVzZSBtNHVfcGxhdCB0
-byBkZWNpZGUgdGhlIGJlaGF2aW9yIG9mIHRoZXNlIHZhcmlhYmxlIGJ1dCB0aGUNCmNvZGUgd291
-bGQgYmUgc28gZGlydHkuIFNvIEkgdGhpbmsgeW91IHNob3VsZCBkcm9wIG00dV9wbGF0IGFuZCB1
-c2UgYQ0KdmFyaWFibGUgdG8gaWRlbnRpZnkgdGhpcyBiZWhhdmlvci4NCg0KUmVnYXJkcywNCkNL
-DQoNCj4gIAkJcmVndmFsID0gKGRhdGEtPnByb3RlY3RfYmFzZSA+PiAxKSB8IChkYXRhLT5lbmFi
-bGVfNEdCIDw8IDMxKTsNCj4gIAllbHNlDQo+ICAJCXJlZ3ZhbCA9IGxvd2VyXzMyX2JpdHMoZGF0
-YS0+cHJvdGVjdF9iYXNlKSB8DQo+IEBAIC03ODIsNiArNzgzLDEzIEBAIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBtdDI3MTJfZGF0YSA9IHsNCj4gIAkubGFyYmlkX3Jl
-bWFwID0gezAsIDEsIDIsIDMsIDQsIDUsIDYsIDcsIDgsIDl9LA0KPiAgfTsNCj4gIA0KPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10ODE2N19kYXRhID0gew0KPiAr
-CS5tNHVfcGxhdCAgICAgPSBNNFVfTVQ4MTY3LA0KPiArCS5oYXNfNGdiX21vZGUgPSB0cnVlLA0K
-PiArCS5yZXNldF9heGkgICAgPSB0cnVlLA0KPiArCS5sYXJiaWRfcmVtYXAgPSB7MCwgMSwgMiwg
-MywgNCwgNX0sIC8qIExpbmVhciBtYXBwaW5nLiAqLw0KPiArfTsNCj4gKw0KPiAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBtdGtfaW9tbXVfcGxhdF9kYXRhIG10ODE3M19kYXRhID0gew0KPiAgCS5tNHVf
-cGxhdCAgICAgPSBNNFVfTVQ4MTczLA0KPiAgCS5oYXNfNGdiX21vZGUgPSB0cnVlLA0KPiBAQCAt
-Nzk4LDYgKzgwNiw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2lvbW11X3BsYXRfZGF0YSBt
-dDgxODNfZGF0YSA9IHsNCj4gIA0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-bXRrX2lvbW11X29mX2lkc1tdID0gew0KPiAgCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQy
-NzEyLW00dSIsIC5kYXRhID0gJm10MjcxMl9kYXRhfSwNCj4gKwl7IC5jb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10ODE2Ny1tNHUiLCAuZGF0YSA9ICZtdDgxNjdfZGF0YX0sDQo+ICAJeyAuY29tcGF0
-aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtbTR1IiwgLmRhdGEgPSAmbXQ4MTczX2RhdGF9LA0KPiAg
-CXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLW00dSIsIC5kYXRhID0gJm10ODE4M19k
-YXRhfSwNCj4gIAl7fQ0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCBi
-L2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gaW5kZXggZWE5NDlhMzI0ZTMzLi5jYjhmZDU5
-NzBjZDQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmgNCj4gKysrIGIv
-ZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaA0KPiBAQCAtMzAsNiArMzAsNyBAQCBzdHJ1Y3QgbXRr
-X2lvbW11X3N1c3BlbmRfcmVnIHsNCj4gIGVudW0gbXRrX2lvbW11X3BsYXQgew0KPiAgCU00VV9N
-VDI3MDEsDQo+ICAJTTRVX01UMjcxMiwNCj4gKwlNNFVfTVQ4MTY3LA0KPiAgCU00VV9NVDgxNzMs
-DQo+ICAJTTRVX01UODE4MywNCj4gIH07DQoNCg==
+H Tero,
 
+On 22/11/19 3:33 PM, Lokesh Vutla wrote:
+> Add power-domains entry for smmu, so that the it is accessible as long
+> as the driver is active. Without this device shutdown is throwing the
+> below warning:
+> "[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
+> 
+> Reported-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Any comments on this patch? If there are no objections, can this be picked?
+
+Thanks and regards,
+Lokesh
+
+> ---
+>  arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> index 698ef9a1d5b7..96445111e398 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> @@ -43,6 +43,7 @@
+>  	smmu0: smmu@36600000 {
+>  		compatible = "arm,smmu-v3";
+>  		reg = <0x0 0x36600000 0x0 0x100000>;
+> +		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
+>  		interrupt-parent = <&gic500>;
+>  		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
+>  			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
+> 
