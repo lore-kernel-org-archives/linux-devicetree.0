@@ -2,87 +2,273 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC29C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D19EC33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7442072E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74862075A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="Kwkiv6kT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgAFOfl (ORCPT
+        id S1726436AbgAFOgq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:35:41 -0500
-Received: from sauhun.de ([88.99.104.3]:39328 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgAFOfl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 09:35:41 -0500
-Received: from localhost (p54B338AC.dip0.t-ipconnect.de [84.179.56.172])
-        by pokefinder.org (Postfix) with ESMTPSA id 576212C0686;
-        Mon,  6 Jan 2020 15:35:39 +0100 (CET)
-Date:   Mon, 6 Jan 2020 15:35:39 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Eugen.Hristev@microchip.com, Ludovic.Desroches@microchip.com,
-        peda@axentia.se, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Codrin.Ciubotariu@microchip.com
-Subject: Re: [PATCH v3 1/4] dt-bindings: i2c: at91: cosmetic formatting of
- compatible list
-Message-ID: <20200106143538.GG1290@ninjato>
-References: <1575886763-19089-1-git-send-email-eugen.hristev@microchip.com>
- <20191218213716.GA30887@bogus>
+        Mon, 6 Jan 2020 09:36:46 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42462 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgAFOgq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 09:36:46 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so49753172wro.9
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 06:36:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4/Feq/rl6du9+WwKmwHvwjCEbxCtkVApIqBg0qi4BAU=;
+        b=Kwkiv6kTlXRw0zfK2SsUQb1YAw6N2Fo7iNI1TA7T289RrCSp0B33ZIQA/fyd3xkPq1
+         LT0AoU2e7/X9iYwny/jGYc7Xfwf0yL6PJRDGWJ4EOBD62UlWMpKxPXceB/JXGYWeur5A
+         Jy8H3eL6qiWJTQZwrFBvUXBHIPuLP/h/KxHpiNyCy1iNURkCRPySRPqA6xOPEwxL/qZH
+         W96es1Kzimsx3HHQQIg1hDzwkdHwlq/kLBnSx+WwLut+pv4wuEfAxS5g+ygBawsWbpng
+         Lrx0Ou8FkjIFoj21GPE2iNpuvjWIWrJS9XpDatiQlkNOwpzqGZ0CE1bVmcFNA3UBfyvt
+         hZdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4/Feq/rl6du9+WwKmwHvwjCEbxCtkVApIqBg0qi4BAU=;
+        b=k4cp6HPt6kKIfoOixi6ruc7bBXpMd787wtKNhMnGyCuCqKIROBqFgoEaYMMoHqvIDY
+         rvV/a4xt4nyu1RU3ee3Yjb9xB8ETjM9ELmTpp+0BrQUkq8yAKj2MsmpT0bQCIB/BIZ/B
+         DQ/WJhkkYduP/Do1c6kYfUCZ6WA5MUl0V0z99YV+T9cRjNQOvU2RDVnSMmksXbZ6i+MX
+         B9chmoJIQ0uafkG85ibMsKiVMVagX2WMn25J7Xn3rcD1v2+12ZcjI5qXLj2UBhnXRHqZ
+         Y62VasLG4Dm8vXhK4pA/hk3Ja/6YRQZ/2blbk3sEq2bL2PD/8Fq/R53+IdPYSogcdI56
+         Vcrg==
+X-Gm-Message-State: APjAAAUyBvOMkJnhHe+ltN7/WnL+0S95ajyapkHexnsjgmQpoAu9JC/f
+        hOW4EBsFIpeTAsYBmmuQkdZ4nQ==
+X-Google-Smtp-Source: APXvYqy6pRTUkXogQo9TN9R1Ao4bR0NLxiBkmvJ0ChfpK+LQLTLdU7Z8rRdAXtUwtY7lbAVxma6tsg==
+X-Received: by 2002:adf:8b4f:: with SMTP id v15mr75604316wra.231.1578321404543;
+        Mon, 06 Jan 2020 06:36:44 -0800 (PST)
+Received: from localhost.localdomain (93-137-254-179.adsl.net.t-com.hr. [93.137.254.179])
+        by smtp.googlemail.com with ESMTPSA id b17sm70224301wrp.49.2020.01.06.06.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 06:36:43 -0800 (PST)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH] ARM: dts: qcom: add gpio-ranges property
+Date:   Mon,  6 Jan 2020 15:36:33 +0100
+Message-Id: <20200106143633.1268701-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G44BJl3Aq1QbV/QL"
-Content-Disposition: inline
-In-Reply-To: <20191218213716.GA30887@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Christian Lamparter <chunkeey@gmail.com>
 
---G44BJl3Aq1QbV/QL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds the gpio-ranges property to almost all of
+the Qualcomm ARM platforms that utilize the pinctrl-msm
+framework.
 
-On Wed, Dec 18, 2019 at 03:37:16PM -0600, Rob Herring wrote:
-> On Mon, 9 Dec 2019 10:19:59 +0000, <Eugen.Hristev@microchip.com> wrote:
-> >=20
-> > From: Eugen Hristev <eugen.hristev@microchip.com>
-> >=20
-> > Format the list of compatibles with one compatible per line.
-> >=20
-> > Suggested-by: Peter Rosin <peda@axentia.se>
-> > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> > Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+The gpio-ranges property is part of the gpiolib subsystem.
+As a result, the binding text is available in section
+"2.1 gpio- and pin-controller interaction" of
+Documentation/devicetree/bindings/gpio/gpio.txt
 
-Applied to for-next, thanks!
+For more information please see the patch titled:
+"pinctrl: msm: fix gpio-hog related boot issues" from
+this series.
 
+Reported-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Tested-by: Sven Eckelmann <sven.eckelmann@openmesh.com> [ipq4019]
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Tested-by: Robert Marko <robert.marko@sartura.hr> [ipq4019]
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-apq8084.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-ipq4019.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-ipq8064.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-mdm9615.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-msm8660.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-msm8960.dtsi   | 1 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi   | 1 +
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/msm8994.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 1 +
+ 13 files changed, 13 insertions(+)
 
---G44BJl3Aq1QbV/QL
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 8b79b4112ee1..2687c4e890ba 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -350,6 +350,7 @@
+ 			reg = <0x800000 0x4000>;
+ 
+ 			gpio-controller;
++			gpio-ranges = <&tlmm_pinmux 0 0 90>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+index 0a0fb147ebb9..4cc2d33f3d3b 100644
+--- a/arch/arm/boot/dts/qcom-apq8084.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+@@ -401,6 +401,7 @@
+ 			compatible = "qcom,apq8084-pinctrl";
+ 			reg = <0xfd510000 0x4000>;
+ 			gpio-controller;
++			gpio-ranges = <&tlmm 0 0 147>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 72d4e290b543..b6e5203a210b 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -201,6 +201,7 @@
+ 			compatible = "qcom,ipq4019-pinctrl";
+ 			reg = <0x01000000 0x300000>;
+ 			gpio-controller;
++			gpio-ranges = <&tlmm 0 0 100>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index 16c0da97932c..4021f661cd11 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -119,6 +119,7 @@
+ 			reg = <0x800000 0x4000>;
+ 
+ 			gpio-controller;
++			gpio-ranges = <&qcom_pinmux 0 0 69>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+index 356e9535f7a6..347b4f7d7889 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+@@ -128,6 +128,7 @@
+ 		msmgpio: pinctrl@800000 {
+ 			compatible = "qcom,mdm9615-pinctrl";
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 88>;
+ 			#gpio-cells = <2>;
+ 			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/qcom-msm8660.dtsi b/arch/arm/boot/dts/qcom-msm8660.dtsi
+index ec5cbc468bd3..480fc08cbe8e 100644
+--- a/arch/arm/boot/dts/qcom-msm8660.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8660.dtsi
+@@ -115,6 +115,7 @@
+ 			reg = <0x800000 0x4000>;
+ 
+ 			gpio-controller;
++			gpio-ranges = <&tlmm 0 0 173>;
+ 			#gpio-cells = <2>;
+ 			interrupts = <0 16 0x4>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
+index f2aeaccdc1ad..172ea3c70eac 100644
+--- a/arch/arm/boot/dts/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
+@@ -107,6 +107,7 @@
+ 		msmgpio: pinctrl@800000 {
+ 			compatible = "qcom,msm8960-pinctrl";
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 152>;
+ 			#gpio-cells = <2>;
+ 			interrupts = <0 16 0x4>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 369e58f64145..1689cf925b03 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -707,6 +707,7 @@
+ 			compatible = "qcom,msm8974-pinctrl";
+ 			reg = <0xfd510000 0x4000>;
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 146>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 67ee5f560104..2b31823d3ccd 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -21,6 +21,7 @@
+ 			reg = <0x1000000 0x300000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
++			gpio-ranges = <&tlmm 0 0 70>;
+ 			#gpio-cells = <0x2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <0x2>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 5ea9fb8f2f87..2d1cbe762b3a 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -374,6 +374,7 @@
+ 			reg = <0x1000000 0x300000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 122>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index 8be60c08a9ab..2021795c99ad 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -171,6 +171,7 @@
+ 			reg = <0xfd510000 0x4000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 146>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+index 3932757f78b7..b1c2d7d6a0f2 100644
+--- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+@@ -133,6 +133,7 @@
+ 			reg = <0xfd510000 0x4000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 146>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 87f4d9c1b0d4..81576aeb2408 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -1234,6 +1234,7 @@
+ 			reg = <0x01010000 0x300000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 150>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-- 
+2.24.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4TRboACgkQFA3kzBSg
-KbbclRAAm2+DMARlhfiRHkwpy6DngebAhoTyl6NBSUEMGtj+HDYSWSH9qlskh54q
-B8xb/31ICwgLWNN8oszpO2ctFyL+yYWfseLcSBw4FmiMXJ8YYe2j96VHHvyNsx2t
-We+lehY+p1K5e3o5PJhoNTrAuv4ZYMd4qAioLr39nqUcxQ5RcTLALvbKkbu6Dsf5
-Bw3I/SiuVkFOFEKHpBt2eqPDyuva5ntJ7TSSQaEftGUOyFWED0mh207w0wp9hfOf
-+YmAa714rEKAcXqhzXw8qANmRB3MsGwaWlap9bC8Zj3gmwfszrhkD7MIkatkv2rJ
-0VlTdk2YAQ+FJqBJGLF5tl9cL40/Sarb0W0Dt/mPRjgwRXKnAUoVEuyC4AD2NouP
-4F8TQi+wPxNi/YZ04NuOdOx0aqSIomHjAJMIXMt8RaoYwQ2m8F8II/kbjqQ7LVO0
-dWOC/1XRRGboxZLUjz5LQ2w6psvYf8JoOeBT/J3UqTt6sZTI3MpDYsUpvb+Fqiu3
-3FRmzRYOEH4obZvDoO2BBqs1RE5hcw582KLO9J+Zqy3LZRJ3oNeCoNR7T3csRywm
-q8frEUJyV0Mu5vel2teDPDrPLfgqfi45rL1ogJv/s2NnxXd74jzDl3aF9k29jcF/
-Tg0fZCfRkyWA8XLVuAqSfppcEKjF5WcsG480+ubEqSqD15e+cAo=
-=mR/+
------END PGP SIGNATURE-----
-
---G44BJl3Aq1QbV/QL--
