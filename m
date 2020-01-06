@@ -2,210 +2,288 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56353C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3EAC33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3DC207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955D32075A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 14:57:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltTOTzWh"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="ttwGoU/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgAFOwh (ORCPT
+        id S1726427AbgAFO5H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 09:52:37 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39713 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbgAFOwh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 09:52:37 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so19000907plp.6;
-        Mon, 06 Jan 2020 06:52:37 -0800 (PST)
+        Mon, 6 Jan 2020 09:57:07 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36042 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgAFO5H (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 09:57:07 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so15571235wma.1
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 06:57:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=J5hhaE5FX3cF52VITZ7S/uv3Q2jj8Ag28WL04w1zpWA=;
-        b=ltTOTzWhSg4Va0gQ6P/71cmwDov+D7T2URRhsJ58MJvUxvpnk4KvJneGrdoBIKZ1eF
-         UN3HhxlJgSxb1B41mlucONmY7Ix+U+G2yUDlILvTSzMBGOww8uNn8wvkDtLCtJ5mznU4
-         VqLdvpKpjdwWeL7mG1kGX9YkQ71ag4AiwCIIWJkpxD2xQDN4W9wX5ywa1tA5UmH/OvQ0
-         TuhgRhxhB9l3J52l0ipDZlnSi25UnN5VJghJI1cAKxDBhu72iOLSmYEjBnQAl6tn0ens
-         lLd5zdWIjC4CNnrOyRmHPn0KECun7KD/+sGjn6+SDbwTYFJLK7QqpHiHqmHrVQGczxvN
-         XTUQ==
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4XoQkxgkZAvdX4n0R/Hf5buiUEi1NTKRWp+mFuPF3iU=;
+        b=ttwGoU/jg/8vRQEm82RGRSdOMth62CiJWTJd5O76BMxtEZOJa/X/vfRdvIZdiUpMmE
+         tJJlPwxMdK/JvDENuuX8oFDIb2C+HKR9raEm2Q36uKS7VBy5kLyHQ8FK2fg7uRAsPCqt
+         /il6xeIHcOiBniwkPpgZVSiZ6liurl9j8hOkgnvL8BvkRJEGDGUXhBdc/t8BBKpmj8cB
+         2LyENU0ASOA/VaciTp5GQQxLGVaoNNuNqUn5OYAIS5zeMSAb6EA7SVqvHVLLryafyFys
+         Ox8TZFwWtsAMDSJC929xfbCtr6KiS/ftFQAo9iJeFsKSIN1GPkbziItKCYLnw15hKF/q
+         0FFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=J5hhaE5FX3cF52VITZ7S/uv3Q2jj8Ag28WL04w1zpWA=;
-        b=MKdth0o3UJtgF8HIAf+P/n/mQPleAZT/qOkB02foCRiujGjAuMDztBgSKOSgNfIFfN
-         SILzXs4GrUvuulXleWDj/UTEDW6z+teCL2FcoHLLVXFb4NmwtBPNqvUNnAp0womW1gOJ
-         C1sPNDvLtyLIeyDY0I/jUrTZeqDdyMueUVntcvDK+5J0DT0F57rfCCuz+KliVq6FX2Rz
-         varoUdI3phlXN5fCUc0TpKsonWsqun83alI8hrS5yS9o9qzO6whWTl+Z+lRv0hNVbVgW
-         fVRLlivEtucua4nyeire0CyCa8/IgyCvs3+eRwKEXH2wxY1CM1+f73If3n35xZe7qkwH
-         dudA==
-X-Gm-Message-State: APjAAAXbDidjT3LRF+BW+sL148Yv7Km1ryI6iQd2Ko3j8LeCbPgpSQKC
-        K7ONU9rSlCDj4gjYEdRdj5/LjUFK
-X-Google-Smtp-Source: APXvYqzfc+QSzFbUyi83aF7VeK3fETNnl4dz1UELxX26HJYYdl2SMD3CcuC57eLYB1Z4NZaUneVu6Q==
-X-Received: by 2002:a17:90a:ec0f:: with SMTP id l15mr41817780pjy.39.1578322356445;
-        Mon, 06 Jan 2020 06:52:36 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z4sm78245782pfn.42.2020.01.06.06.52.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 06:52:35 -0800 (PST)
-Subject: Re: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
- device list supported by driver
-To:     Vadim Pasternak <vadimp@mellanox.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "vijaykhemka@fb.com" <vijaykhemka@fb.com>
-Cc:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20200105105833.30196-1-vadimp@mellanox.com>
- <20200105105833.30196-6-vadimp@mellanox.com>
- <567ebd26-529e-6b2a-2f07-cfaf0f2217a9@roeck-us.net>
- <AM6PR05MB5224F444CBAC5A0503AFBB83A23D0@AM6PR05MB5224.eurprd05.prod.outlook.com>
- <a30e4f98-65a4-f93c-371e-7691aace41f7@roeck-us.net>
- <AM6PR05MB52245C747A0EB1691C3EBFBFA23C0@AM6PR05MB5224.eurprd05.prod.outlook.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <05925e70-0079-2467-b703-eba8d8667eaf@roeck-us.net>
-Date:   Mon, 6 Jan 2020 06:52:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4XoQkxgkZAvdX4n0R/Hf5buiUEi1NTKRWp+mFuPF3iU=;
+        b=TLRoZOx61yg+LthpjuTQNIPSfsfyfL7oLPA3YPvdVpP4f+Fo6sCDiCgDvLpDcBMQmX
+         Td+yrljtl8s+zhLD9W9MJ42zdmu1S3NiOk79hj2xShpKKymx5ejwflR/s3aJp+Ghn9J8
+         g8RMEmJ0pO/7vtFCez82SYhHsblEppMuaxzabmBQza8+2Osi1seHWJ3tmosgysx5ZLfJ
+         tJnOrDkczI3P2Aq3Qe8G//oyXz/7AT85EoCjNvozYqZ1Pt1hKNFkIj+rgrTNcPSP/sxG
+         7BOfnzgkGY2XRrx1hbDfR6wR3QCNikpfCTKIkjlZ2objg6Z3QnfcPW8mTEzre7i8jksv
+         mzLg==
+X-Gm-Message-State: APjAAAVagXKhjE3f4m1l11iVXEHnAsKwpyPV/vHtd2PzAItxag1htqXO
+        Ekx7V83Sg0GknOikwluYWVYmO/VcfKDLHyWKAK2kuPqFyJM=
+X-Google-Smtp-Source: APXvYqxfMwtQJoldMTRdltl3qv6Hgh73aLyhtwnyvgopmbyIZqd67/g0U4D/zDjh4yS9nl1GNCZMzjf38Wezasw1a3Y=
+X-Received: by 2002:a1c:9814:: with SMTP id a20mr33759928wme.94.1578322623741;
+ Mon, 06 Jan 2020 06:57:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <AM6PR05MB52245C747A0EB1691C3EBFBFA23C0@AM6PR05MB5224.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+ <20191227122114.23075-2-andrey.konovalov@linaro.org> <20191227141739.GD861@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20191227141739.GD861@valkosipuli.retiisi.org.uk>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Mon, 6 Jan 2020 14:56:47 +0000
+Message-ID: <CAPY8ntDRWOXass1Et-bybw-e0YLvk6VJEqjR4ULh739LcrNudQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor binding
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Andrey Konovalov <andrey.konovalov@linaro.org>, mchehab@kernel.org,
+        robh+dt@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Peter Griffin <peter.griffin@linaro.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/6/20 4:16 AM, Vadim Pasternak wrote:
-> 
-> 
->> -----Original Message-----
->> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
->> Sent: Sunday, January 05, 2020 8:35 PM
->> To: Vadim Pasternak <vadimp@mellanox.com>; robh+dt@kernel.org;
->> vijaykhemka@fb.com
->> Cc: linux-hwmon@vger.kernel.org; devicetree@vger.kernel.org
->> Subject: Re: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
->> device list supported by driver
->>
->> On 1/5/20 8:44 AM, Vadim Pasternak wrote:
->>>
->>>
->>>> -----Original Message-----
->>>> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
->>>> Sent: Sunday, January 05, 2020 6:04 PM
->>>> To: Vadim Pasternak <vadimp@mellanox.com>; robh+dt@kernel.org;
->>>> vijaykhemka@fb.com
->>>> Cc: linux-hwmon@vger.kernel.org; devicetree@vger.kernel.org
->>>> Subject: Re: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679)
->>>> Extend device list supported by driver
->>>>
->>>> On 1/5/20 2:58 AM, Vadim Pasternak wrote:
->>>>> Extends driver with support of the additional devices:
->>>>> Texas Instruments Dual channel DCAP+ multiphase controllers:
->>>>> TPS53688, SN1906016.
->>>>> Infineon Multi-phase Digital VR Controller Sierra devices
->>>>> XDPE12286C, XDPE12284C, XDPE12283C, XDPE12254C and XDPE12250C.
->>>>>
->>>>> Extend Kconfig with added devices.
->>>>>
->>>>> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
->>>>> ---
->>>>>     drivers/hwmon/pmbus/Kconfig    |  5 +++--
->>>>>     drivers/hwmon/pmbus/tps53679.c | 14 ++++++++++++++
->>>>>     2 files changed, 17 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/hwmon/pmbus/Kconfig
->>>>> b/drivers/hwmon/pmbus/Kconfig index 59859979571d..9e3d197d5322
->>>>> 100644
->>>>> --- a/drivers/hwmon/pmbus/Kconfig
->>>>> +++ b/drivers/hwmon/pmbus/Kconfig
->>>>> @@ -200,10 +200,11 @@ config SENSORS_TPS40422
->>>>>     	  be called tps40422.
->>>>>
->>>>>     config SENSORS_TPS53679
->>>>> -	tristate "TI TPS53679"
->>>>> +	tristate "TI TPS53679, TPS53688, SN1906016, Infineon XDPE122xxx
->>>> family"
->>>>>     	help
->>>>>     	  If you say yes here you get hardware monitoring support for TI
->>>>> -	  TPS53679.
->>>>> +	  TPS53679, PS53688, SN1906016 and Infineon XDPE12286C,
->>>> XDPE12284C,
->>>>
->>>> TPS53688. For the others, for some I can't even determine if they
->>>> exist in the first place (eg SN1906016, XPDE12250C) or how they would
->>>> differ from other variants (eg XPDE12284C vs. XPDE12284A).
->>>> And why would they all use the same bit map in the VOUT_MODE
->>>> register, the same number of PMBus pages (phases), and the same attributes
->> in each page ?
->>>
->>> Hi Guenter,
->>>
->>> Thank you for reply.
->>>
->>> On our new system we have device XPDE12284C equipped.
->>> I tested this device.
->>>
->> Sounds good, but did you also make sure that all chips have the same number of
->> pages (phases), the same set of commands as the TI chip, and support the same
->> bit settings in VOUT_MODE ? It seems a bit unlikely that TI's register definitions
->> would make it into an Infineon chip.
->>
->> Also, what about the SN1906016 ? I don't find that anywhere, except in one
->> place where it is listed as MCU from TI.
-> 
-> I'll drop SN1906016.
-> Datasheet has a title Dual channel DCAP+ multiphase controllers:
-> TPS53688, SN1906016.
-> But maybe it's some custom device (anyway I'll try to check it with TI).
-> 
+Hi Sakari
 
-Or maybe SN1906016 means something else. Unless we have explicit confirmation
-that the chip exists (or will exist) we should not add it to the list.
+On Fri, 27 Dec 2019 at 14:18, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+>
+> Hi Andrey,
+>
+> Thanks for the patchset.
+>
+> On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
+> > Add YAML device tree binding for IMX219 CMOS image sensor, and
+> > the relevant MAINTAINERS entries.
+> >
+> > Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> > ---
+> >  .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
+> >  MAINTAINERS                                   |   8 ++
+> >  2 files changed, 142 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> > new file mode 100644
+> > index 000000000000..b58aa49a7c03
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> > @@ -0,0 +1,134 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
+> > +
+> > +maintainers:
+> > +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > +
+> > +description: |-
+> > +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
+> > +  with an active array size of 3280H x 2464V. It is programmable through
+> > +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
+> > +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
+> > +  4 data lanes.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: sony,imx219
+> > +
+> > +  reg:
+> > +    description: I2C device address
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: xclk
+>
+> There's a single clock. Does it need a name? I'd just omit it.
+>
+> > +
+> > +  VDIG-supply:
+> > +    description:
+> > +      Digital I/O voltage supply, 1.8 volts
+> > +
+> > +  VANA-supply:
+> > +    description:
+> > +      Analog voltage supply, 2.8 volts
+> > +
+> > +  VDDL-supply:
+> > +    description:
+> > +      Digital core voltage supply, 1.2 volts
+> > +
+> > +  xclr-gpios:
+> > +    description: |-
+> > +      Reference to the GPIO connected to the xclr pin, if any.
+> > +      Must be released (set high) after all supplies are applied.
+>
+> A common name for this in camera sensors is xshutdown. I'd suggest to use
+> that.
+>
+> > +
+> > +  camera-clk:
+> > +    type: object
+> > +
+> > +    description: Clock source for imx219
+> > +
+> > +    properties:
+> > +      clock-frequency: true
+> > +
+> > +    required:
+> > +      - clock-frequency
+>
+> Hmm. The driver doesn't seem to use this for anything.
+>
+> There are two approaches to this; either you can get and check the
+> frequency, or specify it in DT bindings, set and then check it.
+>
+> See e.g. Documentation/devicetree/bindings/media/i2c/nokia,smia.txt (not in
+> YAML though).
+>
+> > +
+> > +  # See ../video-interfaces.txt for more details
+> > +  port:
+> > +    type: object
+> > +    properties:
+> > +      endpoint:
+> > +        type: object
+> > +        properties:
+> > +          clock-lanes:
+> > +            const: 0
+>
+> If the hardware does not support lane reordering, you can omit the
+> clock-lanes property as it provides no information.
+>
+> > +
+> > +          data-lanes:
+> > +            description: |-
+> > +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
+> > +              four-lane operation.
+> > +            oneOf:
+> > +              - const: [[ 1, 2 ]]
+> > +              - const: [[ 1, 2, 3, 4 ]]
+> > +
+> > +          clock-noncontinuous:
+> > +            type: boolean
+> > +            description: |-
+> > +              Presence of this boolean property decides whether the MIPI CSI-2
+> > +              clock is continuous or non-continuous.
+>
+> How about: MIPI CSI-2 clock will be non-continuous if this property is
+> present, otherwise it's continuous.
+>
+> > +
+> > +        required:
+> > +          - clock-lanes
+> > +          - data-lanes
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - clocks
+> > +  - clock-names
+> > +  - VANA-supply
+> > +  - VDIG-supply
+> > +  - VDDL-supply
+> > +  - port
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    i2c0 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        imx219: sensor@10 {
+> > +            compatible = "sony,imx219";
+> > +            reg = <0x10>;
+> > +            clocks = <&imx219_clk>;
+> > +            clock-names = "xclk";
+> > +            VANA-supply = <&imx219_vana>;   /* 2.8v */
+> > +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
+> > +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
+> > +
+> > +            imx219_clk: camera-clk {
+> > +                compatible = "fixed-clock";
+> > +                #clock-cells = <0>;
+> > +                clock-frequency = <24000000>;
+> > +            };
+> > +
+> > +            port {
+> > +                imx219_0: endpoint {
+> > +                    remote-endpoint = <&csi1_ep>;
+> > +                    clock-lanes = <0>;
+> > +                    data-lanes = <1 2>;
+> > +                    clock-noncontinuous;
+> > +                };
+> > +            };
+> > +        };
+> > +    };
+> > +
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index ffa3371bc750..f7b6c24ec081 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -15350,6 +15350,14 @@ S:   Maintained
+> >  F:   drivers/media/i2c/imx214.c
+> >  F:   Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> >
+> > +SONY IMX219 SENSOR DRIVER
+> > +M:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+>
+> Is Dave aware of this? :-)
 
->>
->>> Infineon datasheet refers all these device as XDPE122xxC family and it
->>> doesn't specify any differences in register map between these devices.
->>
->> That is a bit vague, especially when it includes devices which return zero results
->> with Google searches.
->>
->> "A" vs. "C" may distinguish automotive vs. commercial; the "A" device is listed
->> under automotive. If the command set is the same, I don't really want the "c" in
->> the id.
-> 
-> Got feedback from Infineon guys.
-> No need 'C' at the end, as you wrote.
-> All XDPE12250, XDPE12254, XDPE12283, XDPE12284, XDPE12286 are
-> treated in the same way:
-> same pages, same VOUT_MODE, VOUT_READ, etcetera.
-> 
+Yes, I'm aware, and happy to be listed as maintainer.
+I'm very grateful to Andrey for his efforts in upstreaming this - it's
+a task that I simply haven't the time for at present.
 
-And same as TI, including VOUT_MODE ? Also, did they confirm that the unpublished
-chips do or will actually exist ?
+  Dave
 
-Sorry, to be persistent, but give my thanks to Infineon.
-
->>
->>> Tomorrow we'll have guys from Infineon in our lab and I'll verify if
->>> there is any difference.
->>
->> Tell them that it isn't really helpful to keep their datasheets under wrap.
->> Unfortunately, TI started doing the same, which isn't helpful either.
-> 
-> Told them about datasheets availability - got :)
-> 
-
-Surprise.
-
-Thanks,
-Guenter
+> > +L:   linux-media@vger.kernel.org
+> > +T:   git git://linuxtv.org/media_tree.git
+> > +S:   Maintained
+> > +F:   drivers/media/i2c/imx219.c
+> > +F:   Documentation/devicetree/bindings/media/i2c/imx219.yaml
+> > +
+> >  SONY IMX258 SENSOR DRIVER
+> >  M:   Sakari Ailus <sakari.ailus@linux.intel.com>
+> >  L:   linux-media@vger.kernel.org
+>
+> --
+> Regards,
+>
+> Sakari Ailus
