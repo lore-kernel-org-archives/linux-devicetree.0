@@ -2,143 +2,192 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F8C6C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C490C33C9B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3502A21734
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2193B21775
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jZVxSjMD"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jF688+TK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbgAFHJS (ORCPT
+        id S1726524AbgAFHK2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 02:09:18 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37551 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726338AbgAFHJS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 02:09:18 -0500
-X-UUID: abf890a27b9744eba74fd5164fdbd476-20200106
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=6r8Q6ouEmerj2BaCaPfoigdqTcUY+4/DsatOS2H3Y48=;
-        b=jZVxSjMDVWIQIbcx1zrUqhYVTSn1fqcr3cbBntsPgo/sC99UrS2taKkYEEUGEovWUT3MSoVNSnZyR1iVG9OSfHeAkDVp2+oT0XLlY3QlhHbTs/ihnZAAspqmNycV55L9CDzJiBCwXch5mU11AREdHXGb9TzfEF+sKjDGRu1CIdk=;
-X-UUID: abf890a27b9744eba74fd5164fdbd476-20200106
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 497406598; Mon, 06 Jan 2020 15:09:14 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 6 Jan 2020 15:08:48 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 6 Jan 2020 15:08:58 +0800
-Message-ID: <1578294552.7875.1.camel@mtksdaap41>
-Subject: Re: [PATCH v9 3/4] misc: eeprom: at24: support pm_runtime control
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     Wolfram Sang <wsa@the-dreams.de>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-devicetree <devicetree@vger.kernel.org>
-Date:   Mon, 6 Jan 2020 15:09:12 +0800
-In-Reply-To: <CAMpxmJUotmLe6sJ4ZEbMMzUeLJMi-gHyamEUuDJzj6k_4JjCBg@mail.gmail.com>
-References: <20191216080445.8747-1-bibby.hsieh@mediatek.com>
-         <20191216080445.8747-4-bibby.hsieh@mediatek.com>
-         <CAMpxmJUotmLe6sJ4ZEbMMzUeLJMi-gHyamEUuDJzj6k_4JjCBg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 6 Jan 2020 02:10:28 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7822 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbgAFHK1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 02:10:27 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e12dd520000>; Sun, 05 Jan 2020 23:10:10 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sun, 05 Jan 2020 23:10:26 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sun, 05 Jan 2020 23:10:26 -0800
+Received: from [10.19.108.118] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jan
+ 2020 07:10:24 +0000
+Subject: Re: [PATCH v5 3/5] dt-bindings: phy: tegra: Add Tegra194 support
+To:     Rob Herring <robh@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <nkristam@nvidia.com>
+References: <20200103081814.9848-1-jckuo@nvidia.com>
+ <20200103081814.9848-4-jckuo@nvidia.com> <20200103223940.GA9205@bogus>
+X-Nvconfidentiality: public
+From:   JC Kuo <jckuo@nvidia.com>
+Message-ID: <baa9b5f4-74be-0ab4-0b24-bf926cf3207c@nvidia.com>
+Date:   Mon, 6 Jan 2020 15:10:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200103223940.GA9205@bogus>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578294610; bh=P75+nICemhj8+2AwnpQssTqZ+OlPS6ivxVr/T7XPS0Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jF688+TKb9BmvElPrCh0au1+bie+y+Sn4L3yjcmaErgcQI1z7QFfAgg1myvThqdip
+         seRb/aNV+JI6w+XidFuDaeZVdMcOAOyoDAKsfj7ztwDnxy22ZzHpX9N7uXJVDhDoZA
+         /ehu/n2R0ME+Sw2uf9kYtkth8BQBM/vPSypFhC5w1HZGamxwTpophLJwnB7YQZJ+9l
+         nwqHUsRHtPFd9QNktdJVUtnSMiLtct7vg1DUlaRIodtM9HTWWG2To0tsLuAU5ferfD
+         6Mf8uE8rKu7bUtpGGUmll4R4+WekfrTjWxWNSJEOTb9WzQ2qv6W2w3VVaykmsGQtvy
+         fMgBXXn9xMtGQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTE5IGF0IDExOjUwICswMTAwLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdy
-b3RlOg0KPiBwb24uLCAxNiBncnUgMjAxOSBvIDA5OjA0IEJpYmJ5IEhzaWVoIDxiaWJieS5oc2ll
-aEBtZWRpYXRlay5jb20+IG5hcGlzYcWCKGEpOg0KPiA+DQo+ID4gQWx0aG91Z2ggaW4gdGhlIG1v
-c3QgcGxhdGZvcm1zLCB0aGUgcG93ZXIgb2YgZWVwcm9tIGFyZSBhbHdheQ0KPiA+IG9uLCBzb21l
-IHBsYXRmb3JtcyBkaXNhYmxlIHRoZSBlZXByb20gcG93ZXIgaW4gb3JkZXIgdG8gbWVldA0KPiA+
-IGxvdyBwb3dlciByZXF1ZXN0LiBUaGlzIHBhdGNoIGFkZCB0aGUgcG1fcnVudGltZSBvcHMgdG8g
-Y29udHJvbA0KPiA+IHBvd2VyIHRvIHN1cHBvcnQgYWxsIHBsYXRmb3Jtcy4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IEJpYmJ5IEhzaWVoIDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQo+ID4g
-LS0tDQo+ID4gIGRyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jIHwgMzggKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlv
-bnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYyBi
-L2RyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jDQo+ID4gaW5kZXggMDY4MWQ1ZmRkNTM4Li42YmEy
-M2E3ZTRkYTEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMNCj4g
-PiArKysgYi9kcml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KPiA+IEBAIC0yMiw2ICsyMiw3IEBA
-DQo+ID4gICNpbmNsdWRlIDxsaW51eC9udm1lbS1wcm92aWRlci5oPg0KPiA+ICAjaW5jbHVkZSA8
-bGludXgvcmVnbWFwLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+DQo+ID4g
-KyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4NCj4gPiAgI2luY2x1ZGUgPGxp
-bnV4L2dwaW8vY29uc3VtZXIuaD4NCj4gPg0KPiA+ICAvKiBBZGRyZXNzIHBvaW50ZXIgaXMgMTYg
-Yml0LiAqLw0KPiA+IEBAIC05MSw2ICs5Miw3IEBAIHN0cnVjdCBhdDI0X2RhdGEgew0KPiA+DQo+
-ID4gICAgICAgICBzdHJ1Y3QgZ3Bpb19kZXNjICp3cF9ncGlvOw0KPiA+DQo+ID4gKyAgICAgICBz
-dHJ1Y3QgcmVndWxhdG9yICp2Y2NfcmVnOw0KPiA+ICAgICAgICAgLyoNCj4gPiAgICAgICAgICAq
-IFNvbWUgY2hpcHMgdGllIHVwIG11bHRpcGxlIEkyQyBhZGRyZXNzZXM7IGR1bW15IGRldmljZXMg
-cmVzZXJ2ZQ0KPiA+ICAgICAgICAgICogdGhlbSBmb3IgdXMsIGFuZCB3ZSdsbCB1c2UgdGhlbSB3
-aXRoIFNNQnVzIGNhbGxzLg0KPiA+IEBAIC02NjIsNiArNjY0LDEwIEBAIHN0YXRpYyBpbnQgYXQy
-NF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPiA+ICAgICAgICAgYXQyNC0+Y2xp
-ZW50WzBdLmNsaWVudCA9IGNsaWVudDsNCj4gPiAgICAgICAgIGF0MjQtPmNsaWVudFswXS5yZWdt
-YXAgPSByZWdtYXA7DQo+ID4NCj4gPiArICAgICAgIGF0MjQtPnZjY19yZWcgPSBkZXZtX3JlZ3Vs
-YXRvcl9nZXQoZGV2LCAidmNjIik7DQo+ID4gKyAgICAgICBpZiAoSVNfRVJSKGF0MjQtPnZjY19y
-ZWcpKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihhdDI0LT52Y2NfcmVnKTsN
-Cj4gPiArDQo+ID4gICAgICAgICBhdDI0LT53cF9ncGlvID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9u
-YWwoZGV2LCAid3AiLCBHUElPRF9PVVRfSElHSCk7DQo+ID4gICAgICAgICBpZiAoSVNfRVJSKGF0
-MjQtPndwX2dwaW8pKQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihhdDI0LT53
-cF9ncGlvKTsNCj4gPiBAQCAtNzAxLDYgKzcwNywxMiBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUo
-c3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4gPg0KPiA+ICAgICAgICAgaTJjX3NldF9jbGll
-bnRkYXRhKGNsaWVudCwgYXQyNCk7DQo+ID4NCj4gPiArICAgICAgIGVyciA9IHJlZ3VsYXRvcl9l
-bmFibGUoYXQyNC0+dmNjX3JlZyk7DQo+ID4gKyAgICAgICBpZiAoZXJyKSB7DQo+ID4gKyAgICAg
-ICAgICAgICAgIGRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSB2Y2MgcmVndWxhdG9yXG4i
-KTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIGVycjsNCj4gPiArICAgICAgIH0NCj4gPiAr
-DQo+ID4gICAgICAgICAvKiBlbmFibGUgcnVudGltZSBwbSAqLw0KPiA+ICAgICAgICAgcG1fcnVu
-dGltZV9zZXRfYWN0aXZlKGRldik7DQo+ID4gICAgICAgICBwbV9ydW50aW1lX2VuYWJsZShkZXYp
-Ow0KPiA+IEBAIC03MTMsNiArNzI1LDcgQEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0cnVjdCBp
-MmNfY2xpZW50ICpjbGllbnQpDQo+ID4gICAgICAgICBwbV9ydW50aW1lX2lkbGUoZGV2KTsNCj4g
-PiAgICAgICAgIGlmIChlcnIpIHsNCj4gPiAgICAgICAgICAgICAgICAgcG1fcnVudGltZV9kaXNh
-YmxlKGRldik7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZ3VsYXRvcl9kaXNhYmxlKGF0MjQtPnZj
-Y19yZWcpOw0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiAgICAgICAg
-IH0NCj4gPg0KPiA+IEBAIC03MjksMTQgKzc0MiwzOSBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUo
-c3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4gPiAgc3RhdGljIGludCBhdDI0X3JlbW92ZShz
-dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPiA+ICB7DQo+ID4gICAgICAgICBwbV9ydW50aW1l
-X2Rpc2FibGUoJmNsaWVudC0+ZGV2KTsNCj4gPiArICAgICAgIGlmICghcG1fcnVudGltZV9zdGF0
-dXNfc3VzcGVuZGVkKCZjbGllbnQtPmRldikpDQo+ID4gKyAgICAgICAgICAgICAgIHJlZ3VsYXRv
-cl9kaXNhYmxlKGF0MjQtPnZjY19yZWcpOw0KPiANCj4gRGlkIHlvdSBhdCBsZWFzdCAqdHJ5KiB0
-byBjb21waWxlIHRoaXM/IEJlY2F1c2UgaWYgeW91IGRpZCwgeW91J2QNCj4gbm90aWNlIGl0IGRv
-ZXNuJ3QgYnVpbGQuDQo+IA0KPiBCYXJ0DQoNCg0KWWVwLCBJIHRyeSB0byBjb21waWxlIHRoZW0u
-Li4gYnV0IEkgZm9yZ2V0IHRvIGVuYWJsZSBhdDI0IGluDQpkZWZjb25maWcuLi4gU29ycnksIEkg
-d2lsbCBmaXggdGhlbSBpbiBteSBuZXh0IHZlcnNpb24uDQoNCg0KQmliYnkNCj4gDQo+ID4gICAg
-ICAgICBwbV9ydW50aW1lX3NldF9zdXNwZW5kZWQoJmNsaWVudC0+ZGV2KTsNCj4gPg0KPiA+ICAg
-ICAgICAgcmV0dXJuIDA7DQo+ID4gIH0NCj4gPg0KPiA+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51
-c2VkIGF0MjRfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gK3sNCj4gPiArICAgICAg
-IHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSB0b19pMmNfY2xpZW50KGRldik7DQo+ID4gKyAg
-ICAgICBzdHJ1Y3QgYXQyNF9kYXRhICphdDI0ID0gaTJjX2dldF9jbGllbnRkYXRhKGNsaWVudCk7
-DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIHJlZ3VsYXRvcl9kaXNhYmxlKGF0MjQtPnZjY19y
-ZWcpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGF0MjRf
-cmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gPiArew0KPiA+ICsgICAgICAgc3RydWN0IGky
-Y19jbGllbnQgKmNsaWVudCA9IHRvX2kyY19jbGllbnQoZGV2KTsNCj4gPiArICAgICAgIHN0cnVj
-dCBhdDI0X2RhdGEgKmF0MjQgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsNCj4gPiArDQo+
-ID4gKyAgICAgICByZXR1cm4gcmVndWxhdG9yX2VuYWJsZShhdDI0LT52Y2NfcmVnKTsNCj4gPiAr
-fQ0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkZXZfcG1fb3BzIGF0MjRfcG1fb3Bz
-ID0gew0KPiA+ICsgICAgICAgU0VUX1NZU1RFTV9TTEVFUF9QTV9PUFMocG1fcnVudGltZV9mb3Jj
-ZV9zdXNwZW5kLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG1fcnVudGlt
-ZV9mb3JjZV9yZXN1bWUpDQo+ID4gKyAgICAgICBTRVRfUlVOVElNRV9QTV9PUFMoYXQyNF9zdXNw
-ZW5kLCBhdDI0X3Jlc3VtZSwgTlVMTCkNCj4gPiArfTsNCj4gPiArDQo+ID4gIHN0YXRpYyBzdHJ1
-Y3QgaTJjX2RyaXZlciBhdDI0X2RyaXZlciA9IHsNCj4gPiAgICAgICAgIC5kcml2ZXIgPSB7DQo+
-ID4gICAgICAgICAgICAgICAgIC5uYW1lID0gImF0MjQiLA0KPiA+ICsgICAgICAgICAgICAgICAu
-cG0gPSAmYXQyNF9wbV9vcHMsDQo+ID4gICAgICAgICAgICAgICAgIC5vZl9tYXRjaF90YWJsZSA9
-IGF0MjRfb2ZfbWF0Y2gsDQo+ID4gICAgICAgICAgICAgICAgIC5hY3BpX21hdGNoX3RhYmxlID0g
-QUNQSV9QVFIoYXQyNF9hY3BpX2lkcyksDQo+ID4gICAgICAgICB9LA0KPiA+IC0tDQo+ID4gMi4x
-OC4wDQoNCg==
+On 1/4/20 6:39 AM, Rob Herring wrote:
+> On Fri, Jan 03, 2020 at 04:18:12PM +0800, JC Kuo wrote:
+>> Extend the bindings to cover the set of features found in Tegra194.
+>> Note that, technically, there are four more supplies connected to the
+>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
+>> , but the power sequencing requirements of Tegra194 require these to be
+>> under the control of the PMIC.
+>>
+>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
+>> is possible for some platforms have long signal trace that could not
+>> provide sufficient electrical environment for Gen 2 speed. This patch
+>> adds a "maximum-speed" property to usb3 ports which can be used to
+>> specify the maximum supported speed for any particular USB 3.1 port.
+>> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
+>> property should carry "super-speed".
+>>
+>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
+>> ---
+>> Changes in v5:
+>> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
+>> Changes in v4: none
+>> Changes in v3: none
+>> Changes in v2:
+>> - fix a typo
+>>
+>>  .../phy/nvidia,tegra124-xusb-padctl.txt        | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>> index 9fb682e47c29..7d0089006e67 100644
+>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>> @@ -37,6 +37,7 @@ Required properties:
+>>    - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padctl"
+>>    - Tegra210: "nvidia,tegra210-xusb-padctl"
+>>    - Tegra186: "nvidia,tegra186-xusb-padctl"
+>> +  - Tegra194: "nvidia,tegra194-xusb-padctl"
+>>  - reg: Physical base address and length of the controller's registers.
+>>  - resets: Must contain an entry for each entry in reset-names.
+>>  - reset-names: Must include the following entries:
+>> @@ -62,6 +63,10 @@ For Tegra186:
+>>  - vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
+>>  - vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
+>>  
+>> +For Tegra194:
+>> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must supply
+>> +  3.3 V.
+>> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
+>>  
+>>  Pad nodes:
+>>  ==========
+>> @@ -154,6 +159,11 @@ For Tegra210, the list of valid PHY nodes is given below:
+>>  - sata: sata-0
+>>    - functions: "usb3-ss", "sata"
+>>  
+>> +For Tegra194, the list of valid PHY nodes is given below:
+>> +- usb2: usb2-0, usb2-1, usb2-2, usb2-3
+>> +  - functions: "xusb"
+>> +- usb3: usb3-0, usb3-1, usb3-2, usb3-3
+>> +  - functions: "xusb"
+>>  
+>>  Port nodes:
+>>  ===========
+>> @@ -221,6 +231,11 @@ Optional properties:
+>>    is internal. In the absence of this property the port is considered to be
+>>    external.
+>>  
+>> +- maximum-speed: Only for Tegra194. A string property that specifies maximum
+>> +  supported speed of a usb3 port. Valid values are:
+>> +  - "super-speed-plus": default, the usb3 port supports USB 3.1 Gen 2 speed.
+> 
+> Not defined as a valid value in usb/generic.txt. '-gen2' instead of 
+> '-plus' would be clearer IMO. However, is there any need to define the 
+> maximum speed possible? The purpose of this property is to limit the 
+> speed below the max.
+> 
+usb_get_maximum_speed(), which parses "maximum-speed" property, indeed handles
+string "super-speed-plus". Should "super-speed-plus" be documented in
+usb/generic.txt"?
 
+static const char *const speed_names[] = {
+	[USB_SPEED_UNKNOWN] = "UNKNOWN",
+	[USB_SPEED_LOW] = "low-speed",
+	[USB_SPEED_FULL] = "full-speed",
+	[USB_SPEED_HIGH] = "high-speed",
+	[USB_SPEED_WIRELESS] = "wireless",
+	[USB_SPEED_SUPER] = "super-speed",
+	[USB_SPEED_SUPER_PLUS] = "super-speed-plus",
+};
+
+A proprietary "nvidia,disable-gen2" property was proposed in earlier revision to
+"limit the speed below the max". I like it because it fit our needs better and
+requires only one line of code change.
+
+   usb3->disable_gen2 = of_property_read_bool(np, "nvidia,disable-gen2");
+
+Should I fallback to that approach?
+
+Thanks,
+JC
+
+>> +  - "super-speed": the usb3 port supports USB 3.1 Gen 1 speed only.
+>> +
+>>  For Tegra124 and Tegra132, the XUSB pad controller exposes the following
+>>  ports:
+>>  - 3x USB2: usb2-0, usb2-1, usb2-2
+>> @@ -233,6 +248,9 @@ For Tegra210, the XUSB pad controller exposes the following ports:
+>>  - 2x HSIC: hsic-0, hsic-1
+>>  - 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
+>>  
+>> +For Tegra194, the XUSB pad controller exposes the following ports:
+>> +- 4x USB2: usb2-0, usb2-1, usb2-2, usb2-3
+>> +- 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
+>>  
+>>  Examples:
+>>  =========
+>> -- 
+>> 2.17.1
+>>
