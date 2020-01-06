@@ -2,202 +2,155 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8CEC00523
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 01:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51B41C33C9A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 01:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27058215A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 01:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296D521775
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 01:42:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IFjvS9gW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xwvq7bAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgAFBb3 (ORCPT
+        id S1727244AbgAFBmg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 20:31:29 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:45812 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbgAFBb3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 20:31:29 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200106013126epoutp0131dfd5fc131db6c7349fc18e9c78907b~nKBoH4YaT2175821758epoutp01E
-        for <devicetree@vger.kernel.org>; Mon,  6 Jan 2020 01:31:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200106013126epoutp0131dfd5fc131db6c7349fc18e9c78907b~nKBoH4YaT2175821758epoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578274286;
-        bh=3VT2jsnbqSwTZB49bAGF93TSEbfGxtSZE2W2NtD5GKg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IFjvS9gWfzR/5IqUANVNWMF6w+8lzxWSC/djOd4S07OGCFjG+9Ew4OOXQdXGeVn1V
-         TJzoGVtAixOfvsIJsjEi2BqS12UlrEp+VE4W85yZTYDNhWlMrZ255OpFO1Hi8qjCHJ
-         wIUnEhgjzwygKSLWYgj+Zm9WO1F6lqQcd3ulS98o=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200106013126epcas1p139555304382a9b47900ba799655158ca~nKBnieZMJ0763307633epcas1p1f;
-        Mon,  6 Jan 2020 01:31:26 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 47rdJW4lWBzMqYkd; Mon,  6 Jan
-        2020 01:31:23 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        28.CD.48498.BED821E5; Mon,  6 Jan 2020 10:31:23 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200106013123epcas1p49edbebd5bf248f8814d56240ef670218~nKBk1VO5f0639406394epcas1p4G;
-        Mon,  6 Jan 2020 01:31:23 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200106013123epsmtrp10e2268e22f89952b99c6a2893017c241~nKBk0Y2YR2423224232epsmtrp19;
-        Mon,  6 Jan 2020 01:31:23 +0000 (GMT)
-X-AuditID: b6c32a36-a55ff7000001bd72-7a-5e128debde22
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F2.47.10238.AED821E5; Mon,  6 Jan 2020 10:31:22 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200106013122epsmtip1d1087755a7ebce07ebc8ba09f1acd44f~nKBkfaiSH1136211362epsmtip1c;
-        Mon,  6 Jan 2020 01:31:22 +0000 (GMT)
-Subject: Re: [PATCH 4/9] PM / devfreq: exynos-bus: Replace deprecated
- 'devfreq' property
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     krzk@kernel.org, mark.rutland@arm.com, heiko@sntech.de,
-        leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, kgene@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-Organization: Samsung Electronics
-Message-ID: <76616499-7c19-06b1-461a-28ae17a76c60@samsung.com>
-Date:   Mon, 6 Jan 2020 10:38:29 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Sun, 5 Jan 2020 20:42:36 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41651 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbgAFBmg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 20:42:36 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h23so49335768ljc.8
+        for <devicetree@vger.kernel.org>; Sun, 05 Jan 2020 17:42:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QQ3JEO6lOKUjdmfiSjcQjm1t9+Ta5EqkWmsBbH0kXA4=;
+        b=xwvq7bAFmotmoaAFK6MS5prohkqPMlwFqY+kNzuC4MOyJvRg7rVi4827QqnPGb5g+O
+         ZTREDa0PxnUNQFOqkijJJOykBet+OCgur0zP1BAxJFpbK9CvnKzCkFRD/Dw5VIm4j5zn
+         OYC/1882en7yIBwKpq8WFqqZc9NGxcLBu8V2ZRKe+r2GtniqrD1Il9rUWajTiR3X8fz1
+         VsMJcJY9qqux025OtH3mjpwtqggDSttYcFVsnC9jxXjotDm2Jjv/asHjtfYmVdBnZz+f
+         JLMTYVrYGqS3c1QTT1iPQYYkIzf2HJp/YYPcP3unPR/F2LBeK/d8CtBdvOON4DxDbJyS
+         cbTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QQ3JEO6lOKUjdmfiSjcQjm1t9+Ta5EqkWmsBbH0kXA4=;
+        b=tySSPFyJN1foiJtVLZPgaJcDRXq6MRqgyInYWFye0PusaeWzWdmCBMmZclD+Ak3NJ6
+         X4bSz8l9/Ajn5oKd99mPal8VRV4IqKXTEnq0dkb1/hO6e69vUtQc37QgdV2hATr/Z26w
+         eaW7viVhnYQXLvwCK0OoHzO1QBDZcFS+eGudDqW+hDlSrPfro1vqq4vvW0Pp1bb6K6in
+         /tqIVM8M+TNZRZcL7wk2LUPXXoY4JONby0Mrp2QkRYva8WDby52WN7a4EAwMWoTI8DIQ
+         40Ownnz9nbMqkz7Xi4F+DMVD8q1nIZorwk3Tej0MUtSZxDgdCPaZxLr27aRp+ZtQucyx
+         O67w==
+X-Gm-Message-State: APjAAAUESgqNPwBs5hMIa/1eJxRf2jU5g7hvCOQS4fjQrCbLUTjS9p5S
+        +ykGLm4/oyLtw2W0YOdNaSL50A==
+X-Google-Smtp-Source: APXvYqwVhtZz96ShQoacxUg5G8ePAL/0yBaV3204f3OzctQcduDswchapdvs6SIeLx52lcL4mHhK6w==
+X-Received: by 2002:a2e:3a12:: with SMTP id h18mr60144104lja.81.1578274954325;
+        Sun, 05 Jan 2020 17:42:34 -0800 (PST)
+Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
+        by smtp.gmail.com with ESMTPSA id y8sm28377300lji.56.2020.01.05.17.42.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 05 Jan 2020 17:42:33 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-ide@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v2] dt-bindings: Create DT bindings for [PS]ATA controllers
+Date:   Mon,  6 Jan 2020 02:42:23 +0100
+Message-Id: <20200106014224.12791-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <a54e4275-012e-77d9-bdbe-1aab64b5c12b@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPJsWRmVeSWpSXmKPExsWy7bCmge7rXqE4g6cf1Szuz2tltJh/5Byr
-        xf9Hr1kt+h+/ZrY4f34Du8XZpjfsFivufmS12PT4GqvF5V1z2Cw+9x5htPj04D+zxYzz+5gs
-        Fja1sFusPXKX3WLp9YtMFrcbV7BZ/N+zg91B0GPNvDWMHptWdbJ5bF5S77Hx3Q4mj74tqxg9
-        tl+bx+zxeZNcAHtUtk1GamJKapFCal5yfkpmXrqtkndwvHO8qZmBoa6hpYW5kkJeYm6qrZKL
-        T4CuW2YO0AdKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul1IKUnALLAr3ixNzi0rx0veT8
-        XCtDAwMjU6DChOyMl3+vMBacEqtoWdzC1sC4SKiLkZNDQsBE4uTixcwgtpDADkaJ/4vCuxi5
-        gOxPjBKPp/9jhXC+MUq8+t/HBtMxrXk6C0RiL6PE7fO/2SCc94wSm5beYgWpEhaIkth2YBGY
-        zSagJbH/xQ2wbhEBRYnfbdPAxjILrGGWaJvymwUkwQ+UuPrjMSOIzStgJ7F1/xmgIg4OFgEV
-        idvNFSBhUYEwiZPbWqBKBCVOznzCAlLCKWAvceWUPUiYWUBc4taT+UwQtrzE9rdzmEFWSQic
-        YpeYdnITE8QHLhIt++ZBfSMs8er4FnYIW0riZX8blF0tsfLkETaI5g5GiS37L7BCJIwl9i+d
-        zASymFlAU2L9Ln2IsKLEzt9zGSEW80m8+9oDdr6EAK9ERxs0qJUlLj+4C3WCpMTi9k62CYxK
-        s5B8MwvJC7OQvDALYdkCRpZVjGKpBcW56anFhgVGyJG9iRGcuLXMdjAuOudziFGAg1GJh5ch
-        WChOiDWxrLgy9xCjBAezkghvo5tgnBBvSmJlVWpRfnxRaU5q8SFGU2BYT2SWEk3OB2aVvJJ4
-        Q1MjY2NjCxNDM1NDQyVxXo4fF2OFBNITS1KzU1MLUotg+pg4OKUaGFXm7eLaacTF9XOK68Lr
-        +Xonv0Q8Wfp6rcZW4euJuQbMZlon2qtkfVfqbT3wM/xmeMHE+OjZry+nR39zTfiv+ObgrvRX
-        z3WsDbZnWDVaxW5ebdi5f+F5qz2ePwL+bq3bzfBeu/X2hwf7gxeKvlm43n6tRnhUM4ONlzJ7
-        PkcYC3PG1HyFE9PidymxFGckGmoxFxUnAgCG0r0r8gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJIsWRmVeSWpSXmKPExsWy7bCSnO6rXqE4g7edNhb357UyWsw/co7V
-        4v+j16wW/Y9fM1ucP7+B3eJs0xt2ixV3P7JabHp8jdXi8q45bBafe48wWnx68J/ZYsb5fUwW
-        C5ta2C3WHrnLbrH0+kUmi9uNK9gs/u/Zwe4g6LFm3hpGj02rOtk8Ni+p99j4bgeTR9+WVYwe
-        26/NY/b4vEkugD2KyyYlNSezLLVI3y6BK+Pl3yuMBafEKloWt7A1MC4S6mLk5JAQMJGY1jyd
-        pYuRi0NIYDejRO/Kn0wQCUmJaRePMncxcgDZwhKHDxeDhIUE3jJK/G8PBLGFBaIkth1YxApi
-        swloSex/cYMNxBYRUJT43TaNFWQms8AaZonzPd1QCyYxSax8sxGsih+o6uqPx4wgNq+AncTW
-        /WdYQZaxCKhI3G6uAAmLCoRJ7FzymAmiRFDi5MwnLCAlnAL2EldO2YOEmQXUJf7Mu8QMYYtL
-        3HoynwnClpfY/nYO8wRG4VlIumchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQsM81LL9YoTc4tL
-        89L1kvNzNzGCI1hLcwfj5SXxhxgFOBiVeHhXBAjFCbEmlhVX5h5ilOBgVhLhbXQTjBPiTUms
-        rEotyo8vKs1JLT7EKM3BoiTO+zTvWKSQQHpiSWp2ampBahFMlomDU6qBUavr0C3B4Cn8z4zv
-        Nd+p0fP4fuhobP/17esrHpvwHk+ZPJPVevKKd5oN2reCPDUfzOdvapjLKdlcvTJV4BFba03k
-        BRun6aKfbI0+mgWbfWZ4a5v2uzyaeTPbX8fIg/89a132rm5cn+B2xcLpcprVYsdq35x0XkbJ
-        QE6m3Q9vRU8VqdnzO3uLEktxRqKhFnNRcSIAgoO6E9wCAAA=
-X-CMS-MailID: 20200106013123epcas1p49edbebd5bf248f8814d56240ef670218
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191217055106epcas1p11f2bc81d6bb2db3fc4bc257d78c337b9
-References: <20191217055738.28445-1-cw00.choi@samsung.com>
-        <CGME20191217055106epcas1p11f2bc81d6bb2db3fc4bc257d78c337b9@epcas1p1.samsung.com>
-        <20191217055738.28445-5-cw00.choi@samsung.com> <20191226210119.GA8706@bogus>
-        <a54e4275-012e-77d9-bdbe-1aab64b5c12b@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+I need to create subnodes for drives connected to PATA
+or SATA host controllers, and this needs to be supported
+generally, so create a common YAML binding for
+"ide" or "sata" that will support subnodes with ports.
 
-Gently Ping.
+This has been designed as a subset of
+ata/pata-sata-common.yaml with the bare essentials and
+should be possible to extend or superset to cover the
+common bindings.
 
-On 12/27/19 9:09 AM, Chanwoo Choi wrote:
-> On 12/27/19 6:01 AM, Rob Herring wrote:
->> On Tue, Dec 17, 2019 at 02:57:33PM +0900, Chanwoo Choi wrote:
->>> In order to remove the deprecated 'devfreq' property, replace with
->>> new 'exynos,parent-bus' property in order to get the parent devfreq device
->>> in devicetree file instead of 'devfreq' property. But, to guarantee the
->>> backward-compatibility, keep the support 'devfreq' property.
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> ---
->>>  .../bindings/devfreq/exynos-bus.txt           | 16 +++++++--------
->>>  drivers/devfreq/exynos-bus.c                  | 20 ++++++++++++-------
->>>  2 files changed, 21 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>> index e71f752cc18f..c948cee01124 100644
->>> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>> @@ -45,7 +45,7 @@ Required properties only for parent bus device:
->>>    of buses.
->>>  
->>>  Required properties only for passive bus device:
->>> -- devfreq: the parent bus device.
->>> +- exynos,parent-bus: the parent bus device.
->>
->> If you are going to do something new, why not use the interconnect 
->> binding here?
-> 
-> As I knew, interconnect make the data path among multiple nodes
-> and set the average and peak bandwidth to the specific data path.
-> 
-> It means that some data will be flowed from node_a to node_d
-> or the reverse way because each node has the tightly coupled
-> dependency for data flow.
-> 
-> 	node_a <-> node_b <-> node_c <-> node_d
-> 
-> 
-> On the other hand, exynos-bus.c driver is not related to 'data path'.
-> Each bus just need to control the their own frequency and voltage.
-> But, share the power line (regulator) between exynos-bus device
-> even if there are no any dependency of data flow.
-> 
-> 'exynos,parent-bus' property just indicate the specific
-> devfreq device(parent bus device) which controls
-> the shared power line(regulator) in order to prevent
-> the h/w problem due to the wrong pair of frequency and voltage.
-> 
-> 'exynos,parent-bus' property is only used to catch
-> the change timing of shared power line.
-> 
-> 
-> And,
-> as you commented, there are some data path among the exynos-bus
-> devices for the display h/w as following:
-> 
-> 	bus_display -> bus_leftbus -> bus_dmc
-> 
-> In order to make the data path between bus devices,
-> interconnect binding is required. This approach[1] was posted.
-> [1] https://patchwork.kernel.org/cover/11305265/
-> - [RFC,v3,0/7] PM / devfreq: Simple QoS for exynos-bus using interconnect
-> 
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Use ide@ and sata@ as node names.
+- Use ide-port@ and sata-port@ for the ports toward the
+  drives, rather than letting the subnodes be the drives
+  themselves.
+---
+ .../bindings/ata/pata-sata-common.yaml        | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/pata-sata-common.yaml
 
-Are there any other commentss?
-
-
+diff --git a/Documentation/devicetree/bindings/ata/pata-sata-common.yaml b/Documentation/devicetree/bindings/ata/pata-sata-common.yaml
+new file mode 100644
+index 000000000000..f46f04446607
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/pata-sata-common.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ata/pata-sata-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Common Properties for Parallel and Serial AT attachment controllers
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description: |
++  This document defines device tree properties common to most Parallel
++  (PATA, also known as IDE) and Serial (SATA) AT attachment storage devices.
++  It doesn't constitue a device tree binding specification by itself but is
++  meant to be referenced by device tree bindings.
++
++  The PATA/SATA controller device tree bindings are responsible for
++  defining whether each property is required or optional.
++
++properties:
++  $nodename:
++    pattern: "^(ide|sata)(@.*)?$"
++    description:
++      Specifies the host controller node. PATA host controller nodes are named
++      "ide" and SATA controller nodes are named "sata"
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^(ide|sata)-port@[0-1]$":
++    description: |
++      DT nodes for ports connected on the PATA or SATA host. The master drive
++      will have ID number 0 and the slave drive will have ID number 1.
++      The PATA port nodes will be named "ide-port" and the SATA port nodes will
++      be named "sata-port".
++    type: object
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 1
++        description:
++          The ID number of the drive port, 0 for the master port and 1 for the
++          slave port.
++
++...
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.21.0
+
