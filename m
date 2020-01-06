@@ -2,100 +2,279 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0611DC32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1BCC2D0D1
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF708207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC8A2072C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="hTOhuySw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgAFKGF (ORCPT
+        id S1726080AbgAFKLy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:06:05 -0500
-Received: from sauhun.de ([88.99.104.3]:37032 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgAFKGE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 05:06:04 -0500
-Received: from localhost (p54B338AC.dip0.t-ipconnect.de [84.179.56.172])
-        by pokefinder.org (Postfix) with ESMTPSA id 8DC052C0686;
-        Mon,  6 Jan 2020 11:06:01 +0100 (CET)
-Date:   Mon, 6 Jan 2020 11:05:58 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code
- check
-Message-ID: <20200106100558.GA4831@kunai>
-References: <20200106045833.1725-1-masahiroy@kernel.org>
+        Mon, 6 Jan 2020 05:11:54 -0500
+Received: from mail-io1-f46.google.com ([209.85.166.46]:40772 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgAFKLx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 05:11:53 -0500
+Received: by mail-io1-f46.google.com with SMTP id x1so48026834iop.7
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 02:11:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BM5QMsP0AbZFoP/y14rM3kVBayTcxH4QJqPjuJIFHqM=;
+        b=hTOhuySw6rVzMQXpbeRI1b4riYgYNv9nSHA24LrY6vw32Aaydw9rut6jpnDig03XNS
+         dGQQdNXySoRhgyugLGobTaaEF2yTpPJYXSfZQGzAHwqmS/Sv0Eg9qALfxRBvpNNQB/LH
+         oLBGtGQpCCpoJ94TQP7K+G8pwBgvLCRSsop1s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BM5QMsP0AbZFoP/y14rM3kVBayTcxH4QJqPjuJIFHqM=;
+        b=LbX/DzCEtzzPHdh7ka5rdnUXkaBjDEP9J7gZPAPC7bUZjJY9nUclsYvOr3iH4Yarqd
+         eUUEbB+ykGnaWf0lAEiESnoEt5P1QiB/PIH1voG/u4eIgkrSOwtzHx3ulcBUazumsWKQ
+         YKdN0bA6uwJ7/k5iuHdM7dl+vkueWZ4s+IHXnm4l06VacM2i0xLwDluoJW+asU11MRQs
+         4HyNEKraYd1oWoOlMwKUjIZObQ9gmaNxS10APf6tupvKnPX7x1FxhfQIHVvVN6sVWCD5
+         maIb4IDpUSygmBS5WlASHhV6eYw6jdP5FwGgqFXIxiw0aXhlfKQhhRa1fv+2hFqrLQkL
+         Qj1w==
+X-Gm-Message-State: APjAAAU97p49hGXFW6YUdfG6uXVirpanU50jSjzJh1q2uWMAR6wpKG9F
+        kf6Hsfu4qU2+XDtj5SmoWwIrxDhQ9kkdBGf7+xZtQQ==
+X-Google-Smtp-Source: APXvYqzUirMUBMW0xxRJzNQkXJ6BFIkz9VVTNKPR3lN6QCD/Fd3IwAFCUoeqyShL+FgsbSIMx5prGQgOon0oVw7bq2c=
+X-Received: by 2002:a02:b893:: with SMTP id p19mr10064623jam.103.1578305512006;
+ Mon, 06 Jan 2020 02:11:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Content-Disposition: inline
-In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200101112444.16250-1-jagan@amarulasolutions.com> <20200104151702.GC17768@ravnborg.org>
+In-Reply-To: <20200104151702.GC17768@ravnborg.org>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 6 Jan 2020 15:41:40 +0530
+Message-ID: <CAMty3ZDbDf6YovrEdG0pACQAwMQidjKr6BJvx-FPXqyT11G05w@mail.gmail.com>
+Subject: Re: [PATCH 0/6] dt-bindings: display: Update few panel bindings with YAML
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sam,
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sat, Jan 4, 2020 at 8:47 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+>
+> Hi Jagan.
+> On Wed, Jan 01, 2020 at 04:54:38PM +0530, Jagan Teki wrote:
+> > These panel bindings are owned by me, so updated all of them into
+> > YAML DT schema.
+> >
+> > Any inputs?
+> Thanks for doing the conversion.
+>
+> dt_binding_check was not happy:
+> Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.exam=
+ple.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'p=
+inctrl-[0-9]+'
+>   DTC     Documentation/devicetree/bindings/display/panel/friendlyarm,hd7=
+02e.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/display/panel/friendlyarm,hd7=
+02e.example.dt.yaml
+> Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.exampl=
+e.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'pin=
+ctrl-[0-9]+'
+> Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.exampl=
+e.dt.yaml: panel: compatible: Additional items are not allowed ('simple-pan=
+el' was unexpected)
+> Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.exampl=
+e.dt.yaml: panel: compatible: ['friendlyarm,hd702e', 'simple-panel'] is too=
+ long
+>   DTC     Documentation/devicetree/bindings/display/panel/sitronix,st7701=
+.example.dt.yaml
+> Error: Documentation/devicetree/bindings/display/panel/sitronix,st7701.ex=
+ample.dts:22.42-43 syntax error
+> FATAL ERROR: Unable to parse input tree
+>
+> Please fix and check the bindings using dt_binding_check before
+> resubmit.
+>
+> I had to install libyaml-dev (as least I recall this was the name)
+> before dt_binding_check worked OK for me.
 
-On Mon, Jan 06, 2020 at 01:58:33PM +0900, Masahiro Yamada wrote:
-> 'PTR_ERR(p) =3D=3D -E*' is a stronger condition than IS_ERR(p).
-> Hence, IS_ERR(p) is unneeded.
->=20
-> The semantic patch that generates this commit is as follows:
->=20
-> // <smpl>
-> @@
-> expression ptr;
-> constant error_code;
-> @@
-> -IS_ERR(ptr) && (PTR_ERR(ptr) =3D=3D - error_code)
-> +PTR_ERR(ptr) =3D=3D - error_code
-> // </smpl>
->=20
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+I did check dt_binfing_check with this series. Here is the complete
+build log and you can see the panels related to this series are
+checked fine. Let me know if I miss anything here?
 
-For drivers/i2c:
-
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-Thanks!
-
-
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4TBoIACgkQFA3kzBSg
-KbYycQ/9HHMMaJuiDZs2ZZyg9Szbt/uDs6lfGNwX2WQjjgoo0FHwIISx26fwUSS0
-sfKb1VukurwS3gKvijHI2Tgo+f8Vb5W76AfDl7l2Pt+/1Fc3udj81ejuq6hrwDtX
-8lb3i4K7U7mReQW1CuGDL2a15XNeUCNSocbEz9r/fSMSCcO7vtYFQdJ1PRCiO40n
-Z9RU/AGK5/6Dm8H6JaPvBbkL4cSaKu0fWTLYwZfm5lUqpj8ERaGKdlz4W/DEy5nw
-/FLsLSoRRKpkrWFzohHUjEplvrX5Xv7//Pl4GHVxH25rPhKgXL7M4bkJUrAOG8Ap
-zRni09tOZTNrB2zkt3dFgDSUXwPHJOM0KLrVyFeze3ZtA/8rDaDxbr7a0lK0Jgi6
-X3+CMoirCftC9W2ub9a9h/IOhLqzFzVoWNN3QsHr4XxLYmE1EvhoIYbCRs3JpVrV
-cgbYECZxZElbp6K6u7sEsETPvGjvHi4gzXBZUwxYpdZyWaUsV+XIzxqQyeQIqkFF
-Yp6Cjmd/cjgLLUMwxL2QaopFPm+Ul+f5AojzQbMP6ScKbrjYfKn8S60q4fwrShk1
-yDlNFlQgdSrn1Dt1PfGllfjLz1bcQ/tsZsmP/ulyPE0Ph9Mv5ixDhEse7mZmOVjm
-8khnVJiGQcIi1CMl8mR8uDU6319aQvxcYWlG84KlF7nXsigrRqA=
-=e1Dd
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
+=E2=82=B9 make dt_binding_check
+arch/x86/Makefile:147: CONFIG_X86_X32 enabled but no binutils support
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/firmware/i=
+ntel,ixp4xx-network-processing-engine.yaml:
+ignoring, error in schema: properties: reg: minItems
+warning: no schema found in file:
+Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-=
+engine.yaml
+/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/interrupt-=
+controller/arm,gic-v3.yaml:
+ignoring, error in schema: properties: ppi-partitions:
+patternProperties: ^interrupt-partition-[0-9]+$
+warning: no schema found in file:
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/net/snps,d=
+wmac.yaml:
+ignoring, error in schema: allOf: 2: then
+warning: no schema found in file:
+Documentation/devicetree/bindings/net/snps,dwmac.yaml
+/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/regulator/=
+fixed-regulator.yaml:
+ignoring, error in schema: properties: compatible: enum: 0
+warning: no schema found in file:
+Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/riscv/cpus=
+.yaml:
+ignoring, error in schema: properties: timebase-frequency: type
+warning: no schema found in file:
+Documentation/devicetree/bindings/riscv/cpus.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/pmu.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/rockchip.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/sirf.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/vt8500.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/calxeda.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/atmel-at91.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/sunxi.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/xilinx.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/moxart.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/stm32/stm32.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/spear.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/al,alpine.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/digicolor.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.=
+yaml
+  CHKDT   Documentation/devicetree/bindings/arm/altera.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/bitmain.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/nxp/lpc32xx.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/fsl.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/axxia.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/psci.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/qcom.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/zte.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/intel-ixp4xx.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/mediatek.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/socionext/milbeaut.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/ti/nspire.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/realtek.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/rda.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/actions.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/l2c2x0.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/renesas.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/tegra.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/amlogic.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao=
+-secure.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/sti.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/primecell.yaml
+  CHKDT   Documentation/devicetree/bindings/arm/cpus.yaml
+  CHKDT   Documentation/devicetree/bindings/bus/allwinner,sun50i-a64-de2.ya=
+ml
+  CHKDT   Documentation/devicetree/bindings/bus/allwinner,sun8i-a23-rsb.yam=
+l
+  CHKDT   Documentation/devicetree/bindings/clock/fixed-factor-clock.yaml
+  CHKDT   Documentation/devicetree/bindings/clock/milbeaut-clock.yaml
+  CHKDT   Documentation/devicetree/bindings/clock/allwinner,sun4i-a10-ccu.y=
+aml
+  CHKDT   Documentation/devicetree/bindings/clock/imx8mn-clock.yaml
+  CHKDT   Documentation/devicetree/bindings/clock/fixed-clock.yaml
+  CHKDT   Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-cryp=
+to.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/ampire,am-480272h=
+3tmqw-t01h.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/innolux,ee101ia-0=
+1d.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.y=
+aml
+  CHKDT   Documentation/devicetree/bindings/display/panel/sitronix,st7701.y=
+aml
+  CHKDT   Documentation/devicetree/bindings/display/panel/nec,nl8048hl11.ya=
+ml
+  CHKDT   Documentation/devicetree/bindings/display/panel/friendlyarm,hd702=
+e.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/bananapi,s070wv20=
+-ct16.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/feiyang,fy07024di=
+26a30d.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/dlc,dlc0700yzg-1.=
+yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/koe,tx31d200vm0ba=
+a.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/mitsubishi,aa121t=
+d01.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/sony,acx424akp.ya=
+ml
+  CHKDT   Documentation/devicetree/bindings/display/panel/logicpd,type28.ya=
+ml
+  CHKDT   Documentation/devicetree/bindings/display/panel/tfc,s9700rtwv43tr=
+-01b.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/ti,nspire.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/tpo,tpg110.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/rocktech,rk070er9=
+427.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/armadeus,st0700-a=
+dapt.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/raspberrypi,7inch=
+-touchscreen.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/lvds.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/panel-common.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/sgd,gktw70sdae4se=
+.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/mitsubishi,aa104x=
+d12.yaml
+  CHKDT   Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.ya=
+ml
+  CHKDT   Documentation/devicetree/bindings/display/amlogic,meson-vpu.yaml
+  CHKDT   Documentation/devicetree/bindings/display/dsi-controller.yaml
+  CHKDT   Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+  CHKDT   Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.y=
+aml
+  CHKDT   Documentation/devicetree/bindings/display/simple-framebuffer.yaml
+  CHKDT   Documentation/devicetree/bindings/display/allwinner,sun6i-a31-mip=
+i-dsi.yaml
+  CHKDT   Documentation/devicetree/bindings/dma/dma-router.yaml
+  CHKDT   Documentation/devicetree/bindings/dma/dma-controller.yaml
+  CHKDT   Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.ya=
+ml
+  CHKDT   Documentation/devicetree/bindings/dma/allwinner,sun4i-a10-dma.yam=
+l
+  CHKDT   Documentation/devicetree/bindings/dma/dma-common.yaml
+  CHKDT   Documentation/devicetree/bindings/dma/allwinner,sun6i-a31-dma.yam=
+l
+  CHKDT   Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+  CHKDT   Documentation/devicetree/bindings/example-schema.yaml
+  CHKDT   Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-p=
+rocessing-engine.yaml
+/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/firmware/i=
+ntel,ixp4xx-network-processing-engine.yaml:
+properties:reg:minItems: False schema does not allow 3
+/home/jagan/work/code/drm-misc/Documentation/devicetree/bindings/firmware/i=
+ntel,ixp4xx-network-processing-engine.yaml:
+properties:reg:maxItems: False schema does not allow 3
+Documentation/devicetree/bindings/Makefile:12: recipe for target
+'Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing=
+-engine.example.dts'
+failed
+make[1]: *** [Documentation/devicetree/bindings/firmware/intel,ixp4xx-netwo=
+rk-processing-engine.example.dts]
+Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
