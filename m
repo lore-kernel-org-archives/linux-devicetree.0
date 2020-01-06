@@ -2,51 +2,50 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DC5C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421AEC32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0908207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0885D2072C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PVuDTOcc"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tWyEhCZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbgAFKUE (ORCPT
+        id S1726677AbgAFKTR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 05:20:04 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46570 "EHLO
+        Mon, 6 Jan 2020 05:19:17 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46468 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726373AbgAFKUC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 05:20:02 -0500
+        with ESMTP id S1726656AbgAFKTP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 05:19:15 -0500
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006AJqCn108707;
-        Mon, 6 Jan 2020 04:19:52 -0600
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 006AJ6uw108484;
+        Mon, 6 Jan 2020 04:19:06 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578305992;
-        bh=OE+CQaY8YINUAl14yThoqiQN60PdlpJALyII5dYryI0=;
+        s=ti-com-17Q1; t=1578305946;
+        bh=Rc8YT4TU+I5HtgVac7UO4Rq0QTyfIQpD6Hq6n/QrUS8=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=PVuDTOcc8NCiUpgGjwYsgA2207dyK6imJ2kxlP9VaoszvtPWzq8+ep2gAG1nXMQkz
-         96BwQrhK71RqLAPLUGf6A3WCELZErPki3PyaggnTmBdEc4JLRkKgcg5e149AJFDowV
-         pDijFc41KkKdWpCbGiXvnuheoTYZB3TMSMNpbHkA=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006AJqc0032595;
-        Mon, 6 Jan 2020 04:19:52 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+        b=tWyEhCZEWRflcLFOCduVl9xPBawSnJV+tuNPJnqTblQsUXyAefuhSXEGtdQriBj0R
+         4sXAlCb5rlDK7rIqPefCUXNLR9/YZtzu/USUHanaLBlZnWSvN8nhh8Q9ead0YMvV4d
+         LxvtvixdtBN2VRctbaGqbPh5kBs4LFAsWAa0ygXE=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006AJ6xS031889;
+        Mon, 6 Jan 2020 04:19:06 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 6 Jan
- 2020 04:19:52 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 04:19:06 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 6 Jan 2020 04:19:52 -0600
+ Frontend Transport; Mon, 6 Jan 2020 04:19:06 -0600
 Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006AIqY5118652;
-        Mon, 6 Jan 2020 04:19:48 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 006AIqXt118652;
+        Mon, 6 Jan 2020 04:19:03 -0600
 From:   Kishon Vijay Abraham I <kishon@ti.com>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -57,9 +56,9 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
 CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH v2 13/14] misc: pci_endpoint_test: Add J721E in pci_device_id table
-Date:   Mon, 6 Jan 2020 15:50:57 +0530
-Message-ID: <20200106102058.19183-14-kishon@ti.com>
+Subject: [PATCH v2 03/14] linux/kernel.h: Add PTR_ALIGN_DOWN macro
+Date:   Mon, 6 Jan 2020 15:50:47 +0530
+Message-ID: <20200106102058.19183-4-kishon@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200106102058.19183-1-kishon@ti.com>
 References: <20200106102058.19183-1-kishon@ti.com>
@@ -71,48 +70,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add J721E in pci_device_id table so that pci-epf-test can be used
-for testing PCIe EP in J721E.
+Add a macro for aligning down a pointer. This is useful to get an
+aligned register address when a device allows only word access and
+doesn't allow half word or byte access.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/misc/pci_endpoint_test.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ include/linux/kernel.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index a5e317073d95..215f9b8432a3 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -64,6 +64,7 @@
- #define PCI_ENDPOINT_TEST_IRQ_TYPE		0x24
- #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 3adcb39fa6f5..888ad70a80aa 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -34,6 +34,7 @@
+ #define ALIGN_DOWN(x, a)	__ALIGN_KERNEL((x) - ((a) - 1), (a))
+ #define __ALIGN_MASK(x, mask)	__ALIGN_KERNEL_MASK((x), (mask))
+ #define PTR_ALIGN(p, a)		((typeof(p))ALIGN((unsigned long)(p), (a)))
++#define PTR_ALIGN_DOWN(p, a)	((typeof(p))ALIGN_DOWN((unsigned long)(p), (a)))
+ #define IS_ALIGNED(x, a)		(((x) & ((typeof(x))(a) - 1)) == 0)
  
-+#define PCI_DEVICE_ID_TI_J721E			0xb00d
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- 
- #define is_am654_pci_dev(pdev)		\
-@@ -789,6 +790,11 @@ static const struct pci_endpoint_test_data am654_data = {
- 	.irq_type = IRQ_TYPE_MSI,
- };
- 
-+static const struct pci_endpoint_test_data j721e_data = {
-+	.alignment = 256,
-+	.irq_type = IRQ_TYPE_MSI,
-+};
-+
- static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
-@@ -797,6 +803,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
- 	  .driver_data = (kernel_ulong_t)&am654_data
- 	},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
-+	  .driver_data = (kernel_ulong_t)&j721e_data,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
+ /* generic data direction definitions */
 -- 
 2.17.1
 
