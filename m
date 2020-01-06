@@ -2,187 +2,284 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C64C33C9B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 15:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C712C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 15:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A45F7207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 15:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091662075A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 15:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="NBgZXr/i"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qqQ2bLTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgAFPDu (ORCPT
+        id S1726436AbgAFPGJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:03:50 -0500
-Received: from mail-eopbgr60080.outbound.protection.outlook.com ([40.107.6.80]:6030
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726303AbgAFPDu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 10:03:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JcFKoSwIIPNcXd3LrD6is7j5I3OqcpiFs7+aeD2TjpEz0FLMoPVcv9uifYbeBXWD+52EmvcAd39+yIKsSbUbFIZY5EKLDni4HkdxPT89/A+KYyz87Mf9nNdGjb+cSNXC650qx/LVLaJdrxl5CTO9fAGzpcAlHg9CkV9Tph2qh5Ekurdem3Y8UaqIQ/2QMWlzM5fv+VcSFa0a/o4YjtSTG5ixkeI2OF5Sij8aIRi1tA7znskwrQwoKQCpty++q4frvcEfRWInNQbsYeTzEYVQbZ8UUF4DJf8/w3Kr8v93TwVMnAWxvj61Loe61CUjHdn3CbouSLPXdNv+byBFfbZ35w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=79qbcmq44EdXCv9P/W4VoPwa7jLjnHIkVr+Hj5j62G4=;
- b=fuJiLmj9OWFgtcV4CU1EAksNobGiLfmdAMjq/bCfkrMB6cNhVJOQvtLzrbXRk5vc5hC4rOR66ETFdQJZmLiMJ23VrN2vV8FI/cJsZodzI/SZGBU+FF3OMLdhZ8tdb09mTcMWub8EVJyzOlYyyKus/2Gk1XH2aamFo6IBd5pmShPRl3tyrcybD5bT8l/AfMdLpnaTU5KKqysght8HpxIfaXw5rJQq7WBHHsLQxIt/KQM6XXtnKAIFVHykOFE8oTKE1dPSBR+MpIOMVIUWZJaBjPiLekaTAWLyjKz1NoP5Ct4tJdSbKcn8L2IfEJEmGD7UAgeZUev4AwShffGc5sidiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=79qbcmq44EdXCv9P/W4VoPwa7jLjnHIkVr+Hj5j62G4=;
- b=NBgZXr/ibeZcwHarAQ92bmx7fYH3pTMVAXLYcqotc7GN4UE9lIuQK9KX4KAfoSN+2dB1YukYBgUik/8JJJIWvkcJc6SWtDIVv86FNPin8Vt8s0P/Txg5GUUI9wIq9PvfnftDb9pCVpf05xWM9vHpc0/PKUAUBFCMWruxWDyHPhY=
-Received: from DB8PR04MB6985.eurprd04.prod.outlook.com (52.133.243.85) by
- DB8PR04MB5657.eurprd04.prod.outlook.com (20.179.9.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Mon, 6 Jan 2020 15:03:44 +0000
-Received: from DB8PR04MB6985.eurprd04.prod.outlook.com
- ([fe80::c181:4a83:14f2:27e3]) by DB8PR04MB6985.eurprd04.prod.outlook.com
- ([fe80::c181:4a83:14f2:27e3%6]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
- 15:03:44 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-CC:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-Subject: RE: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Topic: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
-Thread-Index: AQHVtoABZZFXn6n8UUGKWfe6RtVAuKfBtnoAgAAR9oCABd2qgIAQ9D0AgAAopQCAAAQgAIAAJ5UAgAANzwCAADOTgIAAFvEAgAQ2y6CAAEfMgIAAB5uA
-Date:   Mon, 6 Jan 2020 15:03:44 +0000
-Message-ID: <DB8PR04MB69858BB3EE29A90D0A74BDA3EC3C0@DB8PR04MB6985.eurprd04.prod.outlook.com>
-References: <VI1PR04MB5567FA3170CF45F877870E8CEC520@VI1PR04MB5567.eurprd04.prod.outlook.com>
- <20191223120730.GO25745@shell.armlinux.org.uk>
- <DB8PR04MB69858081021729EC70216BE3EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200103092718.GB25745@shell.armlinux.org.uk>
- <20200103094204.GA18808@shell.armlinux.org.uk>
- <DB8PR04MB698591AAC029ADE9F7FFF69BEC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200103125310.GE25745@shell.armlinux.org.uk>
- <DB8PR04MB6985FB286A71FC6CFF04BE50EC230@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200103171952.GH25745@shell.armlinux.org.uk>
- <DB8PR04MB698500B73BDA9794D242BEDAEC3C0@DB8PR04MB6985.eurprd04.prod.outlook.com>
- <20200106135759.GA23820@lunn.ch>
-In-Reply-To: <20200106135759.GA23820@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=madalin.bucur@oss.nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4634a033-6ffe-4d99-de9e-08d792b9a021
-x-ms-traffictypediagnostic: DB8PR04MB5657:|DB8PR04MB5657:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB56579ACAFAB5061126E78442AD3C0@DB8PR04MB5657.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0274272F87
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(136003)(346002)(13464003)(189003)(199004)(2906002)(26005)(66476007)(66556008)(64756008)(66946007)(66446008)(33656002)(6506007)(53546011)(54906003)(110136005)(5660300002)(7696005)(186003)(86362001)(316002)(81156014)(81166006)(9686003)(8936002)(8676002)(55016002)(52536014)(4326008)(71200400001)(478600001)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5657;H:DB8PR04MB6985.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 23//WWyzDn4IJ8rosB+8zhHts2kkydVncM1kJcMe/9JCcPFZNAtPdPu0CIPtf9AHEhcHJ9G1nGKG+IboqaVBZG73Ducv7pedCMCqe+VvRcEjmunN1FZN66BdkgeR2Why7G/OMGkI/T4DscZmte0c/nyxL1H8YuOKBz7VJ5Ai5qph4hvDWBD5nppdbzr2eTML7J/iz1W7UB3y8Ky46VDqw7bYrrrlcrioy6ZrGuk23SVkxuZuOqdCRKGUNjO6yliyc9yCv/ylfFiJDz8Lt78VfMFSEihRloKPKOvVHxmr45TFfjB6LdrTm/3ffm2FdWLvAeHETjd42oUupAHbGxqWquuJjUa3moIrCj51X2ggIkCWacZeLXF6UqBtLzMA7+IWiY0Wuc6Tj96PzM9ZzdDgMS2T1bI0ClV3GDdvVKJEnMz8o/Zb4lGlk5/cMf03uSpZdndpHgYCCxRnx7ZyC9DEediHKNV8+pm7P62mxk1efZIODS6a/qTsoMFsX4HVq6Qe
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 6 Jan 2020 10:06:09 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52192 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbgAFPGJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 10:06:09 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d73so15285735wmd.1
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 07:06:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4xBi7IZzhoIF7KdHTNyDKmphKN498FgJ/ek10YTA3A8=;
+        b=qqQ2bLTHuAXiOdrNVhPPLTlk+pnB+OpF9gok5Mr1dhmJDvESZlMyGicHDLnhwjI2BP
+         kMedKprUXSoSVUUejyvoTIwI9mnjhzTisEv0MlB7JWfrqHnJdH2eD1ac5Op6b/mPeNRX
+         q2V761mB7wDGKdQ/wi+sX8YrUUSO9AIeCoAfUxeNfYudL9FOATxfRl48tgE2ejJNcBkk
+         irr0ehoxXjM7IfsfbSNo1o5bVfeBHUkt/axo5/J6UaIju1AnbT4HWAMBcPTILlov3Y8S
+         TT+Skw4C2wvYD4oOfK0kqty1v6g4axoL0urwyrsl8I+NBxCUpDiqrocy81uuuY3D4Clq
+         go6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4xBi7IZzhoIF7KdHTNyDKmphKN498FgJ/ek10YTA3A8=;
+        b=hrUlVQ5TMVcMm3HyhawnodnMMdXnJ6/CDqxFyOWHmAMSbeDo2wBw5DxqQ+pDKTZKdX
+         t713mb88o1JlY0dElfnONLJiEDGaumrDX3XwOB/eQmc/TJpOx7xrAW1Cjq736+BIh93E
+         EpTvMZQydD/Thy7i82STsEIJFRgfPAgMKPt+ppF5wZEtTpFw2yJEgl/S0240CdRhIKVm
+         f/Urt63+GA+yoTrHdd9ZeQhmUcf+da/eo0JwxdOIZf/fhcKJMVVISVePhJhA5gnP6uQ/
+         pIIa/h62EAEekvrDJKhnWsXVroEOpXYXhLZVIwxKCVU0BItkEYzAUYLof64qHhhjML2H
+         mnqQ==
+X-Gm-Message-State: APjAAAVqYcnyoYQIkJjiNI78NDvHHCW2+mWg+EIodmzKhD/yEIVkwvNX
+        QtoJlmchzdWS0V8fE3qCwt7AUQ==
+X-Google-Smtp-Source: APXvYqyCCcO+Jy3/h9qJXcbUHtKn+wTka58tVlU/uazUhcU5IZBCZGWZsosooWkC1fqxwTZFStBQGw==
+X-Received: by 2002:a7b:c389:: with SMTP id s9mr35024175wmj.7.1578323165746;
+        Mon, 06 Jan 2020 07:06:05 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id i11sm72950192wrs.10.2020.01.06.07.06.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Jan 2020 07:06:05 -0800 (PST)
+Subject: Re: [PATCH v24 0/2] drm/bridge: PS8640 MIPI-to-eDP bridge
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Ulrich Hecht <uli@fpond.eu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20191230090419.137141-1-enric.balletbo@collabora.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <94d3c3dd-1e3a-39f5-6180-04055da1dc70@baylibre.com>
+Date:   Mon, 6 Jan 2020 16:06:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4634a033-6ffe-4d99-de9e-08d792b9a021
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 15:03:44.7900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2MrCIS3UwD+ZjRi/+w4QnPHYsryFBzolWAZhp+QOgfasa38NFynVkg6eTdwbzWA0wsw6P66AqwwmkgaiSV7hfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5657
+In-Reply-To: <20191230090419.137141-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Andrew Lunn <andrew@lunn.ch>
-> Sent: Monday, January 6, 2020 3:58 PM
-> To: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>
-> Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>;
-> devicetree@vger.kernel.org; davem@davemloft.net; netdev@vger.kernel.org;
-> f.fainelli@gmail.com; hkallweit1@gmail.com; shawnguo@kernel.org
-> Subject: Re: [PATCH 1/6] net: phy: add interface modes for XFI, SFI
->=20
-> > You missed my argument about the device tree describing the HW (thus
-> the
-> > wires, electrical aspects too) and not configuring a certain protocol
-> (the
-> > device tree does not configure HW, it describes HW).
->=20
-> Hi Madalin
->=20
-> You have lots of different points here. I'm just picking out one.
->=20
-> I would say this is a grey area. You need to ensure both devices on
-> the XFI bus are using the same protocol. There are a few ways you
-> could do this:
->=20
-> The MAC and the PHY tells phylink what each is capable of, and phylink
-> picks a common protocol.
->=20
-> Leave it to the boot loader/firmware and cross your fingers.
->=20
-> Make a design decision, this board will use protocol X, and put that
-> in device tree. It is describing how we expect the hardware to be
-> used.
->=20
-> The Marvell SERDES interfaces are pretty generic. They can be used for
-> SATA, USB3, or networking. But these are all protocols running on top
-> of SERDES. So would you argue we cannot describe in device tree that
-> one SERDES is to be used for USB and another for SATA?
->=20
->     Andrew
+Hi,
 
-That's the case with the SERDES on most (all?) SoCs nowadays. I say we
-need to describe them as they are used, which, if I believe the SoC
-documentation authors, the PHY documentation authors, the board
-documentation author, in my case it's XFI. If it were USB3, SATA, and
-a description was needed, why should you not describe it as such? I
-see a difference between the XFI and the protocol on top. Not much
-data will come through a system if the eye diagram is not open, although
-the protocol is the same. Unless you get both right, it does not work.
-In my case, the 10GBASE-R part is implicit/redundant information, the
-electrical part has the potential to add some information to it. On the
-other hand, it's not like someone will solder there a different PHY and
-hope it will work because it says "xfi" or it says "10gbase-r" somewhere.
-There are a hundred other conditions to be met: voltages, power and reset
-sequencing, clock frequencies and stability and so on. It was all taken
-care by the board designer, we just need to describe it so that SW can
-make the best use of it.
+On 30/12/2019 10:04, Enric Balletbo i Serra wrote:
+> Hi all,
+> 
+> This is another version of the driver. Note that the driver changed
+> significally and is a more simply because now is using the panel_bridge
+> helpers. Apart from this, I addressed the comments from Maxime, Laurent
+> and Ezequiel.
+> 
+> This bridge is required to have the embedded display working on an Acer
+> Chromebook R13 ("Elm"). Hopefully we are a bit more close to have this
+> driver merged. If more changes are required, please let me know and I
+> will work on it.
+> 
+> Note: Along these around 20 revisions of this driver I was unable to
+> reconstruct the full changelog history, so I'm skipping this. Sorry
+> about that, I promise I'll maintain the changelog for future revisions.
 
-I wanted to describe the interfaces as close to the documentation a
-developer adding support for a custom board would be likely to use.
-For now a blind replace "xgmii" to "10gbase-r" would be enough to get
-things going as they already are and avoid a warning in the AQR probing.
-But I feel that we'd still be off from the best description we can
-and the above mentioned developer would be left a bit puzzled by that.
+I can apply these, but I'll prefer Rob to ack the new YAML bindings or
+a go from Laurent/Maxime to go with the actual YAML state.
 
-I also have the concern that this device tree parameter started life
-as an MII bus type enumerator and now we say it should describe the
-protocol and only that. Sure, XFI is not an MII interface type, as
-it's not aligned to the MAC-PHY interface but rather a PHY sub-block
-interface but its frequent use by the industry I thought could warrant
-a place for it in that list, unless we decide to build something better.
+For patch 2, I think we can keep devm_i2c_new_dummy_device and not use i2c_new_ancillary_device
 
-While we're at it, should we have XAUI, RXAUI there or 10GBASE-X4,
-10GBASE-X2?
+Neil
 
-Madalin
+> 
+> Thanks,
+>  Enric
+> 
+> Changes in v24:
+> - Fix GPIO polarity as all GPIO descriptors should be handled as active high (Laurent Pinchart)
+> - Make static ps8640_bridge_attach (Ezequiel Garcia)
+> - Use a define for the number of lanes (Ezequiel Garcia)
+> 
+> Changes in v23:
+> - Merge mute/unmute functions into one (Nicolas Boichat)
+> - Use enum for ENABLE/DISABLE instead of bool (Ezequiel Garcia)
+> - Rename mute/unmute to vdo_control and fix error messages (Nicolas Boichat and Enric)
+> - Add space between address and address parameter 'address%02x' (Nicolas Boichat)
+> - Add Tested-by Hsin-Yi
+> - Added me as author after the refactor
+> 
+> Changes in v22:
+> - Migrate to YAML format (Maxime Ripart)
+> - Remove mode-sel property.
+> - Rename sleep-gpios to powerdown-gpios.
+> - Remove sysfs attributes because are not really used (Enric Balletbo)
+> - Use enum for address page offsets (Ezequiel Garcia)
+> - Remove enable tracking (Enric Balletbo)
+> - Use panel_bridge API (Laurent Pinchart)
+> - Do not use kernel-doc format for non kernel-doc formatted commands (Enric Balletbo)
+> - Remove verbose message for PAGE1_VSTART command (Ezequiel Garcia)
+> - Use time_is_after_jiffies idiom (Ezequiel Garcia)
+> - Remove unused macros (Ezequiel Garcia)
+> - Fix weird alignment in dsi->mode_flags (Laurent Pinchart)
+> - Use drm_of_find_panel_or_bridge helper (Laurent Pinchart)
+> - Remove mode-sel-gpios as is not used (Laurent Pinchart)
+> - Remove error messages to get gpios as the core will already report it (Enric Balletbo)
+> - Remove redundant message getting the regulators (Laurent Pinchart)
+> - Rename sleep-gpios to powerdown-gpios (Laurent Pinchart)
+> - Use ARRAY_SIZE(ps_bridge->page) instead of MAX_DEV when possible (Laurent Pinchart)
+> - Fix race with userspace accessing the sysfs attributes (Laurent Pinchart)
+> - Remove id_table as is only used on DR platforms (Laurent Pinchart)
+> - Convert to new i2c device probe() (Laurent Pinchart)
+> - Use i2c_smbus_read/write helpers instead of open coding it (Laurent Pinchart)
+> - Remove unnused global variables (Laurent Pinchart)
+> - Remove unnused fields in ps8640 struct (Laurent Pinchart)
+> - Remove commented-out headers (Laurent Pinchart)
+> 
+> Changes in v21:
+>  - Use devm_i2c_new_dummy_device and fix build issue using deprecated i2c_new_dummy
+>  - Fix build issue due missing drm_bridge.h
+>  - Do not remove in ps8640_remove device managed resources
+> 
+> Changes in v19:
+>  - fixed return value of ps8640_probe() when no panel is found
+> 
+> Changes in v18:
+>  - followed DRM API changes
+>  - use DEVICE_ATTR_RO()
+>  - remove firmware update code
+>  - add SPDX identifier
+> 
+> Changes in v17:
+>  - remove some unused head files.
+>  - add macros for ps8640 pages.
+>  - remove ddc_i2c client
+>  - add mipi_dsi_device_register_full
+>  - remove the manufacturer from the name and i2c_device_id
+> 
+> Changes in v16:
+>  - Disable ps8640 DSI MCS Function.
+>  - Rename gpios name more clearly.
+>  - Tune the ps8640 power on sequence.
+> 
+> Changes in v15:
+>  - Drop drm_connector_(un)register calls from parade ps8640.
+>    The main DRM driver mtk_drm_drv now calls
+>    drm_connector_register_all() after drm_dev_register() in the
+>    mtk_drm_bind() function. That function should iterate over all
+>    connectors and call drm_connector_register() for each of them.
+>    So, remove drm_connector_(un)register calls from parade ps8640.
+> 
+> Changes in v14:
+>  - update copyright info.
+>  - change bridge_to_ps8640 and connector_to_ps8640 to inline function.
+>  - fix some coding style.
+>  - use sizeof as array counter.
+>  - use drm_get_edid when read edid.
+>  - add mutex when firmware updating.
+> 
+> Changes in v13:
+>  - add const on data, ps8640_write_bytes(struct i2c_client *client, const u8 *data, u16 data_len)
+>  - fix PAGE2_SW_REST tyro.
+>  - move the buf[3] init to entrance of the function.
+> 
+> Changes in v12:
+>  - fix hw_chip_id build warning
+> 
+> Changes in v11:
+>  - Remove depends on I2C, add DRM depends
+>  - Reuse ps8640_write_bytes() in ps8640_write_byte()
+>  - Use timer check for polling like the routines in <linux/iopoll.h>
+>  - Fix no drm_connector_unregister/drm_connector_cleanup when ps8640_bridge_attach fail
+>  - Check the ps8640 hardware id in ps8640_validate_firmware
+>  - Remove fw_version check
+>  - Move ps8640_validate_firmware before ps8640_enter_bl
+>  - Add ddc_i2c unregister when probe fail and ps8640_remove
+> 
+> Jitao Shi (2):
+>   Documentation: bridge: Add documentation for ps8640 DT properties
+>   drm/bridge: Add I2C based driver for ps8640 bridge
+> 
+>  .../bindings/display/bridge/ps8640.yaml       | 112 ++++++
+>  drivers/gpu/drm/bridge/Kconfig                |  11 +
+>  drivers/gpu/drm/bridge/Makefile               |   1 +
+>  drivers/gpu/drm/bridge/parade-ps8640.c        | 348 ++++++++++++++++++
+>  4 files changed, 472 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.yaml
+>  create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+> 
+
