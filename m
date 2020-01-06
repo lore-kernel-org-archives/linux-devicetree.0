@@ -2,248 +2,209 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523E8C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED628C33C9B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197B62072C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="cLag7isj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rVKZ7Ilw"
+	by mail.kernel.org (Postfix) with ESMTP id CB18E215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgAFJ12 (ORCPT
+        id S1726281AbgAFJ2u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:27:28 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52137 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725446AbgAFJ12 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:27:28 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 004E321F83;
-        Mon,  6 Jan 2020 04:27:26 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 06 Jan 2020 04:27:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=AD0WwGxa4vEtYVpmX4Bn98NZdb8
-        UG8gq8ruZldWqfFQ=; b=cLag7isjvYNFz1/HpV5BQv84cdbSzYJfvKPOR+++0pS
-        yoiR853GzL2i75zg6w49qoySqj097YsBnP/pn67nzwKxE+Zob6sd8OTrDOkL7KHD
-        wV7/HpVlWvK/KhQBij+1u4nT1p4RCRzbWJcOZ9NV3Tfcu6wjkYoJePbiEIctLdYo
-        vA22lZn23R5J4MOQY3M/ZtahHZ9RpchmZ0Oodr/MHGmYH59ME7PPCyWs9adhbVT2
-        +joNE99ehfDY8K57qbY31xbpnAbD6Dj6BGJokUMO9M83DMtlYXPHpyLRXrszWw1k
-        Qq01SvhWaA546tClqSNwmGgWhTq+1bU30RAOvBIhPvw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=AD0WwG
-        xa4vEtYVpmX4Bn98NZdb8UG8gq8ruZldWqfFQ=; b=rVKZ7IlwMl9UIsTeJUU2mA
-        eGzw997p780+sa50JCs9n11byVdRh3ewZq0B2IfbUxYoSLwmxmmtx1pj2Q9H8+Jm
-        VLyNoTgwcHmjVwordd9iC5jcpBor5NA3AwiZ6cgcH8NwR66GdU5ghedmVPAItfnc
-        0tBZBpeQc+CY1o2EsTEcJUDDf61lAdqGcXHOHBgvoUKZVJT/Ne/7WptJVldTAK/U
-        5ycrIw0UrTJ7OEL2CHUGCWic3mvc1N2wH0AyLhIAUeOleXE9B5sbYvjnLmA8h7bV
-        gcuI9tRkAwRkzOsm36wMNrbH56ZOasypSL/lWxRasdo3hK1/wbzxaBWBoGR1FI3g
-        ==
-X-ME-Sender: <xms:fv0SXgLwl2zHlgDrdGLWXp2abLkUMRWovMDghaBocRhNerV7nHDvRQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdehtddgtdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuffhomhgrih
-    hnpeguvghvihgtvghtrhgvvgdrohhrghenucfkphepledtrdekledrieekrdejieenucfr
-    rghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthhenucevlh
-    hushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:fv0SXr0PxaZyA38ebNMaaNdSWPpxnjZ_EKoxCPBwdm4c2DO2782rbg>
-    <xmx:fv0SXsVms3qbFoRnJo4yaPIcmQGrYchGM7TTgwU2m278g2_kZncyag>
-    <xmx:fv0SXpgeuO96xSWmPnJPo0mt69vpTmfduxPcmPjmrZX1yJ3W3qd-ig>
-    <xmx:fv0SXrxqlbBkNYd8H_bKzhEYY9MH5k2v6I3SqCU2V28YyYo5R1TXnA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 21ECC80060;
-        Mon,  6 Jan 2020 04:27:26 -0500 (EST)
-Date:   Mon, 6 Jan 2020 10:27:24 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     kishon@ti.com, Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: usb: Convert Allwinner A80 USB PHY
- controller to a schema
-Message-ID: <20200106092724.pi2kbui7zayrhhzi@gilmour.lan>
-References: <20200103152824.47383-1-maxime@cerno.tech>
- <20200104221321.GA11672@bogus>
+        Mon, 6 Jan 2020 04:28:50 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41817 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgAFJ2u (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:28:50 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so70904049otc.8;
+        Mon, 06 Jan 2020 01:28:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w+vmYhiLoRG/NgQRQrZPsXjrV365H8hEN68ARUw4CIQ=;
+        b=FKRLwlXcCgrIvCEimY0rBJunTIZNGFx+4XJpVMhKl5ZMWwa9cVXcpVTWWvjJZvnHst
+         QLk1+5ljdPiG19uQJX3JEhgA0QIkIKNF9hPlBkreMMwWgeu7Sz+PBA760049In46dAYG
+         PdiYXrLvqK3C1EaNkI5Zg+/FTHCUh4M5HaJuVutIXuNJJpMp+zhpCpgu6xRLnAMPMVnG
+         ctdI1TyXgPh8I9bnKiUWES7I/VFqGTJodxT6xFvOGuEaRsa9uA1XV8kalwpEl9HnCGP7
+         BItvp3+ltvqYEYcw8+ZoGrgTAW6ew2nIKziDBR7mpgw+q1bo+7E8AVd6ppW9cTVFoAUu
+         lPqQ==
+X-Gm-Message-State: APjAAAU6A+WTSr0Mi3HyNBfJ0OTLuojA9+xfi+JJp4Js8tXK5lm+XQj9
+        VYDkCHGFhzoDNdEo3D0MjfKuEIKzEQiAXnuBXnqPr5LH
+X-Google-Smtp-Source: APXvYqydoa68HpndthaKYQ+8Q+Y7RAZToNChUskpMjnwO3n/K3vgBjeO5XSKtohC/HCShM8R0EGzQ3tA4+SdMZ+80tw=
+X-Received: by 2002:a9d:8f1:: with SMTP id 104mr107563805otf.107.1578302928931;
+ Mon, 06 Jan 2020 01:28:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jfhnjtzfmxu4jsz2"
-Content-Disposition: inline
-In-Reply-To: <20200104221321.GA11672@bogus>
+References: <20200102141246.370-1-geert+renesas@glider.be> <20200102141246.370-4-geert+renesas@glider.be>
+ <20200105091303.GB29102@ravnborg.org>
+In-Reply-To: <20200105091303.GB29102@ravnborg.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Jan 2020 10:28:37 +0100
+Message-ID: <CAMuHMdUL3tCZzCDyJkmqYT5n+-t+Z-Ubo4=+NJpHpZU1w5C07g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] drm: tiny: st7735r: Add support for Okaya RH128128T
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sam,
 
---jfhnjtzfmxu4jsz2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sun, Jan 5, 2020 at 10:13 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> Good to see we add more functionality to the smallest driver in DRM.
+> The patch triggered a few comments - see below.
+> Some comments relates to the original driver - and not your changes.
 
-Hi Rob,
+Thanks for your comments!
 
-On Sat, Jan 04, 2020 at 03:13:21PM -0700, Rob Herring wrote:
-> On Fri, Jan 03, 2020 at 04:28:24PM +0100, Maxime Ripard wrote:
-> > The Allwinner A80 SoCs have a USB PHY controller that is used by Linux,
-> > with a matching Device Tree binding.
+> On Thu, Jan 02, 2020 at 03:12:46PM +0100, Geert Uytterhoeven wrote:
+> > Add support for the Okaya RH128128T display to the st7735r driver.
 > >
-> > Now that we have the DT validation in place, let's convert the device tree
-> > bindings for that controller over to a YAML schemas.
-> >
-> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> >
-> > ---
-> >
-> > Changes from v1:
-> >   - Added r-b tag from chen-yu
-> > ---
-> >  .../phy/allwinner,sun9i-a80-usb-phy.yaml      | 135 ++++++++++++++++++
-> >  .../devicetree/bindings/phy/sun9i-usb-phy.txt |  37 -----
-> >  2 files changed, 135 insertions(+), 37 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> >  delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > new file mode 100644
-> > index 000000000000..ded7d6f0a119
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
-> > @@ -0,0 +1,135 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/allwinner,sun9i-a80-usb-phy.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Allwinner A80 USB PHY Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Chen-Yu Tsai <wens@csie.org>
-> > +  - Maxime Ripard <mripard@kernel.org>
-> > +
-> > +properties:
-> > +  "#phy-cells":
-> > +    const: 0
-> > +
-> > +  compatible:
-> > +    const: allwinner,sun9i-a80-usb-phy
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    anyOf:
-> > +      - description: Main PHY Clock
-> > +
-> > +      - items:
-> > +          - description: Main PHY clock
-> > +          - description: HSIC 12MHz clock
-> > +          - description: HSIC 480MHz clock
+> > The RH128128T is a 128x128 1.44" TFT display driven by a Sitronix
+> > ST7715R TFT Controller/Driver.  The latter is very similar to the
+> > ST7735R, and can be handled by the existing st7735r driver.
 >
-> Rather than anyOf, just 'minItems: 1' would work here. Though I guess
-> this disallows 2 items.
+> As a general comment - it would have eased review if this was split
+> in two patches.
+> One patch to introduce the infrastructure to deal with another set of
+> controller/display and one patch introducing the new combination.
 
-Yeah, 2 items is not allowed so I wanted to prevent that.
+I had thought about that, but didn't pursue as the new combination is
+just 7 added lines.  If you prefer a split, I can do that.
 
-> > +
-> > +  clock-names:
-> > +    oneOf:
-> > +      - const: phy
-> > +
-> > +      - items:
-> > +          - const: phy
-> > +          - const: hsic_12M
-> > +          - const: hsic_480M
-> > +
-> > +  resets:
-> > +    anyOf:
-> > +      - description: Normal USB PHY reset
-> > +
-> > +      - items:
-> > +          - description: Normal USB PHY reset
-> > +          - description: HSIC Reset
-> > +
-> > +  reset-names:
-> > +    oneOf:
-> > +      - const: phy
-> > +
-> > +      - items:
-> > +          - const: phy
-> > +          - const: hsic
-> > +
-> > +  phy_type:
-> > +    const: hsic
-> > +    description:
-> > +      When absent, the PHY type will be assumed to be normal USB.
-> > +
-> > +  phy-supply:
-> > +    description:
-> > +      Regulator that powers VBUS
-> > +
-> > +required:
-> > +  - "#phy-cells"
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - resets
-> > +  - reset-names
-> > +
-> > +additionalProperties: false
-> > +
-> > +if:
-> > +  properties:
-> > +    phy_type:
-> > +      const: hsic
-> > +
-> > +  required:
-> > +    - phy_type
-> > +
-> > +then:
-> > +  properties:
-> > +    clocks:
-> > +      maxItems: 3
-> > +
-> > +    clock-names:
-> > +      maxItems: 3
-> > +
-> > +    resets:
-> > +      maxItems: 2
-> > +
-> > +    reset-names:
-> > +      maxItems: 2
+> > --- a/drivers/gpu/drm/tiny/st7735r.c
+> > +++ b/drivers/gpu/drm/tiny/st7735r.c
+> > @@ -1,8 +1,9 @@
+> >  // SPDX-License-Identifier: GPL-2.0+
+> >  /*
+> > - * DRM driver for Sitronix ST7735R panels
+> > + * DRM driver for Sitronix ST7715R/ST7735R panels
 >
-> Do you intend that only a single item is allowed when not HSIC? If so,
-> that's not what is happening.
+> This comment could describe the situation a little better.
+> This is a sitronix st7735r controller with a jianda jd-t18003-t01
+> display.
+> Or a sitronix st7715r controller with a okaya rh128128t display.
 
-That's intentional indeed, the former binding was making the hsic
-clocks and resets mandatory when the phy was in HSIC mode, but only
-recommending listing them otherwise. Maybe we can change that in the
-future, but that seems out of scope for a conversion.
+Indeed. It is currently limited to two controller/display combos.
+But I expect more combos to be added over time.
+Hence does it make sense to describe all of that in the top comments?
 
-Maxime
+> > @@ -37,12 +39,28 @@
+> >  #define ST7735R_MY   BIT(7)
+> >  #define ST7735R_MX   BIT(6)
+> >  #define ST7735R_MV   BIT(5)
+> > +#define ST7735R_RGB  BIT(3)
+> > +
+> > +struct st7735r_cfg {
+> > +     const struct drm_display_mode mode;
+> > +     unsigned int left_offset;
+> > +     unsigned int top_offset;
+> > +     unsigned int write_only:1;
+> > +     unsigned int rgb:1;             /* RGB (vs. BGR) */
+> > +};
+> > +
+> > +struct st7735r_priv {
+> > +     struct mipi_dbi_dev dbidev;     /* Must be first for .release() */
+> > +     unsigned int rgb:1;
+> > +};
+>
+> The structs here uses "st7735r" as the generic prefix.
+> But the rest of this file uses "jd_t18003_t01" as the generic prefix.
+>
+> It would help readability if the same prefix is used for the common
+> stuff everywhere.
 
---jfhnjtzfmxu4jsz2
-Content-Type: application/pgp-signature; name="signature.asc"
+Agreed.
+So I think it makes most sense to rename jd_t18003_t01_pipe_{enable,funcs}
+to sh7735r_pipe_{enable,funcs}?
+If needed, the display-specific parts (e.g. gamma parameters) could be
+factored out in st7735r_cfg later, if neeeded.
 
------BEGIN PGP SIGNATURE-----
+> struct st7735r_priv includes "rgb" which is copied from struct
+> st7735r_cfg.
+> Maybe just add a const pointer to struct st7735r_cfg,
+> so when we later add more configuration items we do not need to have two
+> copies. And then ofc drop st7735r_priv.rgb.
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhL9fAAKCRDj7w1vZxhR
-xYcDAQCNoZxKDfvA/zKYWnLh123pQrSfnCIT3udI4N3sqlNiBQEA3LOztTGe4r9g
-jqPT0pzltu4HVmYLfflM/aNrJBQsgQQ=
-=9byl
------END PGP SIGNATURE-----
+I thought about that, but didn't do so, as the rgb field is the only
+parameter used outside the probe function.  Can be changed, of course.
 
---jfhnjtzfmxu4jsz2--
+> > @@ -136,13 +167,14 @@ static struct drm_driver st7735r_driver = {
+> >  };
+> >
+> >  static const struct of_device_id st7735r_of_match[] = {
+> > -     { .compatible = "jianda,jd-t18003-t01" },
+> > +     { .compatible = "jianda,jd-t18003-t01", .data = &jd_t18003_t01_cfg },
+> > +     { .compatible = "okaya,rh128128t", .data = &rh128128t_cfg },
+> >       { },
+> { /* sentinel },
+>
+> Also - which is not a new thing - this fails to check that we have the
+> correct combination of two compatibles.
+> From the binding:
+>
+>     Must be one of the following combinations:
+>     - "jianda,jd-t18003-t01", "sitronix,st7735r"
+>     - "okaya,rh128128t", "sitronix,st7715r"
+
+That will be checked by "make dtbs_check", once I have converted the DT
+bindings to yaml ;-)
+
+In reality, there are lots of different ways to communicate with an
+ST77[13]5R display controller (3/4-wire SPI, or 6800/8080 bus, ...), and
+lots of different ways to wire a display to the controller.  Ideally,
+this should be described in DT.  As I don't have schematics for the
+display board, doing so is difficult, and will miss important details,
+which may lead to DTB ABI compatibility issues later.
+I understand using these compatible combinations was a pragmatic solution
+to this problem.
+
+> >  };
+> >  MODULE_DEVICE_TABLE(of, st7735r_of_match);
+> >
+> >  static const struct spi_device_id st7735r_id[] = {
+> > -     { "jd-t18003-t01", 0 },
+> > +     { "jd-t18003-t01", (uintptr_t)&jd_t18003_t01_cfg },
+> >       { },
+> { /* sentinel */ },
+>
+> Do we need an entry for "okaya,rh128128t" here?
+>
+> Note: I have not fully understood how MODULE_DEVICE_TABLE()
+> works - so forgive me my ignorance.
+
+st7735r_id[] is used for matching based on platform device name.
+Hence an entry is needed only to use the display on non-DT systems.
+Can be added later, if ever needed.
+
+Note that there is a separate MODULE_DEVICE_TABLE() for DT-based matching,
+so the driver module will be auto-loaded on DT-based systems.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
