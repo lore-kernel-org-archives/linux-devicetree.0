@@ -2,99 +2,159 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04496C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC5EC33C9B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C66FA21775
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:06:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N6vlhfEm"
+	by mail.kernel.org (Postfix) with ESMTP id B7376218AC
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725996AbgAFIG3 (ORCPT
+        id S1726155AbgAFIHG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 03:06:29 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39185 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFIG3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 03:06:29 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so18618304plp.6
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 00:06:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kc4OOP9HlDHrazGn8ygbL0+SnkDIKiZeyDLgjyCdafs=;
-        b=N6vlhfEmOvMy7F7CmodSMsAX5uy/sztUmVOPhLo8EIl9iFwQ2NLWDi1zBiQ0HUI+ro
-         H563QhrI02xzr4klertPbDzI0unhimjQiTnFJo9Lm/Y5LNTk7uQDut/SczTOtbFuvfFy
-         T67gJwf+zgRk1FzK/lyW90NtqOanKwHtonwbvMw3QYn1nQeU/MYxDRE9oMfGw9yOKWz+
-         R8hxdeoq07y1LNcYCPr4h+rDa12O9RqgQPqubsGtauUci2YgAYgyBn6YjxkUe+fniB3F
-         AwcjV8JD6WgPv2DEehMpZ9CoJhopQgW3nafA0e470xlqukNHjbhNdSOkkOZynRJ+An8G
-         VJqQ==
+        Mon, 6 Jan 2020 03:07:06 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38285 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgAFIHG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 03:07:06 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d7so66167981otf.5;
+        Mon, 06 Jan 2020 00:07:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Kc4OOP9HlDHrazGn8ygbL0+SnkDIKiZeyDLgjyCdafs=;
-        b=QvN2rN7XbFwls3izQ0hOOhPVA3nAcyD7hHE5dghYzlS61VcjzPFU9o5VskSAh5rCra
-         qtlIW6VoQGT5UzL8t6rUT/Cf36D02oBXdlaOG65tp6ERKOmb0Brb3b4HCAh0ho2vomQ1
-         mJLgTiVZm5gSpCda1KecqrIPsC3w314nv31tycFQZunvi/ou6q5W6cQtTs+n5Ss4rORK
-         eElV9sj/8U3nXoIs1S7w0mK6G3dkq3Uyqq0khix5k3fwDPhJHxSYNs4VN3QI/bwpzngi
-         KN8pPv9kwMD3HgQTTBT2gU4xCAcn5h1IScq3gmWO/mxE8WZt15wdvDOgWpv6+N6qSTTk
-         xYuA==
-X-Gm-Message-State: APjAAAXndZQcL3QufNGzmbUogkBwVOos5VcfOiJVxh9JqUj0WNN/vUVr
-        kL3VUNFh6FONllXT0wGIjGmEfGirtgA=
-X-Google-Smtp-Source: APXvYqzPwEbf3yDTuo1YSLiQbcrhWeM/h2hOgU19IgmTT+k+BL1n/XH4cHd3sSgnA+OFj25/f1W7Gw==
-X-Received: by 2002:a17:902:d898:: with SMTP id b24mr100079663plz.133.1578297988771;
-        Mon, 06 Jan 2020 00:06:28 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y20sm11916038pfe.107.2020.01.06.00.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 00:06:28 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] clk: qcom: gcc-msm8996: Fix CLKREF parenting
-Date:   Mon,  6 Jan 2020 00:05:44 -0800
-Message-Id: <20200106080546.3192125-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DW1SIti7NHYB1AbqgFvyF14dNMwa3qPTzBW09JetqYs=;
+        b=fLBvsDRjAp27Ry4z3ybY4TWK2AC39HDKg34iIBO0JHpK4ZW8DIG1X0FLVIcoaFKQPl
+         FcnASseG3YV7gK9AzPCfrox2rjHnRyOSipoEyNKXwGcFFAr30aIEn5KWFdaHrUWaP8sg
+         n8YLlfwpGwRBi7DndS5zY0CSnLwdZeUvyur4u+IrJr/GjJFnn5e0SV8PwOgD5QxajggX
+         GpPTfAuE8jxPWVJ5ZdfdCOhDlZckyYGQmpZ4jNGMQGaOXu2yFjnpx6aV04qnhqKXsmJ+
+         ssGU5M8L6v9M9e3oOx/tIo3A+JENrzYd/59yzbk/ZCZ9GS10i08SoBX1FERJnR3L3Qs6
+         25mA==
+X-Gm-Message-State: APjAAAVOtT996oCGUCAki2uSbSzYITPnZYYhM2djUur4DzuhvbVL9rQn
+        M4Mz7A9vSrpKvjWYnukfm26QXsOikh8nIZxQS6s=
+X-Google-Smtp-Source: APXvYqxAKJhctUL3mn7UzaLw+sqHKf++PDfXB8dUrOnMMXR6h0t2N8/KpR/0X7vcb8CRnhjsdWQ+ZW4+Y5nwyAvTH3w=
+X-Received: by 2002:a9d:dc1:: with SMTP id 59mr15235457ots.250.1578298025342;
+ Mon, 06 Jan 2020 00:07:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-7-geert+renesas@glider.be> <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
+ <CAMuHMdV+Ww5Y9G7+bS-SyHtm4dC89V37yuaYvrS3kYW=PRTkFA@mail.gmail.com> <CACRpkdZwos9Dtt9E3OkxWf4rqMALNTge5NGduzGm-7MhQyLZuQ@mail.gmail.com>
+In-Reply-To: <CACRpkdZwos9Dtt9E3OkxWf4rqMALNTge5NGduzGm-7MhQyLZuQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Jan 2020 09:06:53 +0100
+Message-ID: <CAMuHMdWZ7Wh9rq7SGt7edgCXL1e5UwtSUfxLc0exHa-TEB=W5w@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-We've always seen intermittent resets of msm8996 during boot, seemingly related
-to PCIe somehow. The likely cause of these errors are the fact that the CLKREF
-of all PHYs are parented by LN_BB, which while being on during boot is disabled
-by the UFS host driver if it fails to find its PHY.
+Hi Linus,
 
-As such, depending on the timeing (and success) of the UFS initialization, PCIe
-might loose its clocking.
+On Sat, Jan 4, 2020 at 1:21 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Dec 12, 2019 at 3:48 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Thu, Dec 12, 2019 at 3:42 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+> > > <geert+renesas@glider.be> wrote:
+> > > > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
+> > > > +them into a new gpio_chip, which can be assigned to a group or user using
+> > > > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
+> > > > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
+> > > > +GPIO controller, and no longer needs to care about which GPIOs to grab and
+> > > > +which not, reducing the attack surface.
+> > > > +
+> > > > +Aggregated GPIO controllers are instantiated and destroyed by writing to
+> > > > +write-only attribute files in sysfs.
+> > >
+> > > I suppose virtual machines will have a lengthy config file where
+> > > they specify which GPIO lines to pick and use for their GPIO
+> > > aggregator, and that will all be fine, the VM starts and the aggregator
+> > > is there and we can start executing.
+> > >
+> > > I would perhaps point out a weakness as with all sysfs and with the current
+> > > gpio sysfs: if a process creates an aggregator device, and then that
+> > > process crashes, what happens when you try to restart the process and
+> > > run e.g. your VM again?
+> > >
+> > > Time for a hard reboot? Or should we add some design guidelines for
+> > > these machines so that they can cleanly tear down aggregators
+> > > previously created by the crashed VM?
+> >
+> > No, the VM does not create the aggregator.
+> >
+> > The idea is for the user to create one or more aggregators, set up
+> > permissions on /dev/gpiochipX, and launch the VM, passing the aggregated
+> > /dev/gpiochipX as parameters.
+> > If the VM crashes, just launch it again.
+> >
+> > Destroying the aggregators is a manual and independent process, after
+> > the VM has exited.
+>
+> I'm thinking about someone making some industrial application for some
+> control of a machinery say a robotic arm.
+>
+> And do make sure this VM is only controlling these GPIOs related to
+> this robotic arm, they create a GPIO aggregator. And we care about
+> cases like that since we provide this security argument.
+>
+> Surely that machine will be rebooted.
+>
+> Surely they don't have a printed paper with all the commands lying
+> at the console, and asking whoever powers it back on to manually
+> type it all in again. That feels a bit 1981.
+>
+> So they will have a script for this I suppose. Possibly in some
+> initscript so it is set up on boot. And this script echos stuff
+> all over the place to set up the aggregator.
+>
+> Is this the use case you're thinking of?
 
-These two patches ensures that LN_BB, connected to the CXO2 pad on the SoC, is
-described as parent for all the CLKREF clocks. So that they all vote for this
-clock appropriately.
+Exactly.
 
-Bjorn Andersson (2):
-  clk: qcom: gcc-msm8996: Fix parent for CLKREF clocks
-  arm64: dts: qcom: msm8996: Define parent clocks for gcc
+And they can configure that by echoing the GPIO specifiers to
+/sys/bus/platform/drivers/gpio-aggregator/new_device.
 
- .../devicetree/bindings/clock/qcom,gcc.yaml   | 10 ++++++
- arch/arm64/boot/dts/qcom/msm8996.dtsi         |  3 ++
- drivers/clk/qcom/gcc-msm8996.c                | 35 +++++++++++++++----
- 3 files changed, 41 insertions(+), 7 deletions(-)
+If their system has DT, another option is to describe the device in DT,
+and add its compatible value to gpio_aggregator_dt_ids[], cfr. the
+frobnicator example.
+
+> I just like to have the whole picture here.
+
+Sure. If anything is still unclear, please let me know!
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.24.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
