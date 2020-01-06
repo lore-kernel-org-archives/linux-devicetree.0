@@ -2,144 +2,96 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189B7C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11330C33C9B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D9F215A4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD4D2072E
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 10:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725821AbgAFJyh convert rfc822-to-8bit (ORCPT
+        id S1725821AbgAFKEB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:54:37 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:50663 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFJyh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:54:37 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 414202000D;
-        Mon,  6 Jan 2020 09:54:33 +0000 (UTC)
-Date:   Mon, 6 Jan 2020 10:54:32 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Mon, 6 Jan 2020 05:04:01 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60028 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgAFKEB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 05:04:01 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B63E927D7A1;
+        Mon,  6 Jan 2020 10:03:57 +0000 (GMT)
+Date:   Mon, 6 Jan 2020 11:03:54 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     dri-devel@lists.freedesktop.org,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: display: Add Satoz panel
-Message-ID: <20200106105432.0621bc86@xps13>
-In-Reply-To: <20200104000957.GA17750@bogus>
-References: <20191224141905.22780-1-miquel.raynal@bootlin.com>
-        <20191224141905.22780-2-miquel.raynal@bootlin.com>
-        <20200104000957.GA17750@bogus>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>
+Subject: Re: [PATCH v5 1/4] drm/bridge: Add a drm_bridge_state object
+Message-ID: <20200106110354.0a5cbc10@collabora.com>
+In-Reply-To: <20191219101151.28039-2-narmstrong@baylibre.com>
+References: <20191219101151.28039-1-narmstrong@baylibre.com>
+        <20191219101151.28039-2-narmstrong@baylibre.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Neil,
 
-Rob Herring <robh@kernel.org> wrote on Fri, 3 Jan 2020 17:09:57 -0700:
+On Thu, 19 Dec 2019 11:11:48 +0100
+Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-> On Tue, Dec 24, 2019 at 03:19:04PM +0100, Miquel Raynal wrote:
-> > Satoz is a Chinese TFT manufacturer.
-> > Website: http://www.sat-sz.com/English/index.html
-> > 
-> > Add (simple) bindings for its SAT050AT40H12R2 5.0 inch LCD panel.
-> > 
-> > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > ---
-> > 
-> > Changes since v2:
-> > * None.
-> > 
-> > Changes since v1:
-> > * New patch
-> > 
-> >  .../display/panel/satoz,sat050at40h12r2.yaml  | 27 +++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml  
-> 
-> Note that this may become obsolete if we move all simple panels to a 
-> single schema.
+> +/**
+> + * drm_atomic_helper_duplicate_bridge_state() - Default duplicate state helper
+> + * @bridge: bridge containing the state to duplicate
+> + *
+> + * Default implementation of &drm_bridge_funcs.atomic_duplicate().
+> + *
+> + * RETURNS:
+> + * a valid state object or NULL if the allocation fails.
+> + */
+> +struct drm_bridge_state *
+> +drm_atomic_helper_bridge_duplicate_state(struct drm_bridge *bridge)
+> +{
+> +	struct drm_bridge_state *new;
+> +
+> +	if (WARN_ON(!bridge->base.state))
+> +		return NULL;
+> +
+> +	new = kzalloc(sizeof(*new), GFP_KERNEL);
+> +	if (new)
+> +		__drm_atomic_helper_bridge_duplicate_state(bridge, new);
+> +
+> +	return new;
+> +}
+> +EXPORT_SYMBOL(drm_atomic_helper_bridge_duplicate_state);
 
-Absolutely.
+IIRC, Laurent suggested to make those functions private. I'd also
+recommend changing the names to
+drm_atomic_*default*_bridge_<action>_state() and dropping the kernel doc
+header since making them static means they're no longer helper
+functions.
 
-> 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml b/Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml
-> > new file mode 100644
-> > index 000000000000..567b32a544f3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/satoz,sat050at40h12r2.yaml
-> > @@ -0,0 +1,27 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/satoz,sat050at40h12r2#  
-> 
-> Missing '.yaml'
-> 
-> Run 'make dt_binding_check' which will check this and other things.
+Regards,
 
-Right, corrected.
-
-> 
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Satoz SAT050AT40H12R2 panel
-> > +
-> > +maintainers:
-> > +  - Thierry Reding <thierry.reding@gmail.com>
-> > +
-> > +description: |+
-> > +  LCD 5.0 inch 800x480 RGB panel.  
-> 
-> Any public spec for this panel?
-
-Unfortunately, no. I mentioned it in the v3.
-
-> 
-> > +
-> > +  This binding is compatible with the simple-panel binding, which is specified
-> > +  in simple-panel.txt in this directory.
-> > +
-> > +allOf:
-> > +  - $ref: panel-common.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    contains:  
-> 
-> Drop 'contains'. It must be exactly the below string, not the below 
-> string and *any* other strings.
-
-Ok.
-
-> 
-> > +      const: satoz,sat050at40h12r2
-> > +
-> > +required:
-> > +  - compatible
-> > -- 
-> > 2.20.1
-> >   
-
-Thanks,
-Miquèl
+Boris
