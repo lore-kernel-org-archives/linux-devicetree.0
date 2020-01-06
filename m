@@ -3,116 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97D8C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C27C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948A721734
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA90621734
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 08:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbgAFHwl (ORCPT
+        id S1725817AbgAFIBt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 02:52:41 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58938 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgAFHwk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 02:52:40 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 657BB283C0A;
-        Mon,  6 Jan 2020 07:52:38 +0000 (GMT)
-Date:   Mon, 6 Jan 2020 08:52:35 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 6/7] media: rkvdec: Add the rkvdec driver
-Message-ID: <20200106085235.0e639ecb@collabora.com>
-In-Reply-To: <20191213125414.90725-7-boris.brezillon@collabora.com>
-References: <20191213125414.90725-1-boris.brezillon@collabora.com>
-        <20191213125414.90725-7-boris.brezillon@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 6 Jan 2020 03:01:49 -0500
+Received: from mga03.intel.com ([134.134.136.65]:32659 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgAFIBt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jan 2020 03:01:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Jan 2020 00:01:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,401,1571727600"; 
+   d="scan'208";a="215128790"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 06 Jan 2020 00:01:48 -0800
+Received: from [10.226.38.20] (unknown [10.226.38.20])
+        by linux.intel.com (Postfix) with ESMTP id CD9CC5802C0;
+        Mon,  6 Jan 2020 00:01:46 -0800 (PST)
+Subject: Re: [PATCH v10 0/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+References: <20191217015658.23017-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <c5df1165-5b8d-f329-582f-15553eb5eb1a@ti.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9917ebc0-656e-6539-504a-208ef375a989@linux.intel.com>
+Date:   Mon, 6 Jan 2020 16:01:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <c5df1165-5b8d-f329-582f-15553eb5eb1a@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 13 Dec 2019 13:54:13 +0100
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+Hi,
 
-> +static int rkvdec_try_capture_fmt(struct file *file, void *priv,
-> +				  struct v4l2_format *f)
-> +{
-> +	struct rkvdec_ctx *ctx = fh_to_rkvdec_ctx(priv);
-> +	const struct rkvdec_coded_fmt_desc *coded_desc;
-> +	u32 fourcc, width, height;
-> +	unsigned int i;
-> +
-> +	/*
-> +	 * The codec context should point to a coded format desc, if the format
-> +	 * on the coded end has not been set yet, it should point to the
-> +	 * default value.
-> +	 */
-> +	coded_desc = ctx->coded_fmt_desc;
-> +	if (WARN_ON(!coded_desc))
-> +		return -EINVAL;
-> +
-> +	fourcc = f->fmt.pix_mp.pixelformat;
-> +	for (i = 0; i < coded_desc->num_decoded_fmts; i++) {
-> +		if (coded_desc->decoded_fmts[i] == fourcc)
-> +			break;
-> +	}
-> +
-> +	if (i == coded_desc->num_decoded_fmts)
-> +		return -EINVAL;
-> +
-> +	/* Save the original width/height before aligning them. */
-> +	width = f->fmt.pix_mp.width;
-> +	height = f->fmt.pix_mp.height;
-> +
-> +	/* Always apply the frmsize constraint of the coded end. */
-> +	v4l2_apply_frmsize_constraints(&f->fmt.pix_mp.width,
-> +				       &f->fmt.pix_mp.height,
-> +				       &coded_desc->frmsize);
-> +
-> +	v4l2_fill_pixfmt_mp(&f->fmt.pix_mp, fourcc, f->fmt.pix_mp.width,
-> +			    f->fmt.pix_mp.height);
-> +
-> +	/*
-> +	 * Now that we have computed sizeimage and bytesperline we can restore
-> +	 * the original width/height (before macro block alignment).
-> +	 */
-> +	f->fmt.pix_mp.width = width;
-> +	f->fmt.pix_mp.height = height;
+On 6/1/2020 3:24 PM, Kishon Vijay Abraham I wrote:
+>
+> On 17/12/19 7:26 AM, Ramuthevar,Vadivel MuruganX wrote:
+>> Add eMMC-PHY support for Intel LGM SoC
+> merged now, Thanks!
 
-Looks like restoring the original width/height was a bad idea (it
-breaks the odd_size tests of the VP9 testsuite [1]). I'll adjust the
-test in validate_dec_params() [2] to align the ctrl width/height params
-on a superblock size (64 pixels) instead.
+Thanks a lot!!! Kishon for the quick rely and merge.
 
-> +
-> +	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
-> +
-> +	return 0;
-> +}
-
-[1]https://storage.googleapis.com/downloads.webmproject.org/vp9/decoder-test-streams/Profile_0_8bit.zip
-[2]https://patchwork.kernel.org/patch/11290603/
+---
+Regards
+Vadivel
+>
+> -Kishon
+>
+>> changes in v10:
+>>    - Rob's review comments update in YAML
+>>    - drop clock-names since it is single entry
+>>   
+>> changes in v9:
+>>    - Rob's review comments update in YAML
+>>
+>> changes in v8:
+>>   Remove the extra Signed-of-by
+>>
+>> changes in v7:
+>>   Rebased to maintainer kernel tree phy-tag-5.5
+>>
+>> changes in v6:
+>>     - cobined comaptible strings
+>>     - added as contiguous and can be a single entry for reg properties
+>> changes in v5:
+>>     - earlier Review-by tag given by Rob
+>>     - rework done with syscon parent node.
+>>
+>>   changes in v4:
+>>     - As per Rob's review: validate 5.2 and 5.3
+>>     - drop unrelated items.
+>>
+>>   changes in v3:
+>>     - resolve 'make dt_binding_check' warnings
+>>
+>>   changes in v2:
+>>     As per Rob Herring review comments, the following updates
+>>    - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+>>    - filename is the compatible string plus .yaml
+>>    - LGM: Lightning Mountain
+>>    - update maintainer
+>>    - add intel,syscon under property list
+>>    - keep one example instead of two
+>>
+>>
+>>
+>> Ramuthevar Vadivel Murugan (2):
+>>    dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+>>    phy: intel-lgm-emmc: Add support for eMMC PHY
+>>
+>>   .../bindings/phy/intel,lgm-emmc-phy.yaml           |  56 ++++
+>>   drivers/phy/Kconfig                                |   1 +
+>>   drivers/phy/Makefile                               |   1 +
+>>   drivers/phy/intel/Kconfig                          |   9 +
+>>   drivers/phy/intel/Makefile                         |   2 +
+>>   drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
+>>   6 files changed, 352 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>>   create mode 100644 drivers/phy/intel/Kconfig
+>>   create mode 100644 drivers/phy/intel/Makefile
+>>   create mode 100644 drivers/phy/intel/phy-intel-emmc.c
+>>
