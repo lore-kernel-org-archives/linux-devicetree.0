@@ -1,318 +1,333 @@
-Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABA4C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E718EC32771
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 00:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B63D207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BD9206E6
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 00:00:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZxUjfJh9"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gf7XCgxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgAFXee (ORCPT
+        id S1727163AbgAGAAL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 18:34:34 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:41975 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgAFXee (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 18:34:34 -0500
-Received: by mail-yb1-f195.google.com with SMTP id k5so3355119ybf.8;
-        Mon, 06 Jan 2020 15:34:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=B7k32opSIihINdaaLJXntkuDCZrKVxlxmENs3NCF/TU=;
-        b=ZxUjfJh90jeipt/+zZgudamp3cP5MeO6bW6fY8DAeIgOTTvpgIjsVCNCdyB/yFXSb0
-         e8o/ZSjCCk+UL1vmIPBjS9otZEr1q8g7axvZvteUVlyyhi2XMMX8JRwiAogEBruF3SI6
-         8+fhUrA1Nhya/wdZ28BR2XihWbwtVzM1F6Qyjs9hBmgAo00hUoQuX+dgvV/Ft8WcFm1P
-         FqHzIOgoYMmSf5BeaQFLQruvqbRnQADR3ND+hiGaXoI9l3OlmuLRvumj6Wi9ZK5YA70I
-         gogLm/Pd3eyxoJMg9atGij636QBZbzxYKiqBfd3SA0PhGHnt6LPDcs5VIH8vEusOJBVC
-         ubug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B7k32opSIihINdaaLJXntkuDCZrKVxlxmENs3NCF/TU=;
-        b=f15WKZPwjOe29o+14l4m1c5EVCbMiFGjEbFDV0ozdNc+dMaBNapsdSECwL2ReCP6vq
-         00xR4YJjZz996rAFlZLK1nuQZ6CY4L7+CbBEUAf2FC159XfWKbAgO7DTtN2d5zUcMi7d
-         WvNvuaTAXlH2ifKGCsR5sDUoqYpzcKBAqmfG4/NthHN9jAFMrPPJED+v6m213ZXp+o8B
-         hL7bJjb3c0tOj/eXYOYWmmzMT2G9PjFiM5UPtTVzUNvxnmVfHWJx2cWHxCRcYDZ0DnZS
-         5Dy8EoH7bc1TEvdS1rSYvyQempELzuzx1xWoRzzCrgjZxS9SypaNaEzYHTsO2IwglP37
-         wrrg==
-X-Gm-Message-State: APjAAAXBQOCpR0Egrk+wFm/ztnm5K8O8qlz4AuWS0zFC0dfcFJXPDvrV
-        mbTpWO8Pmn4SrS+050xfoUk=
-X-Google-Smtp-Source: APXvYqy4noLgAsZ42klsSceXcn9ayUwiDOF0bIFo51FFXFel/ToAxi2Tt+lC6YtKadCddIPgHOpu2g==
-X-Received: by 2002:a5b:5c8:: with SMTP id w8mr18622399ybp.441.1578353672878;
-        Mon, 06 Jan 2020 15:34:32 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id o2sm25312840ywe.98.2020.01.06.15.34.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Jan 2020 15:34:32 -0800 (PST)
-Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191230133852.5890-1-geert+renesas@glider.be>
- <20191230133852.5890-3-geert+renesas@glider.be>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
-Date:   Mon, 6 Jan 2020 17:34:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 6 Jan 2020 19:00:11 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:41116 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbgAGAAK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 19:00:10 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 755B252F;
+        Tue,  7 Jan 2020 01:00:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1578355207;
+        bh=9VHkNEnMxkNw7CIek1nfHpk8hjLtgRvsk9eM6Lgfkr4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gf7XCgxSRpHjF+Bq8d2Sg562EcBm2VSUxvBnhV/l/t+TaQuh15R+e9JQvEEUqNnZM
+         WttXVvA3957CmLL34BnX92BBdg/c8YbwWsj3hCJ2husoAkrR6+mlR5SdDGVCFtzCCt
+         XOFdDsgLzw/oIZgArzZeUseZDcSxiDeaMKQV/VW4=
+Date:   Tue, 7 Jan 2020 01:59:57 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
+ yaml bindings
+Message-ID: <20200106235957.GA28230@pendragon.ideasonboard.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+ <20191227200116.2612137-9-helen.koike@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20191230133852.5890-3-geert+renesas@glider.be>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191227200116.2612137-9-helen.koike@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
-> As GPIO hogs are configured at GPIO controller initialization time,
-> adding/removing GPIO hogs in DT overlays does not work.
+Hi Helen,
+
+Thank you for the patch.
+
+On Fri, Dec 27, 2019 at 05:01:13PM -0300, Helen Koike wrote:
+> Add yaml DT bindings for Rockchip ISP1.
 > 
-> Add support for GPIO hogs described in DT overlays by registering an OF
-> reconfiguration notifier, to handle the addition and removal of GPIO hog
-> subnodes to/from a GPIO controller device node.
+> This was tested and verified with:
+> mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
 > 
-> Note that when a GPIO hog device node is being removed, its "gpios"
-> properties is no longer available, so we have to keep track of which
-> node a hog belongs to, which is done by adding a pointer to the hog's
-> device node to struct gpio_desc.
-
-If I have read the patches and the existing overlay source correctly,
-then some observations:
-
-- A gpio hog node added in an overlay will be properly processed.
-
-- A gpio hog node already existing in the live devicetree, but with a
-  non-active status will be properly processed if the status of the
-  gpio hog node is changed to "ok" in the overlay.
-
-- If a gpio hog node already exists in the live devicetree with an
-  active status, then any updated or added properties in that gpio
-  hog node in the overlay will have no effect.
-
-  There is a scenario where the updated property would have an effect:
-  apply a second overlay that sets the status to inactive, then apply
-  a third overlay that sets the status back to active.  This is a
-  rather contrived example and I think it should be documented as
-  not supported and the result undefined.
-
-It would be good to document this explicitly.
-
-
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  drivers/gpio/gpiolib-of.c | 84 +++++++++++++++++++++++++++++++++++++++
->  drivers/gpio/gpiolib-of.h |  2 +
->  drivers/gpio/gpiolib.c    | 14 +++++--
->  drivers/gpio/gpiolib.h    |  3 ++
->  4 files changed, 100 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index dfae797846bb746b..89a6138ac0a4b506 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -649,6 +649,10 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
->  		ret = gpiod_hog(desc, name, lflags, dflags);
->  		if (ret < 0)
->  			return ret;
-> +
-> +#ifdef CONFIG_OF_DYNAMIC
-> +		desc->hog = hog;
-> +#endif
->  	}
->  
->  	return 0;
-> @@ -676,11 +680,91 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
->  			of_node_put(np);
->  			return ret;
->  		}
-> +
-> +		of_node_set_flag(np, OF_POPULATED);
->  	}
->  
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF_DYNAMIC
-> +/**
-> + * of_gpiochip_remove_hog - Remove all hogs in a hog device node
-> + * @chip:	gpio chip to act on
-> + * @hog:	device node describing the hogs
-> + */
-> +static void of_gpiochip_remove_hog(struct gpio_chip *chip,
-> +				   struct device_node *hog)
-> +{
-> +	struct gpio_desc *descs = chip->gpiodev->descs;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < chip->ngpio; i++) {
-> +		if (test_bit(FLAG_IS_HOGGED, &descs[i].flags) &&
-> +		    descs[i].hog == hog)
-> +			gpiochip_free_own_desc(&descs[i]);
-> +	}
-> +}
-> +
-> +static int of_gpiochip_match_node(struct gpio_chip *chip, void *data)
-> +{
-> +	return chip->gpiodev->dev.of_node == data;
-> +}
-> +
-> +static struct gpio_chip *of_find_gpiochip_by_node(struct device_node *np)
-> +{
-> +	return gpiochip_find(np, of_gpiochip_match_node);
-> +}
-> +
-> +static int of_gpio_notify(struct notifier_block *nb, unsigned long action,
-> +			  void *arg)
-> +{
-> +	struct of_reconfig_data *rd = arg;
-> +	struct gpio_chip *chip;
-> +	int ret;
-> +
-> +	switch (of_reconfig_get_state_change(action, arg)) {
-> +	case OF_RECONFIG_CHANGE_ADD:
-> +		if (!of_property_read_bool(rd->dn, "gpio-hog"))
-> +			return NOTIFY_OK;	/* not for us */
-> +
-> +		if (of_node_test_and_set_flag(rd->dn, OF_POPULATED))
-> +			return NOTIFY_OK;
-
-I don't think OF_POPULATED could be already set.  It seems to be a
-bug if it is.
-
-
-> +
-> +		chip = of_find_gpiochip_by_node(rd->dn->parent);
-> +		if (chip == NULL)
-> +			return NOTIFY_OK;	/* not for us */
-
-If I understand correctly, "not for us" is a misleading comment.
-The notification is for the node rd->dn->parent, but the device
-does not exist, so we can't do the hogging at the moment.  (If the
-device is created later, then the gpio hog child node will exist,
-and the init will "do the right thing" with the hog node -- so
-not a problem.)
-
- 
-> +
-> +		ret = of_gpiochip_add_hog(chip, rd->dn);
-> +		if (ret < 0) {
-> +			pr_err("%s: failed to add hogs for %pOF\n", __func__,
-> +			       rd->dn);
-> +			of_node_clear_flag(rd->dn, OF_POPULATED);
-> +			return notifier_from_errno(ret);
-> +		}
-> +		break;
-> +
-> +	case OF_RECONFIG_CHANGE_REMOVE:
-> +		if (!of_node_check_flag(rd->dn, OF_POPULATED))
-> +			return NOTIFY_OK;	/* already depopulated */
-
-I don't think OF_POPULATED could be already cleared.  It seems to be a
-bug if it is.
-
-> +
-> +		chip = of_find_gpiochip_by_node(rd->dn->parent);
-> +		if (chip == NULL)
-> +			return NOTIFY_OK;	/* not for us */
-
-Again, a misleading comment.
-
-> +
-> +		of_gpiochip_remove_hog(chip, rd->dn);
-> +		of_node_clear_flag(rd->dn, OF_POPULATED);
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +struct notifier_block gpio_of_notifier = {
-> +	.notifier_call = of_gpio_notify,
-> +};
-> +#endif /* CONFIG_OF_DYNAMIC */
-> +
->  /**
->   * of_gpio_simple_xlate - translate gpiospec to the GPIO number and flags
->   * @gc:		pointer to the gpio_chip structure
-> diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
-> index 9768831b1fe2f25b..ed26664f153782fc 100644
-> --- a/drivers/gpio/gpiolib-of.h
-> +++ b/drivers/gpio/gpiolib-of.h
-> @@ -35,4 +35,6 @@ static inline bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
->  }
->  #endif /* CONFIG_OF_GPIO */
->  
-> +extern struct notifier_block gpio_of_notifier;
-> +
->  #endif /* GPIOLIB_OF_H */
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index bff5ac774d870b67..ef12cfcaf0962c1c 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2952,6 +2952,9 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
->  		clear_bit(FLAG_PULL_DOWN, &desc->flags);
->  		clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
->  		clear_bit(FLAG_IS_HOGGED, &desc->flags);
-> +#ifdef CONFIG_OF_DYNAMIC
-> +		desc->hog = NULL;
-> +#endif
->  		ret = true;
->  	}
->  
-> @@ -5145,10 +5148,15 @@ static int __init gpiolib_dev_init(void)
->  	if (ret < 0) {
->  		pr_err("gpiolib: failed to allocate char dev region\n");
->  		bus_unregister(&gpio_bus_type);
-> -	} else {
-> -		gpiolib_initialized = true;
-> -		gpiochip_setup_devs();
-> +		return ret;
->  	}
-> +
-> +	gpiolib_initialized = true;
-> +	gpiochip_setup_devs();
-> +
-> +	if (IS_ENABLED(CONFIG_OF_DYNAMIC))
-> +		WARN_ON(of_reconfig_notifier_register(&gpio_of_notifier));
-> +
->  	return ret;
->  }
->  core_initcall(gpiolib_dev_init);
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index a4a759920faa48ab..7af9931e8572304a 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -118,6 +118,9 @@ struct gpio_desc {
->  	const char		*label;
->  	/* Name of the GPIO */
->  	const char		*name;
-> +#ifdef CONFIG_OF_DYNAMIC
-> +	struct device_node	*hog;
-> +#endif
->  };
->  
->  int gpiod_request(struct gpio_desc *desc, const char *label);
+> Changes in v12:
+> - The commit replaces the following commit in previous series named
+> media: staging: dt-bindings: Document the Rockchip ISP1 bindings
+> This new patch adds yaml binding and was verified with
+> make dtbs_check and make dt_binding_check
 > 
+> Changes in v11:
+> - add clock-names values
+> 
+> Changes in v10:
+> - unsquash
+> 
+> Changes in v9:
+> - squash
+> - move to staging
+> 
+> Changes in v8:
+> - fix title division style
+> 
+> Changes in v7:
+> - update document with new design and tested example
+> 
+>  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
+>  1 file changed, 193 insertions(+)
+>  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> 
+> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> new file mode 100644
+> index 000000000000..4d1b2c67a4cd
+> --- /dev/null
+> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> @@ -0,0 +1,193 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/rockchip-isp1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip SoC Image Signal Processing unit v1
+> +
+> +maintainers:
+> +  - Helen Koike <helen.koike@collabora.com>
+> +
+> +description: |
+> +  Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
+> +  which contains image processing, scaling, and compression funcitons.
+> +
+> +properties:
+> +  compatible:
+> +    const: rockchip,rk3399-cif-isp
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    maxItems: 1
+> +    description: phandle for the PHY port
 
+According to http://opensource.rock-chips.com/wiki_Camera_driver, RK3388
+can route either of DPHY RX0 or DPHY RX1 to the single ISP instance,
+while RK3399 has one PHY per ISP instance, with DPHY RX1 being shared
+with the display. Have you given any thought on how we will support this
+in a backward-compatible way in the DT bindings ?
+
+> +
+> +  phy-names:
+> +    const: dphy
+> +
+> +  clocks:
+> +    items:
+> +      - description: ISP clock
+> +      - description: ISP aclk clock
+> +      - description: ISP aclk wrapper clock
+> +      - description: ISP hclk clock
+> +      - description: ISP hclk wrapper clock
+
+I wonder what aclk and hclk stand far. In any case those names match the
+CRU documentation, so that seems fine.
+
+> +
+> +  clock-names:
+> +    items:
+> +      - const: clk_isp
+> +      - const: aclk_isp
+> +      - const: aclk_isp_wrap
+> +      - const: hclk_isp
+> +      - const: hclk_isp_wrap
+> +
+> +  # See ./video-interfaces.txt for details
+> +  ports:
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      "#address-cells":
+> +        const: 1
+> +
+> +      "#size-cells":
+> +        const: 0
+> +
+> +      port@0:
+> +        type: object
+> +        additionalProperties: false
+
+I think this should have a description to tell what this port
+corresponds to.
+
+> +
+> +        properties:
+> +          "#address-cells":
+> +            const: 1
+> +
+> +          "#size-cells":
+> +            const: 0
+> +
+> +          reg:
+> +            const: 0
+> +            description: port identifier.
+
+Here and for the endpoint below the description is probably not needed.
+
+> +
+> +        patternProperties:
+> +          endpoint:
+> +            type: object
+> +            additionalProperties: false
+> +
+> +            properties:
+> +              reg:
+> +                maxItems: 1
+> +                description: endpoint identifier.
+> +
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +
+> +              remote-endpoint: true
+> +
+> +    required:
+> +      - port@0
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - power-domains
+> +  - iommus
+> +  - phys
+> +  - phy-names
+> +  - ports
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    #include <dt-bindings/clock/rk3399-cru.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/power/rk3399-power.h>
+> +
+> +    parent0: parent@0 {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        isp0: isp0@ff910000 {
+> +            compatible = "rockchip,rk3399-cif-isp";
+> +            reg = <0x0 0xff910000 0x0 0x4000>;
+> +            interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
+> +            clocks = <&cru SCLK_ISP0>,
+> +                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
+> +                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
+> +            clock-names = "clk_isp",
+> +                          "aclk_isp", "aclk_isp_wrap",
+> +                          "hclk_isp", "hclk_isp_wrap";
+> +            power-domains = <&power RK3399_PD_ISP0>;
+> +            iommus = <&isp0_mmu>;
+> +            phys = <&dphy>;
+> +            phy-names = "dphy";
+> +
+> +            ports {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +
+> +                port@0 {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +                    reg = <0>;
+> +
+> +                    mipi_in_wcam: endpoint@0 {
+> +                        reg = <0>;
+> +                        remote-endpoint = <&wcam_out>;
+> +                        data-lanes = <1 2>;
+> +                    };
+> +
+> +                    mipi_in_ucam: endpoint@1 {
+> +                        reg = <1>;
+> +                        remote-endpoint = <&ucam_out>;
+> +                        data-lanes = <1>;
+> +                    };
+
+Are those two cameras connected to the same CSI-2 lines with at most one
+sensor out of reset ?
+
+With the above small issues addressed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +                };
+> +            };
+> +        };
+> +
+> +        i2c7: i2c@ff160000 {
+> +            clock-frequency = <400000>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            wcam: camera@36 {
+> +                compatible = "ovti,ov5695";
+> +                reg = <0x36>;
+> +
+> +                port {
+> +                    wcam_out: endpoint {
+> +                        remote-endpoint = <&mipi_in_wcam>;
+> +                        data-lanes = <1 2>;
+> +                    };
+> +                };
+> +            };
+> +
+> +            ucam: camera@3c {
+> +                compatible = "ovti,ov2685";
+> +                reg = <0x3c>;
+> +
+> +                  port {
+> +                      ucam_out: endpoint {
+> +                          remote-endpoint = <&mipi_in_ucam>;
+> +                          data-lanes = <1>;
+> +                      };
+> +                  };
+> +            };
+> +        };
+> +    };
+
+-- 
+Regards,
+
+Laurent Pinchart
