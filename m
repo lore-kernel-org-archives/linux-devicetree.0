@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA98C33C9B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE79C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2553B21775
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A47222C4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 07:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578294525;
-	bh=3tYh2r+1H9Dq6clvHkSmF1+dK9OcVPfrp3TqTHT4UQc=;
+	s=default; t=1578294528;
+	bh=sqos0TyJ+0+0Ds+tEst1M9K4B3tyrzj2cQ2w0TirDlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpRU+CPctjA4QspmpYumt2sFWIfoDZpR1NME0nS1799V+hseYWY4rONshfke5g3qf
-	 JTSiLR/D3W5bpd7rTnWD/VO27dQB5ELcSlZOg88V1LmugK9o2LmEFH02OtCg3qwWQc
-	 uM8YouzqcL0shQ47MmUSrCm02OeZIi2lzd8SaJ+4=
+	b=t2KHfTqx0G0QRuwgFRJ6dt3lMkkpM7lkBs9mtRJeWxw9g5wKomg4nmewDXWJ8P5bg
+	 B3NnRcR09N6eobY0TYRzpIbYjAG7w8A9vEhi6fHv6ubdUYg9YIvIuM4izpIbPeBR5I
+	 SB8T1DmrhfZLxBixJTeo+sgdYQruck1vv9Y7ahos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgAFHIn (ORCPT
+        id S1726902AbgAFHIq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 02:08:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42124 "EHLO mail.kernel.org"
+        Mon, 6 Jan 2020 02:08:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgAFHIn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 6 Jan 2020 02:08:43 -0500
+        id S1726863AbgAFHIq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 6 Jan 2020 02:08:46 -0500
 Received: from localhost.localdomain (unknown [117.99.94.5])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7C4F24650;
-        Mon,  6 Jan 2020 07:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 534A7218AC;
+        Mon,  6 Jan 2020 07:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578294522;
-        bh=3tYh2r+1H9Dq6clvHkSmF1+dK9OcVPfrp3TqTHT4UQc=;
+        s=default; t=1578294526;
+        bh=sqos0TyJ+0+0Ds+tEst1M9K4B3tyrzj2cQ2w0TirDlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bx8XvQR8KPea4KEhS3y2bOTtPNwpL0IpwK/Bz7VefFmGhUcNIdCiS4cuKuTObEJlj
-         YTISr4Okx+jFWoVea+ffLwgCbvsNzHhHGd5lzR//p5Qq1P9Kfko1qz4Ko6xNfO+1xR
-         J7X05tUWiBqhQs2UaygoLv600L8foBRszqTiX9qQ=
+        b=gs192sWq35V84boAEPcES6snA8yLS0j18rLeRANU4rvYaSs8cCmrErswywuz+xgbf
+         frhWgwCOH1A3jDqwZlrnvVUOduGRwicRj1qtkfpEEh+yvBOE/6vx7jMZAgNq6GnFQG
+         Nd4H34uFceHb7RdB7bUlitf/rrCBNEsCch/bJGk8=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
@@ -47,9 +47,9 @@ Cc:     linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Can Guo <cang@codeaurora.org>
-Subject: [PATCH 1/3] arm64: dts: qcom: sm8150-mtp: Add UFS gpio reset
-Date:   Mon,  6 Jan 2020 12:38:24 +0530
-Message-Id: <20200106070826.147064-2-vkoul@kernel.org>
+Subject: [PATCH 2/3] arm64: dts: qcom: sm8150: Fix UFS phy register size
+Date:   Mon,  6 Jan 2020 12:38:25 +0530
+Message-Id: <20200106070826.147064-3-vkoul@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200106070826.147064-1-vkoul@kernel.org>
 References: <20200106070826.147064-1-vkoul@kernel.org>
@@ -60,34 +60,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the reset-gpio for UFS for sm8150-mtp.
+UFS phy register space size is 0x1c0. so update it
 
+Reported-by: Can Guo <cang@codeaurora.org>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-index 1eb93a768a85..9cab51759d2f 100644
---- a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
-@@ -7,6 +7,7 @@
- /dts-v1/;
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+index f36d621a53e2..f92b92866ae0 100644
+--- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -553,7 +553,7 @@ ufs_mem_hc: ufshc@1d84000 {
  
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include <dt-bindings/gpio/gpio.h>
- #include "sm8150.dtsi"
- #include "pm8150.dtsi"
- #include "pm8150b.dtsi"
-@@ -389,6 +390,8 @@ &uart2 {
- &ufs_mem_hc {
- 	status = "okay";
- 
-+	reset-gpios = <&tlmm 175 GPIO_ACTIVE_LOW>;
-+
- 	vcc-supply = <&vreg_l10a_2p5>;
- 	vcc-max-microamp = <750000>;
- 	vccq-supply = <&vreg_l9a_1p2>;
+ 		ufs_mem_phy: phy@1d87000 {
+ 			compatible = "qcom,sm8150-qmp-ufs-phy";
+-			reg = <0 0x01d87000 0 0x18c>;
++			reg = <0 0x01d87000 0 0x1c0>;
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+ 			ranges;
 -- 
 2.24.1
 
