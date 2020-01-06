@@ -2,50 +2,50 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C177C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA504C33C9B
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CE82081E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B040B222D9
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 13:30:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Hlg+3+62"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cBYZKd+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgAFNa1 (ORCPT
+        id S1726494AbgAFN34 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 08:30:27 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:60623 "EHLO
+        Mon, 6 Jan 2020 08:29:56 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54410 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726383AbgAFN35 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 08:29:57 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 006DRNnY015657;
-        Mon, 6 Jan 2020 14:29:43 +0100
+        by vger.kernel.org with ESMTP id S1726292AbgAFN3z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 08:29:55 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 006DRYPr006091;
+        Mon, 6 Jan 2020 14:29:42 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=fcQwQK7DhsbJHsH4iVjG86araMbU8oHNqCR0+zSFh5g=;
- b=Hlg+3+62gXswrbVmCJ/sddrHKt3p/9wz2FijIPGNpL10UAlpwlWAL0rr4QbraDNG/tl7
- URGMqwtxRpGmZKBseVhI1aDA5TiN3xvhVOsm9lmrW8vfPNUuqQZHWvdFXVtCj0s4zzQF
- RFxt8l5BrXdo3pdi1tVUDQff+gEimL2l92GSdmhhnwwEeWh1sky8Y0VoDyAHcybQzkII
- EW3Ej/ctyreKaZyL41VrGYDeXGggmmbd8usWKNKVO4pg+ALSNRALEo7QhPizRxU5/Up+
- zR76UqQhN7K47xViRpBtCB5udqnV31POwPUEl3HcTC+WnduaY+eZl8has1hnSofs977y rg== 
+ bh=eYcVypK+sgkwqPzckURlWdrof32RWOB1cztZmOImKfQ=;
+ b=cBYZKd+WgUwjpGBRx/BeA+9KCUQoBpYgjQWSps97uYM5eMvZY1DIoGZsvlGkEVkzCvqx
+ HLDnnGjHL54C51yef5ooMSrt8TNqQSNXU35Hpsz7lBCspYtvFoNQpeTas4ojEnugQP6G
+ MY++UM+2C7t14x+kVBaRLK+MZahd7PDoCoe9Itu3LiUxx6weiDPip3Jkxz3kj1E9vv+S
+ T6iwoy+3wXO5ciZ7W05bkKN1c8r9S5AFjcQtS8IrCKf7Ko0V8HLPjMba8aFJiIPcu5Rg
+ JmZxf0tCl7Lty29Z/xE1NFHOiYc+nNTS+rtOTTcX95cKE5/WLs0UTkSsbKKBCB59VbWl Kg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakuqg3qp-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xakm584uf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Jan 2020 14:29:43 +0100
+        Mon, 06 Jan 2020 14:29:42 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6B4DF10002A;
-        Mon,  6 Jan 2020 14:29:43 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6562610002A;
+        Mon,  6 Jan 2020 14:29:42 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5EBD42D378B;
-        Mon,  6 Jan 2020 14:29:43 +0100 (CET)
-Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 6 Jan 2020 14:29:43
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 571172D378B;
+        Mon,  6 Jan 2020 14:29:42 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 6 Jan 2020 14:29:42
  +0100
 From:   Alain Volmat <alain.volmat@st.com>
 To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
@@ -55,16 +55,16 @@ CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
-Subject: [PATCH 4/6] i2c: i2c-stm32f7: add PM_SLEEP suspend/resume support
-Date:   Mon, 6 Jan 2020 14:28:32 +0100
-Message-ID: <1578317314-17197-5-git-send-email-alain.volmat@st.com>
+Subject: [PATCH 2/6] ARM: dts: stm32: add i2c2/i2c5 sleep pinctrl on stm32mp157c-ev1
+Date:   Mon, 6 Jan 2020 14:28:30 +0100
+Message-ID: <1578317314-17197-3-git-send-email-alain.volmat@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578317314-17197-1-git-send-email-alain.volmat@st.com>
 References: <1578317314-17197-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2020-01-06_04:2020-01-06,2020-01-06 signatures=0
@@ -73,183 +73,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Backup/restore I2C registers as part of the suspend/resume
-handlers. The device is marked as suspended to ensure that
-transfers are rejected during the suspended period.
+Add the sleep state pinctrl entry for the i2c2 and i2c5 nodes
+of the stm32mp157c-ev1 board.
 
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- drivers/i2c/busses/i2c-stm32f7.c | 117 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 113 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index b2634afe066d..5c3e8ac6ad92 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -169,6 +169,24 @@
- #define STM32F7_AUTOSUSPEND_DELAY		(HZ / 100)
- 
- /**
-+ * struct stm32f7_i2c_regs - i2c f7 registers backup
-+ * @cr1: Control register 1
-+ * @cr2: Control register 2
-+ * @oar1: Own address 1 register
-+ * @oar2: Own address 2 register
-+ * @pecr: PEC register
-+ * @tmgr: Timing register
-+ */
-+struct stm32f7_i2c_regs {
-+	u32 cr1;
-+	u32 cr2;
-+	u32 oar1;
-+	u32 oar2;
-+	u32 pecr;
-+	u32 tmgr;
-+};
-+
-+/**
-  * struct stm32f7_i2c_spec - private i2c specification timing
-  * @rate: I2C bus speed (Hz)
-  * @rate_min: 80% of I2C bus speed (Hz)
-@@ -276,6 +294,7 @@ struct stm32f7_i2c_msg {
-  * @timing: I2C computed timings
-  * @slave: list of slave devices registered on the I2C bus
-  * @slave_running: slave device currently used
-+ * @backup_regs: backup of i2c controller registers (for suspend/resume)
-  * @slave_dir: transfer direction for the current slave device
-  * @master_mode: boolean to know in which mode the I2C is running (master or
-  * slave)
-@@ -298,6 +317,7 @@ struct stm32f7_i2c_dev {
- 	struct stm32f7_i2c_timings timing;
- 	struct i2c_client *slave[STM32F7_I2C_MAX_SLAVE];
- 	struct i2c_client *slave_running;
-+	struct stm32f7_i2c_regs backup_regs;
- 	u32 slave_dir;
- 	bool master_mode;
- 	struct stm32_i2c_dma *dma;
-@@ -2027,8 +2047,7 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int stm32f7_i2c_runtime_suspend(struct device *dev)
-+static int __maybe_unused stm32f7_i2c_runtime_suspend(struct device *dev)
- {
- 	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
- 
-@@ -2038,7 +2057,7 @@ static int stm32f7_i2c_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int stm32f7_i2c_runtime_resume(struct device *dev)
-+static int __maybe_unused stm32f7_i2c_runtime_resume(struct device *dev)
- {
- 	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
- 	int ret;
-@@ -2053,11 +2072,101 @@ static int stm32f7_i2c_runtime_resume(struct device *dev)
- 
- 	return 0;
- }
--#endif
-+
-+static int __maybe_unused
-+stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
-+{
-+	int ret;
-+	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
-+
-+	ret = pm_runtime_get_sync(i2c_dev->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	backup_regs->cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
-+	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
-+	backup_regs->oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
-+	backup_regs->oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
-+	backup_regs->pecr = readl_relaxed(i2c_dev->base + STM32F7_I2C_PECR);
-+	backup_regs->tmgr = readl_relaxed(i2c_dev->base + STM32F7_I2C_TIMINGR);
-+
-+	pm_runtime_put_sync(i2c_dev->dev);
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused
-+stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
-+{
-+	u32 cr1;
-+	int ret;
-+	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
-+
-+	ret = pm_runtime_get_sync(i2c_dev->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
-+	if (cr1 & STM32F7_I2C_CR1_PE)
-+		stm32f7_i2c_clr_bits(i2c_dev->base + STM32F7_I2C_CR1,
-+				     STM32F7_I2C_CR1_PE);
-+
-+	writel_relaxed(backup_regs->tmgr, i2c_dev->base + STM32F7_I2C_TIMINGR);
-+	writel_relaxed(backup_regs->cr1 & ~STM32F7_I2C_CR1_PE,
-+		       i2c_dev->base + STM32F7_I2C_CR1);
-+	if (backup_regs->cr1 & STM32F7_I2C_CR1_PE)
-+		stm32f7_i2c_set_bits(i2c_dev->base + STM32F7_I2C_CR1,
-+				     STM32F7_I2C_CR1_PE);
-+	writel_relaxed(backup_regs->cr2, i2c_dev->base + STM32F7_I2C_CR2);
-+	writel_relaxed(backup_regs->oar1, i2c_dev->base + STM32F7_I2C_OAR1);
-+	writel_relaxed(backup_regs->oar2, i2c_dev->base + STM32F7_I2C_OAR2);
-+	writel_relaxed(backup_regs->pecr, i2c_dev->base + STM32F7_I2C_PECR);
-+
-+	pm_runtime_put_sync(i2c_dev->dev);
-+
-+	return ret;
-+}
-+
-+static int __maybe_unused stm32f7_i2c_suspend(struct device *dev)
-+{
-+	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-+	int ret;
-+
-+	i2c_mark_adapter_suspended(&i2c_dev->adap);
-+	ret = stm32f7_i2c_regs_backup(i2c_dev);
-+	if (ret < 0) {
-+		i2c_mark_adapter_resumed(&i2c_dev->adap);
-+		return ret;
-+	}
-+
-+	pinctrl_pm_select_sleep_state(dev);
-+	pm_runtime_force_suspend(dev);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused stm32f7_i2c_resume(struct device *dev)
-+{
-+	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pm_runtime_force_resume(dev);
-+	if (ret < 0)
-+		return ret;
-+	pinctrl_pm_select_default_state(dev);
-+
-+	ret = stm32f7_i2c_regs_restore(i2c_dev);
-+	if (ret < 0)
-+		return ret;
-+	i2c_mark_adapter_resumed(&i2c_dev->adap);
-+
-+	return 0;
-+}
- 
- static const struct dev_pm_ops stm32f7_i2c_pm_ops = {
- 	SET_RUNTIME_PM_OPS(stm32f7_i2c_runtime_suspend,
- 			   stm32f7_i2c_runtime_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(stm32f7_i2c_suspend, stm32f7_i2c_resume)
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 228e35e16884..d4bfb2adb0e4 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -174,8 +174,9 @@
  };
  
- static const struct of_device_id stm32f7_i2c_match[] = {
+ &i2c2 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2c2_pins_a>;
++	pinctrl-1 = <&i2c2_pins_sleep_a>;
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
+@@ -227,8 +228,9 @@
+ };
+ 
+ &i2c5 {
+-	pinctrl-names = "default";
++	pinctrl-names = "default", "sleep";
+ 	pinctrl-0 = <&i2c5_pins_a>;
++	pinctrl-1 = <&i2c5_pins_sleep_a>;
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
 -- 
 2.7.4
 
