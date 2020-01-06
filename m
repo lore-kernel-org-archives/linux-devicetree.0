@@ -3,251 +3,219 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BFFC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF60C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2956222C4
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82AB8207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="Kv+hr4qb"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="fT6SCqfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgAFJIL (ORCPT
+        id S1726281AbgAFJKd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:08:11 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40922 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgAFJIL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:08:11 -0500
-Received: by mail-io1-f65.google.com with SMTP id x1so47859400iop.7
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 01:08:10 -0800 (PST)
+        Mon, 6 Jan 2020 04:10:33 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56025 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbgAFJKc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:10:32 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so14226834wmj.5
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 01:10:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2YlbHKS1XSi1MOp30MGRF1UhRcwipJXrp79TUCElwhk=;
-        b=Kv+hr4qb81q9+Q3FTXrRhgVuOhWwUkbQL0/+FVjy28Rk+i4TTC1xjEqKJltDSbEa4O
-         st2h7nOGxTtH0xjM2J3my2HrmsHxqAzUJ94T0DHPnnupvsiCvr7/edu2DXoEbLr8IXxU
-         m3PAhrpNeUJEodPEFufefQiR6WKbMw0IRNJe0=
+        bh=0YAKuC3wFwI+CXcdF8S7FL6f/ZbYh+aygiTA+JHhgVc=;
+        b=fT6SCqfFDxAfYyPaxe6fPt46NaZBg05eLaakaY5OWtAAWuA8tlYq/1EhcgGwgR/lm7
+         TB9OPasW7dnE+2SpOJkKnm56dXd2SYUgO6eC/bM+Wpn5qxyKB1aQv7XPTrvYDu10REr7
+         0AdNnaPOQ+InCGPLWxqNqC6wxk5DcECL+gxYWEY8yHGfJ6n/Cbrg+cqd/bGK2uYAxQX9
+         VWEJ0pdBZcygVY4J9H8sVEKXRUlD1/IMyEsZN8p8h+JRIlYz/plscGmswdweTxXZnf5Q
+         DbMn5NwXqqx8rXN+xbQZu6Ujc3uBwbIy6JIPb00/PbHZmlGf/VBknqwm+0Qq/Ns9PAv7
+         yA/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2YlbHKS1XSi1MOp30MGRF1UhRcwipJXrp79TUCElwhk=;
-        b=XMF3iXFI8orK/cYMDmnYe2YLRr5YFFe5R0fREk1xjSqF0aGMXmFr+LV1oXDJxNR0ab
-         aJDRp16a66L36MNKYKXb7LLgh7cLVaOxQ24Bc0FMoW+u16GqDfDBdDs9ekhAR377tmSc
-         yTQ2SruntsV5vyMZiXiCOLCXbfQlorMV8xSW+9B0bRSxi01AfENjIpt+sxSntCMAgUd9
-         G4C9YSXkofa8jpVs7FefijkQCoSVmP2GbsdNS+O51ameCiOgMvmPbQ/OzkHkraqXjNC8
-         JkJAVAB+N50Wo0/JSF7QUbFsqaW14loR4j4QfX5kbreLw/YSuck/wL3DTIIEs5rst48x
-         idQw==
-X-Gm-Message-State: APjAAAUy27cGvhGHYB+4vx2d9XwZN0OW69t4aDtLCERtPRZK1af8964R
-        bhHMkJ0B+3mVJxTlKKNXuLYO5M3svl5DZ+WjQvoKPg==
-X-Google-Smtp-Source: APXvYqxhSabd/hyuEYcLBOGRVREB6m6DYJMFp8FKIF0Qnt428skzzi5p9Z7nF9ixCih+8smwNx0vKyItV06fJD5/fBc=
-X-Received: by 2002:a02:9203:: with SMTP id x3mr75869789jag.62.1578301690043;
- Mon, 06 Jan 2020 01:08:10 -0800 (PST)
+        bh=0YAKuC3wFwI+CXcdF8S7FL6f/ZbYh+aygiTA+JHhgVc=;
+        b=Z5PjZtYSMPSXVPiC2p1KdDn1a6sxARqpZUkGUBdx2qKzsKUTdf+/UdqXyl3cLzml2d
+         2chk7mLsbi/2ITLsdTkFeNFRIuLFJ3ZYCcMPbH1JxhiOhheiMuMQtAL1GObc81rJtHWz
+         iAR7PSaiEGOOOTPQ2Qqov3S32iiUh02DEyS9Y3aqTj237pHEBL+JxktdXmzfBqSHxklw
+         2ELJn8EBt73X2626lrBfIDGlix3eHgzI+zrVzMQFTZqXHG1wAHBWlhQrgltW2EbRcWrx
+         GUvaf4AAn6noirk6kvres0yu2n/djxGX9ZmJ2mKzij0Zku7frl5EcPYw7wl3HCthjRqI
+         trlw==
+X-Gm-Message-State: APjAAAXhJ4d8VUes7Qc18Mu597IT5m0EIIDBzq4zWemQQOFmp2kO8zJ+
+        blBbzl93G6izFoMWZsLrgag2TOEkrFDUrdnMP37tGg==
+X-Google-Smtp-Source: APXvYqzAomKzQkxDUIrNi/Whr2s8NAVXtV7E9CPmSzog947HVmDY807POnBYfNs9xS73M7WtrMQ2fd94nJ5uHmoRjVo=
+X-Received: by 2002:a1c:66d5:: with SMTP id a204mr31955396wmc.64.1578301830614;
+ Mon, 06 Jan 2020 01:10:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20200106090335.21717-1-matt.ranostay@konsulko.com>
-In-Reply-To: <20200106090335.21717-1-matt.ranostay@konsulko.com>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Mon, 6 Jan 2020 17:07:58 +0800
-Message-ID: <CAJCx=gnsfVV1egJ8BWzEMAWZnLHYw3qY7_t6MaRwnPJDLa+Z2Q@mail.gmail.com>
-Subject: Re: [PATCH] iio: chemical: atlas-sensor: add DO-SM module support
-To:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>, devicetree@vger.kernel.org
+References: <1578024801-39039-1-git-send-email-yash.shah@sifive.com> <1578024801-39039-3-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1578024801-39039-3-git-send-email-yash.shah@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 6 Jan 2020 14:40:19 +0530
+Message-ID: <CAAhSdy0CXde5s_ya=4YvmA4UQ5f5gLU-Z_FaOr8LPni+s_615Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] riscv: cacheinfo: Add support to determine no. of
+ L2 cache way enabled
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Bin Meng <bmeng.cn@gmail.com>, green.wan@sifive.com,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@suse.de,
+        devicetree@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 5:04 PM Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+On Fri, Jan 3, 2020 at 9:44 AM Yash Shah <yash.shah@sifive.com> wrote:
 >
-> Atlas Scientific DO-SM OEM sensor reads disolved oxygen in
-> a solution. This is reported back as mg/L which maps directly
-> to ppm and so the IIO_CONCENTRATION channel type can be used.
+> In order to determine the number of L2 cache ways enabled at runtime,
+> implement a private attribute using cache_get_priv_group() in cacheinfo
+> framework. Reading this attribute ("number_of_ways_enabled") will return
+> the number of enabled L2 cache ways at runtime.
 >
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
->  .../bindings/iio/chemical/atlas,do-sm.txt     | 21 ++++++
->  drivers/iio/chemical/atlas-sensor.c           | 64 +++++++++++++++++--
->  2 files changed, 81 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
+>  arch/riscv/include/asm/sifive_l2_cache.h |  2 ++
+>  arch/riscv/kernel/cacheinfo.c            | 31 +++++++++++++++++++++++++++++++
+>  drivers/soc/sifive/sifive_l2_cache.c     |  5 +++++
+>  3 files changed, 38 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
-> new file mode 100644
-> index 000000000000..fc741ea794c4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
-> @@ -0,0 +1,21 @@
-> +* Atlas Scientific DO-SM OEM sensor
-> +
-> +http://www.atlas-scientific.com/_files/_datasheets/_oem/DO_oem_datasheet.pdf
-> +
-> +Required properties:
-> +
-> +  - compatible: must be "atlas,do-sm"
-> +  - reg: the I2C address of the sensor
-> +  - interrupts: the sole interrupt generated by the device
-> +
-> +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> +  node bindings.
-> +
-> +Example:
-> +
-> +atlas@64 {
-
-Noticed this should be 67.. But won't submit a v2 till some feedback.
-
-- Matt
-
-> +       compatible = "atlas,do-sm";
-> +       reg = <0x67>;
-> +       interrupt-parent = <&gpio1>;
-> +       interrupts = <16 2>;
-> +};
-> diff --git a/drivers/iio/chemical/atlas-sensor.c b/drivers/iio/chemical/atlas-sensor.c
-> index 2f0a6fed2589..42ad1ed76144 100644
-> --- a/drivers/iio/chemical/atlas-sensor.c
-> +++ b/drivers/iio/chemical/atlas-sensor.c
-> @@ -48,6 +48,11 @@
->  #define ATLAS_REG_EC_CALIB_STATUS_LOW          BIT(2)
->  #define ATLAS_REG_EC_CALIB_STATUS_HIGH         BIT(3)
+> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
+> index 04f6748..217a42f 100644
+> --- a/arch/riscv/include/asm/sifive_l2_cache.h
+> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
+> @@ -10,6 +10,8 @@
+>  extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+>  extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
 >
-> +#define ATLAS_REG_DO_CALIB_STATUS              0x09
-> +#define ATLAS_REG_DO_CALIB_STATUS_MASK         0x03
-> +#define ATLAS_REG_DO_CALIB_STATUS_PRESSURE     BIT(0)
-> +#define ATLAS_REG_DO_CALIB_STATUS_DO           BIT(1)
+> +int sifive_l2_largest_wayenabled(void);
 > +
->  #define ATLAS_REG_PH_TEMP_DATA         0x0e
->  #define ATLAS_REG_PH_DATA              0x16
+>  #define SIFIVE_L2_ERR_TYPE_CE 0
+>  #define SIFIVE_L2_ERR_TYPE_UE 1
 >
-> @@ -60,14 +65,19 @@
->  #define ATLAS_REG_ORP_CALIB_STATUS     0x0d
->  #define ATLAS_REG_ORP_DATA             0x0e
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index 4c90c07..29bdb21 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/cpu.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <asm/sifive_l2_cache.h>
 >
-> +#define ATLAS_REG_DO_TEMP_DATA         0x12
-> +#define ATLAS_REG_DO_DATA              0x22
-> +
->  #define ATLAS_PH_INT_TIME_IN_MS                450
->  #define ATLAS_EC_INT_TIME_IN_MS                650
->  #define ATLAS_ORP_INT_TIME_IN_MS       450
-> +#define ATLAS_DO_INT_TIME_IN_MS                450
+>  static void ci_leaf_init(struct cacheinfo *this_leaf,
+>                          struct device_node *node,
+> @@ -16,6 +17,36 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
+>         this_leaf->type = type;
+>  }
 >
->  enum {
->         ATLAS_PH_SM,
->         ATLAS_EC_SM,
->         ATLAS_ORP_SM,
-> +       ATLAS_DO_SM,
->  };
->
->  struct atlas_data {
-> @@ -121,7 +131,7 @@ static const struct iio_chan_spec atlas_ph_channels[] = {
->         },
->  };
->
-> -#define ATLAS_EC_CHANNEL(_idx, _addr) \
-> +#define ATLAS_CONCENTRATION_CHANNEL(_idx, _addr) \
->         {\
->                 .type = IIO_CONCENTRATION, \
->                 .indexed = 1, \
-> @@ -152,8 +162,8 @@ static const struct iio_chan_spec atlas_ec_channels[] = {
->                         .endianness = IIO_BE,
->                 },
->         },
-> -       ATLAS_EC_CHANNEL(0, ATLAS_REG_TDS_DATA),
-> -       ATLAS_EC_CHANNEL(1, ATLAS_REG_PSS_DATA),
-> +       ATLAS_CONCENTRATION_CHANNEL(0, ATLAS_REG_TDS_DATA),
-> +       ATLAS_CONCENTRATION_CHANNEL(1, ATLAS_REG_PSS_DATA),
->         IIO_CHAN_SOFT_TIMESTAMP(3),
->         {
->                 .type = IIO_TEMP,
-> @@ -182,6 +192,19 @@ static const struct iio_chan_spec atlas_orp_channels[] = {
->         IIO_CHAN_SOFT_TIMESTAMP(1),
->  };
->
-> +static const struct iio_chan_spec atlas_do_channels[] = {
-> +       ATLAS_CONCENTRATION_CHANNEL(0, ATLAS_REG_DO_DATA),
-> +       IIO_CHAN_SOFT_TIMESTAMP(1),
-> +       {
-> +               .type = IIO_TEMP,
-> +               .address = ATLAS_REG_DO_TEMP_DATA,
-> +               .info_mask_separate =
-> +                       BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> +               .output = 1,
-> +               .scan_index = -1
-> +       },
-> +};
-> +
->  static int atlas_check_ph_calibration(struct atlas_data *data)
->  {
->         struct device *dev = &data->client->dev;
-> @@ -262,7 +285,31 @@ static int atlas_check_orp_calibration(struct atlas_data *data)
->                 dev_warn(dev, "device has not been calibrated\n");
->
->         return 0;
-> -};
-> +}
-> +
-> +static int atlas_check_do_calibration(struct atlas_data *data)
+> +#ifdef CONFIG_SIFIVE_L2
+> +static ssize_t number_of_ways_enabled_show(struct device *dev,
+> +                                          struct device_attribute *attr,
+> +                                          char *buf)
 > +{
-> +       struct device *dev = &data->client->dev;
-> +       int ret;
-> +       unsigned int val;
-> +
-> +       ret = regmap_read(data->regmap, ATLAS_REG_DO_CALIB_STATUS, &val);
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_MASK)) {
-> +               dev_warn(dev, "device has not been calibrated\n");
-> +               return 0;
-> +       }
-> +
-> +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_PRESSURE))
-> +               dev_warn(dev, "device missing atmospheric pressure calibration\n");
-> +
-> +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_DO))
-> +               dev_warn(dev, "device missing dissolved oxygen calibration\n");
-> +
-> +       return 0;
+> +       return sprintf(buf, "%u\n", sifive_l2_largest_wayenabled());
 > +}
+> +
+> +static DEVICE_ATTR_RO(number_of_ways_enabled);
+> +
+> +static struct attribute *priv_attrs[] = {
+> +       &dev_attr_number_of_ways_enabled.attr,
+> +       NULL,
+> +};
+> +
+> +static const struct attribute_group priv_attr_group = {
+> +       .attrs = priv_attrs,
+> +};
+> +
+> +const struct attribute_group *
+> +cache_get_priv_group(struct cacheinfo *this_leaf)
+> +{
+> +       /* We want to use private group for L2 cache only */
+> +       if (this_leaf->level == 2)
+> +               return &priv_attr_group;
+> +       else
+> +               return NULL;
+> +}
+> +#endif /* CONFIG_SIFIVE_L2 */
+> +
+
+Instead of this, I would suggest to implement a generic ops
+structure.
+
+In arch/riscv/include/asm/cacheinfo.h:
+
+struct riscv_caceinfo_ops {
+    const struct attribute_group * (*get_priv_group)(struct cacheinfo
+*this_leaf);
+};
+
+void riscv_set_cacheinfo_ops(struct riscv_caceinfo_ops *ops);
+
+In arch/riscv/riscv/kernel/cacheinfo.h
+
+static struct riscv_caceinfo_ops *rv_cache_ops;
+
+void riscv_set_cacheinfo_ops(struct riscv_caceinfo_ops *ops)
+{
+    rv_cache_ops = ops;
+}
+EXPORT_SYMBOL_GPL(riscv_set_cacheinfo_ops);
+
+const struct attribute_group *
+cache_get_priv_group(struct cacheinfo *this_leaf)
+{
+    if (rv_cache_ops && rv_cache_ops->get_priv_group)
+        return rv_cache_ops->get_priv_group(this_leaf)
+    return NULL;
+}
+
+Above will be a separate patch. In future, we can add more
+ops for SOC specific cacheinfo.
+
+Using riscv_set_cacheinfo_ops() you can have another patch
+to implement SiFive L2 info entirely in drivers/soc/sifive/sifive_l2_cache.c
+
+Also, I would strongly recommend moving
+arch/riscv/include/asm/sifive_l2_cache.h
+TO
+include/soc/sifive/sifive_l2_cache.h
+
+>  static int __init_cache_level(unsigned int cpu)
+>  {
+>         struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
+> diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+> index a9ffff3..f1a5f2c 100644
+> --- a/drivers/soc/sifive/sifive_l2_cache.c
+> +++ b/drivers/soc/sifive/sifive_l2_cache.c
+> @@ -107,6 +107,11 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
+>  }
+>  EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
 >
->  struct atlas_device {
->         const struct iio_chan_spec *channels;
-> @@ -295,6 +342,13 @@ static struct atlas_device atlas_devices[] = {
->                                 .calibration = &atlas_check_orp_calibration,
->                                 .delay = ATLAS_ORP_INT_TIME_IN_MS,
->         },
-> +       [ATLAS_DO_SM] = {
-> +                               .channels = atlas_do_channels,
-> +                               .num_channels = 3,
-> +                               .data_reg = ATLAS_REG_DO_DATA,
-> +                               .calibration = &atlas_check_do_calibration,
-> +                               .delay = ATLAS_DO_INT_TIME_IN_MS,
-> +       },
->  };
->
->  static int atlas_set_powermode(struct atlas_data *data, int on)
-> @@ -507,6 +561,7 @@ static const struct i2c_device_id atlas_id[] = {
->         { "atlas-ph-sm", ATLAS_PH_SM},
->         { "atlas-ec-sm", ATLAS_EC_SM},
->         { "atlas-orp-sm", ATLAS_ORP_SM},
-> +       { "atlas-do-sm", ATLAS_DO_SM},
->         {}
->  };
->  MODULE_DEVICE_TABLE(i2c, atlas_id);
-> @@ -515,6 +570,7 @@ static const struct of_device_id atlas_dt_ids[] = {
->         { .compatible = "atlas,ph-sm", .data = (void *)ATLAS_PH_SM, },
->         { .compatible = "atlas,ec-sm", .data = (void *)ATLAS_EC_SM, },
->         { .compatible = "atlas,orp-sm", .data = (void *)ATLAS_ORP_SM, },
-> +       { .compatible = "atlas,do-sm", .data = (void *)ATLAS_DO_SM, },
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, atlas_dt_ids);
+> +int sifive_l2_largest_wayenabled(void)
+> +{
+> +       return readl(l2_base + SIFIVE_L2_WAYENABLE);
+> +}
+> +
+>  static irqreturn_t l2_int_handler(int irq, void *device)
+>  {
+>         unsigned int add_h, add_l;
 > --
-> 2.20.1
+> 2.7.4
 >
+
+Regards,
+Anup
