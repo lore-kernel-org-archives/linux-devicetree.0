@@ -2,126 +2,159 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD38C33C9B
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 19:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92773C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 19:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 022A1207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 19:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C94207FD
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 19:22:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDofDShd"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="TP+Pam2P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgAFTTN (ORCPT
+        id S1726719AbgAFTWi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 14:19:13 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43428 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgAFTTM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 14:19:12 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k197so27290527pga.10;
-        Mon, 06 Jan 2020 11:19:12 -0800 (PST)
+        Mon, 6 Jan 2020 14:22:38 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38896 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbgAFTWh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 14:22:37 -0500
+Received: by mail-lj1-f195.google.com with SMTP id w1so30124659ljh.5
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 11:22:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Cc+8NW3oaqL7v7CJZlR+R8urn6RS/4vks+nXeck2ako=;
-        b=BDofDShdgPFjSEz7ovXl1Q/E6JikGI9vQ+kXpBed7w52ce/5mCF/SjDbuRsKI7uAja
-         QAsR2f3Ly4Nmasaq3vlaw25EhlnzyYYAXXx29fCGm0OH7ryj2FdtjE+hbl+CPP+nHMHP
-         tIJS9IBgfUDUC1peoBn5cYHb1mXv10c96rN/hIYCpgjCDKvSqrEE9gyNg/fF43ece8pC
-         ey1mqrbD6YbqyxuCB2Ia4REqmBhXHnUfcvrOtdXTj12Kg/2EifQKhoiHAuEcd22f5exn
-         cDtRRYyFADRovM1nw3rFwPic5yzoOrwKeQndnZmdETNN07o04PVKf2B4jvsUZTrzrX+F
-         cc8g==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xD7c5lp/JTbJappC7pd+ucZ9Tynnw8uEgTOT9ePpE+A=;
+        b=TP+Pam2PTdFkBDpy/gZulzYsG/H7IMq7WzsRyV4WOz7x5qswCzaOUDZKO5xLXe4Jyl
+         ybcgJk58DFy5xlIczIjeYgqmtBAjPSULgp9a9mF17Bp4sQQYz1GNLeb+Ps+AO48gVopr
+         EhCCBfcVVTSedL6mg/Z8/t+Akir7yim2Ebgw5WOc61wjVWqfMEBfnxNePlnym/nLdUtf
+         tyst3bf9iKLpqN8okUgzoANIdSRGQ01XVqm6nR974HXwhn6yVoRbon3ljBi1Ma/JXkv7
+         pIX+1pK8NSWD9s53nQjCPsUIQM1We+R16PEuBT+uI7+DWzIbAlH8gmB5HjAQW8WrUz9v
+         KZLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Cc+8NW3oaqL7v7CJZlR+R8urn6RS/4vks+nXeck2ako=;
-        b=qqZ8kGWhS1RyDXaQBDk7mtqvUG3vVKHDzkmCGDHOtvcVG0Kd8PCIC/WbCuRGJPhoNB
-         uJdBk5in09n04BI5WYLxLpoRb3LMYv0jufrtRoyl+zIbzxqFR3z85CZbD3a0VAUrxSkt
-         jKkoRQlx5yQ01eZOtsf+w37/sT5Ch6zYTDmTqBw1K+NnoPlv6WRIgO9ndfJDYf4aycW/
-         7BpafrzK9vjIZ8FeE6Zpo82960XzNbQOeJQZwAeaMsOHyjNImnjmn/AWdxnB5WwG1CG8
-         dXDazyQZNKhKHLJPgvTTtpgPNjpoAHUm96Rhu+5z5khaEl5POvbxR0Sjcf7B8VI60nY6
-         SEug==
-X-Gm-Message-State: APjAAAVWt+11UQBldDH0FvJoQo7aj1sjlWfVBfjcjrubb1eH6hipPROj
-        dLZ1Lqn/pkVZnZfHtKgnlJDtydc4
-X-Google-Smtp-Source: APXvYqxq/x2IRI/9YHrxAyymDX9EY9Q5xfpzh0M6wGgr+jbFrxm2VaKcmYRNZpvhJVW4ZGpQN+rQkw==
-X-Received: by 2002:a62:5214:: with SMTP id g20mr107833749pfb.101.1578338351804;
-        Mon, 06 Jan 2020 11:19:11 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id g10sm72795594pgh.35.2020.01.06.11.19.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 11:19:11 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xD7c5lp/JTbJappC7pd+ucZ9Tynnw8uEgTOT9ePpE+A=;
+        b=QLB8Uu7jXQFgqUzzoBX0zrDXC4K9bDbOtOs/Cl1xQxUn6imbYtVWyEyXoUlKaC2LJB
+         l9w/wXAPOzWmPLsdkB7N/zpsSH9AcNkzb5/6VarCtw0ZIB/+jQxwlr3ToXw5xA+2Yy1n
+         fn3e/OWdjhM0eoUtjjTbZEenXIvgtjgtHVu0M5SGecp9fHFxulDt/NczTB22cLG3LNyQ
+         NN9vOQzTDL2V8gfr4WWiu2edJMyXRcxfY/gM+vb3VIRNXOy+RmTEeAWNTJxMSFKm17A/
+         XPacRRyJYRSyjT/p9gtuY1QJWzmWqnL1C1IfiuYHJPv/V6ekSWR8I5V95CTonBVy4pC5
+         0ZRw==
+X-Gm-Message-State: APjAAAWnsJKFNvq22V58D8Sbm8wCuE5YEWtbhZ8BtDDMFBl2mtWaruaZ
+        d3WnY/p1IDe5zmBeOBPViKN8KQ==
+X-Google-Smtp-Source: APXvYqwMq/OmT9x8fcwh1uutbMmzgyXfzN2dKfF6mn/uJfy+faFs7dTSzi3k1NrS/6ihZgUkrLqskA==
+X-Received: by 2002:a2e:9705:: with SMTP id r5mr61908704lji.114.1578338555545;
+        Mon, 06 Jan 2020 11:22:35 -0800 (PST)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id h81sm29432728lfd.83.2020.01.06.11.22.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 06 Jan 2020 11:22:34 -0800 (PST)
+Date:   Mon, 6 Jan 2020 11:22:25 -0800
+From:   Olof Johansson <olof@lixom.net>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS)
-Subject: [PATCH v2 2/2] ata: ahci_brcm: BCM7216 reset is self de-asserting
-Date:   Mon,  6 Jan 2020 11:19:06 -0800
-Message-Id: <20200106191906.18266-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200106191906.18266-1-f.fainelli@gmail.com>
-References: <20200106191906.18266-1-f.fainelli@gmail.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        soc@kernel.org
+Subject: Re: [PATCH 4/5] ARM: dts: mmp3: Add HSIC controllers
+Message-ID: <20200106192225.wc3ber4abkf7s3iu@localhost>
+References: <20191220065314.237624-1-lkundrak@v3.sk>
+ <20191220065314.237624-5-lkundrak@v3.sk>
+ <186ca73e408654981e08f7f12ae543ba51debb68.camel@v3.sk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <186ca73e408654981e08f7f12ae543ba51debb68.camel@v3.sk>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The BCM7216 reset controller line is self-deasserting, unlike other
-platforms, so make use of reset_control_reset() instead of
-reset_control_deassert().
+On Fri, Dec 20, 2019 at 08:05:50AM +0100, Lubomir Rintel wrote:
+> On Fri, 2019-12-20 at 07:53 +0100, Lubomir Rintel wrote:
+> > There are two on MMP3, along with the PHYs. The PHYs are made compatible
+> > with the NOP transceiver, since there's no driver for the time being and
+> > they're likely configured by the firmware.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  arch/arm/boot/dts/mmp3.dtsi | 44 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+> > index d9762de0ed34b..36c50706e60e0 100644
+> > --- a/arch/arm/boot/dts/mmp3.dtsi
+> > +++ b/arch/arm/boot/dts/mmp3.dtsi
+> > @@ -201,6 +201,50 @@ usb_otg0: usb-otg@d4208000 {
+> >  				status = "disabled";
+> >  			};
+> >  
+> > +			hsic_phy0: hsic-phy@f0001800 {
+> > +				compatible = "marvell,mmp3-hsic-phy",
+> > +					     "usb-nop-xceiv",
+> 
+> I managed to mess this up right before sending it out.     ^^^
+> Sorry for that. There should be a semicolon there. I'll fix this up on
+> next patch spin.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Missed the comments when applying, but I fixed it up locally with the below
+patch. Please send new versions incremental on top of it.
+
+I applied the series to the mmp/hsic (and mmp/hsic-fixed) branch in our tree if
+you want to use that as a base.
+
+
+-Olof
+
+
 ---
- drivers/ata/ahci_brcm.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 70e3e386d52e..75931cfb70bc 100644
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -363,8 +363,12 @@ static int brcm_ahci_resume(struct device *dev)
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
- 	int ret = 0;
+From e2ce979bf176af4b8eb7aea866919d618c08f752 Mon Sep 17 00:00:00 2001
+From: Olof Johansson <olof@lixom.net>
+Date: Mon, 6 Jan 2020 11:14:10 -0800
+Subject: [PATCH] ARM: dts: mmp3: Fix typos
+
+Fixes build failures due to syntax errors.
+
+Fixes: 3240d5b872f2 ("ARM: dts: mmp3: Add HSIC controllers")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+---
+ arch/arm/boot/dts/mmp3.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
+index 36c50706e60e..1eba7fb6629b 100644
+--- a/arch/arm/boot/dts/mmp3.dtsi
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -203,7 +203,7 @@
  
--	if (!IS_ERR_OR_NULL(priv->rcdev))
--		ret = reset_control_deassert(priv->rcdev);
-+	if (!IS_ERR_OR_NULL(priv->rcdev)) {
-+		if (priv->version == BRCM_SATA_BCM7216)
-+			ret = reset_control_reset(priv->rcdev);
-+		else
-+			ret = reset_control_deassert(priv->rcdev);
-+	}
- 	if (ret)
- 		return ret;
+ 			hsic_phy0: hsic-phy@f0001800 {
+ 				compatible = "marvell,mmp3-hsic-phy",
+-					     "usb-nop-xceiv",
++					     "usb-nop-xceiv";
+ 				reg = <0xf0001800 0x40>;
+ 				#phy-cells = <0>;
+ 				status = "disabled";
+@@ -225,7 +225,7 @@
  
-@@ -473,8 +477,12 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 	}
- 
- 	priv->rcdev = devm_reset_control_get(&pdev->dev, reset_name);
--	if (!IS_ERR_OR_NULL(priv->rcdev))
--		reset_control_deassert(priv->rcdev);
-+	if (!IS_ERR_OR_NULL(priv->rcdev)) {
-+		if (priv->version == BRCM_SATA_BCM7216)
-+			reset_control_reset(priv->rcdev);
-+		else
-+			reset_control_deassert(priv->rcdev);
-+	}
- 
- 	ret = ahci_platform_enable_clks(hpriv);
- 	if (ret)
+ 			hsic_phy1: hsic-phy@f0002800 {
+ 				compatible = "marvell,mmp3-hsic-phy",
+-					     "usb-nop-xceiv",
++					     "usb-nop-xceiv";
+ 				reg = <0xf0002800 0x40>;
+ 				#phy-cells = <0>;
+ 				status = "disabled";
 -- 
-2.17.1
+2.22.GIT
 
