@@ -2,326 +2,292 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCFEC33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 22:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8377FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3AC207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 22:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588F82080A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 23:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vhv6WFV6"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="mHBdAgvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgAFW7K (ORCPT
+        id S1727088AbgAFXBp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 17:59:10 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41598 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAFW7K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 17:59:10 -0500
-Received: by mail-lf1-f66.google.com with SMTP id m30so37478939lfp.8;
-        Mon, 06 Jan 2020 14:59:07 -0800 (PST)
+        Mon, 6 Jan 2020 18:01:45 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:37761 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgAFXBp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 18:01:45 -0500
+Received: by mail-oi1-f195.google.com with SMTP id z64so10760115oia.4
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 15:01:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hcP8YB7ZVpJCAlYhLfCYmL9dEsNF8L5O7Bmb/KQU4/Q=;
-        b=vhv6WFV6IRMwRf5308kZZDmnns3vPtn8XfDlSJIvgcAMdVcLCCEyWxK6X2q/telNq6
-         ZgATmObw+NYY7TGRrarzB+rFz/MAm5V7odv0SjLwioHnAdm65Pfj1q1GM1DLAIj2LftI
-         2w0gPCF0WkW3RWVJikSRnYLAeV+ww0uPBjpwhBm1x0zsJNRMWwZ53Z3qJZepPR7T5qwB
-         tRA1qXjRnXn4wLSSzGhj6qrEpaU8aGXZlPc6m6neuDYCNDZx/afw+47adq04Ie/Q/2ur
-         yfPuf8xx0+b8dsSIMGBqVEn2OcRUbN2kgn1+N0CHs/I3Gy0HPbfs3cdoHitJ5Oe9G7UM
-         X+Gw==
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L/UWf+M41qEWyhZEUwNrSpluVFcLWOF99dLaPVLmmyQ=;
+        b=mHBdAgvi53lR/6D5+BxQVcjbZqaA8bIz/bRkGZbHfVQ0EnbrG0JvupRk6J6VY5hfFi
+         OV6WkLpamxIUYCmMn+0XFMNQN38U2o171ZK4Ic9Sei4P16I3H/dy5YhCF8zTitOfrGpc
+         SZtWHi1WPjAWMUolVEgcTDa9GgD3nACAU6TOweX3QxMlvJxfn4SXZan2DwS+yJU1naVk
+         bNa5NbU+dEsYTL8+iFzBlQIVwULXFazRjWANNHQ55T/2gupVRSR7cIjG+UznTgKF7nXZ
+         pS5SEIrmpJvjCnjrYxnPHoJSaviwE4QnY1/b95vlvGrKJCntgQ/tGLDrO4Bjq/gRVe0x
+         OZPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hcP8YB7ZVpJCAlYhLfCYmL9dEsNF8L5O7Bmb/KQU4/Q=;
-        b=qBwSMhwjCYgrAxwTU2l1EsGhadcpoN/ACz6yaw90eYqMyxRVykoerNN3IEg3QvmqA6
-         +TPMJbeN0BYtQ0zyYGJ0BTuJK2bviS3ikAVe2dnvJGEtE5iv2DT2nwbysCBbfsYWSTNL
-         U8nv7dW3fCpCVvI2o8vYKx01dsFFTHE2bIzfPgXVwN+27nCo2K4c0nDjofhTtajwdDzw
-         KRyj9vDLGp0JYvakV+qJ0J2vdTk8vzzlOscZgt08TkJjGyZ9kfyxc/Hf0OcZDKxSCk2q
-         lVnUoBLR4cv06H3+My0W2omQi8n9Q6HqOkWLCGpahS7cE0PERP6fhMPFSEs6+Mvxsv82
-         MO3A==
-X-Gm-Message-State: APjAAAUiN/vbTkP37J+emy+/uxL+/bInFZY8T+MUnLq/WOp/E5gJ3u6S
-        iW0hYX1mo08H6+2CkxofA+1AxAA9
-X-Google-Smtp-Source: APXvYqy7i5GZbUwBr/kvaV+uf4/f9DbV30a0gpyajPkPcVzjutAJh71X79ZCw7Lk03D5r5vLa8AZeQ==
-X-Received: by 2002:ac2:485c:: with SMTP id 28mr57442176lfy.118.1578351546206;
-        Mon, 06 Jan 2020 14:59:06 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id b19sm25422238ljk.25.2020.01.06.14.59.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 14:59:05 -0800 (PST)
-Subject: Re: [PATCH v5 12/19] ASoC: tegra: Add initial parent configuration
- for audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, josephl@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
- <1576880825-15010-13-git-send-email-skomatineni@nvidia.com>
- <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
- <20191225175736.GC27497@sirena.org.uk>
- <856d8a92-0c24-6722-952c-06b86c706e97@gmail.com>
- <dbbce994-27f5-d949-078d-05646100e6be@nvidia.com>
- <b6ec6cfd-d883-ea28-00f8-884fa80cfee1@nvidia.com>
- <576fca44-6734-5431-b523-512747a0bf12@gmail.com>
- <fb252096-e101-7d21-9717-c23607ae6edd@nvidia.com>
- <0f956c12-98cf-3466-f3ee-ffc3a23e3e3d@gmail.com>
- <9e08a1eb-7a9f-0ed0-a2f4-08f1d6f93958@nvidia.com>
- <359bf92f-2e67-28b2-8412-9e47bb24ffdb@nvidia.com>
- <5921f8e1-359d-4352-a785-8a685cd1a200@nvidia.com>
- <33eb0b3e-5605-3dfd-a6ea-a50ae1348c86@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <50657716-a719-6fe1-af3e-76eb90ca0ac5@gmail.com>
-Date:   Tue, 7 Jan 2020 01:59:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L/UWf+M41qEWyhZEUwNrSpluVFcLWOF99dLaPVLmmyQ=;
+        b=g7MwQN3MUxWGE0ZJOpV3kekN+gSLVhcA4OwFOGkXVdNrJ9amXbesIl+Zm3enplk+WH
+         7rS/OnzcpwJgKCJKtIKrhOkADmWyIO4hRaksbdQicyE64TzdkUMEEQV4L7A4Bwie53mo
+         FICC0yOvK8L1I2WqVcLN22EH5eOXO46F6tf9tRmsPHpa0v1SdrhFMdIOYJVbJhLK2/xw
+         6p4SYVisvEitqKHCXi7Qt6d1lzPgeMYUAJwCG+/YpmfwOiwRKV6QfyN7qZplx9pdX6iB
+         Q7FVX5YX1wnLuG7F1V6upXhzgjr/Xs62keXS/0wBmytnPVPQLjjRZDRgXSIq4j6dsebb
+         fMfA==
+X-Gm-Message-State: APjAAAWeEx7DC/24+xT+L8gw0n4V0NPRpzE1dOs9hqLoBzLtABGpmTUk
+        3Pw3lNe4oqoYyhzPzgP3LLczbqg9g5mP0R/oU3Nkuw==
+X-Google-Smtp-Source: APXvYqyYT0X87tAjCZ4vyAc7F2bZqCK1KXaNjsfRXyktkjo3Zstu9tFbHKwsLUsnD54dkRk5wM4YImCFISXuQ7mFMSE=
+X-Received: by 2002:aca:1c0d:: with SMTP id c13mr6054036oic.44.1578351703943;
+ Mon, 06 Jan 2020 15:01:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <33eb0b3e-5605-3dfd-a6ea-a50ae1348c86@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200106143633.1268701-1-robert.marko@sartura.hr> <20200106192248.GX3755841@builder>
+In-Reply-To: <20200106192248.GX3755841@builder>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Tue, 7 Jan 2020 00:01:32 +0100
+Message-ID: <CA+HBbNEutgjfQYzCH0s6OkebgDi=iDAqCgnBDSFajs+4F1bGhA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: qcom: add gpio-ranges property
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-06.01.2020 19:30, Sowjanya Komatineni пишет:
-> 
-> On 1/6/20 8:09 AM, Sowjanya Komatineni wrote:
->>
->> On 1/5/20 8:21 PM, Sameer Pujar wrote:
->>>
->>> On 1/5/2020 10:33 AM, Sowjanya Komatineni wrote:
->>>>
->>>> On 1/4/20 5:05 PM, Dmitry Osipenko wrote:
->>>>> 04.01.2020 08:49, Sowjanya Komatineni пишет:
->>>>>> On 1/2/20 8:12 AM, Dmitry Osipenko wrote:
->>>>>>> 02.01.2020 10:03, Sowjanya Komatineni пишет:
->>>>>>>> On 12/27/19 1:19 PM, Sowjanya Komatineni wrote:
->>>>>>>>> On 12/27/19 6:56 AM, Dmitry Osipenko wrote:
->>>>>>>>>> 25.12.2019 20:57, Mark Brown пишет:
->>>>>>>>>>> On Mon, Dec 23, 2019 at 12:14:34AM +0300, Dmitry Osipenko wrote:
->>>>>>>>>>>> 21.12.2019 01:26, Sowjanya Komatineni пишет:
->>>>>>>>>>>>> Tegra PMC clock clk_out_1 is dedicated for audio mclk from
->>>>>>>>>>>>> Tegra30
->>>>>>>>>>>>> through Tegra210 and currently Tegra clock driver does
->>>>>>>>>>>>> initial parent
->>>>>>>>>>>>> configuration for audio mclk "clk_out_1" and enables them
->>>>>>>>>>>>> by default.
->>>>>>>>>>> Please delete unneeded context from mails when replying. 
->>>>>>>>>>> Doing this
->>>>>>>>>>> makes it much easier to find your reply in the message,
->>>>>>>>>>> helping ensure
->>>>>>>>>>> it won't be missed by people scrolling through the irrelevant
->>>>>>>>>>> quoted
->>>>>>>>>>> material.
->>>>>>>>>> Ok
->>>>>>>>>>
->>>>>>>>>>>>> - clk_disable_unprepare(data->clk_cdev1);
->>>>>>>>>>>>> - clk_disable_unprepare(data->clk_pll_a_out0);
->>>>>>>>>>>>> - clk_disable_unprepare(data->clk_pll_a);
->>>>>>>>>>>>> +    if (__clk_is_enabled(data->clk_cdev1))
->>>>>>>>>>>>> + clk_disable_unprepare(data->clk_cdev1);
->>>>>>>>>>>> The root of the problem is that you removed clocks enabling
->>>>>>>>>>>> from
->>>>>>>>>>>> tegra_asoc_utils_init().
->>>>>>>>> currently, audio mclk and its parent clocks enabling are from
->>>>>>>>> clock
->>>>>>>>> driver init and not from tegra_asoc_utils_init.
->>>>>>>>>>>> I'm not sure why clocks should be disabled during the
->>>>>>>>>>>> rate-changing,
->>>>>>>>>>>> probably this action is not really needed.
->>>>>>>>>>> I know nothing about this particular device but this is not that
->>>>>>>>>>> unusual a restriction for audio hardware, you often can't
->>>>>>>>>>> robustly reconfigure the clocking for a device while it's active
->>>>>>>>>>> due to issues in the hardware.  You often see issues with FIFOs
->>>>>>>>>>> glitching or state machines getting stuck. This may not be an
->>>>>>>>>>> issue here but if it's something that's documented as a
->>>>>>>>>>> requirement it's probably good to pay attention.
->>>>>>>>>> I don't know details about that hardware either, maybe it is
->>>>>>>>>> simply not
->>>>>>>>>> safe to change PLL_A rate dynamically and then
->>>>>>>>>> CLK_SET_RATE_GATE could
->>>>>>>>>> be used.
->>>>>>>>>>
->>>>>>>>>> If nobody knows for sure, then will be better to keep
->>>>>>>>>> tegra_asoc_utils_set_rate() unchanged.
->>>>>>>>> plla rate change through tegra_asoc_utils_set_rate() happens
->>>>>>>>> only when
->>>>>>>>> there is not active playback or record corresponding to this sound
->>>>>>>>> device.
->>>>>>>>>
->>>>>>>>> So, I don't see reason for disabling clock during rate change
->>>>>>>>> and not
->>>>>>>>> sure why we had this from the beginning.
->>>>>>>>>
->>>>>>>>> Thierry/Sameer,
->>>>>>>>>
->>>>>>>>> Can you please comment?
->>>>>>>>>
->>>>>>>>> Yes, we can use CLK_SET_RATE_GATE for PLLA and remove clock
->>>>>>>>> disabling
->>>>>>>>> before rate change.
->>>>>>>>>
->>>>>>>> PLLA is used for both I2S controller clock and also for audio
->>>>>>>> mclk. I2S
->>>>>>>> driver suspend resume implementations takes care of enabling and
->>>>>>>> disabling I2S clock but audio mclk will be enabled during that
->>>>>>>> time and
->>>>>>>> PLLA disable might not happen. So using CLK_SET_RATE_GATE
->>>>>>>> prevents rate
->>>>>>>> change to happen and as rate change happens only when there is
->>>>>>>> no active
->>>>>>>> audio record/playback, we can perform rate change without
->>>>>>>> disable/enable
->>>>>>>> during rate change.
->>>>>>>>
->>>>>>>> So probably below changes should be good.
->>>>>>>>
->>>>>>>>    * remove asoc_utils_set_rate call from asoc_utils_init as
->>>>>>>> set_rate
->>>>>>>>      happens during existing hw_params callback implementations
->>>>>>>> in sound
->>>>>>>>      drivers and there is no need to do rate change during
->>>>>>>> asoc_utils_init.
->>>>>>>>    * remove disable/enable clocks during rate change in
->>>>>>>> asoc_utils_set_rate.
->>>>>>>>    * add startup and shutdown snd_soc_ops callbacks to do enable
->>>>>>>> and
->>>>>>>>      disable audio mclk.
->>>>>>>>
->>>>>>> Sounds good, thanks. I'll be happy to review and test it.
->>>>>> Regarding disabling audio mclk during PLLA rate change, no need to
->>>>>> explicitly disable PLLA on asoc utils as clock driver takes care
->>>>>> of it
->>>>>> properly during pll rate change.
->>>>>>
->>>>>> But the downstream clock divider hardware can malfunction without
->>>>>> recovery when subject to unstable PLL output during locking, unless
->>>>>> clock is gated.
->>>>>>
->>>>>> So it is recommended to disable downstream clocks during PLL rate
->>>>>> change.
->>>>>>
->>>>>> PLLA downstream clocks are I2S and audio mclk (cdev1/clk1 and extern1
->>>>>> clocks) and I2S clock is disabled in I2S driver by PM runtime ops.
->>>>> The I2S driver uses asynchronous pm_runtime_put() and thus there is no
->>>>> guarantee that I2S clock is disabled at the time of changing PLLA
->>>>> rate.
->>>>> Could this be a problem?
->>>> Looking into soc_pcm_hw_params, I see dai_link hw_params ops happens
->>>> prior to  platform snd_soc_dai_driver hw_params ops.
->>>
->>> This is true.
->>>
->>>>
->>>> So, PLL rate change thru asoc_utils_set_rate happens during sample
->>>> rate config of dai_link hw_params ops and during this time I2S will
->>>> always be in idle state.
->>>
->>> This is probably not the case, since runtime resume for I2S would
->>> have already enabled the clock for I2S and in turn PLLA. The
->>> hw_param() call would happen later.
->>> We could have used a fixed clock rate for PLLA, but the reason why we
->>> are setting the rate at runtime is, we support sample rates (and
->>> multuples) of 8kHz and 11.025kHz.
->>> Both of these require a different PLLA base rate for downstream clock
->>> dividers to work properly. That is why, I think we have two base
->>> rates for PLLA.
->>>
->>> Even if we want to enable the clocks (for i2s) in hw_param(), this
->>> still may not help.
->>> For example there could be multiple I2S instances, which can use the
->>> same PLLA source. ALSA playback/capture on different I2S can run
->>> independently.
->>> Hence we are not sure if clk_disable_unprepare() in
->>> tegra_asoc_utils.c would actually disable PLLA. Hence I think the
->>> problem exists in current code too.
->>
->> clk_disable_unprepare in aosc_utils_set_rate will not disable PLLA as
->> it will be in use by other consumer (I2S).
->>
->> But clock driver it self takes care of disabling pll output and
->> keeping it in bypass state so its not really like PLLA output is off.
->>
->> So regarding PLLA rate change, we dont have to explicitly disable in
->> audio driver as pll clock driver takes care during rate update,
->>
->> But consumer clocks of PLLA need to be disabled during rate update so
->> existing dividers doesn't cause any malfunction with new rate update.
->>
->> audio mclk can will be in disabled state during rate update thru
->> hw_params with addition of shutdown snd_soc_ops callbacks to disable
->> of audio mclk.
->>
->> But issue is for I2S clock where clock might be in enabled state and
->> this is issue with current I2S driver already.
->>
->> Sameer/Dmitry,
->>
->> Making sure I2S clock is in disabled state during rate update is
->> something need to work thru for proper fix and this is not related to
->> this patch series as this issue exists with current upstream.
->>
->> So, can we take care of this as separate patch out of this series so I
->> can get this series out as this PMC clock changes are needed for
->> upcoming camera drivers.
->>
-> Based on internal discussion with sameer, proper I2S clock fix will be
-> take care separately and this is not something introduced with this
-> patch series.
-> 
-> So, will move once with audio MCLK fix in next version of patch series.
-> 
->   * remove asoc_utils_set_rate call from asoc_utils_init as set_rate
->     happens during hw_params callback based on existing driver
->   * add shutdown snd_soc_ops callbacks to disable of audio mclk
->   * remove disable clocks prior to rate change in asoc_utils_set_rate
->     (as audio mclk will already be in disabled state by the time
->     hw_param callback gets executed) and keep audio mclk enable after
->     rate change in asoc_utils_set_rate
-> 
->>> We really want to allow user to run any sample rate in the supported
->>> range. However the sample rate is known during hw_param() callback.
->>>
->>> Looking at current discussion, we may have to provide an aternate way
->>> of switching PLLA base rate (may be not in ALSA callbacks)
->>>
->>>>
->>>> Sameer, Please confirm.
->>>>
->>>>>> For audio mclk, need to make sure mclk are disabled during rate
->>>>>> change.
->>>>>>
->>>>>> So below are the changes to audio clocks that will be in next
->>>>>> version.
->>>>>>
->>>>>>    * remove tegra_asoc_utils_set_rate call from
->>>>>> tegra_asoc_utils_init as
->>>>>>      tegra_asoc_utils_set_rate happens during hw_params callback.
->>>>>>    * add shutdown snd_soc_ops callbacks to disable of audio mclk.
->>>>>>    * remove disable audio mclk (cdev1) and plla clocks prior to rate
->>>>>>      change in tegra_asoc_utils_set_rate (as audio mclk will
->>>>>> always be in
->>>>>>      disabled state every time hw_param callback gets executed)
->>>>>> and keep
->>>>>>      audio mclk enable after the rate change in
->>>>>> tegra_asoc_utils_set_rate.
->>>>>>
+On Mon, Jan 6, 2020 at 8:22 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Mon 06 Jan 06:36 PST 2020, Robert Marko wrote:
+>
+> > From: Christian Lamparter <chunkeey@gmail.com>
+> >
+> > This patch adds the gpio-ranges property to almost all of
+> > the Qualcomm ARM platforms that utilize the pinctrl-msm
+> > framework.
+> >
+> > The gpio-ranges property is part of the gpiolib subsystem.
+> > As a result, the binding text is available in section
+> > "2.1 gpio- and pin-controller interaction" of
+> > Documentation/devicetree/bindings/gpio/gpio.txt
+> >
+> > For more information please see the patch titled:
+> > "pinctrl: msm: fix gpio-hog related boot issues" from
+> > this series.
+> >
+> > Reported-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+> > Tested-by: Sven Eckelmann <sven.eckelmann@openmesh.com> [ipq4019]
+> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> > Tested-by: Robert Marko <robert.marko@sartura.hr> [ipq4019]
+> > Cc: Luka Perkov <luka.perkov@sartura.hr>
+>
+> Thanks for follow up on this Robert!
+>
+> We carry dts patches for arm and arm64 in different branches on their
+> way towards Torvalds, can you please split the patch in two? (Double
+> check that the two parts adds up to an equivalent change and you can
+> carry the reviewed-by and tested-by on the two patches).
 
-Indeed, it should be better to factor out all changes that are not
-directly related to the PMC patches into separate patchset.
+Sure, can do.
+>
+> Also I need your Signed-off-by at the end of the tags-list as you
+> forward Christian's patch.
+
+Will add it,
+Cheers
+>
+> Regards,
+> Bjorn
+>
+> > ---
+> >  arch/arm/boot/dts/qcom-apq8064.dtsi   | 1 +
+> >  arch/arm/boot/dts/qcom-apq8084.dtsi   | 1 +
+> >  arch/arm/boot/dts/qcom-ipq4019.dtsi   | 1 +
+> >  arch/arm/boot/dts/qcom-ipq8064.dtsi   | 1 +
+> >  arch/arm/boot/dts/qcom-mdm9615.dtsi   | 1 +
+> >  arch/arm/boot/dts/qcom-msm8660.dtsi   | 1 +
+> >  arch/arm/boot/dts/qcom-msm8960.dtsi   | 1 +
+> >  arch/arm/boot/dts/qcom-msm8974.dtsi   | 1 +
+> >  arch/arm64/boot/dts/qcom/ipq8074.dtsi | 1 +
+> >  arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
+> >  arch/arm64/boot/dts/qcom/msm8992.dtsi | 1 +
+> >  arch/arm64/boot/dts/qcom/msm8994.dtsi | 1 +
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 1 +
+> >  13 files changed, 13 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> > index 8b79b4112ee1..2687c4e890ba 100644
+> > --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> > @@ -350,6 +350,7 @@
+> >                       reg = <0x800000 0x4000>;
+> >
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&tlmm_pinmux 0 0 90>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+> > index 0a0fb147ebb9..4cc2d33f3d3b 100644
+> > --- a/arch/arm/boot/dts/qcom-apq8084.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+> > @@ -401,6 +401,7 @@
+> >                       compatible = "qcom,apq8084-pinctrl";
+> >                       reg = <0xfd510000 0x4000>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&tlmm 0 0 147>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+> > index 72d4e290b543..b6e5203a210b 100644
+> > --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+> > @@ -201,6 +201,7 @@
+> >                       compatible = "qcom,ipq4019-pinctrl";
+> >                       reg = <0x01000000 0x300000>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&tlmm 0 0 100>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> > index 16c0da97932c..4021f661cd11 100644
+> > --- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+> > @@ -119,6 +119,7 @@
+> >                       reg = <0x800000 0x4000>;
+> >
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&qcom_pinmux 0 0 69>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+> > index 356e9535f7a6..347b4f7d7889 100644
+> > --- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+> > @@ -128,6 +128,7 @@
+> >               msmgpio: pinctrl@800000 {
+> >                       compatible = "qcom,mdm9615-pinctrl";
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&msmgpio 0 0 88>;
+> >                       #gpio-cells = <2>;
+> >                       interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> >                       interrupt-controller;
+> > diff --git a/arch/arm/boot/dts/qcom-msm8660.dtsi b/arch/arm/boot/dts/qcom-msm8660.dtsi
+> > index ec5cbc468bd3..480fc08cbe8e 100644
+> > --- a/arch/arm/boot/dts/qcom-msm8660.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-msm8660.dtsi
+> > @@ -115,6 +115,7 @@
+> >                       reg = <0x800000 0x4000>;
+> >
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&tlmm 0 0 173>;
+> >                       #gpio-cells = <2>;
+> >                       interrupts = <0 16 0x4>;
+> >                       interrupt-controller;
+> > diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
+> > index f2aeaccdc1ad..172ea3c70eac 100644
+> > --- a/arch/arm/boot/dts/qcom-msm8960.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
+> > @@ -107,6 +107,7 @@
+> >               msmgpio: pinctrl@800000 {
+> >                       compatible = "qcom,msm8960-pinctrl";
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&msmgpio 0 0 152>;
+> >                       #gpio-cells = <2>;
+> >                       interrupts = <0 16 0x4>;
+> >                       interrupt-controller;
+> > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > index 369e58f64145..1689cf925b03 100644
+> > --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> > @@ -707,6 +707,7 @@
+> >                       compatible = "qcom,msm8974-pinctrl";
+> >                       reg = <0xfd510000 0x4000>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&msmgpio 0 0 146>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> > index 67ee5f560104..2b31823d3ccd 100644
+> > --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> > @@ -21,6 +21,7 @@
+> >                       reg = <0x1000000 0x300000>;
+> >                       interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&tlmm 0 0 70>;
+> >                       #gpio-cells = <0x2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <0x2>;
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > index 5ea9fb8f2f87..2d1cbe762b3a 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> > @@ -374,6 +374,7 @@
+> >                       reg = <0x1000000 0x300000>;
+> >                       interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&msmgpio 0 0 122>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> > index 8be60c08a9ab..2021795c99ad 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+> > @@ -171,6 +171,7 @@
+> >                       reg = <0xfd510000 0x4000>;
+> >                       interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&msmgpio 0 0 146>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> > index 3932757f78b7..b1c2d7d6a0f2 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> > @@ -133,6 +133,7 @@
+> >                       reg = <0xfd510000 0x4000>;
+> >                       interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&msmgpio 0 0 146>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > index 87f4d9c1b0d4..81576aeb2408 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > @@ -1234,6 +1234,7 @@
+> >                       reg = <0x01010000 0x300000>;
+> >                       interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> >                       gpio-controller;
+> > +                     gpio-ranges = <&msmgpio 0 0 150>;
+> >                       #gpio-cells = <2>;
+> >                       interrupt-controller;
+> >                       #interrupt-cells = <2>;
+> > --
+> > 2.24.1
+> >
