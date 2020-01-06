@@ -2,163 +2,225 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3212AC33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BED0C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015BC207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:25:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="u+d0lrvf"
+	by mail.kernel.org (Postfix) with ESMTP id 688862072A
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 21:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578347495;
+	bh=Mh7LcnCXw4vVCv42wMM3EP0PnAh3Q0ZFbhTxd/ljaeg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D1TFNXyYrc7VsUlpJ5R7085sHwmn+LOrFBUFuPa8yR0Hvp1qgEiv48L9J8A5LRHrJ
+	 D+pEn0HNX2h57RZqfiOBvypA+qpyyIBRcwL+ErNkp/66pQPPJL6LO+USy+ReNNLrZ3
+	 Uifga8FvzJYuEJ/3cSOj6CY/AubVor2C9aKhAc60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgAFVZv (ORCPT
+        id S1726695AbgAFVve (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 16:25:51 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34079 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbgAFVZv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 16:25:51 -0500
-Received: by mail-il1-f193.google.com with SMTP id s15so43851689iln.1
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 13:25:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QeWAJBY8qWlUfgcT5Ob4uwidE5Op2m/zDQqkj1Pwwfo=;
-        b=u+d0lrvfRfyBUlad0PtUGp4TDtHVVoXvMSkev/UzeCLj+gmYa+XOiSOxd/NWzOD0Er
-         Uk7rK9aQEwNzCSHqQiHoGTpysSey1Li6/KHxEvGSQgy5J1Xv2URX1BCgaeGYG/y6+YDP
-         H4af5ag2IOE+d7NaUO4cQcIgDyPkBwCaz+r0CHxxwpLEEkNl3a5y7l5vXjI1IzNyHNZt
-         7BTSnnkzHNc98GP1afarxCK/Sai0FbwP2NZu/tn8gv5xWZzskzqAti3cqnU4I82a9dnV
-         /yHEzgOENJdom2xvFRDz+vvBdTMi9VUdmXs/vmrZ8EQiJ9E94Zh5oGcdiMOEIItyefuG
-         n19A==
+        Mon, 6 Jan 2020 16:51:34 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36236 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgAFVve (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 16:51:34 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c16so16965596oic.3
+        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 13:51:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QeWAJBY8qWlUfgcT5Ob4uwidE5Op2m/zDQqkj1Pwwfo=;
-        b=a+lAYGdFYNYUYH2dh81kp5L/pi6ArRjQXotMm45bDR9X01sY9zqLSvhvIv9NLiNF9p
-         LG2QT6ntQX1DR+DuZcEONmQptjkekoKjpidkupy6qdKaTN1uLoueFGBcL6qn+cFjVINw
-         ywn12Jmd8QdjJ/ookouETo8kFY+ORRy0ryD92h3mN4NCvg61APUtqt18rk0UBYCezISh
-         +HbYled5GApNL1YHoEldwi68aMR6Muwn41WgNPhGZNhamnwImieUEhD03dqdNUMZiWEm
-         HjeeaqQmmRWyfnV/z8uUCAWfzgL2uHzFJklmv2TSPRtG+FEUJSnoyKRekirtAYzS/trS
-         Sg6g==
-X-Gm-Message-State: APjAAAW9ZQX8vYJBRCae/jgKrUSYCEgRLnSLZU+O16PQKxR7kDHnWxAb
-        AbgX7i1wvbHgX7F7+vEPQQYJIcio47unQ7KxyNQrOnCh8jKFI/y+
-X-Google-Smtp-Source: APXvYqzue49yqTCM4LifES+9o9JWzgjn29YjX1cFXkGBq1hAH8OyArUIE0efM57Dp/bjZ4g7EYIqgKT4ep+s8IfQ7yM=
-X-Received: by 2002:a92:60f:: with SMTP id x15mr84738951ilg.181.1578345950447;
- Mon, 06 Jan 2020 13:25:50 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=q6uD0y39fhm44pZWO41miHHEfqh/x5T19yL2RZ/nwqg=;
+        b=FfqwYGVO9TwZAuKH6bwaWJMEqRVGKL1Fc1InieBvQIrkk1GGopjT8Nl1Pty64iKVZB
+         CCdvyDJ3R5nEzAB3VCctwg4lUT2JONFbMAB8olMuSzuULt2G/945TH2k0KVA9c4js2P+
+         +b8XzLq6k/b+0jQINIguvVzOVsINSbT+FyD142QQQeDFFUFrkPTG6EPQPqaoT7IZOCMR
+         7cxk7nvDDLQVy5QgkgtJAIWiyKG31gggL0AfPjjgT79iMTsVoOSXtdUCbWTbawzbw/3U
+         syguxwgH0ougMjPUXJHJe2FhD0EQcarlTD3Ipng7PQnu5czutpv2bDp2bZQS1XBu/Bhs
+         iWLA==
+X-Gm-Message-State: APjAAAX/jDBnzZIOsPpyzthQ/B2/YjN8dtO3httWauTa46099x4QK8xu
+        n0JmoFGXYrxjhZjBKNjngziFe2w=
+X-Google-Smtp-Source: APXvYqyCeIzfVrkLM/9cJwo0ujccoL9MDLaDUrNALOZ7Lkbi28y3zF6LlhcDiuzlFQLPbzmeWB38QA==
+X-Received: by 2002:a05:6808:b18:: with SMTP id s24mr6028764oij.31.1578347493110;
+        Mon, 06 Jan 2020 13:51:33 -0800 (PST)
+Received: from rob-hp-laptop (ip-70-5-121-225.ftwttx.spcsdns.net. [70.5.121.225])
+        by smtp.gmail.com with ESMTPSA id i3sm1031634otr.31.2020.01.06.13.51.32
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Jan 2020 13:51:32 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 22043f
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 06 Jan 2020 15:51:29 -0600
+Date:   Mon, 6 Jan 2020 15:51:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     kishon@ti.com, Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: usb: Convert Allwinner A80 USB PHY
+ controller to a schema
+Message-ID: <20200106215129.GB11672@bogus>
+References: <20200103152824.47383-1-maxime@cerno.tech>
+ <20200104221321.GA11672@bogus>
+ <20200106092724.pi2kbui7zayrhhzi@gilmour.lan>
 MIME-Version: 1.0
-References: <20191230231953.29646-1-rjones@gateworks.com> <20191230231953.29646-2-rjones@gateworks.com>
- <20200103223225.GB654@bogus>
-In-Reply-To: <20200103223225.GB654@bogus>
-From:   Bobby Jones <rjones@gateworks.com>
-Date:   Mon, 6 Jan 2020 13:25:39 -0800
-Message-ID: <CALAE=UATZtN47J421Y4i+GqvijiiECAuc25kLSmYNAe6jGhxiA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/5] dt-bindings: arm: fsl: Add Gateworks Ventana
- i.MX6DL/Q compatibles
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106092724.pi2kbui7zayrhhzi@gilmour.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 2:32 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 30, 2019 at 03:19:49PM -0800, Robert Jones wrote:
-> > Add the compatible enum entries for Gateworks Ventana boards.
+On Mon, Jan 06, 2020 at 10:27:24AM +0100, Maxime Ripard wrote:
+> Hi Rob,
+> 
+> On Sat, Jan 04, 2020 at 03:13:21PM -0700, Rob Herring wrote:
+> > On Fri, Jan 03, 2020 at 04:28:24PM +0100, Maxime Ripard wrote:
+> > > The Allwinner A80 SoCs have a USB PHY controller that is used by Linux,
+> > > with a matching Device Tree binding.
+> > >
+> > > Now that we have the DT validation in place, let's convert the device tree
+> > > bindings for that controller over to a YAML schemas.
+> > >
+> > > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> > > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > >
+> > > ---
+> > >
+> > > Changes from v1:
+> > >   - Added r-b tag from chen-yu
+> > > ---
+> > >  .../phy/allwinner,sun9i-a80-usb-phy.yaml      | 135 ++++++++++++++++++
+> > >  .../devicetree/bindings/phy/sun9i-usb-phy.txt |  37 -----
+> > >  2 files changed, 135 insertions(+), 37 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
+> > > new file mode 100644
+> > > index 000000000000..ded7d6f0a119
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
+> > > @@ -0,0 +1,135 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/phy/allwinner,sun9i-a80-usb-phy.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Allwinner A80 USB PHY Device Tree Bindings
+> > > +
+> > > +maintainers:
+> > > +  - Chen-Yu Tsai <wens@csie.org>
+> > > +  - Maxime Ripard <mripard@kernel.org>
+> > > +
+> > > +properties:
+> > > +  "#phy-cells":
+> > > +    const: 0
+> > > +
+> > > +  compatible:
+> > > +    const: allwinner,sun9i-a80-usb-phy
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    anyOf:
+> > > +      - description: Main PHY Clock
+> > > +
+> > > +      - items:
+> > > +          - description: Main PHY clock
+> > > +          - description: HSIC 12MHz clock
+> > > +          - description: HSIC 480MHz clock
 > >
-> > Signed-off-by: Robert Jones <rjones@gateworks.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.yaml | 31 ++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
+> > Rather than anyOf, just 'minItems: 1' would work here. Though I guess
+> > this disallows 2 items.
+> 
+> Yeah, 2 items is not allowed so I wanted to prevent that.
+> 
+> > > +
+> > > +  clock-names:
+> > > +    oneOf:
+> > > +      - const: phy
+> > > +
+> > > +      - items:
+> > > +          - const: phy
+> > > +          - const: hsic_12M
+> > > +          - const: hsic_480M
+> > > +
+> > > +  resets:
+> > > +    anyOf:
+> > > +      - description: Normal USB PHY reset
+> > > +
+> > > +      - items:
+> > > +          - description: Normal USB PHY reset
+> > > +          - description: HSIC Reset
+> > > +
+> > > +  reset-names:
+> > > +    oneOf:
+> > > +      - const: phy
+> > > +
+> > > +      - items:
+> > > +          - const: phy
+> > > +          - const: hsic
+> > > +
+> > > +  phy_type:
+> > > +    const: hsic
+> > > +    description:
+> > > +      When absent, the PHY type will be assumed to be normal USB.
+> > > +
+> > > +  phy-supply:
+> > > +    description:
+> > > +      Regulator that powers VBUS
+> > > +
+> > > +required:
+> > > +  - "#phy-cells"
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - resets
+> > > +  - reset-names
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +if:
+> > > +  properties:
+> > > +    phy_type:
+> > > +      const: hsic
+> > > +
+> > > +  required:
+> > > +    - phy_type
+> > > +
+> > > +then:
+> > > +  properties:
+> > > +    clocks:
+> > > +      maxItems: 3
+> > > +
+> > > +    clock-names:
+> > > +      maxItems: 3
+> > > +
+> > > +    resets:
+> > > +      maxItems: 2
+> > > +
+> > > +    reset-names:
+> > > +      maxItems: 2
 > >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index f79683a..8ed4c85 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -126,6 +126,22 @@ properties:
-> >                - toradex,apalis_imx6q-ixora      # Apalis iMX6 Module on Ixora
-> >                - toradex,apalis_imx6q-ixora-v1.1 # Apalis iMX6 Module on Ixora V1.1
-> >                - variscite,dt6customboard
-> > +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
-> > +              - gw,imx6q-gw51xx
->
-> This doesn't match what you have in dts files. Please check with:
->
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/fsl.yaml
->
-> You'll need a separate entry with 3 compatibles and 'gw,ventana' or drop
-> it.
+> > Do you intend that only a single item is allowed when not HSIC? If so,
+> > that's not what is happening.
+> 
+> That's intentional indeed, the former binding was making the hsic
+> clocks and resets mandatory when the phy was in HSIC mode, but only
+> recommending listing them otherwise. Maybe we can change that in the
+> future, but that seems out of scope for a conversion.
 
-Hi Rob,
+Okay. In that case,
 
-Sorry, I'm still getting used to the whole schema format and a bit
-confused. Can you be more specific in how it doesn't match? I looked
-at the imx6q-gw51xx.dts file where I got the entry from and it has the
-following line:
-
-compatible = "gw,imx6q-gw51xx", "gw,ventana", "fsl,imx6q";
-
-Obviously I'm only submitting the gw59xx board device trees but a
-previous version of this submission was asked to add all of the
-compatible strings for the Gateworks boards. Are you asking me to only
-post the gw59xx lines?
-
->
-> > +              - gw,imx6q-gw52xx
-> > +              - gw,imx6q-gw53xx
-> > +              - gw,imx6q-gw5400-a
-> > +              - gw,imx6q-gw54xx
-> > +              - gw,imx6q-gw551x
-> > +              - gw,imx6q-gw552x
-> > +              - gw,imx6q-gw553x
-> > +              - gw,imx6q-gw560x
-> > +              - gw,imx6q-gw5903
-> > +              - gw,imx6q-gw5904
-> > +              - gw,imx6q-gw5907
-> > +              - gw,imx6q-gw5910
-> > +              - gw,imx6q-gw5912
-> > +              - gw,imx6q-gw5913
-> >            - const: fsl,imx6q
-> >
-> >        - description: i.MX6QP based Boards
-> > @@ -152,6 +168,21 @@ properties:
-> >                - ysoft,imx6dl-yapp4-draco  # i.MX6 DualLite Y Soft IOTA Draco board
-> >                - ysoft,imx6dl-yapp4-hydra  # i.MX6 DualLite Y Soft IOTA Hydra board
-> >                - ysoft,imx6dl-yapp4-ursa   # i.MX6 Solo Y Soft IOTA Ursa board
-> > +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
-> > +              - gw,imx6dl-gw51xx
-> > +              - gw,imx6dl-gw52xx
-> > +              - gw,imx6dl-gw53xx
-> > +              - gw,imx6dl-gw54xx
-> > +              - gw,imx6dl-gw551x
-> > +              - gw,imx6dl-gw552x
-> > +              - gw,imx6dl-gw553x
-> > +              - gw,imx6dl-gw560x
-> > +              - gw,imx6dl-gw5903
-> > +              - gw,imx6dl-gw5904
-> > +              - gw,imx6dl-gw5907
-> > +              - gw,imx6dl-gw5910
-> > +              - gw,imx6dl-gw5912
-> > +              - gw,imx6dl-gw5913
-> >            - const: fsl,imx6dl
-> >
-> >        - description: i.MX6SL based Boards
-> > --
-> > 2.9.2
-> >
+Reviewed-by: Rob Herring <robh@kernel.org>
