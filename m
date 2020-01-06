@@ -2,156 +2,452 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC45C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0857BC00523
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 02:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A386721734
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 02:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FD82072C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 02:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPDci3wO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WT60HEnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbgAFCWj (ORCPT
+        id S1727321AbgAFCiZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 5 Jan 2020 21:22:39 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32884 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbgAFCWi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 5 Jan 2020 21:22:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id z16so26256055pfk.0;
-        Sun, 05 Jan 2020 18:22:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ipcsI+jZ4hrMnV7t9N2jVs66amx0u2G0uIwSlpjDd4Y=;
-        b=lPDci3wOl0yBaSZhnSt8JF1e1tCFoPAb4SE1gSvn6yb8TH4Qf2eBJIevhzA4jJ9kQT
-         jXw8T+0T3DMv9vCc2d3KtMCh0cO0Fh3AtQ1mQp9HnN/WUU9k/IdOqfebWK3ki2Q8kU9A
-         0vSiiZnGpAU22FAwvbSz30yaL+XhXV/sC2lPOgMXd/5FUrKk2Rv2WM/IE6luBBwj6F/Z
-         7T7Q8MrIX9nWS6DUTuRfhnWMeVdWUdb8jFSOYhvdy+lFddRukrLhwFNVoj+Cbm+s5OSp
-         8RzUEI23DO/jQmdHBuFs7xSyPCkTupn1Z1TeuBWqkz7VO3ghWsUkOECPzQHZlnUQi9cb
-         Ar6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ipcsI+jZ4hrMnV7t9N2jVs66amx0u2G0uIwSlpjDd4Y=;
-        b=HYv1hBLq10RYm2LWE5rZh2CihTyn0dCuifN/4m5rriCzvsdPs1eRK1yF6jAbEZipeb
-         J35sXVaggq6/6xxE57zbkveSU/HrLDbiL2ybwyda4DfdiqbMoYSTg0hW5ibTq/vUJKjC
-         0qhm5on26KYeiywb02pLa5vyQ8Eav059sCTJQaxN8j+9SJBy87VEgYIK35L4u4cfUPZW
-         DWcHbZy6nHjXGRzI3Crx9F3R93HXCwhEEcpx5G230ugIuXlM0Yo1Nx+G6FjPpRcwaqtx
-         MK4GD13UflYdNBUnNiV0YRYnAAwS1OqTlu7bLmGNhPpKgm9sijmFtRnVolh2BpOsGN31
-         kDGg==
-X-Gm-Message-State: APjAAAU5hNmAx2PiOr+GerKwvz10AvPG7/ELu7unEdi9YKAQLeBDZeac
-        K1IyAA7cZ+IUabnUfve/BtQ=
-X-Google-Smtp-Source: APXvYqz1BDCSkSXVrUu4zC2a82wSvLK/YKFS/9RPAe5p+u2Z0wTdw9lddOQIFWy8lwM33vK+qK2FoA==
-X-Received: by 2002:a62:e509:: with SMTP id n9mr4122196pff.159.1578277358154;
-        Sun, 05 Jan 2020 18:22:38 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q22sm77320323pfg.170.2020.01.05.18.22.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Jan 2020 18:22:37 -0800 (PST)
-Subject: Re: [PATCH v9 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, yong.liang@mediatek.com,
-        wim@linux-watchdog.org, p.zabel@pengutronix.de,
-        matthias.bgg@gmail.com, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com
-Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
-References: <1578241301-14618-1-git-send-email-jiaxin.yu@mediatek.com>
- <1578241301-14618-2-git-send-email-jiaxin.yu@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <04f9dbd7-4d96-cdbf-0bb2-9c34e8d84dc9@roeck-us.net>
-Date:   Sun, 5 Jan 2020 18:22:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <1578241301-14618-2-git-send-email-jiaxin.yu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Sun, 5 Jan 2020 21:38:25 -0500
+Received: from mail-vi1eur05on2040.outbound.protection.outlook.com ([40.107.21.40]:64865
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727319AbgAFCiZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 5 Jan 2020 21:38:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Fx1JFiJSa/V4E8o6wwcOR0BR46H0Kp/c03LUnuXGKisu7pgqdaeD9OfD/axCHrXSrL8wxE2JnJkq7nR49VciJegQZ/pVKflBDTyUxuGvXwNgiXR8Ma9lOtEBbG3cXxQjcwMNMGCJJ7Enci/cWLQw09LZaFLRsHDzZVdlzS8jdTUc4YrAxz6ZSKt6bDjFmRqlCwhgguS5abBWdmYWjZ97xwg26r1lU1Cde526b2IhedUG82AHvDIrcu7yX9XS6C674FwApMkmziaZSbMFSQsogCA6myWwV9e/xCcmEYTsBYeHOEjbIrifH+2l10FQVaKa42yDk339sxnQoRHbzvRXTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e+vc845n2eKAdY0NzzJ2bu6akDIeYUsr49pGJqJ+k2w=;
+ b=m/Vs3Rd1aD6UJOp/5OdqqYFMyKhzpY9kLgVplJ26uySTNmAmXio1e+J1MNyr5utNOeKszOdi2zQOyYLXKIwJtBBa2SEPRrEM+X1kc0dUqD52M76DYJHYmO6ZHfOP3+XeYGKScFGGgBfuicnowHEFqKRVN2iShAL1a4H1R439AI8+2q/JjsTJjEfDS9L8NSCDmLGXmuwJN5QvC5Vk+EmrQifH3anUB+Gg9Xtj7LY1pOVPWR9aOeKzUPgxbxNdi0wY5uF4Cnj+i2jfAH4wk7q9h2o+aJphyvtdjuP65Jd2H2NMKKmpT2o1HI4DdIVi+VfOzivzU0+c6ijmoNALmqb/dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e+vc845n2eKAdY0NzzJ2bu6akDIeYUsr49pGJqJ+k2w=;
+ b=WT60HEnYCz58XsspIqkctPruMoa6ReC6SEXH6CGH2VZORkcecWjdGrv6/ekU1mQesWER/+r55Zp/ZcxHSiUT3Uc+jt8HAJ9qftmyIgRpw/Df497oQjDM38YuHNaPKBpJV/hO+lSu7pXAv2hs7+xnrsdfxyJu+KM5pU3BJqj24yI=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5682.eurprd04.prod.outlook.com (20.178.202.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Mon, 6 Jan 2020 02:38:18 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::c58c:e631:a110:ba58]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::c58c:e631:a110:ba58%6]) with mapi id 15.20.2602.015; Mon, 6 Jan 2020
+ 02:38:18 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alice Guo <alice.guo@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx: drop "fsl,aips-bus"
+Thread-Topic: [PATCH] ARM: dts: imx: drop "fsl,aips-bus"
+Thread-Index: AQHVvu9AXeMfpR61Rke6CNGr+daIZKfZsCkAgANF9OA=
+Date:   Mon, 6 Jan 2020 02:38:18 +0000
+Message-ID: <AM0PR04MB4481917D6A969053CB85276F883C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1577696078-21720-1-git-send-email-peng.fan@nxp.com>
+ <20200104003634.GA6058@bogus>
+In-Reply-To: <20200104003634.GA6058@bogus>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 00c7e4fc-4ba0-4415-da5c-08d792517d4b
+x-ms-traffictypediagnostic: AM0PR04MB5682:|AM0PR04MB5682:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB56828C7631B05CD71CB47B41883C0@AM0PR04MB5682.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 0274272F87
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(366004)(346002)(136003)(189003)(199004)(86362001)(66476007)(71200400001)(2906002)(76116006)(26005)(9686003)(66946007)(186003)(66446008)(66556008)(55016002)(8936002)(64756008)(4326008)(6506007)(478600001)(44832011)(7696005)(6916009)(8676002)(316002)(81156014)(81166006)(54906003)(52536014)(5660300002)(33656002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5682;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bgqgflOtkZ76FcdnsnCIeNqw6MhVFupfv1qhQ8EdJM4CNBEzDBQ1mYHnm44kZzOWvzTfJQ6azne3Po6NEHg+xkMT5Mpq2wWgZqYh6Zv+I7nCcZ6rK2JnZg14hvIsKM5MQfHSL4QgbRY0WKdIKmkr7D9zmHtYuw3oeKfaTOu10kTAzwNHadfEjGH1AkqzbC+hrcK8fY0v1eNbtdJpqYIik46MEKSHy6HWXG1S2RaPj+zfOZP7d6FrM+bYHhtFPH1K0zUlJ2okbTb+dUOH+AUwtzkF3FWGX9Gfmo0sr71WX7COwr88j6bTKXCBLb/gUdvot2yLolLgMrd5YMG/xEsfUAHOx//C8EIeYMxMjQDRp64hqSALwa8Kd1eCoCt1JzbwGVYZqlYx+ZJjdj9slvk3xbgLB5sAOpBQv+1z/UC9WJSsAorVoPYws4XfytJSt8eSVD4CMudLOhA445eFF0rhF54fsosQcmeg7ze2KYKsNxY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00c7e4fc-4ba0-4415-da5c-08d792517d4b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2020 02:38:18.7104
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QJ+C0IEYdTEE8+dijL6O0ivqG2h76WQnDnylZtiRIg/ml6v2IejhJqXo6uZV3zsbhSJ7un/S+zQanZ9gv489GQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5682
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/5/20 8:21 AM, Jiaxin Yu wrote:
-> Add #reset-cells property and update example
-> 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->   .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
->   .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
->   2 files changed, 39 insertions(+)
->   create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
-> 
+Hi Rob,
 
-Repeating Rob's question from v8: What happened to the bindings document ?
+> Subject: Re: [PATCH] ARM: dts: imx: drop "fsl,aips-bus"
+>=20
+> On Mon, Dec 30, 2019 at 08:58:05AM +0000, Peng Fan wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > There is no binding doc for "fsl,aips-bus", "simple-bus" is enough for
+> > aips usage, so drop it.
+>=20
+> NAK. The AIPS bus has registers, so 'simple-bus' alone is not enough.
 
-Guenter
+You mean the "reg" property below, right?
+                aips-bus@2000000 { /* AIPS1 */
+-                       compatible =3D "fsl,aips-bus", "simple-bus";
++                       compatible =3D "simple-bus";
+                        #address-cells =3D <1>;
+                        #size-cells =3D <1>;
+                        reg =3D <0x02000000 0x100000>;
 
-> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
-> new file mode 100644
-> index 000000000000..9e7ee762f076
-> --- /dev/null
-> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2019 MediaTek Inc.
-> + * Author: Yong Liang <yong.liang@mediatek.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
-> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
-> +
-> +#define MT2712_TOPRGU_INFRA_SW_RST				0
-> +#define MT2712_TOPRGU_MM_SW_RST					1
-> +#define MT2712_TOPRGU_MFG_SW_RST				2
-> +#define MT2712_TOPRGU_VENC_SW_RST				3
-> +#define MT2712_TOPRGU_VDEC_SW_RST				4
-> +#define MT2712_TOPRGU_IMG_SW_RST				5
-> +#define MT2712_TOPRGU_INFRA_AO_SW_RST				8
-> +#define MT2712_TOPRGU_USB_SW_RST				9
-> +#define MT2712_TOPRGU_APMIXED_SW_RST				10
-> +
-> +#define MT2712_TOPRGU_SW_RST_NUM				11
-> +
-> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
-> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
-> index 8804e34ebdd4..a1bbd41e0d12 100644
-> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
-> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
-> @@ -78,4 +78,21 @@
->   #define MT8183_INFRACFG_AO_I2C7_SW_RST				126
->   #define MT8183_INFRACFG_AO_I2C8_SW_RST				127
->   
-> +#define MT8183_INFRACFG_SW_RST_NUM				128
-> +
-> +#define MT8183_TOPRGU_MM_SW_RST					1
-> +#define MT8183_TOPRGU_MFG_SW_RST				2
-> +#define MT8183_TOPRGU_VENC_SW_RST				3
-> +#define MT8183_TOPRGU_VDEC_SW_RST				4
-> +#define MT8183_TOPRGU_IMG_SW_RST				5
-> +#define MT8183_TOPRGU_MD_SW_RST					7
-> +#define MT8183_TOPRGU_CONN_SW_RST				9
-> +#define MT8183_TOPRGU_CONN_MCU_SW_RST				12
-> +#define MT8183_TOPRGU_IPU0_SW_RST				14
-> +#define MT8183_TOPRGU_IPU1_SW_RST				15
-> +#define MT8183_TOPRGU_AUDIO_SW_RST				17
-> +#define MT8183_TOPRGU_CAMSYS_SW_RST				18
-> +
-> +#define MT8183_TOPRGU_SW_RST_NUM				19
-> +
->   #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
-> 
+But the reg property is not required, I think it could be removed.
+There is no binding doc and driver for "fsl,aips-bus", so I think
+It not make sense to have that compatible in dts.
 
+>=20
+> What you should do is change 'aips' node names to 'bus'.
+
+How do you think about below change, with reg removed?
+                aips-bus@2000000 { /* AIPS1 */
+-                       compatible =3D "fsl,aips-bus", "simple-bus";
++                       compatible =3D "simple-bus";
+                        #address-cells =3D <1>;
+                        #size-cells =3D <1>;
+-                       reg =3D <0x02000000 0x100000>;
+
+Thanks,
+Peng.
+>=20
+> >
+> > Scirpt:
+> > sed -i 's/compatible =3D "fsl,aips-bus", "simple-bus";/compatible =3D
+> "simple-bus";/'
+> > arch/arm/boot/dts/imx*
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  arch/arm/boot/dts/imx25.dtsi   | 4 ++--
+> >  arch/arm/boot/dts/imx31.dtsi   | 4 ++--
+> >  arch/arm/boot/dts/imx50.dtsi   | 4 ++--
+> >  arch/arm/boot/dts/imx51.dtsi   | 4 ++--
+> >  arch/arm/boot/dts/imx53.dtsi   | 4 ++--
+> >  arch/arm/boot/dts/imx6qdl.dtsi | 4 ++--
+> > arch/arm/boot/dts/imx6sl.dtsi  | 4 ++--
+> > arch/arm/boot/dts/imx6sll.dtsi | 4 ++--  arch/arm/boot/dts/imx6sx.dtsi
+> > | 6 +++---  arch/arm/boot/dts/imx6ul.dtsi  | 4 ++--
+> > arch/arm/boot/dts/imx6ull.dtsi | 2 +-
+> >  arch/arm/boot/dts/imx7s.dtsi   | 6 +++---
+> >  12 files changed, 25 insertions(+), 25 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/imx25.dtsi
+> > b/arch/arm/boot/dts/imx25.dtsi index 40b95a290bd6..3b7a0b249d80
+> 100644
+> > --- a/arch/arm/boot/dts/imx25.dtsi
+> > +++ b/arch/arm/boot/dts/imx25.dtsi
+> > @@ -76,7 +76,7 @@
+> >  		ranges;
+> >
+> >  		aips@43f00000 { /* AIPS1 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x43f00000 0x100000>;
+> > @@ -333,7 +333,7 @@
+> >  		};
+> >
+> >  		aips@53f00000 { /* AIPS2 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x53f00000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx31.dtsi
+> > b/arch/arm/boot/dts/imx31.dtsi index 6b62f0745b82..b0e7e3bf8a1a
+> 100644
+> > --- a/arch/arm/boot/dts/imx31.dtsi
+> > +++ b/arch/arm/boot/dts/imx31.dtsi
+> > @@ -64,7 +64,7 @@
+> >  		};
+> >
+> >  		aips@43f00000 { /* AIPS1 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x43f00000 0x100000>;
+> > @@ -226,7 +226,7 @@
+> >  		};
+> >
+> >  		aips@53f00000 { /* AIPS2 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x53f00000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx50.dtsi
+> > b/arch/arm/boot/dts/imx50.dtsi index 0bfe7c91d0eb..961de09b571d
+> 100644
+> > --- a/arch/arm/boot/dts/imx50.dtsi
+> > +++ b/arch/arm/boot/dts/imx50.dtsi
+> > @@ -102,7 +102,7 @@
+> >  		ranges;
+> >
+> >  		aips@50000000 { /* AIPS1 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x50000000 0x10000000>;
+> > @@ -390,7 +390,7 @@
+> >  		};
+> >
+> >  		aips@60000000 {	/* AIPS2 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x60000000 0x10000000>;
+> > diff --git a/arch/arm/boot/dts/imx51.dtsi
+> > b/arch/arm/boot/dts/imx51.dtsi index dea86b98e9c3..86708688371b
+> 100644
+> > --- a/arch/arm/boot/dts/imx51.dtsi
+> > +++ b/arch/arm/boot/dts/imx51.dtsi
+> > @@ -159,7 +159,7 @@
+> >  		};
+> >
+> >  		aips@70000000 { /* AIPS1 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x70000000 0x10000000>;
+> > @@ -441,7 +441,7 @@
+> >  		};
+> >
+> >  		aips@80000000 {	/* AIPS2 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x80000000 0x10000000>;
+> > diff --git a/arch/arm/boot/dts/imx53.dtsi
+> > b/arch/arm/boot/dts/imx53.dtsi index ed341cfd9d09..f46a83c7d2c4
+> 100644
+> > --- a/arch/arm/boot/dts/imx53.dtsi
+> > +++ b/arch/arm/boot/dts/imx53.dtsi
+> > @@ -223,7 +223,7 @@
+> >  		};
+> >
+> >  		aips@50000000 { /* AIPS1 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x50000000 0x10000000>;
+> > @@ -655,7 +655,7 @@
+> >  		};
+> >
+> >  		aips@60000000 {	/* AIPS2 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x60000000 0x10000000>;
+> > diff --git a/arch/arm/boot/dts/imx6qdl.dtsi
+> > b/arch/arm/boot/dts/imx6qdl.dtsi index e6b4b8525f98..9b7635e9cf3c
+> > 100644
+> > --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> > +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> > @@ -295,7 +295,7 @@
+> >  		};
+> >
+> >  		aips-bus@2000000 { /* AIPS1 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02000000 0x100000>;
+> > @@ -936,7 +936,7 @@
+> >  		};
+> >
+> >  		aips-bus@2100000 { /* AIPS2 */
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02100000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx6sl.dtsi
+> > b/arch/arm/boot/dts/imx6sl.dtsi index 59c54e6ad09a..4b4f22217dfe
+> > 100644
+> > --- a/arch/arm/boot/dts/imx6sl.dtsi
+> > +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> > @@ -144,7 +144,7 @@
+> >  		};
+> >
+> >  		aips1: aips-bus@2000000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02000000 0x100000>;
+> > @@ -787,7 +787,7 @@
+> >  		};
+> >
+> >  		aips2: aips-bus@2100000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02100000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx6sll.dtsi
+> > b/arch/arm/boot/dts/imx6sll.dtsi index a1bc5bb31756..fac8f22255aa
+> > 100644
+> > --- a/arch/arm/boot/dts/imx6sll.dtsi
+> > +++ b/arch/arm/boot/dts/imx6sll.dtsi
+> > @@ -145,7 +145,7 @@
+> >  		};
+> >
+> >  		aips1: aips-bus@2000000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02000000 0x100000>;
+> > @@ -664,7 +664,7 @@
+> >  		};
+> >
+> >  		aips2: aips-bus@2100000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02100000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx6sx.dtsi
+> > b/arch/arm/boot/dts/imx6sx.dtsi index 59bad60a47dc..4499be62c8bb
+> > 100644
+> > --- a/arch/arm/boot/dts/imx6sx.dtsi
+> > +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> > @@ -236,7 +236,7 @@
+> >  		};
+> >
+> >  		aips1: aips-bus@2000000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02000000 0x100000>;
+> > @@ -831,7 +831,7 @@
+> >  		};
+> >
+> >  		aips2: aips-bus@2100000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02100000 0x100000>;
+> > @@ -1189,7 +1189,7 @@
+> >  		};
+> >
+> >  		aips3: aips-bus@2200000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02200000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx6ul.dtsi
+> > b/arch/arm/boot/dts/imx6ul.dtsi index d9fdca12819b..63d276fc2477
+> > 100644
+> > --- a/arch/arm/boot/dts/imx6ul.dtsi
+> > +++ b/arch/arm/boot/dts/imx6ul.dtsi
+> > @@ -205,7 +205,7 @@
+> >  		};
+> >
+> >  		aips1: aips-bus@2000000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02000000 0x100000>;
+> > @@ -772,7 +772,7 @@
+> >  		};
+> >
+> >  		aips2: aips-bus@2100000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02100000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx6ull.dtsi
+> > b/arch/arm/boot/dts/imx6ull.dtsi index b7e67d121322..633fa08bc972
+> > 100644
+> > --- a/arch/arm/boot/dts/imx6ull.dtsi
+> > +++ b/arch/arm/boot/dts/imx6ull.dtsi
+> > @@ -52,7 +52,7 @@
+> >  / {
+> >  	soc {
+> >  		aips3: aips-bus@2200000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x02200000 0x100000>;
+> > diff --git a/arch/arm/boot/dts/imx7s.dtsi
+> > b/arch/arm/boot/dts/imx7s.dtsi index 139ab9b98472..552b14be14a1
+> 100644
+> > --- a/arch/arm/boot/dts/imx7s.dtsi
+> > +++ b/arch/arm/boot/dts/imx7s.dtsi
+> > @@ -317,7 +317,7 @@
+> >  		};
+> >
+> >  		aips1: aips-bus@30000000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x30000000 0x400000>;
+> > @@ -669,7 +669,7 @@
+> >  		};
+> >
+> >  		aips2: aips-bus@30400000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x30400000 0x400000>;
+> > @@ -809,7 +809,7 @@
+> >  		};
+> >
+> >  		aips3: aips-bus@30800000 {
+> > -			compatible =3D "fsl,aips-bus", "simple-bus";
+> > +			compatible =3D "simple-bus";
+> >  			#address-cells =3D <1>;
+> >  			#size-cells =3D <1>;
+> >  			reg =3D <0x30800000 0x400000>;
+> > --
+> > 2.16.4
+> >
