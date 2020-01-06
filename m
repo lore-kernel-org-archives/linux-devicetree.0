@@ -2,531 +2,301 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601AEC33C8C
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 15:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73375C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 16:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1C12081E
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 15:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CAF214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 16:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MD/KyYTV"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iOdE2LX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgAFPuK (ORCPT
+        id S1726515AbgAFQJh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 10:50:10 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35495 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgAFPuK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 10:50:10 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 15so36694107lfr.2
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 07:50:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NVL5+pBVbAL5rpEkMW1hQcPnra9m/vRP70pZvH2RbgM=;
-        b=MD/KyYTVUIBMi2KaxcIyVNlZVX6jQoBJiMULaEZnYo6Gxozi8WrMti2ageBVD6S4Zm
-         O9Nh5aRRuW3scPQ7Jvp1vdEqvzaTKrYILfWSj+99d5nVVHZ6FrEmd8VigntmF8OuKi2n
-         CrIf+XytNPxjaaOppntG9GBLMpmby+QC0+xl9hUktwW2PNPQHEUIszef4LRiM01rt/QZ
-         GxXMATV1MZr6JWv0zIQsIU11INOmBK8+nt22TCnbZkMqD5ZUOKVNRzH0HNR9SAHH5GUF
-         mOT5duJxdPhRUnTJhVOoPmRRyxLhq/cU4nxLszkjhG/fRJKtiFscTvSveOJwWIZk+VFr
-         OpjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NVL5+pBVbAL5rpEkMW1hQcPnra9m/vRP70pZvH2RbgM=;
-        b=cNIkT2WE6lQgXn3/tW+49l93GdDINS2+bLkYt+K/kkaa6DJCexel6Xg2/dDlFZAj/g
-         jMDPyBpwICWrFWxJZkaR+ZT1StyB3AnR/MZHTUY/QPB0HetiEf07FmCx5q6t4svgDHDp
-         3/deHlR7Vrd/eJ1PkwkgKmcuzSblQAbv0XC+iGFSfZQvRXvgCCBLleD6T9kcC9X82xhn
-         o2FmYmscSAJr8CNhqcJ5U55Ct29WWCjenKRHKVUBVBbH81X8Ph4qE/uSZYwkbpPSkNM6
-         dCKADIljGMu/YKuQnbuAzlBzT2bCqcn05J5NqTF705c43YrDCX3Ez6pAC/zeDkg3L8pt
-         VCAQ==
-X-Gm-Message-State: APjAAAXz2Eas/qgG+9A5d1C6eRjj42E64eJ6jsmuHqVBNd/NdG2qeBhb
-        QHMeiAnpp7cN9+HLkuDojqPbETLY8o4=
-X-Google-Smtp-Source: APXvYqwVBXN4a2fWqZfLcG1fnIxrjRnZlkTMMJtACS/CKoC1pc6cdpBtl8btcWY/fb57ipxypmlC7g==
-X-Received: by 2002:a19:5013:: with SMTP id e19mr57756651lfb.8.1578325807430;
-        Mon, 06 Jan 2020 07:50:07 -0800 (PST)
-Received: from localhost.localdomain ([37.157.136.193])
-        by smtp.gmail.com with ESMTPSA id x84sm29388259lfa.97.2020.01.06.07.50.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jan 2020 07:50:06 -0800 (PST)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org,
-        Aniket Masule <amasule@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v4 02/12] media: venus: introduce core selection
-Date:   Mon,  6 Jan 2020 17:49:19 +0200
-Message-Id: <20200106154929.4331-3-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
-References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+        Mon, 6 Jan 2020 11:09:37 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8917 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgAFQJh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 11:09:37 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e135b900002>; Mon, 06 Jan 2020 08:08:48 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Jan 2020 08:09:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 06 Jan 2020 08:09:35 -0800
+Received: from [10.2.169.188] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 6 Jan
+ 2020 16:09:34 +0000
+Subject: Re: [PATCH v5 12/19] ASoC: tegra: Add initial parent configuration
+ for audio mclk
+To:     Sameer Pujar <spujar@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
+        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <josephl@nvidia.com>, <daniel.lezcano@linaro.org>,
+        <mmaddireddy@nvidia.com>, <markz@nvidia.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1576880825-15010-1-git-send-email-skomatineni@nvidia.com>
+ <1576880825-15010-13-git-send-email-skomatineni@nvidia.com>
+ <a6567ff1-7bc2-3ca5-1200-92a63eb44ddb@gmail.com>
+ <20191225175736.GC27497@sirena.org.uk>
+ <856d8a92-0c24-6722-952c-06b86c706e97@gmail.com>
+ <dbbce994-27f5-d949-078d-05646100e6be@nvidia.com>
+ <b6ec6cfd-d883-ea28-00f8-884fa80cfee1@nvidia.com>
+ <576fca44-6734-5431-b523-512747a0bf12@gmail.com>
+ <fb252096-e101-7d21-9717-c23607ae6edd@nvidia.com>
+ <0f956c12-98cf-3466-f3ee-ffc3a23e3e3d@gmail.com>
+ <9e08a1eb-7a9f-0ed0-a2f4-08f1d6f93958@nvidia.com>
+ <359bf92f-2e67-28b2-8412-9e47bb24ffdb@nvidia.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <5921f8e1-359d-4352-a785-8a685cd1a200@nvidia.com>
+Date:   Mon, 6 Jan 2020 08:09:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <359bf92f-2e67-28b2-8412-9e47bb24ffdb@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578326929; bh=yefysCJzPppAjwnGHzQ0yYS9wOmAfoAeKGGtEFf44Mw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=iOdE2LX8loJPpHnMj3ZXnaHv+ZLmqlygPFFQf64yIlNUg+e+vIc5VQadGhLBBqDxV
+         yG1BXc2Cl94+At5G+2X+k353AdjrZv2kl6uq358USIqhBnB4SSaJlLKw/NJX/sdY0c
+         Uju0OqJAPK9HeMtaCdQYeTKn6miTKOmmnCxfYRFB4pHs3vgSsGqEscLLpc5x+4yKas
+         wP/5CGKlvSKWzkBkZWxYuw+02ja90WSiKj+KadAPkp6qspCB3KX9+NEF3gLRmT6F9g
+         efEzjDTDODjjObAGNSWCDOeHdPxyQlvY0rziAEFufZl7vHx3uG23TZ5nLuo/e60Jye
+         9XIY1bbpswKyA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Aniket Masule <amasule@codeaurora.org>
 
-Presently the core (vcodec pipelines) assignment is static. Here we
-introduce dynamic load balancing across the cores depending on the
-current session load. The load on earch core is calculated and core
-with minimum load is assigned to given instance. This will be
-applicable on Venus v4 with more than one vcodec cores.
+On 1/5/20 8:21 PM, Sameer Pujar wrote:
+>
+> On 1/5/2020 10:33 AM, Sowjanya Komatineni wrote:
+>>
+>> On 1/4/20 5:05 PM, Dmitry Osipenko wrote:
+>>> 04.01.2020 08:49, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> On 1/2/20 8:12 AM, Dmitry Osipenko wrote:
+>>>>> 02.01.2020 10:03, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>> On 12/27/19 1:19 PM, Sowjanya Komatineni wrote:
+>>>>>>> On 12/27/19 6:56 AM, Dmitry Osipenko wrote:
+>>>>>>>> 25.12.2019 20:57, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>>>>>> On Mon, Dec 23, 2019 at 12:14:34AM +0300, Dmitry Osipenko wrote:
+>>>>>>>>>> 21.12.2019 01:26, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+>>>>>>>>>>> Tegra PMC clock clk_out_1 is dedicated for audio mclk from=20
+>>>>>>>>>>> Tegra30
+>>>>>>>>>>> through Tegra210 and currently Tegra clock driver does=20
+>>>>>>>>>>> initial parent
+>>>>>>>>>>> configuration for audio mclk "clk_out_1" and enables them by=20
+>>>>>>>>>>> default.
+>>>>>>>>> Please delete unneeded context from mails when replying.=C2=A0=20
+>>>>>>>>> Doing this
+>>>>>>>>> makes it much easier to find your reply in the message,=20
+>>>>>>>>> helping ensure
+>>>>>>>>> it won't be missed by people scrolling through the irrelevant=20
+>>>>>>>>> quoted
+>>>>>>>>> material.
+>>>>>>>> Ok
+>>>>>>>>
+>>>>>>>>>>> - clk_disable_unprepare(data->clk_cdev1);
+>>>>>>>>>>> - clk_disable_unprepare(data->clk_pll_a_out0);
+>>>>>>>>>>> - clk_disable_unprepare(data->clk_pll_a);
+>>>>>>>>>>> +=C2=A0=C2=A0=C2=A0 if (__clk_is_enabled(data->clk_cdev1))
+>>>>>>>>>>> + clk_disable_unprepare(data->clk_cdev1);
+>>>>>>>>>> The root of the problem is that you removed clocks enabling from
+>>>>>>>>>> tegra_asoc_utils_init().
+>>>>>>> currently, audio mclk and its parent clocks enabling are from clock
+>>>>>>> driver init and not from tegra_asoc_utils_init.
+>>>>>>>>>> I'm not sure why clocks should be disabled during the=20
+>>>>>>>>>> rate-changing,
+>>>>>>>>>> probably this action is not really needed.
+>>>>>>>>> I know nothing about this particular device but this is not that
+>>>>>>>>> unusual a restriction for audio hardware, you often can't
+>>>>>>>>> robustly reconfigure the clocking for a device while it's active
+>>>>>>>>> due to issues in the hardware.=C2=A0 You often see issues with FI=
+FOs
+>>>>>>>>> glitching or state machines getting stuck. This may not be an
+>>>>>>>>> issue here but if it's something that's documented as a
+>>>>>>>>> requirement it's probably good to pay attention.
+>>>>>>>> I don't know details about that hardware either, maybe it is=20
+>>>>>>>> simply not
+>>>>>>>> safe to change PLL_A rate dynamically and then=20
+>>>>>>>> CLK_SET_RATE_GATE could
+>>>>>>>> be used.
+>>>>>>>>
+>>>>>>>> If nobody knows for sure, then will be better to keep
+>>>>>>>> tegra_asoc_utils_set_rate() unchanged.
+>>>>>>> plla rate change through tegra_asoc_utils_set_rate() happens=20
+>>>>>>> only when
+>>>>>>> there is not active playback or record corresponding to this sound
+>>>>>>> device.
+>>>>>>>
+>>>>>>> So, I don't see reason for disabling clock during rate change=20
+>>>>>>> and not
+>>>>>>> sure why we had this from the beginning.
+>>>>>>>
+>>>>>>> Thierry/Sameer,
+>>>>>>>
+>>>>>>> Can you please comment?
+>>>>>>>
+>>>>>>> Yes, we can use CLK_SET_RATE_GATE for PLLA and remove clock=20
+>>>>>>> disabling
+>>>>>>> before rate change.
+>>>>>>>
+>>>>>> PLLA is used for both I2S controller clock and also for audio=20
+>>>>>> mclk. I2S
+>>>>>> driver suspend resume implementations takes care of enabling and
+>>>>>> disabling I2S clock but audio mclk will be enabled during that=20
+>>>>>> time and
+>>>>>> PLLA disable might not happen. So using CLK_SET_RATE_GATE=20
+>>>>>> prevents rate
+>>>>>> change to happen and as rate change happens only when there is no=20
+>>>>>> active
+>>>>>> audio record/playback, we can perform rate change without=20
+>>>>>> disable/enable
+>>>>>> during rate change.
+>>>>>>
+>>>>>> So probably below changes should be good.
+>>>>>>
+>>>>>> =C2=A0=C2=A0 * remove asoc_utils_set_rate call from asoc_utils_init =
+as=20
+>>>>>> set_rate
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 happens during existing hw_params callback =
+implementations=20
+>>>>>> in sound
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 drivers and there is no need to do rate cha=
+nge during=20
+>>>>>> asoc_utils_init.
+>>>>>> =C2=A0=C2=A0 * remove disable/enable clocks during rate change in=20
+>>>>>> asoc_utils_set_rate.
+>>>>>> =C2=A0=C2=A0 * add startup and shutdown snd_soc_ops callbacks to do =
+enable and
+>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0 disable audio mclk.
+>>>>>>
+>>>>> Sounds good, thanks. I'll be happy to review and test it.
+>>>> Regarding disabling audio mclk during PLLA rate change, no need to
+>>>> explicitly disable PLLA on asoc utils as clock driver takes care of it
+>>>> properly during pll rate change.
+>>>>
+>>>> But the downstream clock divider hardware can malfunction without
+>>>> recovery when subject to unstable PLL output during locking, unless
+>>>> clock is gated.
+>>>>
+>>>> So it is recommended to disable downstream clocks during PLL rate=20
+>>>> change.
+>>>>
+>>>> PLLA downstream clocks are I2S and audio mclk (cdev1/clk1 and extern1
+>>>> clocks) and I2S clock is disabled in I2S driver by PM runtime ops.
+>>> The I2S driver uses asynchronous pm_runtime_put() and thus there is no
+>>> guarantee that I2S clock is disabled at the time of changing PLLA rate.
+>>> Could this be a problem?
+>> Looking into soc_pcm_hw_params, I see dai_link hw_params ops happens=20
+>> prior to=C2=A0 platform snd_soc_dai_driver hw_params ops.
+>
+> This is true.
+>
+>>
+>> So, PLL rate change thru asoc_utils_set_rate happens during sample=20
+>> rate config of dai_link hw_params ops and during this time I2S will=20
+>> always be in idle state.
+>
+> This is probably not the case, since runtime resume for I2S would have=20
+> already enabled the clock for I2S and in turn PLLA. The hw_param()=20
+> call would happen later.
+> We could have used a fixed clock rate for PLLA, but the reason why we=20
+> are setting the rate at runtime is, we support sample rates (and=20
+> multuples) of 8kHz and 11.025kHz.
+> Both of these require a different PLLA base rate for downstream clock=20
+> dividers to work properly. That is why, I think we have two base rates=20
+> for PLLA.
+>
+> Even if we want to enable the clocks (for i2s) in hw_param(), this=20
+> still may not help.
+> For example there could be multiple I2S instances, which can use the=20
+> same PLLA source. ALSA playback/capture on different I2S can run=20
+> independently.
+> Hence we are not sure if clk_disable_unprepare() in tegra_asoc_utils.c=20
+> would actually disable PLLA. Hence I think the problem exists in=20
+> current code too.
 
-Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-Co-developed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/core.h      |   3 +
- drivers/media/platform/qcom/venus/helpers.c   |  17 +-
- drivers/media/platform/qcom/venus/helpers.h   |   1 -
- .../media/platform/qcom/venus/hfi_helper.h    |   1 +
- .../media/platform/qcom/venus/hfi_parser.h    |   5 +
- .../media/platform/qcom/venus/pm_helpers.c    | 183 ++++++++++++++++--
- .../media/platform/qcom/venus/pm_helpers.h    |  26 +++
- drivers/media/platform/qcom/venus/vdec.c      |  11 +-
- drivers/media/platform/qcom/venus/venc.c      |  10 +-
- 9 files changed, 221 insertions(+), 36 deletions(-)
+clk_disable_unprepare in aosc_utils_set_rate will not disable PLLA as it=20
+will be in use by other consumer (I2S).
 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index c66763e1b8f1..bfbd4a1ba089 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -181,6 +181,8 @@ struct venus_core {
- 	struct delayed_work work;
- 	struct venus_caps caps[MAX_CODEC_NUM];
- 	unsigned int codecs_count;
-+	unsigned int core0_usage_count;
-+	unsigned int core1_usage_count;
- };
- 
- struct vdec_controls {
-@@ -379,6 +381,7 @@ struct venus_inst {
- 	const struct hfi_inst_ops *ops;
- 	u32 session_type;
- 	union hfi_get_property hprop;
-+	unsigned int core_acquired: 1;
- };
- 
- #define IS_V1(core)	((core)->res->hfi_version == HFI_VERSION_1XX)
-diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-index cbeeaf6077e0..043e0d8705a8 100644
---- a/drivers/media/platform/qcom/venus/helpers.c
-+++ b/drivers/media/platform/qcom/venus/helpers.c
-@@ -723,21 +723,6 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
- }
- EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
- 
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
--{
--	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
--	struct hfi_videocores_usage_type cu;
--
--	inst->clk_data.core_id = usage;
--	if (!IS_V4(inst->core))
--		return 0;
--
--	cu.video_core_enable_mask = usage;
--
--	return hfi_session_set_property(inst, ptype, &cu);
--}
--EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
--
- int venus_helper_init_codec_freq_data(struct venus_inst *inst)
- {
- 	const struct codec_freq_data *data;
-@@ -1101,6 +1086,8 @@ void venus_helper_vb2_stop_streaming(struct vb2_queue *q)
- 	else
- 		inst->streamon_cap = 0;
- 
-+	venus_pm_release_core(inst);
-+
- 	mutex_unlock(&inst->lock);
- }
- EXPORT_SYMBOL_GPL(venus_helper_vb2_stop_streaming);
-diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
-index 44b50914cd12..b64875564064 100644
---- a/drivers/media/platform/qcom/venus/helpers.h
-+++ b/drivers/media/platform/qcom/venus/helpers.h
-@@ -34,7 +34,6 @@ int venus_helper_set_output_resolution(struct venus_inst *inst,
- 				       u32 buftype);
- int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
- int venus_helper_init_codec_freq_data(struct venus_inst *inst);
--int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage);
- int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
- 			      unsigned int output_bufs,
- 			      unsigned int output2_bufs);
-diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
-index b70551e296b7..2a47f6c0a07a 100644
---- a/drivers/media/platform/qcom/venus/hfi_helper.h
-+++ b/drivers/media/platform/qcom/venus/hfi_helper.h
-@@ -550,6 +550,7 @@ struct hfi_bitrate {
- #define HFI_CAPABILITY_LCU_SIZE				0x14
- #define HFI_CAPABILITY_HIER_P_HYBRID_NUM_ENH_LAYERS	0x15
- #define HFI_CAPABILITY_MBS_PER_SECOND_POWERSAVE		0x16
-+#define HFI_CAPABILITY_MAX_VIDEOCORES			0x2b
- 
- struct hfi_capability {
- 	u32 capability_type;
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.h b/drivers/media/platform/qcom/venus/hfi_parser.h
-index 3e931c747e19..264e6dd2415f 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.h
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.h
-@@ -107,4 +107,9 @@ static inline u32 frate_step(struct venus_inst *inst)
- 	return cap_step(inst, HFI_CAPABILITY_FRAMERATE);
- }
- 
-+static inline u32 core_num_max(struct venus_inst *inst)
-+{
-+	return cap_max(inst, HFI_CAPABILITY_MAX_VIDEOCORES);
-+}
-+
- #endif
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-index 9531c01f067b..46d9d2fb5e23 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -14,6 +14,7 @@
- #include <media/v4l2-mem2mem.h>
- 
- #include "core.h"
-+#include "hfi_parser.h"
- #include "hfi_venus_io.h"
- #include "pm_helpers.h"
- 
-@@ -480,6 +481,173 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
- 	return 0;
- }
- 
-+static void
-+min_loaded_core(struct venus_inst *inst, u32 *min_coreid, u32 *min_load)
-+{
-+	u32 mbs_per_sec, load, core1_load = 0, core2_load = 0;
-+	u32 cores_max = core_num_max(inst);
-+	struct venus_core *core = inst->core;
-+	struct venus_inst *inst_pos;
-+	unsigned long vpp_freq;
-+	u32 coreid;
-+
-+	mutex_lock(&core->lock);
-+
-+	list_for_each_entry(inst_pos, &core->instances, list) {
-+		if (inst_pos == inst)
-+			continue;
-+		vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
-+		coreid = inst_pos->clk_data.core_id;
-+
-+		mbs_per_sec = load_per_instance(inst_pos);
-+		load = mbs_per_sec * vpp_freq;
-+
-+		if ((coreid & VIDC_CORE_ID_3) == VIDC_CORE_ID_3) {
-+			core1_load += load / 2;
-+			core2_load += load / 2;
-+		} else if (coreid & VIDC_CORE_ID_1) {
-+			core1_load += load;
-+		} else if (coreid & VIDC_CORE_ID_2) {
-+			core2_load += load;
-+		}
-+	}
-+
-+	*min_coreid = core1_load <= core2_load ?
-+			VIDC_CORE_ID_1 : VIDC_CORE_ID_2;
-+	*min_load = min(core1_load, core2_load);
-+
-+	if (cores_max < VIDC_CORE_ID_2 || core->res->vcodec_num < 2) {
-+		*min_coreid = VIDC_CORE_ID_1;
-+		*min_load = core1_load;
-+	}
-+
-+	mutex_unlock(&core->lock);
-+}
-+
-+static int decide_core(struct venus_inst *inst)
-+{
-+	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-+	struct venus_core *core = inst->core;
-+	u32 min_coreid, min_load, inst_load;
-+	struct hfi_videocores_usage_type cu;
-+	unsigned long max_freq;
-+
-+	if (legacy_binding) {
-+		if (inst->session_type == VIDC_SESSION_TYPE_DEC)
-+			cu.video_core_enable_mask = VIDC_CORE_ID_1;
-+		else
-+			cu.video_core_enable_mask = VIDC_CORE_ID_2;
-+
-+		goto done;
-+	}
-+
-+	if (inst->clk_data.core_id != VIDC_CORE_ID_DEFAULT)
-+		return 0;
-+
-+	inst_load = load_per_instance(inst);
-+	inst_load *= inst->clk_data.codec_freq_data->vpp_freq;
-+	max_freq = core->res->freq_tbl[0].freq;
-+
-+	min_loaded_core(inst, &min_coreid, &min_load);
-+
-+	if ((inst_load + min_load) > max_freq) {
-+		dev_warn(core->dev, "HW is overloaded, needed: %u max: %lu\n",
-+			 inst_load, max_freq);
-+		return -EINVAL;
-+	}
-+
-+	inst->clk_data.core_id = min_coreid;
-+	cu.video_core_enable_mask = min_coreid;
-+
-+done:
-+	return hfi_session_set_property(inst, ptype, &cu);
-+}
-+
-+static int acquire_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	unsigned int coreid_mask = 0;
-+
-+	if (inst->core_acquired)
-+		return 0;
-+
-+	inst->core_acquired = true;
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_1) {
-+		if (core->core0_usage_count++)
-+			return 0;
-+
-+		coreid_mask = VIDC_CORE_ID_1;
-+	}
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_2) {
-+		if (core->core1_usage_count++)
-+			return 0;
-+
-+		coreid_mask |= VIDC_CORE_ID_2;
-+	}
-+
-+	return poweron_coreid(core, coreid_mask);
-+}
-+
-+static int release_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	unsigned int coreid_mask = 0;
-+	int ret;
-+
-+	if (!inst->core_acquired)
-+		return 0;
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_1) {
-+		if (--core->core0_usage_count)
-+			goto done;
-+
-+		coreid_mask = VIDC_CORE_ID_1;
-+	}
-+
-+	if (inst->clk_data.core_id & VIDC_CORE_ID_2) {
-+		if (--core->core1_usage_count)
-+			goto done;
-+
-+		coreid_mask |= VIDC_CORE_ID_2;
-+	}
-+
-+	ret = poweroff_coreid(core, coreid_mask);
-+	if (ret)
-+		return ret;
-+
-+done:
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
-+	return 0;
-+}
-+
-+static int coreid_power_v4(struct venus_inst *inst, int on)
-+{
-+	struct venus_core *core = inst->core;
-+	int ret;
-+
-+	if (legacy_binding)
-+		return 0;
-+
-+	if (on == POWER_ON) {
-+		ret = decide_core(inst);
-+		if (ret)
-+			return ret;
-+
-+		mutex_lock(&core->lock);
-+		ret = acquire_core(inst);
-+		mutex_unlock(&core->lock);
-+	} else {
-+		mutex_lock(&core->lock);
-+		ret = release_core(inst);
-+		mutex_unlock(&core->lock);
-+	}
-+
-+	return ret;
-+}
-+
- static int vdec_get_v4(struct device *dev)
- {
- 	struct venus_core *core = dev_get_drvdata(dev);
-@@ -661,22 +829,12 @@ static void core_put_v4(struct device *dev)
- static int core_power_v4(struct device *dev, int on)
- {
- 	struct venus_core *core = dev_get_drvdata(dev);
--	const unsigned int coreid_mask = VIDC_CORE_ID_1 | VIDC_CORE_ID_2;
- 	int ret = 0;
- 
--	if (on == POWER_ON) {
-+	if (on == POWER_ON)
- 		ret = core_clks_enable(core);
--		if (ret)
--			return ret;
--
--		if (!legacy_binding)
--			ret = poweron_coreid(core, coreid_mask);
--	} else {
--		if (!legacy_binding)
--			ret = poweroff_coreid(core, coreid_mask);
--
-+	else
- 		core_clks_disable(core);
--	}
- 
- 	return ret;
- }
-@@ -786,6 +944,7 @@ static const struct venus_pm_ops pm_ops_v4 = {
- 	.venc_get = venc_get_v4,
- 	.venc_put = venc_put_v4,
- 	.venc_power = venc_power_v4,
-+	.coreid_power = coreid_power_v4,
- 	.load_scale = load_scale_v4,
- };
- 
-diff --git a/drivers/media/platform/qcom/venus/pm_helpers.h b/drivers/media/platform/qcom/venus/pm_helpers.h
-index d98b6dc20740..aa2f6afa2354 100644
---- a/drivers/media/platform/qcom/venus/pm_helpers.h
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.h
-@@ -21,6 +21,8 @@ struct venus_pm_ops {
- 	void (*venc_put)(struct device *dev);
- 	int (*venc_power)(struct device *dev, int on);
- 
-+	int (*coreid_power)(struct venus_inst *inst, int on);
-+
- 	int (*load_scale)(struct venus_inst *inst);
- };
- 
-@@ -36,4 +38,28 @@ static inline int venus_pm_load_scale(struct venus_inst *inst)
- 	return core->pm_ops->load_scale(inst);
- }
- 
-+static inline int venus_pm_acquire_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	const struct venus_pm_ops *pm_ops = core->pm_ops;
-+	int ret = 0;
-+
-+	if (pm_ops && pm_ops->coreid_power)
-+		ret = pm_ops->coreid_power(inst, POWER_ON);
-+
-+	return ret;
-+}
-+
-+static inline int venus_pm_release_core(struct venus_inst *inst)
-+{
-+	struct venus_core *core = inst->core;
-+	const struct venus_pm_ops *pm_ops = core->pm_ops;
-+	int ret = 0;
-+
-+	if (pm_ops && pm_ops->coreid_power)
-+		ret = pm_ops->coreid_power(inst, POWER_OFF);
-+
-+	return ret;
-+}
-+
- #endif
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 83ce30516591..7b7a4f3377cf 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -579,10 +579,6 @@ static int vdec_output_conf(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_1);
--	if (ret)
--		return ret;
--
- 	if (core->res->hfi_version == HFI_VERSION_1XX) {
- 		ptype = HFI_PROPERTY_PARAM_VDEC_CONTINUE_DATA_TRANSFER;
- 		ret = hfi_session_set_property(inst, ptype, &en);
-@@ -951,6 +947,10 @@ static int vdec_start_streaming(struct vb2_queue *q, unsigned int count)
- 
- 	mutex_lock(&inst->lock);
- 
-+	ret = venus_pm_acquire_core(inst);
-+	if (ret)
-+		return ret;
-+
- 	if (q->type == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE)
- 		ret = vdec_start_capture(inst);
- 	else
-@@ -1078,6 +1078,7 @@ static void vdec_session_release(struct venus_inst *inst)
- 
- 	venus_helper_free_dpb_bufs(inst);
- 	venus_pm_load_scale(inst);
-+	venus_pm_release_core(inst);
- 	INIT_LIST_HEAD(&inst->registeredbufs);
- 
- 	mutex_unlock(&inst->lock);
-@@ -1337,6 +1338,8 @@ static int vdec_open(struct file *file)
- 	inst->num_output_bufs = 1;
- 	inst->codec_state = VENUS_DEC_STATE_DEINIT;
- 	inst->buf_count = 0;
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
- 	init_waitqueue_head(&inst->reconf_wait);
- 	venus_helper_init_instance(inst);
- 
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 5fa1724cb537..4f594fe4b661 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -656,10 +656,6 @@ static int venc_set_properties(struct venus_inst *inst)
- 	if (ret)
- 		return ret;
- 
--	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_2);
--	if (ret)
--		return ret;
--
- 	ptype = HFI_PROPERTY_CONFIG_FRAME_RATE;
- 	frate.buffer_type = HFI_BUFFER_OUTPUT;
- 	frate.framerate = inst->fps * (1 << 16);
-@@ -992,6 +988,10 @@ static int venc_start_streaming(struct vb2_queue *q, unsigned int count)
- 	if (ret)
- 		goto bufs_done;
- 
-+	ret = venus_pm_acquire_core(inst);
-+	if (ret)
-+		goto deinit_sess;
-+
- 	ret = venc_set_properties(inst);
- 	if (ret)
- 		goto deinit_sess;
-@@ -1160,6 +1160,8 @@ static int venc_open(struct file *file)
- 
- 	inst->core = core;
- 	inst->session_type = VIDC_SESSION_TYPE_ENC;
-+	inst->clk_data.core_id = VIDC_CORE_ID_DEFAULT;
-+	inst->core_acquired = false;
- 
- 	venus_helper_init_instance(inst);
- 
--- 
-2.17.1
+But clock driver it self takes care of disabling pll output and keeping=20
+it in bypass state so its not really like PLLA output is off.
 
+So regarding PLLA rate change, we dont have to explicitly disable in=20
+audio driver as pll clock driver takes care during rate update,
+
+But consumer clocks of PLLA need to be disabled during rate update so=20
+existing dividers doesn't cause any malfunction with new rate update.
+
+audio mclk can will be in disabled state during rate update thru=20
+hw_params with addition of shutdown snd_soc_ops callbacks to disable of=20
+audio mclk.
+
+But issue is for I2S clock where clock might be in enabled state and=20
+this is issue with current I2S driver already.
+
+Sameer/Dmitry,
+
+Making sure I2S clock is in disabled state during rate update is=20
+something need to work thru for proper fix and this is not related to=20
+this patch series as this issue exists with current upstream.
+
+So, can we take care of this as separate patch out of this series so I=20
+can get this series out as this PMC clock changes are needed for=20
+upcoming camera drivers.
+
+>
+> We really want to allow user to run any sample rate in the supported=20
+> range. However the sample rate is known during hw_param() callback.
+>
+> Looking at current discussion, we may have to provide an aternate way=20
+> of switching PLLA base rate (may be not in ALSA callbacks)
+>
+>>
+>> Sameer, Please confirm.
+>>
+>>>> For audio mclk, need to make sure mclk are disabled during rate=20
+>>>> change.
+>>>>
+>>>> So below are the changes to audio clocks that will be in next version.
+>>>>
+>>>> =C2=A0=C2=A0 * remove tegra_asoc_utils_set_rate call from=20
+>>>> tegra_asoc_utils_init as
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 tegra_asoc_utils_set_rate happens during hw_p=
+arams callback.
+>>>> =C2=A0=C2=A0 * add shutdown snd_soc_ops callbacks to disable of audio =
+mclk.
+>>>> =C2=A0=C2=A0 * remove disable audio mclk (cdev1) and plla clocks prior=
+ to rate
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 change in tegra_asoc_utils_set_rate (as audio=
+ mclk will always=20
+>>>> be in
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 disabled state every time hw_param callback g=
+ets executed) and=20
+>>>> keep
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 audio mclk enable after the rate change in=20
+>>>> tegra_asoc_utils_set_rate.
+>>>>
