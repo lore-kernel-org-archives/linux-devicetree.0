@@ -2,220 +2,76 @@ Return-Path: <SRS0=ND8X=23=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF60C32771
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E4BC32771
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AB8207FD
-	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="fT6SCqfF"
+	by mail.kernel.org (Postfix) with ESMTP id 40B69215A4
+	for <linux-devicetree@archiver.kernel.org>; Mon,  6 Jan 2020 09:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgAFJKd (ORCPT
+        id S1726293AbgAFJTl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 04:10:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:56025 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725821AbgAFJKc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:10:32 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so14226834wmj.5
-        for <devicetree@vger.kernel.org>; Mon, 06 Jan 2020 01:10:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0YAKuC3wFwI+CXcdF8S7FL6f/ZbYh+aygiTA+JHhgVc=;
-        b=fT6SCqfFDxAfYyPaxe6fPt46NaZBg05eLaakaY5OWtAAWuA8tlYq/1EhcgGwgR/lm7
-         TB9OPasW7dnE+2SpOJkKnm56dXd2SYUgO6eC/bM+Wpn5qxyKB1aQv7XPTrvYDu10REr7
-         0AdNnaPOQ+InCGPLWxqNqC6wxk5DcECL+gxYWEY8yHGfJ6n/Cbrg+cqd/bGK2uYAxQX9
-         VWEJ0pdBZcygVY4J9H8sVEKXRUlD1/IMyEsZN8p8h+JRIlYz/plscGmswdweTxXZnf5Q
-         DbMn5NwXqqx8rXN+xbQZu6Ujc3uBwbIy6JIPb00/PbHZmlGf/VBknqwm+0Qq/Ns9PAv7
-         yA/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0YAKuC3wFwI+CXcdF8S7FL6f/ZbYh+aygiTA+JHhgVc=;
-        b=Z5PjZtYSMPSXVPiC2p1KdDn1a6sxARqpZUkGUBdx2qKzsKUTdf+/UdqXyl3cLzml2d
-         2chk7mLsbi/2ITLsdTkFeNFRIuLFJ3ZYCcMPbH1JxhiOhheiMuMQtAL1GObc81rJtHWz
-         iAR7PSaiEGOOOTPQ2Qqov3S32iiUh02DEyS9Y3aqTj237pHEBL+JxktdXmzfBqSHxklw
-         2ELJn8EBt73X2626lrBfIDGlix3eHgzI+zrVzMQFTZqXHG1wAHBWlhQrgltW2EbRcWrx
-         GUvaf4AAn6noirk6kvres0yu2n/djxGX9ZmJ2mKzij0Zku7frl5EcPYw7wl3HCthjRqI
-         trlw==
-X-Gm-Message-State: APjAAAXhJ4d8VUes7Qc18Mu597IT5m0EIIDBzq4zWemQQOFmp2kO8zJ+
-        blBbzl93G6izFoMWZsLrgag2TOEkrFDUrdnMP37tGg==
-X-Google-Smtp-Source: APXvYqzAomKzQkxDUIrNi/Whr2s8NAVXtV7E9CPmSzog947HVmDY807POnBYfNs9xS73M7WtrMQ2fd94nJ5uHmoRjVo=
-X-Received: by 2002:a1c:66d5:: with SMTP id a204mr31955396wmc.64.1578301830614;
- Mon, 06 Jan 2020 01:10:30 -0800 (PST)
-MIME-Version: 1.0
-References: <1578024801-39039-1-git-send-email-yash.shah@sifive.com> <1578024801-39039-3-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1578024801-39039-3-git-send-email-yash.shah@sifive.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 6 Jan 2020 14:40:19 +0530
-Message-ID: <CAAhSdy0CXde5s_ya=4YvmA4UQ5f5gLU-Z_FaOr8LPni+s_615Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] riscv: cacheinfo: Add support to determine no. of
- L2 cache way enabled
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Bin Meng <bmeng.cn@gmail.com>, green.wan@sifive.com,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@suse.de,
-        devicetree@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
+        Mon, 6 Jan 2020 04:19:41 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53487 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgAFJTk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 04:19:40 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1ioOXx-0004Zk-C1; Mon, 06 Jan 2020 10:19:37 +0100
+Message-ID: <12b992550e8fa7d3e7cbfa7930bba8f9fd5d01f8.camel@pengutronix.de>
+Subject: Re: [PATCH v3 0/2] reset: Add Broadcom STB RESCAL reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Jim Quinlan <jim2101024@gmail.com>
+Date:   Mon, 06 Jan 2020 10:19:35 +0100
+In-Reply-To: <20200103190429.1847-1-f.fainelli@gmail.com>
+References: <20200103190429.1847-1-f.fainelli@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 9:44 AM Yash Shah <yash.shah@sifive.com> wrote:
->
-> In order to determine the number of L2 cache ways enabled at runtime,
-> implement a private attribute using cache_get_priv_group() in cacheinfo
-> framework. Reading this attribute ("number_of_ways_enabled") will return
-> the number of enabled L2 cache ways at runtime.
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  arch/riscv/include/asm/sifive_l2_cache.h |  2 ++
->  arch/riscv/kernel/cacheinfo.c            | 31 +++++++++++++++++++++++++++++++
->  drivers/soc/sifive/sifive_l2_cache.c     |  5 +++++
->  3 files changed, 38 insertions(+)
->
-> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/arch/riscv/include/asm/sifive_l2_cache.h
-> index 04f6748..217a42f 100644
-> --- a/arch/riscv/include/asm/sifive_l2_cache.h
-> +++ b/arch/riscv/include/asm/sifive_l2_cache.h
-> @@ -10,6 +10,8 @@
->  extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
->  extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
->
-> +int sifive_l2_largest_wayenabled(void);
-> +
->  #define SIFIVE_L2_ERR_TYPE_CE 0
->  #define SIFIVE_L2_ERR_TYPE_UE 1
->
-> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-> index 4c90c07..29bdb21 100644
-> --- a/arch/riscv/kernel/cacheinfo.c
-> +++ b/arch/riscv/kernel/cacheinfo.c
-> @@ -7,6 +7,7 @@
->  #include <linux/cpu.h>
->  #include <linux/of.h>
->  #include <linux/of_device.h>
-> +#include <asm/sifive_l2_cache.h>
->
->  static void ci_leaf_init(struct cacheinfo *this_leaf,
->                          struct device_node *node,
-> @@ -16,6 +17,36 @@ static void ci_leaf_init(struct cacheinfo *this_leaf,
->         this_leaf->type = type;
->  }
->
-> +#ifdef CONFIG_SIFIVE_L2
-> +static ssize_t number_of_ways_enabled_show(struct device *dev,
-> +                                          struct device_attribute *attr,
-> +                                          char *buf)
-> +{
-> +       return sprintf(buf, "%u\n", sifive_l2_largest_wayenabled());
-> +}
-> +
-> +static DEVICE_ATTR_RO(number_of_ways_enabled);
-> +
-> +static struct attribute *priv_attrs[] = {
-> +       &dev_attr_number_of_ways_enabled.attr,
-> +       NULL,
-> +};
-> +
-> +static const struct attribute_group priv_attr_group = {
-> +       .attrs = priv_attrs,
-> +};
-> +
-> +const struct attribute_group *
-> +cache_get_priv_group(struct cacheinfo *this_leaf)
-> +{
-> +       /* We want to use private group for L2 cache only */
-> +       if (this_leaf->level == 2)
-> +               return &priv_attr_group;
-> +       else
-> +               return NULL;
-> +}
-> +#endif /* CONFIG_SIFIVE_L2 */
-> +
+Hi Florian,
 
-Instead of this, I would suggest to implement a generic ops
-structure.
+On Fri, 2020-01-03 at 11:04 -0800, Florian Fainelli wrote:
+> Hi Philipp,
+> 
+> This patch series adds support for the BCM7216 RESCAL reset controller
+> which is necessary to initialize SATA and PCIe0/1 on that chip.
+> 
+> Please let us know if you have any comments. Thanks!
+> 
+> Changes in v3:
+> 
+> - indented "base" variable with a space
+> - return ret directly out of readl_poll_timeout()
+> - removed additional register read after write, not necessary
+> - removed call to platform_set_drvdata, unnecessary either
+> - corrected Jim's email in Signed-off-by in patch #2
 
-In arch/riscv/include/asm/cacheinfo.h:
+Thank you, both applied to reset/next.
 
-struct riscv_caceinfo_ops {
-    const struct attribute_group * (*get_priv_group)(struct cacheinfo
-*this_leaf);
-};
+regards
+Philipp
 
-void riscv_set_cacheinfo_ops(struct riscv_caceinfo_ops *ops);
-
-In arch/riscv/riscv/kernel/cacheinfo.h
-
-static struct riscv_caceinfo_ops *rv_cache_ops;
-
-void riscv_set_cacheinfo_ops(struct riscv_caceinfo_ops *ops)
-{
-    rv_cache_ops = ops;
-}
-EXPORT_SYMBOL_GPL(riscv_set_cacheinfo_ops);
-
-const struct attribute_group *
-cache_get_priv_group(struct cacheinfo *this_leaf)
-{
-    if (rv_cache_ops && rv_cache_ops->get_priv_group)
-        return rv_cache_ops->get_priv_group(this_leaf)
-    return NULL;
-}
-
-Above will be a separate patch. In future, we can add more
-ops for SOC specific cacheinfo.
-
-Using riscv_set_cacheinfo_ops() you can have another patch
-to implement SiFive L2 info entirely in drivers/soc/sifive/sifive_l2_cache.c
-
-Also, I would strongly recommend moving
-arch/riscv/include/asm/sifive_l2_cache.h
-TO
-include/soc/sifive/sifive_l2_cache.h
-
->  static int __init_cache_level(unsigned int cpu)
->  {
->         struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-> diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
-> index a9ffff3..f1a5f2c 100644
-> --- a/drivers/soc/sifive/sifive_l2_cache.c
-> +++ b/drivers/soc/sifive/sifive_l2_cache.c
-> @@ -107,6 +107,11 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
->  }
->  EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
->
-> +int sifive_l2_largest_wayenabled(void)
-> +{
-> +       return readl(l2_base + SIFIVE_L2_WAYENABLE);
-> +}
-> +
->  static irqreturn_t l2_int_handler(int irq, void *device)
->  {
->         unsigned int add_h, add_l;
-> --
-> 2.7.4
->
-
-Regards,
-Anup
