@@ -2,138 +2,114 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB2FC33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D0CC33C9B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B979A207E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7912051A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:45:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578386757;
+	bh=W7fCVfEcsVq7YjfVrP/tRdV5yKG9ABz6dqFXtySmrFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=THeVKTlPFP3laY3ToyCTtJVEuhMxwKrxyw/OqtO6DCkwqdJaINk7ZvmGwlNK/B7Zw
+	 +5Ja5VKhZAmNiP2SGdYXTo5iB1tqMGGYovaDdfYTXTekiX9MN0z0beZStAlt/BGERu
+	 T3jEITQMOFVhKSnvhX81jTvYxHZ91pxbLbAYh5OQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgAGIhC (ORCPT
+        id S1727308AbgAGIp4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:37:02 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55327 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgAGIhC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 03:37:02 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iokMC-0007de-GN; Tue, 07 Jan 2020 09:36:56 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iokMA-0004B9-C9; Tue, 07 Jan 2020 09:36:54 +0100
-Date:   Tue, 7 Jan 2020 09:36:54 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
-References: <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
+        Tue, 7 Jan 2020 03:45:56 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46343 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgAGIp4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 03:45:56 -0500
+Received: by mail-ed1-f67.google.com with SMTP id m8so49671699edi.13;
+        Tue, 07 Jan 2020 00:45:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8plItG8DbNYbwBcAqdDSAMoRYlALr96HuHXReZfE9QI=;
+        b=n3Gs/llNIVwR+K7PkS9NAsGd5qf4FieL6qXh/bofrqKbv4fBFFhhroa5tUgtoJ9Oyn
+         0zUR0cwuH0zjmxcFE8pxXrlSBloYLHzfAUQ7ycgo19rkIXNgNxb5UkoRws7MGcujJ+cs
+         /nEK7/9km8crzvCiYFqbuxCRZR5iGyWrXYVRQlHNFciMuD6JEnGrrEgDIEJNgKBS8YwS
+         o5yIITPAhwWyiXBETTGmS6pXGMz0Uz2ohy2ARSCEvuHQdRvuQX82waV/nGUdwoV0g2oG
+         5jtxkm3ksxylcMc9DHon0dTh4NbcGzrKkrnKkCIYmJpTXOwhvgL5lrM7T0R2xs6z8sv1
+         jIMA==
+X-Gm-Message-State: APjAAAUPHGx0qgj5egw/2QUfT8kGiMWBEp6JiW0w2RoiUul5ratVWdAI
+        FaZLZ7xxMAb3iBSVil4ID8PXoQ4v
+X-Google-Smtp-Source: APXvYqzbFY7PNYNI0ARSqYBPkHcoX6e4/UrD7HFurJucJLwHzP2dKHYzhk5s1vaVLtajDWHetj7/bg==
+X-Received: by 2002:a50:d5c9:: with SMTP id g9mr110412544edj.131.1578386754616;
+        Tue, 07 Jan 2020 00:45:54 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id c24sm7406894eds.40.2020.01.07.00.45.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 00:45:53 -0800 (PST)
+Date:   Tue, 7 Jan 2020 09:45:51 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: tiny4412: add fimd node
+Message-ID: <20200107084551.GB31906@pi3>
+References: <20200106191003.21584-1-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191217125832.GF4755@sirena.org.uk>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:14:30 up 52 days, 23:33, 43 users,  load average: 0.00, 0.04,
- 0.05
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200106191003.21584-1-tiny.windzz@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Jan 06, 2020 at 07:10:02PM +0000, Yangtao Li wrote:
+> The patch adds fimd node for tiny4412 device.
 
-On 19-12-17 12:58, Mark Brown wrote:
-> On Tue, Dec 17, 2019 at 08:35:33AM +0100, Marco Felsch wrote:
-> > On 19-12-16 11:44, Mark Brown wrote:
-> 
-> > > What I'm saying is that I think the binding needs to explicitly talk
-> > > about that since at the minute it's really confusing reading it as it
-> > > is, it sounds very much like it's trying to override that in a chip
-> > > specific fashion as using gpiolib and the GPIO bindings for pinmuxing is
-> > > really quite unusual.
-> 
-> > Hm.. I still think that we don't mux the pin to some special function.
-> > It is still a gpio input pin and if we don't request the pin we could
-> > read the input from user-space too and get a 'valid' value. Muxing would
-> > happen if we change the pad to so called _alternate_ function. Anyway,
-> > lets find a binding description:
-> 
-> I don't think any of this makes much difference from a user point of
-> view.
-> 
-> > IMHO this is very descriptive and needs no update.
-> 
-> > description:
-> >  - A GPIO reference to a local general purpose input, [1] calls it GPI.
-> >    The DA9062 regulators can select between voltage-a/-b settings.
-> >    Each regulator has a VBUCK*_GPI or VLDO*_GPI input to determine the
-> >    active setting. In front of the VBUCK*_GPI/VLDO*_GPI input is a mux
-> >    to select between different signal sources, valid sources are: the
-> >    internal sequencer, GPI1, GPI2 and GPI3. See [1] table 63 for more
-> >    information. Most the time the internal sequencer is fine but
-> >    sometimes it is necessary to use the signal from the DA9062 GPI
-> >    pads. This binding covers the second use case.
-> >    Attention: Sharing the same GPI for other purposes or across multiple
-> >    regulators is possible but the polarity setting must equal.
-> 
-> This doesn't say anything about how the GPIO input is expected to be
-> controlled, for voltage setting any runtime control would need to be
-> done by the driver and it sounds like that's all that can be controlled.
-> The way this reads I'd expect one use of this to be for fast voltage
-> setting for example (you could even combine that with suspend sequencing
-> using the internal sequencer if you mux back to the sequencer during
-> suspend).
+Hi,
 
-The input signal is routed trough the da9062 gpio block to the
-regualtors. You can't set any voltage value using a gpio instead you
-decide which voltage setting is applied. The voltage values for
-runtime/suspend comes from the dt-data. No it's not just a fast
-switching option imagine the system suspend case where the cpu and soc
-voltage can be reduced to a very low value. Older soc's like the imx6
-signaling this state by a hard wired gpio line because the soc and
-cpu cores don't work properly on such low voltage values. This is
-my use case and I can't use the sequencer.
+Thanks for the patch.
 
-Regards,
-  Marco
+Do not use "This patch ..." sentences but simple, imperative mode:
+https://elixir.bootlin.com/linux/latest/source/Documentation/process/submitting-patches.rst#L151
 
+Here you do not add FIMD node, because the FIMD is already there
+(defined in exynos4.dtsi).  You however enable it.
+
+Enabling it without panel does not really make sense - does it work?
+I guess not, so this should be squashed with second patch.
+
+Best regards,
+Krzysztof
+
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-tiny4412.dts | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> index 01f37b5ac9c4..2b62cb27420c 100644
+> --- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> @@ -68,6 +68,14 @@
+>  	};
+>  };
+>  
+> +&fimd {
+> +	pinctrl-0 = <&lcd_clk>, <&lcd_data24>;
+> +	pinctrl-names = "default";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	status = "okay";
+> +};
+> +
+>  &rtc {
+>  	status = "okay";
+>  };
+> -- 
+> 2.17.1
+> 
