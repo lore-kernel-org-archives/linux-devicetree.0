@@ -2,84 +2,107 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2066C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C91C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 07:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A6E2075A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 07:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F2E207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 07:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgAGH3j (ORCPT
+        id S1725987AbgAGHqZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 02:29:39 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:59622 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726485AbgAGH3j (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 02:29:39 -0500
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1iojIh-00023F-2M; Tue, 07 Jan 2020 08:29:15 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from [192.168.34.101] (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 0077TENG016760
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 7 Jan 2020 08:29:14 +0100
-Subject: Re: [PATCH 2/5] regulator: mp8859: add config option and build entry
-To:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200106211633.2882-1-m.reichl@fivetechno.de>
- <20200106211633.2882-3-m.reichl@fivetechno.de> <6648097.OAGuGJg3er@diego>
-From:   Markus Reichl <m.reichl@fivetechno.de>
-Organization: five technologies GmbH
-Message-ID: <4ec799d7-9404-f61d-3db7-446fb8bd45a2@fivetechno.de>
-Date:   Tue, 7 Jan 2020 08:29:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 7 Jan 2020 02:46:25 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33706 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgAGHqY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 02:46:24 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so53444588otp.0;
+        Mon, 06 Jan 2020 23:46:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iXV+laPsabNEeQDfZldsT+auKzTRBW/prszvDNqd6Fs=;
+        b=pCfKxjODwfC8BwpTtQLuOxyMufZqcfWu/IFOL1cUbBrNEH0RPJZIoQ5W153ODpZoCk
+         YNhBce1Hl8T+KdXJvPAoJHo5T1dXph8jBalP7HWaxl5t7ry92vHR9tK7sLOxct+Uz+i/
+         rEzBQi8eed9yQr/Zp/HbOj7rX/1c5VZeJVLlx3EYstZMLWvUm7YnUj5a2NH5e2zGwbnL
+         GKTgaUj6ruYrmXhIYov0fwfsUg4h/YVqOMmAjH2Ba4269e0usPMZpi8ikcwynFT1F4Ao
+         6iQZlpaJWbRvUuZ9InyzmWZ6VRN/eza7S+A8X3AeFnTotDll8fcdX+1Ziq/0XekpODX3
+         F4vw==
+X-Gm-Message-State: APjAAAXcO1MDvCEr443pIauyvQyud3w0GlI2ESUJj36G6Hb9PLOvhsjS
+        6tGgDxn6ZBbofm2Td5mp5UessvcvBrcyD4oZb04=
+X-Google-Smtp-Source: APXvYqxU0a7VhTzPmtpX5X6XqCiK0SXFvXf+ZRHJw8LRYdjh88xQQEyQcLP+rietftYXFcA/U5QhyNWsvbdKnO4JDik=
+X-Received: by 2002:a9d:8f1:: with SMTP id 104mr112896481otf.107.1578383183750;
+ Mon, 06 Jan 2020 23:46:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <6648097.OAGuGJg3er@diego>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichl@fivetechno.de;1578382178;468f51eb;
-X-HE-SMSGID: 1iojIh-00023F-2M
+References: <20191230133852.5890-1-geert+renesas@glider.be> <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com>
+In-Reply-To: <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Jan 2020 08:46:12 +0100
+Message-ID: <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com>
+Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Heiko,
-Am 06.01.20 um 22:22 schrieb Heiko Stübner:
-> Am Montag, 6. Januar 2020, 22:16:25 CET schrieb Markus Reichl:
->> Add entries for the mp8859 regulator driver
->> to the build system.
->> 
->> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> 
-> this still should get merged into patch1 :-)
+Hi Bartosz,
 
-Will merge them in next version.
+On Fri, Jan 3, 2020 at 10:51 AM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> pon., 30 gru 2019 o 14:38 Geert Uytterhoeven <geert+renesas@glider.be>
+> napisał(a):
+> > As GPIO hogs are configured at GPIO controller initialization time,
+> > adding/removing GPIO hogs in Device Tree overlays currently does not
+> > work.  Hence this patch series adds support for that, by registering an
+> > of_reconfig notifier, as is already done for platform, i2c, and SPI
+> > devices.
+> >
+> > Perhaps this would be better served through a pinctrl-gpio driver?
+> > Pinctrl is already working fine with DT overlays, as the pinctrl-*
+> > properties are part of the slave device node, and thus looked up at
+> > slave device node attachment time, not at pin controller initialization
+> > time.
+> >
+> > In my particular use case (talking to SPI devices connected to a PMOD
+> > connector on the RSK+RZA1 development board), the GPIO performs board
+> > level muxing of a.o. the SPI MOSI/MISO/SCK signals.  Hence the hog
+> > really needs to be active only while talking to the SPI device, so the
+> > muxing could (in theory) be done upon demand.
+> > But how to describe that in DT, and implement it (using Runtime PM?)?
+>
+> I may be missing the whole picture, but from your description this
+> sounds like a job for the mux framework. Maybe we could make runtime
+> PM aware of muxing for this type of use-cases?
 
-> 
-> Heiko
-> 
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+I'm happy with a (static) GPIO hog.
 
-Gruß,
+BTW, what exactly do you mean with "mux framework"? Pinctrl/pinmux?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Markus Reichl
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
