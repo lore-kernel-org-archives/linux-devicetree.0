@@ -2,185 +2,126 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8EFC33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368F8C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F200E2075A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E242075A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 08:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726428AbgAGIIg (ORCPT
+        id S1726558AbgAGILT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 03:08:36 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55459 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgAGIIg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 03:08:36 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iojui-0004tf-Oq; Tue, 07 Jan 2020 09:08:32 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iojuh-0003Rx-Os; Tue, 07 Jan 2020 09:08:31 +0100
-Date:   Tue, 7 Jan 2020 09:08:31 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Support Opensource <Support.Opensource@diasemi.com>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: Input: da9062 - fix
- dlg,disable-key-power description
-Message-ID: <20200107080831.lbeqpdxkgk42pbke@pengutronix.de>
-References: <20191127132304.22924-1-m.felsch@pengutronix.de>
- <20191127132304.22924-4-m.felsch@pengutronix.de>
- <AM5PR1001MB099439FC20DAEBFC6584081280430@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191210082759.2hf6ekuqgs2uzzm2@pengutronix.de>
- <AM5PR1001MB0994D38015B1799F3F3A7CF380550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Tue, 7 Jan 2020 03:11:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45912 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgAGILT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 03:11:19 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so75357634otp.12;
+        Tue, 07 Jan 2020 00:11:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CU/I+wYv+bXJX9c2nuNlCXwS1Rl4z06XpenSPVri4Bc=;
+        b=ZB6h/zkWeCKCIBYGKoer/IhU9va9q6p8NlI83feLgfyKj1dFwVlVQb3SetNbOoxC9T
+         EJxaeyLW1uA/O4BcYvdd14q7BWiu7/UVhoZWJM+h7NinD5RuV/O9Z9w3kwOpU1UVorsD
+         TUSyvT+hbuguIBypSIff3J5ydUodJduR6wySdnx53qIikbK4M8P99CdU+NCI/ZN0+3rv
+         m3BH6i0Xj6R8V58NmA5jw4B0um3ouJYweteP+5dTyeRmr5ugHDWeg2bNCgPfQe7FtW4u
+         k1y4/w4vyuTw2N/vfTQ3vYHv+39xykBiW4ifcje9EgeEVok957MqVV7SqkRKGGf0G4ST
+         1P1w==
+X-Gm-Message-State: APjAAAXaYAZ05sY6qTpAfbeF5AWXzs3d7mI9rU1w+JdSMnQRf122wG0V
+        3C8yt++WXbK21i4D8HOABOTSRFe5okGKVKHhahg=
+X-Google-Smtp-Source: APXvYqyC5pT/X+rRxviS8VZNVsGXhAyiX7ZAbRTGHKnakAkoHGVhnuTXjTsGiefkt7+yOFq6/flTLoNmET2ozo/a0/E=
+X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr121170061otd.39.1578384678509;
+ Tue, 07 Jan 2020 00:11:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR1001MB0994D38015B1799F3F3A7CF380550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:05:04 up 52 days, 23:23, 43 users,  load average: 0.09, 0.13,
- 0.06
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191230133852.5890-1-geert+renesas@glider.be>
+ <20191230133852.5890-3-geert+renesas@glider.be> <41e1c51e-bc17-779e-8c68-bf2e652871eb@gmail.com>
+ <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
+In-Reply-To: <70d24070-4f6d-8fc8-1214-1bd800cb5246@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Jan 2020 09:11:07 +0100
+Message-ID: <CAMuHMdUQbRqyv1FK5JTbL-XL_YPZx8Sf9tQfU-eCozCNyDXYBA@mail.gmail.com>
+Subject: Re: [PATCH/RFC 2/2] gpio: of: Add DT overlay support for GPIO hogs
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Adam, Dmitry,
+Hi Frank,
 
-On 19-12-12 10:08, Adam Thomson wrote:
-> On 10 December 2019 08:28, Marco Felsch wrote:
-> 
-> > Hi Adam,
+On Tue, Jan 7, 2020 at 8:10 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> On 1/6/20 5:34 PM, Frank Rowand wrote:
+> > On 12/30/19 7:38 AM, Geert Uytterhoeven wrote:
+> >> As GPIO hogs are configured at GPIO controller initialization time,
+> >> adding/removing GPIO hogs in DT overlays does not work.
+> >>
+> >> Add support for GPIO hogs described in DT overlays by registering an OF
+> >> reconfiguration notifier, to handle the addition and removal of GPIO hog
+> >> subnodes to/from a GPIO controller device node.
+> >>
+> >> Note that when a GPIO hog device node is being removed, its "gpios"
+> >> properties is no longer available, so we have to keep track of which
+> >> node a hog belongs to, which is done by adding a pointer to the hog's
+> >> device node to struct gpio_desc.
 > >
-> > On 19-12-02 12:15, Adam Thomson wrote:
-> > > On 27 November 2019 13:23, Marco Felsch wrote:
-> > >
-> > > > There was a bug within the driver since commit f889beaaab1c ("Input:
-> > > > da9063 - report KEY_POWER instead of KEY_SLEEP during power
-> > > > key-press"). Since we fixed the bug the KEY_POWER will be reported
-> > > > always so we need to adapt the dt-bindings too. Make the description
-> > > > more precise while on it.
-> > > >
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > ---
-> > > > v2:
-> > > > - change description according Dmitry's suggestion.
-> > > >
-> > > >  Documentation/devicetree/bindings/input/da9062-onkey.txt | 5 ++---
-> > > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > > > b/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > > > index 0005b2bdcdd7..9f895454179d 100644
-> > > > --- a/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > > > +++ b/Documentation/devicetree/bindings/input/da9062-onkey.txt
-> > > > @@ -15,9 +15,8 @@ Required properties:
-> > > >
-> > > >  Optional properties:
-> > > >
-> > > > -- dlg,disable-key-power : Disable power-down using a long key-press. If this
-> > > > -    entry exists the OnKey driver will remove support for the KEY_POWER key
-> > > > -    press when triggered using a long press of the OnKey.
-> > > > +- dlg,disable-key-power : If this property is present, the host will not be
-> > > > +    issuing shutdown command over I2C in response to a long key-press.
-> > >
-> > > This also changes behaviour of button press reporting as the driver will not
-> > > report a longer press (i.e. a button hold where the driver polls for release).
-> > > It will only report a short key press to user-space with this property provided.
-> > >
-> > > The question here is do we still want to support long press reporting but
-> > > without the I2C sequence for shutdown? If so the driver needs to be updated
-> > to
-> > > work this way as right now it doesn't.
+> > If I have read the patches and the existing overlay source correctly,
+> > then some observations:
 > >
-> > Good point. I checked the driver and the documentation for the
-> > da9062/3 again and it seems that we interrupt the pmic hw by doing the
-> > shutdown by itself. As the documentation says:
+> > - A gpio hog node added in an overlay will be properly processed.
 > >
-> > DA9063:
-> > If the hardware reset was initiated by a (debounced) press of nONKEY (or
-> > GPIO14 and GPIO15 together) longer than SD_DELAY, the DA9063 initially
-> > only asserts control bit KEY_RESET in the fault register and signals a
-> > non-maskable interrupt allowing the host to clear the armed reset
-> > sequence within 1 s. If the host does not clear KEY_RESET then a
-> > shutdown to RESET mode is executed. KEY_SD_MODE determines if normal
-> > power sequence timing or a fast shutdown is implemented.
+> > - A gpio hog node already existing in the live devicetree, but with a
+> >   non-active status will be properly processed if the status of the
+> >   gpio hog node is changed to "ok" in the overlay.
 > >
-> > DA9062:
-> > If the reset was initiated by a user’s long press of nONKEY, initially
-> > only KEY_RESET is set and the nIRQ port will be asserted. KEY_RESET
-> > signals the host that a shutdown sequence is started. If the host does
-> > not then clear KEY_RESET within 1 s by writing a 1 to the related bit in
-> > register FAULT_LOG, the shutdown sequence will complete. When the reset
-> > condition has disappeared, DA9062 requires a supply (VSYS >
-> > VDD_FAULT_UPPER) that provides enough power to start-up from the
-> > POWERDOWN mode.
+> > - If a gpio hog node already exists in the live devicetree with an
+> >   active status, then any updated or added properties in that gpio
+> >   hog node in the overlay will have no effect.
 > >
-> > So we don't need to check for the KEY_RESET? This would cleanup the code
-> > a bit.
-> 
-> We could remove that but I think the intention originally was to have this code
-> there in case there was some way to more gracefully shutdown the system in this
-> scenario. Right now that's not the case as the code simply calls to shutdown
-> the pmic via a manual register call, but maybe in the future this could be made
-> more gracful. Another slight advantage of leaving that code in is that we're
-> not waiting for another second delay for the PMIC to pull the plug.
-> 
-> With regards to this patch and the subsequent one to update the OnKey driver, I
-> think we should deprecate this property. The OnKey mode binding you added in
-> a different patch will configure the OnKey according to how you want it to
-> behave in hardware so I don't think this property makes much sense anymore. We
-> can then remove the need for 'key_power' usage in the driver.
+> >   There is a scenario where the updated property would have an effect:
+> >   apply a second overlay that sets the status to inactive, then apply
+> >   a third overlay that sets the status back to active.  This is a
+> >   rather contrived example and I think it should be documented as
+> >   not supported and the result undefined.
+>
+> I went back and double checked the related code.  For gpio hog nodes
+> that are in a non-overlay, the status property is checked because
+> of_gpiochip_scan_gpios() uses for_each_available_child_of_node()
+> to search for gpio hog nodes, and for_each_available_child_of_node()
+> checks the status property.  But in the case of a gpio hog node
+> added by an overlay, of_gpio_notify() does not check the status
+> property in the gpio hog node.  The check for the status property
+> should be added to of_gpio_notify().
 
-Is it okay for you both to drop this patch from this series and open a
-new 'rework' series?
+Right.  of_device_is_available() should be called to check this.
+Note that of_i2c_notify() and of_spi_notify() also lack such a check.
+of_platform_notify() calls of_platform_device_create_pdata(), which does
+have the check.
 
-Regards,
-  Marco
+Gr{oetje,eeting}s,
 
-> 
-> >
-> > Regards,
-> >   Marco
-> >
-> > > >
-> > > >  - dlg,key-opmode : Set the nONKEY behaviour. This value is initial set by the
-> > > >      otp values. See nONKEY_PIN register description for more information.
-> > > > --
-> > > > 2.20.1
-> > >
-> > >
-> >
-> > --
-> > Pengutronix e.K.                           |                             |
-> > Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> > 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+                        Geert
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
