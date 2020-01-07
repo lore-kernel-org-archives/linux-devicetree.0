@@ -2,140 +2,95 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A8C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 17:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6E6C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1850D206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 17:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90F92146E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578420189;
+	bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WcF6lnyqcv6zz1hn5Q7c1LhvkQ6MaZJzUrAcb3BcESghNlS7GZ4l6vL+oPJ8ShhDF
+	 lx7gDksgB8uOvb6b3k79eNoz+VJ1V1VKUS6mfrgIc661S+qB6/ykLyyfUp+W/3YtGY
+	 iQC9ki5AoWLeq4XiFf7TFX+nLOw4apWzrmxpIP6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbgAGR6C (ORCPT
+        id S1728440AbgAGSDI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:58:02 -0500
-Received: from mga18.intel.com ([134.134.136.126]:30934 "EHLO mga18.intel.com"
+        Tue, 7 Jan 2020 13:03:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728429AbgAGR6C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:58:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 09:58:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="395465240"
-Received: from yoojae-mobl1.amr.corp.intel.com (HELO [10.7.153.147]) ([10.7.153.147])
-  by orsmga005.jf.intel.com with ESMTP; 07 Jan 2020 09:58:02 -0800
-Subject: Re: [PATCH 3/3] media: aspeed: add AST2600 support
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Eddie James <eajames@linux.ibm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-References: <20200107011503.17435-1-jae.hyun.yoo@linux.intel.com>
- <20200107011503.17435-4-jae.hyun.yoo@linux.intel.com>
- <CACPK8XejA6emrboLzfwEpmn=dn1JcyHKJVud_cBXVNRiZixgTA@mail.gmail.com>
-From:   Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Message-ID: <86f3dc92-07b0-c993-6c3e-39db6c58214e@linux.intel.com>
-Date:   Tue, 7 Jan 2020 09:58:02 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728451AbgAGSDI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:03:08 -0500
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F1622146E;
+        Tue,  7 Jan 2020 18:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578420187;
+        bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=e2LzPBNXp3x9Bm5rMIEhqwZU81/LocL4/QqhOxwF/P+YoAWqVZI0jLC5EM8khBdqF
+         MioV+9WAdD3+dUiHdLpMCdx4wAXSTcy0PZCcO8yKcP2J4vJw+juDRuGFP5pNxv3pTQ
+         29KO2sWh0NSf5f3ZXEzDza38dv7g3MSSEJvAMvn8=
+Received: by mail-qt1-f173.google.com with SMTP id n15so502441qtp.5;
+        Tue, 07 Jan 2020 10:03:07 -0800 (PST)
+X-Gm-Message-State: APjAAAURryYFfymvWfxrvVZZkLs41BOLguW2QEjLcRRrUaEm3uUOtIFk
+        5ipif0b1PSO56d0bYgjZGpXOakCNBMreHmOR+Q==
+X-Google-Smtp-Source: APXvYqzYgPt2mmOM92fmtqc1Y7J5YrHICFVpYfLAMISsmbC9T8x4hClE7gReZJC7gNb4Eez9i67VoJZ6iFbj0o1RXfE=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr187365qtp.224.1578420186617;
+ Tue, 07 Jan 2020 10:03:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACPK8XejA6emrboLzfwEpmn=dn1JcyHKJVud_cBXVNRiZixgTA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200107130903.14421-1-benjamin.gaignard@st.com>
+ <20200107130903.14421-3-benjamin.gaignard@st.com> <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
+In-Reply-To: <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 7 Jan 2020 12:02:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
+Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: touchscreen: Convert Goodix touchscreen
+ to json-schema
+To:     Bastien Nocera <hadess@hadess.net>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux Input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yannick Fertre <yannick.fertre@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Jan 7, 2020 at 7:38 AM Bastien Nocera <hadess@hadess.net> wrote:
+>
+> On Tue, 2020-01-07 at 14:09 +0100, Benjamin Gaignard wrote:
+> > Convert the Goodix binding to DT schema format using json-schema
+>
+> I don't have an opinion on the migration itself, but this really should
+> not lose any of the descriptions that were in the old text file.
 
+To some extent, yes. Any information specific to the device should be.
+Anything generic can be dropped. I see 2 cases that should be kept:
 
-On 1/6/2020 7:15 PM, Joel Stanley wrote:
-> On Tue, 7 Jan 2020 at 01:14, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
->>
->> Video engine in AST2600 has the exactly same register set with
->> AST2500 except VR084 register which provides more precise JPEG
->> size read back. This commit adds support for the difference and
->> adds 'aspeed,ast2600-video-engine' compatible OF string.
->>
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
->> ---
->>   drivers/media/platform/aspeed-video.c | 15 +++++++++++----
->>   1 file changed, 11 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/media/platform/aspeed-video.c b/drivers/media/platform/aspeed-video.c
->> index d8593cb2ae84..0dbe72672338 100644
->> --- a/drivers/media/platform/aspeed-video.c
->> +++ b/drivers/media/platform/aspeed-video.c
->> @@ -72,10 +72,10 @@
->>   #define  VE_SEQ_CTRL_CAP_BUSY          BIT(16)
->>   #define  VE_SEQ_CTRL_COMP_BUSY         BIT(18)
->>
->> -#ifdef CONFIG_MACH_ASPEED_G5
->> -#define  VE_SEQ_CTRL_JPEG_MODE         BIT(13) /* AST2500 */
->> -#else
->> +#ifdef CONFIG_MACH_ASPEED_G4
->>   #define  VE_SEQ_CTRL_JPEG_MODE         BIT(8)  /* AST2400 */
->> +#else
->> +#define  VE_SEQ_CTRL_JPEG_MODE         BIT(13) /* AST2500/2600 */
->>   #endif /* CONFIG_MACH_ASPEED_G5 */
-> 
-> Yeah, nah. This should have never been done this way. I will send some
-> patches to fix it up, and you can add ast2600 support on top of them,
-> if that works for you.
+> > - - reg                       : I2C address of the chip. Should be
+> > 0x5d or 0x14
 
-Yeah, the runtime configuration in your patch set is right way for it.
-I'll rebase this patch set on top of your patch.
+'I2C address of the chip' can be dropped as that's every 'reg'
+property for I2C devices. The addresses can be expressed as
+constraints.
 
-Thanks,
+> > - - irq-gpios         : GPIO pin used for IRQ. The driver uses the
+> > -                       interrupt gpio pin as output to reset the
+> > device.
 
-Jae
+Also useful info.
 
-> Cheers,
-> 
-> Joel
-> 
->>
->>   #define VE_CTRL                                0x008
->> @@ -135,6 +135,12 @@
->>
->>   #define VE_OFFSET_COMP_STREAM          0x078
->>
->> +#ifdef CONFIG_MACH_ASPEED_G6
->> +#define VE_JPEG_COMP_SIZE_READ_BACK    0x084   /* AST2600 */
->> +#else
->> +#define VE_JPEG_COMP_SIZE_READ_BACK    VE_OFFSET_COMP_STREAM
->> +#endif
->> +
->>   #define VE_SRC_LR_EDGE_DET             0x090
->>   #define  VE_SRC_LR_EDGE_DET_LEFT       GENMASK(11, 0)
->>   #define  VE_SRC_LR_EDGE_DET_NO_V       BIT(12)
->> @@ -572,7 +578,7 @@ static irqreturn_t aspeed_video_irq(int irq, void *arg)
->>          if (sts & VE_INTERRUPT_COMP_COMPLETE) {
->>                  struct aspeed_video_buffer *buf;
->>                  u32 frame_size = aspeed_video_read(video,
->> -                                                  VE_OFFSET_COMP_STREAM);
->> +                                                  VE_JPEG_COMP_SIZE_READ_BACK);
->>
->>                  spin_lock(&video->lock);
->>                  clear_bit(VIDEO_FRAME_INPRG, &video->flags);
->> @@ -1719,6 +1725,7 @@ static int aspeed_video_remove(struct platform_device *pdev)
->>   static const struct of_device_id aspeed_video_of_match[] = {
->>          { .compatible = "aspeed,ast2400-video-engine" },
->>          { .compatible = "aspeed,ast2500-video-engine" },
->> +       { .compatible = "aspeed,ast2600-video-engine" },
->>          {}
->>   };
->>   MODULE_DEVICE_TABLE(of, aspeed_video_of_match);
->> --
->> 2.17.1
->>
+Rob
