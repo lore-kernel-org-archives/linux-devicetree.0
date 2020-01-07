@@ -6,95 +6,107 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CF5C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 13:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FB3C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9862146E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 13:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C24021744
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 13:38:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgAGNbW (ORCPT
+        id S1728115AbgAGNib (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 08:31:22 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:42560 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727858AbgAGNbW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 08:31:22 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 6BF541C2453; Tue,  7 Jan 2020 14:31:20 +0100 (CET)
-Date:   Tue, 7 Jan 2020 14:31:20 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Exponential LED brightness Re: [PATCH v4 0/6] leds: lm3692x: Allow
- to set ovp and brigthness mode
-Message-ID: <20200107133119.GA3825@duo.ucw.cz>
-References: <cover.1578324703.git.agx@sigxcpu.org>
+        Tue, 7 Jan 2020 08:38:31 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39509 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727880AbgAGNib (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 08:38:31 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iop3l-0007Jd-RU; Tue, 07 Jan 2020 14:38:13 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iop3j-0005N2-6B; Tue, 07 Jan 2020 14:38:11 +0100
+Date:   Tue, 7 Jan 2020 14:38:11 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
+References: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <20191216114454.GB4161@sirena.org.uk>
+ <20191217073533.GC31182@pengutronix.de>
+ <20191217125832.GF4755@sirena.org.uk>
+ <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
+ <20200107130911.GD4877@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1578324703.git.agx@sigxcpu.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200107130911.GD4877@sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:32:28 up 53 days,  4:51, 47 users,  load average: 0.02, 0.03,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 20-01-07 13:09, Mark Brown wrote:
+> On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
+> > On 19-12-17 12:58, Mark Brown wrote:
+> 
+> > > This doesn't say anything about how the GPIO input is expected to be
+> > > controlled, for voltage setting any runtime control would need to be
+> > > done by the driver and it sounds like that's all that can be controlled.
+> > > The way this reads I'd expect one use of this to be for fast voltage
+> > > setting for example (you could even combine that with suspend sequencing
+> > > using the internal sequencer if you mux back to the sequencer during
+> > > suspend).
+> 
+> > The input signal is routed trough the da9062 gpio block to the
+> > regualtors. You can't set any voltage value using a gpio instead you
+> > decide which voltage setting is applied. The voltage values for
+> > runtime/suspend comes from the dt-data. No it's not just a fast
+> > switching option imagine the system suspend case where the cpu and soc
+> > voltage can be reduced to a very low value. Older soc's like the imx6
+> > signaling this state by a hard wired gpio line because the soc and
+> > cpu cores don't work properly on such low voltage values. This is
+> > my use case and I can't use the sequencer.
+> 
+> My point is that I can't tell any of this from the description.
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Therefore I want to discuss the dt-binding documentation with you and
+the others to get this done. Is the above description better to
+understand the dt-binding?
 
-Hi!
-
-> Overvoltage protection and brightness mode are currently hardcoded
-> as 29V and disabled in the driver. Make these configurable via DT.
->=20
-> This v4 moves the exponential brightness mode to the back of the series
-> as per Pavel's request:
->=20
->   https://lore.kernel.org/linux-next/20200106103233.GA32426@amd/T/#m93270=
-a9bf10b88e060f4e4cf5701c527476de985
->=20
-> The end result is identical and i've tested everything still works when
-> dropping the last to patches and checked compiltion via
-
-Thank you. Applied 1-4 (with some reformatting of changelog, and
-led->LED).
-
-Exponential mode:
-
-We should decide if LEDs should be linear or not. Most LEDs are linear
-now, and we may want to make it part of the API. Additional advantage
-is that linear is "well defined". It is actually quite important for
-RGB LEDs, because you get wrong colors otherwise.
-
-(Non-linear can have advantages, too... like needing less bits.)
-
-So, my suggestion is to document LEDs as linear, and leave
-exponential->linear conversion to someone else.
-
-Best regards,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXhSIJwAKCRAw5/Bqldv6
-8kXHAKCDMGictHhWZrJFOSojuaRWyxJLOACfRJQtxCfV7IWm9vpd/MURAzCwc78=
-=93c/
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+Regards,
+  Marco
