@@ -2,309 +2,161 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFB2C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA59C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F012B2081E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 124332073D
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:03:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tSvGbjok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbgAGOBX (ORCPT
+        id S1727658AbgAGODC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:01:23 -0500
-Received: from mga01.intel.com ([192.55.52.88]:30700 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbgAGOBX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 09:01:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:01:22 -0800
-X-IronPort-AV: E=Sophos;i="5.69,406,1571727600"; 
-   d="scan'208";a="303202691"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jan 2020 06:01:17 -0800
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id D7C07209AE; Tue,  7 Jan 2020 16:01:15 +0200 (EET)
-Date:   Tue, 7 Jan 2020 16:01:15 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
-        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        laurent.pinchart@ideasonboard.com, joacim.zetterling@gmail.com,
-        kernel@collabora.com, ezequiel@collabora.com,
-        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
- yaml bindings
-Message-ID: <20200107140115.GQ19828@paasikivi.fi.intel.com>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
- <20191227200116.2612137-9-helen.koike@collabora.com>
+        Tue, 7 Jan 2020 09:03:02 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41018 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728020AbgAGODC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 09:03:02 -0500
+Received: by mail-ed1-f66.google.com with SMTP id c26so50411897eds.8
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 06:03:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=45jbDxnDRlrSoUpLAzYybIeaAzogHBOuARwmYD8R+zs=;
+        b=tSvGbjokzeeKehbcHN3x06WZ9/hK6cVn9aTP7JiU/nJ31C/garEmJ2diim7kY/NW6q
+         BIGmBeTJbi/sFb0yw7NDpkgG8/aB8q5sq/gc252u/A6uLKIvyXJhXwD+xO6oXfzU9CCM
+         TL9xwtEGIy5CnK2pSQabkUpr9hwVK6smBrFXE6xIlhaLvQKnAnv7njgd56PolQwSWaiQ
+         PhVksRd0NWpXdDEyD5zCX1g102BKlCmjHdGWo4oFBv03TcqfxhgLePW6eG9mMVXfpipF
+         oSfwRL6BGoOVocZwc3Ctt0Ien2O7AQ9jarbK3qvgaS6LPHEW0fiBV9i8LBqWJRV+gBqh
+         oQQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=45jbDxnDRlrSoUpLAzYybIeaAzogHBOuARwmYD8R+zs=;
+        b=REhwLq/tVnpk8iTkNV6WODl+RXvytx2cijPgFe1/s/m7kQsFtapTKe6hgwPGyOIfsC
+         PImrOZftWUpR+qnPerpSlJ1pmXPdDRHg1bUE30oAch06YNHuQpb2qm/bIGZwz0/xEUkD
+         sT4KliKTwBGGYg0wdeIQ03heTYVgnDA13GBl6O7pIbmvEIobwGL61WLPUJScsEzGnD8V
+         yaevD29l1Fq0947svZWsLpHQMPxA3RPi+ExkNDJ0ueDZiDNRvXS9RkHqz/BiWaLIQ78U
+         CrxrfF/1CcA2ejQ4FQ3OnK2xQk7TAaVZDkbFCaU2QhpCxegbHS1CY1VQZy0K6rS6I/pV
+         YCkw==
+X-Gm-Message-State: APjAAAXglvFa6fP1dTr0QlRDuwD+ACOOsSSebOaSFPbm+K89+0RZtyox
+        cO8aJA7nJT03dPQTUpqMxum6nQ==
+X-Google-Smtp-Source: APXvYqyCGf3BgZI7MYBMSIm2PVIioretqqJbJD50SKpdkHkarN9Xte/8okiCV7IKeTpzMwgxgyFjyw==
+X-Received: by 2002:a05:6402:c82:: with SMTP id cm2mr111400646edb.19.1578405780524;
+        Tue, 07 Jan 2020 06:03:00 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id h16sm8247573ejc.89.2020.01.07.06.02.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 06:02:59 -0800 (PST)
+Subject: Re: [PATCH V3 3/4] venus: core: add sc7180 DT compatible and resource
+ struct
+To:     Dikshita Agarwal <dikshita@codeaurora.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org
+References: <1577971501-3732-1-git-send-email-dikshita@codeaurora.org>
+ <1577971501-3732-4-git-send-email-dikshita@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <9108a39f-4403-ea19-218b-5e6dd86fde61@linaro.org>
+Date:   Tue, 7 Jan 2020 16:02:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227200116.2612137-9-helen.koike@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1577971501-3732-4-git-send-email-dikshita@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Helen,
+Hi Dikshita,
 
-On Fri, Dec 27, 2019 at 05:01:13PM -0300, Helen Koike wrote:
-> Add yaml DT bindings for Rockchip ISP1.
+Thanks for the patch.
+
+On 1/2/20 3:25 PM, Dikshita Agarwal wrote:
+> This add DT compatible string and resource structure for sc7180.
 > 
-> This was tested and verified with:
-> mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> 
+> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
 > ---
-> 
-> Changes in v12:
-> - The commit replaces the following commit in previous series named
-> media: staging: dt-bindings: Document the Rockchip ISP1 bindings
-> This new patch adds yaml binding and was verified with
-> make dtbs_check and make dt_binding_check
-> 
-> Changes in v11:
-> - add clock-names values
-> 
-> Changes in v10:
-> - unsquash
-> 
-> Changes in v9:
-> - squash
-> - move to staging
-> 
-> Changes in v8:
-> - fix title division style
-> 
-> Changes in v7:
-> - update document with new design and tested example
-> 
->  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
->  1 file changed, 193 insertions(+)
->  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> 
-> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> new file mode 100644
-> index 000000000000..4d1b2c67a4cd
-> --- /dev/null
-> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> @@ -0,0 +1,193 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/rockchip-isp1.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip SoC Image Signal Processing unit v1
-> +
-> +maintainers:
-> +  - Helen Koike <helen.koike@collabora.com>
-> +
-> +description: |
-> +  Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
-> +  which contains image processing, scaling, and compression funcitons.
+>  drivers/media/platform/qcom/venus/core.c | 45 ++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 
-"functions"
+Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
+> 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index c7525d9..194b10b9 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -521,11 +521,56 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+>  	.fwname = "qcom/venus-5.2/venus.mdt",
+>  };
+>  
+> +static const struct freq_tbl sc7180_freq_table[] = {
+> +	{  0, 500000000 },
+> +	{  0, 434000000 },
+> +	{  0, 340000000 },
+> +	{  0, 270000000 },
+> +	{  0, 150000000 },
+> +};
 > +
-> +properties:
-> +  compatible:
-> +    const: rockchip,rk3399-cif-isp
+> +static const struct bw_tbl sc7180_bw_table_enc[] = {
+> +	{  972000,  750000, 0, 0, 0 },	/* 3840x2160@30 */
+> +	{  489600,  451000, 0, 0, 0 },	/* 1920x1080@60 */
+> +	{  244800,  234000, 0, 0, 0 },	/* 1920x1080@30 */
+> +};
 > +
-> +  reg:
-> +    maxItems: 1
+> +static const struct bw_tbl sc7180_bw_table_dec[] = {
+> +	{ 1036800, 1386000, 0, 1875000, 0 },	/* 4096x2160@30 */
+> +	{  489600,  865000, 0, 1146000, 0 },	/* 1920x1080@60 */
+> +	{  244800,  530000, 0,  583000, 0 },	/* 1920x1080@30 */
+> +};
 > +
-> +  interrupts:
-> +    maxItems: 1
+> +static const struct venus_resources sc7180_res = {
+> +	.freq_tbl = sc7180_freq_table,
+> +	.freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
+> +	.bw_tbl_enc = sc7180_bw_table_enc,
+> +	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
+> +	.bw_tbl_dec = sc7180_bw_table_dec,
+> +	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
+> +	.codec_freq_data = sdm845_codec_freq_data,
+> +	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
+> +	.clks = {"core", "iface", "bus" },
+> +	.clks_num = 3,
+> +	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
+> +	.vcodec_clks_num = 2,
+> +	.vcodec_pmdomains = { "venus", "vcodec0" },
+> +	.vcodec_pmdomains_num = 2,
+> +	.vcodec_num = 1,
+> +	.hfi_version = HFI_VERSION_4XX,
+> +	.vmem_id = VIDC_RESOURCE_NONE,
+> +	.vmem_size = 0,
+> +	.vmem_addr = 0,
+> +	.dma_mask = 0xe0000000 - 1,
+> +	.fwname = "qcom/venus-5.4/venus.mdt",
+> +};
 > +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  phys:
-> +    maxItems: 1
-> +    description: phandle for the PHY port
-> +
-> +  phy-names:
-> +    const: dphy
-> +
-> +  clocks:
-> +    items:
-> +      - description: ISP clock
-> +      - description: ISP aclk clock
-> +      - description: ISP aclk wrapper clock
-> +      - description: ISP hclk clock
-> +      - description: ISP hclk wrapper clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: clk_isp
-> +      - const: aclk_isp
-> +      - const: aclk_isp_wrap
-> +      - const: hclk_isp
-> +      - const: hclk_isp_wrap
-> +
-> +  # See ./video-interfaces.txt for details
-> +  ports:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-
-If you only have a single port node, you could drop reg as well as @0 on
-the port node.
-
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        properties:
-> +          "#address-cells":
-> +            const: 1
-> +
-> +          "#size-cells":
-> +            const: 0
-> +
-> +          reg:
-> +            const: 0
-> +            description: port identifier.
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              reg:
-> +                maxItems: 1
-> +                description: endpoint identifier.
-> +
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              remote-endpoint: true
-> +
-> +    required:
-> +      - port@0
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - power-domains
-> +  - iommus
-> +  - phys
-> +  - phy-names
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/clock/rk3399-cru.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/rk3399-power.h>
-> +
-> +    parent0: parent@0 {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        isp0: isp0@ff910000 {
-> +            compatible = "rockchip,rk3399-cif-isp";
-> +            reg = <0x0 0xff910000 0x0 0x4000>;
-> +            interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
-> +            clocks = <&cru SCLK_ISP0>,
-> +                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
-> +                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
-> +            clock-names = "clk_isp",
-> +                          "aclk_isp", "aclk_isp_wrap",
-> +                          "hclk_isp", "hclk_isp_wrap";
-> +            power-domains = <&power RK3399_PD_ISP0>;
-> +            iommus = <&isp0_mmu>;
-> +            phys = <&dphy>;
-> +            phy-names = "dphy";
-> +
-> +            ports {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                port@0 {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +                    reg = <0>;
-> +
-> +                    mipi_in_wcam: endpoint@0 {
-> +                        reg = <0>;
-> +                        remote-endpoint = <&wcam_out>;
-> +                        data-lanes = <1 2>;
-> +                    };
-> +
-> +                    mipi_in_ucam: endpoint@1 {
-> +                        reg = <1>;
-> +                        remote-endpoint = <&ucam_out>;
-> +                        data-lanes = <1>;
-> +                    };
-> +                };
-> +            };
-> +        };
-> +
-> +        i2c7: i2c@ff160000 {
-> +            clock-frequency = <400000>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            wcam: camera@36 {
-> +                compatible = "ovti,ov5695";
-> +                reg = <0x36>;
-> +
-> +                port {
-> +                    wcam_out: endpoint {
-> +                        remote-endpoint = <&mipi_in_wcam>;
-> +                        data-lanes = <1 2>;
-> +                    };
-> +                };
-> +            };
-> +
-> +            ucam: camera@3c {
-> +                compatible = "ovti,ov2685";
-> +                reg = <0x3c>;
-> +
-> +                  port {
-> +                      ucam_out: endpoint {
-> +                          remote-endpoint = <&mipi_in_ucam>;
-> +                          data-lanes = <1>;
-> +                      };
-> +                  };
-> +            };
-> +        };
-> +    };
+>  static const struct of_device_id venus_dt_match[] = {
+>  	{ .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
+>  	{ .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
+>  	{ .compatible = "qcom,sdm845-venus", .data = &sdm845_res, },
+>  	{ .compatible = "qcom,sdm845-venus-v2", .data = &sdm845_res_v2, },
+> +	{ .compatible = "qcom,sc7180-venus", .data = &sc7180_res, },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, venus_dt_match);
+> 
 
 -- 
-Kind regards,
-
-Sakari Ailus
+regards,
+Stan
