@@ -2,103 +2,54 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95D6C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55CCC282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2A32087F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578436103;
-	bh=Ng4X0689ET8txDYg+HTSgh4A/4430emIWmGDU7xejoo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZHmwXo2CrplPsJ+PyTZuvfqR7AZfUwY363Jwdt46WYxdIK5x0K4waxhUCDmaPcyxd
-	 CYa5R8q+iI/ZWV3TsOF2OF+YCrb9cXxwbwLBVV34ZENB0+FVpU3DdathyE2XYX96CK
-	 mSy2tNlN6fY0nC0AgyldmAHg2uuURAihmoZ2+5eE=
+	by mail.kernel.org (Postfix) with ESMTP id B884A206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgAGW2X (ORCPT
+        id S1727127AbgAGWcK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:28:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44648 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 17:32:10 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:37618 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgAGW2X (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:28:23 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC02206DB;
-        Tue,  7 Jan 2020 22:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578436102;
-        bh=Ng4X0689ET8txDYg+HTSgh4A/4430emIWmGDU7xejoo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YmOBvRNwxn2p4VVNlN1mtPMiHLf88IILl9CU5zsl8oDc2tEKa1JDkDCVyO4Wy/9qd
-         Yw8vOC7S8QS09Rv6JU0fD4t8I+ojDUHRjDHedmMf3Oi43gBxQs2Q98Q6n0QgUy6HIQ
-         OHTtvmHiGFEn6GyDZhW85HM98ibHSVCqqa6rv8CU=
-Received: by mail-qk1-f173.google.com with SMTP id j9so974861qkk.1;
-        Tue, 07 Jan 2020 14:28:22 -0800 (PST)
-X-Gm-Message-State: APjAAAUUPFkS4VB8XamxNWD0SFRN8E3eurzfYZcpjgmEGoKdeSKNT4lp
-        wdzDakFT/C+P8mgo3YdO96Mkk/qWL+mHr6irjg==
-X-Google-Smtp-Source: APXvYqxoOQxfocQW4kA6khk+aHJU2pwVfyqaD/KAMlGk5ufz1LIdR6mv3ZWKi1+rUBmcLJKspMa+7b9aCsoIRm4X5cM=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr1635519qkn.254.1578436101562;
- Tue, 07 Jan 2020 14:28:21 -0800 (PST)
+        id S1727077AbgAGWcK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:32:10 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ioxOP-000534-Gq; Tue, 07 Jan 2020 23:32:05 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: rk3399-firefly: remove num-slots from &sdio0 node
+Date:   Tue, 07 Jan 2020 23:32:04 +0100
+Message-ID: <2012646.CMKZZmdTN9@phil>
+In-Reply-To: <20191231191154.5587-1-jbx6244@gmail.com>
+References: <20191231191154.5587-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-9-srinivas.kandagatla@linaro.org> <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
- <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
-In-Reply-To: <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 7 Jan 2020 16:28:09 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJksUGvLJeYbeP3zv_TtSe0NBWfrTmUsVes1KrwJW0Ahw@mail.gmail.com>
-Message-ID: <CAL_JsqJksUGvLJeYbeP3zv_TtSe0NBWfrTmUsVes1KrwJW0Ahw@mail.gmail.com>
-Subject: Re: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for gpio
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 4:17 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 07/01/2020 09:47, Linus Walleij wrote:
-> > On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >
-> >> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
-> >> gpio controller to control 5 gpios on the chip. This patch adds
-> >> required device tree bindings for it.
-> >>
-> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >> Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Tell me if you want me to merge this patch through the GPIO tree.
-> >
-> Yes that would be great!. gpio bindings and gpio driver can go via gpio
-> tree as there is no compile time dependency. Also Mark has already
-> merged the audio codec side of it.
+Am Dienstag, 31. Dezember 2019, 20:11:54 CET schrieb Johan Jonker:
+> The option "num-slots" was deprecated long time ago, so remove it.
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-But there is a dependency because dt_binding_check is now broken as
-the codec schema references this GPIO schema. Not much to do about
-this now other than get the GPIO schema into -next.
+applied for 5.6
 
-Rob
+Thanks
+Heiko
+
+
