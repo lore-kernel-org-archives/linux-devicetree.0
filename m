@@ -2,103 +2,121 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F2AC33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509D6C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 11:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7050B207E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 11:16:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WOX+/1IM"
+	by mail.kernel.org (Postfix) with ESMTP id 2DB47207E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 11:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgAGLQm (ORCPT
+        id S1727650AbgAGLTt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 06:16:42 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50712 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgAGLQl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 06:16:41 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007BGXc2024300;
-        Tue, 7 Jan 2020 05:16:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578395793;
-        bh=HXqsa6+h9NoRNz+G1rKqdekJZz8yz8ren1fxTOBhDrY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WOX+/1IMdd097RzhC/63SuwVfRY2EPkT94tkpqLfeFiD0SSKHvc+7xIDjiCXX8Cc+
-         m5e3/iqMlvEay2LILXYfaNoWFppmMtGLIxp+OXU1uE8wZhKxUIFONSvAPlAps/1Gng
-         HKztDIn7I6qsUaeycJIICpyO2HrTwh0EczMQMw2Y=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007BGX8L064520
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 05:16:33 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
- 2020 05:16:33 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 7 Jan 2020 05:16:33 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007BGTRd027407;
-        Tue, 7 Jan 2020 05:16:30 -0600
-Subject: Re: [PATCH v4 08/11] dt-bindings: sdhci-omap: Add documentation for
- ti,needs-special-reset property
-To:     Rob Herring <robh@kernel.org>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <kishon@ti.com>, <adrian.hunter@intel.com>, <mark.rutland@arm.com>,
-        <ulf.hansson@linaro.org>, <tony@atomide.com>
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
- <20200106110133.13791-9-faiz_abbas@ti.com> <20200106220313.GA6822@bogus>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <fa2866cb-485a-9eed-47c2-fb3f6f260d31@ti.com>
-Date:   Tue, 7 Jan 2020 16:48:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 7 Jan 2020 06:19:49 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49809 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbgAGLTt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 06:19:49 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iomti-0001FG-Ne; Tue, 07 Jan 2020 12:19:42 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iomtg-0007Ek-DM; Tue, 07 Jan 2020 12:19:40 +0100
+Date:   Tue, 7 Jan 2020 12:19:40 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+Subject: Re: [PATCH v2 4/7] pwm: Add support for Azoteq IQS620A PWM generator
+Message-ID: <20200107111940.ymiey7npx6rrppqz@pengutronix.de>
+References: <20191209073206.6pftsak5v25jdepz@pengutronix.de>
+ <20191210000252.GA6361@labundy.com>
+ <20191210072227.434hyv5wl3rwztqx@pengutronix.de>
+ <20191215203607.GA31390@labundy.com>
+ <20191216091912.r4onikojbkbmguag@pengutronix.de>
+ <20191220031924.GA2658@labundy.com>
+ <20191220085948.iagsdpjqd6ixdo7j@pengutronix.de>
+ <20191221032755.GA3051@labundy.com>
+ <20191222214851.kapsro6b6qylke43@pengutronix.de>
+ <20200101223933.GB14339@labundy.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106220313.GA6822@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200101223933.GB14339@labundy.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Jeff,
 
-On 07/01/20 3:33 am, Rob Herring wrote:
-> On Mon, Jan 06, 2020 at 04:31:30PM +0530, Faiz Abbas wrote:
->> Some controllers need a special software reset sequence. Document the
->> ti,needs-special-reset binding to indicate that a controller needs this.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/sdhci-omap.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
->> index 97efb01617dd..0f5389c72bda 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-omap.txt
->> @@ -21,6 +21,7 @@ Optional properties:
->>  - dma-names:	List of DMA request names. These strings correspond 1:1 with the
->>  		DMA specifiers listed in dmas. The string naming is to be "tx"
->>  		and "rx" for TX and RX DMA requests, respectively.
->> +- ti,needs-special-reset: Requires a special softreset sequence
+On Wed, Jan 01, 2020 at 10:39:36PM +0000, Jeff LaBundy wrote:
+> On Sun, Dec 22, 2019 at 10:48:51PM +0100, Uwe Kleine-König wrote:
+> > On Sat, Dec 21, 2019 at 03:28:01AM +0000, Jeff LaBundy wrote:
+> > > Based on your other feedback, I'm moving forward under the impression that
+> > > you'll still accept option (2); please let me know if I have misunderstood
+> > > (thank you for being flexible).
+> > 
+> > Yeah, that's fine. If in the end it shows that this is a bad idea we can
+> > still change to (3).
 > 
-> Why can't this be implied by the compatible string?
+> Sounds great. As soon as 5.5-rc5 lands this weekend, I'll rebase v3 and
+> send it out.
 > 
+> I failed to catch this in my previous reply, but the comment I've added
+> to iqs620_pwm_get_state actually reads as follows:
+> 
+> /*
+>  * Since the device cannot generate a 0% duty cycle, requests to do so
+>  * force subsequent calls to iqs620_pwm_get_state to report the output
+>  * as disabled with duty cycle equal to that which was in use prior to
+>  * the request. This is not ideal, but is the best compromise based on
+>  * the capabilities of the device.
+>  */
+> 
+> This matches the present implementation, not your proposed comment that
+> claims duty cycle is clamped to 1 / 256 ms following a request for a 0%
+> duty cycle.
 
-You are right. We can assign the special_reset flag in the next patch
-using compatible as well. Will drop this patch in next version.
+Yeah, if that's the mechanism that is actually implemented, that's fine
+of course.
 
-Thanks,
-Faiz
+> This seems OK since the concept of a duty cycle or period aren't really
+> relevant if the output is disabled in my opinion. However if you prefer
+> I update iqs620_pwm_apply to clamp duty cycle to 1 / 256 ms (instead of
+> leaving it untouched) in this case, please let me know.
+
+For a disabled PWM the duty_cycle and period are not relevant, for an
+enabled PWM running with 0% the period matters (at least in theory)
+however.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
