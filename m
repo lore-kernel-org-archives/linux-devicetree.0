@@ -2,294 +2,117 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71555C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD0C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4BC208C4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E34E20678
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ziDuMHvp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="taUrxPZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgAGJ6T (ORCPT
+        id S1727707AbgAGKRI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:58:19 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52318 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbgAGJ6R (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:58:17 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so18228728wmc.2
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:58:14 -0800 (PST)
+        Tue, 7 Jan 2020 05:17:08 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38064 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbgAGKRI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 05:17:08 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y17so53274390wrh.5
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 02:17:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=UfGDE/pY8GyHptw1+lgKhCDTDIHwOAgtK6t8XN0nv5M=;
-        b=ziDuMHvptB5Iu+MWIvv7l5G8tPvQ62nt+243YesP3kh3NQllbFzC0wCoWuOPEliMoN
-         fO8w5gcZPdaccC5JuLJLdvgPrLjqL5NMPXXhH9H+If4iQQR4TwPn94FfkkM9ixj98/tI
-         eiNUZ0h09fFAS6fsjhBMM3VPL9oFlrySbPVIbbo2bkKhmdEQ2ib1aWRSNM1l/Ka5D/3u
-         HaDAB7iNzcL0++VaSvgApD5ZwEvqceQQ2onwnpRQNghmfll5WqYbhG7v5iayIrHzmDw6
-         qcliaLUXAbEkkV2d8LJ2M1/jzQm7CUgjmZoNEZjokSJ5AynhB/n2OY/cV0XY5GwUTyqw
-         Wmbw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fwzh5B1nXt/sAEFF4P6VGTRMD6n6bfO44NTRH3RJWZ4=;
+        b=taUrxPZTGVzzuvL7T0lvDMjjDK8lWEumcMo06rflm+YVYxsAK4JOpHgrsuAfS9cWXI
+         G41MsZHjP/iu0AGNtOm4RB+dnO/BlbvD6PqTU2RzKIaoKHNOTimtY1JJkFNR4ViAi44p
+         bQfKDKrRFnorlrTOwWLpMu4a12R/xRFUrN6hUtUHkzTgobNonMUqEtmROPxp0Y7ldrp7
+         P8SKMT8N1cWBfXuQWuAhAXgcL+n/MeAI86J59ta9lgyoQ0GiYcuCF0pDGqp3O5kR7WKY
+         tU91FqNkCDxKwj/tG4ZzIzefo7Xul6TH6UYN1zmSjtQupZzVTC06qKPvsKuD5VykiP/Y
+         Ii6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=UfGDE/pY8GyHptw1+lgKhCDTDIHwOAgtK6t8XN0nv5M=;
-        b=fJ+j3Byv6ei+wR2yXDBWzWOGRIHI4DZXUOovzBjgHzDRYR9s/o99sHPs6hUB4I4kcI
-         ipRhncT2JuulOEMSCYe83gNXcfSWC/l/H1y7xf+sho7ue3jB1PyKCwoOupzCksKhFXHt
-         bXU3RdM6a3+BPsg3PAIGBBaiyb1Y5gEiAeG1j1Kr80Xw7UUfVvTdXBFz5X7kD4CPyOlw
-         cZpBsDc75hAnUloPPPxShm/JI6v2LLC0yVmJwLQ9lrb4AiPdoRsgFgsnpPk3BNrfXm47
-         NUieeV7gQpZiS4EJpuRCDebUV6zRnp0rtf316tEWa/eooED5+RYAwRkLowWtVNSTE66X
-         1T8w==
-X-Gm-Message-State: APjAAAWeMHTAtr/Db7i4bxZS/5gFuEKmXcUG9AW7czKsAJgrUNu2WVt8
-        N6gg0mv4r41IMKdTNkadJo45rA==
-X-Google-Smtp-Source: APXvYqw02ATk0nvqjCckJPV3pNCB6y4om3PfcHfNjLxZVW3lmZbv6PEn/XkS6a6cZR4h/pibsnaHDw==
-X-Received: by 2002:a1c:61c1:: with SMTP id v184mr38685861wmb.160.1578391093938;
-        Tue, 07 Jan 2020 01:58:13 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id h8sm78708203wrx.63.2020.01.07.01.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 01:58:13 -0800 (PST)
-References: <20191220091611.36319-1-jian.hu@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: dts: meson-a1: add I2C nodes
-In-reply-to: <20191220091611.36319-1-jian.hu@amlogic.com>
-Date:   Tue, 07 Jan 2020 10:58:12 +0100
-Message-ID: <1ja76zsi4r.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fwzh5B1nXt/sAEFF4P6VGTRMD6n6bfO44NTRH3RJWZ4=;
+        b=SzrmcQsalpI2+d6hKralIUjTXEJBa4rg0JfOzIwTsuA3sHbwTBn2xvdh/aBwdwtvSl
+         /uTY6WbIfPDa2WgKZY3jt0xbPPTRPgl+ptXCjmR+r2hqRf1/Cb/f7HQprqzx+P8N0vGQ
+         hfn1MdebMXaHEdH4S0JcPiki39MVcQQZwrf2fhtvGzMSI6pv3XShz1GYnW7r7WhsgINJ
+         t8hAsZUo6TwUAE8EiVXRQtGIR7dsFMncVpJhP1C5TZ/3G8GyibQMGmAdxo+LOHEEcsYC
+         vhPs7iC4f54IFt4aUDDWZzMwgSe9M7DCYkQaIoroqaqmrDlJQOmlbMum7rcqW/xNJXQ+
+         lFLQ==
+X-Gm-Message-State: APjAAAVee9+G7fgzAR7R881D0Xc08ol/DUDS8cmDKUPCSsP7ogyauHNA
+        xMzzPmSmaOHeJlzy1PX39XY6Qw==
+X-Google-Smtp-Source: APXvYqx96FNnTE7Wcke6NICz9bHsU0YLHTjGvRQKQMsnCyEMLoYLSpwbGJRwJxjIiek++9x0xqV8nQ==
+X-Received: by 2002:a05:6000:149:: with SMTP id r9mr99505691wrx.147.1578392226736;
+        Tue, 07 Jan 2020 02:17:06 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id b17sm73177393wrx.15.2020.01.07.02.17.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 07 Jan 2020 02:17:05 -0800 (PST)
+Subject: Re: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for
+ gpio
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
+ <20191219103153.14875-9-srinivas.kandagatla@linaro.org>
+ <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
+Date:   Tue, 7 Jan 2020 10:17:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On Fri 20 Dec 2019 at 10:16, Jian Hu <jian.hu@amlogic.com> wrote:
 
-> There are four I2C controllers in A1 series,
-> Share the same comptible with AXG. Compared to AXG,
-> Drive strength feature is newly added in A1.
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->
-> ---
-> This patch depends on A1 clock patchset at [0][3]
->
-> Changes since v1 at [1]:
-> -change reg length to 0x20
-> -assign i2c bus alias in dts file
-> -add new feature note compared to AXG in changelog
->
-> Changes since v2 at [2]:
-> -remove the dependence the commit description
-> -remove i2c alias in dtsi
-> -reorder the i2c nodes
-> -reorder the i2c pins
->
-> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
-> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
-> [2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
-> [3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
-> ---
-> ---
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 142 ++++++++++++++++++++++
->  1 file changed, 142 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> index eab2ecd36aa8..1542eeee699d 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -117,6 +117,16 @@
->  				};
->  			};
->  
-> +			i2c0: i2c@1400 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x1400 0x0 0x20>;
-> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
-> +				status = "disabled";
-> +			};
-> +
->  			uart_AO: serial@1c00 {
->  				compatible = "amlogic,meson-gx-uart",
->  					     "amlogic,meson-ao-uart";
-> @@ -136,6 +146,36 @@
->  				clock-names = "xtal", "pclk", "baud";
->  				status = "disabled";
->  			};
-> +
-> +			i2c1: i2c@5c00 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x5c00 0x0 0x20>;
-> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c2: i2c@6800 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x6800 0x0 0x20>;
-> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c3: i2c@6c00 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x6c00 0x0 0x20>;
-> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
-> +				status = "disabled";
-> +			};
->  		};
->  
->  		gic: interrupt-controller@ff901000 {
-> @@ -171,3 +211,105 @@
->  		#clock-cells = <0>;
->  	};
->  };
-> +
-> +&periphs_pinctrl {
+On 07/01/2020 09:47, Linus Walleij wrote:
+> On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+> 
+>> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+>> gpio controller to control 5 gpios on the chip. This patch adds
+>> required device tree bindings for it.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Tell me if you want me to merge this patch through the GPIO tree.
+> 
+Yes that would be great!. gpio bindings and gpio driver can go via gpio 
+tree as there is no compile time dependency. Also Mark has already 
+merged the audio codec side of it.
 
-Why is this not directly under the periphs_pinctrl node ?
+I will address the comments on the driver and send new version of these 
+2 patches.
 
-> +	i2c0_f9_pins:i2c0-f9 {
-                     ^
-                     Missing space here. Same for the other nodes
-
-> +		mux {
-> +			groups = "i2c0_sck_f9",
-> +				"i2c0_sda_f10";
-> +			function = "i2c0";
-> +			bias-pull-up;
-
-Most device we have seen so far have the pull-up on the PCB.
-
-If you look at the other dts file, the i2c pad bias is disabled. If the
-pull-up resistor is missing on the PCB, this setting can overloaded in
-the board dt.
-
-Bottom line please put "bias-disable" or justify why a1 is different
-from the SoC.
-
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c0_f11_pins:i2c0-f11 {
-> +		mux {
-> +			groups = "i2c0_sck_f11",
-> +				"i2c0_sda_f12";
-> +			function = "i2c0";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c1_a_pins:i2c1-a {
-> +		mux {
-> +			groups = "i2c1_sck_a",
-> +				"i2c1_sda_a";
-> +			function = "i2c1";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c1_x_pins:i2c1-x {
-> +		mux {
-> +			groups = "i2c1_sck_x",
-> +				"i2c1_sda_x";
-> +			function = "i2c1";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_a4_pins:i2c2-a4 {
-> +		mux {
-> +			groups = "i2c2_sck_a4",
-> +				"i2c2_sda_a5";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_a8_pins:i2c2-a8 {
-> +		mux {
-> +			groups = "i2c2_sck_a8",
-> +				"i2c2_sda_a9";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_x0_pins:i2c2-x0 {
-> +		mux {
-> +			groups = "i2c2_sck_x0",
-> +				"i2c2_sda_x1";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_x15_pins:i2c2-x15 {
-> +		mux {
-> +			groups = "i2c2_sck_x15",
-> +				"i2c2_sda_x16";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c3_f_pins:i2c3-f {
-> +		mux {
-> +			groups = "i2c3_sck_f",
-> +				"i2c3_sda_f";
-> +			function = "i2c3";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c3_x_pins:i2c3-x {
-> +		mux {
-> +			groups = "i2c3_sck_x",
-> +				"i2c3_sda_x";
-> +			function = "i2c3";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +};
-
+Thanks,
+srini
+> Yours,
+> Linus Walleij
+> 
