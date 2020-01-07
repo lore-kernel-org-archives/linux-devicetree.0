@@ -2,98 +2,192 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E94C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46173C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2225F2081E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C07A20715
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ZaBhwiwA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ix7q3VoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgAGMjD (ORCPT
+        id S1726937AbgAGMlO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:39:03 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:6398 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727834AbgAGMi4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:38:56 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007CbXhP018532;
-        Tue, 7 Jan 2020 13:38:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=LrRlBaLDFuffLqD4z5yxGzk/G0cLADgnwc3XsTVfoCs=;
- b=ZaBhwiwAYjyhKoeGI1D5iaFSenhCJ//B7at1Dr1vWILK/nKLgw55tevPMqmFFDWyHsIm
- ILyUukFobhhD3lOOu6ziqtJnMtEDSV9dS3V+3CO+DJOomdOyarqc4jqWpO7cFxi1zaNr
- PdhXOPLxfxc69hsziqcdzAyi+Dt7Jn2nH/2l6RjFyIkULo00qUWCWq3LwadiL23Gg2rW
- ZqS9p3Rl3Byv2Q77XyMWaamgZq7koAlg9JJhs6AqZ0UT3rARH2DVG1iGhQTT00lbLA5M
- stIzk0fl9K8ouEx/5CwEC3FkDVEEdP7zTMFpZqc95Hn1ZH0jHgO5TzIiA5NiV2qzL6zs 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakuqp4c3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jan 2020 13:38:35 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B91ED10003A;
-        Tue,  7 Jan 2020 13:38:32 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AEA2A2AFAB3;
-        Tue,  7 Jan 2020 13:38:32 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE3.st.com (10.75.127.18)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan 2020 13:38:32
- +0100
-From:   <patrice.chotard@st.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <linux@armlinux.org.uk>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <patrice.chotard@st.com>
-Subject: [PATCH 2/2] ARM: dts: stih410-b2260: Remove deprecated snps PHY properties
-Date:   Tue, 7 Jan 2020 13:38:28 +0100
-Message-ID: <20200107123828.6586-3-patrice.chotard@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107123828.6586-1-patrice.chotard@st.com>
-References: <20200107123828.6586-1-patrice.chotard@st.com>
+        Tue, 7 Jan 2020 07:41:14 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38486 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbgAGMlO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:41:14 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so53785641wrh.5
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 04:41:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
+        b=Ix7q3VoWX7RQy4IAIFvZnnhHrgIlYKKRROKOYAnNZ7BmaaaAs6jHQ61Lxw6GWYosc9
+         js3xOlPWY3Q5glXRYBlLsJy6HptsLcAlxLGYCX5GHoAzT1qratDLllAjeejrq4hB7AG3
+         xclbiyCAqcpiX6ql5hcsvKpZlQMb+kpvEcQEDqtz16NHo0TYR68+ZeN/Mm2pPWK6czSU
+         naCoCQZM/fCLwV2Ea7sZj7L9QcXiu2mYvkjJm3royTbxjzhTcA+uMJWvxw+zzgtrgGRD
+         KUow505mmVSANNrmqo07vaWfAbesYmYiyYN247IZipCnnBntZBu8utEIBaWfQ+VB+Uj5
+         q3DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
+        b=WTAdZLGslViouXSXZDpKNUv+V/CiODT7ozXwr4ybgy0kC5CHbEKXsF5CkQ14sCsdjC
+         c3MpaVybSuKIcPS2aNRz9+B+9+2MMBK1RZbdqQCqsQ25cnlKkwctaWd44EAWPUqXo5t1
+         LrDKt2eWBuPIBD1Kcc0gHf7+xZ4XuCst3Ms4P1spix/RSMxAgs9KCKBe/4sqBVe6SUZh
+         gcd9b+Qdn+3lP46RxXo4KHlpT7BTB/1J4S6JD0eBfU1yHQ8tAU+GYfGNz19lOwryYslt
+         bfXVkflIGVaNdR+IyTxATCkVkq9GyA4tzXCDkO0VgagagnMvVHI1YHJ4wR1wZlMabsVn
+         DSPA==
+X-Gm-Message-State: APjAAAVWPAb4cKpOuSQJPRncvao2dHfxqZ+JZWV59159dIHnyPzijOl+
+        aPEE3+PmMliivxoCaan8m/c2MQ==
+X-Google-Smtp-Source: APXvYqzbZqg0vGgagk5eTcBKjSPx4R7BBZCx64xNuANabxrxXTmsIcFLkSO0bRPr4frccQzcW69BPg==
+X-Received: by 2002:adf:ee45:: with SMTP id w5mr105522947wro.352.1578400871598;
+        Tue, 07 Jan 2020 04:41:11 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id i16sm27397404wmb.36.2020.01.07.04.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 04:41:10 -0800 (PST)
+Date:   Tue, 7 Jan 2020 12:41:24 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200107124124.GI14821@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE3.st.com
- (10.75.127.18)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-07_03:2020-01-06,2020-01-07 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+On Mon, 30 Dec 2019, Matti Vaittinen wrote:
 
-Remove "snps,phy-bus-name", "snps,phy-bus-id" and "snps,phy-addr"
-properties.
+> Few ROHM PMICs allow setting the voltage states for different system states
+> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
+> mechanisms. bd718x7 driver implemented device-tree parsing functions for
+> these state specific voltages. The parsing functions can be re-used by
+> other ROHM chip drivers like bd71828. Split the generic functions from
+> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
+> to use.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+> 
+> Changes from v7 - no changes
+> 
+>  drivers/regulator/Kconfig             |   4 +
+>  drivers/regulator/Makefile            |   1 +
+>  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------------
+>  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
+>  include/linux/mfd/rohm-generic.h      |  44 +++++++
+>  5 files changed, 199 insertions(+), 128 deletions(-)
+>  create mode 100644 drivers/regulator/rohm-regulator.c
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- arch/arm/boot/dts/stih410-b2260.dts | 3 ---
- 1 file changed, 3 deletions(-)
+[...]
 
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index 1df2c37eb3a7..3dd7f4b18856 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -179,9 +179,6 @@
- 			phy-handle = <&phy0>;
- 			pinctrl-0 = <&pinctrl_rgmii1 &pinctrl_rgmii1_mdio_1>;
- 
--			snps,phy-bus-name = "stmmac";
--			snps,phy-bus-id = <0>;
--			snps,phy-addr = <0>;
- 			snps,reset-gpio = <&pio0 7 0>;
- 			snps,reset-active-low;
- 			snps,reset-delays-us = <0 10000 1000000>;
+> diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
+> index ff3dd7578fd3..8037421cc6a1 100644
+> --- a/include/linux/mfd/rohm-generic.h
+> +++ b/include/linux/mfd/rohm-generic.h
+> @@ -4,6 +4,9 @@
+>  #ifndef __LINUX_MFD_ROHM_H__
+>  #define __LINUX_MFD_ROHM_H__
+>  
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +
+>  enum rohm_chip_type {
+>  	ROHM_CHIP_TYPE_BD71837 = 0,
+>  	ROHM_CHIP_TYPE_BD71847,
+> @@ -17,4 +20,45 @@ struct rohm_regmap_dev {
+>  	struct regmap *regmap;
+>  };
+>  
+> +enum {
+> +	ROHM_DVS_LEVEL_UNKNOWN,
+> +	ROHM_DVS_LEVEL_RUN,
+> +	ROHM_DVS_LEVEL_IDLE,
+> +	ROHM_DVS_LEVEL_SUSPEND,
+> +	ROHM_DVS_LEVEL_LPSR,
+> +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
+> +};
+> +
+> +struct rohm_dvs_config {
+> +	uint64_t level_map;
+> +	unsigned int run_reg;
+> +	unsigned int run_mask;
+> +	unsigned int run_on_mask;
+> +	unsigned int idle_reg;
+> +	unsigned int idle_mask;
+> +	unsigned int idle_on_mask;
+> +	unsigned int suspend_reg;
+> +	unsigned int suspend_mask;
+> +	unsigned int suspend_on_mask;
+> +	unsigned int lpsr_reg;
+> +	unsigned int lpsr_mask;
+> +	unsigned int lpsr_on_mask;
+> +};
+
+I think this deserves a kernel-doc header.
+
+> +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
+> +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
+> +				  struct device_node *np,
+> +				  const struct regulator_desc *desc,
+> +				  struct regmap *regmap);
+
+Does these really need to live in the parent's header file?
+
+What other call-sites are there?
+
+> +#else
+> +static inline int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
+> +						struct device_node *np,
+> +						const struct regulator_desc *desc,
+> +						struct regmap *regmap)
+> +{
+> +	return 0;
+> +}
+> +#endif //IS_ENABLED(CONFIG_REGULATOR_ROHM)
+
+a) This comment is not really required
+b) You shouldn't be using C++ comments
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
