@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67710C33C9B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAA9C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37BF6206E6
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45AD120715
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aTl4/mfP"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Q7xFhRm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgAGEOk (ORCPT
+        id S1727492AbgAGEO7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 23:14:40 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11413 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbgAGEOj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 23:14:39 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e14057f0000>; Mon, 06 Jan 2020 20:13:51 -0800
+        Mon, 6 Jan 2020 23:14:59 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4706 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbgAGEOi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 23:14:38 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e14059b0000>; Mon, 06 Jan 2020 20:14:19 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 06 Jan 2020 20:14:38 -0800
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 06 Jan 2020 20:14:36 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 06 Jan 2020 20:14:38 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 04:14:38 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+        by hqpgpgate101.nvidia.com on Mon, 06 Jan 2020 20:14:36 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+ 2020 04:14:35 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 04:14:37 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 7 Jan 2020 04:14:37 +0000
+ 2020 04:14:35 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 7 Jan 2020 04:14:35 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.88]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e1405ac0004>; Mon, 06 Jan 2020 20:14:37 -0800
+        id <B5e1405aa0003>; Mon, 06 Jan 2020 20:14:35 -0800
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <broonie@kernel.org>,
@@ -53,9 +53,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <markz@nvidia.com>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 16/19] arm64: tegra: Add clock-cells property to Tegra PMC node
-Date:   Mon, 6 Jan 2020 20:14:15 -0800
-Message-ID: <1578370458-3686-17-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v6 14/19] clk: tegra: Remove audio related clock enables from init_table
+Date:   Mon, 6 Jan 2020 20:14:13 -0800
+Message-ID: <1578370458-3686-15-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
 References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
@@ -63,96 +63,121 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578370431; bh=uAY6/g1qyuBMNIyQdm/BfCz69EbNXBXHlTGpzX8helM=;
+        t=1578370459; bh=WDUemQk4Sq9JTrUnbIDeUkAPSJTjhfdARkwCbMYLV0Q=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=aTl4/mfPscGKjOuY2wuDr2sPNCasMhSO7kczfHFIOW+HRBdT1/KEt56Qka6EJxqpB
-         sEv2e70Qisumktil1oos3k2y+qK9FmhP293zLCBKXJyIVZvQpxUNhmo4P3L2wQjEy6
-         akw4hi0NpVD7qbml4wgOe7qvh27iTcz2pL7HrLTd1MZRzc5zZpvkRR+sVyoV39ZJiP
-         S3szT8lEd2FGklBUWYEuhGMfqVKVI1lRBN5tnIy9d9pAWtaYyr611194kf6nk30yBk
-         /5mTOMqfWPlq1FyOoj3BBIq4AB44XSCibHQeS8ligH/MxJQZxw0X4MOnce7A9XbAB1
-         63CDngjsn8EAA==
+        b=Q7xFhRm2YEjPtJ2DuG1YgC91uaQgHoDd/UXCja51BTiLJnqHHOKLqNf/rctvH1yel
+         JBxeu2tc5hcViVS+3mNyizQE4/W407eWB15InAtx0+wdPSFtg8Bu7gGtWG3Yjdznlw
+         woPs/aCC9hlLAFfJHKiL8EU1+MenfzBWAgy9BatnVKEIfjEQNQh+zFoHMQpGwMcfr3
+         DOLrbPreyFHnsdM7FQf+tna5TjPf3hPEjDxQ0Gg44tGUxET+qfsnHKfz2dpBL5KgKl
+         siVYGV2UM2aY3znk3uQK5obGfYgal4a6rhPrZqUpSl+O9pojIxU0iIupXopgW8p5YP
+         vDMXYP27e+Iwg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra132 and Tegra210 PMC block has clk_out_1, clk_out_2, clk_out_3,
-and a blink clock as a part of PMC.
+Current clock driver enables PLLA, cdev1 on Tegra20 and extern1 on Tegra30
+and above as a part of clocks init and there is no need to have this
+clock enabled during the boot.
 
-These clocks are moved from clock driver to pmc driver with pmc as a
-clock provider.
+extern1 is used as parent for clk_out_1 and clk_out_1 is dedicated
+for audio mclk on Tegra30 and above Tegra platforms and these clocks
+are taken care by ASoC driver.
 
-Clock ids for these clocks are defined in pmc dt-bindings.
-
-This patch updated device tree to include pmc dt-binding and adds
-#clock-cells property with one clock specifier to pmc node.
+So, this patch removes parenting and enabling extern1 from clock init
+of Tegra30 and above and removes enabling cdev1 from Tegra20 clock init.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra132.dtsi | 4 +++-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 6 ++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/clk/tegra/clk-tegra114.c | 5 ++---
+ drivers/clk/tegra/clk-tegra124.c | 5 ++---
+ drivers/clk/tegra/clk-tegra20.c  | 5 ++---
+ drivers/clk/tegra/clk-tegra210.c | 5 ++---
+ drivers/clk/tegra/clk-tegra30.c  | 5 ++---
+ 5 files changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-index 631a7f77c386..79b1e3b01096 100644
---- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
-@@ -6,6 +6,7 @@
- #include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/tegra124-soctherm.h>
-+#include <dt-bindings/soc/tegra-pmc.h>
- 
- / {
- 	compatible = "nvidia,tegra132", "nvidia,tegra124";
-@@ -577,11 +578,12 @@
- 		clock-names = "rtc";
- 	};
- 
--	pmc@7000e400 {
-+	tegra_pmc: pmc@7000e400 {
- 		compatible = "nvidia,tegra124-pmc";
- 		reg = <0x0 0x7000e400 0x0 0x400>;
- 		clocks = <&tegra_car TEGRA124_CLK_PCLK>, <&clk32k_in>;
- 		clock-names = "pclk", "clk32k_in";
-+		#clock-cells = <1>;
- 	};
- 
- 	fuse@7000f800 {
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 48c63256ba7f..3e73b76249f9 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/reset/tegra210-car.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/thermal/tegra124-soctherm.h>
-+#include <dt-bindings/soc/tegra-pmc.h>
- 
- / {
- 	compatible = "nvidia,tegra210";
-@@ -770,16 +771,17 @@
- 		compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
- 		reg = <0x0 0x7000e000 0x0 0x100>;
- 		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-parent = <&pmc>;
-+		interrupt-parent = <&tegra_pmc>;
- 		clocks = <&tegra_car TEGRA210_CLK_RTC>;
- 		clock-names = "rtc";
- 	};
- 
--	pmc: pmc@7000e400 {
-+	tegra_pmc: pmc@7000e400 {
- 		compatible = "nvidia,tegra210-pmc";
- 		reg = <0x0 0x7000e400 0x0 0x400>;
- 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
- 		clock-names = "pclk", "clk32k_in";
-+		#clock-cells = <1>;
- 		#interrupt-cells = <2>;
- 		interrupt-controller;
- 
+diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
+index 4077dd3a1bd9..5821b636deb3 100644
+--- a/drivers/clk/tegra/clk-tegra114.c
++++ b/drivers/clk/tegra/clk-tegra114.c
+@@ -1134,9 +1134,8 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA114_CLK_UARTB, TEGRA114_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA114_CLK_UARTC, TEGRA114_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA114_CLK_UARTD, TEGRA114_CLK_PLL_P, 408000000, 0 },
+-	{ TEGRA114_CLK_PLL_A, TEGRA114_CLK_CLK_MAX, 564480000, 1 },
+-	{ TEGRA114_CLK_PLL_A_OUT0, TEGRA114_CLK_CLK_MAX, 11289600, 1 },
+-	{ TEGRA114_CLK_EXTERN1, TEGRA114_CLK_PLL_A_OUT0, 0, 1 },
++	{ TEGRA114_CLK_PLL_A, TEGRA114_CLK_CLK_MAX, 564480000, 0 },
++	{ TEGRA114_CLK_PLL_A_OUT0, TEGRA114_CLK_CLK_MAX, 11289600, 0 },
+ 	{ TEGRA114_CLK_I2S0, TEGRA114_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA114_CLK_I2S1, TEGRA114_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA114_CLK_I2S2, TEGRA114_CLK_PLL_A_OUT0, 11289600, 0 },
+diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra124.c
+index 266a0c040933..3e49d6d39af4 100644
+--- a/drivers/clk/tegra/clk-tegra124.c
++++ b/drivers/clk/tegra/clk-tegra124.c
+@@ -1290,9 +1290,8 @@ static struct tegra_clk_init_table common_init_table[] __initdata = {
+ 	{ TEGRA124_CLK_UARTB, TEGRA124_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA124_CLK_UARTC, TEGRA124_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA124_CLK_UARTD, TEGRA124_CLK_PLL_P, 408000000, 0 },
+-	{ TEGRA124_CLK_PLL_A, TEGRA124_CLK_CLK_MAX, 564480000, 1 },
+-	{ TEGRA124_CLK_PLL_A_OUT0, TEGRA124_CLK_CLK_MAX, 11289600, 1 },
+-	{ TEGRA124_CLK_EXTERN1, TEGRA124_CLK_PLL_A_OUT0, 0, 1 },
++	{ TEGRA124_CLK_PLL_A, TEGRA124_CLK_CLK_MAX, 564480000, 0 },
++	{ TEGRA124_CLK_PLL_A_OUT0, TEGRA124_CLK_CLK_MAX, 11289600, 0 },
+ 	{ TEGRA124_CLK_I2S0, TEGRA124_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA124_CLK_I2S1, TEGRA124_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA124_CLK_I2S2, TEGRA124_CLK_PLL_A_OUT0, 11289600, 0 },
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index fe536f1d770d..0da402c144d8 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -1029,9 +1029,8 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA20_CLK_UARTC, TEGRA20_CLK_PLL_P, 0, 0 },
+ 	{ TEGRA20_CLK_UARTD, TEGRA20_CLK_PLL_P, 0, 0 },
+ 	{ TEGRA20_CLK_UARTE, TEGRA20_CLK_PLL_P, 0, 0 },
+-	{ TEGRA20_CLK_PLL_A, TEGRA20_CLK_CLK_MAX, 56448000, 1 },
+-	{ TEGRA20_CLK_PLL_A_OUT0, TEGRA20_CLK_CLK_MAX, 11289600, 1 },
+-	{ TEGRA20_CLK_CDEV1, TEGRA20_CLK_CLK_MAX, 0, 1 },
++	{ TEGRA20_CLK_PLL_A, TEGRA20_CLK_CLK_MAX, 56448000, 0 },
++	{ TEGRA20_CLK_PLL_A_OUT0, TEGRA20_CLK_CLK_MAX, 11289600, 0 },
+ 	{ TEGRA20_CLK_I2S1, TEGRA20_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA20_CLK_I2S2, TEGRA20_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA20_CLK_SDMMC1, TEGRA20_CLK_PLL_P, 48000000, 0 },
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 39dbfad73bf9..1deae4f9fca7 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -3440,9 +3440,8 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_UARTB, TEGRA210_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA210_CLK_UARTC, TEGRA210_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA210_CLK_UARTD, TEGRA210_CLK_PLL_P, 408000000, 0 },
+-	{ TEGRA210_CLK_PLL_A, TEGRA210_CLK_CLK_MAX, 564480000, 1 },
+-	{ TEGRA210_CLK_PLL_A_OUT0, TEGRA210_CLK_CLK_MAX, 11289600, 1 },
+-	{ TEGRA210_CLK_EXTERN1, TEGRA210_CLK_PLL_A_OUT0, 0, 1 },
++	{ TEGRA210_CLK_PLL_A, TEGRA210_CLK_CLK_MAX, 564480000, 0 },
++	{ TEGRA210_CLK_PLL_A_OUT0, TEGRA210_CLK_CLK_MAX, 11289600, 0 },
+ 	{ TEGRA210_CLK_I2S0, TEGRA210_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA210_CLK_I2S1, TEGRA210_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA210_CLK_I2S2, TEGRA210_CLK_PLL_A_OUT0, 11289600, 0 },
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 7bbdb5a4dec4..349acfafa8b9 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -1219,9 +1219,8 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA30_CLK_UARTC, TEGRA30_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA30_CLK_UARTD, TEGRA30_CLK_PLL_P, 408000000, 0 },
+ 	{ TEGRA30_CLK_UARTE, TEGRA30_CLK_PLL_P, 408000000, 0 },
+-	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+-	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+-	{ TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
++	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 0 },
++	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 0 },
+ 	{ TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
 -- 
 2.7.4
 
