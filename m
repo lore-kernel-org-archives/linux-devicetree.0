@@ -2,104 +2,138 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5982CC282DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD01C282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3316820656
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56912087F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:47:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szuMX3AM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="evL9Ec0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgAGSc6 (ORCPT
+        id S1728412AbgAGSrY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:32:58 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36054 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgAGSc6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 13:32:58 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r19so624912ljg.3;
-        Tue, 07 Jan 2020 10:32:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5yQ/2RN1Cvw3xM3qW2gJqwdhulzSTGRTZcA4yZwm3ec=;
-        b=szuMX3AMHYI0gSMY6RihsVSowNacVcfSjmGJO7Syk9LEwBnI+H7cvhmHchoj6oPnpf
-         CQgUt6FfdHpM9YDs9NRCCuvW2lMoxK8IfABvzZg2oAiIVrSeo8yp1de76qAwMtpnd3jo
-         KaAhWqFzKl8W65Ih9gTzURdlbNYLjD6YZvZ+odOSnsTzz9MURnl4L9DPAZrV+U8nTs7Z
-         HlH6YSQMlCDQEVt6lbIkSHxSiUHBI4PTZKt0jROYhjeLpny38tsMc1JVRvxWWWhx8oiF
-         oE8UUJnja9w5sFmrmhZ/FtRNuGJMcWzOu8XvHG4zqrRNZCDoFTDshhJ4CZwndmt6lgZz
-         7sNQ==
+        Tue, 7 Jan 2020 13:47:24 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24704 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728440AbgAGSrY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 13:47:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578422842;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/8Zg9nxAOoXcvew8mYe1pYf5ie2kAu84kdP/XsWGT2E=;
+        b=evL9Ec0jCdrYkz/wiUpctRTYm4sHGbiR6ISoe7gGguchU1pM6TbZshjU7YmuTYWbTz5iPE
+        voW0xPjbQ3icBr7tLLZ4jiPf4H+Rrvi/AJVyQ5oEhTqsfZ2jdoMFIWyvAGng9fEp7b/Wf1
+        p5l5VMLRiR5lkNECfiblm2sK6mGLljQ=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-160-rtO9fKm6Nx6yNvd-uNuldg-1; Tue, 07 Jan 2020 13:47:21 -0500
+X-MC-Unique: rtO9fKm6Nx6yNvd-uNuldg-1
+Received: by mail-wr1-f71.google.com with SMTP id f10so317268wro.14
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 10:47:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5yQ/2RN1Cvw3xM3qW2gJqwdhulzSTGRTZcA4yZwm3ec=;
-        b=IfkHpe5d4tivewWodnZ+xSK4bd0I39XfEI/iu2xlGtXiVGR8BeLir77ymdfKzlFjH9
-         kaYzarWvHYnkPxCGHUuCFA7lX/NhrpSwvcw9uu2SPpCYOnpIuwklCwNARuCURgwoImcm
-         ru/sYYHXsmPgsCPDnhl4LM2sOLlIgxdwX6WZNfu5aIvf/V6spkI2xKRrmSjVbcM9cBD3
-         fBhRjHc1uWMuoKF6v1wMU3fpe2JdPvgzO/7kMzSBzeOFCrOeMALwuwB8oynMSdEfMri3
-         8R7CKybDMA/DdJR03t0Bmi6jbbwH2wJauznhAi2/g8F0QUbsgM4mowZx5RhxL6zXHtMe
-         El4w==
-X-Gm-Message-State: APjAAAXK8YE3SV1weHjp2obpxUY8tNDHuSgH0YgwR4RjV4t87AITZP+I
-        TYoddXNKdSbxZ5rLpbyk0/b4iZB58NEtNQb1FVk=
-X-Google-Smtp-Source: APXvYqymzxa0E0fR2E3OuAmc/FP9tlpw0cmDmDeoe9mooWQr78VIdEE1uYFCuSRmYe08wrAPc9giPkKWA8L17KRVvGg=
-X-Received: by 2002:a05:651c:1b0:: with SMTP id c16mr510355ljn.236.1578421976485;
- Tue, 07 Jan 2020 10:32:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20200106130909.7697-1-matwey@sai.msu.ru> <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
- <CAJs94EbUL6o9sM+pwxwpqHVDkFqy7wFRirET-Vq3SNVd3grUsA@mail.gmail.com> <20200106210509.GF5885@atomide.com>
-In-Reply-To: <20200106210509.GF5885@atomide.com>
-From:   Robert Nelson <robertcnelson@gmail.com>
-Date:   Tue, 7 Jan 2020 12:32:30 -0600
-Message-ID: <CAOCHtYhKUyUwunnWDT1CuRTpzS78d7xKq3qB3Phys7RgUZnM3w@mail.gmail.com>
-Subject: Re: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/8Zg9nxAOoXcvew8mYe1pYf5ie2kAu84kdP/XsWGT2E=;
+        b=DVaufcxFY23ffLZHCmRxQFTkxBnFiM0XVpda1JcVipjeQyj6cCmyE4rftnbb41NKfR
+         9+Dl82AcSXPTZAEJ661IWgYw26etKsp5IstWO8aV0AniNjF1hZsA5VTTsKFswfVRBprW
+         IqxCNYfl9Qcop7EmpqIqx/3aORLddJxPorkzQK3CBWq+jirjP+TTOtXBdNpGTMZ6xC+D
+         O/1cjapSG3FYoXYaNUPGj5U5QICAsZxQFvc1hNy/Cvi/3CL6i5wUcg4cxE+i0ahNwjtB
+         6sv8vDtTu9MKtFow4Zy1K/CLiQgdmYNEA6fz6Dd2H83gb+CeyLPhLMclxdd6w0SZKuuI
+         XbxA==
+X-Gm-Message-State: APjAAAU4h9MPeMPwmpT0yO7GawXtb03+53tZhaDvbuAPTcMJNI8Besd+
+        yc3oEBusasTxMMmZQ/byUtzjTGOpsb1tLtGdIG+lmQMCI9+r8YLiGZW++Tzw61KvoCDZba/YfUR
+        /v1oBE/2egHYKVR4o2qQN0w==
+X-Received: by 2002:a1c:9acf:: with SMTP id c198mr374949wme.175.1578422840005;
+        Tue, 07 Jan 2020 10:47:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyS3CiETVxrLdyEhHA7cbzJ+/9zPZi9ioE/EmeP9k2qsD3wfuMIgZsc4+ZCakmbQ2rVRvEZ3w==
+X-Received: by 2002:a1c:9acf:: with SMTP id c198mr374926wme.175.1578422839831;
+        Tue, 07 Jan 2020 10:47:19 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id p17sm956544wrx.20.2020.01.07.10.47.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 10:47:19 -0800 (PST)
+Subject: Re: [PATCH v3 0/3] ata: ahci_brcm: Follow-up changes for BCM7216
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20200107183022.26224-1-f.fainelli@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <92eeb7d0-5e96-b0b6-38db-a22d4862d6dd@redhat.com>
+Date:   Tue, 7 Jan 2020 19:47:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200107183022.26224-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 3:05 PM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Matwey V. Kornilov <matwey@sai.msu.ru> [200106 20:48]:
-> > =D0=BF=D0=BD, 6 =D1=8F=D0=BD=D0=B2. 2020 =D0=B3. =D0=B2 23:44, Robert N=
-elson <robertcnelson@gmail.com>:
-> > >
-> > > On Mon, Jan 6, 2020 at 7:10 AM Matwey V. Kornilov <matwey@sai.msu.ru>=
- wrote:
-> > > >
-> > > > BeagleBone Black series is equipped with 512MB RAM
-> > > > whereas only 256MB is included from am335x-bone-common.dtsi
-> > >
-> > > FYI: While all versions from the factory are 512MB, some 3rd parties
-> > > offered 1GB reballing upgrades..
->
-> So what's the conclusion, is it safe to bump the default size to
-> 512MB then?
->
-> The custom ones could use their own dts file if bootloader is not
-> setting the RAM.
+Hi,
 
-Yeah this is safe for factory devices. Classic u-boot will update
-these for modified boards.
+On 07-01-2020 19:30, Florian Fainelli wrote:
+> Hi Jens, Philipp,
+> 
+> These three patches are a follow-up to my previous series titled: ata:
+> ahci_brcm: Fixes and new device support.
+> 
+> After submitting the BCM7216 RESCAL reset driver, Philipp the reset
+> controller maintained indicated that the reset line should be self
+> de-asserting and so reset_control_reset() should be used instead.
+> 
+> These three patches update the driver in that regard. It would be great if
+> you could apply those and get them queued up for 5.6 since they are
+> directly related to the previous series.
+> 
+> Changes in v3:
+> - introduced a preliminary patch making use of the proper reset control
+>    API in order to manage the optional reset controller line
+> - updated patches after introducing that preliminary patch
+> 
+> Changes in v2:
+> - updated error path after moving the reset line control
+
+Series looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
---=20
-Robert Nelson
-https://rcn-ee.com/
+Hans
+
+
+
+
+> 
+> Thanks!
+> 
+> Florian Fainelli (3):
+>    ata: ahci_brcm: Correct reset control API usage
+>    ata: ahci_brcm: Perform reset after obtaining resources
+>    ata: ahci_brcm: BCM7216 reset is self de-asserting
+> 
+>   drivers/ata/ahci_brcm.c | 42 +++++++++++++++++++++++++----------------
+>   1 file changed, 26 insertions(+), 16 deletions(-)
+> 
+
