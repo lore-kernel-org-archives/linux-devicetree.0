@@ -6,57 +6,57 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA03C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6126C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E182080A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE5421744
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cjBKRspf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtI5LJo3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbgAGJrU (ORCPT
+        id S1727647AbgAGJs1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:47:20 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35364 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgAGJrU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:47:20 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j1so46621346lja.2
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:47:19 -0800 (PST)
+        Tue, 7 Jan 2020 04:48:27 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45701 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgAGJs0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:48:26 -0500
+Received: by mail-lf1-f67.google.com with SMTP id 203so38358751lfa.12
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:48:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GKAgR/S5tBz772raWFJYIXfn8TDQH+brFFCBErQ1zuE=;
-        b=cjBKRspfACIPeQVMLJLGEfJDGZNyVnna+Twaa3iVAAHS8U+oy2m9Nb9/ySkIfP+83o
-         6Nd+hf5KKEqfByAC7lMtKr9MvuGv4ZYfIANPqsQW1zPiN5oxYMfRen8GL8vHrREQCf5P
-         fYFZ94xQTN2WhdOAGXCHEi1T/VuirSxPZ6wRmCw0bCG5HY6x4Sze6nl/zikjeqkOFPAg
-         UbCPoMUGD0dJ2CrJo+iVFMjdnIbuI1koYD3fO6igDmWt304aS6EprJ/qmbHAXwZABxbW
-         oJaq9ofupn1axmEw/P6QHZ/7dsm+wYsFMYfHNSOgbT6x3HPRZCo0hphOZb+D2FfMEDmI
-         Ml6A==
+        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
+        b=qtI5LJo3/WvWrVIOP518oxDc3sCuQZBRfr9C5k+6doCxp3MzxLMN6EKtFZgGos+b45
+         LkDrzheTzcH8ElGC1D31coYR3J0ag0BydTOCnkr0keaP+7TP+453ZoSSijAkFO2Jn1ns
+         DNdC6m9acz9YM+LvrQD5aWwTHN9J/0xtaN/wa6UdUP77zaUcnKO8GMK4A0X+UZtyuYfn
+         Dojan9A7M8+5unJ7aoUrDc47Ap1APgA/gtyvSA7dLOqWIWFwN1g/8EJ7ozI0vLP2h50c
+         GKOWEwNT6+mgWVJ7cN5Kj5Q8b64XwtQVqTm3ZukPYVhj6NAOIjZbqLym6VSOgAH+u1qH
+         GQ+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GKAgR/S5tBz772raWFJYIXfn8TDQH+brFFCBErQ1zuE=;
-        b=KEKABE43UhIoH4GNPBhfIvDFBsQbTtLKhO/nzpkHCYuHlfJTAE9SFtD0fBWP4NCXga
-         qGBTkZKqgAVSKYuWWT5JXwHlX3Lu85aQsndKFf8+sXUEjtxBV6cJej0pK9uygPF7X2Bw
-         RxKoAaTh7Uvyn7MBQHef+UPThpQnEzPU9OME2gOXfs3Tdxz2Bfa+hFeBsRqmqSc09Hdz
-         d8NphMFm0Xnn0zCh2ovNz9csSwLAahMUwhCXjJVk2C+0eTGRTgY5k2OIWuI8G+HjccAT
-         67xuJlq3Lk9y7n0wLukb6L89Hzt76QEhFg3SBV/WWdKGg3IfVvkHuRkdwFtEKDlnPWic
-         ww+g==
-X-Gm-Message-State: APjAAAWC1tAYRGNfHuXE4lnjVpXJGexNB14n10/Yb205trWMlb7oNSa4
-        c7WK+4xMBJKIPZkKiv3ziVdFLGmHhQlBSN1FB4y5Rw==
-X-Google-Smtp-Source: APXvYqz0CNhEmsacDTRcEPmfxQ/oGL27kQqghbLjNnpafVZ5FskeP2/QqmHESgY8kC+PmcK3Ux3RyArBjry1NP4YanU=
-X-Received: by 2002:a2e:85cd:: with SMTP id h13mr61135533ljj.191.1578390438453;
- Tue, 07 Jan 2020 01:47:18 -0800 (PST)
+        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
+        b=dfJtbl+GnyChO7QCGpEM3jJQOAkPB0raS72MAWijy0Uuq7tTXa82xUVmbd3WcnyUQo
+         b1nojEc659GsNOXv958QTgeiuUuCxPXY/aDbkzSr26LZUfEOB0nDmjYVtA9UEJYRueSI
+         wZW0Kg0bDFaIUgeiaF4891Fn5Mz9vsCXINbuOolYbhtUobp+ktieBvpEo3cZIA8R8blf
+         MHZOzBqoEKmA78Lw3kZjhRGL2jsQnvNlAFcNsqXlZMcFDxRepitSQx6Nw3yWn1HBYLgC
+         KlRAe0Oxlj5XjemCLBcwTfDPIYgmHEsq8UEWclMXw1/5+KXr8GVHVFxwehALKma+XZ0j
+         59+w==
+X-Gm-Message-State: APjAAAUDr52uP6e5arULRZUGJa0+iu8OMzLCwc8ZDftuXr6gdf37VXtT
+        i+wdZ+pHe4890jgsCyURE65DpRpTv1yCYisntivaMg==
+X-Google-Smtp-Source: APXvYqwJ4NEleHWVj49bXWx9f2Reukpm63SdKPnvrbrbdsGZZiFUSvBsk8NVHRhgjrknGj8ifWCADNENNBxCswle48I=
+X-Received: by 2002:a19:c648:: with SMTP id w69mr58882108lff.44.1578390504987;
+ Tue, 07 Jan 2020 01:48:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org> <20191219103153.14875-9-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20191219103153.14875-9-srinivas.kandagatla@linaro.org>
+References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org> <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 10:47:07 +0100
-Message-ID: <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
-Subject: Re: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for gpio
+Date:   Tue, 7 Jan 2020 10:48:14 +0100
+Message-ID: <CACRpkdaoU9B+981iF4wvLgY-QNNnsNUE=CYVmfX8zNtUuOtKfQ@mail.gmail.com>
+Subject: Re: [PATCH v6 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
 To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh@kernel.org>,
@@ -77,16 +77,15 @@ X-Mailing-List: devicetree@vger.kernel.org
 On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
 <srinivas.kandagatla@linaro.org> wrote:
 
-> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
-> gpio controller to control 5 gpios on the chip. This patch adds
-> required device tree bindings for it.
+> This patch adds support to wcd934x gpio block found in
+> WCD9340/WC9341 Audio codecs.
 >
 > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I think I reviewed an earlier version of the patch set yesterday,
+the comments are still valid for this version.
 
-Tell me if you want me to merge this patch through the GPIO tree.
+Sorry for lag in my reviews :/
 
 Yours,
 Linus Walleij
