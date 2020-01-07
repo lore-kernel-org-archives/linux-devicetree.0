@@ -2,248 +2,112 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8EBC33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 06:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AD7C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 07:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3961F207E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 06:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vf3JV4zo"
+	by mail.kernel.org (Postfix) with ESMTP id 7D75C207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 07:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578380412;
+	bh=mqVAhJYsDI+d9WjdV8n8DMR9ou/rAJnSZlAgkuo6W9o=;
+	h=In-Reply-To:References:Cc:To:Subject:From:Date:List-ID:From;
+	b=gDVIwBsaXmnsZaLZBsG8hPKggkT/IuSodj+BJ4TCt+r8WlWQxTt60+Xw2gLXsu+pN
+	 zwV5PEonn3qeIovE95kOC83JApq4fofjq07vED7vK6uPGHxITayCcx8r/ZqZOL4tIU
+	 luzcTa5a2XUFou+4lzEbaWZYfq7mPqw6Ed88J1SE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgAGGer (ORCPT
+        id S1725874AbgAGHAI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 01:34:47 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40901 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgAGGer (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 01:34:47 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c17so41758246qkg.7;
-        Mon, 06 Jan 2020 22:34:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hIJgplRJ76RhyxgWHzYQXLkzuycqS5KcOYNXCryb3pU=;
-        b=vf3JV4zocywSj93VGGe3LGCCRzY+Y4RmfNIF1doHnmWFKtBWXgaGTaKLn5Fl2ixRs+
-         L1cgw38VniG7VxFQIjgUavPesskrlETKwJ+d7l9PZb5rh6c6aV2FsOwvEfmaM8pxyEk1
-         wrgVfiP09rOgWbs+Oo7CoHelt6wHYEm8ggkyhlf0OAo4+6ArSWt73MfjMQovNbItl5X6
-         e3m8AVu8KMTOUm3nW44fDODiDJXQw3y2dD3Ol0z/8sSQOB5GcwuJiKTmvSJ1IO/mRdRu
-         B4swPnqTHnoOvSmP+9UH+x8Yz3Qrg4RpdoHpCwmZlEvT/YwY9jWlqaa2vjcNCWKNO2WJ
-         BUPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hIJgplRJ76RhyxgWHzYQXLkzuycqS5KcOYNXCryb3pU=;
-        b=UIR7DgvJ0DqfTDndxwFehCR83Gh0+kA9Fwk9v8WJp7gNUrXVikbQltz9fOzhRZnHlm
-         7dk5855gcGgpGZq8Tx7hf29Ar1etwAZ0Dvy9Ie34y5G5XYnpARvl30FZTEiOtslep9N6
-         cV/M8PWPcbUSZx6xCmE5gFgXHIramfy4AjBTJBm3hAA0BISzxuaTGGLWQKIdIL9jUHEc
-         uxCeibSu9qtL0PUY6YR5EQgEsoPSOLRFfo5oryrU+ki0br0gEjSIOb9FEyoGJcjF3xws
-         N9+fQgJz0nw0SKCjMrLb9Pmo49t/oUms4QSWZjgPCJYMEz+uuJg38RB949NIWqiYOZo3
-         LzgQ==
-X-Gm-Message-State: APjAAAVdijiZXaLHEqRqHNbNwpiazGLWDnPzRV4oS5hYSzp3qKL2IJJF
-        Rnlu1DjHsjLHPMm+d9KypEI7rGOW/fE1cm+k5Wo=
-X-Google-Smtp-Source: APXvYqy/6QqapX3ChkaW3f+y6Y82dfEMw3gnR8ZvHF2xUUzeh/+SkQu1xakvfd6nPvrNB/s8A/AHkK3774z8iwCvyzM=
-X-Received: by 2002:a37:b601:: with SMTP id g1mr84298304qkf.114.1578378885720;
- Mon, 06 Jan 2020 22:34:45 -0800 (PST)
+        Tue, 7 Jan 2020 02:00:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgAGHAI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 02:00:08 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D92F206DB;
+        Tue,  7 Jan 2020 07:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578380407;
+        bh=mqVAhJYsDI+d9WjdV8n8DMR9ou/rAJnSZlAgkuo6W9o=;
+        h=In-Reply-To:References:Cc:To:Subject:From:Date:From;
+        b=aEqhSLP7UscDWt/g0rnZTzPSmOVPtuv25EZAc0MuCqYhpQrhc2QkDjuZ7QFZBnO5h
+         jYSDwkDVEbXmD91SJs+L4JIN5aokcceddk+PL+7p+gYfCcACiWmwuPH/10/4HR4ddT
+         jaN5gdi57+7Tb/DTQMbTociQ4MHJsQ+oq0Hn0+50=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200106110133.13791-1-faiz_abbas@ti.com> <20200106110133.13791-3-faiz_abbas@ti.com>
-In-Reply-To: <20200106110133.13791-3-faiz_abbas@ti.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 7 Jan 2020 14:34:34 +0800
-Message-ID: <CADBw62qR5F8h4YbpWfU2UESeoR3zXzS=eePMvQHuT7NQE5hdSA@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] mmc: sdhci: Factor out some operations set to
- their own functions
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     linux-omap@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        kishon@ti.com, Adrian Hunter <adrian.hunter@intel.com>,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>, tony@atomide.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4726f580-fe88-5b20-e869-4e31bd63c6e3@kernel.org>
+References: <20190918013459.15966-1-dinguyen@kernel.org> <20190918013459.15966-2-dinguyen@kernel.org> <20190918050010.74B4021848@mail.kernel.org> <4726f580-fe88-5b20-e869-4e31bd63c6e3@kernel.org>
+Cc:     devicetree@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org
+To:     Dinh Nguyen <dinguyen@kernel.org>, linux-clk@vger.kernel.org
+Subject: Re: [PATCH 2/2] clk: socfpga: agilex: add clock driver for the Agilex platform
+From:   Stephen Boyd <sboyd@kernel.org>
+User-Agent: alot/0.8.1
+Date:   Mon, 06 Jan 2020 23:00:06 -0800
+Message-Id: <20200107070007.6D92F206DB@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Faiz,
+Quoting Dinh Nguyen (2019-12-03 07:15:21)
+> Hi Stephen,
+>=20
+> On 9/18/19 12:00 AM, Stephen Boyd wrote:
+> > Quoting Dinh Nguyen (2019-09-17 18:34:59)
+> >> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> >> index 0cad76021297..ef2c96c0f1e0 100644
+> >> --- a/drivers/clk/Makefile
+> >> +++ b/drivers/clk/Makefile
+> >> @@ -18,6 +18,7 @@ endif
+> >> =20
+>=20
+> <snip>
+>=20
+> >> +struct clk *agilex_register_pll(const char *name,
+> >> +                               const char * const *parent_names,
+> >> +                               u8 num_parents, unsigned long flags,
+> >> +                               void __iomem *reg, unsigned long offse=
+t)
+> >> +{
+> >> +       struct clk *clk;
+> >> +       struct socfpga_pll *pll_clk;
+> >> +       struct clk_init_data init;
+> >> +
+> >> +       pll_clk =3D kzalloc(sizeof(*pll_clk), GFP_KERNEL);
+> >> +       if (WARN_ON(!pll_clk))
+> >> +               return NULL;
+> >> +
+> >> +       pll_clk->hw.reg =3D reg + offset;
+> >> +
+> >> +       if (streq(name, SOCFPGA_BOOT_CLK))
+> >> +               init.ops =3D &clk_boot_ops;
+> >> +       else
+> >> +               init.ops =3D &agilex_clk_pll_ops;
+> >> +
+> >> +       init.name =3D name;
+> >> +       init.flags =3D flags;
+> >> +
+> >> +       init.num_parents =3D num_parents;
+> >> +       init.parent_names =3D parent_names;
+> >=20
+> > Is it possible to use the new way of specifying clk parents here so that
+> > we don't have to keep using strings to describe the clk topology?
+> >=20
+>=20
+> Can you point me to what you mean here? Perhaps a driver that is using
+> this new way of specifying clk parents?
+>=20
 
-On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> In preparation for adding external dma support, factor out data initialization,
-> block info and mrq_done to their own functions.
->
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/mmc/host/sdhci.c | 96 +++++++++++++++++++++++-----------------
->  1 file changed, 55 insertions(+), 41 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1b1c26da3fe0..f6999054abcf 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1025,18 +1025,9 @@ static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
->         }
->  }
->
-> -static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> +static void sdhci_initialize_data(struct sdhci_host *host,
-> +                                 struct mmc_data *data)
->  {
-> -       struct mmc_data *data = cmd->data;
-> -
-> -       host->data_timeout = 0;
-> -
-> -       if (sdhci_data_line_cmd(cmd))
-> -               sdhci_set_timeout(host, cmd);
-> -
-> -       if (!data)
-> -               return;
-> -
->         WARN_ON(host->data);
->
->         /* Sanity checks */
-> @@ -1048,6 +1039,36 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->         host->data_early = 0;
->         host->data->bytes_xfered = 0;
->
+I'm supposed to write some documentation, but you can look for drivers
+that have 'struct clk_parent_data' until I write the doc up.
 
-Can you remove above redundant blank line?
+ $ git grep 'struct clk_parent_data' -- drivers/clk/
 
-> +}
-> +
-> +static inline void sdhci_set_block_info(struct sdhci_host *host,
-> +                                       struct mmc_data *data)
-> +{
-> +
-
-Ditto.
-
-Otherwise, please add my tested tag if feel free.
-
-Tested-by: Baolin Wang <baolin.wang7@gmail.com>
-
-> +       /* Set the DMA boundary value and block size */
-> +       sdhci_writew(host,
-> +                    SDHCI_MAKE_BLKSZ(host->sdma_boundary, host->data->blksz),
-> +                    SDHCI_BLOCK_SIZE);
-> +       /*
-> +        * For Version 4.10 onwards, if v4 mode is enabled, 32-bit Block Count
-> +        * can be supported, in that case 16-bit block count register must be 0.
-> +        */
-> +       if (host->version >= SDHCI_SPEC_410 && host->v4_mode &&
-> +           (host->quirks2 & SDHCI_QUIRK2_USE_32BIT_BLK_CNT)) {
-> +               if (sdhci_readw(host, SDHCI_BLOCK_COUNT))
-> +                       sdhci_writew(host, 0, SDHCI_BLOCK_COUNT);
-> +               sdhci_writew(host, host->data->blocks, SDHCI_32BIT_BLK_CNT);
-> +       } else {
-> +               sdhci_writew(host, host->data->blocks, SDHCI_BLOCK_COUNT);
-> +       }
-> +}
-> +
-> +static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> +{
-> +       struct mmc_data *data = cmd->data;
-> +
-> +       sdhci_initialize_data(host, data);
-> +
->         if (host->flags & (SDHCI_USE_SDMA | SDHCI_USE_ADMA)) {
->                 struct scatterlist *sg;
->                 unsigned int length_mask, offset_mask;
-> @@ -1133,22 +1154,7 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->
->         sdhci_set_transfer_irqs(host);
->
-> -       /* Set the DMA boundary value and block size */
-> -       sdhci_writew(host, SDHCI_MAKE_BLKSZ(host->sdma_boundary, data->blksz),
-> -                    SDHCI_BLOCK_SIZE);
-> -
-> -       /*
-> -        * For Version 4.10 onwards, if v4 mode is enabled, 32-bit Block Count
-> -        * can be supported, in that case 16-bit block count register must be 0.
-> -        */
-> -       if (host->version >= SDHCI_SPEC_410 && host->v4_mode &&
-> -           (host->quirks2 & SDHCI_QUIRK2_USE_32BIT_BLK_CNT)) {
-> -               if (sdhci_readw(host, SDHCI_BLOCK_COUNT))
-> -                       sdhci_writew(host, 0, SDHCI_BLOCK_COUNT);
-> -               sdhci_writew(host, data->blocks, SDHCI_32BIT_BLK_CNT);
-> -       } else {
-> -               sdhci_writew(host, data->blocks, SDHCI_BLOCK_COUNT);
-> -       }
-> +       sdhci_set_block_info(host, data);
->  }
->
->  static inline bool sdhci_auto_cmd12(struct sdhci_host *host,
-> @@ -1245,22 +1251,10 @@ static bool sdhci_needs_reset(struct sdhci_host *host, struct mmc_request *mrq)
->                  (host->quirks & SDHCI_QUIRK_RESET_AFTER_REQUEST)));
->  }
->
-> -static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
-> +static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
->  {
->         int i;
->
-> -       if (host->cmd && host->cmd->mrq == mrq)
-> -               host->cmd = NULL;
-> -
-> -       if (host->data_cmd && host->data_cmd->mrq == mrq)
-> -               host->data_cmd = NULL;
-> -
-> -       if (host->data && host->data->mrq == mrq)
-> -               host->data = NULL;
-> -
-> -       if (sdhci_needs_reset(host, mrq))
-> -               host->pending_reset = true;
-> -
->         for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->                 if (host->mrqs_done[i] == mrq) {
->                         WARN_ON(1);
-> @@ -1276,6 +1270,23 @@ static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
->         }
->
->         WARN_ON(i >= SDHCI_MAX_MRQS);
-> +}
-> +
-> +static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
-> +{
-> +       if (host->cmd && host->cmd->mrq == mrq)
-> +               host->cmd = NULL;
-> +
-> +       if (host->data_cmd && host->data_cmd->mrq == mrq)
-> +               host->data_cmd = NULL;
-> +
-> +       if (host->data && host->data->mrq == mrq)
-> +               host->data = NULL;
-> +
-> +       if (sdhci_needs_reset(host, mrq))
-> +               host->pending_reset = true;
-> +
-> +       sdhci_set_mrq_done(host, mrq);
->
->         sdhci_del_timer(host, mrq);
->
-> @@ -1390,12 +1401,15 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->         }
->
->         host->cmd = cmd;
-> +       host->data_timeout = 0;
->         if (sdhci_data_line_cmd(cmd)) {
->                 WARN_ON(host->data_cmd);
->                 host->data_cmd = cmd;
-> +               sdhci_set_timeout(host, cmd);
->         }
->
-> -       sdhci_prepare_data(host, cmd);
-> +       if (cmd->data)
-> +               sdhci_prepare_data(host, cmd);
->
->         sdhci_writel(host, cmd->arg, SDHCI_ARGUMENT);
->
-> --
-> 2.19.2
->
