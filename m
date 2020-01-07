@@ -2,57 +2,57 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077EFC282DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A73C282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0250206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9913206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578426713;
-	bh=RkPkxHdDrVWTWUcfdQwi+Xu/cIE6Qm9n1GGBwAbqrOU=;
+	s=default; t=1578426746;
+	bh=2Rt8QBkwsT8hqHrj/Cy8k8w71wAL2Fyl80RFLWrMlDQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OXfxK64O+XBGt7439L1hYrPWQ7GkNOemVfaUYHJDd03Y+jbs5+KMBQcewv2HWtK2I
-	 LNJTnuvBE99vouZOP9JbzKp90R3Qaqq8kMJpRtmMLUdxoWiGeWO8QzoRUcZf0muOuf
-	 TaqhCzTF1i3zBCL3VSbZcKsx4ofN4BzUKhm4Eh1w=
+	b=U98/TQ9MNU6RJ9qrt5DohKXjgtbcsnFbUH9f2gtKXXf2XrJSSDk3cigCOuOeBy+Se
+	 zavi9pL/TyWV7DT9vbx9qAVR13ZBnmBoqKQuxkdq9Z8+xe7SaedoxQ8ot6Z1G45N4u
+	 gbxDfGMCkUz/aciNSFq0Zp90VAe477erypezsGcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgAGTvx (ORCPT
+        id S1728369AbgAGTw0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:51:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36762 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 14:52:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgAGTvx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:51:53 -0500
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        id S1728358AbgAGTw0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:52:26 -0500
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D43421744
-        for <devicetree@vger.kernel.org>; Tue,  7 Jan 2020 19:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E56206DB
+        for <devicetree@vger.kernel.org>; Tue,  7 Jan 2020 19:52:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578426712;
-        bh=RkPkxHdDrVWTWUcfdQwi+Xu/cIE6Qm9n1GGBwAbqrOU=;
+        s=default; t=1578426746;
+        bh=2Rt8QBkwsT8hqHrj/Cy8k8w71wAL2Fyl80RFLWrMlDQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=koi+qwb0kk2y+oCdP0Dw98mzl4xq36YUSAFXGOyLpjw3rPhVaAqNQkNpliAkRlRAc
-         Oz9G8Ol7VDw4pGmPMFyIDHdKBhvPvvxYdG/9MktPJjJG07xfCooqiaD4Z9jvOumxfn
-         fWHn8BrXXvcLBdfhA2tSFa+HVpYV4TSGL0VONs+U=
-Received: by mail-qv1-f44.google.com with SMTP id p2so383037qvo.10
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 11:51:52 -0800 (PST)
-X-Gm-Message-State: APjAAAUbCtmPjO122blEMcbP7ZwDgI6GobSevRGYmfau/3i0NF0yyKki
-        sJULrrlw/m+V9bMTyZqOy4yLyLtKB3QgBblmGw==
-X-Google-Smtp-Source: APXvYqyqfnWHJxq4dKDL6Fu0FBWApL6bA5ye4/JPZIjQq52JfXuVn/kiI1xloPDFuRdmsfn8sK9L280z437O+o6RbOQ=
-X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr1028545qvo.20.1578426711761;
- Tue, 07 Jan 2020 11:51:51 -0800 (PST)
+        b=qbe4WB003BufWRMI4iq8w+Eqbb0/XzH/5VFJ4sUA2f6I46f+wJWlRs3m7PPnNmscu
+         iYpIRQVE9zDpIqymWuqn6KX0x/H6fdTLf+TYLvytFj6CaKIzihHrrfFT32dIO+OCOz
+         RGAwSYy24SQCRTSY9kHlwjzxSCGJQ9isHIqa05iA=
+Received: by mail-qk1-f172.google.com with SMTP id x1so475938qkl.12
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 11:52:25 -0800 (PST)
+X-Gm-Message-State: APjAAAUL9Dor2T8R6Z3YcxXj3GRkgubsoyZYgHJIJDfNYHW3Lmbn2auE
+        +/hzMCbuqvuYtwgnEJ3KPCE4Xxu5kKKCnHxhDQ==
+X-Google-Smtp-Source: APXvYqydWfBVAnZIKKmVTsP2BSuvkrTyEB6Wnb6j0Ux07qk+ik6JM+AXfglu7IoQ0c/w36bS6FRPyi67+RTkoOkatM0=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr904157qkl.119.1578426745034;
+ Tue, 07 Jan 2020 11:52:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20200102101712.5085-1-sam@ravnborg.org> <20200102101712.5085-3-sam@ravnborg.org>
-In-Reply-To: <20200102101712.5085-3-sam@ravnborg.org>
+References: <20200102101712.5085-1-sam@ravnborg.org> <20200102101712.5085-2-sam@ravnborg.org>
+In-Reply-To: <20200102101712.5085-2-sam@ravnborg.org>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 7 Jan 2020 13:51:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+C8zOKhT1jg7RcuMqMTYUqTCeyw2e_vJrz6-ycxhHQ3w@mail.gmail.com>
-Message-ID: <CAL_Jsq+C8zOKhT1jg7RcuMqMTYUqTCeyw2e_vJrz6-ycxhHQ3w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: one file of all simple DSI panels
+Date:   Tue, 7 Jan 2020 13:52:13 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLdbS5W0xZq_TfLmWh8J6+t1arvzov85rtj3UXuK0QRaQ@mail.gmail.com>
+Message-ID: <CAL_JsqLdbS5W0xZq_TfLmWh8J6+t1arvzov85rtj3UXuK0QRaQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: one binding file for all simple panels
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Maxime Ripard <mripard@kernel.org>,
@@ -69,16 +69,53 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Thu, Jan 2, 2020 at 4:17 AM Sam Ravnborg <sam@ravnborg.org> wrote:
 >
-> To complement panel-simple.yaml, create panel-simple-dsi.yaml.
-> panel-simple-dsi-yaml are for all simple DSP panels with a single
-> power-supply and optional backlight / enable GPIO.
+> There is an increasing number of new simple panels.
+> Common for many of these simple panels are that they have one
+> mandatory power-supply and some of them have backlight and / or
+> an enable gpio.
 >
-> Migrate panasonic,vvx10f034n00 over to the new file.
+> The binding file to describe these panels adds overhead
+> that really do not add value.
+> The binding are known and there is nothing gained from a
+> dedicated binding file nor for any dedicated example.
 >
-> The objectives with one file for all the simple DSI panels are:
->     - Make it simpler to add bindings for simple DSI panels
->     - Keep the number of bindings file lower
->     - Keep the binding documentation for simple DSI panels more consistent
+> The following patch introduces a single panel-simple.yaml
+> and converts two ampire bindings over to the new file.
+>
+> The conversion - if applied will have following effects:
+>
+> - The maintainer for the individual file will change
+>     There is no need for many different maintainers for a simple binding.
+>     We have the same situation with the panel-simple driver in the kernel.
+>
+> - The license will change to (GPL-2.0-only OR BSD-2-Clause)
+>     There is usually only a single line copied from the original
+>     file, a line that is often copied from a datasheet.
+>     This license change should be acceptable considered what little
+>     is copied.
+>     If the license change is not OK we can use a dedicated binding
+>     file in these cases.
+>
+> This is a follow-up on Rob's big patch converting a lot of panel bindings
+> to individual files:
+>
+> "dt-bindings: display: Convert a bunch of panels to DT schema"
+> https://patchwork.ozlabs.org/patch/1197683/
+>
+> The objectives with one file for the relevant simple panels are:
+> - Make it simpler to add bindings for simple panels
+> - Keep the number of bindings file lower and thus easier to find a
+>   relevant file to copy from when adding new panels.
+> - Keep the binding documentation for simple panels more consistent
+> - Make it simpler to add support for new panels
+>
+> v2:
+>   - spelling fixes (imirkin via irc, Rob)
+>   - updated description (Rob)
+>   - list properires in alphabetical order
+>   - added power-supply to example (Rob)
+>   - updated title
+>   - reworded changelog a little
 >
 > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 > Cc: Thierry Reding <thierry.reding@gmail.com>
@@ -90,104 +127,12 @@ On Thu, Jan 2, 2020 at 4:17 AM Sam Ravnborg <sam@ravnborg.org> wrote:
 > Cc: dri-devel@lists.freedesktop.org
 > Cc: devicetree@vger.kernel.org
 > ---
->  .../display/panel/panasonic,vvx10f034n00.txt  | 20 ------
->  .../display/panel/panel-simple-dsi.yaml       | 67 +++++++++++++++++++
->  2 files changed, 67 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/panasonic,vvx10f034n00.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+>  .../panel/ampire,am-480272h3tmqw-t01h.yaml    | 42 -------------
+>  .../panel/ampire,am800480r3tmqwa1h.txt        |  7 ---
+>  .../bindings/display/panel/panel-simple.yaml  | 59 +++++++++++++++++++
+>  3 files changed, 59 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-simple.yaml
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/panasonic,vvx10f034n00.txt b/Documentation/devicetree/bindings/display/panel/panasonic,vvx10f034n00.txt
-> deleted file mode 100644
-> index 37dedf6a6702..000000000000
-> --- a/Documentation/devicetree/bindings/display/panel/panasonic,vvx10f034n00.txt
-> +++ /dev/null
-> @@ -1,20 +0,0 @@
-> -Panasonic 10" WUXGA TFT LCD panel
-> -
-> -Required properties:
-> -- compatible: should be "panasonic,vvx10f034n00"
-> -- reg: DSI virtual channel of the peripheral
-> -- power-supply: phandle of the regulator that provides the supply voltage
-> -
-> -Optional properties:
-> -- backlight: phandle of the backlight device attached to the panel
-> -
-> -Example:
-> -
-> -       mdss_dsi@fd922800 {
-> -               panel@0 {
-> -                       compatible = "panasonic,vvx10f034n00";
-> -                       reg = <0>;
-> -                       power-supply = <&vreg_vsp>;
-> -                       backlight = <&lp8566_wled>;
-> -               };
-> -       };
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> new file mode 100644
-> index 000000000000..05c52390269e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/panel-simple-dsi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Simple DSI panels with a single power-supply
-> +
-> +maintainers:
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +  - Sam Ravnborg <sam@ravnborg.org>
-> +
-> +description: |
-> +  This binding file is a collection of the DSI panels that
-> +  requires only a single power-supply.
-> +  There are optionally a backlight and an enable GPIO.
-> +  The panel may use an OF graph binding for the association to the display,
-> +  or it may be a direct child node of the display.
-> +
-> +  If the panel is more advanced a dedicated binding file is required.
-> +
-> +allOf:
-> +  - $ref: panel-common.yaml#
-> +
-> +properties:
-> +
-> +  compatible:
-> +    enum:
-> +    # compatible must be listed in alphabetical order, ordered by compatible.
-> +    # The description in the comment is mandatory for each compatible.
-
-To answer your irc question, this is fine. You could do it like this instead:
-
-oneOf:
-  - description: ...
-    const: compat-string
-  - description: ...
-    const: compat-string-2
-
-The advantage is being able to extract 'description' if say you wanted
-to generate documentation. Even so, I somewhat prefer how you have it.
-
-> +
-> +    # Panasonic 10" WUXGA TFT LCD panel
-
-I'd align the # with the string to keep the list '-' a bit more
-visible. IOW, 2 more spaces (before my next comment).
-
-> +    - panasonic,vvx10f034n00
-
-This should be indented 2 more spaces.
-
-BTW, I extracted all the panels from my patch with this:
-
-git show | grep -E '(title|const)' | sed -e 's/\+title:/  #/' -e 's/+
-  const:/\-/'
-
-There's a few with more than just 'title'.
-
-Rob
