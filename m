@@ -2,159 +2,329 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CFDC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92FFC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36DC207E0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7322075A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:57:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FyRzPZic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgAGMq7 (ORCPT
+        id S1728044AbgAGM5m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:46:59 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36152 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726937AbgAGMq7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:46:59 -0500
-Received: by mail-oi1-f196.google.com with SMTP id c16so17621329oic.3;
-        Tue, 07 Jan 2020 04:46:58 -0800 (PST)
+        Tue, 7 Jan 2020 07:57:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41556 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgAGM5l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:57:41 -0500
+Received: by mail-wr1-f65.google.com with SMTP id c9so53822736wrw.8
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 04:57:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=93QCy+6lfoPu6T2jeY2YuuqgksbRKDw7v2F+iiG2Jic=;
+        b=FyRzPZicMMxp+pAWuWqWtAdTwZ3vMQndL9HoJsAxXaC8Lui7wOPJsm0geFbfSDw6Dd
+         nrwfovxHI2u0lUEJ4C2RPqAfw31p0iI2xgo7ZzLfgOy5BYd9eo5LPjQ79nKmMn7uXpji
+         yWh0Qk1MIyP/EkWv1WHtqJrguSIy8bXZFWFL952IlOzXB095CADywjTfy7mVkmAFOXmP
+         n7n/QLfzytJQbbEyIFCceszQFyaNeJdQNyOoHKHwmieOTUvhyHgbxgncBq21oWX0Iq2n
+         tNujW6zoah5QZurnwEcCLBSJw9Tot2YZXDBpxsHvcBJ8DAk9hvV3t50r2/cmCEzOizS7
+         /1Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vf/wP9IVDV4Hl6f1lzWr98u8m3GuJl26OsoEjxDSC+g=;
-        b=L+yd60keN0Dp0YBA/Xbp2waebe7tjW5j+rG13qYzzdjZ6vC4HsW028Ld+YzNryygv4
-         tAEAgoH4N3CsxX/Z7kDGpdE9E7z1wczBFmJ0Ypq+rJaPLaELbv6IyBUm3dJtXOhyWd4q
-         +fw0+Yk93EO5EaprOpd+N+x6rdooKAjtsGr4clj21K4gSvEwb/mKRb4zaLfKykZneO1i
-         CU90u/Dwm5L3mrMwQKExQ+kzFXvGj3LzUiG0G3OLZVIDQXhFggoVvTwb3ZP6yJdFlFfi
-         Yw9W8LjGXJgKLzmAEgtK8CAYLUMEQKKFUoB6/zLQn5RRLbSWJClC/7TyQt0WONbi/3j+
-         DwIg==
-X-Gm-Message-State: APjAAAX73uZygXFSzo80jcFoPUWEGR+RQV0+2PHHKtYvzRqcpqGX8CnS
-        uu9LbMc06KL+cveEsT1AXO2HTjVNvVXjw00PGEA=
-X-Google-Smtp-Source: APXvYqxA0Ir0h8IUX7YSNxseIUU1PobEpQXNKjYgoTrMgiMQwt3o9H2jAlIFDg4si3GQJ6t0pjmhx39BhXHXf9WoKjk=
-X-Received: by 2002:aca:1a06:: with SMTP id a6mr6541881oia.148.1578401218279;
- Tue, 07 Jan 2020 04:46:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20200102141246.370-1-geert+renesas@glider.be> <20200102141246.370-4-geert+renesas@glider.be>
- <20200105091303.GB29102@ravnborg.org> <CAMuHMdUL3tCZzCDyJkmqYT5n+-t+Z-Ubo4=+NJpHpZU1w5C07g@mail.gmail.com>
- <893b059c-fd7d-3c21-384c-da33af595ffb@lechnology.com>
-In-Reply-To: <893b059c-fd7d-3c21-384c-da33af595ffb@lechnology.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 7 Jan 2020 13:46:47 +0100
-Message-ID: <CAMuHMdXxwSR6D_tzg9iqwwLYEJZg6DEonvvvC_TigtG0PAvn+w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] drm: tiny: st7735r: Add support for Okaya RH128128T
-To:     David Lechner <david@lechnology.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=93QCy+6lfoPu6T2jeY2YuuqgksbRKDw7v2F+iiG2Jic=;
+        b=lV6kQ3lKUoecTFdezVLPhsfxsS8+bZpXm8lDBPmXS9zNbYBQHWfkThJJSMeKl3xMLW
+         TdQfECJb/KszsmTEgU67lW0vuBsH20lSCW/06j5Kz7aWsxkq5APHdEO7aISQHbaJyP7n
+         3Ld0ihHJhrcYHX7STzJ+tr1+UySFCplMHqs4r2TWxU+3DbEa7nANmAj+Wy2nCYkh5s7b
+         DRkuLCl9HM6SfccICJOxd1fbuMakxexJmKdN4t8ONJKkNIJcUAI60ft3Dx+G9iYQVTmp
+         YIedXiQpT4AuleioWBWWPH2U9gqAJ2nC1aWdWSI8heIKtWeuKaz4AnBfMOsgCUiiY32E
+         kwCQ==
+X-Gm-Message-State: APjAAAX3BnzmDcUVbQRGlchQ1hHDQ1T5rOIXXPN7gzQoAG7bJFohxNDZ
+        +5Vhan+G43PSyt7Tpgdg71/GGg==
+X-Google-Smtp-Source: APXvYqwOseVEoEwqvKt/WKPStKBJ1FZIuG8u48y75PfT52y/SVxc8BBiYwOqw0EIng9E63iyfPitLw==
+X-Received: by 2002:adf:f80c:: with SMTP id s12mr108243229wrp.1.1578401858462;
+        Tue, 07 Jan 2020 04:57:38 -0800 (PST)
+Received: from dell ([2.27.35.135])
+        by smtp.gmail.com with ESMTPSA id m10sm77330092wrx.19.2020.01.07.04.57.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 04:57:37 -0800 (PST)
+Date:   Tue, 7 Jan 2020 12:57:51 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v8 09/12] rtc: bd70528: add BD71828 support
+Message-ID: <20200107125751.GJ14821@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <b904fd485b61d3f3af3c100855f5100940916abf.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b904fd485b61d3f3af3c100855f5100940916abf.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi David,
+On Mon, 30 Dec 2019, Matti Vaittinen wrote:
 
-On Mon, Jan 6, 2020 at 6:12 PM David Lechner <david@lechnology.com> wrote:
-> On 1/6/20 3:28 AM, Geert Uytterhoeven wrote:
-> > On Sun, Jan 5, 2020 at 10:13 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >> On Thu, Jan 02, 2020 at 03:12:46PM +0100, Geert Uytterhoeven wrote:
-> >>> Add support for the Okaya RH128128T display to the st7735r driver.
-> >>>
-> >>> The RH128128T is a 128x128 1.44" TFT display driven by a Sitronix
-> >>> ST7715R TFT Controller/Driver.  The latter is very similar to the
-> >>> ST7735R, and can be handled by the existing st7735r driver.
+> ROHM BD71828 PMIC RTC block is from many parts similar to one
+> on BD70528. Support BD71828 RTC using BD70528 RTC driver and
+> avoid re-inventing the wheel.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+> 
+> Changes from v7 - no changes
+> 
+>  drivers/rtc/Kconfig              |   3 +-
+>  drivers/rtc/rtc-bd70528.c        | 168 ++++++++++++++++++++++++++++---
+>  include/linux/mfd/rohm-bd70528.h |  13 +--
+>  include/linux/mfd/rohm-bd71828.h |   4 +-
+>  include/linux/mfd/rohm-shared.h  |  27 +++++
+>  5 files changed, 186 insertions(+), 29 deletions(-)
+>  create mode 100644 include/linux/mfd/rohm-shared.h
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index d77515d8382c..df7a3843069d 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -498,12 +498,13 @@ config RTC_DRV_M41T80_WDT
+>  	help
+>  	  If you say Y here you will get support for the
+>  	  watchdog timer in the ST M41T60 and M41T80 RTC chips series.
+> +
+>  config RTC_DRV_BD70528
+>  	tristate "ROHM BD70528 PMIC RTC"
+>  	depends on MFD_ROHM_BD70528 && (BD70528_WATCHDOG || !BD70528_WATCHDOG)
+>  	help
+>  	  If you say Y here you will get support for the RTC
+> -	  on ROHM BD70528 Power Management IC.
+> +	  block on ROHM BD70528 and BD71828 Power Management IC.
+>  
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-bd70528.
+> diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
+> index 627037aa66a8..2ce202040556 100644
+> --- a/drivers/rtc/rtc-bd70528.c
+> +++ b/drivers/rtc/rtc-bd70528.c
+> @@ -6,6 +6,7 @@
+>  
+>  #include <linux/bcd.h>
+>  #include <linux/mfd/rohm-bd70528.h>
+> +#include <linux/mfd/rohm-bd71828.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> @@ -15,7 +16,7 @@
+>  /*
+>   * We read regs RTC_SEC => RTC_YEAR
+>   * this struct is ordered according to chip registers.
+> - * Keep it u8 only to avoid padding issues.
+> + * Keep it u8 only (or packed) to avoid padding issues.
+>   */
+>  struct bd70528_rtc_day {
+>  	u8 sec;
+> @@ -36,6 +37,13 @@ struct bd70528_rtc_wake {
+>  	u8 ctrl;
+>  } __packed;
+>  
+> +struct bd71828_rtc_alm {
+> +	struct bd70528_rtc_data alm0;
+> +	struct bd70528_rtc_data alm1;
+> +	u8 alm_mask;
+> +	u8 alm1_mask;
+> +} __packed;
+> +
+>  struct bd70528_rtc_alm {
+>  	struct bd70528_rtc_data data;
+>  	u8 alm_mask;
+> @@ -45,6 +53,8 @@ struct bd70528_rtc_alm {
+>  struct bd70528_rtc {
+>  	struct rohm_regmap_dev *mfd;
 
-> >>> --- a/drivers/gpu/drm/tiny/st7735r.c
-> >>> +++ b/drivers/gpu/drm/tiny/st7735r.c
+I think it would be better if you fixed this up be more forthcoming.
+It took some grepping to find out what this actually meant.  An MFD
+isn't really a thing, we made it up.  Here you are referring to this
+platform device's parent's device data.
 
-> >>> @@ -37,12 +39,28 @@
-> >>>   #define ST7735R_MY   BIT(7)
-> >>>   #define ST7735R_MX   BIT(6)
-> >>>   #define ST7735R_MV   BIT(5)
-> >>> +#define ST7735R_RGB  BIT(3)
-> >>> +
-> >>> +struct st7735r_cfg {
-> >>> +     const struct drm_display_mode mode;
-> >>> +     unsigned int left_offset;
-> >>> +     unsigned int top_offset;
-> >>> +     unsigned int write_only:1;
-> >>> +     unsigned int rgb:1;             /* RGB (vs. BGR) */
-> >>> +};
-> >>> +
-> >>> +struct st7735r_priv {
-> >>> +     struct mipi_dbi_dev dbidev;     /* Must be first for .release() */
-> >>> +     unsigned int rgb:1;
-> >>> +};
-> >>
-> >> The structs here uses "st7735r" as the generic prefix.
-> >> But the rest of this file uses "jd_t18003_t01" as the generic prefix.
-> >>
-> >> It would help readability if the same prefix is used for the common
-> >> stuff everywhere.
-> >
-> > Agreed.
-> > So I think it makes most sense to rename jd_t18003_t01_pipe_{enable,funcs}
-> > to sh7735r_pipe_{enable,funcs}?
-> > If needed, the display-specific parts (e.g. gamma parameters) could be
-> > factored out in st7735r_cfg later, if neeeded.
->
-> IIRC, the original intention here is that functions/structs with the
-> jd_t18003_t01_ prefix are specific to the panel, not the controller.
+With that in mind I offer some suggestions:
 
-Makes sense.
+  'struct rohm_parent_ddata pddata'
+  'struct rohm_parent_ddata parent'
 
-> E.g. things like power settings and gamma curves.
->
-> The idea is that it is much easier to write and understand the init sequence
-> as a function rather than trying to make a generic function that can parse
-> a any possible init sequence from a data structure.
+>  	struct device *dev;
+> +	u8 reg_time_start;
+> +	bool has_rtc_timers;
+>  };
 
-I believe the init sequence is the same.  The init parameters may not be.
-What happened to the separation of code and data? ;-)
+[...]
 
-> This new panel really has all of the same settings as the existing one?
+> +static int bd71828_set_alarm(struct device *dev, struct rtc_wkalrm *a)
+> +{
+> +	int ret;
+> +	struct bd71828_rtc_alm alm;
+> +	struct bd70528_rtc *r = dev_get_drvdata(dev);
+> +	struct rohm_regmap_dev *bd71828 = r->mfd;
 
-I went through all the ST77[13]5R-specific register settings in the pipe
-enable function. All these registers exist on both ST7715R and ST7735R.
-Unfortunately the Okaya display documentation doesn't give any clues
-w.r.t. the expected values to program.
-However, my display seems to work fine.  Even the grayscale bands from
-fbtest test006 look good, so the gamma parameters must be correct ;-)
+Then ...
 
-> Having a separate pipe enable function for the new panel would also eliminate
-> the need for the extra private rgb data.
+	struct rohm_parent_ddata *parent = r->parent;
 
-At the expense of duplicating the whole function, for one single bit of
-difference...
+	ret = regmap_bulk_read(parent->regmap, BD71828_REG_RTC_ALM_START,
+			       &alm, sizeof(alm));
+	if (ret) {
+		dev_err(dev, "Failed to read alarm regs\n");
+		return ret;
+	}
 
-P.S. Note that I'm using this on an RSK+RZA1 board with 32 MiB of SDRAM.
-Enabling support for this display increases kernel size by 316 KiB.
-And apparently most real world users of the RZ/A1 SoC are not even using
-SDRAM, but doing XIP with the builtin 10 MiB of SRAM...
+[...]
 
-Thanks!
+> diff --git a/include/linux/mfd/rohm-bd70528.h b/include/linux/mfd/rohm-bd70528.h
+> index 2ad2320d0a96..a57af878fd0c 100644
+> --- a/include/linux/mfd/rohm-bd70528.h
+> +++ b/include/linux/mfd/rohm-bd70528.h
+> @@ -7,6 +7,7 @@
+>  #include <linux/bits.h>
+>  #include <linux/device.h>
+>  #include <linux/mfd/rohm-generic.h>
+> +#include <linux/mfd/rohm-shared.h>
+>  #include <linux/regmap.h>
+>  
+>  enum {
+> @@ -307,17 +308,6 @@ enum {
+>  
+>  /* RTC masks to mask out reserved bits */
+>  
+> -#define BD70528_MASK_RTC_SEC		0x7f
+> -#define BD70528_MASK_RTC_MINUTE		0x7f
+> -#define BD70528_MASK_RTC_HOUR_24H	0x80
+> -#define BD70528_MASK_RTC_HOUR_PM	0x20
+> -#define BD70528_MASK_RTC_HOUR		0x1f
+> -#define BD70528_MASK_RTC_DAY		0x3f
+> -#define BD70528_MASK_RTC_WEEK		0x07
+> -#define BD70528_MASK_RTC_MONTH		0x1f
+> -#define BD70528_MASK_RTC_YEAR		0xff
+> -#define BD70528_MASK_RTC_COUNT_L	0x7f
+> -
+>  #define BD70528_MASK_ELAPSED_TIMER_EN	0x1
+>  /* Mask second, min and hour fields
+>   * HW would support ALM irq for over 24h
+> @@ -326,7 +316,6 @@ enum {
+>   * wake-up we limit ALM to 24H and only
+>   * unmask sec, min and hour
+>   */
+> -#define BD70528_MASK_ALM_EN		0x7
+>  #define BD70528_MASK_WAKE_EN		0x1
+>  
+>  /* WDT masks */
+> diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
+> index d013e03f742d..017a4c01cb31 100644
+> --- a/include/linux/mfd/rohm-bd71828.h
+> +++ b/include/linux/mfd/rohm-bd71828.h
+> @@ -5,6 +5,7 @@
+>  #define __LINUX_MFD_BD71828_H__
+>  
+>  #include <linux/mfd/rohm-generic.h>
+> +#include <linux/mfd/rohm-shared.h>
 
-Gr{oetje,eeting}s,
+Isn't generic shared?
 
-                        Geert
+>  /* Regulator IDs */
+>  enum {
+> @@ -160,6 +161,7 @@ enum {
+>  #define BD71828_REG_RTC_YEAR		0x52
+>  
+>  #define BD71828_REG_RTC_ALM0_SEC	0x53
+> +#define BD71828_REG_RTC_ALM_START	BD71828_REG_RTC_ALM0_SEC
+>  #define BD71828_REG_RTC_ALM0_MINUTE	0x54
+>  #define BD71828_REG_RTC_ALM0_HOUR	0x55
+>  #define BD71828_REG_RTC_ALM0_WEEK	0x56
+> @@ -178,6 +180,7 @@ enum {
+>  #define BD71828_REG_RTC_ALM1_MASK	0x62
+>  
+>  #define BD71828_REG_RTC_ALM2		0x63
+> +#define BD71828_REG_RTC_START		BD71828_REG_RTC_SEC
+>  
+>  /* Charger/Battey */
+>  #define BD71828_REG_CHG_STATE		0x65
+> @@ -204,7 +207,6 @@ enum {
+>  #define BD71828_REG_INT_MASK_TEMP	0xdd
+>  #define BD71828_REG_INT_MASK_RTC	0xde
+>  
+> -
+>  #define BD71828_REG_INT_MAIN		0xdf
+>  #define BD71828_REG_INT_BUCK		0xe0
+>  #define BD71828_REG_INT_DCIN1		0xe1
+> diff --git a/include/linux/mfd/rohm-shared.h b/include/linux/mfd/rohm-shared.h
+> new file mode 100644
+> index 000000000000..f16fc3b5000e
+> --- /dev/null
+> +++ b/include/linux/mfd/rohm-shared.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/* Copyright (C) 2018 ROHM Semiconductors */
+
+This is very out of data now!
+
+> +
+> +#ifndef __LINUX_MFD_ROHM_SHARED_H__
+> +#define __LINUX_MFD_ROHM_SHARED_H__
+> +
+> +/*
+> + * RTC definitions shared between
+> + *
+> + * BD70528
+> + * and BD71828
+
+This reads poorly.
+
+Either form a bullet pointed list, or just write it out.
+
+> + */
+> +
+> +
+> +#define BD70528_MASK_RTC_SEC		0x7f
+> +#define BD70528_MASK_RTC_MINUTE	0x7f
+> +#define BD70528_MASK_RTC_HOUR_24H	0x80
+> +#define BD70528_MASK_RTC_HOUR_PM	0x20
+> +#define BD70528_MASK_RTC_HOUR		0x3f
+> +#define BD70528_MASK_RTC_DAY		0x3f
+> +#define BD70528_MASK_RTC_WEEK		0x07
+> +#define BD70528_MASK_RTC_MONTH		0x1f
+> +#define BD70528_MASK_RTC_YEAR		0xff
+> +#define BD70528_MASK_ALM_EN		0x7
+> +
+> +#endif /* __LINUX_MFD_ROHM_SHARED_H__ */
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
