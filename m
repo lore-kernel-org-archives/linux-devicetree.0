@@ -2,326 +2,120 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92FFC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC4FC33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 13:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7322075A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDE22075A
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 13:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FyRzPZic"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t57Lq1k+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgAGM5m (ORCPT
+        id S1728080AbgAGNBo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:57:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41556 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgAGM5l (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:57:41 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c9so53822736wrw.8
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 04:57:39 -0800 (PST)
+        Tue, 7 Jan 2020 08:01:44 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36249 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727834AbgAGNBo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 08:01:44 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so19296725wma.1
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 05:01:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=93QCy+6lfoPu6T2jeY2YuuqgksbRKDw7v2F+iiG2Jic=;
-        b=FyRzPZicMMxp+pAWuWqWtAdTwZ3vMQndL9HoJsAxXaC8Lui7wOPJsm0geFbfSDw6Dd
-         nrwfovxHI2u0lUEJ4C2RPqAfw31p0iI2xgo7ZzLfgOy5BYd9eo5LPjQ79nKmMn7uXpji
-         yWh0Qk1MIyP/EkWv1WHtqJrguSIy8bXZFWFL952IlOzXB095CADywjTfy7mVkmAFOXmP
-         n7n/QLfzytJQbbEyIFCceszQFyaNeJdQNyOoHKHwmieOTUvhyHgbxgncBq21oWX0Iq2n
-         tNujW6zoah5QZurnwEcCLBSJw9Tot2YZXDBpxsHvcBJ8DAk9hvV3t50r2/cmCEzOizS7
-         /1Wg==
+        bh=rsd4WxHtfQsVDCvn7FcjJVFWrx0QIgf8GxfkAbKjofQ=;
+        b=t57Lq1k++t+1RObQ6sShnQgRverizUkmwShdSCnRt9lpDnO9ae7437MuvUAIXbrJ13
+         INGbLEg/mxAp0Az+JMD+P/LXln2x3nRQtn89tWSipX+cmE+giYUSjw0azjchIbqEeXIA
+         R3TnAzO/6tD73X3mZ06to1NKqGSM3dHV/KGpDlk4tr6qx0f4a88uNKIImQky61zgNluh
+         m81wnD2SGnhdCbhdcms6156P5FWQ/5m4g4IiqvvyrmPPgt2N3eOvI69cXoZu6ZoULuBM
+         b3lt43QWtL5G69mqtICN/BNHVuJAmOvp8aKuMAC8M1AJIn1u503vbmdmafHh6WyaQRzt
+         jF2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=93QCy+6lfoPu6T2jeY2YuuqgksbRKDw7v2F+iiG2Jic=;
-        b=lV6kQ3lKUoecTFdezVLPhsfxsS8+bZpXm8lDBPmXS9zNbYBQHWfkThJJSMeKl3xMLW
-         TdQfECJb/KszsmTEgU67lW0vuBsH20lSCW/06j5Kz7aWsxkq5APHdEO7aISQHbaJyP7n
-         3Ld0ihHJhrcYHX7STzJ+tr1+UySFCplMHqs4r2TWxU+3DbEa7nANmAj+Wy2nCYkh5s7b
-         DRkuLCl9HM6SfccICJOxd1fbuMakxexJmKdN4t8ONJKkNIJcUAI60ft3Dx+G9iYQVTmp
-         YIedXiQpT4AuleioWBWWPH2U9gqAJ2nC1aWdWSI8heIKtWeuKaz4AnBfMOsgCUiiY32E
-         kwCQ==
-X-Gm-Message-State: APjAAAX3BnzmDcUVbQRGlchQ1hHDQ1T5rOIXXPN7gzQoAG7bJFohxNDZ
-        +5Vhan+G43PSyt7Tpgdg71/GGg==
-X-Google-Smtp-Source: APXvYqwOseVEoEwqvKt/WKPStKBJ1FZIuG8u48y75PfT52y/SVxc8BBiYwOqw0EIng9E63iyfPitLw==
-X-Received: by 2002:adf:f80c:: with SMTP id s12mr108243229wrp.1.1578401858462;
-        Tue, 07 Jan 2020 04:57:38 -0800 (PST)
+        bh=rsd4WxHtfQsVDCvn7FcjJVFWrx0QIgf8GxfkAbKjofQ=;
+        b=DwPvqZopMEsdOg9I+tryPim17gD06AdbpTxxuhMirX7IUcqGOQ/0NEVdHYbUwVEouH
+         jfxqAe7X7mhExKechfDS7qFma2o/ng9G7WKzwg47+Tghnv9scmIwEtnRy5Ald1llyuAw
+         sxcpDVmJ+YCpSZCNnsM07BA30wzecmujTIehzLgbzXUfwXcgjdRtr6kcA+hoUljFStgV
+         gHm+MLw1Lmxg97Vzk1F2O/JUNkDUe2lvYYf1CqEBHmBLE4oKYOBfpC11JSPDWvGVP2eO
+         +c1WIMEKrnBLnu+mHptaEobUveU/qIOybmn3/0QsLazaaxV1JgMAJD+pEt7GuryIyrHq
+         oH8g==
+X-Gm-Message-State: APjAAAVhUsythsJZVxjDUxj6dKFoo0EdgYqUFKrikT7MMTUG/2HK6OgK
+        AwuU0HYiQn3pDwYhZ4X4LracQg==
+X-Google-Smtp-Source: APXvYqwMlqIbVKT8/8AOvzjJhmb6FM38WJc7sDo3lwZDlIiVfkTWsJRI+dWlgGyRqgxg/h7EevIgaA==
+X-Received: by 2002:a1c:2187:: with SMTP id h129mr41447568wmh.44.1578402102060;
+        Tue, 07 Jan 2020 05:01:42 -0800 (PST)
 Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id m10sm77330092wrx.19.2020.01.07.04.57.37
+        by smtp.gmail.com with ESMTPSA id r15sm26449932wmh.21.2020.01.07.05.01.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 04:57:37 -0800 (PST)
-Date:   Tue, 7 Jan 2020 12:57:51 +0000
+        Tue, 07 Jan 2020 05:01:41 -0800 (PST)
+Date:   Tue, 7 Jan 2020 13:01:55 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     mazziesaccount@gmail.com, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v8 09/12] rtc: bd70528: add BD71828 support
-Message-ID: <20200107125751.GJ14821@dell>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <b904fd485b61d3f3af3c100855f5100940916abf.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Message-ID: <20200107130155.GK14821@dell>
+References: <20191227111235.GA3370@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <b904fd485b61d3f3af3c100855f5100940916abf.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20191227111235.GA3370@localhost.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Dec 2019, Matti Vaittinen wrote:
+On Fri, 27 Dec 2019, Matti Vaittinen wrote:
 
-> ROHM BD71828 PMIC RTC block is from many parts similar to one
-> on BD70528. Support BD71828 RTC using BD70528 RTC driver and
-> avoid re-inventing the wheel.
+> Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml. Split
+> the binding document to two separate documents (own documents for BD71837
+> and BD71847) as they have different amount of regulators. This way we can
+> better enforce the node name check for regulators. ROHM is also providing
+> BD71850 - which is almost identical to BD71847 - main difference is some
+> initial regulator states. The BD71850 can be driven by same driver and it
+> has same buck/LDO setup as BD71847 - add it to BD71847 binding document and
+> introduce compatible for it.
 > 
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
 > 
-> Changes from v7 - no changes
+> changes since v1:
+> - constrains to short and long presses.
+> - reworded commit message to shorten a line exceeding 75 chars
+> - added 'additionalProperties: false'
+> - removed 'clock-names' from example node
 > 
->  drivers/rtc/Kconfig              |   3 +-
->  drivers/rtc/rtc-bd70528.c        | 168 ++++++++++++++++++++++++++++---
->  include/linux/mfd/rohm-bd70528.h |  13 +--
->  include/linux/mfd/rohm-bd71828.h |   4 +-
->  include/linux/mfd/rohm-shared.h  |  27 +++++
->  5 files changed, 186 insertions(+), 29 deletions(-)
->  create mode 100644 include/linux/mfd/rohm-shared.h
-> 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index d77515d8382c..df7a3843069d 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -498,12 +498,13 @@ config RTC_DRV_M41T80_WDT
->  	help
->  	  If you say Y here you will get support for the
->  	  watchdog timer in the ST M41T60 and M41T80 RTC chips series.
-> +
->  config RTC_DRV_BD70528
->  	tristate "ROHM BD70528 PMIC RTC"
->  	depends on MFD_ROHM_BD70528 && (BD70528_WATCHDOG || !BD70528_WATCHDOG)
->  	help
->  	  If you say Y here you will get support for the RTC
-> -	  on ROHM BD70528 Power Management IC.
-> +	  block on ROHM BD70528 and BD71828 Power Management IC.
->  
->  	  This driver can also be built as a module. If so, the module
->  	  will be called rtc-bd70528.
-> diff --git a/drivers/rtc/rtc-bd70528.c b/drivers/rtc/rtc-bd70528.c
-> index 627037aa66a8..2ce202040556 100644
-> --- a/drivers/rtc/rtc-bd70528.c
-> +++ b/drivers/rtc/rtc-bd70528.c
-> @@ -6,6 +6,7 @@
->  
->  #include <linux/bcd.h>
->  #include <linux/mfd/rohm-bd70528.h>
-> +#include <linux/mfd/rohm-bd71828.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> @@ -15,7 +16,7 @@
->  /*
->   * We read regs RTC_SEC => RTC_YEAR
->   * this struct is ordered according to chip registers.
-> - * Keep it u8 only to avoid padding issues.
-> + * Keep it u8 only (or packed) to avoid padding issues.
->   */
->  struct bd70528_rtc_day {
->  	u8 sec;
-> @@ -36,6 +37,13 @@ struct bd70528_rtc_wake {
->  	u8 ctrl;
->  } __packed;
->  
-> +struct bd71828_rtc_alm {
-> +	struct bd70528_rtc_data alm0;
-> +	struct bd70528_rtc_data alm1;
-> +	u8 alm_mask;
-> +	u8 alm1_mask;
-> +} __packed;
-> +
->  struct bd70528_rtc_alm {
->  	struct bd70528_rtc_data data;
->  	u8 alm_mask;
-> @@ -45,6 +53,8 @@ struct bd70528_rtc_alm {
->  struct bd70528_rtc {
->  	struct rohm_regmap_dev *mfd;
+>  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
+>  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236 ++++++++++++++++++
+>  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222 ++++++++++++++++
+>  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
+>  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
+>  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
 
-I think it would be better if you fixed this up be more forthcoming.
-It took some grepping to find out what this actually meant.  An MFD
-isn't really a thing, we made it up.  Here you are referring to this
-platform device's parent's device data.
+Can you split these out per-subsystem, so that I can apply the MFD
+changes please?
 
-With that in mind I offer some suggestions:
-
-  'struct rohm_parent_ddata pddata'
-  'struct rohm_parent_ddata parent'
-
->  	struct device *dev;
-> +	u8 reg_time_start;
-> +	bool has_rtc_timers;
->  };
-
-[...]
-
-> +static int bd71828_set_alarm(struct device *dev, struct rtc_wkalrm *a)
-> +{
-> +	int ret;
-> +	struct bd71828_rtc_alm alm;
-> +	struct bd70528_rtc *r = dev_get_drvdata(dev);
-> +	struct rohm_regmap_dev *bd71828 = r->mfd;
-
-Then ...
-
-	struct rohm_parent_ddata *parent = r->parent;
-
-	ret = regmap_bulk_read(parent->regmap, BD71828_REG_RTC_ALM_START,
-			       &alm, sizeof(alm));
-	if (ret) {
-		dev_err(dev, "Failed to read alarm regs\n");
-		return ret;
-	}
-
-[...]
-
-> diff --git a/include/linux/mfd/rohm-bd70528.h b/include/linux/mfd/rohm-bd70528.h
-> index 2ad2320d0a96..a57af878fd0c 100644
-> --- a/include/linux/mfd/rohm-bd70528.h
-> +++ b/include/linux/mfd/rohm-bd70528.h
-> @@ -7,6 +7,7 @@
->  #include <linux/bits.h>
->  #include <linux/device.h>
->  #include <linux/mfd/rohm-generic.h>
-> +#include <linux/mfd/rohm-shared.h>
->  #include <linux/regmap.h>
->  
->  enum {
-> @@ -307,17 +308,6 @@ enum {
->  
->  /* RTC masks to mask out reserved bits */
->  
-> -#define BD70528_MASK_RTC_SEC		0x7f
-> -#define BD70528_MASK_RTC_MINUTE		0x7f
-> -#define BD70528_MASK_RTC_HOUR_24H	0x80
-> -#define BD70528_MASK_RTC_HOUR_PM	0x20
-> -#define BD70528_MASK_RTC_HOUR		0x1f
-> -#define BD70528_MASK_RTC_DAY		0x3f
-> -#define BD70528_MASK_RTC_WEEK		0x07
-> -#define BD70528_MASK_RTC_MONTH		0x1f
-> -#define BD70528_MASK_RTC_YEAR		0xff
-> -#define BD70528_MASK_RTC_COUNT_L	0x7f
-> -
->  #define BD70528_MASK_ELAPSED_TIMER_EN	0x1
->  /* Mask second, min and hour fields
->   * HW would support ALM irq for over 24h
-> @@ -326,7 +316,6 @@ enum {
->   * wake-up we limit ALM to 24H and only
->   * unmask sec, min and hour
->   */
-> -#define BD70528_MASK_ALM_EN		0x7
->  #define BD70528_MASK_WAKE_EN		0x1
->  
->  /* WDT masks */
-> diff --git a/include/linux/mfd/rohm-bd71828.h b/include/linux/mfd/rohm-bd71828.h
-> index d013e03f742d..017a4c01cb31 100644
-> --- a/include/linux/mfd/rohm-bd71828.h
-> +++ b/include/linux/mfd/rohm-bd71828.h
-> @@ -5,6 +5,7 @@
->  #define __LINUX_MFD_BD71828_H__
->  
->  #include <linux/mfd/rohm-generic.h>
-> +#include <linux/mfd/rohm-shared.h>
-
-Isn't generic shared?
-
->  /* Regulator IDs */
->  enum {
-> @@ -160,6 +161,7 @@ enum {
->  #define BD71828_REG_RTC_YEAR		0x52
->  
->  #define BD71828_REG_RTC_ALM0_SEC	0x53
-> +#define BD71828_REG_RTC_ALM_START	BD71828_REG_RTC_ALM0_SEC
->  #define BD71828_REG_RTC_ALM0_MINUTE	0x54
->  #define BD71828_REG_RTC_ALM0_HOUR	0x55
->  #define BD71828_REG_RTC_ALM0_WEEK	0x56
-> @@ -178,6 +180,7 @@ enum {
->  #define BD71828_REG_RTC_ALM1_MASK	0x62
->  
->  #define BD71828_REG_RTC_ALM2		0x63
-> +#define BD71828_REG_RTC_START		BD71828_REG_RTC_SEC
->  
->  /* Charger/Battey */
->  #define BD71828_REG_CHG_STATE		0x65
-> @@ -204,7 +207,6 @@ enum {
->  #define BD71828_REG_INT_MASK_TEMP	0xdd
->  #define BD71828_REG_INT_MASK_RTC	0xde
->  
-> -
->  #define BD71828_REG_INT_MAIN		0xdf
->  #define BD71828_REG_INT_BUCK		0xe0
->  #define BD71828_REG_INT_DCIN1		0xe1
-> diff --git a/include/linux/mfd/rohm-shared.h b/include/linux/mfd/rohm-shared.h
-> new file mode 100644
-> index 000000000000..f16fc3b5000e
-> --- /dev/null
-> +++ b/include/linux/mfd/rohm-shared.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +/* Copyright (C) 2018 ROHM Semiconductors */
-
-This is very out of data now!
-
-> +
-> +#ifndef __LINUX_MFD_ROHM_SHARED_H__
-> +#define __LINUX_MFD_ROHM_SHARED_H__
-> +
-> +/*
-> + * RTC definitions shared between
-> + *
-> + * BD70528
-> + * and BD71828
-
-This reads poorly.
-
-Either form a bullet pointed list, or just write it out.
-
-> + */
-> +
-> +
-> +#define BD70528_MASK_RTC_SEC		0x7f
-> +#define BD70528_MASK_RTC_MINUTE	0x7f
-> +#define BD70528_MASK_RTC_HOUR_24H	0x80
-> +#define BD70528_MASK_RTC_HOUR_PM	0x20
-> +#define BD70528_MASK_RTC_HOUR		0x3f
-> +#define BD70528_MASK_RTC_DAY		0x3f
-> +#define BD70528_MASK_RTC_WEEK		0x07
-> +#define BD70528_MASK_RTC_MONTH		0x1f
-> +#define BD70528_MASK_RTC_YEAR		0xff
-> +#define BD70528_MASK_ALM_EN		0x7
-> +
-> +#endif /* __LINUX_MFD_ROHM_SHARED_H__ */
+>  6 files changed, 658 insertions(+), 252 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71837-pmic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.txt
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71837-regulator.yaml
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71847-regulator.yaml
 
 -- 
 Lee Jones [李琼斯]
