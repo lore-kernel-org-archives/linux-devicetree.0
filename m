@@ -2,95 +2,119 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6E6C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE9EC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90F92146E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578420189;
-	bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WcF6lnyqcv6zz1hn5Q7c1LhvkQ6MaZJzUrAcb3BcESghNlS7GZ4l6vL+oPJ8ShhDF
-	 lx7gDksgB8uOvb6b3k79eNoz+VJ1V1VKUS6mfrgIc661S+qB6/ykLyyfUp+W/3YtGY
-	 iQC9ki5AoWLeq4XiFf7TFX+nLOw4apWzrmxpIP6M=
+	by mail.kernel.org (Postfix) with ESMTP id 2B4CA214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 18:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="d9HAQrSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgAGSDI (ORCPT
+        id S1728364AbgAGSQS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 13:03:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44822 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 13:16:18 -0500
+Received: from mout.gmx.net ([212.227.15.15]:53391 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728451AbgAGSDI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 13:03:08 -0500
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F1622146E;
-        Tue,  7 Jan 2020 18:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578420187;
-        bh=cSIlJoOHgh09/Owb7TPSkjG78kZT597IFYgjh7h8uB4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=e2LzPBNXp3x9Bm5rMIEhqwZU81/LocL4/QqhOxwF/P+YoAWqVZI0jLC5EM8khBdqF
-         MioV+9WAdD3+dUiHdLpMCdx4wAXSTcy0PZCcO8yKcP2J4vJw+juDRuGFP5pNxv3pTQ
-         29KO2sWh0NSf5f3ZXEzDza38dv7g3MSSEJvAMvn8=
-Received: by mail-qt1-f173.google.com with SMTP id n15so502441qtp.5;
-        Tue, 07 Jan 2020 10:03:07 -0800 (PST)
-X-Gm-Message-State: APjAAAURryYFfymvWfxrvVZZkLs41BOLguW2QEjLcRRrUaEm3uUOtIFk
-        5ipif0b1PSO56d0bYgjZGpXOakCNBMreHmOR+Q==
-X-Google-Smtp-Source: APXvYqzYgPt2mmOM92fmtqc1Y7J5YrHICFVpYfLAMISsmbC9T8x4hClE7gReZJC7gNb4Eez9i67VoJZ6iFbj0o1RXfE=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr187365qtp.224.1578420186617;
- Tue, 07 Jan 2020 10:03:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20200107130903.14421-1-benjamin.gaignard@st.com>
- <20200107130903.14421-3-benjamin.gaignard@st.com> <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
-In-Reply-To: <99576d0367241bff637e82dddca839c40f672d86.camel@hadess.net>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jan 2020 12:02:52 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
-Message-ID: <CAL_JsqLGJehgW6c=GbyFSV8hL+WsUEkRzEBO0_kEka-d2nQ8pw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: touchscreen: Convert Goodix touchscreen
- to json-schema
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        id S1728358AbgAGSQS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 13:16:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1578420964;
+        bh=fStf+8RF6qmT38/5o2VMhgNCxx4YDKOqS+6ymSk2hVA=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=d9HAQrSHcd8IpQHrnD7QnLWvY34o9aZGluK5xDCOfkXl/ctDqARxBO039GMtLY6p8
+         4b1dgvRfu8liXH5Sd4umlA1YgbS7OujTTja38Esiy9gCnKDzIqRxUH50o6udP4Vpn+
+         fdZXnzQFcmCibON1iNWwO0ggMgR3NxaYqumiaA1M=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([37.4.249.154]) by mail.gmx.com
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MTAFh-1jHAwl1fqx-00UXyY; Tue, 07 Jan 2020 19:16:04 +0100
+From:   Stefan Wahren <wahrenst@gmx.net>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yannick Fertre <yannick.fertre@st.com>
-Content-Type: text/plain; charset="UTF-8"
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V3 0/4] ARM: Enable thermal support for Raspberry Pi 4
+Date:   Tue,  7 Jan 2020 19:15:53 +0100
+Message-Id: <1578420957-32229-1-git-send-email-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.7.4
+X-Provags-ID: V03:K1:xkFz0dLUtTbMvdFsQps4ETe/MuVllBCYSLf/H/6OpwsfMs6tNd3
+ X6PXvReYKhvwDSzLeprp9PesTWWsWfWB5Mkt87VssaeyetCzrSlQ8A4oX4Y6Ttkfz+VUObT
+ rooWqxyoOcHxc2KFR6nigDhPGGfIgXaiM5Bj8aRB64sLA4ybf5r3nS/stlYgzy8O5GY6X1L
+ UsOGhE69KexYdQRATkT9A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WIesbUME1I0=:JFzG6lFhRvAeiyna9slav0
+ mYylMG+lG39zpj0pqbGUrF0+eF9YfjFSr+H4N01Av1elAtoRK6AUStVwP7oW0C3wz+YIdkh8k
+ TjVti9j3GBJ6+4PDN84kj+FU3F5N2z297iobibGRAtVMlFM/D8tulsoqpYMWO55fgZvxqms6a
+ ahcYsWKqG2SzzMXjMUEmz5GjcnKSw3aikD8IAvS8pcSuRrtTHmg3iwfRd6pYBLzJihedkA0pe
+ H/Q5a86O+3joTklgCO0A8BzALBWv/p6IqxWC/yQjF5gLUgvn49YnSQXgujREA2siVEtIVt6Xq
+ TA6qMH/4KB9+CCRdvGHjZcXQhX94kc6p/pWH6ThPb6r6PqNpUe6ZhS9CpMqSwqu/6hCIXtBad
+ EkAbwBAN5RimQlydCtvo+k7gT7Ob38p+sffQ9s6SxTnlTn4YNd9UbQxYo2yxS0mepGvZNZRjg
+ 3BbqRkj6ZkoqE5uXWZIyHfMUjEWdTdjwiavlW+SXSplrWjwuQG5BDrgPIsigFzGaXsXwdyTmX
+ mldBdohc0x4HtyLZoA3HHW1tWNz4/noA/XB28FSpIh0fwjN98mx/u7iULeEMK9ICfOw2E817K
+ OCBgPNRvAbgolZes3oW5TuzJL54zeCTqDG1KKMg07i9xg6dEoH0oEsfYdrwEz6cIAgEU+h/ak
+ FQ5VgifCAtEMYRvTE1ykThGY/IbqzbthkNJMSx7gpfeOJijZ0vfGe+P5gmDuzCAY2fwzSughh
+ c6klPCMDscqZod6FPanG0VkpnVT0CYDEOOBQ0y1wAgk5c8A7EptnQ8Cranysoz8MeF541FcnS
+ m+wJbn7bAunCBP7/6u4R7DbQij0I2VWkns9EXmE1BkVWYurNvIDxCwYiOVlI1mNBUhox83k7T
+ C63zidmO7y/GNSsQnrgfmgAt2S549/zWHyfUvaQJnRRS8WGs08KkN4mbRSKag9vplfCV0bLHl
+ uXap25Tupjzppe23e9oyBmKXo6j8/pnvXSGKnzws+UC5ev3y/2ooqceJnIMzhB43GbUGkWkNA
+ VyzAs6+Lyd8WeILoNip4Wa+tYHG2xS3ceTGw9yzYsMSGJJgMd0n2lc6v1FRECoD+z615aE624
+ /RzGwNmXe9txKmx7Ynw7NLWM9WFd8+0Zt5XtJ4Tbdlku544Yt3yJRgaZqAMc0A+RfX950YbzS
+ uz1Z2SFir2axcrKnlO9tYeq7vnU5HF//M+ck+JtvwH8yVgyt1vUXulh/vl4gwTGYxyigjvOBK
+ 7/Eyh/gKcnRbDez7QxE13FM/hi8MkSjT6TBddIA==
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 7:38 AM Bastien Nocera <hadess@hadess.net> wrote:
->
-> On Tue, 2020-01-07 at 14:09 +0100, Benjamin Gaignard wrote:
-> > Convert the Goodix binding to DT schema format using json-schema
->
-> I don't have an opinion on the migration itself, but this really should
-> not lose any of the descriptions that were in the old text file.
+This series enables thermal support for the Raspberry Pi 4. Neither the
+bcm2835_thermal nor the brcmstb_thermal are suitable for the BCM2711.
+So add a new thermal driver to read out the SoC temperature from the
+AVS RO block of the BCM2711.
 
-To some extent, yes. Any information specific to the device should be.
-Anything generic can be dropped. I see 2 cases that should be kept:
+Changes in V3:
+- add Rob's, Florian's and Nicolas' reviewed-by/tested-by
+- adjust binding license
+- make error pointer handling consistent
 
-> > - - reg                       : I2C address of the chip. Should be
-> > 0x5d or 0x14
+Changes in V2:
+- rebase on thermal/linux-next
+- convert binding to YAML
+- make AVS RO block a subnode of AVS monitor and access it via syscon
+- drop unnecessary TSENS clock and get the rid of remove callback
+- add Florian's reviewed-by to last/unchanged patch
 
-'I2C address of the chip' can be dropped as that's every 'reg'
-property for I2C devices. The addresses can be expressed as
-constraints.
+Stefan Wahren (4):
+  dt-bindings: Add Broadcom AVS RO thermal
+  thermal: Add BCM2711 thermal driver
+  ARM: dts: bcm2711: Enable thermal
+  ARM: configs: Build BCM2711 thermal as module
 
-> > - - irq-gpios         : GPIO pin used for IRQ. The driver uses the
-> > -                       interrupt gpio pin as output to reset the
-> > device.
+ .../bindings/thermal/brcm,avs-ro-thermal.yaml      |  45 +++++++
+ arch/arm/boot/dts/bcm2711.dtsi                     |  12 ++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/broadcom/Kconfig                   |   7 ++
+ drivers/thermal/broadcom/Makefile                  |   1 +
+ drivers/thermal/broadcom/bcm2711_thermal.c         | 129 ++++++++++++++++=
++++++
+ 7 files changed, 196 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-ro-=
+thermal.yaml
+ create mode 100644 drivers/thermal/broadcom/bcm2711_thermal.c
 
-Also useful info.
+=2D-
+2.7.4
 
-Rob
