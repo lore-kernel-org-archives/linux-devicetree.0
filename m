@@ -2,285 +2,138 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0353FC282DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2688C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F4920656
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mBEeOxyU"
+	by mail.kernel.org (Postfix) with ESMTP id BAE4D2077B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578425456;
+	bh=RcixPhzFLFpfoeFpHnTwEM2jSreesLXT8nwQzlKShsI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xYfSJVDITuXcIz1YKluIZhcl+nOg6Ie/BqJ2uhf241liclVaumi26SPjYjUKd2moa
+	 W030kRhhHEbZB6oQpu9NjaMyi0QZYjNyKQF8M0iBOWMaGq+6Y2UliKgmrYdtEqpxHY
+	 KP6PYe8X+4Kr1zFMifGUSBrHXYB6FZa71BytQJQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgAGT2e (ORCPT
+        id S1728756AbgAGTat (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:28:34 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:12002 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728307AbgAGT2e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 14:28:34 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578425313; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=RQwQB66tsLYS5Q5td7KICDIdEQhztmUN50oAmo2FSoI=;
- b=mBEeOxyUaaARSW/HEiB6sfuMjgFWvnEC/cZDDjGG0HSHZh2ic2HnFuB/olgj67Vvgexa/Cpg
- A/kfgKsQKRe9T8qUib7g9rLt0RxKvcIDwWrVyZ5IBrPNtsJna5RYZxRt9+vM4zuxBp4+9sXP
- CbOxPL5DGtYpEST4CNUdO0BWLUU=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e14dbdc.7f9b421a4a78-smtp-out-n01;
- Tue, 07 Jan 2020 19:28:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E0877C447A2; Tue,  7 Jan 2020 19:28:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Tue, 7 Jan 2020 14:30:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728307AbgAGTat (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 14:30:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7B41DC433CB;
-        Tue,  7 Jan 2020 19:28:25 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 08 Jan 2020 00:58:25 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        by mail.kernel.org (Postfix) with ESMTPSA id D66ED206DB;
+        Tue,  7 Jan 2020 19:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578425448;
+        bh=RcixPhzFLFpfoeFpHnTwEM2jSreesLXT8nwQzlKShsI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mspJgrcd3kka6cRo+m/U4Jk7qGCePRKsS2a86k+iP6adF9v7uQxR84KhP4c0z0NYh
+         OcoENlWN8eKeW/waEEdBjCv613rFOeKnd8XONxxn2G5BBQ2Okfshb5GHklCCKkja0+
+         7OtcjypDEs10nMLdEsmZ3sXif0Dld54tNdO8+eSg=
+Date:   Tue, 7 Jan 2020 20:30:46 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
-In-Reply-To: <20191207002424.201796-3-saravanak@google.com>
-References: <20191207002424.201796-1-saravanak@google.com>
- <20191207002424.201796-3-saravanak@google.com>
-Message-ID: <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Hans de Goede <hdegoede@redhat.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
+Message-ID: <20200107193046.GB2021584@kroah.com>
+References: <20191210185351.14825-1-f.fainelli@gmail.com>
+ <CA+G9fYsMyUWGo8Qtd2UCfYDV2aoH71=hCZKaTurq4Aj2eeZczw@mail.gmail.com>
+ <CA+G9fYvmwetcZPraZrHbj=MjgWZik-wFK7nEejs-6TrYyODcSg@mail.gmail.com>
+ <f2867b48-7ee3-4545-5d3e-19622120be4c@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2867b48-7ee3-4545-5d3e-19622120be4c@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hey Saravana,
+On Tue, Jan 07, 2020 at 09:39:58AM -0800, Florian Fainelli wrote:
+> On 1/7/20 9:29 AM, Naresh Kamboju wrote:
+> > On Tue, 7 Jan 2020 at 22:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >>
+> >> On Wed, 11 Dec 2019 at 00:25, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >>>
+> >>> Hi Jens,
+> >>>
+> >>> The first 4 patches are fixes and should ideally be queued up/picked up
+> >>> by stable. The last 4 patches add support for BCM7216 which is one of
+> >>> our latest devices supported by this driver.
+> >>>
+> >>> Patch #2 does a few things, but it was pretty badly broken before and it
+> >>> is hard not to fix all call sites (probe, suspend, resume) in one shot.
+> >>>
+> >>> Please let me know if you have any comments.
+> >>>
+> >>> Thanks!
+> >>>
+> >>> Florian Fainelli (8):
+> >>>   ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+> >>>   ata: ahci_brcm: Fix AHCI resources management
+> >>
+> >> Following error on stable-rc 4.14 and 4.9 branch for arm build.
+> > 
+> > Following error on stable-rc 4.19, 4.14 and 4.9 branch for arm build.
+> > 
+> >>
+> >>  drivers/ata/ahci_brcm.c: In function 'brcm_ahci_probe':
+> >>  drivers/ata/ahci_brcm.c:412:28: error: 'struct brcm_ahci_priv' has no
+> >> member named 'rcdev'; did you mean 'dev'?
+> >>    if (!IS_ERR_OR_NULL(priv->rcdev))
+> >>                              ^~~~~
+> >>                              dev
+> >>    CC      fs/pnode.o
+> >>    CC      block/genhd.o
+> >>  drivers/ata/ahci_brcm.c:413:3: error: implicit declaration of
+> >> function 'reset_control_assert'; did you mean 'ahci_reset_controller'?
+> >> [-Werror=implicit-function-declaration]
+> >>     reset_control_assert(priv->rcdev);
+> >>     ^~~~~~~~~~~~~~~~~~~~
+> >>     ahci_reset_controller
+> >>  drivers/ata/ahci_brcm.c:413:30: error: 'struct brcm_ahci_priv' has no
+> >> member named 'rcdev'; did you mean 'dev'?
+> >>     reset_control_assert(priv->rcdev);
+> >>                                ^~~~~
+> >>                                dev
+> >>  cc1: some warnings being treated as errors
+> >>
+> >> Full build log links,
+> >> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/702/consoleText
+> >> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/773/consoleText
+> > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/404/consoleText
+> 
+> The reset controller support was added in
+> 2b2c47d9e1fe90311b725125d6252a859ee87a79 ("ata: ahci_brcm: Allow
+> optional reset controller to be used") which was include in v4.20 and
+> newer so that explains the build failure.
+> 
+> You may want to cherry pick that change into the respective stable
+> branches and then back port the fixes if that is not too much trouble.
+> If that does not work or is impractical, please let me know and I can
+> provide directed backport changes for 4.9, 4.14 and 4.19.
 
-Spent some time testing this series while
-trying out dcvs on SDM845/SC7180. Apart from
-the few minor issues it works quite well!
+No need, I'll just queue up the other needed patch now, thanks.
 
-On 2019-12-07 05:54, Saravana Kannan wrote:
-> Not all devices quantify their performance points in terms of 
-> frequency.
-> Devices like interconnects quantify their performance points in terms 
-> of
-> bandwidth. We need a way to represent these bandwidth levels in OPP. 
-> So,
-> add support for parsing bandwidth OPPs from DT.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/opp/core.c | 15 +++++++++--
->  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
->  drivers/opp/opp.h  |  5 ++++
->  3 files changed, 62 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index be7a7d332332..c79bbfac7289 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -1282,11 +1282,21 @@ static bool
-> _opp_supported_by_regulators(struct dev_pm_opp *opp,
->  	return true;
->  }
-> 
-> +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
-> +{
-> +	if (opp1->rate != opp2->rate)
-> +		return opp1->rate < opp2->rate ? -1 : 1;
-> +	if (opp1->peak_bw != opp2->peak_bw)
-> +		return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
-> +	return 0;
-> +}
-> +
->  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp 
-> *new_opp,
->  			     struct opp_table *opp_table,
->  			     struct list_head **head)
->  {
->  	struct dev_pm_opp *opp;
-> +	int opp_cmp;
-> 
->  	/*
->  	 * Insert new OPP in order of increasing frequency and discard if
-> @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device
-> *dev, struct dev_pm_opp *new_opp,
->  	 * loop.
->  	 */
->  	list_for_each_entry(opp, &opp_table->opp_list, node) {
-> -		if (new_opp->rate > opp->rate) {
-> +		opp_cmp = opp_compare_key(new_opp, opp);
-> +		if (opp_cmp > 0) {
->  			*head = &opp->node;
->  			continue;
->  		}
-> 
-> -		if (new_opp->rate < opp->rate)
-> +		if (opp_cmp < 0)
->  			return 0;
-> 
->  		/* Duplicate OPPs */
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 1cbb58240b80..b565da5a2b1f 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device 
-> *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> 
-> +static int _read_opp_key(struct dev_pm_opp *new_opp, struct 
-> device_node *np,
-> +			 bool *rate_not_available)
-> +{
-> +	int ret;
-> +	u64 rate;
-> +	u32 bw;
-> +
-> +	ret = of_property_read_u64(np, "opp-hz", &rate);
-> +	if (!ret) {
-> +		/*
-> +		 * Rate is defined as an unsigned long in clk API, and so
-> +		 * casting explicitly to its type. Must be fixed once rate is 64
-> +		 * bit guaranteed in clk API.
-> +		 */
-> +		new_opp->rate = (unsigned long)rate;
-> +		goto out;
-> +	}
-> +
-> +	ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> +	if (!ret) {
-> +		new_opp->peak_bw = bw;
-> +
-> +		if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
-> +			new_opp->avg_bw = bw;
-> +	}
-> +
-> +out:
-> +	*rate_not_available = !!ret;
-> +	/*
-> +	 * If ret is 0 at this point, we have already found a key. If we
-> +	 * haven't found a key yet, then ret already has an error value. In
-> +	 * either case, we don't need to update ret.
-> +	 */
-> +	of_property_read_u32(np, "opp-level", &new_opp->level);
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT 
-> bindings)
->   * @opp_table:	OPP table
-> @@ -558,26 +596,12 @@ static struct dev_pm_opp
-> *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (!new_opp)
->  		return ERR_PTR(-ENOMEM);
-> 
-> -	ret = of_property_read_u64(np, "opp-hz", &rate);
-> -	if (ret < 0) {
-> -		/* "opp-hz" is optional for devices like power domains. */
-> -		if (!opp_table->is_genpd) {
-> -			dev_err(dev, "%s: opp-hz not found\n", __func__);
-> -			goto free_opp;
-> -		}
-> -
-> -		rate_not_available = true;
-> -	} else {
-> -		/*
-> -		 * Rate is defined as an unsigned long in clk API, and so
-> -		 * casting explicitly to its type. Must be fixed once rate is 64
-> -		 * bit guaranteed in clk API.
-> -		 */
-> -		new_opp->rate = (unsigned long)rate;
-> +	ret = _read_opp_key(new_opp, np, &rate_not_available);
-> +	if (ret) {
-
-if (!opp_table->is_genpd) {
-
-_read_opp_key returns an error for genpd
-opps so please check if it is a genpd
-opp_table before erroring out here.
-
-> +		dev_err(dev, "%s: opp key field not found\n", __func__);
-> +		goto free_opp;
->  	}
-> 
-> -	of_property_read_u32(np, "opp-level", &new_opp->level);
-> -
->  	/* Check if the OPP supports hardware's hierarchy of versions or not 
-> */
->  	if (!_opp_is_supported(dev, opp_table, np)) {
->  		dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
-> @@ -616,7 +640,8 @@ static struct dev_pm_opp
-> *_opp_add_static_v2(struct opp_table *opp_table,
->  	if (of_property_read_bool(np, "opp-suspend")) {
->  		if (opp_table->suspend_opp) {
->  			/* Pick the OPP with higher rate as suspend OPP */
-> -			if (new_opp->rate > opp_table->suspend_opp->rate) {
-> +			if (opp_compare_key(new_opp,
-> +					    opp_table->suspend_opp) > 1) {
-
-shouldn't the condition be > 0?
-
->  				opp_table->suspend_opp->suspend = false;
->  				new_opp->suspend = true;
->  				opp_table->suspend_opp = new_opp;
-> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> index 01a500e2c40a..0def3154d07b 100644
-> --- a/drivers/opp/opp.h
-> +++ b/drivers/opp/opp.h
-> @@ -57,6 +57,8 @@ extern struct list_head opp_tables;
->   * @suspend:	true if suspend OPP
->   * @pstate: Device's power domain's performance state.
->   * @rate:	Frequency in hertz
-> + * @peak_bw:	Peak bandwidth in kilobytes per second
-> + * @avg_bw:	Average bandwidth in kilobytes per second
->   * @level:	Performance level
->   * @supplies:	Power supplies voltage/current values
->   * @clock_latency_ns: Latency (in nanoseconds) of switching to this 
-> OPP's
-> @@ -78,6 +80,8 @@ struct dev_pm_opp {
->  	bool suspend;
->  	unsigned int pstate;
->  	unsigned long rate;
-> +	unsigned int peak_bw;
-> +	unsigned int avg_bw;
->  	unsigned int level;
-> 
->  	struct dev_pm_opp_supply *supplies;
-> @@ -213,6 +217,7 @@ struct opp_device *_add_opp_dev(const struct
-> device *dev, struct opp_table *opp_
->  void _dev_pm_opp_find_and_remove_table(struct device *dev);
->  struct dev_pm_opp *_opp_allocate(struct opp_table *opp_table);
->  void _opp_free(struct dev_pm_opp *opp);
-> +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2);
->  int _opp_add(struct device *dev, struct dev_pm_opp *new_opp, struct
-> opp_table *opp_table, bool rate_not_available);
->  int _opp_add_v1(struct opp_table *opp_table, struct device *dev,
-> unsigned long freq, long u_volt, bool dynamic);
->  void _dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask,
-> int last_cpu);
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+greg k-h
