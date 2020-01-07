@@ -2,138 +2,135 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2688C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E410C282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE4D2077B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578425456;
-	bh=RcixPhzFLFpfoeFpHnTwEM2jSreesLXT8nwQzlKShsI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xYfSJVDITuXcIz1YKluIZhcl+nOg6Ie/BqJ2uhf241liclVaumi26SPjYjUKd2moa
-	 W030kRhhHEbZB6oQpu9NjaMyi0QZYjNyKQF8M0iBOWMaGq+6Y2UliKgmrYdtEqpxHY
-	 KP6PYe8X+4Kr1zFMifGUSBrHXYB6FZa71BytQJQk=
+	by mail.kernel.org (Postfix) with ESMTP id 57365206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:31:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QyKVUg/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbgAGTat (ORCPT
+        id S1728836AbgAGTbq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:30:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgAGTat (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:30:49 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 7 Jan 2020 14:31:46 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31121 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728704AbgAGTbn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 14:31:43 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578425502; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=H1ad7rjFwqJKREdfqPrnUil+yQWGOMad6EBf7VMu6sw=;
+ b=QyKVUg/BUcBvqqBLnXZtifEp7SpbpOg2+mX0Q4XmxiJQRHJYwiqjs+raJy9RKJgajy5UbWR4
+ 40aXFAvJGLUlNRGmibqCQptxMlGKxi7FnJCz4bLXGCN1zLPCCHPn9fnI0g5Qxj7ZRHkR43+Q
+ SonVDvET9cGuB+qAxy4Tkiab7LA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e14dc9c.7f2e05dbefb8-smtp-out-n03;
+ Tue, 07 Jan 2020 19:31:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 959F1C43383; Tue,  7 Jan 2020 19:31:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D66ED206DB;
-        Tue,  7 Jan 2020 19:30:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578425448;
-        bh=RcixPhzFLFpfoeFpHnTwEM2jSreesLXT8nwQzlKShsI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mspJgrcd3kka6cRo+m/U4Jk7qGCePRKsS2a86k+iP6adF9v7uQxR84KhP4c0z0NYh
-         OcoENlWN8eKeW/waEEdBjCv613rFOeKnd8XONxxn2G5BBQ2Okfshb5GHklCCKkja0+
-         7OtcjypDEs10nMLdEsmZ3sXif0Dld54tNdO8+eSg=
-Date:   Tue, 7 Jan 2020 20:30:46 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D159CC433A2;
+        Tue,  7 Jan 2020 19:31:39 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 08 Jan 2020 01:01:39 +0530
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
-Message-ID: <20200107193046.GB2021584@kroah.com>
-References: <20191210185351.14825-1-f.fainelli@gmail.com>
- <CA+G9fYsMyUWGo8Qtd2UCfYDV2aoH71=hCZKaTurq4Aj2eeZczw@mail.gmail.com>
- <CA+G9fYvmwetcZPraZrHbj=MjgWZik-wFK7nEejs-6TrYyODcSg@mail.gmail.com>
- <f2867b48-7ee3-4545-5d3e-19622120be4c@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f2867b48-7ee3-4545-5d3e-19622120be4c@gmail.com>
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
+ provider support
+In-Reply-To: <CAE=gft6Dr_=zQ1h93qdxzi-GsZv3caddyOGaGQpSi+8BmBSO+Q@mail.gmail.com>
+References: <20191118154435.20357-1-sibis@codeaurora.org>
+ <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
+ <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
+ <0101016e83897442-ecc4c00f-c0d1-4c2c-92ed-ce78e65c0935-000000@us-west-2.amazonses.com>
+ <0101016eac068d05-761f0d60-b1ef-400f-bf84-3164c2a26d2e-000000@us-west-2.amazonses.com>
+ <CAE=gft5cS54qn0JjxO58xL6sFyQk4t=8ofLFWPUSVQ9sdU4XpQ@mail.gmail.com>
+ <b11c2116-f247-17c5-69ca-071183365a01@codeaurora.org>
+ <CAE=gft6Dr_=zQ1h93qdxzi-GsZv3caddyOGaGQpSi+8BmBSO+Q@mail.gmail.com>
+Message-ID: <d2ceee796d27283506311a0b61f80931@codeaurora.org>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 09:39:58AM -0800, Florian Fainelli wrote:
-> On 1/7/20 9:29 AM, Naresh Kamboju wrote:
-> > On Tue, 7 Jan 2020 at 22:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >>
-> >> On Wed, 11 Dec 2019 at 00:25, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> >>>
-> >>> Hi Jens,
-> >>>
-> >>> The first 4 patches are fixes and should ideally be queued up/picked up
-> >>> by stable. The last 4 patches add support for BCM7216 which is one of
-> >>> our latest devices supported by this driver.
-> >>>
-> >>> Patch #2 does a few things, but it was pretty badly broken before and it
-> >>> is hard not to fix all call sites (probe, suspend, resume) in one shot.
-> >>>
-> >>> Please let me know if you have any comments.
-> >>>
-> >>> Thanks!
-> >>>
-> >>> Florian Fainelli (8):
-> >>>   ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
-> >>>   ata: ahci_brcm: Fix AHCI resources management
-> >>
-> >> Following error on stable-rc 4.14 and 4.9 branch for arm build.
-> > 
-> > Following error on stable-rc 4.19, 4.14 and 4.9 branch for arm build.
-> > 
-> >>
-> >>  drivers/ata/ahci_brcm.c: In function 'brcm_ahci_probe':
-> >>  drivers/ata/ahci_brcm.c:412:28: error: 'struct brcm_ahci_priv' has no
-> >> member named 'rcdev'; did you mean 'dev'?
-> >>    if (!IS_ERR_OR_NULL(priv->rcdev))
-> >>                              ^~~~~
-> >>                              dev
-> >>    CC      fs/pnode.o
-> >>    CC      block/genhd.o
-> >>  drivers/ata/ahci_brcm.c:413:3: error: implicit declaration of
-> >> function 'reset_control_assert'; did you mean 'ahci_reset_controller'?
-> >> [-Werror=implicit-function-declaration]
-> >>     reset_control_assert(priv->rcdev);
-> >>     ^~~~~~~~~~~~~~~~~~~~
-> >>     ahci_reset_controller
-> >>  drivers/ata/ahci_brcm.c:413:30: error: 'struct brcm_ahci_priv' has no
-> >> member named 'rcdev'; did you mean 'dev'?
-> >>     reset_control_assert(priv->rcdev);
-> >>                                ^~~~~
-> >>                                dev
-> >>  cc1: some warnings being treated as errors
-> >>
-> >> Full build log links,
-> >> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/702/consoleText
-> >> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/773/consoleText
-> > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/404/consoleText
+On 2020-01-08 00:44, Evan Green wrote:
+> On Mon, Dec 16, 2019 at 10:30 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> Hey Evan,
+>> 
+>> On 12/7/19 12:46 AM, Evan Green wrote:
+>> > On Wed, Nov 27, 2019 at 12:42 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>> >>
+>> >> Hey Evan/Georgi,
+>> >>
+>> >> https://git.linaro.org/people/georgi.djakov/linux.git/commit/?h=icc-dev&id=9197da7d06e88666d1588e3c21a743e60381264d
+>> >>
+>> >> With the "Redefine interconnect provider
+>> >> DT nodes for SDM845" series, wouldn't it
+>> >> make more sense to define the OSM_L3 icc
+>> >> nodes in the sdm845.c icc driver and have
+>> >> the common helpers in osm_l3 driver? Though
+>> >> we don't plan on linking the OSM L3 nodes
+>> >> to the other nodes on SDM845/SC7180, we
+>> >> might have GPU needing to be linked to the
+>> >> OSM L3 nodes on future SoCs. Let me know
+>> >> how you want this done.
+>> >>
+>> >> Anyway I'll re-spin the series once the
+>> >> SDM845 icc re-work gets re-posted.
+>> >
+>> > I don't have a clear picture of the proposal. You'd put the couple of
+>> > extra defines in sdm845.c for the new nodes. But then you'd need to do
+>> > something in icc_set() of sdm845. Is that when you'd call out to the
+>> > osm_l3 driver?
+>> 
+>> with sdm845 icc rework "https://patchwork.kernel.org/cover/11293399/"
+>> osm l3 icc provider needs to know the total number of rsc icc nodes,
+>> i.e I can define the total number of rsc nodes and continue using the
+>> same design as v3 since on sdm845/sc7180 gpu is not cache coherent.
+>> 
+>> or have the osm l3 table population logic and osm icc_set as helpers
+>> and have it called from the sdm845/sc7180 icc driver so that we would
+>> be able to link osm_l3 with rsc nodes on future qcom SoCs.
 > 
-> The reset controller support was added in
-> 2b2c47d9e1fe90311b725125d6252a859ee87a79 ("ata: ahci_brcm: Allow
-> optional reset controller to be used") which was include in v4.20 and
-> newer so that explains the build failure.
-> 
-> You may want to cherry pick that change into the respective stable
-> branches and then back port the fixes if that is not too much trouble.
-> If that does not work or is impractical, please let me know and I can
-> provide directed backport changes for 4.9, 4.14 and 4.19.
+> I see, so if we use the same design as v3, then the number of nodes is
+> established at compile-time, and ends up being specific to sdm845. I'm
+> fine with either approach, maybe leaning towards the hardcoded
+> #defines you have now, and waiting to do the refactoring until you
+> actually have two SoCs that can use this.
+> -Evan
 
-No need, I'll just queue up the other needed patch now, thanks.
+Thanks will stick to the #defines
+for now.
 
-greg k-h
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
