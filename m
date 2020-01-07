@@ -2,192 +2,159 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46173C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CFDC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C07A20715
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ix7q3VoW"
+	by mail.kernel.org (Postfix) with ESMTP id C36DC207E0
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgAGMlO (ORCPT
+        id S1727903AbgAGMq7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:41:14 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38486 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbgAGMlO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:41:14 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so53785641wrh.5
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 04:41:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
-        b=Ix7q3VoWX7RQy4IAIFvZnnhHrgIlYKKRROKOYAnNZ7BmaaaAs6jHQ61Lxw6GWYosc9
-         js3xOlPWY3Q5glXRYBlLsJy6HptsLcAlxLGYCX5GHoAzT1qratDLllAjeejrq4hB7AG3
-         xclbiyCAqcpiX6ql5hcsvKpZlQMb+kpvEcQEDqtz16NHo0TYR68+ZeN/Mm2pPWK6czSU
-         naCoCQZM/fCLwV2Ea7sZj7L9QcXiu2mYvkjJm3royTbxjzhTcA+uMJWvxw+zzgtrgGRD
-         KUow505mmVSANNrmqo07vaWfAbesYmYiyYN247IZipCnnBntZBu8utEIBaWfQ+VB+Uj5
-         q3DA==
+        Tue, 7 Jan 2020 07:46:59 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36152 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgAGMq7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:46:59 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c16so17621329oic.3;
+        Tue, 07 Jan 2020 04:46:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=W1LjRqVdC+lguBKzA6hEhdSKsqbzU0HC/EHXe2PyVFE=;
-        b=WTAdZLGslViouXSXZDpKNUv+V/CiODT7ozXwr4ybgy0kC5CHbEKXsF5CkQ14sCsdjC
-         c3MpaVybSuKIcPS2aNRz9+B+9+2MMBK1RZbdqQCqsQ25cnlKkwctaWd44EAWPUqXo5t1
-         LrDKt2eWBuPIBD1Kcc0gHf7+xZ4XuCst3Ms4P1spix/RSMxAgs9KCKBe/4sqBVe6SUZh
-         gcd9b+Qdn+3lP46RxXo4KHlpT7BTB/1J4S6JD0eBfU1yHQ8tAU+GYfGNz19lOwryYslt
-         bfXVkflIGVaNdR+IyTxATCkVkq9GyA4tzXCDkO0VgagagnMvVHI1YHJ4wR1wZlMabsVn
-         DSPA==
-X-Gm-Message-State: APjAAAVWPAb4cKpOuSQJPRncvao2dHfxqZ+JZWV59159dIHnyPzijOl+
-        aPEE3+PmMliivxoCaan8m/c2MQ==
-X-Google-Smtp-Source: APXvYqzbZqg0vGgagk5eTcBKjSPx4R7BBZCx64xNuANabxrxXTmsIcFLkSO0bRPr4frccQzcW69BPg==
-X-Received: by 2002:adf:ee45:: with SMTP id w5mr105522947wro.352.1578400871598;
-        Tue, 07 Jan 2020 04:41:11 -0800 (PST)
-Received: from dell ([2.27.35.135])
-        by smtp.gmail.com with ESMTPSA id i16sm27397404wmb.36.2020.01.07.04.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 04:41:10 -0800 (PST)
-Date:   Tue, 7 Jan 2020 12:41:24 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vf/wP9IVDV4Hl6f1lzWr98u8m3GuJl26OsoEjxDSC+g=;
+        b=L+yd60keN0Dp0YBA/Xbp2waebe7tjW5j+rG13qYzzdjZ6vC4HsW028Ld+YzNryygv4
+         tAEAgoH4N3CsxX/Z7kDGpdE9E7z1wczBFmJ0Ypq+rJaPLaELbv6IyBUm3dJtXOhyWd4q
+         +fw0+Yk93EO5EaprOpd+N+x6rdooKAjtsGr4clj21K4gSvEwb/mKRb4zaLfKykZneO1i
+         CU90u/Dwm5L3mrMwQKExQ+kzFXvGj3LzUiG0G3OLZVIDQXhFggoVvTwb3ZP6yJdFlFfi
+         Yw9W8LjGXJgKLzmAEgtK8CAYLUMEQKKFUoB6/zLQn5RRLbSWJClC/7TyQt0WONbi/3j+
+         DwIg==
+X-Gm-Message-State: APjAAAX73uZygXFSzo80jcFoPUWEGR+RQV0+2PHHKtYvzRqcpqGX8CnS
+        uu9LbMc06KL+cveEsT1AXO2HTjVNvVXjw00PGEA=
+X-Google-Smtp-Source: APXvYqxA0Ir0h8IUX7YSNxseIUU1PobEpQXNKjYgoTrMgiMQwt3o9H2jAlIFDg4si3GQJ6t0pjmhx39BhXHXf9WoKjk=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr6541881oia.148.1578401218279;
+ Tue, 07 Jan 2020 04:46:58 -0800 (PST)
+MIME-Version: 1.0
+References: <20200102141246.370-1-geert+renesas@glider.be> <20200102141246.370-4-geert+renesas@glider.be>
+ <20200105091303.GB29102@ravnborg.org> <CAMuHMdUL3tCZzCDyJkmqYT5n+-t+Z-Ubo4=+NJpHpZU1w5C07g@mail.gmail.com>
+ <893b059c-fd7d-3c21-384c-da33af595ffb@lechnology.com>
+In-Reply-To: <893b059c-fd7d-3c21-384c-da33af595ffb@lechnology.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Jan 2020 13:46:47 +0100
+Message-ID: <CAMuHMdXxwSR6D_tzg9iqwwLYEJZg6DEonvvvC_TigtG0PAvn+w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] drm: tiny: st7735r: Add support for Okaya RH128128T
+To:     David Lechner <david@lechnology.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20200107124124.GI14821@dell>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 30 Dec 2019, Matti Vaittinen wrote:
+Hi David,
 
-> Few ROHM PMICs allow setting the voltage states for different system states
-> like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
-> mechanisms. bd718x7 driver implemented device-tree parsing functions for
-> these state specific voltages. The parsing functions can be re-used by
-> other ROHM chip drivers like bd71828. Split the generic functions from
-> bd718x7-regulator.c to rohm-regulator.c and export them for other modules
-> to use.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> ---
-> 
-> Changes from v7 - no changes
-> 
->  drivers/regulator/Kconfig             |   4 +
->  drivers/regulator/Makefile            |   1 +
->  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------------
->  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
->  include/linux/mfd/rohm-generic.h      |  44 +++++++
->  5 files changed, 199 insertions(+), 128 deletions(-)
->  create mode 100644 drivers/regulator/rohm-regulator.c
+On Mon, Jan 6, 2020 at 6:12 PM David Lechner <david@lechnology.com> wrote:
+> On 1/6/20 3:28 AM, Geert Uytterhoeven wrote:
+> > On Sun, Jan 5, 2020 at 10:13 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> >> On Thu, Jan 02, 2020 at 03:12:46PM +0100, Geert Uytterhoeven wrote:
+> >>> Add support for the Okaya RH128128T display to the st7735r driver.
+> >>>
+> >>> The RH128128T is a 128x128 1.44" TFT display driven by a Sitronix
+> >>> ST7715R TFT Controller/Driver.  The latter is very similar to the
+> >>> ST7735R, and can be handled by the existing st7735r driver.
 
-[...]
+> >>> --- a/drivers/gpu/drm/tiny/st7735r.c
+> >>> +++ b/drivers/gpu/drm/tiny/st7735r.c
 
-> diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-> index ff3dd7578fd3..8037421cc6a1 100644
-> --- a/include/linux/mfd/rohm-generic.h
-> +++ b/include/linux/mfd/rohm-generic.h
-> @@ -4,6 +4,9 @@
->  #ifndef __LINUX_MFD_ROHM_H__
->  #define __LINUX_MFD_ROHM_H__
->  
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/driver.h>
-> +
->  enum rohm_chip_type {
->  	ROHM_CHIP_TYPE_BD71837 = 0,
->  	ROHM_CHIP_TYPE_BD71847,
-> @@ -17,4 +20,45 @@ struct rohm_regmap_dev {
->  	struct regmap *regmap;
->  };
->  
-> +enum {
-> +	ROHM_DVS_LEVEL_UNKNOWN,
-> +	ROHM_DVS_LEVEL_RUN,
-> +	ROHM_DVS_LEVEL_IDLE,
-> +	ROHM_DVS_LEVEL_SUSPEND,
-> +	ROHM_DVS_LEVEL_LPSR,
-> +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
-> +};
-> +
-> +struct rohm_dvs_config {
-> +	uint64_t level_map;
-> +	unsigned int run_reg;
-> +	unsigned int run_mask;
-> +	unsigned int run_on_mask;
-> +	unsigned int idle_reg;
-> +	unsigned int idle_mask;
-> +	unsigned int idle_on_mask;
-> +	unsigned int suspend_reg;
-> +	unsigned int suspend_mask;
-> +	unsigned int suspend_on_mask;
-> +	unsigned int lpsr_reg;
-> +	unsigned int lpsr_mask;
-> +	unsigned int lpsr_on_mask;
-> +};
+> >>> @@ -37,12 +39,28 @@
+> >>>   #define ST7735R_MY   BIT(7)
+> >>>   #define ST7735R_MX   BIT(6)
+> >>>   #define ST7735R_MV   BIT(5)
+> >>> +#define ST7735R_RGB  BIT(3)
+> >>> +
+> >>> +struct st7735r_cfg {
+> >>> +     const struct drm_display_mode mode;
+> >>> +     unsigned int left_offset;
+> >>> +     unsigned int top_offset;
+> >>> +     unsigned int write_only:1;
+> >>> +     unsigned int rgb:1;             /* RGB (vs. BGR) */
+> >>> +};
+> >>> +
+> >>> +struct st7735r_priv {
+> >>> +     struct mipi_dbi_dev dbidev;     /* Must be first for .release() */
+> >>> +     unsigned int rgb:1;
+> >>> +};
+> >>
+> >> The structs here uses "st7735r" as the generic prefix.
+> >> But the rest of this file uses "jd_t18003_t01" as the generic prefix.
+> >>
+> >> It would help readability if the same prefix is used for the common
+> >> stuff everywhere.
+> >
+> > Agreed.
+> > So I think it makes most sense to rename jd_t18003_t01_pipe_{enable,funcs}
+> > to sh7735r_pipe_{enable,funcs}?
+> > If needed, the display-specific parts (e.g. gamma parameters) could be
+> > factored out in st7735r_cfg later, if neeeded.
+>
+> IIRC, the original intention here is that functions/structs with the
+> jd_t18003_t01_ prefix are specific to the panel, not the controller.
 
-I think this deserves a kernel-doc header.
+Makes sense.
 
-> +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
-> +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
-> +				  struct device_node *np,
-> +				  const struct regulator_desc *desc,
-> +				  struct regmap *regmap);
+> E.g. things like power settings and gamma curves.
+>
+> The idea is that it is much easier to write and understand the init sequence
+> as a function rather than trying to make a generic function that can parse
+> a any possible init sequence from a data structure.
 
-Does these really need to live in the parent's header file?
+I believe the init sequence is the same.  The init parameters may not be.
+What happened to the separation of code and data? ;-)
 
-What other call-sites are there?
+> This new panel really has all of the same settings as the existing one?
 
-> +#else
-> +static inline int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
-> +						struct device_node *np,
-> +						const struct regulator_desc *desc,
-> +						struct regmap *regmap)
-> +{
-> +	return 0;
-> +}
-> +#endif //IS_ENABLED(CONFIG_REGULATOR_ROHM)
+I went through all the ST77[13]5R-specific register settings in the pipe
+enable function. All these registers exist on both ST7715R and ST7735R.
+Unfortunately the Okaya display documentation doesn't give any clues
+w.r.t. the expected values to program.
+However, my display seems to work fine.  Even the grayscale bands from
+fbtest test006 look good, so the gamma parameters must be correct ;-)
 
-a) This comment is not really required
-b) You shouldn't be using C++ comments
+> Having a separate pipe enable function for the new panel would also eliminate
+> the need for the extra private rgb data.
+
+At the expense of duplicating the whole function, for one single bit of
+difference...
+
+P.S. Note that I'm using this on an RSK+RZA1 board with 32 MiB of SDRAM.
+Enabling support for this display increases kernel size by 316 KiB.
+And apparently most real world users of the RZ/A1 SoC are not even using
+SDRAM, but doing XIP with the builtin 10 MiB of SRAM...
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
