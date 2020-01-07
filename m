@@ -2,207 +2,169 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8C9C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 02:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C27C32771
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 02:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE8720715
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 02:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304952072E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 02:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgAGCGa (ORCPT
+        id S1727332AbgAGCfN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 21:06:30 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:38564 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727250AbgAGCGa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 21:06:30 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id ABE66277412
-Message-ID: <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com>
-Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip
- MIPI RX D-PHY yaml bindings
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
-        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
-        kernel@collabora.com, linux-media@vger.kernel.org,
-        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
-Date:   Mon, 06 Jan 2020 23:06:12 -0300
-In-Reply-To: <20200107001055.GE22189@pendragon.ideasonboard.com>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
-         <20191227200116.2612137-10-helen.koike@collabora.com>
-         <20200107001055.GE22189@pendragon.ideasonboard.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Mon, 6 Jan 2020 21:35:13 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:30798 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbgAGCfN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 21:35:13 -0500
+Received: from [10.18.38.198] (10.18.38.198) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 7 Jan
+ 2020 10:35:34 +0800
+Subject: Re: [PATCH v3 1/6] dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com>
+ <1577428606-69855-2-git-send-email-hanjie.lin@amlogic.com>
+ <20200104002806.GA24214@bogus>
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+Message-ID: <dca2c600-fb07-4071-4cf0-0392e64f450c@amlogic.com>
+Date:   Tue, 7 Jan 2020 10:35:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
+In-Reply-To: <20200104002806.GA24214@bogus>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.38.198]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-Thanks a lot for reviewing this.
 
-On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
-> Hi Helen,
+On 2020/1/4 8:28, Rob Herring wrote:
+> On Fri, Dec 27, 2019 at 02:36:41PM +0800, Hanjie Lin wrote:
+>> Add the Amlogic A1 Family USB2 PHY Bindings
+>>
+>> It supports Host mode only.
+>>
+>> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+>> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
+>> ---
+>>  .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    | 55 ++++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+>> new file mode 100644
+>> index 00000000..2b2c526
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+>> @@ -0,0 +1,55 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +# Copyright 2019 Amlogic, Inc
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/phy/amlogic,meson-a1-usb2-phy.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic A1 USB2 PHY
+>> +
+>> +maintainers:
+>> +  - Yue Wang <yue.wang@amlogic.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - amlogic,meson-a1-usb2-phy
 > 
-> Thank you for the patch.
-> 
-> On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
-> > Add yaml DT bindings for Rockchip MIPI D-PHY RX
-> > 
-> > This was tested and verified with:
-> > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml  Documentation/devicetree/bindings/phy/
-> > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > 
-> > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > 
-> > ---
-> > 
-> > Changes in v12:
-> > - The commit replaces the following commit in previous series named
-> > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-> > This new patch adds yaml binding and was verified with
-> > make dtbs_check and make dt_binding_check
-> > 
-> > Changes in v11: None
-> > Changes in v10:
-> > - unsquash
-> > 
-> > Changes in v9:
-> > - fix title division style
-> > - squash
-> > - move to staging
-> > 
-> > Changes in v8: None
-> > Changes in v7:
-> > - updated doc with new design and tested example
-> > 
-> >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
-> >  1 file changed, 75 insertions(+)
-> >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > 
-> > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml b/drivers/staging/media/phy-
-> > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > new file mode 100644
-> > index 000000000000..af97f1b3e005
-> > --- /dev/null
-> > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > @@ -0,0 +1,75 @@
-> > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
-> 
-> Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
-
-The driver currently only supports RX0, but I think you are right,
-it should say RX here. This binding could be extended for RX1.
-
-> Looking at the PHY driver, it seems to handle all PHYs with a single
-> struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> Use 'const' if there's only 1.
 > 
 
-I am not following this. The driver handles just one PHY. Each PHY
-should have its own node.
+Ok
 
-> > +
-> > +maintainers:
-> > +  - Helen Koike <helen.koike@collabora.com>
-> > +  - Ezequiel Garcia <ezequiel@collabora.com>
-> > +
-> > +description: |
-> > +  The Rockchip SoC has a MIPI D-PHY bus with an RX0 entry which connects to
-> > +  the ISP1 (Image Signal Processing unit v1.0) for CSI cameras.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: rockchip,rk3399-mipi-dphy
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: Mipi d-phy ref clock
-> > +      - description: Mipi d-phy rx0 cfg clock
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  reset-names:
+>> +    items:
+>> +      - const: phy
 > 
-> s/Mipi d-phy/MIPI D-PHY/
+> Don't need *-names when there's a single entry.
 > 
 
-Yep.
+Ok
 
-> > +      - description: Video in/out general register file clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: dphy-ref
-> > +      - const: dphy-cfg
-> > +      - const: grf
-> > +
-> > +  '#phy-cells':
-> > +    const: 0
-> > +
-> > +  power-domains:
-> > +    description: Video in/out power domain.
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - clocks
-> > +  - clock-names
-> > +  - '#phy-cells'
-> > +  - power-domains
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +
-> > +    /*
-> > +     * MIPI RX D-PHY use registers in "general register files", it
-> > +     * should be a child of the GRF.
-> > +     *
-> > +     * grf: syscon@ff770000 {
-> > +     *  compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> > +     *  ...
+>> +
+>> +  "#phy-cells":
+>> +    const: 0
+>> +
+>> +  power-domains:
+>> +     maxItems: 1
+>> +     description:
+>> +       a phandle to respective power domain node as described by generic
+>> +       PM domain bindings (see power/power_domain.txt for more information).
 > 
-> missing
-> 
-> 	* };
+> Drop the generic description. No need to duplicate everywhere.
 > 
 
-OK.
+Ok, I will modify these issues.
 
-> > +     */
-> > +
-> > +    #include <dt-bindings/clock/rk3399-cru.h>
-> > +    #include <dt-bindings/power/rk3399-power.h>
-> > +
-> > +    dphy: mipi-dphy {
-> > +        compatible = "rockchip,rk3399-mipi-dphy";
-> > +        clocks = <&cru SCLK_MIPIDPHY_REF>,
-> > +                 <&cru SCLK_DPHY_RX0_CFG>,
-> > +                 <&cru PCLK_VIO_GRF>;
-> > +        clock-names = "dphy-ref", "dphy-cfg", "grf";
-> > +        power-domains = <&power RK3399_PD_VIO>;
-> > +        #phy-cells = <0>;
-> > +    };
+Thanks
 
+Hanjie
 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - resets
+>> +  - reset-names
+>> +  - "#phy-cells"
+>> +  - power-domains
+>> +
+>> +examples:
+>> +  - |
+>> +    usb2_phy1: phy@40000 {
+>> +      status = "okay";
+>> +      compatible = "amlogic,a1-usb2-phy";
+>> +      reg = <0x0 0x40000 0x0 0x2000>;
+>> +      resets = <&reset RESET_USBPHY>;
+>> +      reset-names = "phy";
+>> +      #phy-cells = <0>;
+>> +      power-domains = <&pwrc PWRC_USB_ID>;
+>> +    };
+>> -- 
+>> 2.7.4
+>>
+> 
+> .
+> 
