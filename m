@@ -2,90 +2,92 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6126C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB694C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE5421744
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:48:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtI5LJo3"
+	by mail.kernel.org (Postfix) with ESMTP id 9C8D82081E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727647AbgAGJs1 (ORCPT
+        id S1727211AbgAGJtZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:48:27 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45701 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbgAGJs0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:48:26 -0500
-Received: by mail-lf1-f67.google.com with SMTP id 203so38358751lfa.12
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:48:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
-        b=qtI5LJo3/WvWrVIOP518oxDc3sCuQZBRfr9C5k+6doCxp3MzxLMN6EKtFZgGos+b45
-         LkDrzheTzcH8ElGC1D31coYR3J0ag0BydTOCnkr0keaP+7TP+453ZoSSijAkFO2Jn1ns
-         DNdC6m9acz9YM+LvrQD5aWwTHN9J/0xtaN/wa6UdUP77zaUcnKO8GMK4A0X+UZtyuYfn
-         Dojan9A7M8+5unJ7aoUrDc47Ap1APgA/gtyvSA7dLOqWIWFwN1g/8EJ7ozI0vLP2h50c
-         GKOWEwNT6+mgWVJ7cN5Kj5Q8b64XwtQVqTm3ZukPYVhj6NAOIjZbqLym6VSOgAH+u1qH
-         GQ+w==
+        Tue, 7 Jan 2020 04:49:25 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36590 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726558AbgAGJtZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:49:25 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 19so63185839otz.3;
+        Tue, 07 Jan 2020 01:49:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=57yyaLukCeYKAR+EhYGKNLb0YJSXe31eGECRa1cvyNQ=;
-        b=dfJtbl+GnyChO7QCGpEM3jJQOAkPB0raS72MAWijy0Uuq7tTXa82xUVmbd3WcnyUQo
-         b1nojEc659GsNOXv958QTgeiuUuCxPXY/aDbkzSr26LZUfEOB0nDmjYVtA9UEJYRueSI
-         wZW0Kg0bDFaIUgeiaF4891Fn5Mz9vsCXINbuOolYbhtUobp+ktieBvpEo3cZIA8R8blf
-         MHZOzBqoEKmA78Lw3kZjhRGL2jsQnvNlAFcNsqXlZMcFDxRepitSQx6Nw3yWn1HBYLgC
-         KlRAe0Oxlj5XjemCLBcwTfDPIYgmHEsq8UEWclMXw1/5+KXr8GVHVFxwehALKma+XZ0j
-         59+w==
-X-Gm-Message-State: APjAAAUDr52uP6e5arULRZUGJa0+iu8OMzLCwc8ZDftuXr6gdf37VXtT
-        i+wdZ+pHe4890jgsCyURE65DpRpTv1yCYisntivaMg==
-X-Google-Smtp-Source: APXvYqwJ4NEleHWVj49bXWx9f2Reukpm63SdKPnvrbrbdsGZZiFUSvBsk8NVHRhgjrknGj8ifWCADNENNBxCswle48I=
-X-Received: by 2002:a19:c648:: with SMTP id w69mr58882108lff.44.1578390504987;
- Tue, 07 Jan 2020 01:48:24 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yTkMq4Kgxs+bgJ12u344a0U4C5wtaNMcJkHchqqiJ6c=;
+        b=srQbJmpIlH1buQSSPgC8kwZNd+mRlIlYdQ11ItsE6OL73wfPvPT636aaA7Qdg2+/Cm
+         CBFFjkaghUPwc0M1l+jyX1DlE70n3/BrTiAbiDlwxPsLLKEosT+mls2OF4S87fOe1Fpq
+         pWTu2v/PL5gIf9TZlRuFl9zTXMlra9mXx+ySOyETQ1bPvWNbDIyHI6+0gbK+iPVF1zvD
+         lNh41i2ykDSQZAlupAotYoNJDUemdb8+HgRaQGNhf6W/kqKI4X2lUDDuavWTwNaxa7SR
+         rpBEY0zmc6sb+hdjF9KrWnJROsMyghzSk89e88hWeNrR635iVFw5ggAZED4dBUx/FQ+M
+         zsvg==
+X-Gm-Message-State: APjAAAXsUH2jrxElBgIc4sr9DAxc7t8CGZc84pYFaYP33TYbq/C+V4jL
+        WYl2OVoTlDujHi594uY+691RCgcO6s1GfNRYsVY=
+X-Google-Smtp-Source: APXvYqzRVR1QAO55iw2NC5cGRGVkVKTwPXP9+cfKieV2+EpwkfBXjfsqLNWDsvanUJXDoTlmdwv0shF10XBiHgmiOD0=
+X-Received: by 2002:a9d:8f1:: with SMTP id 104mr113370808otf.107.1578390564626;
+ Tue, 07 Jan 2020 01:49:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org> <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20191219103153.14875-10-srinivas.kandagatla@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 7 Jan 2020 10:48:14 +0100
-Message-ID: <CACRpkdaoU9B+981iF4wvLgY-QNNnsNUE=CYVmfX8zNtUuOtKfQ@mail.gmail.com>
-Subject: Re: [PATCH v6 09/11] gpio: wcd934x: Add support to wcd934x gpio controller
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20191230133852.5890-1-geert+renesas@glider.be>
+ <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com>
+ <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com> <CAMRc=Mf6CpsMpqwXjzC7jF0rxchSop+q7GQ2xgooKVRuC52VPQ@mail.gmail.com>
+In-Reply-To: <CAMRc=Mf6CpsMpqwXjzC7jF0rxchSop+q7GQ2xgooKVRuC52VPQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 7 Jan 2020 10:49:13 +0100
+Message-ID: <CAMuHMdU6pF6bB4gWZhJyBVTVRG59ucinW0K6nrjrYZSWvLXYew@mail.gmail.com>
+Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
+Hi Bartosz,
 
-> This patch adds support to wcd934x gpio block found in
-> WCD9340/WC9341 Audio codecs.
+On Tue, Jan 7, 2020 at 10:03 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> wt., 7 sty 2020 o 08:46 Geert Uytterhoeven <geert@linux-m68k.org> napisał(a):
+> > I'm happy with a (static) GPIO hog.
+> >
+> > BTW, what exactly do you mean with "mux framework"? Pinctrl/pinmux?
 >
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> No, I meant the multiplexer subsystem under drivers/mux. I thought we
+> could call mux_control_select() from pm_runtime_get_*() or something
+> similar. This is just an idea though, and I see Frank already did an
+> in-depth analysis so never mind my comment.
 
-I think I reviewed an earlier version of the patch set yesterday,
-the comments are still valid for this version.
+Thanks, I wasn't aware of drivers/mux/...
 
-Sorry for lag in my reviews :/
+Gr{oetje,eeting}s,
 
-Yours,
-Linus Walleij
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
