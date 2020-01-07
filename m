@@ -2,137 +2,102 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A73C282DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD65C282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9913206DB
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 19:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F4A20848
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578426746;
-	bh=2Rt8QBkwsT8hqHrj/Cy8k8w71wAL2Fyl80RFLWrMlDQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=U98/TQ9MNU6RJ9qrt5DohKXjgtbcsnFbUH9f2gtKXXf2XrJSSDk3cigCOuOeBy+Se
-	 zavi9pL/TyWV7DT9vbx9qAVR13ZBnmBoqKQuxkdq9Z8+xe7SaedoxQ8ot6Z1G45N4u
-	 gbxDfGMCkUz/aciNSFq0Zp90VAe477erypezsGcg=
+	s=default; t=1578428055;
+	bh=Np4uAfPzehCZsxUKnH7M3GExyXqR94cdrJra78mTd08=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A6cs2s3dXUYs6xRGZ4EBZKsOV4J0flk0xanjhdXLb0GmZ+IKng8eMpD/fAdXRgVu9
+	 DMe2RCMbaIaVn90H+qjGaRlUkw/txE1Zj0aUdYbGx52wdRD8LSjnTfuzBiC9HB/shH
+	 Yr/gBAiCyH8TJdwauGW7JotAkhm3BrJd6pp1e6hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgAGTw0 (ORCPT
+        id S1728584AbgAGUOM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 14:52:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgAGTw0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 14:52:26 -0500
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E56206DB
-        for <devicetree@vger.kernel.org>; Tue,  7 Jan 2020 19:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578426746;
-        bh=2Rt8QBkwsT8hqHrj/Cy8k8w71wAL2Fyl80RFLWrMlDQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qbe4WB003BufWRMI4iq8w+Eqbb0/XzH/5VFJ4sUA2f6I46f+wJWlRs3m7PPnNmscu
-         iYpIRQVE9zDpIqymWuqn6KX0x/H6fdTLf+TYLvytFj6CaKIzihHrrfFT32dIO+OCOz
-         RGAwSYy24SQCRTSY9kHlwjzxSCGJQ9isHIqa05iA=
-Received: by mail-qk1-f172.google.com with SMTP id x1so475938qkl.12
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 11:52:25 -0800 (PST)
-X-Gm-Message-State: APjAAAUL9Dor2T8R6Z3YcxXj3GRkgubsoyZYgHJIJDfNYHW3Lmbn2auE
-        +/hzMCbuqvuYtwgnEJ3KPCE4Xxu5kKKCnHxhDQ==
-X-Google-Smtp-Source: APXvYqydWfBVAnZIKKmVTsP2BSuvkrTyEB6Wnb6j0Ux07qk+ik6JM+AXfglu7IoQ0c/w36bS6FRPyi67+RTkoOkatM0=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr904157qkl.119.1578426745034;
- Tue, 07 Jan 2020 11:52:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20200102101712.5085-1-sam@ravnborg.org> <20200102101712.5085-2-sam@ravnborg.org>
-In-Reply-To: <20200102101712.5085-2-sam@ravnborg.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 7 Jan 2020 13:52:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLdbS5W0xZq_TfLmWh8J6+t1arvzov85rtj3UXuK0QRaQ@mail.gmail.com>
-Message-ID: <CAL_JsqLdbS5W0xZq_TfLmWh8J6+t1arvzov85rtj3UXuK0QRaQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: one binding file for all simple panels
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Yannick Fertre <yannick.fertre@st.com>,
+        Tue, 7 Jan 2020 15:14:12 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34748 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728379AbgAGUOM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 15:14:12 -0500
+Received: by mail-ed1-f68.google.com with SMTP id l8so696329edw.1;
+        Tue, 07 Jan 2020 12:14:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cj6OnC4YqYTNvb3pcEicnN54BEeDPq18S6hBvoM8yBY=;
+        b=uVP/x9x9ydFmW8cCCkrwSRjjbEAv2HlyJ5EzgMZrYL1yiZvSyDHzrZa147iaLdyDZ3
+         1ETS0vcbB3T/XCZm6Bg63TFtBpauizibuMqWb2/8D6rihleZMrtfwdoita71bRkVrYUh
+         Z+gKQWRjKZO7OR8fsCemwqZAywSDoxbhEbJVIg3ZVviEMMT/lS6dGEjQFLu/+kRl7EYr
+         m6zt7BrlShEKRuJyGxw7JC9oG8bQAudRzvygvfXLcdHgy0pHhRIgIvH6BZZrrdPgh8vx
+         D4P3RnY6YeyT6DfHkhITbMDzGPVaZ51YA8UpesF40sboPUF2tpcc3pATZ0tbBtJNqUYX
+         v5dw==
+X-Gm-Message-State: APjAAAXgOv+aG7/1wQbRGpnnU7LANdbknlEwhIz4s5z55PzgRxt/inuD
+        wqPEwQUYWY2QG7FGbPqHOsMt10wB
+X-Google-Smtp-Source: APXvYqzcuGIUKdEaymd4zEMJHlaqst1TFGezEbWMzGdVSrPg5EGnVz+F/fGV2JQg1SdNlH9/iBz1cQ==
+X-Received: by 2002:a50:f391:: with SMTP id g17mr1797161edm.52.1578428049704;
+        Tue, 07 Jan 2020 12:14:09 -0800 (PST)
+Received: from kozik-book ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id f7sm12301ejq.38.2020.01.07.12.14.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 07 Jan 2020 12:14:08 -0800 (PST)
+Date:   Tue, 7 Jan 2020 21:14:06 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v2 02/20] arm64: dts: exynos: Rename Samsung and Exynos
+ to lowercase
+Message-ID: <20200107201406.GA8636@kozik-book>
+References: <20200104152107.11407-1-krzk@kernel.org>
+ <20200104152107.11407-3-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200104152107.11407-3-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 2, 2020 at 4:17 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> There is an increasing number of new simple panels.
-> Common for many of these simple panels are that they have one
-> mandatory power-supply and some of them have backlight and / or
-> an enable gpio.
->
-> The binding file to describe these panels adds overhead
-> that really do not add value.
-> The binding are known and there is nothing gained from a
-> dedicated binding file nor for any dedicated example.
->
-> The following patch introduces a single panel-simple.yaml
-> and converts two ampire bindings over to the new file.
->
-> The conversion - if applied will have following effects:
->
-> - The maintainer for the individual file will change
->     There is no need for many different maintainers for a simple binding.
->     We have the same situation with the panel-simple driver in the kernel.
->
-> - The license will change to (GPL-2.0-only OR BSD-2-Clause)
->     There is usually only a single line copied from the original
->     file, a line that is often copied from a datasheet.
->     This license change should be acceptable considered what little
->     is copied.
->     If the license change is not OK we can use a dedicated binding
->     file in these cases.
->
-> This is a follow-up on Rob's big patch converting a lot of panel bindings
-> to individual files:
->
-> "dt-bindings: display: Convert a bunch of panels to DT schema"
-> https://patchwork.ozlabs.org/patch/1197683/
->
-> The objectives with one file for the relevant simple panels are:
-> - Make it simpler to add bindings for simple panels
-> - Keep the number of bindings file lower and thus easier to find a
->   relevant file to copy from when adding new panels.
-> - Keep the binding documentation for simple panels more consistent
-> - Make it simpler to add support for new panels
->
-> v2:
->   - spelling fixes (imirkin via irc, Rob)
->   - updated description (Rob)
->   - list properires in alphabetical order
->   - added power-supply to example (Rob)
->   - updated title
->   - reworded changelog a little
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Yannick Fertre <yannick.fertre@st.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: devicetree@vger.kernel.org
+On Sat, Jan 04, 2020 at 04:20:49PM +0100, Krzysztof Kozlowski wrote:
+> Fix up inconsistent usage of upper and lowercase letters in "Samsung"
+> and "Exynos" names.
+> 
+> "SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
+> names.  Therefore they should be written with lowercase letters starting
+> with capital letter.
+> 
+> The lowercase "Exynos" name is promoted by its manufacturer Samsung
+> Electronics Co., Ltd., in advertisement materials and on website.
+> 
+> Although advertisement materials usually use uppercase "SAMSUNG", the
+> lowercase version is used in all legal aspects (e.g. on Wikipedia and in
+> privacy/legal statements on
+> https://www.samsung.com/semiconductor/privacy-global/).
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  .../panel/ampire,am-480272h3tmqw-t01h.yaml    | 42 -------------
->  .../panel/ampire,am800480r3tmqwa1h.txt        |  7 ---
->  .../bindings/display/panel/panel-simple.yaml  | 59 +++++++++++++++++++
->  3 files changed, 59 insertions(+), 49 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
->  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 +-
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts         | 2 +-
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts        | 2 +-
+>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts       | 4 ++--
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi               | 2 +-
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied.
+
+Best regards,
+Krzysztof
+
