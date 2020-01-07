@@ -2,111 +2,125 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F903C282DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 23:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03834C282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 23:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E165E2072A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 23:04:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578438265;
-	bh=zKdukV38l1KtyXdcWoPM86hXcKY/+oxlv2OrUMNI2vE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zb56AyGGDRJBsyeOqmyEahs6AYKXGhmWvSzTFCJKOsrshXsGU/KTjc92OlNRv2LcG
-	 aiDLN/aXLkTOtYdj+j5cd7ANMRGPy7S3joxAQibaE13n5JhtkLVz5MxmHscTWIMcqe
-	 y5ShJKfi8WRZtTXpLK6Fn7DVUDtLDGMGVEmnH7MQ=
+	by mail.kernel.org (Postfix) with ESMTP id C1F4D2077B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 23:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="HJOmLIqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgAGXEY (ORCPT
+        id S1727257AbgAGXSX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 18:04:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34012 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 18:18:23 -0500
+Received: from onstation.org ([52.200.56.107]:35462 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgAGXEY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 18:04:24 -0500
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727074AbgAGXSW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 18:18:22 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599CB2072A;
-        Tue,  7 Jan 2020 23:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578438263;
-        bh=zKdukV38l1KtyXdcWoPM86hXcKY/+oxlv2OrUMNI2vE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KGXTtl/x+Q6PPjHP8G3bFP+QfBF+JvWyTeZyG79qarhp5mMcFBzpm5js0OpxdJ2cD
-         BoColFbUccjeZ1H6QTqU/twgYno0hGc8+zlUp3+pB6ykVJsPcB5ERfOzA8soTA/67Q
-         K1px87lnvxqP9mtIEOVnkwzPvBCH9xacOIl5XdtQ=
-Received: by mail-qk1-f179.google.com with SMTP id j9so1050345qkk.1;
-        Tue, 07 Jan 2020 15:04:23 -0800 (PST)
-X-Gm-Message-State: APjAAAVzkQtbOlZvqiNUW14iU8x/+mfo/7a/F+2467PNOZthzxD0TdLV
-        ujt10Z+yRvEMqHmobF4Pr9tsmE6AcR3p3af6Ow==
-X-Google-Smtp-Source: APXvYqypMp1YvCAnvRLYK0n8h2AoOEfsjNGRjZvjWA9oVL8NeuOJojQR+6JSl6kEe46bz5HE6afLLdy/0Yk0IElNOTg=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr1538529qkl.119.1578438262529;
- Tue, 07 Jan 2020 15:04:22 -0800 (PST)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 3FF903EE6F;
+        Tue,  7 Jan 2020 23:18:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1578439101;
+        bh=dPi/tlFFpKEhh6XGOkAwyWFcjw/UEJV74jJZmzMoFC4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HJOmLIqBjzocoa69Tgfssq8+Zhsh/tT9Ma4MDBktwAV8J8Eg9QpZQxspeRIIPCEly
+         4OT73k4esnw71aA6YvcjVvjU51j2V3r36iUt/GxRhIcFoFUrIgm/Zoy3wrcNXGiPJk
+         bzaaAwwrQzuZNwx8/a154IzGC6zRXEYe0O+vl7s8=
+Date:   Tue, 7 Jan 2020 18:18:20 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: Input: introduce new clock vibrator
+ bindings
+Message-ID: <20200107231820.GA13416@onstation.org>
+References: <20191205002503.13088-1-masneyb@onstation.org>
+ <20191205002503.13088-5-masneyb@onstation.org>
+ <20200105083534.01EB12071A@mail.kernel.org>
+ <20200107120317.GB8083@onstation.org>
+ <20200107175222.6B5052073D@mail.kernel.org>
 MIME-Version: 1.0
-References: <20200107220938.2412463-1-arnd@arndb.de>
-In-Reply-To: <20200107220938.2412463-1-arnd@arndb.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jan 2020 17:04:11 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ0bVEkDfUw9+8gf=EVN=xjH4F1uyrmtWQfgc80FsTvew@mail.gmail.com>
-Message-ID: <CAL_JsqJ0bVEkDfUw9+8gf=EVN=xjH4F1uyrmtWQfgc80FsTvew@mail.gmail.com>
-Subject: Re: [PATCH] of: add dummy of_platform_device_destroy
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Frank Rowand <frowand.list@gmail.com>, Jyri Sarha <jsarha@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107175222.6B5052073D@mail.kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 4:09 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The new phy-j721e-wiz driver causes a link failure without CONFIG_OF:
->
-> drivers/phy/ti/phy-j721e-wiz.o: In function `wiz_remove':
-> phy-j721e-wiz.c:(.text+0x40): undefined reference to `of_platform_device_destroy'
->
-> Add a dummy version of this function to avoid having to add Kconfig
-> dependencies for the driver.
->
-> Fixes: 42440de5438a ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  include/linux/of_platform.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 84a966623e78..2551c263e57d 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -54,11 +54,16 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
->                                          struct device *parent);
->  #ifdef CONFIG_OF
->  extern struct platform_device *of_find_device_by_node(struct device_node *np);
-> +extern int of_platform_device_destroy(struct device *dev, void *data);
+On Tue, Jan 07, 2020 at 09:52:21AM -0800, Stephen Boyd wrote:
+> Quoting Brian Masney (2020-01-07 04:03:17)
+> > On Sun, Jan 05, 2020 at 12:35:33AM -0800, Stephen Boyd wrote:
+> > > Quoting Brian Masney (2019-12-04 16:25:00)
+> > > > +examples:
+> > > > +  - |
+> > > > +    #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> > > > +    #include <dt-bindings/gpio/gpio.h>
+> > > > +
+> > > > +    vibrator {
+> > > > +        compatible = "clk-vibrator";
+> > > > +
+> > > > +        vcc-supply = <&pm8941_l19>;
+> > > > +
+> > > > +        clocks = <&mmcc CAMSS_GP1_CLK>;
+> > > > +        clock-names = "core";
+> > > > +        clock-frequency = <24000>;
+> > > > +
+> > > > +        enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
+> > > > +
+> > > > +        pinctrl-names = "default";
+> > > > +        pinctrl-0 = <&vibrator_pin>;
+> > > 
+> > > I'm still trying to wrap my head around this. I think we can have a pwm
+> > > provider in a clk controller node (so imagine &mmcc has #pwm-cells) and
+> > > then this 'clk-vibrator' binding wouldn't exist? Instead we would have
+> > > some sort of binding for a device that expects a pwm and whatever else
+> > > is required, like the enable gpio and power supply. Is there an actual
+> > > hardware block that is this way? Does it have a real product id and is
+> > > made by some company? Right now this looks a little too generic to not
+> > > just be a catch-all for something that buzzes.
+> > 
+> > So have some of the Qualcomm clocks like this one register with both the
+> > clk and the pwm frameworks? I feel that approach would better represent
+> > the hardware in device tree.
+> 
+> That is one option. Or another option would be to have another node that
+> "adapts" a clk signal to a pwm provider. Similar to how we adapt a gpio
+> to make a clk gate or mux. Something like:
+> 
+> 	gcc: clock-controller@f00d {
+> 		reg = <0xf00d 0xd00d>;
+> 		#clock-cells = <1>;
+> 	};
+> 
+> 
+> 	pwm {
+> 		compatible = "pwm-clk";
+> 		#pwm-cells = <0>;
+> 		clocks = <&gcc 45>;
+> 		assigned-clocks = <&gcc 45>;
+> 		assigned-clock-rates = <1400000>;
+> 	};
+> 
+> And then the pwm-clk driver would adjust the duty cycle to generate a
+> pwm.
 
-This is already declared, so don't you want to remove the existing one.
+OK, that makes sense.
 
->  #else
->  static inline struct platform_device *of_find_device_by_node(struct device_node *np)
->  {
->         return NULL;
->  }
-> +static inline int of_platform_device_destroy(struct device *dev, void *data)
-> +{
-> +       return 0;
-> +}
+I'll pick this up after someone from Qualcomm posts a patch that
+implements the clock duty cycle. I'm willing to do that work if someone
+explains the relationship between the m, n, and d values on these clocks.
 
-I'm curious why this is needed, but of_platform_device_create() is not?
-
->  #endif
->
->  /* Platform devices and busses creation */
-> --
-> 2.20.0
->
+Brian
