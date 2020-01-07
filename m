@@ -2,212 +2,479 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6804C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 739E1C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 11:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651D020678
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B082081E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 11:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="PQj/zWbo"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yoMO425i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgAGK6o (ORCPT
+        id S1727273AbgAGLBs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:58:44 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:64698 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727857AbgAGK6o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 05:58:44 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007Aw4WS026227;
-        Tue, 7 Jan 2020 05:58:12 -0500
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xaneaeu6s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Jan 2020 05:58:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BrpdcTOSXfvmjBm7f0sU1YNH0BQTHrNFMac7aczIMjYRI21EoODQzHg2h8aZh2hJ+m3Mp9IKrJ4AF++k2UIWj8UpeND4Ynmm0PQPe+RJHsGv6DuXJUdQyeccXGKFWqwbuPxg/1s2GfnLUDTr0LHKX0804HWoEmIuPLrWe20G2V21Jfo0PgbpI1EABjfJgYoGXIVmWUHCyQHf+qCIjABbfK9K6cMd+JtwZO5kx1RL0J1R+H2gvR1qcThn1vWphsOiA5bisJ4hMUmpD2W5+GyXpPIubvlwgsOpzmdZ0nn1t5QzzHC3O7cnePp+grJkQ+pA8FYWHJVoT817KKs13f2/Aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/w43bNGP1KTpzQOQlde9YYZ1rTv4uuaVx1hOmF5i6RM=;
- b=fZuHNh2diT32F0nccuKwS/XoIbfv5u1iBDuBivRpQ9LMGXKEnAA2IGko2wF1pK3+AsDCTxaLnhw7XzSH1L8CE6g/jsKUJffEJY0IIehWsSI0/n6i6qNInGGxE+ppjSKfw+W9xAz5Dar7mfkCRxEnKkchJfP/s5jav7sgoTgrInqU08CWDzHk1qgUSr5iJRJzdsQCiyQu2i61DHYoY8avwgDpYmqXhClYbYyd6j5rVBx16ewWURgDmfVS7pYvKZLclk2dHkUaMSMkRdOJzoGfd7mey9q4BmYYueS2od1urh0RjtQRtflU0iuyD7jCFNNwXid1XyBBKhGaqdxtAccc1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/w43bNGP1KTpzQOQlde9YYZ1rTv4uuaVx1hOmF5i6RM=;
- b=PQj/zWbooavZxMy1zYAdhlDXxQ/vzN43CY22rL1RmXZM4rDct4Iycx+BdlaLuP6POgvlYNPtBCVDu+578HSK+cWAofnLFvt63my4NATdZADbPSkxgQM8J/RGyil0V+3S5NrPfujYKtmdnoyUjFLA0tRxRwXjMWzoqksLSTnmxjM=
-Received: from BN3PR03CA0078.namprd03.prod.outlook.com
- (2a01:111:e400:7a4d::38) by BYAPR03MB4310.namprd03.prod.outlook.com
- (2603:10b6:a03:c1::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.13; Tue, 7 Jan
- 2020 10:58:09 +0000
-Received: from CY1NAM02FT019.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::204) by BN3PR03CA0078.outlook.office365.com
- (2a01:111:e400:7a4d::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2602.12 via Frontend
- Transport; Tue, 7 Jan 2020 10:58:09 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT019.mail.protection.outlook.com (10.152.75.177) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2602.11
- via Frontend Transport; Tue, 7 Jan 2020 10:58:09 +0000
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id 007Aw8f4011473
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 7 Jan 2020 02:58:08 -0800
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 7 Jan 2020
- 05:58:07 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 7 Jan 2020 02:58:07 -0800
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 007Avvmn002960;
-        Tue, 7 Jan 2020 05:58:03 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <linux-hwmon@vger.kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <linux-kernel@vger.kernel.org>,
-        <jdelvare@suse.com>, <linux@roeck-us.net>, <mark.rutland@arm.com>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v3 2/3] dt-binding: hwmon: Add documentation for ADM1177
-Date:   Tue, 7 Jan 2020 12:59:28 +0200
-Message-ID: <20200107105929.18938-2-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107105929.18938-1-beniamin.bia@analog.com>
-References: <20200107105929.18938-1-beniamin.bia@analog.com>
+        Tue, 7 Jan 2020 06:01:48 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:58950 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbgAGLBr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 06:01:47 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 007B1jYx060765;
+        Tue, 7 Jan 2020 05:01:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578394905;
+        bh=ArL1wxVPn2fXNIPXWN2Nq4lDw2Po95F8fKiIcNMW/PY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yoMO425id0Qqi31MWfqifTqgrueeseDz35wWA6HfILIjEISAPAopUFRHerRISqwH3
+         BsO6v00b7Y46MFlBqqxQBdeuLkQUgwgbJkGqU8RM6btOvUjMi68V4tKftzE1WVK8zl
+         sOIP1nXQNaWLhG6U5mg9ZbYZDPjGrojN+3y/hCio=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 007B1jHU043765
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 7 Jan 2020 05:01:45 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 7 Jan
+ 2020 05:01:44 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 7 Jan 2020 05:01:44 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 007B1f7B047378;
+        Tue, 7 Jan 2020 05:01:42 -0600
+Subject: Re: [RESEND PATCHv4 01/14] dt-bindings: remoteproc: Add OMAP
+ remoteproc bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mathieu.poirier@linaro.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>, <devicetree@vger.kernel.org>
+References: <20200102131845.12992-2-t-kristo@ti.com>
+ <20200102132512.13248-1-t-kristo@ti.com> <20200103233855.GA19897@bogus>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <358abb44-7724-4e25-6a3d-6939ec82386a@ti.com>
+Date:   Tue, 7 Jan 2020 13:01:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(376002)(346002)(136003)(189003)(199004)(7636002)(966005)(2616005)(86362001)(44832011)(4326008)(6916009)(5660300002)(1076003)(54906003)(336012)(26005)(36756003)(426003)(186003)(478600001)(356004)(6666004)(7696005)(246002)(2906002)(107886003)(8676002)(8936002)(70206006)(70586007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4310;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 47d145a4-f998-4854-4767-08d793607b57
-X-MS-TrafficTypeDiagnostic: BYAPR03MB4310:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB4310CB29011A53ECA416844FF03F0@BYAPR03MB4310.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 027578BB13
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /HfVkCLlujx2uYkwNF6CietrQ4Zu4fRzPiTucfs8nb/ggzXXQxFUK4lxNdAB9I9Qpe2uSmrDVFZfaoKTJpSv21ajRhwN/L9GaarExBSEDqA+Qp0rhVgak9v7GS8e2OuPZrdibAvvgLXmUb/Z/KReUiwfqogomkYeB4pFMVAMQR/zPSWbOl51wZ2rJY+uGtZXjUlASuD50iabsp2aOCHmb3njcFrdO/7ZzD4bpAP1kfxVQgpzdlcEISuYT6EWWATHNOmYRsaWxAyxCr78nupgkR/jzFQEvI8U+SohQ4yIi5dhjRDajdRecwlHIrWCBM25hkPWeVxOQ3ThNM2wHSS2lOOEBfmMNkgs4tqL5nZAesQ+VdOBLC7hR5WM7eoQme1DB6ZgrqY035RFokY95Jgn1M0mJMOgLpKELyvCWvWR60CIXZPZC5L3mNAM4k9KYLCGazA+FpRTOhTc1Bv9lVjrNiEbTPDvf+NlD0hPtykN3EU=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2020 10:58:09.0271
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47d145a4-f998-4854-4767-08d793607b57
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4310
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-07_02:2020-01-06,2020-01-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 adultscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
- spamscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001070088
+In-Reply-To: <20200103233855.GA19897@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Documentation for ADM1177 was added.
+On 04/01/2020 01:38, Rob Herring wrote:
+> On Thu, Jan 02, 2020 at 03:25:12PM +0200, Tero Kristo wrote:
+>> From: Suman Anna <s-anna@ti.com>
+>>
+>> Add the device tree bindings document for the IPU and DSP
+>> remote processor devices on OMAP4+ SoCs.
+>>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> [t-kristo@ti.com: converted to schema]
+>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>> ---
+>> v4: added ti,bootreg-shift and ti,autosuspend-delay properties
+>>
+>>   .../remoteproc/ti,omap-remoteproc.yaml        | 329 ++++++++++++++++++
+>>   1 file changed, 329 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+>> new file mode 100644
+>> index 000000000000..f53d58efaae3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+>> @@ -0,0 +1,329 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/remoteproc/ti,omap-remoteproc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: OMAP4+ Remoteproc Devices
+>> +
+>> +maintainers:
+>> +  - Suman Anna <s-anna@ti.com>
+>> +
+>> +description:
+>> +  The OMAP family of SoCs usually have one or more slave processor sub-systems
+>> +  that are used to offload some of the processor-intensive tasks, or to manage
+>> +  other hardware accelerators, for achieving various system level goals.
+>> +
+>> +  The processor cores in the sub-system are usually behind an IOMMU, and may
+>> +  contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+>> +  caches, an Interrupt Controller, a Cache Controller etc.
+>> +
+>> +  The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+>> +  sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+>> +  C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+>> +  sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core
+>> +  Cortex-M4 processors.
+>> +
+>> +  Each remote processor sub-system is represented as a single DT node. Each node
+>> +  has a number of required or optional properties that enable the OS running on
+>> +  the host processor (MPU) to perform the device management of the remote
+>> +  processor and to communicate with the remote processor. The various properties
+>> +  can be classified as constant or variable. The constant properties are
+>> +  dictated by the SoC and does not change from one board to another having the
+>> +  same SoC. Examples of constant properties include 'iommus', 'reg'. The
+>> +  variable properties are dictated by the system integration aspects such as
+>> +  memory on the board, or configuration used within the corresponding firmware
+>> +  image. Examples of variable properties include 'mboxes', 'memory-region',
+>> +  'timers', 'watchdog-timers' etc.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ti,omap4-dsp
+>> +      - ti,omap5-dsp
+>> +      - ti,dra7-dsp
+>> +      - ti,omap4-ipu
+>> +      - ti,omap5-ipu
+>> +      - ti,dra7-ipu
+>> +
+>> +  iommus:
+>> +    minItems: 1
+>> +    maxItems: 2
+>> +    description: |
+>> +      phandles to OMAP IOMMU nodes, that need to be programmed
+>> +      for this remote processor to access any external RAM memory or
+>> +      other peripheral device address spaces. This property usually
+>> +      has only a single phandle. Multiple phandles are used only in
+>> +      cases where the sub-system has different ports for different
+>> +      sub-modules within the processor sub-system (eg: DRA7 DSPs),
+>> +      and need the same programming in both the MMUs.
+>> +
+>> +  mboxes:
+>> +    minItems: 1
+>> +    maxItems: 2
+>> +    description: |
+>> +      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+>> +      communication with the remote processor. The specifier format is
+>> +      as per the bindings,
+>> +      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+>> +      This property should match with the sub-mailbox node used in
+>> +      the firmware image.
+>> +
+>> +  clocks:
+>> +    description: |
+>> +      Main functional clock for the remote processor
+>> +
+>> +  resets:
+>> +    description: |
+>> +      Reset handles for the remote processor
+>> +
+>> +  memory-region:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description: |
+>> +      phandle to the reserved memory node to be associated
+>> +      with the remoteproc device. The reserved memory node
+>> +      can be a CMA memory node, and should be defined as
+>> +      per the bindings,
+>> +      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+>> +
+>> +  firmware-name:
+>> +    description: |
+>> +      Default name of the firmware to load to the remote processor.
+>> +
+>> +# Optional properties:
+>> +# --------------------
+>> +# Some of these properties are mandatory on some SoCs, and some are optional
+>> +# depending on the configuration of the firmware image to be executed on the
+>> +# remote processor. The conditions are mentioned for each property.
+>> +#
+>> +# The following are the optional properties:
+>> +
+>> +  reg:
+>> +    description: |
+>> +      Address space for any remoteproc memories present on
+>> +      the SoC. Should contain an entry for each value in
+>> +      'reg-names'. These are mandatory for all DSP and IPU
+>> +      processors that have them (OMAP4/OMAP5 DSPs do not have
+>> +      any RAMs)
+>> +
+>> +  reg-names:
+>> +    description: |
+>> +      Required names for each of the address spaces defined in
+>> +      the 'reg' property. Should contain a string from among
+>> +      the following names, each representing the corresponding
+>> +      internal RAM memory region.
+> 
+> The schema is more constrained than 'a string from among the following
+> names'. 'l2ram' is the only valid 1st entry for example.
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in v3:
--nothing changed
+Right, I wasn't able to figure out a way to make the schema more 
+flexible, so I will just modify the description above.
 
- .../bindings/hwmon/adi,adm1177.yaml           | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
+> 
+>> +    minItems: 1
+>> +    maxItems: 3
+>> +    items:
+>> +      - const: l2ram
+>> +      - const: l1pram
+>> +      - const: l1dram
+>> +
+>> +  ti,bootreg:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description: |
+>> +      Should be a pair of the phandle to the System Control
+>> +      Configuration region that contains the boot address
+>> +      register, and the register offset of the boot address
+>> +      register within the System Control module. This property
+>> +      is required for all the DSP instances on OMAP4, OMAP5
+>> +      and DRA7xx SoCs.
+>> +
+>> +  ti,bootreg-shift:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Describes the bit position of the boot address field within
+>> +      the ti,bootreg.
+> 
+> Just make this a 2nd cell value for ti,bootreg. There's nothing to gain
+> with 2 properties.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-new file mode 100644
-index 000000000000..65ef95328bc6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/adi,adm1177.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
-+
-+maintainers:
-+  - Michael Hennerich <michael.hennerich@analog.com>
-+  - Beniamin Bia <beniamin.bia@analog.com>
-+
-+description: |
-+  Analog Devices ADM1177 Hot Swap Controller and Digital Power Monitor
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1177.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adm1177
-+
-+  reg:
-+    maxItems: 1
-+
-+  avcc-supply:
-+    description:
-+      Phandle to the Avcc power supply
-+
-+  shunt-resistor-micro-ohms:
-+    description:
-+      The value of curent sense resistor in microohms. If not provided,
-+      the current reading and overcurrent alert is disabled.
-+
-+  adi,shutdown-threshold-microamp:
-+    description:
-+      Specifies the current level at which an over current alert occurs.
-+      If not provided, the overcurrent alert is configured to max ADC range
-+      based on shunt-resistor-micro-ohms.
-+
-+  adi,vrange-high-enable:
-+    description:
-+      Specifies which internal voltage divider to be used. A 1 selects
-+      a 7:2 voltage divider while a 0 selects a 14:1 voltage divider.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pwmon@5a {
-+                compatible = "adi,adm1177";
-+                reg = <0x5a>;
-+		shunt-resistor-micro-ohms = <50000>; /* 50 mOhm */
-+                adi,shutdown-threshold-microamp = <1059000>; /* 1.059 A */
-+                adi,vrange-high-enable;
-+        };
-+    };
-+...
--- 
-2.17.1
+Ok.
 
+> 
+>> +
+>> +  ti,autosuspend-delay:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Custom autosuspend delay for the remoteproc in milliseconds.
+> 
+> Needs a standard unit suffix and then you can drop the type.
+
+Yeah, that seems to work.
+
+> 
+>> +
+>> +  ti,timers:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description: |
+>> +      One or more phandles to OMAP DMTimer nodes, that serve
+>> +      as System/Tick timers for the OS running on the remote
+>> +      processors. This will usually be a single timer if the
+>> +      processor sub-system is running in SMP mode, or one per
+>> +      core in the processor sub-system. This can also be used
+>> +      to reserve specific timers to be dedicated to the
+>> +      remote processors.
+>> +
+>> +      This property is mandatory on remote processors requiring
+>> +      external tick wakeup, and to support Power Management
+>> +      features. The timers to be used should match with the
+>> +      timers used in the firmware image.
+>> +
+>> +  ti,watchdog-timers:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    description: |
+>> +      One or more phandles to OMAP DMTimer nodes, used to
+>> +      serve as Watchdog timers for the processor cores. This
+>> +      will usually be one per executing processor core, even
+>> +      if the processor sub-system is running a SMP OS.
+>> +
+>> +      The timers to be used should match with the watchdog
+>> +      timers used in the firmware image.
+>> +
+>> +if:
+>> +  properties:
+>> +    compatible:
+>> +      enum:
+>> +        - ti,dra7-dsp
+>> +then:
+>> +  properties:
+>> +    reg:
+>> +      minItems: 3
+>> +      maxItems: 3
+>> +    ti,bootreg:
+>> +      minItems: 1
+>> +      maxItems: 1
+> 
+> What are you trying to express here? That ti,bootreg is only 1
+> phandle+args or it's only a phandle (with no arg cells)? This does the
+> former (I think), but I'm not clear when it would be more than 1.
+
+Yeah, ti,bootreg is only a single entry of a phandle + args. However, it 
+seems like this tweak does not work, so I will just drop it.
+
+> 
+>> +    ti,bootreg-shift:
+>> +      minItems: 1
+>> +      maxItems: 1
+>> +
+>> +else:
+>> +  if:
+>> +    properties:
+>> +      compatible:
+>> +        enum:
+>> +          - ti,omap4-ipu
+>> +          - ti,omap5-ipu
+>> +          - ti,dra7-ipu
+>> +  then:
+>> +    properties:
+>> +      reg:
+>> +        minItems: 1
+>> +        maxItems: 1
+>> +
+>> +  else:
+>> +    properties:
+>> +      reg:
+>> +        maxItems: 0
+> 
+> This is not how you express 'reg' is not present. You want 'reg: false'.
+
+Ok will fix this.
+
+> Also, I assume for some compatibles, 'reg' is required which you haven't
+> expressed.
+
+Hmm, ok, I was assuming just setting the min/maxItems does this but it 
+doesn't, I'll extend the required prop based on compatible for the ones 
+that need them.
+
+-Tero
+
+> 
+>> +      ti,bootreg:
+>> +        minItems: 1
+>> +        maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - iommus
+>> +  - mboxes
+>> +  - memory-region
+>> +  - clocks
+>> +  - resets
+>> +  - firmware-name
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +
+>> +    //Example 1: OMAP4 DSP
+>> +
+>> +    /* DSP Reserved Memory node */
+>> +    #include <dt-bindings/clock/omap4.h>
+>> +    reserved-memory {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +
+>> +        dsp_memory_region: dsp-memory@98000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x98000000 0x800000>;
+>> +            reusable;
+>> +        };
+>> +    };
+>> +
+>> +    /* DSP node */
+>> +    ocp {
+>> +        dsp: dsp {
+>> +            compatible = "ti,omap4-dsp";
+>> +            ti,bootreg = <&scm_conf 0x304>;
+>> +            iommus = <&mmu_dsp>;
+>> +            mboxes = <&mailbox &mbox_dsp>;
+>> +            memory-region = <&dsp_memory_region>;
+>> +            ti,timers = <&timer5>;
+>> +            ti,watchdog-timers = <&timer6>;
+>> +            clocks = <&tesla_clkctrl OMAP4_DSP_CLKCTRL 0>;
+>> +            resets = <&prm_tesla 0>, <&prm_tesla 1>;
+>> +            firmware-name = "omap4-dsp-fw.xe64T";
+>> +        };
+>> +    };
+>> +
+>> +  - |+
+>> +
+>> +    //Example 2: OMAP5 IPU
+>> +
+>> +    /* IPU Reserved Memory node */
+>> +    #include <dt-bindings/clock/omap5.h>
+>> +    reserved-memory {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        ipu_memory_region: ipu-memory@95800000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0 0x95800000 0 0x3800000>;
+>> +            reusable;
+>> +        };
+>> +    };
+>> +
+>> +    /* IPU node */
+>> +    ocp {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +
+>> +        ipu: ipu@55020000 {
+>> +            compatible = "ti,omap5-ipu";
+>> +            reg = <0x55020000 0x10000>;
+>> +            reg-names = "l2ram";
+>> +            iommus = <&mmu_ipu>;
+>> +            mboxes = <&mailbox &mbox_ipu>;
+>> +            memory-region = <&ipu_memory_region>;
+>> +            ti,timers = <&timer3>, <&timer4>;
+>> +            ti,watchdog-timers = <&timer9>, <&timer11>;
+>> +            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
+>> +            resets = <&prm_core 2>;
+>> +            firmware-name = "omap5-ipu-fw.xem";
+>> +        };
+>> +    };
+>> +
+>> +  - |+
+>> +
+>> +    //Example 3: DRA7xx/AM57xx DSP
+>> +
+>> +    /* DSP1 Reserved Memory node */
+>> +    #include <dt-bindings/clock/dra7.h>
+>> +    reserved-memory {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        dsp1_memory_region: dsp1-memory@99000000 {
+>> +            compatible = "shared-dma-pool";
+>> +            reg = <0x0 0x99000000 0x0 0x4000000>;
+>> +            reusable;
+>> +        };
+>> +    };
+>> +
+>> +    /* DSP1 node */
+>> +    ocp {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +
+>> +        dsp1: dsp@40800000 {
+>> +            compatible = "ti,dra7-dsp";
+>> +            reg = <0x40800000 0x48000>,
+>> +                  <0x40e00000 0x8000>,
+>> +                  <0x40f00000 0x8000>;
+>> +            reg-names = "l2ram", "l1pram", "l1dram";
+>> +            ti,bootreg = <&scm_conf 0x55c>;
+>> +            iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
+>> +            mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
+>> +            memory-region = <&dsp1_memory_region>;
+>> +            ti,timers = <&timer5>;
+>> +            ti,watchdog-timers = <&timer10>;
+>> +            resets = <&prm_dsp1 0>;
+>> +            clocks = <&dsp1_clkctrl DRA7_DSP1_MMU0_DSP1_CLKCTRL 0>;
+>> +            firmware-name = "dra7-dsp1-fw.xe66";
+>> +        };
+>> +    };
+>> -- 
+>> 2.17.1
+>>
+>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
