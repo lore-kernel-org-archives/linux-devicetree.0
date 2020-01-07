@@ -2,41 +2,44 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C5AC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BCFC33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0AF2080A
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DDE2081E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 04:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e1V/rvdn"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qjRirQyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgAGEOY (ORCPT
+        id S1727631AbgAGEOe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 6 Jan 2020 23:14:24 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6478 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbgAGEOY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 23:14:24 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e14058d0000>; Mon, 06 Jan 2020 20:14:05 -0800
+        Mon, 6 Jan 2020 23:14:34 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4693 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbgAGEOd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 6 Jan 2020 23:14:33 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1405970000>; Mon, 06 Jan 2020 20:14:15 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 06 Jan 2020 20:14:22 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 06 Jan 2020 20:14:32 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 06 Jan 2020 20:14:22 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+        by hqpgpgate102.nvidia.com on Mon, 06 Jan 2020 20:14:32 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
- 2020 04:14:22 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 7 Jan 2020 04:14:22 +0000
+ 2020 04:14:31 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 7 Jan
+ 2020 04:14:31 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 7 Jan 2020 04:14:31 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.171.88]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e14059d0004>; Mon, 06 Jan 2020 20:14:22 -0800
+        id <B5e1405a50001>; Mon, 06 Jan 2020 20:14:31 -0800
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <broonie@kernel.org>,
@@ -50,218 +53,521 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <markz@nvidia.com>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 00/19] Move PMC clocks into Tegra PMC driver
-Date:   Mon, 6 Jan 2020 20:13:59 -0800
-Message-ID: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v6 09/19] clk: tegra: Remove tegra_pmc_clk_init along with clk ids
+Date:   Mon, 6 Jan 2020 20:14:08 -0800
+Message-ID: <1578370458-3686-10-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
+References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
 X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578370445; bh=j/W/Iw/pMw+XAm0wZvs92EVWGyWToBN6qPIX0iKmQKA=;
+        t=1578370455; bh=Po0nzNOOrFqs2sbRT74sDlrGCKNPJkZOjLt62u3xsNs=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=e1V/rvdn21JvQ7F7kTAqw5fc2Y5aBm+r7o/hF7Mwpld3w+fwD8kYtN7FxxodsjEMx
-         oyFeJGUnjJnBSO8ADxKiMLtk/xcPNmgDTep6Pz6bG7abCCVZ+SGKiKlvhAwVEz3qtK
-         fhziRKkAS2tCgH8hrIoZk/QI+T+7Q2IbzQ3wFIXQgfPSbvUPtz5Y3gw24sJ/FGlL0a
-         NaP+ILmJMQEMzg8Zv0HyynnV1Xrdo9BvK+ak5S5jQ836KD8OFbjbkoVQZnQTRD+28N
-         hGOdltT6nhQIoLzuxPfrMDyHA7Pn58lOY5HOy7Dkpt4IXoiIZbFFzT+hyqTtbg/BfV
-         qfetGRkxwqZAQ==
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=qjRirQyLWcwk2jxHHYaSq3/j7j/KdHx6d1GL17Qp7Lg8VDBxEiVV4JYtJQmUgIKqa
+         oNIn+clIU08RcQk0kPgbCb2XrxT7sGlI65P/wtZ/JbVep5SekrUl5+Cmw6j8jH2/uc
+         FurGf7rXi5dOLIsoLQcRA7w60OQT5lCiVy4VIXsA5+z92/uvn/O7BO/eRneXr02YMX
+         ElXKhgPClO4clVw2hsPyAKDEAkPvAYX0GaifBVTwjGTjdAv3tf4SV8fazqsd8XwXEH
+         yPIRpM2pQe6MJYTazcVOotkJKYQR37tguhHsYn2ZaWOh4a6drOrjw0k12V3rPeaJ3u
+         E5OXyIRqaZojw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series moves Tegra PMC clocks from clock driver to pmc driver
-along with the device trees changes and audio driver which uses one of
-the pmc clock for audio mclk.
+Current Tegra clock driver registers PMC clocks clk_out_1, clk_out_2,
+clk_out_3 and 32KHz blink output in tegra_pmc_init() which does direct
+PMC register access during clk_ops and these PMC register read and write
+access will not happen when PMC is in secure mode.
 
-Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
-are currently registered by Tegra clock driver using clk_regiser_mux and
-clk_register_gate which performs direct Tegra PMC register access.
+Any direct PMC register access from non-secure world will not go
+through.
 
-When Tegra PMC is in secure mode, any access from non-secure world will
-not go through.
+All the PMC clocks are moved to Tegra PMC driver with PMC as a clock
+provider.
 
-This patch series adds these Tegra PMC clocks and blink controls to Tegra
-PMC driver with PMC as clock provider and removes them from Tegra clock
-driver.
+This patch removes tegra_pmc_clk_init along with corresponding clk ids
+from Tegra clock driver.
 
-PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru Tegra210
-and clock driver does inital parent configuration for it and enables them.
-But this clock should be taken care by audio driver as there is no need
-to have this clock pre enabled.
-
-So, this series also includes patch that updates ASoC driver to take
-care of parent configuration for mclk if device tree don't specify
-initial parent configuration using assigned-clock-parents and controls
-audio mclk enable/disable during ASoC machine startup and shutdown.
-
-DTs are also updated to use clk_out_1 as audio mclk rather than extern1.
-
-This series also includes a patch for mclk fallback to extern1 when
-retrieving mclk fails to have this backward compatible of new DT with
-old kernels.
-
-[v6]:	Changes between v5 and v6 are
-	- v5 feedback
-	- Added ASoC machine startup and shutdown callbacks to control audio
-	  mclk enable/disable and removed default mclk enable from clock driver.
-	- Updated tegra_asoc_utils_set_rate to disable mclk only during PLLA
-	  rate change and removed disabling PLLA as its already taken care by
-	  pll clock driver.
-	- Removed tegra_asoc_utils_set_rate call from utils_init as set_rate
-	  is set during machine hw_params and during utils_init mclk is
-	  already in disabled state and this causes warning during mclk disable
-	  in utils_set_rate.
-
-[v5]:	Changes between v4 and v5 are
-	- v4 feedback
-	- updated dt-binding pmc YAML schema with more description on power
-	  gate nodes and pad configuration state nodes.
-	- update tegra_asoc_utils_set_rate to disable audio mclk only if
-	  its in enable state.
-
-[v4]:	Changes between v3 and v4 are
-	- v3 Feedback
-	- Updated clocks clk_m_div2 and clk_m_div4 as osc_div2 and osc_div4.
-	  Tegra don't have clk_m_div2, clk_m_div4 and they should actually
-	  be osc_div2 and osc_div4 clocks from osc pads.
-	- Fixed PMC clock parents to use osc, osc_div2, osc_div4.
-	- Register each PMC clock as single clock rather than separate
-	  mux and gate clocks.
-	- Update ASoC utils to use resource managed APIs rather than
-	  using clk_get and clk_put.
-	- Updated device tree and ASoC driver to use clk_out_1 instead of
-	  clk_out_1_mux as PMC clocks are registered as single clock.
-	- Update clock driver init_table to not enable audio related clocks
-	  as ASoC utils will do audio clock enables.
-
-[v3]:	Changes between v2 and v3 are
-	- Removes set parent of clk_out_1_mux to extern1 and enabling
-	  extern1 from the clock driver.
-	- Doesn't enable clk_out_1 and blink by default in pmc driver
-	- Updates ASoC driver to take care of audio mclk parent
-	  configuration incase if device tree don't specify assigned
-	  clock parent properties and enables mclk using both clk_out_1
-	  and extern1.
-	- updates all device trees using extern1 as mclk in sound node
-	  to use clk_out_1 from pmc.
-	- patch for YAML format pmc dt-binding
-	- Includes v2 feedback
-
-[v2]:	Changes between v1 and v2 are
-	- v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
-	  blink controls to Tegra PMC driver and removing clk-tegra-pmc.
-	- feedback related to pmc clocks in Tegra PMC driver from v1
-	- Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC programming
-	  by the clock driver using helper functions from Tegra PMC.
-
- 	  Note:
-	  To use helper functions from PMC driver, PMC early init need to
-	  happen prior to using helper functions and these helper functions are
-	  for PLLM Override and PLLE IDDQ programming in PMC during PLLM/PLLE
-	  clock registration which happen in clock_init prior to Tegra PMC
-	  probe.
-	  Moving PLLM/PLLE clocks registration to happen after Tegra PMC
-	  impacts other clocks EMC, MC and corresponding tegra_emc_init and
-	  tegra_mc_init.
-	  This implementation of configuring PMC registers thru helper
-	  functions in clock driver needs proper changes across PMC, Clock,
-	  EMC and MC inits to have it work across all Tegra platforms.
-
-	  Currently PLLM Override is not enabled in the bootloader so proper
-	  patches for this fix will be taken care separately.
-
-[v1]:	v1 includes patches for below fixes.
-	- adding clk_out_1, clk_out_2, clk_out_3, blink controls to Tegra PMC
-	  driver and removing clk-tegra-pmc.
-	- updated clock provider from tegra_car to pmc in the device tree
-	  tegra210-smaug.dts that uses clk_out_2.
-	- Added helper functions in PMC driver for WB0 PLLM overrides and PLLE
-	  IDDQ programming to use by clock driver and updated clock driver to
-	  use these helper functions and removed direct PMC access from clock
-	  driver and all pmc base address references in clock driver.
-
-
-
-
-Sowjanya Komatineni (19):
-  dt-bindings: clock: tegra: Change CLK_M_DIV to OSC_DIV clocks
-  clk: tegra: Change CLK_M_DIV clocks to OSC_DIV clocks
-  clk: tegra: Fix Tegra PMC clock out parents
-  dt-bindings: tegra: Convert Tegra PMC bindings to YAML
-  dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
-  soc: tegra: Add Tegra PMC clocks registration into PMC driver
-  dt-bindings: soc: tegra-pmc: Add id for Tegra PMC 32KHz blink clock
-  soc: tegra: Add support for 32KHz blink clock
-  clk: tegra: Remove tegra_pmc_clk_init along with clk ids
-  dt-bindings: clock: tegra: Remove pmc clock ids from clock dt-bindings
-  ASoC: tegra: Use device managed resource APIs to get the clock
-  ASoC: tegra: Add audio mclk configuration
-  ASoC: tegra: Add fallback implementation for audio mclk
-  clk: tegra: Remove audio related clock enables from init_table
-  ARM: dts: tegra: Add clock-cells property to pmc
-  arm64: tegra: Add clock-cells property to Tegra PMC node
-  ARM: tegra: Update sound node clocks in device tree
-  arm64: tegra: smaug: Change clk_out_2 provider to pmc
-  ASoC: nau8825: change Tegra clk_out_2 provider from tegra_car to pmc
-
- .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 300 -----------------
- .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml     | 354 +++++++++++++++++++++
- .../devicetree/bindings/sound/nau8825.txt          |   2 +-
- arch/arm/boot/dts/tegra114-dalmore.dts             |   8 +-
- arch/arm/boot/dts/tegra114.dtsi                    |   4 +-
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi        |   8 +-
- arch/arm/boot/dts/tegra124-apalis.dtsi             |   8 +-
- arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   8 +-
- arch/arm/boot/dts/tegra124-nyan.dtsi               |   8 +-
- arch/arm/boot/dts/tegra124-venice2.dts             |   8 +-
- arch/arm/boot/dts/tegra124.dtsi                    |   4 +-
- arch/arm/boot/dts/tegra20.dtsi                     |   4 +-
- arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi         |   8 +-
- arch/arm/boot/dts/tegra30-apalis.dtsi              |   8 +-
- arch/arm/boot/dts/tegra30-beaver.dts               |   8 +-
- arch/arm/boot/dts/tegra30-cardhu.dtsi              |   8 +-
- arch/arm/boot/dts/tegra30-colibri.dtsi             |   8 +-
- arch/arm/boot/dts/tegra30.dtsi                     |   4 +-
- arch/arm64/boot/dts/nvidia/tegra132.dtsi           |   4 +-
- arch/arm64/boot/dts/nvidia/tegra210-smaug.dts      |   2 +-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +-
- drivers/clk/tegra/Makefile                         |   1 -
- drivers/clk/tegra/clk-id.h                         |  11 +-
- drivers/clk/tegra/clk-tegra-fixed.c                |  32 +-
- drivers/clk/tegra/clk-tegra-pmc.c                  | 122 -------
- drivers/clk/tegra/clk-tegra114.c                   |  41 +--
- drivers/clk/tegra/clk-tegra124.c                   |  46 +--
- drivers/clk/tegra/clk-tegra20.c                    |   9 +-
- drivers/clk/tegra/clk-tegra210.c                   |  30 +-
- drivers/clk/tegra/clk-tegra30.c                    |  31 +-
- drivers/clk/tegra/clk.h                            |   1 -
- drivers/soc/tegra/pmc.c                            | 352 ++++++++++++++++++++
- include/dt-bindings/clock/tegra114-car.h           |  18 +-
- include/dt-bindings/clock/tegra124-car-common.h    |  18 +-
- include/dt-bindings/clock/tegra20-car.h            |   2 +-
- include/dt-bindings/clock/tegra210-car.h           |  18 +-
- include/dt-bindings/clock/tegra30-car.h            |  18 +-
- include/dt-bindings/soc/tegra-pmc.h                |  16 +
- sound/soc/tegra/tegra_alc5632.c                    |  28 +-
- sound/soc/tegra/tegra_asoc_utils.c                 | 125 ++++----
- sound/soc/tegra/tegra_asoc_utils.h                 |   3 +-
- sound/soc/tegra/tegra_max98090.c                   |  43 ++-
- sound/soc/tegra/tegra_rt5640.c                     |  43 ++-
- sound/soc/tegra/tegra_rt5677.c                     |  28 +-
- sound/soc/tegra/tegra_sgtl5000.c                   |  28 +-
- sound/soc/tegra/tegra_wm8753.c                     |  43 ++-
- sound/soc/tegra/tegra_wm8903.c                     |  43 ++-
- sound/soc/tegra/tegra_wm9712.c                     |   8 +-
- sound/soc/tegra/trimslice.c                        |  39 ++-
- 49 files changed, 1192 insertions(+), 777 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/clk/tegra/Makefile        |   1 -
+ drivers/clk/tegra/clk-id.h        |   7 ---
+ drivers/clk/tegra/clk-tegra-pmc.c | 122 --------------------------------------
+ drivers/clk/tegra/clk-tegra114.c  |  17 +-----
+ drivers/clk/tegra/clk-tegra124.c  |  33 ++++-------
+ drivers/clk/tegra/clk-tegra20.c   |   4 --
+ drivers/clk/tegra/clk-tegra210.c  |  17 +-----
+ drivers/clk/tegra/clk-tegra30.c   |  18 +-----
+ drivers/clk/tegra/clk.h           |   1 -
+ 9 files changed, 19 insertions(+), 201 deletions(-)
  delete mode 100644 drivers/clk/tegra/clk-tegra-pmc.c
- create mode 100644 include/dt-bindings/soc/tegra-pmc.h
 
+diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+index df966ca06788..1f7c30f87ece 100644
+--- a/drivers/clk/tegra/Makefile
++++ b/drivers/clk/tegra/Makefile
+@@ -12,7 +12,6 @@ obj-y					+= clk-sdmmc-mux.o
+ obj-y					+= clk-super.o
+ obj-y					+= clk-tegra-audio.o
+ obj-y					+= clk-tegra-periph.o
+-obj-y					+= clk-tegra-pmc.o
+ obj-y					+= clk-tegra-fixed.o
+ obj-y					+= clk-tegra-super-gen4.o
+ obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
+index 1bf21766d3e8..c82f8ce9e93e 100644
+--- a/drivers/clk/tegra/clk-id.h
++++ b/drivers/clk/tegra/clk-id.h
+@@ -32,7 +32,6 @@ enum clk_id {
+ 	tegra_clk_audio4,
+ 	tegra_clk_audio4_2x,
+ 	tegra_clk_audio4_mux,
+-	tegra_clk_blink,
+ 	tegra_clk_bsea,
+ 	tegra_clk_bsev,
+ 	tegra_clk_cclk_g,
+@@ -46,12 +45,6 @@ enum clk_id {
+ 	tegra_clk_clk_m,
+ 	tegra_clk_osc_div2,
+ 	tegra_clk_osc_div4,
+-	tegra_clk_clk_out_1,
+-	tegra_clk_clk_out_1_mux,
+-	tegra_clk_clk_out_2,
+-	tegra_clk_clk_out_2_mux,
+-	tegra_clk_clk_out_3,
+-	tegra_clk_clk_out_3_mux,
+ 	tegra_clk_cml0,
+ 	tegra_clk_cml1,
+ 	tegra_clk_csi,
+diff --git a/drivers/clk/tegra/clk-tegra-pmc.c b/drivers/clk/tegra/clk-tegra-pmc.c
+deleted file mode 100644
+index 5e044ba1ae36..000000000000
+--- a/drivers/clk/tegra/clk-tegra-pmc.c
++++ /dev/null
+@@ -1,122 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * Copyright (c) 2012, 2013, NVIDIA CORPORATION.  All rights reserved.
+- */
+-
+-#include <linux/io.h>
+-#include <linux/clk-provider.h>
+-#include <linux/clkdev.h>
+-#include <linux/of.h>
+-#include <linux/of_address.h>
+-#include <linux/delay.h>
+-#include <linux/export.h>
+-#include <linux/clk/tegra.h>
+-
+-#include "clk.h"
+-#include "clk-id.h"
+-
+-#define PMC_CLK_OUT_CNTRL 0x1a8
+-#define PMC_DPD_PADS_ORIDE 0x1c
+-#define PMC_DPD_PADS_ORIDE_BLINK_ENB 20
+-#define PMC_CTRL 0
+-#define PMC_CTRL_BLINK_ENB 7
+-#define PMC_BLINK_TIMER 0x40
+-
+-struct pmc_clk_init_data {
+-	char *mux_name;
+-	char *gate_name;
+-	const char **parents;
+-	int num_parents;
+-	int mux_id;
+-	int gate_id;
+-	char *dev_name;
+-	u8 mux_shift;
+-	u8 gate_shift;
+-};
+-
+-#define PMC_CLK(_num, _mux_shift, _gate_shift)\
+-	{\
+-		.mux_name = "clk_out_" #_num "_mux",\
+-		.gate_name = "clk_out_" #_num,\
+-		.parents = clk_out ##_num ##_parents,\
+-		.num_parents = ARRAY_SIZE(clk_out ##_num ##_parents),\
+-		.mux_id = tegra_clk_clk_out_ ##_num ##_mux,\
+-		.gate_id = tegra_clk_clk_out_ ##_num,\
+-		.dev_name = "extern" #_num,\
+-		.mux_shift = _mux_shift,\
+-		.gate_shift = _gate_shift,\
+-	}
+-
+-static DEFINE_SPINLOCK(clk_out_lock);
+-
+-static const char *clk_out1_parents[] = { "osc", "osc_div2",
+-	"osc_div4", "extern1",
+-};
+-
+-static const char *clk_out2_parents[] = { "osc", "osc_div2",
+-	"osc_div4", "extern2",
+-};
+-
+-static const char *clk_out3_parents[] = { "osc", "osc_div2",
+-	"osc_div4", "extern3",
+-};
+-
+-static struct pmc_clk_init_data pmc_clks[] = {
+-	PMC_CLK(1, 6, 2),
+-	PMC_CLK(2, 14, 10),
+-	PMC_CLK(3, 22, 18),
+-};
+-
+-void __init tegra_pmc_clk_init(void __iomem *pmc_base,
+-				struct tegra_clk *tegra_clks)
+-{
+-	struct clk *clk;
+-	struct clk **dt_clk;
+-	int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(pmc_clks); i++) {
+-		struct pmc_clk_init_data *data;
+-
+-		data = pmc_clks + i;
+-
+-		dt_clk = tegra_lookup_dt_id(data->mux_id, tegra_clks);
+-		if (!dt_clk)
+-			continue;
+-
+-		clk = clk_register_mux(NULL, data->mux_name, data->parents,
+-				data->num_parents,
+-				CLK_SET_RATE_NO_REPARENT | CLK_SET_RATE_PARENT,
+-				pmc_base + PMC_CLK_OUT_CNTRL, data->mux_shift,
+-				3, 0, &clk_out_lock);
+-		*dt_clk = clk;
+-
+-
+-		dt_clk = tegra_lookup_dt_id(data->gate_id, tegra_clks);
+-		if (!dt_clk)
+-			continue;
+-
+-		clk = clk_register_gate(NULL, data->gate_name, data->mux_name,
+-					CLK_SET_RATE_PARENT,
+-					pmc_base + PMC_CLK_OUT_CNTRL,
+-					data->gate_shift, 0, &clk_out_lock);
+-		*dt_clk = clk;
+-		clk_register_clkdev(clk, data->dev_name, data->gate_name);
+-	}
+-
+-	/* blink */
+-	writel_relaxed(0, pmc_base + PMC_BLINK_TIMER);
+-	clk = clk_register_gate(NULL, "blink_override", "clk_32k", 0,
+-				pmc_base + PMC_DPD_PADS_ORIDE,
+-				PMC_DPD_PADS_ORIDE_BLINK_ENB, 0, NULL);
+-
+-	dt_clk = tegra_lookup_dt_id(tegra_clk_blink, tegra_clks);
+-	if (!dt_clk)
+-		return;
+-
+-	clk = clk_register_gate(NULL, "blink", "blink_override", 0,
+-				pmc_base + PMC_CTRL,
+-				PMC_CTRL_BLINK_ENB, 0, NULL);
+-	clk_register_clkdev(clk, "blink", NULL);
+-	*dt_clk = clk;
+-}
+-
+diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
+index 9d2ca387114c..4077dd3a1bd9 100644
+--- a/drivers/clk/tegra/clk-tegra114.c
++++ b/drivers/clk/tegra/clk-tegra114.c
+@@ -778,10 +778,6 @@ static struct tegra_clk tegra114_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_audio3] = { .dt_id = TEGRA114_CLK_AUDIO3, .present = true },
+ 	[tegra_clk_audio4] = { .dt_id = TEGRA114_CLK_AUDIO4, .present = true },
+ 	[tegra_clk_spdif] = { .dt_id = TEGRA114_CLK_SPDIF, .present = true },
+-	[tegra_clk_clk_out_1] = { .dt_id = TEGRA114_CLK_CLK_OUT_1, .present = true },
+-	[tegra_clk_clk_out_2] = { .dt_id = TEGRA114_CLK_CLK_OUT_2, .present = true },
+-	[tegra_clk_clk_out_3] = { .dt_id = TEGRA114_CLK_CLK_OUT_3, .present = true },
+-	[tegra_clk_blink] = { .dt_id = TEGRA114_CLK_BLINK, .present = true },
+ 	[tegra_clk_xusb_host_src] = { .dt_id = TEGRA114_CLK_XUSB_HOST_SRC, .present = true },
+ 	[tegra_clk_xusb_falcon_src] = { .dt_id = TEGRA114_CLK_XUSB_FALCON_SRC, .present = true },
+ 	[tegra_clk_xusb_fs_src] = { .dt_id = TEGRA114_CLK_XUSB_FS_SRC, .present = true },
+@@ -803,9 +799,6 @@ static struct tegra_clk tegra114_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_audio3_mux] = { .dt_id = TEGRA114_CLK_AUDIO3_MUX, .present = true },
+ 	[tegra_clk_audio4_mux] = { .dt_id = TEGRA114_CLK_AUDIO4_MUX, .present = true },
+ 	[tegra_clk_spdif_mux] = { .dt_id = TEGRA114_CLK_SPDIF_MUX, .present = true },
+-	[tegra_clk_clk_out_1_mux] = { .dt_id = TEGRA114_CLK_CLK_OUT_1_MUX, .present = true },
+-	[tegra_clk_clk_out_2_mux] = { .dt_id = TEGRA114_CLK_CLK_OUT_2_MUX, .present = true },
+-	[tegra_clk_clk_out_3_mux] = { .dt_id = TEGRA114_CLK_CLK_OUT_3_MUX, .present = true },
+ 	[tegra_clk_dsia_mux] = { .dt_id = TEGRA114_CLK_DSIA_MUX, .present = true },
+ 	[tegra_clk_dsib_mux] = { .dt_id = TEGRA114_CLK_DSIB_MUX, .present = true },
+ 	[tegra_clk_cec] = { .dt_id = TEGRA114_CLK_CEC, .present = true },
+@@ -863,10 +856,9 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "audio3_2x", .dt_id = TEGRA114_CLK_AUDIO3_2X },
+ 	{ .con_id = "audio4_2x", .dt_id = TEGRA114_CLK_AUDIO4_2X },
+ 	{ .con_id = "spdif_2x", .dt_id = TEGRA114_CLK_SPDIF_2X },
+-	{ .con_id = "extern1", .dev_id = "clk_out_1", .dt_id = TEGRA114_CLK_EXTERN1 },
+-	{ .con_id = "extern2", .dev_id = "clk_out_2", .dt_id = TEGRA114_CLK_EXTERN2 },
+-	{ .con_id = "extern3", .dev_id = "clk_out_3", .dt_id = TEGRA114_CLK_EXTERN3 },
+-	{ .con_id = "blink", .dt_id = TEGRA114_CLK_BLINK },
++	{ .con_id = "extern1", .dt_id = TEGRA114_CLK_EXTERN1 },
++	{ .con_id = "extern2", .dt_id = TEGRA114_CLK_EXTERN2 },
++	{ .con_id = "extern3", .dt_id = TEGRA114_CLK_EXTERN3 },
+ 	{ .con_id = "cclk_g", .dt_id = TEGRA114_CLK_CCLK_G },
+ 	{ .con_id = "cclk_lp", .dt_id = TEGRA114_CLK_CCLK_LP },
+ 	{ .con_id = "sclk", .dt_id = TEGRA114_CLK_SCLK },
+@@ -1145,8 +1137,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA114_CLK_PLL_A, TEGRA114_CLK_CLK_MAX, 564480000, 1 },
+ 	{ TEGRA114_CLK_PLL_A_OUT0, TEGRA114_CLK_CLK_MAX, 11289600, 1 },
+ 	{ TEGRA114_CLK_EXTERN1, TEGRA114_CLK_PLL_A_OUT0, 0, 1 },
+-	{ TEGRA114_CLK_CLK_OUT_1_MUX, TEGRA114_CLK_EXTERN1, 0, 1 },
+-	{ TEGRA114_CLK_CLK_OUT_1, TEGRA114_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA114_CLK_I2S0, TEGRA114_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA114_CLK_I2S1, TEGRA114_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA114_CLK_I2S2, TEGRA114_CLK_PLL_A_OUT0, 11289600, 0 },
+@@ -1348,7 +1338,6 @@ static void __init tegra114_clock_init(struct device_node *np)
+ 	tegra_audio_clk_init(clk_base, pmc_base, tegra114_clks,
+ 			     tegra114_audio_plls,
+ 			     ARRAY_SIZE(tegra114_audio_plls), 24000000);
+-	tegra_pmc_clk_init(pmc_base, tegra114_clks);
+ 	tegra_super_clk_gen4_init(clk_base, pmc_base, tegra114_clks,
+ 					&pll_x_params);
+ 
+diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra124.c
+index 15f42718f4cb..266a0c040933 100644
+--- a/drivers/clk/tegra/clk-tegra124.c
++++ b/drivers/clk/tegra/clk-tegra124.c
+@@ -902,10 +902,6 @@ static struct tegra_clk tegra124_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_audio3] = { .dt_id = TEGRA124_CLK_AUDIO3, .present = true },
+ 	[tegra_clk_audio4] = { .dt_id = TEGRA124_CLK_AUDIO4, .present = true },
+ 	[tegra_clk_spdif] = { .dt_id = TEGRA124_CLK_SPDIF, .present = true },
+-	[tegra_clk_clk_out_1] = { .dt_id = TEGRA124_CLK_CLK_OUT_1, .present = true },
+-	[tegra_clk_clk_out_2] = { .dt_id = TEGRA124_CLK_CLK_OUT_2, .present = true },
+-	[tegra_clk_clk_out_3] = { .dt_id = TEGRA124_CLK_CLK_OUT_3, .present = true },
+-	[tegra_clk_blink] = { .dt_id = TEGRA124_CLK_BLINK, .present = true },
+ 	[tegra_clk_xusb_host_src] = { .dt_id = TEGRA124_CLK_XUSB_HOST_SRC, .present = true },
+ 	[tegra_clk_xusb_falcon_src] = { .dt_id = TEGRA124_CLK_XUSB_FALCON_SRC, .present = true },
+ 	[tegra_clk_xusb_fs_src] = { .dt_id = TEGRA124_CLK_XUSB_FS_SRC, .present = true },
+@@ -931,9 +927,6 @@ static struct tegra_clk tegra124_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_audio3_mux] = { .dt_id = TEGRA124_CLK_AUDIO3_MUX, .present = true },
+ 	[tegra_clk_audio4_mux] = { .dt_id = TEGRA124_CLK_AUDIO4_MUX, .present = true },
+ 	[tegra_clk_spdif_mux] = { .dt_id = TEGRA124_CLK_SPDIF_MUX, .present = true },
+-	[tegra_clk_clk_out_1_mux] = { .dt_id = TEGRA124_CLK_CLK_OUT_1_MUX, .present = true },
+-	[tegra_clk_clk_out_2_mux] = { .dt_id = TEGRA124_CLK_CLK_OUT_2_MUX, .present = true },
+-	[tegra_clk_clk_out_3_mux] = { .dt_id = TEGRA124_CLK_CLK_OUT_3_MUX, .present = true },
+ 	[tegra_clk_cec] = { .dt_id = TEGRA124_CLK_CEC, .present = true },
+ };
+ 
+@@ -988,10 +981,9 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "audio3_2x", .dt_id = TEGRA124_CLK_AUDIO3_2X },
+ 	{ .con_id = "audio4_2x", .dt_id = TEGRA124_CLK_AUDIO4_2X },
+ 	{ .con_id = "spdif_2x", .dt_id = TEGRA124_CLK_SPDIF_2X },
+-	{ .con_id = "extern1", .dev_id = "clk_out_1", .dt_id = TEGRA124_CLK_EXTERN1 },
+-	{ .con_id = "extern2", .dev_id = "clk_out_2", .dt_id = TEGRA124_CLK_EXTERN2 },
+-	{ .con_id = "extern3", .dev_id = "clk_out_3", .dt_id = TEGRA124_CLK_EXTERN3 },
+-	{ .con_id = "blink", .dt_id = TEGRA124_CLK_BLINK },
++	{ .con_id = "extern1", .dt_id = TEGRA124_CLK_EXTERN1 },
++	{ .con_id = "extern2", .dt_id = TEGRA124_CLK_EXTERN2 },
++	{ .con_id = "extern3", .dt_id = TEGRA124_CLK_EXTERN3 },
+ 	{ .con_id = "cclk_g", .dt_id = TEGRA124_CLK_CCLK_G },
+ 	{ .con_id = "cclk_lp", .dt_id = TEGRA124_CLK_CCLK_LP },
+ 	{ .con_id = "sclk", .dt_id = TEGRA124_CLK_SCLK },
+@@ -1301,8 +1293,6 @@ static struct tegra_clk_init_table common_init_table[] __initdata = {
+ 	{ TEGRA124_CLK_PLL_A, TEGRA124_CLK_CLK_MAX, 564480000, 1 },
+ 	{ TEGRA124_CLK_PLL_A_OUT0, TEGRA124_CLK_CLK_MAX, 11289600, 1 },
+ 	{ TEGRA124_CLK_EXTERN1, TEGRA124_CLK_PLL_A_OUT0, 0, 1 },
+-	{ TEGRA124_CLK_CLK_OUT_1_MUX, TEGRA124_CLK_EXTERN1, 0, 1 },
+-	{ TEGRA124_CLK_CLK_OUT_1, TEGRA124_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA124_CLK_I2S0, TEGRA124_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA124_CLK_I2S1, TEGRA124_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA124_CLK_I2S2, TEGRA124_CLK_PLL_A_OUT0, 11289600, 0 },
+@@ -1457,11 +1447,9 @@ static void __init tegra132_clock_apply_init_table(void)
+  * tegra124_132_clock_init_pre - clock initialization preamble for T124/T132
+  * @np: struct device_node * of the DT node for the SoC CAR IP block
+  *
+- * Register most of the clocks controlled by the CAR IP block, along
+- * with a few clocks controlled by the PMC IP block.  Everything in
+- * this function should be common to Tegra124 and Tegra132.  XXX The
+- * PMC clock initialization should probably be moved to PMC-specific
+- * driver code.  No return value.
++ * Register most of the clocks controlled by the CAR IP block.
++ * Everything in this function should be common to Tegra124 and Tegra132.
++ * No return value.
+  */
+ static void __init tegra124_132_clock_init_pre(struct device_node *np)
+ {
+@@ -1504,7 +1492,6 @@ static void __init tegra124_132_clock_init_pre(struct device_node *np)
+ 	tegra_audio_clk_init(clk_base, pmc_base, tegra124_clks,
+ 			     tegra124_audio_plls,
+ 			     ARRAY_SIZE(tegra124_audio_plls), 24576000);
+-	tegra_pmc_clk_init(pmc_base, tegra124_clks);
+ 
+ 	/* For Tegra124 & Tegra132, PLLD is the only source for DSIA & DSIB */
+ 	plld_base = readl(clk_base + PLLD_BASE);
+@@ -1516,11 +1503,11 @@ static void __init tegra124_132_clock_init_pre(struct device_node *np)
+  * tegra124_132_clock_init_post - clock initialization postamble for T124/T132
+  * @np: struct device_node * of the DT node for the SoC CAR IP block
+  *
+- * Register most of the along with a few clocks controlled by the PMC
+- * IP block.  Everything in this function should be common to Tegra124
++ * Register most of the clocks controlled by the CAR IP block.
++ * Everything in this function should be common to Tegra124
+  * and Tegra132.  This function must be called after
+- * tegra124_132_clock_init_pre(), otherwise clk_base and pmc_base will
+- * not be set.  No return value.
++ * tegra124_132_clock_init_pre(), otherwise clk_base will not be set.
++ * No return value.
+  */
+ static void __init tegra124_132_clock_init_post(struct device_node *np)
+ {
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index 4d8222f5c638..fe536f1d770d 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -458,7 +458,6 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "cdev1", .dt_id = TEGRA20_CLK_CDEV1 },
+ 	{ .con_id = "cdev2", .dt_id = TEGRA20_CLK_CDEV2 },
+ 	{ .con_id = "clk_32k", .dt_id = TEGRA20_CLK_CLK_32K },
+-	{ .con_id = "blink", .dt_id = TEGRA20_CLK_BLINK },
+ 	{ .con_id = "clk_m", .dt_id = TEGRA20_CLK_CLK_M },
+ 	{ .con_id = "pll_ref", .dt_id = TEGRA20_CLK_PLL_REF },
+ 	{ .dev_id = "tegra20-i2s.0", .dt_id = TEGRA20_CLK_I2S1 },
+@@ -537,7 +536,6 @@ static struct tegra_clk tegra20_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_csi] = { .dt_id = TEGRA20_CLK_CSI, .present = true },
+ 	[tegra_clk_isp] = { .dt_id = TEGRA20_CLK_ISP, .present = true },
+ 	[tegra_clk_clk_32k] = { .dt_id = TEGRA20_CLK_CLK_32K, .present = true },
+-	[tegra_clk_blink] = { .dt_id = TEGRA20_CLK_BLINK, .present = true },
+ 	[tegra_clk_hclk] = { .dt_id = TEGRA20_CLK_HCLK, .present = true },
+ 	[tegra_clk_pclk] = { .dt_id = TEGRA20_CLK_PCLK, .present = true },
+ 	[tegra_clk_pll_p_out1] = { .dt_id = TEGRA20_CLK_PLL_P_OUT1, .present = true },
+@@ -1034,7 +1032,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA20_CLK_PLL_A, TEGRA20_CLK_CLK_MAX, 56448000, 1 },
+ 	{ TEGRA20_CLK_PLL_A_OUT0, TEGRA20_CLK_CLK_MAX, 11289600, 1 },
+ 	{ TEGRA20_CLK_CDEV1, TEGRA20_CLK_CLK_MAX, 0, 1 },
+-	{ TEGRA20_CLK_BLINK, TEGRA20_CLK_CLK_MAX, 32768, 1 },
+ 	{ TEGRA20_CLK_I2S1, TEGRA20_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA20_CLK_I2S2, TEGRA20_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA20_CLK_SDMMC1, TEGRA20_CLK_PLL_P, 48000000, 0 },
+@@ -1148,7 +1145,6 @@ static void __init tegra20_clock_init(struct device_node *np)
+ 	tegra_super_clk_gen4_init(clk_base, pmc_base, tegra20_clks, NULL);
+ 	tegra20_periph_clk_init();
+ 	tegra20_audio_clk_init();
+-	tegra_pmc_clk_init(pmc_base, tegra20_clks);
+ 
+ 	tegra_init_dup_clks(tegra_clk_duplicates, clks, TEGRA20_CLK_CLK_MAX);
+ 
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 5687fcda620e..39dbfad73bf9 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2417,10 +2417,6 @@ static struct tegra_clk tegra210_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_audio3] = { .dt_id = TEGRA210_CLK_AUDIO3, .present = true },
+ 	[tegra_clk_audio4] = { .dt_id = TEGRA210_CLK_AUDIO4, .present = true },
+ 	[tegra_clk_spdif] = { .dt_id = TEGRA210_CLK_SPDIF, .present = true },
+-	[tegra_clk_clk_out_1] = { .dt_id = TEGRA210_CLK_CLK_OUT_1, .present = true },
+-	[tegra_clk_clk_out_2] = { .dt_id = TEGRA210_CLK_CLK_OUT_2, .present = true },
+-	[tegra_clk_clk_out_3] = { .dt_id = TEGRA210_CLK_CLK_OUT_3, .present = true },
+-	[tegra_clk_blink] = { .dt_id = TEGRA210_CLK_BLINK, .present = true },
+ 	[tegra_clk_xusb_gate] = { .dt_id = TEGRA210_CLK_XUSB_GATE, .present = true },
+ 	[tegra_clk_xusb_host_src_8] = { .dt_id = TEGRA210_CLK_XUSB_HOST_SRC, .present = true },
+ 	[tegra_clk_xusb_falcon_src_8] = { .dt_id = TEGRA210_CLK_XUSB_FALCON_SRC, .present = true },
+@@ -2452,9 +2448,6 @@ static struct tegra_clk tegra210_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_audio3_mux] = { .dt_id = TEGRA210_CLK_AUDIO3_MUX, .present = true },
+ 	[tegra_clk_audio4_mux] = { .dt_id = TEGRA210_CLK_AUDIO4_MUX, .present = true },
+ 	[tegra_clk_spdif_mux] = { .dt_id = TEGRA210_CLK_SPDIF_MUX, .present = true },
+-	[tegra_clk_clk_out_1_mux] = { .dt_id = TEGRA210_CLK_CLK_OUT_1_MUX, .present = true },
+-	[tegra_clk_clk_out_2_mux] = { .dt_id = TEGRA210_CLK_CLK_OUT_2_MUX, .present = true },
+-	[tegra_clk_clk_out_3_mux] = { .dt_id = TEGRA210_CLK_CLK_OUT_3_MUX, .present = true },
+ 	[tegra_clk_maud] = { .dt_id = TEGRA210_CLK_MAUD, .present = true },
+ 	[tegra_clk_mipibif] = { .dt_id = TEGRA210_CLK_MIPIBIF, .present = true },
+ 	[tegra_clk_qspi] = { .dt_id = TEGRA210_CLK_QSPI, .present = true },
+@@ -2540,10 +2533,9 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "audio4", .dt_id = TEGRA210_CLK_AUDIO4 },
+ 	{ .con_id = "spdif", .dt_id = TEGRA210_CLK_SPDIF },
+ 	{ .con_id = "spdif_2x", .dt_id = TEGRA210_CLK_SPDIF_2X },
+-	{ .con_id = "extern1", .dev_id = "clk_out_1", .dt_id = TEGRA210_CLK_EXTERN1 },
+-	{ .con_id = "extern2", .dev_id = "clk_out_2", .dt_id = TEGRA210_CLK_EXTERN2 },
+-	{ .con_id = "extern3", .dev_id = "clk_out_3", .dt_id = TEGRA210_CLK_EXTERN3 },
+-	{ .con_id = "blink", .dt_id = TEGRA210_CLK_BLINK },
++	{ .con_id = "extern1", .dt_id = TEGRA210_CLK_EXTERN1 },
++	{ .con_id = "extern2", .dt_id = TEGRA210_CLK_EXTERN2 },
++	{ .con_id = "extern3", .dt_id = TEGRA210_CLK_EXTERN3 },
+ 	{ .con_id = "cclk_g", .dt_id = TEGRA210_CLK_CCLK_G },
+ 	{ .con_id = "cclk_lp", .dt_id = TEGRA210_CLK_CCLK_LP },
+ 	{ .con_id = "sclk", .dt_id = TEGRA210_CLK_SCLK },
+@@ -3451,8 +3443,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA210_CLK_PLL_A, TEGRA210_CLK_CLK_MAX, 564480000, 1 },
+ 	{ TEGRA210_CLK_PLL_A_OUT0, TEGRA210_CLK_CLK_MAX, 11289600, 1 },
+ 	{ TEGRA210_CLK_EXTERN1, TEGRA210_CLK_PLL_A_OUT0, 0, 1 },
+-	{ TEGRA210_CLK_CLK_OUT_1_MUX, TEGRA210_CLK_EXTERN1, 0, 1 },
+-	{ TEGRA210_CLK_CLK_OUT_1, TEGRA210_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA210_CLK_I2S0, TEGRA210_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA210_CLK_I2S1, TEGRA210_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA210_CLK_I2S2, TEGRA210_CLK_PLL_A_OUT0, 11289600, 0 },
+@@ -3693,7 +3683,6 @@ static void __init tegra210_clock_init(struct device_node *np)
+ 	tegra_audio_clk_init(clk_base, pmc_base, tegra210_clks,
+ 			     tegra210_audio_plls,
+ 			     ARRAY_SIZE(tegra210_audio_plls), 24576000);
+-	tegra_pmc_clk_init(pmc_base, tegra210_clks);
+ 
+ 	/* For Tegra210, PLLD is the only source for DSIA & DSIB */
+ 	value = readl(clk_base + PLLD_BASE);
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 1322188edb72..7bbdb5a4dec4 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -569,10 +569,9 @@ static struct tegra_devclk devclks[] __initdata = {
+ 	{ .con_id = "audio3_2x", .dt_id = TEGRA30_CLK_AUDIO3_2X },
+ 	{ .con_id = "audio4_2x", .dt_id = TEGRA30_CLK_AUDIO4_2X },
+ 	{ .con_id = "spdif_2x", .dt_id = TEGRA30_CLK_SPDIF_2X },
+-	{ .con_id = "extern1", .dev_id = "clk_out_1", .dt_id = TEGRA30_CLK_EXTERN1 },
+-	{ .con_id = "extern2", .dev_id = "clk_out_2", .dt_id = TEGRA30_CLK_EXTERN2 },
+-	{ .con_id = "extern3", .dev_id = "clk_out_3", .dt_id = TEGRA30_CLK_EXTERN3 },
+-	{ .con_id = "blink", .dt_id = TEGRA30_CLK_BLINK },
++	{ .con_id = "extern1", .dt_id = TEGRA30_CLK_EXTERN1 },
++	{ .con_id = "extern2", .dt_id = TEGRA30_CLK_EXTERN2 },
++	{ .con_id = "extern3", .dt_id = TEGRA30_CLK_EXTERN3 },
+ 	{ .con_id = "cclk_g", .dt_id = TEGRA30_CLK_CCLK_G },
+ 	{ .con_id = "cclk_lp", .dt_id = TEGRA30_CLK_CCLK_LP },
+ 	{ .con_id = "sclk", .dt_id = TEGRA30_CLK_SCLK },
+@@ -711,13 +710,6 @@ static struct tegra_clk tegra30_clks[tegra_clk_max] __initdata = {
+ 	[tegra_clk_audio3_2x] = { .dt_id = TEGRA30_CLK_AUDIO3_2X, .present = true },
+ 	[tegra_clk_audio4_2x] = { .dt_id = TEGRA30_CLK_AUDIO4_2X, .present = true },
+ 	[tegra_clk_spdif_2x] = { .dt_id = TEGRA30_CLK_SPDIF_2X, .present = true },
+-	[tegra_clk_clk_out_1] = { .dt_id = TEGRA30_CLK_CLK_OUT_1, .present = true },
+-	[tegra_clk_clk_out_2] = { .dt_id = TEGRA30_CLK_CLK_OUT_2, .present = true },
+-	[tegra_clk_clk_out_3] = { .dt_id = TEGRA30_CLK_CLK_OUT_3, .present = true },
+-	[tegra_clk_blink] = { .dt_id = TEGRA30_CLK_BLINK, .present = true },
+-	[tegra_clk_clk_out_1_mux] = { .dt_id = TEGRA30_CLK_CLK_OUT_1_MUX, .present = true },
+-	[tegra_clk_clk_out_2_mux] = { .dt_id = TEGRA30_CLK_CLK_OUT_2_MUX, .present = true },
+-	[tegra_clk_clk_out_3_mux] = { .dt_id = TEGRA30_CLK_CLK_OUT_3_MUX, .present = true },
+ 	[tegra_clk_hclk] = { .dt_id = TEGRA30_CLK_HCLK, .present = true },
+ 	[tegra_clk_pclk] = { .dt_id = TEGRA30_CLK_PCLK, .present = true },
+ 	[tegra_clk_i2s0] = { .dt_id = TEGRA30_CLK_I2S0, .present = true },
+@@ -1230,9 +1222,6 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA30_CLK_PLL_A, TEGRA30_CLK_CLK_MAX, 564480000, 1 },
+ 	{ TEGRA30_CLK_PLL_A_OUT0, TEGRA30_CLK_CLK_MAX, 11289600, 1 },
+ 	{ TEGRA30_CLK_EXTERN1, TEGRA30_CLK_PLL_A_OUT0, 0, 1 },
+-	{ TEGRA30_CLK_CLK_OUT_1_MUX, TEGRA30_CLK_EXTERN1, 0, 0 },
+-	{ TEGRA30_CLK_CLK_OUT_1, TEGRA30_CLK_CLK_MAX, 0, 1 },
+-	{ TEGRA30_CLK_BLINK, TEGRA30_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA30_CLK_I2S0, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA30_CLK_I2S1, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+ 	{ TEGRA30_CLK_I2S2, TEGRA30_CLK_PLL_A_OUT0, 11289600, 0 },
+@@ -1364,7 +1353,6 @@ static void __init tegra30_clock_init(struct device_node *np)
+ 	tegra_audio_clk_init(clk_base, pmc_base, tegra30_clks,
+ 			     tegra30_audio_plls,
+ 			     ARRAY_SIZE(tegra30_audio_plls), 24000000);
+-	tegra_pmc_clk_init(pmc_base, tegra30_clks);
+ 
+ 	tegra_init_dup_clks(tegra_clk_duplicates, clks, TEGRA30_CLK_CLK_MAX);
+ 
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index 416a6b09f6a3..2c9a68302e02 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -854,7 +854,6 @@ void tegra_periph_clk_init(void __iomem *clk_base, void __iomem *pmc_base,
+ 			struct tegra_clk *tegra_clks,
+ 			struct tegra_clk_pll_params *pll_params);
+ 
+-void tegra_pmc_clk_init(void __iomem *pmc_base, struct tegra_clk *tegra_clks);
+ void tegra_fixed_clk_init(struct tegra_clk *tegra_clks);
+ int tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
+ 		       unsigned long *input_freqs, unsigned int num,
 -- 
 2.7.4
 
