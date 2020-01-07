@@ -2,147 +2,117 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45729C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEBBC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAF6206F0
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9ADB208C4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 12:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhpeMaFy"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Wk7K5PvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbgAGMPL (ORCPT
+        id S1727658AbgAGMQr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 07:15:11 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35326 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbgAGMPL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:15:11 -0500
-Received: by mail-wr1-f65.google.com with SMTP id g17so53648856wro.2
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 04:15:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4Vcrc9kPwEMI1qMY97ZKxc5ORffAx/A/CKvvB8bb9HU=;
-        b=EhpeMaFyUHCBnnfIlkhHmvYes0eM1ZWephawKnNl2g0DdN5tHsMvsQ/4FsRIcI1ViF
-         V3/zNmW1WqptpoasSr9aVQONe03NmK6y+Cy/hq3dcavQYK9NWmkl9yncPAucoZVWqrm1
-         gPX2TUOOvSfAT4nSupIbsHctrqzFpJbV4AK55H+WRQ8pzAHVKBqX9fYkFNQB9KymoiAu
-         5pckxvxkWMzCezBHVm0PXp2+q61yOoT7RtNKrwGmk0N/cZXrCFPvvmA3KGehcXEty84s
-         qYp/wXsXFzMl6wnmBGudBncGbsTHnH+veG76aeSlYrgEJeARwZvgabwFPoH7F/fJylJz
-         0ufw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Vcrc9kPwEMI1qMY97ZKxc5ORffAx/A/CKvvB8bb9HU=;
-        b=nMFfozsu6LKF/2JZTyLJ2zJCWpRBBxqh5FIh5yOs+KvPPWWimtV1+/P2EDVfryx1Le
-         k0PUfPIusSCfikA8baNv1mABxD0LkhiTXo2vPxsDWGwalrF/+gxE6x1Lrs/jTHAUQ8Kf
-         RHbcBPOz6Trb1U/6qusIqZt+znVuSSR6ZbJu/wyQw1bCyO3qrQofh3RyvFoq2dWpZChl
-         LPevYYQngdA+izd7ZELB30RowHKvXyn+4t8wHQ5y5WCy0dQ+2jxWy8ScXWQW1cRo9S7K
-         aZYr7nwCkpb6LTm00d3KVVBjqB33aYeLCidBgnPEedIKluvBlZTJ9J572d7mrgJHxWoa
-         F5kw==
-X-Gm-Message-State: APjAAAX85w6c1b1Kry4/AXmqAu5Za6Rp4DtLI06Ck38jvK5uua44kikH
-        tQ1eUFobmtieMbS25Cnz5Gk=
-X-Google-Smtp-Source: APXvYqxE9TizJBrkadc+zJOygaNd5/9MmQLFuKw9E9v9SnmDj4SWvg+X9NC/e2sfNSFX1wfVgHOQoQ==
-X-Received: by 2002:adf:ef92:: with SMTP id d18mr105419063wro.234.1578399308307;
-        Tue, 07 Jan 2020 04:15:08 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id b10sm78937461wrt.90.2020.01.07.04.15.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 04:15:07 -0800 (PST)
-Date:   Tue, 7 Jan 2020 13:15:06 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, Maxime Ripard <mripard@kernel.org>,
-        Yannick Fertre <yannick.fertre@st.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] combine bindings for simple panels in a few files
-Message-ID: <20200107121506.GC1964183@ulmo>
-References: <20200102101712.5085-1-sam@ravnborg.org>
+        Tue, 7 Jan 2020 07:16:47 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:33911 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727177AbgAGMQr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 07:16:47 -0500
+X-UUID: b2f3c6d48fe44b8c85c0864c38f075c2-20200107
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=xUz0iKdA3Jx7oeQE3+cQqp7m0F3c8sg3JZxB5700qYk=;
+        b=Wk7K5PvLmuqs0f37o3uTDVzG3WZjjykLl9vUGffeHnBc/sW3y56CjF1LVcThnsspWNWnFD16Q8ISbmVygZCL4sET33CuR6gNsRAj0y7yVCiCskpmSwqUAviZMDn0EcNq4+0CNLrqyp9XfNB31ZRVsermppVsv2W6xXxrH3mBTbI=;
+X-UUID: b2f3c6d48fe44b8c85c0864c38f075c2-20200107
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <light.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 593148599; Tue, 07 Jan 2020 20:16:42 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 7 Jan 2020 20:15:50 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 7 Jan 2020 20:17:15 +0800
+Message-ID: <1578399400.16092.14.camel@mtkswgap22>
+Subject: Re: [PATCH v7 5/6] Backward compatible to previous Mediatek's
+ bias-pull usage
+From:   Light Hsieh <light.hsieh@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sean Wang <sean.wang@kernel.org>, <kuohong.wang@mediatek.com>
+Date:   Tue, 7 Jan 2020 20:16:40 +0800
+In-Reply-To: <CACRpkdbto2goahTjzozi_LXXo1QNUTV1wm_rwoFOTcb36w0jkw@mail.gmail.com>
+References: <1577799707-11855-1-git-send-email-light.hsieh@mediatek.com>
+         <1577799707-11855-5-git-send-email-light.hsieh@mediatek.com>
+         <CACRpkdbto2goahTjzozi_LXXo1QNUTV1wm_rwoFOTcb36w0jkw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="32u276st3Jlj2kUU"
-Content-Disposition: inline
-In-Reply-To: <20200102101712.5085-1-sam@ravnborg.org>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+X-TM-SNTS-SMTP: B7E5CF622FD1C7D1CA83D3F7690555CFE8E879EC25EAEB8C1BCCED3F2290A7CC2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+T24gVHVlLCAyMDIwLTAxLTA3IGF0IDExOjQwICswMTAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
+PiBPbiBUdWUsIERlYyAzMSwgMjAxOSBhdCAyOjQxIFBNIExpZ2h0IEhzaWVoIDxsaWdodC5oc2ll
+aEBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiANCj4gPiBSZWZpbmUgbXRrX3BpbmNvbmZfc2V0KCkv
+bXRrX3BpbmNvbmZfZ2V0KCkgZm9yIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgdG8NCj4gPiBwcmV2
+aW91cyBNZWRpYVRlaydzIGJpYXMtcHVsbCB1c2FnZS4NCj4gPiBJbiBQSU5DVFJMX01USyB0aGF0
+IHVzZSBwaW5jdHJsLW10ay1jb21tb24uYywgYmlhcy1wdWxsIHNldHRpbmcgZm9yIHBpbnMNCj4g
+PiB3aXRoIDIgcHVsbCByZXNpc3RvcnMgY2FuIGJlIHNwZWNpZmllZCBhcyB2YWx1ZSBmb3IgYmlh
+cy1wdWxsLXVwIGFuZA0KPiA+IGJpYXMtcHVsbC1kb3duLiBGb3IgZXhhbXBsZToNCj4gPiAgICAg
+Ymlhcy1wdWxsLXVwID0gPE1US19QVVBEX1NFVF9SMVIwXzAwPjsNCj4gPiAgICAgYmlhcy1wdWxs
+LXVwID0gPE1US19QVVBEX1NFVF9SMVIwXzAxPjsNCj4gPiAgICAgYmlhcy1wdWxsLXVwID0gPE1U
+S19QVVBEX1NFVF9SMVIwXzEwPjsNCj4gPiAgICAgYmlhcy1wdWxsLXVwID0gPE1US19QVVBEX1NF
+VF9SMVIwXzExPjsNCj4gPiAgICAgYmlhcy1wdWxsLWRvd24gPSA8TVRLX1BVUERfU0VUX1IxUjBf
+MDA+Ow0KPiA+ICAgICBiaWFzLXB1bGwtZG93biA9IDxNVEtfUFVQRF9TRVRfUjFSMF8wMT47DQo+
+ID4gICAgIGJpYXMtcHVsbC1kb3duID0gPE1US19QVVBEX1NFVF9SMVIwXzEwPjsNCj4gPiAgICAg
+Ymlhcy1wdWxsLWRvd24gPSA8TVRLX1BVUERfU0VUX1IxUjBfMTE+Ow0KPiA+DQo+ID4gT24gdGhl
+IG90aGVyIGhhbmQsIFBJTkNUUkxfTVRLX1BBUklTIHVzZSBjdXN0b21pemVkIHByb3BlcnRpZXMN
+Cj4gPiAibWVkaWF0ZWsscHVsbC11cC1hZHYiIGFuZCAibWVkaWF0ZWsscHVsbC1kb3duLWFkdiIg
+dG8gc3BlY2lmeSBiaWFzLXB1bGwNCj4gPiBzZXR0aW5nIGZvciBwaW5zIHdpdGggMiBwdWxsIHJl
+c2lzdG9ycy4NCj4gPiBUaGlzIGludHJvZHVjZSBpbi1jb21wYXRpYmlsaXR5IGluIGRldmljZSB0
+cmVlIGFuZCBpbmNyZWFzZSBwb3J0aW5nDQo+ID4gZWZmb3J0IHRvIE1lZGlhVGVrJ3MgY3VzdG9t
+ZXIgdGhhdCBoYWQgYWxyZWFkeSB1c2VkIFBJTkNUUkxfTVRLIHZlcnNpb24uDQo+ID4gQmVzaWRl
+cywgaWYgY3VzdG9tZXJzIGFyZSBub3QgYXdhcmUgb2YgdGhpcyBjaGFuZ2UgYW5kIHN0aWxsIHdy
+aXRlIGRldmljZXRyZWUNCj4gPiBmb3IgUElOQ1RSTF9NVEsgdmVyc2lvbiwgdGhleSBtYXkgZW5j
+b3VudGVyIHJ1bnRpbWUgZmFpbHVyZSB3aXRoIHBpbmN0cmwgYW5kDQo+ID4gc3BlbnQgdGltZSB0
+byBkZWJ1Zy4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBiYWNrd2FyZCBjb21wYXRpYmxlIHRv
+IHByZXZpb3VzIE1lZGlhVGVrJ3MgYmlhcy1wdWxsIHVzYWdlDQo+ID4gc28gdGhhdCBNZWRpYXRl
+aydzIGN1c3RvbWVyIG5lZWQgbm90IHVzZSBhIG5ldyBkZXZpY2V0cmVlIHByb3BlcnR5IG5hbWUu
+DQo+ID4gVGhlIHJhdGlvbmFsZSBpcyB0aGF0OiBjaGFuZ2luZyBkcml2ZXIgaW1wbGVtZW50YXRp
+b24gaGFkIGJldHRlciBsZWF2ZQ0KPiA+IGludGVyZmFjZSB1bmNoYW5nZWQuDQo+IA0KPiBBcmUg
+dGhlc2UgZGV2aWNldHJlZSBiaW5kaW5ncyB1cHN0cmVhbSwgb3IgYXJlIHRoZXNlIGJpbmRpbmdz
+IG5ldmVyDQo+IHN1Ym1pdHRlZCBmb3IgaW5jbHVzaW9uIGluIHRoZSBvZmZpY2lhbCBkZXZpY2Ug
+dHJlZSBiaW5kaW5ncz8NCj4gDQo+IEkgZG9uJ3QgcmVhbGx5IHdhbnQgdG8gZW5jb3VyYWdlIG91
+dC1vZi10cmVlIG5vbi1jYW5vbmljYWwgZGV2aWNlDQo+IHRyZWUgZXhwZXJpbWVudHMuDQo+IA0K
+PiBPbiB0aGUgb3RoZXIgaGFuZCBJIHdhbnQgcnVubmluZyBjb2RlLg0KPiANCj4gSSBzdXBwb3Nl
+IGlmIHRoZXJlIGlzIGEgc29saWQgdXNlIGNhc2UgZm9yIGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5
+DQo+IHRoYXQgYWxzbyBhZmZlY3QgaW5kZXBlbmRlbnQgZGV2ZWxvcGVycyAoc3VjaCBhcyBwZW9w
+bGUganVzdA0KPiBoYWNraW5nIGFyb3VuZCB3aXRoIHRoZXNlIGRldmljZXMpIHRoZW4gd2UgY291
+bGQgYWRkIGl0Lg0KPiANCj4gWW91cnMsDQo+IExpbnVzIFdhbGxlaWoNCg0KVXNlIG9mICJiaWFz
+LXB1bGwtZG93biA9IDxNVEtfUFVQRF9TRVRfUjFSMF9YWD4iIGhhZCBhbHJlYWR5IGJlZW4NCmRl
+c2NyaWJlZCBpbg0KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmcvcGluY3RybC9waW5j
+dHJsLW10NjV4eC50eHQuDQpQcmV2aW91cyBNZWRpYVRlayBjaGlwcyB1c2luZyBwaW5jdHJsLW10
+ay1jb21tb24uYyBoYWQgYWxyZWFkeSB1c2Ugc3VjaA0KYmluZGluZy4gVGhpcyBpcyBzby1jYWxs
+ZWQgYmFja3dhcmQgY29tcGF0aWJpbGl0eS4NCg0KQmVzaWRlcywgYWNjb3JkaW5nIHRvDQpEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZy9waW5jdHJsL3BpbmNmZy1ub2RlLnlhbWwsIGJp
+YXMtcHVsbC11cA0KYW5kIGJpYXMtcHVsbC1kb3duIGNhbiBoYXZlIGFuIG9wdGlvbmFsIGFyZ3Vt
+ZW50IHRvIHNlbGVjdCBwdWxsIHN0cmVuZ3RoDQp3aGVuIHN1cHBvcnRlZCBieSBoYXJkd2FyZS4N
+ClNvLCBJIHRoaW5rIHRoZSBwcm9wb3NlIG9mIHVzaW5nICJtZWRpYXRlayxwdWxsLXVwLWFkdiIg
+YW5kDQoibWVkaWF0ZWsscHVsbC1kb3duLWFkdiIgaXMgbm90IG5lY2Vzc2FyeS4gSG93ZXZlciwg
+SSBmYWlsIHRvIHN0b3ANCnVwc3RyZWFtIG9mIHVzaW5nICJtZWRpYXRlayxwdWxsLXVwLWFkdiIg
+YW5kICJtZWRpYXRlayxwdWxsLWRvd24tYWR2IiBpbg0KcGluY3RybC1tdGstY29tbW9uLXYyLmMu
+DQoNCkxpZ2h0IEhzaWVoDQoNCg0K
 
---32u276st3Jlj2kUU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jan 02, 2020 at 11:17:10AM +0100, Sam Ravnborg wrote:
-> This patchset introduces two files:
->=20
->     panel-simple.yaml
->     panel-simple-dsi.yaml
->=20
-> The two files will be used for bindings for simple
-> panels that have only a single power-supply.
->=20
-> For now only a few bindings are migrated - the
-> reamining bindings will be migrated when we have agreed
-> on the format.
->=20
-> v2:
->   - updated binding description in panel-simple.yaml
->   - fixed exampe in panel-simple.yaml
->     (I was missing libyaml-dev - now the examples are checked properly he=
-re)
->   - added panel-simple-dsi.yaml
->=20
-> 	Sam=20
->=20
-> Sam Ravnborg (2):
->       dt-bindings: one binding file for all simple panels
->       dt-bindings: one file of all simple DSI panels
->=20
->  .../display/panel/ampire,am-480272h3tmqw-t01h.yaml | 42 --------------
->  .../display/panel/ampire,am800480r3tmqwa1h.txt     |  7 ---
->  .../display/panel/panasonic,vvx10f034n00.txt       | 20 -------
->  .../bindings/display/panel/panel-simple-dsi.yaml   | 67 ++++++++++++++++=
-++++++
->  .../bindings/display/panel/panel-simple.yaml       | 59 ++++++++++++++++=
-+++
->  5 files changed, 126 insertions(+), 69 deletions(-)
-
-I like this. With the improved structure that the YAML bindings provide
-this becomes rather neat. You may want to update the subject of the
-patches to better reflect the style (most seem to use "dt-bindings:
-display: " as prefix, for example). But overall, looks good:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---32u276st3Jlj2kUU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4UdkgACgkQ3SOs138+
-s6HTnxAAm2DXdt4nuIiLcds9qXXf1V3A+d0r/Qya5SmQkUW7UZQ6X4PMvIZKHUQx
-rTdXlrytFDfJgX6oGy0x3vd6fTTOLpTEiMNNORnj0/6TXtcVihVvF+HzkBvbeVKt
-zcDjCZN41KpimIsTEww1I/HUD/+iy/1s/ekjvxogcpzXLo/a2pMR5aAICgPp+Kni
-Q/zgsMNefCwqTJCBz37uxNBUJ5grcyHThuIp+dwfvcrTRbBN6qlMvylVJ6W5K8Al
-KKkG4HvFmTucPg7UgiE80wZWZgOdLFRleXtN7/7arIWrPNzyh5769hhcRlXR9Nm1
-/U6YR5XXImyNeWlKLV6H6Eo2Gmw2sHOC3OwtfDgGkQun9dyRhoIPdFV1DZlaymS+
-PF5F379d5piQT39BtDTUn00K/8drc8QjIzYxi2ko+aZPFj7oL3yYz6ZkCoycB4F9
-HwIrGjyNbxmto6UBvY3LPDEZV6tbfv+OWDfjYY/Itf74sUYjvivQjLUUZNIMsR9Q
-rhw+9MpDxx9o6MfO4Zgr+//7F+X3zDQuG+a4S/1GLJnV+ryYay7FJuH52GfO24Og
-q/exUWQONwXywghxZ58/QbBBDSAoJT/nH6NUKcFl5vn+gPO8rDVYu8EN7NJ74Qbl
-XWHW36sT/ZpMwzTBkQDpNwN+92nerIJYxVXYQq9RBG9tfVax6OE=
-=1Z06
------END PGP SIGNATURE-----
-
---32u276st3Jlj2kUU--
