@@ -2,140 +2,124 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D7C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8081EC33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F2920656
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A979206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:29:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZJhcPv9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgAGJ2u (ORCPT
+        id S1727154AbgAGJ36 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:28:50 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:58290 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgAGJ2u (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 04:28:50 -0500
-Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iolA5-0001Tu-Jm; Tue, 07 Jan 2020 10:28:29 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, gregkh@linuxfoundation.org,
-        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
-        kernel@collabora.com, linux-media@vger.kernel.org,
-        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip MIPI RX D-PHY yaml bindings
-Date:   Tue, 07 Jan 2020 10:28:28 +0100
-Message-ID: <2549505.MsbA2le1sL@diego>
-In-Reply-To: <20200107023721.GG22189@pendragon.ideasonboard.com>
-References: <20191227200116.2612137-1-helen.koike@collabora.com> <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com> <20200107023721.GG22189@pendragon.ideasonboard.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 7 Jan 2020 04:29:58 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33338 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgAGJ36 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:29:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b6so53136367wrq.0
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:29:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZhKekxLTP92RphP15HP22YKK/XHkNOZwqR3Bm0RWNn4=;
+        b=ZJhcPv9VdZ/7VIGypWEKwM5EncUxXp0fNe+4lYsmyU2Qk/MlORWzXDCDpxYwo/f8c5
+         nWI1WyE1jWYp1JRiQ5XcqZMB7lirXbLDe+NJQSrfFpLQgyqjU7wmB8o3qTDtJkUrdPoA
+         6Oc+IcB4gUH0jIpPkhx+4Ewbd5S0UfrpTA1iWpAsv058Buk1FKKxfIof+Fqf/zslP+yu
+         u3mw0lfzhZdZkbBfw4Yf4PtDoCvBDckD5etJlXfebZIepenqHlVSy+W2OVFnKDKQFUCP
+         y7HgQzbrwCmrTA5Om423DjuyBs6dRNz4JxViQtkE5o4qphLd0gwGlZbjfK6t5p9D8qe8
+         PYFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZhKekxLTP92RphP15HP22YKK/XHkNOZwqR3Bm0RWNn4=;
+        b=XMVl52N47F0mRfgDjswsM5DiAvJITEAq9FlopT/ey9ksYEKYbXaihyAOOatkBglp8C
+         MWQ6JjzUlBUCe+EoYRz57c6h7VOuI3MtDlP7lfaiXgxY35mlC6R0NGPiu9SqeGAAJ/K3
+         TWlFHvmiBAPeQzK2/w7qUwCWJhxarhxLL2m8B/4wCr3xiV7qgDe1MQA5KPfdkD67QYfW
+         3Qslzw7Cnbnn1Kp2vkD9rXMKlJsLj2t9AuqqUKxhRyZx60anjeEYx8l4Vx4uxnirEfnr
+         yGYMAx9gqwF75LXyQ6IVoQUsSK6SCGkER8HnczF1DTTPDxqi3EyuR6SS8VUht/pZC+B+
+         ID+Q==
+X-Gm-Message-State: APjAAAU+jafoLuHhB807HXa9iCOHwtZgzkq0RGQSYYWncioyWflm/yL5
+        cVHVqrvkA9lmKxku71vjSqUDuw==
+X-Google-Smtp-Source: APXvYqyBJgLVBMFmDPjle8pjsXE/Ihg1UOVL/twyltX1BaSO63tN2499JJk0LQeLW1FMO53qx3nADw==
+X-Received: by 2002:adf:a141:: with SMTP id r1mr109570212wrr.285.1578389396079;
+        Tue, 07 Jan 2020 01:29:56 -0800 (PST)
+Received: from localhost.localdomain (i16-les01-ntr-213-44-229-207.sfr.lns.abo.bbox.fr. [213.44.229.207])
+        by smtp.googlemail.com with ESMTPSA id x14sm25959969wmj.42.2020.01.07.01.29.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 01:29:55 -0800 (PST)
+From:   Khouloud Touil <ktouil@baylibre.com>
+To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
+        baylibre-upstreaming@groups.io
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linus.walleij@linaro.org,
+        Khouloud Touil <ktouil@baylibre.com>
+Subject: [PATCH v4 0/5] at24: move write-protect pin handling to nvmem core
+Date:   Tue,  7 Jan 2020 10:29:17 +0100
+Message-Id: <20200107092922.18408-1-ktouil@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
-> On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
-> > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
-> > > Hi Helen,
-> > > 
-> > > Thank you for the patch.
-> > > 
-> > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
-> > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
-> > > > 
-> > > > This was tested and verified with:
-> > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml  Documentation/devicetree/bindings/phy/
-> > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > 
-> > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > > 
-> > > > ---
-> > > > 
-> > > > Changes in v12:
-> > > > - The commit replaces the following commit in previous series named
-> > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
-> > > > This new patch adds yaml binding and was verified with
-> > > > make dtbs_check and make dt_binding_check
-> > > > 
-> > > > Changes in v11: None
-> > > > Changes in v10:
-> > > > - unsquash
-> > > > 
-> > > > Changes in v9:
-> > > > - fix title division style
-> > > > - squash
-> > > > - move to staging
-> > > > 
-> > > > Changes in v8: None
-> > > > Changes in v7:
-> > > > - updated doc with new design and tested example
-> > > > 
-> > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
-> > > >  1 file changed, 75 insertions(+)
-> > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > 
-> > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml b/drivers/staging/media/phy-
-> > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..af97f1b3e005
-> > > > --- /dev/null
-> > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
-> > > > @@ -0,0 +1,75 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
-> > > 
-> > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
-> > 
-> > The driver currently only supports RX0, but I think you are right,
-> > it should say RX here. This binding could be extended for RX1.
-> > 
-> > > Looking at the PHY driver, it seems to handle all PHYs with a single
-> > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
-> > 
-> > I am not following this. The driver handles just one PHY. Each PHY
-> > should have its own node.
-> 
-> Looking at the registers, it seems that the different PHYs are
-> intertwined and we would could have trouble handling the different PHYs
-> with different DT nodes and thus struct device instances.
+The write-protect pin handling looks like a standard property that
+could benefit other users if available in the core nvmem framework.
 
-I have to confess to not following _ALL_ of the threads, so may say
-something stupid, but I don't think the PHYs are intertwined so much.
+Instead of modifying all the drivers to check this pin, make the
+nvmem subsystem check if the write-protect GPIO being passed
+through the nvmem_config or defined in the device tree and pull it
+low whenever writing to the memory.
 
-Where RX0 is controlled from the "General Register Files" alone
-[register dumping ground for soc designers], the TX1RX1-phy
-actually gets controlled from inside the dsi1 register area it seems.
+This patchset:
 
-So in my previous (still unsucessful) tests, I was rolling with something like
-https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
+- adds support for the write-protect pin split into two parts.
+The first patch modifies modifies the relevant binding document,
+while the second modifies the nvmem code to pull the write-protect
+GPIO low (if present) during write operations.
 
-With the actual "logic" picked from the vendor kernel, that just double-
-maps the dsi1-registers in both dsi and dphy driver, which was strange.
+- removes support for the write-protect pin split into two parts.
+The first patch modifies the relevant binding document to make the
+wp-gpio a reference to the property defined by nvmem , while the
+second removes the relevant code in the at24 driver.
+
+- adds reference in the at25 binding document for the wp-gpios property
+as it uses nvmem subsystem.
+
+Changes since v1:
+-Add an explenation on how the wp-gpios works
+-Keep reference to the wp-gpios in the at24 binding
+
+Changes since v2:
+-Use the flag GPIO_ACTIVE_HIGH instead of 0
+
+Changes since v3:
+-Keep the example of the wp-gpios in the at25 bindings
+-Add reference for the wp-gpios property in the at25 binding
 
 
-Heiko
+Khouloud Touil (5):
+  dt-bindings: nvmem: new optional property wp-gpios
+  nvmem: add support for the write-protect pin
+  dt-bindings: at24: make wp-gpios a reference to the property defined
+    by nvmem
+  dt-bindings: at25: add reference for the wp-gpios property
+  eeprom: at24: remove the write-protect pin support
 
+ .../devicetree/bindings/eeprom/at24.yaml      |  5 +----
+ .../devicetree/bindings/eeprom/at25.txt       |  2 ++
+ .../devicetree/bindings/nvmem/nvmem.yaml      | 11 +++++++++++
+ drivers/misc/eeprom/at24.c                    |  9 ---------
+ drivers/nvmem/core.c                          | 19 +++++++++++++++++--
+ drivers/nvmem/nvmem.h                         |  2 ++
+ include/linux/nvmem-provider.h                |  3 +++
+ 7 files changed, 36 insertions(+), 15 deletions(-)
+
+-- 
+2.17.1
 
