@@ -2,95 +2,294 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83F6C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71555C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7C72081E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:53:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578390795;
-	bh=rcKJiBOHF/a0+MDVGltwkYmA7kAiSShXv3OfBucNo/w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JA8WheHX/HHQbsC2obc6EWKEiERPOyMbiRbT3ptZQVwrchwC7L95uWyodKfoe8Fva
-	 93QV0TuC7HxCcV/Wo5kZmk4XPAEm4H1matufHvrY7F4GU/MKNioIteKVJP/v/gOeve
-	 sZEObWShBwp4EDQyU5jJz43Gy6HBC05NrX6+qu7U=
+	by mail.kernel.org (Postfix) with ESMTP id 3D4BC208C4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ziDuMHvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgAGJxK (ORCPT
+        id S1727084AbgAGJ6T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:53:10 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37397 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726485AbgAGJxJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:53:09 -0500
-Received: by mail-ot1-f68.google.com with SMTP id k14so75721552otn.4;
-        Tue, 07 Jan 2020 01:53:09 -0800 (PST)
+        Tue, 7 Jan 2020 04:58:19 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52318 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727753AbgAGJ6R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:58:17 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so18228728wmc.2
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:58:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=UfGDE/pY8GyHptw1+lgKhCDTDIHwOAgtK6t8XN0nv5M=;
+        b=ziDuMHvptB5Iu+MWIvv7l5G8tPvQ62nt+243YesP3kh3NQllbFzC0wCoWuOPEliMoN
+         fO8w5gcZPdaccC5JuLJLdvgPrLjqL5NMPXXhH9H+If4iQQR4TwPn94FfkkM9ixj98/tI
+         eiNUZ0h09fFAS6fsjhBMM3VPL9oFlrySbPVIbbo2bkKhmdEQ2ib1aWRSNM1l/Ka5D/3u
+         HaDAB7iNzcL0++VaSvgApD5ZwEvqceQQ2onwnpRQNghmfll5WqYbhG7v5iayIrHzmDw6
+         qcliaLUXAbEkkV2d8LJ2M1/jzQm7CUgjmZoNEZjokSJ5AynhB/n2OY/cV0XY5GwUTyqw
+         Wmbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rcKJiBOHF/a0+MDVGltwkYmA7kAiSShXv3OfBucNo/w=;
-        b=spnwUusnFCnaGf0nGyhvYIrZK7fZxpchw6XZAQvKRpfSTstjz1xbvLHYrIer0tt1NQ
-         pOmR9iHuZCi+Xad2SBPYWR6XjJkc4WH7f3RhtWQkE6vD+CgiLwJIigIoZNqKDFrTCOi7
-         ekkK6FQuLloN7K5IWcCA84W2PhEU4sDup6KXC05A4Xxe9Lasl3W4GTxQgROtxvrI9bd6
-         q9tMJfTKCxvF+uud38NFqdU1SayNNThFi/oRzzlSbqgduMZHY3uh04R+StFmSVF4ESxl
-         NTcdfFFqTxRKvTLoH8H8z21jlPBhA70Ue0eYGza7RPMIyHLRyx+YU+ZjKOKrdfSJXYgf
-         EnLA==
-X-Gm-Message-State: APjAAAU2zApQ8IQFnvMckrK9/w5ky0goBRLpYuAYc5ANu/OU/zxkuzeR
-        TbAhQBPYuloBuxZ1Rhvfa5fE9o92Le7TkqYwgCQ=
-X-Google-Smtp-Source: APXvYqyijdjeyq4HJ5FCDcI015uTWnvTRQoFeaQRgxTWy1DfLN1zgBL6llgNmNnOtPrGgkpTZXmDGjkn5Is6S8EHkt8=
-X-Received: by 2002:a9d:62c7:: with SMTP id z7mr111166052otk.189.1578390788841;
- Tue, 07 Jan 2020 01:53:08 -0800 (PST)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=UfGDE/pY8GyHptw1+lgKhCDTDIHwOAgtK6t8XN0nv5M=;
+        b=fJ+j3Byv6ei+wR2yXDBWzWOGRIHI4DZXUOovzBjgHzDRYR9s/o99sHPs6hUB4I4kcI
+         ipRhncT2JuulOEMSCYe83gNXcfSWC/l/H1y7xf+sho7ue3jB1PyKCwoOupzCksKhFXHt
+         bXU3RdM6a3+BPsg3PAIGBBaiyb1Y5gEiAeG1j1Kr80Xw7UUfVvTdXBFz5X7kD4CPyOlw
+         cZpBsDc75hAnUloPPPxShm/JI6v2LLC0yVmJwLQ9lrb4AiPdoRsgFgsnpPk3BNrfXm47
+         NUieeV7gQpZiS4EJpuRCDebUV6zRnp0rtf316tEWa/eooED5+RYAwRkLowWtVNSTE66X
+         1T8w==
+X-Gm-Message-State: APjAAAWeMHTAtr/Db7i4bxZS/5gFuEKmXcUG9AW7czKsAJgrUNu2WVt8
+        N6gg0mv4r41IMKdTNkadJo45rA==
+X-Google-Smtp-Source: APXvYqw02ATk0nvqjCckJPV3pNCB6y4om3PfcHfNjLxZVW3lmZbv6PEn/XkS6a6cZR4h/pibsnaHDw==
+X-Received: by 2002:a1c:61c1:: with SMTP id v184mr38685861wmb.160.1578391093938;
+        Tue, 07 Jan 2020 01:58:13 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h8sm78708203wrx.63.2020.01.07.01.58.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 01:58:13 -0800 (PST)
+References: <20191220091611.36319-1-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3] arm64: dts: meson-a1: add I2C nodes
+In-reply-to: <20191220091611.36319-1-jian.hu@amlogic.com>
+Date:   Tue, 07 Jan 2020 10:58:12 +0100
+Message-ID: <1ja76zsi4r.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20200106045833.1725-1-masahiroy@kernel.org>
-In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 7 Jan 2020 10:52:57 +0100
-Message-ID: <CAJZ5v0jBEq+GiTP8V4ZzQvR9qbSBdEz_P8EZNX7yNZMzTjB86Q@mail.gmail.com>
-Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code check
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, netdev <netdev@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 6:11 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+
+On Fri 20 Dec 2019 at 10:16, Jian Hu <jian.hu@amlogic.com> wrote:
+
+> There are four I2C controllers in A1 series,
+> Share the same comptible with AXG. Compared to AXG,
+> Drive strength feature is newly added in A1.
 >
-> 'PTR_ERR(p) == -E*' is a stronger condition than IS_ERR(p).
-> Hence, IS_ERR(p) is unneeded.
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
 >
-> The semantic patch that generates this commit is as follows:
->
-> // <smpl>
-> @@
-> expression ptr;
-> constant error_code;
-> @@
-> -IS_ERR(ptr) && (PTR_ERR(ptr) == - error_code)
-> +PTR_ERR(ptr) == - error_code
-> // </smpl>
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
+> This patch depends on A1 clock patchset at [0][3]
+>
+> Changes since v1 at [1]:
+> -change reg length to 0x20
+> -assign i2c bus alias in dts file
+> -add new feature note compared to AXG in changelog
+>
+> Changes since v2 at [2]:
+> -remove the dependence the commit description
+> -remove i2c alias in dtsi
+> -reorder the i2c nodes
+> -reorder the i2c pins
+>
+> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
+> [2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
+> [3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+> ---
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 142 ++++++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index eab2ecd36aa8..1542eeee699d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -117,6 +117,16 @@
+>  				};
+>  			};
+>  
+> +			i2c0: i2c@1400 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x1400 0x0 0x20>;
+> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
+> +				status = "disabled";
+> +			};
+> +
+>  			uart_AO: serial@1c00 {
+>  				compatible = "amlogic,meson-gx-uart",
+>  					     "amlogic,meson-ao-uart";
+> @@ -136,6 +146,36 @@
+>  				clock-names = "xtal", "pclk", "baud";
+>  				status = "disabled";
+>  			};
+> +
+> +			i2c1: i2c@5c00 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x5c00 0x0 0x20>;
+> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c2: i2c@6800 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6800 0x0 0x20>;
+> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c3: i2c@6c00 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6c00 0x0 0x20>;
+> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
+> +				status = "disabled";
+> +			};
+>  		};
+>  
+>  		gic: interrupt-controller@ff901000 {
+> @@ -171,3 +211,105 @@
+>  		#clock-cells = <0>;
+>  	};
+>  };
+> +
+> +&periphs_pinctrl {
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Why is this not directly under the periphs_pinctrl node ?
 
-for the acpi/scan.c change, but there seems to be a typo in the subject:
+> +	i2c0_f9_pins:i2c0-f9 {
+                     ^
+                     Missing space here. Same for the other nodes
 
-s/redundent/redundant/
+> +		mux {
+> +			groups = "i2c0_sck_f9",
+> +				"i2c0_sda_f10";
+> +			function = "i2c0";
+> +			bias-pull-up;
+
+Most device we have seen so far have the pull-up on the PCB.
+
+If you look at the other dts file, the i2c pad bias is disabled. If the
+pull-up resistor is missing on the PCB, this setting can overloaded in
+the board dt.
+
+Bottom line please put "bias-disable" or justify why a1 is different
+from the SoC.
+
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c0_f11_pins:i2c0-f11 {
+> +		mux {
+> +			groups = "i2c0_sck_f11",
+> +				"i2c0_sda_f12";
+> +			function = "i2c0";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c1_a_pins:i2c1-a {
+> +		mux {
+> +			groups = "i2c1_sck_a",
+> +				"i2c1_sda_a";
+> +			function = "i2c1";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c1_x_pins:i2c1-x {
+> +		mux {
+> +			groups = "i2c1_sck_x",
+> +				"i2c1_sda_x";
+> +			function = "i2c1";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_a4_pins:i2c2-a4 {
+> +		mux {
+> +			groups = "i2c2_sck_a4",
+> +				"i2c2_sda_a5";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_a8_pins:i2c2-a8 {
+> +		mux {
+> +			groups = "i2c2_sck_a8",
+> +				"i2c2_sda_a9";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_x0_pins:i2c2-x0 {
+> +		mux {
+> +			groups = "i2c2_sck_x0",
+> +				"i2c2_sda_x1";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_x15_pins:i2c2-x15 {
+> +		mux {
+> +			groups = "i2c2_sck_x15",
+> +				"i2c2_sda_x16";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c3_f_pins:i2c3-f {
+> +		mux {
+> +			groups = "i2c3_sck_f",
+> +				"i2c3_sda_f";
+> +			function = "i2c3";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c3_x_pins:i2c3-x {
+> +		mux {
+> +			groups = "i2c3_sck_x",
+> +				"i2c3_sda_x";
+> +			function = "i2c3";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +};
+
