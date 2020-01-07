@@ -2,106 +2,119 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190B9C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463CEC33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCAF208C4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:11:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgxO9545"
+	by mail.kernel.org (Postfix) with ESMTP id 22A80208C4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 14:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgAGOLx (ORCPT
+        id S1728202AbgAGOOp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 09:11:53 -0500
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:36505 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAGOLx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 09:11:53 -0500
-Received: by mail-wr1-f42.google.com with SMTP id z3so54115593wru.3;
-        Tue, 07 Jan 2020 06:11:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXPcYVB30xhm6gxEB0gvLyqs4GZoHNZT9ztvtTk+fFQ=;
-        b=FgxO9545VskxHdJfVvn1tBI9A3UGeuOqdRPg00rxYVknBk5+0A0+BeLRo6ya9Q8zg1
-         q259O/l0MJDndgkDFAeV2kzqT121mXVxR8ll3yDU93GYIxyAJaVNQNNVdifkkBAswQ2R
-         mm2PQyXSrInjHhHs2QgUKqrA1KqKzyl7as/TeAZsSuVhiZd95QWB5NaCh3ozi1f7QYbb
-         c3bCN/b3XxVVJp54P4QR7hGtWd/hrHS4+XZx+68kE5ArF9eDWTaKKm+fwrqfIuZwp/0v
-         8pZ+1eEhiSnGCGpyQyYpgrFTcuyK8w2EPZh4rRcO76/55KquRwIPvCs5jaQEh0kCtxIq
-         8aqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wXPcYVB30xhm6gxEB0gvLyqs4GZoHNZT9ztvtTk+fFQ=;
-        b=N8Dh/tnl0xVQT70OI+6nW6tZG15V2kZzHFc3v4uVWQ7fhSf+0yaMV7uh9F9Komcool
-         ZZc63nzxOroMUkgWlJUnEko9WI/bzkPK+QuCPGHKVSMxfkgqsPfILMqxwVx0U02p0Q/d
-         RXccqllFYAy8mg6jKhWggtABWSiRiZ4pSPi88KP12mesy8KVila+teukuIvuuPgq43TN
-         YxuQQYpCZWxzhZoiWRp7vDuutiyhTbsLEVu3ezfiXG8+M7oRZ1gmwMBsUzwlACjiFXX6
-         GBhWNVm5b4ufQavS+ibk1NuhCbW96m5wXp/HySnodCz/STisbSKL3EJkrjvQ2cyU3YSw
-         ANHQ==
-X-Gm-Message-State: APjAAAX74IOmcQmEV8UbKU6gr5aHuhH+vocrGRmjqDHDVsJ2j9wP0EpW
-        TSHOzPcP3sSGfKYezmh51sqTz63oJEx8ow==
-X-Google-Smtp-Source: APXvYqz1QI4XS31P1PNOZE+0WObqXH1kplJZw6jUyS/QqmL60a1DQE5wdTxT3VFtI3SKI+m72hpbug==
-X-Received: by 2002:adf:f605:: with SMTP id t5mr25536036wrp.282.1578406310894;
-        Tue, 07 Jan 2020 06:11:50 -0800 (PST)
-Received: from localhost.localdomain (3e6b1cc1.rev.stofanet.dk. [62.107.28.193])
-        by smtp.googlemail.com with ESMTPSA id d14sm78822429wru.9.2020.01.07.06.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 06:11:50 -0800 (PST)
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-To:     devicetree@vger.kernel.org
-Cc:     Bruno Thomsen <bruno.thomsen@gmail.com>,
+        Tue, 7 Jan 2020 09:14:45 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51730 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbgAGOOp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 09:14:45 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 70DA3AC50;
+        Tue,  7 Jan 2020 14:14:43 +0000 (UTC)
+Message-ID: <8cef3ff20485a084ab395533f28eb0c51b47925d.camel@suse.de>
+Subject: Re: [PATCH V2 0/4] ARM: Enable thermal support for Raspberry Pi 4
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stefan Wahren <wahrenst@gmx.net>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] dt: bindings: add vendor prefix for Kamstrup A/S
-Date:   Tue,  7 Jan 2020 15:11:38 +0100
-Message-Id: <20200107141143.11838-1-bruno.thomsen@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+Date:   Tue, 07 Jan 2020 15:14:41 +0100
+In-Reply-To: <1578072236-31820-1-git-send-email-wahrenst@gmx.net>
+References: <1578072236-31820-1-git-send-email-wahrenst@gmx.net>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-XJAu1+XbK2gXuacraTLW"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Kamstrup manufactures meters for electricity, heating, cooling
-and water. Including long-life communication infrastructure
-for e.g. smart grid based on Linux, more information on
-https://www.kamstrup.com
 
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+--=-XJAu1+XbK2gXuacraTLW
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..aab35a93e5ec 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -475,6 +475,8 @@ patternProperties:
-     description: Shenzhen Jesurun Electronics Business Dept.
-   "^jianda,.*":
-     description: Jiandangjing Technology Co., Ltd.
-+  "^kam,.*":
-+    description: Kamstrup A/S
-   "^karo,.*":
-     description: Ka-Ro electronics GmbH
-   "^keithkoep,.*":
--- 
-2.24.1
+On Fri, 2020-01-03 at 18:23 +0100, Stefan Wahren wrote:
+> This series enables thermal support for the Raspberry Pi 4. Neither the
+> bcm2835_thermal nor the brcmstb_thermal are suitable for the BCM2711.
+> So add a new thermal driver to read out the SoC temperature from the
+> AVS RO block of the BCM2711.
+>=20
+> Changes in V2:
+> - rebase on thermal/linux-next
+> - convert binding to YAML
+> - make AVS RO block a subnode of AVS monitor and access it via syscon
+> - drop unnecessary TSENS clock and get the rid of remove callback
+> - add Florian's reviewed-by to last/unchanged patch
+>=20
+> Stefan Wahren (4):
+>   dt-bindings: Add Broadcom AVS RO thermal
+>   thermal: Add BCM2711 thermal driver
+>   ARM: dts: bcm2711: Enable thermal
+>   ARM: configs: Build BCM2711 thermal as module
+>=20
+>  .../bindings/thermal/brcm,avs-ro-thermal.yaml      |  45 +++++++
+>  arch/arm/boot/dts/bcm2711.dtsi                     |  12 ++
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  arch/arm64/configs/defconfig                       |   1 +
+>  drivers/thermal/broadcom/Kconfig                   |   7 ++
+>  drivers/thermal/broadcom/Makefile                  |   1 +
+>  drivers/thermal/broadcom/bcm2711_thermal.c         | 129
+> +++++++++++++++++++++
+>  7 files changed, 196 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-ro=
+-
+> thermal.yaml
+>  create mode 100644 drivers/thermal/broadcom/bcm2711_thermal.c
+>=20
+> --
+> 2.7.4
+>=20
+
+Minus the small changes mentioned you can add my:
+
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+
+Many Thanks!
+Nicolas
+
+
+--=-XJAu1+XbK2gXuacraTLW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl4UklEACgkQlfZmHno8
+x/4CQAgAgO+zhdwQWVLtIsszrQRrZ0kfdbdfbJNrCOokDEca2VetcAHeJAL/cuw5
+n3TWr7fqVt2u38R7e9T8lleri5Yn8ZLkzhi97Azuhox7HDYTyLU2SjRQEnrWJ4T9
+1lrotXzonE48X7aouECdmfPI3RkL/wRu9wPzsgbrMC3adYZEoK8ZXLlOdGyq64bc
+pdp+kF7P7DKDTmAtcpCi2XTnWlPi5OgoK+eGn0MrobV1DMKeEvo+Guq8aEeDfMbJ
+QReBzmmcFf3BFrqy50L10s77vtSQ1HBU/GrIJPviPlHRfd6NCD4FIl/CiARF7RIk
+abmzDRMNNKuqw00mOD69A/mIKZTd2w==
+=6C0G
+-----END PGP SIGNATURE-----
+
+--=-XJAu1+XbK2gXuacraTLW--
 
