@@ -2,222 +2,185 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D052C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A116C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DBF524679
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33038222D9
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:24:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ssi0ikKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgAGJXO (ORCPT
+        id S1726565AbgAGJYF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:23:14 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:27723 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgAGJXO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:23:14 -0500
-IronPort-SDR: DTH7b/YHklWdtscrk0AXRcpodAl62dhBjd5ew3Nt9UD4m/et7ceA0/2JBnOg3T1e77uOri2CLb
- syd6zYuibimpQFHODEH6qeEttBauGfcQP5F817xlYk45ZUljge4iEvyXylDT6OCrSfk39oVvk4
- hhLmWmssy1GkTeffm+zZRLl6/K2CJhLq1QG9TL297K5w5sMTBZI2orxJzOZUpJHp1CoYO/YcRd
- Uq6ITq2LfippA2KqRng82ngUrNtLjUFkBVr9gqTww60FeLvyvG3Zh085qxxtYzAP5XcdXmWB/Z
- D9k=
-X-IronPort-AV: E=Sophos;i="5.69,405,1571731200"; 
-   d="scan'208";a="44610273"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 07 Jan 2020 01:23:13 -0800
-IronPort-SDR: tplytpQIcwlbIf6KWtUbVKFft0awdS/aTQTvzBBS5nfk2+yF+nNPt/gKw3Bp71JWpuXBjDgttE
- ou1DhX9GL7maq4Zt5tL3WB5lEug62wNjDQ0Hf5D9pPSCdaw1Y9rbyeUHtGVD2TjUdPc9PBiXKo
- UVxCnDd8dmEOwk2n/far46XKA96RK92eSVdaRRC80sjVtkIX25JWz5QUy8HK2/aVsudoVSRlCF
- kKLKCz+exnrzdiTz5LU5QWud31JtVK56w8RQptKsfehgn286N8ErL2Qu9zAFY69vhCdFJagpm0
- WSE=
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh@kernel.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be>
- <20191205210653.GA29969@bogus>
- <CAMuHMdXKPC7-XaezodwL1Dhvke6PUVSZEbvN-sm3Uh6T61qbhQ@mail.gmail.com>
- <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
- <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-Message-ID: <bb5fb539-0d0d-6356-35c2-8ba47cb9fcbf@mentor.com>
-Date:   Tue, 7 Jan 2020 14:52:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 7 Jan 2020 04:24:05 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42663 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbgAGJYF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:24:05 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q6so52964958wro.9
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:24:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jJ5pfTfr1oTq02pXY/Q0LpFtsR1htYmf8bYAxrgz1T0=;
+        b=Ssi0ikKg1+CxiQDcYTjOggcE0ILVs32Ko4UeEL0DyLrqNFIB/V4MP6EbzvRtol1V0z
+         dVuq2VWNK9l45rutKiO9XCDZS/OFlqIuBjeEUuXD66P2rIx0t1hbkumLgvP4+6jlzjf5
+         DXYdthmm0O51j+Xvm4doD6h6Ddh3GFgV9BoEcNZIoDnur11yu0ql7LAaiNf4VHDeOGeN
+         ZDMxQQX8cEJcs5SD23nWo1UtmTzgY1helUhPMKlnRU//BTpk78OvevYZhg+hthwJ6HZY
+         1c8eCVPjD4vPJjKjdRKvfWB+2vqH+z6Um6T6Z9fI1K2hpHRXMaXZg4loILurRaCc3xte
+         TXiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jJ5pfTfr1oTq02pXY/Q0LpFtsR1htYmf8bYAxrgz1T0=;
+        b=D04wjOEwjSDV5VOZjGEvmj7z6hre5L1buutZDAbX8vcABJotTI0KT7C8ey3Ldh8+up
+         DcnI1xBEE1vKmkHeAV/3QVEYPIq9sUYXnhBqq7YqEcJKXQ+qEaP61pdWUFxq4JUNt7C/
+         HO6H7xo23zRVEuiSRgAshQamEd1o7tSJkkMRoQYjfhPdWeCYc4JDXS22X/3nEP+jWbN7
+         zE2lkFsl++s92Ul/bDIBaPv5RYGAOVi6DK/JOzbanD/H0uX++D7rl9SsCnQGIf/P3z9f
+         MHvsL50rW8tT47Fc41liSUl8ie8kpioCQb61yPzTcN21eZVMcphS0Q96y0kuT22XR+ff
+         5ZKw==
+X-Gm-Message-State: APjAAAWHnVd6aoRZ6RNxQHKV8lm0Xw4KgqAd0T/pqMfobO3pkeIQw7IZ
+        7+gM3Kgu1uFTaWgOI1uBPd3B7A==
+X-Google-Smtp-Source: APXvYqwi9PEiUYheOJVnMZ7drMhgq/ICX6s9Wtho3XvYPockXuKB8vSyJtfbeCfSa4egxCeeFdJ3IA==
+X-Received: by 2002:a5d:528e:: with SMTP id c14mr27530005wrv.308.1578389042531;
+        Tue, 07 Jan 2020 01:24:02 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q11sm74554735wrp.24.2020.01.07.01.24.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 01:24:01 -0800 (PST)
+Subject: Re: [PATCH v6 0/4] drm: Add support for bus-format negotiation
+To:     dri-devel@lists.freedesktop.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+References: <20200106143409.32321-1-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <4f44d89c-a473-b114-755d-7ce21d8903d0@baylibre.com>
+Date:   Tue, 7 Jan 2020 10:24:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200106143409.32321-1-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-06.mgc.mentorg.com (139.181.222.6) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 06/01/2020 15:34, Neil Armstrong wrote:
+> This patch series aims at adding support for runtime bus-format
+> negotiation between all elements of the
+> 'encoder -> bridges -> connector/display' section of the pipeline.
+> 
+> In order to support that, we need drm bridges to fully take part in the
+> atomic state validation process, which requires adding a
+> drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
+> Once those basic building blocks are in place, we can add new hooks to
+> allow bus format negotiation (those are called just before
+> ->atomic_check()). The bus format selection is done at runtime by
+> testing all possible combinations across the whole bridge chain until
+> one is reported to work.
+> 
+> No Major changes in this v6, I addressed the slight changed requested
+> by Boris from Laurent on the patch 1, and rebased on drm-misc-next. 
+> Note that this version only contains core changes.
+> Once those changes are merged I'll send the imx/panel/lvds-codec specific bits.
+> 
+> A more detailed changelog is provided in each patch.
+> 
+> This patch series is also available here [1].
+> 
+> Thanks,
+> 
+> ~Boris~ Neil
+> 
+> [1] https://github.com/superna9999/linux/commits/drm-bridge-busfmt-v6
+> 
+> Boris Brezillon (4):
+>   drm/bridge: Add a drm_bridge_state object
+>   drm/bridge: Patch atomic hooks to take a drm_bridge_state
+>   drm/bridge: Add an ->atomic_check() hook
+>   drm/bridge: Add the necessary bits to support bus format negotiation
+> 
+>  .../drm/bridge/analogix/analogix_dp_core.c    |  41 +-
+>  drivers/gpu/drm/drm_atomic.c                  |  39 ++
+>  drivers/gpu/drm/drm_atomic_helper.c           |  32 +-
+>  drivers/gpu/drm/drm_bridge.c                  | 527 +++++++++++++++++-
+>  drivers/gpu/drm/rcar-du/rcar_lvds.c           |   5 +-
+>  include/drm/drm_atomic.h                      |   3 +
+>  include/drm/drm_bridge.h                      | 275 ++++++++-
+>  7 files changed, 874 insertions(+), 48 deletions(-)
+> 
 
-On 06/01/20 1:42 PM, Geert Uytterhoeven wrote:
-> Hi Rob,
->
-> On Fri, Dec 6, 2019 at 4:04 PM Rob Herring <robh@kernel.org> wrote:
->> On Fri, Dec 6, 2019 at 3:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>> On Thu, Dec 5, 2019 at 10:06 PM Rob Herring <robh@kernel.org> wrote:
->>>> On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
->>>>> Add Device Tree bindings for a GPIO repeater, with optional translation
->>>>> of physical signal properties.  This is useful for describing explicitly
->>>>> the presence of e.g. an inverter on a GPIO line, and was inspired by the
->>>>> non-YAML gpio-inverter bindings by Harish Jenny K N
->>>>> <harish_kandiga@mentor.com>[1].
->>>>>
->>>>> Note that this is different from a GPIO Nexus Node[2], which cannot do
->>>>> physical signal property translation.
->>>> It can't? Why not? The point of the passthru mask is to not do
->>>> translation of flags, but without it you are always doing translation of
->>>> cells.
->>> Thanks for pushing me deeper into nexuses!
->>> You're right, you can map from one type to another.
->>> However, you cannot handle the "double inversion" of an ACTIVE_LOW
->>> signal with a physical inverter added:
->>>
->>>         nexus: led-nexus {
->>>                 #gpio-cells = <2>;
->>>                 gpio-map = <0 0 &gpio2 19 GPIO_ACTIVE_LOW>,     // inverted
->>>                            <1 0 &gpio2 20 GPIO_ACTIVE_HIGH>,    // noninverted
->>>                            <2 0 &gpio2 21 GPIO_ACTIVE_LOW>;     // inverted
->>>                 gpio-map-mask = <3 0>;
->>>                 // default gpio-map-pass-thru = <0 0>;
->>>         };
->>>
->>>         leds {
->>>                 compatible = "gpio-leds";
->>>                 led6-inverted {
->>>                         gpios = <&nexus 0 GPIO_ACTIVE_HIGH>;
->>>                 };
->>>                 led7-noninverted {
->>>                         gpios = <&nexus 1 GPIO_ACTIVE_HIGH>;
->>>                 };
->>>                 led8-double-inverted {  // FAILS: still inverted
->>>                         gpios = <&nexus 2 GPIO_ACTIVE_LOW>;
->>>                 };
->>>         };
->>>
->>> It "works" if the last entry in gpio-map is changed to GPIO_ACTIVE_HIGH.
->>> Still, the consumer would see the final translated polarity, and not the
->>> actual one it needs to program the consumer for.
->> I'm not really following. Why isn't a double inversion just the same
->> as no inversion?
-> Because the nexus can only mask and/or substitute bits.
-> It cannot do a XOR operation on the GPIO flags.
->
->>>>> While an inverter can be described implicitly by exchanging the
->>>>> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
->>>>> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
->>>>> th provider and consumer sides:
->>>>>   1. The GPIO provider (controller) looks at the flags to know the
->>>>>      polarity, so it can translate between logical (active/not active)
->>>>>      and physical (high/low) signal levels.
->>>>>   2. While the signal polarity is usually fixed on the GPIO consumer
->>>>>      side (e.g. an LED is tied to either the supply voltage or GND),
->>>>>      it may be configurable on some devices, and both sides need to
->>>>>      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
->>>>>      match the actual polarity.
->>>>>      There exists a similar issue with interrupt flags, where both the
->>>>>      interrupt controller and the device generating the interrupt need
->>>>>      to agree, which breaks in the presence of a physical inverter not
->>>>>      described in DT (see e.g. [3]).
->>>> Adding an inverted flag as I've suggested would also solve this issue.
->>> As per your suggestion in "Re: [PATCH V4 2/2] gpio: inverter: document
->>> the inverter bindings"?
->>> https://lore.kernel.org/linux-devicetree/CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com/
->>>
->>> Oh, now I understand. I was misguided by Harish' interpretation
->>> https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/
->>> which assumed an "inverted" property, e.g.
->>>
->>>     inverted = /bits/ 8 <0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0>;
->>>
->>> But you actually meant a new GPIO_INVERTED flag, to be ORed into the 2nd
->>> cell of a GPIO specifier? I.e. add to include/dt-bindings/gpio/gpio.h"
->>>
->>>     /* Bit 6 expresses the presence of a physical inverter */
->>>     #define GPIO_INVERTED 64
->> Exactly.
-> OK, makes sense.
-
-
-The reason I went for "inverted" property is because, we can specify this for gpios at provider side.
-
-The usecase needed to define the polarity which did not have kernel space consumer driver.
-
-
-I am not sure how do we achieve this using GPIO_INVERTED flag. We need some sort of node/gpio-hog to specify these
-
-type of properties? Otherwise gpio-pin will be held by kernel or the module using the hog property and the user space application will not be able to access pin.
-
-
-or please let me know if I am missing something.
-
-
->
->>> We need to be very careful in defining to which side the GPIO_ACTIVE_*
->>> applies to (consumer?), and which side the GPIO_INVERTED flag (provider?).
->>> Still, this doesn't help if e.g. a FET is used instead of a push-pull
->>> inverter, as the former needs translation of other flags (which the
->>> nexus can do, the caveats above still applies, though).
->> Yes. Historically the cells values are meaningful to the provider and
->> opaque to the consumer. Standardized cell values changes that
->> somewhat. I think we want the active flag to be from the provider's
->> prospective because the provider always needs to know. The consumer
->> often doesn't need to know. That also means things work without the
->> GPIO_INVERTED flag if the consumer doesn't care which is what we have
->> today already and we can't go back in time.
->>
-
-Things will work without GPIO_INVERTED flag for consumers which can specify GPIO_ACTIVE_* flags.
-
-
-
->>> Same for adding IRQ_TYPE_INVERTED.
->> I suppose so, yes.
->>
->>> Related issue: how to handle physical inverters on SPI chip select lines,
->>> if the SPI slave can be configured for both polarities?
->> Good question. Perhaps in a different way because we have to handle
->> both h/w controlled and gpio chip selects.
->>
->> However, how would one configure the polarity in the device in the
->> first place? You have to assert the CS first to give a command to
->> reprogram it.
-> That's indeed true for a simple SPI slave.
-> But if it is a smarter device (e.g. a generic micro controller), it may use the
-> system's DTB to configure itself.
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
+Applied to drm-misc-next with slight change in patch 1 and doc fix in patch 4
