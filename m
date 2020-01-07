@@ -2,117 +2,137 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD0C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1339C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E34E20678
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828F820678
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 10:20:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="taUrxPZT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xCw2aOcD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgAGKRI (ORCPT
+        id S1727722AbgAGKUX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 05:17:08 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38064 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727427AbgAGKRI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 05:17:08 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so53274390wrh.5
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 02:17:07 -0800 (PST)
+        Tue, 7 Jan 2020 05:20:23 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35235 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727154AbgAGKUX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 05:20:23 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 15so38497634lfr.2
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 02:20:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fwzh5B1nXt/sAEFF4P6VGTRMD6n6bfO44NTRH3RJWZ4=;
-        b=taUrxPZTGVzzuvL7T0lvDMjjDK8lWEumcMo06rflm+YVYxsAK4JOpHgrsuAfS9cWXI
-         G41MsZHjP/iu0AGNtOm4RB+dnO/BlbvD6PqTU2RzKIaoKHNOTimtY1JJkFNR4ViAi44p
-         bQfKDKrRFnorlrTOwWLpMu4a12R/xRFUrN6hUtUHkzTgobNonMUqEtmROPxp0Y7ldrp7
-         P8SKMT8N1cWBfXuQWuAhAXgcL+n/MeAI86J59ta9lgyoQ0GiYcuCF0pDGqp3O5kR7WKY
-         tU91FqNkCDxKwj/tG4ZzIzefo7Xul6TH6UYN1zmSjtQupZzVTC06qKPvsKuD5VykiP/Y
-         Ii6A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eMXkNg8gjjjP4/UPSl/T3BVhY6m7trOu4dhjFlvWIdM=;
+        b=xCw2aOcDbDhAosRUZpI6S8jMUrGPkDQqWqFwb5KY/DgItDqPB6ptgX5V8gs2yDC82+
+         TQSjZ5E2cLNKjaz6JtEmt4T7mFfIrrPYNyrT3jiAN6/2Iyc2srA526cttuVeaA9GgZy7
+         RsjrRB4c79+Wti1TvIpqtZa5J1rHZihfl2JV8GWrftEngwr59RFHWw/BAxyZc22OAW9/
+         mAqEQpKUAtdMyffk8S0eL1YYz/+fwuQPZL+9BCsW8/zdkEbMRl8S/rExnFRhho40HLDS
+         VkvUCyyWA7t7vhznmbNtN4ENfD3DyIk0oCQtLNU+auQQZHfpdNT541zidQxXe0Qz4M0T
+         FgfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fwzh5B1nXt/sAEFF4P6VGTRMD6n6bfO44NTRH3RJWZ4=;
-        b=SzrmcQsalpI2+d6hKralIUjTXEJBa4rg0JfOzIwTsuA3sHbwTBn2xvdh/aBwdwtvSl
-         /uTY6WbIfPDa2WgKZY3jt0xbPPTRPgl+ptXCjmR+r2hqRf1/Cb/f7HQprqzx+P8N0vGQ
-         hfn1MdebMXaHEdH4S0JcPiki39MVcQQZwrf2fhtvGzMSI6pv3XShz1GYnW7r7WhsgINJ
-         t8hAsZUo6TwUAE8EiVXRQtGIR7dsFMncVpJhP1C5TZ/3G8GyibQMGmAdxo+LOHEEcsYC
-         vhPs7iC4f54IFt4aUDDWZzMwgSe9M7DCYkQaIoroqaqmrDlJQOmlbMum7rcqW/xNJXQ+
-         lFLQ==
-X-Gm-Message-State: APjAAAVee9+G7fgzAR7R881D0Xc08ol/DUDS8cmDKUPCSsP7ogyauHNA
-        xMzzPmSmaOHeJlzy1PX39XY6Qw==
-X-Google-Smtp-Source: APXvYqx96FNnTE7Wcke6NICz9bHsU0YLHTjGvRQKQMsnCyEMLoYLSpwbGJRwJxjIiek++9x0xqV8nQ==
-X-Received: by 2002:a05:6000:149:: with SMTP id r9mr99505691wrx.147.1578392226736;
-        Tue, 07 Jan 2020 02:17:06 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id b17sm73177393wrx.15.2020.01.07.02.17.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 Jan 2020 02:17:05 -0800 (PST)
-Subject: Re: [PATCH v6 08/11] dt-bindings: gpio: wcd934x: Add bindings for
- gpio
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20191219103153.14875-1-srinivas.kandagatla@linaro.org>
- <20191219103153.14875-9-srinivas.kandagatla@linaro.org>
- <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <1a027d45-6082-1697-ccf2-4a5be9a3591a@linaro.org>
-Date:   Tue, 7 Jan 2020 10:17:04 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eMXkNg8gjjjP4/UPSl/T3BVhY6m7trOu4dhjFlvWIdM=;
+        b=cgtSGfaJOvHF/on5/0ys4oVYSWvPMtKzs78rl5qhWuH+FthSFc9KZWWR+7Uk0JNe0P
+         7Areaumt6C5ctaAsfLAfv6Zmr3IjNMX0mvc6zPyGpNHti6fSdZN1AHOXsZmz1+TANiC0
+         UZ8NJJMWgGAwKNiQXhokTpmC5W1QO34Tlek/FGLeOJbNxGsRI9EzalOoPcY8/U+KAbXT
+         rMaDrzRZ715j+k7uqZt/X+kFHC1bTb0DQMIBm41xUk82xJrkWAHkz/kznoe0Q0RuKPPw
+         YM7QO2q0E/n3YyPMDFsaw/M+zZ6B0UrtKkhcUYFpQZLye6NvPkrRXGMPJeFJykBzLEau
+         F2/Q==
+X-Gm-Message-State: APjAAAW6AXyBGrkR7SFyN20PFnQzQbjSFY8bfYYs7Ggy1Zb1ZoRDE+A/
+        viTDo3KAqX6NzfE2aUqjexzLG0WLkGew7jMMpmjZWQ==
+X-Google-Smtp-Source: APXvYqx+1HVleR9t6Yuyooq8t8xa7rjXdvZgR0S/2R2tmpjcPZ3EC1OYv8foVlifSxaWiiQHWGnQCar3duKMNpwhtnc=
+X-Received: by 2002:ac2:55a8:: with SMTP id y8mr58557682lfg.117.1578392421291;
+ Tue, 07 Jan 2020 02:20:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYc-kB4Kx690FnU=3CwnjFdQhdxofGguFAAs_j==C=nmQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
+ <1566206502-4347-6-git-send-email-mars.cheng@mediatek.com>
+ <CACRpkdZa_sQgvWC3ic0NxrVi9gS1cNTsV-wa-SDpA0e5kutBRw@mail.gmail.com> <1577022724.7468.20.camel@mtkswgap22>
+In-Reply-To: <1577022724.7468.20.camel@mtkswgap22>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 7 Jan 2020 11:20:10 +0100
+Message-ID: <CACRpkdZUxpQ1tS9mKG9tc_U==M2BL9HwXt3DS1t413GGSEaVTA@mail.gmail.com>
+Subject: Re: [PATCH v2 05/11] pinctrl: mediatek: avoid virtual gpio trying to
+ set reg
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Mars Cheng <mars.cheng@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, wsd_upstream@mediatek.com,
+        mtk01761 <wendell.lin@mediatek.com>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Mon, Dec 23, 2019 at 4:11 AM Hanks Chen <hanks.chen@mediatek.com> wrote:
+> On Fri, 2019-08-23 at 10:57 +0200, Linus Walleij wrote:
+> > On Mon, Aug 19, 2019 at 11:22 AM Mars Cheng <mars.cheng@mediatek.com> wrote:
 
+> > This does not explain what a "virtual GPIO" is in this
+> > context, so please elaborate. What is this? Why does
+> > it exist? What is it used for?
+> >
+> > GPIO is "general purpose input/output" and it is a
+> > pretty rubbery category already as it is, so we need
+> > to define our terms pretty strictly.
+> >
+> Virtual GPIO only used inside SOC and not being exported to outside SOC
+> in MTK platform. Some modules use virtual GPIO as eint (e.g. pmic or
+> usb).
 
-On 07/01/2020 09:47, Linus Walleij wrote:
-> On Thu, Dec 19, 2019 at 11:33 AM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
-> 
->> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
->> gpio controller to control 5 gpios on the chip. This patch adds
->> required device tree bindings for it.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Tell me if you want me to merge this patch through the GPIO tree.
-> 
-Yes that would be great!. gpio bindings and gpio driver can go via gpio 
-tree as there is no compile time dependency. Also Mark has already 
-merged the audio codec side of it.
+I would call that internal GPIOs, those are very real rails inside
+the chip made with polysilicone so there is nothing "virtual"
+about them. If the documentation for the chip calls them virtual
+then explain in the driver that these are SoC-internal
+lines so that everyone will get it.
 
-I will address the comments on the driver and send new version of these 
-2 patches.
+Is the PMIC inside the SoC? I thought that was usually outside of it
+in its own chip.
 
-Thanks,
-srini
-> Yours,
-> Linus Walleij
-> 
+But I suppose there could be some interface to it in the SoC and
+then that interface has this EINT?
+
+> In MTK platform, external interrupt (EINT) and GPIO is 1-1 mapping and
+> we can set GPIO as eint.
+> But some modules use specific eint which doesn't have real GPIO pin.
+> So we use virtual GPIO to map it.
+
+OK I get it I think... just put these comments into the code as well
+so we understand when reading the code what is going on.
+
+> > > +       if (mtk_is_virt_gpio(hw, gpio))
+> > > +               return 1;
+> >
+> > Why are "virtual GPIOs" always inputs?
+>
+> We set virtual GPIO as eint.
+> It mean virtual GPIO only used inside SOC and not being exported to
+> outside SOC.
+
+Are you saying that:
+- "Virtual" GPIOs are always and only used for interrupts
+- Since they are only used for interrupts, they are always inputs
+
+Then write that in a comment to the above change so we know
+this context.
+
+Yours,
+Linus Walleij
