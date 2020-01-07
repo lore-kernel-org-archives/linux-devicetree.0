@@ -6,198 +6,140 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F995C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD80C282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB13208C4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD728206DB
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 22:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578435299;
-	bh=RucTsMxr2qacpOC34F0AC9F0BKeUpDA+psINAfp9OCo=;
+	s=default; t=1578435673;
+	bh=NkKTf9JtMWy3QWBJ1X8z0Xyh/O2MvFDSh5L3xkxXEFA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FxR0ar21iTPFpG34z/5G2+t1+sfhB5DjcNR73L67+wj8riGi2gJ8qq1tL0r0/6GD1
-	 +puYlgnB7z/TP5s9mGZS5liTdrrIwgNMElyBZg0LSPEGEusE6ynas/E2grp+PikpcL
-	 4VT0QyiiVY8x0jjfIAY23DM2XniXgsKK7L3k3oFk=
+	b=OH3KLIImSTsCTEq7K5dKvrnBRcpAqffQuBCG0mmOQMV20tDrSr2ldCU4HWOp8/pd0
+	 hcRtIe22QgXJCHw59AkX9THCohjLbhPIhjVNaiqZvMu68gP+woMqdW2BvEvvYVla93
+	 pcrO+Tb8Bffl1a8HVUhq9qjL7ru//OrLoW03DM0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbgAGWO6 (ORCPT
+        id S1726952AbgAGWVK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 17:14:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51410 "EHLO mail.kernel.org"
+        Tue, 7 Jan 2020 17:21:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbgAGWO6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 17:14:58 -0500
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        id S1725601AbgAGWVK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 17:21:10 -0500
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54EDE2073D;
-        Tue,  7 Jan 2020 22:14:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAFC52077B;
+        Tue,  7 Jan 2020 22:21:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578435297;
-        bh=RucTsMxr2qacpOC34F0AC9F0BKeUpDA+psINAfp9OCo=;
+        s=default; t=1578435668;
+        bh=NkKTf9JtMWy3QWBJ1X8z0Xyh/O2MvFDSh5L3xkxXEFA=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MXaKcRixoGSgVj7J1nE7KRVF9SClcly8oq1T8gZButE9Mld4ndN4F69nFh3k2SfeF
-         QGCDGUWSsTg04E9ZL9N9sqPp8Wwu/x7kCaFW39LkhxlfAXjovL/99wuxIzgjf3Eof2
-         zAI12y1KH8JYB1uA7sUyYN0VqTple82pap51JrK4=
-Received: by mail-qv1-f41.google.com with SMTP id m14so588568qvl.3;
-        Tue, 07 Jan 2020 14:14:57 -0800 (PST)
-X-Gm-Message-State: APjAAAXO3gPgj3sx+UNMTD2l3g30eDt3ZAKTki2K51X2eBRda+Ct8T8r
-        Ck5Wdp5/YVL3NOlOSCyNIP6JeDvlAi4JEiTPQA==
-X-Google-Smtp-Source: APXvYqybizgUrBr9nhhJvcbQ6c0I6iKBqW16hJjNrPtgV9+z/C+p7hKmsqwonNDKpS2lM5D11wSbF/mOy/0V8VBXvhs=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr1434429qvu.136.1578435296434;
- Tue, 07 Jan 2020 14:14:56 -0800 (PST)
+        b=du3SlLusQi5E6+0/ummXqIs96p4I75CtDzKtnmeoTLT0WkCfttIcAvBM72tluulHn
+         cZDu0WfQuioUuBZnTmtGTTjczaIe3CaXULwGxi8Sz4cdFzoyF78aNpfGXb0g6egY1t
+         mS5+2+pbW/Ts4YPW9NA4j4IvYeeGhV/2YFQRyVJE=
+Received: by mail-qk1-f170.google.com with SMTP id k6so930129qki.5;
+        Tue, 07 Jan 2020 14:21:08 -0800 (PST)
+X-Gm-Message-State: APjAAAVJS+jNVkIfW1e5B6nMZ8gnHVuFq6lC+XBE+RXupIhBHabui3HN
+        EMhm95pDynVSsEKv4SOYvL7V2tKiMagonq11Fw==
+X-Google-Smtp-Source: APXvYqxaeVkPuYsl3xVEY7yZlxgOA/L3HpU+5g5utASwlUWkzj0ouG5Hvzh6bHZNzhtY1FLiuQwmORZs9a76vab4yn8=
+X-Received: by 2002:a37:a70b:: with SMTP id q11mr1500663qke.393.1578435667832;
+ Tue, 07 Jan 2020 14:21:07 -0800 (PST)
 MIME-Version: 1.0
-References: <1576595954-9991-1-git-send-email-jhugo@codeaurora.org> <1576595987-10043-1-git-send-email-jhugo@codeaurora.org>
-In-Reply-To: <1576595987-10043-1-git-send-email-jhugo@codeaurora.org>
+References: <20191220065314.237624-1-lkundrak@v3.sk> <20191220065314.237624-4-lkundrak@v3.sk>
+In-Reply-To: <20191220065314.237624-4-lkundrak@v3.sk>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 7 Jan 2020 16:14:44 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+b45XoZ+RnDkuguW+NaPF_fEjzNmHueWT-cQFrX3+2Bg@mail.gmail.com>
-Message-ID: <CAL_Jsq+b45XoZ+RnDkuguW+NaPF_fEjzNmHueWT-cQFrX3+2Bg@mail.gmail.com>
-Subject: Re: [PATCH v11 1/4] dt-bindings: clock: Document external clocks for
- MSM8998 gcc
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Michael Turquette <mturquette@baylibre.com>,
+Date:   Tue, 7 Jan 2020 16:20:56 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+LduJhf_LawZ+Ofu-70J3c1L3NuqAw3_jzYpC0Gy3x0A@mail.gmail.com>
+Message-ID: <CAL_Jsq+LduJhf_LawZ+Ofu-70J3c1L3NuqAw3_jzYpC0Gy3x0A@mail.gmail.com>
+Subject: Re: [PATCH 3/5] dt-bindings: phy: Add binding for marvell,mmp3-hsic-phy
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
+        devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
+        soc@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 9:19 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+On Fri, Dec 20, 2019 at 1:01 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
 >
-> The global clock controller on MSM8998 can consume a number of external
-> clocks.  Document them.
+> This is the PHY chip for USB HSIC on MMP3 platform.
 >
-> For 7180 and 8150, the hardware always exists, so no clocks are truly
-> optional.  Therefore, simplify the binding by removing the min/max
-> qualifiers to clocks.  Also, fixup an example so that dt_binding_check
-> passes.
->
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
->  .../devicetree/bindings/clock/qcom,gcc.yaml        | 73 +++++++++++++++++-----
->  1 file changed, 59 insertions(+), 14 deletions(-)
+>  .../bindings/phy/marvell,mmp3-hsic-phy.yaml   | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
 
-This breaks 'make dt_binding_check'...
+Seems this is already in -next, but it breaks dt_binding_check.
 
 >
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> index e73a56f..f2b5cd6 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
-> @@ -40,20 +40,40 @@ properties:
->         - qcom,gcc-sm8150
->
->    clocks:
-> -    minItems: 1
-> -    maxItems: 3
-> -    items:
-> -      - description: Board XO source
-> -      - description: Board active XO source
-> -      - description: Sleep clock source
-> +    oneOf:
-> +      #qcom,gcc-sm8150
-> +      #qcom,gcc-sc7180
-> +      - items:
-> +        - description: Board XO source
-> +        - description: Board active XO source
-> +        - description: Sleep clock source
-> +      #qcom,gcc-msm8998
-> +      - items:
-> +        - description: Board XO source
-> +        - description: Sleep clock source
-> +        - description: USB 3.0 phy pipe clock
-> +        - description: UFS phy rx symbol clock for pipe 0
-> +        - description: UFS phy rx symbol clock for pipe 1
-> +        - description: UFS phy tx symbol clock
-> +        - description: PCIE phy pipe clock
->
->    clock-names:
-> -    minItems: 1
-> -    maxItems: 3
-> -    items:
-> -      - const: bi_tcxo
-> -      - const: bi_tcxo_ao
-> -      - const: sleep_clk
-> +    oneOf:
-> +      #qcom,gcc-sm8150
-> +      #qcom,gcc-sc7180
-> +      - items:
-> +        - const: bi_tcxo
-> +        - const: bi_tcxo_ao
-> +        - const: sleep_clk
-> +      #qcom,gcc-msm8998
-> +      - items:
-> +        - const: xo
-> +        - const: sleep_clk
-> +        - const: usb3_pipe
-> +        - const: ufs_rx_symbol0
-> +        - const: ufs_rx_symbol1
-> +        - const: ufs_tx_symbol0
-> +        - const: pcie0_pipe
->
->    '#clock-cells':
->      const: 1
-> @@ -118,6 +138,7 @@ else:
->        compatible:
->          contains:
->            enum:
-> +            - qcom,gcc-msm8998
->              - qcom,gcc-sm8150
->              - qcom,gcc-sc7180
->    then:
-> @@ -179,10 +200,34 @@ examples:
->      clock-controller@100000 {
->        compatible = "qcom,gcc-sc7180";
->        reg = <0x100000 0x1f0000>;
-> -      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
-> -      clock-names = "bi_tcxo", "bi_tcxo_ao";
-> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <0>;
-> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
-> +      #clock-cells = <1>;
-> +      #reset-cells = <1>;
-> +      #power-domain-cells = <1>;
-> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> new file mode 100644
+> index 0000000000000..7917a95cda78d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> @@ -0,0 +1,41 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+
+Dual license new bindings:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +# Copyright 2019 Lubomir Rintel <lkundrak@v3.sk>
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/marvell,mmp3-hsic-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +  # Example of MSM8998 GCC:
+> +title: Marvell MMP3 HSIC PHY
+> +
+> +maintainers:
+> +  - Lubomir Rintel <lkundrak@v3.sk>
+> +
+> +properties:
+> +  compatible:
+> +    const: marvell,mmp3-hsic-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: base address of the device
+
+Drop description. That's *every* 'reg' property.
+
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: GPIO connected to reset
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
+> +  - "#phy-cells"
+> +
+> +examples:
 > +  - |
-> +    clock-controller@100000 {
-> +      compatible = "qcom,gcc-msm8998";
->        #clock-cells = <1>;
->        #reset-cells = <1>;
->        #power-domain-cells = <1>;
-> +      reg = <0x00100000 0xb0000>;
-> +      clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+> +    hsic-phy@f0001800 {
+> +            compatible = "marvell,mmp3-hsic-phy";
+> +            reg = <0xf0001800 0x40>;
+> +            reset-gpios = <&gpio 63 GPIO_ACTIVE_HIGH>;
 
-Probably because of this define.
+Examples are built now and this one doesn't. You need the include for
+the define. Check with 'make dt_binding_check'.
 
-> +               <&sleep>,
-> +               <0>,
-> +               <0>,
-> +               <0>,
-> +               <0>,
-> +               <0>;
-
-Why are these all 0?
-
-> +      clock-names = "xo",
-> +                    "sleep",
-> +                    "usb3_pipe",
-> +                    "ufs_rx_symbol0",
-> +                    "ufs_rx_symbol1",
-> +                    "ufs_tx_symbol0",
-> +                    "pcie0_pipe";
->      };
->  ...
+> +            #phy-cells = <0>;
+> +    };
 > --
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 2.24.1
 >
