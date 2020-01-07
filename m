@@ -2,97 +2,90 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36E0C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 05:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19325C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 05:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F1C207FD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 05:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MMfH6Xnx"
+	by mail.kernel.org (Postfix) with ESMTP id EA477208C4
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 05:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725601AbgAGFdO (ORCPT
+        id S1725267AbgAGFkr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 00:33:14 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38412 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgAGFdO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 00:33:14 -0500
-Received: by mail-lj1-f193.google.com with SMTP id w1so31395426ljh.5;
-        Mon, 06 Jan 2020 21:33:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=veUZeWQZbFotsYKfqCj5Y1xDEGG7Ogankt+eKInlDDg=;
-        b=MMfH6XnxLwcfhqY5ZYFKRsc3ald9qks2waZ+5mhHbxfbPDldlzeHEyFnWC32mjlXiD
-         nv5uIdsSajiXc6qMcPW+thKv2TdmQxMyY+KSy0o2fyGK91cU93LX0jr8dTipdjZEisxa
-         n92MWUnqgs+nXMqghBgQrTgDdj9/4KyBOGOOK+ftTLiwW96rgYuiA0ye296hJCljaHKk
-         bS8T8oyQai1Im75g3knKsixURKV1ZaFfm/fzitEejbyMebTkXFfMGS1vFF1HJJpsQYMP
-         FYiPRWPQ+N0sW95n1immb1Q1q4u1FFcuWp31D9cM+7DsZGTBOSb+AWGP9WkopSZPfBhw
-         8JBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=veUZeWQZbFotsYKfqCj5Y1xDEGG7Ogankt+eKInlDDg=;
-        b=bXr3C7oya5CfXPs9LQ8oxzcLO1AzrP5BgIH9PFl6gUQYnrxYOncxf/txR/CblRwQwS
-         U8+DDP/C6c8/x6ZGHoaaZ3RC2YrtJSZVM+LRhCAqBt9aPYDv0YhezI3OW10uwcVYSqIj
-         bjDDFmBa7iIACbp2TyAAqu+7CY4DJlps93+7/WjJiJwikzKH5zee2urVz/h9Z3Q7Q3Mz
-         UzjiSih8AyRxz9Py0digkOVE1BGFPcRJTUUqupj4jXM8PrR94FJJXojvowidnHSgaOsx
-         AatVB3Sg+hoMseapFzzZxVysIDH33cFqprdZ4dMXkVd6B5uVwOlHKAm7ZgVpsat37VhQ
-         NPLA==
-X-Gm-Message-State: APjAAAWFnVu3ZAlKBI46ufBWB8nwCMcizsJjSqF7fzt/u2oEeu1WdrNq
-        SJKwmi9WWEDtVnO+OZoExSQ=
-X-Google-Smtp-Source: APXvYqwQuxl/nNc1WZx6Hq7z8hwzhuGnyiQkFsUMBIML9+phR645Yvg8qHIcxH0R9Etz+2+hei6HEw==
-X-Received: by 2002:a2e:7e05:: with SMTP id z5mr48052335ljc.99.1578375191537;
-        Mon, 06 Jan 2020 21:33:11 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id m21sm29860754lfh.53.2020.01.06.21.33.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jan 2020 21:33:10 -0800 (PST)
-Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Scott Liu <scott.liu@emc.com.tw>,
-        James Chen <james.chen@emc.com.tw>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh-dt@kernel.org>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <20191212192420.GD101194@dtor-ws>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
-Date:   Tue, 7 Jan 2020 08:33:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20191212192420.GD101194@dtor-ws>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 7 Jan 2020 00:40:47 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:48264 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725835AbgAGFkr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 00:40:47 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Jan 2020 11:10:43 +0530
+Received: from harigovi-linux.qualcomm.com ([10.204.66.157])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 07 Jan 2020 11:10:11 +0530
+Received: by harigovi-linux.qualcomm.com (Postfix, from userid 2332695)
+        id 2F2FC256D; Tue,  7 Jan 2020 11:10:10 +0530 (IST)
+From:   Harigovindan P <harigovi@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+Subject: [v2] drm/msm: update LANE_CTRL register value from default value
+Date:   Tue,  7 Jan 2020 11:10:08 +0530
+Message-Id: <1578375608-28995-1-git-send-email-harigovi@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-12.12.2019 22:24, Dmitry Torokhov пишет:
-> On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
->> This series cleans up the driver a bit and implements changes needed to
->> support EKTF3624-based touchscreen used in eg. Asus TF300T tablet. 
-> 
-> Johnny, could you please take a look at this patch series?
-> 
-> Thanks!
+LANE_CTRL register in latest version of DSI controller (v2.2)
+has additional functionality introduced to enable/disable HS
+signalling with default value set to enabled. To accommodate this
+change, LANE_CTRL register should be read and bit wise ORed to enable
+non continuous clock mode. Without this change, if register is written
+directly, HS signalling will be disabled resulting in black screen.
 
-Hello Johnny,
+Changes in v1:
+	-Update LANE_CTRL register value
+Changes in v2:
+	-Changing commit message accordingly.
 
-Could you please let us know whether you or anyone else from Elan are
-going to take a look at this patchset anytime soon?
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+---
+ drivers/gpu/drm/msm/dsi/dsi_host.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_host.c b/drivers/gpu/drm/msm/dsi/dsi_host.c
+index e6289a3..d3c5233 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_host.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_host.c
+@@ -816,7 +816,7 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
+ 	u32 flags = msm_host->mode_flags;
+ 	enum mipi_dsi_pixel_format mipi_fmt = msm_host->format;
+ 	const struct msm_dsi_cfg_handler *cfg_hnd = msm_host->cfg_hnd;
+-	u32 data = 0;
++	u32 data = 0, lane_ctrl = 0;
+ 
+ 	if (!enable) {
+ 		dsi_write(msm_host, REG_DSI_CTRL, 0);
+@@ -904,9 +904,11 @@ static void dsi_ctrl_config(struct msm_dsi_host *msm_host, bool enable,
+ 	dsi_write(msm_host, REG_DSI_LANE_SWAP_CTRL,
+ 		  DSI_LANE_SWAP_CTRL_DLN_SWAP_SEL(msm_host->dlane_swap));
+ 
+-	if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
++	if (!(flags & MIPI_DSI_CLOCK_NON_CONTINUOUS)) {
++		lane_ctrl = dsi_read(msm_host, REG_DSI_LANE_CTRL);
+ 		dsi_write(msm_host, REG_DSI_LANE_CTRL,
+-			DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
++			lane_ctrl | DSI_LANE_CTRL_CLKLN_HS_FORCE_REQUEST);
++	}
+ 
+ 	data |= DSI_CTRL_ENABLE;
+ 
+-- 
+2.7.4
+
