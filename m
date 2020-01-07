@@ -2,320 +2,129 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06433C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFE0C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D6B2073D
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60279214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HkNn+Mcl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMjaeoJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgAGQTp (ORCPT
+        id S1728421AbgAGQr0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:19:45 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:33244 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbgAGQTp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 11:19:45 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C028352F;
-        Tue,  7 Jan 2020 17:19:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1578413982;
-        bh=ePBq3gwBEwF1GIYrfuJj8013Yt+Uie+hLIRudyo/dw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HkNn+Mclmn9Y3BBpXeUWX3gJmCnnzXIOv+0DeFaMGiwyssNdHA2IwGKzCWkwrEKiP
-         AaAQjjEG/kOgNVsDF/kSzXUyTC4YsnBMNRk1cKSCCKx2DjRPfDROz4JrISCAx1ze+N
-         ih/no+WPtqkoYyg3FWcEcX/vYVjkD7n7F9weFwwc=
-Date:   Tue, 7 Jan 2020 18:19:32 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
-        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
-        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
-        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
-        kernel@collabora.com, linux-media@vger.kernel.org,
-        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
- yaml bindings
-Message-ID: <20200107161932.GJ4871@pendragon.ideasonboard.com>
-References: <20191227200116.2612137-1-helen.koike@collabora.com>
- <20191227200116.2612137-9-helen.koike@collabora.com>
- <20200106235957.GA28230@pendragon.ideasonboard.com>
- <a465c895f944b5cb0b63bfab2f8642fc81f1576e.camel@collabora.com>
+        Tue, 7 Jan 2020 11:47:26 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43282 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbgAGQr0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 11:47:26 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so241269ljm.10
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 08:47:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZvoR1wO4oEITSwLk+nSR4iwy2dpggu13mmwT8OJyr0g=;
+        b=FMjaeoJA437ug2DT9AkKATKeWYluxfalXHIXuGLsu+H/CQWTMXEXGaJONDmFqkXD9Z
+         YIl47qQjL9YED4/QKTQMdRBMaR4UtzhzsUP4vEGJgLYsQ8a2Lh84aBwcaeZ5/Dv4RszG
+         GuV9ct7YZJyaK5EC0tdAm/MZa1N1zGPbW9Y1BGjKgKcF6Eaa0cfA576OBqXwRNXvngR+
+         q5bgSIUOToJTEtbIQwgXjX7ADRA6XiN3fJ+mbM5GBESF0JdmpNuOlJYgepSHvi/UyCa8
+         JcMXJizo1L2IUUuDvh8IEVEK/ct86ME35mNKyCYVQXGlZI1mfCA2nsZb30F/bHp35m1X
+         AOLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZvoR1wO4oEITSwLk+nSR4iwy2dpggu13mmwT8OJyr0g=;
+        b=jPcubkN/mspc6GcAYvH+NZHsxxgdtMGF6/r87oHd5zBHsmuIC1wP2U1dfLAXZsZoPO
+         7GD29r0xyqjsNE3bJakx3MIfuGAewXK/7WQ2Mle1tGC1VN9TxekAT3G9xFWLmnJnAfQS
+         7RrpW2zgpuvsLqp7ZwAozNxddCPNp6mxQIX2UK18u9S1D+146gRG+/gkhAm13oc4hvJP
+         1JaKUwid9GV9yRK9y15UUyeLsEn+LXw85facxpTZxHCNDN6XKgEut3ELDiMnq1l9DJf+
+         L575Y0WBl0BCQBUsX9E+fFsEqJEcNU8yXVyWXWstNjt5u+1mAOG2RmhZRRJNOM7tIdb9
+         AmmQ==
+X-Gm-Message-State: APjAAAXlUtM7KvvEHf9WwjaLeySK9gKGvt3JSTdi5kAr8/u+jvX0AYJd
+        SyVTIpe/nrqjUPfiqUDFVHeRHa+tGHI7yh/OqUECXg==
+X-Google-Smtp-Source: APXvYqwIOBpCiKZzxq03MFz/y1i3ELijhWT1WUVjLBovW8HeCR9HCsqvBGOQKdcEH2KQk6TVpk5F1srYFucbjgSGpMY=
+X-Received: by 2002:a2e:5357:: with SMTP id t23mr215735ljd.227.1578415644575;
+ Tue, 07 Jan 2020 08:47:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a465c895f944b5cb0b63bfab2f8642fc81f1576e.camel@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191210185351.14825-1-f.fainelli@gmail.com>
+In-Reply-To: <20191210185351.14825-1-f.fainelli@gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 7 Jan 2020 22:17:13 +0530
+Message-ID: <CA+G9fYsMyUWGo8Qtd2UCfYDV2aoH71=hCZKaTurq4Aj2eeZczw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ezequiel,
+On Wed, 11 Dec 2019 at 00:25, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Hi Jens,
+>
+> The first 4 patches are fixes and should ideally be queued up/picked up
+> by stable. The last 4 patches add support for BCM7216 which is one of
+> our latest devices supported by this driver.
+>
+> Patch #2 does a few things, but it was pretty badly broken before and it
+> is hard not to fix all call sites (probe, suspend, resume) in one shot.
+>
+> Please let me know if you have any comments.
+>
+> Thanks!
+>
+> Florian Fainelli (8):
+>   ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+>   ata: ahci_brcm: Fix AHCI resources management
 
-On Tue, Jan 07, 2020 at 10:45:15AM -0300, Ezequiel Garcia wrote:
-> On Tue, 2020-01-07 at 01:59 +0200, Laurent Pinchart wrote:
-> > On Fri, Dec 27, 2019 at 05:01:13PM -0300, Helen Koike wrote:
-> > > Add yaml DT bindings for Rockchip ISP1.
-> > > 
-> > > This was tested and verified with:
-> > > mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
-> > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > > 
-> > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > 
-> > > ---
-> > > 
-> > > Changes in v12:
-> > > - The commit replaces the following commit in previous series named
-> > > media: staging: dt-bindings: Document the Rockchip ISP1 bindings
-> > > This new patch adds yaml binding and was verified with
-> > > make dtbs_check and make dt_binding_check
-> > > 
-> > > Changes in v11:
-> > > - add clock-names values
-> > > 
-> > > Changes in v10:
-> > > - unsquash
-> > > 
-> > > Changes in v9:
-> > > - squash
-> > > - move to staging
-> > > 
-> > > Changes in v8:
-> > > - fix title division style
-> > > 
-> > > Changes in v7:
-> > > - update document with new design and tested example
-> > > 
-> > >  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
-> > >  1 file changed, 193 insertions(+)
-> > >  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > > 
-> > > diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > > b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > > new file mode 100644
-> > > index 000000000000..4d1b2c67a4cd
-> > > --- /dev/null
-> > > +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
-> > > @@ -0,0 +1,193 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/media/rockchip-isp1.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Rockchip SoC Image Signal Processing unit v1
-> > > +
-> > > +maintainers:
-> > > +  - Helen Koike <helen.koike@collabora.com>
-> > > +
-> > > +description: |
-> > > +  Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
-> > > +  which contains image processing, scaling, and compression funcitons.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: rockchip,rk3399-cif-isp
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  iommus:
-> > > +    maxItems: 1
-> > > +
-> > > +  power-domains:
-> > > +    maxItems: 1
-> > > +
-> > > +  phys:
-> > > +    maxItems: 1
-> > > +    description: phandle for the PHY port
-> > 
-> > According to http://opensource.rock-chips.com/wiki_Camera_driver, RK3388
-> > can route either of DPHY RX0 or DPHY RX1 to the single ISP instance,
-> > while RK3399 has one PHY per ISP instance, with DPHY RX1 being shared
-> > with the display. Have you given any thought on how we will support this
-> > in a backward-compatible way in the DT bindings ?
-> 
-> As discussed on IRC, we could have multiple PHYs specifiers
-> in the phy property. The ISP would have multiple ports,
-> with one PHY per port.
-> 
-> > > +
-> > > +  phy-names:
-> > > +    const: dphy
-> > > +
-> > > +  clocks:
-> > > +    items:
-> > > +      - description: ISP clock
-> > > +      - description: ISP aclk clock
-> > > +      - description: ISP aclk wrapper clock
-> > > +      - description: ISP hclk clock
-> > > +      - description: ISP hclk wrapper clock
-> > 
-> > I wonder what aclk and hclk stand far. In any case those names match the
-> > CRU documentation, so that seems fine.
-> 
-> IIRC, traditionally, Rockchip calls aclk to the AXI clock,
-> and hclk to the AHB. We'll improve this description.
-> 
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: clk_isp
-> > > +      - const: aclk_isp
-> > > +      - const: aclk_isp_wrap
-> > > +      - const: hclk_isp
-> > > +      - const: hclk_isp_wrap
-> > > +
-> 
-> I wonder if we should better amend the names as well.
+Following error on stable-rc 4.14 and 4.9 branch for arm build.
 
-We could, but they match the names in the CRU documentation, so I think
-they're fine.
+ drivers/ata/ahci_brcm.c: In function 'brcm_ahci_probe':
+ drivers/ata/ahci_brcm.c:412:28: error: 'struct brcm_ahci_priv' has no
+member named 'rcdev'; did you mean 'dev'?
+   if (!IS_ERR_OR_NULL(priv->rcdev))
+                             ^~~~~
+                             dev
+   CC      fs/pnode.o
+   CC      block/genhd.o
+ drivers/ata/ahci_brcm.c:413:3: error: implicit declaration of
+function 'reset_control_assert'; did you mean 'ahci_reset_controller'?
+[-Werror=implicit-function-declaration]
+    reset_control_assert(priv->rcdev);
+    ^~~~~~~~~~~~~~~~~~~~
+    ahci_reset_controller
+ drivers/ata/ahci_brcm.c:413:30: error: 'struct brcm_ahci_priv' has no
+member named 'rcdev'; did you mean 'dev'?
+    reset_control_assert(priv->rcdev);
+                               ^~~~~
+                               dev
+ cc1: some warnings being treated as errors
 
-> > > +  # See ./video-interfaces.txt for details
-> > > +  ports:
-> > > +    type: object
-> > > +    additionalProperties: false
-> > > +
-> > > +    properties:
-> > > +      "#address-cells":
-> > > +        const: 1
-> > > +
-> > > +      "#size-cells":
-> > > +        const: 0
-> > > +
-> > > +      port@0:
-> > > +        type: object
-> > > +        additionalProperties: false
-> > 
-> > I think this should have a description to tell what this port
-> > corresponds to.
-> 
-> OK.
-> 
-> > > +
-> > > +        properties:
-> > > +          "#address-cells":
-> > > +            const: 1
-> > > +
-> > > +          "#size-cells":
-> > > +            const: 0
-> > > +
-> > > +          reg:
-> > > +            const: 0
-> > > +            description: port identifier.
-> > 
-> > Here and for the endpoint below the description is probably not needed.
-> 
-> OK.
-> 
-> > > +
-> > > +        patternProperties:
-> > > +          endpoint:
-> > > +            type: object
-> > > +            additionalProperties: false
-> > > +
-> > > +            properties:
-> > > +              reg:
-> > > +                maxItems: 1
-> > > +                description: endpoint identifier.
-> > > +
-> > > +              data-lanes:
-> > > +                minItems: 1
-> > > +                maxItems: 4
-> > > +
-> > > +              remote-endpoint: true
-> > > +
-> > > +    required:
-> > > +      - port@0
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - interrupts
-> > > +  - clocks
-> > > +  - clock-names
-> > > +  - power-domains
-> > > +  - iommus
-> > > +  - phys
-> > > +  - phy-names
-> > > +  - ports
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +
-> > > +    #include <dt-bindings/clock/rk3399-cru.h>
-> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +    #include <dt-bindings/power/rk3399-power.h>
-> > > +
-> > > +    parent0: parent@0 {
-> > > +        #address-cells = <2>;
-> > > +        #size-cells = <2>;
-> > > +
-> > > +        isp0: isp0@ff910000 {
-> > > +            compatible = "rockchip,rk3399-cif-isp";
-> > > +            reg = <0x0 0xff910000 0x0 0x4000>;
-> > > +            interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +            clocks = <&cru SCLK_ISP0>,
-> > > +                     <&cru ACLK_ISP0>, <&cru ACLK_ISP0_WRAPPER>,
-> > > +                     <&cru HCLK_ISP0>, <&cru HCLK_ISP0_WRAPPER>;
-> > > +            clock-names = "clk_isp",
-> > > +                          "aclk_isp", "aclk_isp_wrap",
-> > > +                          "hclk_isp", "hclk_isp_wrap";
-> > > +            power-domains = <&power RK3399_PD_ISP0>;
-> > > +            iommus = <&isp0_mmu>;
-> > > +            phys = <&dphy>;
-> > > +            phy-names = "dphy";
-> > > +
-> > > +            ports {
-> > > +                #address-cells = <1>;
-> > > +                #size-cells = <0>;
-> > > +
-> > > +                port@0 {
-> > > +                    #address-cells = <1>;
-> > > +                    #size-cells = <0>;
-> > > +                    reg = <0>;
-> > > +
-> > > +                    mipi_in_wcam: endpoint@0 {
-> > > +                        reg = <0>;
-> > > +                        remote-endpoint = <&wcam_out>;
-> > > +                        data-lanes = <1 2>;
-> > > +                    };
-> > > +
-> > > +                    mipi_in_ucam: endpoint@1 {
-> > > +                        reg = <1>;
-> > > +                        remote-endpoint = <&ucam_out>;
-> > > +                        data-lanes = <1>;
-> > > +                    };
-> > 
-> > Are those two cameras connected to the same CSI-2 lines with at most one
-> > sensor out of reset ?
-> 
-> Indeed, these are two cameras connected to the same DPHY,
-> and only one can work at a time.
-> 
-> > With the above small issues addressed,
-> > 
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Full build log links,
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/702/consoleText
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/773/consoleText
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+Linaro LKFT
+https://lkft.linaro.org
