@@ -2,564 +2,181 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2058C33C8C
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 341C8C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1DF2087F
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AZhfGDDh"
+	by mail.kernel.org (Postfix) with ESMTP id F10512087F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 16:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578413830;
+	bh=TcK/7aE4Lb5IQGTN4l832m41faNVf2PC5yZ/92fqI2A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Y19XsbbSkwfL5A5ffH2xUafE9HSOkU6YB8wgsr/yp3L3x/8NpdsOk6QX5iR5U1VPu
+	 plgU4xDHkBr2J2zjmPgJpUPInp2eieqdqwobX4nimTtEbDwwBoPB2W12keWE3QtL7w
+	 y9sWbcQEpd4NCEDr33LMaNSqix1ZQxE9wha94PKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgAGQL0 (ORCPT
+        id S1728236AbgAGQRJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 11:11:26 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:39625 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgAGQL0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 11:11:26 -0500
-Received: by mail-qv1-f68.google.com with SMTP id y8so71470qvk.6
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 08:11:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9iHDp/IoA33Qqf8hH53ThtaevJGMMIDFJpqoSccVc7w=;
-        b=AZhfGDDhg9Bq+QVHH0R62kUactCgUteglH/sdtUQOcxkW8+STcoFoBNzDQzE65DxBN
-         THXbyOShAAqP7yUsEdKyuFkAiklsRtZugoS8MGqgUp4v8OvdgAC3LqqftVJEgXc8yHlU
-         Pm16qLIWp59y6acwbOQsTPh9v28/W9h9gAFEuo/8Gl06MFkEpB3v6+6XTdZ7cHNWycBJ
-         9OpDJuZJ8Yerqw7VqBYCoWq25/BgBT2SwAsd3Hegc4MYF4Ad6wjxkmBnkxXp1v/gy+Io
-         zKEWrlaoZiFysVfvCjoApFkpy4FVyASdDJTuj55yvMyPCH8ISk5t2RlKEf2GhMPkw6cP
-         8ceQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9iHDp/IoA33Qqf8hH53ThtaevJGMMIDFJpqoSccVc7w=;
-        b=OQfoHRZY8ChL9RzAgGwNRmRhkaBtQMbiJog01WxxFBOh0zdryCU2vqG5F+of38y47q
-         12OwB2PL/zNk/QZ0p7bVjA+elxduPjoZaNzOa7teCjGJdr2up5LKhWL90rZQgEbPIcpR
-         4gNESLHMEHDSO6ATklMYkQlENTuj30gYZHoyZzGnNir60KVAh7H5nQGU9m36ut9/BqRz
-         u9R5XrGT5UdQcmK3hDHEdRRsE2AdH7Rf7iiVSbcGZ0ZEY4C3pSw5HsoZ8Y12wx6NJPJ8
-         /hKVjz/4cPkd+okJ6laImu00KHWvEn/oZYZN+F1Wz8vPEytpOK5bt/5U3vjgB9zuFqK4
-         6oww==
-X-Gm-Message-State: APjAAAVJJrzx9EpysujIrKpAi/Be/qbL4bCzluRiFZlDX2jO4YHmnOS1
-        6T0RQPYCBhiKQXGQg9Y15YnaTf6dzL6R7EG6k9b4sDOKhIU=
-X-Google-Smtp-Source: APXvYqzupYXLHoy5ObehA5nPD8wjHKBrBebIUvmCcGRCNVlFm7XHhliBOiD4tTaqiJc71WVi0w8pBmdNabr7It4rHQ0=
-X-Received: by 2002:a05:6214:965:: with SMTP id do5mr143933qvb.202.1578413484847;
- Tue, 07 Jan 2020 08:11:24 -0800 (PST)
+        Tue, 7 Jan 2020 11:17:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728020AbgAGQRJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 11:17:09 -0500
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E49AE2087F;
+        Tue,  7 Jan 2020 16:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578413828;
+        bh=TcK/7aE4Lb5IQGTN4l832m41faNVf2PC5yZ/92fqI2A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MtXDAItdlR0w7BtO9nkPqbz8JjRbHTxkmI6J3QHqdH99i8TS81f1ggDuImhedCVwQ
+         cocox4EgDVcMOxxMWJ+aP83KffqYb2WhqpOFDst2PKEBTpojXcr/YtO8kSHpIx8VxK
+         DIq8qyPOa8nqN9mHhbrwf7AeFOStpWTYU80Tkrms=
+Received: by mail-qt1-f180.google.com with SMTP id w47so232430qtk.4;
+        Tue, 07 Jan 2020 08:17:07 -0800 (PST)
+X-Gm-Message-State: APjAAAViIElWJOAKvYIkupkmQfdQtnU3qzWguGry4R154Uwdr17BDuYx
+        PJOKXg4BBxQuBOg4Vvm2KUFNsnBys5MaJzTNzA==
+X-Google-Smtp-Source: APXvYqxu6QS6UEy/ATbaU7VuwfNWuBF7IRyea4pEzngRlZmCRsIAC/DS1RwMyWEY7uG3GrUoCz0vxhPI3sFuOGops/M=
+X-Received: by 2002:ac8:1415:: with SMTP id k21mr65903534qtj.300.1578413827079;
+ Tue, 07 Jan 2020 08:17:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20191230164138.28137-1-mike.leach@linaro.org> <20200103222359.GA7211@bogus>
-In-Reply-To: <20200103222359.GA7211@bogus>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 7 Jan 2020 16:11:14 +0000
-Message-ID: <CAJ9a7ViLioi64oARqM2-kR=0hq4xSvBvaZCAefm9YkuXUiXSeA@mail.gmail.com>
-Subject: Re: [PATCH v7 05/15] dt-bindings: arm: Adds CoreSight CTI hardware definitions.
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andy Gross <agross@kernel.org>
+References: <20191230231953.29646-1-rjones@gateworks.com> <20191230231953.29646-2-rjones@gateworks.com>
+ <20200103223225.GB654@bogus> <CALAE=UATZtN47J421Y4i+GqvijiiECAuc25kLSmYNAe6jGhxiA@mail.gmail.com>
+In-Reply-To: <CALAE=UATZtN47J421Y4i+GqvijiiECAuc25kLSmYNAe6jGhxiA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 7 Jan 2020 10:16:52 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKmCeKw4ErVGMeLCvZvvHp2Z4qkUswV=aDN1hjb6-x0Aw@mail.gmail.com>
+Message-ID: <CAL_JsqKmCeKw4ErVGMeLCvZvvHp2Z4qkUswV=aDN1hjb6-x0Aw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/5] dt-bindings: arm: fsl: Add Gateworks Ventana
+ i.MX6DL/Q compatibles
+To:     Bobby Jones <rjones@gateworks.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the feedback.
-
-On Fri, 3 Jan 2020 at 22:24, Rob Herring <robh@kernel.org> wrote:
+On Mon, Jan 6, 2020 at 3:25 PM Bobby Jones <rjones@gateworks.com> wrote:
 >
-> On Mon, Dec 30, 2019 at 04:41:37PM +0000, Mike Leach wrote:
-> > Adds new coresight-cti.yaml file describing the bindings required to define
-> > CTI in the device trees.
+> On Fri, Jan 3, 2020 at 2:32 PM Rob Herring <robh@kernel.org> wrote:
 > >
-> > Adds an include file to dt-bindings/arm to define constants describing
-> > common signal functionality used in CoreSight and generic usage.
+> > On Mon, Dec 30, 2019 at 03:19:49PM -0800, Robert Jones wrote:
+> > > Add the compatible enum entries for Gateworks Ventana boards.
+> > >
+> > > Signed-off-by: Robert Jones <rjones@gateworks.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 31 ++++++++++++++++++++++++++
+> > >  1 file changed, 31 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > index f79683a..8ed4c85 100644
+> > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > @@ -126,6 +126,22 @@ properties:
+> > >                - toradex,apalis_imx6q-ixora      # Apalis iMX6 Module on Ixora
+> > >                - toradex,apalis_imx6q-ixora-v1.1 # Apalis iMX6 Module on Ixora V1.1
+> > >                - variscite,dt6customboard
+> > > +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
+> > > +              - gw,imx6q-gw51xx
+> >
+> > This doesn't match what you have in dts files. Please check with:
+> >
+> > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/fsl.yaml
+> >
+> > You'll need a separate entry with 3 compatibles and 'gw,ventana' or drop
+> > it.
 >
-> What's going on with the message threading in this series?
+> Hi Rob,
 >
-
-Not entirely sure what is expected here.
-
-> >
-> > Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > ---
-> >  .../bindings/arm/coresight-cti.yaml           | 326 ++++++++++++++++++
-> >  .../devicetree/bindings/arm/coresight.txt     |   7 +
-> >  MAINTAINERS                                   |   2 +
-> >  include/dt-bindings/arm/coresight-cti-dt.h    |  37 ++
-> >  4 files changed, 372 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/coresight-cti.yaml
-> >  create mode 100644 include/dt-bindings/arm/coresight-cti-dt.h
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/coresight-cti.yaml b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
-> > new file mode 100644
-> > index 000000000000..e4d28cee5dfd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/coresight-cti.yaml
-> > @@ -0,0 +1,326 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only or BSD-2-Clause
-> > +# Copyright 2019 Linaro Ltd.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/coresight-cti.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ARM Coresight Cross Trigger Interface (CTI) device.
-> > +
-> > +description: |
-> > +  The CoreSight Embedded Cross Trigger (ECT) consists of CTI devices connected
-> > +  to one or more CoreSight components and/or a CPU, with CTIs interconnected in
-> > +  a star topology via the Cross Trigger Matrix (CTM), which is not programmable.
-> > +  The ECT components are not part of the trace generation data path and are thus
-> > +  not part of the CoreSight graph described in the general CoreSight bindings
-> > +  file coresight.txt.
-> > +
-> > +  The CTI component properties define the connections between the individual
-> > +  CTI and the components it is directly connected to, consisting of input and
-> > +  output hardware trigger signals. CTIs can have a maximum number of input and
-> > +  output hardware trigger signals (8 each for v1 CTI, 32 each for v2 CTI). The
-> > +  number is defined at design time, the maximum of each defined in the DEVID
-> > +  register.
-> > +
-> > +  CTIs are interconnected in a star topology via the CTM, using a number of
-> > +  programmable channels, usually 4, but again implementation defined and
-> > +  described in the DEVID register. The star topology is not required to be
-> > +  described in the bindings as the actual connections are software
-> > +  programmable.
-> > +
-> > +  In general the connections between CTI and components via the trigger signals
-> > +  are implementation defined, except when the CTI is connected to an ARM v8
-> > +  architecture core and optional ETM.
-> > +
-> > +  In this case the ARM v8 architecture defines the required signal connections
-> > +  between CTI and the CPU core and ETM if present. In the case of a v8
-> > +  architecturally connected CTI an additional compatible string is used to
-> > +  indicate this feature (arm,coresight-cti-v8-arch).
-> > +
-> > +  When CTI trigger connection information is unavailable then a minimal driver
-> > +  binding can be declared with no explicit trigger signals. This will result
-> > +  the driver detecting the maximum available triggers and channels from the
-> > +  DEVID register and make them all available for use as a single default
-> > +  connection. Any user / client application will require additional information
-> > +  on the connections between the CTI and other components for correct operation.
-> > +  This information might be found by enabling the Integration Test registers in
-> > +  the driver (set CONFIG_CORESIGHT_CTI_INTEGRATION_TEST in Kernel
-> > +  configuration). These registers may be used to explore the trigger connections
-> > +  between CTI and other CoreSight components.
-> > +
-> > +  Certain triggers between CoreSight devices and the CTI have specific types
-> > +  and usages. These can be defined along with the signal indexes with the
-> > +  constants defined in <dt-bindings/arm/coresight-cti-dt.h>
-> > +
-> > +  For example a CTI connected to a core will usually have a DBGREQ signal. This
-> > +  is defined in the binding as type PE_EDBGREQ. These types will appear in an
-> > +  optional array alongside the signal indexes. Omitting types will default all
-> > +  signals to GEN_IO.
-> > +
-> > +  Note that some hardware trigger signals can be connected to non-CoreSight
-> > +  components (e.g. UART etc) depending on hardware implementation.
-> > +
-> > +maintainers:
-> > +  - Mike Leach <mike.leach@linaro.org>
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/arm/primecell.yaml#
-> > +
-> > +# Need a custom select here or 'arm,primecell' will match on lots of nodes
-> > +select:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
-> > +          - arm,coresight-cti
-> > +  required:
-> > +    - compatible
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^cti(@[0-9a-f]+)$"
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - const: arm,coresight-cti
-> > +        - const: arm,primecell
-> > +      - items:
-> > +        - const: arm,coresight-cti-v8-arch
-> > +        - const: arm,coresight-cti
-> > +        - const: arm,primecell
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  cpu:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description:
-> > +      Handle to cpu this device is associated with. This must appear in the
-> > +      base cti node if compatible string arm,coresight-cti-v8-arch is used,
-> > +      or may appear in a trig-conns child node when appropriate.
-> > +
-> > +  arm,cti-ctm-id:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      Defines the CTM this CTI is connected to, in large systems with multiple
-> > +      separate CTI/CTM nets. Typically multi-socket systems where the CTM is
-> > +      propagated between sockets.
-> > +
-> > +  arm,cs-dev-assoc:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description:
-> > +      defines a phandle reference to an associated CoreSight trace device.
-> > +      When the associated trace device is enabled, then the respective CTI
-> > +      will be enabled. Use in a trig-conns node, or in CTI base node when
-> > +      compatible string arm,coresight-cti-v8-arch used. If the associated
-> > +      device has not been registered then the node name will be stored as
-> > +      the connection name for later resolution. If the associated device is
-> > +      not a CoreSight device or not registered then the node name will remain
-> > +      the connection name and automatic enabling will not occur.
-> > +
-> > +patternProperties:
-> > +  '^trig-conns@([0-9]+)$':
-> > +    type: object
-> > +    description:
-> > +      A trigger connections child node which describes the trigger signals
-> > +      between this CTI and another hardware device. This device may be a CPU,
-> > +      CoreSight device, any other hardware device or simple external IO lines.
-> > +      The connection may have both input and output triggers, or only one or the
-> > +      other.
-> > +
-> > +    properties:
-> > +
-> > +      arm,trig-in-sigs:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +        minItems: 1
-> > +        maxItems: 32
-> > +        description:
-> > +          List of CTI trigger in signal numbers in use by a trig-conns node.
-> > +
-> > +      arm,trig-in-types:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +        minItems: 1
-> > +        maxItems: 32
-> > +        description:
-> > +          List of constants representing the types for the CTI trigger in
-> > +          signals. Types in this array match to the corresponding signal in the
-> > +          arm,trig-in-sigs array. If the -types array is smaller, or omitted
-> > +          completely, then the types will default to GEN_IO.
-> > +
-> > +      arm,trig-out-sigs:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +        minItems: 1
-> > +        maxItems: 32
-> > +        description:
-> > +          List of CTI trigger out signal numbers in use by a trig-conns node.
-> > +
-> > +      arm,trig-out-types:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +        minItems: 1
-> > +        maxItems: 32
-> > +        description:
-> > +          List of constants representing the types for the CTI trigger out
-> > +          signals. Types in this array match to the corresponding signal
-> > +          in the arm,trig-out-sigs array. If the "-types" array is smaller,
-> > +          or omitted completely, then the types will default to GEN_IO.
-> > +
-> > +      arm,trig-filters:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +        minItems: 1
-> > +        maxItems: 32
-> > +        description:
-> > +          List of CTI trigger out signals that will be blocked from becoming
-> > +          active, unless filtering is disabled on the driver.
-> > +
-> > +      arm,trig-conn-name:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/string
-> > +        description:
-> > +          Defines a connection name that will be displayed, if the cpu or
-> > +          arm,cs-dev-assoc properties are not being used in this connection.
-> > +          Principle use for CTI that are connected to non-CoreSight devices, or
-> > +          external IO.
-> > +
-> > +    anyOf:
-> > +      - required:
-> > +        - arm,trig-in-sigs
-> > +      - required:
-> > +        - arm,trig-out-sigs
-> > +    oneOf:
-> > +      - required:
-> > +        - arm,trig-conn-name
-> > +      - required:
-> > +        - cpu
-> > +      - required:
-> > +        - arm,cs-dev-assoc
-> > +    required:
-> > +      - reg
+> Sorry, I'm still getting used to the whole schema format and a bit
+> confused. Can you be more specific in how it doesn't match? I looked
+> at the imx6q-gw51xx.dts file where I got the entry from and it has the
+> following line:
 >
-> You need 'reg' defined as a property too along with any constraints.
->
+> compatible = "gw,imx6q-gw51xx", "gw,ventana", "fsl,imx6q";
 
-OK - will do.
+As written, the schema would not allow this, but would allow one of these:
 
-> You also need #size-cells and #address-cells in the parent. And are they
-> required?
->
+"gw,imx6q-gw51xx", "fsl,imx6q"
+"gw,ventana", "fsl,imx6q"
 
-Size cells/ address cells can be defined and limited to appropriate values.
+The 'items' schema allows for 2 entries. So if you want/need to
+support 3 entries for compatible, you need a new 'items' schema with 3
+entries:
 
-However they are only required if the binding defines optional child
-nodes per the patternProperties:  '^trig-conns@([0-9]+)$': pattern.
-I have not been able to find a form a .yaml that can encode this requirement.
-if ( element matches "trig-conns")
-then required (#size-cells, #address-cells.)
+items:
+  - enum:
+      - gw,imx6q-gw51xx
+      - ... all the other boards listed below
+  - const: gw,ventana
+  - enum:
+      - fsl,imx6dl
+      - fsl,imx6q
 
-What I do find is that if a trig-conns element has been defined, then
-the binding will not compile correctly without #size-cells and
-#address-cells.
+> Obviously I'm only submitting the gw59xx board device trees but a
+> previous version of this submission was asked to add all of the
+> compatible strings for the Gateworks boards. Are you asking me to only
+> post the gw59xx lines?
 
+That's an orthogonal issue which I'll leave to the i.MX maintainers.
 
-Regards
-
-Mike
-
-
-
-
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        const: arm,coresight-cti-v8-arch
-> > +
-> > +then:
-> > +  required:
-> > +    - cpu
-> > +
-> > +examples:
-> > +  # minimum CTI definition. DEVID register used to set number of triggers.
-> > +  - |
-> > +    cti@20020000 {
-> > +      compatible = "arm,coresight-cti", "arm,primecell";
-> > +      reg = <0x20020000 0x1000>;
-> > +
-> > +      clocks = <&soc_smc50mhz>;
-> > +      clock-names = "apb_pclk";
-> > +    };
-> > +  #  v8 architecturally defined CTI - CPU + ETM connections generated by the
-> > +  #  driver according to the v8 architecture specification.
-> > +  - |
-> > +    cti@859000 {
-> > +      compatible = "arm,coresight-cti-v8-arch", "arm,coresight-cti",
-> > +                   "arm,primecell";
-> > +      reg = <0x859000 0x1000>;
-> > +
-> > +      clocks = <&soc_smc50mhz>;
-> > +      clock-names = "apb_pclk";
-> > +
-> > +      cpu = <&CPU1>;
-> > +      arm,cs-dev-assoc = <&etm1>;
-> > +    };
-> > +  # Implementation defined CTI - CPU + ETM connections explicitly defined..
-> > +  # Shows use of type constants from dt-bindings/arm/coresight-cti-dt.h
-> > +  - |
-> > +    #include <dt-bindings/arm/coresight-cti-dt.h>
-> > +
-> > +    cti@858000 {
-> > +      compatible = "arm,coresight-cti", "arm,primecell";
-> > +      reg = <0x858000 0x1000>;
-> > +
-> > +      clocks = <&soc_smc50mhz>;
-> > +      clock-names = "apb_pclk";
-> > +
-> > +      arm,cti-ctm-id = <1>;
-> > +
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      trig-conns@0 {
-> > +            reg = <0>;
-> > +            arm,trig-in-sigs = <4 5 6 7>;
-> > +            arm,trig-in-types = <ETM_EXTOUT
-> > +                                 ETM_EXTOUT
-> > +                                 ETM_EXTOUT
-> > +                                 ETM_EXTOUT>;
-> > +            arm,trig-out-sigs = <4 5 6 7>;
-> > +            arm,trig-out-types = <ETM_EXTIN
-> > +                                  ETM_EXTIN
-> > +                                  ETM_EXTIN
-> > +                                  ETM_EXTIN>;
-> > +            arm,cs-dev-assoc = <&etm0>;
-> > +      };
-> > +
-> > +      trig-conns@1 {
-> > +            reg = <1>;
-> > +            cpu = <&CPU0>;
-> > +            arm,trig-in-sigs = <0 1>;
-> > +            arm,trig-in-types = <PE_DBGTRIGGER
-> > +                                 PE_PMUIRQ>;
-> > +            arm,trig-out-sigs=<0 1 2 >;
-> > +            arm,trig-out-types = <PE_EDBGREQ
-> > +                                  PE_DBGRESTART
-> > +                                  PE_CTIIRQ>;
-> > +
-> > +            arm,trig-filters = <0>;
-> > +      };
-> > +    };
-> > +  # Implementation defined CTI - non CoreSight component connections.
-> > +  - |
-> > +    cti@20110000 {
-> > +      compatible = "arm,coresight-cti", "arm,primecell";
-> > +      reg = <0 0x20110000 0 0x1000>;
-> > +
-> > +      clocks = <&soc_smc50mhz>;
-> > +      clock-names = "apb_pclk";
-> > +
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      trig-conns@0 {
-> > +        reg = <0>;
-> > +        arm,trig-in-sigs=<0>;
-> > +        arm,trig-in-types=<GEN_INTREQ>;
-> > +        arm,trig-out-sigs=<0>;
-> > +        arm,trig-out-types=<GEN_HALTREQ>;
-> > +        arm,trig-conn-name = "sys_profiler";
-> > +      };
-> > +
-> > +      trig-conns@1 {
-> > +        reg = <1>;
-> > +        arm,trig-out-sigs=<2 3>;
-> > +        arm,trig-out-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-> > +        arm,trig-conn-name = "watchdog";
-> > +      };
-> > +
-> > +      trig-conns@2 {
-> > +        reg = <2>;
-> > +        arm,trig-in-sigs=<1 6>;
-> > +        arm,trig-in-types=<GEN_HALTREQ GEN_RESTARTREQ>;
-> > +        arm,trig-conn-name = "g_counter";
-> > +      };
-> > +    };
-> > +
-> > +...
-> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > index d02c42d21f2f..846f6daae71b 100644
-> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > @@ -45,6 +45,10 @@ its hardware characteristcs.
-> >               - Coresight Address Translation Unit (CATU)
-> >                       "arm,coresight-catu", "arm,primecell";
 > >
-> > +             - Coresight Cross Trigger Interface (CTI):
-> > +                     "arm,coresight-cti", "arm,primecell";
-> > +                     See coresight-cti.yaml for full CTI definitions.
-> > +
-> >       * reg: physical base address and length of the register
-> >         set(s) of the component.
-> >
-> > @@ -72,6 +76,9 @@ its hardware characteristcs.
-> >       * reg-names: the only acceptable values are "stm-base" and
-> >         "stm-stimulus-base", each corresponding to the areas defined in "reg".
-> >
-> > +* Required properties for Coresight Cross Trigger Interface (CTI)
-> > +     See coresight-cti.yaml for full CTI definitions.
-> > +
-> >  * Required properties for devices that don't show up on the AMBA bus, such as
-> >    non-configurable replicators and non-configurable funnels:
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index bd5847e802de..77f5d28fa84b 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1645,9 +1645,11 @@ R:     Suzuki K Poulose <suzuki.poulose@arm.com>
-> >  L:   linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> >  S:   Maintained
-> >  F:   drivers/hwtracing/coresight/*
-> > +F:   include/dt-bindings/arm/coresight-cti-dt.h
-> >  F:   Documentation/trace/coresight/*
-> >  F:   Documentation/devicetree/bindings/arm/coresight.txt
-> >  F:   Documentation/devicetree/bindings/arm/coresight-cpu-debug.txt
-> > +F:   Documentation/devicetree/bindings/arm/coresight-cti.yaml
-> >  F:   Documentation/ABI/testing/sysfs-bus-coresight-devices-*
-> >  F:   tools/perf/arch/arm/util/pmu.c
-> >  F:   tools/perf/arch/arm/util/auxtrace.c
-> > diff --git a/include/dt-bindings/arm/coresight-cti-dt.h b/include/dt-bindings/arm/coresight-cti-dt.h
-> > new file mode 100644
-> > index 000000000000..61e7bdf8ea6e
-> > --- /dev/null
-> > +++ b/include/dt-bindings/arm/coresight-cti-dt.h
-> > @@ -0,0 +1,37 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * This header provides constants for the defined trigger signal
-> > + * types on CoreSight CTI.
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
-> > +#define _DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H
-> > +
-> > +#define GEN_IO               0
-> > +#define GEN_INTREQ   1
-> > +#define GEN_INTACK   2
-> > +#define GEN_HALTREQ  3
-> > +#define GEN_RESTARTREQ       4
-> > +#define PE_EDBGREQ   5
-> > +#define PE_DBGRESTART        6
-> > +#define PE_CTIIRQ    7
-> > +#define PE_PMUIRQ    8
-> > +#define PE_DBGTRIGGER        9
-> > +#define ETM_EXTOUT   10
-> > +#define ETM_EXTIN    11
-> > +#define SNK_FULL     12
-> > +#define SNK_ACQCOMP  13
-> > +#define SNK_FLUSHCOMP        14
-> > +#define SNK_FLUSHIN  15
-> > +#define SNK_TRIGIN   16
-> > +#define STM_ASYNCOUT 17
-> > +#define STM_TOUT_SPTE        18
-> > +#define STM_TOUT_SW  19
-> > +#define STM_TOUT_HETE        20
-> > +#define STM_HWEVENT  21
-> > +#define ELA_TSTART   22
-> > +#define ELA_TSTOP    23
-> > +#define ELA_DBGREQ   24
-> > +#define CTI_TRIG_MAX 25
-> > +
-> > +#endif /*_DT_BINDINGS_ARM_CORESIGHT_CTI_DT_H */
-> > --
-> > 2.17.1
-> >
-
-
-
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+> > > +              - gw,imx6q-gw52xx
+> > > +              - gw,imx6q-gw53xx
+> > > +              - gw,imx6q-gw5400-a
+> > > +              - gw,imx6q-gw54xx
+> > > +              - gw,imx6q-gw551x
+> > > +              - gw,imx6q-gw552x
+> > > +              - gw,imx6q-gw553x
+> > > +              - gw,imx6q-gw560x
+> > > +              - gw,imx6q-gw5903
+> > > +              - gw,imx6q-gw5904
+> > > +              - gw,imx6q-gw5907
+> > > +              - gw,imx6q-gw5910
+> > > +              - gw,imx6q-gw5912
+> > > +              - gw,imx6q-gw5913
+> > >            - const: fsl,imx6q
+> > >
+> > >        - description: i.MX6QP based Boards
+> > > @@ -152,6 +168,21 @@ properties:
+> > >                - ysoft,imx6dl-yapp4-draco  # i.MX6 DualLite Y Soft IOTA Draco board
+> > >                - ysoft,imx6dl-yapp4-hydra  # i.MX6 DualLite Y Soft IOTA Hydra board
+> > >                - ysoft,imx6dl-yapp4-ursa   # i.MX6 Solo Y Soft IOTA Ursa board
+> > > +              - gw,ventana                # Gateworks i.MX6DL or i.MX6Q Ventana
+> > > +              - gw,imx6dl-gw51xx
+> > > +              - gw,imx6dl-gw52xx
+> > > +              - gw,imx6dl-gw53xx
+> > > +              - gw,imx6dl-gw54xx
+> > > +              - gw,imx6dl-gw551x
+> > > +              - gw,imx6dl-gw552x
+> > > +              - gw,imx6dl-gw553x
+> > > +              - gw,imx6dl-gw560x
+> > > +              - gw,imx6dl-gw5903
+> > > +              - gw,imx6dl-gw5904
+> > > +              - gw,imx6dl-gw5907
+> > > +              - gw,imx6dl-gw5910
+> > > +              - gw,imx6dl-gw5912
+> > > +              - gw,imx6dl-gw5913
+> > >            - const: fsl,imx6dl
+> > >
+> > >        - description: i.MX6SL based Boards
+> > > --
+> > > 2.9.2
+> > >
