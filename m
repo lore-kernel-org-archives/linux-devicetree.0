@@ -2,185 +2,140 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A116C33C99
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D7C33C99
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33038222D9
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:24:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ssi0ikKg"
+	by mail.kernel.org (Postfix) with ESMTP id B7F2920656
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgAGJYF (ORCPT
+        id S1727650AbgAGJ2u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:24:05 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42663 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgAGJYF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:24:05 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q6so52964958wro.9
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jJ5pfTfr1oTq02pXY/Q0LpFtsR1htYmf8bYAxrgz1T0=;
-        b=Ssi0ikKg1+CxiQDcYTjOggcE0ILVs32Ko4UeEL0DyLrqNFIB/V4MP6EbzvRtol1V0z
-         dVuq2VWNK9l45rutKiO9XCDZS/OFlqIuBjeEUuXD66P2rIx0t1hbkumLgvP4+6jlzjf5
-         DXYdthmm0O51j+Xvm4doD6h6Ddh3GFgV9BoEcNZIoDnur11yu0ql7LAaiNf4VHDeOGeN
-         ZDMxQQX8cEJcs5SD23nWo1UtmTzgY1helUhPMKlnRU//BTpk78OvevYZhg+hthwJ6HZY
-         1c8eCVPjD4vPJjKjdRKvfWB+2vqH+z6Um6T6Z9fI1K2hpHRXMaXZg4loILurRaCc3xte
-         TXiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=jJ5pfTfr1oTq02pXY/Q0LpFtsR1htYmf8bYAxrgz1T0=;
-        b=D04wjOEwjSDV5VOZjGEvmj7z6hre5L1buutZDAbX8vcABJotTI0KT7C8ey3Ldh8+up
-         DcnI1xBEE1vKmkHeAV/3QVEYPIq9sUYXnhBqq7YqEcJKXQ+qEaP61pdWUFxq4JUNt7C/
-         HO6H7xo23zRVEuiSRgAshQamEd1o7tSJkkMRoQYjfhPdWeCYc4JDXS22X/3nEP+jWbN7
-         zE2lkFsl++s92Ul/bDIBaPv5RYGAOVi6DK/JOzbanD/H0uX++D7rl9SsCnQGIf/P3z9f
-         MHvsL50rW8tT47Fc41liSUl8ie8kpioCQb61yPzTcN21eZVMcphS0Q96y0kuT22XR+ff
-         5ZKw==
-X-Gm-Message-State: APjAAAWHnVd6aoRZ6RNxQHKV8lm0Xw4KgqAd0T/pqMfobO3pkeIQw7IZ
-        7+gM3Kgu1uFTaWgOI1uBPd3B7A==
-X-Google-Smtp-Source: APXvYqwi9PEiUYheOJVnMZ7drMhgq/ICX6s9Wtho3XvYPockXuKB8vSyJtfbeCfSa4egxCeeFdJ3IA==
-X-Received: by 2002:a5d:528e:: with SMTP id c14mr27530005wrv.308.1578389042531;
-        Tue, 07 Jan 2020 01:24:02 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q11sm74554735wrp.24.2020.01.07.01.24.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jan 2020 01:24:01 -0800 (PST)
-Subject: Re: [PATCH v6 0/4] drm: Add support for bus-format negotiation
-To:     dri-devel@lists.freedesktop.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kernel@collabora.com, Sam Ravnborg <sam@ravnborg.org>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chris Healy <cphealy@gmail.com>, devicetree@vger.kernel.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-References: <20200106143409.32321-1-narmstrong@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <4f44d89c-a473-b114-755d-7ce21d8903d0@baylibre.com>
-Date:   Tue, 7 Jan 2020 10:24:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 7 Jan 2020 04:28:50 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:58290 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726485AbgAGJ2u (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 04:28:50 -0500
+Received: from ip5f5a5f74.dynamic.kabel-deutschland.de ([95.90.95.116] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iolA5-0001Tu-Jm; Tue, 07 Jan 2020 10:28:29 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 09/11] media: staging: dt-bindings: add Rockchip MIPI RX D-PHY yaml bindings
+Date:   Tue, 07 Jan 2020 10:28:28 +0100
+Message-ID: <2549505.MsbA2le1sL@diego>
+In-Reply-To: <20200107023721.GG22189@pendragon.ideasonboard.com>
+References: <20191227200116.2612137-1-helen.koike@collabora.com> <cfd5156f09358a428d0c40cfcd17d688e0225f2b.camel@collabora.com> <20200107023721.GG22189@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106143409.32321-1-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06/01/2020 15:34, Neil Armstrong wrote:
-> This patch series aims at adding support for runtime bus-format
-> negotiation between all elements of the
-> 'encoder -> bridges -> connector/display' section of the pipeline.
+Am Dienstag, 7. Januar 2020, 03:37:21 CET schrieb Laurent Pinchart:
+> On Mon, Jan 06, 2020 at 11:06:12PM -0300, Ezequiel Garcia wrote:
+> > On Tue, 2020-01-07 at 02:10 +0200, Laurent Pinchart wrote:
+> > > Hi Helen,
+> > > 
+> > > Thank you for the patch.
+> > > 
+> > > On Fri, Dec 27, 2019 at 05:01:14PM -0300, Helen Koike wrote:
+> > > > Add yaml DT bindings for Rockchip MIPI D-PHY RX
+> > > > 
+> > > > This was tested and verified with:
+> > > > mv drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml  Documentation/devicetree/bindings/phy/
+> > > > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > 
+> > > > Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > > > 
+> > > > ---
+> > > > 
+> > > > Changes in v12:
+> > > > - The commit replaces the following commit in previous series named
+> > > > media: staging: dt-bindings: Document the Rockchip MIPI RX D-PHY bindings
+> > > > This new patch adds yaml binding and was verified with
+> > > > make dtbs_check and make dt_binding_check
+> > > > 
+> > > > Changes in v11: None
+> > > > Changes in v10:
+> > > > - unsquash
+> > > > 
+> > > > Changes in v9:
+> > > > - fix title division style
+> > > > - squash
+> > > > - move to staging
+> > > > 
+> > > > Changes in v8: None
+> > > > Changes in v7:
+> > > > - updated doc with new design and tested example
+> > > > 
+> > > >  .../bindings/phy/rockchip-mipi-dphy.yaml      | 75 +++++++++++++++++++
+> > > >  1 file changed, 75 insertions(+)
+> > > >  create mode 100644 drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > 
+> > > > diff --git a/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml b/drivers/staging/media/phy-
+> > > > rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..af97f1b3e005
+> > > > --- /dev/null
+> > > > +++ b/drivers/staging/media/phy-rockchip-dphy/Documentation/devicetree/bindings/phy/rockchip-mipi-dphy.yaml
+> > > > @@ -0,0 +1,75 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/phy/rockchip-mipi-dphy.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Rockchip SoC MIPI RX0 D-PHY Device Tree Bindings
+> > > 
+> > > Should this be s/RX0/RX/ ? Or do you expect different bindings for RX1 ?
+> > 
+> > The driver currently only supports RX0, but I think you are right,
+> > it should say RX here. This binding could be extended for RX1.
+> > 
+> > > Looking at the PHY driver, it seems to handle all PHYs with a single
+> > > struct device. Should we thus use #phy-cells = <1> to select the PHY ?
+> > 
+> > I am not following this. The driver handles just one PHY. Each PHY
+> > should have its own node.
 > 
-> In order to support that, we need drm bridges to fully take part in the
-> atomic state validation process, which requires adding a
-> drm_bridge_state and a new drm_bridge_funcs.atomic_check() hook.
-> Once those basic building blocks are in place, we can add new hooks to
-> allow bus format negotiation (those are called just before
-> ->atomic_check()). The bus format selection is done at runtime by
-> testing all possible combinations across the whole bridge chain until
-> one is reported to work.
-> 
-> No Major changes in this v6, I addressed the slight changed requested
-> by Boris from Laurent on the patch 1, and rebased on drm-misc-next. 
-> Note that this version only contains core changes.
-> Once those changes are merged I'll send the imx/panel/lvds-codec specific bits.
-> 
-> A more detailed changelog is provided in each patch.
-> 
-> This patch series is also available here [1].
-> 
-> Thanks,
-> 
-> ~Boris~ Neil
-> 
-> [1] https://github.com/superna9999/linux/commits/drm-bridge-busfmt-v6
-> 
-> Boris Brezillon (4):
->   drm/bridge: Add a drm_bridge_state object
->   drm/bridge: Patch atomic hooks to take a drm_bridge_state
->   drm/bridge: Add an ->atomic_check() hook
->   drm/bridge: Add the necessary bits to support bus format negotiation
-> 
->  .../drm/bridge/analogix/analogix_dp_core.c    |  41 +-
->  drivers/gpu/drm/drm_atomic.c                  |  39 ++
->  drivers/gpu/drm/drm_atomic_helper.c           |  32 +-
->  drivers/gpu/drm/drm_bridge.c                  | 527 +++++++++++++++++-
->  drivers/gpu/drm/rcar-du/rcar_lvds.c           |   5 +-
->  include/drm/drm_atomic.h                      |   3 +
->  include/drm/drm_bridge.h                      | 275 ++++++++-
->  7 files changed, 874 insertions(+), 48 deletions(-)
-> 
+> Looking at the registers, it seems that the different PHYs are
+> intertwined and we would could have trouble handling the different PHYs
+> with different DT nodes and thus struct device instances.
 
-Applied to drm-misc-next with slight change in patch 1 and doc fix in patch 4
+I have to confess to not following _ALL_ of the threads, so may say
+something stupid, but I don't think the PHYs are intertwined so much.
+
+Where RX0 is controlled from the "General Register Files" alone
+[register dumping ground for soc designers], the TX1RX1-phy
+actually gets controlled from inside the dsi1 register area it seems.
+
+So in my previous (still unsucessful) tests, I was rolling with something like
+https://github.com/mmind/linux-rockchip/commit/e0d4b03976d2aab85a8c1630be937ea003b5df88
+
+With the actual "logic" picked from the vendor kernel, that just double-
+maps the dsi1-registers in both dsi and dphy driver, which was strange.
+
+
+Heiko
+
+
