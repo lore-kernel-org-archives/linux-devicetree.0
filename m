@@ -2,93 +2,115 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A063C33C9B
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B19C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205352081E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:03:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rCQ72smI"
+	by mail.kernel.org (Postfix) with ESMTP id 2EA03214D8
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 09:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578387895;
+	bh=r1wDW23r/YjPiDMuICfuT5d52gAql+2ws9tKVfO4uKU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tms40YQ0VczcrMHTJpT13uLBA6ShXY5afhMQso4H6ZL7PuiaZmCE/2kS2zr5RHvIR
+	 Nm79JzDZcF5VdZuq3itr8tyxIjm9llYyxdS8loqLF5PPULmhLPBDBrfTRBuB6P3nF3
+	 NkWHOGgrmcu3xiigYuBnV11vbd9UtTHhRdm45qEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgAGJDj (ORCPT
+        id S1726565AbgAGJEy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 04:03:39 -0500
-Received: from mail-io1-f46.google.com ([209.85.166.46]:40487 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbgAGJDj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:03:39 -0500
-Received: by mail-io1-f46.google.com with SMTP id x1so51799416iop.7
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 01:03:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gj7J+/hEyeRK4BnoKtzoxr09YQuNhvHYUJt19aqFDpk=;
-        b=rCQ72smI0DeWhto4Sdmg+g3DY80KqgNn96Sod2Bue/c4qK+Y2AWvn1/SKK0jdm3uMy
-         4OWncNlPthi60+f6sTGrp8rrYPvKwtxNVE9q20Fone5ubfhDjcoDdqDxDEQToIC91W19
-         1MVc8vTRmZbJ50sao+hrdDQ6lVbXLTX/7vT5BJWxxIBEeAFbgdIfsd/GZdCMEtBd/9XW
-         w/H6CWiDdCHqLtmpvq1SBiQSd6pm40ProtZ5QnDcHg1DjzsNfg/SH0EFcbZVvQ/7Uyww
-         dtkSLL0pOjU3mdP9zeAlTeJT3ui9xN4Vqsimo4y4KrTLY/1HDnct8cCDJuH61tYEXyMC
-         9K4Q==
+        Tue, 7 Jan 2020 04:04:54 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42399 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbgAGJEy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 04:04:54 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so49760554edv.9;
+        Tue, 07 Jan 2020 01:04:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gj7J+/hEyeRK4BnoKtzoxr09YQuNhvHYUJt19aqFDpk=;
-        b=RvUcorQupZicHoDsU/T+Ua5C/7Z8IgTG2S/hPh1w7ak2HzEc86I1niF+R4n01Voc8f
-         XAi4Q3R2NWwJp2o3QW6ZMXliLC2AfpaWnlyttzEhnqB6i+Kp5DjO4zvxBpDr5joncdNw
-         gNR6/l+5X1TvI0rujy2SI8Q08tHRXi+0kb8mYK8729b5+Os6se2FvCcWosNPPeKOUV5h
-         Z1e/yJVloJAwQHG0FhVUfHUAqnl90rPX8lfY+50IDIJ84WlRG+zU3TDItBPMUsoq9mxA
-         9sUe4+TXPcJHcWa95DCkJElwgvwBqE+qAN0L/DTQAVXPFcu5NpnM+nZUZVV8HZghDqnt
-         6Iuw==
-X-Gm-Message-State: APjAAAVGiFZKNJ83XWH7yxsno0nbaSb4PbKMzRRH2BVn8B8Ss0ODuStX
-        MZ9o5KRcRbFi4O2LrNINlSYgvLgUruoiDEyJ5VAoqw==
-X-Google-Smtp-Source: APXvYqyUtDB0HoymsX65YpI76/mEkEWx0c+eKzafBa4vfpoPil7ziDgesHwZmWXrZmHNbTMZb+waD2Dwo254bAv1VmM=
-X-Received: by 2002:a6b:fb19:: with SMTP id h25mr72537201iog.40.1578387818317;
- Tue, 07 Jan 2020 01:03:38 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SGG4xHX2YATIq9VZs4BAzLmEWAu7JtLxJw2WW5I4CiA=;
+        b=ml4yFRXcG07xR5Ec5LlVMuyB0MdnKiA7vbz0DIxsAFT6bqY5wlQZ96YqYvcu244Bp+
+         CCSFABy1MfGGddECldMe21vxMXxkRKgEcgIXVXwRLjD4ix8deTmjt63drd240WfZsd7r
+         DNZfE7jnj5Oxi+0F+sozycZvVnZJ0aRLMw0xeovr2oC07ojMlhfhSqJi1WMLksYyHK+N
+         1gETWiNkgqlnI0NLhEFoDmx2sKHGSV2DdOkZn+7KNU+/bCaw0APnwCpAX/dtS8oaJ8P5
+         HP9Q3+hZf0fV4DcOaqoZxRuTmP5fFQBSuzwdKMra0rLMMjO04IDCIpYhca6yiy7fMrZ8
+         3UIw==
+X-Gm-Message-State: APjAAAX5XQsoItwqaVX1GAKuAiaxgxR1xEdbJxdVuGOD2aTXANT83Pgy
+        EO5lgeWcNU/2k5GvLglyfGRwM4ZP
+X-Google-Smtp-Source: APXvYqyYO/ux/7ZOIuaH8J6fcPFS8f5Bcu/C6zg1+oGXA5GRJ16yYiqmjY4rrOHIsud0A3lqXQDsVw==
+X-Received: by 2002:a17:907:212f:: with SMTP id qo15mr86708540ejb.245.1578387891926;
+        Tue, 07 Jan 2020 01:04:51 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id s12sm8054935eja.79.2020.01.07.01.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 01:04:51 -0800 (PST)
+Date:   Tue, 7 Jan 2020 10:04:49 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: tiny4412: add proper panel node
+Message-ID: <20200107090449.GA32007@pi3>
+References: <20200106191003.21584-1-tiny.windzz@gmail.com>
+ <20200106191003.21584-2-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-References: <20191230133852.5890-1-geert+renesas@glider.be>
- <CAMpxmJVN3f5vWZoUpgsM0kocmBYSO=T0OeoG--5rQi9=jk2t2g@mail.gmail.com> <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVo7bvCKjn2-SD4j7EPwDPeTWn2Sh2e-Moj+RkqudZGuQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 7 Jan 2020 10:03:27 +0100
-Message-ID: <CAMRc=Mf6CpsMpqwXjzC7jF0rxchSop+q7GQ2xgooKVRuC52VPQ@mail.gmail.com>
-Subject: Re: [PATCH/RFC 0/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200106191003.21584-2-tiny.windzz@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 7 sty 2020 o 08:46 Geert Uytterhoeven <geert@linux-m68k.org> napisa=C5=
-=82(a):
->
-> I'm happy with a (static) GPIO hog.
->
-> BTW, what exactly do you mean with "mux framework"? Pinctrl/pinmux?
->
+On Mon, Jan 06, 2020 at 07:10:03PM +0000, Yangtao Li wrote:
+> This patch add at070tn92 panel for tiny4412 board.
 
-No, I meant the multiplexer subsystem under drivers/mux. I thought we
-could call mux_control_select() from pm_runtime_get_*() or something
-similar. This is just an idea though, and I see Frank already did an
-in-depth analysis so never mind my comment.
+Please fix description as in patch 1.
 
-Bart
+> 
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-tiny4412.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> index 2b62cb27420c..57f9d09233ad 100644
+> --- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> @@ -66,6 +66,16 @@
+>  			clock-frequency = <24000000>;
+>  		};
+>  	};
+> +
+> +	panel {
+> +		compatible = "innolux,at070tn92";
+> +
+> +		port {
+> +			panel_input: endpoint {
+> +				remote-endpoint = <&lcdc_output>;
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &fimd {
+> @@ -74,6 +84,12 @@
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
+>  	status = "okay";
+
+One empty space here.
+
+> +	port@3 {
+> +		reg = <3>;
+
+Why starting from "3"? Why this is port@3, not just "port"?
+
+Best regards,
+Krzysztof
+
