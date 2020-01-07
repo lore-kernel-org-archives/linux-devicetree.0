@@ -2,111 +2,96 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B390C282DD
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4C6C282DD
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0981208C4
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 20:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01DA2077B
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 21:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578428067;
-	bh=1kRpl3D/84++yLzuVo/93IHEm/dKswMXhcgmSQzkB/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ljdE9pTESW9vUjVCxXwWl/UWyZ8z2VyZ37z1OlI7fUQNT8ic6h96fvJFvXMlIzdXL
-	 dzyvL6Myx9AOZmxiNgOuODQRDVRHL7Lkxw7RiX+f7Jy22DqxUVLtf3WvvO0RvHS2dW
-	 Fiifa1WogEMnMlHh+pLGURfb6lGsD8fqzvbUnU0g=
+	s=default; t=1578431599;
+	bh=Mu0zhx9ti4OUp/EdrAMXIrQy01N+AgLGZ/0oUsekZgg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pBNe249xma4FY5nFboWfHCPTHWZtMqUXFVEzWKzEEWDO/69+AeZlTrr3Q9WUEFXoQ
+	 5NikuCAJXbQmuJDnalEMOtsAAQH1v+bF7eWY+9ozBChJmCt/2kdijzttGKCqZ+xCe5
+	 g/YeVbuhWcw1RfxJ8qa3TZOtkDZHaZkbY0EY7YtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgAGUO0 (ORCPT
+        id S1728739AbgAGVNS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 15:14:26 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43450 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgAGUO0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 15:14:26 -0500
-Received: by mail-ed1-f67.google.com with SMTP id dc19so639896edb.10;
-        Tue, 07 Jan 2020 12:14:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3aS4Jy/hBVuzIbx1M24ZHNxqIgSBkpGASRqgDczsY+s=;
-        b=aGNyRd3VY9cTMQ/eljJ03a9OFsacMzKg29cFkxqFtYnHqXBLFUNdA/eGHaYlpeCSfa
-         qvLMElPLfejKzp4AjqJmA7NwTsvmnzO3wV1BJd/Op9WpSSf4/QKnetX9ERL+xOrcg80+
-         KNdn0Cwo8xsLFj9G+8u3VTm4f9Nu62+HvtDk6nA1dZUf8V1J/4OcpCEU03YH9UwFl7Ww
-         ga2nPKIbEW3h9tZdxWVuIWvV6502+rba6wET+hhQl4N3R/uLaXKeQ057+gYw2Vqi5E8x
-         yy8ThdhIahqWC55XWj/azCJPDrrLiyJu07fOZe3WE4eTJldr1aSOsGgrOd6ZMH/B2q4/
-         xWcg==
-X-Gm-Message-State: APjAAAX5K/rvTK19RonAj0xYAzZ3TrZ/QeMrLmw0edErJITsi56hG9o+
-        qW++gBRGz+40n8P91uNzzEIAqd31
-X-Google-Smtp-Source: APXvYqwm8bN/J1cRIU0kGkZ/Ucp0J0RgPBy+IBYEsfHdkNRt4A0cKKb2/owPSuFmmfFe275aBXb7YA==
-X-Received: by 2002:a17:906:5358:: with SMTP id j24mr1298906ejo.44.1578428064594;
-        Tue, 07 Jan 2020 12:14:24 -0800 (PST)
-Received: from kozik-book ([194.230.155.149])
-        by smtp.googlemail.com with ESMTPSA id r13sm11313ejb.27.2020.01.07.12.14.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 07 Jan 2020 12:14:23 -0800 (PST)
-Date:   Tue, 7 Jan 2020 21:14:20 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v2 03/20] ARM: dts: samsung: Rename Samsung and Exynos to
- lowercase
-Message-ID: <20200107201420.GB8636@kozik-book>
-References: <20200104152107.11407-1-krzk@kernel.org>
- <20200104152107.11407-4-krzk@kernel.org>
+        Tue, 7 Jan 2020 16:13:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727345AbgAGVNR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 7 Jan 2020 16:13:17 -0500
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50B87222D9
+        for <devicetree@vger.kernel.org>; Tue,  7 Jan 2020 21:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578431596;
+        bh=Mu0zhx9ti4OUp/EdrAMXIrQy01N+AgLGZ/0oUsekZgg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HZ+ZEmZaxJOG4sJ6wCyRwffphyheNBiyMazVmMNLn+R7YnC9wfA8tao4JhjKl/TkW
+         qjN33XFEy2GCq0s8KifroyEefD+6yD110qd1WZYLF+IB3kYfuah5ilzOwGY7pZj3Wj
+         M8Ntiw7a1tysnwZEfyCjWqmdqCn+KPBHNuac6GhU=
+Received: by mail-qt1-f173.google.com with SMTP id d18so961488qtj.10
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 13:13:16 -0800 (PST)
+X-Gm-Message-State: APjAAAV7eC+ODEfvCzG2hyR1EERYeaHWCEpR88Wf33UC6u/rTCk2R0GK
+        tcASZWZIAf73J2kcvuJjzZz6Ia9LCUIIxhEjag==
+X-Google-Smtp-Source: APXvYqwDgmAjJGxgm7wk0h6HATAd7Cshh9FVAcgKcQjVPlOIjTq+cJCEaNcpcpLZPfTHcRLwSdZZOc90O30ygN3j8v4=
+X-Received: by 2002:aed:2344:: with SMTP id i4mr893504qtc.136.1578431595537;
+ Tue, 07 Jan 2020 13:13:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200104152107.11407-4-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAA2QUqKK+XcR5oqpZPrMNnQmgk=BV7s05UR7Efc2kCcYUs8=2w@mail.gmail.com>
+In-Reply-To: <CAA2QUqKK+XcR5oqpZPrMNnQmgk=BV7s05UR7Efc2kCcYUs8=2w@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 7 Jan 2020 15:13:04 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLgMJty+EgzEV-AfyWM7mKzWyB0X4ohxk5FUksMLcSL3w@mail.gmail.com>
+Message-ID: <CAL_JsqLgMJty+EgzEV-AfyWM7mKzWyB0X4ohxk5FUksMLcSL3w@mail.gmail.com>
+Subject: Re: [RFC] MAX_RESERVED_REGIONS hard-coded value
+To:     Daniele Alessandrelli <daniele.alessandrelli@gmail.com>
+Cc:     Miles Chen <miles.chen@mediatek.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Jan 04, 2020 at 04:20:50PM +0100, Krzysztof Kozlowski wrote:
-> Fix up inconsistent usage of upper and lowercase letters in "Samsung"
-> and "Exynos" names.
-> 
-> "SAMSUNG" and "EXYNOS" are not abbreviations but regular trademarked
-> names.  Therefore they should be written with lowercase letters starting
-> with capital letter.
-> 
-> The lowercase "Exynos" name is promoted by its manufacturer Samsung
-> Electronics Co., Ltd., in advertisement materials and on website.
-> 
-> Although advertisement materials usually use uppercase "SAMSUNG", the
-> lowercase version is used in all legal aspects (e.g. on Wikipedia and in
-> privacy/legal statements on
-> https://www.samsung.com/semiconductor/privacy-global/).
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/exynos5250-arndale.dts      | 2 +-
->  arch/arm/boot/dts/exynos5250-smdk5250.dts     | 4 ++--
->  arch/arm/boot/dts/exynos5250.dtsi             | 8 ++++----
->  arch/arm/boot/dts/exynos5260-xyref5260.dts    | 4 ++--
->  arch/arm/boot/dts/exynos5260.dtsi             | 2 +-
->  arch/arm/boot/dts/exynos5410-smdk5410.dts     | 4 ++--
->  arch/arm/boot/dts/exynos5410.dtsi             | 6 +++---
->  arch/arm/boot/dts/exynos5420-arndale-octa.dts | 2 +-
->  arch/arm/boot/dts/exynos5420-cpus.dtsi        | 2 +-
->  arch/arm/boot/dts/exynos5420-smdk5420.dts     | 4 ++--
->  arch/arm/boot/dts/exynos5420.dtsi             | 6 +++---
->  arch/arm/boot/dts/exynos5422-cpus.dtsi        | 2 +-
->  arch/arm/boot/dts/exynos5800.dtsi             | 6 +++---
->  arch/arm/boot/dts/s3c2416-smdk2416.dts        | 2 +-
->  arch/arm/boot/dts/s3c6410-smdk6410.dts        | 4 ++--
+On Mon, Jan 6, 2020 at 12:05 PM Daniele Alessandrelli
+<daniele.alessandrelli@gmail.com> wrote:
+>
+> Hi,
+>
+> I'm using a Device Tree with more then 32 reserved memory regions and
+> I'm seeing the following error while booting the Kernel:
+> [    0.000000] OF: reserved mem: not enough space all defined regions.
 
-Applied.
+How many do you have? Is that DT available somewhere?
 
-Best regards,
-Krzysztof
+> My understanding is that this is due to the hard-coded value of
+> MAX_RESERVED_REGIONS in drivers/of/of_reserved_mem.c
+>
+> Googling around, I found this old discussion [1] in which Miles
+> suggests to add a CONFIG_MAX_OF_RESERVED_REGIONS kconfig option to
+> configure MAX_RESERVED_REGIONS. Rob replied to Miles' email saying
+> that he would prefer MAX_RESERVED_REGIONS to be dynamic. However,
+> later in the thread, it looks like making MAX_RESERVED_REGIONS dynamic
+> poses some implementation issues [2]. At that point the discussion
+> seemed to have stopped.
 
+Not sure what the problem was as there's no code, but I'd guess the
+array alloc and populating have to be done later (perhaps in
+unflattening).
+
+> Is there any chance for the patch proposed by Miles to be reconsidered?
+
+A kconfig option would still be my 3rd choice after dynamically
+allocating the array or just growing the fixed array size.
+
+Rob
