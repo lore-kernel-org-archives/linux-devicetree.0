@@ -2,276 +2,135 @@ Return-Path: <SRS0=83Av=24=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB9CC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 17:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA363C33C8C
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 17:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2324D21744
-	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 17:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578416959;
-	bh=rdMbnFROR3ZGRGF6MMtW3HCXNlbQ1I4/MOT+6Eqn3j4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kGCfKO4NgoYPIkJAQqW3b1CI7hJM2OTCJkppD4Tg2GaIGgyPRd3ttjId/Seqa5fbC
-	 8a4/dTKgle/60xeUvzoESGelp4MdZzTDophXWUS5Eso8jw/HdqZI8LdHR5V45qnYt6
-	 UwuIw2ipb0kghtV1SA1D7SRPW4Z4/mD4BNTtjIDw=
+	by mail.kernel.org (Postfix) with ESMTP id C0C252087F
+	for <linux-devicetree@archiver.kernel.org>; Tue,  7 Jan 2020 17:29:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qwQPCEh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgAGRJS (ORCPT
+        id S1728437AbgAGR33 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 12:09:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728266AbgAGRJS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 12:09:18 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 024522087F;
-        Tue,  7 Jan 2020 17:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578416957;
-        bh=rdMbnFROR3ZGRGF6MMtW3HCXNlbQ1I4/MOT+6Eqn3j4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SlbBB53O6zNjf1ennYLpa4fDSiui/LvfBlf+oZJpsSuR+FsvfYsLxdbV2tnuJwnmR
-         Vv80E7cItGr1oQ4vnUd6SUDRsUogjVIvkORu4fjXuHmb/6vhZD48LeARbtJuy/2Yyv
-         VSUGNEr51g5h1TFrxtL2e7OzcHvWqsqt9Kv5nw1Q=
-Date:   Tue, 7 Jan 2020 18:09:14 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: allwinner: a64: enable DVFS
-Message-ID: <20200107170914.4lloj62szdmvsa2j@gilmour>
-References: <20200104063505.219030-1-anarsoul@gmail.com>
- <20200104063505.219030-4-anarsoul@gmail.com>
- <20200104083734.hmeapykk7gninukf@gilmour.lan>
- <CA+E=qVdZGktgAwEUeUkqYaU=pWe-Ogjnf90=z7YcyrXn74h+9w@mail.gmail.com>
+        Tue, 7 Jan 2020 12:29:29 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39771 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgAGR33 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 12:29:29 -0500
+Received: by mail-lj1-f195.google.com with SMTP id l2so405106lja.6
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 09:29:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JgUNxG+Km1+BP8w9TX1X22sqfNmqdVbzivjIJVzsay4=;
+        b=qwQPCEh5sM6BpKHk+6sN0FKBHHUglvqoiC7FA66ZsXfXJ1HceaI9LHqlKEi/ca9RY3
+         +RwQ7928TzgKz+a7Ve38vM7ARzyXCpfPVEud2OgnJNWNyCxPGd0I/kkC9YIOfQOhhG04
+         sCY08N2mkjisP2DpDw046K+C8dDdGqHISrc/MjYC//0BtJmtbkCbH3JWJNFfL0n6b//6
+         Agn19xaLVEYYuo3sRmUwT3zq0fJq++8WWOCVgMkiU1ZXlshzqehAzk/IKwjIPe61eDCl
+         kb3tFR8jF4tBegzU3ZDCVx6S7RUAC5ks60JcvdrmGn45Zj7E9fIvHyBmcalSCxJlJqau
+         jXjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JgUNxG+Km1+BP8w9TX1X22sqfNmqdVbzivjIJVzsay4=;
+        b=Ep5fdDEUU72y9d5+o9bQD+XPRSP98tcunFc1RppE9MmgplBkudAKWVDpWuRYeb752U
+         nIBrMf4mdQfQsBvL0HQ2eXkle2j1XVT320E0nSzj8TPKC7ZsDz+EQA+xftQiwifOdf/5
+         hi8qmP0XomdVeW1fvdniNHva7kBdcQlPaxbRKzyxDQxPwG67rbR8H8arhPOi2R4vjanx
+         256YT97nhkZkxWB/dNg00XrMD40y9mF2MvW5X/m8zK8Q3HuCM7fmcpbUohND6XkHTqHl
+         y3Ylt/gNgKIGZaqrS9sb3nRBPomRqhaHQdVrxSyNGg4OjVhr2Ick5hZFv2fpn5sICGRO
+         rnFA==
+X-Gm-Message-State: APjAAAULcru7KIWopwkq5/5wV2vrAPoza2r/me64p9jNUrmVEjww5kD3
+        TeAbUyL3Omqg1nqAn3MbhgavWOuOQY6cYuktM7j4Fw==
+X-Google-Smtp-Source: APXvYqyeD3Z3ZptIkzBJq5ByN1Cm20iK0EYdKy4UieSVpwDzlUWuSCA0ziNPb2E3L3zab4ZLNvJaxxXUt+9CaOdkztc=
+X-Received: by 2002:a2e:b4ef:: with SMTP id s15mr380590ljm.20.1578418167575;
+ Tue, 07 Jan 2020 09:29:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hianm4mhkxhl3mtz"
-Content-Disposition: inline
-In-Reply-To: <CA+E=qVdZGktgAwEUeUkqYaU=pWe-Ogjnf90=z7YcyrXn74h+9w@mail.gmail.com>
+References: <20191210185351.14825-1-f.fainelli@gmail.com> <CA+G9fYsMyUWGo8Qtd2UCfYDV2aoH71=hCZKaTurq4Aj2eeZczw@mail.gmail.com>
+In-Reply-To: <CA+G9fYsMyUWGo8Qtd2UCfYDV2aoH71=hCZKaTurq4Aj2eeZczw@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 7 Jan 2020 22:59:16 +0530
+Message-ID: <CA+G9fYvmwetcZPraZrHbj=MjgWZik-wFK7nEejs-6TrYyODcSg@mail.gmail.com>
+Subject: Re: [PATCH 0/8] ata: ahci_brcm: Fixes and new device support
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---hianm4mhkxhl3mtz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Sat, Jan 04, 2020 at 08:24:01AM -0800, Vasily Khoruzhick wrote:
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-> > > @@ -104,6 +104,10 @@ &de {
-> > >       status = "okay";
-> > >  };
-> > >
-> > > +&cpu0 {
-> > > +     cpu-supply = <&reg_dcdc2>;
-> > > +};
-> > > +
-> > >  &ehci1 {
-> > >       status = "okay";
-> > >  };
+On Tue, 7 Jan 2020 at 22:17, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Wed, 11 Dec 2019 at 00:25, Florian Fainelli <f.fainelli@gmail.com> wrote:
 > >
-> > Did you test it on all those boards (and if so, how were the OPP
-> > tested), or was it done simply by looking at the schematics?
->
-> I tested it only on Pine64-LTS and Pinebook. But all these boards use
-> AXP803 which always uses DCDC2 as CPU regulator.
-
-Ok. How were those OPPs picked and tested?
-
-> > > +             opp-912000000 {
-> > > +                     opp-hz = /bits/ 64 <912000000>;
-> > > +                     opp-microvolt = <1120000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +             opp-960000000 {
-> > > +                     opp-hz = /bits/ 64 <960000000>;
-> > > +                     opp-microvolt = <1160000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +             opp-1008000000 {
-> > > +                     opp-hz = /bits/ 64 <1008000000>;
-> > > +                     opp-microvolt = <1200000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +             opp-1056000000 {
-> > > +                     opp-hz = /bits/ 64 <1056000000>;
-> > > +                     opp-microvolt = <1240000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +             opp-1104000000 {
-> > > +                     opp-hz = /bits/ 64 <1104000000>;
-> > > +                     opp-microvolt = <1260000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +             opp-1152000000 {
-> > > +                     opp-hz = /bits/ 64 <1152000000>;
-> > > +                     opp-microvolt = <1300000>;
-> > > +                     clock-latency-ns = <244144>; /* 8 32k periods */
-> > > +             };
-> > > +     };
-> > > +
+> > Hi Jens,
 > >
-> > What frequency is setup by U-Boot?
->
-> It's 816 MHz
->
-> > If it's 1008 MHz as usual, then having the OPP above that frequency by
-> > default means that a board that doesn't set cpu-supply (or doesn't set
-> > it up properly) will be unstable, since it will increase the
-> > frequency, but not the voltage, and the voltage isn't enough for that
-> > new frequency.
+> > The first 4 patches are fixes and should ideally be queued up/picked up
+> > by stable. The last 4 patches add support for BCM7216 which is one of
+> > our latest devices supported by this driver.
 > >
-> > The way we've done it so far on the SoCs in a similar situation (A33,
-> > A83t) is only to list the OPP below the frequency set up by U-Boot in
-> > the DTSI, and list the frequencies above that in the boards that add
-> > cpu-supply.
+> > Patch #2 does a few things, but it was pretty badly broken before and it
+> > is hard not to fix all call sites (probe, suspend, resume) in one shot.
 > >
-> > Given that it seems that we need to have them listed on number of
-> > boards, I guess we could add a separate DTSI that would be included
-> > only by the boards setting cpu-supply?
->
-> Currently all the A64 boards that we support use AXP803, so I'm not
-> sure whether we actually need that. We can just define CPU regulator
-> for them and use default OPP and that's exactly what I did.
-
-Yeah, but none of them have been supporting it since day one. Having
-these OPPs now mean that the very first thing you'll need to do is to
-bringup the PMIC as well, otherwise the system will crash.
-
-And to the person doing the bringup, this will be far from obvious
-that a) we have that requirement b) the crash that they are seeing is
-due to cpufreq.
-
-> > >       cpus {
-> > >               #address-cells = <1>;
-> > >               #size-cells = <0>;
-> > > @@ -90,6 +136,10 @@ cpu0: cpu@0 {
-> > >                       reg = <0>;
-> > >                       enable-method = "psci";
-> > >                       next-level-cache = <&L2>;
-> > > +                     clocks = <&ccu CLK_CPUX>;
-> > > +                     clock-names = "cpu";
-> > > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > > +                     #cooling-cells = <2>;
-> > >               };
-> > >
-> > >               cpu1: cpu@1 {
-> > > @@ -98,6 +148,10 @@ cpu1: cpu@1 {
-> > >                       reg = <1>;
-> > >                       enable-method = "psci";
-> > >                       next-level-cache = <&L2>;
-> > > +                     clocks = <&ccu CLK_CPUX>;
-> > > +                     clock-names = "cpu";
-> > > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > > +                     #cooling-cells = <2>;
-> > >               };
-> > >
-> > >               cpu2: cpu@2 {
-> > > @@ -106,6 +160,10 @@ cpu2: cpu@2 {
-> > >                       reg = <2>;
-> > >                       enable-method = "psci";
-> > >                       next-level-cache = <&L2>;
-> > > +                     clocks = <&ccu CLK_CPUX>;
-> > > +                     clock-names = "cpu";
-> > > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > > +                     #cooling-cells = <2>;
-> > >               };
-> > >
-> > >               cpu3: cpu@3 {
-> > > @@ -114,6 +172,10 @@ cpu3: cpu@3 {
-> > >                       reg = <3>;
-> > >                       enable-method = "psci";
-> > >                       next-level-cache = <&L2>;
-> > > +                     clocks = <&ccu CLK_CPUX>;
-> > > +                     clock-names = "cpu";
-> > > +                     operating-points-v2 = <&cpu0_opp_table>;
-> > > +                     #cooling-cells = <2>;
-> > >               };
-> > >
-> > >               L2: l2-cache {
-> > > @@ -218,6 +280,46 @@ cpu_thermal: cpu0-thermal {
-> > >                       polling-delay-passive = <0>;
-> > >                       polling-delay = <0>;
-> > >                       thermal-sensors = <&ths 0>;
-> > > +
-> > > +                     cooling-maps {
-> > > +                             map0 {
-> > > +                                     trip = <&cpu_alert0>;
-> > > +                                     cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                                      <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                                      <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                                      <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > > +                             };
-> > > +                             map1 {
-> > > +                                     trip = <&cpu_alert1>;
-> > > +                                     cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                                      <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                                      <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > +                                                      <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > > +                             };
-> > > +                     };
-> > > +
-> > > +                     trips {
-> > > +                             cpu_alert0: cpu_alert0 {
-> > > +                                     /* milliCelsius */
-> > > +                                     temperature = <75000>;
-> > > +                                     hysteresis = <2000>;
-> > > +                                     type = "passive";
-> > > +                             };
-> > > +
-> > > +                             cpu_alert1: cpu_alert1 {
-> > > +                                     /* milliCelsius */
-> > > +                                     temperature = <90000>;
-> > > +                                     hysteresis = <2000>;
-> > > +                                     type = "hot";
-> > > +                             };
-> > > +
-> > > +                             cpu_crit: cpu_crit {
-> > > +                                     /* milliCelsius */
-> > > +                                     temperature = <110000>;
-> > > +                                     hysteresis = <2000>;
-> > > +                                     type = "critical";
-> > > +                             };
-> > > +                     };
-> > >               };
+> > Please let me know if you have any comments.
 > >
-> > Where are those tripping points coming from?
+> > Thanks!
+> >
+> > Florian Fainelli (8):
+> >   ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
+> >   ata: ahci_brcm: Fix AHCI resources management
 >
-> These are taken from A33 dtsi. I couldn't find any recommended
-> throttling and critical temp in A64 user manual [1].
+> Following error on stable-rc 4.14 and 4.9 branch for arm build.
+
+Following error on stable-rc 4.19, 4.14 and 4.9 branch for arm build.
+
 >
-> [1] http://linux-sunxi.org/images/b/b4/Allwinner_A64_User_Manual_V1.1.pdf
-
-Ok. Can you mention that in the commit log?
-
-Thanks!
-Maxime
-
---hianm4mhkxhl3mtz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhS7OgAKCRDj7w1vZxhR
-xQQjAQDDAGuF7KVFijZrX/x9f2hoKg8Se71yoKXELvAAn2sfSQD9FPigAAshBbsY
-ciKKIlTkN+W0/ShZ/Xktti/OYPS0YgU=
-=UXPG
------END PGP SIGNATURE-----
-
---hianm4mhkxhl3mtz--
+>  drivers/ata/ahci_brcm.c: In function 'brcm_ahci_probe':
+>  drivers/ata/ahci_brcm.c:412:28: error: 'struct brcm_ahci_priv' has no
+> member named 'rcdev'; did you mean 'dev'?
+>    if (!IS_ERR_OR_NULL(priv->rcdev))
+>                              ^~~~~
+>                              dev
+>    CC      fs/pnode.o
+>    CC      block/genhd.o
+>  drivers/ata/ahci_brcm.c:413:3: error: implicit declaration of
+> function 'reset_control_assert'; did you mean 'ahci_reset_controller'?
+> [-Werror=implicit-function-declaration]
+>     reset_control_assert(priv->rcdev);
+>     ^~~~~~~~~~~~~~~~~~~~
+>     ahci_reset_controller
+>  drivers/ata/ahci_brcm.c:413:30: error: 'struct brcm_ahci_priv' has no
+> member named 'rcdev'; did you mean 'dev'?
+>     reset_control_assert(priv->rcdev);
+>                                ^~~~~
+>                                dev
+>  cc1: some warnings being treated as errors
+>
+> Full build log links,
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/702/consoleText
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/773/consoleText
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/404/consoleText
+>
+>
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
