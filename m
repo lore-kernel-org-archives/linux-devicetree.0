@@ -2,237 +2,255 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D82C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D330C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D143220720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:32:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578490342;
-	bh=VcONW9GbuCF27LwlMLUJpVLQ8pUaOf/yKfcR06idb6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HXUKyrFJ5zay6WZKXrBrEamhO3+NFFmkF4lewjT4jXmLHScLMq1WSD8dmXwIg/2dn
-	 pTQkqJ6eNDH5zJQPH2MHmInBMl383FybVGFbyX3Ioh3qUWe7HbrfD+1asSH5KC4Vj2
-	 ibZmt19+RvJnmu9w2DTf5rdsusYGjhll4nLNeNlI=
+	by mail.kernel.org (Postfix) with ESMTP id DA4B720643
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:35:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sQHwcf5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgAHNcW (ORCPT
+        id S1726254AbgAHNfb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:32:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgAHNcW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jan 2020 08:32:22 -0500
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41CB12075D;
-        Wed,  8 Jan 2020 13:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578490341;
-        bh=VcONW9GbuCF27LwlMLUJpVLQ8pUaOf/yKfcR06idb6s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cMUCzkHH8l69mwaD/nGw6sTeAPM/t7+SZ0DWD9HEhadZWciK8PWrPMnOBJ/YG07rM
-         4Qi5s3ehGDQ5g0pmvTff+LLB7gzxmnWMfgl2/HAFc0Fu8EZCjWDb0IT+PY0ISi1PUl
-         dH7Be++a9SXd9KyBbptOcqVjAmZuu/9QpsYKVtns=
-Received: by mail-qk1-f172.google.com with SMTP id x129so2564556qke.8;
-        Wed, 08 Jan 2020 05:32:21 -0800 (PST)
-X-Gm-Message-State: APjAAAVlvECZlEMHStffgvcUr3u2FcPXXyANvnINck2O5eFcT9emw5Qf
-        MwHUVnYjJ4lQq4YGTKx/2SfgcaFZSXzODPwZUA==
-X-Google-Smtp-Source: APXvYqz/X1U8NMj3Iv076A9wnrKOXCNBeZWJV5pvd1/KUv6bNiJ2ND6vyZmndtFtfAcLrrZTlGQcEo1+jY2bafbAvCs=
-X-Received: by 2002:a37:a70b:: with SMTP id q11mr4263840qke.393.1578490340276;
- Wed, 08 Jan 2020 05:32:20 -0800 (PST)
+        Wed, 8 Jan 2020 08:35:31 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:32990 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgAHNfb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 08:35:31 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008DZGhq110034;
+        Wed, 8 Jan 2020 07:35:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578490516;
+        bh=Mm+aQW4c+5WaDj/N2HzmeOCdIlB6jBSyEgt1OZ7cqAw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=sQHwcf5MggXXcp/dmSJKv5rAqVgUkrzDzH57p/zoslHDTQ5Q3God2U6EBDbL5Uwnb
+         +l+gdE1ap5ECtnnOYcZZuoxg8tNQ5v7GchN8xAlIEeFuprrsUjxV7p6GhDcU55fVJ3
+         v1es4lleUzi5PMUmEkpXBoeF5d3KsXjO5hRPPuLY=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008DZF8J049930
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 07:35:15 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 07:35:14 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 07:35:14 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008DZBH5117693;
+        Wed, 8 Jan 2020 07:35:12 -0600
+Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA
+ devices
+To:     Baolin Wang <baolin.wang7@gmail.com>,
+        Faiz Abbas <faiz_abbas@ti.com>
+CC:     <linux-omap@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>, <kishon@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, <tony@atomide.com>
+References: <20200106110133.13791-1-faiz_abbas@ti.com>
+ <20200106110133.13791-4-faiz_abbas@ti.com>
+ <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
+ <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
+ <CADBw62rK1a9K7cxf5ti7YkFsJJ5tJ+8yjuF2aYR3PnZnoK-r2g@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f599735e-83f7-5afc-ebe6-168f0157d2c3@ti.com>
+Date:   Wed, 8 Jan 2020 15:35:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1578302992-5723-1-git-send-email-Anson.Huang@nxp.com>
- <20200106221246.GA17055@bogus> <DB3PR0402MB39161890A510346EBA8EF881F53F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB39161890A510346EBA8EF881F53F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 8 Jan 2020 07:32:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLn8F2aoYgnTpd+k0JEbpC_Aq-AVpj=niM4w591qjRhfg@mail.gmail.com>
-Message-ID: <CAL_JsqLn8F2aoYgnTpd+k0JEbpC_Aq-AVpj=niM4w591qjRhfg@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MP
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CADBw62rK1a9K7cxf5ti7YkFsJJ5tJ+8yjuF2aYR3PnZnoK-r2g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 12:01 AM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Rob
->
-> > Subject: Re: [PATCH V3 1/3] dt-bindings: imx: Add pinctrl binding doc for
-> > i.MX8MP
-> >
-> > On Mon, Jan 06, 2020 at 05:29:50PM +0800, Anson Huang wrote:
-> > > Add binding doc for i.MX8MP pinctrl driver.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
-> > > ---
-> > > Changes since V2:
-> > >     - use DT schema instead of txt for binding doc.
-> > > ---
-> > >  .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       |  65 ++
-> > >  arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h     | 931
-> > +++++++++++++++++++++
-> > >  2 files changed, 996 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-> > >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-> > > b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-> > > new file mode 100644
-> > > index 0000000..cdb6c21
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yam
-> > > +++ l
-> > > @@ -0,0 +1,65 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-or-later %YAML 1.2
-> > > +---
-> > > +$id:
-> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
-> > > +cetree.org%2Fschemas%2Fpinctrl%2Ffsl%2Cimx8mp-
-> > pinctrl.yaml%23&amp;dat
-> > >
-> > +a=02%7C01%7Canson.huang%40nxp.com%7Cfacd4426e6e54bc5416b08d79
-> > 2f59319%
-> > >
-> > +7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63713945576195750
-> > 5&amp;s
-> > >
-> > +data=0O3w1U6vs9xVq6B%2BhyT4Nz5HdKuk6XDymPUg7wQy0lM%3D&amp;
-> > reserved=0
-> > > +$schema:
-> > > +https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevi
-> > > +cetree.org%2Fmeta-
-> > schemas%2Fcore.yaml%23&amp;data=02%7C01%7Canson.hua
-> > >
-> > +ng%40nxp.com%7Cfacd4426e6e54bc5416b08d792f59319%7C686ea1d3bc2b
-> > 4c6fa92
-> > >
-> > +cd99c5c301635%7C0%7C0%7C637139455761957505&amp;sdata=XUN%2BG
-> > zMOqpVNRj
-> > > +UM1CO6CXPOMT72DtdefLs%2Bs%2BGPaGI%3D&amp;reserved=0
-> > > +
-> > > +title: Freescale IMX8MP IOMUX Controller
-> > > +
-> > > +maintainers:
-> > > +  - Anson Huang <Anson.Huang@nxp.com>
-> > > +
-> > > +description:
-> > > +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in
-> > > +this directory
-> > > +  for common binding part and usage.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: fsl,imx8mp-iomuxc
-> > > +
-> > > +# Client device subnode's properties
-> > > +patternProperties:
-> > > +  '-grp$':
-> > > +    type: object
-> > > +    description:
-> > > +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> > > +      Client device subnodes use below standard properties.
-> > > +
-> > > +    properties:
-> > > +      fsl,pins:
-> > > +        $ref: /schemas/types.yaml#/definitions/string
-> >
-> > string or...
-> >
-> > > +        description:
-> > > +          each entry consists of 6 integers and represents the mux
-> > > + and config
-> >
-> > integers?
->
-> I think it should be uint32-array
->
-> >
-> > > +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-> > > +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which
-> > can
-> > > +          be found in <arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>.
-> > The last
-> > > +          integer CONFIG is the pad setting value like pull-up on this pin.
-> > Please
-> > > +          refer to i.MX8M Plus Reference Manual for detailed CONFIG settings.
-> > > +
-> > > +    required:
-> > > +      - fsl,pins
-> > > +
-> > > +    additionalProperties: false
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  # Pinmux controller node
-> > > +  - |
-> > > +    iomuxc: pinctrl@30330000 {
-> > > +        compatible = "fsl,imx8mp-iomuxc";
-> > > +        reg = <0x30330000 0x10000>;
-> > > +
-> > > +        pinctrl_uart2: uart2grp {
-> > > +            fsl,pins = <
-> > > +                MX8MP_IOMUXC_UART2_RXD__UART2_DCE_RX       0x49
-> > > +                MX8MP_IOMUXC_UART2_TXD__UART2_DCE_TX       0x49
-> >
-> > Run 'make dt_binding_check'. Doesn't build:
-> >
-> > Error: Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-
-> > pinctrl.example.dts:23.21-22 syntax error FATAL ERROR: Unable to parse
-> > input tree
->
-> I fix it by NOT using Macro Definition as below, but still have some build error which looks like
-> my environment issue, please help review V4, thanks.
->
->              fsl,pins = <
->                  0x228 0x488 0x5F0 0x0 0x6       0x49
->                  0x228 0x488 0x000 0x0 0x0       0x49
->              >;
->
->
->   CHKDT   Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
->   DTC     Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.example.dt.yaml
-> FATAL ERROR: Unknown output format "yaml"
+Hi,
 
-You need dtc built with yaml enabled. Make sure you have libyaml,
-libyaml-dev and pkg-config.
+On 08/01/2020 11.29, Baolin Wang wrote:
+> Hi Faiz,
+> 
+> On Wed, Jan 8, 2020 at 5:19 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+>>
+>> Hi Baolin,
+>>
+>> On 08/01/20 6:58 am, Baolin Wang wrote:
+>>> Hi Faiz,
+>>>
+>>> On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+>>>>
+>>>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+>>>>
+>>>> Some standard SD host controllers can support both external dma
+>>>> controllers as well as ADMA/SDMA in which the SD host controller
+>>>> acts as DMA master. TI's omap controller is the case as an example.
+>>>>
+>>>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
+>>>> the host controller but does not have any support for external DMA
+>>>> controllers implemented using dmaengine, meaning that custom code is
+>>>> needed for any systems that use an external DMA controller with SDHCI.
+>>>>
+>>>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
+>>>> 1. Map scatterlists before dmaengine_prep_slave_sg()
+>>>> 2. Use dma_async() functions inside of the send_command() path and call
+>>>> terminate_sync() in non-atomic context in case of an error.
+>>>>
+>>>> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>>> ---
+>>>>  drivers/mmc/host/Kconfig |   3 +
+>>>>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
+>>>>  drivers/mmc/host/sdhci.h |   8 ++
+>>>>  3 files changed, 237 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+>>>> index d06b2dfe3c95..adef971582a1 100644
+>>>> --- a/drivers/mmc/host/Kconfig
+>>>> +++ b/drivers/mmc/host/Kconfig
+>>>> @@ -1040,3 +1040,6 @@ config MMC_OWL
+>>>>         help
+>>>>           This selects support for the SD/MMC Host Controller on
+>>>>           Actions Semi Owl SoCs.
+>>>> +
+>>>> +config MMC_SDHCI_EXTERNAL_DMA
+>>>> +       bool
+>>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>>>> index f6999054abcf..8cc78c76bc3d 100644
+>>>> --- a/drivers/mmc/host/sdhci.c
+>>>> +++ b/drivers/mmc/host/sdhci.c
+>>>> @@ -10,6 +10,7 @@
+>>>>   */
+>>>>
+>>>>  #include <linux/delay.h>
+>>>> +#include <linux/dmaengine.h>
+>>>>  #include <linux/ktime.h>
+>>>>  #include <linux/highmem.h>
+>>>>  #include <linux/io.h>
+>>>> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+>>>>         sdhci_set_block_info(host, data);
+>>>>  }
+>>>>
+>>>> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
+>>>> +
+>>>> +static int sdhci_external_dma_init(struct sdhci_host *host)
+>>>> +{
+>>>> +       int ret = 0;
+>>>> +       struct mmc_host *mmc = host->mmc;
+>>>> +
+>>>> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
+>>>> +       if (IS_ERR(host->tx_chan)) {
+>>>> +               ret = PTR_ERR(host->tx_chan);
+>>>> +               if (ret != -EPROBE_DEFER)
+>>>> +                       pr_warn("Failed to request TX DMA channel.\n");
+>>>> +               host->tx_chan = NULL;
+>>>> +               return ret;
+>>>> +       }
+>>>> +
+>>>> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
+>>>> +       if (IS_ERR(host->rx_chan)) {
+>>>> +               if (host->tx_chan) {
+>>>> +                       dma_release_channel(host->tx_chan);
+>>>> +                       host->tx_chan = NULL;
+>>>> +               }
+>>>> +
+>>>> +               ret = PTR_ERR(host->rx_chan);
+>>>> +               if (ret != -EPROBE_DEFER)
+>>>> +                       pr_warn("Failed to request RX DMA channel.\n");
+>>>> +               host->rx_chan = NULL;
+>>>> +       }
+>>>> +
+>>>> +       return ret;
+>>>> +}
+>>>> +
+>>>> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
+>>>> +                                                  struct mmc_data *data)
+>>>> +{
+>>>> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
+>>>> +}
+>>>> +
+>>>> +static int sdhci_external_dma_setup(struct sdhci_host *host,
+>>>> +                                   struct mmc_command *cmd)
+>>>> +{
+>>>> +       int ret, i;
+>>>> +       struct dma_async_tx_descriptor *desc;
+>>>> +       struct mmc_data *data = cmd->data;
+>>>> +       struct dma_chan *chan;
+>>>> +       struct dma_slave_config cfg;
+>>>> +       dma_cookie_t cookie;
+>>>> +       int sg_cnt;
+>>>> +
+>>>> +       if (!host->mapbase)
+>>>> +               return -EINVAL;
+>>>> +
+>>>> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
+>>>> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
+>>>> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>>>> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>>>> +       cfg.src_maxburst = data->blksz / 4;
+>>>> +       cfg.dst_maxburst = data->blksz / 4;
+>>>> +
+>>>> +       /* Sanity check: all the SG entries must be aligned by block size. */
+>>>> +       for (i = 0; i < data->sg_len; i++) {
+>>>> +               if ((data->sg + i)->length % data->blksz)
+>>>> +                       return -EINVAL;
+>>>> +       }
+>>>> +
+>>>> +       chan = sdhci_external_dma_channel(host, data);
+>>>> +
+>>>> +       ret = dmaengine_slave_config(chan, &cfg);
+>>>> +       if (ret)
+>>>> +               return ret;
+>>>> +
+>>>> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
+>>>> +       if (sg_cnt <= 0)
+>>>> +               return -EINVAL;
+>>>> +
+>>>> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+>>>> +                                      mmc_get_dma_dir(data),
+>>>> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>>>> +       if (!desc)
+>>>> +               return -EINVAL;
+>>>> +
+>>>> +       desc->callback = NULL;
+>>>> +       desc->callback_param = NULL;
+>>>> +
+>>>> +       cookie = dmaengine_submit(desc);
+>>>> +       if (cookie < 0)
+>>>
+>>> We usually use the DMA engine standard API: dma_submit_error() to
+>>> validate the cookie.
+>>>
+>>
+>> The if condition is doing the same thing as the API. Do we really
+>> require it?
+> 
+> Yes, now it did the same thing. But in future if the DMA engine expand
+> the cookie indication, which may break your current condition, but use
+> dma_submit_error() is more safe, that will help to cover the internal
+> cookie things. So I recommend to use the standard API as far as
+> possible.
 
-Rob
+dma_cookie_t is typedefed to s32 currently, but it could change. The
+cookie is for DMA engine internal tracking.
+Clients should not use it directly for doing arithmetic on it.
+
+> But if Ulf does not care about this, it's Okay for me too :)
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
