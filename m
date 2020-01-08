@@ -2,123 +2,177 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CB4C00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2865C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0864206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D7D520705
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:30:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S03AhBky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbgAHIZc (ORCPT
+        id S1727167AbgAHIaj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:25:32 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:35619 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbgAHIZc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 03:25:32 -0500
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M6DSo-1imtiz3GKO-006feL; Wed, 08 Jan 2020 09:25:29 +0100
-Received: by mail-qt1-f178.google.com with SMTP id k40so2110480qtk.8;
-        Wed, 08 Jan 2020 00:25:29 -0800 (PST)
-X-Gm-Message-State: APjAAAUVJcur91k6COxzGQDAVGvdKx2A/RkImD4jpAsweb0/3PApGTcf
-        0Q6E9KYQjbE8V50zljgfPlNO7tA3DVXajJud4fA=
-X-Google-Smtp-Source: APXvYqxo1JZhvOPCBQPM+a8aOATlvbZDJjTr/hwxzR+Dg/SgLXNsNMz44+CS7FY2RXBXTHIAAV0lb1p8dTXhOGbqEVI=
-X-Received: by 2002:ac8:47d3:: with SMTP id d19mr2496507qtr.142.1578471928598;
- Wed, 08 Jan 2020 00:25:28 -0800 (PST)
+        Wed, 8 Jan 2020 03:30:39 -0500
+Received: from mail-eopbgr20085.outbound.protection.outlook.com ([40.107.2.85]:43782
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726556AbgAHIai (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jan 2020 03:30:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ULfymETQ6FGb0C+an5/+BJeqYLZXc1G+ASi1L1Y8VyDWeIJd7b+SRc1YQNmH9b+gt88BbEiq6MhPmaSXNr+vrA/Z6KmahBbSZdaQbLkoYj6GYF0OrPrRPClabhVowadD5bsXxIW/Z6OibqfiV1TDMsKnONaINWVkadWuOQFP2apbW8pCCLHj2wvEwc/hQItkES18C13tuEEHd/BNNOep5SsyehCuqhkm2K79L/7K6ux81sNl1dcnrnllRLvzTYAcOJx+hSpo+ojn7y1ijCxIVAoA33PsYfUy0jENsGxAu2uOzflRG6Tm/A6LrVi0udKZ8eQwf0e9M1Ow2t4DmEhbWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubWuDKneieWqZqps87Cf73MhpxpseCyT4FuguI/XZuw=;
+ b=RG2hVW5kOZVK86yus3kRZe3Z95ou7ARMJEJPxjV9UFFUwmmoNsa/DR631aFeFTOn9nsfcgGzRs2MwMWW6+mi4flG6tVU8o9k3ER9pc+SqryJywMC0njVfkn+ucLi4zursxW0ijBaUk56kdIsPnATbfyZqjyUuKcM+ZAe/p4O2lyeY0W4WPMJysTapCGPOLvxDNIcEJp2Q6ksqaxSS4mCEyIG4wyVTcbXRZYwtaFcJ1lDIKW4iue+uvBMacjq0tf69ri1E5g0qMBwBT2tx2/jtXGteQvMTR8b+HW9RrY/v3ALvY0BceT4BpdHhhbUVnq7uxLdua08Yud6X0lsc/n+iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ubWuDKneieWqZqps87Cf73MhpxpseCyT4FuguI/XZuw=;
+ b=S03AhBkyR5ltWVJK986wN7oUzwD1Q9RPp9JWikEa9AJqaN/J+0MMRZlFDL1jEBzvfnNiIQphm630EhvGZcvZcoYywyutQiREWvJ0AdV7yQrTPixY8EnPt03nZd0TY2LxUDKRqdOOjO3vrFYGMn+s9aGXvswChI28/shORXdKSvg=
+Received: from DB8PR04MB5786.eurprd04.prod.outlook.com (20.179.10.31) by
+ DB8PR04MB6457.eurprd04.prod.outlook.com (20.179.248.223) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Wed, 8 Jan 2020 08:30:34 +0000
+Received: from DB8PR04MB5786.eurprd04.prod.outlook.com
+ ([fe80::6d98:adb8:f7cc:394]) by DB8PR04MB5786.eurprd04.prod.outlook.com
+ ([fe80::6d98:adb8:f7cc:394%7]) with mapi id 15.20.2602.017; Wed, 8 Jan 2020
+ 08:30:34 +0000
+Received: from localhost (89.37.124.34) by AM7PR04CA0022.eurprd04.prod.outlook.com (2603:10a6:20b:110::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Wed, 8 Jan 2020 08:30:33 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "t-kristo@ti.com" <t-kristo@ti.com>, Peng Fan <peng.fan@nxp.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V3 1/4] clk: imx: gate4: Switch imx_clk_gate4_flags() to
+ clk_hw based API
+Thread-Topic: [PATCH V3 1/4] clk: imx: gate4: Switch imx_clk_gate4_flags() to
+ clk_hw based API
+Thread-Index: AQHVxccHqL7Ov6gaike6khrnD2xGWKfgcDiA
+Date:   Wed, 8 Jan 2020 08:30:34 +0000
+Message-ID: <20200108083031.kpcmlujhpu5fein2@fsr-ub1664-175>
+References: <1578448417-17760-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1578448417-17760-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM7PR04CA0022.eurprd04.prod.outlook.com
+ (2603:10a6:20b:110::32) To DB8PR04MB5786.eurprd04.prod.outlook.com
+ (2603:10a6:10:a8::31)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7d9bea7a-41cd-4159-8d91-08d794150773
+x-ms-traffictypediagnostic: DB8PR04MB6457:|DB8PR04MB6457:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB64570767E8DBFBA2ECC3D227F63E0@DB8PR04MB6457.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 02760F0D1C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(396003)(346002)(366004)(39860400002)(376002)(136003)(189003)(199004)(9686003)(316002)(6636002)(2906002)(86362001)(71200400001)(33716001)(8936002)(8676002)(54906003)(7416002)(81166006)(81156014)(6496006)(52116002)(1076003)(956004)(53546011)(4326008)(5660300002)(66946007)(26005)(66476007)(6862004)(66556008)(478600001)(44832011)(66446008)(64756008)(6486002)(186003)(16526019);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6457;H:DB8PR04MB5786.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MU6svVdXrTt8Tzi4m0HxoNCBk06EYYuSJDfUWy9m+BagPGrJf4kFgSY4ps75IjLUMORqmjivqIFaY+uOQ1ys9d1f0ybDBkWhwi8w2bdreIbwbW0OBmMKRLOMc/PotKpAxOknE68PfeoC9xdU6FlA7UUth/jxOSBkjy1kfRrP49MrReo6C4I+z5K6QKXgXI7RfBCCGGt39Ckm9fCy9eJP3uenlI0M1PKhcIzMhoLoNxNFd2Nm6SjakTi+czUPhvt47Hw+XIr8/CT0jDH7FkggsqdCndCUycQXtzuHkEWJRTg1n0WQS8gWYwZgpT1ceAkIYVI3LDfC+xTTq5nKVzrbolzuoeWk4qdbFOQKztRfCuBC9V5kSjJ5XGggkwE8vNRId4bbSbPUpdYZeZvepMT61BNVe+T7VcNOQKPBsJphctZGudOSv/cohhXP/XL7m5cE
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1CC62D0316E4814C83B3DCB649EBF82C@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200107220938.2412463-1-arnd@arndb.de> <CAL_JsqJ0bVEkDfUw9+8gf=EVN=xjH4F1uyrmtWQfgc80FsTvew@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ0bVEkDfUw9+8gf=EVN=xjH4F1uyrmtWQfgc80FsTvew@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 8 Jan 2020 09:25:12 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2b5Chu2Bjt1Rto+2rgoyX0hr-fa3YmeYkyNE-05YHheA@mail.gmail.com>
-Message-ID: <CAK8P3a2b5Chu2Bjt1Rto+2rgoyX0hr-fa3YmeYkyNE-05YHheA@mail.gmail.com>
-Subject: Re: [PATCH] of: add dummy of_platform_device_destroy
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, Jyri Sarha <jsarha@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ud5vZVq+DoTLU60wLe1FP6anNS3xDaBUZsRiYTw3oR4dQTckzXl
- letZZFolOWU12mzxBMt5KcrK5VDqAGbY9HOa+I4gpFyoeFyhuQgfZ7aBgHjNoozrKChK6ON
- qfjtiz+yGoN1/rgrWTh3kbyqiBx5q9Rilo4XYLV/f910lBEFPXX+jI9Wi8p1VXd0VZVdq8n
- UU2Oa8rs6gvchVpQfhrGA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yK24Jz0MwPc=:Oudvt2ykSk6ZhyN5hlY59Y
- y0DXEpMQuyqYIcJF+7MweSP12KcNBb4HzFR8g7IeIEzHxtxijEtiXXtC6xbg1q8b930RkIpxF
- Cf1NvoS6V1EMZ97jiV1YMskeKZoMIyb6m8OSxNdFi52QsCIZgPn6Q+7UODhlgRRgYXofJZGQM
- l/ZzEsKAjUJaOiImeeX1n4n5LOwydj3FPBfiPM3UQE2vft+iSM8aNLuiSlcUhZ8rLK/knJpnE
- RJ/Vgy/yxVSd9cI15DA9sFVNdEHBd3VQcBhvxd/NS3d8uXxjujosx/63oG4bmxjgvdkKgcMqB
- QWQ/oM10lRYX45CIA+3iZHqsQKbC0BM1bXS+wn5tA5Zz3Zsa8Bdt9caqYEsDhozGYGBoiTExv
- jEpOZ5RhsaeNKaG/W36RJhn0lyFJ5kT0BsEf9G5z767QJdMNIJTpo9XPWrlqEE/FiNRCo4aVt
- Td1e6ge3gjfj5o5yQLu/SCTxCku/HJOrZXyhJ3SbPPfOGBZgJTouPAsrNvLWXKRFpiKzGDSPy
- ipJ0DU1b1CvICJhMpUL0/bLfEjSxrBiBrVe3+PLQbXIGU7F90bl+XDr66iNIxIIk2t0TymgMk
- RIn4nSum9gr0whXsVe0hV4evdaJyACoM9skhkz704FcLfrif2GYJqx7XRaYKGHi7otZUmc8GQ
- 3SfsGeSRRDU498J9qJsJIimXgw+VT78No2hFjRl/AQM0ykyLz4LPVM1VfMdu3p22U1dSfPBFU
- MlB/L38kdAco6lkJVHSCx54V2LuxGI1tCA67t9ibenMkCUZWtcdGKNTee6qNYrr9VwXGjqUDA
- xUs4ZkjUz00xbmJlpqLXsqFFm7QJqMg56tOadnD5wGbo07DMypnWf7wW7hlOwmumEvg9TjweI
- csOuE4GW0AcBf1l6cx8A==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9bea7a-41cd-4159-8d91-08d794150773
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 08:30:34.0879
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v2YxH4VS74IF8vvRRsEzexXJC09fS6SErYakKT/QGQE0oCTWcB8/FrR/NmkSU/NwwFex9PrRMMW687ysJMXf4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6457
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 12:04 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Jan 7, 2020 at 4:09 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > The new phy-j721e-wiz driver causes a link failure without CONFIG_OF:
-> >
-> > drivers/phy/ti/phy-j721e-wiz.o: In function `wiz_remove':
-> > phy-j721e-wiz.c:(.text+0x40): undefined reference to `of_platform_device_destroy'
-> >
-> > Add a dummy version of this function to avoid having to add Kconfig
-> > dependencies for the driver.
-> >
-> > Fixes: 42440de5438a ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  include/linux/of_platform.h | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> > index 84a966623e78..2551c263e57d 100644
-> > --- a/include/linux/of_platform.h
-> > +++ b/include/linux/of_platform.h
-> > @@ -54,11 +54,16 @@ extern struct platform_device *of_device_alloc(struct device_node *np,
-> >                                          struct device *parent);
-> >  #ifdef CONFIG_OF
-> >  extern struct platform_device *of_find_device_by_node(struct device_node *np);
-> > +extern int of_platform_device_destroy(struct device *dev, void *data);
->
-> This is already declared, so don't you want to remove the existing one.
+On 20-01-08 09:53:34, Anson Huang wrote:
+> Switch the imx_clk_gate4_flags() function to clk_hw based API, rename
+> accordingly and add a macro for clk based legacy. This allows us to
+> move closer to a clear split between consumer and provider clk APIs.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Yes, this is what I had intended. I'm surprised there are no warnings when
-the compiler sees both an 'extern' and a 'static inline' declaration, but both
-clang and gcc seem to accept this, as long as the 'static inline' declaration
-comes first.
+For the entire patchset:
 
-> >  #else
-> >  static inline struct platform_device *of_find_device_by_node(struct device_node *np)
-> >  {
-> >         return NULL;
-> >  }
-> > +static inline int of_platform_device_destroy(struct device *dev, void *data)
-> > +{
-> > +       return 0;
-> > +}
->
-> I'm curious why this is needed, but of_platform_device_create() is not?
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-I think what happens in the driver is that this is called from the
-probe function
-after calling some other interfaces that always return an error without
-CONFIG_OF, so the compiler manages to optimize out that call.
-
-I agree it makes sense to treat create the same as remove, I'll send a new
-version addressing both comments.
-
-     Arnd
+> ---
+> Changes since V2:
+> 	- Switch to latest i.MX clock driver base to redo the patch.
+> ---
+>  drivers/clk/imx/clk.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+> index 65d80c6..b05213b 100644
+> --- a/drivers/clk/imx/clk.h
+> +++ b/drivers/clk/imx/clk.h
+> @@ -390,15 +390,18 @@ static inline struct clk_hw *imx_clk_hw_gate4(const=
+ char *name, const char *pare
+>  			reg, shift, 0x3, 0, &imx_ccm_lock, NULL);
+>  }
+> =20
+> -static inline struct clk *imx_clk_gate4_flags(const char *name,
+> +static inline struct clk_hw *imx_clk_hw_gate4_flags(const char *name,
+>  		const char *parent, void __iomem *reg, u8 shift,
+>  		unsigned long flags)
+>  {
+> -	return clk_register_gate2(NULL, name, parent,
+> +	return clk_hw_register_gate2(NULL, name, parent,
+>  			flags | CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
+>  			reg, shift, 0x3, 0, &imx_ccm_lock, NULL);
+>  }
+> =20
+> +#define imx_clk_gate4_flags(name, parent, reg, shift, flags) \
+> +	to_clk(imx_clk_hw_gate4_flags(name, parent, reg, shift, flags))
+> +
+>  static inline struct clk_hw *imx_clk_hw_mux(const char *name, void __iom=
+em *reg,
+>  			u8 shift, u8 width, const char * const *parents,
+>  			int num_parents)
+> --=20
+> 2.7.4
+>=20
