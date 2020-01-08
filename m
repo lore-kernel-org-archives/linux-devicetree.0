@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8571AC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BE9C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C342072B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E932067D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joSnIdyk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/a717vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgAHEUs (ORCPT
+        id S1726617AbgAHEUt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 23:20:48 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41883 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgAHEUs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:20:48 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x8so899299pgk.8
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 20:20:48 -0800 (PST)
+        Tue, 7 Jan 2020 23:20:49 -0500
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:39141 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgAHEUt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:20:49 -0500
+Received: by mail-pl1-f170.google.com with SMTP id g6so573841plp.6
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 20:20:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=a9CbtpSeP2FndDuoSPtr7TkepCmjH+G9q6KhtPvuICk=;
-        b=joSnIdykr9M65iSmT897djm+dYgRXOxKaLDa39hQjDBsRFT8cgHHS1HqfrC+8njn0S
-         GmKpAfbIz9tI08oB05Mskl3Yrnlr1vqfYvN6GgvGWvX3FoY2D6jbqe2n4AiirNQdshck
-         YcSK7KyOEEdgcfT1MDpDMqSH6+KBFM/JsK2panWK+6cq9d4i+8VHPl3LBwb3TRlt9GKC
-         HWWP9v7YK8P8Gq1dR6DESgYndv5C65NUgUlKbRcPs16burh5GxlVTZ2qyyHDh2E6urd/
-         xOk5klU4x4BpUSEAZqvVBMOap07jbZTKpxI8KR4tyg/7ZBcjNuYba9rroCATi6io/1NX
-         eQ6Q==
+        bh=8i3jv2NcKPJav5JSnI7n2xF76BQZT2zWeKXSSkvhBZs=;
+        b=H/a717vhcYdvgT5UJJEdaEDhfGrJ1j0HoL7+znfKXxb1Y70kiaalEnKwTOftppJqSI
+         1rMpWLSrGf+L+vwFltOJAWRQQ8V19AAuQS/hA1XYU/M6qHJC44Xu0X/km4PC8/gFrt4m
+         Q/d4OV1lPPcYQnf/mT/nhAU2ATiZy4PuxeMBrmsb9r8NVto8YVHZr1l1KKnLpIR0K5Qi
+         LXGTXmomlp2NTiyLWQ7JhRKhQ2iVdAi8i/NFE8ezioC0cVS14BvG/FDurgl4cAu+s/Qk
+         QMnA/efNS1Zwt1rW+ZbiOw2iP94KQOPzk1ETbHRF4LYvziTEAIwXRzdC2VKi2j1VTdoH
+         yDWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=a9CbtpSeP2FndDuoSPtr7TkepCmjH+G9q6KhtPvuICk=;
-        b=ozOsEdkVf4S7CdgZGg+e+kt2V709gc5UxOtPCQh76/w4Ady8BQszJr79h8g4VCt8B0
-         7a2lYl92nM2eo2OfaMkkEjL4Rizp5X6yy4ArwV6Qg0UTdYbUhpMN3xV9NhEwvqIsy8hJ
-         OvIhXUAAKSNjXwybohW8/FjdyhGo627i+ngim+Z7wiGUBwECehJw1THrCzg3Hi1lPoFZ
-         Y//80rqyUtcFZXTyqnHSJ3yhaOBusRQUXwfrdHA50L4/KLvJb1Jb7nGHgewgFR2NjGAM
-         K/v4ARe0E9d4KlYqWIYPlBOApCP2wuWH9cdWQtBV/maLAdEA6zQ46/oLhNWFZ+7mBKUh
-         +Msg==
-X-Gm-Message-State: APjAAAVVKAnpdnacSl9CJEgqQG1PiOORqit9/LTFqQzRQUhyjpLSXT1A
-        3uzOynTNgHL41kpsFrxSsEQ=
-X-Google-Smtp-Source: APXvYqzdjVZCW2V6yoSf9haV6oUXng2MFLJ+MiXr/PXgpLd1X/Um2PrG+0b8+5nZBm4rNj/J3c9wNQ==
-X-Received: by 2002:a63:de03:: with SMTP id f3mr3268086pgg.141.1578457247965;
-        Tue, 07 Jan 2020 20:20:47 -0800 (PST)
+        bh=8i3jv2NcKPJav5JSnI7n2xF76BQZT2zWeKXSSkvhBZs=;
+        b=own2Mc3IoWoLNq0WjewF9LmnPzQSkbRLpapOKoANfjM0qgFeAO3e9eQmj6reQ8VH7+
+         6kG4q3BnGhETkvgbAG9qYkyIkUiVdM+ibUW8UPWq3HBrGrtsIKt5ykfXKbE/lESRcnbA
+         AAPGsI0p1d+oyTdxXpnDZxUGHH70XrN6DicVshmzL8Poy4zb4Udpihzny8vTFWuM3pE6
+         NEKEcTs9F/dItW8DI8esO+ZGoXEeqz+zmDgiSqTsN57EFsmQU7UiPLqgjYXHFpMmevyO
+         fXJniBZuT8Zaxe0iu8n+itDzzMmeZzeaUMG/Pa1xDO4w3aw7f9HQy4rD12DJhRKWQ65r
+         Q7MA==
+X-Gm-Message-State: APjAAAUICyE0JZdf48VJIoFRqIdLUVfEL2eZchQDu7KeALnWjXOlaoLA
+        u9W6Dk4OvZG2hkFje4E7imQ=
+X-Google-Smtp-Source: APXvYqx/IAJeMafAjvWogVFDy3hU75s9q/3GXL6uTncLxHrzyp5S8XMfkOSmZjkMJCjL7Zk+tPqS4Q==
+X-Received: by 2002:a17:902:6501:: with SMTP id b1mr3415381plk.121.1578457248856;
+        Tue, 07 Jan 2020 20:20:48 -0800 (PST)
 Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id p12sm1133478pjo.5.2020.01.07.20.20.47
+        by smtp.gmail.com with ESMTPSA id p12sm1133478pjo.5.2020.01.07.20.20.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 20:20:47 -0800 (PST)
+        Tue, 07 Jan 2020 20:20:48 -0800 (PST)
 From:   Vasily Khoruzhick <anarsoul@gmail.com>
 To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v2 2/4] arm64: dts: allwinner: a64: add cooling maps and thermal tripping points
-Date:   Tue,  7 Jan 2020 20:20:16 -0800
-Message-Id: <20200108042018.571251-3-anarsoul@gmail.com>
+Subject: [PATCH v2 3/4] arm64: dts: allwinner: a64: add dtsi with CPU operating points
+Date:   Tue,  7 Jan 2020 20:20:17 -0800
+Message-Id: <20200108042018.571251-4-anarsoul@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200108042018.571251-1-anarsoul@gmail.com>
 References: <20200108042018.571251-1-anarsoul@gmail.com>
@@ -75,98 +75,96 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add cooling maps and thermal tripping points to prevent CPU overheating when
-running at the highest frequency. Tripping points are taken from A33 dts since
-A64 user manual doesn't mention when we should start throttling.
+Add operating points for A64. These are taken from FEX file from BSP
+for A64.
 
 Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ .../dts/allwinner/sun50i-a64-cpu-opp.dtsi     | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-cpu-opp.dtsi
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 77b33087866d..54a741f3cd8c 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -92,6 +92,7 @@ cpu0: cpu@0 {
- 			next-level-cache = <&L2>;
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -102,6 +103,7 @@ cpu1: cpu@1 {
- 			next-level-cache = <&L2>;
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -112,6 +114,7 @@ cpu2: cpu@2 {
- 			next-level-cache = <&L2>;
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -122,6 +125,7 @@ cpu3: cpu@3 {
- 			next-level-cache = <&L2>;
- 			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
-+			#cooling-cells = <2>;
- 		};
- 
- 		L2: l2-cache {
-@@ -226,6 +230,46 @@ cpu_thermal: cpu0-thermal {
- 			polling-delay-passive = <0>;
- 			polling-delay = <0>;
- 			thermal-sensors = <&ths 0>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-cpu-opp.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-cpu-opp.dtsi
+new file mode 100644
+index 000000000000..578c37490d90
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-cpu-opp.dtsi
+@@ -0,0 +1,75 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 Vasily khoruzhick <anarsoul@gmail.com>
++ */
 +
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert0>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+				map1 {
-+					trip = <&cpu_alert1>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
++/ {
++	cpu0_opp_table: opp_table0 {
++		compatible = "operating-points-v2";
++		opp-shared;
 +
-+			trips {
-+				cpu_alert0: cpu_alert0 {
-+					/* milliCelsius */
-+					temperature = <75000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
++		opp-648000000 {
++			opp-hz = /bits/ 64 <648000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
 +
-+				cpu_alert1: cpu_alert1 {
-+					/* milliCelsius */
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
++		opp-816000000 {
++			opp-hz = /bits/ 64 <816000000>;
++			opp-microvolt = <1100000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
 +
-+				cpu_crit: cpu_crit {
-+					/* milliCelsius */
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
- 		};
- 
- 		gpu0_thermal: gpu0-thermal {
++		opp-912000000 {
++			opp-hz = /bits/ 64 <912000000>;
++			opp-microvolt = <1120000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp-960000000 {
++			opp-hz = /bits/ 64 <960000000>;
++			opp-microvolt = <1160000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp-1008000000 {
++			opp-hz = /bits/ 64 <1008000000>;
++			opp-microvolt = <1200000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp-1056000000 {
++			opp-hz = /bits/ 64 <1056000000>;
++			opp-microvolt = <1240000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp-1104000000 {
++			opp-hz = /bits/ 64 <1104000000>;
++			opp-microvolt = <1260000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp-1152000000 {
++			opp-hz = /bits/ 64 <1152000000>;
++			opp-microvolt = <1300000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++	};
++};
++
++&cpu0 {
++	operating-points-v2 = <&cpu0_opp_table>;
++};
++
++&cpu1 {
++	operating-points-v2 = <&cpu0_opp_table>;
++};
++
++&cpu2 {
++	operating-points-v2 = <&cpu0_opp_table>;
++};
++
++&cpu3 {
++	operating-points-v2 = <&cpu0_opp_table>;
++};
 -- 
 2.24.1
 
