@@ -2,153 +2,92 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019CCC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90542C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8363206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XJJKmDKN"
+	by mail.kernel.org (Postfix) with ESMTP id 5B2B320678
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578500149;
+	bh=tgKCSs93XA7uX1BwWyzEqIecwBft+EvXOTzII3f3es8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2M0ucLYJMbavIk9conz/GGkBOyIXob5EtbvhvpqMaiLNMBDUsBXkmmzPZtLuX3AIp
+	 91uVUaQB7SNymvWQkll+BVy/OZ6zWVUPzidbn1vwFzC9y4sci9nN+7+OoJE9moKibs
+	 T6joebS7uviFBhULpeAZFmCJeKrDIOF44ORVv6Ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgAHQPV (ORCPT
+        id S1727428AbgAHQPt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:15:21 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33010 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727428AbgAHQPV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:15:21 -0500
-Received: by mail-io1-f65.google.com with SMTP id z8so3833949ioh.0
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 08:15:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Pb8r0umTZ03Oj31eFFNkQ5/UFrrXui0/Z3wS1BX5zew=;
-        b=XJJKmDKNgJiszihlF5iGiAOK+HqqJGmf4LOU8f59ExaA+7o0h/ESRDy0HDGkkOhnlr
-         lpMBx+PIrHHbn8kzi6qaYd5+lYD5FCcaXLKYk9FmiNpnl0Hz5y/2o7/FQwXULQbDYrkS
-         TnZR0Wm6qGrQ0FS+xMGvfU63ZgQB5ivnnuVrBk0Oo6NNOkp0g60gWiHOF1FpLDbgmAJH
-         dC9sEzCNGzzNRJ90eR380/vyWSFTkPDD6h5pnA/dmRy/N7ljdAaxq3HWpMCb/cGtAht/
-         LYmkrxdFNQ5xcwjovi3i8Z9vU+7CofshevW0bwvNuZuzAgbvRFZLWBgeHf27ZOZ6W0L2
-         Gz6g==
+        Wed, 8 Jan 2020 11:15:49 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44101 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729217AbgAHQPs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:15:48 -0500
+Received: by mail-oi1-f195.google.com with SMTP id d62so3067466oia.11
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 08:15:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pb8r0umTZ03Oj31eFFNkQ5/UFrrXui0/Z3wS1BX5zew=;
-        b=q5PkJuge0UhCUnPk1jLzEY63JOPIUfIxsxCq9QprqTFfy+M+PkXKvvimnAvntM72Cz
-         21KZYHXZmIH1nUeuFf4PtfybOwDr//S3NW5qIGywm7i3RPjeQ9o/E8knxAihgsaC9Hpi
-         CxDzTWMg27XiqEg9H5PvganCd7ZiOxsqZNiEJH9QYsT9d6m4DwuL1KrnfItWi0hS66l/
-         JTFLDohVOAbWOIcU1VMcxLq9ahpVVvvn1/S/3yE8H/9Xz0+QjKjI9FTcZQocEQaUXsyg
-         tL7hY2udGCArBfNXOeXhndMGkMIDJLEBUcG2PLGZNYLIPiIY6Gu0EI3Dfg4iUsVGynxm
-         bhag==
-X-Gm-Message-State: APjAAAW2mBIiSOs+683mxesmszYMNekbX0d7HDhJJXlp6hSH4q6YwGvW
-        0in7Hw/Weh5MVKuTF8B/Xwg8X99ZOxXBlAuswbk=
-X-Google-Smtp-Source: APXvYqwBQUtw0MQorbR0lrHuXwVhzfJaXjgtHT1rwgbOIKaW492cSkdBCSjEcHIKxc3FP9ADSIA6n1h0zWea3GEzrV0=
-X-Received: by 2002:a6b:3a8a:: with SMTP id h132mr3767245ioa.207.1578500120234;
- Wed, 08 Jan 2020 08:15:20 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0DnqajaRB9CjW+Edkai5OQTOGJN4IE2DCdpMlqf4PPI=;
+        b=QiTCO/4w8ceXP9cT1uS6fxmjdGpKd5zxjb+agM38oXafn4WYB4SelfTKPCtuMgLbQn
+         ZYNvC+9QLWCvr8A/ziG1+aLvHk/zhQMu22NYtKJYVg0RXmcwvnA33QAtV6rgqamZepcU
+         pQxmbYa/4iy/gwKQYNoNixtmgifVyS1Mxx2HzgNETIKoo8zvbffsofq6/F72Qjvh+3Vz
+         9Gj0wwkeWcYBLJlwxEoC0cMEMwKLP8+EeCHDwakWUDniBR7XiaReIlj1b3n9jUDdbXuf
+         vD7EEp5qF3cGvO/zhE7Vkz3OZQB8AnAhluvNdsA3JU4jmX0o5uxni0tYQ3JXLbauCMP5
+         JMlA==
+X-Gm-Message-State: APjAAAXPBfKM/Xv7YV9faSIeNcrKpXNbKma83CrtGuhMIvo0nnoZbphW
+        JzGcaf1O1blKmgxYnTojSdFy+54=
+X-Google-Smtp-Source: APXvYqyck9hyKP2ua9WQGghgO03TY6a4WyB1HPlj729ksLfws0E2/NWHChcXJWo5TVrahzzosZDKKg==
+X-Received: by 2002:aca:5f87:: with SMTP id t129mr3779241oib.36.1578500146949;
+        Wed, 08 Jan 2020 08:15:46 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a74sm1223809oii.37.2020.01.08.08.15.46
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 08:15:46 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220333
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 08 Jan 2020 10:15:45 -0600
+Date:   Wed, 8 Jan 2020 10:15:45 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 02/13] dt-bindings: memory: Add Tegra194 memory
+ controller header
+Message-ID: <20200108161545.GA10129@bogus>
+References: <20191222141035.1649937-1-thierry.reding@gmail.com>
+ <20191222141035.1649937-3-thierry.reding@gmail.com>
 MIME-Version: 1.0
-References: <CAA2QUqKK+XcR5oqpZPrMNnQmgk=BV7s05UR7Efc2kCcYUs8=2w@mail.gmail.com>
- <CAL_JsqLgMJty+EgzEV-AfyWM7mKzWyB0X4ohxk5FUksMLcSL3w@mail.gmail.com> <1578465928.29698.21.camel@mtkswgap22>
-In-Reply-To: <1578465928.29698.21.camel@mtkswgap22>
-From:   Daniele Alessandrelli <daniele.alessandrelli@gmail.com>
-Date:   Wed, 8 Jan 2020 16:15:08 +0000
-Message-ID: <CAA2QUq+b4R=s1v-XU0y+R3PmFWXAXtFEAnU4pSW-0KAzRrzLFA@mail.gmail.com>
-Subject: Re: [RFC] MAX_RESERVED_REGIONS hard-coded value
-To:     Miles Chen <miles.chen@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191222141035.1649937-3-thierry.reding@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob, Miles,
+On Sun, 22 Dec 2019 15:10:24 +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> This header contains definitions for the memory controller found on
+> NVIDIA Tegra194 SoCs, such as the stream IDs used for the ARM SMMU and
+> the IDs used to identify the various memory clients.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  include/dt-bindings/memory/tegra194-mc.h | 410 +++++++++++++++++++++++
+>  1 file changed, 410 insertions(+)
+>  create mode 100644 include/dt-bindings/memory/tegra194-mc.h
+> 
 
-Thank you both for your replies.
-
-On Wed, Jan 8, 2020 at 6:45 AM Miles Chen <miles.chen@mediatek.com> wrote:
->
-> Hi,
->
-> On Tue, 2020-01-07 at 15:13 -0600, Rob Herring wrote:
-> > On Mon, Jan 6, 2020 at 12:05 PM Daniele Alessandrelli
-> > <daniele.alessandrelli@gmail.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > I'm using a Device Tree with more then 32 reserved memory regions and
-> > > I'm seeing the following error while booting the Kernel:
-> > > [    0.000000] OF: reserved mem: not enough space all defined regions.
-> >
-> > How many do you have? Is that DT available somewhere?
-
-Unfortunately, the DT is not publicly available yet. Anyway, I
-currently have 41 reserved memory regions.
-
-> >
-> > > My understanding is that this is due to the hard-coded value of
-> > > MAX_RESERVED_REGIONS in drivers/of/of_reserved_mem.c
-> > >
-> > > Googling around, I found this old discussion [1] in which Miles
-> > > suggests to add a CONFIG_MAX_OF_RESERVED_REGIONS kconfig option to
-> > > configure MAX_RESERVED_REGIONS. Rob replied to Miles' email saying
-> > > that he would prefer MAX_RESERVED_REGIONS to be dynamic. However,
-> > > later in the thread, it looks like making MAX_RESERVED_REGIONS dynamic
-> > > poses some implementation issues [2]. At that point the discussion
-> > > seemed to have stopped.
-> >
-> > Not sure what the problem was as there's no code, but I'd guess the
-> > array alloc and populating have to be done later (perhaps in
-> > unflattening).
->
-> I missed my draft patch.
->
-> From what I recall, the problem I had that time is that
-> early_init_fdt_scan_reserved_mem() is called before paging_init(). So I
-> cannot allocate accessible memory in early_init_fdt_scan_reserved_mem().
->
-> For example: aarch64 setup_arch()
-> setup_arch()
-> {
->     memblock_init(); /* early_init_fdt_scan_reserved_mem() is called */
->     paging_init(); /* map memory */
-> }
->
-> >
-> > > Is there any chance for the patch proposed by Miles to be reconsidered?
-> >
-> > A kconfig option would still be my 3rd choice after dynamically
-> > allocating the array or just growing the fixed array size.
-
-I'm happy with just growing the fixed array size, but just out of
-curiosity, why do you prefer it to the kconfig option?
-
->
-> Not sure how many of reserve memory regions Daniele has. In my case,
-> we grow the MAX_RESERVED_REGIONS to 64 (3x used) and we are still trying
-> to suppress the amount of reserved memory to fit
-> MAX_RESERVED_REGIONS=32.
-
-64 would be a safe value for my case as well.
-
-We are also trying to reduce the amount of memory regions, but it's
-unlikely we will manage to stay below 32 :/
-
-Regards,
-Daniele
-
->
->
->
-> thanks,
-> Miles
-> >
-> > Rob
->
+Acked-by: Rob Herring <robh@kernel.org>
