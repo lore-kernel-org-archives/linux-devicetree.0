@@ -2,230 +2,184 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C58EC00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9720C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1392520705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A174A2070E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:23:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IWkISoJr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MmhgDzpk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgAHJTI (ORCPT
+        id S1727423AbgAHJXr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:19:08 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33064 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727200AbgAHJTI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:19:08 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0089IvJN082699;
-        Wed, 8 Jan 2020 03:18:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578475137;
-        bh=0v/0GKYMhTFfSAd0G2N5wdNhwt5MxxLP4iA8zez90n4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=IWkISoJrS1dVWl6DWs8Av4X40yFyhG4mDJCXpIjP7z61UYMZCvQ6WjYJfnH9mf+Xi
-         Rd7Dl4JpwTzCmgRx3Tx5ta/EW3gGr5gfvjYgtJZ2PBjZT6AiHugQao3THL0fJ1KS9D
-         AA/PV3amgpXXLc0jy8EirZbDafXfm4N1iFJJ/vj4=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0089Ivh8091876
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 03:18:57 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 03:18:57 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 03:18:57 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0089IrBV046357;
-        Wed, 8 Jan 2020 03:18:54 -0600
-Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA
- devices
-To:     Baolin Wang <baolin.wang7@gmail.com>
-CC:     <linux-omap@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>, <kishon@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, <tony@atomide.com>
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
- <20200106110133.13791-4-faiz_abbas@ti.com>
- <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
-Date:   Wed, 8 Jan 2020 14:50:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 04:23:47 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40974 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726913AbgAHJXq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:23:46 -0500
+Received: by mail-qk1-f193.google.com with SMTP id x129so1990563qke.8
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 01:23:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9dvmLFRNf8+MHZpd2KwDUGsjP9seJu3x0QfwV/busyw=;
+        b=MmhgDzpkb3QF+Fx2mfbonhzmTOXYwPOM2REqoidoQz6LZAt7G7Ay1D8WBd0mZmksqC
+         Rof5oKMwOHnpbdQeMCW8L+9nP+ZhffuGVq6Dfvcr0PDISyMVL52kKOBHyl6jt/XD4xKO
+         OZ6DNx4eETnFloWf4905hXGH+RVD0Pc95Lm9U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9dvmLFRNf8+MHZpd2KwDUGsjP9seJu3x0QfwV/busyw=;
+        b=KHCZiiw63vroDsP8BLFFnmEM6TyTojOqKVK+5D3mcv/eUgbHP00JpjlrKwzB7AiaeC
+         n3coFWrgsjC7gXZ7zGgN06usEB+9O8XLhR/B4Ie9AaEDVk71IIjlNt8Nre4Nxm6Y15N/
+         I7HrzbT1wSjCj+1FPIvlN2edo+ntNjS6SbpluT1mRRcB88W+EMnUUm8MqhkppwcjCqdv
+         53asMx4gNAsEDclp288XXUPWeWWg6GaEdCUYx1IYDM7T5IE8CF6wDQotGHwm4GH8d4OP
+         h/K6n29Jgi39h23NKs3n05V7uC12F9Gw3t6E51ARX9+ohLfEQVo3bjkhjJcohYK7yTzG
+         3HqA==
+X-Gm-Message-State: APjAAAWJUATSn274qQtiWMHOoSq/UuSfttrp7vyeshb98MmXS9o4xxHx
+        bANlnoEqnR+aMxts5flzytO5IxUwqwnJDBcq9qpPWQ==
+X-Google-Smtp-Source: APXvYqwWV6FSAKUDlqYUh8WnnbcO3wfHfUcUiiCVl4DG3IsL8LYVYSB1P9HskH2Zm2P9Z19FZbHbYqQp7dcB68MOHlo=
+X-Received: by 2002:ae9:f003:: with SMTP id l3mr3352513qkg.457.1578475425523;
+ Wed, 08 Jan 2020 01:23:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1578280296-18946-1-git-send-email-jiaxin.yu@mediatek.com> <1578280296-18946-2-git-send-email-jiaxin.yu@mediatek.com>
+In-Reply-To: <1578280296-18946-2-git-send-email-jiaxin.yu@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 8 Jan 2020 17:23:34 +0800
+Message-ID: <CANMq1KCrDX+svufQEeqHYgAFmFaBS0paEz0EBBte73ehA5PiGw@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
+Cc:     Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org,
+        linux@roeck-us.net, Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-watchdog@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Baolin,
+On Mon, Jan 6, 2020 at 11:11 AM Jiaxin Yu <jiaxin.yu@mediatek.com> wrote:
+>
+> Add #reset-cells property and update example
+>
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/watchdog/mtk-wdt.txt  | 10 ++++++---
+>  .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
+>  .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
+>  3 files changed, 46 insertions(+), 3 deletions(-)
+>  create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> index 92181b648f52..5a76ac262f8d 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>
+>  - compatible should contain:
+>         "mediatek,mt2701-wdt", "mediatek,mt6589-wdt": for MT2701
+> +       "mediatek,mt2712-wdt", "mediatek,mt6589-wdt": for MT2712
 
-On 08/01/20 6:58 am, Baolin Wang wrote:
-> Hi Faiz,
-> 
-> On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->>
->> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>
->> Some standard SD host controllers can support both external dma
->> controllers as well as ADMA/SDMA in which the SD host controller
->> acts as DMA master. TI's omap controller is the case as an example.
->>
->> Currently the generic SDHCI code supports ADMA/SDMA integrated in
->> the host controller but does not have any support for external DMA
->> controllers implemented using dmaengine, meaning that custom code is
->> needed for any systems that use an external DMA controller with SDHCI.
->>
->> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
->> 1. Map scatterlists before dmaengine_prep_slave_sg()
->> 2. Use dma_async() functions inside of the send_command() path and call
->> terminate_sync() in non-atomic context in case of an error.
->>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  drivers/mmc/host/Kconfig |   3 +
->>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
->>  drivers/mmc/host/sdhci.h |   8 ++
->>  3 files changed, 237 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
->> index d06b2dfe3c95..adef971582a1 100644
->> --- a/drivers/mmc/host/Kconfig
->> +++ b/drivers/mmc/host/Kconfig
->> @@ -1040,3 +1040,6 @@ config MMC_OWL
->>         help
->>           This selects support for the SD/MMC Host Controller on
->>           Actions Semi Owl SoCs.
->> +
->> +config MMC_SDHCI_EXTERNAL_DMA
->> +       bool
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index f6999054abcf..8cc78c76bc3d 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -10,6 +10,7 @@
->>   */
->>
->>  #include <linux/delay.h>
->> +#include <linux/dmaengine.h>
->>  #include <linux/ktime.h>
->>  #include <linux/highmem.h>
->>  #include <linux/io.h>
->> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->>         sdhci_set_block_info(host, data);
->>  }
->>
->> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
->> +
->> +static int sdhci_external_dma_init(struct sdhci_host *host)
->> +{
->> +       int ret = 0;
->> +       struct mmc_host *mmc = host->mmc;
->> +
->> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
->> +       if (IS_ERR(host->tx_chan)) {
->> +               ret = PTR_ERR(host->tx_chan);
->> +               if (ret != -EPROBE_DEFER)
->> +                       pr_warn("Failed to request TX DMA channel.\n");
->> +               host->tx_chan = NULL;
->> +               return ret;
->> +       }
->> +
->> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
->> +       if (IS_ERR(host->rx_chan)) {
->> +               if (host->tx_chan) {
->> +                       dma_release_channel(host->tx_chan);
->> +                       host->tx_chan = NULL;
->> +               }
->> +
->> +               ret = PTR_ERR(host->rx_chan);
->> +               if (ret != -EPROBE_DEFER)
->> +                       pr_warn("Failed to request RX DMA channel.\n");
->> +               host->rx_chan = NULL;
->> +       }
->> +
->> +       return ret;
->> +}
->> +
->> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
->> +                                                  struct mmc_data *data)
->> +{
->> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
->> +}
->> +
->> +static int sdhci_external_dma_setup(struct sdhci_host *host,
->> +                                   struct mmc_command *cmd)
->> +{
->> +       int ret, i;
->> +       struct dma_async_tx_descriptor *desc;
->> +       struct mmc_data *data = cmd->data;
->> +       struct dma_chan *chan;
->> +       struct dma_slave_config cfg;
->> +       dma_cookie_t cookie;
->> +       int sg_cnt;
->> +
->> +       if (!host->mapbase)
->> +               return -EINVAL;
->> +
->> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
->> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
->> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->> +       cfg.src_maxburst = data->blksz / 4;
->> +       cfg.dst_maxburst = data->blksz / 4;
->> +
->> +       /* Sanity check: all the SG entries must be aligned by block size. */
->> +       for (i = 0; i < data->sg_len; i++) {
->> +               if ((data->sg + i)->length % data->blksz)
->> +                       return -EINVAL;
->> +       }
->> +
->> +       chan = sdhci_external_dma_channel(host, data);
->> +
->> +       ret = dmaengine_slave_config(chan, &cfg);
->> +       if (ret)
->> +               return ret;
->> +
->> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
->> +       if (sg_cnt <= 0)
->> +               return -EINVAL;
->> +
->> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
->> +                                      mmc_get_dma_dir(data),
->> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->> +       if (!desc)
->> +               return -EINVAL;
->> +
->> +       desc->callback = NULL;
->> +       desc->callback_param = NULL;
->> +
->> +       cookie = dmaengine_submit(desc);
->> +       if (cookie < 0)
-> 
-> We usually use the DMA engine standard API: dma_submit_error() to
-> validate the cookie.
-> 
+Doesn't look related?
 
-The if condition is doing the same thing as the API. Do we really
-require it?
+>         "mediatek,mt6589-wdt": for MT6589
+>         "mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
+>         "mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
+> @@ -14,11 +15,14 @@ Required properties:
+>
+>  Optional properties:
+>  - timeout-sec: contains the watchdog timeout in seconds.
+> +- #reset-cells: Should be 1.
+>
+>  Example:
+>
+> -wdt: watchdog@10000000 {
+> -       compatible = "mediatek,mt6589-wdt";
+> -       reg = <0x10000000 0x18>;
+> +watchdog: watchdog@10007000 {
+> +       compatible = "mediatek,mt8183-wdt",
 
-Thanks,
-Faiz
+Well mt8183-wdt compatible is not yet upstream, do you want to work
+with Yong Liang to send both these bindings in the same series? (you
+can add mt2712 in the same patch as mt8183 binding maybe?)
+
+> +                    "mediatek,mt6589-wdt";
+> +       reg = <0 0x10007000 0 0x100>;
+>         timeout-sec = <10>;
+> +       #reset-cells = <1>;
+>  };
+> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
+> new file mode 100644
+> index 000000000000..9e7ee762f076
+> --- /dev/null
+> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Yong Liang <yong.liang@mediatek.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +
+> +#define MT2712_TOPRGU_INFRA_SW_RST                             0
+> +#define MT2712_TOPRGU_MM_SW_RST                                        1
+> +#define MT2712_TOPRGU_MFG_SW_RST                               2
+> +#define MT2712_TOPRGU_VENC_SW_RST                              3
+> +#define MT2712_TOPRGU_VDEC_SW_RST                              4
+> +#define MT2712_TOPRGU_IMG_SW_RST                               5
+> +#define MT2712_TOPRGU_INFRA_AO_SW_RST                          8
+> +#define MT2712_TOPRGU_USB_SW_RST                               9
+> +#define MT2712_TOPRGU_APMIXED_SW_RST                           10
+> +
+> +#define MT2712_TOPRGU_SW_RST_NUM                               11
+> +
+> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
+> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
+> index 8804e34ebdd4..a1bbd41e0d12 100644
+> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
+> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
+> @@ -78,4 +78,21 @@
+>  #define MT8183_INFRACFG_AO_I2C7_SW_RST                         126
+>  #define MT8183_INFRACFG_AO_I2C8_SW_RST                         127
+>
+> +#define MT8183_INFRACFG_SW_RST_NUM                             128
+> +
+> +#define MT8183_TOPRGU_MM_SW_RST                                        1
+> +#define MT8183_TOPRGU_MFG_SW_RST                               2
+> +#define MT8183_TOPRGU_VENC_SW_RST                              3
+> +#define MT8183_TOPRGU_VDEC_SW_RST                              4
+> +#define MT8183_TOPRGU_IMG_SW_RST                               5
+> +#define MT8183_TOPRGU_MD_SW_RST                                        7
+> +#define MT8183_TOPRGU_CONN_SW_RST                              9
+> +#define MT8183_TOPRGU_CONN_MCU_SW_RST                          12
+> +#define MT8183_TOPRGU_IPU0_SW_RST                              14
+> +#define MT8183_TOPRGU_IPU1_SW_RST                              15
+> +#define MT8183_TOPRGU_AUDIO_SW_RST                             17
+> +#define MT8183_TOPRGU_CAMSYS_SW_RST                            18
+> +
+> +#define MT8183_TOPRGU_SW_RST_NUM                               19
+> +
+>  #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
+> --
+> 2.18.0
