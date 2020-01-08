@@ -2,179 +2,186 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB37BC00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA87C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800A820673
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8881D2077B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mubr9Yrx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XL4fjlno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgAHKcR (ORCPT
+        id S1726401AbgAHKp3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:32:17 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44898 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgAHKcQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 05:32:16 -0500
-Received: by mail-pl1-f194.google.com with SMTP id az3so949091plb.11
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 02:32:16 -0800 (PST)
+        Wed, 8 Jan 2020 05:45:29 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39234 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgAHKp2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 05:45:28 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 20so1948071wmj.4;
+        Wed, 08 Jan 2020 02:45:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JRSseHLewK0ltHlOf6IIEMSjngjyOxSD/KfPZ4IpVLI=;
-        b=mubr9YrxsOv2C7hQ34JdHTW+nIwSF2+agoCwwGIe38uqhRdL/w+coigyFZAX/abKN4
-         53EXMRyLW1XlzXdjaYINHxBYivMQ71jxTtaj/3m8fTTW7uZn2QIMDC/RvBC2RX5GZGPj
-         IBcFRr22CvB2+x/Aylp6ue8NFLAW14HcKIalz5FP+DWrW3dxQvQ3TgOJOPaK8R/UwYdc
-         biITeYn18Tard2Om0MBmQyDsgP3WEQ9gqj55g4K2XjkzQKhBS7RkBn+FtnOEmmuVAsuN
-         rGzBh4icbFZFEcGCVFYu0z7HvX6DwNHGTPx29tI9i+nmvt7TnlbRX29hCZVWp0QuPdgo
-         Gc0A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cWNocU7eA9+Wp59TtXNSPoHKPg/gQFuCfBlz6EP4IJM=;
+        b=XL4fjlnoCxTK5zuVeOatSIA0QPobR9ogTd6FCkUDTguco9kcRi9Tbnhk/6Vceo4ZRo
+         jar35VEPwdo1p2/UGuWCkf22+E/TvJ2RGq1aHs9TUQHytq9JhAgi/QSsTYzpvaNXM1uH
+         YtAXDpIYKRMyvRU7wONZ2e/Us8z48GwassZeYBUak8x3TTPT3hl5/PUrJCbNlweOhwNm
+         l2DlBC+QW9aCGTwb02ek/YJauLcmN0emIq4z8/76Y2jnJVpouUB0JpfsZ8AdmR7GtDG+
+         SqXmjRY9xY7BB4V7pz6oHGSo6xD0eXICGBijwUrM1evNAgt5o9JMAB0o/lBkl5ux0wGT
+         DTog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JRSseHLewK0ltHlOf6IIEMSjngjyOxSD/KfPZ4IpVLI=;
-        b=D3ULtQzJaSMwT3tdCQTgmDj9Ozt2OsA7kZnG0jy595OVGFmCbvJYQzEgHASEN9rTGH
-         SjQPKPs5XKdZHfH0mRS76YQutZZeKRTFM5PbbgRuju446X6+oOfVkqlYYkLxjsBUpYgP
-         6j9RfAVwqFUdkzKriBS75ydQUj3hdxb+EW8k8oF2B0+N7vob+BiuAwl4tSpLxXuIQkCK
-         jPjyhaKhfZJ4tjqMIM3QqKwN7zyXPdXuN2Y0koVCslMkpBEd1S3/kJ1gQk+7YgqE4+tR
-         uwZja/C0JxVbha4rHlZoHppE4OMieVQv6nhtJGItnZ+GbmvLFRvg6djUlJSQMBq5zYnN
-         DyKA==
-X-Gm-Message-State: APjAAAW3SIqJX+0+tN3Zl+v5vqj+pu/HrG8P5PW9Zh5jGQurrZw9wlm5
-        9ai2NxCj0dF0IBRdInHVuenkoQ==
-X-Google-Smtp-Source: APXvYqzl2pKlCO2kMLeHPiwC65RgF/2o1TWeA38eJFNgsrc5MhPHh89c3t41AVilMN+OeoXZstB+vw==
-X-Received: by 2002:a17:90a:cb16:: with SMTP id z22mr3550255pjt.122.1578479535942;
-        Wed, 08 Jan 2020 02:32:15 -0800 (PST)
-Received: from localhost ([122.172.26.121])
-        by smtp.gmail.com with ESMTPSA id d24sm3082639pfq.75.2020.01.08.02.32.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 02:32:15 -0800 (PST)
-Date:   Wed, 8 Jan 2020 16:02:10 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: opp: Introduce opp-peak-kBps and
- opp-avg-kBps bindings
-Message-ID: <20200108103210.oyrqxlybrdbelkne@vireshk-i7>
-References: <20191207002424.201796-1-saravanak@google.com>
- <20191207002424.201796-2-saravanak@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cWNocU7eA9+Wp59TtXNSPoHKPg/gQFuCfBlz6EP4IJM=;
+        b=WNLozMzGWrMzDCov+te+kh9rbghLwU7r1QfdPlnGw5x7IvKxhSsLWJjAdTNTq+/SVy
+         2HLK/ZTKXlmi5M6DLVQ3H4DwQD0RN/uGdARkYuAlQqb9vnIZwXpMOgBDiuaUMsyeKEYn
+         GAl9cJxwhpRwvktS3/Spf536947kx/nY4FoT9ClFEtPjOHti1wDHsRJd2QUUMp2/TvnN
+         cQ03rGV5VzMOBG3FoLobdNzO8907QzYhoNK7WJIE25QVzQ2JDOm3l0imYt43F+BDY80u
+         8Zg3J/iGF1fEmw/hyTNDL6AhKfmA6u1imrSOQisCtgfrZCYvE7N7vrzviClGNMX+cIKI
+         b7ew==
+X-Gm-Message-State: APjAAAUvgfI7/vzgty/hieDAbGT5N86jIy/o7wrFNPvxw7kvTHRXEUQf
+        80T2ORTRj4ltuvK8WZHLCjstyE0z4+oDzGpJYb0=
+X-Google-Smtp-Source: APXvYqxCEiSVPvqEPV1TYN+VTi6zRgss5wzhXYoBJ7RLBYKSCj5Cw8CA6v+eMTnefLxFNeJid/0wFmP3UfzNj91cJPQ=
+X-Received: by 2002:a1c:f008:: with SMTP id a8mr3018534wmb.81.1578480326589;
+ Wed, 08 Jan 2020 02:45:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207002424.201796-2-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200108101006.150706-1-andre.przywara@arm.com> <20200108101006.150706-2-andre.przywara@arm.com>
+In-Reply-To: <20200108101006.150706-2-andre.przywara@arm.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 8 Jan 2020 11:45:15 +0100
+Message-ID: <CAJiuCccSWR4oMF5x67eUVMFL6YhRMJVo_r0VfCUVVRtAJ9uR2w@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/2] arm64: dts: sun50i: H6: Add SPI
+ controllers nodes and pinmuxes
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Icenowy Zheng <icenowy@aosc.xyz>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06-12-19, 16:24, Saravana Kannan wrote:
-> Interconnects often quantify their performance points in terms of
-> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
-> allow specifying Bandwidth OPP tables in DT.
-> 
-> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
-> tables.
-> 
-> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
-> tables.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Andre,
+
+On Wed, 8 Jan 2020 at 11:10, Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> The Allwinner H6 SoC contains two SPI controllers similar to the H3/A64,
+> but with the added capability of 3-wire and 4-wire operation modes.
+> For now the driver does not support those, but the SPI registers are
+> fully backwards-compatible, just adding bits and registers which were
+> formerly reserved. So we can use the existing driver for the "normal" SPI
+> modes, for instance to access the SPI NOR flash soldered on the PineH64
+> board.
+> We use an H6 specific compatible string in addition to the existing H3
+> string, so when the driver later gains Quad SPI support, it should work
+> automatically without any DT changes.
+>
+> Tested by accessing the SPI flash on a Pine H64 board (SPI0), also
+> connecting another SPI flash to the SPI1 header pins.
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > ---
->  Documentation/devicetree/bindings/opp/opp.txt     | 15 ++++++++++++---
->  .../devicetree/bindings/property-units.txt        |  4 ++++
->  2 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index 68592271461f..dbad8eb6c746 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -83,9 +83,14 @@ properties.
->  
->  Required properties:
->  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
-> -  required property for all device nodes but devices like power domains. The
-> -  power domain nodes must have another (implementation dependent) property which
-> -  uniquely identifies the OPP nodes.
-> +  required property for all device nodes except for devices like power domains
-> +  or bandwidth opp tables.
-
-Fine until here.
-
-> The power domain nodes must have another
-> +  (implementation dependent) property which uniquely identifies the OPP nodes.
-> +  The interconnect opps are required to have the opp-peak-kBps property.
-
-Maybe rewrite it as:
-
-The devices which don't have this property must have another
-(implementation dependent) property which uniquely identifies the OPP
-nodes.
-
-So we won't be required to update this again for another property.
-
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index 3329283e38ab..40835850893e 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -338,6 +338,30 @@
+>                                 bias-pull-up;
+>                         };
+>
+> +                       /omit-if-no-ref/
+> +                       spi0_pins: spi0-pins {
+> +                               pins = "PC0", "PC2", "PC3";
+> +                               function = "spi0";
+> +                       };
 > +
-> +- opp-peak-kBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
-> +  big-endian integer.
-
-> This is a required property for all devices that don't
-> +  have opp-hz.
-
-This statement is surely incorrect, isn't it ? What about power-domain
-tables ?
-
-Suggest rewriting it as:
-
-This is a required property for bandwidth OPP tables.
-
-> For example, bandwidth OPP tables for interconnect paths.
->  
->  Optional properties:
->  - opp-microvolt: voltage in micro Volts.
-> @@ -132,6 +137,10 @@ Optional properties:
->  - opp-level: A value representing the performance level of the device,
->    expressed as a 32-bit integer.
->  
-> +- opp-avg-kBps: Average bandwidth in kilobytes per second, expressed as a
-> +  32-bit big-endian integer. This property is only meaningful in OPP tables
-> +  where opp-peak-kBps is present.
+> +                       /omit-if-no-ref/
+> +                       spi0_cs_pin: spi0-cs-pin {
+> +                               pins = "PC5";
+> +                               function = "spi0";
+> +                       };
 > +
->  - clock-latency-ns: Specifies the maximum possible transition latency (in
->    nanoseconds) for switching to this OPP from any other OPP.
->  
-> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-> index e9b8360b3288..c80a110c1e26 100644
-> --- a/Documentation/devicetree/bindings/property-units.txt
-> +++ b/Documentation/devicetree/bindings/property-units.txt
-> @@ -41,3 +41,7 @@ Temperature
->  Pressure
->  ----------------------------------------
->  -kpascal	: kilopascal
+> +                       /omit-if-no-ref/
+> +                       spi1_pins: spi1-pins {
+> +                               pins = "PH4", "PH5", "PH6";
+> +                               function = "spi1";
+> +                       };
 > +
-> +Throughput
-> +----------------------------------------
-> +-kBps		: kilobytes per second
-> -- 
-> 2.24.0.393.g34dc348eaf-goog
+> +                       /omit-if-no-ref/
+> +                       spi1_cs_pin: spi1-cs-pin {
+> +                               pins = "PH3";
+> +                               function = "spi1";
+> +                       };
+> +
+>                         spdif_tx_pin: spdif-tx-pin {
+>                                 pins = "PH7";
+>                                 function = "spdif";
+> @@ -504,6 +528,36 @@
+>                         #size-cells = <0>;
+>                 };
+>
+> +               spi0: spi@5010000 {
+> +                       compatible = "allwinner,sun50i-h6-spi",
+> +                                    "allwinner,sun8i-h3-spi";
 
--- 
-viresh
+You need to document this compatible in the dt-bindings to avoid any warnings.
+
+Regards,
+Clement
+
+
+
+
+> +                       reg = <0x05010000 0x1000>;
+> +                       interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
+> +                       clock-names = "ahb", "mod";
+> +                       dmas = <&dma 22>, <&dma 22>;
+> +                       dma-names = "rx", "tx";
+> +                       resets = <&ccu RST_BUS_SPI0>;
+> +                       status = "disabled";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +               };
+> +
+> +               spi1: spi@5011000 {
+> +                       compatible = "allwinner,sun50i-h6-spi",
+> +                                    "allwinner,sun8i-h3-spi";
+> +                       reg = <0x05011000 0x1000>;
+> +                       interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
+> +                       clock-names = "ahb", "mod";
+> +                       dmas = <&dma 23>, <&dma 23>;
+> +                       dma-names = "rx", "tx";
+> +                       resets = <&ccu RST_BUS_SPI1>;
+> +                       status = "disabled";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +               };
+> +
+>                 emac: ethernet@5020000 {
+>                         compatible = "allwinner,sun50i-h6-emac",
+>                                      "allwinner,sun50i-a64-emac";
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20200108101006.150706-2-andre.przywara%40arm.com.
