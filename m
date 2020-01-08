@@ -2,109 +2,123 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D50C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64DBC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57AD206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5842070E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:27:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="r/5T5aJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgAHL0R (ORCPT
+        id S1726466AbgAHL1l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:26:17 -0500
-Received: from mga18.intel.com ([134.134.136.126]:44512 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbgAHL0Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jan 2020 06:26:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 03:26:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,409,1571727600"; 
-   d="scan'208";a="218043679"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga008.fm.intel.com with ESMTP; 08 Jan 2020 03:26:09 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ip9TV-0001sB-6p; Wed, 08 Jan 2020 13:26:09 +0200
-Date:   Wed, 8 Jan 2020 13:26:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yingjoe Chen <yingjoe.chen@mediatek.com>
-Cc:     fengping yu <fengping.yu@mediatek.com>,
+        Wed, 8 Jan 2020 06:27:41 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:29186 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726098AbgAHL1k (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 06:27:40 -0500
+X-UUID: c02c473c9be144d299865735663f90f0-20200108
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=1fi/fDDjeP/w31P1XgOwqFMDo56O99pCAi7DUbNxiWw=;
+        b=r/5T5aJWB59LTnEkYNHmW6r5/rlvodqYKmJvWZ4DBmfbXvx14YA6w2sXfrmVK8ed2rNBb71n4uE6EsfTWVEcJ6ZQ6QtBU2082sqAjE1Y5YiuVINjsR4frij6u3q7guy1Qqjk/Fzt8kjYs4tqeeDjb9mSGU0a+MZtdBvA+8tYJ64=;
+X-UUID: c02c473c9be144d299865735663f90f0-20200108
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1577135201; Wed, 08 Jan 2020 19:27:36 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 8 Jan 2020 19:28:10 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 8 Jan 2020 19:25:57 +0800
+Message-ID: <1578482850.7554.18.camel@mtkswgap22>
+Subject: Re: [PATCH v2 05/11] pinctrl: mediatek: avoid virtual gpio trying
+ to set reg
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rob Herring <robh@kernel.org>, CC Hwang <cc.hwang@mediatek.com>,
+        <wsd_upstream@mediatek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Loda Chou <loda.chou@mediatek.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "Mars Cheng" <mars.cheng@mediatek.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 2/2] drivers: input: keyboard
-Message-ID: <20200108112609.GN32742@smile.fi.intel.com>
-References: <20200108062923.14684-1-fengping.yu@mediatek.com>
- <20200108062923.14684-3-fengping.yu@mediatek.com>
- <1578473162.12131.13.camel@mtksdaap41>
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Date:   Wed, 8 Jan 2020 19:27:30 +0800
+In-Reply-To: <CACRpkdZUxpQ1tS9mKG9tc_U==M2BL9HwXt3DS1t413GGSEaVTA@mail.gmail.com>
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com>
+         <1566206502-4347-6-git-send-email-mars.cheng@mediatek.com>
+         <CACRpkdZa_sQgvWC3ic0NxrVi9gS1cNTsV-wa-SDpA0e5kutBRw@mail.gmail.com>
+         <1577022724.7468.20.camel@mtkswgap22>
+         <CACRpkdZUxpQ1tS9mKG9tc_U==M2BL9HwXt3DS1t413GGSEaVTA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578473162.12131.13.camel@mtksdaap41>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 04:46:02PM +0800, Yingjoe Chen wrote:
-> On Wed, 2020-01-08 at 14:29 +0800, fengping yu wrote:
-
-> > +	tasklet_init(&keypad->tasklet, kpd_keymap_handler,
-> > +		     (unsigned long)keypad);
-> > +
-> > +	writew((u16)(keypad->key_debounce & KPD_DEBOUNCE_MASK),
-> > +		     keypad->base + KP_DEBOUNCE);
-> 
-> You use a 13 bits mask and set it directly to KP_DEBOUNCE register. Are
-> you sure the debounce unit is ms?
-> 
-> > +
-> > +	/* register IRQ */
-> > +	err = request_irq(keypad->irqnr, kpd_irq_handler, IRQF_TRIGGER_NONE,
-> > +			  KPD_NAME, keypad);
-> 
-> please consider using devm_request_irq, otherwise you have to free it in
-> _remove function.
-
-No, you may not use devm_*_irq() when tasklets are in use. There is a nasty
-race condition.
-
-Actually the rule of thumb is to NOT use devm_*_irq() unless you exactly know
-what you are doing.
-
-P.S. Why simple not to switch to threaded IRQ handler and drop tasklet? In such
-case devm_*_irq() is fine.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+T24gVHVlLCAyMDIwLTAxLTA3IGF0IDExOjIwICswMTAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0K
+PiBPbiBNb24sIERlYyAyMywgMjAxOSBhdCA0OjExIEFNIEhhbmtzIENoZW4gPGhhbmtzLmNoZW5A
+bWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPiBPbiBGcmksIDIwMTktMDgtMjMgYXQgMTA6NTcgKzAy
+MDAsIExpbnVzIFdhbGxlaWogd3JvdGU6DQo+ID4gPiBPbiBNb24sIEF1ZyAxOSwgMjAxOSBhdCAx
+MToyMiBBTSBNYXJzIENoZW5nIDxtYXJzLmNoZW5nQG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+IA0K
+PiA+ID4gVGhpcyBkb2VzIG5vdCBleHBsYWluIHdoYXQgYSAidmlydHVhbCBHUElPIiBpcyBpbiB0
+aGlzDQo+ID4gPiBjb250ZXh0LCBzbyBwbGVhc2UgZWxhYm9yYXRlLiBXaGF0IGlzIHRoaXM/IFdo
+eSBkb2VzDQo+ID4gPiBpdCBleGlzdD8gV2hhdCBpcyBpdCB1c2VkIGZvcj8NCj4gPiA+DQo+ID4g
+PiBHUElPIGlzICJnZW5lcmFsIHB1cnBvc2UgaW5wdXQvb3V0cHV0IiBhbmQgaXQgaXMgYQ0KPiA+
+ID4gcHJldHR5IHJ1YmJlcnkgY2F0ZWdvcnkgYWxyZWFkeSBhcyBpdCBpcywgc28gd2UgbmVlZA0K
+PiA+ID4gdG8gZGVmaW5lIG91ciB0ZXJtcyBwcmV0dHkgc3RyaWN0bHkuDQo+ID4gPg0KPiA+IFZp
+cnR1YWwgR1BJTyBvbmx5IHVzZWQgaW5zaWRlIFNPQyBhbmQgbm90IGJlaW5nIGV4cG9ydGVkIHRv
+IG91dHNpZGUgU09DDQo+ID4gaW4gTVRLIHBsYXRmb3JtLiBTb21lIG1vZHVsZXMgdXNlIHZpcnR1
+YWwgR1BJTyBhcyBlaW50IChlLmcuIHBtaWMgb3INCj4gPiB1c2IpLg0KPiANCj4gSSB3b3VsZCBj
+YWxsIHRoYXQgaW50ZXJuYWwgR1BJT3MsIHRob3NlIGFyZSB2ZXJ5IHJlYWwgcmFpbHMgaW5zaWRl
+DQo+IHRoZSBjaGlwIG1hZGUgd2l0aCBwb2x5c2lsaWNvbmUgc28gdGhlcmUgaXMgbm90aGluZyAi
+dmlydHVhbCINCj4gYWJvdXQgdGhlbS4gSWYgdGhlIGRvY3VtZW50YXRpb24gZm9yIHRoZSBjaGlw
+IGNhbGxzIHRoZW0gdmlydHVhbA0KPiB0aGVuIGV4cGxhaW4gaW4gdGhlIGRyaXZlciB0aGF0IHRo
+ZXNlIGFyZSBTb0MtaW50ZXJuYWwNCj4gbGluZXMgc28gdGhhdCBldmVyeW9uZSB3aWxsIGdldCBp
+dC4NCj4gDQoNCkdvdCBpdCwgSSB3aWxsIGFkZCB0aGUgaW5mbyBpbnRvIHRoZSBkcml2ZXIgaW4g
+djMgDQoNCj4gSXMgdGhlIFBNSUMgaW5zaWRlIHRoZSBTb0M/IEkgdGhvdWdodCB0aGF0IHdhcyB1
+c3VhbGx5IG91dHNpZGUgb2YgaXQNCj4gaW4gaXRzIG93biBjaGlwLg0KPiANCj4gQnV0IEkgc3Vw
+cG9zZSB0aGVyZSBjb3VsZCBiZSBzb21lIGludGVyZmFjZSB0byBpdCBpbiB0aGUgU29DIGFuZA0K
+PiB0aGVuIHRoYXQgaW50ZXJmYWNlIGhhcyB0aGlzIEVJTlQ/DQo+IA0KDQpUaGF0J3MgcmlnaHQu
+IEkgdXNlIGluY29ycmVjdCB3b3JkLg0KZS5nLiBwbWljIGludGVyZmFjZSBpbnNpZGUgdGhlIFNP
+QyAoUE1JRiksIG5vdCBwbWljLi4uDQoNCj4gPiBJbiBNVEsgcGxhdGZvcm0sIGV4dGVybmFsIGlu
+dGVycnVwdCAoRUlOVCkgYW5kIEdQSU8gaXMgMS0xIG1hcHBpbmcgYW5kDQo+ID4gd2UgY2FuIHNl
+dCBHUElPIGFzIGVpbnQuDQo+ID4gQnV0IHNvbWUgbW9kdWxlcyB1c2Ugc3BlY2lmaWMgZWludCB3
+aGljaCBkb2Vzbid0IGhhdmUgcmVhbCBHUElPIHBpbi4NCj4gPiBTbyB3ZSB1c2UgdmlydHVhbCBH
+UElPIHRvIG1hcCBpdC4NCj4gDQo+IE9LIEkgZ2V0IGl0IEkgdGhpbmsuLi4ganVzdCBwdXQgdGhl
+c2UgY29tbWVudHMgaW50byB0aGUgY29kZSBhcyB3ZWxsDQo+IHNvIHdlIHVuZGVyc3RhbmQgd2hl
+biByZWFkaW5nIHRoZSBjb2RlIHdoYXQgaXMgZ29pbmcgb24uDQoNCkdvdCBpdCwgd2lsbCBhZGQg
+dGhlIGNvbW1lbnRzIGluIHYzLiBUaGFua3MgZm9yIHJldmlld2luZy4NCg0KPiANCj4gPiA+ID4g
+KyAgICAgICBpZiAobXRrX2lzX3ZpcnRfZ3BpbyhodywgZ3BpbykpDQo+ID4gPiA+ICsgICAgICAg
+ICAgICAgICByZXR1cm4gMTsNCj4gPiA+DQo+ID4gPiBXaHkgYXJlICJ2aXJ0dWFsIEdQSU9zIiBh
+bHdheXMgaW5wdXRzPw0KPiA+DQo+ID4gV2Ugc2V0IHZpcnR1YWwgR1BJTyBhcyBlaW50Lg0KPiA+
+IEl0IG1lYW4gdmlydHVhbCBHUElPIG9ubHkgdXNlZCBpbnNpZGUgU09DIGFuZCBub3QgYmVpbmcg
+ZXhwb3J0ZWQgdG8NCj4gPiBvdXRzaWRlIFNPQy4NCj4gDQo+IEFyZSB5b3Ugc2F5aW5nIHRoYXQ6
+DQo+IC0gIlZpcnR1YWwiIEdQSU9zIGFyZSBhbHdheXMgYW5kIG9ubHkgdXNlZCBmb3IgaW50ZXJy
+dXB0cw0KPiAtIFNpbmNlIHRoZXkgYXJlIG9ubHkgdXNlZCBmb3IgaW50ZXJydXB0cywgdGhleSBh
+cmUgYWx3YXlzIGlucHV0cw0KPiANCj4gVGhlbiB3cml0ZSB0aGF0IGluIGEgY29tbWVudCB0byB0
+aGUgYWJvdmUgY2hhbmdlIHNvIHdlIGtub3cNCj4gdGhpcyBjb250ZXh0Lg0KPiANCg0KWWVzLCB2
+aXJ0dWFsIEdQSU9zIGFyZSBhbHdheXMgYW5kIG9ubHkgdXNlZCBmb3IgaW50ZXJydXB0cyBpbiBt
+dGsNCnBsYXRmb3JtLiBJJ2xsIGFkZCB0aGUgY29tbWVudHMgaW4gdjMuIFRoYW5rcyBmb3IgcmV2
+aWV3aW5nDQoNCj4gWW91cnMsDQo+IExpbnVzIFdhbGxlaWoNCj4gDQo+IF9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IExpbnV4LW1lZGlhdGVrIG1haWxp
+bmcgbGlzdA0KPiBMaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsNCg0KDQo=
 
