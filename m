@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFF5C33CA4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DA3C33CA5
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BE92067D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA7C20705
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgAHSqU (ORCPT
+        id S1729171AbgAHSqr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:46:20 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59822 "EHLO
+        Wed, 8 Jan 2020 13:46:47 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59916 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728249AbgAHSqT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 13:46:19 -0500
+        with ESMTP id S1730250AbgAHSqq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 13:46:46 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: koike)
-        with ESMTPSA id 7E79C2912ED
+        with ESMTPSA id A5F8829131A
 From:   Helen Koike <helen.koike@collabora.com>
 To:     linux-rockchip@lists.infradead.org
 Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
@@ -34,11 +34,10 @@ Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
         joacim.zetterling@gmail.com, kernel@collabora.com,
         ezequiel@collabora.com, linux-media@vger.kernel.org,
         jacob-chen@iotwrt.com, linux-arm-kernel@lists.infradead.org,
-        Jacob Chen <jacob2.chen@rock-chips.com>,
         Helen Koike <helen.koike@collabora.com>
-Subject: [PATCH v13 07/11] media: staging: rkisp1: add document for rkisp1 meta buffer format
-Date:   Wed,  8 Jan 2020 15:44:50 -0300
-Message-Id: <20200108184454.825725-8-helen.koike@collabora.com>
+Subject: [PATCH v13 11/11] MAINTAINERS: add entry for Rockchip ISP1 driver
+Date:   Wed,  8 Jan 2020 15:44:54 -0300
+Message-Id: <20200108184454.825725-12-helen.koike@collabora.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200108184454.825725-1-helen.koike@collabora.com>
 References: <20200108184454.825725-1-helen.koike@collabora.com>
@@ -49,101 +48,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jacob Chen <jacob2.chen@rock-chips.com>
+Add MAINTAINERS entry for the rockchip isp1 driver.
 
-This commit add document for rkisp1 meta buffer format
-
-Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
 Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 ---
 
 Changes in v13: None
-Changes in v12:
-- Change Jacob's email to original jacob2.chen@rock-chips.com
-
+Changes in v12: None
 Changes in v11: None
-Changes in v10:
-- unsquash
-
+Changes in v10: None
 Changes in v9:
-- squash
-- migrate to staging
-- remove meta-formats.rst update
+- Move to staging
 
-Changes in v8:
-- Add SPDX in the header
-- Remove emacs configs
-- Fix doc style
+Changes in v8: None
+Changes in v7: None
 
-Changes in v7:
-- s/correspond/corresponding
-- s/use/uses
-- s/docuemnt/document
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
- .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    | 23 +++++++++++++++++++
- .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      | 22 ++++++++++++++++++
- 2 files changed, 45 insertions(+)
- create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
- create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-
-diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-new file mode 100644
-index 000000000000..32034e481357
---- /dev/null
-+++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-@@ -0,0 +1,23 @@
-+.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 87f3d89d44a2..5ed1287cbb1c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14117,6 +14117,12 @@ F:	drivers/hid/hid-roccat*
+ F:	include/linux/hid-roccat*
+ F:	Documentation/ABI/*/sysfs-driver-hid-roccat*
+ 
++ROCKCHIP ISP V1 DRIVER
++M:	Helen Koike <helen.koike@collabora.com>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	drivers/staging/media/rkisp1/
 +
-+.. _v4l2-meta-fmt-rkisp1-params:
-+
-+============================
-+V4L2_META_FMT_RK_ISP1_PARAMS
-+============================
-+
-+Rockchip ISP1 Parameters Data
-+
-+Description
-+===========
-+
-+This format describes input parameters for the Rockchip ISP1.
-+
-+It uses c-struct :c:type:`rkisp1_params_cfg`, which is defined in
-+the ``linux/rkisp1-config.h`` header file.
-+
-+The parameters consist of multiple modules.
-+The module won't be updated if the corresponding bit was not set in module_*_update.
-+
-+.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-+   :functions: rkisp1_params_cfg
-diff --git a/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-new file mode 100644
-index 000000000000..4ad303f96421
---- /dev/null
-+++ b/drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-@@ -0,0 +1,22 @@
-+.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+.. _v4l2-meta-fmt-rkisp1-stat:
-+
-+=============================
-+V4L2_META_FMT_RK_ISP1_STAT_3A
-+=============================
-+
-+
-+Rockchip ISP1 Statistics Data
-+
-+Description
-+===========
-+
-+This format describes image color statistics information generated by the Rockchip
-+ISP1.
-+
-+It uses c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
-+the ``linux/rkisp1-config.h`` header file.
-+
-+.. kernel-doc:: include/uapi/linux/rkisp1-config.h
-+   :functions: rkisp1_stat_buffer
+ ROCKCHIP RASTER 2D GRAPHIC ACCELERATION UNIT DRIVER
+ M:	Jacob Chen <jacob-chen@iotwrt.com>
+ M:	Ezequiel Garcia <ezequiel@collabora.com>
 -- 
 2.24.0
 
