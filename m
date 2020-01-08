@@ -2,156 +2,206 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD8AC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A8DC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DDA02070E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C55E2067D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cHYk+eN9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IFCNzfE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgAHEZY (ORCPT
+        id S1726481AbgAHE5T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 23:25:24 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12474 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgAHEZX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:25:23 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1559a10000>; Tue, 07 Jan 2020 20:25:05 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 20:25:22 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 20:25:22 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
- 2020 04:25:22 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 8 Jan 2020 04:25:21 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.162.131]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e1559b00000>; Tue, 07 Jan 2020 20:25:21 -0800
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 01/21] dt-bindings: clock: tegra: Change CLK_M_DIV to OSC_DIV clocks
-Date:   Tue, 7 Jan 2020 20:24:55 -0800
-Message-ID: <1578457515-3477-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 7 Jan 2020 23:57:19 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34759 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726333AbgAHE5T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:57:19 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s94so5917357pjc.1
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 20:57:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4mtdywEsJk+nT9VyFRx8P9/lJ04ak0DTV5M3N2oJ6TI=;
+        b=IFCNzfE7iaak3dYJ1Yo+CaQgGqdHU+rfnC0wA0asEZh3mwNM1h3hScSbEa03vlZRgV
+         MAPp5pCSefK9OXvYT5Waxldi6gEVqLLUSA+o4HblpXqowqsmbdQuimnfTf+AGUW/LHW1
+         THk3eO06X4L8Elr5oqkT++qalFZVbq1SV9b3oUjmDCX+OUemW2JL9pLvU39PHC4aE6PJ
+         3dwNd11UTsTeqK4HiKkBGeQkG7hnLu09OwNu3UeRKPtqmTZf+uIIDeTFjdzd+K2uilN1
+         cntRJGYp9dQ5zOwrEnt+A+DuE40gtfi65O3OKNIXPDRzhBaXRl74aJn8KjKjzt74dwLi
+         +E7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4mtdywEsJk+nT9VyFRx8P9/lJ04ak0DTV5M3N2oJ6TI=;
+        b=Cdm7/DVSAsRGXB9KMdozd7QlaFbwZEIF1fsKlcr1ShaZdj+uH8TQTEKct5PadeYUah
+         nmgK0l0TDIrM6OZdENrFkEAyfzZ9LRuN8V06rn2QNfB0UA5h1c77ZC7XY+2H3aMeEAC1
+         5NnqmTaItw3zfSRQUq6J4LGj+xMxrFR3K+gZM2GOCw0FmEIuGKu26X9NIkvOGnRwd64b
+         C0CYSI5lw+N0PKpHTHvKaomOGLb2r8bmrp5Gea8ufR6Z3ghg5JJPwTMqD3lhdxIREs60
+         Q+C1Rq8JsbJx7Yaa0VSMoecvO14nBnWzha5B4bzqAo8hXMpk96wG2FA1NyTA56Q1epD7
+         6raw==
+X-Gm-Message-State: APjAAAUL+ApICNEret2F0T0vLl/m2qr9zBZCtL5XNFBVKNMSn6x7CyTd
+        pQMfszNwPhG67FzXARd05j1cww==
+X-Google-Smtp-Source: APXvYqyAiUM0Zfk94sj3wybH1+jEV9hsV42rj3yXWIoRlo02aJPtDczc5InitHATpM/Ute/7PNrkUA==
+X-Received: by 2002:a17:902:760e:: with SMTP id k14mr3539817pll.238.1578459437930;
+        Tue, 07 Jan 2020 20:57:17 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j38sm1469771pgj.27.2020.01.07.20.57.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 20:57:17 -0800 (PST)
+Date:   Tue, 7 Jan 2020 20:57:14 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: sdm845: move gpu zap nodes to per-device
+ dts
+Message-ID: <20200108045714.GH738324@yoga>
+References: <20200108013847.899170-1-robdclark@gmail.com>
+ <20200108013847.899170-4-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578457505; bh=fz0oIBleYHAc98+TeBIodQTdGZvMElQMohnHQMAvR/Q=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=cHYk+eN96v+MDW+I0GCSkoag2k3iKax2YtmQR1KSpKcMiZ3SXd46tPLDKCHvFgOmP
-         6E9dMh13CTrSiJxRjXZihs4dPkdg7O2piaMwkx55YdBozLXY9B0pFyrD3bIdh1poPQ
-         xUX4x3HNnoraYanaRDVDYk25l9Nir/iDTcgAWXayAheH+yhTV69GVicN6DpbaqWAuF
-         WJhJtehlGmGNLp+lLDqAiXWaWv8nVKqJgG1fyt7bm24mFJqg0bkJqE5PfGHi+gs4gC
-         LnMuYdMEhx71R/FrRtAULPzGhJl8m+1O/bwjO3wpKQObyRylxn6yhjx8gwOTZBbSKZ
-         BwdK1NBLUQT8w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108013847.899170-4-robdclark@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra has no CLK_M_DIV2 and CLK_M_DIV4 clocks and instead it has
-OSC_DIV2 and OSC_DIV4 clocks from OSC pads.
+On Tue 07 Jan 17:38 PST 2020, Rob Clark wrote:
 
-This patch changes CLK_M_DIV2 and CLK_M_DIV4 clock ids to OSC_DIV2
-and OSC_DIV4 clock ids for Tegra30 through Tegra210.
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> We want to specify per-device firmware-name, so move the zap node into
+> the .dts file for individual boards/devices.  This lets us get rid of
+> the /delete-node/ for cheza, which does not use zap.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi           | 1 -
+>  arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 7 +++++++
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts              | 8 ++++++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi                 | 6 +-----
+>  arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 7 +++++++
+>  5 files changed, 23 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> index 9a4ff57fc877..2db79c1ecdac 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> @@ -165,7 +165,6 @@ panel_in_edp: endpoint {
+>  /delete-node/ &venus_mem;
+>  /delete-node/ &cdsp_mem;
+>  /delete-node/ &cdsp_pas;
+> -/delete-node/ &zap_shader;
+>  /delete-node/ &gpu_mem;
+>  
+>  /* Increase the size from 120 MB to 128 MB */
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+> index d100f46791a6..c472195e44fb 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+> @@ -352,6 +352,13 @@ &gcc {
+>  			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+>  };
+>  
+> +&gpu {
+> +	zap-shader {
+> +		memory-region = <&gpu_mem>;
+> +		firmware-name = "qcom/db845c/a630_zap.mbn";
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- include/dt-bindings/clock/tegra114-car.h        | 4 ++--
- include/dt-bindings/clock/tegra124-car-common.h | 4 ++--
- include/dt-bindings/clock/tegra210-car.h        | 4 ++--
- include/dt-bindings/clock/tegra30-car.h         | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+We agreed upon qcom/sdm845/* for the test-signed 845 firmware :)
 
-diff --git a/include/dt-bindings/clock/tegra114-car.h b/include/dt-bindings/clock/tegra114-car.h
-index bb5c2c999c05..f4880959b094 100644
---- a/include/dt-bindings/clock/tegra114-car.h
-+++ b/include/dt-bindings/clock/tegra114-car.h
-@@ -226,8 +226,8 @@
- #define TEGRA114_CLK_FUSE_BURN 199
- #define TEGRA114_CLK_CLK_32K 200
- #define TEGRA114_CLK_CLK_M 201
--#define TEGRA114_CLK_CLK_M_DIV2 202
--#define TEGRA114_CLK_CLK_M_DIV4 203
-+#define TEGRA114_CLK_OSC_DIV2 202
-+#define TEGRA114_CLK_OSC_DIV4 203
- #define TEGRA114_CLK_PLL_REF 204
- #define TEGRA114_CLK_PLL_C 205
- #define TEGRA114_CLK_PLL_C_OUT1 206
-diff --git a/include/dt-bindings/clock/tegra124-car-common.h b/include/dt-bindings/clock/tegra124-car-common.h
-index 0c4f5be0a742..e7e601a88d3d 100644
---- a/include/dt-bindings/clock/tegra124-car-common.h
-+++ b/include/dt-bindings/clock/tegra124-car-common.h
-@@ -225,8 +225,8 @@
- #define TEGRA124_CLK_FUSE_BURN 199
- #define TEGRA124_CLK_CLK_32K 200
- #define TEGRA124_CLK_CLK_M 201
--#define TEGRA124_CLK_CLK_M_DIV2 202
--#define TEGRA124_CLK_CLK_M_DIV4 203
-+#define TEGRA124_CLK_OSC_DIV2 202
-+#define TEGRA124_CLK_OSC_DIV4 203
- #define TEGRA124_CLK_PLL_REF 204
- #define TEGRA124_CLK_PLL_C 205
- #define TEGRA124_CLK_PLL_C_OUT1 206
-diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
-index 44f60623f99b..6f65c14bf013 100644
---- a/include/dt-bindings/clock/tegra210-car.h
-+++ b/include/dt-bindings/clock/tegra210-car.h
-@@ -260,8 +260,8 @@
- #define TEGRA210_CLK_FUSE_BURN 231
- #define TEGRA210_CLK_CLK_32K 232
- #define TEGRA210_CLK_CLK_M 233
--#define TEGRA210_CLK_CLK_M_DIV2 234
--#define TEGRA210_CLK_CLK_M_DIV4 235
-+#define TEGRA210_CLK_OSC_DIV2 234
-+#define TEGRA210_CLK_OSC_DIV4 235
- #define TEGRA210_CLK_PLL_REF 236
- #define TEGRA210_CLK_PLL_C 237
- #define TEGRA210_CLK_PLL_C_OUT1 238
-diff --git a/include/dt-bindings/clock/tegra30-car.h b/include/dt-bindings/clock/tegra30-car.h
-index 3c90f1535551..907a8a04c280 100644
---- a/include/dt-bindings/clock/tegra30-car.h
-+++ b/include/dt-bindings/clock/tegra30-car.h
-@@ -194,8 +194,8 @@
- #define TEGRA30_CLK_TVO 169
- #define TEGRA30_CLK_CLK_32K 170
- #define TEGRA30_CLK_CLK_M 171
--#define TEGRA30_CLK_CLK_M_DIV2 172
--#define TEGRA30_CLK_CLK_M_DIV4 173
-+#define TEGRA30_CLK_OSC_DIV2 172
-+#define TEGRA30_CLK_OSC_DIV4 173
- #define TEGRA30_CLK_PLL_REF 174
- #define TEGRA30_CLK_PLL_C 175
- #define TEGRA30_CLK_PLL_C_OUT1 176
--- 
-2.7.4
+> +	};
+> +};
+> +
+>  &pm8998_gpio {
+>  	vol_up_pin_a: vol-up-active {
+>  		pins = "gpio6";
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index c57548b7b250..876155fc0547 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -360,6 +360,14 @@ &gcc {
+>  			   <GCC_LPASS_SWAY_CLK>;
+>  };
+>  
+> +&gpu {
+> +	zap-shader {
+> +		memory-region = <&gpu_mem>;
+> +		// TODO presumably mtp can use same "test key" signed zap?
 
+Drop this comment after s/db845c/sdm845/
+
+> +		firmware-name = "qcom/db845c/a630_zap.mbn";
+
+Apart from that, I think this looks good!
+
+Regards,
+Bjorn
+
+> +	};
+> +};
+> +
+>  &i2c10 {
+>  	status = "okay";
+>  	clock-frequency = <400000>;
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index ddb1f23c936f..601c57cc9b6d 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2804,7 +2804,7 @@ dsi1_phy: dsi-phy@ae96400 {
+>  			};
+>  		};
+>  
+> -		gpu@5000000 {
+> +		gpu: gpu@5000000 {
+>  			compatible = "qcom,adreno-630.2", "qcom,adreno";
+>  			#stream-id-cells = <16>;
+>  
+> @@ -2824,10 +2824,6 @@ gpu@5000000 {
+>  
+>  			qcom,gmu = <&gmu>;
+>  
+> -			zap_shader: zap-shader {
+> -				memory-region = <&gpu_mem>;
+> -			};
+> -
+>  			gpu_opp_table: opp-table {
+>  				compatible = "operating-points-v2";
+>  
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> index 13dc619687f3..b255be3a4a0a 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -245,6 +245,13 @@ &gcc {
+>  			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+>  };
+>  
+> +&gpu {
+> +	zap-shader {
+> +		memory-region = <&gpu_mem>;
+> +		firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn";
+> +	};
+> +};
+> +
+>  &i2c1 {
+>  	status = "okay";
+>  	clock-frequency = <400000>;
+> -- 
+> 2.24.1
+> 
