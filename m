@@ -2,198 +2,332 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBFFC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 14:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1905EC282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 14:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48E820692
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 14:32:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="jgLCFiOQ"
+	by mail.kernel.org (Postfix) with ESMTP id DFDA5206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 14:55:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbgAHOcg (ORCPT
+        id S1728180AbgAHOzM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 09:32:36 -0500
-Received: from mail.blih.net ([212.83.177.182]:26771 "EHLO mail.blih.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgAHOcg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jan 2020 09:32:36 -0500
-Received: from mail.blih.net (mail.blih.net [212.83.177.182])
-        by mail.blih.net (OpenSMTPD) with ESMTP id 44fc4725;
-        Wed, 8 Jan 2020 15:32:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=bidouilliste.com; h=date
-        :from:to:cc:subject:message-id:in-reply-to:references
-        :mime-version:content-type:content-transfer-encoding; s=mail;
-         bh=2yUHFzCKidxrTbLTYWuAZ0T5Tlo=; b=jgLCFiOQaLOxXHprjINfgd7x7d8W
-        UNDP9F659T9fBhRFiVeP/PV/20Bhc7XkY2PW1cPHb8G0s+tsmCcUKE0n4U88npEc
-        8oR+SA1cQCvVmEflHGLWN4EgirZC55s1kYDMzHDBrLAK/EEXGQkv6FbxRHZjhvhd
-        2/f547rCFfM5alY=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=bidouilliste.com; h=date
-        :from:to:cc:subject:message-id:in-reply-to:references
-        :mime-version:content-type:content-transfer-encoding; q=dns; s=
-        mail; b=bvBMmkZ221zKQvLyKxA+SPMgg+O573MGZjvnAWQfZdAUqvKpJYa6gBUL
-        3eCkdxCRQi0aXy2uhUrTlGYmCOokssIwj6KLahT/X7Q+ne71OEQmm3lUqMXJpfFZ
-        9ZNCND5YDXSAQGZZrG8vc95Z1DjJtIlHG8IZAU490cE1Vy75P0U=
-Received: from skull.home.blih.net (lfbn-idf2-1-1164-130.w90-92.abo.wanadoo.fr [90.92.223.130])
-        by mail.blih.net (OpenSMTPD) with ESMTPSA id 4fe403c8
-        TLS version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO;
-        Wed, 8 Jan 2020 15:32:32 +0100 (CET)
-Date:   Wed, 8 Jan 2020 15:32:30 +0100
-From:   Emmanuel Vadot <manu@bidouilliste.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-spi@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Mark Brown <broonie@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.xyz>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] arm64: dts: sun50i: H6: Add SPI controllers nodes
- and pinmuxes
-Message-Id: <20200108153230.509ce90f4cbdf1122dbd6d59@bidouilliste.com>
-In-Reply-To: <20200108114706.5f27a9b2@donnerap.cambridge.arm.com>
-References: <20200108101006.150706-1-andre.przywara@arm.com>
-        <20200108101006.150706-2-andre.przywara@arm.com>
-        <20200108123448.26286186e74f899caaf5ad35@bidouilliste.com>
-        <20200108114706.5f27a9b2@donnerap.cambridge.arm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 8 Jan 2020 09:55:12 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:25861 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727164AbgAHOzM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 09:55:12 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 08 Jan 2020 20:25:07 +0530
+Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 08 Jan 2020 20:24:44 +0530
+Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
+        id 823253502; Wed,  8 Jan 2020 20:24:42 +0530 (IST)
+From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH V3] arm64: dts: qcom: sc7180: Add nodes for eMMC and SD card
+Date:   Wed,  8 Jan 2020 20:24:10 +0530
+Message-Id: <1578495250-10672-1-git-send-email-sbhanu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 8 Jan 2020 11:47:06 +0000
-Andre Przywara <andre.przywara@arm.com> wrote:
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-> On Wed, 8 Jan 2020 12:34:48 +0100
-> Emmanuel Vadot <manu@bidouilliste.com> wrote:
-> 
-> Hi Emmanuel,
-> 
-> > On Wed,  8 Jan 2020 10:10:05 +0000
-> > Andre Przywara <andre.przywara@arm.com> wrote:
-> > 
-> > > The Allwinner H6 SoC contains two SPI controllers similar to the H3/A64,
-> > > but with the added capability of 3-wire and 4-wire operation modes.
-> > > For now the driver does not support those, but the SPI registers are
-> > > fully backwards-compatible, just adding bits and registers which were
-> > > formerly reserved. So we can use the existing driver for the "normal" SPI
-> > > modes, for instance to access the SPI NOR flash soldered on the PineH64
-> > > board.
-> > > We use an H6 specific compatible string in addition to the existing H3
-> > > string, so when the driver later gains Quad SPI support, it should work
-> > > automatically without any DT changes.
-> > > 
-> > > Tested by accessing the SPI flash on a Pine H64 board (SPI0), also
-> > > connecting another SPI flash to the SPI1 header pins.
-> > > 
-> > > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
-> > >  1 file changed, 54 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > index 3329283e38ab..40835850893e 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> > > @@ -338,6 +338,30 @@
-> > >  				bias-pull-up;
-> > >  			};
-> > >  
-> > > +			/omit-if-no-ref/  
-> > 
-> >  That would prevent users to use an overlay and use those pins, is that
-> > something that we want ? I'm not sure that the space saved by those are
-> > useful.
-> 
-> Me neither ;-), but Maxime asked for it before, and it doesn't really hurt.
-> 
-> For overlays: if a .dtb is compiled with support for overlays (-@ to generate symbols), this tag is ignored, and the nodes stay in the .dtb, regardless of being referenced or not. Just confirmed by trying this.
+Add sdhc instances for supporting eMMC and SD-card on sc7180.
+The regulators should be in HPM state for proper functionality of
+eMMC and SD-card. Updating corresponding regulators accordingly.
 
- Oh I didn't knew that (and didn't tried before sending my mail
-sorry :P), then it's good for me leaving them :)
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+---
+Changes since V2:
+	- Added cmdq register space and support-cqe flag.
+	- Incorporated review comments by Matthias Kaehlcke.
 
- Thanks,
+Changes since V1:
+	- Updated the regulator min, max voltages as per
+	  eMMC/SD-card voltage requirements
+	- Enabled IOMMU for eMMC and SD-card.
+	- Added pull and drive strength to SD-card cd-gpio.
+	- Incorporated review comments by Matthias Kaehlcke.
+---
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  47 +++++++---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 148 ++++++++++++++++++++++++++++++++
+ 2 files changed, 183 insertions(+), 12 deletions(-)
 
-> Cheers,
-> Andre.
-> 
-> > 
-> >  Cheers,
-> > 
-> > > +			spi0_pins: spi0-pins {
-> > > +				pins = "PC0", "PC2", "PC3";
-> > > +				function = "spi0";
-> > > +			};
-> > > +
-> > > +			/omit-if-no-ref/
-> > > +			spi0_cs_pin: spi0-cs-pin {
-> > > +				pins = "PC5";
-> > > +				function = "spi0";
-> > > +			};
-> > > +
-> > > +			/omit-if-no-ref/
-> > > +			spi1_pins: spi1-pins {
-> > > +				pins = "PH4", "PH5", "PH6";
-> > > +				function = "spi1";
-> > > +			};
-> > > +
-> > > +			/omit-if-no-ref/
-> > > +			spi1_cs_pin: spi1-cs-pin {
-> > > +				pins = "PH3";
-> > > +				function = "spi1";
-> > > +			};
-> > > +
-> > >  			spdif_tx_pin: spdif-tx-pin {
-> > >  				pins = "PH7";
-> > >  				function = "spdif";
-> > > @@ -504,6 +528,36 @@
-> > >  			#size-cells = <0>;
-> > >  		};
-> > >  
-> > > +		spi0: spi@5010000 {
-> > > +			compatible = "allwinner,sun50i-h6-spi",
-> > > +				     "allwinner,sun8i-h3-spi";
-> > > +			reg = <0x05010000 0x1000>;
-> > > +			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> > > +			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
-> > > +			clock-names = "ahb", "mod";
-> > > +			dmas = <&dma 22>, <&dma 22>;
-> > > +			dma-names = "rx", "tx";
-> > > +			resets = <&ccu RST_BUS_SPI0>;
-> > > +			status = "disabled";
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <0>;
-> > > +		};
-> > > +
-> > > +		spi1: spi@5011000 {
-> > > +			compatible = "allwinner,sun50i-h6-spi",
-> > > +				     "allwinner,sun8i-h3-spi";
-> > > +			reg = <0x05011000 0x1000>;
-> > > +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> > > +			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
-> > > +			clock-names = "ahb", "mod";
-> > > +			dmas = <&dma 23>, <&dma 23>;
-> > > +			dma-names = "rx", "tx";
-> > > +			resets = <&ccu RST_BUS_SPI1>;
-> > > +			status = "disabled";
-> > > +			#address-cells = <1>;
-> > > +			#size-cells = <0>;
-> > > +		};
-> > > +
-> > >  		emac: ethernet@5020000 {
-> > >  			compatible = "allwinner,sun50i-h6-emac",
-> > >  				     "allwinner,sun50i-a64-emac";
-> > > -- 
-> > > 2.17.1
-
-
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+index 388f50a..a790d82 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -7,6 +7,7 @@
+ 
+ /dts-v1/;
+ 
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+ #include "sc7180.dtsi"
+ #include "pm6150.dtsi"
+@@ -101,9 +102,9 @@
+ 		};
+ 
+ 		vreg_l12a_1p8: ldo12 {
+-			regulator-min-microvolt = <1696000>;
+-			regulator-max-microvolt = <1952000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+ 		vreg_l13a_1p8: ldo13 {
+@@ -143,9 +144,9 @@
+ 		};
+ 
+ 		vreg_l19a_2p9: ldo19 {
+-			regulator-min-microvolt = <2696000>;
+-			regulator-max-microvolt = <3304000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 	};
+ 
+@@ -189,9 +190,9 @@
+ 		};
+ 
+ 		vreg_l6c_2p9: ldo6 {
+-			regulator-min-microvolt = <2696000>;
+-			regulator-max-microvolt = <3304000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <2950000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+ 		vreg_l7c_3p0: ldo7 {
+@@ -207,9 +208,9 @@
+ 		};
+ 
+ 		vreg_l9c_2p9: ldo9 {
+-			regulator-min-microvolt = <2952000>;
+-			regulator-max-microvolt = <3304000>;
+-			regulator-initial-mode = <RPMH_REGULATOR_MODE_LPM>;
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
+ 		vreg_l10c_3p3: ldo10 {
+@@ -254,6 +255,28 @@
+ 	status = "okay";
+ };
+ 
++&sdhc_1 {
++	status = "okay";
++
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc1_on>;
++	pinctrl-1 = <&sdc1_off>;
++	vmmc-supply = <&vreg_l19a_2p9>;
++	vqmmc-supply = <&vreg_l12a_1p8>;
++};
++
++&sdhc_2 {
++	status = "okay";
++
++	pinctrl-names = "default","sleep";
++	pinctrl-0 = <&sdc2_on>;
++	pinctrl-1 = <&sdc2_off>;
++	vmmc-supply  = <&vreg_l9c_2p9>;
++	vqmmc-supply = <&vreg_l6c_2p9>;
++
++	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
++};
++
+ &uart3 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 3676bfd..525bc02 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -226,6 +226,33 @@
+ 			};
+ 		};
+ 
++		sdhc_1: sdhci@7c4000 {
++			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
++			reg = <0 0x7c4000 0 0x1000>,
++				<0 0x07c5000 0 0x1000>;
++			reg-names = "hc_mem", "cqhci_mem";
++
++			iommus = <&apps_smmu 0x60 0x0>;
++			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clocks = <&gcc GCC_SDCC1_APPS_CLK>,
++					<&gcc GCC_SDCC1_AHB_CLK>;
++			clock-names = "core", "iface";
++
++			bus-width = <8>;
++			non-removable;
++			supports-cqe;
++
++			mmc-ddr-1_8v;
++			mmc-hs200-1_8v;
++			mmc-hs400-1_8v;
++			mmc-hs400-enhanced-strobe;
++
++			status = "disabled";
++		};
++
+ 		qupv3_id_0: geniqup@8c0000 {
+ 			compatible = "qcom,geni-se-qup";
+ 			reg = <0 0x008c0000 0 0x6000>;
+@@ -929,6 +956,127 @@
+ 					function = "qup15";
+ 				};
+ 			};
++
++			sdc1_on: sdc1-on {
++				pinconf-clk {
++					pins = "sdc1_clk";
++					bias-disable;
++					drive-strength = <16>;
++				};
++
++				pinconf-cmd {
++					pins = "sdc1_cmd";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				pinconf-data {
++					pins = "sdc1_data";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				pinconf-rclk {
++					pins = "sdc1_rclk";
++					bias-pull-down;
++				};
++			};
++
++			sdc1_off: sdc1-off {
++				pinconf-clk {
++					pins = "sdc1_clk";
++					bias-disable;
++					drive-strength = <2>;
++				};
++
++				pinconf-cmd {
++					pins = "sdc1_cmd";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				pinconf-data {
++					pins = "sdc1_data";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				pinconf-rclk {
++					pins = "sdc1_rclk";
++					bias-pull-down;
++				};
++			};
++
++			sdc2_on: sdc2-on {
++				pinconf-clk {
++					pins = "sdc2_clk";
++					bias-disable;
++					drive-strength = <16>;
++				};
++
++				pinconf-cmd {
++					pins = "sdc2_cmd";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				pinconf-data {
++					pins = "sdc2_data";
++					bias-pull-up;
++					drive-strength = <10>;
++				};
++
++				pinconf-sd-cd {
++					pins = "gpio69";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++			};
++
++			sdc2_off: sdc2-off {
++				pinconf-clk {
++					pins = "sdc2_clk";
++					bias-disable;
++					drive-strength = <2>;
++				};
++
++				pinconf-cmd {
++					pins = "sdc2_cmd";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				pinconf-data {
++					pins = "sdc2_data";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				pinconf-sd-cd {
++					pins = "gpio69";
++					bias-disable;
++					drive-strength = <2>;
++				};
++			};
++		};
++
++		sdhc_2: sdhci@8804000 {
++			compatible = "qcom,sc7180-sdhci", "qcom,sdhci-msm-v5";
++			reg = <0 0x08804000 0 0x1000>;
++			reg-names = "hc_mem";
++
++			iommus = <&apps_smmu 0x80 0>;
++			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hc_irq", "pwr_irq";
++
++			clocks = <&gcc GCC_SDCC2_APPS_CLK>,
++					<&gcc GCC_SDCC2_AHB_CLK>;
++			clock-names = "core", "iface";
++
++			bus-width = <4>;
++
++			status = "disabled";
+ 		};
+ 
+ 		qspi: spi@88dc000 {
 -- 
-Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
