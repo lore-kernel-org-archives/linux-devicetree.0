@@ -2,144 +2,97 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCF6C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65162C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7408C2073A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wIZ1auYO"
+	by mail.kernel.org (Postfix) with ESMTP id 39D7C2073A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:49:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578502168;
+	bh=zPanyCcKhHxPWZxuBbWbBxU0REZPdGF4wjMWBEpeJHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K/3Yt0EeW/bD50QcUtldf2kZKtZ8W8TO0xsc5matwLXizjI7qayvkzxLrCl/oUAk/
+	 j19pjtt/a29FeBhQ7fNEdcaa/ak+7V/gEHmmYfctFuBiKiJAQddJZCn7mgCPl1sghD
+	 xwm4CI+rTdnFBAO/otpplottiix2YQLhhOch31vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgAHQtZ (ORCPT
+        id S1728511AbgAHQt1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:49:25 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40494 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgAHQtY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:49:24 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008GnMhY098921;
-        Wed, 8 Jan 2020 10:49:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578502162;
-        bh=RY2+pDL0Ybn6SAoSKXqWNf7C7aZKNuQoq94KgJgydn8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wIZ1auYOr+n4ggCmZNifI8nsb48C1L9mnN2DQVRkJMsPVsSN7e/QL2D2eWefDDcW1
-         6tqiTiStWi10VoCUOlBunkyrkDNAr6fPX5tllbRYCXtG1CLotXIGkSRl9kFNNd4eVX
-         2PZGWoOpc8Vw2NuQOqjUNe2+Fa30e5CCFyhIBfpk=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008GnMrN021268
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 10:49:22 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 10:49:21 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 10:49:21 -0600
-Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008GnLfN077466;
-        Wed, 8 Jan 2020 10:49:21 -0600
-Subject: Re: [RESEND PATCHv4 01/14] dt-bindings: remoteproc: Add OMAP
- remoteproc bindings
-To:     Tero Kristo <t-kristo@ti.com>, <bjorn.andersson@linaro.org>,
-        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
-        <linux-omap@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200102131845.12992-2-t-kristo@ti.com>
- <20200102132512.13248-1-t-kristo@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <f4ac066a-e5ee-f888-42bb-3f6d444747ee@ti.com>
-Date:   Wed, 8 Jan 2020 10:49:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 8 Jan 2020 11:49:27 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39908 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgAHQt1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:49:27 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a67so3209837oib.6
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 08:49:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HKRuP7odiUozzLKAizXkP/NVcvz1pjhKor6f3Gtuf1U=;
+        b=afa78yhn5X5PUcQTcXump7jHi1LzItuqrqmthtoKxZlZtxnJT5a2QKBYn0QUjViMq7
+         dlVW03MM6wHKU584+J9sANSmhopaaACWIQMW04aqiRSMZIb5iqfz7qgy+k8AxnBWi8xu
+         JHyQ4W0Yyz6eBuEElTBEA3oVvomEu3oBgZfSu5AelYX/bsUhUDLibhn/TCqh+6OLacZM
+         MyyxobZZEsJkY0EKCS1KHbj9cHIZrwveLdZt2BYRSsZiOIpr6Ak083DmLE1o8NT5ACzO
+         R0Cv967b/oKPEGLjyZ0pvsds6gFSX0S/Ggc6TPY+iKawQRgE7wiMlFE3cDYInC0NnAaZ
+         Trfw==
+X-Gm-Message-State: APjAAAVXJHywNN+5Tn9a7e3e4aVij5DrDawmckwshB/pqwKpMTGvXRFi
+        ktOF2n5UPfj8uaQ/3+cvPJ2yEz0=
+X-Google-Smtp-Source: APXvYqwQ7Ze1vczuiPJ/BU6XO89JHMIw8oET9FQ4+JfYQ1UFhrOPnli5IMkuAVrMm5AlM03Z6C5XOA==
+X-Received: by 2002:aca:ad11:: with SMTP id w17mr4003908oie.85.1578502165956;
+        Wed, 08 Jan 2020 08:49:25 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x15sm1273568otq.30.2020.01.08.08.49.25
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 08:49:25 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2219a4
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 08 Jan 2020 10:49:24 -0600
+Date:   Wed, 8 Jan 2020 10:49:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH] of: overlay: Remove blank line between assignment and
+ check
+Message-ID: <20200108164924.GA26592@bogus>
+References: <20191231134644.28119-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <20200102132512.13248-1-t-kristo@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191231134644.28119-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tero,
-
-On 1/2/20 7:25 AM, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Tue, 31 Dec 2019 14:46:44 +0100, Geert Uytterhoeven wrote:
+> There used to be blank lines between assignment and check of the
+> __of_changeset_revert_entries() result, to make the phandle cache
+> management operations stand out.  After the removal of those operations
+> in commit 90dc0d1ce890419f ("of: Rework and simplify phandle cache to
+> use a fixed size"), there is no longer a reason to have such a blank
+> line.
 > 
-> Add the device tree bindings document for the IPU and DSP
-> remote processor devices on OMAP4+ SoCs.
+> Remove the blank line, to rejoin visibly the status assignement and
+> check, and to match coding style.
 > 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> [t-kristo@ti.com: converted to schema]
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> v4: added ti,bootreg-shift and ti,autosuspend-delay properties
-
-You missed out on my v3 comment on the firmware-name on Example 2. Can
-you please address it when you post the next version?
-
+>  drivers/of/overlay.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
->  .../remoteproc/ti,omap-remoteproc.yaml        | 329 ++++++++++++++++++
->  1 file changed, 329 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
-> new file mode 100644
-> index 000000000000..f53d58efaae3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
 
-[snip]
+Applied, thanks.
 
-> +  - |+
-> +
-> +    //Example 2: OMAP5 IPU
-> +
-> +    /* IPU Reserved Memory node */
-> +    #include <dt-bindings/clock/omap5.h>
-> +    reserved-memory {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        ipu_memory_region: ipu-memory@95800000 {
-> +            compatible = "shared-dma-pool";
-> +            reg = <0 0x95800000 0 0x3800000>;
-> +            reusable;
-> +        };
-> +    };
-> +
-> +    /* IPU node */
-> +    ocp {
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        ipu: ipu@55020000 {
-> +            compatible = "ti,omap5-ipu";
-> +            reg = <0x55020000 0x10000>;
-> +            reg-names = "l2ram";
-> +            iommus = <&mmu_ipu>;
-> +            mboxes = <&mailbox &mbox_ipu>;
-> +            memory-region = <&ipu_memory_region>;
-> +            ti,timers = <&timer3>, <&timer4>;
-> +            ti,watchdog-timers = <&timer9>, <&timer11>;
-> +            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
-> +            resets = <&prm_core 2>;
-> +            firmware-name = "omap5-ipu-fw.xem";
-> +        };
-> +    };
-
-regards
-Suman
+Rob
