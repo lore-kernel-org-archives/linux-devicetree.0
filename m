@@ -2,92 +2,235 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847CFC00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD77FC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5564A2051A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A652075D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:30:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mWqduuy/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1io/82z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgAHJ0A (ORCPT
+        id S1727518AbgAHJaE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:26:00 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36126 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727599AbgAHJZ7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:25:59 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a203so2033580qkc.3
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 01:25:59 -0800 (PST)
+        Wed, 8 Jan 2020 04:30:04 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:44977 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727205AbgAHJaE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:30:04 -0500
+Received: by mail-qv1-f66.google.com with SMTP id n8so1091983qvg.11;
+        Wed, 08 Jan 2020 01:30:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=d9itra/1hP66y5Vh1A/apsI7vVNMDV9CQI60fYE2iNo=;
-        b=mWqduuy/+k1H4CJ3RmxwE369OYZjbQ91El877rL/H+x8wlktANqK8kcC4voHl2Sj9F
-         BWPxcXnJgz1F9WIFJwkli10BS+NHOKcP6tM0yyKGvdBw2htSyoe13BdbGf7XPQMCdUhk
-         KKAC3xbCwpVV74ByShIV2AhcfQ7oHmaS+egzk=
+        bh=V+AnIr8xJIC3DpDvf2MIpLIgJZ+CN4irLPhk6yFtscY=;
+        b=f1io/82ztPz4bFPaOPr46ckbgnYVY94PXievQr73C+rowMuyOHKiSNrmuascnB2cze
+         h03T47dhOjR86Dt4+dh1p5suEVfENZ4d6otja4ynHrN8Y/AkVV7JDKsDgRzjdw0YoD4J
+         v21ym8pM4mxz8OHeBSloSUy5dhzb7B6vL1xVE9B0E+soNiQ3xbEWdWQ+pZoiZoE6j9WD
+         4KAhq6HGZ5Xi6gcU1IwQCu4dcFDBfiHsblTYD+laPFzVGomS+6yFfX3O6l6OyWbP01J+
+         ZP/LKr4ThZX0/ZN9ogymhRtyvt0IMG6mba+oUevS5RE2McnKNGvP8b70YbwvEiPLVRya
+         aPfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=d9itra/1hP66y5Vh1A/apsI7vVNMDV9CQI60fYE2iNo=;
-        b=G5TteKyxmh43v7wQTCZJpZaZmlpgn+Hwc8bCwuZW8ExdkwyMjWVpdymrmtm3i30jem
-         5dnVUFMwQ0cX+FBA4kW2Oe4EgjMtApvKARcB9jHaG9wPkSXAp3AiJ2ZCyl5pYLSJiGEg
-         1aA1aV9qhGX8q59Uiewri8+aUZRCdNnXK9hvWpkyxE9grq22wu1Ox15fnRgE1yJjNnug
-         DZFSagvj/NLEwzAvO6DBQ/hI/tYNRdIJiUHiyogLX7VjfqiLXO2siRYCZDKEAlFCLU0H
-         Gn4viHwd6NzEys7sfKCjvoxa6JUNSkadHGOLrBliWLvLdlyLJ+x6UTbXISm5qd8EBcaP
-         I87g==
-X-Gm-Message-State: APjAAAXi2c16/tY05rq92/0qsdm+nYSd5im4UdMCJNbNS0tkd9TqCn4z
-        bpH6BWQrCu3PVHqb03VBe1gsdzGmdeoL5IxBfBKjFQ==
-X-Google-Smtp-Source: APXvYqxUSfxCpOfPQeb5k2dIYC6xmY0+WG2Ufqb4kkw22kn9ZUvrNzcvtQ2APhviNZ1LTVVT4U0dZLh1RLVsQUCsLdo=
-X-Received: by 2002:a37:6551:: with SMTP id z78mr3581807qkb.144.1578475558723;
- Wed, 08 Jan 2020 01:25:58 -0800 (PST)
+        bh=V+AnIr8xJIC3DpDvf2MIpLIgJZ+CN4irLPhk6yFtscY=;
+        b=kE1t6WTQ7oFwM12gF4YhZTYzwbnQE20znTiqD9dHzUzIsyHb976VSD24pUTHLNZMAC
+         wcI06YxxbaZ7MJqmPDgKDoa+L6kcdFpWvj0kEVTltJuq5/CP/zDNCxrSafc9QSu9fYnd
+         cfIR8GLDhpaDu3typKaanQE9J8UWzkhUcbqidrkPTSw1APEr9hEXGI+2T5J2G0FjJgpU
+         9kO6Lypm3xBDk0lnLgW2RREFQsLRbAZ72t2/GBCvWytx442UU69kl5s1fW1D/N2Uhi8g
+         OUoFHkl/B+tXVWKTUXbeu6Ztm/Uc3pZRMjcdXrYiEh4u/GdbVW0t4TfOVngMi81vfKCn
+         qePA==
+X-Gm-Message-State: APjAAAWevDF6X3lCqQ3nLc+z7B/tTLlIqmuw10WmIxvSxeRCsbz6UCp1
+        MNC+PtTR2TYPBWwSGqN9k9dmrEdQOAEQGB4iu1I=
+X-Google-Smtp-Source: APXvYqyBrSSS+aT2CW4js6+jBTqkMjLw2OzZRXJCjT67nXeKRwAZ5gsI59ky8XuqOn13xntwvOGG55Pa0BGIb3OB4zY=
+X-Received: by 2002:ad4:496f:: with SMTP id p15mr3146294qvy.191.1578475802943;
+ Wed, 08 Jan 2020 01:30:02 -0800 (PST)
 MIME-Version: 1.0
-References: <1578280296-18946-1-git-send-email-jiaxin.yu@mediatek.com> <1578280296-18946-3-git-send-email-jiaxin.yu@mediatek.com>
-In-Reply-To: <1578280296-18946-3-git-send-email-jiaxin.yu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 8 Jan 2020 17:25:48 +0800
-Message-ID: <CANMq1KD3n5r1ACy2acKgXTfTLHMsONzT-NscL=AoY1Jr-eqdww@mail.gmail.com>
-Subject: Re: [PATCH v10 2/2] watchdog: mtk_wdt: mt8183: Add reset controller
-To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
-Cc:     Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org,
-        linux@roeck-us.net, Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-watchdog@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com,
-        Stephen Boyd <sboyd@kernel.org>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>
+References: <20200106110133.13791-1-faiz_abbas@ti.com> <20200106110133.13791-4-faiz_abbas@ti.com>
+ <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com> <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
+In-Reply-To: <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 8 Jan 2020 17:29:51 +0800
+Message-ID: <CADBw62rK1a9K7cxf5ti7YkFsJJ5tJ+8yjuF2aYR3PnZnoK-r2g@mail.gmail.com>
+Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA devices
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     linux-omap@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        kishon@ti.com, Adrian Hunter <adrian.hunter@intel.com>,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>, tony@atomide.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 11:11 AM Jiaxin Yu <jiaxin.yu@mediatek.com> wrote:
->
-> Add reset controller API in watchdog driver.
-> Besides watchdog, MTK toprgu module alsa provide sub-system (eg, audio,
-> camera, codec and connectivity) software reset functionality.
+Hi Faiz,
 
-You add support for reset controller on both 8183 and 2712, do you
-want to say that in the commit title and message?
-
+On Wed, Jan 8, 2020 at 5:19 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
 >
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  drivers/watchdog/mtk_wdt.c | 105 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 104 insertions(+), 1 deletion(-)
+> Hi Baolin,
+>
+> On 08/01/20 6:58 am, Baolin Wang wrote:
+> > Hi Faiz,
+> >
+> > On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+> >>
+> >> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+> >>
+> >> Some standard SD host controllers can support both external dma
+> >> controllers as well as ADMA/SDMA in which the SD host controller
+> >> acts as DMA master. TI's omap controller is the case as an example.
+> >>
+> >> Currently the generic SDHCI code supports ADMA/SDMA integrated in
+> >> the host controller but does not have any support for external DMA
+> >> controllers implemented using dmaengine, meaning that custom code is
+> >> needed for any systems that use an external DMA controller with SDHCI.
+> >>
+> >> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
+> >> 1. Map scatterlists before dmaengine_prep_slave_sg()
+> >> 2. Use dma_async() functions inside of the send_command() path and call
+> >> terminate_sync() in non-atomic context in case of an error.
+> >>
+> >> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> >> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> >> ---
+> >>  drivers/mmc/host/Kconfig |   3 +
+> >>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
+> >>  drivers/mmc/host/sdhci.h |   8 ++
+> >>  3 files changed, 237 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> >> index d06b2dfe3c95..adef971582a1 100644
+> >> --- a/drivers/mmc/host/Kconfig
+> >> +++ b/drivers/mmc/host/Kconfig
+> >> @@ -1040,3 +1040,6 @@ config MMC_OWL
+> >>         help
+> >>           This selects support for the SD/MMC Host Controller on
+> >>           Actions Semi Owl SoCs.
+> >> +
+> >> +config MMC_SDHCI_EXTERNAL_DMA
+> >> +       bool
+> >> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> >> index f6999054abcf..8cc78c76bc3d 100644
+> >> --- a/drivers/mmc/host/sdhci.c
+> >> +++ b/drivers/mmc/host/sdhci.c
+> >> @@ -10,6 +10,7 @@
+> >>   */
+> >>
+> >>  #include <linux/delay.h>
+> >> +#include <linux/dmaengine.h>
+> >>  #include <linux/ktime.h>
+> >>  #include <linux/highmem.h>
+> >>  #include <linux/io.h>
+> >> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+> >>         sdhci_set_block_info(host, data);
+> >>  }
+> >>
+> >> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
+> >> +
+> >> +static int sdhci_external_dma_init(struct sdhci_host *host)
+> >> +{
+> >> +       int ret = 0;
+> >> +       struct mmc_host *mmc = host->mmc;
+> >> +
+> >> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
+> >> +       if (IS_ERR(host->tx_chan)) {
+> >> +               ret = PTR_ERR(host->tx_chan);
+> >> +               if (ret != -EPROBE_DEFER)
+> >> +                       pr_warn("Failed to request TX DMA channel.\n");
+> >> +               host->tx_chan = NULL;
+> >> +               return ret;
+> >> +       }
+> >> +
+> >> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
+> >> +       if (IS_ERR(host->rx_chan)) {
+> >> +               if (host->tx_chan) {
+> >> +                       dma_release_channel(host->tx_chan);
+> >> +                       host->tx_chan = NULL;
+> >> +               }
+> >> +
+> >> +               ret = PTR_ERR(host->rx_chan);
+> >> +               if (ret != -EPROBE_DEFER)
+> >> +                       pr_warn("Failed to request RX DMA channel.\n");
+> >> +               host->rx_chan = NULL;
+> >> +       }
+> >> +
+> >> +       return ret;
+> >> +}
+> >> +
+> >> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
+> >> +                                                  struct mmc_data *data)
+> >> +{
+> >> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
+> >> +}
+> >> +
+> >> +static int sdhci_external_dma_setup(struct sdhci_host *host,
+> >> +                                   struct mmc_command *cmd)
+> >> +{
+> >> +       int ret, i;
+> >> +       struct dma_async_tx_descriptor *desc;
+> >> +       struct mmc_data *data = cmd->data;
+> >> +       struct dma_chan *chan;
+> >> +       struct dma_slave_config cfg;
+> >> +       dma_cookie_t cookie;
+> >> +       int sg_cnt;
+> >> +
+> >> +       if (!host->mapbase)
+> >> +               return -EINVAL;
+> >> +
+> >> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
+> >> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
+> >> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> >> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> >> +       cfg.src_maxburst = data->blksz / 4;
+> >> +       cfg.dst_maxburst = data->blksz / 4;
+> >> +
+> >> +       /* Sanity check: all the SG entries must be aligned by block size. */
+> >> +       for (i = 0; i < data->sg_len; i++) {
+> >> +               if ((data->sg + i)->length % data->blksz)
+> >> +                       return -EINVAL;
+> >> +       }
+> >> +
+> >> +       chan = sdhci_external_dma_channel(host, data);
+> >> +
+> >> +       ret = dmaengine_slave_config(chan, &cfg);
+> >> +       if (ret)
+> >> +               return ret;
+> >> +
+> >> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
+> >> +       if (sg_cnt <= 0)
+> >> +               return -EINVAL;
+> >> +
+> >> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+> >> +                                      mmc_get_dma_dir(data),
+> >> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+> >> +       if (!desc)
+> >> +               return -EINVAL;
+> >> +
+> >> +       desc->callback = NULL;
+> >> +       desc->callback_param = NULL;
+> >> +
+> >> +       cookie = dmaengine_submit(desc);
+> >> +       if (cookie < 0)
+> >
+> > We usually use the DMA engine standard API: dma_submit_error() to
+> > validate the cookie.
+> >
+>
+> The if condition is doing the same thing as the API. Do we really
+> require it?
+
+Yes, now it did the same thing. But in future if the DMA engine expand
+the cookie indication, which may break your current condition, but use
+dma_submit_error() is more safe, that will help to cover the internal
+cookie things. So I recommend to use the standard API as far as
+possible.
+
+But if Ulf does not care about this, it's Okay for me too :)
