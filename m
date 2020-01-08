@@ -2,74 +2,73 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FC6C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 22:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B330FC282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 22:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 277A520720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 22:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C30206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 22:52:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wnszb6on"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XY5GOnFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbgAHWoc (ORCPT
+        id S1727352AbgAHWwo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 17:44:32 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40738 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbgAHWoc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 17:44:32 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c17so4252266qkg.7
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 14:44:31 -0800 (PST)
+        Wed, 8 Jan 2020 17:52:44 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46631 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgAHWwo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 17:52:44 -0500
+Received: by mail-qk1-f193.google.com with SMTP id r14so4218239qke.13
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 14:52:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Vo+6C1EuzsBLHBwL8bvb08t4OkksMVFETIJoYKx5DTo=;
-        b=Wnszb6on0SMp/3XOzNETDRgBA1SdEWJobacWeeLrc4lDfi7vhmtnOldGqbPPBAZbfG
-         7wp6u/0G5WV3uSIpGENHwwILKLe4qZ56kKoDHOHcvgCpvAf4N2HVstmon3dD9/r6c9sv
-         qlfEDsZVhNNIdGprWFOmlxpJcR4ut9Km4zNUY=
+        bh=bQ8sePp1UB/buB3CQpsdDQjSw45clnU/8Z5dyE7MCUQ=;
+        b=XY5GOnFn0zgYevPRNgkVz3RQithuZHY98uxSsiNEuf6vWLkXUGm9VbUWdjyqnbrO0p
+         hSlRJ/xH3cUk/dTtQws1Y2BllgiV24bBnUj3yqD6jDFghwhecYRGqhwHtvzQlLjYIres
+         pmL7s49IWRxqVAkNWYGTMoSy/oHAsP79XvpSw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Vo+6C1EuzsBLHBwL8bvb08t4OkksMVFETIJoYKx5DTo=;
-        b=FhEXgsdgiV8T1NloFWfqNc4sagea/cPV6VRkzyo2Hc9Loo9TU7CRDIp12nidmd3Pp6
-         RSud1ZGlaSEqr9NNJLMmA5zK04herwEAr/TMnpa/Wts1YaZ8+0O2aSh3vsnpgpuh/B3O
-         h/ASU3f6j9AeFdp+D+rePh6+SVFNSraCCSuGRIj6PaverWIkTPTzWw/hEpsdBwGuMNzB
-         m7PaBDQMOLwV3cZX2QULWhFKnjRAOk+cJs4eMhRi8khVdgFhFEPRIF0zOvUjjVVhrtiI
-         jxto2YJ58EBnN6EBhN2A5ObiZUfPWvphcom2iHRNwc33WL9SvTf0wjle25BEHOtXjE+r
-         qUNw==
-X-Gm-Message-State: APjAAAXIy6A7et60uzrV9n2U/qaTU19huHIiYdwGbmrYfj9zhg7cnMB7
-        p+rybfQfnG5J9L79Sw5jOMXSiuaNRBXwkPmP1sByqA==
-X-Google-Smtp-Source: APXvYqxnt7gN4ytrxX2jjjTbvXbu6erGQ6HNZhqe3Pr82LWm38qxIiDN1rgAR/6KRKR7dwyCXJ7fm7aQppC5xk7pbCM=
-X-Received: by 2002:ae9:e103:: with SMTP id g3mr6826468qkm.353.1578523471432;
- Wed, 08 Jan 2020 14:44:31 -0800 (PST)
+        bh=bQ8sePp1UB/buB3CQpsdDQjSw45clnU/8Z5dyE7MCUQ=;
+        b=ow5EJnEp3wGCA+sHFbJWOYDlhhPndO/zxl7ZfDdlyaWcrkg2oh29UXyXtQTZrpLOMU
+         MICy6rSsOdFFy7sEZJN0CJ2teXisNccs3wp0ncSfNhn18W+ruTynmCAbR9CiNP4HpzHv
+         nHtUQUiACjo+l66PJXMJ4quRPPwMX8pMAInA81wKMTRXVhHi6OGyxSUdBzwh8RMACFPx
+         4X8I2JA89Q+PWQNlmUEB7eskckPyIvLJ1vJamF5C8hXGpJc5ZfT0CL95iWzhwYIAgpcW
+         IxSq2XVY20s0xaB+r4R9rOFkv30BDxZnYz2Summ+vj9GHqraKtNGULISDVRH6x3egs7x
+         /Rfw==
+X-Gm-Message-State: APjAAAWNxn6lP4uUc6Yc8pxSs/MYJ4fVo6aUCX7edGfjvjKrea1ywyrP
+        5v//OoeqtaewYJFR6uWzRFxHGHBEEoH2L60dN5CfyA==
+X-Google-Smtp-Source: APXvYqw2JjwDeqMh2CT5SlyR30QLXuZPvZ+1N9eFdrRhTkkWcwjICSQnRUvYtFyz4OeBrSGR4GBFkA8sANeEtDRg/YU=
+X-Received: by 2002:a37:6551:: with SMTP id z78mr7090523qkb.144.1578523963679;
+ Wed, 08 Jan 2020 14:52:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-8-drinkcat@chromium.org>
- <CAL_Jsq+jWtrV8-iDzqsefRxr_21jzf7AdSLap8k4hstqK3MBvQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+jWtrV8-iDzqsefRxr_21jzf7AdSLap8k4hstqK3MBvQ@mail.gmail.com>
+References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-5-drinkcat@chromium.org>
+ <20200108132302.GA3817@sirena.org.uk>
+In-Reply-To: <20200108132302.GA3817@sirena.org.uk>
 From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 9 Jan 2020 06:44:20 +0800
-Message-ID: <CANMq1KCTdtKDB4bmdAFf+voTvCECedAKTJHue4H1quhW6SXbxQ@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7, RFC]: drm/panfrost: devfreq: Add support for 2 regulators
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+Date:   Thu, 9 Jan 2020 06:52:32 +0800
+Message-ID: <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
+ for the GPU
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Mark Rutland <mark.rutland@arm.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
         Steven Price <steven.price@arm.com>,
         Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
         Devicetree List <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
         Hsin-Yi Wang <hsinyi@chromium.org>
@@ -79,24 +78,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 4:09 AM Rob Herring <robh+dt@kernel.org> wrote:
-> [snip]
-> >  void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> > index 92d471676fc7823..581da3fe5df8b17 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> > @@ -91,10 +91,12 @@ struct panfrost_device {
-> >         struct {
-> >                 struct devfreq *devfreq;
-> >                 struct thermal_cooling_device *cooling;
-> > +               struct opp_table *dev_opp_table;
-> >                 ktime_t busy_time;
-> >                 ktime_t idle_time;
-> >                 ktime_t time_last_update;
-> >                 atomic_t busy_count;
-> > +               struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
+On Wed, Jan 8, 2020 at 9:23 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> ?? Left over from some rebase?
+> On Wed, Jan 08, 2020 at 01:23:34PM +0800, Nicolas Boichat wrote:
+>
+> > Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
+> > regulator for their SRAM, let's add support for that.
+>
+> > +     pfdev->regulator_sram = devm_regulator_get_optional(pfdev->dev, "sram");
+> > +     if (IS_ERR(pfdev->regulator_sram)) {
+>
+> This supply is required for the devices that need it so I'd therefore
+> expect the driver to request the supply non-optionally based on the
+> compatible string rather than just hoping that a missing regulator isn't
+> important.
 
-Oh, yes, sorry.
+That'd be a bit awkward to match, though... Currently all bifrost
+share the same compatible "arm,mali-bifrost", and it'd seem
+weird/wrong to match "mediatek,mt8183-mali" in this driver? I have no
+idea if any other Mali implementation will require a second regulator,
+but with the MT8183 we do need it, see below.
+
+> Though I do have to wonder given the lack of any active
+> management of the supply if this is *really* part of the GPU or if it's
+> more of a SoC thing, it's not clear what exactly adding this code is
+> achieving.
+
+Well if devfreq was working (see patch 7
+https://patchwork.kernel.org/patch/11322851/ for a partial
+implementation), it would adjust both mali and sram regulators, see
+the OPP table in patch 2
+(https://patchwork.kernel.org/patch/11322825/): SRAM voltage needs to
+be increased for frequencies >=698Mhz.
+
+Now if you have some better idea how to implement this, I'm all ears!
+
+Thanks.
