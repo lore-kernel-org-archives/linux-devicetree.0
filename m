@@ -2,102 +2,230 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1764DC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C58EC00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E35AC20882
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1392520705
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K/jE8RWo"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IWkISoJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgAHJOn (ORCPT
+        id S1727352AbgAHJTI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:14:43 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:46828 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbgAHJOj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:14:39 -0500
-Received: by mail-qv1-f66.google.com with SMTP id u1so1070987qvk.13
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 01:14:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SPzHp/TCuO+PA2nHlHMVzeUghB/5uams6CZGUZBj35o=;
-        b=K/jE8RWozDdRYmSsW9itFfvjGkVpL/zCzGu39X34ur7j0Be+cWMBI2auPmoluvn4c1
-         /S/feNX81zbnksyn4ZVjM/8vfVA6T/7g7v52oVDY/X+5X9Y9F/hAbdyl8xKfHD3iR7ln
-         3kR5KrCmE2zxPQDibCfArttMxzqMRbVfVXuiM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SPzHp/TCuO+PA2nHlHMVzeUghB/5uams6CZGUZBj35o=;
-        b=R2qCoAclmfJ/Uwk5bOZVtWzM/fdt6SbL1SzbAooIX/vcF4mfVXK3MYR4mz6FcmYfLo
-         8OqEzINzF3fSnxzJoTFa2F2MLPG2dgX/PGHe2MDqKHdrSfuy7bYBnKxQ+tLpyHd7ZztX
-         mwTIRInquq+x+HtD8kKwqWirND7Ct7it87qnQqTGOj0pcqATEm5l+Dd19P2X/0Tpm7Hp
-         IARuLjpb+b7dqyMN2mOvfwB7SreZ7dImQLpgJ/X4abGZ0ItfmkcxJfS7XFTOLeYFV09m
-         jIx2hXhOk2KEfUZn+R+c2X609QjqJYtzCe2WxMg66ZjiUld0uY1/zauz4azBlbzY0w1t
-         Rxyw==
-X-Gm-Message-State: APjAAAXLiyx1HphxB6L3F2CIY+tCg4RmrXgvay2Lrnfx3HhRsVJRVA20
-        Yo6WD3xYkNYPJi4UhCuKyTGEg+pp0bz/Rs/pazkMYA==
-X-Google-Smtp-Source: APXvYqxf/pnt/xOzQY9MksejO/BRE5fT3xBR6Oezhn4Kzl/SblH+zp9r0nnNwuErhStHc9QFh2BYf2nQYASas+C1/yI=
-X-Received: by 2002:a0c:f703:: with SMTP id w3mr3236524qvn.6.1578474878009;
- Wed, 08 Jan 2020 01:14:38 -0800 (PST)
+        Wed, 8 Jan 2020 04:19:08 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33064 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbgAHJTI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:19:08 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0089IvJN082699;
+        Wed, 8 Jan 2020 03:18:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578475137;
+        bh=0v/0GKYMhTFfSAd0G2N5wdNhwt5MxxLP4iA8zez90n4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IWkISoJrS1dVWl6DWs8Av4X40yFyhG4mDJCXpIjP7z61UYMZCvQ6WjYJfnH9mf+Xi
+         Rd7Dl4JpwTzCmgRx3Tx5ta/EW3gGr5gfvjYgtJZ2PBjZT6AiHugQao3THL0fJ1KS9D
+         AA/PV3amgpXXLc0jy8EirZbDafXfm4N1iFJJ/vj4=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0089Ivh8091876
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 8 Jan 2020 03:18:57 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
+ 2020 03:18:57 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 8 Jan 2020 03:18:57 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0089IrBV046357;
+        Wed, 8 Jan 2020 03:18:54 -0600
+Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA
+ devices
+To:     Baolin Wang <baolin.wang7@gmail.com>
+CC:     <linux-omap@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>, <kishon@ti.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>, <tony@atomide.com>
+References: <20200106110133.13791-1-faiz_abbas@ti.com>
+ <20200106110133.13791-4-faiz_abbas@ti.com>
+ <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
+Date:   Wed, 8 Jan 2020 14:50:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191227141405.3396-1-yong.liang@mediatek.com>
- <20191227141405.3396-2-yong.liang@mediatek.com> <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
-In-Reply-To: <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 8 Jan 2020 17:14:27 +0800
-Message-ID: <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
-To:     Yong Liang <yong.liang@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, wim@linux-watchdog.org,
-        linux@roeck-us.net, linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 4:56 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> minor nit, s/amr64/arm64/ in the commit title.
->
-> On Fri, Dec 27, 2019 at 10:15 PM Yong Liang <yong.liang@mediatek.com> wrote:
-> >
-> > From: "yong.liang" <yong.liang@mediatek.com>
-> >
-> > 1. Include mt8183-reset.h and add reset-cells in infracfg
-> > in dtsi file
+Hi Baolin,
 
-Err, wait, doesn't this depend on
-http://lists.infradead.org/pipermail/linux-mediatek/2020-January/026170.html
-?
+On 08/01/20 6:58 am, Baolin Wang wrote:
+> Hi Faiz,
+> 
+> On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+>>
+>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+>>
+>> Some standard SD host controllers can support both external dma
+>> controllers as well as ADMA/SDMA in which the SD host controller
+>> acts as DMA master. TI's omap controller is the case as an example.
+>>
+>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
+>> the host controller but does not have any support for external DMA
+>> controllers implemented using dmaengine, meaning that custom code is
+>> needed for any systems that use an external DMA controller with SDHCI.
+>>
+>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
+>> 1. Map scatterlists before dmaengine_prep_slave_sg()
+>> 2. Use dma_async() functions inside of the send_command() path and call
+>> terminate_sync() in non-atomic context in case of an error.
+>>
+>> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>> ---
+>>  drivers/mmc/host/Kconfig |   3 +
+>>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
+>>  drivers/mmc/host/sdhci.h |   8 ++
+>>  3 files changed, 237 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+>> index d06b2dfe3c95..adef971582a1 100644
+>> --- a/drivers/mmc/host/Kconfig
+>> +++ b/drivers/mmc/host/Kconfig
+>> @@ -1040,3 +1040,6 @@ config MMC_OWL
+>>         help
+>>           This selects support for the SD/MMC Host Controller on
+>>           Actions Semi Owl SoCs.
+>> +
+>> +config MMC_SDHCI_EXTERNAL_DMA
+>> +       bool
+>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+>> index f6999054abcf..8cc78c76bc3d 100644
+>> --- a/drivers/mmc/host/sdhci.c
+>> +++ b/drivers/mmc/host/sdhci.c
+>> @@ -10,6 +10,7 @@
+>>   */
+>>
+>>  #include <linux/delay.h>
+>> +#include <linux/dmaengine.h>
+>>  #include <linux/ktime.h>
+>>  #include <linux/highmem.h>
+>>  #include <linux/io.h>
+>> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+>>         sdhci_set_block_info(host, data);
+>>  }
+>>
+>> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
+>> +
+>> +static int sdhci_external_dma_init(struct sdhci_host *host)
+>> +{
+>> +       int ret = 0;
+>> +       struct mmc_host *mmc = host->mmc;
+>> +
+>> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
+>> +       if (IS_ERR(host->tx_chan)) {
+>> +               ret = PTR_ERR(host->tx_chan);
+>> +               if (ret != -EPROBE_DEFER)
+>> +                       pr_warn("Failed to request TX DMA channel.\n");
+>> +               host->tx_chan = NULL;
+>> +               return ret;
+>> +       }
+>> +
+>> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
+>> +       if (IS_ERR(host->rx_chan)) {
+>> +               if (host->tx_chan) {
+>> +                       dma_release_channel(host->tx_chan);
+>> +                       host->tx_chan = NULL;
+>> +               }
+>> +
+>> +               ret = PTR_ERR(host->rx_chan);
+>> +               if (ret != -EPROBE_DEFER)
+>> +                       pr_warn("Failed to request RX DMA channel.\n");
+>> +               host->rx_chan = NULL;
+>> +       }
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
+>> +                                                  struct mmc_data *data)
+>> +{
+>> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
+>> +}
+>> +
+>> +static int sdhci_external_dma_setup(struct sdhci_host *host,
+>> +                                   struct mmc_command *cmd)
+>> +{
+>> +       int ret, i;
+>> +       struct dma_async_tx_descriptor *desc;
+>> +       struct mmc_data *data = cmd->data;
+>> +       struct dma_chan *chan;
+>> +       struct dma_slave_config cfg;
+>> +       dma_cookie_t cookie;
+>> +       int sg_cnt;
+>> +
+>> +       if (!host->mapbase)
+>> +               return -EINVAL;
+>> +
+>> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
+>> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
+>> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+>> +       cfg.src_maxburst = data->blksz / 4;
+>> +       cfg.dst_maxburst = data->blksz / 4;
+>> +
+>> +       /* Sanity check: all the SG entries must be aligned by block size. */
+>> +       for (i = 0; i < data->sg_len; i++) {
+>> +               if ((data->sg + i)->length % data->blksz)
+>> +                       return -EINVAL;
+>> +       }
+>> +
+>> +       chan = sdhci_external_dma_channel(host, data);
+>> +
+>> +       ret = dmaengine_slave_config(chan, &cfg);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
+>> +       if (sg_cnt <= 0)
+>> +               return -EINVAL;
+>> +
+>> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+>> +                                      mmc_get_dma_dir(data),
+>> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+>> +       if (!desc)
+>> +               return -EINVAL;
+>> +
+>> +       desc->callback = NULL;
+>> +       desc->callback_param = NULL;
+>> +
+>> +       cookie = dmaengine_submit(desc);
+>> +       if (cookie < 0)
+> 
+> We usually use the DMA engine standard API: dma_submit_error() to
+> validate the cookie.
+> 
 
-> > 2. Add watchdog device node
+The if condition is doing the same thing as the API. Do we really
+require it?
 
-Can we have a patch with just this change instead, since you're
-sending the binding with it.
-
-> >
-> > Signed-off-by: yong.liang <yong.liang@mediatek.com>
->
-> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
->
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > [snip]
+Thanks,
+Faiz
