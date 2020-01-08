@@ -2,235 +2,245 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD77FC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E20C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A652075D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88CF22070E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 09:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f1io/82z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="okYH2Iap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbgAHJaE (ORCPT
+        id S1726199AbgAHJlY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 04:30:04 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44977 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727205AbgAHJaE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:30:04 -0500
-Received: by mail-qv1-f66.google.com with SMTP id n8so1091983qvg.11;
-        Wed, 08 Jan 2020 01:30:03 -0800 (PST)
+        Wed, 8 Jan 2020 04:41:24 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35588 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgAHJlX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 04:41:23 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z76so2074483qka.2
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 01:41:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V+AnIr8xJIC3DpDvf2MIpLIgJZ+CN4irLPhk6yFtscY=;
-        b=f1io/82ztPz4bFPaOPr46ckbgnYVY94PXievQr73C+rowMuyOHKiSNrmuascnB2cze
-         h03T47dhOjR86Dt4+dh1p5suEVfENZ4d6otja4ynHrN8Y/AkVV7JDKsDgRzjdw0YoD4J
-         v21ym8pM4mxz8OHeBSloSUy5dhzb7B6vL1xVE9B0E+soNiQ3xbEWdWQ+pZoiZoE6j9WD
-         4KAhq6HGZ5Xi6gcU1IwQCu4dcFDBfiHsblTYD+laPFzVGomS+6yFfX3O6l6OyWbP01J+
-         ZP/LKr4ThZX0/ZN9ogymhRtyvt0IMG6mba+oUevS5RE2McnKNGvP8b70YbwvEiPLVRya
-         aPfA==
+         :cc:content-transfer-encoding;
+        bh=3k6KL6OW1KuD898Wo+SDCSL7TZFSrXg9GJsYynsrAdM=;
+        b=okYH2IapmjevC5ti+PTUU3rDgJnZbZhkOFFP5/HMzw3t1VcZyMsKGQdtxXCzMGoe02
+         WojLrMbu17kYro+jjp3Rmim2CnbXH3uS2MO7JBir6PHFg9U69der0jw6adFENPjLflIq
+         zxtGDVyKIkkS08xrxFMFQnKYye0r0cJo6+sXyLUOBtv5H0w//MCznhmoqcGVd/wVzgY3
+         3M/k4/d8p3TAMefDrxzrIFFm77j0U7A+Ny+1iHJDuVmlFykct7vmExVd0d4WNy/FTiJz
+         WnI3+HLDB79CSwQAC/tQVJf9KjuwQefZVLUYHbkLqWlrE1UP0mj/Hf8F8jx4N8JBBEUT
+         Wc7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+AnIr8xJIC3DpDvf2MIpLIgJZ+CN4irLPhk6yFtscY=;
-        b=kE1t6WTQ7oFwM12gF4YhZTYzwbnQE20znTiqD9dHzUzIsyHb976VSD24pUTHLNZMAC
-         wcI06YxxbaZ7MJqmPDgKDoa+L6kcdFpWvj0kEVTltJuq5/CP/zDNCxrSafc9QSu9fYnd
-         cfIR8GLDhpaDu3typKaanQE9J8UWzkhUcbqidrkPTSw1APEr9hEXGI+2T5J2G0FjJgpU
-         9kO6Lypm3xBDk0lnLgW2RREFQsLRbAZ72t2/GBCvWytx442UU69kl5s1fW1D/N2Uhi8g
-         OUoFHkl/B+tXVWKTUXbeu6Ztm/Uc3pZRMjcdXrYiEh4u/GdbVW0t4TfOVngMi81vfKCn
-         qePA==
-X-Gm-Message-State: APjAAAWevDF6X3lCqQ3nLc+z7B/tTLlIqmuw10WmIxvSxeRCsbz6UCp1
-        MNC+PtTR2TYPBWwSGqN9k9dmrEdQOAEQGB4iu1I=
-X-Google-Smtp-Source: APXvYqyBrSSS+aT2CW4js6+jBTqkMjLw2OzZRXJCjT67nXeKRwAZ5gsI59ky8XuqOn13xntwvOGG55Pa0BGIb3OB4zY=
-X-Received: by 2002:ad4:496f:: with SMTP id p15mr3146294qvy.191.1578475802943;
- Wed, 08 Jan 2020 01:30:02 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3k6KL6OW1KuD898Wo+SDCSL7TZFSrXg9GJsYynsrAdM=;
+        b=nmP8e+OCYOIVScO8YZmbL2QbFzPmgmVjCNvHG+OSa2UFl6AcFVBlkzySknX4SDVCLt
+         q7KaFtWR7TA4EgWDGkyWE62d/jlZ5Kl6DxP+XInv1vHGmy8KsGyVF0oXvUO6+L4AaBud
+         CaJI8Idz0NgI99ZzMiW2knqIMcM/mQM90pha6p3jm7qMZxzR7oYUz1KgzQ871qdz722g
+         8nAyJkBoxaF9rkBN+dNhAYFuN75bVjzZUSFrGJjhudQdorS60PDgEk9p00MnbX0JOVT9
+         TJ+Oy6v4HvoheOlj/fiHybDwhY6H9aygZUtrad8sIaILLYMPywRq7Cymi4NAKspntni0
+         Mq7w==
+X-Gm-Message-State: APjAAAVNbr7w8qR+rBlORHpoZ8ADzt6Zbs5c2UFEXMNvE/zw25RY+OTK
+        JljV9QgubUbN9L+x7nA+B1PhO+fi4DDsVbZmfn++cw==
+X-Google-Smtp-Source: APXvYqy2/LpK3ufvjtvR9X+/rFP3P9INLibytATp5NFmROxu1EyOEfLgKPVYeRJln5R2ecUpmMXB1RsyhjuzaypjjWI=
+X-Received: by 2002:a05:620a:cd1:: with SMTP id b17mr3073346qkj.427.1578476482847;
+ Wed, 08 Jan 2020 01:41:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20200106110133.13791-1-faiz_abbas@ti.com> <20200106110133.13791-4-faiz_abbas@ti.com>
- <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com> <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
-In-Reply-To: <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 8 Jan 2020 17:29:51 +0800
-Message-ID: <CADBw62rK1a9K7cxf5ti7YkFsJJ5tJ+8yjuF2aYR3PnZnoK-r2g@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA devices
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     linux-omap@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        kishon@ti.com, Adrian Hunter <adrian.hunter@intel.com>,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>, tony@atomide.com
+References: <20200102101712.5085-1-sam@ravnborg.org> <20200102101712.5085-3-sam@ravnborg.org>
+ <CA+M3ks5Zs5j0FMD4SQiva2soW62tSnu14qiq3kErhLvCMxrxAA@mail.gmail.com> <CAL_Jsq+g8mVdC=aOZDpMGMt3j1Y=Lgku-OcfoBP_V7PGabq5Lg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+g8mVdC=aOZDpMGMt3j1Y=Lgku-OcfoBP_V7PGabq5Lg@mail.gmail.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Wed, 8 Jan 2020 10:41:12 +0100
+Message-ID: <CA+M3ks4sD971mCUQRJO+9gXaAWcwgzy2iNtMNVBRov5JSJk=HQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: one file of all simple DSI panels
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Yannick Fertre <yannick.fertre@st.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Faiz,
-
-On Wed, Jan 8, 2020 at 5:19 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+Le mar. 7 janv. 2020 =C3=A0 18:05, Rob Herring <robh@kernel.org> a =C3=A9cr=
+it :
 >
-> Hi Baolin,
+> On Tue, Jan 7, 2020 at 9:44 AM Benjamin Gaignard
+> <benjamin.gaignard@linaro.org> wrote:
+> >
+> > Le jeu. 2 janv. 2020 =C3=A0 11:17, Sam Ravnborg <sam@ravnborg.org> a =
+=C3=A9crit :
+> > >
+> > > To complement panel-simple.yaml, create panel-simple-dsi.yaml.
+> > > panel-simple-dsi-yaml are for all simple DSP panels with a single
+> > > power-supply and optional backlight / enable GPIO.
+> > >
+> > > Migrate panasonic,vvx10f034n00 over to the new file.
+> > >
+> > > The objectives with one file for all the simple DSI panels are:
+> > >     - Make it simpler to add bindings for simple DSI panels
+> > >     - Keep the number of bindings file lower
+> > >     - Keep the binding documentation for simple DSI panels more consi=
+stent
+> > >
+> > > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> > > Cc: Thierry Reding <thierry.reding@gmail.com>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Cc: Maxime Ripard <mripard@kernel.org>
+> > > Cc: Yannick Fertre <yannick.fertre@st.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > Cc: dri-devel@lists.freedesktop.org
+> > > Cc: devicetree@vger.kernel.org
+> > > ---
+> > >  .../display/panel/panasonic,vvx10f034n00.txt  | 20 ------
+> > >  .../display/panel/panel-simple-dsi.yaml       | 67 +++++++++++++++++=
+++
+> > >  2 files changed, 67 insertions(+), 20 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/display/panel/p=
+anasonic,vvx10f034n00.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/p=
+anel-simple-dsi.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/panel/panasoni=
+c,vvx10f034n00.txt b/Documentation/devicetree/bindings/display/panel/panaso=
+nic,vvx10f034n00.txt
+> > > deleted file mode 100644
+> > > index 37dedf6a6702..000000000000
+> > > --- a/Documentation/devicetree/bindings/display/panel/panasonic,vvx10=
+f034n00.txt
+> > > +++ /dev/null
+> > > @@ -1,20 +0,0 @@
+> > > -Panasonic 10" WUXGA TFT LCD panel
+> > > -
+> > > -Required properties:
+> > > -- compatible: should be "panasonic,vvx10f034n00"
+> > > -- reg: DSI virtual channel of the peripheral
+> > > -- power-supply: phandle of the regulator that provides the supply vo=
+ltage
+> > > -
+> > > -Optional properties:
+> > > -- backlight: phandle of the backlight device attached to the panel
+> > > -
+> > > -Example:
+> > > -
+> > > -       mdss_dsi@fd922800 {
+> > > -               panel@0 {
+> > > -                       compatible =3D "panasonic,vvx10f034n00";
+> > > -                       reg =3D <0>;
+> > > -                       power-supply =3D <&vreg_vsp>;
+> > > -                       backlight =3D <&lp8566_wled>;
+> > > -               };
+> > > -       };
+> > > diff --git a/Documentation/devicetree/bindings/display/panel/panel-si=
+mple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simpl=
+e-dsi.yaml
+> > > new file mode 100644
+> > > index 000000000000..05c52390269e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/panel/panel-simple-ds=
+i.yaml
+> > > @@ -0,0 +1,67 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/display/panel/panel-simple-dsi.ya=
+ml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Simple DSI panels with a single power-supply
+> > > +
+> > > +maintainers:
+> > > +  - Thierry Reding <thierry.reding@gmail.com>
+> > > +  - Sam Ravnborg <sam@ravnborg.org>
+> > > +
+> > > +description: |
+> > > +  This binding file is a collection of the DSI panels that
+> > > +  requires only a single power-supply.
+> > > +  There are optionally a backlight and an enable GPIO.
+> > > +  The panel may use an OF graph binding for the association to the d=
+isplay,
+> > > +  or it may be a direct child node of the display.
+> > > +
+> > > +  If the panel is more advanced a dedicated binding file is required=
+.
+> > > +
+> > > +allOf:
+> > > +  - $ref: panel-common.yaml#
+> > > +
+> > > +properties:
+> > > +
+> > > +  compatible:
+> > > +    enum:
+> > > +    # compatible must be listed in alphabetical order, ordered by co=
+mpatible.
+> > > +    # The description in the comment is mandatory for each compatibl=
+e.
+> > > +
+> > > +    # Panasonic 10" WUXGA TFT LCD panel
+> > > +    - panasonic,vvx10f034n00
+> >
+> > Hi Sam,
+> >
+> > I have tested your patch with these 2 dsi panels:
+> > # Orise Tech OTM8009A is a 3.97" 480x800 TFT LCD
+> >   - orisetech,otm8009a
+> >  # Raydium Semiconductor Corporation RM68200 is a 5.5" 720x1280 TFT LCD
+> >    - raydium,rm68200
+> >
+> > It is close to be fine for me but I have minors comments below.
+> >
+> > Benjamin
+> >
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +    description: DSI virtual channel
+> > > +
+> > > +  backlight: true
+> > > +  enable-gpios: true
+> > > +  port: true
+> > > +  power-supply: true
+> >
+> > add reset-gpios: true to support orisetech panel
 >
-> On 08/01/20 6:58 am, Baolin Wang wrote:
-> > Hi Faiz,
-> >
-> > On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
-> >>
-> >> From: Chunyan Zhang <zhang.chunyan@linaro.org>
-> >>
-> >> Some standard SD host controllers can support both external dma
-> >> controllers as well as ADMA/SDMA in which the SD host controller
-> >> acts as DMA master. TI's omap controller is the case as an example.
-> >>
-> >> Currently the generic SDHCI code supports ADMA/SDMA integrated in
-> >> the host controller but does not have any support for external DMA
-> >> controllers implemented using dmaengine, meaning that custom code is
-> >> needed for any systems that use an external DMA controller with SDHCI.
-> >>
-> >> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
-> >> 1. Map scatterlists before dmaengine_prep_slave_sg()
-> >> 2. Use dma_async() functions inside of the send_command() path and call
-> >> terminate_sync() in non-atomic context in case of an error.
-> >>
-> >> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-> >> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> >> ---
-> >>  drivers/mmc/host/Kconfig |   3 +
-> >>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
-> >>  drivers/mmc/host/sdhci.h |   8 ++
-> >>  3 files changed, 237 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> >> index d06b2dfe3c95..adef971582a1 100644
-> >> --- a/drivers/mmc/host/Kconfig
-> >> +++ b/drivers/mmc/host/Kconfig
-> >> @@ -1040,3 +1040,6 @@ config MMC_OWL
-> >>         help
-> >>           This selects support for the SD/MMC Host Controller on
-> >>           Actions Semi Owl SoCs.
-> >> +
-> >> +config MMC_SDHCI_EXTERNAL_DMA
-> >> +       bool
-> >> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> >> index f6999054abcf..8cc78c76bc3d 100644
-> >> --- a/drivers/mmc/host/sdhci.c
-> >> +++ b/drivers/mmc/host/sdhci.c
-> >> @@ -10,6 +10,7 @@
-> >>   */
-> >>
-> >>  #include <linux/delay.h>
-> >> +#include <linux/dmaengine.h>
-> >>  #include <linux/ktime.h>
-> >>  #include <linux/highmem.h>
-> >>  #include <linux/io.h>
-> >> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> >>         sdhci_set_block_info(host, data);
-> >>  }
-> >>
-> >> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
-> >> +
-> >> +static int sdhci_external_dma_init(struct sdhci_host *host)
-> >> +{
-> >> +       int ret = 0;
-> >> +       struct mmc_host *mmc = host->mmc;
-> >> +
-> >> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
-> >> +       if (IS_ERR(host->tx_chan)) {
-> >> +               ret = PTR_ERR(host->tx_chan);
-> >> +               if (ret != -EPROBE_DEFER)
-> >> +                       pr_warn("Failed to request TX DMA channel.\n");
-> >> +               host->tx_chan = NULL;
-> >> +               return ret;
-> >> +       }
-> >> +
-> >> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
-> >> +       if (IS_ERR(host->rx_chan)) {
-> >> +               if (host->tx_chan) {
-> >> +                       dma_release_channel(host->tx_chan);
-> >> +                       host->tx_chan = NULL;
-> >> +               }
-> >> +
-> >> +               ret = PTR_ERR(host->rx_chan);
-> >> +               if (ret != -EPROBE_DEFER)
-> >> +                       pr_warn("Failed to request RX DMA channel.\n");
-> >> +               host->rx_chan = NULL;
-> >> +       }
-> >> +
-> >> +       return ret;
-> >> +}
-> >> +
-> >> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
-> >> +                                                  struct mmc_data *data)
-> >> +{
-> >> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
-> >> +}
-> >> +
-> >> +static int sdhci_external_dma_setup(struct sdhci_host *host,
-> >> +                                   struct mmc_command *cmd)
-> >> +{
-> >> +       int ret, i;
-> >> +       struct dma_async_tx_descriptor *desc;
-> >> +       struct mmc_data *data = cmd->data;
-> >> +       struct dma_chan *chan;
-> >> +       struct dma_slave_config cfg;
-> >> +       dma_cookie_t cookie;
-> >> +       int sg_cnt;
-> >> +
-> >> +       if (!host->mapbase)
-> >> +               return -EINVAL;
-> >> +
-> >> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
-> >> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
-> >> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> >> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> >> +       cfg.src_maxburst = data->blksz / 4;
-> >> +       cfg.dst_maxburst = data->blksz / 4;
-> >> +
-> >> +       /* Sanity check: all the SG entries must be aligned by block size. */
-> >> +       for (i = 0; i < data->sg_len; i++) {
-> >> +               if ((data->sg + i)->length % data->blksz)
-> >> +                       return -EINVAL;
-> >> +       }
-> >> +
-> >> +       chan = sdhci_external_dma_channel(host, data);
-> >> +
-> >> +       ret = dmaengine_slave_config(chan, &cfg);
-> >> +       if (ret)
-> >> +               return ret;
-> >> +
-> >> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
-> >> +       if (sg_cnt <= 0)
-> >> +               return -EINVAL;
-> >> +
-> >> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
-> >> +                                      mmc_get_dma_dir(data),
-> >> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> >> +       if (!desc)
-> >> +               return -EINVAL;
-> >> +
-> >> +       desc->callback = NULL;
-> >> +       desc->callback_param = NULL;
-> >> +
-> >> +       cookie = dmaengine_submit(desc);
-> >> +       if (cookie < 0)
-> >
-> > We usually use the DMA engine standard API: dma_submit_error() to
-> > validate the cookie.
-> >
+> Nope. If not a single GPIO and single supply, not a simple panel.
 >
-> The if condition is doing the same thing as the API. Do we really
-> require it?
+> Maybe reset could be allowed, but we have to draw the line somewhere.
+>
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - power-supply
+> >
+> > power-supply should optional
+>
+> The panel works without power? The dts should have a fixed supply if
+> not controllable.
+>
+> Here's the problem. If it is not required, then panels with multiple
+> supplies will get added here because they didn't care to begin with.
+> Then when someone decides to think about the supplies it will have to
+> be moved. Bindings need to be complete from the start.
 
-Yes, now it did the same thing. But in future if the DMA engine expand
-the cookie indication, which may break your current condition, but use
-dma_submit_error() is more safe, that will help to cover the internal
-cookie things. So I recommend to use the standard API as far as
-possible.
+Fair enough, I will add fixed supply in dts files.
+If reset-gpios could be added in this schema then we could include
+oristech panel here.
 
-But if Ulf does not care about this, it's Okay for me too :)
+Benjamin
+
+>
+> Rob
