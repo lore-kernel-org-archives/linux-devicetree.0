@@ -4,67 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2362FC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB0DC00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8BC92073D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB2820720
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:58:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rmY/HpS/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H333vNfZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725774AbgAHFxh (ORCPT
+        id S1726079AbgAHF6V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:53:37 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36189 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726263AbgAHFxh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 00:53:37 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k3so1018209pgc.3
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 21:53:36 -0800 (PST)
+        Wed, 8 Jan 2020 00:58:21 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39600 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbgAHF6V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 00:58:21 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q10so1052290pfs.6
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 21:58:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YoB041Qi6gAAsKDfeXTiJLvWYKMaZ3RNSLAQlXIIIG0=;
-        b=rmY/HpS/mbpy6xWHZc+XG8LDePEJw8nEDOE0yYUwMpcMbWnwWD4ibVlbu0EtJt9XGY
-         WTpuQENnkbkloGePmvTrH2uDl2i4ocs//5xYYKO8sKEFe0NOUpPL4H9cv36+Fa8Wv+o8
-         73u1xiZnqzTqz5nGn/h2l3h++gMTHvf/Qtf1wA3lblGcMZ9vIHGoEvJhTiocXpKJ45Ma
-         qGZTgblO1msz7vOzp8YrREaSyZ+2UCokkTEp7+vGdJIBFAnzrJfwO1K1VOYPbogtinNp
-         8LCL2gseqtHo1MnNLTdgnZ1qS+wMFzm8MCoHr2YBTHVLTj0+yQg+Qs3d5+d/U5ZDryb0
-         ptVA==
+        bh=Phg8y1R5IYTau943Qj+6UR9d0/QPUMjq7ucLEIys45A=;
+        b=H333vNfZtn+CPBYRjGbjwSoCT6UolP+k7JjY/9asLzrEum+Btp3wL1m7q67xG9iGPf
+         XquHXjAFfeRx0GVmDLB1X3jGI7QpLZrAVE1WxWF+1/+XvPmzqdhDqG60iBECVosP1Ip5
+         2inpz0OIyrJMg2sn2YyodCPiRHsixi650TJQvcT6nBIrFOk1uTWvfaoC5kOpAP2Wc4lC
+         0JdKgrBhgH1MlnFTLbFyn0Dg4xmUXSDGN0GJdHEQUw3Ge+TLu6WDjrNoh1WUpHTNjE8w
+         8DQdXrVP6SracHU7feuKSJY2KrzxKgb+LHgS9cxd8vway5DAW42eoQIYfByid70zpkRS
+         96Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YoB041Qi6gAAsKDfeXTiJLvWYKMaZ3RNSLAQlXIIIG0=;
-        b=C+IQFGDOhYK2wfap+p4vGt3xsD2eywXMNPgCSK56eReVDG8autSP/hbVMwA7721t9y
-         wm6RFGViCR96J9rsfR5j73kzPe+PpaKC5ahhWZ1iGRhdUPb/MwfynqRecQ5+Zi1NHuRV
-         BRp22lns37fISQIFZU6bNPXCf2/Yi7rmGfIs2ZFz0k69gnbNvnDqUWAqVqtCTbSpKnh0
-         kTOedp+yoe788v88uhfUrITCZgDhFHAzDcE2A2Vg6TJL8KF8R4Wfp7zb40yLzYj4F8NS
-         FU3hdHvCpFr4JGFDL0FgdcsRtUETYYNxXFTeysbGAbUsml4vyeM414dkeI64RzgGoOdG
-         vjhA==
-X-Gm-Message-State: APjAAAVflBB8jJXVbhH08pC3x1Qk7un3lyyqsUNw1hRuRGtEegrdNPdf
-        4xqZkXui9kqX4IaZQsa4FsY++w==
-X-Google-Smtp-Source: APXvYqzw6INjJz8mKK7BZ2+aIxdsMGb+ExuIJpa29ybtjU6VtPqSIZdlwTCJ4IiEtL1Rb8g/wUwGUA==
-X-Received: by 2002:a65:5786:: with SMTP id b6mr3555590pgr.316.1578462816142;
-        Tue, 07 Jan 2020 21:53:36 -0800 (PST)
+        bh=Phg8y1R5IYTau943Qj+6UR9d0/QPUMjq7ucLEIys45A=;
+        b=VP5rOTuCB+sLGY5LTnJrEiLbcsNQhAa9zI6Qwkw2yJVoqaKhbadnyZaJhxFUbsM/P+
+         8pfo0ewYs/oTP9+khjk0tEi4c8HHPiuqGkj1R2y5EZd185yfXS0tsBHIc1v6b+F/bH6I
+         EFQgDJXV/eTeDl7pPGag+oLoQ+l0dGhEQl5XBcKwtLyjKDZ3lhn6ROud+e8GAitl7nI7
+         1vWylAN4nDja7jbqIGyDdtOieipUgQPkHeB0nJVOh0fe2QCsDw1LMJm/P/hzrx7WxwCE
+         HlF+SPNwJONO3jNv5P4xpJpLXvYU11SOO+1kZ6lN1jufIo0AZbQ9lkRdJ/jcY3dSKEoa
+         802g==
+X-Gm-Message-State: APjAAAWwqEk55T693H1qHkpeagV90zjUce/rXsOOVf6f6T8+nf3G1JpH
+        gBwl6h1246YaNcihBw8q1AoVXZ0ruII=
+X-Google-Smtp-Source: APXvYqw5E7G1glzJF9cSgW+HhcYIsPSmF8DMa0JFZyZ0P4dKjH3ejvmGwwAQ4C12DLkT42EFOq/tnw==
+X-Received: by 2002:aa7:824d:: with SMTP id e13mr3266032pfn.247.1578463100112;
+        Tue, 07 Jan 2020 21:58:20 -0800 (PST)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b8sm1643971pff.114.2020.01.07.21.53.35
+        by smtp.gmail.com with ESMTPSA id b12sm1577546pfi.157.2020.01.07.21.58.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 21:53:35 -0800 (PST)
+        Tue, 07 Jan 2020 21:58:19 -0800 (PST)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] remoteproc: qcom: wcnss: Allow specifying firmware-name
-Date:   Tue,  7 Jan 2020 21:52:52 -0800
-Message-Id: <20200108055252.639791-1-bjorn.andersson@linaro.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: db410c: Update firmware-name for wcnss and mpss
+Date:   Tue,  7 Jan 2020 21:57:35 -0800
+Message-Id: <20200108055735.660475-1-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,60 +70,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Introduce a firmware-name property, in order to be able to support
-device/platform specific firmware for the wireless connectivity
-subsystem; in line with other Qualcomm remoteproc drivers.
+Enable the mpss remoteproc node and specify the firmware-name for this
+and the wcnss remoteproc on the Dragonboard 410c.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../devicetree/bindings/remoteproc/qcom,wcnss-pil.txt     | 6 ++++++
- drivers/remoteproc/qcom_wcnss.c                           | 8 +++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 6 ++++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi     | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-index d420f84ddfb0..00844a5d2ccf 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-@@ -34,6 +34,12 @@ on the Qualcomm WCNSS core.
- 	Definition: should be "wdog", "fatal", optionally followed by "ready",
- 		    "handover", "stop-ack"
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 037e26b3f8d5..298684c62cc1 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -494,6 +494,7 @@
  
-+- firmware-name:
-+	Usage: optional
-+	Value type: <string>
-+	Definition: must list the relative firmware image path for the
-+		    WCNSS core.
+ 		wcnss@a21b000 {
+ 			status = "okay";
++			firmware-name = "qcom/msm8916/wcnss.mdt";
+ 		};
+ 	};
+ 
+@@ -538,6 +539,11 @@
+ 	};
+ };
+ 
++&mpss {
++	status = "okay";
++	firmware-name = "qcom/msm8916/mba.mbn", "qcom/msm8916/modem.mdt";
++};
 +
- - vddmx-supply:
- - vddcx-supply:
- - vddpx-supply:
-diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-index dc135754bb9c..a0468b3cc76f 100644
---- a/drivers/remoteproc/qcom_wcnss.c
-+++ b/drivers/remoteproc/qcom_wcnss.c
-@@ -457,6 +457,7 @@ static int wcnss_alloc_memory_region(struct qcom_wcnss *wcnss)
+ &spmi_bus {
+ 	pm8916_0: pm8916@0 {
+ 		pon@800 {
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 9c4d89319e7c..1ced09a61531 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -1054,7 +1054,7 @@
+ 		};
  
- static int wcnss_probe(struct platform_device *pdev)
- {
-+	const char *fw_name = WCNSS_FIRMWARE_NAME;
- 	const struct wcnss_data *data;
- 	struct qcom_wcnss *wcnss;
- 	struct resource *res;
-@@ -474,8 +475,13 @@ static int wcnss_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
  
-+	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
-+				      &fw_name);
-+	if (ret < 0 && ret != -EINVAL)
-+		return ret;
-+
- 	rproc = rproc_alloc(&pdev->dev, pdev->name, &wcnss_ops,
--			    WCNSS_FIRMWARE_NAME, sizeof(*wcnss));
-+			    fw_name, sizeof(*wcnss));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
- 		return -ENOMEM;
+-		hexagon@4080000 {
++		mpss: remoteproc@4080000 {
+ 			compatible = "qcom,q6v5-pil";
+ 			reg = <0x04080000 0x100>,
+ 			      <0x04020000 0x040>;
 -- 
 2.24.0
 
