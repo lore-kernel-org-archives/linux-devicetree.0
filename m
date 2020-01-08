@@ -5,38 +5,38 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E6CC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D9DC00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF702070E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72DB020720
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:26:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="K4BXBSu9"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NFkGm820"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgAHEZd (ORCPT
+        id S1727298AbgAHEZz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 23:25:33 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10398 "EHLO
+        Tue, 7 Jan 2020 23:25:55 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10446 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbgAHEZc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:25:32 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1559aa0004>; Tue, 07 Jan 2020 20:25:14 -0800
+        with ESMTP id S1727283AbgAHEZz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:25:55 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1559c00000>; Tue, 07 Jan 2020 20:25:36 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 20:25:32 -0800
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 20:25:54 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 20:25:32 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
- 2020 04:25:31 +0000
+        by hqpgpgate102.nvidia.com on Tue, 07 Jan 2020 20:25:54 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 04:25:53 +0000
 Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 8 Jan 2020 04:25:31 +0000
+ Transport; Wed, 8 Jan 2020 04:25:53 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.162.131]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e1559b90003>; Tue, 07 Jan 2020 20:25:31 -0800
+        id <B5e1559d00000>; Tue, 07 Jan 2020 20:25:53 -0800
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <broonie@kernel.org>,
@@ -50,9 +50,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <markz@nvidia.com>, <devicetree@vger.kernel.org>,
         <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 07/21] dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
-Date:   Tue, 7 Jan 2020 20:25:01 -0800
-Message-ID: <1578457515-3477-8-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v7 21/21] ASoC: nau8825: change Tegra clk_out_2 provider to tegra_pmc
+Date:   Tue, 7 Jan 2020 20:25:15 -0800
+Message-ID: <1578457515-3477-22-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
 References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
@@ -60,100 +60,46 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578457514; bh=Z3ACX3vP5nNFEx8B7eX+Er9D7XJtGr/zcelaygn+3Bo=;
+        t=1578457536; bh=pWNZAo13Br7GvFxHxRFIS/1sozX6HF632kX/lxY43iQ=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=K4BXBSu9MScA2PYYrIYzqBATVzLgxunoGmK6jTRnjrTgpmuZfc8ct269dqAvCJwlf
-         +OsRAuc+g66pmrnhp1uJ2In5pMFTYE4bYoMkwPr9WQKkXRZa3hEwVRV89rA6ztyis1
-         b/FH5fQtCgOqoRFO8MQeTMg7BDZ3/t12Hx+dYtSrDEB+icTWneOmkgQknfiQOtfnPz
-         2OwpSRTdvBM7Zjbrxsts81R5J0t+dzflZ3cMJBI+7DoETYyVz/zRDAYqGIssroFqPC
-         4R+q4qMMfUTcAkcAkEYzkK3b+dgz6VGvxpFRvfPJkVJeinwAm+DZoazu7O0FQ3KEvj
-         +FINrRFDdSiAw==
+        b=NFkGm820zbY010IcHMC5idC6pN9XMW/B7u/1UVUjVw3kSpwdoCesS38MFXmORb1wD
+         0JKF+xvJOGoPt/2IYWIbPcejn9m1P5LGbR6h8sUa7Th8hp+i0sG2otGiz7D+HaR+6Y
+         KoE6qNR6Z9KcgqTNmbx+3+o5ox9W75jU1brrdpDTSk4xTcOeCL7FrEN7XrHhjiUgPd
+         X9YESHjIlC0Ef8wskMMZoyCjmu+szWoY/+RyUQpqeznr+BOGoo3gIMcrjQ+ECWbR5e
+         2Vfmv3x06GDumeVhCUBch7pl+jMn/1D+DDS14/ev0X2JYBAE6ib89+VWgmZTVP/lC0
+         +D3xtfmLHdJ2w==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Tegra PMC has 3 clocks clk_out_1, clk_out_2, and clk_out_3.
+Tegra clk_out_1, clk_out_2, and clk_out_3 are part of PMC block and
+these clocks are moved from clock drvier to pmc driver with pmc as
+a provider for these clocks.
 
-This patch documents PMC clock bindings and adds a header defining
-Tegra PMC clock ids.
+Update bindings document to use pmc as clock provider for clk_out_2 and
+change id to pmc clock id.
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- .../devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml | 12 ++++++++++++
- include/dt-bindings/soc/tegra-pmc.h                       | 15 +++++++++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 include/dt-bindings/soc/tegra-pmc.h
+ Documentation/devicetree/bindings/sound/nau8825.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
-index 3ff34b348141..5b5c42a00264 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
-@@ -40,6 +40,15 @@ properties:
-       Must contain an entry for each entry in clock-names.
-       See ../clocks/clocks-bindings.txt for details.
+diff --git a/Documentation/devicetree/bindings/sound/nau8825.txt b/Documentation/devicetree/bindings/sound/nau8825.txt
+index d16d96839bcb..388a7bc60b1f 100644
+--- a/Documentation/devicetree/bindings/sound/nau8825.txt
++++ b/Documentation/devicetree/bindings/sound/nau8825.txt
+@@ -101,5 +101,5 @@ Example:
+       nuvoton,crosstalk-enable;
  
-+  '#clock-cells':
-+    const: 1
-+    description:
-+      Tegra PMC has clk_out_1, clk_out_2, and clk_out_3.
-+      Consumer of PMC clock should specify the desired clock by having
-+      the clock ID in its "clocks" phandle cell with pmc clock provider.
-+      See include/dt-bindings/soc/tegra-pmc.h for the list of Tegra PMC
-+      clock IDs.
-+
-   '#interrupt-cells':
-     const: 2
-     description:
-@@ -296,6 +305,7 @@ required:
-   - reg
-   - clock-names
-   - clocks
-+  - '#clock-cells'
- 
- dependencies:
-   "nvidia,suspend-mode": ["nvidia,core-pwr-off-time", "nvidia,cpu-pwr-off-time"]
-@@ -307,12 +317,14 @@ examples:
- 
-     #include <dt-bindings/clock/tegra210-car.h>
-     #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
-+    #include <dt-bindings/soc/tegra-pmc.h>
- 
-     tegra_pmc: pmc@7000e400 {
-               compatible = "nvidia,tegra210-pmc";
-               reg = <0x0 0x7000e400 0x0 0x400>;
-               clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
-               clock-names = "pclk", "clk32k_in";
-+              #clock-cells = <1>;
- 
-               nvidia,invert-interrupt;
-               nvidia,suspend-mode = <0>;
-diff --git a/include/dt-bindings/soc/tegra-pmc.h b/include/dt-bindings/soc/tegra-pmc.h
-new file mode 100644
-index 000000000000..f7c866404456
---- /dev/null
-+++ b/include/dt-bindings/soc/tegra-pmc.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2019-2020, NVIDIA CORPORATION.  All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_SOC_TEGRA_PMC_H
-+#define _DT_BINDINGS_SOC_TEGRA_PMC_H
-+
-+#define TEGRA_PMC_CLK_OUT_1		0
-+#define TEGRA_PMC_CLK_OUT_2		1
-+#define TEGRA_PMC_CLK_OUT_3		2
-+
-+#define TEGRA_PMC_CLK_MAX		3
-+
-+#endif	/* _DT_BINDINGS_SOC_TEGRA_PMC_H */
+       clock-names = "mclk";
+-      clocks = <&tegra_car TEGRA210_CLK_CLK_OUT_2>;
++      clocks = <&tegra_pmc TEGRA_PMC_CLK_OUT_2>;
+   };
 -- 
 2.7.4
 
