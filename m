@@ -2,120 +2,265 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB0DC00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADB3C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 06:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB2820720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E482081E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 06:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H333vNfZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHZPn0qF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726079AbgAHF6V (ORCPT
+        id S1725907AbgAHGRB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:58:21 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39600 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgAHF6V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 00:58:21 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so1052290pfs.6
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 21:58:20 -0800 (PST)
+        Wed, 8 Jan 2020 01:17:01 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34687 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgAHGRB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 01:17:01 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l136so1723021oig.1
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 22:17:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Phg8y1R5IYTau943Qj+6UR9d0/QPUMjq7ucLEIys45A=;
-        b=H333vNfZtn+CPBYRjGbjwSoCT6UolP+k7JjY/9asLzrEum+Btp3wL1m7q67xG9iGPf
-         XquHXjAFfeRx0GVmDLB1X3jGI7QpLZrAVE1WxWF+1/+XvPmzqdhDqG60iBECVosP1Ip5
-         2inpz0OIyrJMg2sn2YyodCPiRHsixi650TJQvcT6nBIrFOk1uTWvfaoC5kOpAP2Wc4lC
-         0JdKgrBhgH1MlnFTLbFyn0Dg4xmUXSDGN0GJdHEQUw3Ge+TLu6WDjrNoh1WUpHTNjE8w
-         8DQdXrVP6SracHU7feuKSJY2KrzxKgb+LHgS9cxd8vway5DAW42eoQIYfByid70zpkRS
-         96Wg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7eJrxhaP/aaAfcxtlL9c20UfMMdfSSzkJiRKVZy1Dns=;
+        b=eHZPn0qFgiwR3TqFdduhITPTiKflxh0LGckrcuBVonlJemqgmLHotGKYPwlHp1FJMi
+         xNnCmo6tTnLgl2axxjjps13sWddlfqJLjuY7gDwHJgGruJMUq6NdN2PVTMetx8SRM4So
+         +15FJC2MFVzhNDSkf3N433EGhGJBDxaDNMdrcbsPRbUB3kCnIlCCM4rQLlneQQI8gKsv
+         lIttIgNYq4KMNjKAHWH+QBINXldzaIjxFu6EEkdCq+MQmui8YHyvI1PxwXY9taRR3pt1
+         mjGO/QDtkelqlR9gjQuP7z6LR9nM/W+onOl3mqOcEmHmiYOvmiHX2A94xcqB8N4eWqTD
+         a+cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Phg8y1R5IYTau943Qj+6UR9d0/QPUMjq7ucLEIys45A=;
-        b=VP5rOTuCB+sLGY5LTnJrEiLbcsNQhAa9zI6Qwkw2yJVoqaKhbadnyZaJhxFUbsM/P+
-         8pfo0ewYs/oTP9+khjk0tEi4c8HHPiuqGkj1R2y5EZd185yfXS0tsBHIc1v6b+F/bH6I
-         EFQgDJXV/eTeDl7pPGag+oLoQ+l0dGhEQl5XBcKwtLyjKDZ3lhn6ROud+e8GAitl7nI7
-         1vWylAN4nDja7jbqIGyDdtOieipUgQPkHeB0nJVOh0fe2QCsDw1LMJm/P/hzrx7WxwCE
-         HlF+SPNwJONO3jNv5P4xpJpLXvYU11SOO+1kZ6lN1jufIo0AZbQ9lkRdJ/jcY3dSKEoa
-         802g==
-X-Gm-Message-State: APjAAAWwqEk55T693H1qHkpeagV90zjUce/rXsOOVf6f6T8+nf3G1JpH
-        gBwl6h1246YaNcihBw8q1AoVXZ0ruII=
-X-Google-Smtp-Source: APXvYqw5E7G1glzJF9cSgW+HhcYIsPSmF8DMa0JFZyZ0P4dKjH3ejvmGwwAQ4C12DLkT42EFOq/tnw==
-X-Received: by 2002:aa7:824d:: with SMTP id e13mr3266032pfn.247.1578463100112;
-        Tue, 07 Jan 2020 21:58:20 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b12sm1577546pfi.157.2020.01.07.21.58.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 21:58:19 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: db410c: Update firmware-name for wcnss and mpss
-Date:   Tue,  7 Jan 2020 21:57:35 -0800
-Message-Id: <20200108055735.660475-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7eJrxhaP/aaAfcxtlL9c20UfMMdfSSzkJiRKVZy1Dns=;
+        b=hS6rLl+AA/Zg3Mng5mshRvGH1JccVjFg3A9u/X85EM82gt8D7oH/mRbYaEJGf1jRzQ
+         vcYm6sqF5Zw6Yb3HaENHUhLjeFNPlAwHkRFCpPNFAgPCriJNtjlNkIjGkt7z1jME19gN
+         O/U/nYjCPUT64pZRBUj+W6j8uZ8rIQtfsvORfp+J1HZFefatAdTv5GGfqd1tFO0l37fy
+         y7uSmosf7XKROF9w5U7ptTL8szXuLaAm6jdO5/imMeQ3PRM7O+jOFGvf9zZeRh7lRtwP
+         ZjziXS8b0x3ZKmjPNFDvlhqRevbgvH2V8LV+7DjljLn7z54/Y58WAlrYrDJ4oCsWOQ/g
+         1mYQ==
+X-Gm-Message-State: APjAAAVnlOQDvVz83kD6u3onZcVyMQjmIK4ZmVr4jKLtwwC+aKV9XRJ/
+        OG9w8tBtsny+3JLVudYhKEG5pwK9yjkVtVjsKMU6Wg==
+X-Google-Smtp-Source: APXvYqwrxujGPx+8mslow3vxWpXeXFymV/tHcUenrLe4Wf7W57KW9I6GPXuC3PeiLqPMCiatJJf8YGVK7zVdiZMj9AA=
+X-Received: by 2002:aca:d4c1:: with SMTP id l184mr1907823oig.172.1578464220518;
+ Tue, 07 Jan 2020 22:17:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-3-saravanak@google.com>
+ <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
+In-Reply-To: <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 7 Jan 2020 22:16:24 -0800
+Message-ID: <CAGETcx9Or==EEL6jRMEh4bG4cmFmLqk_n1ReKT=cg-MEsL9w0w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable the mpss remoteproc node and specify the firmware-name for this
-and the wcnss remoteproc on the Dragonboard 410c.
+On Tue, Jan 7, 2020 at 11:28 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>
+> Hey Saravana,
+>
+> Spent some time testing this series while
+> trying out dcvs on SDM845/SC7180. Apart from
+> the few minor issues it works quite well!
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 6 ++++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi     | 2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Thanks a lot for testing Sibi. Can you give a tested-by? Glad to hear
+it works well.
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 037e26b3f8d5..298684c62cc1 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -494,6 +494,7 @@
- 
- 		wcnss@a21b000 {
- 			status = "okay";
-+			firmware-name = "qcom/msm8916/wcnss.mdt";
- 		};
- 	};
- 
-@@ -538,6 +539,11 @@
- 	};
- };
- 
-+&mpss {
-+	status = "okay";
-+	firmware-name = "qcom/msm8916/mba.mbn", "qcom/msm8916/modem.mdt";
-+};
-+
- &spmi_bus {
- 	pm8916_0: pm8916@0 {
- 		pon@800 {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9c4d89319e7c..1ced09a61531 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -1054,7 +1054,7 @@
- 		};
- 
- 
--		hexagon@4080000 {
-+		mpss: remoteproc@4080000 {
- 			compatible = "qcom,q6v5-pil";
- 			reg = <0x04080000 0x100>,
- 			      <0x04020000 0x040>;
--- 
-2.24.0
+> On 2019-12-07 05:54, Saravana Kannan wrote:
+> > Not all devices quantify their performance points in terms of
+> > frequency.
+> > Devices like interconnects quantify their performance points in terms
+> > of
+> > bandwidth. We need a way to represent these bandwidth levels in OPP.
+> > So,
+> > add support for parsing bandwidth OPPs from DT.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/opp/core.c | 15 +++++++++--
+> >  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
+> >  drivers/opp/opp.h  |  5 ++++
+> >  3 files changed, 62 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > index be7a7d332332..c79bbfac7289 100644
+> > --- a/drivers/opp/core.c
+> > +++ b/drivers/opp/core.c
+> > @@ -1282,11 +1282,21 @@ static bool
+> > _opp_supported_by_regulators(struct dev_pm_opp *opp,
+> >       return true;
+> >  }
+> >
+> > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
+> > +{
+> > +     if (opp1->rate != opp2->rate)
+> > +             return opp1->rate < opp2->rate ? -1 : 1;
+> > +     if (opp1->peak_bw != opp2->peak_bw)
+> > +             return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
+> > +     return 0;
+> > +}
+> > +
+> >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp
+> > *new_opp,
+> >                            struct opp_table *opp_table,
+> >                            struct list_head **head)
+> >  {
+> >       struct dev_pm_opp *opp;
+> > +     int opp_cmp;
+> >
+> >       /*
+> >        * Insert new OPP in order of increasing frequency and discard if
+> > @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device
+> > *dev, struct dev_pm_opp *new_opp,
+> >        * loop.
+> >        */
+> >       list_for_each_entry(opp, &opp_table->opp_list, node) {
+> > -             if (new_opp->rate > opp->rate) {
+> > +             opp_cmp = opp_compare_key(new_opp, opp);
+> > +             if (opp_cmp > 0) {
+> >                       *head = &opp->node;
+> >                       continue;
+> >               }
+> >
+> > -             if (new_opp->rate < opp->rate)
+> > +             if (opp_cmp < 0)
+> >                       return 0;
+> >
+> >               /* Duplicate OPPs */
+> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> > index 1cbb58240b80..b565da5a2b1f 100644
+> > --- a/drivers/opp/of.c
+> > +++ b/drivers/opp/of.c
+> > @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device
+> > *dev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> >
+> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct
+> > device_node *np,
+> > +                      bool *rate_not_available)
+> > +{
+> > +     int ret;
+> > +     u64 rate;
+> > +     u32 bw;
+> > +
+> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > +     if (!ret) {
+> > +             /*
+> > +              * Rate is defined as an unsigned long in clk API, and so
+> > +              * casting explicitly to its type. Must be fixed once rate is 64
+> > +              * bit guaranteed in clk API.
+> > +              */
+> > +             new_opp->rate = (unsigned long)rate;
+> > +             goto out;
+> > +     }
+> > +
+> > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > +     if (!ret) {
+> > +             new_opp->peak_bw = bw;
+> > +
+> > +             if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
+> > +                     new_opp->avg_bw = bw;
+> > +     }
+> > +
+> > +out:
+> > +     *rate_not_available = !!ret;
+> > +     /*
+> > +      * If ret is 0 at this point, we have already found a key. If we
+> > +      * haven't found a key yet, then ret already has an error value. In
+> > +      * either case, we don't need to update ret.
+> > +      */
+> > +     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > +
+> > +     return ret;
+> > +}
+> > +
+> >  /**
+> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT
+> > bindings)
+> >   * @opp_table:       OPP table
+> > @@ -558,26 +596,12 @@ static struct dev_pm_opp
+> > *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (!new_opp)
+> >               return ERR_PTR(-ENOMEM);
+> >
+> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
+> > -     if (ret < 0) {
+> > -             /* "opp-hz" is optional for devices like power domains. */
+> > -             if (!opp_table->is_genpd) {
+> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
+> > -                     goto free_opp;
+> > -             }
+> > -
+> > -             rate_not_available = true;
+> > -     } else {
+> > -             /*
+> > -              * Rate is defined as an unsigned long in clk API, and so
+> > -              * casting explicitly to its type. Must be fixed once rate is 64
+> > -              * bit guaranteed in clk API.
+> > -              */
+> > -             new_opp->rate = (unsigned long)rate;
+> > +     ret = _read_opp_key(new_opp, np, &rate_not_available);
+> > +     if (ret) {
+>
+> if (!opp_table->is_genpd) {
+>
+> _read_opp_key returns an error for genpd
+> opps so please check if it is a genpd
+> opp_table before erroring out here.
 
+Thanks. I'll fix it in the next version.
+
+> > +             dev_err(dev, "%s: opp key field not found\n", __func__);
+> > +             goto free_opp;
+> >       }
+> >
+> > -     of_property_read_u32(np, "opp-level", &new_opp->level);
+> > -
+> >       /* Check if the OPP supports hardware's hierarchy of versions or not
+> > */
+> >       if (!_opp_is_supported(dev, opp_table, np)) {
+> >               dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
+> > @@ -616,7 +640,8 @@ static struct dev_pm_opp
+> > *_opp_add_static_v2(struct opp_table *opp_table,
+> >       if (of_property_read_bool(np, "opp-suspend")) {
+> >               if (opp_table->suspend_opp) {
+> >                       /* Pick the OPP with higher rate as suspend OPP */
+> > -                     if (new_opp->rate > opp_table->suspend_opp->rate) {
+> > +                     if (opp_compare_key(new_opp,
+> > +                                         opp_table->suspend_opp) > 1) {
+>
+> shouldn't the condition be > 0?
+
+Duh. Thanks. I'll fix it in the next version.
+
+I'm guessing you tested with the fixes you pointed out?
+
+-Saravana
