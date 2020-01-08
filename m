@@ -2,227 +2,142 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B94C00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D634C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC38F206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:56:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pSo54nAU"
+	by mail.kernel.org (Postfix) with ESMTP id F03CA20678
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578470374;
+	bh=O4Amm0qb2RUINtvaLuluBzRmt873weGN6kdJZSo05ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KbOUZYri32SxybveT+vdHbJ6IPjLWEp2F+A9KsBCmqHx0qm/08b/MP9zWHl0jT9DP
+	 GwEHBFmkb1Xd7UUOWrdsFxnmZ/GT8IvFlii6KR7HcvmHcRQMJKhS1YBVogtA3ITc4x
+	 I4wJ573/ys7qIncJGWo9T9B4M/RboPy8pHZlPFHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgAHH4d (ORCPT
+        id S1726443AbgAHH7d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:56:33 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50534 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgAHH4c (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 02:56:32 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0087uIfs049960;
-        Wed, 8 Jan 2020 01:56:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578470179;
-        bh=KhpU0u2bEtnbSBp/blmXJmSlFWzazsyzwOWjBb3p9KM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pSo54nAUYeoghyNG2Vp0JJ4+ERQGPp7VcdfLFMh/PGgBvfSTc/km0YN787idyLnrU
-         +BElqlIjyPCsML+/9157zyIDMEptsY4k5CRUOKZSjjGT5YrRTHpcxm5PoVRlncAG6R
-         kR2N8SO9eFWv50Y3nayWz1aT1g5eyAjiWZXFxMa4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0087uIvj092817
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 01:56:18 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 01:56:18 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 01:56:18 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0087uG3g067723;
-        Wed, 8 Jan 2020 01:56:16 -0600
-Subject: Re: [PATCH v2] dt-bindings: usb: Convert Allwinner A80 USB PHY
- controller to a schema
-To:     Rob Herring <robh@kernel.org>, Maxime Ripard <maxime@cerno.tech>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200103152824.47383-1-maxime@cerno.tech>
- <20200104221321.GA11672@bogus> <20200106092724.pi2kbui7zayrhhzi@gilmour.lan>
- <20200106215129.GB11672@bogus>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b0777c04-c21c-3737-7957-4dda37b85838@ti.com>
-Date:   Wed, 8 Jan 2020 13:28:22 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 8 Jan 2020 02:59:33 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45690 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgAHH7d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 02:59:33 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v28so1759909edw.12;
+        Tue, 07 Jan 2020 23:59:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cMtj+4fElMhagL+EzReN9239oHGv4iNUyK/a8PqjjnQ=;
+        b=KRjfhBH8Wc/RMzHhToQAuXOzWc3MF4+h308/OcV8JMfPTg4hy1iYM9Pqba4BkN5Yei
+         64LuyHhOPmgfZYi/TN1WmRPhL1khGd5JYU0MZ44yQk2PjSsnvXMI7D7XsBfWLM4GY/ym
+         D8+zLqJFKhMG+I8LBBI8C69k4Vzo3Te+/matx6IiCeBVf8Di/ohkl5me3V9f0o7o76R7
+         WhY6229nSyJOsTMzWRmw+PWFkotLkWtHcEuXQiiftOT9h/Q7RFs7gvLXb1fpa6Z2siLS
+         M88TaEzgAS8V87YuaMJv4l1spnZifYn3mYdiuhal+PSYv2olNH+ajG/Xn1tcORT6Sigj
+         0prw==
+X-Gm-Message-State: APjAAAUNZeoRdsfGnw0nCNQqrdTh9Y3UN1e9AjXQojpzi4kjF+LFJPQF
+        Up6qKXgHdkP1a8eA0FYqh8c=
+X-Google-Smtp-Source: APXvYqx1oeIDihha1MbvAq15cZlBUGgIhGRDf0dk1K6ypd+mZhyiUjjB1ZsQjTlzbZgvEOTKZctg/A==
+X-Received: by 2002:a17:906:1d50:: with SMTP id o16mr3510203ejh.111.1578470371251;
+        Tue, 07 Jan 2020 23:59:31 -0800 (PST)
+Received: from pi3 ([194.230.155.149])
+        by smtp.googlemail.com with ESMTPSA id bm18sm58278edb.97.2020.01.07.23.59.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 23:59:30 -0800 (PST)
+Date:   Wed, 8 Jan 2020 08:59:28 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Frank Lee <tiny.windzz@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: tiny4412: add proper panel node
+Message-ID: <20200108075928.GA9911@pi3>
+References: <20200106191003.21584-1-tiny.windzz@gmail.com>
+ <20200106191003.21584-2-tiny.windzz@gmail.com>
+ <20200107090449.GA32007@pi3>
+ <CAEExFWvJx82h1c1QBrQ+DpT4kgEZ0o3q_O7JLbk-1L-iuMGPEw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106215129.GB11672@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAEExFWvJx82h1c1QBrQ+DpT4kgEZ0o3q_O7JLbk-1L-iuMGPEw@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 07/01/20 3:21 AM, Rob Herring wrote:
-> On Mon, Jan 06, 2020 at 10:27:24AM +0100, Maxime Ripard wrote:
->> Hi Rob,
->>
->> On Sat, Jan 04, 2020 at 03:13:21PM -0700, Rob Herring wrote:
->>> On Fri, Jan 03, 2020 at 04:28:24PM +0100, Maxime Ripard wrote:
->>>> The Allwinner A80 SoCs have a USB PHY controller that is used by Linux,
->>>> with a matching Device Tree binding.
->>>>
->>>> Now that we have the DT validation in place, let's convert the device tree
->>>> bindings for that controller over to a YAML schemas.
->>>>
->>>> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
->>>> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
->>>>
->>>> ---
->>>>
->>>> Changes from v1:
->>>>   - Added r-b tag from chen-yu
->>>> ---
->>>>  .../phy/allwinner,sun9i-a80-usb-phy.yaml      | 135 ++++++++++++++++++
->>>>  .../devicetree/bindings/phy/sun9i-usb-phy.txt |  37 -----
->>>>  2 files changed, 135 insertions(+), 37 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
->>>>  delete mode 100644 Documentation/devicetree/bindings/phy/sun9i-usb-phy.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
->>>> new file mode 100644
->>>> index 000000000000..ded7d6f0a119
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/phy/allwinner,sun9i-a80-usb-phy.yaml
->>>> @@ -0,0 +1,135 @@
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/phy/allwinner,sun9i-a80-usb-phy.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Allwinner A80 USB PHY Device Tree Bindings
->>>> +
->>>> +maintainers:
->>>> +  - Chen-Yu Tsai <wens@csie.org>
->>>> +  - Maxime Ripard <mripard@kernel.org>
->>>> +
->>>> +properties:
->>>> +  "#phy-cells":
->>>> +    const: 0
->>>> +
->>>> +  compatible:
->>>> +    const: allwinner,sun9i-a80-usb-phy
->>>> +
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +
->>>> +  clocks:
->>>> +    anyOf:
->>>> +      - description: Main PHY Clock
->>>> +
->>>> +      - items:
->>>> +          - description: Main PHY clock
->>>> +          - description: HSIC 12MHz clock
->>>> +          - description: HSIC 480MHz clock
->>>
->>> Rather than anyOf, just 'minItems: 1' would work here. Though I guess
->>> this disallows 2 items.
->>
->> Yeah, 2 items is not allowed so I wanted to prevent that.
->>
->>>> +
->>>> +  clock-names:
->>>> +    oneOf:
->>>> +      - const: phy
->>>> +
->>>> +      - items:
->>>> +          - const: phy
->>>> +          - const: hsic_12M
->>>> +          - const: hsic_480M
->>>> +
->>>> +  resets:
->>>> +    anyOf:
->>>> +      - description: Normal USB PHY reset
->>>> +
->>>> +      - items:
->>>> +          - description: Normal USB PHY reset
->>>> +          - description: HSIC Reset
->>>> +
->>>> +  reset-names:
->>>> +    oneOf:
->>>> +      - const: phy
->>>> +
->>>> +      - items:
->>>> +          - const: phy
->>>> +          - const: hsic
->>>> +
->>>> +  phy_type:
->>>> +    const: hsic
->>>> +    description:
->>>> +      When absent, the PHY type will be assumed to be normal USB.
->>>> +
->>>> +  phy-supply:
->>>> +    description:
->>>> +      Regulator that powers VBUS
->>>> +
->>>> +required:
->>>> +  - "#phy-cells"
->>>> +  - compatible
->>>> +  - reg
->>>> +  - clocks
->>>> +  - clock-names
->>>> +  - resets
->>>> +  - reset-names
->>>> +
->>>> +additionalProperties: false
->>>> +
->>>> +if:
->>>> +  properties:
->>>> +    phy_type:
->>>> +      const: hsic
->>>> +
->>>> +  required:
->>>> +    - phy_type
->>>> +
->>>> +then:
->>>> +  properties:
->>>> +    clocks:
->>>> +      maxItems: 3
->>>> +
->>>> +    clock-names:
->>>> +      maxItems: 3
->>>> +
->>>> +    resets:
->>>> +      maxItems: 2
->>>> +
->>>> +    reset-names:
->>>> +      maxItems: 2
->>>
->>> Do you intend that only a single item is allowed when not HSIC? If so,
->>> that's not what is happening.
->>
->> That's intentional indeed, the former binding was making the hsic
->> clocks and resets mandatory when the phy was in HSIC mode, but only
->> recommending listing them otherwise. Maybe we can change that in the
->> future, but that seems out of scope for a conversion.
+On Wed, Jan 08, 2020 at 03:07:25AM +0800, Frank Lee wrote:
+> On Tue, Jan 7, 2020 at 5:04 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Mon, Jan 06, 2020 at 07:10:03PM +0000, Yangtao Li wrote:
+> > > This patch add at070tn92 panel for tiny4412 board.
+> >
+> > Please fix description as in patch 1.
+> >
+> > >
+> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> > > ---
+> > >  arch/arm/boot/dts/exynos4412-tiny4412.dts | 16 ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> > > index 2b62cb27420c..57f9d09233ad 100644
+> > > --- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> > > +++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
+> > > @@ -66,6 +66,16 @@
+> > >                       clock-frequency = <24000000>;
+> > >               };
+> > >       };
+> > > +
+> > > +     panel {
+> > > +             compatible = "innolux,at070tn92";
+> > > +
+> > > +             port {
+> > > +                     panel_input: endpoint {
+> > > +                             remote-endpoint = <&lcdc_output>;
+> > > +                     };
+> > > +             };
+> > > +     };
+> > >  };
+> > >
+> > >  &fimd {
+> > > @@ -74,6 +84,12 @@
+> > >       #address-cells = <1>;
+> > >       #size-cells = <0>;
+> > >       status = "okay";
+> >
+> > One empty space here.
+> >
+> > > +     port@3 {
+> > > +             reg = <3>;
+> >
+> > Why starting from "3"? Why this is port@3, not just "port"?
 > 
-> Okay. In that case,
+> From samsung-fimd.txt:
+> ---
+> The device node can contain 'port' child nodes according to the bindings defined
+> in [2]. The following are properties specific to those nodes:
+> - reg: (required) port index, can be:
+>                 0 - for CAMIF0 input,
+>                 1 - for CAMIF1 input,
+>                 2 - for CAMIF2 input,
+>                 3 - for parallel output,
+>                 4 - for write-back interface
+> ---
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> I guess it is influenced here.
+> https://elixir.bootlin.com/linux/v5.5-rc5/source/drivers/gpu/drm/exynos/exynos_drm_dpi.c#L170
+> Without it, lcd is completely black.
 
-merged, thanks!
+Thanks for explanation.
 
--Kishon
+Best regards,
+Krzysztof
+
