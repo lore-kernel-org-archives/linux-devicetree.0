@@ -2,145 +2,212 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F66BC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49557C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153B720705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECBC206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8P3CEg+"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="OJVfdC2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgAHMle (ORCPT
+        id S1726708AbgAHMz6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:41:34 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36566 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgAHMle (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 07:41:34 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so2351474wma.1;
-        Wed, 08 Jan 2020 04:41:32 -0800 (PST)
+        Wed, 8 Jan 2020 07:55:58 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33397 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgAHMz6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 07:55:58 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d139so16461811wmd.0
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 04:55:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2FpWqk5kX5ZHzdiu6B4EPT5qMnNg77c2Hjts/PYf+0A=;
-        b=H8P3CEg+uTqzcZSyOl/Loa8wZGqZkRitl/SOWRJP0/aVFNuuGI7zodu6Kei6b4yEUF
-         LT3qyhbKoPvXKgHoYXFKWOnlpYof81GFy71es14AQmvZx628+YG3oy8oGYjfnI0kC+D+
-         ssZ/Yfq8FOTgKbNnazbaEgX0lo+Wd8nfy39FTOd2Bo39v38VVDzpCCyhAzFDZOkxghDb
-         2b1v/ivhwuDjCIHVPxQarzNPZeNVVKVLuqye0R1vL1B56v33dc0hrtEANYuo8cszjAFW
-         coOWk77rDWTmtLCiDst7ef7KSffAv9pFxwnEt1MRVRJ1q3H1Z3pwT/zkvX3y4SjGw1UI
-         o7lg==
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bdtpbTs9T4GbtVdHi/XNrhbno1vREs2paRznkMKkr6Y=;
+        b=OJVfdC2zxbnX5OXOhp8PI+J8q+MT0PB0Bz0xcJ7CnJIDiJAxDPthu/UpowbYL28Hug
+         GZnkxFv5mGjCwaktlWCNN3KzWDA/oXyE8+ShwWSXexSk1fAIZZNG04fgfqkxzcEeW2VS
+         ssF/fzYTrUX3xOqJ6vAkuzNyyDPe36UEruYH05uz4dOLZtg9lpnoQsDNE2rtAz5Mbvjy
+         y/Lr2IivklAmWcfsthwApX6cgAiTnSJ31ArCZcYyjnxpQMdOfV99ROCrfLhl5GpsLdLx
+         pH/gIMS5aRVH/lxDI2Y95w3txZu0/QQQ/XXhJ2j9sAXumkBlByPOWs7w1sgKsCO3rcr5
+         Ky3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2FpWqk5kX5ZHzdiu6B4EPT5qMnNg77c2Hjts/PYf+0A=;
-        b=SpL6uBflHdsQSCEgEiBhL0ED1uulrejsDxTsTOae8xAfYPln6Dlhmihz1mZgoy4TJx
-         t88w611uA2jArZvdiyNCsG+9SfCPN3SL6ICw24PgMK6vCRjvNh43gIDaeYpCDek6joK1
-         HXPlJOCYozIJ6qH4OCrPBhwZ1vetBQAtDfPz8mOtMuM3N8e9wQz0X1QKkQSLkdmRNXcV
-         4tkpiEnDfXWHUwpqQoD5TDHWRTdAEfDQqYwt4iCQAhQm1zt7xp+pE7pVOt6+soQ2TOZ5
-         KfzmjmW/wP2pyvx9KQR1Rtti2zSjq5SWzLTLKxtuE76ya0pG1l3tVP88Ekrx4As49p8q
-         aEWA==
-X-Gm-Message-State: APjAAAWstGfaxmKFoKH3lKgc4uyOdSirsbpLREAoe3M4mfXalbKMvGq8
-        09snXUYzXcsN3cmMu0uczb8=
-X-Google-Smtp-Source: APXvYqwaF+btXG6zk5cvB15rPmx9cOJ3OhlFMPfM9b/9hmfBceRINUIsHbFESeLBwAtylB9xPyCaHA==
-X-Received: by 2002:a1c:e289:: with SMTP id z131mr3483897wmg.18.1578487292009;
-        Wed, 08 Jan 2020 04:41:32 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id w20sm3569232wmk.34.2020.01.08.04.41.30
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bdtpbTs9T4GbtVdHi/XNrhbno1vREs2paRznkMKkr6Y=;
+        b=IXozvdvb7ZmZ8XaJv5H+e6LKnF42Mnk3i12UGg3hA47YuZ+K7IEAf90EGA//plcmNd
+         bnrZ+lhl7HEqB76inRNhubEcC3/S3IxBSHBosklRSWFObyoWghCjMH3d0xKXY1aeVNrH
+         Zwt6zBRLC94s9ShrS3QNK7tCLIfrsjQQQMmdQGKMnKE0kOLd73XXEszurNA61Gjmybic
+         3I11eDGuwC6v88FmGyaIlL9W4Rg/slGXIdoaqFu04oGbD792EfdEjVc70ZSXqJrWqPY1
+         GZRoCCDy5nwndOXZUxTym3pYeDYJT+nbYSRgdc0af9zaxwS4uha2uGROrOVoICYfuF5u
+         3GUQ==
+X-Gm-Message-State: APjAAAVz3U6vwKEEX25Fl66kGtFhoEl8HE1kvkQrRi4RmAh0eKYpibDM
+        BIYTBS2TmOqc8m8tBea2qPJJGA==
+X-Google-Smtp-Source: APXvYqxuqRgRDpSyCXwMzN5jh6YP1cietWwlaiVE4CDUS7pATCAd4OqdAfXN/s/MZE8G0yEIhUOxLw==
+X-Received: by 2002:a1c:2dcd:: with SMTP id t196mr3644438wmt.22.1578488155588;
+        Wed, 08 Jan 2020 04:55:55 -0800 (PST)
+Received: from localhost.localdomain (93-143-224-199.adsl.net.t-com.hr. [93.143.224.199])
+        by smtp.googlemail.com with ESMTPSA id k7sm3598475wmi.19.2020.01.08.04.55.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 04:41:30 -0800 (PST)
-Date:   Wed, 8 Jan 2020 13:41:29 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] pwm: mxs: add support for setting polarity via DT
-Message-ID: <20200108124129.GC1993114@ulmo>
-References: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
+        Wed, 08 Jan 2020 04:55:55 -0800 (PST)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Subject: [PATCH v2 1/2] ARM: dts: qcom: add gpio-ranges property
+Date:   Wed,  8 Jan 2020 13:54:55 +0100
+Message-Id: <20200108125455.308969-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="s9fJI615cBHmzTOP"
-Content-Disposition: inline
-In-Reply-To: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Christian Lamparter <chunkeey@gmail.com>
 
---s9fJI615cBHmzTOP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds the gpio-ranges property to almost all of
+the Qualcomm ARM platforms that utilize the pinctrl-msm
+framework.
 
-On Fri, Oct 04, 2019 at 03:32:01PM +0200, Rasmus Villemoes wrote:
-> This series adds support for setting the polarity via DT to the
-> pwm-mxs driver.
->=20
-> The DT binding is updated, but I'm not touching the existing .dts or
-> .dtsi files - it seems that the same was done for bcm2835 in commits
-> 46421d9d8e802e570dfa4d793a4938d2642ec7a7 and
-> 8a88b2a2017d1e7e80db53080baff591fd454722, while
-> arch/arm/boot/dts/bcm283x.dtsi still has #pwm-cells =3D <2>.
->=20
-> v2:
-> - Rebase to v5.4-rc1
-> - Address comments from Uwe.
-> - Add Rob's ack to patch 4.
-> - New patches 5 and 6. The last one is independent of the others, but
->   I stumbled on this when rebasing and found the signature had
->   changed.
->=20
-> Rasmus Villemoes (6):
->   pwm: mxs: implement ->apply
->   pwm: mxs: remove legacy methods
->   pwm: mxs: add support for inverse polarity
->   dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
->   pwm: mxs: avoid a division in mxs_pwm_apply()
->   pwm: update comment on struct pwm_ops::apply
->=20
->  .../devicetree/bindings/pwm/mxs-pwm.txt       |   4 +-
->  drivers/pwm/pwm-mxs.c                         | 101 +++++++++---------
->  include/linux/pwm.h                           |   5 +-
->  3 files changed, 53 insertions(+), 57 deletions(-)
+The gpio-ranges property is part of the gpiolib subsystem.
+As a result, the binding text is available in section
+"2.1 gpio- and pin-controller interaction" of
+Documentation/devicetree/bindings/gpio/gpio.txt
 
-Applied, thanks.
+For more information please see the patch titled:
+"pinctrl: msm: fix gpio-hog related boot issues" from
+this series.
 
-Thierry
+Reported-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Tested-by: Sven Eckelmann <sven.eckelmann@openmesh.com> [ipq4019]
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Tested-by: Robert Marko <robert.marko@sartura.hr> [ipq4019]
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+Changes since v1:
+- Split ARM and ARM64 DTS changes into separate patches
 
---s9fJI615cBHmzTOP
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 1 +
+ arch/arm/boot/dts/qcom-apq8084.dtsi | 1 +
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 1 +
+ arch/arm/boot/dts/qcom-ipq8064.dtsi | 1 +
+ arch/arm/boot/dts/qcom-mdm9615.dtsi | 1 +
+ arch/arm/boot/dts/qcom-msm8660.dtsi | 1 +
+ arch/arm/boot/dts/qcom-msm8960.dtsi | 1 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 1 +
+ 8 files changed, 8 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 8b79b4112ee1..2687c4e890ba 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -350,6 +350,7 @@
+ 			reg = <0x800000 0x4000>;
+ 
+ 			gpio-controller;
++			gpio-ranges = <&tlmm_pinmux 0 0 90>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+index 0a0fb147ebb9..4cc2d33f3d3b 100644
+--- a/arch/arm/boot/dts/qcom-apq8084.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+@@ -401,6 +401,7 @@
+ 			compatible = "qcom,apq8084-pinctrl";
+ 			reg = <0xfd510000 0x4000>;
+ 			gpio-controller;
++			gpio-ranges = <&tlmm 0 0 147>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 72d4e290b543..b6e5203a210b 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -201,6 +201,7 @@
+ 			compatible = "qcom,ipq4019-pinctrl";
+ 			reg = <0x01000000 0x300000>;
+ 			gpio-controller;
++			gpio-ranges = <&tlmm 0 0 100>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-ipq8064.dtsi b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+index 16c0da97932c..4021f661cd11 100644
+--- a/arch/arm/boot/dts/qcom-ipq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq8064.dtsi
+@@ -119,6 +119,7 @@
+ 			reg = <0x800000 0x4000>;
+ 
+ 			gpio-controller;
++			gpio-ranges = <&qcom_pinmux 0 0 69>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+index 356e9535f7a6..347b4f7d7889 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+@@ -128,6 +128,7 @@
+ 		msmgpio: pinctrl@800000 {
+ 			compatible = "qcom,mdm9615-pinctrl";
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 88>;
+ 			#gpio-cells = <2>;
+ 			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/qcom-msm8660.dtsi b/arch/arm/boot/dts/qcom-msm8660.dtsi
+index ec5cbc468bd3..480fc08cbe8e 100644
+--- a/arch/arm/boot/dts/qcom-msm8660.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8660.dtsi
+@@ -115,6 +115,7 @@
+ 			reg = <0x800000 0x4000>;
+ 
+ 			gpio-controller;
++			gpio-ranges = <&tlmm 0 0 173>;
+ 			#gpio-cells = <2>;
+ 			interrupts = <0 16 0x4>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
+index f2aeaccdc1ad..172ea3c70eac 100644
+--- a/arch/arm/boot/dts/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
+@@ -107,6 +107,7 @@
+ 		msmgpio: pinctrl@800000 {
+ 			compatible = "qcom,msm8960-pinctrl";
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 152>;
+ 			#gpio-cells = <2>;
+ 			interrupts = <0 16 0x4>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 369e58f64145..1689cf925b03 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -707,6 +707,7 @@
+ 			compatible = "qcom,msm8974-pinctrl";
+ 			reg = <0xfd510000 0x4000>;
+ 			gpio-controller;
++			gpio-ranges = <&msmgpio 0 0 146>;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-- 
+2.24.1
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4VzfcACgkQ3SOs138+
-s6Faow//TMKnlzQDSD5P+wcJ27rYXmJrVrrfo/2vFp2FVtLXqOjDk6c0uR9m8Qiq
-oiSIc70R+qNva7QrmlgDZpbIVnSD+ziImsh04Zr9fH8N+pdWda26aqYkGjPUutXU
-7Rh02JTyvOqBK7W9qEu2c7xrlUdKzadeeeQSxijqqAyHFSsG5wfNmZK6qeTlB0y/
-q0tWwa4YyVfDhjkAWUvKUhw5nPfv/AKO2zStCMv8jIuSJ62w5ahypLBs2A3adZJY
-npSKMvPIFzyVOaHdWs3+rmJJzbujKtqMKsQ7RyE6rBRaectlLeHSonDFSjMFtO0t
-BKcikgTpmwUEVDzMh0l+uNGm3cAcIjIfRQ7cpigyQEc+dntXNQfRKh8y+x3pWeDc
-gssO+6ftEcLgnBSy13djxqNf2xzzqzgv0a/nTzBG2OUfGL85VQTfocP2SN+2yYmV
-X4NQckVF2qs8nSQtJCdLhYGUQQMJzJ+KLd0RDRms35E2QiawYii/KvUz+oqN06WP
-Wt4h4SWFZ0PVsaq9EeW74DJ1iPvHgDoFWg2y+WGlKO1F3nNQcH15lQdqWuL8i0NP
-quf8OKsUUEGTfImySK2ql7pzk2ouy1Sup7wZs8bz7almHoP0KOgFVST9jb1VZRIl
-2CQY1FTNqQVTWKcERuxOn6HVMVAnGBLuGWah7wr04iziCVoiY/w=
-=4ETa
------END PGP SIGNATURE-----
-
---s9fJI615cBHmzTOP--
