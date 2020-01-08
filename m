@@ -2,136 +2,182 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF5AC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 00:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15DCC33C99
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D1F207E0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 00:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C92207E0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bq87BfQ9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKpyIDZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgAHAvu (ORCPT
+        id S1725908AbgAHBAd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 19:51:50 -0500
-Received: from mail-am6eur05on2053.outbound.protection.outlook.com ([40.107.22.53]:37089
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgAHAvu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 7 Jan 2020 19:51:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QVNxMlnmdNkpgLX4FVwf4mN9Y5RUFe0oUVdNMrizYGBiXJJAz2Jwuay0vEXj2fOGmaXXDtEQMLSlaFkkHnjQpxxbiQjIFLiK3RwbApVBL5PE/q55/jzvnC85XOCzOrq2i+ZIhY6fMs4yzlw5ewGaM86xZDWJgJxJ95azPyN9qIF9+5z2ZM/q2nwjYXXbV54ywYrCtT95wY1v/OQmDX4s8WSZbN1dwxB1he6UoqWCKfUKy5IinIs+IKMe0Iwdz0g7gXRJ4v7r+6Ka3/CHx39FM0kOxsFi1W8wOVyI7Dygi7I7A542psY6xf86P+BCJXNF697Mt55tPDA55+R3vKUTOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mIls5LWpjnWuZR40O6iyFui5L4nni4mmokAAjtRT8DM=;
- b=iWyVTnGyBmhtOav6x/x1BSz96GQ7yqmNx9v7DqfdJ2iQJ5kg7UDjmovBAUvc+8ANiSPrhowNfQoTBVpb7qGPBXuFjOS3nMhD8w/gsDKGseV4mLFVPdtuThTfnZcyMaksaXnWorbGagqxDQBiCwIBKlgVhVnIaqBVmK5+cHm/7sQUZg86kOZx7EugVFwlYsH1oPpZdmJ+LNL18ErqNCAxR6lsQClVd9inn4NyESiSWkGxGeKt2jMQ8IAoj3ZwqIUuGftLGbuflCdsZMjAoER3iLkC7aVhXbXvfTE/IK2Bg3snMePfYuetpmOXH+tpD4UD5CvmmkU3g81QKmLo70JMhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mIls5LWpjnWuZR40O6iyFui5L4nni4mmokAAjtRT8DM=;
- b=bq87BfQ9D0L06ix9kqHulMJ+P6zYkVh8H5lgpi2usWcjgiqSjpwSD0jMIolQkfU+d0NUNv8ZrFAoHygmZKs0xtl7eriDSGzVt2sB3tl2rLDe/HdJiDtVUZyHHq9AH5vxVnLyTNUzeIovLfO27A1q8i5Dg9J9MjAU3ZNC/rq7SUI=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3836.eurprd04.prod.outlook.com (52.134.71.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Wed, 8 Jan 2020 00:51:44 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d968:56ad:4c0c:616f]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d968:56ad:4c0c:616f%7]) with mapi id 15.20.2602.016; Wed, 8 Jan 2020
- 00:51:44 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "t-kristo@ti.com" <t-kristo@ti.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 2/5] clk: imx: Add support for i.MX8M hw based clk
- provider
-Thread-Topic: [PATCH V2 2/5] clk: imx: Add support for i.MX8M hw based clk
- provider
-Thread-Index: AQHVxT22lCphJTTugEK2JxbHY9gYlKfe8rWAgAD+LjA=
-Date:   Wed, 8 Jan 2020 00:51:43 +0000
-Message-ID: <DB3PR0402MB3916FD8AE2F010B6FADF40DDF53E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1578387197-5750-1-git-send-email-Anson.Huang@nxp.com>
- <1578387197-5750-2-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4481A2BBA0CCE3501F5337A6883F0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4481A2BBA0CCE3501F5337A6883F0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 144547f0-5bbb-44f6-cbe0-08d793d4eea3
-x-ms-traffictypediagnostic: DB3PR0402MB3836:|DB3PR0402MB3836:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB38361E10E58ABFF34FE88E36F53E0@DB3PR0402MB3836.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:549;
-x-forefront-prvs: 02760F0D1C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(346002)(376002)(366004)(199004)(189003)(52536014)(64756008)(76116006)(186003)(66556008)(7696005)(6506007)(5660300002)(66446008)(66946007)(2906002)(4744005)(26005)(66476007)(4326008)(71200400001)(86362001)(8676002)(8936002)(55016002)(316002)(44832011)(81166006)(81156014)(966005)(9686003)(7416002)(33656002)(110136005)(478600001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3836;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: g7v/xaor+Q09Mgv/67j/kvpTS4lcOJdWg/TvsmgdhVOnLVD/L5LD5FxJ4/ACtHGXm16g+BHetzdpyz+Y+U09G8oQolskWFLrRlYfhiEVvEbnT4qDJa7u+qX2/1QTz1x3OXKb9TcJ07BDtBNkpTU3Cev297YEUInBX8+o/jlu3FU2G4GViS570Xzxk6dg+v1oJkk9IHyrFxqxQvl3DjuL9cv02ov9tbVlY7iGPzcI7nWjsb0la5BBSJiFy/UqUCUZmvW1GyKXdQ8llyqrnw35nz1qDRd0ls2PETSunUyQIIBmpo5b0SR1zH0bY5RcVUAsITBANKMkyOaNZlPNWLI+EBjIPdAH8X9pEnOJSGIrmF0Nzcrc59WPkIBCYXTk+sX6ZfK/rkAP/pjXMNrRNYh+tktNbtBztx/P+JuWaRioFQhUnJxnxKSf0Q04sMquj9rt7LOfKK0Q/n2VcwK2mgIYg3LvawkQ6qx5PqDcaYv4oy02k3X2YEo5Xfe+5Me7CkI+8Jx7JRUi05KX/RPZyvYK7AImmqxIUgVKWSRWiiPrFm9FV50yF6ITfZ96U4kGzQVSlqYfkH3Q7/9JG0AKXFyn2g==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 7 Jan 2020 20:00:33 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44708 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgAHBAd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 20:00:33 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so1106220lfa.11;
+        Tue, 07 Jan 2020 17:00:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K1WP8Nt9IQPQl2KOhe2wpI7M9tBqcPCV3SoKWveA2gE=;
+        b=CKpyIDZpy9/X1XRZGg+g94Jld+ZA92gxz+9G5S0NWC/QTg6laZM8Pbax1fUCnmyUic
+         9Fos/Ai6ZQeBxm6kzQjhUugfBSaPakMfJnkB7eVChYX8kdE+cPpFCXwK1q9ll8GUA9fH
+         cwlsx4THXXCviFb0E/AdfzaGyqn3/8mbbpkPp2XpiCGG/S3+Ssw0tbaeJ5/T7E4Du+PK
+         ej+8788RJtDWfvenUfbYGEoG5HI/a77UCS8x28oCNy2wQyrLqmZ56mrPNKbYyFTxo6fh
+         2uVhudc+3esSMxBZ/vaQOjLVRnEkqVq4pUCUZEUPKaIDk9EpHl21dVU9sZ3dhn9+N5Ca
+         /+4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K1WP8Nt9IQPQl2KOhe2wpI7M9tBqcPCV3SoKWveA2gE=;
+        b=h5+IyIfprpDwfOhrbYGh3/kvY6cyTjJtnf1xD1ter1YIdSigLd7dhG+Xmp0dHD6djE
+         nN+H48HN+2HGOuq6FdEbnE1n0q9vEKaNT9AyGMvg5u1NZCKl3ogEGbwOUi406cp/89qq
+         X0iYp/12Gm/BoH+oGCkJEIpPg6KtaiCH2DxaDRsExS/jSGF1mJFwMx11RZ0AE4K4EQgJ
+         TRDSKo0De1/z51p6epcOuK17XFsnorkAgz15BO5NQJlQ5qjS9ivf6TnQvvmcOOP7Oy2T
+         pyhS93bhwnRsJZhZN6Zo+DKpoTS8Gpa/GOmKXiu1GeWWcclEYP7sPLRUY255enuj4Aqo
+         GElQ==
+X-Gm-Message-State: APjAAAWkB1tNv6caPVYlB0ILekcAcrCulmCKRN+5ZPrrWD9sqbmJH4UY
+        qYICIc4q//lGwr5N8xK0Jn2kzYK9
+X-Google-Smtp-Source: APXvYqxlFIc5MZjr1WvkXMENKUiPp2po17tVllNb4RZz7CwvgpAUwjW0i6K3x+iiWURfcON05bQQ0w==
+X-Received: by 2002:ac2:5549:: with SMTP id l9mr1246026lfk.53.1578445230650;
+        Tue, 07 Jan 2020 17:00:30 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f22sm451040ljh.74.2020.01.07.17.00.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jan 2020 17:00:29 -0800 (PST)
+Subject: Re: [PATCH v6 06/19] soc: tegra: Add Tegra PMC clocks registration
+ into PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, broonie@kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
+        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, spujar@nvidia.com,
+        josephl@nvidia.com, daniel.lezcano@linaro.org,
+        mmaddireddy@nvidia.com, markz@nvidia.com,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
+ <1578370458-3686-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b37d1be0-affc-a0c7-157a-140b141ca155@gmail.com>
+Date:   Wed, 8 Jan 2020 04:00:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 144547f0-5bbb-44f6-cbe0-08d793d4eea3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Jan 2020 00:51:43.8798
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Iw3L93Vsc8tgcrwHBYVWsmi1eOn7GCLkMKGOdcUW4d7MtsoT9JrRmDbpnFxxyBCVLHgHEzxE+eMQkXekyM48Ug==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3836
+In-Reply-To: <1578370458-3686-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DQoNCj4gPiBTdWJqZWN0OiBbUEFUQ0ggVjIgMi81XSBjbGs6IGlteDogQWRkIHN1cHBvcnQgZm9y
-IGkuTVg4TSBodyBiYXNlZCBjbGsNCj4gPiBwcm92aWRlcg0KPiA+DQo+ID4gQWRkIGh3IGJhc2Vk
-IHByb3ZpZGVyIHN1cHBvcnQgZm9yIGkuTVg4TSBjb21wb3NpdGUgY2xrLCBwbGwxNHh4IGNsaw0K
-PiA+IGFuZCBvdGhlciBnYXRlL211eCBjbGsgQVBJcywgc28gdGhhdCBuZXcgYWRkZWQgaS5NWDhN
-IFNvQ3MgY2FuIHVzZSBodw0KPiA+IGJhc2VkIGNsayBwcm92aWRlci4NCj4gDQo+IGkuTVg4TSBo
-dyBjb21wb3NpdGUgY2xrIGhhcyBiZWVuIGluIHNoYXduJ3MgdHJlZSwNCj4gaHR0cHM6Ly9naXQu
-a2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc2hhd25ndW8vbGludXguZ2l0Lw0K
-PiBjb21taXQvP2g9Zm9yLW5leHQmaWQ9YTRiNDMxZjgwMzhhNjcyMjJmZGU4ODhhNDhiY2JkNzA0
-ZDJkYWNhMA0KPiANCj4gWW91IG1pZ2h0IGJlIHVzaW5nIGFuIG9sZCBiYXNlPw0KDQpJIHVzZWQg
-bGludXgtbmV4dC4uLiwgd2lsbCByZWRvIHRoZSBwYXRjaCBzZXJpZXMgYmFzZWQgb24gU2hhd24n
-cyB0cmVlLg0KDQpUaGFua3MsDQpBbnNvbg0K
+07.01.2020 07:14, Sowjanya Komatineni пишет:
+> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and currently
+> these PMC clocks are registered by Tegra clock driver with each clock as
+> separate mux and gate clocks using clk_register_mux and clk_register_gate
+> by passing PMC base address and register offsets and PMC programming for
+> these clocks happens through direct PMC access by the clock driver.
+> 
+> With this, when PMC is in secure mode any direct PMC access from the
+> non-secure world does not go through and these clocks will not be
+> functional.
+> 
+> This patch adds these PMC clocks registration to pmc driver with PMC as
+> a clock provider and registers each clock as single clock.
+> 
+> clk_ops callback implementations for these clocks uses tegra_pmc_readl and
+> tegra_pmc_writel which supports PMC programming in both secure mode and
+> non-secure mode.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/soc/tegra/pmc.c | 242 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 242 insertions(+)
+> 
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index 1699dda6b393..2b1a709c3cb7 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -13,9 +13,13 @@
+>  
+>  #include <linux/arm-smccc.h>
+>  #include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk/clk-conf.h>
+>  #include <linux/clk/tegra.h>
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+> +#include <linux/device.h>
+>  #include <linux/err.h>
+>  #include <linux/export.h>
+>  #include <linux/init.h>
+> @@ -48,6 +52,7 @@
+>  #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>  #include <dt-bindings/gpio/tegra186-gpio.h>
+>  #include <dt-bindings/gpio/tegra194-gpio.h>
+> +#include <dt-bindings/soc/tegra-pmc.h>
+>  
+>  #define PMC_CNTRL			0x0
+>  #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
+> @@ -100,6 +105,8 @@
+>  #define PMC_WAKE2_STATUS		0x168
+>  #define PMC_SW_WAKE2_STATUS		0x16c
+>  
+> +#define PMC_CLK_OUT_CNTRL		0x1a8
+> +#define  PMC_CLK_OUT_MUX_MASK		GENMASK(1, 0)
+>  #define PMC_SENSOR_CTRL			0x1b0
+>  #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
+>  #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
+> @@ -155,6 +162,63 @@
+>  #define  TEGRA_SMC_PMC_READ	0xaa
+>  #define  TEGRA_SMC_PMC_WRITE	0xbb
+>  
+> +struct pmc_clk {
+> +	struct clk_hw	hw;
+> +	unsigned long	offs;
+> +	u32		mux_shift;
+> +	u32		force_en_shift;
+> +};
+> +
+> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
+> +
+> +struct pmc_clk_init_data {
+> +	char *name;
+> +	const char *const *parents;
+> +	int num_parents;
+> +	int clk_id;
+> +	u8 mux_shift;
+> +	u8 force_en_shift;
+> +};
+> +
+> +static const char * const clk_out1_parents[] = { "osc", "osc_div2",
+> +	"osc_div4", "extern1",
+> +};
+> +
+> +static const char * const clk_out2_parents[] = { "osc", "osc_div2",
+> +	"osc_div4", "extern2",
+> +};
+> +
+> +static const char * const clk_out3_parents[] = { "osc", "osc_div2",
+> +	"osc_div4", "extern3",
+> +};
+
+There is no way to specify "osc" as a parent clock in a device-tree
+because there is no DT ID assigned to the OSC in the CaR driver, should
+this be fixed?
