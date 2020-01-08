@@ -2,177 +2,90 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F90C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B67C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16524206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221692070E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dt29E8cP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgAHIsF (ORCPT
+        id S1727482AbgAHI4h (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:48:05 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46869 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgAHIsF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 03:48:05 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ip70T-0004RZ-If; Wed, 08 Jan 2020 09:48:01 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ip70S-0005ud-Iv; Wed, 08 Jan 2020 09:48:00 +0100
-Date:   Wed, 8 Jan 2020 09:48:00 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, stwiss.opensource@diasemi.com,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        Adam.Thomson.Opensource@diasemi.com, lee.jones@linaro.org
-Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] input: misc: da9063_onkey: add mode change support
-Message-ID: <20200108084800.x2doud4v6m3ssz6s@pengutronix.de>
-References: <20191127132304.22924-1-m.felsch@pengutronix.de>
- <20191127132304.22924-3-m.felsch@pengutronix.de>
+        Wed, 8 Jan 2020 03:56:37 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38036 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726481AbgAHI4g (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 03:56:36 -0500
+Received: by mail-qt1-f194.google.com with SMTP id n15so2184291qtp.5
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 00:56:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=23UaZlNsApqhumDDLUOyVqHmZXSwjOyNRAB7ikWfhfk=;
+        b=dt29E8cPCpwAonKSxaiv3VaP8BgaW6t7bbMQkQnM0D3acz6OORwBCcouS6gD45iHNu
+         GoPZetsVGj8l0OnJGPxqVSmqzq56aVUI+0uLD7j+Gg9OKKkLy6E736TS9AFewSX5PE6+
+         AOSxXDvApaNRuUXWC+iSUIvKTYYK+4hSDeiCc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=23UaZlNsApqhumDDLUOyVqHmZXSwjOyNRAB7ikWfhfk=;
+        b=oV9/Rm1E2OpIS3rSJyLsoWsyu/5dMaM6BTp8hsU5kIskmesDtJ3L+91dqRZucauZ3S
+         UZ5t7hMrXsaCjZ3PwGHvo82kCL4DLSpHRMJaDVNwiPzf1DfJqrqjR2p4wWM6MRVy50GV
+         vN7p2CesGZEkwWR0BvTHq1+52Li2ByGSHLDGCHCLNNe2QGeYH4MPOBRvRWgwWdLaQcbO
+         h9jQn0Y31vuBUZ3Ojwn8knS6BjrH2wx3h3aqq6gaqIvdl1Cx0gEEGv9ylUtq+JwvPEro
+         rbUcco7dcWFhc7P2UPTLs6q+KjYtoYzpmnzWbx/ZWFP9n2+VSqWTQdt8EqRscPcE1lIz
+         7oQA==
+X-Gm-Message-State: APjAAAXXhKY1TSDzlPNvW5V/Y8Nd8JVIwjxaaYCRRaJ12zCPKzn1KGFc
+        BA0ZQ2hQHalj4m91gifU1rVrtRgvk+rl3FIZZjgQdA==
+X-Google-Smtp-Source: APXvYqwLdC1bnpk+yFSSUDDZwVNj0SEXt8iwYqeuRY98reHyPr1olVJxIKDeEhuHBiSIek43xvF7qoUS3R03lEt//CI=
+X-Received: by 2002:ac8:3946:: with SMTP id t6mr2632345qtb.278.1578473795857;
+ Wed, 08 Jan 2020 00:56:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127132304.22924-3-m.felsch@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:46:36 up 54 days, 5 min, 46 users,  load average: 0.02, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20191227141405.3396-1-yong.liang@mediatek.com> <20191227141405.3396-2-yong.liang@mediatek.com>
+In-Reply-To: <20191227141405.3396-2-yong.liang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 8 Jan 2020 16:56:25 +0800
+Message-ID: <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
+To:     Yong Liang <yong.liang@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, wim@linux-watchdog.org,
+        linux@roeck-us.net, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lee,
+minor nit, s/amr64/arm64/ in the commit title.
 
-I forgot to add you to review the mfd part, sorry. Please can you have a
-look on it?
+On Fri, Dec 27, 2019 at 10:15 PM Yong Liang <yong.liang@mediatek.com> wrote:
+>
+> From: "yong.liang" <yong.liang@mediatek.com>
+>
+> 1. Include mt8183-reset.h and add reset-cells in infracfg
+> in dtsi file
+> 2. Add watchdog device node
+>
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
 
-Regards,
-  Marco
+Tested-by: Nicolas Boichat <drinkcat@chromium.org>
 
-On 19-11-27 14:23, Marco Felsch wrote:
-> The pmic state machine behaviour upon a 'onkey press' event can be
-> configured using the ONKEY_PIN bit field. Most the time this is
-> configured correct by the OTP but sometimes we need to adjust the
-> behaviour so we need to add the support here.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
-> v2:
-> - make use of da906x_chip_config
-> - rm unnecessary key_opmode
-> 
->  drivers/input/misc/da9063_onkey.c | 16 ++++++++++++++++
->  drivers/mfd/da9062-core.c         |  1 +
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/input/misc/da9063_onkey.c b/drivers/input/misc/da9063_onkey.c
-> index 79851923ee57..3a3f06a33eda 100644
-> --- a/drivers/input/misc/da9063_onkey.c
-> +++ b/drivers/input/misc/da9063_onkey.c
-> @@ -19,6 +19,7 @@
->  
->  struct da906x_chip_config {
->  	/* REGS */
-> +	int onkey_config;
->  	int onkey_status;
->  	int onkey_pwr_signalling;
->  	int onkey_fault_log;
-> @@ -26,6 +27,7 @@ struct da906x_chip_config {
->  	/* MASKS */
->  	int onkey_nonkey_mask;
->  	int onkey_nonkey_lock_mask;
-> +	int onkey_nonkey_pin_mask;
->  	int onkey_key_reset_mask;
->  	int onkey_shutdown_mask;
->  	/* NAMES */
-> @@ -44,6 +46,7 @@ struct da9063_onkey {
->  
->  static const struct da906x_chip_config da9063_regs = {
->  	/* REGS */
-> +	.onkey_config = DA9063_REG_CONFIG_I,
->  	.onkey_status = DA9063_REG_STATUS_A,
->  	.onkey_pwr_signalling = DA9063_REG_CONTROL_B,
->  	.onkey_fault_log = DA9063_REG_FAULT_LOG,
-> @@ -51,6 +54,7 @@ static const struct da906x_chip_config da9063_regs = {
->  	/* MASKS */
->  	.onkey_nonkey_mask = DA9063_NONKEY,
->  	.onkey_nonkey_lock_mask = DA9063_NONKEY_LOCK,
-> +	.onkey_nonkey_pin_mask = DA9063_NONKEY_PIN_MASK,
->  	.onkey_key_reset_mask = DA9063_KEY_RESET,
->  	.onkey_shutdown_mask = DA9063_SHUTDOWN,
->  	/* NAMES */
-> @@ -59,6 +63,7 @@ static const struct da906x_chip_config da9063_regs = {
->  
->  static const struct da906x_chip_config da9062_regs = {
->  	/* REGS */
-> +	.onkey_config = DA9062AA_CONFIG_I,
->  	.onkey_status = DA9062AA_STATUS_A,
->  	.onkey_pwr_signalling = DA9062AA_CONTROL_B,
->  	.onkey_fault_log = DA9062AA_FAULT_LOG,
-> @@ -66,6 +71,7 @@ static const struct da906x_chip_config da9062_regs = {
->  	/* MASKS */
->  	.onkey_nonkey_mask = DA9062AA_NONKEY_MASK,
->  	.onkey_nonkey_lock_mask = DA9062AA_NONKEY_LOCK_MASK,
-> +	.onkey_nonkey_pin_mask = DA9062AA_NONKEY_PIN_MASK,
->  	.onkey_key_reset_mask = DA9062AA_KEY_RESET_MASK,
->  	.onkey_shutdown_mask = DA9062AA_SHUTDOWN_MASK,
->  	/* NAMES */
-> @@ -193,6 +199,7 @@ static int da9063_onkey_probe(struct platform_device *pdev)
->  {
->  	struct da9063_onkey *onkey;
->  	const struct of_device_id *match;
-> +	unsigned int val;
->  	int irq;
->  	int error;
->  
-> @@ -220,6 +227,15 @@ static int da9063_onkey_probe(struct platform_device *pdev)
->  	onkey->key_power = !of_property_read_bool(pdev->dev.of_node,
->  						  "dlg,disable-key-power");
->  
-> +	if (!of_property_read_u32(pdev->dev.of_node, "dlg,key-opmode", &val)) {
-> +		error = regmap_update_bits(onkey->regmap,
-> +					   onkey->config->onkey_config,
-> +					   onkey->config->onkey_nonkey_pin_mask,
-> +					   val);
-> +		if (error)
-> +			return error;
-> +	}
-> +
->  	onkey->input = devm_input_allocate_device(&pdev->dev);
->  	if (!onkey->input) {
->  		dev_err(&pdev->dev, "Failed to allocated input device.\n");
-> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> index e69626867c26..aaa1f1841bc3 100644
-> --- a/drivers/mfd/da9062-core.c
-> +++ b/drivers/mfd/da9062-core.c
-> @@ -510,6 +510,7 @@ static const struct regmap_range da9062_aa_writeable_ranges[] = {
->  	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B),
->  	regmap_reg_range(DA9062AA_BBAT_CONT, DA9062AA_BBAT_CONT),
->  	regmap_reg_range(DA9062AA_GP_ID_0, DA9062AA_GP_ID_19),
-> +	regmap_reg_range(DA9062AA_CONFIG_I, DA9062AA_CONFIG_I),
->  };
->  
->  static const struct regmap_range da9062_aa_volatile_ranges[] = {
-> -- 
-> 2.20.1
-> 
-> 
-> 
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> [snip]
