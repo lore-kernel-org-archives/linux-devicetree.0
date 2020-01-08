@@ -2,92 +2,139 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217FAC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6BBC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E77FC20720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578501781;
-	bh=ynpqtPeDiLkS3B1XbB+7iA1SxwfKdgld1oNMaDvbztA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RvU4VehgZQ+RoGD24KiEV9o0BsYIOXVoQFEL6meYzlsxA7y/5FrTl/sFWDekLVj8C
-	 OJI7/gqpfmT1wfHpbSx/EqGwToMsL3VPlTz/U2D3zrjtaQcAOsEx4h1f5oOw+1y3rC
-	 wAMOXWGAWLDcf2QmBhQWbCs467CBH5TLO+vILjjQ=
+	by mail.kernel.org (Postfix) with ESMTP id 243562070E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:43:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d0PY+8gs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgAHQmx (ORCPT
+        id S1729301AbgAHQne (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:42:53 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44167 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbgAHQmx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:42:53 -0500
-Received: by mail-oi1-f195.google.com with SMTP id d62so3156393oia.11
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 08:42:53 -0800 (PST)
+        Wed, 8 Jan 2020 11:43:34 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37107 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729206AbgAHQne (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:43:34 -0500
+Received: by mail-ed1-f65.google.com with SMTP id cy15so3124161edb.4
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 08:43:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=z/DDsWY474Xa+zjcBfFKboi75muYRoVjaBuY1De3KlQ=;
+        b=d0PY+8gs+HppL0imKZQf9JDw/zoiES1fhKiECfj7S/QbLBKu0w/7ps+rKWud6Y/PBA
+         8kOmrptJp4r94SNEW8rIXv//t/ucQ8L+YxYUh7Dc3POsVKpY0jYfjWh144b837vdBKYT
+         pWB6xf3875XlMzVKIZfVsm0+VJ0Ay8CSUIfgnwMXK8y/yYajD7jvLpQRvxFpaTT/DHDF
+         wUeKmf4Bpy0wSt88XBR1eEOeVlfqW6ng1DVAqiPIqTwycBrkQ92MrlrLSCD6IHQK82qJ
+         WMW3okyIvXD9vV2Fo27Fl9DsplLhxb9wh+fc5OpCKrhqFAP+31wT7FHpMwfqGiAvl0AU
+         /M7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UKDNwGykO2dbNkNckCxJfHqBIvtnDZYUjcmwNmsSzE8=;
-        b=NZXFdK4GjOoRxjxFPsyYJOoHUGS1EXB8Qm4v9fJeOJMpqEa9I+YzrC3Hdl23FRpUte
-         fQQQCRXhPan9EfeRw0i43t/uuW2EP4JLiMhb3nfI02esZGYsXf1sncqfNeiMbeNnbU3F
-         ywLzRt2chbZWPPjTw92cJ/fB9PlXctavsX4ErnssDEdQcMyv6FimPnPaQuUJLmRFOmtL
-         P3Y6khTOxFcDK/3RWZYt6/omuh9GVWV3yfpIem64sfyOh8g72rz4u6kOU1jtszTnrHk6
-         FM/sQAr/PJlwPomQYLKCc+PmIRRGmkCbvhfrhc+3NXCK2Cn8k8Rs+kxYo5zLGNC96Mnz
-         GBAg==
-X-Gm-Message-State: APjAAAXaTnRtMFny80gRgmQ2VJ7vbSj8T/JqxMwk5uswRRtsBJnR3+x1
-        M6gMQX85iFk7FLsnRwC9Ftq0xQY=
-X-Google-Smtp-Source: APXvYqxz4gOjjPo08HpZVcZyky83rvdD0e8SZU5MkELVh4xVNjzV5EofHwrkYyXtqXCiWCGQZ9M3lA==
-X-Received: by 2002:a05:6808:f:: with SMTP id u15mr3904600oic.100.1578501772712;
-        Wed, 08 Jan 2020 08:42:52 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r13sm1213830oic.52.2020.01.08.08.42.51
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 08:42:51 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2208fa
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 10:42:50 -0600
-Date:   Wed, 8 Jan 2020 10:42:50 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        aisheng.dong@nxp.com, l.stach@pengutronix.de, angus@akkea.ca,
-        cosmin.stoica@nxp.com, gary.bisson@boundarydevices.com,
-        leonard.crestez@nxp.com, abel.vesa@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 3/3] dt-bindings: arm: imx: Add the i.MX8MP EVK board
-Message-ID: <20200108164250.GA17075@bogus>
-References: <1577426385-31273-1-git-send-email-Anson.Huang@nxp.com>
- <1577426385-31273-3-git-send-email-Anson.Huang@nxp.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z/DDsWY474Xa+zjcBfFKboi75muYRoVjaBuY1De3KlQ=;
+        b=F2cymMp2lINb4bRuFpsaVjhfN8CV5rqYmwo8wcMHkorV7ng3M1WD92+Adggf4XxSLB
+         5pyQ250O/SeYagDkqxvTVekCvPQddcFxk1cB4Wu8ZzGkGhRUH/fAMNzBxVNok70WPyGf
+         fQ1QrK/8lIJmvd8kEI8lIHqxkG14whBeAEqmJCc1jBARQqUpDWF9jUI2RC5O7YQoCa0q
+         A3tezykyBjABN6fSpNL/bmxU/7deBBMIS58MkMO0SHRCJ3u+U7VYOYDh2/LibWkvC4F1
+         PhddrhOY1ctm9HV/ge7AKfTGQz+9qWwW7cVRNldFl2q1ahuIs/zTPdo4KpjvRlEYY39K
+         qGzA==
+X-Gm-Message-State: APjAAAVu/+5SvBA0WTOLetOLnc+r3zXbrn12ZmiAIb7AtFWfzonMtKJ5
+        ydYv341vFIT9/NJc0ho6W/hYgbH+xm0=
+X-Google-Smtp-Source: APXvYqxr0RdezdAcqeIeYXVWxfETnNalCciJvWAc/XKAhpVVfT5KGkf5rLQqPjO9CLHl27QGEhPhVQ==
+X-Received: by 2002:a05:6402:3132:: with SMTP id dd18mr6394995edb.118.1578501812283;
+        Wed, 08 Jan 2020 08:43:32 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id d22sm81627edp.28.2020.01.08.08.43.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 08:43:31 -0800 (PST)
+Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+ <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <da434e7b-ffc6-2d59-76a7-a2ddeaf54657@linaro.org>
+Date:   Wed, 8 Jan 2020 18:43:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577426385-31273-3-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 27 Dec 2019 13:59:45 +0800, Anson Huang wrote:
-> Add board binding for i.MX8MP EVK board.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On 1/8/20 6:09 PM, Hans Verkuil wrote:
+> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
+>> This event indicate that the source color bit-depth is changed
+>> during run-time. The client must get the new format and re-allocate
+>> buffers for it. This can usually happens with video decoder (encoders)
+>> when the bit-stream color bit-depth is changed from 8 to 10bits
+>> or vice versa.
+>>
+>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>  include/uapi/linux/videodev2.h                  | 1 +
+>>  3 files changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> index 42659a3d1705..fad853d440cf 100644
+>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> @@ -402,7 +402,13 @@ call.
+>>  	that many Video Capture devices are not able to recover from a temporary
+>>  	loss of signal and so restarting streaming I/O is required in order for
+>>  	the hardware to synchronize to the video signal.
+>> -
+>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
+>> +      - 0x0002
+>> +      - This event gets triggered when color bit-depth change is detected
+>> +	from a video decoder. Applications will have to query the new pixel
+>> +	format and re-negotiate the queue. In most cases the streaming must be
+>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
+>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+> 
+> I think this is too specific for decoders. Something similar to the
+> CH_RESOLUTION description would be more appropriate:
+> 
+>       - This event gets triggered when a color bit-depth change (but not a
+> 	resolution change!) is detected	at an input. This can come from an
+> 	input connector or from a video decoder. Applications will have to query
+> 	the new pixel format and re-negotiate the queue.
+> 
+> 	For stateful decoders follow the guidelines in :ref:`decoder`.
+> 	Video capture devices will in most cases have to stop and restart
+> 	streaming (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>` followed by
+> 	:ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+> 
+> And update dev-decoder.rst where needed with this new event flag.
+> 
+> As to your question on irc: once I've acked this patch it can be merged
+> via a venus PR.
+
+Sounds good, thank you.
+
+-- 
+regards,
+Stan
