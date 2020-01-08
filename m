@@ -2,100 +2,197 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4C0C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313E2C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FA8206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E422072A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:19:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u2cauyRl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I/QT89u9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgAHLSs (ORCPT
+        id S1726768AbgAHLTw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:18:48 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45310 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgAHLSr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 06:18:47 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 008BIiOi125874;
-        Wed, 8 Jan 2020 05:18:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578482324;
-        bh=SP4EnpeM6GGBv5vJGSKWMvGveJi/0lQQ/mLpvMFlKa8=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=u2cauyRl6FSe2eAiALYEAf7qHVidCGqfPIw9zhUUI1I2znqSJ1bKOe4oSbzXIuyLg
-         P8A2YttJty2OeDSzBvtIwxhB81JggkRhCFu2VpxtxEHOaI9lcEdMttpDH/O0KNCUMu
-         Mm6zzFwRKR/42KXAmslehTAfuRGJbfY+zsZZP7R8=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 008BIicK019473
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 8 Jan 2020 05:18:44 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 8 Jan
- 2020 05:18:42 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 8 Jan 2020 05:18:42 -0600
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 008BIWBs087830;
-        Wed, 8 Jan 2020 05:18:40 -0600
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <nm@ti.com>, <kishon@ti.com>, <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 3/5] arm64: dts: ti: k3-j721e-main.dtsi: Add USB to SERDES MUX
-Date:   Wed, 8 Jan 2020 13:18:28 +0200
-Message-ID: <20200108111830.8482-4-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200108111830.8482-1-rogerq@ti.com>
-References: <20200108111830.8482-1-rogerq@ti.com>
+        Wed, 8 Jan 2020 06:19:52 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37798 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726098AbgAHLTw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 06:19:52 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p14so1471811pfn.4
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 03:19:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cOGvD7y5HQkBlYF9N0NkWtEGiRyDw5Hk/20diZQAQAA=;
+        b=I/QT89u9dGq6KzbLwqtEEmn/0AiFljz/rRwWBalIGmgNls+lZ9nYd5DXSIv9m05O2Z
+         SZKKVkwM3oOOZODQB1o592LcPoEvG7Ja7SL0pSrPQSloyXq9KBwWsHOBATXFlx7mrNEE
+         oueZQP/zINGY37BWRcZ+BZGgNt4BEFuYBFhqDFY6DfFXYINZNNIAqjsij2h7BhluqmYJ
+         MY6lk9SKV67tqYvS4NcOvT9FKs9ZrmuKS9g/3KM15PGlNE3DI3Z/rk8NOG6z66HOAwAM
+         Yi0mLF/L6qJBN1ZQDoWMOAzD8/Nno07zII52xCpgJ/ah9SXNXLBZf707rByTlpFQ5ldx
+         R8Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cOGvD7y5HQkBlYF9N0NkWtEGiRyDw5Hk/20diZQAQAA=;
+        b=pXmdJTKUuKkv7W/USDfBCqBNg8nX40m3BeuMQ7h8oQSeEHYQSTgcFkDO2/V2a06vuQ
+         Iakb0u6T49sHwgFlNy+q0EjvFMf2XvuriOwqiEz1sOvnyPw3/F3/u2GaOhe8VTYi255g
+         8bnjZUXJoY2MtciMXZexGZFxKgQ7/aeNu2jt77xG3WRrMhxCCJCYkV5nGZ+FMeGcFOeC
+         XTDfLpLQyNZRfR7Pe0xtjqR5Vipcrz3LGZ3gsFmvexfYkIAUrHh/HPkaD1vFiqn+Fi6Z
+         XTY36q84Af2yQEiaL0zN/UwxMQrbEM4sJm4Jg+MX6NLlpS1+LynTgJATs9/hx45Iogn4
+         G99g==
+X-Gm-Message-State: APjAAAXVMa+s8WUIqUXU7RVwwHFgVJhp8lHkIjkdUc7CR6m2bskGKeXv
+        ICsdeSajyWTEi+LXTBsOfEdatw==
+X-Google-Smtp-Source: APXvYqzywDkjkEjHqoRKd7VAHnkY87bW3tIFt9/TraoWF+Ti+CuLoHpFVbqgQ0f1lIJZz3L5tlYXog==
+X-Received: by 2002:a63:201d:: with SMTP id g29mr4778115pgg.427.1578482390987;
+        Wed, 08 Jan 2020 03:19:50 -0800 (PST)
+Received: from localhost ([122.172.26.121])
+        by smtp.gmail.com with ESMTPSA id o7sm3513384pfg.138.2020.01.08.03.19.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 03:19:49 -0800 (PST)
+Date:   Wed, 8 Jan 2020 16:49:47 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
+Message-ID: <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
+References: <20191207002424.201796-1-saravanak@google.com>
+ <20191207002424.201796-4-saravanak@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207002424.201796-4-saravanak@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The USB controllers can be connected to one of the 2 SERDESes
-using a MUX. Add a MUX controller node fot that.
+On 06-12-19, 16:24, Saravana Kannan wrote:
+> The frequency OPP tables have helper functions to search for entries in the
+> table based on frequency and get the frequency values for a given (or
+> suspend) OPP entry.
+> 
+> Add similar helper functions for bandwidth OPP tables to search for entries
+> in the table based on peak bandwidth and to get the peak and average
+> bandwidth for a given (or suspend) OPP entry.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/opp/core.c     | 301 +++++++++++++++++++++++++++++++++++------
+>  include/linux/pm_opp.h |  43 ++++++
+>  2 files changed, 305 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index c79bbfac7289..3ff33a08198e 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
+>  
+> +/**
+> + * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
+> + * @opp:	opp for which peak bandwidth has to be returned for
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+s/peak //
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index 6741c1e67f50..7c60f8ec6365 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -43,6 +43,13 @@
- 				      <MUX_IDLE_AS_IS>, <SERDES3_LANE1_USB3_0>,
- 				      <SERDES4_LANE0_EDP_LANE0>, <SERDES4_LANE1_EDP_LANE1>, <SERDES4_LANE2_EDP_LANE2>, <SERDES4_LANE3_EDP_LANE3>;
- 		};
-+
-+		usb_serdes_mux: mux-controller@4000 {
-+			compatible = "mmio-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x4000 0x8000000>, /* USB0 to SERDES0/3 mux */
-+					<0x4010 0x8000000>; /* USB1 to SERDES1/2 mux */
-+	    };
- 	};
- 
- 	gic500: interrupt-controller@1800000 {
+> + * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
+> + *		Can be NULL.
+> + *
+> + * Return: Peak bandwidth in kBps corresponding to the opp, else
+> + * return 0
+> + */
+> +unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
+> +{
+> +	if (IS_ERR_OR_NULL(opp) || !opp->available) {
+> +		pr_err("%s: Invalid parameters\n", __func__);
+> +		return 0;
+> +	}
+> +
+> +	if (avg_bw)
+
+Do you see this being NULL in practice ? If no, then we can make it
+mandatory for now ?
+
+> +		*avg_bw = opp->avg_bw;
+> +
+> +	return opp->peak_bw;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
+> +
+>  /**
+>   * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
+>   * @opp:	opp for which level value has to be returned for
+> @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
+>  
+> +/**
+> + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
+
+Hmm, I wasn't expecting this. So the interconnects will also have a
+suspend OPP ?
+
+> + * @dev:	device for which we do this operation
+> + * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
+> + *		Can be NULL.
+> + *
+> + * Return: This function returns the peak bandwidth of the OPP marked as
+> + * suspend_opp if one is available, else returns 0;
+> + */
+> +unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
+> +					    unsigned long *avg_bw)
+> +{
+> +	struct opp_table *opp_table;
+> +	unsigned long peak_bw = 0;
+> +
+> +	opp_table = _find_opp_table(dev);
+> +	if (IS_ERR(opp_table))
+> +		return 0;
+> +
+> +	if (opp_table->suspend_opp && opp_table->suspend_opp->available)
+> +		peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
+> +
+> +	dev_pm_opp_put_opp_table(opp_table);
+> +
+> +	return peak_bw;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
+> +
+>  int _get_opp_count(struct opp_table *opp_table)
+>  {
+>  	struct dev_pm_opp *opp;
+> @@ -343,6 +394,40 @@ int dev_pm_opp_get_opp_count(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_count);
+>  
+
+I think we should add function header here instead of the helpers
+which get exact match for freq, bw or level. And then pass a enum
+value to it, which tells what we are looking to compare. After that
+rest of the routines will be just one liners, make them macros in
+header file itself.
+
+> +struct dev_pm_opp *dev_pm_opp_find_opp_exact(struct device *dev,
+> +					      struct dev_pm_opp *opp_key,
+> +					      bool available)
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+viresh
