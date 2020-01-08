@@ -2,410 +2,274 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AE2C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296EEC00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E42220705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97492072B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 04:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kc6oE+AJ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H6wbMbmB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgAHEUu (ORCPT
+        id S1726683AbgAHEZX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 23:20:50 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41887 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgAHEUu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:20:50 -0500
-Received: by mail-pg1-f194.google.com with SMTP id x8so899330pgk.8
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 20:20:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BsY5fjuE+U5lF0TwpIgIkyumygVTDJwlCVDsGfXmUK8=;
-        b=kc6oE+AJmInib4sWUwj7Bo4GM/V9TueAwUxznfc+rj2AY6joapIE3XSs6HMfKGAijK
-         DglLqt5X+pDenU7oBGRdAcOQnDlVhlMyS25SVHmZwEGo/uRJJujF5KYfSdora/uss2tQ
-         4r+D81aayGrqJ+BeyPcugXTMGzav3DlAaYQx6QNBYfFzECHWyWtfe/pHak+Uo5c3Levu
-         pGwplkFv1OUWFA0NsKIJIIRqCFNntsiRDj/eaKCtOOF9NSxk20AOplYC3meKtt13z0Og
-         i22Ueiq0WiDRlTR/g91e/b9iKSYl+4yDHdWqRPGFWSnduIB9ccLor/uOYVZ6eMr6pvEp
-         VliQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BsY5fjuE+U5lF0TwpIgIkyumygVTDJwlCVDsGfXmUK8=;
-        b=sNnU2dvGdpTMeHJorh8/aldwg56gL9I3+sQD0mhPnrp+3+HF1Ebr+8UllYtYPvQrDc
-         q93jFWVM8bLX6o6d+A5Yi6JT0cpR4bAY/rL2YvXpeFQZe8rO7Dj7rt+O+v61W2XaoaVP
-         rvOX44NsYJ9Y988DqLTgr+mCwrVGSh05u04SOxkpxhK17j9Db2OpFCeRnthKWwCvnBjf
-         Stdo4a9H9sn11y653f7bKWogxCoiQozvJLRyFxneZA/KQlnaKwxjijN/0xzcN/EDqFGU
-         knMa/JaM7HJwmJ9A3DuCmSIQWapSDcr7RWzhpXvQ4Bx/5xDA2tolXgBxGH7c0ImMO7Nk
-         nr6w==
-X-Gm-Message-State: APjAAAUR9DX19x9rsGWS9F3WRAgq0KTL4Ql0eYgWeeW4JGe0JHWzasYY
-        zjQqeGqanQ8w4uWDsHACAjBFJO88
-X-Google-Smtp-Source: APXvYqxdSxMGety0x4AQA+p6/3GZXq/gedEOa5lO+VVW/Q7TsVcy3wbnObTRaipaON3o9Kb4R8AagQ==
-X-Received: by 2002:a62:f94d:: with SMTP id g13mr3001129pfm.60.1578457249828;
-        Tue, 07 Jan 2020 20:20:49 -0800 (PST)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id p12sm1133478pjo.5.2020.01.07.20.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 20:20:49 -0800 (PST)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH v2 4/4] arm64: dts: allwinner: a64: enable DVFS
-Date:   Tue,  7 Jan 2020 20:20:18 -0800
-Message-Id: <20200108042018.571251-5-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200108042018.571251-1-anarsoul@gmail.com>
-References: <20200108042018.571251-1-anarsoul@gmail.com>
+        Tue, 7 Jan 2020 23:25:23 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:12464 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgAHEZX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 23:25:23 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e15599f0000>; Tue, 07 Jan 2020 20:25:03 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 20:25:20 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 20:25:20 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 04:25:20 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 8 Jan 2020 04:25:20 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.162.131]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e1559ae0000>; Tue, 07 Jan 2020 20:25:19 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 00/21] Move PMC clocks into Tegra PMC driver
+Date:   Tue, 7 Jan 2020 20:24:54 -0800
+Message-ID: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578457503; bh=vTnJ6UV6D8N/iqnZQiwmRsdOZFb6A/xn5C+ozGxR8hA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=H6wbMbmB7EHDRXjf4EWrKaadwkjDY41iUkfzVmL6RF+y7LMf+Y2dWDwkUgJBlABNg
+         D/524xWmkstgCAqBeLdXYXxSxNENcLen/iIVgLQ7F6vPjPOvpmmSKrrjd1HZB6gjYw
+         kcO5xfkQdihMHbg4WG2C+/qTn8/0SrpArDLk1GUJBgRAbX/GPG5nd3FYz0ys9H1zTS
+         kYC+IBvpMMatWx/jTdzvcgbIQq/bbhNdpC9+HE5Fr1wCPM8WeBPPug1dIbtm4zFWh0
+         S2Qr/6/btUApkKqPlhJtoC2a3AaY234ILxGWb1PEdwPL8cFysEzTpUqovBt3PoQG5/
+         4z8eZAWvifBaQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add CPU regulator and operating points for all the A64-based boards
-that are currently supported to enable DVFS.
+This patch series moves Tegra PMC clocks from clock driver to pmc driver
+along with the device trees changes and audio driver which uses one of
+the pmc clock for audio mclk.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../dts/allwinner/sun50i-a64-amarula-relic.dts  | 17 +++++++++++++++++
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts   | 17 +++++++++++++++++
- .../dts/allwinner/sun50i-a64-nanopi-a64.dts     | 17 +++++++++++++++++
- .../boot/dts/allwinner/sun50i-a64-olinuxino.dts | 17 +++++++++++++++++
- .../dts/allwinner/sun50i-a64-orangepi-win.dts   | 17 +++++++++++++++++
- .../boot/dts/allwinner/sun50i-a64-pine64.dts    | 17 +++++++++++++++++
- .../boot/dts/allwinner/sun50i-a64-pinebook.dts  | 17 +++++++++++++++++
- .../boot/dts/allwinner/sun50i-a64-sopine.dtsi   | 17 +++++++++++++++++
- .../boot/dts/allwinner/sun50i-a64-teres-i.dts   | 17 +++++++++++++++++
- 9 files changed, 153 insertions(+)
+Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+are currently registered by Tegra clock driver using clk_regiser_mux and
+clk_register_gate which performs direct Tegra PMC register access.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index 5634245d11db..6ee7291293ec 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -7,6 +7,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -65,6 +66,22 @@ wifi_pwrseq: wifi-pwrseq {
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &csi {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 208373efee49..9b80e06f40d6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -43,6 +43,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -108,6 +109,22 @@ &codec_analog {
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &dai {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-index 9b9d9157128c..6b81b91da504 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -43,6 +43,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -87,6 +88,22 @@ wifi_pwrseq: wifi_pwrseq {
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &de {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 01a9a52edae4..fb45c32558c5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -43,6 +43,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -87,6 +88,22 @@ wifi_pwrseq: wifi_pwrseq {
- 	};
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &de {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index f54a415f2e3b..a510cf40a9fe 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -44,6 +44,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -123,6 +124,22 @@ &codec_analog {
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &dai {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index 409523cb0950..7cb01886aa32 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -43,6 +43,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -84,6 +85,22 @@ &codec_analog {
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &dai {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 78c82a665c84..74a8569c677f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-@@ -98,6 +99,22 @@ &codec_analog {
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &dai {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index 9d20e13f0c02..e64f330ca420 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -44,6 +44,7 @@
-  */
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- 
-@@ -51,6 +52,22 @@ &codec_analog {
- 	cpvdd-supply = <&reg_eldo1>;
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 970415106dcf..0356608ce467 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -8,6 +8,7 @@
- /dts-v1/;
- 
- #include "sun50i-a64.dtsi"
-+#include "sun50i-a64-cpu-opp.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
-@@ -104,6 +105,22 @@ &de {
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
+When Tegra PMC is in secure mode, any access from non-secure world will
+not go through.
+
+This patch series adds these Tegra PMC clocks and blink controls to Tegra
+PMC driver with PMC as clock provider and removes them from Tegra clock
+driver.
+
+PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru Tegra210
+and clock driver does inital parent configuration for it and enables them.
+But this clock should be taken care by audio driver as there is no need
+to have this clock pre enabled.
+
+So, this series also includes patch that updates ASoC driver to take
+care of parent configuration for mclk if device tree don't specify
+initial parent configuration using assigned-clock-parents and controls
+audio mclk enable/disable during ASoC machine startup and shutdown.
+
+DTs are also updated to use clk_out_1 as audio mclk rather than extern1.
+
+This series also includes a patch for mclk fallback to extern1 when
+retrieving mclk fails to have this backward compatible of new DT with
+old kernels.
+
+[v7]:	Changes between v7 and v7 are
+	- v6 minor feedback
+	- Added DT id for Tegra OSC to use in device tree for pmc clock
+	  parent.
+
+[v6]:	Changes between v5 and v6 are
+	- v5 feedback
+	- Added ASoC machine startup and shutdown callbacks to control audio
+	  mclk enable/disable and removed default mclk enable from clock driver.
+	- Updated tegra_asoc_utils_set_rate to disable mclk only during PLLA
+	  rate change and removed disabling PLLA as its already taken care by
+	  pll clock driver.
+	- Removed tegra_asoc_utils_set_rate call from utils_init as set_rate
+	  is set during machine hw_params and during utils_init mclk is
+	  already in disabled state and this causes warning during mclk disable
+	  in utils_set_rate.
+
+[v5]:	Changes between v4 and v5 are
+	- v4 feedback
+	- updated dt-binding pmc YAML schema with more description on power
+	  gate nodes and pad configuration state nodes.
+	- update tegra_asoc_utils_set_rate to disable audio mclk only if
+	  its in enable state.
+
+[v4]:	Changes between v3 and v4 are
+	- v3 Feedback
+	- Updated clocks clk_m_div2 and clk_m_div4 as osc_div2 and osc_div4.
+	  Tegra don't have clk_m_div2, clk_m_div4 and they should actually
+	  be osc_div2 and osc_div4 clocks from osc pads.
+	- Fixed PMC clock parents to use osc, osc_div2, osc_div4.
+	- Register each PMC clock as single clock rather than separate
+	  mux and gate clocks.
+	- Update ASoC utils to use resource managed APIs rather than
+	  using clk_get and clk_put.
+	- Updated device tree and ASoC driver to use clk_out_1 instead of
+	  clk_out_1_mux as PMC clocks are registered as single clock.
+	- Update clock driver init_table to not enable audio related clocks
+	  as ASoC utils will do audio clock enables.
+
+[v3]:	Changes between v2 and v3 are
+	- Removes set parent of clk_out_1_mux to extern1 and enabling
+	  extern1 from the clock driver.
+	- Doesn't enable clk_out_1 and blink by default in pmc driver
+	- Updates ASoC driver to take care of audio mclk parent
+	  configuration incase if device tree don't specify assigned
+	  clock parent properties and enables mclk using both clk_out_1
+	  and extern1.
+	- updates all device trees using extern1 as mclk in sound node
+	  to use clk_out_1 from pmc.
+	- patch for YAML format pmc dt-binding
+	- Includes v2 feedback
+
+[v2]:	Changes between v1 and v2 are
+	- v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
+	  blink controls to Tegra PMC driver and removing clk-tegra-pmc.
+	- feedback related to pmc clocks in Tegra PMC driver from v1
+	- Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC programming
+	  by the clock driver using helper functions from Tegra PMC.
+
+ 	  Note:
+	  To use helper functions from PMC driver, PMC early init need to
+	  happen prior to using helper functions and these helper functions are
+	  for PLLM Override and PLLE IDDQ programming in PMC during PLLM/PLLE
+	  clock registration which happen in clock_init prior to Tegra PMC
+	  probe.
+	  Moving PLLM/PLLE clocks registration to happen after Tegra PMC
+	  impacts other clocks EMC, MC and corresponding tegra_emc_init and
+	  tegra_mc_init.
+	  This implementation of configuring PMC registers thru helper
+	  functions in clock driver needs proper changes across PMC, Clock,
+	  EMC and MC inits to have it work across all Tegra platforms.
+
+	  Currently PLLM Override is not enabled in the bootloader so proper
+	  patches for this fix will be taken care separately.
+
+[v1]:	v1 includes patches for below fixes.
+	- adding clk_out_1, clk_out_2, clk_out_3, blink controls to Tegra PMC
+	  driver and removing clk-tegra-pmc.
+	- updated clock provider from tegra_car to pmc in the device tree
+	  tegra210-smaug.dts that uses clk_out_2.
+	- Added helper functions in PMC driver for WB0 PLLM overrides and PLLE
+	  IDDQ programming to use by clock driver and updated clock driver to
+	  use these helper functions and removed direct PMC access from clock
+	  driver and all pmc base address references in clock driver.
+
+
+
+
+
+Sowjanya Komatineni (21):
+  dt-bindings: clock: tegra: Change CLK_M_DIV to OSC_DIV clocks
+  clk: tegra: Change CLK_M_DIV clocks to OSC_DIV clocks
+  dt-bindings: clock: tegra: Add DT id for OSC clock
+  clk: tegra: Add Tegra OSC to clock lookup
+  clk: tegra: Fix Tegra PMC clock out parents
+  dt-bindings: tegra: Convert Tegra PMC bindings to YAML
+  dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
+  soc: tegra: Add Tegra PMC clocks registration into PMC driver
+  dt-bindings: soc: tegra-pmc: Add id for Tegra PMC 32KHz blink clock
+  soc: tegra: Add support for 32KHz blink clock
+  clk: tegra: Remove tegra_pmc_clk_init along with clk ids
+  dt-bindings: clock: tegra: Remove pmc clock ids from clock dt-bindings
+  ASoC: tegra: Use device managed resource APIs to get the clock
+  ASoC: tegra: Add audio mclk configuration
+  ASoC: tegra: Add fallback implementation for audio mclk
+  clk: tegra: Remove audio related clock enables from init_table
+  ARM: dts: tegra: Add clock-cells property to pmc
+  arm64: tegra: Add clock-cells property to Tegra PMC node
+  ARM: tegra: Update sound node clocks in device tree
+  arm64: tegra: smaug: Change clk_out_2 provider to pmc
+  ASoC: nau8825: change Tegra clk_out_2 provider to tegra_pmc
+
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 300 -----------------
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml     | 354 +++++++++++++++++++++
+ .../devicetree/bindings/sound/nau8825.txt          |   2 +-
+ arch/arm/boot/dts/tegra114-dalmore.dts             |   8 +-
+ arch/arm/boot/dts/tegra114.dtsi                    |   4 +-
+ arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi        |   8 +-
+ arch/arm/boot/dts/tegra124-apalis.dtsi             |   8 +-
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   8 +-
+ arch/arm/boot/dts/tegra124-nyan.dtsi               |   8 +-
+ arch/arm/boot/dts/tegra124-venice2.dts             |   8 +-
+ arch/arm/boot/dts/tegra124.dtsi                    |   4 +-
+ arch/arm/boot/dts/tegra20.dtsi                     |   4 +-
+ arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi         |   8 +-
+ arch/arm/boot/dts/tegra30-apalis.dtsi              |   8 +-
+ arch/arm/boot/dts/tegra30-beaver.dts               |   8 +-
+ arch/arm/boot/dts/tegra30-cardhu.dtsi              |   8 +-
+ arch/arm/boot/dts/tegra30-colibri.dtsi             |   8 +-
+ arch/arm/boot/dts/tegra30.dtsi                     |   4 +-
+ arch/arm64/boot/dts/nvidia/tegra132.dtsi           |   4 +-
+ arch/arm64/boot/dts/nvidia/tegra210-smaug.dts      |   2 +-
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +-
+ drivers/clk/tegra/Makefile                         |   1 -
+ drivers/clk/tegra/clk-id.h                         |  12 +-
+ drivers/clk/tegra/clk-tegra-fixed.c                |  37 ++-
+ drivers/clk/tegra/clk-tegra-pmc.c                  | 122 -------
+ drivers/clk/tegra/clk-tegra114.c                   |  43 +--
+ drivers/clk/tegra/clk-tegra124.c                   |  48 ++-
+ drivers/clk/tegra/clk-tegra20.c                    |   9 +-
+ drivers/clk/tegra/clk-tegra210.c                   |  32 +-
+ drivers/clk/tegra/clk-tegra30.c                    |  33 +-
+ drivers/clk/tegra/clk.h                            |   1 -
+ drivers/soc/tegra/pmc.c                            | 352 ++++++++++++++++++++
+ include/dt-bindings/clock/tegra114-car.h           |  20 +-
+ include/dt-bindings/clock/tegra124-car-common.h    |  20 +-
+ include/dt-bindings/clock/tegra20-car.h            |   2 +-
+ include/dt-bindings/clock/tegra210-car.h           |  20 +-
+ include/dt-bindings/clock/tegra30-car.h            |  20 +-
+ include/dt-bindings/soc/tegra-pmc.h                |  16 +
+ sound/soc/tegra/tegra_alc5632.c                    |  25 +-
+ sound/soc/tegra/tegra_asoc_utils.c                 | 129 ++++----
+ sound/soc/tegra/tegra_asoc_utils.h                 |   3 +-
+ sound/soc/tegra/tegra_max98090.c                   |  40 ++-
+ sound/soc/tegra/tegra_rt5640.c                     |  40 ++-
+ sound/soc/tegra/tegra_rt5677.c                     |  25 +-
+ sound/soc/tegra/tegra_sgtl5000.c                   |  25 +-
+ sound/soc/tegra/tegra_wm8753.c                     |  40 ++-
+ sound/soc/tegra/tegra_wm8903.c                     |  40 ++-
+ sound/soc/tegra/tegra_wm9712.c                     |   8 +-
+ sound/soc/tegra/trimslice.c                        |  36 ++-
+ 49 files changed, 1190 insertions(+), 781 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
+ delete mode 100644 drivers/clk/tegra/clk-tegra-pmc.c
+ create mode 100644 include/dt-bindings/soc/tegra-pmc.h
+
 -- 
-2.24.1
+2.7.4
 
