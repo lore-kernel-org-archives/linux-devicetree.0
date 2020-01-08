@@ -2,57 +2,59 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01459C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C27C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C78E420643
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76ED9205F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGiv7UgY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DEqNeINv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726708AbgAHNMq (ORCPT
+        id S1727852AbgAHNMy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:12:46 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33694 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgAHNMq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 08:12:46 -0500
-Received: by mail-wr1-f66.google.com with SMTP id b6so3382222wrq.0;
-        Wed, 08 Jan 2020 05:12:44 -0800 (PST)
+        Wed, 8 Jan 2020 08:12:54 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38396 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgAHNMv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 08:12:51 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so3337718wrh.5;
+        Wed, 08 Jan 2020 05:12:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=CW1vsmVOYVpnu21wOV1FaVQtVlxQeM9zvVeI3WDjoeQ=;
-        b=TGiv7UgYOnCvuzeHdEbOimyJWrw0yKav/L80GnMtkV3tQsGQB0qsfwJwoIjI9a8EyY
-         Edi0fjN7J30XXnYRBDvH7r9dNEIoUg/OMEesb0PGkwjop57B8UHXxtx//W7JVGu6MpIW
-         tl8YijCWvV/pLDOzHl7ZiTXVguS7u2J1rCSftGu1mpKseTBKrmOIVoN+sRMbnhPpFLmh
-         XDbB4gKsAzGM0uBcgTjabj/xHFzKuxgFc+giboEvqLY3lexuRV1FCVJJ8st3/lrThiOX
-         01giLKsLHfvrMx0vbHbzS5hMDL+1XfeRbKNB/XOwDoh/BCjIFoskOi7PntEsweng0igd
-         CVEQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ZYQSBkLnONYX/PnkBykc7VPkafXkRFxOt23+Xt4Hyj4=;
+        b=DEqNeINvEPFZrR82s01TIr2Z5zkaL3KzinrkHm1nflYyWOneu654e9Kv8RTghk/5tG
+         b/tCXXQ9KE8N7j8UszhHK9watAkwfIcQJSejG3KkrerNPYqohgag6wH0rKovU3gFpN4K
+         nBFQE/Ilq+OJhly61BsWQu4UFfbdMBeMoRgNEz4Xwa+1SirL6h7A8S1PcUaCeyXpTHs2
+         Z21+XkFeje3+Xvp+Aa+Pa7sK6CRon2Hu9BQStwVi5wuMYBsn2s/8zUKkiwpOv+vITCqV
+         fFqDRurAcq09zYoIP6Ga87pFNLQ5AnPwkD9kodK4L+GNgKc2gQWKgB/xxFrtJF/Y+Smn
+         zAVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CW1vsmVOYVpnu21wOV1FaVQtVlxQeM9zvVeI3WDjoeQ=;
-        b=ExbJa0NvjYmwlOHSP9PlFZRzZltGTw+2QHhJIXT+R0LhnmMUPgfbJooUrSJl2W0amK
-         Aby5/vrD1A7v2bOit3w5F7Pqz2Kn1DUMN5Gq9ZTCBQIpfy7rVZ0IjGF1bTqV/XZSvavO
-         VWm2NPPk5LY4F7LC9yXouE3NNw8s5T6IUvW8HlISQexoq+wBvk2kf+LXNoAThrAHQQ9Q
-         GSB/xdz3hj0HJed+nEnXDhjzdJfDf0XC+PwzHiTeOACt+iUMex+kKVYioCmaxHDYLkiq
-         dd7OImeQCtk1xHHjc3jeUup9OAGIvqtqE3Gom8+O/IVj17+TdTxYYfpsKSfyF7VgrO30
-         3jGA==
-X-Gm-Message-State: APjAAAVZiQTVTXoVeGiyh2yP8MU4NQCqNkKOsgH+tSkgnvrjE+CPrd/D
-        BNJH+nwp24leJPr+CzvAcGU=
-X-Google-Smtp-Source: APXvYqw/u2BVw/HyzOF7uxDcGn7emrybdnMAcnzp/hI83PU8kL4Xy2UxLatfb/e8u7n4Ijadyri1gg==
-X-Received: by 2002:adf:edd0:: with SMTP id v16mr4468409wro.310.1578489163703;
-        Wed, 08 Jan 2020 05:12:43 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ZYQSBkLnONYX/PnkBykc7VPkafXkRFxOt23+Xt4Hyj4=;
+        b=q70KyYlVVwuLmNNgrTXbI96+/Cvgo6zfgtmLmg4JzWz4oh3ZSl+CdaLF5WhEzbo19D
+         EYkWboo6CYmvNDW6tL4cFOjWTuk/n6tTpsSo+bqiJHZSgS874plrcL/m4lM40CUUyYwn
+         6nRCAXl019lw8fWJu3sehmHPpcX2dYkAZwGyY91Od3//4Nu0HmMtwHxc2pcirQng27cD
+         Bv6vF1hQ8IKTt/rvrZXhD66O0hhbYQDQoTqgVTlyyu/Rp3fFrpGnNLnhmGa1rf0pTT60
+         4e8eEhNY2RNi243OfnlZWQRGh/jWlZZKhECdx8f1Ta2V+uUoLdYrtD24VGaYZUDUUlGj
+         2qYQ==
+X-Gm-Message-State: APjAAAVZbYDz8IAiD895uq1u4ccqzTdYiPg4YM4Igtg+qOZ/75ymrIus
+        V6TYRl4o+E88Hw34zTdRTis=
+X-Google-Smtp-Source: APXvYqxj2owmLk2IT33kc+mzFJE9ViqbragwDPdKw11kvr+eaFOqEk6sIhBZPF92jcoV9vAdi2Nv8g==
+X-Received: by 2002:adf:f7c4:: with SMTP id a4mr4390211wrq.332.1578489169124;
+        Wed, 08 Jan 2020 05:12:49 -0800 (PST)
 Received: from localhost.localdomain (p5B3F64F6.dip0.t-ipconnect.de. [91.63.100.246])
-        by smtp.gmail.com with ESMTPSA id k82sm3875878wmf.10.2020.01.08.05.12.42
+        by smtp.gmail.com with ESMTPSA id k82sm3875878wmf.10.2020.01.08.05.12.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 05:12:42 -0800 (PST)
+        Wed, 08 Jan 2020 05:12:48 -0800 (PST)
 From:   Saravanan Sekar <sravanhome@gmail.com>
 To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
@@ -61,60 +63,42 @@ To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
         gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
         davem@davemloft.net, mchehab+samsung@kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/4] Add regulator support for mpq7920
-Date:   Wed,  8 Jan 2020 14:12:30 +0100
-Message-Id: <20200108131234.24128-1-sravanhome@gmail.com>
+Subject: [PATCH v5 4/4] MAINTAINERS: Add entry for mpq7920 PMIC driver
+Date:   Wed,  8 Jan 2020 14:12:34 +0100
+Message-Id: <20200108131234.24128-5-sravanhome@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200108131234.24128-1-sravanhome@gmail.com>
+References: <20200108131234.24128-1-sravanhome@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changes in V5:
-    - removed timeslot related changes, the timeslot register holds the value of
-      time duration between each regulator of power on/off sequence. Although
-      timeslot register is accessed over I2C the changes reflects on next powercycle
-      of pmic, so cannot handled part of this driver.
-    - device tree bindings property are defined per regulator node
+Add MAINTAINERS entry for Monolithic Power Systems mpq7920 PMIC driver.
 
-Changes in V4:
-    - fixed 0-DAY warnings
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Changes in V3:
-    - fixed review comments in Documentation and dt_bindings_check passed
-
-Changes in V2:
-    - fixed all the review comments in the driver, avoid ternery operator, inline & constant
-    - fixed/modifed review comments in Documentation
-
-This patch series add support for PMIC regulator driver for Monolithic
-Power System's MPQ7920 chipset. MPQ7920 provides support for 4-BUCK converter,
-one fixed voltage RTCLDO and 4-LDO regualtor, accessed over I2C.
-
-Saravanan Sekar (4):
-  dt-bindings: Add an entry for Monolithic Power System, MPS
-  dt-bindings: regulator: add document bindings for mpq7920
-  regulator: mpq7920: add mpq7920 regulator driver
-  MAINTAINERS: Add entry for mpq7920 PMIC driver
-
-Saravanan Sekar (4):
-  dt-bindings: Add an entry for Monolithic Power System, MPS
-  dt-bindings: regulator: add document bindings for mpq7920
-  regulator: mpq7920: add mpq7920 regulator driver
-  MAINTAINERS: Add entry for mpq7920 PMIC driver
-
- .../bindings/regulator/mps,mpq7920.yaml       | 202 +++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- MAINTAINERS                                   |   7 +
- drivers/regulator/Kconfig                     |  10 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/mpq7920.c                   | 342 ++++++++++++++++++
- drivers/regulator/mpq7920.h                   |  72 ++++
- 7 files changed, 636 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
- create mode 100644 drivers/regulator/mpq7920.c
- create mode 100644 drivers/regulator/mpq7920.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0fd82e674cf4..8a31285b59c6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11128,6 +11128,13 @@ S:	Maintained
+ F:	Documentation/driver-api/serial/moxa-smartio.rst
+ F:	drivers/tty/mxser.*
+ 
++MONOLITHIC POWER SYSTEM PMIC DRIVER
++M:	Saravanan Sekar <sravanhome@gmail.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/regulator/mpq7920.yaml
++F:	drivers/regulator/mpq7920.c
++F:	drivers/regulator/mpq7920.h
++
+ MR800 AVERMEDIA USB FM RADIO DRIVER
+ M:	Alexey Klimov <klimov.linux@gmail.com>
+ L:	linux-media@vger.kernel.org
 -- 
 2.17.1
 
