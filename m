@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0006C33CA7
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ED4C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829812072A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A4020673
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 11:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgAHLLE (ORCPT
+        id S1727607AbgAHLLH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 06:11:04 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37589 "EHLO
+        Wed, 8 Jan 2020 06:11:07 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58691 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgAHLLC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 06:11:02 -0500
+        with ESMTP id S1727437AbgAHLLD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 06:11:03 -0500
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1ip9Ei-0003Uw-Tn; Wed, 08 Jan 2020 12:10:52 +0100
+        id 1ip9Ei-0003V0-Tz; Wed, 08 Jan 2020 12:10:52 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1ip9Eh-0005TU-6q; Wed, 08 Jan 2020 12:10:51 +0100
+        id 1ip9Eh-0005Tf-8J; Wed, 08 Jan 2020 12:10:51 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
         dmitry.torokhov@gmail.com, bparrot@ti.com,
@@ -35,9 +35,9 @@ To:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
         alexandre.belloni@bootlin.com, shawnguo@kernel.org
 Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
         linux-input@vger.kernel.org
-Subject: [PATCH v3 2/6] Input: edt-ft5x06 - alphabetical include reorder
-Date:   Wed,  8 Jan 2020 12:10:46 +0100
-Message-Id: <20200108111050.19001-3-m.felsch@pengutronix.de>
+Subject: [PATCH v3 5/6] Input: edt-ft5x06 - use pm core to enable/disable the wake irq
+Date:   Wed,  8 Jan 2020 12:10:49 +0100
+Message-Id: <20200108111050.19001-6-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200108111050.19001-1-m.felsch@pengutronix.de>
 References: <20200108111050.19001-1-m.felsch@pengutronix.de>
@@ -52,56 +52,60 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It seems that the include order is historical increased and no one takes
-care of it. Fix this to align it with the common rule to be in a
-alphabetical order.
+We do not have to handle the wake-irq within the driver because the pm
+core can handle this for us. The only use case for the suspend/resume
+callbacks was to handle the wake-irq so we can remove the callbacks.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+v3:
+- new patch to drop enable/disable_irq_wake() calls
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 24 ------------------------
+ 1 file changed, 24 deletions(-)
 
 diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index b87b1e074f62..e1b31fd525e2 100644
+index c781952c3409..d2587724c52a 100644
 --- a/drivers/input/touchscreen/edt-ft5x06.c
 +++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -13,22 +13,23 @@
-  *    http://www.glyn.com/Products/Displays
-  */
+@@ -1227,29 +1227,6 @@ static int edt_ft5x06_ts_remove(struct i2c_client *client)
+ 	return 0;
+ }
  
--#include <linux/module.h>
--#include <linux/ratelimit.h>
--#include <linux/irq.h>
--#include <linux/interrupt.h>
--#include <linux/input.h>
--#include <linux/i2c.h>
--#include <linux/kernel.h>
--#include <linux/uaccess.h>
--#include <linux/delay.h>
- #include <linux/debugfs.h>
--#include <linux/slab.h>
-+#include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/input.h>
- #include <linux/input/mt.h>
- #include <linux/input/touchscreen.h>
--#include <asm/unaligned.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/ratelimit.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+
-+#include <asm/unaligned.h>
- 
- #define WORK_REGISTER_THRESHOLD		0x00
- #define WORK_REGISTER_REPORT_RATE	0x08
+-static int __maybe_unused edt_ft5x06_ts_suspend(struct device *dev)
+-{
+-	struct i2c_client *client = to_i2c_client(dev);
+-
+-	if (device_may_wakeup(dev))
+-		enable_irq_wake(client->irq);
+-
+-	return 0;
+-}
+-
+-static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
+-{
+-	struct i2c_client *client = to_i2c_client(dev);
+-
+-	if (device_may_wakeup(dev))
+-		disable_irq_wake(client->irq);
+-
+-	return 0;
+-}
+-
+-static SIMPLE_DEV_PM_OPS(edt_ft5x06_ts_pm_ops,
+-			 edt_ft5x06_ts_suspend, edt_ft5x06_ts_resume);
+-
+ static const struct edt_i2c_chip_data edt_ft5x06_data = {
+ 	.max_support_points = 5,
+ };
+@@ -1288,7 +1265,6 @@ static struct i2c_driver edt_ft5x06_ts_driver = {
+ 	.driver = {
+ 		.name = "edt_ft5x06",
+ 		.of_match_table = edt_ft5x06_of_match,
+-		.pm = &edt_ft5x06_ts_pm_ops,
+ 	},
+ 	.id_table = edt_ft5x06_ts_id,
+ 	.probe    = edt_ft5x06_ts_probe,
 -- 
 2.20.1
 
