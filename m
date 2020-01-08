@@ -2,179 +2,215 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD88C33C99
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F129C33C99
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5F72075A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4273820692
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:28:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kRZyLZAY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+sdWsKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbgAHBNo (ORCPT
+        id S1726145AbgAHB2s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:13:44 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2018 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgAHBNo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 20:13:44 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e152cb50000>; Tue, 07 Jan 2020 17:13:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 07 Jan 2020 17:13:43 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 17:13:43 -0800
-Received: from [10.2.175.47] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
- 2020 01:13:42 +0000
-Subject: Re: [PATCH v6 06/19] soc: tegra: Add Tegra PMC clocks registration
- into PMC driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
-        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1578370458-3686-1-git-send-email-skomatineni@nvidia.com>
- <1578370458-3686-7-git-send-email-skomatineni@nvidia.com>
- <b37d1be0-affc-a0c7-157a-140b141ca155@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5b11d228-1894-e052-f740-3a050bb35b6f@nvidia.com>
-Date:   Tue, 7 Jan 2020 17:13:41 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 7 Jan 2020 20:28:48 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38208 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgAHB2s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 20:28:48 -0500
+Received: by mail-qk1-f194.google.com with SMTP id k6so1280103qki.5;
+        Tue, 07 Jan 2020 17:28:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nAwqjhRGqFXJzIg3lBkXFVNjftwBX4mw//gKj6RNvIE=;
+        b=d+sdWsKioaDMQfVwvM4js/xplepHEPSIMPFJ8ZWXTJm/gZ2PMbiB6qh5gEtr3KSxxI
+         JMfxaLVS99Z1VmXqQYdK10yd2HhLYleaPDcgmfsoboWnbLU7oiP+WyX3dqd6o4yWJjsY
+         nuEfqmH8gboGbQrabUwXIQo0426ODhG6I6IHOhlCLIqV7QuBJuUxZ7dVAsiiTEv9j7Qk
+         Sy1OzwU8gSKWDL/bBGX4PwKGhG8Kegnny4cb0Qqdxh816ER1fIEiFzra5Ypk2Pp3ZBzA
+         yDrgklTF+qMdsKdz2p+usEVM6i02Xt0rHvLos37LJcn/IlwhNoel0LRYPLJ4cpeKud6l
+         bFIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nAwqjhRGqFXJzIg3lBkXFVNjftwBX4mw//gKj6RNvIE=;
+        b=eSOXwFrB477NrzbPW5KCdGADxb8iV+qTRgQDEZUbIuBURTTbqYf0ClsnWup0l4pS7R
+         8uPUjFM7i4sVAW5WNUYMXwEQkgsbFmy+TU7vXHEVoBJKC1xLIoQoRgMkqty5dJgZtX4e
+         amndUl5+fzXx0kQ6NJyC3rE25o5OeKg+W9FF/TXXy5nXU8iR4xq+bepgZACh6Y1ENB5i
+         2HgffzaAbbnxrEv+6GxEMaUr8dryqqZRxhq9b7dek4iWsEyuFtsdTkIl728z51w4Fuxp
+         J3r2OVBogETv7dfJIQuXpY55kRcRFxwoKDPJigMlJtlTkh6NMfdfD+M9DVP5m+dZrhZQ
+         6TTA==
+X-Gm-Message-State: APjAAAWb68DJnaX2vsaDbKqFxZYX7kMIBhzo00hhwzNNYL9chJdhF+Qx
+        6TYqtJsOJLF3QdluVUjCIU9EnHwzrtdNpY2h7V8=
+X-Google-Smtp-Source: APXvYqzGDMvemNyQyj1kGMDw7M31RlDX86odL/bjLg+raDWg1MqtYcdX/WS4zMfQmnseQzZl7HebbITU8dG4JjiwmQo=
+X-Received: by 2002:a37:b601:: with SMTP id g1mr2158429qkf.114.1578446926868;
+ Tue, 07 Jan 2020 17:28:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <b37d1be0-affc-a0c7-157a-140b141ca155@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578446005; bh=czqak03I8wVN+sOkdYFnWRgHfGjKJTCcV+nbIBWcpRw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=kRZyLZAYHd4buYr0Ek+AywBSLcYhyZLkiTM2318NEwV8CxAj6LE8sBsdszQCRMedH
-         0QwCQirl+VNREOgGlFi6/zeDIJcK6+9/N2PaKxBsnjlZ05mseQ1KB1PYr5/EUTpOOM
-         bxenoSDeTWStCgKoeJUECDmKEo+OsxhBUXKvKu3l5dTz6QH86/y+tHxq1pxnbhHTJ5
-         vWkepxdghSUIAfpHxUrZSZPq1HtbAmuTsOM2Abmtg50YU9sUQqmvu1X2d3IjXynRJE
-         5z06kP5iiz6bjMtwj4Thn2A6/yY0FgPorai48tAVln20Fie3efFk61P8MpH3kRyxKY
-         wH16naeZ8XD2g==
+References: <20200106110133.13791-1-faiz_abbas@ti.com> <20200106110133.13791-4-faiz_abbas@ti.com>
+In-Reply-To: <20200106110133.13791-4-faiz_abbas@ti.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Wed, 8 Jan 2020 09:28:35 +0800
+Message-ID: <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
+Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA devices
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     linux-omap@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        kishon@ti.com, Adrian Hunter <adrian.hunter@intel.com>,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        Ulf Hansson <ulf.hansson@linaro.org>, tony@atomide.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Faiz,
 
-On 1/7/20 5:00 PM, Dmitry Osipenko wrote:
-> 07.01.2020 07:14, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Tegra PMC has clk_out_1, clk_out_2, and clk_out_3 clocks and currently
->> these PMC clocks are registered by Tegra clock driver with each clock as
->> separate mux and gate clocks using clk_register_mux and clk_register_gat=
-e
->> by passing PMC base address and register offsets and PMC programming for
->> these clocks happens through direct PMC access by the clock driver.
->>
->> With this, when PMC is in secure mode any direct PMC access from the
->> non-secure world does not go through and these clocks will not be
->> functional.
->>
->> This patch adds these PMC clocks registration to pmc driver with PMC as
->> a clock provider and registers each clock as single clock.
->>
->> clk_ops callback implementations for these clocks uses tegra_pmc_readl a=
-nd
->> tegra_pmc_writel which supports PMC programming in both secure mode and
->> non-secure mode.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   drivers/soc/tegra/pmc.c | 242 ++++++++++++++++++++++++++++++++++++++++=
-++++++++
->>   1 file changed, 242 insertions(+)
->>
->> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->> index 1699dda6b393..2b1a709c3cb7 100644
->> --- a/drivers/soc/tegra/pmc.c
->> +++ b/drivers/soc/tegra/pmc.c
->> @@ -13,9 +13,13 @@
->>  =20
->>   #include <linux/arm-smccc.h>
->>   #include <linux/clk.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/clk/clk-conf.h>
->>   #include <linux/clk/tegra.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/delay.h>
->> +#include <linux/device.h>
->>   #include <linux/err.h>
->>   #include <linux/export.h>
->>   #include <linux/init.h>
->> @@ -48,6 +52,7 @@
->>   #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
->>   #include <dt-bindings/gpio/tegra186-gpio.h>
->>   #include <dt-bindings/gpio/tegra194-gpio.h>
->> +#include <dt-bindings/soc/tegra-pmc.h>
->>  =20
->>   #define PMC_CNTRL			0x0
->>   #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
->> @@ -100,6 +105,8 @@
->>   #define PMC_WAKE2_STATUS		0x168
->>   #define PMC_SW_WAKE2_STATUS		0x16c
->>  =20
->> +#define PMC_CLK_OUT_CNTRL		0x1a8
->> +#define  PMC_CLK_OUT_MUX_MASK		GENMASK(1, 0)
->>   #define PMC_SENSOR_CTRL			0x1b0
->>   #define  PMC_SENSOR_CTRL_SCRATCH_WRITE	BIT(2)
->>   #define  PMC_SENSOR_CTRL_ENABLE_RST	BIT(1)
->> @@ -155,6 +162,63 @@
->>   #define  TEGRA_SMC_PMC_READ	0xaa
->>   #define  TEGRA_SMC_PMC_WRITE	0xbb
->>  =20
->> +struct pmc_clk {
->> +	struct clk_hw	hw;
->> +	unsigned long	offs;
->> +	u32		mux_shift;
->> +	u32		force_en_shift;
->> +};
->> +
->> +#define to_pmc_clk(_hw) container_of(_hw, struct pmc_clk, hw)
->> +
->> +struct pmc_clk_init_data {
->> +	char *name;
->> +	const char *const *parents;
->> +	int num_parents;
->> +	int clk_id;
->> +	u8 mux_shift;
->> +	u8 force_en_shift;
->> +};
->> +
->> +static const char * const clk_out1_parents[] =3D { "osc", "osc_div2",
->> +	"osc_div4", "extern1",
->> +};
->> +
->> +static const char * const clk_out2_parents[] =3D { "osc", "osc_div2",
->> +	"osc_div4", "extern2",
->> +};
->> +
->> +static const char * const clk_out3_parents[] =3D { "osc", "osc_div2",
->> +	"osc_div4", "extern3",
->> +};
-> There is no way to specify "osc" as a parent clock in a device-tree
-> because there is no DT ID assigned to the OSC in the CaR driver, should
-> this be fixed?
-Yes, we need DT ID for OSC. Will add.
+On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
+>
+> From: Chunyan Zhang <zhang.chunyan@linaro.org>
+>
+> Some standard SD host controllers can support both external dma
+> controllers as well as ADMA/SDMA in which the SD host controller
+> acts as DMA master. TI's omap controller is the case as an example.
+>
+> Currently the generic SDHCI code supports ADMA/SDMA integrated in
+> the host controller but does not have any support for external DMA
+> controllers implemented using dmaengine, meaning that custom code is
+> needed for any systems that use an external DMA controller with SDHCI.
+>
+> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
+> 1. Map scatterlists before dmaengine_prep_slave_sg()
+> 2. Use dma_async() functions inside of the send_command() path and call
+> terminate_sync() in non-atomic context in case of an error.
+>
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  drivers/mmc/host/Kconfig |   3 +
+>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
+>  drivers/mmc/host/sdhci.h |   8 ++
+>  3 files changed, 237 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> index d06b2dfe3c95..adef971582a1 100644
+> --- a/drivers/mmc/host/Kconfig
+> +++ b/drivers/mmc/host/Kconfig
+> @@ -1040,3 +1040,6 @@ config MMC_OWL
+>         help
+>           This selects support for the SD/MMC Host Controller on
+>           Actions Semi Owl SoCs.
+> +
+> +config MMC_SDHCI_EXTERNAL_DMA
+> +       bool
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index f6999054abcf..8cc78c76bc3d 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -10,6 +10,7 @@
+>   */
+>
+>  #include <linux/delay.h>
+> +#include <linux/dmaengine.h>
+>  #include <linux/ktime.h>
+>  #include <linux/highmem.h>
+>  #include <linux/io.h>
+> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+>         sdhci_set_block_info(host, data);
+>  }
+>
+> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
+> +
+> +static int sdhci_external_dma_init(struct sdhci_host *host)
+> +{
+> +       int ret = 0;
+> +       struct mmc_host *mmc = host->mmc;
+> +
+> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
+> +       if (IS_ERR(host->tx_chan)) {
+> +               ret = PTR_ERR(host->tx_chan);
+> +               if (ret != -EPROBE_DEFER)
+> +                       pr_warn("Failed to request TX DMA channel.\n");
+> +               host->tx_chan = NULL;
+> +               return ret;
+> +       }
+> +
+> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
+> +       if (IS_ERR(host->rx_chan)) {
+> +               if (host->tx_chan) {
+> +                       dma_release_channel(host->tx_chan);
+> +                       host->tx_chan = NULL;
+> +               }
+> +
+> +               ret = PTR_ERR(host->rx_chan);
+> +               if (ret != -EPROBE_DEFER)
+> +                       pr_warn("Failed to request RX DMA channel.\n");
+> +               host->rx_chan = NULL;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
+> +                                                  struct mmc_data *data)
+> +{
+> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
+> +}
+> +
+> +static int sdhci_external_dma_setup(struct sdhci_host *host,
+> +                                   struct mmc_command *cmd)
+> +{
+> +       int ret, i;
+> +       struct dma_async_tx_descriptor *desc;
+> +       struct mmc_data *data = cmd->data;
+> +       struct dma_chan *chan;
+> +       struct dma_slave_config cfg;
+> +       dma_cookie_t cookie;
+> +       int sg_cnt;
+> +
+> +       if (!host->mapbase)
+> +               return -EINVAL;
+> +
+> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
+> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
+> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +       cfg.src_maxburst = data->blksz / 4;
+> +       cfg.dst_maxburst = data->blksz / 4;
+> +
+> +       /* Sanity check: all the SG entries must be aligned by block size. */
+> +       for (i = 0; i < data->sg_len; i++) {
+> +               if ((data->sg + i)->length % data->blksz)
+> +                       return -EINVAL;
+> +       }
+> +
+> +       chan = sdhci_external_dma_channel(host, data);
+> +
+> +       ret = dmaengine_slave_config(chan, &cfg);
+> +       if (ret)
+> +               return ret;
+> +
+> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
+> +       if (sg_cnt <= 0)
+> +               return -EINVAL;
+> +
+> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
+> +                                      mmc_get_dma_dir(data),
+> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+> +       if (!desc)
+> +               return -EINVAL;
+> +
+> +       desc->callback = NULL;
+> +       desc->callback_param = NULL;
+> +
+> +       cookie = dmaengine_submit(desc);
+> +       if (cookie < 0)
+
+We usually use the DMA engine standard API: dma_submit_error() to
+validate the cookie.
