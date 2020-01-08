@@ -4,216 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA0DC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 03:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7DEC00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 03:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939812070A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 03:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783CA20848
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 03:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578455000;
-	bh=9HlAFAPdT7inw4rZ02VMCK1iGrci8IZ+q/v1evxjCzY=;
+	s=default; t=1578455162;
+	bh=Ihl+3pdCOlhiMQtJMYRapemNry7m7Oc+/e/RZqPfzGw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=etUur9H9isGKwiUlrh82oYtJN75m20jGwcf/sdJw9eNezbB9v0tuNZkBuDs2Udopn
-	 Ytgy8wQqpy/0W7T1NdlEb/35DwVPos/GinJBBaoFfgtuYXIvEiBOhMiy4KCdRX5pUQ
-	 IeX3OOlyZHesti42kW4KP4YjA1UPxxMJPC/3XY/0=
+	b=bFgFXM1vekP2n080w3Su5mZ6dkkana1MLhpN1whN9ElknxX6GXu0sicuhs8gao8GU
+	 iEKTqTURHZBeuidTtUhdJ6r+m57mwlyD0Ellxp3QWma1WJNu6xmnDgvDLCh4+A2RuT
+	 ydpLBJoUuncWBHruRUCk5C1fC2vnxDWXJFqzmdKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbgAHDnT (ORCPT
+        id S1726210AbgAHDqB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 22:43:19 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38052 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726145AbgAHDnS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 22:43:18 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l9so1492331oii.5
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 19:43:18 -0800 (PST)
+        Tue, 7 Jan 2020 22:46:01 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42153 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgAHDqB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 22:46:01 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 18so1470493oin.9
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 19:46:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ilH05ihXEuc/NhF/tPgNdcykj6uPjvXn5uaHX6J7/Ak=;
-        b=exVz2/aKTJoPTzXpa1SOgTHvm1uu/YFkQU/MRmRCcFpKf8ZB9cSSUs0dB2BV9WkE8Q
-         9U0uIGZo82B2p0W6Hr73AUHVGP/bLJXIKicmla2ezRu2dWudAcuNzkssRcweeCOPVE5U
-         b3KhUKWq222zqhP7/XkyyDnuH3mX0mk4A0tdBTY66sMUnIxmf5tDb9sWmzXCDl3wTvHS
-         BqjnF3gmsyKy/OjvAtvD6+XFgMFeYqMbsM6zg6GbdNwmB80FXsAJG2uGyTTYVI4DG3A0
-         3zvA0ftCgFOHqwZLTirxHTWPrSDBMS9uAsn5cdHAQGen03dyFNcYmx5rEboEj5wJ2SaN
-         MLOA==
-X-Gm-Message-State: APjAAAWcJ4xhhVZl4rvBzuuTMvR3pcL9GMkddxFl6lvFlxKJ7HZp1qFp
-        riHcTZi0o4IFNtEjIqON3kBPZNw=
-X-Google-Smtp-Source: APXvYqxaNhEHHFuq1MJg7pmkqChfgKXpPNQEAB+HJzFdERGda8MbtWdeH80vLPhOQ6NonewJiYqPuA==
-X-Received: by 2002:aca:5658:: with SMTP id k85mr1369080oib.153.1578454997168;
-        Tue, 07 Jan 2020 19:43:17 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=r+pFes6TBL9qlt9DAArVbPYLSHaTdO8S1tCZhBCIPEc=;
+        b=rpoOyjquoE8HlWnkYdLr5XsYG2HjezZM4dFD0yOcLbXFxnaPYgbSRqk7bctaFl/R8C
+         xkx+eX09OWjT60fefviMZJMIO4hlduJavX/iBslgFeTVn5Eutq6lDV+94iTVLZGv/0Gl
+         tm/4mnNn6otzP01/habmTS/Ew6NZ+xtAaCu7p4Ww0nM3zX8xRcD7QxxTN210Eu+dVFsB
+         MUaNzzP46up9jzViBxTLLisnTQ1vC0Ak1L8UMwccVOPZJiOROhf+/snyOLb+Z+PHKdyy
+         RKhYshDxdAke/zmu0zNX6F0LXX98rXVhOYKNYdtxq9AsuxHVmHVBJH3S+X6WyImk6+dS
+         1oTQ==
+X-Gm-Message-State: APjAAAWcfqh/bmx2pDux8lrOIwWK5TvYP3fUqd0iSwWk2v6CEpaTSyfu
+        dyLTgNgl6FqKmoh0dWudn8Uwog8=
+X-Google-Smtp-Source: APXvYqyD7MkYbUM3VzyFdWZuav47RtjwfZlEhZyfjZ92aIrzB+CQcOqt019up3x5TpozdjXnDd/5Kg==
+X-Received: by 2002:aca:b183:: with SMTP id a125mr1469049oif.83.1578455160694;
+        Tue, 07 Jan 2020 19:46:00 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d7sm651094otc.73.2020.01.07.19.43.14
+        by smtp.gmail.com with ESMTPSA id f1sm657145otq.4.2020.01.07.19.46.00
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 19:43:15 -0800 (PST)
+        Tue, 07 Jan 2020 19:46:00 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
         id 2219e3
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 07 Jan 2020 21:43:14 -0600
-Date:   Tue, 7 Jan 2020 21:43:14 -0600
+        Tue, 07 Jan 2020 21:45:59 -0600
+Date:   Tue, 7 Jan 2020 21:45:59 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 01/14] dt-bindings: PCI: cadence: Add PCIe RC/EP DT
- schema for Cadence PCIe
-Message-ID: <20200108034314.GA5412@bogus>
-References: <20200106102058.19183-1-kishon@ti.com>
- <20200106102058.19183-2-kishon@ti.com>
+To:     Daniel Mack <daniel@zonque.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org,
+        lee.jones@linaro.org, lars@metafoo.de, pascal.huerst@gmail.com
+Subject: Re: [PATCH 02/10] dt-bindings: i2c: Add documentation for ad242x i2c
+ controllers
+Message-ID: <20200108034559.GA27808@bogus>
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-3-daniel@zonque.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200106102058.19183-2-kishon@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191209183511.3576038-3-daniel@zonque.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 03:50:45PM +0530, Kishon Vijay Abraham I wrote:
-> Add PCIe Host (RC) and Endpoint (EP) device tree schema for Cadence
-> PCIe core library. Platforms using Cadence PCIe core can include the
-> schemas added here in the platform specific schemas.
+On Mon, Dec 09, 2019 at 07:35:02PM +0100, Daniel Mack wrote:
+> This device must be placed as a sub-device of an AD242x MFD node.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
 > ---
->  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 20 ++++++++++++
->  .../bindings/pci/cdns-pcie-host.yaml          | 30 +++++++++++++++++
->  .../devicetree/bindings/pci/cdns-pcie.yaml    | 32 +++++++++++++++++++
->  3 files changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-
-Need to remove the old files.
-
-Note that I posted a conversion of Cadence host[1]. Yours goes further, 
-but please compare and add anything mine has that yours doesn't.
-
-[1] https://lore.kernel.org/linux-pci/20191231193903.15929-2-robh@kernel.org/
-
+>  .../bindings/i2c/adi,ad242x-i2c.yaml          | 31 +++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
+> diff --git a/Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml b/Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml
 > new file mode 100644
-> index 000000000000..36aaae5931c3
+> index 000000000000..ded92f8a791b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
-> @@ -0,0 +1,20 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +--
-> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence PCIe Endpoint
-> +
-> +maintainers:
-> +  - Tom Joseph <tjoseph@cadence.com>
-> +
-> +allOf:
-> +  - $ref: "cdns-pcie.yaml#"
-> +
-> +properties:
-> +  max-functions:
-> +    description: Maximum number of functions that can be configured (default 1)
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint8
-> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-> new file mode 100644
-> index 000000000000..78261bc4f0c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-> @@ -0,0 +1,30 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+> +++ b/Documentation/devicetree/bindings/i2c/adi,ad242x-i2c.yaml
+> @@ -0,0 +1,31 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-host.yaml#"
+> +$id: "http://devicetree.org/schemas/i2c/adi,ad242x-i2c.yaml#"
 > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +title: Cadence PCIe Host
+> +title: Analog Devices AD242x I2C controller
 > +
 > +maintainers:
-> +  - Tom Joseph <tjoseph@cadence.com>
+> +  - Daniel Mack <daniel@zonque.org>
 > +
 > +allOf:
-> +  - $ref: "/schemas/pci/pci-bus.yaml#"
-> +  - $ref: "cdns-pcie.yaml#"
+> +  - $ref: /schemas/i2c/i2c-controller.yaml#
+> +
+> +description: |
+> +  This module is part of the AD242x MFD device. For more details and an example
+> +  refer to Documentation/devicetree/bindings/mfd/ad242x.yaml.
 > +
 > +properties:
-> +  vendor-id:
-> +    description: The PCI vendor ID (16 bits, default is design dependent)
+> +  compatible:
+> +    enum:
+> +      - adi,ad2428w-i2c
 > +
-> +  device-id:
-> +    description: The PCI device ID (16 bits, default is design dependent)
+> +  clock-frequency:
+> +    $ref: '/schemas/types.yaml#/definitions/uint32'
 
-While these got defined here as 16-bits, these should be fixed to 32-bit 
-because they are established properties for a long time.
+Can drop as it already has a type.
 
+> +    default: 100000
+> +    enum: [100000, 400000]
+> +    description: Specifies the I²C clock frequency in Hz.
 > +
-> +  cdns,no-bar-match-nbits:
-> +    description: Set into the no BAR match register to configure the number
-> +      of least significant bits kept during inbound (PCIe -> AXI) address
-> +      translations (default 32)
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-
-What about compatible?
-
-> +
-> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-> new file mode 100644
-> index 000000000000..497d3dc2e6f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/cdns-pcie.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence PCIe Core
-> +
-> +maintainers:
-> +  - Tom Joseph <tjoseph@cadence.com>
-> +
-> +properties:
-> +  max-link-speed:
-> +    minimum: 1
-> +    maximum: 3
-> +
-> +  num-lanes:
-> +    minimum: 1
-> +    maximum: 2
-
-Needs a type.
-
-The Cadence IP can't support x4, x8, or x16?
-
-> +
-> +  cdns,max-outbound-regions:
-> +    description: Set to maximum number of outbound regions.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  phys:
-> +    description: List of Generic PHY phandles. One per lane if more than one in
-> +      the list. If only one PHY listed it must manage all lanes.
-> +
-> +  phy-names:
-> +    description: List of names to identify the PHY.
+> +required:
+> +  - compatible
 > -- 
-> 2.17.1
+> 2.23.0
 > 
