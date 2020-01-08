@@ -2,295 +2,101 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05281C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E1EC282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50BF205F4
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t44lAC4V"
+	by mail.kernel.org (Postfix) with ESMTP id 47C352073A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 13:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578489785;
+	bh=cTUeJMrPuAapMRQ3yHGUc1ITEIgv9Zm9prsnYmYx4vE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l1VpxbaP4Ho4Bpa4NtgDdZ/1QOxHzzBnlvz6rJlb5ai+c8KgsVnrL1EKZ7aovXej4
+	 7UQocjzI6FPFsL1iV2b1WA4XeAYz8qCZ5Tk8Fv5RHIAe4Kl7eP9kqLXMYFEtOKK90j
+	 0ioK9sv2N9IHgtiwyWr4RRRNFxyQhcRvOL0uVVBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgAHNM7 (ORCPT
+        id S1726947AbgAHNXE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 08:12:59 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46031 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgAHNMt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 08:12:49 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so3257591wrj.12;
-        Wed, 08 Jan 2020 05:12:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=St6q5202LZ4WNScNSwJG5KHQgHK6N7FvcWjRsWrSrMk=;
-        b=t44lAC4VEPhv2FUv6NZsyfkGeSg4b0veibBNSBMefoVwuYSFMD9PZAxIk8XdL0U+uA
-         JzkgAbXdclSPMThsV6GNg4hQlxln68YZ3cq3vrFqLn1LuuKWHTXjxHMVRix1+HEKV72/
-         GdX3wpibbcfzUJYR+i/d1Agpr87vxZ/e7krF9p8XYIuLDwXLeLvf0rGLH1y/gVWGGvHL
-         /+S8Tcg+hWXRDWZ+oWCXVjemk3a5Gw6KHNygSkm9eTuSQ4ItX01RVKiPLnHROtjq+leJ
-         OVjfgFl32sfmT7AopVEpjg5LkoigLscREOj9e7iR2Z79zGme0t8e5ViX9++vJO1yuJXU
-         yh/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=St6q5202LZ4WNScNSwJG5KHQgHK6N7FvcWjRsWrSrMk=;
-        b=PCYFXhEwxVrVk5b/yP4AQaRLT8S86wBrH+osNJzF79s4vIiLYU23rbMIaXj45oYM3X
-         U/XwNDALRFRwos+t7Pg6cet+gOE1w9At6G/pAqPU/c416RhyhpGMiIpK7LsFR+uTIE3k
-         fDrdlFNz7x/twFQ9yR59VsiLdFa0TF68TORLbNPFwPP8sIwQ3zwBRWu19LATAVpeuYYN
-         u17tLcjFQF6Nw3Pyb1IislDA5Lqv4mWTyzsOwKP+nV6n7KOLREb1supfMcxGoEi8TEnv
-         B8uqvFjeunSpEHJ1wOD0LjJVtW2oE8j0/p8gnbbeq6+KIZ3UhJy8VuBqCXV4nn09sZkp
-         roDg==
-X-Gm-Message-State: APjAAAVcfONqFC6c77zKuS3vYUFMgU5nyBdzEW5Q7ILmyhd1wP3OKru3
-        hKalcmDVH6ufDtP1lZMPObU=
-X-Google-Smtp-Source: APXvYqx40dgOsDZgOrARQvsYerdlaDXzxdk8zr5blSt+XtkGK4gh+Rl/Zkjd5YjLsFiDRkdp5GIqsw==
-X-Received: by 2002:adf:ebc6:: with SMTP id v6mr4513898wrn.75.1578489166322;
-        Wed, 08 Jan 2020 05:12:46 -0800 (PST)
-Received: from localhost.localdomain (p5B3F64F6.dip0.t-ipconnect.de. [91.63.100.246])
-        by smtp.gmail.com with ESMTPSA id k82sm3875878wmf.10.2020.01.08.05.12.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 05:12:45 -0800 (PST)
-From:   Saravanan Sekar <sravanhome@gmail.com>
-To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        shawnguo@kernel.org, heiko@sntech.de, sam@ravnborg.org,
-        icenowy@aosc.io, laurent.pinchart@ideasonboard.com,
-        gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/4] dt-bindings: regulator: add document bindings for mpq7920
-Date:   Wed,  8 Jan 2020 14:12:32 +0100
-Message-Id: <20200108131234.24128-3-sravanhome@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200108131234.24128-1-sravanhome@gmail.com>
-References: <20200108131234.24128-1-sravanhome@gmail.com>
+        Wed, 8 Jan 2020 08:23:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:44500 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726757AbgAHNXE (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jan 2020 08:23:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A8B431B;
+        Wed,  8 Jan 2020 05:23:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99F2B3F703;
+        Wed,  8 Jan 2020 05:23:03 -0800 (PST)
+Date:   Wed, 8 Jan 2020 13:23:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org
+Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
+ for the GPU
+Message-ID: <20200108132302.GA3817@sirena.org.uk>
+References: <20200108052337.65916-1-drinkcat@chromium.org>
+ <20200108052337.65916-5-drinkcat@chromium.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Disposition: inline
+In-Reply-To: <20200108052337.65916-5-drinkcat@chromium.org>
+X-Cookie: Trouble always comes at the wrong time.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add device tree binding information for mpq7920 regulator driver.
-Example bindings for mpq7920 are added.
 
-Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
----
- .../bindings/regulator/mps,mpq7920.yaml       | 202 ++++++++++++++++++
- 1 file changed, 202 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-new file mode 100644
-index 000000000000..598f3ea070c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
-@@ -0,0 +1,202 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/mps,mpq7920.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Monolithic Power System MPQ7920 PMIC
-+
-+maintainers:
-+  - Saravanan Sekar <sravanhome@gmail.com>
-+
-+properties:
-+  $nodename:
-+    pattern: "pmic@[0-9a-f]{1,2}"
-+  compatible:
-+    enum:
-+      - mps,mpq7920
-+
-+  reg:
-+    maxItems: 1
-+
-+  regulators:
-+    type: object
-+    description: |
-+      list of regulators provided by this controller, must be named
-+      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
-+
-+      mps,switch-freq:
-+        description: |
-+          switching frequency must be one of following corresponding value
-+          1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
-+        $ref: "/schemas/types.yaml#/definitions/uint8"
-+        enum: [ 0, 1, 2, 3 ]
-+        default: 2
-+
-+      buck1:
-+        type: object
-+        $ref: "regulator.yaml#"
-+        description: |
-+          4.5A DC-DC step down converter
-+
-+        mps,buck-softstart:
-+           $ref: "/schemas/types.yaml#/definitions/uint8"
-+           enum: [ 0, 1, 2, 3 ]
-+           default: 1
-+           description: |
-+             defines the soft start time of this buck, must be one of the following
-+             corresponding values 150us, 300us, 610us, 920us
-+
-+         mps,buck-phase-delay:
-+           $ref: "/schemas/types.yaml#/definitions/uint8"
-+           enum: [ 0, 1, 2, 3 ]
-+           default: 0
-+           description: |
-+             defines the phase delay of this buck, must be one of the following
-+             corresponding values 0deg, 90deg, 180deg, 270deg
-+
-+         mps,buck-ovp-disable:
-+           type: boolean
-+           description: |
-+             disables over voltage protection of this buck
-+
-+      buck2:
-+        type: object
-+        $ref: "regulator.yaml#"
-+        description: |
-+          2.5A DC-DC step down converter
-+
-+        mps,buck-softstart:
-+          description: |
-+            defines the soft start time of this buck, must be one of the following
-+            corresponding values 150us, 300us, 610us, 920us
-+          $ref: "/schemas/types.yaml#/definitions/uint8"
-+          enum: [ 0, 1, 2, 3 ]
-+          default: 1
-+
-+        mps,buck-phase-delay:
-+          description: |
-+            defines the phase delay of this buck, must be one of the following
-+            corresponding values 0deg, 90deg, 180deg, 270deg
-+          $ref: "/schemas/types.yaml#/definitions/uint8"
-+          enum: [ 0, 1, 2, 3 ]
-+          default: 0
-+
-+        mps,buck-ovp-disable:
-+          description: |
-+            disables over voltage protection of this buck
-+          type: boolean
-+
-+      buck3:
-+        type: object
-+        $ref: "regulator.yaml#"
-+        description: |
-+          4.5A DC-DC step down converter
-+
-+        mps,buck-softstart:
-+           description: |
-+             defines the soft start time of this buck, must be one of the following
-+             corresponding values 150us, 300us, 610us, 920us
-+           $ref: "/schemas/types.yaml#/definitions/uint8"
-+           enum: [ 0, 1, 2, 3 ]
-+           default: 1
-+
-+         mps,buck-phase-delay:
-+           description: |
-+             defines the phase delay of this buck, must be one of the following
-+             corresponding values 0deg, 90deg, 180deg, 270deg
-+           $ref: "/schemas/types.yaml#/definitions/uint8"
-+           enum: [ 0, 1, 2, 3 ]
-+           default: 1
-+
-+         mps,buck-ovp-disable:
-+           description: |
-+             disables over voltage protection of this buck
-+           type: boolean
-+
-+      buck4:
-+        type: object
-+        $ref: "regulator.yaml#"
-+        description: |
-+          2.5A DC-DC step down converter
-+
-+        mps,buck-softstart:
-+          description: |
-+            defines the soft start time of this buck, must be one of the following
-+            corresponding values 150us, 300us, 610us, 920us
-+          $ref: "/schemas/types.yaml#/definitions/uint8"
-+          enum: [ 0, 1, 2, 3 ]
-+          default: 1
-+
-+        mps,buck-phase-delay:
-+          description: |
-+            defines the phase delay of this buck, must be one of the following
-+            corresponding values 0deg, 90deg, 180deg, 270deg
-+          $ref: "/schemas/types.yaml#/definitions/uint8"
-+          enum: [ 0, 1, 2, 3 ]
-+          default: 1
-+
-+        mps,buck-ovp-disable:
-+          description: |
-+            disables over voltage protection of this buck
-+          type: boolean
-+
-+      ldortc:
-+        $ref: "regulator.yaml#"
-+        description: |
-+          regulator with 0.65V-3.5875V for RTC, always enabled
-+
-+      ldo2:
-+        $ref: "regulator.yaml#"
-+        description: |
-+          regulator with 0.65V-3.5875V
-+
-+      ldo3:
-+        $ref: "regulator.yaml#"
-+        description: |
-+          regulator with 0.65V-3.5875V
-+
-+      ldo4:
-+        $ref: "regulator.yaml#"
-+        description: |
-+          regulator with 0.65V-3.5875V
-+
-+      ldo5:
-+        $ref: "regulator.yaml#"
-+        description: |
-+          regulator with 0.65V-3.5875V
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pmic@69 {
-+          compatible = "mps,mpq7920";
-+          reg = <0x69>;
-+
-+          regulators {
-+            mps,switch-freq = <1>;
-+
-+            buck1 {
-+             regulator-name = "buck1";
-+             regulator-min-microvolt = <400000>;
-+             regulator-max-microvolt = <3587500>;
-+             regulator-min-microamp  = <460000>;
-+             regulator-max-microamp  = <7600000>;
-+             regulator-boot-on;
-+             mps,buck-ovp-disable;
-+             mps,buck-phase-delay = <2>;
-+             mps,buck-softstart = <1>;
-+            };
-+
-+            ldo2 {
-+             regulator-name = "ldo2";
-+             regulator-min-microvolt = <650000>;
-+             regulator-max-microvolt = <3587500>;
-+            };
-+         };
-+       };
-+     };
-+...
--- 
-2.17.1
+On Wed, Jan 08, 2020 at 01:23:34PM +0800, Nicolas Boichat wrote:
 
+> Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
+> regulator for their SRAM, let's add support for that.
+
+> +	pfdev->regulator_sram = devm_regulator_get_optional(pfdev->dev, "sram");
+> +	if (IS_ERR(pfdev->regulator_sram)) {
+
+This supply is required for the devices that need it so I'd therefore
+expect the driver to request the supply non-optionally based on the
+compatible string rather than just hoping that a missing regulator isn't
+important.  Though I do have to wonder given the lack of any active
+management of the supply if this is *really* part of the GPU or if it's
+more of a SoC thing, it's not clear what exactly adding this code is
+achieving.
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4V17MACgkQJNaLcl1U
+h9B1Tgf9F6myo+YZUDZcDAsE1tQHONaZ147hS3g2NDCgQf79b/fWyNVelAPRvxg+
+wz+J0q2LmDX9K0ldimkt+BEitrL5aVQsPjw/WOXbOk/n4FBP11uDMxk9i586GGfO
+EXHDmfUQh8D+wEjZBKck8+yaa0NYCFoHdlxc3rPILim9fGRiJKa18EdbPRfb7lNm
+86k2Nkicmd8gkBfk7GlJ8MgGabr1ezpiza+F/vhTkEm+WHCcDwy+BadJG5whNnC0
+GmKn0ieyraLxmVUjC4BpkJbeG/ye5VPCOcLn4ZjGrRU209STb45MyFAlAaYFNzX0
+0wWQAm/aPa23vn2QhxYUW1RALdueLQ==
+=UhEZ
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
