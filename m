@@ -4,100 +4,177 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69B1C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB37BC00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2F820673
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 800A820673
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:32:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jIrcwa1d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mubr9Yrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgAHKWI (ORCPT
+        id S1727790AbgAHKcR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:22:08 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16842 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726368AbgAHKWI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 05:22:08 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008ADnJ7030854;
-        Wed, 8 Jan 2020 11:21:51 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=TYfln+0XXf027Uy3uDGknh/wr9TsRfllIQ1i3R7P5zo=;
- b=jIrcwa1dSelJaj4xkAqslSzeRCcLNKu/0Z5fUDjkk67spLfeusQnw+ggVtFaS+pqbavs
- PMD0cW0haTYwmVxzWLYdfnwn4rSfWoYsFsw+CVjA796y9mr9n2p4P8893orUwdLvvQhn
- liEcJvods6TfY86DEkVa9WKTFjLKJpZoGL/cH8ViMaEMLxYa/aT5mJ7dTHnOKed2coxc
- lnLcM9n8oqanfg+bsd6JeBDgtJ+Fndpz7RY53EEqKpsQ1ClPM7Wt1ii6c3zjG7tSJJDi
- GSZkAV31T5QkmKWBcs3PRnUiFTzyYc/WutrZFqpveMZMwnP9kfwGKT9b9Cg9hk+Nymp7 Vw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2xakkauetj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 08 Jan 2020 11:21:51 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 033B2100038;
-        Wed,  8 Jan 2020 11:21:46 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C92022A8A6E;
-        Wed,  8 Jan 2020 11:21:46 +0100 (CET)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
- 2020 11:21:46 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Wed, 8 Jan 2020 11:21:46 +0100
-From:   Patrice CHOTARD <patrice.chotard@st.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 8 Jan 2020 05:32:17 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44898 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbgAHKcQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 05:32:16 -0500
+Received: by mail-pl1-f194.google.com with SMTP id az3so949091plb.11
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 02:32:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JRSseHLewK0ltHlOf6IIEMSjngjyOxSD/KfPZ4IpVLI=;
+        b=mubr9YrxsOv2C7hQ34JdHTW+nIwSF2+agoCwwGIe38uqhRdL/w+coigyFZAX/abKN4
+         53EXMRyLW1XlzXdjaYINHxBYivMQ71jxTtaj/3m8fTTW7uZn2QIMDC/RvBC2RX5GZGPj
+         IBcFRr22CvB2+x/Aylp6ue8NFLAW14HcKIalz5FP+DWrW3dxQvQ3TgOJOPaK8R/UwYdc
+         biITeYn18Tard2Om0MBmQyDsgP3WEQ9gqj55g4K2XjkzQKhBS7RkBn+FtnOEmmuVAsuN
+         rGzBh4icbFZFEcGCVFYu0z7HvX6DwNHGTPx29tI9i+nmvt7TnlbRX29hCZVWp0QuPdgo
+         Gc0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JRSseHLewK0ltHlOf6IIEMSjngjyOxSD/KfPZ4IpVLI=;
+        b=D3ULtQzJaSMwT3tdCQTgmDj9Ozt2OsA7kZnG0jy595OVGFmCbvJYQzEgHASEN9rTGH
+         SjQPKPs5XKdZHfH0mRS76YQutZZeKRTFM5PbbgRuju446X6+oOfVkqlYYkLxjsBUpYgP
+         6j9RfAVwqFUdkzKriBS75ydQUj3hdxb+EW8k8oF2B0+N7vob+BiuAwl4tSpLxXuIQkCK
+         jPjyhaKhfZJ4tjqMIM3QqKwN7zyXPdXuN2Y0koVCslMkpBEd1S3/kJ1gQk+7YgqE4+tR
+         uwZja/C0JxVbha4rHlZoHppE4OMieVQv6nhtJGItnZ+GbmvLFRvg6djUlJSQMBq5zYnN
+         DyKA==
+X-Gm-Message-State: APjAAAW3SIqJX+0+tN3Zl+v5vqj+pu/HrG8P5PW9Zh5jGQurrZw9wlm5
+        9ai2NxCj0dF0IBRdInHVuenkoQ==
+X-Google-Smtp-Source: APXvYqzl2pKlCO2kMLeHPiwC65RgF/2o1TWeA38eJFNgsrc5MhPHh89c3t41AVilMN+OeoXZstB+vw==
+X-Received: by 2002:a17:90a:cb16:: with SMTP id z22mr3550255pjt.122.1578479535942;
+        Wed, 08 Jan 2020 02:32:15 -0800 (PST)
+Received: from localhost ([122.172.26.121])
+        by smtp.gmail.com with ESMTPSA id d24sm3082639pfq.75.2020.01.08.02.32.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 02:32:15 -0800 (PST)
+Date:   Wed, 8 Jan 2020 16:02:10 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux-DT <devicetree@vger.kernel.org>,
-        Linux-ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: stihxxx-b2120.dtsi: fixup sound frame-inversion
-Thread-Topic: [PATCH] ARM: stihxxx-b2120.dtsi: fixup sound frame-inversion
-Thread-Index: AQHVs7XByhrpIEFc6kCeIo0ELQ1dwafgoquA
-Date:   Wed, 8 Jan 2020 10:21:46 +0000
-Message-ID: <e7ae8519-9b19-a23b-8743-9a2ab6da5919@st.com>
-References: <87lfrd3tu8.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87lfrd3tu8.wl-kuninori.morimoto.gx@renesas.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <87E319AF7ED09A46AC66406E93AFC4BD@st.com>
-Content-Transfer-Encoding: base64
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        kernel-team@android.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: opp: Introduce opp-peak-kBps and
+ opp-avg-kBps bindings
+Message-ID: <20200108103210.oyrqxlybrdbelkne@vireshk-i7>
+References: <20191207002424.201796-1-saravanak@google.com>
+ <20191207002424.201796-2-saravanak@google.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_01:2020-01-08,2020-01-08 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191207002424.201796-2-saravanak@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgS3VuaW5vcmkNCg0KT24gMTIvMTYvMTkgMzowOCBBTSwgS3VuaW5vcmkgTW9yaW1vdG8gd3Jv
-dGU6DQo+IEZyb206IEt1bmlub3JpIE1vcmltb3RvIDxrdW5pbm9yaS5tb3JpbW90by5neEByZW5l
-c2FzLmNvbT4NCj4NCj4gZnJhbWUtaW52ZXJzaW9uIGlzICJmbGFnIiBub3QgInVpbnQzMiIuDQo+
-IFRoaXMgcGF0Y2ggZml4dXAgaXQuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEt1bmlub3JpIE1vcmlt
-b3RvIDxrdW5pbm9yaS5tb3JpbW90by5neEByZW5lc2FzLmNvbT4NCj4gLS0tDQo+ICBhcmNoL2Fy
-bS9ib290L2R0cy9zdGloeHh4LWIyMTIwLmR0c2kgfCAyICstDQo+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N0aWh4eHgtYjIxMjAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWh4eHgt
-YjIxMjAuZHRzaQ0KPiBpbmRleCA2MGUxMTA0Li5kMDUxZjA4IDEwMDY0NA0KPiAtLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9zdGloeHh4LWIyMTIwLmR0c2kNCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvc3RpaHh4eC1iMjEyMC5kdHNpDQo+IEBAIC00Niw3ICs0Niw3IEBADQo+ICAJCQkvKiBEQUMg
-Ki8NCj4gIAkJCWZvcm1hdCA9ICJpMnMiOw0KPiAgCQkJbWNsay1mcyA9IDwyNTY+Ow0KPiAtCQkJ
-ZnJhbWUtaW52ZXJzaW9uID0gPDE+Ow0KPiArCQkJZnJhbWUtaW52ZXJzaW9uOw0KPiAgCQkJY3B1
-IHsNCj4gIAkJCQlzb3VuZC1kYWkgPSA8JnN0aV91bmlfcGxheWVyMj47DQo+ICAJCQl9Ow0KDQpS
-ZXZpZXdlZC1ieTogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29tPg0KDQpU
-aGFua3MNCg0K
+On 06-12-19, 16:24, Saravana Kannan wrote:
+> Interconnects often quantify their performance points in terms of
+> bandwidth. So, add opp-peak-kBps (required) and opp-avg-kBps (optional) to
+> allow specifying Bandwidth OPP tables in DT.
+> 
+> opp-peak-kBps is a required property that replaces opp-hz for Bandwidth OPP
+> tables.
+> 
+> opp-avg-kBps is an optional property that can be used in Bandwidth OPP
+> tables.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/opp/opp.txt     | 15 ++++++++++++---
+>  .../devicetree/bindings/property-units.txt        |  4 ++++
+>  2 files changed, 16 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+> index 68592271461f..dbad8eb6c746 100644
+> --- a/Documentation/devicetree/bindings/opp/opp.txt
+> +++ b/Documentation/devicetree/bindings/opp/opp.txt
+> @@ -83,9 +83,14 @@ properties.
+>  
+>  Required properties:
+>  - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
+> -  required property for all device nodes but devices like power domains. The
+> -  power domain nodes must have another (implementation dependent) property which
+> -  uniquely identifies the OPP nodes.
+> +  required property for all device nodes except for devices like power domains
+> +  or bandwidth opp tables.
+
+Fine until here.
+
+> The power domain nodes must have another
+> +  (implementation dependent) property which uniquely identifies the OPP nodes.
+> +  The interconnect opps are required to have the opp-peak-kBps property.
+
+Maybe rewrite it as:
+
+The devices which don't have this property must have another
+(implementation dependent) property which uniquely identifies the OPP
+nodes.
+
+So we won't be required to update this again for another property.
+
+> +
+> +- opp-peak-kBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
+> +  big-endian integer.
+
+> This is a required property for all devices that don't
+> +  have opp-hz.
+
+This statement is surely incorrect, isn't it ? What about power-domain
+tables ?
+
+Suggest rewriting it as:
+
+This is a required property for bandwidth OPP tables.
+
+> For example, bandwidth OPP tables for interconnect paths.
+>  
+>  Optional properties:
+>  - opp-microvolt: voltage in micro Volts.
+> @@ -132,6 +137,10 @@ Optional properties:
+>  - opp-level: A value representing the performance level of the device,
+>    expressed as a 32-bit integer.
+>  
+> +- opp-avg-kBps: Average bandwidth in kilobytes per second, expressed as a
+> +  32-bit big-endian integer. This property is only meaningful in OPP tables
+> +  where opp-peak-kBps is present.
+> +
+>  - clock-latency-ns: Specifies the maximum possible transition latency (in
+>    nanoseconds) for switching to this OPP from any other OPP.
+>  
+> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+> index e9b8360b3288..c80a110c1e26 100644
+> --- a/Documentation/devicetree/bindings/property-units.txt
+> +++ b/Documentation/devicetree/bindings/property-units.txt
+> @@ -41,3 +41,7 @@ Temperature
+>  Pressure
+>  ----------------------------------------
+>  -kpascal	: kilopascal
+> +
+> +Throughput
+> +----------------------------------------
+> +-kBps		: kilobytes per second
+> -- 
+> 2.24.0.393.g34dc348eaf-goog
+
+-- 
+viresh
