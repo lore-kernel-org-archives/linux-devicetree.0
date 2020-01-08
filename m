@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C299C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFD5C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78C92077B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D2C2070E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578499151;
-	bh=D4L6+FD9qqSfQmjxGQsIt3OSzapL79mcVPmvOSrn5tg=;
+	s=default; t=1578499196;
+	bh=ZmnIzpp81DmxYJOfDGkQtwvrwcDh8+AwRb0AtE1IvR0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=SvTWLiTSK3r6Jc/vFHbGNP4Yzw2tF9JV9hvHKbpIluwjUvBv7yBlUfwyDS7CQMkI2
-	 4TpuIhSsZZuBEGtWfHU+/v3SxvamSLBranAK1HTjBhj2b2BbJF6wCAsTgwPpiTqHV/
-	 aCrq+gov5xiy/FIpnSDzG3y/v+Sbtau0txl95XEw=
+	b=Sr22r4QSTgisI2r9BX98X9nH1H9tiXlLiOCHA2qvcfP9EGXDhyKUQCfDFUsAmmr13
+	 jhVTyycH2NuFpW8EcCqKDKyfsOlaZoeLmk+zZU9jwT2TuMM3iUhdFy5pTlX+QMuA1p
+	 amdqc6qY7TjxWo216wNUuo4dSLxtn2BMvpTUjHDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgAHP7C (ORCPT
+        id S1729185AbgAHP6z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:59:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:46660 "EHLO foss.arm.com"
+        Wed, 8 Jan 2020 10:58:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:46604 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729213AbgAHP7C (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jan 2020 10:59:02 -0500
+        id S1727746AbgAHP6y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jan 2020 10:58:54 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 518FA328;
-        Wed,  8 Jan 2020 07:59:01 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F6CEDA7;
+        Wed,  8 Jan 2020 07:58:54 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD6253F534;
-        Wed,  8 Jan 2020 07:59:00 -0800 (PST)
-Date:   Wed, 08 Jan 2020 15:58:59 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CAA9A3F534;
+        Wed,  8 Jan 2020 07:58:53 -0800 (PST)
+Date:   Wed, 08 Jan 2020 15:58:52 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Saravanan Sekar <sravanhome@gmail.com>
 Cc:     broonie@kernel.org, davem@davemloft.net,
@@ -42,12 +42,11 @@ Cc:     broonie@kernel.org, davem@davemloft.net,
         laurent.pinchart@ideasonboard.com, lgirdwood@gmail.com,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         mark.rutland@arm.com, mchehab+samsung@kernel.org,
-        mripard@kernel.org, robh+dt@kernel.org,
-        Rob Herring <robh@kernel.org>, sam@ravnborg.org,
+        mripard@kernel.org, robh+dt@kernel.org, sam@ravnborg.org,
         shawnguo@kernel.org, sravanhome@gmail.com
-Subject: Applied "dt-bindings: Add an entry for Monolithic Power System, MPS" to the regulator tree
-In-Reply-To: <20200108131234.24128-2-sravanhome@gmail.com>
-Message-Id: <applied-20200108131234.24128-2-sravanhome@gmail.com>
+Subject: Applied "regulator: bindings: add document bindings for mpq7920" to the regulator tree
+In-Reply-To: <20200108131234.24128-3-sravanhome@gmail.com>
+Message-Id: <applied-20200108131234.24128-3-sravanhome@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -56,7 +55,7 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   dt-bindings: Add an entry for Monolithic Power System, MPS
+   regulator: bindings: add document bindings for mpq7920
 
 has been applied to the regulator tree at
 
@@ -81,34 +80,230 @@ to this mail.
 Thanks,
 Mark
 
-From 9399e5dc6b679994872a6039849547c416bb6b05 Mon Sep 17 00:00:00 2001
+From f5fa59a61ecac5efcb77b294a10134aab358bb5c Mon Sep 17 00:00:00 2001
 From: Saravanan Sekar <sravanhome@gmail.com>
-Date: Wed, 8 Jan 2020 14:12:31 +0100
-Subject: [PATCH] dt-bindings: Add an entry for Monolithic Power System, MPS
+Date: Wed, 8 Jan 2020 14:12:32 +0100
+Subject: [PATCH] regulator: bindings: add document bindings for mpq7920
 
-Add an entry for Monolithic Power System, MPS
+Add device tree binding information for mpq7920 regulator driver.
+Example bindings for mpq7920 are added.
 
 Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20200108131234.24128-2-sravanhome@gmail.com
+Link: https://lore.kernel.org/r/20200108131234.24128-3-sravanhome@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/regulator/mps,mpq7920.yaml       | 202 ++++++++++++++++++
+ 1 file changed, 202 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 6046f4555852..5eac9d08bfa8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -605,6 +605,8 @@ patternProperties:
-     description: MiraMEMS Sensing Technology Co., Ltd.
-   "^mitsubishi,.*":
-     description: Mitsubishi Electric Corporation
-+  "^mps,.*":
-+    description: Monolithic Power Systems, Inc.
-   "^mosaixtech,.*":
-     description: Mosaix Technologies, Inc.
-   "^motorola,.*":
+diff --git a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+new file mode 100644
+index 000000000000..598f3ea070c9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+@@ -0,0 +1,202 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/mps,mpq7920.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Monolithic Power System MPQ7920 PMIC
++
++maintainers:
++  - Saravanan Sekar <sravanhome@gmail.com>
++
++properties:
++  $nodename:
++    pattern: "pmic@[0-9a-f]{1,2}"
++  compatible:
++    enum:
++      - mps,mpq7920
++
++  reg:
++    maxItems: 1
++
++  regulators:
++    type: object
++    description: |
++      list of regulators provided by this controller, must be named
++      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
++
++      mps,switch-freq:
++        description: |
++          switching frequency must be one of following corresponding value
++          1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
++        $ref: "/schemas/types.yaml#/definitions/uint8"
++        enum: [ 0, 1, 2, 3 ]
++        default: 2
++
++      buck1:
++        type: object
++        $ref: "regulator.yaml#"
++        description: |
++          4.5A DC-DC step down converter
++
++        mps,buck-softstart:
++           $ref: "/schemas/types.yaml#/definitions/uint8"
++           enum: [ 0, 1, 2, 3 ]
++           default: 1
++           description: |
++             defines the soft start time of this buck, must be one of the following
++             corresponding values 150us, 300us, 610us, 920us
++
++         mps,buck-phase-delay:
++           $ref: "/schemas/types.yaml#/definitions/uint8"
++           enum: [ 0, 1, 2, 3 ]
++           default: 0
++           description: |
++             defines the phase delay of this buck, must be one of the following
++             corresponding values 0deg, 90deg, 180deg, 270deg
++
++         mps,buck-ovp-disable:
++           type: boolean
++           description: |
++             disables over voltage protection of this buck
++
++      buck2:
++        type: object
++        $ref: "regulator.yaml#"
++        description: |
++          2.5A DC-DC step down converter
++
++        mps,buck-softstart:
++          description: |
++            defines the soft start time of this buck, must be one of the following
++            corresponding values 150us, 300us, 610us, 920us
++          $ref: "/schemas/types.yaml#/definitions/uint8"
++          enum: [ 0, 1, 2, 3 ]
++          default: 1
++
++        mps,buck-phase-delay:
++          description: |
++            defines the phase delay of this buck, must be one of the following
++            corresponding values 0deg, 90deg, 180deg, 270deg
++          $ref: "/schemas/types.yaml#/definitions/uint8"
++          enum: [ 0, 1, 2, 3 ]
++          default: 0
++
++        mps,buck-ovp-disable:
++          description: |
++            disables over voltage protection of this buck
++          type: boolean
++
++      buck3:
++        type: object
++        $ref: "regulator.yaml#"
++        description: |
++          4.5A DC-DC step down converter
++
++        mps,buck-softstart:
++           description: |
++             defines the soft start time of this buck, must be one of the following
++             corresponding values 150us, 300us, 610us, 920us
++           $ref: "/schemas/types.yaml#/definitions/uint8"
++           enum: [ 0, 1, 2, 3 ]
++           default: 1
++
++         mps,buck-phase-delay:
++           description: |
++             defines the phase delay of this buck, must be one of the following
++             corresponding values 0deg, 90deg, 180deg, 270deg
++           $ref: "/schemas/types.yaml#/definitions/uint8"
++           enum: [ 0, 1, 2, 3 ]
++           default: 1
++
++         mps,buck-ovp-disable:
++           description: |
++             disables over voltage protection of this buck
++           type: boolean
++
++      buck4:
++        type: object
++        $ref: "regulator.yaml#"
++        description: |
++          2.5A DC-DC step down converter
++
++        mps,buck-softstart:
++          description: |
++            defines the soft start time of this buck, must be one of the following
++            corresponding values 150us, 300us, 610us, 920us
++          $ref: "/schemas/types.yaml#/definitions/uint8"
++          enum: [ 0, 1, 2, 3 ]
++          default: 1
++
++        mps,buck-phase-delay:
++          description: |
++            defines the phase delay of this buck, must be one of the following
++            corresponding values 0deg, 90deg, 180deg, 270deg
++          $ref: "/schemas/types.yaml#/definitions/uint8"
++          enum: [ 0, 1, 2, 3 ]
++          default: 1
++
++        mps,buck-ovp-disable:
++          description: |
++            disables over voltage protection of this buck
++          type: boolean
++
++      ldortc:
++        $ref: "regulator.yaml#"
++        description: |
++          regulator with 0.65V-3.5875V for RTC, always enabled
++
++      ldo2:
++        $ref: "regulator.yaml#"
++        description: |
++          regulator with 0.65V-3.5875V
++
++      ldo3:
++        $ref: "regulator.yaml#"
++        description: |
++          regulator with 0.65V-3.5875V
++
++      ldo4:
++        $ref: "regulator.yaml#"
++        description: |
++          regulator with 0.65V-3.5875V
++
++      ldo5:
++        $ref: "regulator.yaml#"
++        description: |
++          regulator with 0.65V-3.5875V
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pmic@69 {
++          compatible = "mps,mpq7920";
++          reg = <0x69>;
++
++          regulators {
++            mps,switch-freq = <1>;
++
++            buck1 {
++             regulator-name = "buck1";
++             regulator-min-microvolt = <400000>;
++             regulator-max-microvolt = <3587500>;
++             regulator-min-microamp  = <460000>;
++             regulator-max-microamp  = <7600000>;
++             regulator-boot-on;
++             mps,buck-ovp-disable;
++             mps,buck-phase-delay = <2>;
++             mps,buck-softstart = <1>;
++            };
++
++            ldo2 {
++             regulator-name = "ldo2";
++             regulator-min-microvolt = <650000>;
++             regulator-max-microvolt = <3587500>;
++            };
++         };
++       };
++     };
++...
 -- 
 2.20.1
 
