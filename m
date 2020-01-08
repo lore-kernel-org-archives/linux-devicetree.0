@@ -2,147 +2,108 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB6EC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCA9C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8CE20720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127A120705
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S3tVQZXg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l5xqIVub"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbgAHFYY (ORCPT
+        id S1726186AbgAHF0d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:24:24 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34790 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgAHFYQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 00:24:16 -0500
-Received: by mail-pg1-f195.google.com with SMTP id r11so987370pgf.1
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 21:24:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tLPzDvqsyKjpMgl6ZY+ZEjymtgHHsFzBQXHTW4eiM1M=;
-        b=S3tVQZXgAvZAvGKT4jucRDlF/M0TWOh+3V7E9ZFoKg0xoIXSRxIr5TYGLCUnvTfS9N
-         f+oKg6lg9u0QxJzV+FId6ptqevsKmNbYDMNZJ9DJAVLRY/8KFELoCSNhdge1SKfgY0Xy
-         AuK7NrZkfWLHM89vkHp0eJTBqDJW+EynagsuQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tLPzDvqsyKjpMgl6ZY+ZEjymtgHHsFzBQXHTW4eiM1M=;
-        b=XtW1U8esLWAML/evGPtiU5RX3nC/QHk5HrKLjM7iWQWZ0fnT6LhRJ+0jOT8Pt4RaU0
-         IVLCr62TLMpDvs2WXaVMrs/QXImouck0NUuoqzZvOnpysCmJhS24v96zgg/lcd7hnsq/
-         Zk2zf30SBY2sYIR1Ey46kELBt0bsge1ujt9n/ncMZFcCSjqYsAG7U/Y/NI1hsZl44/o/
-         AoqNfJJyvKtQEhgovzvOyO/SMSPi9pFycfJ0qsfDFIDwCckik0IncsRmzIfC6XgDL6Qk
-         Yjgb1X5C5dTySuDxknZP3HLtMnp47DC8MqsDhgLMJHF6bYHs7JxB+AUO8166QtDGI38m
-         UkPg==
-X-Gm-Message-State: APjAAAWh3pbmwcrNGEk5CI4d82elrxsUw6Q9i2EIVIZo/8vjzeCzH0an
-        5Ic7BNOUFZuFrXo55ZUKjXbSZg==
-X-Google-Smtp-Source: APXvYqzoefkOYFH4FXTTMbYJDxtsQiuVsYfMMaYxsSll0XpoVzmSh/ccdl9HE7eeGAdfYbzMduo/6Q==
-X-Received: by 2002:a63:ed56:: with SMTP id m22mr3334545pgk.261.1578461055680;
-        Tue, 07 Jan 2020 21:24:15 -0800 (PST)
-Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id n24sm387505pff.12.2020.01.07.21.24.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 21:24:15 -0800 (PST)
-From:   Nicolas Boichat <drinkcat@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: [PATCH v2 7/7, RFC]: drm/panfrost: devfreq: Add support for 2 regulators
-Date:   Wed,  8 Jan 2020 13:23:37 +0800
-Message-Id: <20200108052337.65916-8-drinkcat@chromium.org>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-In-Reply-To: <20200108052337.65916-1-drinkcat@chromium.org>
-References: <20200108052337.65916-1-drinkcat@chromium.org>
+        Wed, 8 Jan 2020 00:26:33 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12578 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgAHF0d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 00:26:33 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1567d70000>; Tue, 07 Jan 2020 21:25:43 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 21:26:32 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 21:26:32 -0800
+Received: from [10.24.44.157] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 05:26:25 +0000
+Subject: Re: [PATCH v7 13/21] ASoC: tegra: Use device managed resource APIs to
+ get the clock
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <josephl@nvidia.com>, <daniel.lezcano@linaro.org>,
+        <mmaddireddy@nvidia.com>, <markz@nvidia.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <1578457515-3477-14-git-send-email-skomatineni@nvidia.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <692ae1f9-ec01-f0e9-9b9a-a0eba3f32e44@nvidia.com>
+Date:   Wed, 8 Jan 2020 10:56:23 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1578457515-3477-14-git-send-email-skomatineni@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578461144; bh=w+gsWa0qiEkQSfXhM8XZ4JIoQhx/eP1errE4+Rsqd/E=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=l5xqIVubpaNoOoNwLqOYOWizAjo7K2v7/n/TYg/81Uto2BR6zBJUqI9DlxaMjJ9wA
+         qNCQ8QWGVjX/5ggpMQqPrx84daWX9h8Yfg9Nw+F69H/q182bWw6sjptir0uDVGUl1F
+         WPm0NQrdqf8ynfLk/4vZmMzJuseNxW5GLzuB+GxlE+52la9KKO46N36K8+dhdXrlye
+         o+pWY5V8K3jPo4izmxLsFjDOGBTcc3JEiY8kx94qLoupPz82nUG3wMepXT0w363yp5
+         NozOnsnXYvk+uQMVc7bMKe3Cro//GQ8qW4JlmU6qT1fb9fD1hjeJKkY4264KotxBjY
+         zTNOTVdBHQjZw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
-devfreq, and provides OPP table with 2 sets of voltages.
 
-TODO: This is incomplete as we'll need add support for setting
-a pair of voltages as well.
+On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
+> tegra_asoc_utils uses clk_get() and clk_put() to get the clock
+> and to free them explicitly.
+>
+> This patch updates it to use device managed resource API
+> devm_clk_get() so the clock will be automatically released and freed
+> when the device is unbound and removes tegra_asoc_utils_fini() as
+> its no longer needed.
+>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
----
- drivers/gpu/drm/panfrost/panfrost_devfreq.c | 18 ++++++++++++++++++
- drivers/gpu/drm/panfrost/panfrost_device.h  |  2 ++
- 2 files changed, 20 insertions(+)
+Reviewed-by: Sameer Pujar <spujar@nvidia.com>
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-index 413987038fbfccb..5eb0effded7eb09 100644
---- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-@@ -79,6 +79,22 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
- 	struct devfreq *devfreq;
- 	struct thermal_cooling_device *cooling;
- 
-+	/* If we have 2 regulator, we need an OPP table with 2 voltages. */
-+	if (pfdev->regulator_sram) {
-+		const char * const reg_names[] = { "mali", "sram" };
-+
-+		pfdev->devfreq.dev_opp_table =
-+			dev_pm_opp_set_regulators(dev,
-+					reg_names, ARRAY_SIZE(reg_names));
-+		if (IS_ERR(pfdev->devfreq.dev_opp_table)) {
-+			ret = PTR_ERR(pfdev->devfreq.dev_opp_table);
-+			pfdev->devfreq.dev_opp_table = NULL;
-+			dev_err(dev,
-+				"Failed to init devfreq opp table: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	ret = dev_pm_opp_of_add_table(dev);
- 	if (ret == -ENODEV) /* Optional, continue without devfreq */
- 		return 0;
-@@ -119,6 +135,8 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
- 	if (pfdev->devfreq.cooling)
- 		devfreq_cooling_unregister(pfdev->devfreq.cooling);
- 	dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
-+	if (pfdev->devfreq.dev_opp_table)
-+		dev_pm_opp_put_regulators(pfdev->devfreq.dev_opp_table);
- }
- 
- void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 92d471676fc7823..581da3fe5df8b17 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -91,10 +91,12 @@ struct panfrost_device {
- 	struct {
- 		struct devfreq *devfreq;
- 		struct thermal_cooling_device *cooling;
-+		struct opp_table *dev_opp_table;
- 		ktime_t busy_time;
- 		ktime_t idle_time;
- 		ktime_t time_last_update;
- 		atomic_t busy_count;
-+		struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
- 	} devfreq;
- };
- 
--- 
-2.24.1.735.g03f4e72817-goog
-
+> ---
+>   sound/soc/tegra/tegra_alc5632.c    |  7 +------
+>   sound/soc/tegra/tegra_asoc_utils.c | 34 +++++++---------------------------
+>   sound/soc/tegra/tegra_asoc_utils.h |  1 -
+>   sound/soc/tegra/tegra_max98090.c   | 22 ++++++----------------
+>   sound/soc/tegra/tegra_rt5640.c     | 22 ++++++----------------
+>   sound/soc/tegra/tegra_rt5677.c     |  7 +------
+>   sound/soc/tegra/tegra_sgtl5000.c   |  7 +------
+>   sound/soc/tegra/tegra_wm8753.c     | 22 ++++++----------------
+>   sound/soc/tegra/tegra_wm8903.c     | 22 ++++++----------------
+>   sound/soc/tegra/tegra_wm9712.c     |  8 ++------
+>   sound/soc/tegra/trimslice.c        | 18 ++++--------------
+>   11 files changed, 40 insertions(+), 130 deletions(-)
+. . .
