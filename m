@@ -2,59 +2,59 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B67C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BFAC00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221692070E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C2E20692
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dt29E8cP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Fmu2+rMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727482AbgAHI4h (ORCPT
+        id S1727139AbgAHI5j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:56:37 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38036 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgAHI4g (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 03:56:36 -0500
-Received: by mail-qt1-f194.google.com with SMTP id n15so2184291qtp.5
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 00:56:36 -0800 (PST)
+        Wed, 8 Jan 2020 03:57:39 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39273 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727091AbgAHI5j (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 03:57:39 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c16so1959126qko.6
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 00:57:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=23UaZlNsApqhumDDLUOyVqHmZXSwjOyNRAB7ikWfhfk=;
-        b=dt29E8cPCpwAonKSxaiv3VaP8BgaW6t7bbMQkQnM0D3acz6OORwBCcouS6gD45iHNu
-         GoPZetsVGj8l0OnJGPxqVSmqzq56aVUI+0uLD7j+Gg9OKKkLy6E736TS9AFewSX5PE6+
-         AOSxXDvApaNRuUXWC+iSUIvKTYYK+4hSDeiCc=
+        bh=txHGvTmn6wHXPp2oQOJpqKQj8noXhF4VbGKRGRI9/tU=;
+        b=Fmu2+rMdGH01pAOFv9xENu9HKyrQuitINAws5ePHXdMU3xruGlysnG5rLwZfvug1bU
+         dvirjyp/LKV7X2OHq9BL2qNsJ1a4/Y5qFIHU4vq3gZwbU8TZRVu/ba5u0Xzk3Ec5Q0Ds
+         WW27qghCc4Qi/QUT/ch/sBr5K/mGcq3oOsx10=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=23UaZlNsApqhumDDLUOyVqHmZXSwjOyNRAB7ikWfhfk=;
-        b=oV9/Rm1E2OpIS3rSJyLsoWsyu/5dMaM6BTp8hsU5kIskmesDtJ3L+91dqRZucauZ3S
-         UZ5t7hMrXsaCjZ3PwGHvo82kCL4DLSpHRMJaDVNwiPzf1DfJqrqjR2p4wWM6MRVy50GV
-         vN7p2CesGZEkwWR0BvTHq1+52Li2ByGSHLDGCHCLNNe2QGeYH4MPOBRvRWgwWdLaQcbO
-         h9jQn0Y31vuBUZ3Ojwn8knS6BjrH2wx3h3aqq6gaqIvdl1Cx0gEEGv9ylUtq+JwvPEro
-         rbUcco7dcWFhc7P2UPTLs6q+KjYtoYzpmnzWbx/ZWFP9n2+VSqWTQdt8EqRscPcE1lIz
-         7oQA==
-X-Gm-Message-State: APjAAAXXhKY1TSDzlPNvW5V/Y8Nd8JVIwjxaaYCRRaJ12zCPKzn1KGFc
-        BA0ZQ2hQHalj4m91gifU1rVrtRgvk+rl3FIZZjgQdA==
-X-Google-Smtp-Source: APXvYqwLdC1bnpk+yFSSUDDZwVNj0SEXt8iwYqeuRY98reHyPr1olVJxIKDeEhuHBiSIek43xvF7qoUS3R03lEt//CI=
-X-Received: by 2002:ac8:3946:: with SMTP id t6mr2632345qtb.278.1578473795857;
- Wed, 08 Jan 2020 00:56:35 -0800 (PST)
+        bh=txHGvTmn6wHXPp2oQOJpqKQj8noXhF4VbGKRGRI9/tU=;
+        b=KxQk0Ndor4NxIKGpst9QrjAUKK/uVuDVk1b2Ai8ag3jfO6/hOYG0/9A/uq3DZDLE7/
+         28wbHmIT0WoQM/y/QoNNxmSHnhEtLspRfSt16EPIK0LQAVVewVuB/EOHxS/pxqpBzOFE
+         ayYmA/HToEu4nTNMKl/yzxbnY2JOthl9l/SsYIbwjbFUIstWDv4PACRRYoaplzrNCYVd
+         d1oB8tl13G8X7qL55S5JpwtkdtK9lVUCd6rQpXadVpS8KCJ3zG0pKQJ+U1CevixvCDrR
+         N7DVbe9C2r2EUVN5KR32l9su4poJHR7IJxgI3xg283B7r0csu7sH1F8E5399nojLp9nq
+         v+Mw==
+X-Gm-Message-State: APjAAAUh46djOUpsu+YPfs7HKo1Fr4JG1I9psC4cmmTtRvuAFkHh+INP
+        Skt7gCXpnAv6lQ+TdZXkUvUifHKPcuCGsXzV/oTOag==
+X-Google-Smtp-Source: APXvYqyxg+WXfWADIYH7mp/FamID6msEFLooGtjXHNkGMJ3b/HHH7fES5RiF7qjZJrTUVIs9ZocSgYGBXQI6iIPX6GE=
+X-Received: by 2002:ae9:f003:: with SMTP id l3mr3269467qkg.457.1578473858520;
+ Wed, 08 Jan 2020 00:57:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20191227141405.3396-1-yong.liang@mediatek.com> <20191227141405.3396-2-yong.liang@mediatek.com>
-In-Reply-To: <20191227141405.3396-2-yong.liang@mediatek.com>
+References: <20191227141405.3396-1-yong.liang@mediatek.com> <20191227141405.3396-3-yong.liang@mediatek.com>
+In-Reply-To: <20191227141405.3396-3-yong.liang@mediatek.com>
 From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 8 Jan 2020 16:56:25 +0800
-Message-ID: <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
+Date:   Wed, 8 Jan 2020 16:57:27 +0800
+Message-ID: <CANMq1KBaE0OimRaa2tiQQYS2irsaNQR_7O8RCWYMpTGnnYNYEg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: mt8183: Add watchdog dt-binding
 To:     Yong Liang <yong.liang@mediatek.com>
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
         linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
@@ -71,21 +71,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-minor nit, s/amr64/arm64/ in the commit title.
+Looks trivial.
 
-On Fri, Dec 27, 2019 at 10:15 PM Yong Liang <yong.liang@mediatek.com> wrote:
+On Fri, Dec 27, 2019 at 10:25 PM Yong Liang <yong.liang@mediatek.com> wrote:
 >
 > From: "yong.liang" <yong.liang@mediatek.com>
 >
-> 1. Include mt8183-reset.h and add reset-cells in infracfg
-> in dtsi file
-> 2. Add watchdog device node
+> This patch add watchdog binding documentation for
+> watchdog on MTK Socs.
 >
 > Signed-off-by: yong.liang <yong.liang@mediatek.com>
 
-Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
 
 > ---
->  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> [snip]
+>  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> index fd380eb28df5..3ee625d0812f 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>         "mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
+>         "mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
+>         "mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
+> +       "mediatek,mt8183-wdt", "mediatek,mt6589-wdt": for MT8183
+>         "mediatek,mt8516-wdt", "mediatek,mt6589-wdt": for MT8516
+>
+>  - reg : Specifies base physical address and size of the registers.
+> --
+> 2.18.0
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
