@@ -2,93 +2,270 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897CCC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 21:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2E8C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 21:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABAA20692
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 21:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578517333;
-	bh=wlolg3E3L4ANOt4HcBeJdXMgpDmVugFNTWotSSrHwUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zua6dhC+Xz3caERFEFGT83EKEb3isT3oOKQQWXvYwPC5f0TNqT77vL8PevWtQIfG0
-	 dr8/feLZnjSwlLbMHHIUEgoiEhwrL5eGcdPrEGoNABqe8UwiemIrNmPpXraL98IFEz
-	 oeb+4gjY1Oh/RfuJxZCTwT+ltpJibeUI+w20t+F0=
+	by mail.kernel.org (Postfix) with ESMTP id 1166120643
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 21:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgAHVCM (ORCPT
+        id S1726990AbgAHVMU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 16:02:12 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33313 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgAHVCM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 16:02:12 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b18so5040623otp.0
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 13:02:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uIbTO+scLpMtdyQX4VTD0iVt1QuxcxYNeAASTguI5Fc=;
-        b=rYz0y28Pjvry0lH5HOTDkR98UKCQU3i8rrKINVNQsdKgBvJh6CEgBYNXCmw+OQnMWx
-         vfFSV3c2YjDnbzS8iuvOZZZoZtvVbZbxE+wNq1bcanS35VN5vyKFskWroRBjddK5a70a
-         wRFNhb9+HWs+wB8+d54Y1EZA5ebqQP3xdm1zIW28PCRaJNw4k8b8OvA88310p/cn+THg
-         COlDS1sGGDl4BKNe5CP/rzBDTl1P4UDss0KhpJPUADbXXI5ZI0qvhLPRIIX23B1W9Txf
-         iA5iFBFHli1PZRh+5+9TPz9SI/aIThqyMO6SABzZjpNahTDhQxeEtKZmz/zA+pPHMvxA
-         fv5w==
-X-Gm-Message-State: APjAAAWoh6D841t79dZ+8ZL6i8mXFW24+TykOV+CT0yXAOREWEIYIMjR
-        fvfRF00K0ahbt29EGKSxY3yNtb0=
-X-Google-Smtp-Source: APXvYqy6iV1MkQCvZ7v0gdO17U46MXEvSVRWOd+4ebHLPtm0ok12jRP+lb41rxdJ1WokMMTuTQXwyQ==
-X-Received: by 2002:a9d:6a5a:: with SMTP id h26mr5901138otn.103.1578517331363;
-        Wed, 08 Jan 2020 13:02:11 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i20sm1494051otl.74.2020.01.08.13.02.10
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 13:02:10 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220333
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 15:02:09 -0600
-Date:   Wed, 8 Jan 2020 15:02:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bruno Thomsen <bruno.thomsen@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt: bindings: add vendor prefix for Kamstrup A/S
-Message-ID: <20200108210209.GA27864@bogus>
-References: <20200107141143.11838-1-bruno.thomsen@gmail.com>
+        Wed, 8 Jan 2020 16:12:20 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:38190 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgAHVMU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 16:12:20 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E7F438046E;
+        Wed,  8 Jan 2020 22:12:14 +0100 (CET)
+Date:   Wed, 8 Jan 2020 22:12:13 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jyri Sarha <jsarha@ti.com>, Rob Clark <robdclark@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: one binding file for all simple
+ panels
+Message-ID: <20200108211213.GA8405@ravnborg.org>
+References: <20200102101712.5085-1-sam@ravnborg.org>
+ <20200102101712.5085-2-sam@ravnborg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200107141143.11838-1-bruno.thomsen@gmail.com>
+In-Reply-To: <20200102101712.5085-2-sam@ravnborg.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=voM4FWlXAAAA:8
+        a=7gkXJVJtAAAA:8 a=pGLkceISAAAA:8 a=VwQbUJbxAAAA:8 a=8b9GpE9nAAAA:8
+        a=7CQSdrXTAAAA:8 a=e5mUnYsNAAAA:8 a=gEfo2CItAAAA:8 a=Ikd4Dj_1AAAA:8
+        a=uTl3g0ePkkkIrOugLNwA:9 a=kZqpKjxlpy6geOCd:21 a=tP3eZPZ3YdYSV6mm:21
+        a=CjuIK1q_8ugA:10 a=IC2XNlieTeVoXbcui8wp:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=T3LWEMljR5ZiDmsYVIUa:22
+        a=a-qgeE7W1pNrGK8U0ZQC:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  7 Jan 2020 15:11:38 +0100, Bruno Thomsen wrote:
-> Kamstrup manufactures meters for electricity, heating, cooling
-> and water. Including long-life communication infrastructure
-> for e.g. smart grid based on Linux, more information on
-> https://www.kamstrup.com
+Hi Jyri, Rob, Paul, Miquel.
+
+Following patch is now applied to drm-misc-next.
+
+Please add your simple panels to this file so
+we avoid independent bindings files for ecah panel.
+
+I will handle the inevitable conflicts when I apply.
+
+	Sam
+
+
+On Thu, Jan 02, 2020 at 11:17:11AM +0100, Sam Ravnborg wrote:
+> There is an increasing number of new simple panels.
+> Common for many of these simple panels are that they have one
+> mandatory power-supply and some of them have backlight and / or
+> an enable gpio.
 > 
-> Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
+> The binding file to describe these panels adds overhead
+> that really do not add value.
+> The binding are known and there is nothing gained from a
+> dedicated binding file nor for any dedicated example.
+> 
+> The following patch introduces a single panel-simple.yaml
+> and converts two ampire bindings over to the new file.
+> 
+> The conversion - if applied will have following effects:
+> 
+> - The maintainer for the individual file will change
+>     There is no need for many different maintainers for a simple binding.
+>     We have the same situation with the panel-simple driver in the kernel.
+> 
+> - The license will change to (GPL-2.0-only OR BSD-2-Clause)
+>     There is usually only a single line copied from the original
+>     file, a line that is often copied from a datasheet.
+>     This license change should be acceptable considered what little
+>     is copied.
+>     If the license change is not OK we can use a dedicated binding
+>     file in these cases.
+> 
+> This is a follow-up on Rob's big patch converting a lot of panel bindings
+> to individual files:
+> 
+> "dt-bindings: display: Convert a bunch of panels to DT schema"
+> https://patchwork.ozlabs.org/patch/1197683/
+> 
+> The objectives with one file for the relevant simple panels are:
+> - Make it simpler to add bindings for simple panels
+> - Keep the number of bindings file lower and thus easier to find a
+>   relevant file to copy from when adding new panels.
+> - Keep the binding documentation for simple panels more consistent
+> - Make it simpler to add support for new panels
+> 
+> v2:
+>   - spelling fixes (imirkin via irc, Rob)
+>   - updated description (Rob)
+>   - list properires in alphabetical order
+>   - added power-supply to example (Rob)
+>   - updated title
+>   - reworded changelog a little
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Yannick Fertre <yannick.fertre@st.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: devicetree@vger.kernel.org
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../panel/ampire,am-480272h3tmqw-t01h.yaml    | 42 -------------
+>  .../panel/ampire,am800480r3tmqwa1h.txt        |  7 ---
+>  .../bindings/display/panel/panel-simple.yaml  | 59 +++++++++++++++++++
+>  3 files changed, 59 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-simple.yaml
 > 
-
-Applied, thanks.
-
-Rob
+> diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> deleted file mode 100644
+> index c6e33e7f36d0..000000000000
+> --- a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+> +++ /dev/null
+> @@ -1,42 +0,0 @@
+> -# SPDX-License-Identifier: GPL-2.0
+> -%YAML 1.2
+> ----
+> -$id: http://devicetree.org/schemas/display/panel/ampire,am-480272h3tmqw-t01h.yaml#
+> -$schema: http://devicetree.org/meta-schemas/core.yaml#
+> -
+> -title: Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
+> -
+> -maintainers:
+> -  - Yannick Fertre <yannick.fertre@st.com>
+> -  - Thierry Reding <treding@nvidia.com>
+> -
+> -allOf:
+> -  - $ref: panel-common.yaml#
+> -
+> -properties:
+> -  compatible:
+> -    const: ampire,am-480272h3tmqw-t01h
+> -
+> -  power-supply: true
+> -  enable-gpios: true
+> -  backlight: true
+> -  port: true
+> -
+> -required:
+> -  - compatible
+> -
+> -additionalProperties: false
+> -
+> -examples:
+> -  - |
+> -    panel_rgb: panel {
+> -      compatible = "ampire,am-480272h3tmqw-t01h";
+> -      enable-gpios = <&gpioa 8 1>;
+> -      port {
+> -        panel_in_rgb: endpoint {
+> -          remote-endpoint = <&controller_out_rgb>;
+> -        };
+> -      };
+> -    };
+> -
+> -...
+> diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
+> deleted file mode 100644
+> index 83e2cae1cc1b..000000000000
+> --- a/Documentation/devicetree/bindings/display/panel/ampire,am800480r3tmqwa1h.txt
+> +++ /dev/null
+> @@ -1,7 +0,0 @@
+> -Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
+> -
+> -Required properties:
+> -- compatible: should be "ampire,am800480r3tmqwa1h"
+> -
+> -This binding is compatible with the simple-panel binding, which is specified
+> -in simple-panel.txt in this directory.
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> new file mode 100644
+> index 000000000000..51ca50201182
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/panel-simple.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Simple panels with one power supply
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Sam Ravnborg <sam@ravnborg.org>
+> +
+> +description: |
+> +  This binding file is a collection of the simple (dumb) panels that
+> +  requires only a single power-supply.
+> +  There are optionally a backlight and an enable GPIO.
+> +  The panel may use an OF graph binding for the association to the display,
+> +  or it may be a direct child node of the display.
+> +
+> +  If the panel is more advanced a dedicated binding file is required. 
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +
+> +  compatible:
+> +    enum:
+> +    # compatible must be listed in alphabetical order, ordered by compatible.
+> +    # The description in the comment is mandatory for each compatible.
+> +
+> +    # Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
+> +    - ampire,am-480272h3tmqw-t01h
+> +    # Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
+> +    - ampire,am800480r3tmqwa1h
+> +
+> +  backlight: true
+> +  enable-gpios: true
+> +  port: true
+> +  power-supply: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - power-supply
+> +
+> +examples:
+> +  - |
+> +    panel_rgb: panel-rgb {
+> +      compatible = "ampire,am-480272h3tmqw-t01h";
+> +      power-supply = <&vcc_lcd_reg>;
+> +
+> +      port {
+> +        panel_in_rgb: endpoint {
+> +          remote-endpoint = <&ltdc_out_rgb>;
+> +        };
+> +      };
+> +    };
+> -- 
+> 2.20.1
