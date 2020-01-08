@@ -2,169 +2,92 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC478C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB05C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C274E20656
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvW80tsx"
+	by mail.kernel.org (Postfix) with ESMTP id 7C6AF20705
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578516894;
+	bh=yi7tnlDrdUMVzs3ejGEjAyMYwtvhzO8l6OlDpQ15tro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QEvEMtk4jEQ7GASi7L4YN5m+QrM5cbXwSYgSwrxq5+dnn7VgRdS9fD03+Kf229bkr
+	 gD7ywvmYelRY3+2sAIzl7neAy0MLcctvgI4+SgViaabiY4/570iscEEf1KAUQ9zevo
+	 eL+Z4OkAyAP2LKCbRKt3pJCh3sjR9x/fxlhnOyBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726155AbgAHUxt (ORCPT
+        id S1727181AbgAHUyx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:53:49 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37907 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbgAHUxt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 15:53:49 -0500
-Received: by mail-wr1-f67.google.com with SMTP id y17so4942996wrh.5;
-        Wed, 08 Jan 2020 12:53:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HAVtrrvP7lMDn+z4yW5t1+0ZMAlAWmibvRDN72JzVdg=;
-        b=fvW80tsxmitYEBvGtuh21m8wnBrE83VykidXd3KTI0rxQr60hgtOGRLWtAgjGRdeSO
-         ZsRWTtQ02MuMnIsoiUmBaJpGUxV1cStx+zM1VnKo62bXNajzo4DGa5tyqaWhJlvyunGn
-         PPcjQo11qmTC+Jjg8VnDzQpYw240eF2tRX7QhBqxq2X77Bvevr0h3cnpGnSLucGwGqu4
-         NeZ8g8I5QTPHgNTGPznEcq4Vs++QwEPJ6yCN3ke8la8QHoifR+iUp+vPBM0TSQofpGIO
-         +tf2wJ9uuEfsKuTLtLkXDn/e3Tl03vRVdSzJufN+Nhd+ctQwX2QSzffJWD8WE5rgcqhr
-         U50A==
+        Wed, 8 Jan 2020 15:54:53 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38382 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727069AbgAHUyv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 15:54:51 -0500
+Received: by mail-ot1-f68.google.com with SMTP id d7so4975365otf.5
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 12:54:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HAVtrrvP7lMDn+z4yW5t1+0ZMAlAWmibvRDN72JzVdg=;
-        b=Q5jgevGZ0+88GfYPqNMYGiFrrFAPiwiB7ZTCn/Znl3QLMMnLZBZwIox3eUgE+vk4lW
-         NW93wOBY4meXlpqZ7A+R5ZXMxnmxkMBRIk7UXMfDlvuMBisfzTOz0F6692VuUyzvBuqd
-         RtcS0UyjM6UEcIZe0bZtglC/ze29xReQBtmKj+fFarCLyFY+FU6ZLc+nL/kKNv3GhYkJ
-         Cds+ONET9g7KHZ+/kOcFdiSX8hgLPP5CPgS+351VV7EGRKQLEkZcdiByNXfFd1BZ6qIS
-         3h7S5vqNP1ikVZwTvZNYFJrPA65ImZjiey5JZKBuzwEO8ci0lBmwbbBKzS3N8+xjbyoO
-         +Tow==
-X-Gm-Message-State: APjAAAXI0cI4eH5W7iU8kHGGGVxzqG+k86lQKvbYU4g7lfGCeW/9UOJm
-        EBSr84p5jFMnbD6yOE9Srcc=
-X-Google-Smtp-Source: APXvYqxULPp2fA/trb8q4KJWfPyDdsD0Vv2qlG337KA4yMv9O2EsWOqRDwrpvkD0urJEQL8otamhMQ==
-X-Received: by 2002:a5d:6b47:: with SMTP id x7mr1025519wrw.277.1578516827246;
-        Wed, 08 Jan 2020 12:53:47 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id c5sm311835wmd.42.2020.01.08.12.53.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 Jan 2020 12:53:46 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     miquel.raynal@bootlin.com
-Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, heiko@sntech.de,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 01/10] dt-bindings: mtd: add rockchip nand controller bindings
-Date:   Wed,  8 Jan 2020 21:53:29 +0100
-Message-Id: <20200108205338.11369-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200108205338.11369-1-jbx6244@gmail.com>
-References: <20200108205338.11369-1-jbx6244@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jf75AHX9cWk938eoPABkjnqB5jtoAKhCXPRF42yiNM0=;
+        b=V5bqMjQ6tOT2byyUzpCQelQ17+XyzlJfBh/fX4hi4/yDJ1d4k1QsAN3w1ZOPg0Z6A9
+         20jNejcJ8C2tkdHKuMrxX+aHp42JmXFsHMHG8Ww6ypsjZOCjQYuVoMRYEhZxOyunuU+l
+         hbEuxK+9E7iIK2Nm6SLlSQEwVt6IPe878wZ2Qu92rq+fZLgJQqXFnlMC7z8xrNUQ/+Lr
+         CxoXK9sYyJlPzG4cVgLfCX3xDVtw2vSyTr4n3sP3Mgz3bhmin/yAMF63HcH15G1Ay7gb
+         sCahjJuYAbhNCzv610rmRW9fr3r2Cgc3ZS+5qMrm0ECPGzWV7woM+wwy+PHh0dMpv35G
+         1NJg==
+X-Gm-Message-State: APjAAAXzYOyXnFqP/06jSkRzOENKZJ4r/uIBRN6kXhNBsUPDuM/vs3kf
+        4jwDa5+qQ7TF9ffK1YeJGLfj7lQ=
+X-Google-Smtp-Source: APXvYqwgRsNCgnIzYurHwI24pGt4G3q9G7FH1/pI9ObUBoaDX2gXrCGXC5cUU8Iopk9g16Xhb5cH2g==
+X-Received: by 2002:a05:6830:138b:: with SMTP id d11mr5412586otq.38.1578516890376;
+        Wed, 08 Jan 2020 12:54:50 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w201sm1462952oif.29.2020.01.08.12.54.48
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 12:54:48 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2208fa
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 08 Jan 2020 14:54:47 -0600
+Date:   Wed, 8 Jan 2020 14:54:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Khouloud Touil <ktouil@baylibre.com>
+Cc:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
+        baylibre-upstreaming@groups.io, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linus.walleij@linaro.org, Khouloud Touil <ktouil@baylibre.com>
+Subject: Re: [PATCH v4 4/5] dt-bindings: at25: add reference for the wp-gpios
+ property
+Message-ID: <20200108205447.GA16981@bogus>
+References: <20200107092922.18408-1-ktouil@baylibre.com>
+ <20200107092922.18408-5-ktouil@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107092922.18408-5-ktouil@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Rockchip NAND controller bindings.
+On Tue,  7 Jan 2020 10:29:21 +0100, Khouloud Touil wrote:
+> As the at25 uses the NVMEM subsystem, and the property is now being
+> handled, adding reference for it in the device tree binding document,
+> which allows to specify the GPIO line to which the write-protect pin
+> is connected.
+> 
+> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/eeprom/at25.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- .../devicetree/bindings/mtd/rockchip,nandc.yaml    | 78 ++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml
-
-diff --git a/Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml b/Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml
-new file mode 100644
-index 000000000..573d1a580
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml
-@@ -0,0 +1,78 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/rockchip,nandc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip NAND Controller Device Tree Bindings
-+
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,nandc-v6
-+      - rockchip,nandc-v9
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    oneOf:
-+      - items:
-+        - const: hclk_nandc
-+      - items:
-+        - const: clk_nandc
-+        - const: hclk_nandc
-+
-+patternProperties:
-+  "^nand@[a-f0-9]+$":
-+    type: object
-+    properties:
-+      reg:
-+        minimum: 0
-+        maximum: 3
-+
-+      nand-is-boot-medium: true
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3188-cru-common.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    nandc: nand-controller@10500000 {
-+      compatible = "rockchip,nandc-v6";
-+      reg = <0x10500000 0x4000>;
-+      interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru HCLK_NANDC0>;
-+      clock-names = "hclk_nandc";
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-is-boot-medium;
-+      };
-+    };
-+
-+...
--- 
-2.11.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
