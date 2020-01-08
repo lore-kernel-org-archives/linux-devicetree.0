@@ -2,97 +2,92 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA54DC00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C297C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC8820705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA0B205F4
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 07:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgAHHYM (ORCPT
+        id S1726079AbgAHH3b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 02:24:12 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33563 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726079AbgAHHYK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 02:24:10 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ip5gu-0003RP-HA; Wed, 08 Jan 2020 08:23:44 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ip5gs-0003MG-LI; Wed, 08 Jan 2020 08:23:42 +0100
-Date:   Wed, 8 Jan 2020 08:23:42 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     fengping yu <fengping.yu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH V2 2/2] drivers: input: keyboard
-Message-ID: <20200108072342.xkym3bnqgwapgqjz@pengutronix.de>
-References: <20200108062923.14684-1-fengping.yu@mediatek.com>
- <20200108062923.14684-3-fengping.yu@mediatek.com>
- <20200108071130.leowzwzkexozumda@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108071130.leowzwzkexozumda@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:22:13 up 53 days, 22:40, 46 users,  load average: 0.15, 0.09,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Wed, 8 Jan 2020 02:29:31 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:44342 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbgAHH3b (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jan 2020 02:29:31 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E4E781A0B13;
+        Wed,  8 Jan 2020 08:29:29 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 617A51A03DB;
+        Wed,  8 Jan 2020 08:29:21 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4A74E402D9;
+        Wed,  8 Jan 2020 15:29:11 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        shengjiu.wang@nxp.com, ping.bai@nxp.com, jun.li@nxp.com,
+        aford173@gmail.com, peng.fan@nxp.com, abel.vesa@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/2] arm64: dts: imx8mm: Memory node should be in board DT
+Date:   Wed,  8 Jan 2020 15:25:28 +0800
+Message-Id: <1578468329-9983-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Memory address/size depends on board design, so memory node should
+be in board DT.
 
-On 20-01-08 08:11, Marco Felsch wrote:
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 5 +++++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi    | 5 -----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-...
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index cf044dd..9e54747 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -16,6 +16,11 @@
+ 		stdout-path = &uart2;
+ 	};
+ 
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x0 0x40000000 0 0x80000000>;
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index a3d179b..1e5e115 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -140,11 +140,6 @@
+ 		};
+ 	};
+ 
+-	memory@40000000 {
+-		device_type = "memory";
+-		reg = <0x0 0x40000000 0 0x80000000>;
+-	};
+-
+ 	osc_32k: clock-osc-32k {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-- 
+2.7.4
 
-> > +struct mtk_keypad {
-> > +	struct input_dev *input_dev;
-> > +	struct wakeup_source *suspend_lock;
-> > +	struct tasklet_struct tasklet;
-> 
-> Why do you use a tasklet instead of a simple softirq?
-
-Sorry, what I mean was a threaded_irq.
-
-Regards,
-  Marco
