@@ -2,95 +2,109 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F0BC33CA2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1D5C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CECBE20720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578516869;
-	bh=Cfb9Uzn9xY4OAixivbNqg1oIOhfzgcr0f5sZItaRd60=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k7FzUHICmFrxmvLzq4bXqPw3W23hlpQ2QogBTGH/Z7hdfoLleAaeRa2Z8CTbxJOhD
-	 WBHXkgwTYMBPYerMEkpiRdmfSutSQE8UrU7LwQwe3E3qjBNQhA1RBLvzTttZQ8G9L6
-	 c99mCDGfeBtNmKcrNCVw/Sd3UhAnkCgN8Ypp/D9k=
+	by mail.kernel.org (Postfix) with ESMTP id 1A8A520656
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NzEFBmTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbgAHUyX (ORCPT
+        id S1727316AbgAHUxw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:54:23 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37326 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbgAHUyX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 15:54:23 -0500
-Received: by mail-ot1-f67.google.com with SMTP id k14so4976967otn.4
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 12:54:22 -0800 (PST)
+        Wed, 8 Jan 2020 15:53:52 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35222 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgAHUxv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 15:53:51 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so4945467wro.2;
+        Wed, 08 Jan 2020 12:53:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=z5HJGRQJ2/f2kJUQoCeIFnI3hwMtLOLQy/CYHk2/+co=;
+        b=NzEFBmTw/MkuVz5mPbP3iuI9K7JbjF/4gA3ZSAEoJ2JoIY4O3CU11F950od9NnqL5p
+         ZK7/1X7C64V0PeKlQ/aros7Yl1Rx1u/ImZnvL4Hz4b9S0DLJ2bQE6t7chelRxG1JZ4UO
+         oLTVQDNDrC0MUR1pw2Xb7rB90EZG4hEI0q2sW9QsT5WQLZCN3d8P8s4Z7Hu1TwBb65FL
+         ZQUx5+MNfsgJ/Hux8ohu2XmkyLuLPq0oFZwCWQlMgSiAlGcb4lpAkQQuC0MacU6pCdf+
+         boF6qMr7xQzqAWqHSa1JJ3f7F6a2qlS4dEfSYaG3Xu8Mk9bsmcXkn3oATl0yt0dlwsvr
+         YLlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=irwHBzNJL11iS3DIpsshB1iOiTtfFrxmr67ljB2o42w=;
-        b=RvxbMknusHO4tg0vxOZP0/oJl6mhPccMw5GHggjSdK/q0nf0q0ptYDP6dguZhEWYhd
-         zUOB1sn01kWr/9vW2M/UolxM+I7wV5t2sBqY7jBz1vYx9x6bo7O/khxYLLR7RWHpWrh7
-         GQsZDIMbimImHTZPakr3e18odY9i4eYpvdTHuLU7lDBTktwp53ohepzAZD6u6wtPO913
-         ex+eGkur4OcFX7EgVXrEkDBIF7Fv9viNOkuLrEKBx6/M8sKVjYzKR6xOiqfq5olqX0om
-         EEMz27YfKWH5aZAxk0OMN+HbMd1asX30LtWyiw2GaSVKwRuzskH8oejau7FImsarklym
-         IiEw==
-X-Gm-Message-State: APjAAAXnIE34i1guZssjzwBFoVbMtdgWasHhay+a+Y/IKZTWg94UxD94
-        mFjBYWFvQ1JitC7/JbaWVcFY4/Q=
-X-Google-Smtp-Source: APXvYqylUekhNBuRsxQAUJK95JHQj89usO0AoI9UE14nJJNsNl0Ug9CwVRoQeB4sZeScgpNL4zmBSw==
-X-Received: by 2002:a9d:6045:: with SMTP id v5mr5335000otj.252.1578516862270;
-        Wed, 08 Jan 2020 12:54:22 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v4sm1552605otf.7.2020.01.08.12.54.20
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 12:54:21 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2208fa
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 14:54:19 -0600
-Date:   Wed, 8 Jan 2020 14:54:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
-        baylibre-upstreaming@groups.io, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linus.walleij@linaro.org, Khouloud Touil <ktouil@baylibre.com>
-Subject: Re: [PATCH v4 3/5] dt-bindings: at24: make wp-gpios a reference to
- the property defined by nvmem
-Message-ID: <20200108205419.GA16184@bogus>
-References: <20200107092922.18408-1-ktouil@baylibre.com>
- <20200107092922.18408-4-ktouil@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200107092922.18408-4-ktouil@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=z5HJGRQJ2/f2kJUQoCeIFnI3hwMtLOLQy/CYHk2/+co=;
+        b=pY0JsJWlIhUx210HjTjXty6kxr1pjAbiuaLHLR08TY4fxiHk6g/qRF9HTTLbGStd50
+         e5b+WVukp17kKqyUERUl2uU3deXkbi5PujK84S1VbHKH+AuSl1T9AXS34EoWEYPcOVJ7
+         12eJGQzYfXh1H/5vvmOZAki2mWjK4M4K+zcTzso5V2brAUSPlH3hWsr2Bp0xrkznF9mq
+         nnQhvrOANJLKbwI6OK2TfjIzM623gWC6IP9TWVwg8but49mk8+4nhs4AkQ/uO0+FzDD8
+         z0+eRJCYFaGNo5aIfR3nIguIAdXfNIsHzw9ZCbxrVFEOiUnE0TOS/OiWnD48B0ioWu/t
+         uvOw==
+X-Gm-Message-State: APjAAAUxZ9Sa121jwm95Yq4N+nolFzG2dzvnDhP0YxvRsnTG4fxhf527
+        HLZXVtv72eg04D6tTYBtIwg=
+X-Google-Smtp-Source: APXvYqztpcAxKuxj+Aok9yVC+U1ZAFgB2+pDeKfb/4QaCGmSSDWhXBw5M0MhKZ4pGGLFPjk83KIEIQ==
+X-Received: by 2002:adf:f850:: with SMTP id d16mr6884005wrq.161.1578516829937;
+        Wed, 08 Jan 2020 12:53:49 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id c5sm311835wmd.42.2020.01.08.12.53.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 08 Jan 2020 12:53:49 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     miquel.raynal@bootlin.com
+Cc:     richard@nod.at, vigneshr@ti.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, heiko@sntech.de,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 03/10] ARM: dts: rockchip: add nandc node for rk3066a/rk3188
+Date:   Wed,  8 Jan 2020 21:53:31 +0100
+Message-Id: <20200108205338.11369-4-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200108205338.11369-1-jbx6244@gmail.com>
+References: <20200108205338.11369-1-jbx6244@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue,  7 Jan 2020 10:29:20 +0100, Khouloud Touil wrote:
-> NVMEM framework is an interface for the at24 EEPROMs as well as for
-> other drivers, instead of passing the wp-gpios over the different
-> drivers each time, it would be better to pass it over the NVMEM
-> subsystem once and for all.
-> 
-> Making wp-gpios a reference to the property defined by nvmem.
-> 
-> Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.yaml | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
+From: Chris Zhong <zyw@rock-chips.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Add nandc node for rk3066a/rk3188.
+
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3xxx.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 97307a405..416b0d272 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -273,6 +273,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	nandc: nand-controller@10500000 {
++		compatible = "rockchip,nandc-v6";
++		reg = <0x10500000 0x4000>;
++		interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_NANDC0>;
++		clock-names = "hclk_nandc";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	pmu: pmu@20004000 {
+ 		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
+ 		reg = <0x20004000 0x100>;
+-- 
+2.11.0
+
