@@ -2,209 +2,131 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72A1C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558E5C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ABB020720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF742053B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578514350;
-	bh=22OobtloNvyA6wdbMtDQyiAM5CsGqya7WcK1rP/Rarw=;
+	s=default; t=1578514684;
+	bh=k29/a7uEuYqNAIhFsBFDfjAE0p9XzbeHTZjXgbV00jY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pPap82uWAuKvYFctq8tEYtTZVoj/NInxSOgG61tTTghSyxqH+9IZtkFX+TzivcBdb
-	 96LF2ZyxZZ4robkD2yjr6sWD+n55VWZpq8RQOL+YmMMUjFF9T+48UAePlKDrFhMWZ/
-	 GlzT3J4YyW7xeXtABh3UVXcJmT5Q9hA6aJVkXGdo=
+	b=gXuyAEWwWNIS5nXkoxrdx5YaHb2ffXqJrTGOpES9ezlWv0vREOJl7WZuIE5DJGda4
+	 pUEUJid2jJrJKvY0X5ISWUvJFnc4IYToxMEmHA33JCn3laH8Nw5v6m1V8RhgfdFmiL
+	 3GFsRTrnbCU3ILLYsDAlzuLF3do0n5yVN09Xe2YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgAHUM3 (ORCPT
+        id S1726548AbgAHUSD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:12:29 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38138 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgAHUM3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 15:12:29 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d7so4850871otf.5
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 12:12:29 -0800 (PST)
+        Wed, 8 Jan 2020 15:18:03 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33605 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbgAHUSC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 15:18:02 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v140so3871011oie.0
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 12:18:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k7+Uq6HkxozZICbgNkuKzFsXaFY2bmpVlgViuwauvZs=;
-        b=MSAFcUQd1CKZdOdOpew93WFGukN+ZC4kYh6lcgK+MGlFcAFJKL/ooo76EQdLdEYeKU
-         oa4xJWoQbkIc58UMRSv1HaiJJd+tpfhZxtFUFRA84j783vQdOpbvYzyIj9Y+6AQdCqe9
-         5FfKDbxcMfNQFeP3xbmWEjps2XKUm9B3KPnJO+/Dmik0wdo/vSolVlSBr+c3KtwTOn8f
-         NcNvcEZavt4im6dMS8v1gLrxlewTxK6X753QLY2pdkxJAcIdHYrCkVOrAzcZjycvbu9o
-         mZ2mJ1tp7Rd16G643AbmKsZ+xweFH3ZMYAyFw7UreVde1yBoKhZjXqK50wwREVkB0lMs
-         lGOg==
-X-Gm-Message-State: APjAAAX2gsxa0LyZkhBPnQULOhdwq657RFlix48PCL8MX9ze+yLRb9p2
-        MKCkZv/m8CI9OC2OL0T+Sv4FRLs=
-X-Google-Smtp-Source: APXvYqzl1sMRwoW9dZde+AvZJuDr7YUCB8Xp+FbQeoF6LrRhISI61L0LkuGa5l+D7SWhJyvWS5GVsA==
-X-Received: by 2002:a9d:6183:: with SMTP id g3mr5475077otk.304.1578514348524;
-        Wed, 08 Jan 2020 12:12:28 -0800 (PST)
+        bh=UM9Yhyyn+nTPYkkQGog0oC/YJwVnBTJCjtlyMYqJ2Ow=;
+        b=OhGckBHoH27+aY/cIJ/iwdGMbE2Su0apCOBjjPK/HmAaHlnwohHsZOD61oDwfxlX1T
+         6WkLi4Dbntj5RUuSTc7SOVRCTRJHDzZ9bkiOu/9JexIE5jn1CBJtnMsCxku7RFUtvX3s
+         S0EsaFVDx95WuoGVWlyCB4wdE+z0LTCMYGOyO+CGFZwkPtz2AyLAvncZk1PO4S/fZcgZ
+         V65FukCKs10aboEPTVcnrEiCPWwkXq1pftG1eBdv7GpbRtqmxfVnEPa2bisVSBU1M4My
+         sT3jySG3qYhdGLc8Pxcil8a4EZzCvAIvCZz1A4svuqfOOWlsa59Utf9IHmNnHV8P84Sj
+         SwlQ==
+X-Gm-Message-State: APjAAAUvSE2frt2Twp5MDLxscepsyp26ITi05m+9AMBWM2bPiXwFFttg
+        0XnflZ8btI9g9Lr1kvQ5EiiHYtA=
+X-Google-Smtp-Source: APXvYqyNyRyBSSCvbiCZjUr9iOfPF5E8P3OIIZSyl7LMftsI5vE+bwQdigkYmKu5MK2/GGdu52i0Mg==
+X-Received: by 2002:a05:6808:150:: with SMTP id h16mr310091oie.130.1578514682160;
+        Wed, 08 Jan 2020 12:18:02 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u13sm1433033oic.2.2020.01.08.12.12.27
+        by smtp.gmail.com with ESMTPSA id w192sm1419005oiw.8.2020.01.08.12.18.00
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 12:12:27 -0800 (PST)
+        Wed, 08 Jan 2020 12:18:00 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 220333
+        id 2208fa
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 08 Jan 2020 14:12:26 -0600
-Date:   Wed, 8 Jan 2020 14:12:26 -0600
+        Wed, 08 Jan 2020 14:17:59 -0600
+Date:   Wed, 8 Jan 2020 14:17:59 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] dt-bindings: input: Add docs for ADC driven joystick.
-Message-ID: <20200108201226.GA10350@bogus>
-References: <20200105001639.142061-1-contact@artur-rojek.eu>
- <20200105001639.142061-4-contact@artur-rojek.eu>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>,
+        linux-mtd@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] treewide: remove redundent IS_ERR() before error code
+ check
+Message-ID: <20200108201759.GA28519@bogus>
+References: <20200106045833.1725-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200105001639.142061-4-contact@artur-rojek.eu>
+In-Reply-To: <20200106045833.1725-1-masahiroy@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jan 05, 2020 at 01:16:38AM +0100, Artur Rojek wrote:
-> Add documentation for the adc-joystick driver, used to provide support
-> for joysticks connected over ADC.
+On Mon,  6 Jan 2020 13:58:33 +0900, Masahiro Yamada wrote:
+> 'PTR_ERR(p) == -E*' is a stronger condition than IS_ERR(p).
+> Hence, IS_ERR(p) is unneeded.
 > 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> The semantic patch that generates this commit is as follows:
+> 
+> // <smpl>
+> @@
+> expression ptr;
+> constant error_code;
+> @@
+> -IS_ERR(ptr) && (PTR_ERR(ptr) == - error_code)
+> +PTR_ERR(ptr) == - error_code
+> // </smpl>
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  .../bindings/input/adc-joystick.yaml          | 100 ++++++++++++++++++
->  1 file changed, 100 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
-> new file mode 100644
-> index 000000000000..97ae797348c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
-> @@ -0,0 +1,100 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2019-2020 Artur Rojek
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/bindings/input/adc-joystick.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: ADC attached joystick
-> +
-> +maintainers:
-> +  - Artur Rojek <contact@artur-rojek.eu>
-> +
-> +description: |
-> +  Bindings for joystick devices connected to ADC controllers supporting
-> +  the Industrial I/O subsystem.
-> +
-> +properties:
-> +  compatible:
-> +    const: adc-joystick
-> +
-> +  io-channels:
-> +    description: |
-> +      List of phandle and IIO specifier pairs.
-> +      Each pair defines one ADC channel to which a joystick axis is connected.
-> +      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
-> +
-> +required:
-> +  - compatible
-> +  - io-channels
-> +
-> +additionalProperties: false
-> +
-> +patternProperties:
-> +  "^axis@([0-9])$":
-
-A unit-address means there should be a 'reg' property. I'd just do 
-axis-x and axis-y instead.
-
-> +    type: object
-> +    description: |
-> +      Represents a joystick axis bound to the given ADC channel.
-> +      For each entry in the io-channels list, one axis subnode with a matching
-> +      index must be specified.
-> +
-> +    properties:
-> +      linux,abs-code:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: EV_ABS specific event code generated by the axis.
-
-Existing 'linux,code' should be used here.
-
-> +
-> +      linux,abs-range:
-
-Drop 'linux,' here and on the rest of these.
-
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          - description: minimum value
-> +          - description: maximum value
-> +        description: |
-> +          Minimum and maximum values produced by the axis.
-> +          For an ABS_X axis this will be the left-most and right-most
-> +          inclination of the joystick. If min > max, it is left to userspace to
-> +          treat the axis as inverted.
-> +          This property is interpreted as two signed 32 bit values.
-> +
-> +      linux,abs-fuzz:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Amount of noise in the input value.
-> +          Omitting this property indicates the axis is precise.
-> +
-> +      linux,abs-flat:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Axial "deadzone", or area around the center position, where the axis
-> +          is considered to be at rest.
-> +          Omitting this property indicates the axis always returns to exactly
-> +          the center position.
-> +
-> +    required:
-> +      - linux,abs-code
-> +      - linux,abs-range
-> +
-> +    additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
-> +    #include <dt-bindings/input/input.h>
-> +
-> +    joystick: adc-joystick {
-> +      compatible = "adc-joystick";
-> +      io-channels = <&adc INGENIC_ADC_TOUCH_XP>,
-> +                    <&adc INGENIC_ADC_TOUCH_YP>;
-> +
-> +      axis@0 {
-> +              linux,abs-code = <ABS_X>;
-> +              linux,abs-range = <3300 0>;
-> +              linux,abs-fuzz = <4>;
-> +              linux,abs-flat = <200>;
-> +      };
-> +      axis@1 {
-> +              linux,abs-code = <ABS_Y>;
-> +              linux,abs-range = <0 3300>;
-> +              linux,abs-fuzz = <4>;
-> +              linux,abs-flat = <200>;
-> +      };
-> +    };
-> -- 
-> 2.24.1
+>  crypto/af_alg.c                      | 2 +-
+>  drivers/acpi/scan.c                  | 2 +-
+>  drivers/char/hw_random/bcm2835-rng.c | 2 +-
+>  drivers/char/hw_random/omap-rng.c    | 4 ++--
+>  drivers/clk/clk.c                    | 2 +-
+>  drivers/dma/mv_xor_v2.c              | 2 +-
+>  drivers/gpio/gpiolib-devres.c        | 2 +-
+>  drivers/gpio/gpiolib-of.c            | 8 ++++----
+>  drivers/gpio/gpiolib.c               | 2 +-
+>  drivers/i2c/busses/i2c-mv64xxx.c     | 5 ++---
+>  drivers/i2c/busses/i2c-synquacer.c   | 2 +-
+>  drivers/mtd/ubi/build.c              | 2 +-
+>  drivers/of/device.c                  | 2 +-
+>  drivers/pci/controller/pci-tegra.c   | 2 +-
+>  drivers/phy/phy-core.c               | 4 ++--
+>  drivers/spi/spi-orion.c              | 3 +--
+>  drivers/video/fbdev/imxfb.c          | 2 +-
+>  fs/ext4/super.c                      | 2 +-
+>  fs/f2fs/node.c                       | 2 +-
+>  fs/ocfs2/suballoc.c                  | 2 +-
+>  fs/sysfs/group.c                     | 2 +-
+>  net/core/dev.c                       | 2 +-
+>  net/core/filter.c                    | 2 +-
+>  net/xfrm/xfrm_policy.c               | 2 +-
+>  sound/soc/codecs/ak4104.c            | 3 +--
+>  sound/soc/codecs/cs4270.c            | 3 +--
+>  sound/soc/codecs/tlv320aic32x4.c     | 6 ++----
+>  sound/soc/sunxi/sun4i-spdif.c        | 2 +-
+>  28 files changed, 35 insertions(+), 41 deletions(-)
 > 
+
+Acked-by: Rob Herring <robh@kernel.org>
