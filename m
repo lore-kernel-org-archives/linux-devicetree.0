@@ -2,172 +2,89 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 695CCC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3713C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453A72082E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D23520678
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:52:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S+juTaNj"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hpES8SdR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgAHSs7 (ORCPT
+        id S1729488AbgAHSw5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:48:59 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:47299 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728069AbgAHSs7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 13:48:59 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578509338; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=gTr19O6/h1bieTEtOdTwKJcuvZEZhmSsjFCuP6lT+N4=; b=S+juTaNj2fbdEoi+tX1SV3RRMdgXGyfD6wfeMXeUti93FLUSEije0raYr63EXfJ2Z5yiSXvu
- /igURp9Apn/JgxHmh2r5nB0hXVjCHCTn+cNCsgwdskOvwMHEo8T2fERq7DPcMm+eyBqdWLoX
- i2tWvxyVTk75ckWHAUOl8dV/9jo=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e162418.7f8a0f7f6d50-smtp-out-n01;
- Wed, 08 Jan 2020 18:48:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 021D2C4479C; Wed,  8 Jan 2020 18:48:55 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B59D8C4479F;
-        Wed,  8 Jan 2020 18:48:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B59D8C4479F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Wed, 8 Jan 2020 11:48:50 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] drm/msm: support firmware-name for zap fw
-Message-ID: <20200108184850.GA13260@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200108013847.899170-1-robdclark@gmail.com>
- <20200108013847.899170-2-robdclark@gmail.com>
+        Wed, 8 Jan 2020 13:52:57 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:37715 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729479AbgAHSw4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 13:52:56 -0500
+Received: by mail-pj1-f67.google.com with SMTP id m13so10541pjb.2
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 10:52:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=hCOCHoRkkp5UhkO13eAqohn7PL1ou6ER+9SiJJ5LA7k=;
+        b=hpES8SdR9Uct+j5WAd8zNLCHlHLI0Dpp7FDalu+Q8dq7QprTl2szIsh+6DBrWb4NNz
+         xRrBGudrw+X/Ehs59ly2N8d8DSql+Fw7Ppwdjr4XpX75C+4sgM5xKFuqbIkO+z3QChEl
+         iQYQ0JNOqgh+OuuWj0mFms7QubXPP6Q/OqvExcsyRbIwKARY9jgHP2914Gc3gDTgacjJ
+         CR7FlFxLhEsgcA9/zQ4FxzryADWNeNR+68ozE/oMrV3BXa3+q5U8PWFc9AiE31Wd81R0
+         25Cgh1ITcxRibM6EOVZlV9vd99Nz5cGzZQ82KxKqCxpzlKEY6ZSH/lut8bdb5+a1U84z
+         Zw8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=hCOCHoRkkp5UhkO13eAqohn7PL1ou6ER+9SiJJ5LA7k=;
+        b=IspDKUlnetztoFLwyxvPrrLSodXpPAmbhQkezeRGXfRMJCpWjrHqwGzmHSCZ7NIci3
+         PPXm+S/HaZALh9+RrSQNAMToNdU38H8Hm9z31DBwkvrq1NJt/IOiRGZ14Jug6wpQI3de
+         1bgJclC8pI3TnKeY+wIHWPuesDwLQclidvcZirxctYiNNGTzyi88GOdJsfuYzXV9J1L8
+         iMGr1+FE9IycO3XvYxWiAYzZOUGaT03GHkHzpXhbQ4Vs0Tm6j4cgFksRiCfDXg9Fzqbv
+         gIpkvURVwnwD8fmRl8uA5kNcVzSaZGkfSx27+T8wOsFyioR1Kt414E0+B9O0XA0ThkH5
+         KgLA==
+X-Gm-Message-State: APjAAAUoLHawvd8P66EGToTG2fRgtMKtsmTpn91Tum41qlnL8mM0BYIp
+        t2hyE4LL3a1K7DY/Y5ifHAgIC1T+KdyeZg==
+X-Google-Smtp-Source: APXvYqyaHwgFqHkdB1vUFNMuHsw49pWnr1JXRS+Ome1dK+LyPoCS43sUUsv8UcMPR7AbUHvBPCKp0g==
+X-Received: by 2002:a17:902:34a:: with SMTP id 68mr6646218pld.250.1578509576062;
+        Wed, 08 Jan 2020 10:52:56 -0800 (PST)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id m3sm4429923pfh.116.2020.01.08.10.52.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 Jan 2020 10:52:55 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson: add audio fifo depths
+In-Reply-To: <20191218202452.1288378-1-jbrunet@baylibre.com>
+References: <20191218202452.1288378-1-jbrunet@baylibre.com>
+Date:   Wed, 08 Jan 2020 10:52:54 -0800
+Message-ID: <7himllg4qh.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108013847.899170-2-robdclark@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 05:38:42PM -0800, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
-> 
-> Since zap firmware can be device specific, allow for a firmware-name
-> property in the zap node to specify which firmware to load, similarly to
-> the scheme used for dsp/wifi/etc.
-> 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+Jerome Brunet <jbrunet@baylibre.com> writes:
+
+> Add the property describing the depth of the audio fifo on the axg, g12a
+> and sm1 SoC family
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 32 ++++++++++++++++++++++---
->  1 file changed, 29 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 112e8b8a261e..aa8737bd58db 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -26,6 +26,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
->  {
->  	struct device *dev = &gpu->pdev->dev;
->  	const struct firmware *fw;
-> +	const char *signed_fwname = NULL;
->  	struct device_node *np, *mem_np;
->  	struct resource r;
->  	phys_addr_t mem_phys;
-> @@ -58,8 +59,33 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
->  
->  	mem_phys = r.start;
->  
-> -	/* Request the MDT file for the firmware */
-> -	fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> +	/*
-> +	 * Check for a firmware-name property.  This is the new scheme
-> +	 * to handle firmware that may be signed with device specific
-> +	 * keys, allowing us to have a different zap fw path for different
-> +	 * devices.
-> +	 *
-> +	 * If the firmware-name property is found, we bypass the
-> +	 * adreno_request_fw() mechanism, because we don't need to handle
-> +	 * the /lib/firmware/qcom/* vs /lib/firmware/* case.
-> +	 *
-> +	 * If the firmware-name property is not found, for backwards
-> +	 * compatibility we fall back to the fwname from the gpulist
-> +	 * table.
-> +	 */
-> +	of_property_read_string_index(np, "firmware-name", 0, &signed_fwname);
-> +	if (signed_fwname) {
-> +		fwname = signed_fwname;
-> +		ret = request_firmware_direct(&fw, signed_fwname, gpu->dev->dev);
-> +		if (ret) {
-> +			DRM_DEV_ERROR(dev, "could not load signed zap firmware: %d\n", ret);
-> +			fw = ERR_PTR(ret);
-> +		}
-> +	} else {
-> +		/* Request the MDT file for the firmware */
-> +		fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> +	}
-> +
+>  Hi Kevin,
+>
+>  The binding documentation for this new property will be merged through Mark's ASoC tree [0]
+> [0]: https://lkml.kernel.org/r/applied-20191218172420.1199117-3-jbrunet@baylibre.com
 
-Since DT seems to be the trend for target specific firmware names I think we
-should plan to quickly deprecate the legacy name and not require new targets to
-set it. If a zap node is going to be opt in then it isn't onerous to ask
-the developer to set the additional property for each target platform.
+Queued for v5.6,
 
-Jordan
+Thanks,
 
->  	if (IS_ERR(fw)) {
->  		DRM_DEV_ERROR(dev, "Unable to load %s\n", fwname);
->  		return PTR_ERR(fw);
-> @@ -95,7 +121,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
->  	 * not.  But since we've already gotten through adreno_request_fw()
->  	 * we know which of the two cases it is:
->  	 */
-> -	if (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY) {
-> +	if (signed_fwname || (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY)) {
->  		ret = qcom_mdt_load(dev, fw, fwname, pasid,
->  				mem_region, mem_phys, mem_size, NULL);
->  	} else {
-> -- 
-> 2.24.1
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Kevin
