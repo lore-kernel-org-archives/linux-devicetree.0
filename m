@@ -2,171 +2,108 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A5BC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07061C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3ED2067D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8142067D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vNp5hose"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgAHPgi (ORCPT
+        id S1727357AbgAHPhe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:36:38 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38115 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgAHPgh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 10:36:37 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ipDNj-0007qN-VJ; Wed, 08 Jan 2020 16:36:27 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ipDNi-0002vF-3B; Wed, 08 Jan 2020 16:36:26 +0100
-Date:   Wed, 8 Jan 2020 16:36:26 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-media@vger.kernel.org
-Subject: Re: [PATCH v11 04/15] media: v4l2-fwnode: add initial connector
- parsing support
-Message-ID: <20200108153626.we3zasacpriksczs@pengutronix.de>
-References: <20190930093900.16524-1-m.felsch@pengutronix.de>
- <20190930093900.16524-5-m.felsch@pengutronix.de>
- <20191115233439.GB2696@mara.localdomain>
+        Wed, 8 Jan 2020 10:37:34 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38988 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726254AbgAHPhe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 10:37:34 -0500
+Received: by mail-lj1-f195.google.com with SMTP id l2so3771221lja.6;
+        Wed, 08 Jan 2020 07:37:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c9hbr49Ley4UTmimx7yxEnrqrafXHv5pmFx/ZO0fWMk=;
+        b=vNp5hosegcOknmSw79NZpyGoMqDPAkYat31L0xMKOSqqNI+hCdjY4mv6g8r9dTQFrS
+         SDNPQBPCtFhxO5L/YcELkmNK8MM7OrKAVCaVImJRqErnYEJUn6bccDjrhvECPlyhxN4p
+         BmvFbayLVt9r5BDgWiv0JOmOgz8ZsDytgPXWRil6qqP/2OWLrSnYq4CPnCGvfdgkVVDo
+         yyhAnBtjDuyWKwQ6t45f2FpOy3qWLgHyzX4AM/3ZL+PzU+qJF1JySPSSfnSf+9csNq7J
+         rjAnksKIIlAgLEae9UKXX52uOGWO1iKmXDvWHlxtzSMkuscaTv8Xpdd0wzPG0L8vUjIb
+         1ezQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c9hbr49Ley4UTmimx7yxEnrqrafXHv5pmFx/ZO0fWMk=;
+        b=srvVkGZ5r+J+/OjEkUEvjnY3R0V+qwBqxn4CE1+uaxbwMzuUZjC2HGMNMCjDLgwX19
+         coZ+ouyuVfT03j4qDEnoWB/S5b38AyAaRmmlkOsgHHYspJ7h261+1wXbSKU0eJ1zZzps
+         GzSfd59KvKYNJtaFKqeDSEUuF6SPfMh64M/3zdLf0IXEBMrhyEeIt8NHxndTJyCR4QfM
+         ywr8D9y7E3A2LzNEd6JpbctnlPY5M4EkCi8MS8/H1CUUV9dEBgkACAF0Q94APRDfuhWK
+         KoUo2nlZa9z/rAgHIGF2z8Y/QT5PuWMXaNWFm3CcU81eOcqER8CTbD0a+HJKIhDalrz0
+         +97w==
+X-Gm-Message-State: APjAAAXJNC4Czi9AwXhEy/6+35rQH2NE9lHM/G+N7gQMgwe7ghutWMDJ
+        ZtJ9d/xFYg2LGrP+rmkD5mo=
+X-Google-Smtp-Source: APXvYqwh7BDY6OtOgf2vFIGEdrgC3+UO6b2zbI6cR9IU/z5FxmWmUdmzOm1y2uW1q1QDxoAPd1U82Q==
+X-Received: by 2002:a2e:8544:: with SMTP id u4mr3239243ljj.70.1578497851734;
+        Wed, 08 Jan 2020 07:37:31 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id 138sm1624357lfa.76.2020.01.08.07.37.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Jan 2020 07:37:30 -0800 (PST)
+Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
+To:     "Johnny.Chuang" <johnny.chuang@emc.com.tw>,
+        'Dmitry Torokhov' <dmitry.torokhov@gmail.com>,
+        =?UTF-8?B?J01pY2hhxYIgTWlyb3PFgmF3Jw==?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        'Scott Liu' <scott.liu@emc.com.tw>,
+        'James Chen' <james.chen@emc.com.tw>,
+        linux-kernel@vger.kernel.org,
+        'Henrik Rydberg' <rydberg@bitmath.org>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Rob Herring' <robh-dt@kernel.org>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <20191212192420.GD101194@dtor-ws>
+ <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
+ <000001d5c634$655bed20$3013c760$@emc.com.tw>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1451c959-03fc-9493-48f1-404cbd273aa9@gmail.com>
+Date:   Wed, 8 Jan 2020 18:37:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115233439.GB2696@mara.localdomain>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:42:59 up 54 days,  5:01, 46 users,  load average: 0.01, 0.03,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <000001d5c634$655bed20$3013c760$@emc.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 19-11-16 01:34, Sakari Ailus wrote:
-> Hi Marco,
+08.01.2020 18:00, Johnny.Chuang пишет:
+>> 12.12.2019 22:24, Dmitry Torokhov пишет:
+>>> On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
+>>>> This series cleans up the driver a bit and implements changes needed
+>>>> to support EKTF3624-based touchscreen used in eg. Asus TF300T tablet.
+>>>
+>>> Johnny, could you please take a look at this patch series?
+>>>
+>>> Thanks!
+>>
+>> Hello Johnny,
+>>
+>> Could you please let us know whether you or anyone else from Elan are going
+>> to take a look at this patchset anytime soon?
 > 
-> On Mon, Sep 30, 2019 at 11:38:49AM +0200, Marco Felsch wrote:
-
-...
-
-> > +int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
-> > +				      struct v4l2_fwnode_connector *connector)
-> > +{
-> > +	struct fwnode_handle *remote_pp, *remote_ep;
-> > +	const char *type_name;
-> > +	unsigned int i = 0, ep_num = 0;
-> > +	int err;
-> > +
-> > +	memset(connector, 0, sizeof(*connector));
-> > +
-> > +	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
-> > +	if (!remote_pp)
-> > +		return -ENOLINK;
-
-I will align the API with the v4l2_fwnode_endpoint_alloc_parse()
-function so the caller need to pass the connector fwnode handle.
-
-> > +
-> > +	/* Parse all common properties first. */
-> > +	fwnode_graph_for_each_endpoint(remote_pp, remote_ep)
-> > +		ep_num++;
+> Hi Dmitry Osipenko,
 > 
-> If there are no endpoints, ep_num will be zero and kmalloc_array() will
-> return NULL? There should be a way there are no endpoints, rather than
-> returning -ENOMEM.
+> I'm sorry to reply late. James Chen will take a look at this patch set. 
 > 
-> > +
-> > +	connector->nr_of_links = ep_num;
-> > +	connector->links = kmalloc_array(ep_num, sizeof(*connector->links),
-> > +					 GFP_KERNEL);
-> > +	if (!connector->links) {
-> > +		err = -ENOMEM;
-> > +		goto err_put_fwnode;
-> > +	}
-> > +
-> > +	fwnode_graph_for_each_endpoint(remote_pp, remote_ep) {
-> > +		err = v4l2_fwnode_parse_link(remote_ep, &connector->links[i]);
-> 
-> If you start parsing a connector starting from another device connected to
-> it, nothing seems to prevent parsing the same links twice, in case the
-> connector is connected to more than one sub-device.
-> 
-> Or do I miss something crucial here?
 
-Yes thats right but it seems that sharing connectors isn't supported at
-all. All bridge drivers using connectors implementing the connector
-handling by their self. Anyway, I will add a function parameter to check
-that we parse only the endpoints connected to the calling sub-dev.
-
-Regards,
-  Marco
-
-> > +		if (err) {
-> > +			fwnode_handle_put(remote_ep);
-> > +			goto err_free_links;
-> > +		}
-> > +		i++;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Links reference counting guarantees access -> no duplication needed
-> > +	 */
-> > +	fwnode_property_read_string(remote_pp, "label", &connector->label);
-> > +
-> > +	/* The connector-type is stored within the compatible string. */
-> > +	err = fwnode_property_read_string(remote_pp, "compatible", &type_name);
-> > +	if (err) {
-> > +		err = -EINVAL;
-> > +		goto err_free_links;
-> > +	}
-> > +	connector->type = v4l2_fwnode_string_to_connector_type(type_name);
-> > +
-> > +	/* Now parse the connector specific properties. */
-> > +	switch (connector->type) {
-> > +	case V4L2_CONN_COMPOSITE:
-> > +	case V4L2_CONN_SVIDEO:
-> > +		err = v4l2_fwnode_connector_parse_analog(remote_pp, connector);
-> > +		break;
-> > +	case V4L2_CONN_UNKNOWN:
-> > +	default:
-> > +		pr_err("Unknown connector type\n");
-> > +		err = -EINVAL;
-> > +		goto err_free_links;
-> > +	}
-> > +
-> > +	fwnode_handle_put(remote_pp);
-> > +
-> > +	return err;
-> > +
-> > +err_free_links:
-> > +	for (i = 0; i < ep_num; i++)
-> > +		v4l2_fwnode_put_link(&connector->links[i]);
-> > +	kfree(connector->links);
-> > +err_put_fwnode:
-> > +	fwnode_handle_put(remote_pp);
-> > +
-> > +	return err;
-> > +}
-> > +EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_alloc_parse);
-> > +
+No problems, thank you very much.
