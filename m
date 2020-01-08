@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5336CC3F68F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D50C33CA2
 	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34BAD20720
+	by mail.kernel.org (Postfix) with ESMTP id B5BA02073A
 	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbgAHPop (ORCPT
+        id S1727158AbgAHPoj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:44:45 -0500
-Received: from lists.gateworks.com ([108.161.130.12]:49083 "EHLO
+        Wed, 8 Jan 2020 10:44:39 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:49060 "EHLO
         lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbgAHPoo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 10:44:44 -0500
+        with ESMTP id S1729084AbgAHPoi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 10:44:38 -0500
 Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
         by lists.gateworks.com with esmtp (Exim 4.82)
         (envelope-from <rjones@gateworks.com>)
-        id 1ipDVa-0007s2-Ag; Wed, 08 Jan 2020 15:44:34 +0000
+        id 1ipDVZ-0007s2-Fa; Wed, 08 Jan 2020 15:44:33 +0000
 From:   Robert Jones <rjones@gateworks.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -33,11 +33,10 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        Tim Harvey <tharvey@gateworks.com>,
         Robert Jones <rjones@gateworks.com>
-Subject: [PATCH v7 3/5] ARM: dts: imx: Add GW5910 board support
-Date:   Wed,  8 Jan 2020 07:44:22 -0800
-Message-Id: <20200108154424.15736-4-rjones@gateworks.com>
+Subject: [PATCH v7 2/5] ARM: dts: imx: Add GW5907 board support
+Date:   Wed,  8 Jan 2020 07:44:21 -0800
+Message-Id: <20200108154424.15736-3-rjones@gateworks.com>
 X-Mailer: git-send-email 2.9.2
 In-Reply-To: <20200108154424.15736-1-rjones@gateworks.com>
 References: <20200108154424.15736-1-rjones@gateworks.com>
@@ -46,64 +45,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
-
-The Gateworks GW5910 is an IMX6 SoC based single board computer with:
+The Gateworks GW5907 is an IMX6 SoC based single board computer with:
  - IMX6Q or IMX6DL
  - 32bit DDR3 DRAM
- - FEC GbE RJ45 front-panel
- - 1x miniPCIe socket with PCI Gen2, USB2
- - 1x miniPCIe socket with PCI Gen2, USB2, nanoSIM
- - 5V to 60V DC input barrel jack
- - 3axis accelerometer (lis2de12)
- - GPS (ublox ZOE-M8Q)
+ - FEC GbE Phy
  - bi-color front-panel LED
  - 256MB NAND boot device
- - microSD socket (with UHS-I support)
- - user pushbutton
  - Gateworks System Controller (hwmon, pushbutton controller, EEPROM)
- - Dual-Band Wireless MCU (CC1352, UART/I2S interrconnect to IMX6)
- - WiFi/Bluetooth/BLE module (Sterling-LSW, SDIO/UART interconnect to IMX6)
- - RS232 transceiver (1x UART with flow-control or 2x UART (build option)
- - off-board SPI connector (1x chip-select)
+ - Digital IO expander (pca9555)
+ - Joystick 12bit adc (ads1015)
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 Signed-off-by: Robert Jones <rjones@gateworks.com>
+Reviewed-by: Tim Harvey <tharvey@gateworks.com>
 ---
  arch/arm/boot/dts/Makefile            |   2 +
- arch/arm/boot/dts/imx6dl-gw5910.dts   |  14 +
- arch/arm/boot/dts/imx6q-gw5910.dts    |  14 +
- arch/arm/boot/dts/imx6qdl-gw5910.dtsi | 491 ++++++++++++++++++++++++++++++++++
- 4 files changed, 521 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-gw5910.dts
- create mode 100644 arch/arm/boot/dts/imx6q-gw5910.dts
- create mode 100644 arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+ arch/arm/boot/dts/imx6dl-gw5907.dts   |  14 ++
+ arch/arm/boot/dts/imx6q-gw5907.dts    |  14 ++
+ arch/arm/boot/dts/imx6qdl-gw5907.dtsi | 399 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 429 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5907.dtsi
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9ee80e2..85e53cc 100644
+index 1e9e1af..9ee80e2 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -423,6 +423,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+@@ -422,6 +422,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw560x.dtb \
  	imx6dl-gw5903.dtb \
  	imx6dl-gw5904.dtb \
- 	imx6dl-gw5907.dtb \
-+	imx6dl-gw5910.dtb \
++	imx6dl-gw5907.dtb \
  	imx6dl-hummingboard.dtb \
  	imx6dl-hummingboard-emmc-som-v15.dtb \
  	imx6dl-hummingboard-som-v15.dtb \
-@@ -495,6 +496,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+@@ -493,6 +494,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw560x.dtb \
  	imx6q-gw5903.dtb \
  	imx6q-gw5904.dtb \
- 	imx6q-gw5907.dtb \
-+	imx6q-gw5910.dtb \
++	imx6q-gw5907.dtb \
  	imx6q-h100.dtb \
  	imx6q-hummingboard.dtb \
  	imx6q-hummingboard-emmc-som-v15.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-gw5910.dts b/arch/arm/boot/dts/imx6dl-gw5910.dts
+diff --git a/arch/arm/boot/dts/imx6dl-gw5907.dts b/arch/arm/boot/dts/imx6dl-gw5907.dts
 new file mode 100644
-index 0000000..0d5e7e5
+index 0000000..3fa2822
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-gw5910.dts
++++ b/arch/arm/boot/dts/imx6dl-gw5907.dts
 @@ -0,0 +1,14 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
@@ -113,17 +101,17 @@ index 0000000..0d5e7e5
 +/dts-v1/;
 +
 +#include "imx6dl.dtsi"
-+#include "imx6qdl-gw5910.dtsi"
++#include "imx6qdl-gw5907.dtsi"
 +
 +/ {
-+	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5910";
-+	compatible = "gw,imx6dl-gw5910", "gw,ventana", "fsl,imx6dl";
++	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5907";
++	compatible = "gw,imx6dl-gw5907", "gw,ventana", "fsl,imx6dl";
 +};
-diff --git a/arch/arm/boot/dts/imx6q-gw5910.dts b/arch/arm/boot/dts/imx6q-gw5910.dts
+diff --git a/arch/arm/boot/dts/imx6q-gw5907.dts b/arch/arm/boot/dts/imx6q-gw5907.dts
 new file mode 100644
-index 0000000..6aafa2f
+index 0000000..b25526e
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-gw5910.dts
++++ b/arch/arm/boot/dts/imx6q-gw5907.dts
 @@ -0,0 +1,14 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
@@ -133,18 +121,18 @@ index 0000000..6aafa2f
 +/dts-v1/;
 +
 +#include "imx6q.dtsi"
-+#include "imx6qdl-gw5910.dtsi"
++#include "imx6qdl-gw5907.dtsi"
 +
 +/ {
-+	model = "Gateworks Ventana i.MX6 Dual/Quad GW5910";
-+	compatible = "gw,imx6q-gw5910", "gw,ventana", "fsl,imx6q";
++	model = "Gateworks Ventana i.MX6 Dual/Quad GW5907";
++	compatible = "gw,imx6q-gw5907", "gw,ventana", "fsl,imx6q";
 +};
-diff --git a/arch/arm/boot/dts/imx6qdl-gw5910.dtsi b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5907.dtsi b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
 new file mode 100644
-index 0000000..be1af74
+index 0000000..0bdebdd
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx6qdl-gw5910.dtsi
-@@ -0,0 +1,491 @@
++++ b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+@@ -0,0 +1,399 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright 2019 Gateworks Corporation
@@ -157,16 +145,13 @@ index 0000000..be1af74
 +	aliases {
 +		led0 = &led0;
 +		led1 = &led1;
-+		led2 = &led2;
++		nand = &gpmi;
++		usb0 = &usbh1;
++		usb1 = &usbotg;
 +	};
 +
 +	chosen {
 +		stdout-path = &uart2;
-+	};
-+
-+	memory@10000000 {
-+		device_type = "memory";
-+		reg = <0x10000000 0x20000000>;
 +	};
 +
 +	leds {
@@ -186,19 +171,18 @@ index 0000000..be1af74
 +			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
 +			default-state = "off";
 +		};
++	};
 +
-+		led2: user3 {
-+			label = "user3";
-+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
-+			default-state = "off";
-+		};
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0x20000000>;
 +	};
 +
 +	pps {
 +		compatible = "pps-gpio";
 +		pinctrl-names = "default";
 +		pinctrl-0 = <&pinctrl_pps>;
-+		gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
++		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
 +		status = "okay";
 +	};
 +
@@ -218,51 +202,32 @@ index 0000000..be1af74
 +		regulator-always-on;
 +	};
 +
-+	reg_wl: regulator-wl {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_wl>;
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
 +		compatible = "regulator-fixed";
-+		regulator-name = "wl";
-+		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <100>;
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
 +		enable-active-high;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
 +	};
-+
-+	reg_bt: regulator-bt {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_bt>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "bt";
-+		gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <100>;
-+		enable-active-high;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+
-+&ecspi3 {
-+	cs-gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi3>;
-+	status = "okay";
 +};
 +
 +&fec {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_enet>;
 +	phy-mode = "rgmii-id";
++	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
 +	status = "okay";
 +};
 +
 +&gpmi {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	status = "okay";
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c3>;
 +	status = "okay";
 +};
 +
@@ -322,22 +287,43 @@ index 0000000..be1af74
 +	pinctrl-0 = <&pinctrl_i2c3>;
 +	status = "okay";
 +
-+	accel@19 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_accel>;
-+		compatible = "st,lis2de12";
-+		reg = <0x19>;
-+		st,drdy-int-pin = <1>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <13 0>;
-+		interrupt-names = "INT1";
++	gpio@20 {
++		compatible = "nxp,pca9555";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	adc@48 {
++		compatible = "ti,ads1015";
++		reg = <0x48>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		channel@4 {
++			reg = <4>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++
++		channel@5 {
++			reg = <5>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++
++		channel@6 {
++			reg = <6>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
 +	};
 +};
 +
 +&pcie {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio3 20 GPIO_ACTIVE_LOW>;
++	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
 +	status = "okay";
 +};
 +
@@ -353,29 +339,30 @@ index 0000000..be1af74
 +	status = "disabled";
 +};
 +
-+/* off-board RS232 */
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>; /* MX6_DIO3 */
++	status = "disabled";
++};
++
 +&uart1 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_uart1>;
 +	status = "okay";
 +};
 +
-+/* serial console */
 +&uart2 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_uart2>;
 +	status = "okay";
 +};
 +
-+/* Sterling-LWB Bluetooth */
-+&uart4 {
++&uart3 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	uart-has-rtscts;
++	pinctrl-0 = <&pinctrl_uart3>;
 +	status = "okay";
 +};
 +
-+/* GPS */
 +&uart5 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_uart5>;
@@ -383,7 +370,7 @@ index 0000000..be1af74
 +};
 +
 +&usbotg {
-+	vbus-supply = <&reg_5p0v>;
++	vbus-supply = <&reg_usb_otg_vbus>;
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_usbotg>;
 +	disable-over-current;
@@ -394,26 +381,6 @@ index 0000000..be1af74
 +	status = "okay";
 +};
 +
-+/* Sterling-LWB SDIO WiFi */
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	vmmc-supply = <&reg_3p3v>;
-+	non-removable;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	cd-gpios = <&gpio7 0 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&reg_3p3v>;
-+	status = "okay";
-+};
-+
 +&wdog1 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_wdog>;
@@ -421,35 +388,20 @@ index 0000000..be1af74
 +};
 +
 +&iomuxc {
-+	pinctrl_accel: accelmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_18__GPIO7_IO13		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_ecspi3: escpi3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT0__ECSPI3_SCLK	0x100b1
-+			MX6QDL_PAD_DISP0_DAT1__ECSPI3_MOSI	0x100b1
-+			MX6QDL_PAD_DISP0_DAT2__ECSPI3_MISO	0x100b1
-+			MX6QDL_PAD_DISP0_DAT3__GPIO4_IO24	0x100b1
-+		>;
-+	};
-+
 +	pinctrl_enet: enetgrp {
 +		fsl,pins = <
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
 +			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
 +			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
 +			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
@@ -460,9 +412,8 @@ index 0000000..be1af74
 +
 +	pinctrl_gpio_leds: gpioledsgrp {
 +		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL0__GPIO4_IO06  0x1b0b0
-+			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07  0x1b0b0
-+			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15  0x1b0b0
++			MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
++			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
 +		>;
 +	};
 +
@@ -505,18 +456,20 @@ index 0000000..be1af74
 +		fsl,pins = <
 +			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
 +			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
++			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x1b0b0
 +		>;
 +	};
 +
 +	pinctrl_pcie: pciegrp {
 +		fsl,pins = <
-+			MX6QDL_PAD_EIM_D20__GPIO3_IO20		0x1b0b0
++			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0
 +		>;
 +	};
 +
 +	pinctrl_pps: ppsgrp {
 +		fsl,pins = <
-+			MX6QDL_PAD_DI0_DISP_CLK__GPIO4_IO16	0x1b0b1
++			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
 +		>;
 +	};
 +
@@ -532,22 +485,16 @@ index 0000000..be1af74
 +		>;
 +	};
 +
-+	pinctrl_reg_bt: regbtgrp {
++	pinctrl_pwm4: pwm4grp {
 +		fsl,pins = <
-+			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_reg_wl: regwlgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_5__GPIO1_IO05		0x1b0b1
++			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
 +		>;
 +	};
 +
 +	pinctrl_uart1: uart1grp {
 +		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
++			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
 +		>;
 +	};
 +
@@ -558,12 +505,10 @@ index 0000000..be1af74
 +		>;
 +	};
 +
-+	pinctrl_uart4: uart4grp {
++	pinctrl_uart3: uart3grp {
 +		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B	0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B	0x1b0b1
++			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
 +		>;
 +	};
 +
@@ -576,57 +521,8 @@ index 0000000..be1af74
 +
 +	pinctrl_usbotg: usbotggrp {
 +		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x13059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6QDL_PAD_SD2_CLK__SD2_CLK		0x10059
-+			MX6QDL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-+			MX6QDL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-+			MX6QDL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-+			MX6QDL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x17059 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170b9
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x170b9
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170b9 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170f9
-+			MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100f9
-+			MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
-+			MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
-+			MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
-+			MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
-+			MX6QDL_PAD_SD3_DAT5__GPIO7_IO00		0x170f9 /* CD */
-+			MX6QDL_PAD_NANDF_CS1__SD3_VSELECT	0x170f9
++			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0
 +		>;
 +	};
 +
