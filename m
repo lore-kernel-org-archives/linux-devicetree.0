@@ -2,145 +2,209 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF68C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72A1C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED9D20720
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABB020720
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 20:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578514190;
-	bh=HMpUUI05u881FivDVXx8p23Q4WPCIib06475xNf1c9I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uU9t9W9dH5y+PmcbwnADUWxkBsaKDyw0F5etLIVpLJYawXP6nHViWJRLGhoxAaVWM
-	 rDsMrFKwCx+pzSbcQHcjJmlEMvm9KK69ZFBMsvjdd6ehqoB+ub9IAkFUcab2Ve0SsB
-	 A6PWvdT1fTcUZmPVtPo/SwaSXPv4d7N7Ws3LQwYM=
+	s=default; t=1578514350;
+	bh=22OobtloNvyA6wdbMtDQyiAM5CsGqya7WcK1rP/Rarw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pPap82uWAuKvYFctq8tEYtTZVoj/NInxSOgG61tTTghSyxqH+9IZtkFX+TzivcBdb
+	 96LF2ZyxZZ4robkD2yjr6sWD+n55VWZpq8RQOL+YmMMUjFF9T+48UAePlKDrFhMWZ/
+	 GlzT3J4YyW7xeXtABh3UVXcJmT5Q9hA6aJVkXGdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725446AbgAHUJu (ORCPT
+        id S1726617AbgAHUM3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 15:09:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbgAHUJt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 8 Jan 2020 15:09:49 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEDAA2072A;
-        Wed,  8 Jan 2020 20:09:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578514189;
-        bh=HMpUUI05u881FivDVXx8p23Q4WPCIib06475xNf1c9I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=lbfmSdy+Wrg1cKLMM72tdGc41LpdFrJUC2MTXQSvs+CnZr9rnij5xj4uZvm0y+nXr
-         uzzUOtubqbF077jeXhjPh2tR+aoy7gSUi3nr+OAOKX0TZIp0AvFQiRu6NJmMm8pThE
-         5hrTN+D0LmCaARPP6yREK0FbcXzEPtNzLzbmSfgc=
-Received: by mail-qk1-f177.google.com with SMTP id t129so3824148qke.10;
-        Wed, 08 Jan 2020 12:09:48 -0800 (PST)
-X-Gm-Message-State: APjAAAWCcEiPGevYZqCXDNSyAuP5ztv1p9omMdzvEmaN6He/qoG2p+dL
-        LTyIcP8wEVTSah3o9U0HaBK673KfL8KKy0+rEQ==
-X-Google-Smtp-Source: APXvYqyBzM8hpEjCqsN8vXLIaQ3o5cj0NDc/Yz3b1xjFrRbEN7LH8SmrAR3PWRfmz+8M9gI0InsycHS1b2WLHCaGWPY=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr6192361qkd.223.1578514187969;
- Wed, 08 Jan 2020 12:09:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-8-drinkcat@chromium.org>
-In-Reply-To: <20200108052337.65916-8-drinkcat@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 8 Jan 2020 14:09:36 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+jWtrV8-iDzqsefRxr_21jzf7AdSLap8k4hstqK3MBvQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+jWtrV8-iDzqsefRxr_21jzf7AdSLap8k4hstqK3MBvQ@mail.gmail.com>
-Subject: Re: [PATCH v2 7/7, RFC]: drm/panfrost: devfreq: Add support for 2 regulators
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 8 Jan 2020 15:12:29 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38138 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbgAHUM3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 15:12:29 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d7so4850871otf.5
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 12:12:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k7+Uq6HkxozZICbgNkuKzFsXaFY2bmpVlgViuwauvZs=;
+        b=MSAFcUQd1CKZdOdOpew93WFGukN+ZC4kYh6lcgK+MGlFcAFJKL/ooo76EQdLdEYeKU
+         oa4xJWoQbkIc58UMRSv1HaiJJd+tpfhZxtFUFRA84j783vQdOpbvYzyIj9Y+6AQdCqe9
+         5FfKDbxcMfNQFeP3xbmWEjps2XKUm9B3KPnJO+/Dmik0wdo/vSolVlSBr+c3KtwTOn8f
+         NcNvcEZavt4im6dMS8v1gLrxlewTxK6X753QLY2pdkxJAcIdHYrCkVOrAzcZjycvbu9o
+         mZ2mJ1tp7Rd16G643AbmKsZ+xweFH3ZMYAyFw7UreVde1yBoKhZjXqK50wwREVkB0lMs
+         lGOg==
+X-Gm-Message-State: APjAAAX2gsxa0LyZkhBPnQULOhdwq657RFlix48PCL8MX9ze+yLRb9p2
+        MKCkZv/m8CI9OC2OL0T+Sv4FRLs=
+X-Google-Smtp-Source: APXvYqzl1sMRwoW9dZde+AvZJuDr7YUCB8Xp+FbQeoF6LrRhISI61L0LkuGa5l+D7SWhJyvWS5GVsA==
+X-Received: by 2002:a9d:6183:: with SMTP id g3mr5475077otk.304.1578514348524;
+        Wed, 08 Jan 2020 12:12:28 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u13sm1433033oic.2.2020.01.08.12.12.27
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 12:12:27 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220333
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 08 Jan 2020 14:12:26 -0600
+Date:   Wed, 8 Jan 2020 14:12:26 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] dt-bindings: input: Add docs for ADC driven joystick.
+Message-ID: <20200108201226.GA10350@bogus>
+References: <20200105001639.142061-1-contact@artur-rojek.eu>
+ <20200105001639.142061-4-contact@artur-rojek.eu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200105001639.142061-4-contact@artur-rojek.eu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 11:24 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
-> devfreq, and provides OPP table with 2 sets of voltages.
->
-> TODO: This is incomplete as we'll need add support for setting
-> a pair of voltages as well.
->
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+On Sun, Jan 05, 2020 at 01:16:38AM +0100, Artur Rojek wrote:
+> Add documentation for the adc-joystick driver, used to provide support
+> for joysticks connected over ADC.
+> 
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
 > ---
->  drivers/gpu/drm/panfrost/panfrost_devfreq.c | 18 ++++++++++++++++++
->  drivers/gpu/drm/panfrost/panfrost_device.h  |  2 ++
->  2 files changed, 20 insertions(+)
->
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> index 413987038fbfccb..5eb0effded7eb09 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
-> @@ -79,6 +79,22 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
->         struct devfreq *devfreq;
->         struct thermal_cooling_device *cooling;
->
-> +       /* If we have 2 regulator, we need an OPP table with 2 voltages. */
-> +       if (pfdev->regulator_sram) {
-> +               const char * const reg_names[] = { "mali", "sram" };
+>  .../bindings/input/adc-joystick.yaml          | 100 ++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-joystick.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/input/adc-joystick.yaml b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> new file mode 100644
+> index 000000000000..97ae797348c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/adc-joystick.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2019-2020 Artur Rojek
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/bindings/input/adc-joystick.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
-> +               pfdev->devfreq.dev_opp_table =
-> +                       dev_pm_opp_set_regulators(dev,
-> +                                       reg_names, ARRAY_SIZE(reg_names));
-> +               if (IS_ERR(pfdev->devfreq.dev_opp_table)) {
-> +                       ret = PTR_ERR(pfdev->devfreq.dev_opp_table);
-> +                       pfdev->devfreq.dev_opp_table = NULL;
-> +                       dev_err(dev,
-> +                               "Failed to init devfreq opp table: %d\n", ret);
-> +                       return ret;
-> +               }
-> +       }
+> +title: ADC attached joystick
 > +
->         ret = dev_pm_opp_of_add_table(dev);
->         if (ret == -ENODEV) /* Optional, continue without devfreq */
->                 return 0;
-> @@ -119,6 +135,8 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
->         if (pfdev->devfreq.cooling)
->                 devfreq_cooling_unregister(pfdev->devfreq.cooling);
->         dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
-> +       if (pfdev->devfreq.dev_opp_table)
-> +               dev_pm_opp_put_regulators(pfdev->devfreq.dev_opp_table);
->  }
->
->  void panfrost_devfreq_resume(struct panfrost_device *pfdev)
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index 92d471676fc7823..581da3fe5df8b17 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -91,10 +91,12 @@ struct panfrost_device {
->         struct {
->                 struct devfreq *devfreq;
->                 struct thermal_cooling_device *cooling;
-> +               struct opp_table *dev_opp_table;
->                 ktime_t busy_time;
->                 ktime_t idle_time;
->                 ktime_t time_last_update;
->                 atomic_t busy_count;
-> +               struct panfrost_devfreq_slot slot[NUM_JOB_SLOTS];
+> +maintainers:
+> +  - Artur Rojek <contact@artur-rojek.eu>
+> +
+> +description: |
+> +  Bindings for joystick devices connected to ADC controllers supporting
+> +  the Industrial I/O subsystem.
+> +
+> +properties:
+> +  compatible:
+> +    const: adc-joystick
+> +
+> +  io-channels:
+> +    description: |
+> +      List of phandle and IIO specifier pairs.
+> +      Each pair defines one ADC channel to which a joystick axis is connected.
+> +      See Documentation/devicetree/bindings/iio/iio-bindings.txt for details.
+> +
+> +required:
+> +  - compatible
+> +  - io-channels
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  "^axis@([0-9])$":
 
-?? Left over from some rebase?
+A unit-address means there should be a 'reg' property. I'd just do 
+axis-x and axis-y instead.
 
-Rob
+> +    type: object
+> +    description: |
+> +      Represents a joystick axis bound to the given ADC channel.
+> +      For each entry in the io-channels list, one axis subnode with a matching
+> +      index must be specified.
+> +
+> +    properties:
+> +      linux,abs-code:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: EV_ABS specific event code generated by the axis.
+
+Existing 'linux,code' should be used here.
+
+> +
+> +      linux,abs-range:
+
+Drop 'linux,' here and on the rest of these.
+
+> +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          - description: minimum value
+> +          - description: maximum value
+> +        description: |
+> +          Minimum and maximum values produced by the axis.
+> +          For an ABS_X axis this will be the left-most and right-most
+> +          inclination of the joystick. If min > max, it is left to userspace to
+> +          treat the axis as inverted.
+> +          This property is interpreted as two signed 32 bit values.
+> +
+> +      linux,abs-fuzz:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Amount of noise in the input value.
+> +          Omitting this property indicates the axis is precise.
+> +
+> +      linux,abs-flat:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description: |
+> +          Axial "deadzone", or area around the center position, where the axis
+> +          is considered to be at rest.
+> +          Omitting this property indicates the axis always returns to exactly
+> +          the center position.
+> +
+> +    required:
+> +      - linux,abs-code
+> +      - linux,abs-range
+> +
+> +    additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/iio/adc/ingenic,adc.h>
+> +    #include <dt-bindings/input/input.h>
+> +
+> +    joystick: adc-joystick {
+> +      compatible = "adc-joystick";
+> +      io-channels = <&adc INGENIC_ADC_TOUCH_XP>,
+> +                    <&adc INGENIC_ADC_TOUCH_YP>;
+> +
+> +      axis@0 {
+> +              linux,abs-code = <ABS_X>;
+> +              linux,abs-range = <3300 0>;
+> +              linux,abs-fuzz = <4>;
+> +              linux,abs-flat = <200>;
+> +      };
+> +      axis@1 {
+> +              linux,abs-code = <ABS_Y>;
+> +              linux,abs-range = <0 3300>;
+> +              linux,abs-fuzz = <4>;
+> +              linux,abs-flat = <200>;
+> +      };
+> +    };
+> -- 
+> 2.24.1
+> 
