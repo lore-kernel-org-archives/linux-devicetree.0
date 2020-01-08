@@ -2,265 +2,151 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADB3C00523
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 06:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC91C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E482081E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 06:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AB52077B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 06:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eHZPn0qF"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZNR7SZJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgAHGRB (ORCPT
+        id S1725838AbgAHG3G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 01:17:01 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34687 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbgAHGRB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 01:17:01 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l136so1723021oig.1
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 22:17:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7eJrxhaP/aaAfcxtlL9c20UfMMdfSSzkJiRKVZy1Dns=;
-        b=eHZPn0qFgiwR3TqFdduhITPTiKflxh0LGckrcuBVonlJemqgmLHotGKYPwlHp1FJMi
-         xNnCmo6tTnLgl2axxjjps13sWddlfqJLjuY7gDwHJgGruJMUq6NdN2PVTMetx8SRM4So
-         +15FJC2MFVzhNDSkf3N433EGhGJBDxaDNMdrcbsPRbUB3kCnIlCCM4rQLlneQQI8gKsv
-         lIttIgNYq4KMNjKAHWH+QBINXldzaIjxFu6EEkdCq+MQmui8YHyvI1PxwXY9taRR3pt1
-         mjGO/QDtkelqlR9gjQuP7z6LR9nM/W+onOl3mqOcEmHmiYOvmiHX2A94xcqB8N4eWqTD
-         a+cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7eJrxhaP/aaAfcxtlL9c20UfMMdfSSzkJiRKVZy1Dns=;
-        b=hS6rLl+AA/Zg3Mng5mshRvGH1JccVjFg3A9u/X85EM82gt8D7oH/mRbYaEJGf1jRzQ
-         vcYm6sqF5Zw6Yb3HaENHUhLjeFNPlAwHkRFCpPNFAgPCriJNtjlNkIjGkt7z1jME19gN
-         O/U/nYjCPUT64pZRBUj+W6j8uZ8rIQtfsvORfp+J1HZFefatAdTv5GGfqd1tFO0l37fy
-         y7uSmosf7XKROF9w5U7ptTL8szXuLaAm6jdO5/imMeQ3PRM7O+jOFGvf9zZeRh7lRtwP
-         ZjziXS8b0x3ZKmjPNFDvlhqRevbgvH2V8LV+7DjljLn7z54/Y58WAlrYrDJ4oCsWOQ/g
-         1mYQ==
-X-Gm-Message-State: APjAAAVnlOQDvVz83kD6u3onZcVyMQjmIK4ZmVr4jKLtwwC+aKV9XRJ/
-        OG9w8tBtsny+3JLVudYhKEG5pwK9yjkVtVjsKMU6Wg==
-X-Google-Smtp-Source: APXvYqwrxujGPx+8mslow3vxWpXeXFymV/tHcUenrLe4Wf7W57KW9I6GPXuC3PeiLqPMCiatJJf8YGVK7zVdiZMj9AA=
-X-Received: by 2002:aca:d4c1:: with SMTP id l184mr1907823oig.172.1578464220518;
- Tue, 07 Jan 2020 22:17:00 -0800 (PST)
+        Wed, 8 Jan 2020 01:29:06 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15810 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgAHG3G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 01:29:06 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1576800002>; Tue, 07 Jan 2020 22:28:16 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 07 Jan 2020 22:29:05 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 07 Jan 2020 22:29:05 -0800
+Received: from [10.24.44.157] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 8 Jan
+ 2020 06:28:59 +0000
+Subject: Re: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for
+ audio mclk
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <josephl@nvidia.com>, <daniel.lezcano@linaro.org>,
+        <mmaddireddy@nvidia.com>, <markz@nvidia.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
+ <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
+ <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <a3c5293b-9ed4-3266-f792-38b980e54b1e@nvidia.com>
+Date:   Wed, 8 Jan 2020 11:58:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-3-saravanak@google.com>
- <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
-In-Reply-To: <c701fe1d94631e3aba92a8c80070c6a4@codeaurora.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 7 Jan 2020 22:16:24 -0800
-Message-ID: <CAGETcx9Or==EEL6jRMEh4bG4cmFmLqk_n1ReKT=cg-MEsL9w0w@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578464897; bh=OHhIle+XKX/LTcA5mmunIMXF7a5LS6VUkkqyvI0+XNg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ZNR7SZJgFRYaRAx4eRFJT2uN5zQzJqxtOI2lcGNIlSwFBmAEIBNAWOaBMHMhyLs39
+         AYBer1uvKCm9U/ZUrwjhcjhAATw3Je5U+v7ubgsWf+mEAd9sC3SBG6IY/bvaXTTlra
+         Vc8vOpPasi+ZKzgw+3nhm0VZmYV5OZ89xt3Vi6as2nlt5/CIiMlhzhJrtlEn4eKsLC
+         eMObyYS7kHlRN6oTWH8yCSmnodXewyv7fsEDrzsrdBD0JAVIUwrqV6+iqhkiQcVzIP
+         hlLgZOiOtDl28knHeiGM7iEYvRGtjq9YyY403f4bVVEsdJ3TjVaSBrNbnU6TDZnUJ3
+         nXcH7t0bhalBQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 11:28 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+
+On 1/8/2020 11:18 AM, Sowjanya Komatineni wrote:
 >
-> Hey Saravana,
+> On 1/7/20 9:34 PM, Sameer Pujar wrote:
+>>
+>> On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
+>>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc clocks
+>>> are moved to Tegra PMC driver with pmc as clock provider and using pmc
+>>> clock ids.
+>>>
+>>> New device tree uses clk_out_1 from pmc clock provider.
+>>>
+>>> So, this patch adds implementation for mclk fallback to extern1 when
+>>> retrieving mclk returns -ENOENT to be backward compatible of new device
+>>> tree with older kernels.
+>>>
+>>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>> =C2=A0 sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+>>> =C2=A0 1 file changed, 10 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c=20
+>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>> index 9cfebef74870..9a5f81039491 100644
+>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>> @@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct=20
+>>> tegra_asoc_utils_data *data,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->clk_cdev1 =3D devm_clk_get(dev, "m=
+clk");
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(data->clk_cdev1)) {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->de=
+v, "Can't retrieve clk cdev1\n");
+>>
+>> This error print can be moved inside below if, when this actually=20
+>> meant to be an error condition.
+>>
+> Want to show error even if mclk retrieval returns ENOENT to clearly=20
+> indicate mclk does not exist along with message of falling back to=20
+> extern1.
+
+Yes, but falling back essentially means 'mclk' is not available and=20
+fallback print is not an error.
+Not a major issue though, you can consider updating. Otherwise LGTM.
+
+>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(data->clk_cd=
+ev1);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (PTR_ERR(data->clk_cdev1=
+) !=3D -ENOENT)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
+urn PTR_ERR(data->clk_cdev1);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Fall back to extern1 */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->clk_cdev1 =3D devm_cl=
+k_get(dev, "extern1");
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(data->clk_cdev1)=
+) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev=
+_err(data->dev, "Can't retrieve clk extern1\n");
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret=
+urn PTR_ERR(data->clk_cdev1);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(data->dev, "Falling=
+ back to extern1\n");
+>>
+>> This can be a info print?
 >
-> Spent some time testing this series while
-> trying out dcvs on SDM845/SC7180. Apart from
-> the few minor issues it works quite well!
-
-Thanks a lot for testing Sibi. Can you give a tested-by? Glad to hear
-it works well.
-
-> On 2019-12-07 05:54, Saravana Kannan wrote:
-> > Not all devices quantify their performance points in terms of
-> > frequency.
-> > Devices like interconnects quantify their performance points in terms
-> > of
-> > bandwidth. We need a way to represent these bandwidth levels in OPP.
-> > So,
-> > add support for parsing bandwidth OPPs from DT.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/core.c | 15 +++++++++--
-> >  drivers/opp/of.c   | 63 ++++++++++++++++++++++++++++++++--------------
-> >  drivers/opp/opp.h  |  5 ++++
-> >  3 files changed, 62 insertions(+), 21 deletions(-)
-> >
-> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > index be7a7d332332..c79bbfac7289 100644
-> > --- a/drivers/opp/core.c
-> > +++ b/drivers/opp/core.c
-> > @@ -1282,11 +1282,21 @@ static bool
-> > _opp_supported_by_regulators(struct dev_pm_opp *opp,
-> >       return true;
-> >  }
-> >
-> > +int opp_compare_key(struct dev_pm_opp *opp1, struct dev_pm_opp *opp2)
-> > +{
-> > +     if (opp1->rate != opp2->rate)
-> > +             return opp1->rate < opp2->rate ? -1 : 1;
-> > +     if (opp1->peak_bw != opp2->peak_bw)
-> > +             return opp1->peak_bw < opp2->peak_bw ? -1 : 1;
-> > +     return 0;
-> > +}
-> > +
-> >  static int _opp_is_duplicate(struct device *dev, struct dev_pm_opp
-> > *new_opp,
-> >                            struct opp_table *opp_table,
-> >                            struct list_head **head)
-> >  {
-> >       struct dev_pm_opp *opp;
-> > +     int opp_cmp;
-> >
-> >       /*
-> >        * Insert new OPP in order of increasing frequency and discard if
-> > @@ -1297,12 +1307,13 @@ static int _opp_is_duplicate(struct device
-> > *dev, struct dev_pm_opp *new_opp,
-> >        * loop.
-> >        */
-> >       list_for_each_entry(opp, &opp_table->opp_list, node) {
-> > -             if (new_opp->rate > opp->rate) {
-> > +             opp_cmp = opp_compare_key(new_opp, opp);
-> > +             if (opp_cmp > 0) {
-> >                       *head = &opp->node;
-> >                       continue;
-> >               }
-> >
-> > -             if (new_opp->rate < opp->rate)
-> > +             if (opp_cmp < 0)
-> >                       return 0;
-> >
-> >               /* Duplicate OPPs */
-> > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > index 1cbb58240b80..b565da5a2b1f 100644
-> > --- a/drivers/opp/of.c
-> > +++ b/drivers/opp/of.c
-> > @@ -521,6 +521,44 @@ void dev_pm_opp_of_remove_table(struct device
-> > *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
-> >
-> > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct
-> > device_node *np,
-> > +                      bool *rate_not_available)
-> > +{
-> > +     int ret;
-> > +     u64 rate;
-> > +     u32 bw;
-> > +
-> > +     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > +     if (!ret) {
-> > +             /*
-> > +              * Rate is defined as an unsigned long in clk API, and so
-> > +              * casting explicitly to its type. Must be fixed once rate is 64
-> > +              * bit guaranteed in clk API.
-> > +              */
-> > +             new_opp->rate = (unsigned long)rate;
-> > +             goto out;
-> > +     }
-> > +
-> > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> > +     if (!ret) {
-> > +             new_opp->peak_bw = bw;
-> > +
-> > +             if (!of_property_read_u32(np, "opp-avg-kBps", &bw))
-> > +                     new_opp->avg_bw = bw;
-> > +     }
-> > +
-> > +out:
-> > +     *rate_not_available = !!ret;
-> > +     /*
-> > +      * If ret is 0 at this point, we have already found a key. If we
-> > +      * haven't found a key yet, then ret already has an error value. In
-> > +      * either case, we don't need to update ret.
-> > +      */
-> > +     of_property_read_u32(np, "opp-level", &new_opp->level);
-> > +
-> > +     return ret;
-> > +}
-> > +
-> >  /**
-> >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT
-> > bindings)
-> >   * @opp_table:       OPP table
-> > @@ -558,26 +596,12 @@ static struct dev_pm_opp
-> > *_opp_add_static_v2(struct opp_table *opp_table,
-> >       if (!new_opp)
-> >               return ERR_PTR(-ENOMEM);
-> >
-> > -     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > -     if (ret < 0) {
-> > -             /* "opp-hz" is optional for devices like power domains. */
-> > -             if (!opp_table->is_genpd) {
-> > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > -                     goto free_opp;
-> > -             }
-> > -
-> > -             rate_not_available = true;
-> > -     } else {
-> > -             /*
-> > -              * Rate is defined as an unsigned long in clk API, and so
-> > -              * casting explicitly to its type. Must be fixed once rate is 64
-> > -              * bit guaranteed in clk API.
-> > -              */
-> > -             new_opp->rate = (unsigned long)rate;
-> > +     ret = _read_opp_key(new_opp, np, &rate_not_available);
-> > +     if (ret) {
->
-> if (!opp_table->is_genpd) {
->
-> _read_opp_key returns an error for genpd
-> opps so please check if it is a genpd
-> opp_table before erroring out here.
-
-Thanks. I'll fix it in the next version.
-
-> > +             dev_err(dev, "%s: opp key field not found\n", __func__);
-> > +             goto free_opp;
-> >       }
-> >
-> > -     of_property_read_u32(np, "opp-level", &new_opp->level);
-> > -
-> >       /* Check if the OPP supports hardware's hierarchy of versions or not
-> > */
-> >       if (!_opp_is_supported(dev, opp_table, np)) {
-> >               dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
-> > @@ -616,7 +640,8 @@ static struct dev_pm_opp
-> > *_opp_add_static_v2(struct opp_table *opp_table,
-> >       if (of_property_read_bool(np, "opp-suspend")) {
-> >               if (opp_table->suspend_opp) {
-> >                       /* Pick the OPP with higher rate as suspend OPP */
-> > -                     if (new_opp->rate > opp_table->suspend_opp->rate) {
-> > +                     if (opp_compare_key(new_opp,
-> > +                                         opp_table->suspend_opp) > 1) {
->
-> shouldn't the condition be > 0?
-
-Duh. Thanks. I'll fix it in the next version.
-
-I'm guessing you tested with the fixes you pointed out?
-
--Saravana
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
