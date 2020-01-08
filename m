@@ -7,75 +7,68 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51467C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0BBC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FFF2073A
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC282070E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 08:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b9NjNWMo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DJNwDlL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgAHIbK (ORCPT
+        id S1727262AbgAHIca (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 03:31:10 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39615 "EHLO
+        Wed, 8 Jan 2020 03:32:30 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33733 "EHLO
         mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHIbK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 03:31:10 -0500
-Received: by mail-ed1-f68.google.com with SMTP id t17so1863426eds.6
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 00:31:09 -0800 (PST)
+        with ESMTP id S1726290AbgAHIcZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 03:32:25 -0500
+Received: by mail-ed1-f68.google.com with SMTP id r21so1905034edq.0
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 00:32:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nDs1T93B8v5O40q4fibGGoHo0SYxTJ1NHmqT2ydaTtQ=;
-        b=b9NjNWMouhdpSZtVq012+7zvznVTp6QoZw51rmP4BNezumhjhJquZYaI6v/glUqFFc
-         D9A4WNgMg18sR1bYHIAYMamQSAr+wbCD7vS4JxSqtjLGsQahp9fjoLWJgSAbiN4WTo4O
-         Tmf9quFCyhzeh4Qs15QxtY1pnKC96mV0T6W5ESv/IlqMHhYm7SZkYLjz87po6wHuXMip
-         35vnLTT4gwexuJRzIbJearbTuSjvYO3tzzCv7zRRV77JK/VHOPdORCSRvCpxA+kxWuNi
-         /15egs5vLzmfJA8llCr/BnDfHwPZ/DDKAYAGSn4R+JDWCXW+7Hl7WcQMBE3n5z+yghjb
-         O9tQ==
+        bh=EJq18jC7Zcz3jiw0XRo7+m7xE+YdVfNUh9ZReMPNKrQ=;
+        b=DJNwDlL1OXItKz/ojVHNGLCZiQNC7yNY+dsK8FbSYlWnTs1cyL+qkedoxGsjqc3+fW
+         ncrG3n2hfRJoaJXKssiN2a64aqYsJz7skH4erSYSHp+ukpUmJAvphLc+oedLvpFBnGti
+         mN9NcltTeEmn5w5KzpyXlWqvurg2a13jcJknbN719hY8eHOoggCO3QW6yDH8AnUX1U/M
+         SoZEGEnurhtEVNTgzHJOy5vLA1nAGvK7aKqpOwJ0owDCcvU3VvT9c86YhqYKb7OT4UYp
+         upZ7mDQj+n+fPxfHUsxLD9hA4ArlDKcmd7UROcNceqpLZeu1UnLgX+hbfPCE7gCyj8PN
+         q3zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nDs1T93B8v5O40q4fibGGoHo0SYxTJ1NHmqT2ydaTtQ=;
-        b=i3yhoDOtU6K5Z7dyDerfAQEGRGP81NI1MLdW30p5LsOb0TT/CW1hdAnwrnpnef6FML
-         8xDINlvGpeTJSwXwHy9vWJryWClZdW36Ula7r4arl/m8ghW5hxAaSr40y1O19tFrqBbA
-         Q2Ke79CzWkanxZzLxM5sgobKByXcbShlCdf2meEiO+nJ+LK/hUnij1fZbeiBtvpICFDF
-         rZvUX3mPn823VAvXKlarW2pCRtsgVSa+PvAbl4mstYPCfL75AkTJtgjKkBr9LGLgevU+
-         pqRbZapLGfQDCcv+2+XwwVk27ScB1JezrmkbcToOTpFPX3QSWc9HCYL23UmkvDuHEHeV
-         b4mQ==
-X-Gm-Message-State: APjAAAUvh2dSK7rFjIrDcsSNMu6kfhxE0pzsmcebprQ90rvtCsnMI3Vy
-        59MWdTi3xs7qBgeWs+NHpOMosQ==
-X-Google-Smtp-Source: APXvYqwPCVmrHuNQsu+V3IVoJ6JlOom1LqJ0JNrlLBv+rc79vCsB3yVJlQZi8FK9es6qo7D5qIk82Q==
-X-Received: by 2002:a17:906:c44a:: with SMTP id ck10mr3605843ejb.149.1578472268962;
-        Wed, 08 Jan 2020 00:31:08 -0800 (PST)
+        bh=EJq18jC7Zcz3jiw0XRo7+m7xE+YdVfNUh9ZReMPNKrQ=;
+        b=GruvgrzXJyroVuLcEwps5NAtQnB5RYViKBwZKJzzrBSeY1x2Rbjly97+KfAsl3VQz3
+         1FHQibYz24AniX6sY/YxcObounJLKCUcHELaQQpkxaRnBW6wxSO05zGKRrOlWl1uC/4q
+         M7wE03jWLihVXzr3m23sD/WCii+uNn0j2UUktVq4CLdEmCbdlloo2CZ040vFLdBJZOIy
+         OQSgMw8dBw0NXxqj55EOchtatuKLp3PVC6jqBiVleYmL3lGRkyaNJF0Fxi+DLyyCap6Y
+         nuzfcVKKWyRqowaRfvfVdogXUr+BcSTcl0HXfLcBlNveFAKMM19/IomOXUwZ2W7JA9KT
+         f5Vw==
+X-Gm-Message-State: APjAAAWThP+dqKnTZ/47Y2n0WYA1nifXrYys/eW2oHsjIUunxgKLzKhL
+        ZGMVK3sfvZBT6R+viqE5k+hA8Q==
+X-Google-Smtp-Source: APXvYqwI7JobTMRItpT6/lKFsQ/omg3dzT9QAyBjzuK9dcOB1hXL83guixIepLk5Eo5emXux/Kiimg==
+X-Received: by 2002:a17:906:19ca:: with SMTP id h10mr3649690ejd.282.1578472343655;
+        Wed, 08 Jan 2020 00:32:23 -0800 (PST)
 Received: from [192.168.27.209] ([37.157.136.193])
-        by smtp.googlemail.com with ESMTPSA id u21sm58393edv.43.2020.01.08.00.31.07
+        by smtp.googlemail.com with ESMTPSA id dd17sm61670edb.9.2020.01.08.00.32.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 00:31:07 -0800 (PST)
-Subject: Re: [PATCH] arm64: dts: qcom: add Venus firmware node on Cheza
-To:     Rob Clark <robdclark@gmail.com>,
+        Wed, 08 Jan 2020 00:32:22 -0800 (PST)
+Subject: Re: [PATCH v2] arm64: dts: qcom: add Venus firmware node on Cheza
+To:     Alexandre Courbot <acourbot@chromium.org>,
         Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Alexandre Courbot <acourbot@chromium.org>,
-        linux-media@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vikash Garodia <vgarodia@codeaurora.org>
-References: <20200107143402.122455-1-acourbot@chromium.org>
- <3aef91ea-30c1-530f-0c18-ea52b92347f9@linaro.org>
- <CAF6AEGvgYB8w_GD-6_XywKk4XkS6bFFCiJHeY-CSz71Foz7JTg@mail.gmail.com>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200108032623.113921-1-acourbot@chromium.org>
 From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <1d31b609-9bae-8bbd-0329-f27f59b4533e@linaro.org>
-Date:   Wed, 8 Jan 2020 10:31:06 +0200
+Message-ID: <ab7bbed7-c4dc-8411-1267-5b1cb995581a@linaro.org>
+Date:   Wed, 8 Jan 2020 10:32:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGvgYB8w_GD-6_XywKk4XkS6bFFCiJHeY-CSz71Foz7JTg@mail.gmail.com>
+In-Reply-To: <20200108032623.113921-1-acourbot@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,77 +78,48 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-
-On 1/7/20 7:42 PM, Rob Clark wrote:
-> On Tue, Jan 7, 2020 at 6:51 AM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
->>
->> Hi Alex,
->>
->> On 1/7/20 4:34 PM, Alexandre Courbot wrote:
->>> Cheza boards require this node to probe, so add it.
->>>
->>> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
->>> ---
->>>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 6 ++++++
->>>  arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
->>>  2 files changed, 7 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
->>> index 9a4ff57fc877..35ba65cd9822 100644
->>> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
->>> @@ -1279,3 +1279,9 @@ config {
->>>               };
->>>       };
->>>  };
->>> +
->>> +&venus_codec {
->>
->> We have similar patch for sc7180 and call it just "venus". Do you think
->> we should shorten it here too?
->>
->>> +     video-firmware {
->>> +             iommus = <&apps_smmu 0x10b2 0x0>;
->>> +     };
+On 1/8/20 5:26 AM, Alexandre Courbot wrote:
+> Cheza boards require this node to probe, so add it.
 > 
-> 
-> btw Stan, not sure if you noticed, but Bjorn started adding
-> firmware-name properties so we can have different device specific
-> subdirectories for signed fw (ie. so one /lib/firmware can work on
-> multiple different devices).  I'm just looking at doing the same thing
-> for gpu zap fw.  Afaiu the venus fw is also signed, so I guess it
-> could benefit from the same treatment?  Not sure if that is something
-> you've already talked with Bjorn about?
+> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 6 ++++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 
-I have to check does Venus fw is signed with device specific keys or
-with something else (like HMAC).
+Thanks Alex.
 
-Cc: Vikash for opinion
+Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 
 > 
-> BR,
-> -R
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> index 9a4ff57fc877..8c2e3aeacac4 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> @@ -1279,3 +1279,9 @@ config {
+>  		};
+>  	};
+>  };
+> +
+> +&venus {
+> +	video-firmware {
+> +		iommus = <&apps_smmu 0x10b2 0x0>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index ddb1f23c936f..8f1d19c5a098 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -2567,7 +2567,7 @@ usb_2_dwc3: dwc3@a800000 {
+>  			};
+>  		};
+>  
+> -		video-codec@aa00000 {
+> +		venus: video-codec@aa00000 {
+>  			compatible = "qcom,sdm845-venus";
+>  			reg = <0 0x0aa00000 0 0xff000>;
+>  			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
 > 
->>> +};
->>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> index ddb1f23c936f..7b913688cc6d 100644
->>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> @@ -2567,7 +2567,7 @@ usb_2_dwc3: dwc3@a800000 {
->>>                       };
->>>               };
->>>
->>> -             video-codec@aa00000 {
->>> +             venus_codec: video-codec@aa00000 {
->>>                       compatible = "qcom,sdm845-venus";
->>>                       reg = <0 0x0aa00000 0 0xff000>;
->>>                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->>>
->>
->> --
->> regards,
->> Stan
 
 -- 
 regards,
