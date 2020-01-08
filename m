@@ -2,75 +2,99 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BC4C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525C2C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E34206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCAC2075D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 12:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgAHMbD (ORCPT
+        id S1727358AbgAHMkI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 07:31:03 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:61022 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726967AbgAHMbD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 07:31:03 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 08 Jan 2020 18:00:20 +0530
-Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 08 Jan 2020 18:00:12 +0530
-Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id A7BDA1AA2; Wed,  8 Jan 2020 18:00:11 +0530 (IST)
-From:   Sandeep Maheswaram <sanm@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 8 Jan 2020 07:40:08 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:39130 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727328AbgAHMkI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jan 2020 07:40:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 22CFCFB02;
+        Wed,  8 Jan 2020 13:40:04 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oPyIRY5MccmG; Wed,  8 Jan 2020 13:40:02 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id E318F49D3D; Wed,  8 Jan 2020 13:40:00 +0100 (CET)
+Date:   Wed, 8 Jan 2020 13:40:00 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v2 2/3] arm64: dts: qcom: sc7180: Remove global phy reset in QMP phy
-Date:   Wed,  8 Jan 2020 17:59:40 +0530
-Message-Id: <1578486581-7540-3-git-send-email-sanm@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578486581-7540-1-git-send-email-sanm@codeaurora.org>
-References: <1578486581-7540-1-git-send-email-sanm@codeaurora.org>
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Exponential LED brightness Re: [PATCH v4 0/6] leds: lm3692x:
+ Allow to set ovp and brigthness mode
+Message-ID: <20200108124000.GA21245@bogon.m.sigxcpu.org>
+References: <cover.1578324703.git.agx@sigxcpu.org>
+ <20200107133119.GA3825@duo.ucw.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200107133119.GA3825@duo.ucw.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Remove global phy reset and do only usb phy reset in QMP phy.
+Hi Pavel,
+On Tue, Jan 07, 2020 at 02:31:20PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > Overvoltage protection and brightness mode are currently hardcoded
+> > as 29V and disabled in the driver. Make these configurable via DT.
+> > 
+> > This v4 moves the exponential brightness mode to the back of the series
+> > as per Pavel's request:
+> > 
+> >   https://lore.kernel.org/linux-next/20200106103233.GA32426@amd/T/#m93270a9bf10b88e060f4e4cf5701c527476de985
+> > 
+> > The end result is identical and i've tested everything still works when
+> > dropping the last to patches and checked compiltion via
+> 
+> Thank you. Applied 1-4 (with some reformatting of changelog, and
+> led->LED).
+> 
+> Exponential mode:
+> 
+> We should decide if LEDs should be linear or not. Most LEDs are linear
+> now, and we may want to make it part of the API. Additional advantage
+> is that linear is "well defined". It is actually quite important for
+> RGB LEDs, because you get wrong colors otherwise.
+> 
+> (Non-linear can have advantages, too... like needing less bits.)
+> 
+> So, my suggestion is to document LEDs as linear, and leave
+> exponential->linear conversion to someone else.
 
-Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+That would mean doing a conversion in the kernel that can be done by the
+chip. Would exposing non-linearity like in
+/sys/class/backlight/<backlight>/scale be an option?
+Cheers,
+ -- Guido
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index c00c3d4..448ab88 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1072,9 +1072,8 @@
- 				 <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref", "com_aux";
- 
--			resets = <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
--				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
--			reset-names = "phy", "common";
-+			resets = <&gcc GCC_USB3_PHY_PRIM_BCR>;
-+			reset-names = "phy";
- 
- 			usb_1_ssphy: phy@88e9200 {
- 				reg = <0 0x088e9200 0 0x128>,
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+> 
+> Best regards,
+> 
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+
 
