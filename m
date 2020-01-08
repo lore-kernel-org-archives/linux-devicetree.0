@@ -2,43 +2,41 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A8FC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB794C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9786206DB
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F5D206DB
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 10:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgAHKsH (ORCPT
+        id S1727924AbgAHKsI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 05:48:07 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:59907 "EHLO
+        Wed, 8 Jan 2020 05:48:08 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45257 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbgAHKsH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 05:48:07 -0500
+        with ESMTP id S1727874AbgAHKsI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 05:48:08 -0500
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1ip8se-0000eb-56; Wed, 08 Jan 2020 11:48:04 +0100
+        id 1ip8se-0000eZ-56; Wed, 08 Jan 2020 11:48:04 +0100
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1ip8sd-000159-J6; Wed, 08 Jan 2020 11:48:03 +0100
+        id 1ip8sd-000154-Ht; Wed, 08 Jan 2020 11:48:03 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     support.opensource@diasemi.com, lee.jones@linaro.org,
         robh+dt@kernel.org, linus.walleij@linaro.org,
         Adam.Thomson.Opensource@diasemi.com
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel@pengutronix.de, linux-gpio@vger.kernel.org
-Subject: [PATCH v4 2/3] mfd: da9062: add support for the DA9062 GPIOs in the core
-Date:   Wed,  8 Jan 2020 11:47:45 +0100
-Message-Id: <20200108104746.1765-3-m.felsch@pengutronix.de>
+Subject: [PATCH v4 0/3] Add DA9062 GPIO support
+Date:   Wed,  8 Jan 2020 11:47:43 +0100
+Message-Id: <20200108104746.1765-1-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200108104746.1765-1-m.felsch@pengutronix.de>
-References: <20200108104746.1765-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
@@ -50,53 +48,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Currently the da9062 GPIO's aren't available. The patch adds the support
-to make these available by adding a gpio device with the corresponding
-irq resources. Furthermore the patch fixes a minor style issue for the
-onkey device.
+Hi,
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/mfd/da9062-core.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+this v4 adds the missing PIN_CONFIG_BIAS_DISABLE support so
+pull-ups/-downs can be disconnected. I also added all git-tag already
+made on my v3 [1].
 
-diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-index e69626867c26..5290bdc0ddcd 100644
---- a/drivers/mfd/da9062-core.c
-+++ b/drivers/mfd/da9062-core.c
-@@ -233,6 +233,14 @@ static struct resource da9062_onkey_resources[] = {
- 	DEFINE_RES_NAMED(DA9062_IRQ_ONKEY, 1, "ONKEY", IORESOURCE_IRQ),
- };
- 
-+static struct resource da9062_gpio_resources[] = {
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI0, 1, "GPI0", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI1, 1, "GPI1", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI2, 1, "GPI2", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI3, 1, "GPI3", IORESOURCE_IRQ),
-+	DEFINE_RES_NAMED(DA9062_IRQ_GPI4, 1, "GPI4", IORESOURCE_IRQ),
-+};
-+
- static const struct mfd_cell da9062_devs[] = {
- 	{
- 		.name		= "da9062-core",
-@@ -266,7 +274,13 @@ static const struct mfd_cell da9062_devs[] = {
- 		.name		= "da9062-onkey",
- 		.num_resources	= ARRAY_SIZE(da9062_onkey_resources),
- 		.resources	= da9062_onkey_resources,
--		.of_compatible = "dlg,da9062-onkey",
-+		.of_compatible	= "dlg,da9062-onkey",
-+	},
-+	{
-+		.name		= "da9062-gpio",
-+		.num_resources	= ARRAY_SIZE(da9062_gpio_resources),
-+		.resources	= da9062_gpio_resources,
-+		.of_compatible	= "dlg,da9062-gpio",
- 	},
- };
- 
+@Lee
+checkpatch complains about the "Acked-for-MFD-by" tag. I kept it but is
+this behaviour on purpose?
+
+Regards,
+  Marco
+
+[1] https://lkml.org/lkml/2019/12/12/601
+
+Marco Felsch (3):
+  dt-bindings: mfd: da9062: add gpio bindings
+  mfd: da9062: add support for the DA9062 GPIOs in the core
+  pinctrl: da9062: add driver support
+
+ .../devicetree/bindings/mfd/da9062.txt        |  10 +
+ MAINTAINERS                                   |   1 +
+ drivers/mfd/da9062-core.c                     |  16 +-
+ drivers/pinctrl/Kconfig                       |  12 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-da9062.c              | 300 ++++++++++++++++++
+ 6 files changed, 339 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/pinctrl-da9062.c
+
 -- 
 2.20.1
 
