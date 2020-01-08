@@ -2,161 +2,195 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D97C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CABFC282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611A320656
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:07:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUCxLSOk"
+	by mail.kernel.org (Postfix) with ESMTP id 0EE812067D
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 18:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgAHSHP (ORCPT
+        id S1727229AbgAHSJB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 13:07:15 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42983 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726902AbgAHSHO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 13:07:14 -0500
-Received: by mail-ed1-f68.google.com with SMTP id e10so3325314edv.9;
-        Wed, 08 Jan 2020 10:07:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DXy6P7nvLP7A4nGabp4KGrM6Ox1HgQ0XwO5nRHAGTNw=;
-        b=bUCxLSOkRlli8uZi4DWtnuTHBW/CR4uSwOMwJhz6BUHzIhdbxY+L4bOsNoXqeYRxW8
-         RusLaNA/lqRDVm6eiOoofxTBHu5VEWHPOyKYS9ScaYwgwlovtpQ3Yiizw61R+Oy/CzHa
-         j4zz6cWXFzFHIrP1DGNsnpYaYRxh85L6MAYa+uosTek6CoduoWuQFguSSGrsEjrBt1n7
-         S2gGm6G+5iEkioFGLUdn+VXCoxAK5BsXTNzzLBH1a028qpfL54nywYjhHsUqfp7r8D3x
-         W97Vanu5RiVizxHdvbKEBu5ZaQZeNNPFI4vN2kwEpvZYdnqjNT6Z/YxrBdLQZggpdigH
-         BCAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DXy6P7nvLP7A4nGabp4KGrM6Ox1HgQ0XwO5nRHAGTNw=;
-        b=cpBBUjPApS5DSnwrqwsM2H5/HrMgLgrgg5T9pWqHckl6ABlphdDyesufYZhBunUrfu
-         gDuGxiAR6nkSTfTVtdI4/xNLdYe79A044qiMtyfdvSb64CuUvqdVFxdiAdln3g8NbG2W
-         tkFsDdFMxY+MF7CFamoRSHSdjKtdWu0tremJnPCEOD8mKwCdD1BejCBJEkP6FbaLOThA
-         kLgv8nRUj0J7Gk9Bc2Gp0MS3MnV5LoHIYRgVsD3Oj1OfUDZmTkFeH3kTQ0eUOyIhVWui
-         YyzAA8l7UkiP54losrCp/dYgH+1qbXiaX/5HORLIGUVaoBEdcMdkVx94rIRifwf5JjTb
-         QxNw==
-X-Gm-Message-State: APjAAAWWbmTwAr9n1fYb123MwPPYatb7ZQpo92yqnxtMx2ppVqC79+c/
-        yl4IWYjvy4N+KZ9qO7wgFefpAIQO
-X-Google-Smtp-Source: APXvYqzzy9Bb6gt/9ucEmJcOHTliFjd75FSQWFQcs2nC6nmkNklLjyLBB2xKnAw8L4OgGBLJD0ILtQ==
-X-Received: by 2002:a17:906:3786:: with SMTP id n6mr6348181ejc.124.1578506831742;
-        Wed, 08 Jan 2020 10:07:11 -0800 (PST)
-Received: from [10.67.50.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id v2sm57356ejj.44.2020.01.08.10.07.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 10:07:10 -0800 (PST)
-Subject: Re: [PATCH v2 0/6] brcmstb_thermal updates for new processes
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        "maintainer:BROADCOM STB AVS TMON DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191211203143.2952-1-f.fainelli@gmail.com>
- <277b5f3d-b25b-89b0-9fc1-e520242b3380@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <eaa320a2-76ce-5115-ead6-70d8e7616762@gmail.com>
-Date:   Wed, 8 Jan 2020 10:07:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 8 Jan 2020 13:09:01 -0500
+Received: from mga05.intel.com ([192.55.52.43]:52644 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726781AbgAHSJB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 8 Jan 2020 13:09:01 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Jan 2020 10:09:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,410,1571727600"; 
+   d="scan'208";a="421521020"
+Received: from tfeiten-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.37.105])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jan 2020 10:08:56 -0800
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id B962521EDA; Wed,  8 Jan 2020 20:08:54 +0200 (EET)
+Date:   Wed, 8 Jan 2020 20:08:54 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
+        andrey.konovalov@linaro.org, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, joacim.zetterling@gmail.com,
+        kernel@collabora.com, ezequiel@collabora.com,
+        linux-media@vger.kernel.org, jacob-chen@iotwrt.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v12 08/11] media: staging: dt-bindings: add Rockchip ISP1
+ yaml bindings
+Message-ID: <20200108180854.GA5438@kekkonen.localdomain>
+References: <20191227200116.2612137-1-helen.koike@collabora.com>
+ <20191227200116.2612137-9-helen.koike@collabora.com>
+ <20200107140115.GQ19828@paasikivi.fi.intel.com>
+ <ad9d8ef7-5b52-d27e-ac95-db07dc1d443c@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <277b5f3d-b25b-89b0-9fc1-e520242b3380@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad9d8ef7-5b52-d27e-ac95-db07dc1d443c@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 12/26/19 7:54 AM, Florian Fainelli wrote:
+On Wed, Jan 08, 2020 at 01:50:38PM -0300, Helen Koike wrote:
+> Hi,
 > 
+> Thank you for your review.
 > 
-> On 12/11/2019 12:31 PM, Florian Fainelli wrote:
->> Hi,
->>
->> This patch series contains a bug fix for the existing platforms and then
->> paves the way for adding support for Broadcom STB's latest chips in 16nm
->> processes, and finally updates the driver with pecularities introduced
->> with the 16nm, like the lack of interrupt notification from the HW.
->>
->> Please queue up the first patch for -stable if you want, thanks!
+> On 1/7/20 12:01 PM, Sakari Ailus wrote:
+> > Hi Helen,
+> > 
+> > On Fri, Dec 27, 2019 at 05:01:13PM -0300, Helen Koike wrote:
+> >> Add yaml DT bindings for Rockchip ISP1.
+> >>
+> >> This was tested and verified with:
+> >> mv drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml Documentation/devicetree/bindings/media/
+> >> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >>
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>
+> >> ---
+> >>
+> >> Changes in v12:
+> >> - The commit replaces the following commit in previous series named
+> >> media: staging: dt-bindings: Document the Rockchip ISP1 bindings
+> >> This new patch adds yaml binding and was verified with
+> >> make dtbs_check and make dt_binding_check
+> >>
+> >> Changes in v11:
+> >> - add clock-names values
+> >>
+> >> Changes in v10:
+> >> - unsquash
+> >>
+> >> Changes in v9:
+> >> - squash
+> >> - move to staging
+> >>
+> >> Changes in v8:
+> >> - fix title division style
+> >>
+> >> Changes in v7:
+> >> - update document with new design and tested example
+> >>
+> >>  .../bindings/media/rockchip-isp1.yaml         | 193 ++++++++++++++++++
+> >>  1 file changed, 193 insertions(+)
+> >>  create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >>
+> >> diff --git a/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> new file mode 100644
+> >> index 000000000000..4d1b2c67a4cd
+> >> --- /dev/null
+> >> +++ b/drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.yaml
+> >> @@ -0,0 +1,193 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/media/rockchip-isp1.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Rockchip SoC Image Signal Processing unit v1
+> >> +
+> >> +maintainers:
+> >> +  - Helen Koike <helen.koike@collabora.com>
+> >> +
+> >> +description: |
+> >> +  Rockchip ISP1 is the Camera interface for the Rockchip series of SoCs
+> >> +  which contains image processing, scaling, and compression funcitons.
+> > 
+> > "functions"
+> > 
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: rockchip,rk3399-cif-isp
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  interrupts:
+> >> +    maxItems: 1
+> >> +
+> >> +  iommus:
+> >> +    maxItems: 1
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +
+> >> +  phys:
+> >> +    maxItems: 1
+> >> +    description: phandle for the PHY port
+> >> +
+> >> +  phy-names:
+> >> +    const: dphy
+> >> +
+> >> +  clocks:
+> >> +    items:
+> >> +      - description: ISP clock
+> >> +      - description: ISP aclk clock
+> >> +      - description: ISP aclk wrapper clock
+> >> +      - description: ISP hclk clock
+> >> +      - description: ISP hclk wrapper clock
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      - const: clk_isp
+> >> +      - const: aclk_isp
+> >> +      - const: aclk_isp_wrap
+> >> +      - const: hclk_isp
+> >> +      - const: hclk_isp_wrap
+> >> +
+> >> +  # See ./video-interfaces.txt for details
+> >> +  ports:
+> >> +    type: object
+> >> +    additionalProperties: false
+> >> +
+> >> +    properties:
+> >> +      "#address-cells":
+> >> +        const: 1
+> >> +
+> >> +      "#size-cells":
+> >> +        const: 0
+> >> +
+> >> +      port@0:
+> > 
+> > If you only have a single port node, you could drop reg as well as @0 on
+> > the port node.
 > 
-> Amit, Daniel, Rui, does this look acceptable to you now? Thank you
+> After the discussions, we have a single port for now, but we might have port@1
+> for tx1rx1 in the future.
 
-Ping? Is this good to go now?
+Ack. Please keep it as-is then.
+
 -- 
-Florian
+Sakari Ailus
+sakari.ailus@linux.intel.com
