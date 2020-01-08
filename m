@@ -2,191 +2,99 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EAFC33C9B
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1213AC33C99
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEDEA2146E
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FE62075A
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:52:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFJiDvvz"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SKePdRKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgAHBjM (ORCPT
+        id S1726683AbgAHBwd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:39:12 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35803 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726111AbgAHBjL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 20:39:11 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i23so777310pfo.2;
-        Tue, 07 Jan 2020 17:39:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=THEg3QFZEQa/O6HzLLi2uHWnREbCmXjTJPDpWzYvpYE=;
-        b=bFJiDvvzRPYy9tdXQ0hkK/djyuBrFTMSlg2q0m8p/LFtm9htcOMfpSjWHqApL/PkM1
-         hjQIkMC5uFV8SbB/E1pKh54o/9vCh+9nmWdBu3HaR3xo4o6SpQHrIBL9bgxcIM7XM5n5
-         ligtnEa3e6CeS/jpbKV9flDmO4A/oM+A1c7e25lpjOkA+FpY+zHr/ot9xfxSlu60X6C8
-         S85g2bu68aqCM+Tpg2hGTVHvaNjPvHj6zCHJklt8o17So2Co3W96UWMIXT8C0pLGT1pg
-         qdNQMPfkQKuBTx8p1/poFS+aWKOBCPydbaELEEYgcN7FF4LNdOzP1VJBlt996eRPax/w
-         hMYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=THEg3QFZEQa/O6HzLLi2uHWnREbCmXjTJPDpWzYvpYE=;
-        b=LlOafNyLwBOkPYr2zTQPriSoZsq1LAammv4vH+FYFjBcu2gXTRcUVSmBF96qN8DHXt
-         6gJ4xEhR/a8VsmcuaiVVqcj/jMS8az+zD2zan/5TyXxoYQ+47zUU48BX9AiFF7B89m3q
-         0KmuGnIURkNYPi1kEulSNhSwqySd2n+FPnKJ9iBR79dNLcMPEoiys0tfuEeXKDmsw6+S
-         oQkN34JFp0RMZIp5bKviKZ6McOdBj3Oc1+airqvrEthegXS3OUvU+fQZMrfUZukcVBj2
-         C9GPPp39qHu4EzKiT8izClNWVxdViF8iV+lNlZcnrBCng1dLpHD4SWAUKMM91b/g6EqX
-         qy4A==
-X-Gm-Message-State: APjAAAV+6ZIc1VPleR/+oA1NITjqVvTPnJmZ/hms4CKM3YXaCGRIT/9R
-        vzYBVtpWxw7Fi3VtHNJBHLU=
-X-Google-Smtp-Source: APXvYqyW+M9y0psHwU0NpMvkTavrh7MZTxAMiyVpc4pqn2yNLfg6OeaTa33ovYQ/omgdDo7LgmmXpQ==
-X-Received: by 2002:a62:1944:: with SMTP id 65mr2476029pfz.151.1578447550936;
-        Tue, 07 Jan 2020 17:39:10 -0800 (PST)
-Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id a6sm994334pgg.25.2020.01.07.17.39.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 17:39:10 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     devicetree@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 7 Jan 2020 20:52:33 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:46950 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726180AbgAHBwc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 20:52:32 -0500
+X-UUID: 013b3fe85fe64c5d9885b544ede2a873-20200108
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3nT/zyPqTRXKX+qkYY8Mvpnq2j5E/DAPw3se4gA7isQ=;
+        b=SKePdRKDuT5QWhVEZsUCaLkiIW5kk34dALXq2BWnZuno9BC7zdp58CvfKtsVUUUw1QoWCJhzH2LH27DRhhjNP7hNMARcGtntlrrVLV/gKK545/a/KIr8uEQHzMgZ0Dd8SGp/YM5M+rnaKUmVKtK3Le8EXa2juCxG0JdZG7GMsAw=;
+X-UUID: 013b3fe85fe64c5d9885b544ede2a873-20200108
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1229779208; Wed, 08 Jan 2020 09:52:25 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 8 Jan 2020 09:50:44 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 8 Jan 2020 09:52:58 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] arm64: dts: sdm845: move gpu zap nodes to per-device dts
-Date:   Tue,  7 Jan 2020 17:38:44 -0800
-Message-Id: <20200108013847.899170-4-robdclark@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200108013847.899170-1-robdclark@gmail.com>
-References: <20200108013847.899170-1-robdclark@gmail.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [RESEND PATCH v5 02/11] dt-bindings: phy-mtk-tphy: make the ref clock optional
+Date:   Wed, 8 Jan 2020 09:51:57 +0800
+Message-ID: <1578448326-27455-2-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1578448326-27455-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1578448326-27455-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 9D839053CFF735E21A66DF2F8599DF469A78D96CCF3DB75A4F64AD6A83A2EE562000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
-
-We want to specify per-device firmware-name, so move the zap node into
-the .dts file for individual boards/devices.  This lets us get rid of
-the /delete-node/ for cheza, which does not use zap.
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi           | 1 -
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 7 +++++++
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts              | 8 ++++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi                 | 6 +-----
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 7 +++++++
- 5 files changed, 23 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9a4ff57fc877..2db79c1ecdac 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -165,7 +165,6 @@ panel_in_edp: endpoint {
- /delete-node/ &venus_mem;
- /delete-node/ &cdsp_mem;
- /delete-node/ &cdsp_pas;
--/delete-node/ &zap_shader;
- /delete-node/ &gpu_mem;
- 
- /* Increase the size from 120 MB to 128 MB */
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index d100f46791a6..c472195e44fb 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -352,6 +352,13 @@ &gcc {
- 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/db845c/a630_zap.mbn";
-+	};
-+};
-+
- &pm8998_gpio {
- 	vol_up_pin_a: vol-up-active {
- 		pins = "gpio6";
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index c57548b7b250..876155fc0547 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -360,6 +360,14 @@ &gcc {
- 			   <GCC_LPASS_SWAY_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		// TODO presumably mtp can use same "test key" signed zap?
-+		firmware-name = "qcom/db845c/a630_zap.mbn";
-+	};
-+};
-+
- &i2c10 {
- 	status = "okay";
- 	clock-frequency = <400000>;
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index ddb1f23c936f..601c57cc9b6d 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2804,7 +2804,7 @@ dsi1_phy: dsi-phy@ae96400 {
- 			};
- 		};
- 
--		gpu@5000000 {
-+		gpu: gpu@5000000 {
- 			compatible = "qcom,adreno-630.2", "qcom,adreno";
- 			#stream-id-cells = <16>;
- 
-@@ -2824,10 +2824,6 @@ gpu@5000000 {
- 
- 			qcom,gmu = <&gmu>;
- 
--			zap_shader: zap-shader {
--				memory-region = <&gpu_mem>;
--			};
--
- 			gpu_opp_table: opp-table {
- 				compatible = "operating-points-v2";
- 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index 13dc619687f3..b255be3a4a0a 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -245,6 +245,13 @@ &gcc {
- 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn";
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 	clock-frequency = <400000>;
--- 
-2.24.1
+TWFrZSB0aGUgcmVmIGNsb2NrIG9wdGlvbmFsLCB0aGVuIHdlIG5vIG5lZWQgcmVmZXIgdG8gYSBm
+aXhlZC1jbG9jaw0KaW4gRFRTIGFueW1vcmUgd2hlbiB0aGUgY2xvY2sgb2YgVVNCMyBQSFkgY29t
+ZXMgZnJvbSBvc2NpbGxhdG9yDQpkaXJlY3RseQ0KDQpTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZ
+dW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4NCi0tLQ0KdjR+djU6IG5vIGNoYW5nZXMNCg0KdjM6IGFkZCBhY2tlZC1i
+eSBSb2INCg0KdjI6IG5vIGNoYW5nZXMNCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bo
+eS9waHktbXRrLXRwaHkudHh0ICAgICAgICB8IDEzICsrKysrKystLS0tLS0NCiAxIGZpbGUgY2hh
+bmdlZCwgNyBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0DQppbmRl
+eCBjZTZhYmZiZGZiZTEuLjFmNGEzNmRkODBlMCAxMDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW10ay10cGh5LnR4dA0KKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXRrLXRwaHkudHh0DQpAQCAtMzQsMTIg
+KzM0LDYgQEAgT3B0aW9uYWwgcHJvcGVydGllcyAoY29udHJvbGxlciAocGFyZW50KSBub2RlKToN
+CiANCiBSZXF1aXJlZCBwcm9wZXJ0aWVzIChwb3J0IChjaGlsZCkgbm9kZSk6DQogLSByZWcJCTog
+YWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBwb3J0Lg0KLS0g
+Y2xvY2tzCTogYSBsaXN0IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBm
+b3IgZWFjaA0KLQkJICBlbnRyeSBpbiBjbG9jay1uYW1lcw0KLS0gY2xvY2stbmFtZXMJOiBtdXN0
+IGNvbnRhaW4NCi0JCSAgInJlZiI6IDQ4TSByZWZlcmVuY2UgY2xvY2sgZm9yIEhpZ2hTcGVlZCBh
+bmFsb2cgcGh5OyBhbmQgMjZNDQotCQkJcmVmZXJlbmNlIGNsb2NrIGZvciBTdXBlclNwZWVkIGFu
+YWxvZyBwaHksIHNvbWV0aW1lcyBpcw0KLQkJCTI0TSwgMjVNIG9yIDI3TSwgZGVwZW5kZWQgb24g
+cGxhdGZvcm0uDQogLSAjcGh5LWNlbGxzCTogc2hvdWxkIGJlIDEgKFNlZSBzZWNvbmQgZXhhbXBs
+ZSkNCiAJCSAgY2VsbCBhZnRlciBwb3J0IHBoYW5kbGUgaXMgcGh5IHR5cGUgZnJvbToNCiAJCQkt
+IFBIWV9UWVBFX1VTQjINCkBAIC00OCw2ICs0MiwxMyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIChw
+b3J0IChjaGlsZCkgbm9kZSk6DQogCQkJLSBQSFlfVFlQRV9TQVRBDQogDQogT3B0aW9uYWwgcHJv
+cGVydGllcyAoUEhZX1RZUEVfVVNCMiBwb3J0IChjaGlsZCkgbm9kZSk6DQorLSBjbG9ja3MJOiBh
+IGxpc3Qgb2YgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoDQor
+CQkgIGVudHJ5IGluIGNsb2NrLW5hbWVzDQorLSBjbG9jay1uYW1lcwk6IG1heSBjb250YWluDQor
+CQkgICJyZWYiOiA0OE0gcmVmZXJlbmNlIGNsb2NrIGZvciBIaWdoU3BlZWQgYW5vbG9nIHBoeTsg
+YW5kIDI2TQ0KKwkJCXJlZmVyZW5jZSBjbG9jayBmb3IgU3VwZXJTcGVlZCBhbm9sb2cgcGh5LCBz
+b21ldGltZXMgaXMNCisJCQkyNE0sIDI1TSBvciAyN00sIGRlcGVuZGVkIG9uIHBsYXRmb3JtLg0K
+Kw0KIC0gbWVkaWF0ZWssZXllLXNyYwk6IHUzMiwgdGhlIHZhbHVlIG9mIHNsZXcgcmF0ZSBjYWxp
+YnJhdGUNCiAtIG1lZGlhdGVrLGV5ZS12cnQJOiB1MzIsIHRoZSBzZWxlY3Rpb24gb2YgVlJUIHJl
+ZmVyZW5jZSB2b2x0YWdlDQogLSBtZWRpYXRlayxleWUtdGVybQk6IHUzMiwgdGhlIHNlbGVjdGlv
+biBvZiBIU19UWCBURVJNIHJlZmVyZW5jZSB2b2x0YWdlDQotLSANCjIuMjQuMA0K
 
