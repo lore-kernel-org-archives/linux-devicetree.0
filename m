@@ -2,144 +2,115 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9CDC33C99
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D87BC33C99
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F6020692
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731592077B
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 01:39:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ol69AOK3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejeetgrc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgAHBc4 (ORCPT
+        id S1726180AbgAHBjE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 7 Jan 2020 20:32:56 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45109 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgAHBc4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 20:32:56 -0500
-Received: by mail-qk1-f195.google.com with SMTP id x1so1235690qkl.12;
-        Tue, 07 Jan 2020 17:32:55 -0800 (PST)
+        Tue, 7 Jan 2020 20:39:04 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39402 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgAHBjD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 7 Jan 2020 20:39:03 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b137so737300pga.6;
+        Tue, 07 Jan 2020 17:39:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D0KWS2bmnM2w8jSnvLb5h60Kle/fBeOTfLYPIJ5EOpY=;
-        b=Ol69AOK30CK/wW/0zqC9CsW1HvPIgqDWQv+yLkWghIobQmMiQKDVzMPsmU6VGcbj2j
-         lNc5vC9vNZ5yzIHQu17kb18tdqaFOutepb79PUrlkLkIzxl3mhqnOZYdXUGnTlNTldN6
-         ryDhkieOk3mxRQ6p9CZuZJQOaA6Fokwva4Pvy29yp1316hmyz91f23wTYEktJDEFQfiC
-         K2uCyh/GM7XDFk4Jr0qYvyXTuzDA80lch4BU/4/lrp8uLbPbLH01YO0dC4fLhZdZABHv
-         Frc+6f3MHRVThvj0MxTWx6OIdRNY+mj/bslQJeYAyXsJIekSmsQLjF+8rXDYQDSHA5qK
-         UkSQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qrBHJRFSRA4AlmSOTlxgOJ04a73uvSIbhRd+GAk2pRE=;
+        b=ejeetgrcvv9LsANDxK4s91NGCUtBlKd9sKWqIIK30ge81Kr3B8uhtVoCvfC+V8RuZo
+         k3tsAtYkYe+3Kj9IzIcdhnuZpq6JQKfNqfS+pPtEXTjMDRTixQSCX1D/GUUY/qg23W2N
+         YzM9zAOOlCEBSqx4grMnk0Z24bb7ilMh17h4wjC4MqvnSpejwCKLFk2XvVbFcbVB35tp
+         41feryqS09briYf4eGcDGNuUU4XLmSVnU+X9EMbw1C2Gi0MUp7iCiq39bRvvhzBEC1we
+         WNT8TtlhktCHnPYfsp+GAIdGW2wHPu8p/3DVaAlxLAoasAomod10GTlOiuqQdCtG6UPU
+         9YHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D0KWS2bmnM2w8jSnvLb5h60Kle/fBeOTfLYPIJ5EOpY=;
-        b=HwP4YM732NsaCC0xLbwr2URJni8GxwLXwW8lCYtaYz/oR1djfc1F6SvdMvYVLJwiYF
-         q/MCQWVY5Fcz86Ac4kCA8tSvcJ/bjQcbr0ZUC9cOJqANVkvd6q/9HHOIX9ldYYk3akDG
-         N1aXY4nvamAFtMqCvGlXXRfNwcYQl+9zS6mxX31fvQDTecZfbHe/h+jNpNwbC28Q/LXp
-         lYL5GkBGMuIYgIeQUklcTkYPefJvAnsa/A8FkFLv/6tT+yHLdbRarRADSzu5ylkLZTPg
-         AKvCuERvDmqSX8x33FC2IeBkB0yYqDhJNb6T3WOMqc/nCSULb+ofHMtprj0Zjyb83QPK
-         lUHQ==
-X-Gm-Message-State: APjAAAVI0Oz9tKqVSzroT9RerNokD8SJJ+Y79DdgfFEZODg60k6b4lhC
-        VSlumLhMs/KHE+GWp5sUAgraAAlObSEqWcKQRNjym8M2
-X-Google-Smtp-Source: APXvYqy6eIHyxCmknwk6MCfrWtg1wQT3fooOJigafTIomk2b84KDncPi1Me0AaxLv52BmtSGaJXrsV2Sy4zLQDobXAQ=
-X-Received: by 2002:ae9:c003:: with SMTP id u3mr2075595qkk.133.1578447175126;
- Tue, 07 Jan 2020 17:32:55 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qrBHJRFSRA4AlmSOTlxgOJ04a73uvSIbhRd+GAk2pRE=;
+        b=kmFSzJQ37amdYKdF9SbDM5rxtsxWfI1RljkfaQA1y0YMgTh6fDv0l9tZe8dvuPe1aH
+         +P6GODQgET8GQ2AoQ4utY/2ndy3Mp3iBocF9QgebKLUVfd7LaVzhQDYTatyBNn2fX3h+
+         N9MIUuezzVRGXfsljMUlFQmdQ1xoX8zxvFuFdzZnTKHrbBM9Wu85kX3OIPLfcHSQjHAO
+         UevLfYkOTY4KRlNHSElSMdkYo0HTTD+6r1VNTqOPBzuYwrCtI67KVGpbdMoQWTB/Yj/y
+         /QSid1ZSManAPJ/X9sWqFhJds4QZrnu22cBD8pDteFV1xkoCr8mj02vUwsGjDE6hCJTm
+         +hgA==
+X-Gm-Message-State: APjAAAWTINOpOP/niqS1pT4SOUrXZJDgM5je/sQ2p9A4sQUItv9GOIhp
+        e0Y78ry7/QzofVZXvV9Ha2s=
+X-Google-Smtp-Source: APXvYqx/RXCffdkJxN9926F2ZtBJ7RCAjEZ+yRHzVoEMHDlC2SG4j9p18uaRcrabtEj3ZNUIWgSNsQ==
+X-Received: by 2002:aa7:8007:: with SMTP id j7mr2431615pfi.71.1578447542963;
+        Tue, 07 Jan 2020 17:39:02 -0800 (PST)
+Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
+        by smtp.gmail.com with ESMTPSA id 73sm1032858pgc.13.2020.01.07.17.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2020 17:39:02 -0800 (PST)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     devicetree@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-kernel@vger.kernel.org (open list),
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 0/3] drm/msm: use firmware-name to find zap fw
+Date:   Tue,  7 Jan 2020 17:38:41 -0800
+Message-Id: <20200108013847.899170-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200106110133.13791-1-faiz_abbas@ti.com> <20200106110133.13791-3-faiz_abbas@ti.com>
- <CADBw62qR5F8h4YbpWfU2UESeoR3zXzS=eePMvQHuT7NQE5hdSA@mail.gmail.com> <27fded85-d195-0a82-899a-bb6e727258dc@ti.com>
-In-Reply-To: <27fded85-d195-0a82-899a-bb6e727258dc@ti.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 8 Jan 2020 09:32:43 +0800
-Message-ID: <CADBw62pA3tub70Uvkz7_6HTqvpuvweroGJXScv5NdPcDViG0Dw@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] mmc: sdhci: Factor out some operations set to
- their own functions
-To:     Faiz Abbas <faiz_abbas@ti.com>
-Cc:     linux-omap@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
-        kishon@ti.com, Adrian Hunter <adrian.hunter@intel.com>,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>, tony@atomide.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Faiz,
+From: Rob Clark <robdclark@chromium.org>
 
-On Tue, Jan 7, 2020 at 3:20 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->
-> Hi Baolin,
->
-> On 07/01/20 12:04 pm, Baolin Wang wrote:
-> > Hi Faiz,
-> >
-> > On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
-> >>
-> >> In preparation for adding external dma support, factor out data initialization,
-> >> block info and mrq_done to their own functions.
-> >>
-> >> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> >> ---
-> >>  drivers/mmc/host/sdhci.c | 96 +++++++++++++++++++++++-----------------
-> >>  1 file changed, 55 insertions(+), 41 deletions(-)
-> >>
-> >> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> >> index 1b1c26da3fe0..f6999054abcf 100644
-> >> --- a/drivers/mmc/host/sdhci.c
-> >> +++ b/drivers/mmc/host/sdhci.c
-> >> @@ -1025,18 +1025,9 @@ static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
-> >>         }
-> >>  }
-> >>
-> >> -static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> >> +static void sdhci_initialize_data(struct sdhci_host *host,
-> >> +                                 struct mmc_data *data)
-> >>  {
-> >> -       struct mmc_data *data = cmd->data;
-> >> -
-> >> -       host->data_timeout = 0;
-> >> -
-> >> -       if (sdhci_data_line_cmd(cmd))
-> >> -               sdhci_set_timeout(host, cmd);
-> >> -
-> >> -       if (!data)
-> >> -               return;
-> >> -
-> >>         WARN_ON(host->data);
-> >>
-> >>         /* Sanity checks */
-> >> @@ -1048,6 +1039,36 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> >>         host->data_early = 0;
-> >>         host->data->bytes_xfered = 0;
-> >>
-> >
-> > Can you remove above redundant blank line?
-> Ok.
-> >
-> >> +}
-> >> +
-> >> +static inline void sdhci_set_block_info(struct sdhci_host *host,
-> >> +                                       struct mmc_data *data)
-> >> +{
-> >> +
-> >
-> > Ditto.
-> Ok.
-> >
-> > Otherwise, please add my tested tag if feel free.
-> >
-> > Tested-by: Baolin Wang <baolin.wang7@gmail.com>
->
-> Which platform did you test this on?
+For devices which use zap fw to take the GPU out of secure mode on
+reset, the firmware is likely to be signed with a device specific key.
+Meaning that we can't have a single filesystem (or /lib/firmware) that
+works on multiple devices.
 
-I tested on our Spreadtrum platform for the common sdhci driver
-modification, but our host controller can not support external DMA, so
-I can not help to test the external DMA.
+So allow a firmware-name to be specified in the zap-shader node in dt.
+This moves the zap-shader node out of the core sdm845.dtsi and into per-
+device dts files.  Which also removes the need for /delete-node/ in
+sdm845-cheza.dtsi (as cheza devices do not use zap).
+
+This aligns with how Bjorn has been handling the similar situation with
+adsp/cdsp/mpss fw:
+
+   https://patchwork.kernel.org/patch/11160089/
+
+Rob Clark (3):
+  drm/msm: support firmware-name for zap fw
+  dt-bindings: drm/msm/gpu: Document firmware-name
+  arm64: dts: sdm845: move gpu zap nodes to per-device dts
+
+ .../devicetree/bindings/display/msm/gpu.txt   |  3 ++
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |  1 -
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |  7 ++++
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |  8 +++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  6 +---
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts |  7 ++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 32 +++++++++++++++++--
+ 7 files changed, 55 insertions(+), 9 deletions(-)
+
+-- 
+2.24.1
+
