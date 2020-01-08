@@ -2,145 +2,173 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1A1C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82252C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E07E20673
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:09:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="fTMbiHxB"
+	by mail.kernel.org (Postfix) with ESMTP id 57057206F0
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578500015;
+	bh=wfA0RgqOGZiXS9s9Zj3yv92iIIXZZ9gM5zABPwDN1jE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dp2O+mHHQSEbQx19kOyfCtmjGiCRatcPA7GLPyvWLxj4UP0GehmSdK66kYsKCTi+J
+	 OA4IZw4cVn2u3yVwoxdcTfd2jL87pREOw2rBygjnOuHZCplNKnoRYMe4DmtdClpCay
+	 KD1KhFuzKzLsHqOpRISrOueVE4Zh5IRqVkkRnUbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgAHQJj (ORCPT
+        id S1729400AbgAHQNe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:09:39 -0500
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:49271 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726922AbgAHQJj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:09:39 -0500
-Received: from [192.168.2.10] ([62.249.185.68])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id pDtjiXEm4pLtbpDtmiHdt5; Wed, 08 Jan 2020 17:09:35 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578499775; bh=kmsCylMQnvNLljjtH/5R6Qd+4IWFqilvWA3W0idMQLA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=fTMbiHxB2zt4MZxGlsWVKDEqwXrLP8SZBRCUGfA9Jpe4MA0p0Qvap7o0A7x/DejNn
-         cjYXCYUzfs2TKzFqemb9CrkLroMmWjmbP033MuWFNVCzDVlRgpn0My0/f9LWUwzN6i
-         R4gM9jw+nwd+DcT9FExDM5POEFKAu2IwFRPREezB9//v8D+AQjqe/+o/dH0GgyWAxM
-         VJOcrb4X6R4PrkXFuvFw6Xi3E/rjX+epyGNOWw3nMEWRP/Z8XOKGas0ppH21UIqcAV
-         M/33YPRt3n97/V00gygIvTsnS99tQK+UTGi2jiGhd+MbtOpXuVkHzcKt43V5fO9XnT
-         Qe/4rE1R383Qg==
-Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
-References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
- <20200106154929.4331-5-stanimir.varbanov@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
-Date:   Wed, 8 Jan 2020 17:09:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 8 Jan 2020 11:13:34 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:32873 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729396AbgAHQNe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:13:34 -0500
+Received: by mail-ot1-f67.google.com with SMTP id b18so4137954otp.0
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 08:13:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6A9p8VArf1P33xI9fyJ0iKzLLi4HFeo/bhHGTXLA584=;
+        b=MBdKNS68FQNtavIUaxXgx0DWgBjBT+Hq1a4HFtRbwX9p8XLg7h2VCUtqDAIazrgXR4
+         GmTiD/DxxDkRdvwzdLMyBneqJ2lzrps6jSrHsUTuAMrqqMt16ub4i4ueuhHGK5kSp8DV
+         9v3y7VO5cDQIldMUOUYHgYdBoRzaDRb7exPzd7sLXcgZwg06vq5KB5lypiJpVaq4Zbjk
+         zoGBUR4iXNI90X3/KP/bvBxsGI0JQA/kKc5hiVbVVrRZJOk715zDH94f9p+XsIhMIX9X
+         s6N3BBmcNPmiePFy4HQR5p87xgb12zIJ0oVeM7p9HUtgfK/vBeZjsVj+fyeLMsDj8qkZ
+         G7lQ==
+X-Gm-Message-State: APjAAAVytl+VrdvoNQ7n+FGN3iNIyCWcYnxip3Bo2FHSDdTB4blnz5SW
+        wwC45Nl5mUyrLtGCdZJSN9I2Cik=
+X-Google-Smtp-Source: APXvYqx0jmfS08707/HnAjMys7SUv+amHV58VqaprfD9pSMVZJ84OOzWKD/0m64weOi0kssZUhoI7Q==
+X-Received: by 2002:a05:6830:18f1:: with SMTP id d17mr4509112otf.298.1578500013495;
+        Wed, 08 Jan 2020 08:13:33 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q5sm1196643oia.21.2020.01.08.08.13.32
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jan 2020 08:13:32 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220333
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 08 Jan 2020 10:13:31 -0600
+Date:   Wed, 8 Jan 2020 10:13:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kamil Debski <kamil@wypas.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] hwmon: (pwm-fan) add option to stop fan on shutdown
+Message-ID: <20200108161331.GA18546@bogus>
+References: <1577023823-9615-1-git-send-email-akinobu.mita@gmail.com>
+ <1577023823-9615-2-git-send-email-akinobu.mita@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200106154929.4331-5-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfLZOPd7nEc6mtz3KkR3z8WAv5nebYzc6GaZPifyqG8SDLEYK+/cZcgiZj1m8Mp2HsvqxYBIh6PDz+ME2Wm31Ob0+/Pt4jCULg9nqdbDtyOWlZf89Flgn
- wHJe3KHP6oEFsyqoJIbiDfk0lalpJahBN8ZGTAkXJVFW60qQlMiSEownruBt7/WJfQo1IeRwuNhNBCm19ldTcQd7+7s3tdPLrX5hWj2+4ZC3wmsoDHyoZnGp
- WVpp9IxdbqmtNOapjPTnkroI6ks6CCIwe/vRR7AA+7HRZeiwXLjeDYuKiqh7bev+uPkKIUOZ4tPWyqTao9RYreTkiRBLt4UQNbq1sRxU2lwyzvsQglv3Gwix
- IusukogpwVb+GvIeGMTxwXMsg1mEdoOrGYYmsfRtV29mS+SYlHgVFDrwRt0Yl+CzJV/gZtby
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577023823-9615-2-git-send-email-akinobu.mita@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
-> This event indicate that the source color bit-depth is changed
-> during run-time. The client must get the new format and re-allocate
-> buffers for it. This can usually happens with video decoder (encoders)
-> when the bit-stream color bit-depth is changed from 8 to 10bits
-> or vice versa.
+On Sun, Dec 22, 2019 at 11:10:22PM +0900, Akinobu Mita wrote:
+> The pwm-fan driver leaves the fun running when shutting down the system.
+> (On the other hand the gpio-fan driver stops it.)
+
+Seemms like we should have consistent behavior independent of what the 
+underlying implementation uses. Is there actually a case you'd want to 
+leave the fan on? It seems strange to disable in suspend and leave on in 
+shutdown.
+
+Wouldn't the shutdown state depend if the PWM off state is high or low? 
+IIRC, i.MX PWM has a quirk that the PWM disabled state is high. Doesn't 
+it also depend on what the PWM driver does in shutdown?
+
+Rob
+
 > 
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> This adds an optional property "disable-state-shutdown" in case someone
+> wants to stop the fun running when shutting down the system.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Kamil Debski <kamil@wypas.org>
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 > ---
->  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
->  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->  include/uapi/linux/videodev2.h                  | 1 +
->  3 files changed, 9 insertions(+), 1 deletion(-)
+>  drivers/hwmon/pwm-fan.c | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-> index 42659a3d1705..fad853d440cf 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-> @@ -402,7 +402,13 @@ call.
->  	that many Video Capture devices are not able to recover from a temporary
->  	loss of signal and so restarting streaming I/O is required in order for
->  	the hardware to synchronize to the video signal.
-> -
-> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
-> +      - 0x0002
-> +      - This event gets triggered when color bit-depth change is detected
-> +	from a video decoder. Applications will have to query the new pixel
-> +	format and re-negotiate the queue. In most cases the streaming must be
-> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
-> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
-
-I think this is too specific for decoders. Something similar to the
-CH_RESOLUTION description would be more appropriate:
-
-      - This event gets triggered when a color bit-depth change (but not a
-	resolution change!) is detected	at an input. This can come from an
-	input connector or from a video decoder. Applications will have to query
-	the new pixel format and re-negotiate the queue.
-
-	For stateful decoders follow the guidelines in :ref:`decoder`.
-	Video capture devices will in most cases have to stop and restart
-	streaming (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>` followed by
-	:ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
-
-And update dev-decoder.rst where needed with this new event flag.
-
-As to your question on irc: once I've acked this patch it can be merged
-via a venus PR.
-
-Regards,
-
-	Hans
-
+> diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+> index 42ffd2e..8775d37 100644
+> --- a/drivers/hwmon/pwm-fan.c
+> +++ b/drivers/hwmon/pwm-fan.c
+> @@ -33,6 +33,7 @@ struct pwm_fan_ctx {
+>  	u8 pulses_per_revolution;
+>  	ktime_t sample_start;
+>  	struct timer_list rpm_timer;
+> +	bool disable_state_shutdown;
 >  
->  Return Value
->  ============
-> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-> index cb6ccf91776e..209709114378 100644
-> --- a/Documentation/media/videodev2.h.rst.exceptions
-> +++ b/Documentation/media/videodev2.h.rst.exceptions
-> @@ -490,6 +490,7 @@ replace define V4L2_EVENT_CTRL_CH_FLAGS ctrl-changes-flags
->  replace define V4L2_EVENT_CTRL_CH_RANGE ctrl-changes-flags
+>  	unsigned int pwm_value;
+>  	unsigned int pwm_fan_state;
+> @@ -292,6 +293,9 @@ static int pwm_fan_probe(struct platform_device *pdev)
 >  
->  replace define V4L2_EVENT_SRC_CH_RESOLUTION src-changes-flags
-> +replace define V4L2_EVENT_SRC_CH_COLOR_DEPTH src-changes-flags
+>  	mutex_init(&ctx->lock);
 >  
->  replace define V4L2_EVENT_MD_FL_HAVE_FRAME_SEQ :c:type:`v4l2_event_motion_det`
+> +	ctx->disable_state_shutdown =
+> +		of_property_read_bool(dev->of_node, "disable-state-shutdown");
+> +
+>  	ctx->pwm = devm_of_pwm_get(dev, dev->of_node, NULL);
+>  	if (IS_ERR(ctx->pwm)) {
+>  		ret = PTR_ERR(ctx->pwm);
+> @@ -390,8 +394,7 @@ static int pwm_fan_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
 >  
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 5f9357dcb060..1d349c9d57a7 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -2332,6 +2332,7 @@ struct v4l2_event_frame_sync {
->  };
+> -#ifdef CONFIG_PM_SLEEP
+> -static int pwm_fan_suspend(struct device *dev)
+> +static int pwm_fan_disable(struct device *dev)
+>  {
+>  	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+>  	struct pwm_args args;
+> @@ -418,6 +421,22 @@ static int pwm_fan_suspend(struct device *dev)
+>  	return 0;
+>  }
 >  
->  #define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
-> +#define V4L2_EVENT_SRC_CH_COLOR_DEPTH		(1 << 1)
+> +static void pwm_fan_shutdown(struct platform_device *pdev)
+> +{
+> +	struct pwm_fan_ctx *ctx = platform_get_drvdata(pdev);
+> +
+> +	if (!ctx->disable_state_shutdown)
+> +		return;
+> +
+> +	pwm_fan_disable(&pdev->dev);
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int pwm_fan_suspend(struct device *dev)
+> +{
+> +	return pwm_fan_disable(dev);
+> +}
+> +
+>  static int pwm_fan_resume(struct device *dev)
+>  {
+>  	struct pwm_fan_ctx *ctx = dev_get_drvdata(dev);
+> @@ -455,6 +474,7 @@ MODULE_DEVICE_TABLE(of, of_pwm_fan_match);
 >  
->  struct v4l2_event_src_change {
->  	__u32 changes;
+>  static struct platform_driver pwm_fan_driver = {
+>  	.probe		= pwm_fan_probe,
+> +	.shutdown	= pwm_fan_shutdown,
+>  	.driver	= {
+>  		.name		= "pwm-fan",
+>  		.pm		= &pwm_fan_pm,
+> -- 
+> 2.7.4
 > 
-
