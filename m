@@ -2,108 +2,110 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07061C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2393C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8142067D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:37:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vNp5hose"
+	by mail.kernel.org (Postfix) with ESMTP id B2B8120720
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 15:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgAHPhe (ORCPT
+        id S1728561AbgAHPoe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 10:37:34 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38988 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726254AbgAHPhe (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 10:37:34 -0500
-Received: by mail-lj1-f195.google.com with SMTP id l2so3771221lja.6;
-        Wed, 08 Jan 2020 07:37:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c9hbr49Ley4UTmimx7yxEnrqrafXHv5pmFx/ZO0fWMk=;
-        b=vNp5hosegcOknmSw79NZpyGoMqDPAkYat31L0xMKOSqqNI+hCdjY4mv6g8r9dTQFrS
-         SDNPQBPCtFhxO5L/YcELkmNK8MM7OrKAVCaVImJRqErnYEJUn6bccDjrhvECPlyhxN4p
-         BmvFbayLVt9r5BDgWiv0JOmOgz8ZsDytgPXWRil6qqP/2OWLrSnYq4CPnCGvfdgkVVDo
-         yyhAnBtjDuyWKwQ6t45f2FpOy3qWLgHyzX4AM/3ZL+PzU+qJF1JySPSSfnSf+9csNq7J
-         rjAnksKIIlAgLEae9UKXX52uOGWO1iKmXDvWHlxtzSMkuscaTv8Xpdd0wzPG0L8vUjIb
-         1ezQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c9hbr49Ley4UTmimx7yxEnrqrafXHv5pmFx/ZO0fWMk=;
-        b=srvVkGZ5r+J+/OjEkUEvjnY3R0V+qwBqxn4CE1+uaxbwMzuUZjC2HGMNMCjDLgwX19
-         coZ+ouyuVfT03j4qDEnoWB/S5b38AyAaRmmlkOsgHHYspJ7h261+1wXbSKU0eJ1zZzps
-         GzSfd59KvKYNJtaFKqeDSEUuF6SPfMh64M/3zdLf0IXEBMrhyEeIt8NHxndTJyCR4QfM
-         ywr8D9y7E3A2LzNEd6JpbctnlPY5M4EkCi8MS8/H1CUUV9dEBgkACAF0Q94APRDfuhWK
-         KoUo2nlZa9z/rAgHIGF2z8Y/QT5PuWMXaNWFm3CcU81eOcqER8CTbD0a+HJKIhDalrz0
-         +97w==
-X-Gm-Message-State: APjAAAXJNC4Czi9AwXhEy/6+35rQH2NE9lHM/G+N7gQMgwe7ghutWMDJ
-        ZtJ9d/xFYg2LGrP+rmkD5mo=
-X-Google-Smtp-Source: APXvYqwh7BDY6OtOgf2vFIGEdrgC3+UO6b2zbI6cR9IU/z5FxmWmUdmzOm1y2uW1q1QDxoAPd1U82Q==
-X-Received: by 2002:a2e:8544:: with SMTP id u4mr3239243ljj.70.1578497851734;
-        Wed, 08 Jan 2020 07:37:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 138sm1624357lfa.76.2020.01.08.07.37.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 07:37:30 -0800 (PST)
-Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
-To:     "Johnny.Chuang" <johnny.chuang@emc.com.tw>,
-        'Dmitry Torokhov' <dmitry.torokhov@gmail.com>,
-        =?UTF-8?B?J01pY2hhxYIgTWlyb3PFgmF3Jw==?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        'Scott Liu' <scott.liu@emc.com.tw>,
-        'James Chen' <james.chen@emc.com.tw>,
-        linux-kernel@vger.kernel.org,
-        'Henrik Rydberg' <rydberg@bitmath.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Rob Herring' <robh-dt@kernel.org>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <20191212192420.GD101194@dtor-ws>
- <7c67b849-369f-8a20-4f9e-9e0a7caec1cb@gmail.com>
- <000001d5c634$655bed20$3013c760$@emc.com.tw>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1451c959-03fc-9493-48f1-404cbd273aa9@gmail.com>
-Date:   Wed, 8 Jan 2020 18:37:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <000001d5c634$655bed20$3013c760$@emc.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 8 Jan 2020 10:44:34 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:49049 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgAHPoe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 10:44:34 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <rjones@gateworks.com>)
+        id 1ipDVX-0007s2-Rx; Wed, 08 Jan 2020 15:44:31 +0000
+From:   Robert Jones <rjones@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: [PATCH v7 0/5] ARM: dts: imx: Add GW59xx Gateworks specials
+Date:   Wed,  8 Jan 2020 07:44:19 -0800
+Message-Id: <20200108154424.15736-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.9.2
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-08.01.2020 18:00, Johnny.Chuang пишет:
->> 12.12.2019 22:24, Dmitry Torokhov пишет:
->>> On Wed, Dec 11, 2019 at 05:03:18PM +0100, Michał Mirosław wrote:
->>>> This series cleans up the driver a bit and implements changes needed
->>>> to support EKTF3624-based touchscreen used in eg. Asus TF300T tablet.
->>>
->>> Johnny, could you please take a look at this patch series?
->>>
->>> Thanks!
->>
->> Hello Johnny,
->>
->> Could you please let us know whether you or anyone else from Elan are going
->> to take a look at this patchset anytime soon?
-> 
-> Hi Dmitry Osipenko,
-> 
-> I'm sorry to reply late. James Chen will take a look at this patch set. 
-> 
+This series adds board support for the GW59xx Gateworks Ventana family
+specials.
 
-No problems, thank you very much.
+Changes in v2:
+ - Generalized node names
+ - Removed unnecessary labels
+ - Expanded patch subject
+ - Removed undocumented compatible string in dts
+
+Changes in v3:
+ - Fixed a conflict in arch/arm/boot/dts/Makefile
+
+Changes in v4:
+ - Clarified authorship
+ - Added dt-bindings compatible entries
+
+Changes in v5:
+ - Added documentation schema permutations for all gateworks ventana boards
+ - Added back compatible strings from dts removed in v2
+
+Changes in v6:
+ - Reorganized dt-bindings schema into new items entry
+
+Changes in v7:
+ - Separated dt-bindings to two entries for DL/Q variants
+
+Robert Jones (4):
+  dt-bindings: arm: fsl: Add Gateworks Ventana i.MX6DL/Q compatibles
+  ARM: dts: imx: Add GW5907 board support
+  ARM: dts: imx: Add GW5913 board support
+  ARM: dts: imx: Add GW5912 board support
+
+Tim Harvey (1):
+  ARM: dts: imx: Add GW5910 board support
+
+ Documentation/devicetree/bindings/arm/fsl.yaml |  41 +++
+ arch/arm/boot/dts/Makefile                     |   8 +
+ arch/arm/boot/dts/imx6dl-gw5907.dts            |  14 +
+ arch/arm/boot/dts/imx6dl-gw5910.dts            |  14 +
+ arch/arm/boot/dts/imx6dl-gw5912.dts            |  13 +
+ arch/arm/boot/dts/imx6dl-gw5913.dts            |  14 +
+ arch/arm/boot/dts/imx6q-gw5907.dts             |  14 +
+ arch/arm/boot/dts/imx6q-gw5910.dts             |  14 +
+ arch/arm/boot/dts/imx6q-gw5912.dts             |  13 +
+ arch/arm/boot/dts/imx6q-gw5913.dts             |  14 +
+ arch/arm/boot/dts/imx6qdl-gw5907.dtsi          | 399 ++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw5910.dtsi          | 491 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw5912.dtsi          | 461 +++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw5913.dtsi          | 348 ++++++++++++++++++
+ 14 files changed, 1858 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5910.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5912.dts
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5913.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5910.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5912.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5913.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5910.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5912.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5913.dtsi
+
+-- 
+2.9.2
+
