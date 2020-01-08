@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AD8C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0B5C00523
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965F520705
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A046F20720
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 05:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jfjo+Fag"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KZ2Fr1SI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725774AbgAHFYF (ORCPT
+        id S1726439AbgAHFYI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 00:24:05 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39434 "EHLO
+        Wed, 8 Jan 2020 00:24:08 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35701 "EHLO
         mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgAHFYF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 00:24:05 -0500
-Received: by mail-pj1-f66.google.com with SMTP id t101so559773pjb.4
-        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 21:24:05 -0800 (PST)
+        with ESMTP id S1726637AbgAHFYH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 00:24:07 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s7so566671pjc.0
+        for <devicetree@vger.kernel.org>; Tue, 07 Jan 2020 21:24:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VXWKPtv3cxE8lSp3PQIY49x0a4P+s/RHd/rRix+wGzg=;
-        b=Jfjo+Faggwo7DaWWKVmhC7/00Vvhz+MTRYNmhAKQYX1HCOP3EYR8Lin5NwFPnmhjMY
-         4+Fb5Qu0e1wDWqALzow5cVbQpRrmDtK6+s0MWVLSCLeAn/oBigTNqV6pS0G3uvjzNP7g
-         ZOYd16bXAfTR+SPI/3E9hzT5bBEzHfFjf0IP8=
+        bh=GZPi5S7C9JBOvDvG9rs8XlkVI4VOHpLwCsMiOaYI8o4=;
+        b=KZ2Fr1SIWZOlOI/MInwohmz1Hb6Xx7Tq+QTxkCat51I7DcfFdbynSqAxDlo/ZrmAzy
+         bzYx04hvPnPCCny7HlSE8qtcQ54XXy3skRRoKWw/srh/+NPKZBDJmkfK0r32EhMKP8As
+         Ki1O01CCcGhKnBDTGVZ2lIeuDq9nZ6XwreZMY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VXWKPtv3cxE8lSp3PQIY49x0a4P+s/RHd/rRix+wGzg=;
-        b=QgRpT8V4+GxT9BxQdUupC+Hk9irqVE0KLKkFRIbWE0zjUIaXLCludQ9VdOhoKGF1iG
-         vNwwJzJBbkpzEj5Us8+fAwCqUKuHUur+iu7/iZS4fRj1/51xnMe7eSJKHjX6Bf2JOtOG
-         REtRrX6PasaBAocP0cNlHjafPYT5v/6wGq4jEbHIwKGvEXHDmDWCGqlU4C+JHgFAzUyR
-         72MrjBX5EqJvC+1w1RFu2OsCVLKE0MfzhA2ePT50inuAHAD8UcWIqYK9cggji/bEV1wt
-         ioi49hoeVojBBjXFoTBX8Qal6mCJIV5XAfppT3VRlDB5i9n4Pe4TzMVOGjjvyoGXCCyS
-         4fbA==
-X-Gm-Message-State: APjAAAWbQjK+hGPZGMQVxUNlyKvp6i/MgoL3lly7CJZUUJC9NP/GAepx
-        hIcA7P0sWP9qDp3aWN5rh3wtRw==
-X-Google-Smtp-Source: APXvYqyHC+8oOSDbkbTqCwSPnXshCUeDVww8reRuLxI2n62N7ExPieyrDCDC2ipIyCqYctUkgXWJYA==
-X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr2510426pjc.9.1578461044170;
-        Tue, 07 Jan 2020 21:24:04 -0800 (PST)
+        bh=GZPi5S7C9JBOvDvG9rs8XlkVI4VOHpLwCsMiOaYI8o4=;
+        b=FdX0MzeJi3zQMWUDhVmS58okfICWRG08VMF5J8qN+Sm/ceieaNgO4RjxUgicUd4PlM
+         I3EDaRjszHgD0q5OebeAM5U7racNZGdBWMWFSgYzueiTdmrJd9QrL7n7DCoYOmkcMf4a
+         P18dVVVXwJOPSicKay/2j4AldUheM5Cqky1+zCoL+1gXJG8CPDr+kBtO2eYTFZxfZ1q1
+         nNL3ubJbhQmVi/CXxeiFKBOLvfqPKsSKoJQ1U9Bt/7H91ZYh5jCVrOorg+oj9iK+zxlw
+         atsULNWUledB9P/Wa6XGUDBy5jV2mll/+I4tSWmFFFZacvaw7Ahm6EYS4MJMsMosxVdL
+         F8QA==
+X-Gm-Message-State: APjAAAUfsAMcB0eCn9SF01kmq/HpF9mTDlThBcYCLI8uliALR1llIymP
+        vo+b0tbWGe+CppYsfNtmZtoE+w==
+X-Google-Smtp-Source: APXvYqyXscgEKtXSz2fpP6ePSqF6Ze4O7OI5VBeA+RFqRdvOMivOeOELOfMM09JM7WNsSJ6itelcsA==
+X-Received: by 2002:a17:90a:d789:: with SMTP id z9mr2508178pju.5.1578461047043;
+        Tue, 07 Jan 2020 21:24:07 -0800 (PST)
 Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id n24sm387505pff.12.2020.01.07.21.24.01
+        by smtp.gmail.com with ESMTPSA id n24sm387505pff.12.2020.01.07.21.24.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jan 2020 21:24:03 -0800 (PST)
+        Tue, 07 Jan 2020 21:24:06 -0800 (PST)
 From:   Nicolas Boichat <drinkcat@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -65,9 +65,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: [PATCH v2 3/7] drm/panfrost: Improve error reporting in panfrost_gpu_power_on
-Date:   Wed,  8 Jan 2020 13:23:33 +0800
-Message-Id: <20200108052337.65916-4-drinkcat@chromium.org>
+Subject: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator for the GPU
+Date:   Wed,  8 Jan 2020 13:23:34 +0800
+Message-Id: <20200108052337.65916-5-drinkcat@chromium.org>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20200108052337.65916-1-drinkcat@chromium.org>
 References: <20200108052337.65916-1-drinkcat@chromium.org>
@@ -78,54 +78,65 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-It is useful to know which component cannot be powered on.
+Some GPUs, namely, the bifrost/g72 part on MT8183, have a second
+regulator for their SRAM, let's add support for that.
 
 Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-
 ---
+ drivers/gpu/drm/panfrost/panfrost_device.c | 21 +++++++++++++++++++++
+ drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-Was useful when trying to probe bifrost GPU, to understand what
-issue we are facing.
----
- drivers/gpu/drm/panfrost/panfrost_gpu.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-index 8822ec13a0d619f..ba02bbfcf28c011 100644
---- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-@@ -308,21 +308,26 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
- 	gpu_write(pfdev, L2_PWRON_LO, pfdev->features.l2_present);
- 	ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
- 		val, val == pfdev->features.l2_present, 100, 1000);
-+	if (ret)
-+		dev_err(pfdev->dev, "error powering up gpu L2");
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+index 238fb6d54df4732..a0b0a6fef8b4e63 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.c
++++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+@@ -102,12 +102,33 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
+ 		return ret;
+ 	}
  
- 	gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
--	ret |= readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
-+	ret = readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
- 		val, val == pfdev->features.stack_present, 100, 1000);
-+	if (ret)
-+		dev_err(pfdev->dev, "error powering up gpu stack");
- 
- 	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
--	ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
-+	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
- 		val, val == pfdev->features.shader_present, 100, 1000);
-+	if (ret)
-+		dev_err(pfdev->dev, "error powering up gpu shader");
- 
- 	gpu_write(pfdev, TILER_PWRON_LO, pfdev->features.tiler_present);
--	ret |= readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
-+	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
- 		val, val == pfdev->features.tiler_present, 100, 1000);
--
- 	if (ret)
--		dev_err(pfdev->dev, "error powering up gpu");
-+		dev_err(pfdev->dev, "error powering up gpu tiler");
++	pfdev->regulator_sram = devm_regulator_get_optional(pfdev->dev, "sram");
++	if (IS_ERR(pfdev->regulator_sram)) {
++		ret = PTR_ERR(pfdev->regulator_sram);
++		dev_err(pfdev->dev, "failed to get SRAM regulator: %d\n", ret);
++		goto err;
++	}
++
++	if (pfdev->regulator_sram) {
++		ret = regulator_enable(pfdev->regulator_sram);
++		if (ret < 0) {
++			dev_err(pfdev->dev,
++				"failed to enable SRAM regulator: %d\n", ret);
++			goto err;
++		}
++	}
++
+ 	return 0;
++
++err:
++	regulator_disable(pfdev->regulator);
++	return ret;
  }
  
- void panfrost_gpu_power_off(struct panfrost_device *pfdev)
+ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+ {
+ 	regulator_disable(pfdev->regulator);
++	regulator_disable(pfdev->regulator_sram);
+ }
+ 
+ int panfrost_device_init(struct panfrost_device *pfdev)
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+index 06713811b92cdf7..a124334d69e7e93 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.h
++++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+@@ -60,6 +60,7 @@ struct panfrost_device {
+ 	struct clk *clock;
+ 	struct clk *bus_clock;
+ 	struct regulator *regulator;
++	struct regulator *regulator_sram;
+ 	struct reset_control *rstc;
+ 
+ 	struct panfrost_features features;
 -- 
 2.24.1.735.g03f4e72817-goog
 
