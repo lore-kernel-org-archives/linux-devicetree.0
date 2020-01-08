@@ -2,105 +2,99 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CC7C282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 17:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B767C282DD
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A6C3206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 17:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671EA20705
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 17:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T/HyNHaq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LTssbe7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgAHR3i (ORCPT
+        id S1729089AbgAHRsP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 12:29:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43202 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727794AbgAHR3i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 12:29:38 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x6so1949479pfo.10
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 09:29:38 -0800 (PST)
+        Wed, 8 Jan 2020 12:48:15 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:46917 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729052AbgAHRsP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 12:48:15 -0500
+Received: by mail-vk1-f195.google.com with SMTP id u6so1186275vkn.13
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 09:48:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mMwd4GY7WpoUd+q3WHc05cOMnEtzmKmuiR4/lw/Ya3g=;
-        b=T/HyNHaq9e8cbQVUreQfu5gRUOxAEtP7KBnGPK4VG1izDsBIXfErCDkAzoODEWAKfT
-         KmVRs7if9s79Hw4/IRFF7llVxAHbrvpIH1e5fKl5V0cerMK08L5hixYimJYXzQig4pB4
-         ihttQxAnVdGv3/7gXuOM7it2XnqHJCQwIkoIc=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6fjeBXfdA5v8j8/xbcj6l8Tou8rGGc9L+qfhjRz0QRI=;
+        b=LTssbe7xKtfJVDgsmMn2w88kRfx17N272Mz1utTbhfsLCjMFjPKI/5jq1OVsGaqA/q
+         XdMmhJqxW1e83ABFojZyXrW0egWKzCycXb0O62a+JoAHeY5Xx8k6d+4OXPTQq+lexwaq
+         twnq+XxLCP5A58S4nIVyd5jdb6MYrvhrtWTf8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mMwd4GY7WpoUd+q3WHc05cOMnEtzmKmuiR4/lw/Ya3g=;
-        b=DublmyUrwspfnprgwj/4dtl//X7cNyVu77X6coBLIUCABW9qKi+5RSJN6aMpiayl8s
-         UmAZZZDLkmjcC+KKJFMhupdF2NUYzwAlXo1SsXBMfKwX6nVTV0CFHkwqNC+li1bLZ+F3
-         lGVsTKSTki0sQb4qxPUNFaWUH8OX6KR90N8Y9Qlf4/eHOalu2LutCTvhsuTzOvRm8ZyT
-         noY/8yE93ghIsPPnXwR9hdPbVAnTDaxQlvCJr52Q9qSKJml/6FiMGkM98JHYqSz15d0c
-         2cM0TgmLCMx2oO2CECbOL6LHgRcoo9Zh22SfJy2kIohrHLHqPvxEKAgkju0wuJH6eRCr
-         5sZA==
-X-Gm-Message-State: APjAAAUw/AnyyYgTeaOWW5aayy5j3+lA4Q2lCIDPSF09MNl9lxmw+Ec4
-        rmQAslVeRvG8KW0rMgrMub5Lpg==
-X-Google-Smtp-Source: APXvYqw0OvKMBstXlwLxuisnD8Yf1k/xKZ1PL3f/l7d7MkDcdEYGfVApur48bGpdfK8DooEJJ6BlMw==
-X-Received: by 2002:a62:7c58:: with SMTP id x85mr6263307pfc.76.1578504577924;
-        Wed, 08 Jan 2020 09:29:37 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id i4sm4464144pgc.51.2020.01.08.09.29.37
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6fjeBXfdA5v8j8/xbcj6l8Tou8rGGc9L+qfhjRz0QRI=;
+        b=FJBFjKkqB9s+QUOXJ6BA6V7RJ4ZaX9LNaWtcVkwakw/nGoIIvfeP5VC5uTgF1+3QQX
+         o/zSHLQMMS033Bqyqzoq2ByTkqmLxv9Oh9G9Doaz6oMxDcteI2+oBRV8hK1Yb5xdXKpF
+         LWVLXeVDpeBWBgYRs3c1auQyGmv/dgPUqKPCe5Ni6CCR/dbEWZTwPJcqwmimd/bdYb+/
+         gRZJ3KMpQ+68rVvpQdrK1awaIp6dYbLLFjO0fBJ08GpMRlJReL70RhsGj306bcAgrj5r
+         a1aK5z1ZWSCbn3DOciSDa1PRk+joPTBh39DDgDw1Ftiu5GSxKpaCDm6RPI3Bw79PG1u9
+         nehQ==
+X-Gm-Message-State: APjAAAUuojNURdw8N1lOPFQoPMNLlwrQ1qakbkpgZaKyxxFuP4vRGFhT
+        jMMvh4q4So+E9Zr/ZrjWA4l51ZXpQ9g=
+X-Google-Smtp-Source: APXvYqyTNrodS0TlQ5utUFZMu/sZc6HZStDn+qK3phMxPfatRrLWcCkr+b/WxSO4kvLgbzVOUsGT8A==
+X-Received: by 2002:a1f:5fc1:: with SMTP id t184mr4056817vkb.57.1578505693691;
+        Wed, 08 Jan 2020 09:48:13 -0800 (PST)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id x9sm998237vsf.7.2020.01.08.09.48.12
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Jan 2020 09:29:37 -0800 (PST)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-rockchip@lists.infradead.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] ARM: dts: rockchip: Use ABI name for recovery mode pin on veyron fievel/tiger
-Date:   Wed,  8 Jan 2020 09:29:33 -0800
-Message-Id: <20200108092908.1.I3afd3535b65460e79f3976e9ebfa392a0dd75e01@changeid>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+        Wed, 08 Jan 2020 09:48:12 -0800 (PST)
+Received: by mail-vs1-f42.google.com with SMTP id x123so2431198vsc.2
+        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 09:48:12 -0800 (PST)
+X-Received: by 2002:a67:e342:: with SMTP id s2mr1091753vsm.198.1578505692418;
+ Wed, 08 Jan 2020 09:48:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200108092908.1.I3afd3535b65460e79f3976e9ebfa392a0dd75e01@changeid>
+In-Reply-To: <20200108092908.1.I3afd3535b65460e79f3976e9ebfa392a0dd75e01@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 8 Jan 2020 09:48:00 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WFCjzRGv=8C-LU9O+fRi_C6E6zuyM7SyAX7CWx=wHnGw@mail.gmail.com>
+Message-ID: <CAD=FV=WFCjzRGv=8C-LU9O+fRi_C6E6zuyM7SyAX7CWx=wHnGw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: Use ABI name for recovery mode pin on
+ veyron fievel/tiger
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The recovery mode pin is currently named 'REC_MODE_L', which is
-how the signal is called in the schematics. The Chrome OS ABI
-requires the pin to be named 'RECOVERY_SW_L', which is also how
-it is called on all other veyron devices. Rename the pin to match
-the ABI.
+Hi,
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-Another misnamed pin, I should have noticed when fixing the
-name of the write protect pin ...
+On Wed, Jan 8, 2020 at 9:29 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> The recovery mode pin is currently named 'REC_MODE_L', which is
+> how the signal is called in the schematics. The Chrome OS ABI
+> requires the pin to be named 'RECOVERY_SW_L', which is also how
+> it is called on all other veyron devices. Rename the pin to match
+> the ABI.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Another misnamed pin, I should have noticed when fixing the
+> name of the write protect pin ...
 
- arch/arm/boot/dts/rk3288-veyron-fievel.dts | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+...and I should have noticed when reviewing.  Sorry about that.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-fievel.dts b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-index 2d6f32b77821b8..9f4bb5d2e7d8dd 100644
---- a/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-fievel.dts
-@@ -234,7 +234,11 @@
- 			  "PHY_PMEB",
- 
- 			  "PHY_INT",
--			  "REC_MODE_L",
-+			  /*
-+			   * RECOVERY_SW_L is Chrome OS ABI.  Schematics call
-+			   * it REC_MODE_L.
-+			   */
-+			  "RECOVERY_SW_L",
- 			  "OTP_OUT",
- 			  "",
- 			  "USB_OTG_POWER_EN",
--- 
-2.24.1.735.g03f4e72817-goog
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
