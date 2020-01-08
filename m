@@ -2,59 +2,60 @@ Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E5CC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1A7C33CA6
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F027C2067D
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763232146E
+	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 16:22:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h8knQN1o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sxgseL/7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgAHQWQ (ORCPT
+        id S1729246AbgAHQWX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 11:22:16 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40782 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbgAHQWQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:22:16 -0500
-Received: by mail-wr1-f65.google.com with SMTP id c14so4020884wrn.7;
-        Wed, 08 Jan 2020 08:22:13 -0800 (PST)
+        Wed, 8 Jan 2020 11:22:23 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50209 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729422AbgAHQWX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 11:22:23 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so3144703wmb.0;
+        Wed, 08 Jan 2020 08:22:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cUbkapGV6usokmQ+FjkB5jOvk1qHqcO9wl6AKNn00Nk=;
-        b=h8knQN1o2rUkXrs6cmqV6R0pZjpNIqTB7V3oR6JagTvF2BpOTk33TgZQ2VL93ruQ7P
-         NNtDsRaibXPh7F02dYHtJ23M3Y3TC1viY/GMDwFXVwsH7Drp2dVaq+ui+IOEhKqEWxww
-         RkI1XxZjkJLPRpBc3L41n30oe3o1GEAs4M3Vf0C9LFw4uYItxRTiYzLwTXE8YL6e6lF7
-         ejW2UtnyvBVNEuAw3RGFEgpsA20udS2bYVFlzlOWNZ6OhFIWCLIfEayHqXthpZXu3lfl
-         ruevaOxPDyQiiiDNRjoGGGj4DGK0ynXBLEITcvzszreVeWlDIGmLWGx9Dl8JZK2FYWcR
-         rrxA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aBpKzW0DysSlCqpBbIOQ7IwtG+vQDqbV9o/9aw4xq+E=;
+        b=sxgseL/7cesCABwZJ1lkUkZMf3g+t22y92wXapWpsRzLZPLcJgG758dCEJjCtnHIFb
+         385Bw00mjiXslrxf0PJPtvPoAWbCeB28o+pu98WujS7hgyYHpc47909CrM1A6D8KQCON
+         3mN8IOPrKDfpigRHDlZXQQY8/7CJ7U6zz2pURwZdf18xO84Sy9DaIdxTq7RiH303ZBm6
+         2Z1xvuoZxr1uAFbLyF9kJKzwfzs/RvwepZguHuw0YhbWbJnm9aoF9pCzQWXS+0/vznVf
+         82y1A5IcIvlC6ojD66Seq9zwPgSKvNpm6p1NYOf4NPFLnFJkyGBYRbOwZ4oy7GPM8vZa
+         XWDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cUbkapGV6usokmQ+FjkB5jOvk1qHqcO9wl6AKNn00Nk=;
-        b=nkDqtskOAfVkvyShgRwxCXv+owi2GHE//gTa7CCDDPLnruO8InaXQZ4rE1ejbyhclv
-         +oV1DM5gjRhppxMKCknUjq/VkoIudrTTrDk+2q42Ef8g4+iqisxt+lZ1twqRgPA7bzzd
-         +A5LmZ6LYtK0NYTy6o+gKOq9uMljaOhVWNlnViMiwQPVQJU3nJw5c684ZC5Q2QpHUP19
-         hvEt9lkRNVeCvy3UKpWEUQ9ejFs6Y1fsiqsZ3zfbrvDdFJwcXskcEDeHPwOmWOG21Pb1
-         A0Wn77qixXvKEwVoFUDTnWp7Pnjdso3pv5FI4l5JZXOpNi3kEIMadWm3/UR85ERDe6uq
-         zHHA==
-X-Gm-Message-State: APjAAAWYIKLIiegsRceJUZwGVTQfDPc5ru9Tdib8JE/kZvfr+0QBwWC/
-        b6hyDtttjtftfwb8MIHT0E0=
-X-Google-Smtp-Source: APXvYqwhZnXB7Q+A6al2Q81sPowDetau5NML4GV6kVoXXoSM8NYtMGUCa8Dyubp6uMZAvSBs3Fp6EA==
-X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr5761235wrx.304.1578500533082;
-        Wed, 08 Jan 2020 08:22:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aBpKzW0DysSlCqpBbIOQ7IwtG+vQDqbV9o/9aw4xq+E=;
+        b=enbNPyWZR28wjr8gs3PqIWQKcwBEHSEDeEAcOx+ZxBTD/qzw82W3mYu1RheBmZDAmu
+         1YiVLPjTlk5snRNOvQpNlsArzEtjLOAbhEFaLJHVRabrCYuk/hT5kEmloCYysHN9hRV7
+         dERLrRwZd9PX1L20UAkXNHTtpyHfzTXWTobcoV1sfHRkwMfNYccXKWt5KZs+EI3IIXPO
+         zUHVKWOS/cFfAE3m5jWYrVP5/7eZJtaaU5eXWMPquAV+/OJn/Tzm4ETpHgDLOXmxynrN
+         n5aLVn9DqSTE9R8uQi/6TBdtv8HVaeFQE5m5AcmzPu9GXQNfQEEEX6Ed1OP84Ba/YG3O
+         hv8Q==
+X-Gm-Message-State: APjAAAUknstc08nGabOKB85Kv79QxFlAkf/SPZ9dri0iXcuxZRT8dUWD
+        mFPgZ/whfNcXaJcw4+9MbKo=
+X-Google-Smtp-Source: APXvYqxwsO4hRnwBU4qNvNBYudqrLRYtxXPrDL2K47Q4rMNDd8IDSR95WAp82oBtVNj39288uOZ/1w==
+X-Received: by 2002:a1c:6588:: with SMTP id z130mr4941894wmb.0.1578500540987;
+        Wed, 08 Jan 2020 08:22:20 -0800 (PST)
 Received: from prasmi.home ([2a00:23c6:d18:6d00:2811:8b65:294e:fa09])
-        by smtp.gmail.com with ESMTPSA id q3sm5112180wrn.33.2020.01.08.08.22.11
+        by smtp.gmail.com with ESMTPSA id q3sm5112180wrn.33.2020.01.08.08.22.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 08:22:12 -0800 (PST)
+        Wed, 08 Jan 2020 08:22:20 -0800 (PST)
 From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -85,10 +86,12 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Heiko Stuebner <heiko@sntech.de>,
         linux-rockchip@lists.infradead.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [v3 0/6] Add support for PCIe controller to work in endpoint mode on R-Car SoCs
-Date:   Wed,  8 Jan 2020 16:22:05 +0000
-Message-Id: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [v3 6/6] misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
+Date:   Wed,  8 Jan 2020 16:22:11 +0000
+Message-Id: <20200108162211.22358-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -96,169 +99,35 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series adds support for PCIe controller on rcar to work in
-endpoint mode, this also extends the epf framework to handle base region
-for mapping PCI address locally..
+Add RZ/G2E in pci_device_id table so that pci-epf-test can be used for
+testing PCIe EP in RZ/G2E.
 
-Note:
-The cadence/rockchip/designware endpoint drivers are build tested only.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/misc/pci_endpoint_test.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes for v3:
-1] Fixed review comments from Bjorn and Kishon.
-3] Converted to DT schema
-
-Changes for v2:
-1] Fixed review comments from Biju for dt-bindings to include an example
-   for a tested platform.
-2] Fixed review comments from Kishon to extend the features of outbound
-   regions in epf framework.
-3] Added support to parse outbound-ranges in OF.
-
-lspci output on host:
-=====================
-
-01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
-        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-        Latency: 0
-        Interrupt: pin A routed to IRQ 152
-        Region 0: Memory at fe200200 (64-bit, non-prefetchable) [size=128]
-        Region 2: Memory at fe200000 (64-bit, non-prefetchable) [size=256]
-        Region 4: Memory at fe200100 (64-bit, non-prefetchable) [size=256]
-        Capabilities: [40] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-                Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-        Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
-                Address: 00000004fa36d000  Data: 0001
-                Masking: fffffffe  Pending: 00000000
-        Capabilities: [70] Express (v2) Endpoint, MSI 00
-                DevCap: MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
-                        ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 0.000W
-                DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
-                        RlxdOrd- ExtTag+ PhantFunc- AuxPwr- NoSnoop+
-                        MaxPayload 128 bytes, MaxReadReq 128 bytes
-                DevSta: CorrErr+ UncorrErr+ FatalErr- UnsuppReq+ AuxPwr- TransPend-
-                LnkCap: Port #0, Speed 5GT/s, Width x1, ASPM L0s, Exit Latency L0s unlimited
-                        ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-                LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
-                        ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-                LnkSta: Speed 5GT/s, Width x1, TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
-                DevCap2: Completion Timeout: Not Supported, TimeoutDis+, LTR-, OBFF Not Supported
-                         AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-                DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
-                         AtomicOpsCtl: ReqEn-
-                LnkCtl2: Target Link Speed: 5GT/s, EnterCompliance- SpeedDis-
-                         Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-                         Compliance De-emphasis: -6dB
-                LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
-                         EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
-        Capabilities: [100 v1] Virtual Channel
-                Caps:   LPEVC=0 RefClk=100ns PATEntryBits=1
-                Arb:    Fixed- WRR32- WRR64- WRR128-
-                Ctrl:   ArbSelect=Fixed
-                Status: InProgress-
-                VC0:    Caps:   PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-                        Arb:    Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-                        Ctrl:   Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-                        Status: NegoPending- InProgress-
-        Kernel driver in use: pci-endpoint-test
-
-BAR Test
-========
-root@g2e:~# pcitest -b 0
-BAR0:           OKAY
-root@g2e:~# pcitest -b 1
-BAR1:           NOT OKAY
-root@g2e:~# pcitest -b 2
-BAR2:           OKAY
-root@g2e:~# pcitest -b 3
-BAR3:           NOT OKAY
-root@g2e:~# pcitest -b 4
-BAR4:           OKAY
-root@g2e:~# pcitest -b 5
-BAR5:           NOT OKAY
-
-Note: BAR test for 1/3/5 fail because they are configured to be 64bits
-
-Interrupt Test
-==============
-root@g2e:~# pcitest -i 0
-SET IRQ TYPE TO LEGACY:         OKAY
-root@g2e:~# pcitest -l
-LEGACY IRQ:     OKAY
-
-Read Test
-=========
-root@g2e:~# pcitest -r -s 1
-READ (      1 bytes):           OKAY
-root@g2e:~# pcitest -r -s 1024
-READ (   1024 bytes):           OKAY
-root@g2e:~# pcitest -r -s 1025
-READ (   1025 bytes):           OKAY
-root@g2e:~# pcitest -r -s 1024000
-READ (1024000 bytes):           OKAY
-root@g2e:~# pcitest -r -s 1024001
-READ (1024001 bytes):           OKAY
-
-Write Test
-==========
-root@g2e:~# pcitest -w -s 1
-WRITE (      1 bytes):          OKAY
-root@g2e:~# pcitest -w -s 1024
-WRITE (   1024 bytes):          OKAY
-root@g2e:~# pcitest -w -s 1025
-WRITE (   1025 bytes):          OKAY
-root@g2e:~# pcitest -w -s 1024000
-WRITE (1024000 bytes):          OKAY
-root@g2e:~# pcitest -w -s 1024001
-WRITE (1024001 bytes):          OKAY
-
-Copy Test
-=========
-root@g2e:~# pcitest -c -s 1
-COPY (      1 bytes):           OKAY
-root@g2e:~# pcitest -c -s 1024
-COPY (   1024 bytes):           OKAY
-root@g2e:~# pcitest -c -s 1025
-COPY (   1025 bytes):           OKAY
-root@g2e:~# pcitest -c -s 1024000
-COPY (1024000 bytes):           OKAY
-root@g2e:~# pcitest -c -s 1024001
-COPY (1024001 bytes):           OKAY
-
-
-Lad Prabhakar (6):
-  PCI: rcar: Preparation for adding endpoint support
-  PCI: rcar: Fix calculating mask for PCIEPAMR register
-  PCI: endpoint: Add support to handle multiple base for mapping
-    outbound memory
-  dt-bindings: PCI: rcar: Add bindings for R-Car PCIe endpoint
-    controller
-  PCI: rcar: Add support for rcar PCIe controller in endpoint mode
-  misc: pci_endpoint_test: Add Device ID for RZ/G2E PCIe controller
-
- .../devicetree/bindings/pci/rcar-pci-ep.yaml  |   76 +
- arch/arm64/configs/defconfig                  |    2 +-
- drivers/misc/pci_endpoint_test.c              |    3 +
- drivers/pci/controller/Kconfig                |   11 +-
- drivers/pci/controller/Makefile               |    3 +-
- .../pci/controller/cadence/pcie-cadence-ep.c  |   12 +-
- .../pci/controller/dwc/pcie-designware-ep.c   |   31 +-
- drivers/pci/controller/pcie-rcar-ep.c         |  497 +++++++
- drivers/pci/controller/pcie-rcar-host.c       | 1044 ++++++++++++++
- drivers/pci/controller/pcie-rcar.c            | 1232 +----------------
- drivers/pci/controller/pcie-rcar.h            |  132 ++
- drivers/pci/controller/pcie-rockchip-ep.c     |   14 +-
- drivers/pci/endpoint/functions/pci-epf-test.c |   29 +-
- drivers/pci/endpoint/pci-epc-core.c           |    7 +-
- drivers/pci/endpoint/pci-epc-mem.c            |  199 ++-
- include/linux/pci-epc.h                       |   46 +-
- 16 files changed, 2064 insertions(+), 1274 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
- create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
- create mode 100644 drivers/pci/controller/pcie-rcar-host.c
- create mode 100644 drivers/pci/controller/pcie-rcar.h
-
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index a5e317073d95..3c84e9a98a05 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -66,6 +66,8 @@
+ 
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
+ 
++#define PCI_DEVICE_ID_RENESAS_RZG2E		0x002d
++
+ #define is_am654_pci_dev(pdev)		\
+ 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
+ 
+@@ -797,6 +799,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
+ 	},
++	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_RZG2E) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
 -- 
 2.20.1
 
