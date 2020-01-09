@@ -2,192 +2,123 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30401C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3698CC32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06D23206ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12CC1206ED
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgAIHHW (ORCPT
+        id S1728132AbgAIHLE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:07:22 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44355 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgAIHHW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 02:07:22 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ipRuR-00076j-6t; Thu, 09 Jan 2020 08:07:11 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ipRuO-0005HR-BR; Thu, 09 Jan 2020 08:07:08 +0100
-Date:   Thu, 9 Jan 2020 08:07:08 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        jacopo+renesas@jmondi.org, laurent.pinchart@ideasonboard.com,
-        kernel@pengutronix.de, hans.verkuil@cisco.com, mchehab@kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v11 04/15] media: v4l2-fwnode: add initial connector
- parsing support
-Message-ID: <20200109070708.arel6nepqs5ucl7b@pengutronix.de>
-References: <20190930093900.16524-1-m.felsch@pengutronix.de>
- <20190930093900.16524-5-m.felsch@pengutronix.de>
- <20191115233439.GB2696@mara.localdomain>
- <20200108153626.we3zasacpriksczs@pengutronix.de>
+        Thu, 9 Jan 2020 02:11:04 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:51887 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgAIHLE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 02:11:04 -0500
+Received: from localhost ([31.212.60.142]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MfZDK-1jMIjo396O-00fwpo; Thu, 09 Jan 2020 08:10:48 +0100
+Date:   Thu, 9 Jan 2020 08:10:47 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     jic23@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, rpi-receiver@htl-steyr.ac.at,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: devantech-srf04.yaml: add pm feature
+Message-ID: <20200109071047.GA3043@arbad>
+References: <20200102172749.v7ufupd32ytf7jda@arbad>
+ <20200108165813.GA4472@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108153626.we3zasacpriksczs@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:58:36 up 54 days, 22:17, 46 users,  load average: 0.00, 0.04,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200108165813.GA4472@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:n4ntl9gVhdsv+OwVdqknKL8TANkqMYHfUGVQTP0bv2p2PAA85Nl
+ 7iPPMgwkQ8uapwU5YKMJMWeuMFow089H1U2dy4bbZYVKrD6YVVQiPQ8NE8akssYB0Wc4G6m
+ /0Zoa31ALt+49KlkgDgDQfwXa2+/WIYOe05+EXL+BA4BM2wS8WwVO0PJBu5TplSPHE3ANbi
+ OLP57Mv1jWP1FysrPyq2g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lCCLisCEUrs=:9ZKaN92OPR8/Y54hM9jcRH
+ s6joxY0YtizkvP4rarCGq9I2q7vo2TBU1xkW7B9VT7FrjNiqcVTt9jFc+N08reBHNT1yTYKHT
+ /k6QzzufTMrto4INolpHzGtBjexDN2WbDN9wL4HnR1tJ/3RNwDWcwDXSF2Rn6muEkbKL/B1wk
+ oAYU4CgLMOfZro3YT5WL1EbRUnzTlihW2mInt7tuLuxua1eAUP92xR5oLRnaSUOSAAVJoNDpi
+ WJOZUTg6WSwZsZQPCCMuUxb/19bIRt7JGV9a4ewAU4ZTKvVVf6n0n2DqgtFR7ZegSmwNuDqPv
+ wvLI9hqCR7Qk+txMSIXRrOWYUHgiGnJ3wiMYC8hLD5HqOKHlGWT7FaACmlH92R5Ky6Z4jUwbG
+ Z8+UKbSVQacz0XO9vxN7NmA49UfA+/E2u2ixrwYqtkVj8iZgrU/lkLNtTUn4iN5OADSK0qEWT
+ BlVWwtvUkPM4m16HViwclJY6PYX/KwFvmXJ5g0XGsi1MANJAZ/GfYlByofgzS8SHFN/JUEIA4
+ iOesEasQXMMXlzkr8Mnkl3obWZmo+hRD2FNtO8Zpae3OqcCK51TNWTqF5FA0tT7LNsvXu6Ofb
+ 1EFQiXIbcZGn9vZPVyVqTIVtsksxFuErXxwvy8ENxnGiRtkNaSSDny6J8mxQq4c/s3g11F+Y5
+ 9wqnoI21A0a0xDzYE2KJfX+37lJzrnlSQr0c4mE95VnUVZO5Bzk2U+U9c78vJkBjtvdhVuais
+ U/eZRhZLcUz0qO2NhZ9RE4wxgHYz/hIIGi10ANNQaLQu2XjJP9+oM/ThtHRhRr/GQRo32AzuK
+ EceoU0RQuz3jLy7pbbjUqkY/sVpl79f7KS6KSOWcAvKCp8GeC2QBqV/EJ0GGGJFSta9K57o3+
+ Bs3moFz3Ibf0QuU8z9Tw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Rob,
 
-just a few questions about the below helper.
+see below.
 
-On 20-01-08 16:36, Marco Felsch wrote:
-> Hi Sakari,
-> 
-> On 19-11-16 01:34, Sakari Ailus wrote:
-> > Hi Marco,
+Rob Herring <robh@kernel.org> schrieb am Mi, 08. Jan 10:58:
+> On Thu, Jan 02, 2020 at 06:27:51PM +0100, Andreas Klinger wrote:
+> > Add GPIO line and startup time for usage of power management
 > > 
-> > On Mon, Sep 30, 2019 at 11:38:49AM +0200, Marco Felsch wrote:
-> 
-> ...
-> 
-> > > +int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
-> > > +				      struct v4l2_fwnode_connector *connector)
-> > > +{
-> > > +	struct fwnode_handle *remote_pp, *remote_ep;
-> > > +	const char *type_name;
-> > > +	unsigned int i = 0, ep_num = 0;
-> > > +	int err;
-> > > +
-> > > +	memset(connector, 0, sizeof(*connector));
-> > > +
-> > > +	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
-> > > +	if (!remote_pp)
-> > > +		return -ENOLINK;
-> 
-> I will align the API with the v4l2_fwnode_endpoint_alloc_parse()
-> function so the caller need to pass the connector fwnode handle.
-
-Should we really align this with v4l2_fwnode_endpoint_alloc_parse()? I
-have some concerns because this moves the step to the user. Using the
-current approach makes it easier for the user.
-
-Regards,
-  Marco
-
-> > > +
-> > > +	/* Parse all common properties first. */
-> > > +	fwnode_graph_for_each_endpoint(remote_pp, remote_ep)
-> > > +		ep_num++;
+> > Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> > ---
+> >  .../bindings/iio/proximity/devantech-srf04.yaml          | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
 > > 
-> > If there are no endpoints, ep_num will be zero and kmalloc_array() will
-> > return NULL? There should be a way there are no endpoints, rather than
-> > returning -ENOMEM.
-> > 
-> > > +
-> > > +	connector->nr_of_links = ep_num;
-> > > +	connector->links = kmalloc_array(ep_num, sizeof(*connector->links),
-> > > +					 GFP_KERNEL);
-> > > +	if (!connector->links) {
-> > > +		err = -ENOMEM;
-> > > +		goto err_put_fwnode;
-> > > +	}
-> > > +
-> > > +	fwnode_graph_for_each_endpoint(remote_pp, remote_ep) {
-> > > +		err = v4l2_fwnode_parse_link(remote_ep, &connector->links[i]);
-> > 
-> > If you start parsing a connector starting from another device connected to
-> > it, nothing seems to prevent parsing the same links twice, in case the
-> > connector is connected to more than one sub-device.
-> > 
-> > Or do I miss something crucial here?
+> > diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> > index 4e80ea7c1475..b3fcb3b79485 100644
+> > --- a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.yaml
+> > @@ -51,6 +51,22 @@ properties:
+> >        the time between two interrupts is measured in the driver.
+> >      maxItems: 1
+> >  
+> > +  power-gpios:
+> > +    description:
+> > +      Definition of the GPIO for power management of connected peripheral
+> > +      (output).
+> > +      This GPIO can be used by the external hardware for power management.
+> > +      When the device gets suspended it's switched off and when it resumes
+> > +      it's switched on again. After some period of inactivity the driver
+> > +      get suspended automatically (autosuspend feature).
+> > +    maxItems: 1
+> > +
+> > +  startup-time-ms:
 > 
-> Yes thats right but it seems that sharing connectors isn't supported at
-> all. All bridge drivers using connectors implementing the connector
-> handling by their self. Anyway, I will add a function parameter to check
-> that we parse only the endpoints connected to the calling sub-dev.
-> 
-> Regards,
->   Marco
-> 
-> > > +		if (err) {
-> > > +			fwnode_handle_put(remote_ep);
-> > > +			goto err_free_links;
-> > > +		}
-> > > +		i++;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * Links reference counting guarantees access -> no duplication needed
-> > > +	 */
-> > > +	fwnode_property_read_string(remote_pp, "label", &connector->label);
-> > > +
-> > > +	/* The connector-type is stored within the compatible string. */
-> > > +	err = fwnode_property_read_string(remote_pp, "compatible", &type_name);
-> > > +	if (err) {
-> > > +		err = -EINVAL;
-> > > +		goto err_free_links;
-> > > +	}
-> > > +	connector->type = v4l2_fwnode_string_to_connector_type(type_name);
-> > > +
-> > > +	/* Now parse the connector specific properties. */
-> > > +	switch (connector->type) {
-> > > +	case V4L2_CONN_COMPOSITE:
-> > > +	case V4L2_CONN_SVIDEO:
-> > > +		err = v4l2_fwnode_connector_parse_analog(remote_pp, connector);
-> > > +		break;
-> > > +	case V4L2_CONN_UNKNOWN:
-> > > +	default:
-> > > +		pr_err("Unknown connector type\n");
-> > > +		err = -EINVAL;
-> > > +		goto err_free_links;
-> > > +	}
-> > > +
-> > > +	fwnode_handle_put(remote_pp);
-> > > +
-> > > +	return err;
-> > > +
-> > > +err_free_links:
-> > > +	for (i = 0; i < ep_num; i++)
-> > > +		v4l2_fwnode_put_link(&connector->links[i]);
-> > > +	kfree(connector->links);
-> > > +err_put_fwnode:
-> > > +	fwnode_handle_put(remote_pp);
-> > > +
-> > > +	return err;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_alloc_parse);
-> > > +
-> 
-> 
+> Why isn't this implied by the compatible string? 
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Under the same trade name "SRF-04" there are many different sensors on the
+market which are clones of the original one from Devantech. They are equipped
+with different hardware components and they have a slightly different behavior,
+such as the startup time. 
+
+> 
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> 
+> You can drop this for standard units. 
+> 
+> 0-2^32 is valid?
+
+I can add boundaries here.
+
+> 
+> > +    description:
+> > +      This is the startup time the device needs after a resume to be up and
+> > +      running.
+> > +
+> >  required:
+> >    - compatible
+> >    - trig-gpios
+> > -- 
+> > 2.11.0
+
+Andreas
