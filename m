@@ -2,103 +2,253 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E092C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00767C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650182067D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4792073A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:47:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cKqRG0En"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Vhlsglha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgAIKnP (ORCPT
+        id S1729418AbgAIKrF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:43:15 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40587 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729454AbgAIKnB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 05:43:01 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so2244103wmi.5
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 02:43:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=1+dHq18C0bFPHtybcse9Vo/A581Ece5LU7fp8OU7MIA=;
-        b=cKqRG0EnXT/JJJfM09cUs5fipYn6nyM82sI5CTyQH86aHScCx1yQBYPyLFKjjcKU3C
-         FgWGO5HtBUpH/vNHAhStjCPGFeHHzmooHb7nw//gXz2eU+e5zlV7Zck1sOpcbd4olg0Y
-         JTHVLTfDigFQtS2VTFg7IuOaTdaOCywrcTe2CTCPb8p3z9q8R/ji9pOhJ0T1MnWWVf0W
-         DZ5yFn7f4VMNOuYkVAt3ZKLWbI1dlU3I3uqNOAFF6MVsX+FkMbuIGbUmn/7Oug3uW/3H
-         ko3Nvbm2U0klMibnOX8f1boK+KXFiZkki3AhapyQuQdD8OUkAIJMeRNStziOrZJyTUq7
-         ZRIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1+dHq18C0bFPHtybcse9Vo/A581Ece5LU7fp8OU7MIA=;
-        b=IsJNg+eBYuLE/GNzrRypmpwLrl6Ox6POsTmhPJ5G7uNH1i5qOjGarkt6o+Ck38QkTa
-         s1aG7M1imXbSR/OJ9zN3oez65AOQvusMiNhByBl1hk5+G0FA2NerzgGLfk0ClFkn6L8U
-         ig/Ya6kuUefAlgeHaAbNn5+E6bV17eLVL+5S0m8Mpj3AGMiN9kLlGNpEPJJ6qE3HtbXx
-         kRbNxQqZApT2Zz4Pj9u0qS+SL6ok8IAYsLpEs84z/3X5XSxEC1K9FtCec6/mA2c5DSNr
-         ZC6mYkqnYxg55v65jWD+BhtIpfG6Yo5KKlxfskWEXxJjxZAxN2hwxkDEXhd9wzOptz7d
-         QE1Q==
-X-Gm-Message-State: APjAAAV0ADame1dq9/J2zzMdisqTtYLgyrZsJkQ+sHIMIpMP4CNNyoEq
-        Wvi7PhdpXMZqioT8jaJEOzIkLw==
-X-Google-Smtp-Source: APXvYqx3mnWFPevVQy8vni2p9aUcio3Y6O/BSZXI7da7LcAZZVbXmt0IU4pY0bgojjO7SfvOboMA4A==
-X-Received: by 2002:a7b:c38c:: with SMTP id s12mr4068172wmj.96.1578566579791;
-        Thu, 09 Jan 2020 02:42:59 -0800 (PST)
-Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q68sm2587167wme.14.2020.01.09.02.42.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 02:42:59 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
-Cc:     johan@kernel.org, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org, khilman@baylibre.com
-Subject: [PATCH v6 0/2] add support of interrupt for host wakeup from devicetree in BCM HCI driver
-Date:   Thu,  9 Jan 2020 11:42:55 +0100
-Message-Id: <20200109104257.6942-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 Jan 2020 05:47:05 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:47702 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729431AbgAIKrF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 05:47:05 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200109104701epoutp010cb973c638a25de3951f2e551615da8d~oMikx2s--1559815598epoutp01G
+        for <devicetree@vger.kernel.org>; Thu,  9 Jan 2020 10:47:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200109104701epoutp010cb973c638a25de3951f2e551615da8d~oMikx2s--1559815598epoutp01G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578566821;
+        bh=q8vj0BcK18G8xmFgVWnFYICGZOyJli/3tcnfk3LTJ8A=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Vhlsglha3Fm/BY5NMERIOFlFGbKnYdhVjVpipaiOuL4mlVuv3qZjQmaQ+PKg17+xY
+         UKmRdiHDkRSczn8/6UP4Uzi1++NZrAt5EQZigEq4tW6H/dzmo5DuaddnRucNv9zf91
+         38lHeFfFC7jkfOTNziphBIVcDNLl1e3CfLWb6Z/A=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200109104701epcas1p29b302a54bf7ad5b1f453de9d6e965274~oMikScT0K0845108451epcas1p20;
+        Thu,  9 Jan 2020 10:47:01 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47tjVB1bSXzMqYkZ; Thu,  9 Jan
+        2020 10:46:58 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        20.0F.48498.2A4071E5; Thu,  9 Jan 2020 19:46:58 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200109104657epcas1p41d90cb9037af506897e14e15b0ed43a0~oMihCjHQe2909129091epcas1p48;
+        Thu,  9 Jan 2020 10:46:57 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200109104657epsmtrp1a2c3598f84f274456c8b5ffb4bc4a7de~oMihBp2MA0405704057epsmtrp1J;
+        Thu,  9 Jan 2020 10:46:57 +0000 (GMT)
+X-AuditID: b6c32a36-a3dff7000001bd72-29-5e1704a2a1a7
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AA.14.06569.1A4071E5; Thu,  9 Jan 2020 19:46:57 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200109104657epsmtip1cf3e05328ada9f32d7e46b8409ca6f84~oMigv4SII0075600756epsmtip1A;
+        Thu,  9 Jan 2020 10:46:57 +0000 (GMT)
+Subject: Re: [PATCH v2 02/11] PM / devfreq: Remove
+ devfreq_get_devfreq_by_phandle function
+To:     Lukasz Luba <lukasz.luba@arm.com>, robh+dt@kernel.org,
+        krzk@kernel.org, heiko@sntech.de, leonard.crestez@nxp.com
+Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <22cde618-d51e-2d4d-461e-e2d2c1b52af2@samsung.com>
+Date:   Thu, 9 Jan 2020 19:54:04 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <b9a1ebe5-e114-3a6b-6081-c794e1341329@arm.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRmVeSWpSXmKPExsWy7bCmvu4iFvE4g74OTov781oZLeYfOcdq
+        8f/Ra1aL/sevmS3On9/AbnG26Q27xYq7H1ktNj2+xmpxedccNovPvUcYLT49+M9sMeP8PiaL
+        hU0t7BZrj9xlt1h6/SKTxe3GFWwWrXuPsDsIeqyZt4bRY9OqTjaPzUvqPTa+28Hk0bdlFaPH
+        9mvzmD0+b5ILYI/KtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLx
+        CdB1y8wB+kBJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BZoFecmFtcmpeul5yf
+        a2VoYGBkClSYkJ3x4vBZpoKzyhVnJrYyNzD+ke1i5OSQEDCR2HO7hb2LkYtDSGAHo8SFj7dZ
+        IZxPjBKLljyFcr4BZbYvYIZpeXblKBtEYi+jxKmXHVD97xkl1nxYygZSJSwQI/Fx4QZWEFtE
+        oExiwp6bjCBFzAI3mCQutyxgB0mwCWhJ7H9xA6yBX0BR4uqPx4wgNq+AncSkzcvAmlkEVCR2
+        7nsEFhcVCJM4ua0FqkZQ4uTMJywgNqeAtcSr17/B6pkFxCVuPZnPBGHLSzRvnQ119il2iVkd
+        8RC2i0T/qrmsELawxKvjW9ghbCmJl/1tUHa1xMqTR8DelBDoYJTYsv8CVIOxxP6lk4EWcAAt
+        0JRYv0sfIqwosfP3XEaIvXwS7772sIKUSAjwSnS0CUGUKEtcfnCXCcKWlFjc3sk2gVFpFpJv
+        ZiH5YBaSD2YhLFvAyLKKUSy1oDg3PbXYsMAIObo3MYKTt5bZDsZF53wOMQpwMCrx8DIoicUJ
+        sSaWFVfmHmKU4GBWEuE9egMoxJuSWFmVWpQfX1Sak1p8iNEUGNgTmaVEk/OBmSWvJN7Q1MjY
+        2NjCxNDM1NBQSZyX48fFWCGB9MSS1OzU1ILUIpg+Jg5OqQZGn2uV/29Iz5SvZUlbrvWV6eJ9
+        na9cUvL3bknN2cs0f5PrYcG1089F/9/B9zk9e79h1H3D1Y52F7oNHieu8711yCtHvqY5MGvj
+        YWfR9I8H/vQKajPr8B95/Dvm49nP71KC1/DX30x4Hmh4Y+r+irB09V2v+uST66wj3m94z68q
+        538rLi0vycxTiaU4I9FQi7moOBEAnoLKzfQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsWy7bCSnO5CFvE4g9tXdCzuz2tltJh/5Byr
+        xf9Hr1kt+h+/ZrY4f34Du8XZpjfsFivufmS12PT4GqvF5V1z2Cw+9x5htPj04D+zxYzz+5gs
+        Fja1sFusPXKX3WLp9YtMFrcbV7BZtO49wu4g6LFm3hpGj02rOtk8Ni+p99j4bgeTR9+WVYwe
+        26/NY/b4vEkugD2KyyYlNSezLLVI3y6BK+PF4bNMBWeVK85MbGVuYPwj28XIySEhYCLx7MpR
+        ti5GLg4hgd2MElP/fWaGSEhKTLt4FMjmALKFJQ4fLoaoecsoMefEHiaQGmGBGImPCzewgtgi
+        AmUSm9YtZwcpYha4wSRx8PwMVoiOD4wS3d9nM4JUsQloSex/cYMNxOYXUJS4+uMxWJxXwE5i
+        0uZlYJNYBFQkdu57BBYXFQiT2LnkMRNEjaDEyZlPWEBsTgFriVevf4PVMwuoS/yZd4kZwhaX
+        uPVkPhOELS/RvHU28wRG4VlI2mchaZmFpGUWkpYFjCyrGCVTC4pz03OLDQuM8lLL9YoTc4tL
+        89L1kvNzNzGC41hLawfjiRPxhxgFOBiVeHgZlMTihFgTy4orcw8xSnAwK4nwHr0BFOJNSays
+        Si3Kjy8qzUktPsQozcGiJM4rn38sUkggPbEkNTs1tSC1CCbLxMEp1cAoxKLu+mJ/QL8pg9OO
+        oxfW//qwcGq27BTnjyx/fMQOpZ4Onhj65flN97vteSpF7kq39wUcUkqyddrsZqIrzFhUuerP
+        sQnJPTVZbJK7mz7LmJ5ewGL/42FFeX91Cv+0ne7LCzVYtNY4hGtemqvWpDPFlu/HhvrSJR38
+        z1kVFkgynA1peRO+eKYSS3FGoqEWc1FxIgAEWzda3wIAAA==
+X-CMS-MailID: 20200109104657epcas1p41d90cb9037af506897e14e15b0ed43a0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0
+References: <20191220002430.11995-1-cw00.choi@samsung.com>
+        <CGME20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0@epcas1p4.samsung.com>
+        <20191220002430.11995-3-cw00.choi@samsung.com>
+        <b9a1ebe5-e114-3a6b-6081-c794e1341329@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-add interrupts and interrupt-names properties to set host wakeup IRQ.
-actually driver find this IRQ from host-wakeup-gpios propety
-but some platforms are not supported gpiod_to_irq function.
-so to have possibility to use interrupt mode we need to add interrupts
-field in devicetree and support it in driver.
+On 1/9/20 7:37 PM, Lukasz Luba wrote:
+> Hi Chanwoo,
+> 
+> On 12/20/19 12:24 AM, Chanwoo Choi wrote:
+>> Previously, devfreq core support 'devfreq' property in order to get
+>> the devfreq device by phandle. But, 'devfreq' property name is not proper
+>> on devicetree binding because this name doesn't mean the any h/w attribute.
+>>
+>> The devfreq core hand over the right to decide the property name
+>> for getting the devfreq device on devicetree. Each devfreq driver
+>> will decide the property name on devicetree binding and then get
+>> the devfreq device by using devfreq_get_devfreq_by_node().
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>   drivers/devfreq/devfreq.c    | 35 -----------------------------------
+>>   drivers/devfreq/exynos-bus.c | 12 +++++++++++-
+>>   include/linux/devfreq.h      |  8 --------
+>>   3 files changed, 11 insertions(+), 44 deletions(-)
+>>
+>> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+>> index cb8ca81c8973..c3d3c7c802a0 100644
+>> --- a/drivers/devfreq/devfreq.c
+>> +++ b/drivers/devfreq/devfreq.c
+>> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>>         return ERR_PTR(-ENODEV);
+>>   }
+>> -
+>> -/*
+>> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
+>> - * @dev - instance to the given device
+>> - * @index - index into list of devfreq
+>> - *
+>> - * return the instance of devfreq device
+>> - */
+>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+>> -{
+>> -    struct device_node *node;
+>> -    struct devfreq *devfreq;
+>> -
+>> -    if (!dev)
+>> -        return ERR_PTR(-EINVAL);
+>> -
+>> -    if (!dev->of_node)
+>> -        return ERR_PTR(-EINVAL);
+>> -
+>> -    node = of_parse_phandle(dev->of_node, "devfreq", index);
+>> -    if (!node)
+>> -        return ERR_PTR(-ENODEV);
+>> -
+>> -    devfreq = devfreq_get_devfreq_by_node(node);
+>> -    of_node_put(node);
+>> -
+>> -    return devfreq;
+>> -}
+>> -
+>>   #else
+>>   struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>>   {
+>>       return ERR_PTR(-ENODEV);
+>>   }
+>> -
+>> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+>> -{
+>> -    return ERR_PTR(-ENODEV);
+>> -}
+>>   #endif /* CONFIG_OF */
+>>   EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
+>> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
+>>     /**
+>>    * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
+>> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+>> index 7f5917d59072..1bc4e3c81115 100644
+>> --- a/drivers/devfreq/exynos-bus.c
+>> +++ b/drivers/devfreq/exynos-bus.c
+>> @@ -86,6 +86,16 @@ static int exynos_bus_get_event(struct exynos_bus *bus,
+>>       return ret;
+>>   }
+>>   +static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
+>> +{
+>> +    struct device_node *node = of_parse_phandle(np, "devfreq", 0);
+>> +
+>> +    if (!node)
+>> +        return ERR_PTR(-ENODEV);
+>> +
+>> +    return devfreq_get_devfreq_by_node(node);
+>> +}
+>> +
+>>   /*
+>>    * devfreq function for both simple-ondemand and passive governor
+>>    */
+>> @@ -353,7 +363,7 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>>       profile->exit = exynos_bus_passive_exit;
+>>         /* Get the instance of parent devfreq device */
+>> -    parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+>> +    parent_devfreq = exynos_bus_get_parent_devfreq(dev->of_node);
+>>       if (IS_ERR(parent_devfreq))
+>>           return -EPROBE_DEFER;
+>>   
+> 
+> These changes won't apply, probably I need some base for it.
 
-change sinve v5:
-- add tags
+I developed it on devfreq-next branch[1]
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git/log/?h=devfreq-next
 
-change sinve v4 [1]:
-- add patch to update Documentation
-- use of_irq_get_byname to be more clear and move call in bcm_of_probe
-- update commit message
+And I try to apply these patchset to linux-next[2] with tags/next-20200109.
+But, patch10/11 of deviceetree has some merge conflict
+because patch[3] related to exynos-bus was merged.
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/
+[3] https://patchwork.kernel.org/cover/11303235/
+    - [v2,0/2] Exynos5422: fix bus related OPPs for Odroid XU3/XU4/HC1
 
-change since v3:
-- move on of_irq instead of platform_get_irq
+On next version, I'll rebase it on latest patches.
 
-change since v2:
-- fix commit message
+> 
+> Regards,
+> Lukasz
+> 
+> 
+> 
 
-change since v1:
-- rebase patch
-
-[1] https://lore.kernel.org/linux-bluetooth/20191213105521.4290-1-glaroque@baylibre.com/
-
-Guillaume La Roque (2):
-  dt-bindings: net: bluetooth: add interrupts properties
-  bluetooth: hci_bcm: enable IRQ capability from devicetree
-
- Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
- drivers/bluetooth/hci_bcm.c                                  | 3 +++
- 2 files changed, 6 insertions(+), 1 deletion(-)
 
 -- 
-2.17.1
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
