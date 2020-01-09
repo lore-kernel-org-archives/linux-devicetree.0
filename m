@@ -2,116 +2,162 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E71AC32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4BAC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1193D2072A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:31:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oSAFRUuI"
+	by mail.kernel.org (Postfix) with ESMTP id 0B44120673
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgAIKba (ORCPT
+        id S1729671AbgAIKhm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:31:30 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35506 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728866AbgAIKba (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 05:31:30 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z76so5500164qka.2
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 02:31:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SIH3Ne6v4PFkZV6VUGUzjoFVUhaLqB+lgrvUawjrMYc=;
-        b=oSAFRUuI/WV+Ymxkmqk+o2KoSZNYBI6zkdW782vrphCc7w6DF+HXx4WL5QcCrgPKWM
-         w8Zd/vouvnJom/empxWRyjT//3ljh5eDMjX4BoLsXZMMApwg2XAB0d21u1NeFWjdnKC3
-         NqfR7arNPf2N1W64klSU7LmQqd3JBdciWX4Li4fXnwDgI5UiPILsQ6zrMtpaFqbsTqpV
-         tDuMxNUZukDdIqFswXLJMym1lcVhhkamC87dUCGPwRslHSDiMh7/6A81uVST37sgAlJY
-         TrjuFjdzJI+b9MUPZ89sAu5kMrZpG7AqfI57rwrbSc7qKO1FNy436ko+mA33nMcLvne0
-         G3bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SIH3Ne6v4PFkZV6VUGUzjoFVUhaLqB+lgrvUawjrMYc=;
-        b=LArrqLHSnJJtw4fsx5KPNrlx1Hs0tYJITrTQBBFtg0wqM8D4uC4PLOgBrVrIpHtX83
-         SpjKHu4Le5PEZ4aVxXV+yyHZueFvp6ounWzaRqUMwS06WgF29XI1TII2rYlKxgAfW9JO
-         imfVoeQPIh6fjHElwMnJ/Bh96UycvH3jod0liWJJdxEbJ+s3BkSjzo9Lvn8pltDBzZcF
-         GP1ZzZJNjS23yTacuNnhKvr2UQPC69rm9gQgyWCua8VwpJRHxtINDLzZZYJbER5glSib
-         t0tOfed3IvBFfqpRy/iepuo4+f53fJjToMhduCg11/2TcTsJPIXm4LaitNavX81ufW0O
-         QTCw==
-X-Gm-Message-State: APjAAAVpfZKIEIhTeIFqaJqbKaji1uPyApUvBU1KyKyjmItPw3yFxJBD
-        Tj0noAH9WZR16jKxeZ7wYOijzpopN6Us6iUtR8w0pA==
-X-Google-Smtp-Source: APXvYqyuv1+zcik5Km8uc+VG5tVlFqozxu7U9959A+DWpFFqIOkOabtR5WlV1vnJUCEyIZ0zqLgdQUhYhHYvx+7h6dk=
-X-Received: by 2002:a37:6255:: with SMTP id w82mr8824719qkb.330.1578565889528;
- Thu, 09 Jan 2020 02:31:29 -0800 (PST)
+        Thu, 9 Jan 2020 05:37:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:56666 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729326AbgAIKhm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:37:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7852E31B;
+        Thu,  9 Jan 2020 02:37:41 -0800 (PST)
+Received: from [10.37.12.111] (unknown [10.37.12.111])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD0053F6C4;
+        Thu,  9 Jan 2020 02:37:37 -0800 (PST)
+Subject: Re: [PATCH v2 02/11] PM / devfreq: Remove
+ devfreq_get_devfreq_by_phandle function
+To:     Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        krzk@kernel.org, heiko@sntech.de, leonard.crestez@nxp.com
+Cc:     mark.rutland@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, kgene@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+References: <20191220002430.11995-1-cw00.choi@samsung.com>
+ <CGME20191220001759epcas1p4ce1c2017937a35de84eab720b9732df0@epcas1p4.samsung.com>
+ <20191220002430.11995-3-cw00.choi@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <b9a1ebe5-e114-3a6b-6081-c794e1341329@arm.com>
+Date:   Thu, 9 Jan 2020 10:37:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200107092922.18408-1-ktouil@baylibre.com>
-In-Reply-To: <20200107092922.18408-1-ktouil@baylibre.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 9 Jan 2020 11:31:18 +0100
-Message-ID: <CAMpxmJVj3DHXFq9D5HUD0j7t=Q7gFNF1eQsg2jUa4PEFrFas4w@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] at24: move write-protect pin handling to nvmem core
-To:     Khouloud Touil <ktouil@baylibre.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baylibre-upstreaming@groups.io,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191220002430.11995-3-cw00.choi@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 7 sty 2020 o 10:29 Khouloud Touil <ktouil@baylibre.com> napisa=C5=82(a=
-):
->
-> The write-protect pin handling looks like a standard property that
-> could benefit other users if available in the core nvmem framework.
->
-> Instead of modifying all the drivers to check this pin, make the
-> nvmem subsystem check if the write-protect GPIO being passed
-> through the nvmem_config or defined in the device tree and pull it
-> low whenever writing to the memory.
->
-> This patchset:
->
-> - adds support for the write-protect pin split into two parts.
-> The first patch modifies modifies the relevant binding document,
-> while the second modifies the nvmem code to pull the write-protect
-> GPIO low (if present) during write operations.
->
-> - removes support for the write-protect pin split into two parts.
-> The first patch modifies the relevant binding document to make the
-> wp-gpio a reference to the property defined by nvmem , while the
-> second removes the relevant code in the at24 driver.
->
-> - adds reference in the at25 binding document for the wp-gpios property
-> as it uses nvmem subsystem.
->
-> Changes since v1:
-> -Add an explenation on how the wp-gpios works
-> -Keep reference to the wp-gpios in the at24 binding
->
-> Changes since v2:
-> -Use the flag GPIO_ACTIVE_HIGH instead of 0
->
-> Changes since v3:
-> -Keep the example of the wp-gpios in the at25 bindings
-> -Add reference for the wp-gpios property in the at25 binding
+Hi Chanwoo,
 
-I picked up patches 1-3 & 5 into the at24 tree.
+On 12/20/19 12:24 AM, Chanwoo Choi wrote:
+> Previously, devfreq core support 'devfreq' property in order to get
+> the devfreq device by phandle. But, 'devfreq' property name is not proper
+> on devicetree binding because this name doesn't mean the any h/w attribute.
+> 
+> The devfreq core hand over the right to decide the property name
+> for getting the devfreq device on devicetree. Each devfreq driver
+> will decide the property name on devicetree binding and then get
+> the devfreq device by using devfreq_get_devfreq_by_node().
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>   drivers/devfreq/devfreq.c    | 35 -----------------------------------
+>   drivers/devfreq/exynos-bus.c | 12 +++++++++++-
+>   include/linux/devfreq.h      |  8 --------
+>   3 files changed, 11 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index cb8ca81c8973..c3d3c7c802a0 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -991,48 +991,13 @@ struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>   
+>   	return ERR_PTR(-ENODEV);
+>   }
+> -
+> -/*
+> - * devfreq_get_devfreq_by_phandle - Get the devfreq device from devicetree
+> - * @dev - instance to the given device
+> - * @index - index into list of devfreq
+> - *
+> - * return the instance of devfreq device
+> - */
+> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+> -{
+> -	struct device_node *node;
+> -	struct devfreq *devfreq;
+> -
+> -	if (!dev)
+> -		return ERR_PTR(-EINVAL);
+> -
+> -	if (!dev->of_node)
+> -		return ERR_PTR(-EINVAL);
+> -
+> -	node = of_parse_phandle(dev->of_node, "devfreq", index);
+> -	if (!node)
+> -		return ERR_PTR(-ENODEV);
+> -
+> -	devfreq = devfreq_get_devfreq_by_node(node);
+> -	of_node_put(node);
+> -
+> -	return devfreq;
+> -}
+> -
+>   #else
+>   struct devfreq *devfreq_get_devfreq_by_node(struct device_node *node)
+>   {
+>   	return ERR_PTR(-ENODEV);
+>   }
+> -
+> -struct devfreq *devfreq_get_devfreq_by_phandle(struct device *dev, int index)
+> -{
+> -	return ERR_PTR(-ENODEV);
+> -}
+>   #endif /* CONFIG_OF */
+>   EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_node);
+> -EXPORT_SYMBOL_GPL(devfreq_get_devfreq_by_phandle);
+>   
+>   /**
+>    * devm_devfreq_remove_device() - Resource-managed devfreq_remove_device()
+> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+> index 7f5917d59072..1bc4e3c81115 100644
+> --- a/drivers/devfreq/exynos-bus.c
+> +++ b/drivers/devfreq/exynos-bus.c
+> @@ -86,6 +86,16 @@ static int exynos_bus_get_event(struct exynos_bus *bus,
+>   	return ret;
+>   }
+>   
+> +static struct devfreq *exynos_bus_get_parent_devfreq(struct device_node *np)
+> +{
+> +	struct device_node *node = of_parse_phandle(np, "devfreq", 0);
+> +
+> +	if (!node)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return devfreq_get_devfreq_by_node(node);
+> +}
+> +
+>   /*
+>    * devfreq function for both simple-ondemand and passive governor
+>    */
+> @@ -353,7 +363,7 @@ static int exynos_bus_profile_init_passive(struct exynos_bus *bus,
+>   	profile->exit = exynos_bus_passive_exit;
+>   
+>   	/* Get the instance of parent devfreq device */
+> -	parent_devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+> +	parent_devfreq = exynos_bus_get_parent_devfreq(dev->of_node);
+>   	if (IS_ERR(parent_devfreq))
+>   		return -EPROBE_DEFER;
+>   
 
-Patch 4 will need an Ack from Greg.
+These changes won't apply, probably I need some base for it.
 
-Bart
+Regards,
+Lukasz
+
