@@ -2,119 +2,225 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B1C282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137F3C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2294020678
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24AD20721
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U8I2YmCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgAISkv (ORCPT
+        id S1732155AbgAISoj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:40:51 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40737 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388514AbgAISku (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 13:40:50 -0500
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5B4152000B;
-        Thu,  9 Jan 2020 18:40:48 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
+        Thu, 9 Jan 2020 13:44:39 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45416 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730531AbgAISoi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 13:44:38 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so8223687otp.12
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 10:44:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8XTYu6dx3P7+neGNkEsuHx7Hl39JFzGEmh9FvOI/6t8=;
+        b=U8I2YmCRoAq67WWxoFFCJ3k3gOrykE2YQwTErZWVe+5AoPziMhEmwKx1VMD0KMFPCX
+         +jbhGCIi7LaCyRozBXGg67tWcEshu9t/nV+5GRwcrDrqaDPVF/q7WB8dwyvMqzHqXwXh
+         vrxb+U/3GbD3UJN8t4zfHH1mfu+g+1u0RsxmiGudZ7HOzTAUZJgwQCEkmMzHDz3VZVLP
+         1NJnm0l580uFrBULSlvulQKs3TC7T5fJclJfMNd+rdGx7VAt3rjC3csdddytt5qAtS3Z
+         elFxbmidwN6O0NCzzqYHweFXkI8SZ4G5Gp6oB6GfQmpbRyFtz4PI/ZFnReNOyC4mjr8l
+         abGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8XTYu6dx3P7+neGNkEsuHx7Hl39JFzGEmh9FvOI/6t8=;
+        b=La8gDzhhmXrxEidrQQ/61u1oj9DjlUrFZ1BOZKDVcx0HQPLjn0u1TcIY+ad0vKuqdK
+         7KJlgj5NEeuiQjeXisv3WT+H89RbARyYNRdJuua5YEdHOYzvnCazUxpFLGXPAAp2JJUo
+         QygVETQAtvOUOtlM9CAh85GQgZYbIIp/IqC1sRQHVHty6HIUmm7ttulghYw8NkuUAX35
+         Dnr5ogipCoU32ZdCbxwfrYLe/OhsgR6i1xu+jXESkfjMJO6i87JGFZfXbm9PezWd9ZSM
+         4kjzCR/4QlihkVo4MK56TdOOWqYcA24bmLUD5vXAFB3RrtM9DwwOP29OEIRTxdMoN6yX
+         8d4w==
+X-Gm-Message-State: APjAAAXwcWRWm9cEFri8seP4jXptcZWSi5QaPYFwMIKSVLC9BU+UaXHP
+        SRF/nGOS4w07pXj1tFUWy5e7nuRTdIqZiJU3gFm7Hg==
+X-Google-Smtp-Source: APXvYqwbORFOz9hNPUv86p8ax7GkF+op9OEIJjbOBrv/fGZR+RsiVZt588/jpZ7zEUY+jEIrhutCl+sw14/o5poL9tg=
+X-Received: by 2002:a05:6830:121a:: with SMTP id r26mr9606498otp.225.1578595477678;
+ Thu, 09 Jan 2020 10:44:37 -0800 (PST)
+MIME-Version: 1.0
+References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-4-saravanak@google.com>
+ <20200108111947.q5aafrlz26tnk3nq@vireshk-i7> <CAGETcx_T7VONkSd-r9CY-5OpZBZ2iD0tFoCf0+d8CY2b5zgr9g@mail.gmail.com>
+ <20200109044051.62ocfpt44q25q6qi@vireshk-i7>
+In-Reply-To: <20200109044051.62ocfpt44q25q6qi@vireshk-i7>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 9 Jan 2020 10:44:01 -0800
+Message-ID: <CAGETcx-UWFSaZ8q1iiFVFUEPLN8t1uFb-u6v4VJiMarS21RLRQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
+To:     Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, dri-devel@lists.freedesktop.org,
-        <linux-kernel@vger.kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 2/2] drm/panel: simple: Add Satoz SAT050AT40H12R2 panel support
-Date:   Thu,  9 Jan 2020 19:40:37 +0100
-Message-Id: <20200109184037.9091-2-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200109184037.9091-1-miquel.raynal@bootlin.com>
-References: <20200109184037.9091-1-miquel.raynal@bootlin.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for the Satoz SAT050AT40H12R2 panel.
+On Wed, Jan 8, 2020 at 8:40 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 08-01-20, 16:58, Saravana Kannan wrote:
+> > On Wed, Jan 8, 2020 at 3:19 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >  /**
+> > > >   * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
+> > > >   * @opp:     opp for which level value has to be returned for
+> > > > @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
+> > > >
+> > > > +/**
+> > > > + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
+> > >
+> > > Hmm, I wasn't expecting this. So the interconnects will also have a
+> > > suspend OPP ?
+> >
+> > Yes, device voting for interconnect paths might want to lower the
+> > bandwidth to a suspend bandwidth when they suspend.
+>
+> That's exactly what I was saying, the request for a change during
+> suspend should come from the device
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
+Agree. And this tells the device requesting for bandwidth, what
+bandwidth to vote for when it's suspending. Keep in mind that these
+bandwidth OPP tables are used by the consumers of the interconnects to
+pick from a list of bandwidths to vote for.
 
-Changes since v4:
-* None.
+> and you can't do it here, i.e.
+> they should lower their frequency requirement, which should lead to a
+> low bandwidth automatically.
 
-Changes since v3:
-* Added connector type.
+Agree, the OPP framework itself shouldn't be responsible. And I'm not
+doing anything here? Just giving those devices a way to look up what
+their suspend bandwidth is? So they can vote for it when they suspend?
 
-Changes since v2:
-* Dropped two uneeded lines which would fail the build.
+> > > > + * @dev:     device for which we do this operation
+> > > > + * @avg_bw:  Pointer where the corresponding average bandwidth is stored.
+> > > > + *           Can be NULL.
+> > > > + *
+> > > > + * Return: This function returns the peak bandwidth of the OPP marked as
+> > > > + * suspend_opp if one is available, else returns 0;
+> > > > + */
+> > > > +unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
+> > > > +                                         unsigned long *avg_bw)
+> > > > +{
+> > > > +     struct opp_table *opp_table;
+> > > > +     unsigned long peak_bw = 0;
+> > > > +
+> > > > +     opp_table = _find_opp_table(dev);
+> > > > +     if (IS_ERR(opp_table))
+> > > > +             return 0;
+> > > > +
+> > > > +     if (opp_table->suspend_opp && opp_table->suspend_opp->available)
+> > > > +             peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
+> > > > +
+> > > > +     dev_pm_opp_put_opp_table(opp_table);
+> > > > +
+> > > > +     return peak_bw;
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
+> > > > +
+> > > >  int _get_opp_count(struct opp_table *opp_table)
+> > > >  {
+> > > >       struct dev_pm_opp *opp;
+> > > > @@ -343,6 +394,40 @@ int dev_pm_opp_get_opp_count(struct device *dev)
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_count);
+> > > >
+> > >
+> > > I think we should add function header here instead of the helpers
+> > > which get exact match for freq, bw or level. And then pass a enum
+> > > value to it, which tells what we are looking to compare. After that
+> > > rest of the routines will be just one liners, make them macros in
+> > > header file itself.
+> >
+> > Not sure I understand what you are saying here.
+>
+> Okay, lemme try again with proper example.
+>
+> enum opp_key_type {
+>         OPP_KEY_FREQ = 0x1,
+>         OPP_KEY_LEVEL= 0x2,
+>         OPP_KEY_BW   = 0x4,
+>         OPP_KEY_ALL  = 0x7,
+> }
+>
+> /**
+>  * Add function header here..
+>  */
+> struct dev_pm_opp *dev_pm_opp_find_opp_exact(struct device *dev,
+>                                              enum opp_key_type key,
+>                                              unsigned long key_value,
+>                                              bool available)
+> {
+>        struct opp_table *opp_table;
+>        struct dev_pm_opp *temp_opp, *opp = ERR_PTR(-ERANGE);
+>
+>        opp_table = _find_opp_table(dev);
+>        if (IS_ERR(opp_table)) {
+>                int r = PTR_ERR(opp_table);
+>
+>                dev_err(dev, "%s: OPP table not found (%d)\n", __func__, r);
+>                return ERR_PTR(r);
+>        }
+>
+>        mutex_lock(&opp_table->lock);
+>
+>        list_for_each_entry(temp_opp, &opp_table->opp_list, node) {
+>                if (temp_opp->available == available &&
+>                    !opp_compare_key(temp_opp, key, key_value)) {
+>                        opp = temp_opp;
+>
+>                        /* Increment the reference count of OPP */
+>                        dev_pm_opp_get(opp);
+>                        break;
+>                }
+>        }
+>
+>        mutex_unlock(&opp_table->lock);
+>        dev_pm_opp_put_opp_table(opp_table);
+>
+>        return opp;
+> }
+>
+> //Now in header file
+>
+> #define dev_pm_opp_find_freq_exact(dev, freq, available)        dev_pm_opp_find_opp_exact(dev, OPP_KEY_FREQ, freq, available);
+> #define dev_pm_opp_find_level_exact(dev, level, available)      dev_pm_opp_find_opp_exact(dev, OPP_KEY_LEVEL, level, available);
+> #define dev_pm_opp_find_bw_exact(dev, bw, available)            dev_pm_opp_find_opp_exact(dev, OPP_KEY_BW, bw, available);
 
-Changes since v1:
-* Switched to display_timing's instead of display_mode.
+Ok, but you want this done only for "exact" or for all the other
+helpers too? Also, this means that I'll have to implement a
+_opp_compare_key2() or whatever because the generic one that
+automatically picks the key is still needed for the generic code. Is
+that fine by you?
 
- drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Also, ack to your other response.
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index aaa08beac13c..1aa6622abc49 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2577,6 +2577,30 @@ static const struct panel_desc samsung_ltn140at29_301 = {
- 	},
- };
- 
-+static const struct display_timing satoz_sat050at40h12r2_timing = {
-+	.pixelclock = {33300000, 33300000, 50000000},
-+	.hactive = {800, 800, 800},
-+	.hfront_porch = {16, 210, 354},
-+	.hback_porch = {46, 46, 46},
-+	.hsync_len = {1, 1, 40},
-+	.vactive = {480, 480, 480},
-+	.vfront_porch = {7, 22, 147},
-+	.vback_porch = {23, 23, 23},
-+	.vsync_len = {1, 1, 20},
-+};
-+
-+static const struct panel_desc satoz_sat050at40h12r2 = {
-+	.timings = &satoz_sat050at40h12r2_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 108,
-+		.height = 65,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct drm_display_mode sharp_ld_d5116z01b_mode = {
- 	.clock = 168480,
- 	.hdisplay = 1920,
-@@ -3377,6 +3401,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "samsung,ltn140at29-301",
- 		.data = &samsung_ltn140at29_301,
-+	}, {
-+		.compatible = "satoz,sat050at40h12r2",
-+		.data = &satoz_sat050at40h12r2,
- 	}, {
- 		.compatible = "sharp,ld-d5116z01b",
- 		.data = &sharp_ld_d5116z01b,
--- 
-2.20.1
-
+-Saravana
