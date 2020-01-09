@@ -2,98 +2,103 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168BDC33CA1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E092C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17D52075D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 650182067D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uoqz0OpG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cKqRG0En"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgAIKnE (ORCPT
+        id S1730436AbgAIKnP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:43:04 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40587 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729452AbgAIKnD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 05:43:03 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so2244166wmi.5
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 02:43:01 -0800 (PST)
+        Thu, 9 Jan 2020 05:43:15 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40587 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729454AbgAIKnB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 05:43:01 -0500
+Received: by mail-wm1-f68.google.com with SMTP id t14so2244103wmi.5
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 02:43:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SkP26v/29sY5BZoOYQZTZZMRC2NCKhLFiuqXUfgUjgM=;
-        b=uoqz0OpGuZlIKpuC1qD25vMQ8f8AwUGhljW7ahY/QhxT8Xe2V3SblVo39+T7MCrfOQ
-         p+7+4dCMK3j8YQ4uNpPRGj5JCrFgrzCOK0AC0WYWXm78egPzuldiXFUvffzk4Ph/YrL+
-         rb23xRV9xN2hMWIkKiWTswiYewjWish8ZU2ztY+rZl1xtNUz033UCWG7SsNFwihNqK9Z
-         nJhSskX+XSv8KkL8U5MeKNzXJSxVU2HhFnTZdFCb14ffLGfnHxoIztFtu58Tdu9YKVtN
-         cG3YFf6/zeJe2CkeAcezY8lz1+2heGetqWb9mfUgE9N2xsnOmN9bi6uHSNCCSpGeVFtn
-         vtQw==
+        h=from:to:cc:subject:date:message-id;
+        bh=1+dHq18C0bFPHtybcse9Vo/A581Ece5LU7fp8OU7MIA=;
+        b=cKqRG0EnXT/JJJfM09cUs5fipYn6nyM82sI5CTyQH86aHScCx1yQBYPyLFKjjcKU3C
+         FgWGO5HtBUpH/vNHAhStjCPGFeHHzmooHb7nw//gXz2eU+e5zlV7Zck1sOpcbd4olg0Y
+         JTHVLTfDigFQtS2VTFg7IuOaTdaOCywrcTe2CTCPb8p3z9q8R/ji9pOhJ0T1MnWWVf0W
+         DZ5yFn7f4VMNOuYkVAt3ZKLWbI1dlU3I3uqNOAFF6MVsX+FkMbuIGbUmn/7Oug3uW/3H
+         ko3Nvbm2U0klMibnOX8f1boK+KXFiZkki3AhapyQuQdD8OUkAIJMeRNStziOrZJyTUq7
+         ZRIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=SkP26v/29sY5BZoOYQZTZZMRC2NCKhLFiuqXUfgUjgM=;
-        b=cjt4zT+Af/f+3MVpd15VxZGdKs+ssMEzK+XcNjpmsKDn79adMQdelUgmNu0z6D5lLW
-         StZY5TRcHqB628Bke+AezU5WLDjwsBM8xh4Mmc7HtCmk99Fq5bVZnJJYicEit7YArgKD
-         gWaV7Q5s+9fclM2UHTo+hs46LCuk0eRGa3e9ZifuWGDQZZAMx5gRhpG+6KT9VbqtrgUr
-         QyKPSyQWb9ZeCdTcSAriiAfgE+1g1A0O3azbt6lOwpZtyOR4isbn5tTN9klG1UygdE4n
-         pRBexg++V7LIsi1BNYGN98asSTLYaZ4UuY61KpweBlDb81lupEQgdcJAH3Q9B13uqa9h
-         LRxg==
-X-Gm-Message-State: APjAAAXj26tFjLTq+5YxRCLhwaVNe747f1PtqQGr8zmHU9FUcnwiHe3p
-        jT46SPLxAEMh8Hlo6KmfSXZAGg==
-X-Google-Smtp-Source: APXvYqyfTgBCgG8JNZwv9gyCo6cleXy4olSHdPrj/npJ2qIXbxd0e54RdUeD4kfVeYeqABDs4it7ww==
-X-Received: by 2002:a1c:81ce:: with SMTP id c197mr4091282wmd.96.1578566580609;
-        Thu, 09 Jan 2020 02:43:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1+dHq18C0bFPHtybcse9Vo/A581Ece5LU7fp8OU7MIA=;
+        b=IsJNg+eBYuLE/GNzrRypmpwLrl6Ox6POsTmhPJ5G7uNH1i5qOjGarkt6o+Ck38QkTa
+         s1aG7M1imXbSR/OJ9zN3oez65AOQvusMiNhByBl1hk5+G0FA2NerzgGLfk0ClFkn6L8U
+         ig/Ya6kuUefAlgeHaAbNn5+E6bV17eLVL+5S0m8Mpj3AGMiN9kLlGNpEPJJ6qE3HtbXx
+         kRbNxQqZApT2Zz4Pj9u0qS+SL6ok8IAYsLpEs84z/3X5XSxEC1K9FtCec6/mA2c5DSNr
+         ZC6mYkqnYxg55v65jWD+BhtIpfG6Yo5KKlxfskWEXxJjxZAxN2hwxkDEXhd9wzOptz7d
+         QE1Q==
+X-Gm-Message-State: APjAAAV0ADame1dq9/J2zzMdisqTtYLgyrZsJkQ+sHIMIpMP4CNNyoEq
+        Wvi7PhdpXMZqioT8jaJEOzIkLw==
+X-Google-Smtp-Source: APXvYqx3mnWFPevVQy8vni2p9aUcio3Y6O/BSZXI7da7LcAZZVbXmt0IU4pY0bgojjO7SfvOboMA4A==
+X-Received: by 2002:a7b:c38c:: with SMTP id s12mr4068172wmj.96.1578566579791;
+        Thu, 09 Jan 2020 02:42:59 -0800 (PST)
 Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q68sm2587167wme.14.2020.01.09.02.42.59
+        by smtp.gmail.com with ESMTPSA id q68sm2587167wme.14.2020.01.09.02.42.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 02:43:00 -0800 (PST)
+        Thu, 09 Jan 2020 02:42:59 -0800 (PST)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     marcel@holtmann.org, johan.hedberg@gmail.com,
         devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
 Cc:     johan@kernel.org, nsaenzjulienne@suse.de,
         linux-kernel@vger.kernel.org, khilman@baylibre.com
-Subject: [PATCH v6 1/2] dt-bindings: net: bluetooth: add interrupts properties
-Date:   Thu,  9 Jan 2020 11:42:56 +0100
-Message-Id: <20200109104257.6942-2-glaroque@baylibre.com>
+Subject: [PATCH v6 0/2] add support of interrupt for host wakeup from devicetree in BCM HCI driver
+Date:   Thu,  9 Jan 2020 11:42:55 +0100
+Message-Id: <20200109104257.6942-1-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200109104257.6942-1-glaroque@baylibre.com>
-References: <20200109104257.6942-1-glaroque@baylibre.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-add interrupts and interrupt-names as optional properties
-to support host-wakeup by interrupt properties instead of
-host-wakeup-gpios.
+add interrupts and interrupt-names properties to set host wakeup IRQ.
+actually driver find this IRQ from host-wakeup-gpios propety
+but some platforms are not supported gpiod_to_irq function.
+so to have possibility to use interrupt mode we need to add interrupts
+field in devicetree and support it in driver.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
+change sinve v5:
+- add tags
+
+change sinve v4 [1]:
+- add patch to update Documentation
+- use of_irq_get_byname to be more clear and move call in bcm_of_probe
+- update commit message
+
+change since v3:
+- move on of_irq instead of platform_get_irq
+
+change since v2:
+- fix commit message
+
+change since v1:
+- rebase patch
+
+[1] https://lore.kernel.org/linux-bluetooth/20191213105521.4290-1-glaroque@baylibre.com/
+
+Guillaume La Roque (2):
+  dt-bindings: net: bluetooth: add interrupts properties
+  bluetooth: hci_bcm: enable IRQ capability from devicetree
+
  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_bcm.c                                  | 3 +++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index c44a30dbe43d..d33bbc998687 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -37,7 +37,9 @@ Optional properties:
-     - pcm-frame-type: short, long
-     - pcm-sync-mode: slave, master
-     - pcm-clock-mode: slave, master
--
-+ - interrupts: must be one, used to wakeup the host processor if
-+   gpiod_to_irq function not supported
-+ - interrupt-names: must be "host-wakeup"
- 
- Example:
- 
 -- 
 2.17.1
 
