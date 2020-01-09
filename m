@@ -2,209 +2,224 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CC3C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 00:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323A9C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 01:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F1E2077B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 00:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6FA206F0
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 01:31:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gfa4k3DW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KLQMWToN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727746AbgAIA7P (ORCPT
+        id S1727703AbgAIBbf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 19:59:15 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45201 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbgAIA7P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 19:59:15 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 59so5510597otp.12
-        for <devicetree@vger.kernel.org>; Wed, 08 Jan 2020 16:59:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9Fgy4gBsnNDhvVOVnNjUhXi1MEMb8Zuk1lMJfG95h70=;
-        b=Gfa4k3DW+bK3x+Fb5EJ7YEGcSey+eNjFZEw7HfBF0DTflbvNacUsFd5DDahJnij83j
-         /Z36JmzQlEbgDubnN/NTi9LB7SNhaxmPYSvWtLtQc/czukrG2y3+ndOuHGjO1DkI2E4T
-         ZwfPxLUFkVkV6czF2pFrOIGjeUC+eLWLQMoDOreu6s2VHgG9g223fRjVcj6KU+RtcobH
-         uIgYMz44sn2W4a8ifK9z5HZj/qo3kVn1/fJOEfsNg3JoxoBLGNwJ7464QL0Tyo8chjtL
-         BwMMxa/IeE2Kfs1gUkothnSfSA+r5wrx6UOG0u0TFag1GYxRm6pTogkejtm0D5LZ/U7q
-         0sLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9Fgy4gBsnNDhvVOVnNjUhXi1MEMb8Zuk1lMJfG95h70=;
-        b=sgnEOsqwGBDEdQaiPCFeqSpwlq6IH9WiXg8d8IYNdfub/ykpBQoEAu59pEBq7knGJl
-         nQXurJWvyp5LRnr7v3hx5EgphgSOOaExZ8qnUUHLGQrVehffJXP64HrZXwX9B3Od9/Iq
-         Sy/WG5+LkCwXR58V1P77IBmMC0GGkffxri/9xpsgHmZrLFnyiHomVCOJC+3AdBEHYHB1
-         RbVvXkArZhha++OkAJvNUKd+P4sN8MTkw1ZjsPEINbVnREsQ4+w7U5XiTNd3y+GHc4Hf
-         MZ6bqD0IKqJ4lHH6siSqvLsfk4Y9vZdc2EbmWEI6BUqIVd5B9XdzBa2Kr90KRuQw1hCI
-         6CSA==
-X-Gm-Message-State: APjAAAVSk5cRQGNnI12X5L/q2RaM7SzPiMSJ/ITY3zlGd8qTC2483CjV
-        I/ptk9USpVmm+cAGNNRARIN8WpbJCG9pw7sJG5pbBg==
-X-Google-Smtp-Source: APXvYqwjwFClxrTy/XuUbDeOil0j1vYMARYAI98fBCmBlP5FWFo8hJswWYfeoJtxQGvZURgI56ERiVn6apAi6N2UaVY=
-X-Received: by 2002:a05:6830:22ee:: with SMTP id t14mr6258010otc.236.1578531553965;
- Wed, 08 Jan 2020 16:59:13 -0800 (PST)
+        Wed, 8 Jan 2020 20:31:35 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7235 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbgAIBbf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 20:31:35 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1682600000>; Wed, 08 Jan 2020 17:31:12 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 08 Jan 2020 17:31:30 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 08 Jan 2020 17:31:30 -0800
+Received: from [10.19.108.118] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 9 Jan
+ 2020 01:31:28 +0000
+Subject: Re: [PATCH v5 3/5] dt-bindings: phy: tegra: Add Tegra194 support
+From:   JC Kuo <jckuo@nvidia.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <nkristam@nvidia.com>
+References: <20200103081814.9848-1-jckuo@nvidia.com>
+ <20200103081814.9848-4-jckuo@nvidia.com> <20200103223940.GA9205@bogus>
+ <baa9b5f4-74be-0ab4-0b24-bf926cf3207c@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <4c3f3776-65e2-aafd-7bb9-fa69df301cb6@nvidia.com>
+Date:   Thu, 9 Jan 2020 09:31:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-4-saravanak@google.com>
- <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
-In-Reply-To: <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 8 Jan 2020 16:58:38 -0800
-Message-ID: <CAGETcx_T7VONkSd-r9CY-5OpZBZ2iD0tFoCf0+d8CY2b5zgr9g@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <baa9b5f4-74be-0ab4-0b24-bf926cf3207c@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578533472; bh=yv+sG1oLTyGNOFQKfWpRTYpWpAeICrtXJQhslfyq10I=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=KLQMWToNXlnnhH05QLUOYIkUoR/SZHBsl57vOhV9Fk1riSDhAGEeBBEyXMw5VKmxU
+         YLyNx/tv/HMKaf7YcQoSKux2ZEzsMoTB8YSQUPUjvNpejIgwno8M2OgSlE5JGGPi1m
+         k6SKBk07gtPokRhxfhnhPpz6VUWT+jL2fKvev4aIQGyVVpcEmcR0B9TIYWcLnKjE4F
+         tbxGABvmpI2nziDRvWHDmrHccXdy3HpuOkey6aStbm6t+vC/HFVi5XCBhBdDuw6SUq
+         pImTG+dzsp3svWFCwvkhRdv+iEXx6INY3iQPGJidm/pypGkEJgkL6N3iBrvRVMXMLR
+         VjTPN1Fv8qdAA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 3:19 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 06-12-19, 16:24, Saravana Kannan wrote:
-> > The frequency OPP tables have helper functions to search for entries in the
-> > table based on frequency and get the frequency values for a given (or
-> > suspend) OPP entry.
-> >
-> > Add similar helper functions for bandwidth OPP tables to search for entries
-> > in the table based on peak bandwidth and to get the peak and average
-> > bandwidth for a given (or suspend) OPP entry.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/opp/core.c     | 301 +++++++++++++++++++++++++++++++++++------
-> >  include/linux/pm_opp.h |  43 ++++++
-> >  2 files changed, 305 insertions(+), 39 deletions(-)
-> >
-> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > index c79bbfac7289..3ff33a08198e 100644
-> > --- a/drivers/opp/core.c
-> > +++ b/drivers/opp/core.c
-> > @@ -127,6 +127,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
-> >
-> > +/**
-> > + * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
-> > + * @opp:     opp for which peak bandwidth has to be returned for
->
-> s/peak //
+Hi Rob,
+For now we have two options.
+1. reusing the existing "maximum-speed" which is documented in usb/generic.txt
+Pro: no need to add new property
+Con: only "super-speed" and "super-speed-plus" are valid for Tegra XUSB PADCTL,
+therefore extra code/document change is required.
 
-Ack
++	if (device_property_present(&port->dev, "maximum-speed")) {
++		maximum_speed =  usb_get_maximum_speed(&port->dev);
++		if (maximum_speed == USB_SPEED_SUPER)
++			usb3->disable_gen2 = true;
++		else if (maximum_speed == USB_SPEED_SUPER_PLUS)
++			usb3->disable_gen2 = false;
++		else
++			return -EINVAL;
++	}
 
->
-> > + * @avg_bw:  Pointer where the corresponding average bandwidth is stored.
-> > + *           Can be NULL.
-> > + *
-> > + * Return: Peak bandwidth in kBps corresponding to the opp, else
-> > + * return 0
-> > + */
-> > +unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
-> > +{
-> > +     if (IS_ERR_OR_NULL(opp) || !opp->available) {
-> > +             pr_err("%s: Invalid parameters\n", __func__);
-> > +             return 0;
-> > +     }
-> > +
-> > +     if (avg_bw)
->
-> Do you see this being NULL in practice ? If no, then we can make it
-> mandatory for now ?
+2. introducing a new proprietary "nvidia,disable-gen2" property
+Pro: its logic perfectly matches the need, and code change is minimum
 
-Yes, very likely. A lot of OPP tables might not have avg bandwidth listed.
++        usb3->disable_gen2 = of_property_read_bool(np, "nvidia,disable-gen2");
 
-> > +             *avg_bw = opp->avg_bw;
-> > +
-> > +     return opp->peak_bw;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-> > +
-> >  /**
-> >   * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
-> >   * @opp:     opp for which level value has to be returned for
-> > @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
-> >
-> > +/**
-> > + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
->
-> Hmm, I wasn't expecting this. So the interconnects will also have a
-> suspend OPP ?
+Con: it's a new and proprietary property.
 
-Yes, device voting for interconnect paths might want to lower the
-bandwidth to a suspend bandwidth when they suspend.
+Please let me know which one do you prefer or there is something else works better.
 
-> > + * @dev:     device for which we do this operation
-> > + * @avg_bw:  Pointer where the corresponding average bandwidth is stored.
-> > + *           Can be NULL.
-> > + *
-> > + * Return: This function returns the peak bandwidth of the OPP marked as
-> > + * suspend_opp if one is available, else returns 0;
-> > + */
-> > +unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-> > +                                         unsigned long *avg_bw)
-> > +{
-> > +     struct opp_table *opp_table;
-> > +     unsigned long peak_bw = 0;
-> > +
-> > +     opp_table = _find_opp_table(dev);
-> > +     if (IS_ERR(opp_table))
-> > +             return 0;
-> > +
-> > +     if (opp_table->suspend_opp && opp_table->suspend_opp->available)
-> > +             peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
-> > +
-> > +     dev_pm_opp_put_opp_table(opp_table);
-> > +
-> > +     return peak_bw;
-> > +}
-> > +EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
-> > +
-> >  int _get_opp_count(struct opp_table *opp_table)
-> >  {
-> >       struct dev_pm_opp *opp;
-> > @@ -343,6 +394,40 @@ int dev_pm_opp_get_opp_count(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_count);
-> >
->
-> I think we should add function header here instead of the helpers
-> which get exact match for freq, bw or level. And then pass a enum
-> value to it, which tells what we are looking to compare. After that
-> rest of the routines will be just one liners, make them macros in
-> header file itself.
-
-Not sure I understand what you are saying here.
+Thanks,
+JC
 
 
-> > +struct dev_pm_opp *dev_pm_opp_find_opp_exact(struct device *dev,
-> > +                                           struct dev_pm_opp *opp_key,
-> > +                                           bool available)
->
-
--Saravana
+On 1/6/20 3:10 PM, JC Kuo wrote:
+> On 1/4/20 6:39 AM, Rob Herring wrote:
+>> On Fri, Jan 03, 2020 at 04:18:12PM +0800, JC Kuo wrote:
+>>> Extend the bindings to cover the set of features found in Tegra194.
+>>> Note that, technically, there are four more supplies connected to the
+>>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
+>>> , but the power sequencing requirements of Tegra194 require these to be
+>>> under the control of the PMIC.
+>>>
+>>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
+>>> is possible for some platforms have long signal trace that could not
+>>> provide sufficient electrical environment for Gen 2 speed. This patch
+>>> adds a "maximum-speed" property to usb3 ports which can be used to
+>>> specify the maximum supported speed for any particular USB 3.1 port.
+>>> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
+>>> property should carry "super-speed".
+>>>
+>>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
+>>> ---
+>>> Changes in v5:
+>>> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
+>>> Changes in v4: none
+>>> Changes in v3: none
+>>> Changes in v2:
+>>> - fix a typo
+>>>
+>>>  .../phy/nvidia,tegra124-xusb-padctl.txt        | 18 ++++++++++++++++++
+>>>  1 file changed, 18 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>>> index 9fb682e47c29..7d0089006e67 100644
+>>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
+>>> @@ -37,6 +37,7 @@ Required properties:
+>>>    - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padctl"
+>>>    - Tegra210: "nvidia,tegra210-xusb-padctl"
+>>>    - Tegra186: "nvidia,tegra186-xusb-padctl"
+>>> +  - Tegra194: "nvidia,tegra194-xusb-padctl"
+>>>  - reg: Physical base address and length of the controller's registers.
+>>>  - resets: Must contain an entry for each entry in reset-names.
+>>>  - reset-names: Must include the following entries:
+>>> @@ -62,6 +63,10 @@ For Tegra186:
+>>>  - vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
+>>>  - vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
+>>>  
+>>> +For Tegra194:
+>>> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must supply
+>>> +  3.3 V.
+>>> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
+>>>  
+>>>  Pad nodes:
+>>>  ==========
+>>> @@ -154,6 +159,11 @@ For Tegra210, the list of valid PHY nodes is given below:
+>>>  - sata: sata-0
+>>>    - functions: "usb3-ss", "sata"
+>>>  
+>>> +For Tegra194, the list of valid PHY nodes is given below:
+>>> +- usb2: usb2-0, usb2-1, usb2-2, usb2-3
+>>> +  - functions: "xusb"
+>>> +- usb3: usb3-0, usb3-1, usb3-2, usb3-3
+>>> +  - functions: "xusb"
+>>>  
+>>>  Port nodes:
+>>>  ===========
+>>> @@ -221,6 +231,11 @@ Optional properties:
+>>>    is internal. In the absence of this property the port is considered to be
+>>>    external.
+>>>  
+>>> +- maximum-speed: Only for Tegra194. A string property that specifies maximum
+>>> +  supported speed of a usb3 port. Valid values are:
+>>> +  - "super-speed-plus": default, the usb3 port supports USB 3.1 Gen 2 speed.
+>>
+>> Not defined as a valid value in usb/generic.txt. '-gen2' instead of 
+>> '-plus' would be clearer IMO. However, is there any need to define the 
+>> maximum speed possible? The purpose of this property is to limit the 
+>> speed below the max.
+>>
+> usb_get_maximum_speed(), which parses "maximum-speed" property, indeed handles
+> string "super-speed-plus". Should "super-speed-plus" be documented in
+> usb/generic.txt"?
+> 
+> static const char *const speed_names[] = {
+> 	[USB_SPEED_UNKNOWN] = "UNKNOWN",
+> 	[USB_SPEED_LOW] = "low-speed",
+> 	[USB_SPEED_FULL] = "full-speed",
+> 	[USB_SPEED_HIGH] = "high-speed",
+> 	[USB_SPEED_WIRELESS] = "wireless",
+> 	[USB_SPEED_SUPER] = "super-speed",
+> 	[USB_SPEED_SUPER_PLUS] = "super-speed-plus",
+> };
+> 
+> A proprietary "nvidia,disable-gen2" property was proposed in earlier revision to
+> "limit the speed below the max". I like it because it fit our needs better and
+> requires only one line of code change.
+> 
+>    usb3->disable_gen2 = of_property_read_bool(np, "nvidia,disable-gen2");
+> 
+> Should I fallback to that approach?
+> 
+> Thanks,
+> JC
+> 
+>>> +  - "super-speed": the usb3 port supports USB 3.1 Gen 1 speed only.
+>>> +
+>>>  For Tegra124 and Tegra132, the XUSB pad controller exposes the following
+>>>  ports:
+>>>  - 3x USB2: usb2-0, usb2-1, usb2-2
+>>> @@ -233,6 +248,9 @@ For Tegra210, the XUSB pad controller exposes the following ports:
+>>>  - 2x HSIC: hsic-0, hsic-1
+>>>  - 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
+>>>  
+>>> +For Tegra194, the XUSB pad controller exposes the following ports:
+>>> +- 4x USB2: usb2-0, usb2-1, usb2-2, usb2-3
+>>> +- 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
+>>>  
+>>>  Examples:
+>>>  =========
+>>> -- 
+>>> 2.17.1
+>>>
