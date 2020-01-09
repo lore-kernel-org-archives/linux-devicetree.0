@@ -2,154 +2,173 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB83AC33CA1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 19:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6B9C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 20:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 896D0206ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 19:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578599373;
-	bh=ITD6w/02vqRdUm0ShsXkkbuu5q3Ob/c1kGTjOJU2efA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JJzM0bkzSmF1bUX8QA08+kVtyQCzZ4zqS7kfRcbChhf9hR66q/SWgPD+WyTaQ+rcb
-	 D9iCkUnQOAD32UoI9Zh87AryNDwDCukjYe46jKSvRP1gSAM8XeKpW4Y6+MJOjh2vB4
-	 FLEamCWFU34MIcsEA+XfQDP2KL4qJvfWM+PHYP/Q=
+	by mail.kernel.org (Postfix) with ESMTP id A643F20656
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 20:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJYcvEmJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbgAITtd (ORCPT
+        id S1728832AbgAIUIk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:49:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:36222 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730077AbgAITtd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:49:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2264531B;
-        Thu,  9 Jan 2020 11:49:32 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CFEA3F534;
-        Thu,  9 Jan 2020 11:49:31 -0800 (PST)
-Date:   Thu, 9 Jan 2020 19:49:30 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
- for the GPU
-Message-ID: <20200109194930.GD3702@sirena.org.uk>
-References: <20200108052337.65916-1-drinkcat@chromium.org>
- <20200108052337.65916-5-drinkcat@chromium.org>
- <20200108132302.GA3817@sirena.org.uk>
- <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
- <09ddfac3-da8d-c039-92a0-d0f51dc3fea5@arm.com>
- <20200109162814.GB3702@sirena.org.uk>
- <a40baddb-cbab-d8fc-3fd9-0582f1b5b24e@arm.com>
+        Thu, 9 Jan 2020 15:08:40 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35052 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728814AbgAIUIj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 15:08:39 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so4252986wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 12:08:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cfTQKwhDn39Z9BPcDt5HjRV6ynzFTUIrt1bOiAf4Bjk=;
+        b=dJYcvEmJbcE97RqtVcw5loINNavY94FeTJInKLsHXn4oLH/YTcsByTUafTpo48YZY1
+         M7/CYR7M2bqciWZNqW0Q7QqfP+QqTcgCfb2IPIzBE8XtwbH+ZFSil+tvlQUxq4yvAvrf
+         ulHpxs1qUKzKaLvEr86yt6mTsvKluJeo794UVlCWaS1MQWDeLzDPVm3dGIrzTzvuArWa
+         mq2gtt0SHw7miuA7XDSyJWQTyexVs4as9tBh/V5MAr4EIGq5yPTDnz0z/sSVS3LEEVHO
+         82gSlT5ymZV+l0X62pe2BttJ0IurJ+CLI5x1YFsNx5auxhlEsBxvShjshDCuwnwnvqmX
+         o6jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=cfTQKwhDn39Z9BPcDt5HjRV6ynzFTUIrt1bOiAf4Bjk=;
+        b=KAmcpVXssSJvC79ATETg9EtNaokkTayUGo6MnbnKh1Ryqb+j/zooMDAgr5Bku5SKWe
+         ynM1Si6tWe54ol0IKozlkaxuLjfIZNibpUeS6duCkm4OtmfMzx/qAwAy3dqMkqG7A9HY
+         VpvXEAMy9cr3QbDDH3UeSLG6IYNkKapysf/NAzcc11aZbNq/yGE8WgsDEfIMUvC2II3J
+         mCpyjq2pjEX9xPYm90yJkxzinppVUR+kQB2XbXLMCIaYkrsHbAtFeDrIOElM94vKckFb
+         JqONCrvbwJCtQ3LAXtjxDDlfrjupU3VrwUWKEepm8CLK+fe07w/8cB43V0vUpoFNzkEW
+         HHWw==
+X-Gm-Message-State: APjAAAUukCWMZrXiBe413tILWwqT6Fd6k/lmTULTYcyIEx24Y1k0FdrW
+        tgvgfVFFYG3t8OC017DT0fXMQQ==
+X-Google-Smtp-Source: APXvYqyg8t+euJPl04/VCZ2VF/CO4WtGVGnXLLqxBZPedKnLK6Ny1yVCXvbanvzqJFw0Rrb2u1aJHQ==
+X-Received: by 2002:a1c:b603:: with SMTP id g3mr6481314wmf.133.1578600516558;
+        Thu, 09 Jan 2020 12:08:36 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d? ([2a01:e34:ed2f:f020:f1d5:61e0:e9d8:1c3d])
+        by smtp.googlemail.com with ESMTPSA id h2sm9613168wrt.45.2020.01.09.12.08.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 12:08:36 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
+ thermal zones
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, wens@csie.org, anarsoul@gmail.com,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        megous@megous.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+References: <20200106174639.20862-1-tiny.windzz@gmail.com>
+ <20200106174639.20862-2-tiny.windzz@gmail.com>
+ <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
+ <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
+ <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <af4bca3b-ba95-aa10-5601-753f1c5275b3@linaro.org>
+Date:   Thu, 9 Jan 2020 21:08:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pQhZXvAqiZgbeUkD"
-Content-Disposition: inline
-In-Reply-To: <a40baddb-cbab-d8fc-3fd9-0582f1b5b24e@arm.com>
-X-Cookie: Killing turkeys causes winter.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 09/01/2020 14:13, Maxime Ripard wrote:
+> Hi Daniel,
+> 
+> On Thu, Jan 09, 2020 at 12:51:27PM +0100, Daniel Lezcano wrote:
+>> On 07/01/2020 08:58, Maxime Ripard wrote:
+>>> On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
+>>>> There are two sensors, sensor0 for CPU, sensor1 for GPU.
+>>>>
+>>>> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+>>>> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+>>>> Tested-on: sun8i-r40-bananapi-m2-ultra
+>>>
+>>> As far as I know, tested-on is not documented anywhere (and isn't
+>>> really used either). I've removed it and applied, thanks!
+>>
+>> I think this patch should go through my tree as it refers to a commit in
+>> my branch.
+> 
+> I'm not quite sure to get why. Even though that patch depends on the
+> one affecting the driver to be functional, it doesn't break anything
+> when merged through arm-soc, and similarly yours doesn't affect any
+> other tree if it's merged through your tree, so there's no dependency?
 
---pQhZXvAqiZgbeUkD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry, I puzzled myself, I thought you meant you applied patch 1/2
 
-On Thu, Jan 09, 2020 at 04:53:02PM +0000, Steven Price wrote:
-> On 09/01/2020 16:28, Mark Brown wrote:
-> > On Thu, Jan 09, 2020 at 02:14:42PM +0000, Steven Price wrote:
 
-> > > I'm not sure if it's better, but could we just encode the list of
-> > > regulators into device tree. I'm a bit worried about special casing an
-> > > "sram" regulator given that other platforms might have a similar
-> > > situation but call the second regulator a different name.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> > Obviously the list of regulators bound on a given platform is encoded in
-> > the device tree but you shouldn't really be relying on that to figure
-> > out what to request in the driver - the driver should know what it's
-> > expecting.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-> From a driver perspective we don't expect to have to worry about power
-> domains/multiple regulators - the hardware provides a bunch of power
-> registers to turn on/off various parts of the hardware and this should be
-> linked (in hardware) to a PDC which sorts it out. The GPU/PDC handles the
-> required sequencing. So it *should* be a case of turn power/clocks on and
-> go.
-
-Ah, the well abstracted and consistent hardware with which we are all so
-fortunate to work :) .  More seriously perhaps the thing to do here is
-create a driver that provides a soft PDC and then push all the special
-case handling into that?  It can then get instantiated based on the
-compatible or perhaps represented directly in the device tree if that
-makes sense.
-
-> However certain integrations may have quirks such that there are physically
-> multiple supplies. These are expected to all be turned on before using the
-> GPU. Quite how this is best represented is something I'm not sure about.
-
-If they're always on and don't ever change then that's really easy to
-represent in the DT without involving drivers, it's when you need to
-actively manage them that it's more effort.
-
-> > Bear in mind that getting regulator stuff wrong can result
-> > in physical damage to the system so it pays to be careful and to
-> > consider that platform integrators have a tendency to rely on things
-> > that just happen to work but aren't a good idea or accurate
-> > representations of the system.  It's certainly *possible* to do
-> > something like that, the information is there, but I would not in any
-> > way recommend doing things that way as it's likely to not be robust.
-
-> > The possibility that the regulator setup may vary on other platforms
-> > (which I'd expect TBH) does suggest that just requesting a bunch of
-> > supply names optionally and hoping that we got all the ones that are
-> > important on a given platform is going to lead to trouble down the line.
-
-> Certainly if we miss a regulator the GPU isn't going to work properly (some
-> cores won't be able to power up successfully). However at the moment the
-> driver will happily do this if someone provides it with a DT which includes
-> regulators that it doesn't know about. So I'm not sure how adding special
-> case code for a SoC would help here.
-
-I thought this SoC neeed to vary the voltage on both rails as part of
-the power management?  Things like that can lead to hardware damage if
-we go out of spec far enough for long enough - there can be requirements
-like keeping one rail a certain voltage above another or whatever.
-
---pQhZXvAqiZgbeUkD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4Xg8kACgkQJNaLcl1U
-h9DhIQf9HZ2Q1blNvGt1n4U2y9oZgTgphMEa0JMJU6uCB4DzokV/ki8co9SwPcFC
-feV+gosXXo6A98jenPsWIobEfWSUiwEYa5w3ClUYlcVrKLIwlUmThXvSiIS1+uva
-LEnxvF+4WP37piAr891qK5iZdpOoMniy8m1bBXSm75midArEGcV2rqCorXEStIih
-LNey+eFBxgweMQNmVL/FElCItrW6+x9HyxEGdBL4TLDMOpxC1cb/qyQUs9dAlRwQ
-evp+V1ZYh5rSuQqAF5XEJwA+f8k33X0VJki7BJ+Nh3IkQpVWtg0ORKW3e4hw5+DW
-B6Gvn1/3P+OYjc/Azm6w18G1USraiQ==
-=M45L
------END PGP SIGNATURE-----
-
---pQhZXvAqiZgbeUkD--
