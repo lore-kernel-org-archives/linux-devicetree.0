@@ -2,73 +2,98 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 763E0C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F4AC32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48C0F20678
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E7F20673
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ex9Eg7dw"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tljAdzLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbgAIJBR (ORCPT
+        id S1728862AbgAIJIJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:01:17 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:24492 "EHLO
+        Thu, 9 Jan 2020 04:08:09 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:23198 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729069AbgAIJBR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 04:01:17 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0098vluo027339;
-        Thu, 9 Jan 2020 10:01:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=VrpNqw1ml8Zy129ySb4TfJry+4/8mCEXYVXi+jrwUo4=;
- b=Ex9Eg7dwD08Sqq4AnJ4VKMz3942ON5mW6GSfi09pXE0WW191YtZAisAaWCGBdxfOM/c0
- +L36s7Y8wXA2XNDhbMWlBE3xDgKh0vt4Lp3ZqT1EUHJHNQK0MBS4qJf55ikNF+tpwJdu
- 17xK4xrsqfKIbIEIpEkJo/rW/325R8lIcAlTHUqcbK6oYl/eCU1bUp3bXa1CCp6y5AkQ
- XmaNsD3S+ebYb1xpG3BUge2ypZ7lY5wAY2+YlqIpFUimdLhzF+lsBl0Ts2qJivyvioMg
- IrtcXNwgrJZvnCQr5o3b9hiGz8gMT+FqzJXdT7SNR4O4LJSPQxDx3BJri8lVEXNzPM7C VA== 
+        by vger.kernel.org with ESMTP id S1728782AbgAIJIJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 04:08:09 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009943ki002842;
+        Thu, 9 Jan 2020 10:07:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=is6x6Xsavc4DrmaKIz9Vu39SoGM1pxSmkBDyOwyjfa0=;
+ b=tljAdzLxNcuZNYbois3hdLfVjFYmM+a7XJR2qA4cbheXmLFBmwcvO4Tyd2PSUhPfrtUP
+ dGkXZNfXXiMRik0oqLpd8MMkk8w2vph+qXFWX5RpZTzayz/MwKQUvtzaBUn9oB6DT/Xm
+ fVEv5X/L+HfQinfv8d96XpjqpEwy/iu0DE07SVJbdbPA87ilcpoRnzVpAXrYHE5Ni44y
+ DJi6tT4FeDBqo7qcL13pXZdGwr4mzsDAarBKJ4WnFg3E+4MH/wyWFxBwMPYr+oBUvd4n
+ G3fWAxEmEzxBt2tq0Ajwg2Ez0Tt/KIWcBff3mLkHMpLMYIQAOsvVE1LNdaplPElsnl3P 1Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakur0ggh-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xakm5rk43-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 10:01:04 +0100
+        Thu, 09 Jan 2020 10:07:35 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8495A10002A;
-        Thu,  9 Jan 2020 10:01:04 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AFAB2A4D7B;
-        Thu,  9 Jan 2020 10:01:04 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 Jan
- 2020 10:01:03 +0100
-Subject: Re: [PATCH 0/3] Convert STM32 ROMEM to json-schema
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <srinivas.kandagatla@linaro.org>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <fabrice.gasnier@st.com>
-CC:     <devicetree@vger.kernel.org>,
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A573A10003B;
+        Thu,  9 Jan 2020 10:07:32 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 84DD02A4D87;
+        Thu,  9 Jan 2020 10:07:32 +0100 (CET)
+Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 Jan
+ 2020 10:07:32 +0100
+Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
+ SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
+ 15.00.1473.003; Thu, 9 Jan 2020 10:07:32 +0100
+From:   Christophe ROULLIER <christophe.roullier@st.com>
+To:     Maxime Ripard <mripard@kernel.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
         <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191219144117.21527-1-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c3326bf5-f3f8-489b-5245-3b9fd47324bb@st.com>
-Date:   Thu, 9 Jan 2020 10:01:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191219144117.21527-1-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Topic: [PATCH 1/2] dt-bindings: net: dwmac: increase 'maxItems' for
+ 'clocks', 'clock-names' properties
+Thread-Index: AQHVljS9qESSyYnraEKgryyZ/0O5A6eL1WwAgFaFz4A=
+Date:   Thu, 9 Jan 2020 09:07:32 +0000
+Message-ID: <009e8c0e-6a72-7e14-699e-8a897199ae16@st.com>
+References: <20191108103526.22254-1-christophe.roullier@st.com>
+ <20191108103526.22254-2-christophe.roullier@st.com>
+ <20191108104231.GE4345@gilmour.lan>
+ <f934df21-ac57-50ad-3e7b-b3b337daabe1@st.com>
+ <20191115075008.GY4345@gilmour.lan>
+In-Reply-To: <20191115075008.GY4345@gilmour.lan>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE2.st.com
- (10.75.127.8)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.51]
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <23EE773BFEB22B40A7851F2EFDD3C50A@st.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
 Sender: devicetree-owner@vger.kernel.org
@@ -76,28 +101,85 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Benjamin,
+On 15/11/2019 08:50, Maxime Ripard wrote:
+> On Fri, Nov 08, 2019 at 01:02:14PM +0000, Christophe ROULLIER wrote:
+>> On 11/8/19 11:42 AM, Maxime Ripard wrote:
+>>> Hi,
+>>>
+>>> On Fri, Nov 08, 2019 at 11:35:25AM +0100, Christophe Roullier wrote:
+>>>> This change is needed for some soc based on snps,dwmac, which have
+>>>> more than 3 clocks.
+>>>>
+>>>> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 +++++++-
+>>>>    1 file changed, 7 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/D=
+ocumentation/devicetree/bindings/net/snps,dwmac.yaml
+>>>> index 4845e29411e4..376a531062c2 100644
+>>>> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>>>> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+>>>> @@ -27,6 +27,7 @@ select:
+>>>>              - snps,dwmac-3.710
+>>>>              - snps,dwmac-4.00
+>>>>              - snps,dwmac-4.10a
+>>>> +          - snps,dwmac-4.20a
+>>>>              - snps,dwxgmac
+>>>>              - snps,dwxgmac-2.10
+>>>>
+>>>> @@ -62,6 +63,7 @@ properties:
+>>>>            - snps,dwmac-3.710
+>>>>            - snps,dwmac-4.00
+>>>>            - snps,dwmac-4.10a
+>>>> +        - snps,dwmac-4.20a
+>>>>            - snps,dwxgmac
+>>>>            - snps,dwxgmac-2.10
+>>>>
+>>>> @@ -87,7 +89,8 @@ properties:
+>>>>
+>>>>      clocks:
+>>>>        minItems: 1
+>>>> -    maxItems: 3
+>>>> +    maxItems: 5
+>>>> +    additionalItems: true
+>>> Those additional clocks should be documented
+>>>
+>>> Maxime
+>> Hi Maxime,
+>>
+>> The problem it is specific to our soc, so is it possible to
+>>
+>> propose "optional clock" for 2 extras clocks in snps,dwmac.yaml
+>>
+>> and "official" description in soc yaml file (stm32-dwmac.yaml) ?
+>>
+>>   =A0 clocks:
+>>   =A0=A0=A0 minItems: 1
+>>   =A0=A0=A0 maxItems: 5
+>>   =A0=A0=A0 additionalItems: true
+>>   =A0=A0=A0 items:
+>>   =A0=A0=A0=A0=A0 - description: GMAC main clock
+>>   =A0=A0=A0=A0=A0 - description: Peripheral registers interface clock
+>>   =A0=A0=A0=A0=A0 - description:
+>>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 PTP reference clock. This clock is used fo=
+r programming the
+>>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 Timestamp Addend Register. If not passed t=
+hen the system
+>>   =A0=A0=A0=A0=A0=A0=A0=A0=A0 clock will be used and this is fine on som=
+e platforms.
+>>
+>> +=A0=A0=A0=A0=A0 - description: optional clock
+>>
+>> +=A0=A0=A0=A0=A0 - description: optional clock
+> I guess we'd really need to figure out what those clocks are doing,
+> they are probably helpful (and used, under a different name) by
+> others.
+>
+> Hopefully the questions Rob asked will clear that out
 
-On 12/19/19 3:41 PM, Benjamin Gaignard wrote:
-> Convert STM32 ROMEM to json-schema and fix the issues detected on stm32 dtsi
-> files.
-> Note that stm32mp1 patch should be applied on top of the stm32-next tree.
-> 
-> Benjamin Gaignard (3):
->    dt-bindings: nvmem: Convert STM32 ROMEM to json-schema
->    ARM: dts: stm32: change nvmem node name on stm32f429
->    ARM: dts: stm32: change nvmem node name on stm32mp1
-> 
->   .../devicetree/bindings/nvmem/st,stm32-romem.txt   | 31 ---------------
->   .../devicetree/bindings/nvmem/st,stm32-romem.yaml  | 46 ++++++++++++++++++++++
->   arch/arm/boot/dts/stm32f429.dtsi                   |  2 +-
->   arch/arm/boot/dts/stm32mp151.dtsi                  |  2 +-
->   4 files changed, 48 insertions(+), 33 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.txt
->   create mode 100644 Documentation/devicetree/bindings/nvmem/st,stm32-romem.yaml
-> 
-
-DT patches applied on stm32-next.
+Rob, do you have any ideas, suggestions ?
 
 Thanks
-Alex
+
+> Maxime=
