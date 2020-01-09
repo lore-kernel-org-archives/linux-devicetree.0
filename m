@@ -6,19 +6,19 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7867C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 02:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FE9C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 02:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D9220705
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 02:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676C420705
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 02:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgAICbF (ORCPT
+        id S1727888AbgAICbG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 21:31:05 -0500
+        Wed, 8 Jan 2020 21:31:06 -0500
 Received: from mail-sh.amlogic.com ([58.32.228.43]:32408 "EHLO
         mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgAICbE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 21:31:04 -0500
+        with ESMTP id S1727855AbgAICbG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 21:31:06 -0500
 Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
  (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 9 Jan 2020
  10:31:21 +0800
@@ -43,9 +43,9 @@ CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
         Jian Hu <jian.hu@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
         Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v4 5/6] arm64: dts: meson: a1: Enable USB2 PHY
-Date:   Thu, 9 Jan 2020 10:30:44 +0800
-Message-ID: <1578537045-23260-6-git-send-email-hanjie.lin@amlogic.com>
+Subject: [PATCH v4 6/6] arm64: dts: meson: a1: Enable DWC3 controller
+Date:   Thu, 9 Jan 2020 10:30:45 +0800
+Message-ID: <1578537045-23260-7-git-send-email-hanjie.lin@amlogic.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578537045-23260-1-git-send-email-hanjie.lin@amlogic.com>
 References: <1578537045-23260-1-git-send-email-hanjie.lin@amlogic.com>
@@ -57,44 +57,63 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable USB2 PHY for Meson A1 SoC.
+Enable DWC3 controller for Meson A1 SoC.
 
 Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
 Signed-off-by: Yue Wang <yue.wang@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 6fdc0dd..3cae8e9 100644
+index 3cae8e9..009d2c4 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -6,6 +6,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
+@@ -7,6 +7,8 @@
  #include <dt-bindings/interrupt-controller/arm-gic.h>
  #include <dt-bindings/power/meson-a1-power.h>
-+#include <dt-bindings/reset/amlogic,meson-a1-reset.h>
+ #include <dt-bindings/reset/amlogic,meson-a1-reset.h>
++#include <dt-bindings/clock/a1-pll-clkc.h>
++#include <dt-bindings/clock/a1-clkc.h>
  
  / {
  	compatible = "amlogic,a1";
-@@ -100,6 +101,17 @@
- 				#power-domain-cells = <1>;
- 				status = "okay";
- 			};
-+
-+			usb2_phy1: phy@40000 {
-+				status = "okay";
-+				compatible = "amlogic,a1-usb2-phy";
-+				clocks = <&clkc_periphs CLKID_XTAL_USB_PHY>;
-+				clock-names = "xtal_usb_phy";
-+				reg = <0x0 0x40000 0x0 0x2000>;
-+				resets = <&reset RESET_USBPHY>;
-+				#phy-cells = <0>;
-+				power-domains = <&pwrc PWRC_USB_ID>;
-+			};
+@@ -126,6 +128,35 @@
+ 			#interrupt-cells = <3>;
+ 			#address-cells = <0>;
  		};
++
++		usb: usb@ffe09000 {
++			status = "okay";
++			compatible = "amlogic,meson-a1-usb-ctrl";
++			reg = <0x0 0xffe09000 0x0 0xa0>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&clkc_periphs CLKID_USB_CTRL>,
++				 <&clkc_periphs CLKID_USB_BUS>,
++				 <&clkc_periphs CLKID_XTAL_USB_CTRL>;
++			clock-names = "usb_ctrl", "usb_bus", "xtal_usb_ctrl";
++			resets = <&reset RESET_USBCTRL>;
++
++			dr_mode = "host";
++
++			phys = <&usb2_phy1>;
++			phy-names = "usb2-phy1";
++
++			dwc3: usb@ff400000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0xff400000 0x0 0x100000>;
++				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++				dr_mode = "host";
++				snps,dis_u2_susphy_quirk;
++				snps,quirk-frame-length-adjustment = <0x20>;
++			};
++		};
+ 	};
  
- 		gic: interrupt-controller@ff901000 {
+ 	timer {
 -- 
 2.7.4
 
