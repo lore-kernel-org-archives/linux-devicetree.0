@@ -2,227 +2,104 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F193C282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D07C282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276A72082E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2418D2075D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="DWOUhR5P"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rG0mAqjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbgAINw2 (ORCPT
+        id S1725879AbgAIN5I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:52:28 -0500
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:34621 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731313AbgAINw1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:52:27 -0500
-Received: by mail-wr1-f46.google.com with SMTP id t2so7531271wrr.1
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 05:52:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZrLGBX0GAZWIN09k6Jkrkg5nYulCVLrz9ygY+tV/Kr0=;
-        b=DWOUhR5Pw1UT7nKDs96VcPAvctYVQZndKPpUAYQQaemJuOKNPPi0djqIMoTKZmGNdU
-         m3gYqAb2ZVDxU/ZmL47bE6H4/45c0kE9GHr77nVQmGhaqxX9qBzA9K0zkGCvferdeN3h
-         J1DrePcxW4f1i1JjeVvek39aSe3n1PTymc+5Lx1s6ZtJwDtXi55BhGpYWr9i0eEcmce6
-         2SBlT27TJFZJymacRlX9+h9SesUOiLwWCZMyW9bsfLSzvrjNHj4TEEiRpWGHHO7BVaSC
-         OKY8TIY484UNoZXe/Xrdxwn1WuxtuR7eWETApOEoiAYq28mwHqlCmjaNheN8dW5yrSOx
-         ch2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=ZrLGBX0GAZWIN09k6Jkrkg5nYulCVLrz9ygY+tV/Kr0=;
-        b=A/46tw3rGAQAu1+LOofAMrCKEx1fbZtsfAZpH09ARzd5Tzihs++SZlYuYn/vVnyTEr
-         zrE6gF6TM14Qo1NJLgSVzNuwu4MtPMONZdCrvdf0BEbRgfJbW+E2heDyCpnz7ep9Wr32
-         sgGkL6RfNKKsPG1HL9fIOMjnN9NqklH5fDmq0OkKiSkgZZnIDQyv+8fbogTGUqHx8IKW
-         5QzB23L7Z74Rz1Wdd/B4wKLOXc2NEwaSfKcoEzguxBxghIu+xlDqnky3jHG7SnlN/Aqh
-         KOBDDxMJjuMq3Aj2GUE7cJG/kHy2nkCppj8sxTHY5jObrP4K2FvpnKhnEYwvknLjD2Wp
-         4htA==
-X-Gm-Message-State: APjAAAWgQXep1igTeJDXJxYTwfC3XO6kX8+aViraaUCg/gxK3yP+sMsF
-        GlngIu4ecd1v17jD/BkdGLIlnA==
-X-Google-Smtp-Source: APXvYqw3xbHMsE3r5E/4sf+7dAbuVceFIbAf9AcL+fsqMok5sD7ZmoMagUK3wKeOBKhMKTlaTmrfug==
-X-Received: by 2002:adf:de84:: with SMTP id w4mr10669349wrl.97.1578577945671;
-        Thu, 09 Jan 2020 05:52:25 -0800 (PST)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id g21sm2877547wmh.17.2020.01.09.05.52.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:52:25 -0800 (PST)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
-Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/8] arm64: zynqmp: Use ethernet-phy as node name for ethernet phys
-Date:   Thu,  9 Jan 2020 14:52:15 +0100
-Message-Id: <fabbd8e1417f326376d12b5bd0935405ce26eac6.1578577931.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1578577931.git.michal.simek@xilinx.com>
-References: <cover.1578577931.git.michal.simek@xilinx.com>
+        Thu, 9 Jan 2020 08:57:08 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56172 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgAIN5I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:57:08 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 009Dv07b034023;
+        Thu, 9 Jan 2020 07:57:00 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578578220;
+        bh=1TMtTjCmCOQvk0/KYtiyqoakyNuPU5JopEa33VjdmNo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rG0mAqjUXNic9c38dJv5JnTvoFWWjMt1L99eOncZbTmHK9DiG6xDWuY5P3iMv69V7
+         C8WRRAzNzyNhnQJzTln3YK/fjpTrhx69x/ILebB8XkOxqmXnLEQwuyTtEOK8O3PStZ
+         Exc/geNURmUbkdE4ay/zq/dChFvtJ9f8oy1Ifapo=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 009Dv07F123940
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jan 2020 07:57:00 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
+ 2020 07:56:59 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Jan 2020 07:56:59 -0600
+Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 009DuuFt014859;
+        Thu, 9 Jan 2020 07:56:57 -0600
+Subject: Re: [PATCH] arm: dts: Move am33xx and am43xx mmc nodes to sdhci-omap
+ driver
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        "tony@atomide.com >> Tony Lindgren" <tony@atomide.com>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>,
+        <bcousson@baylibre.com>, <kishon@ti.com>
+References: <20200106111517.15158-1-faiz_abbas@ti.com>
+From:   Faiz Abbas <faiz_abbas@ti.com>
+Message-ID: <ab908007-fd7d-9dd5-c822-f4058c793d7d@ti.com>
+Date:   Thu, 9 Jan 2020 19:28:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200106111517.15158-1-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Ethernet phys based on devicetree specification should be using
-ethernet-phy@ node name instead of pure phy@.
+Hi,
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+On 06/01/20 4:45 pm, Faiz Abbas wrote:
+> Move mmc nodes to be compatible with the sdhci-omap driver. The following
+> modifications are required for omap_hsmmc specific properties:
+> 
+> ti,non-removable: convert to the generic mmc non-removable
+> ti,needs-special-reset:  co-opted into the sdhci-omap driver
+> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
+> ti,needs-special-hs-handling: removed. Legacy property not used in am335x or am43xx
+> 
+> Also since the sdhci-omap driver does not support runtime PM, explicitly
+> disable the mmc3 instance in the dtsi.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+> 
+> Driver modifications have been posted separately:
+> https://patchwork.kernel.org/project/linux-mmc/list/?series=224053
+> 
+> Tested on: am335x-evm, am335x-boneblack, am335x-sk, am335x-bone, am437x-idk,
+> am43xx-gp-evm, am43xx-epos-evm.
+> 
+> I need some help with testing all other am335x variants and SDIO cards.
+> 
+> Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
+> 
 
-Changes in v2:
-- Add missing patch
+Tony, can you help test some of these boards?
 
- arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts      | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts      | 4 ++--
- arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts      | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts      | 2 +-
- arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts      | 2 +-
- 9 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts
-index 3542d92735cb..69f6e4610739 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts
-@@ -73,7 +73,7 @@ &gem3 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@0 {
-+	phy0: ethernet-phy@0 {
- 		reg = <0>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-index e5d83a4aca07..b75235ae7d30 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
-@@ -84,7 +84,7 @@ &gem2 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@5 {
-+	phy0: ethernet-phy@5 {
- 		reg = <5>;
- 		ti,rx-internal-delay = <0x8>;
- 		ti,tx-internal-delay = <0xa>;
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts
-index 3750690925ad..4ea6ef5a7f2b 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts
-@@ -73,7 +73,7 @@ &gem0 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@0 { /* VSC8211 */
-+	phy0: ethernet-phy@0 { /* VSC8211 */
- 		reg = <0>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts
-index 9a894e6db6ba..41934e3525c6 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts
-@@ -74,7 +74,7 @@ &gem1 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@0 {
-+	phy0: ethernet-phy@0 {
- 		reg = <0>;
- 	};
- };
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-index d92f617f0b9d..7c6b538490f8 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-@@ -105,7 +105,7 @@ &gem3 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@21 {
-+	phy0: ethernet-phy@21 {
- 		reg = <21>;
- 		ti,rx-internal-delay = <0x8>;
- 		ti,tx-internal-delay = <0xa>;
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
-index 1780ed237daf..d9ad8a4b20d3 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
-@@ -16,7 +16,7 @@ / {
- 
- &gem3 {
- 	phy-handle = <&phyc>;
--	phyc: phy@c {
-+	phyc: ethernet-phy@c {
- 		reg = <0xc>;
- 		ti,rx-internal-delay = <0x8>;
- 		ti,tx-internal-delay = <0xa>;
-@@ -24,7 +24,7 @@ phyc: phy@c {
- 		ti,dp83867-rxctrl-strap-quirk;
- 	};
- 	/* Cleanup from RevA */
--	/delete-node/ phy@21;
-+	/delete-node/ ethernet-phy@21;
- };
- 
- /* Fix collision with u61 */
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-index cfb054e46723..2d71b4431cce 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
-@@ -50,7 +50,7 @@ &gem3 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@c {
-+	phy0: ethernet-phy@c {
- 		reg = <0xc>;
- 		ti,rx-internal-delay = <0x8>;
- 		ti,tx-internal-delay = <0xa>;
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-index ea2dcbe9effd..ae62fe4287c2 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-@@ -106,7 +106,7 @@ &gem3 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@c {
-+	phy0: ethernet-phy@c {
- 		reg = <0xc>;
- 		ti,rx-internal-delay = <0x8>;
- 		ti,tx-internal-delay = <0xa>;
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-index d656eb8b3040..b3c29947d6b3 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-@@ -101,7 +101,7 @@ &gem3 {
- 	status = "okay";
- 	phy-handle = <&phy0>;
- 	phy-mode = "rgmii-id";
--	phy0: phy@c {
-+	phy0: ethernet-phy@c {
- 		reg = <0xc>;
- 		ti,rx-internal-delay = <0x8>;
- 		ti,tx-internal-delay = <0xa>;
--- 
-2.24.0
-
+Thanks,
+Faiz
