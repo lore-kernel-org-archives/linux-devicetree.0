@@ -2,117 +2,166 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC3CC32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 12:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FE2C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 12:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A7620661
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 12:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBF662077B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 12:12:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbgAIMD5 (ORCPT
+        id S1730191AbgAIMMX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 07:03:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:58044 "EHLO foss.arm.com"
+        Thu, 9 Jan 2020 07:12:23 -0500
+Received: from mx.socionext.com ([202.248.49.38]:22779 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgAIMD5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 07:03:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7293831B;
-        Thu,  9 Jan 2020 04:03:56 -0800 (PST)
-Received: from [10.1.32.29] (e122027.cambridge.arm.com [10.1.32.29])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C6553F534;
-        Thu,  9 Jan 2020 04:03:53 -0800 (PST)
-Subject: Re: [PATCH v2 3/7] drm/panfrost: Improve error reporting in
- panfrost_gpu_power_on
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200108052337.65916-1-drinkcat@chromium.org>
- <20200108052337.65916-4-drinkcat@chromium.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3997e444-e388-929f-b764-537d62643bae@arm.com>
-Date:   Thu, 9 Jan 2020 12:03:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1730167AbgAIMMW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 07:12:22 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 09 Jan 2020 21:12:20 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id A5D3B603AB;
+        Thu,  9 Jan 2020 21:12:20 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 9 Jan 2020 21:13:11 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 322C540343;
+        Thu,  9 Jan 2020 21:12:20 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id F0BFA120136;
+        Thu,  9 Jan 2020 21:12:19 +0900 (JST)
+Date:   Thu, 09 Jan 2020 21:12:20 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA controller driver
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20191227063411.GG3006@vkoul-mobl>
+References: <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com> <20191227063411.GG3006@vkoul-mobl>
+Message-Id: <20200109211219.57FC.4A936039@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <20200108052337.65916-4-drinkcat@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 08/01/2020 05:23, Nicolas Boichat wrote:
-> It is useful to know which component cannot be powered on.
+Hi Vinod,
+
+Thank you for your comment.
+
+On Fri, 27 Dec 2019 12:04:11 +0530 <vkoul@kernel.org> wrote:
+
+> On 18-12-19, 09:57, Kunihiko Hayashi wrote:
+> > This adds external DMA controller driver implemented in Socionext
+> > UniPhier SoCs. This driver supports DMA_MEMCPY and DMA_SLAVE modes.
+> > 
+> > Since this driver does not support the the way to transfer size
+> > unaligned to burst width, 'src_maxburst' or 'dst_maxburst' of
 > 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> You mean driver does not support any unaligned bursts?
 
-Looks like helpful error reporting.
-
-Reviewed-by: Steven Price <steven.price@arm.com>
+Yes. If transfer size is unaligned to burst size, the final transfer
+will be overrun.
 
 > 
-> ---
+> > +static int uniphier_xdmac_probe(struct platform_device *pdev)
+> > +{
+> > +	struct uniphier_xdmac_device *xdev;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct dma_device *ddev;
+> > +	int irq;
+> > +	int nr_chans;
+> > +	int i, ret;
+> > +
+> > +	if (of_property_read_u32(dev->of_node, "dma-channels", &nr_chans))
+> > +		return -EINVAL;
+> > +	if (nr_chans > XDMAC_MAX_CHANS)
+> > +		nr_chans = XDMAC_MAX_CHANS;
+> > +
+> > +	xdev = devm_kzalloc(dev, struct_size(xdev, channels, nr_chans),
+> > +			    GFP_KERNEL);
+> > +	if (!xdev)
+> > +		return -ENOMEM;
+> > +
+> > +	xdev->nr_chans = nr_chans;
+> > +	xdev->reg_base = devm_platform_ioremap_resource(pdev, 0);
+> > +	if (IS_ERR(xdev->reg_base))
+> > +		return PTR_ERR(xdev->reg_base);
+> > +
+> > +	ddev = &xdev->ddev;
+> > +	ddev->dev = dev;
+> > +	dma_cap_zero(ddev->cap_mask);
+> > +	dma_cap_set(DMA_MEMCPY, ddev->cap_mask);
+> > +	dma_cap_set(DMA_SLAVE, ddev->cap_mask);
+> > +	ddev->src_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
+> > +	ddev->dst_addr_widths = UNIPHIER_XDMAC_BUSWIDTHS;
+> > +	ddev->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
+> > +			   BIT(DMA_MEM_TO_MEM);
+> > +	ddev->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> > +	ddev->max_burst = XDMAC_MAX_WORDS;
+> > +	ddev->device_free_chan_resources = uniphier_xdmac_free_chan_resources;
+> > +	ddev->device_prep_dma_memcpy = uniphier_xdmac_prep_dma_memcpy;
+> > +	ddev->device_prep_slave_sg = uniphier_xdmac_prep_slave_sg;
+> > +	ddev->device_config = uniphier_xdmac_slave_config;
+> > +	ddev->device_terminate_all = uniphier_xdmac_terminate_all;
+> > +	ddev->device_synchronize = uniphier_xdmac_synchronize;
+> > +	ddev->device_tx_status = dma_cookie_status;
+> > +	ddev->device_issue_pending = uniphier_xdmac_issue_pending;
+> > +	INIT_LIST_HEAD(&ddev->channels);
+> > +
+> > +	for (i = 0; i < nr_chans; i++) {
+> > +		ret = uniphier_xdmac_chan_init(xdev, i);
+> > +		if (ret) {
+> > +			dev_err(dev,
+> > +				"Failed to initialize XDMAC channel %d\n", i);
+> > +			return ret;
 > 
-> Was useful when trying to probe bifrost GPU, to understand what
-> issue we are facing.
-> ---
->   drivers/gpu/drm/panfrost/panfrost_gpu.c | 15 ++++++++++-----
->   1 file changed, 10 insertions(+), 5 deletions(-)
+> so on error for channel N we leave N-1 channels initialized?
+
+The uniphier_xdmac_chan_init() always returns 0, so this error decision
+can be removed.
+
+> > +static int uniphier_xdmac_remove(struct platform_device *pdev)
+> > +{
+> > +	struct uniphier_xdmac_device *xdev = platform_get_drvdata(pdev);
+> > +	struct dma_device *ddev = &xdev->ddev;
+> > +	struct dma_chan *chan;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Before reaching here, almost all descriptors have been freed by the
+> > +	 * ->device_free_chan_resources() hook. However, each channel might
+> > +	 * be still holding one descriptor that was on-flight at that moment.
+> > +	 * Terminate it to make sure this hardware is no longer running. Then,
+> > +	 * free the channel resources once again to avoid memory leak.
+> > +	 */
+> > +	list_for_each_entry(chan, &ddev->channels, device_node) {
+> > +		ret = dmaengine_terminate_sync(chan);
+> > +		if (ret)
+> > +			return ret;
+> > +		uniphier_xdmac_free_chan_resources(chan);
 > 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> index 8822ec13a0d619f..ba02bbfcf28c011 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> @@ -308,21 +308,26 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
->   	gpu_write(pfdev, L2_PWRON_LO, pfdev->features.l2_present);
->   	ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
->   		val, val == pfdev->features.l2_present, 100, 1000);
-> +	if (ret)
-> +		dev_err(pfdev->dev, "error powering up gpu L2");
->   
->   	gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
-> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
-> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
->   		val, val == pfdev->features.stack_present, 100, 1000);
-> +	if (ret)
-> +		dev_err(pfdev->dev, "error powering up gpu stack");
+> terminating sounds okayish but not freeing here. .ree_chan_resources()
+> should have been called already and that should ensure that termination
+> is already done...
 
-As mentioned in my previous email - we could just drop this entire section dealing with the core stacks and let the GPU's own dependency management code handle it. Of course there might be a GPU out there for which that is broken... in which case some sort of quirk handling will be needed :(
+If all transfers are complete, .device_free_chan_resources() should be called.
+Since _remove() might be called asynchronously, this is post-processing just
+before transfer completion.
 
-Steve
+Thank you,
 
->   
->   	gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
-> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
-> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
->   		val, val == pfdev->features.shader_present, 100, 1000);
-> +	if (ret)
-> +		dev_err(pfdev->dev, "error powering up gpu shader");
->   
->   	gpu_write(pfdev, TILER_PWRON_LO, pfdev->features.tiler_present);
-> -	ret |= readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
-> +	ret = readl_relaxed_poll_timeout(pfdev->iomem + TILER_READY_LO,
->   		val, val == pfdev->features.tiler_present, 100, 1000);
-> -
->   	if (ret)
-> -		dev_err(pfdev->dev, "error powering up gpu");
-> +		dev_err(pfdev->dev, "error powering up gpu tiler");
->   }
->   
->   void panfrost_gpu_power_off(struct panfrost_device *pfdev)
-> 
+---
+Best Regards,
+Kunihiko Hayashi
 
