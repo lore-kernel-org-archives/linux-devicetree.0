@@ -2,70 +2,75 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D07C282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB6EC282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 14:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2418D2075D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32FD2075D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 14:02:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rG0mAqjU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="Q7PFKTGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725879AbgAIN5I (ORCPT
+        id S1729712AbgAIOCZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:57:08 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:56172 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgAIN5I (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:57:08 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 009Dv07b034023;
-        Thu, 9 Jan 2020 07:57:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578578220;
-        bh=1TMtTjCmCOQvk0/KYtiyqoakyNuPU5JopEa33VjdmNo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rG0mAqjUXNic9c38dJv5JnTvoFWWjMt1L99eOncZbTmHK9DiG6xDWuY5P3iMv69V7
-         C8WRRAzNzyNhnQJzTln3YK/fjpTrhx69x/ILebB8XkOxqmXnLEQwuyTtEOK8O3PStZ
-         Exc/geNURmUbkdE4ay/zq/dChFvtJ9f8oy1Ifapo=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 009Dv07F123940
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 9 Jan 2020 07:57:00 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
- 2020 07:56:59 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 9 Jan 2020 07:56:59 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 009DuuFt014859;
-        Thu, 9 Jan 2020 07:56:57 -0600
-Subject: Re: [PATCH] arm: dts: Move am33xx and am43xx mmc nodes to sdhci-omap
- driver
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        "tony@atomide.com >> Tony Lindgren" <tony@atomide.com>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <bcousson@baylibre.com>, <kishon@ti.com>
-References: <20200106111517.15158-1-faiz_abbas@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <ab908007-fd7d-9dd5-c822-f4058c793d7d@ti.com>
-Date:   Thu, 9 Jan 2020 19:28:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 09:02:25 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40118 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbgAIOCZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 09:02:25 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so2946416wmi.5
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 06:02:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cH3/OtZ3DAvw8IgKFnqPXU8D4jtKtoD9aLE/M0BbcKs=;
+        b=Q7PFKTGxpyCSu9tOEMplXNfwBzehjnBpiHUyvo+zkGU7Jnf4Pk73EORE5sthX5quPi
+         NZfAq9ONyqTNDWQUy4XkVGDXC/iLmaFl6eHu/m+CGEyOKWB2SRTyN1Uh4M9aYlQyUCgI
+         lPGue0manFc74H5onYbbMtUeLfH150STGLEYotHrptrBwpwaQX5908a5KWP/o3UuS/mc
+         +Fhsc2Cgc6sI3nRyMiKGzsTlVjMYnosUMQoLRtSO0m4H2tbVrcV566XiPwRaTQYq1XrT
+         h7oXEmdZf1tbOffD4LeeZ4Ye5a3GON25kL38+23iJBXg6Y65XEWVSDfxgNTVCq7X/h8o
+         YkDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=cH3/OtZ3DAvw8IgKFnqPXU8D4jtKtoD9aLE/M0BbcKs=;
+        b=n9GrTbG/IytVyB9B1UA4MuiyqzViQHwAKE/4WyKwnRba5ZWR/YcvRSVOzzBWwCZ1x3
+         sQBoory9gkoR+DKcEnrmCF44QMOAJEa04/WFMXnmSa6IGljsf8XboRjyWHXMUY18LWfm
+         yOWmcgqhPkOgKOF9lp+FHGmtt9aVK7+ALten8qR4G1TSWoVNjNZ+Fwog8FE1bMqYa/eD
+         bZmNyr8516qbtQrh0HlrF40a3qPt7wcULlD4F0EEOfv7TWadZ818r+T1s3rHGOoK5QX1
+         KbT67EevQwdWF25kRyCXiHE2s03v2lvEE6HHwiD9mrlP1Guiwl4W5C6JI7SkQbUq9vqC
+         Gs7w==
+X-Gm-Message-State: APjAAAXgm+7jSmH/9CbaiGpm9tMmdpwl/+C0smZrs1p1IGT34YIBsBlr
+        q9Rt+g54otaAlidCOkDyZzpSlg==
+X-Google-Smtp-Source: APXvYqz9WNWkReumkSXQjkJSbEUPQl0vWe2bk7mCzx+9uimnftzUwsh7ehidAGZy+lLpg/8XU0tk6w==
+X-Received: by 2002:a1c:7901:: with SMTP id l1mr5038497wme.67.1578578543372;
+        Thu, 09 Jan 2020 06:02:23 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id g18sm2851975wmh.48.2020.01.09.06.02.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Jan 2020 06:02:22 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] arm64: zynqmp: Enable iio-hwmon based on iio ina226 driver with labels
+Date:   Thu,  9 Jan 2020 15:02:14 +0100
+Message-Id: <cover.1578578535.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20200106111517.15158-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -73,33 +78,29 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hi,
 
-On 06/01/20 4:45 pm, Faiz Abbas wrote:
-> Move mmc nodes to be compatible with the sdhci-omap driver. The following
-> modifications are required for omap_hsmmc specific properties:
-> 
-> ti,non-removable: convert to the generic mmc non-removable
-> ti,needs-special-reset:  co-opted into the sdhci-omap driver
-> ti,dual-volt: removed. Legacy property not used in am335x or am43xx
-> ti,needs-special-hs-handling: removed. Legacy property not used in am335x or am43xx
-> 
-> Also since the sdhci-omap driver does not support runtime PM, explicitly
-> disable the mmc3 instance in the dtsi.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
-> 
-> Driver modifications have been posted separately:
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=224053
-> 
-> Tested on: am335x-evm, am335x-boneblack, am335x-sk, am335x-bone, am437x-idk,
-> am43xx-gp-evm, am43xx-epos-evm.
-> 
-> I need some help with testing all other am335x variants and SDIO cards.
-> 
-> Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
-> 
-
-Tony, can you help test some of these boards?
+the patch 2c3d0c9ffd24 ("iio: core: Add optional symbolic label to device attributes")
+added support for labelling IIO devices that's why I can enable iio based
+ina226 driver with label property.
 
 Thanks,
-Faiz
+Michal
+
+
+Michal Simek (7):
+  arm64: zynqmp: Enable iio-hwmon for ina226 on zcu100
+  arm64: zynqmp: Enable iio-hwmon for ina226 on zcu111
+  arm64: zynqmp: Add label property to all ina226 on zcu111
+  arm64: zynqmp: Enable iio-hwmon for ina226 on zcu102
+  arm64: zynqmp: Add label property to all ina226 on zcu102
+  arm64: zynqmp: Enable iio-hwmon for ina226 on zcu106
+  arm64: zynqmp: Add label property to all ina226 on zcu106
+
+ .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    |   8 +-
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    | 145 +++++++++++++++---
+ .../boot/dts/xilinx/zynqmp-zcu106-revA.dts    | 145 +++++++++++++++---
+ .../boot/dts/xilinx/zynqmp-zcu111-revA.dts    | 113 ++++++++++++--
+ 4 files changed, 360 insertions(+), 51 deletions(-)
+
+-- 
+2.24.0
+
