@@ -2,107 +2,251 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF41CC282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 14:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A8FC282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 14:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A117220673
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 14:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1822075D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 14:36:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z6zkCoDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgAIO0Z (ORCPT
+        id S1729577AbgAIOg2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 09:26:25 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41544 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgAIO0Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 09:26:25 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5E0F22934FF
-Subject: Re: [PATCH 1/2] dt-bindings: arm64: dts: mediatek: Add mt8173 elm and
- hana
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-References: <20200109101042.201500-1-hsinyi@chromium.org>
- <20200109101042.201500-2-hsinyi@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <46ccc713-5951-62ee-1909-f572772217c2@collabora.com>
-Date:   Thu, 9 Jan 2020 15:26:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 9 Jan 2020 09:36:28 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40985 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731748AbgAIOg2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 09:36:28 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c9so7621572wrw.8
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 06:36:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=g2drrPLS9W1lcBDXqoZZiE3Yz8L8Qun+2VJ+iOV7n9U=;
+        b=z6zkCoDmXbyKIxNdRu3f+62NTSmeRR1H7SSY5NSACWxmE7l6Hx44I/sC8Tv73fqYSs
+         AU2DcCxpx+ac0feHDzb2ec0bwRByF0IBMLG2BS6y2ijM1gFmamN8HBNpKJ4H9yF4OsyT
+         WTrfzeJZwSrjLTnegGFZ4jXXqqQdOlhQIB1yciwcd26uyVKWGN0v0glC7GaUqJW34+lJ
+         eUaWwYy/Z73VEnyNwguYUX+e0xO+PmHCBz82W/M3kM+LhnyCmd15D/FQ2VmjHb/iWLX3
+         sdAb3U3VrUpZAQXEOIi6jyKKLjQhqZxU/qGePqGTgDCO2wSItFKHvAPuoqyt+/kUNP5F
+         Fjjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=g2drrPLS9W1lcBDXqoZZiE3Yz8L8Qun+2VJ+iOV7n9U=;
+        b=X2bpf6HRauirE7FYxFjWqK8c3XyymNxcnnmyVpCtnqPwttaGWb6ODaM1gYazKLF+6I
+         xH+e9WS4R6MPez3HgXn5Doi0UY/jq+6a7H/oUEzFXl6uE2PtQSeZqtwWf+vfDuj6PkDU
+         eI0WT6Xm+GBZOCgL86vjnYLqYmYIXCMIQqNhOv2np0Gf9NxP4txfM1VL/aRtWfzQ+Tba
+         tQK+R5SpUl8ynwqXQQcKTDUkWQkBrV40MB/PI4jlks0JkB9GJKeV5SD0dO5C78SKd6KT
+         qLegpzn7JKRdkGEnAX4LBh+jtPqagDbU4Tkndp+/walVBgKk0wBbwP9OkJJzPC5EwM6Y
+         VzAQ==
+X-Gm-Message-State: APjAAAW9qye8SjJytnhz0tz9dGJvgFpCmrZ3bKpdlVBSrVay3Rt4G+Ym
+        IvDfFUY1VaB7Tv3/pUdhmrmh4w==
+X-Google-Smtp-Source: APXvYqwF8e5jIK0p0rSZVDWRKyZV/LcuULWfpv1lLvBp4kTaTHfK4BZm6ZFa/I1SthEb6xyhNmBKxA==
+X-Received: by 2002:adf:e3d0:: with SMTP id k16mr11584783wrm.241.1578580585031;
+        Thu, 09 Jan 2020 06:36:25 -0800 (PST)
+Received: from myrica (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
+        by smtp.gmail.com with ESMTPSA id l6sm3122575wmf.21.2020.01.09.06.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 06:36:24 -0800 (PST)
+Date:   Thu, 9 Jan 2020 15:36:18 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     mark.rutland@arm.com, robin.murphy@arm.com, guohanjun@huawei.com,
+        rjw@rjwysocki.net, robh+dt@kernel.org, sudeep.holla@arm.com,
+        bhelgaas@google.com, zhangfei.gao@linaro.org, will@kernel.org,
+        lenb@kernel.org
+Subject: Re: [PATCH v4 00/13] iommu: Add PASID support to Arm SMMUv3
+Message-ID: <20200109143618.GA942461@myrica>
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200109101042.201500-2-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219163033.2608177-1-jean-philippe@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hsin-Yi,
+Hi Will,
 
-Thanks for sending this patch upstream, one comment below ...
-
-On 9/1/20 11:10, Hsin-Yi Wang wrote:
-> Elm is Acer Chromebook R13. Hana is Lenovo Chromebook. Both uses mt8173
-> SoC.
+On Thu, Dec 19, 2019 at 05:30:20PM +0100, Jean-Philippe Brucker wrote:
+> Add support for Substream ID and PASIDs to the SMMUv3 driver. Since v3
+> [1], I added review and tested tags where appropriate and applied the
+> suggested changes, shown in the diff below. Thanks all!
 > 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  .../devicetree/bindings/arm/mediatek.yaml      | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-> index 4043c5046441..a27b22f264a2 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
-> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-> @@ -86,6 +86,24 @@ properties:
->            - const: mediatek,mt8135
->        - items:
->            - enum:
-> +              - google,elm
-> +              - google,elm-rev1
-> +              - google,elm-rev2
-> +              - google,elm-rev3
-> +              - google,elm-rev4
-> +              - google,elm-rev5
-> +              - google,elm-rev6
-> +              - google,elm-rev7
-> +              - google,elm-rev8
+> I'm testing using the zip accelerator on the Hisilicon KunPeng920 and
+> Zhangfei's uacce module [2]. The full SVA support, which I'll send out
+> early next year, is available on my branch sva/zip-devel at
+> https://jpbrucker.net/git/linux/
 
-Did you run dtbs_check [1] after having patch 2 applied? I think that will
-trigger some errors. I am not sure if this should be a const instead of an enum
-like we have in rockchip.yaml?
-
-[1] make ARCH=arm64
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/mediatek.yaml dtbs_check
+Is there anything more I should do for the PASID support? Ideally I'd like
+to get this in v5.6 so I can focus on the rest of the SVA work and on
+performance improvements.
 
 Thanks,
- Enric
+Jean
 
-> +              - google,hana
-> +              - google,hana-rev0
-> +              - google,hana-rev1
-> +              - google,hana-rev2
-> +              - google,hana-rev3
-> +              - google,hana-rev4
-> +              - google,hana-rev5
-> +              - google,hana-rev6
-> +              - google,hana-rev7
->                - mediatek,mt8173-evb
->            - const: mediatek,mt8173
->        - items:
 > 
+> [1] https://lore.kernel.org/linux-iommu/20191209180514.272727-1-jean-philippe@linaro.org/
+> [2] https://lore.kernel.org/linux-iommu/1576465697-27946-1-git-send-email-zhangfei.gao@linaro.org/
+> 
+> Jean-Philippe Brucker (13):
+>   iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA allocation
+>   dt-bindings: document PASID property for IOMMU masters
+>   iommu/arm-smmu-v3: Parse PASID devicetree property of platform devices
+>   ACPI/IORT: Parse SSID property of named component node
+>   iommu/arm-smmu-v3: Prepare arm_smmu_s1_cfg for SSID support
+>   iommu/arm-smmu-v3: Add context descriptor tables allocators
+>   iommu/arm-smmu-v3: Add support for Substream IDs
+>   iommu/arm-smmu-v3: Propagate ssid_bits
+>   iommu/arm-smmu-v3: Prepare for handling arm_smmu_write_ctx_desc()
+>     failure
+>   iommu/arm-smmu-v3: Add second level of context descriptor table
+>   iommu/arm-smmu-v3: Improve add_device() error handling
+>   PCI/ATS: Add PASID stubs
+>   iommu/arm-smmu-v3: Add support for PCI PASID
+> 
+>  .../devicetree/bindings/iommu/iommu.txt       |   6 +
+>  drivers/acpi/arm64/iort.c                     |  18 +
+>  drivers/iommu/arm-smmu-v3.c                   | 467 +++++++++++++++---
+>  drivers/iommu/of_iommu.c                      |   6 +-
+>  include/linux/iommu.h                         |   2 +
+>  include/linux/pci-ats.h                       |   3 +
+>  6 files changed, 442 insertions(+), 60 deletions(-)
+> 
+> -- 
+> Diff since v3:
+> #diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index cde7af39681c..8e95ecad4c9a 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -589,8 +589,10 @@ struct arm_smmu_cd_table {
+>  };
+> 
+>  struct arm_smmu_s1_cfg {
+> +	/* Leaf tables or linear table */
+>  	struct arm_smmu_cd_table	*tables;
+>  	size_t				num_tables;
+> +	/* First level tables, when two levels are used */
+>  	__le64				*l1ptr;
+>  	dma_addr_t			l1ptr_dma;
+>  	struct arm_smmu_ctx_desc	cd;
+> @@ -1561,27 +1563,22 @@ static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>  	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+> 
+> -	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
+> -		table = &cfg->tables[0];
+> -		idx = ssid;
+> -	} else {
+> -		idx = ssid >> CTXDESC_SPLIT;
+> -		if (idx >= cfg->num_tables)
+> -			return NULL;
+> +	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR)
+> +		return cfg->tables[0].ptr + ssid * CTXDESC_CD_DWORDS;
+> 
+> -		table = &cfg->tables[idx];
+> -		if (!table->ptr) {
+> -			if (arm_smmu_alloc_cd_leaf_table(smmu, table,
+> -							 CTXDESC_L2_ENTRIES))
+> -				return NULL;
+> +	idx = ssid >> CTXDESC_SPLIT;
+> +	table = &cfg->tables[idx];
+> +	if (!table->ptr) {
+> +		if (arm_smmu_alloc_cd_leaf_table(smmu, table,
+> +						 CTXDESC_L2_ENTRIES))
+> +			return NULL;
+> 
+> -			l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORDS;
+> -			arm_smmu_write_cd_l1_desc(l1ptr, table);
+> -			/* An invalid L1CD can be cached */
+> -			arm_smmu_sync_cd(smmu_domain, ssid, false);
+> -		}
+> -		idx = ssid & (CTXDESC_L2_ENTRIES - 1);
+> +		l1ptr = cfg->l1ptr + idx * CTXDESC_L1_DESC_DWORDS;
+> +		arm_smmu_write_cd_l1_desc(l1ptr, table);
+> +		/* An invalid L1CD can be cached */
+> +		arm_smmu_sync_cd(smmu_domain, ssid, false);
+>  	}
+> +	idx = ssid & (CTXDESC_L2_ENTRIES - 1);
+>  	return table->ptr + idx * CTXDESC_CD_DWORDS;
+>  }
+> 
+> @@ -1617,8 +1614,12 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  	u64 val;
+>  	bool cd_live;
+>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> -	__le64 *cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
+> +	__le64 *cdptr;
+> 
+> +	if (WARN_ON(ssid >= (1 << smmu_domain->s1_cfg.s1cdmax)))
+> +		return -E2BIG;
+> +
+> +	cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
+>  	if (!cdptr)
+>  		return -ENOMEM;
+> 
+> @@ -1640,9 +1641,9 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+>  		cdptr[3] = cpu_to_le64(cd->mair);
+> 
+>  		/*
+> -		 * STE is live, and the SMMU might fetch this CD at any
+> -		 * time. Ensure that it observes the rest of the CD before we
+> -		 * enable it.
+> +		 * STE is live, and the SMMU might read dwords of this CD in any
+> +		 * order. Ensure that it observes valid values before reading
+> +		 * V=1.
+>  		 */
+>  		arm_smmu_sync_cd(smmu_domain, ssid, true);
+> 
+> @@ -1706,7 +1707,7 @@ static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
+>  	 * Only allocate a leaf table for linear case. With two levels, leaf
+>  	 * tables are allocated lazily.
+>  	 */
+> -	if (!cfg->l1ptr) {
+> +	if (cfg->s1fmt == STRTAB_STE_0_S1FMT_LINEAR) {
+>  		ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0],
+>  						   max_contexts);
+>  		if (ret)
+> @@ -2657,17 +2658,21 @@ static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
+> 
+>  	features = pci_pasid_features(pdev);
+>  	if (features < 0)
+> -		return -ENODEV;
+> +		return features;
+> 
+>  	num_pasids = pci_max_pasids(pdev);
+>  	if (num_pasids <= 0)
+> -		return -ENODEV;
+> +		return num_pasids;
+> 
+>  	ret = pci_enable_pasid(pdev, features);
+> -	if (!ret)
+> -		master->ssid_bits = min_t(u8, ilog2(num_pasids),
+> -					  master->smmu->ssid_bits);
+> -	return ret;
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to enable PASID\n");
+> +		return ret;
+> +	}
+> +
+> +	master->ssid_bits = min_t(u8, ilog2(num_pasids),
+> +				  master->smmu->ssid_bits);
+> +	return 0;
+>  }
+> 
+>  static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
+> 
+> 
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
