@@ -2,99 +2,89 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29CCC282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE58C282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 851CE2072E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F3B20721
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578587597;
+	bh=4WvK/Vwr0t6fsucuKLCWVDS1adVfhfWQioHJ5iOeZRY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WOUfwFAT6NA8bui4fhXvB536F8ql24VvXcMcbUJ5sbIp7v3wYdAVlRGyPf88CsHvs
+	 G/+TN8GKOqkWZX7OJx8BlQASFzkIaj4ZtGnJMqieC0+Q6ZzSfr2YzOUQy+n2odyHCp
+	 ftCwVtBoBg2By2uaSf+zPIFeLChJ000+gZVSVI90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgAIQad convert rfc822-to-8bit (ORCPT
+        id S2387675AbgAIQdQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:30:33 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37009 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387657AbgAIQad (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 11:30:33 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E41DA2000E;
-        Thu,  9 Jan 2020 16:30:29 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 17:30:28 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     richard@nod.at, marek.vasut@gmail.com, dwmw2@infradead.org,
-        bbrezillon@kernel.org, computersforpeace@gmail.com,
-        vigneshr@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: mtd: Document Macronix NAND device
- bindings
-Message-ID: <20200109173028.09de5f08@xps13>
-In-Reply-To: <1571902807-10388-3-git-send-email-masonccyang@mxic.com.tw>
-References: <1571902807-10388-1-git-send-email-masonccyang@mxic.com.tw>
-        <1571902807-10388-3-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 9 Jan 2020 11:33:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729746AbgAIQdQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:33:16 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D4B2067D;
+        Thu,  9 Jan 2020 16:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578587596;
+        bh=4WvK/Vwr0t6fsucuKLCWVDS1adVfhfWQioHJ5iOeZRY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ydf7n9Fblw0iNZ7Arj3yiZSJiFz2NDxehhoAbru69iCdNO66RvhNsnfvoS8WDSNqs
+         rAqX4tcjxr+8u8wFi1CgBA48Tic44A4o6BODfLxU6I/XNwcXLTCa3dfZVt+CUXJWCc
+         RZeqKAIzAI5Hf5CruQW2y4qEvlZ7FUwa0ZqORn1Y=
+Date:   Thu, 9 Jan 2020 17:33:13 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] arm64: allwinner: a64: Enable DVFS on A64
+Message-ID: <20200109163313.wrotyymf5hgiazki@gilmour.lan>
+References: <20200108042018.571251-1-anarsoul@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="63v3ohpo2ubteem4"
+Content-Disposition: inline
+In-Reply-To: <20200108042018.571251-1-anarsoul@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mason,
 
-Mason Yang <masonccyang@mxic.com.tw> wrote on Thu, 24 Oct 2019 15:40:07
-+0800:
+--63v3ohpo2ubteem4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Document the bindings used by the Macronix NAND device.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> ---
->  .../devicetree/bindings/mtd/nand-macronix.txt        | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/nand-macronix.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-macronix.txt b/Documentation/devicetree/bindings/mtd/nand-macronix.txt
-> new file mode 100644
-> index 0000000..cb60358
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/nand-macronix.txt
-> @@ -0,0 +1,20 @@
-> +Macronix NANDs Device Tree Bindings
-> +-----------------------------------
-> +
-> +Macronix NANDs support randomizer operation for user data scrambled,
-> +which can be enabled with a SET_FEATURE. The penalty of randomizer
-> +is subpage accesses prohibited. By adding a new specific property
-> +in children nodes to enable randomizer function.
+On Tue, Jan 07, 2020 at 08:20:14PM -0800, Vasily Khoruzhick wrote:
+> This series introduces new DTSI with operating points for A64,
+> adds cooling maps and thermal tripping points and enables DVFS
+> on all the supported A64-based boards
+>
+> v2: - drop two commits that were merged
+>     - mention where tripping points and OPP were taken from
+>     - add new line after each node in OPP table
+>     - split adding CPU clock and OPP into separate commits
+>     - put operating points into their own dtsi
 
-You don't mention the performance penalty nor the benefits of such
-operation.
+Applied, thanks!
+Maxime
 
-Please also insist on the fact that this is a one time persistent, non
-reversible operation and the use should use this property only if they
-know what they are doing!
+--63v3ohpo2ubteem4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +Required NAND chip properties in children mode:
-> +- randomizer enable: should be "mxic,enable-randomizer-otp"
-> +
-> +Example:
-> +
-> +	nand: nand-controller@unit-address {
-> +
-> +		nand@0 {
-> +			reg = <0>;
-> +			mxic,enable-randomizer-otp;
-> +		};
-> +	};
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Miquèl
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhdVyQAKCRDj7w1vZxhR
+xYoLAQDaU8aVVWmJIe8ePJZeGdrN601c8Zsful46WQo20L/sTQEA9e+OUlu72vXf
+e/JDVRzPVUXp3lH5nVT6lcbUGhiErAU=
+=0Q1E
+-----END PGP SIGNATURE-----
+
+--63v3ohpo2ubteem4--
