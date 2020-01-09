@@ -2,87 +2,121 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECACC282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7017AC282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A73CC2077B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43FC62077B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:29:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578576518;
-	bh=8FlOzoCP2VaezYfv8yGcdclpzGXdox7sbGfTsslZTiY=;
+	s=default; t=1578576555;
+	bh=iHdDym7OR79CQ1t/GpbEMYCujRuSnN4psVqgGjqi+CI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kdLmcpKEdTISYs5uSnevloRWPBhJPEP3jMUvF6z8J6ScGvbg3kBnaRyeDLhkcMlHq
-	 OF9Zhb+CgVFsgKyNVKY4tTx2JVBm8hyPtTzgUOynrzf7fXkxiYmkWwfwMFy467DAUz
-	 L0yzJr6EsZynbka0tBpfdgN7f029YC9Csf2T5Emw=
+	b=ieqMkVCFP9qpLJaWXl8WWxfvy60Htooha4LFyY9pB7xhm+KshnjDU/bIygOut/hh7
+	 jFVYoO0607I82eigt0qAaRHlBastrivNy1yAO9549JSMaIt2CiXhHAhwDo/tvWlgwH
+	 hsCCDtsz10UZUmIDq4C7T2xk1MSBEAj7VvsSliz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbgAIN2i (ORCPT
+        id S1731087AbgAIN3K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:28:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:59016 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbgAIN2i (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:28:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7206E31B;
-        Thu,  9 Jan 2020 05:28:37 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEEEF3F534;
-        Thu,  9 Jan 2020 05:28:36 -0800 (PST)
-Date:   Thu, 9 Jan 2020 13:28:35 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        sam@ravnborg.org, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] regulator: mpq7920: add mpq7920 regulator driver
-Message-ID: <20200109132835.GA7768@sirena.org.uk>
-References: <20200109112548.23914-1-sravanhome@gmail.com>
- <20200109112548.23914-4-sravanhome@gmail.com>
+        Thu, 9 Jan 2020 08:29:10 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45595 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbgAIN3K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:29:10 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j26so7192039ljc.12;
+        Thu, 09 Jan 2020 05:29:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ErcL1N2fmNI636PPVQLs5GTMAwUgd2f5seuvakUioCs=;
+        b=QcitNdlnK1P8XDsxpOgCJEwk8BBeULze+HvJMfvdQLstUAogkO0HRDXMxt23Xq8ZEq
+         omkD9d+73f49SLK0dpWF2+fyJogSQb2sKjnkQBllazj9K6sfP8TeYqHSq99dZoJRfxeP
+         Tz6FdqVBlVBOSt/NlFQ4up89rRSZDcpstAKFUNs6Y1MbzVpWcxo35CoafZdsFoA1rrYg
+         THdYG47CGQWjWNMDbwQwTjtmQJqV2rYRVIvXvSqMTpkpGebkIaKBhL9jXhOI8VY+6pBg
+         k4sa6qDKRscAFBfZAaYInptVWWKwfQwbgFVEeUd6tjLB5dji3vmnIOLzZJeyXGnUQ8Gn
+         h4dA==
+X-Gm-Message-State: APjAAAX78+2GfWTcxOvQaXm0qmiM0y/RFuy8LSFbHhNHA+chhijaJxmg
+        IH7YTBYrvbYPecAnFjVQoLU=
+X-Google-Smtp-Source: APXvYqw1hcidTUPsXmbfZ5E6ekSaUosd6Z+QbgYKjFwaIPR65Yk0gkHBGblfoIvMFxRv4YpPXS00DQ==
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr6321120ljh.138.1578576547878;
+        Thu, 09 Jan 2020 05:29:07 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id y25sm3094435lfy.59.2020.01.09.05.29.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 05:29:07 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1ipXsD-0004Te-LT; Thu, 09 Jan 2020 14:29:17 +0100
+Date:   Thu, 9 Jan 2020 14:29:17 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     guillaume La Roque <glaroque@baylibre.com>
+Cc:     Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        nsaenzjulienne@suse.de, linux-kernel@vger.kernel.org,
+        khilman@baylibre.com
+Subject: Re: [PATCH v6 1/2] dt-bindings: net: bluetooth: add interrupts
+ properties
+Message-ID: <20200109132917.GM30908@localhost>
+References: <20200109104257.6942-1-glaroque@baylibre.com>
+ <20200109104257.6942-2-glaroque@baylibre.com>
+ <20200109105305.GL30908@localhost>
+ <a33f9c30-03a8-ea12-e9d3-5e050e41318e@baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200109112548.23914-4-sravanhome@gmail.com>
-X-Cookie: Necessity is a mother.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a33f9c30-03a8-ea12-e9d3-5e050e41318e@baylibre.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Thu, Jan 09, 2020 at 02:13:23PM +0100, guillaume La Roque wrote:
+> 
+> On 1/9/20 11:53 AM, Johan Hovold wrote:
+> > On Thu, Jan 09, 2020 at 11:42:56AM +0100, Guillaume La Roque wrote:
+> >> add interrupts and interrupt-names as optional properties
+> >> to support host-wakeup by interrupt properties instead of
+> >> host-wakeup-gpios.
+> >>
+> >> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 +++-
+> >>  1 file changed, 3 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> index c44a30dbe43d..d33bbc998687 100644
+> >> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> >> @@ -37,7 +37,9 @@ Optional properties:
+> >>      - pcm-frame-type: short, long
+> >>      - pcm-sync-mode: slave, master
+> >>      - pcm-clock-mode: slave, master
+> >> -
+> >> + - interrupts: must be one, used to wakeup the host processor if
+> >> +   gpiod_to_irq function not supported
+> >> + - interrupt-names: must be "host-wakeup"
+> > Looks like you forgot to address Rob's comment. If I understood him
+> > correctly you either need to stick with "host-wakeup-gpios" (and fix
+> > your platform) or deprecate it in favour of "interrupts":
+> >
+> > 	https://lkml.kernel.org/r/20191218203818.GA8009@bogus
+> 
+> not forgot marcel ask me a v6
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not much point in sending v6 before addressing feedback on v5.
+Especially as Marcel asked for a v6 with acks. ;)
 
-On Thu, Jan 09, 2020 at 12:25:47PM +0100, Saravanan Sekar wrote:
-> Adding regulator driver for the device mpq7920.
-> The MPQ7920 PMIC device contains four DC-DC buck converters and
-> five regulators, is designed for automotive and accessed over I2C.
+> for rob comment ok but it's not possible to support gpiod_to_irq on my
+> platform.
+> 
+> if i deprecated it i need to update all DT with good interrupt number
+> right?
 
-This doesn't apply against current code, please check and resend.
+Not sure. Perhaps just updating the binding is enough. Rob?
 
---OXfL5xGRrasGEqWY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4XKoIACgkQJNaLcl1U
-h9CDdgf/bTjR+dsJEfEA7ydjVkffsHZoIdhND0nuXgydleN4eH2kE05CNTaafAOU
-FCs/pTjuZaG6lG4fDc7FglR4NOZxmI32wOpYwwqYjz9NF2EV0pm49tFPYAfvPo3/
-i+StQaOspnLdkvEymxxzxISY5Dc6n57pIThIa+R0+HHoKjmOJnpIHvShAM/lD0Lz
-TAi0mCwUZWBzkZwG6IpJj7i3PcjshNeDiIzgum/QKyP8405l4PlzqLH0CHNNLoWv
-AYn9+xrpViRU1P6RK5b6TBm8UvBTHXNgSfX7JpEKVoAcg8K6fXcjzTUuaA0ZFKt8
-PGlX0xcbeeM3FDK35H6wCQrQD8tcng==
-=afwH
------END PGP SIGNATURE-----
-
---OXfL5xGRrasGEqWY--
+Johan
