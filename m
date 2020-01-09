@@ -2,110 +2,116 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D65C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E71AC32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DAD206ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1193D2072A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="h0ow4VeS"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oSAFRUuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgAIKPl (ORCPT
+        id S1728912AbgAIKba (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:15:41 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44888 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728922AbgAIKPk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 05:15:40 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so6713475wrm.11
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 02:15:39 -0800 (PST)
+        Thu, 9 Jan 2020 05:31:30 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:35506 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728866AbgAIKba (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 05:31:30 -0500
+Received: by mail-qk1-f193.google.com with SMTP id z76so5500164qka.2
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 02:31:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cskzhIjwtS0ZVRi8zMZa+kHk4M1kBjG50N69LQL60P8=;
-        b=h0ow4VeStV9ER/XHasMs74E0+JCwgBvbicr55G654K+QgM0E3o7aCk/LftohaQ/mam
-         K/oPl1DN9ogDVNFnXQbG619dEI3IiXEBVkaAAHXUe7T8aypF4zBkArvDclU6nylS3EZM
-         RsYFqnDW/LsLHvnfFU1VGIYFweyPCIYpDVrRkeaGDhB5ogdRzQQHJFTmBSANZKatHOHJ
-         l7suu9Wc/eeOJCwarOUn3veAcF3NA986bAtFIgIh/Xi8GhKX1w68ZtCg88Sk7IclgS5v
-         FaOPmjwSuVB0QSRe/FpXDssCBKIP/At2DrBAd2pK7bu89NvewLGccxwZioH4NbNJ8yvW
-         2kkQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SIH3Ne6v4PFkZV6VUGUzjoFVUhaLqB+lgrvUawjrMYc=;
+        b=oSAFRUuI/WV+Ymxkmqk+o2KoSZNYBI6zkdW782vrphCc7w6DF+HXx4WL5QcCrgPKWM
+         w8Zd/vouvnJom/empxWRyjT//3ljh5eDMjX4BoLsXZMMApwg2XAB0d21u1NeFWjdnKC3
+         NqfR7arNPf2N1W64klSU7LmQqd3JBdciWX4Li4fXnwDgI5UiPILsQ6zrMtpaFqbsTqpV
+         tDuMxNUZukDdIqFswXLJMym1lcVhhkamC87dUCGPwRslHSDiMh7/6A81uVST37sgAlJY
+         TrjuFjdzJI+b9MUPZ89sAu5kMrZpG7AqfI57rwrbSc7qKO1FNy436ko+mA33nMcLvne0
+         G3bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cskzhIjwtS0ZVRi8zMZa+kHk4M1kBjG50N69LQL60P8=;
-        b=fY1U/puFFL2hZCANknJt+aN9/HFdnqN0vCMweSVrwb3/e+LuWGUy9v7OszBcpxQgsx
-         N8lEV8CMe/E8NQMBwQchJIKj6ERy6XD6xnXX1dvCnFMoQOmmJDY64MsJelv4hJHhMSZt
-         XF4746GqRzC5ZRMFRF3TR+NeYqvROqoxqtppv27ruErCYDcwFn8IkcCOZQ00Huj39pQv
-         EAdG7jcbGKwID5vcv5be03uH/09S1/tg1V35fZsPWA0iBVYTDK8/e/h+kIcwhJKo4VeU
-         WoCWjk/ROY1aPE2FWm9YslnFAnr3ezRBZM5I8lxN27PoSHhnU8iha8hqfdHvJpkGQHhd
-         X7mw==
-X-Gm-Message-State: APjAAAUkN8fz2Ir1CmijJ26zba+7kC6zPd5rTNzVk/MbNVaPnpTlIgoL
-        JjrwnlBAxf/22Tskda+IGoIXrQ==
-X-Google-Smtp-Source: APXvYqwBJeqcb+JtzqfcXa3IBx+RAeZpEMUk+jeaEw1/iu/wKVv0xRKabBxEgIHfrQJo/hYAfvxhCQ==
-X-Received: by 2002:a05:6000:11c5:: with SMTP id i5mr9833559wrx.102.1578564939054;
-        Thu, 09 Jan 2020 02:15:39 -0800 (PST)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id q19sm2250460wmc.12.2020.01.09.02.15.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 02:15:38 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     balbi@kernel.org, khilman@baylibre.com, devicetree@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Jun Li <lijun.kernel@gmail.com>, Tim <elatllat@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/3] doc: dt: bindings: usb: dwc3: Update entries for disabling SS instances in park mode
-Date:   Thu,  9 Jan 2020 11:15:33 +0100
-Message-Id: <20200109101535.26812-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200109101535.26812-1-narmstrong@baylibre.com>
-References: <20200109101535.26812-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SIH3Ne6v4PFkZV6VUGUzjoFVUhaLqB+lgrvUawjrMYc=;
+        b=LArrqLHSnJJtw4fsx5KPNrlx1Hs0tYJITrTQBBFtg0wqM8D4uC4PLOgBrVrIpHtX83
+         SpjKHu4Le5PEZ4aVxXV+yyHZueFvp6ounWzaRqUMwS06WgF29XI1TII2rYlKxgAfW9JO
+         imfVoeQPIh6fjHElwMnJ/Bh96UycvH3jod0liWJJdxEbJ+s3BkSjzo9Lvn8pltDBzZcF
+         GP1ZzZJNjS23yTacuNnhKvr2UQPC69rm9gQgyWCua8VwpJRHxtINDLzZZYJbER5glSib
+         t0tOfed3IvBFfqpRy/iepuo4+f53fJjToMhduCg11/2TcTsJPIXm4LaitNavX81ufW0O
+         QTCw==
+X-Gm-Message-State: APjAAAVpfZKIEIhTeIFqaJqbKaji1uPyApUvBU1KyKyjmItPw3yFxJBD
+        Tj0noAH9WZR16jKxeZ7wYOijzpopN6Us6iUtR8w0pA==
+X-Google-Smtp-Source: APXvYqyuv1+zcik5Km8uc+VG5tVlFqozxu7U9959A+DWpFFqIOkOabtR5WlV1vnJUCEyIZ0zqLgdQUhYhHYvx+7h6dk=
+X-Received: by 2002:a37:6255:: with SMTP id w82mr8824719qkb.330.1578565889528;
+ Thu, 09 Jan 2020 02:31:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200107092922.18408-1-ktouil@baylibre.com>
+In-Reply-To: <20200107092922.18408-1-ktouil@baylibre.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 9 Jan 2020 11:31:18 +0100
+Message-ID: <CAMpxmJVj3DHXFq9D5HUD0j7t=Q7gFNF1eQsg2jUa4PEFrFas4w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] at24: move write-protect pin handling to nvmem core
+To:     Khouloud Touil <ktouil@baylibre.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        baylibre-upstreaming@groups.io,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch updates the documentation with the information related
-to the quirks that needs to be added for disabling all SuperSpeed XHCI
-instances in park mode.
+wt., 7 sty 2020 o 10:29 Khouloud Touil <ktouil@baylibre.com> napisa=C5=82(a=
+):
+>
+> The write-protect pin handling looks like a standard property that
+> could benefit other users if available in the core nvmem framework.
+>
+> Instead of modifying all the drivers to check this pin, make the
+> nvmem subsystem check if the write-protect GPIO being passed
+> through the nvmem_config or defined in the device tree and pull it
+> low whenever writing to the memory.
+>
+> This patchset:
+>
+> - adds support for the write-protect pin split into two parts.
+> The first patch modifies modifies the relevant binding document,
+> while the second modifies the nvmem code to pull the write-protect
+> GPIO low (if present) during write operations.
+>
+> - removes support for the write-protect pin split into two parts.
+> The first patch modifies the relevant binding document to make the
+> wp-gpio a reference to the property defined by nvmem , while the
+> second removes the relevant code in the at24 driver.
+>
+> - adds reference in the at25 binding document for the wp-gpios property
+> as it uses nvmem subsystem.
+>
+> Changes since v1:
+> -Add an explenation on how the wp-gpios works
+> -Keep reference to the wp-gpios in the at24 binding
+>
+> Changes since v2:
+> -Use the flag GPIO_ACTIVE_HIGH instead of 0
+>
+> Changes since v3:
+> -Keep the example of the wp-gpios in the at25 bindings
+> -Add reference for the wp-gpios property in the at25 binding
 
-Cc: Dongjin Kim <tobetter@gmail.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Thinh Nguyen <thinhn@synopsys.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Reported-by: Tim <elatllat@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
- 1 file changed, 2 insertions(+)
+I picked up patches 1-3 & 5 into the at24 tree.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 66780a47ad85..c977a3ba2f35 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -75,6 +75,8 @@ Optional properties:
- 			from P0 to P1/P2/P3 without delay.
-  - snps,dis-tx-ipgap-linecheck-quirk: when set, disable u2mac linestate check
- 			during HS transmit.
-+ - snps,parkmode-disable-ss-quirk: when set, all SuperSpeed bus instances in
-+			park mode are disabled.
-  - snps,dis_metastability_quirk: when set, disable metastability workaround.
- 			CAUTION: use only if you are absolutely sure of it.
-  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
--- 
-2.22.0
+Patch 4 will need an Ack from Greg.
 
+Bart
