@@ -7,109 +7,68 @@ X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	TVD_SUBJ_WIPE_DEBT,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4448C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EB2C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95C332077B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0653820678
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 10:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578566326;
-	bh=JtNVHuga6xmyefkyDg+GtPhTmmnZ7VHox9qyNsUyOmA=;
+	s=default; t=1578566381;
+	bh=4zBOYHX6eeVFAgflBYqbR1VmzzyGdmrN6kkQCLA9ZYE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ou8AKWUbCI6sMK6rnLPd3Qs0bXOBc5bk+75kwQdSGVCc1KJEsFxedWgm27j7CeZY8
-	 BSYyYPMSad1B6zR4YhWgJHZ2c1qDDvpdHndpLgsVoYm1a61uRX7W5NzwxpAIQyEhGQ
-	 APbwgboJeM0Ac0mj/6bOAZKKxklsbh6++EcmywC8=
+	b=a+3TJphsi9ncQ8/Dyuaog0xZObV+riX2NElqTtnAJMdAy+qduUs1Q8UtIHSDErjh/
+	 2J1KzTX1sQEBVfa4riwJEb1X4JypZ9ytQGCMLziwurEYSTaaTP3KkltyB/qcu/Iz+z
+	 CRV5xBy9i7KqIbfGFbmgZJ8or+JiE0ecRnBaCXVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbgAIKiq (ORCPT
+        id S1730214AbgAIKjk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 05:38:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 05:39:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729151AbgAIKip (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 05:38:45 -0500
+        id S1728565AbgAIKjk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 05:39:40 -0500
 Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE7C72073A;
-        Thu,  9 Jan 2020 10:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8978520673;
+        Thu,  9 Jan 2020 10:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578566325;
-        bh=JtNVHuga6xmyefkyDg+GtPhTmmnZ7VHox9qyNsUyOmA=;
+        s=default; t=1578566378;
+        bh=4zBOYHX6eeVFAgflBYqbR1VmzzyGdmrN6kkQCLA9ZYE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MJW5jK4lhz6XLeJECKpleUW7vlgPEe8DE0vS6YIPsamEZHl6wcT/Eu+4nydnLS/l0
-         8NPgQ6SbWwbYXHLwF2Ocwv1yUMyrAQ/eAuamt+2MahQA9rDUcRJaAL9eBR9xW3p9Nd
-         4NSPbtmk+lBGXGzply7GdkXG7qYydVy5/DoqQlTs=
-Date:   Thu, 9 Jan 2020 18:38:33 +0800
+        b=2PNDEIdtYgnGmThcdeExByKs/hjypEDmN5Nm9AV5zYqSDgsPT5G3thzCYKUnG9moj
+         Sc+DZkCaq2t9A1e1A2cdzHdYX7DcbK8nECEqm4QHUrYVQfpQLBVbWXDQFSRK3INveM
+         fxDu3mPK2XuZrUeklhIzw8FtOZ/wN0KmzgAgJYTc=
+Date:   Thu, 9 Jan 2020 18:39:30 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "andreas@kemnade.info" <andreas@kemnade.info>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect power
- supply assignment
-Message-ID: <20200109103832.GO4456@T480>
-References: <1577670071-1322-1-git-send-email-Anson.Huang@nxp.com>
- <20200109080600.GH4456@T480>
- <DB3PR0402MB39168406714A06869C33D037F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20200109090950.GJ4456@T480>
- <DB3PR0402MB3916EBF00EECB42C1F4E2D40F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, andreas@kemnade.info,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2] ARM: dts: imx6: Remove incorrect power supply
+ assignment
+Message-ID: <20200109103929.GP4456@T480>
+References: <1578562682-32548-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB3916EBF00EECB42C1F4E2D40F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <1578562682-32548-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:25:35AM +0000, Anson Huang wrote:
-> Hi, Shawn
-> 
-> > Subject: Re: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect
-> > power supply assignment
-> > 
-> > On Thu, Jan 09, 2020 at 08:25:03AM +0000, Anson Huang wrote:
-> > > Hi, Shawn
-> > >
-> > > > Subject: Re: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect
-> > > > power supply assignment
-> > > >
-> > > > On Mon, Dec 30, 2019 at 09:41:07AM +0800, Anson Huang wrote:
-> > > > > The vdd3p0's input should be from external USB VBUS directly, NOT
-> > > >
-> > > > Shouldn't USB VBUS usually be 5V?  It doesn't seem to match 3.0V
-> > > > which is suggested by vdd3p0 name.
-> > > >
-> > > > > PMIC's sw2, so remove the power supply assignment for vdd3p0.
-> > > > >
-> > > > > Fixes: 93385546ba36 ("ARM: dts: imx6qdl-sabresd: Assign
-> > > > > corresponding power supply for LDOs")
-> > > >
-> > > > Is it only a description correcting or is it fixing a real problem?
-> > > > I'm trying to understand it is a 5.5-rc material or can be applied for 5.6.
-> > > >
-> > >
-> > > It is fixing a real problem about USB LDO voltage, that is why we noticed
-> > this issue.
-> > 
-> > Okay, please describe the problem a little bit in the commit log.  Also squash
-> > the series into one patch, which is easier to be merged into -rc as a fix.
-> 
-> OK, will send a new patch with squashing them together, but will NOT have the fix tag,
-> is it OK? As the fix tag are different for each patch.
+On Thu, Jan 09, 2020 at 05:38:02PM +0800, Anson Huang wrote:
+> The vdd3p0 LDO's input should be from external USB VBUS directly, NOT
+> PMIC's power supply, the vdd3p0 LDO's target output voltage can be
+> controlled by SW, and it requires input voltage to be high enough, with
+> incorrect power supply assigned, if the power supply's voltage is lower
+> than the LDO target output voltage, it will return fail and skip the LDO
+> voltage adjustment, so remove the power supply assignment for vdd3p0 to
+> avoid such scenario.
 
-Good point.  I just applied series (as separate patch) to make the
-stable kernel back port easier.  Patch #5 is fixing a commit that hasn't
-landed on mainline, so I drop the fix tag, as the commit ID is not
-stable.
+I applied v1 patches with using this version of commit log.
 
 Shawn
