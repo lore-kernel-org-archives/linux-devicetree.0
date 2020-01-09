@@ -2,225 +2,123 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137F3C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF62C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24AD20721
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:44:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U8I2YmCR"
+	by mail.kernel.org (Postfix) with ESMTP id F1C142072A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 18:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578595952;
+	bh=dS3/M+a35lZrY3UAJ8s/f9PwWzJpPdroeYz+K3FWL/4=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=JoYpf61zfCZ5imQGxvKUhFmZmqw6Q9DC6CDxPFFyamUi55KCEw0Yw6aYNy2x4BUK6
+	 lXzWNWpi0f1Swq1zEP32xB8G2KHFreRjGDqSD30MwvSMIh+uhiUuqF9dMPwsJlkKdI
+	 c8H8JYMtM1l5Coq79BwkWevWT96OBfN9NbldGwho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732155AbgAISoj (ORCPT
+        id S2388583AbgAISwb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 13:44:39 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45416 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730531AbgAISoi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 13:44:38 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so8223687otp.12
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 10:44:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8XTYu6dx3P7+neGNkEsuHx7Hl39JFzGEmh9FvOI/6t8=;
-        b=U8I2YmCRoAq67WWxoFFCJ3k3gOrykE2YQwTErZWVe+5AoPziMhEmwKx1VMD0KMFPCX
-         +jbhGCIi7LaCyRozBXGg67tWcEshu9t/nV+5GRwcrDrqaDPVF/q7WB8dwyvMqzHqXwXh
-         vrxb+U/3GbD3UJN8t4zfHH1mfu+g+1u0RsxmiGudZ7HOzTAUZJgwQCEkmMzHDz3VZVLP
-         1NJnm0l580uFrBULSlvulQKs3TC7T5fJclJfMNd+rdGx7VAt3rjC3csdddytt5qAtS3Z
-         elFxbmidwN6O0NCzzqYHweFXkI8SZ4G5Gp6oB6GfQmpbRyFtz4PI/ZFnReNOyC4mjr8l
-         abGQ==
+        Thu, 9 Jan 2020 13:52:31 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36551 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730273AbgAISwb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 13:52:31 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k3so3641243pgc.3;
+        Thu, 09 Jan 2020 10:52:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8XTYu6dx3P7+neGNkEsuHx7Hl39JFzGEmh9FvOI/6t8=;
-        b=La8gDzhhmXrxEidrQQ/61u1oj9DjlUrFZ1BOZKDVcx0HQPLjn0u1TcIY+ad0vKuqdK
-         7KJlgj5NEeuiQjeXisv3WT+H89RbARyYNRdJuua5YEdHOYzvnCazUxpFLGXPAAp2JJUo
-         QygVETQAtvOUOtlM9CAh85GQgZYbIIp/IqC1sRQHVHty6HIUmm7ttulghYw8NkuUAX35
-         Dnr5ogipCoU32ZdCbxwfrYLe/OhsgR6i1xu+jXESkfjMJO6i87JGFZfXbm9PezWd9ZSM
-         4kjzCR/4QlihkVo4MK56TdOOWqYcA24bmLUD5vXAFB3RrtM9DwwOP29OEIRTxdMoN6yX
-         8d4w==
-X-Gm-Message-State: APjAAAXwcWRWm9cEFri8seP4jXptcZWSi5QaPYFwMIKSVLC9BU+UaXHP
-        SRF/nGOS4w07pXj1tFUWy5e7nuRTdIqZiJU3gFm7Hg==
-X-Google-Smtp-Source: APXvYqwbORFOz9hNPUv86p8ax7GkF+op9OEIJjbOBrv/fGZR+RsiVZt588/jpZ7zEUY+jEIrhutCl+sw14/o5poL9tg=
-X-Received: by 2002:a05:6830:121a:: with SMTP id r26mr9606498otp.225.1578595477678;
- Thu, 09 Jan 2020 10:44:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20191207002424.201796-1-saravanak@google.com> <20191207002424.201796-4-saravanak@google.com>
- <20200108111947.q5aafrlz26tnk3nq@vireshk-i7> <CAGETcx_T7VONkSd-r9CY-5OpZBZ2iD0tFoCf0+d8CY2b5zgr9g@mail.gmail.com>
- <20200109044051.62ocfpt44q25q6qi@vireshk-i7>
-In-Reply-To: <20200109044051.62ocfpt44q25q6qi@vireshk-i7>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 9 Jan 2020 10:44:01 -0800
-Message-ID: <CAGETcx-UWFSaZ8q1iiFVFUEPLN8t1uFb-u6v4VJiMarS21RLRQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=/BAqD0l+U83NH1RGSfzcWZQsiJzjl7183QqqyS1Fo7Q=;
+        b=M4eGhbsgisg+94qlBajzj3M2JwTjI9PiYDGiso3fenQa2TcMmjODG8jcYkc9i8ZOI8
+         wf4vRzVtNXUkmwLlSvelx1IMNEqHcLfL0bpKtFKGKS5m/YHjwJzownKjSreEUUUASUVV
+         JvI7CZI9TohaWXinZWIwJrukflTnbaclF3683MK5xvNLLUUJWhaQ9CIDukGTEHHYXJtc
+         0kzqKcV8BWO/TvBE6NJgJA1xnEcsIJfpM/3qtP7TDethzzJ6OIrf/FmHA6NoZhwLQuLt
+         YX4THryXr5Y/vrnVvfS43cvabygL2rzYZw0LGiAItMxMVWd3t4XJp6XOy41TrmnazufD
+         PHMw==
+X-Gm-Message-State: APjAAAWvpQSD7KR5VL8ESebWYtcwDXcJvNU+IZdPI+/2Jmgn9X9QsfTo
+        lIg3R68dZMzfmQ173CA9GNg=
+X-Google-Smtp-Source: APXvYqyZpF90AQBz/1Us2pQyaSH42OFP5AqFZ5uOYa6ViVC/ACpU6AhH3y1g8yuh7AoDADOMEIndAw==
+X-Received: by 2002:aa7:96c7:: with SMTP id h7mr12316286pfq.211.1578595950166;
+        Thu, 09 Jan 2020 10:52:30 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id z64sm8902610pfz.23.2020.01.09.10.52.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 10:52:29 -0800 (PST)
+Message-ID: <5e17766d.1c69fb81.71d2b.581c@mx.google.com>
+Date:   Thu, 09 Jan 2020 10:52:28 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     =?utf-8?b?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+CC:     linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mripard@kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com, alexandre.belloni@bootlin.com,
+        ralf@linux-mips.org, heiko@sntech.de, icenowy@aosc.io,
+        ak@linux.intel.com, laurent.pinchart@ideasonboard.com,
+        krzk@kernel.org, geert+renesas@glider.be, paul@crapouillou.net,
+        prasannatsmkumar@gmail.com, keescook@chromium.org,
+        ebiederm@xmission.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, 772753199@qq.com
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH v8 1/4] MIPS: Ingenic: Add Ingenic X1000 support.
+References:  <1575979363-25956-2-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To:  <1575979363-25956-2-git-send-email-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 8:40 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 08-01-20, 16:58, Saravana Kannan wrote:
-> > On Wed, Jan 8, 2020 at 3:19 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > >  /**
-> > > >   * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
-> > > >   * @opp:     opp for which level value has to be returned for
-> > > > @@ -299,6 +322,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
-> > > >
-> > > > +/**
-> > > > + * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in kBps
-> > >
-> > > Hmm, I wasn't expecting this. So the interconnects will also have a
-> > > suspend OPP ?
-> >
-> > Yes, device voting for interconnect paths might want to lower the
-> > bandwidth to a suspend bandwidth when they suspend.
->
-> That's exactly what I was saying, the request for a change during
-> suspend should come from the device
+Hello,
 
-Agree. And this tells the device requesting for bandwidth, what
-bandwidth to vote for when it's suspending. Keep in mind that these
-bandwidth OPP tables are used by the consumers of the interconnects to
-pick from a list of bandwidths to vote for.
+周琰杰 (Zhou Yanjie) wrote:
+> Support the Ingenic X1000 SoC using the code under arch/mips/jz4740.
+> This is left unselectable in Kconfig until a X1000 based board is
+> added in a later commit.
 
-> and you can't do it here, i.e.
-> they should lower their frequency requirement, which should lead to a
-> low bandwidth automatically.
+Series applied to mips-next.
 
-Agree, the OPP framework itself shouldn't be responsible. And I'm not
-doing anything here? Just giving those devices a way to look up what
-their suspend bandwidth is? So they can vote for it when they suspend?
+> MIPS: Ingenic: Add Ingenic X1000 support.
+>   commit 7a16ccd300c2
+>   https://git.kernel.org/mips/c/7a16ccd300c2
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> dt-bindings: Document yna vendor-prefix.
+>   commit 9d022be3c192
+>   https://git.kernel.org/mips/c/9d022be3c192
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Acked-by: Rob Herring <robh@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> dt-bindings: MIPS: Add Ingenic XBurst based boards.
+>   commit 4b396e56a0b8
+>   https://git.kernel.org/mips/c/4b396e56a0b8
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Reviewed-by: Rob Herring <robh@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: Ingenic: Add YSH & ATIL CU Neo board support.
+>   commit 0cd2c6e5701e
+>   https://git.kernel.org/mips/c/0cd2c6e5701e
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Acked-by: Paul Cercueil <paul@crapouillou.net>
+>   [paulburton@kernel.org:
+>     Drop stale mention of previously unselectable Kconfig entry.]
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
 
-> > > > + * @dev:     device for which we do this operation
-> > > > + * @avg_bw:  Pointer where the corresponding average bandwidth is stored.
-> > > > + *           Can be NULL.
-> > > > + *
-> > > > + * Return: This function returns the peak bandwidth of the OPP marked as
-> > > > + * suspend_opp if one is available, else returns 0;
-> > > > + */
-> > > > +unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-> > > > +                                         unsigned long *avg_bw)
-> > > > +{
-> > > > +     struct opp_table *opp_table;
-> > > > +     unsigned long peak_bw = 0;
-> > > > +
-> > > > +     opp_table = _find_opp_table(dev);
-> > > > +     if (IS_ERR(opp_table))
-> > > > +             return 0;
-> > > > +
-> > > > +     if (opp_table->suspend_opp && opp_table->suspend_opp->available)
-> > > > +             peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
-> > > > +
-> > > > +     dev_pm_opp_put_opp_table(opp_table);
-> > > > +
-> > > > +     return peak_bw;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
-> > > > +
-> > > >  int _get_opp_count(struct opp_table *opp_table)
-> > > >  {
-> > > >       struct dev_pm_opp *opp;
-> > > > @@ -343,6 +394,40 @@ int dev_pm_opp_get_opp_count(struct device *dev)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_count);
-> > > >
-> > >
-> > > I think we should add function header here instead of the helpers
-> > > which get exact match for freq, bw or level. And then pass a enum
-> > > value to it, which tells what we are looking to compare. After that
-> > > rest of the routines will be just one liners, make them macros in
-> > > header file itself.
-> >
-> > Not sure I understand what you are saying here.
->
-> Okay, lemme try again with proper example.
->
-> enum opp_key_type {
->         OPP_KEY_FREQ = 0x1,
->         OPP_KEY_LEVEL= 0x2,
->         OPP_KEY_BW   = 0x4,
->         OPP_KEY_ALL  = 0x7,
-> }
->
-> /**
->  * Add function header here..
->  */
-> struct dev_pm_opp *dev_pm_opp_find_opp_exact(struct device *dev,
->                                              enum opp_key_type key,
->                                              unsigned long key_value,
->                                              bool available)
-> {
->        struct opp_table *opp_table;
->        struct dev_pm_opp *temp_opp, *opp = ERR_PTR(-ERANGE);
->
->        opp_table = _find_opp_table(dev);
->        if (IS_ERR(opp_table)) {
->                int r = PTR_ERR(opp_table);
->
->                dev_err(dev, "%s: OPP table not found (%d)\n", __func__, r);
->                return ERR_PTR(r);
->        }
->
->        mutex_lock(&opp_table->lock);
->
->        list_for_each_entry(temp_opp, &opp_table->opp_list, node) {
->                if (temp_opp->available == available &&
->                    !opp_compare_key(temp_opp, key, key_value)) {
->                        opp = temp_opp;
->
->                        /* Increment the reference count of OPP */
->                        dev_pm_opp_get(opp);
->                        break;
->                }
->        }
->
->        mutex_unlock(&opp_table->lock);
->        dev_pm_opp_put_opp_table(opp_table);
->
->        return opp;
-> }
->
-> //Now in header file
->
-> #define dev_pm_opp_find_freq_exact(dev, freq, available)        dev_pm_opp_find_opp_exact(dev, OPP_KEY_FREQ, freq, available);
-> #define dev_pm_opp_find_level_exact(dev, level, available)      dev_pm_opp_find_opp_exact(dev, OPP_KEY_LEVEL, level, available);
-> #define dev_pm_opp_find_bw_exact(dev, bw, available)            dev_pm_opp_find_opp_exact(dev, OPP_KEY_BW, bw, available);
+Thanks,
+    Paul
 
-Ok, but you want this done only for "exact" or for all the other
-helpers too? Also, this means that I'll have to implement a
-_opp_compare_key2() or whatever because the generic one that
-automatically picks the key is still needed for the generic code. Is
-that fine by you?
-
-Also, ack to your other response.
-
--Saravana
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
