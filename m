@@ -2,279 +2,173 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8ECC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 02:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6255FC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 03:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3C920705
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 02:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FA520705
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 03:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BOV8vx+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgAICmw (ORCPT
+        id S1727591AbgAIDKN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 21:42:52 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:32303 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgAICmw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 21:42:52 -0500
-Received: from [10.28.39.63] (10.28.39.63) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 9 Jan
- 2020 10:43:14 +0800
-Subject: Re: [PATCH v3] arm64: dts: meson-a1: add I2C nodes
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191220091611.36319-1-jian.hu@amlogic.com>
- <1ja76zsi4r.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <484f2273-80d2-87fe-2637-33f5313c580d@amlogic.com>
-Date:   Thu, 9 Jan 2020 10:43:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 8 Jan 2020 22:10:13 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:23258 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726913AbgAIDKN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 22:10:13 -0500
+X-UUID: ae2f3c26cc324f2490964a65b6847c34-20200109
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=CvLcLmQtEQDCFrVxh2k8LuEaR4ksyAkc5R169z2PTA0=;
+        b=BOV8vx+ReKxBKjksHc50rHJ2C95agoVwYmtbD9qjoMKD1CokJ5KlNSl75Ce39DJGo4HHnk3CwigmY5LyvtpHaBbEKm8ViHR+laYJGY/QB9f4RcBF6FtB2Iqnebtpc0BPZyKOW7qu2Tpy7iRlBTltzpmcg+GuE1VZOW9VMiBBqk4=;
+X-UUID: ae2f3c26cc324f2490964a65b6847c34-20200109
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.liang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 620868315; Thu, 09 Jan 2020 11:10:06 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 9 Jan
+ 2020 11:08:18 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 9 Jan 2020 11:10:21 +0800
+Message-ID: <1578539400.20923.10.camel@mhfsdcap03>
+Subject: Re: [PATCH v10 1/2] dt-bindings: mediatek: mt8183: Add #reset-cells
+From:   Yong Liang <yong.liang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
+        <Jiaxin.Yu@mediatek.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Chang-An Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B6=E5=AE=89=29?= 
+        <Chang-An.Chen@mediatek.com>,
+        Freddy Hsin =?UTF-8?Q?=28=E8=BE=9B=E6=81=92=E8=B1=90=29?= 
+        <Freddy.Hsin@mediatek.com>,
+        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
+        <Yingjoe.Chen@mediatek.com>, Stephen Boyd <sboyd@kernel.org>
+Date:   Thu, 9 Jan 2020 11:10:00 +0800
+In-Reply-To: <CANMq1KCrDX+svufQEeqHYgAFmFaBS0paEz0EBBte73ehA5PiGw@mail.gmail.com>
+References: <1578280296-18946-1-git-send-email-jiaxin.yu@mediatek.com>
+         <1578280296-18946-2-git-send-email-jiaxin.yu@mediatek.com>
+         <CANMq1KCrDX+svufQEeqHYgAFmFaBS0paEz0EBBte73ehA5PiGw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <1ja76zsi4r.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.63]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+X-TM-SNTS-SMTP: D25EFC5CE1DF3AC4CFAAAEB2CCCF1058B998E9A6793A7E0B87C17B3A807A55C52000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jerome
+T24gV2VkLCAyMDIwLTAxLTA4IGF0IDE3OjIzICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+IE9uIE1vbiwgSmFuIDYsIDIwMjAgYXQgMTE6MTEgQU0gSmlheGluIFl1IDxqaWF4aW4ueXVA
+bWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFkZCAjcmVzZXQtY2VsbHMgcHJvcGVydHkg
+YW5kIHVwZGF0ZSBleGFtcGxlDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiB5b25nLmxpYW5nIDx5
+b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKaWF4aW4gWXUgPGpp
+YXhpbi55dUBtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFlpbmdqb2UgQ2hlbiA8eWlu
+Z2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogUGhpbGlwcCBaYWJlbCA8
+cC56YWJlbEBwZW5ndXRyb25peC5kZT4NCj4gPiAtLS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQgIHwgMTAgKysrKysrLS0tDQo+ID4gIC4uLi9yZXNl
+dC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaCAgICAgICAgICB8IDIyICsrKysrKysrKysrKysr
+KysrKysNCj4gPiAgLi4uL3Jlc2V0LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oICAgICAgICAg
+IHwgMTcgKysrKysrKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCA0NiBpbnNlcnRpb25z
+KCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1i
+aW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0
+LnR4dA0KPiA+IGluZGV4IDkyMTgxYjY0OGY1Mi4uNWE3NmFjMjYyZjhkIDEwMDY0NA0KPiA+IC0t
+LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4
+dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9t
+dGstd2R0LnR4dA0KPiA+IEBAIC00LDYgKzQsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+
+DQo+ID4gIC0gY29tcGF0aWJsZSBzaG91bGQgY29udGFpbjoNCj4gPiAgICAgICAgICJtZWRpYXRl
+ayxtdDI3MDEtd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQyNzAxDQo+ID4gKyAg
+ICAgICAibWVkaWF0ZWssbXQyNzEyLXdkdCIsICJtZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1U
+MjcxMg0KPiANCj4gRG9lc24ndCBsb29rIHJlbGF0ZWQ/DQogIFdlIHByZWZlciB0byBzZW5kIG10
+MjcxMiBhbmQgbXQ4MTgzIHRvZ2V0aGVyLg0KPiANCj4gPiAgICAgICAgICJtZWRpYXRlayxtdDY1
+ODktd2R0IjogZm9yIE1UNjU4OQ0KPiA+ICAgICAgICAgIm1lZGlhdGVrLG10Njc5Ny13ZHQiLCAi
+bWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY3OTcNCj4gPiAgICAgICAgICJtZWRpYXRlayxt
+dDc2MjItd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ3NjIyDQo+ID4gQEAgLTE0
+LDExICsxNSwxNCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+DQo+ID4gIE9wdGlvbmFsIHBy
+b3BlcnRpZXM6DQo+ID4gIC0gdGltZW91dC1zZWM6IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1l
+b3V0IGluIHNlY29uZHMuDQo+ID4gKy0gI3Jlc2V0LWNlbGxzOiBTaG91bGQgYmUgMS4NCj4gPg0K
+PiA+ICBFeGFtcGxlOg0KPiA+DQo+ID4gLXdkdDogd2F0Y2hkb2dAMTAwMDAwMDAgew0KPiA+IC0g
+ICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY1ODktd2R0IjsNCj4gPiAtICAgICAgIHJl
+ZyA9IDwweDEwMDAwMDAwIDB4MTg+Ow0KPiA+ICt3YXRjaGRvZzogd2F0Y2hkb2dAMTAwMDcwMDAg
+ew0KPiA+ICsgICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxODMtd2R0IiwNCj4gDQo+
+IFdlbGwgbXQ4MTgzLXdkdCBjb21wYXRpYmxlIGlzIG5vdCB5ZXQgdXBzdHJlYW0sIGRvIHlvdSB3
+YW50IHRvIHdvcmsNCj4gd2l0aCBZb25nIExpYW5nIHRvIHNlbmQgYm90aCB0aGVzZSBiaW5kaW5n
+cyBpbiB0aGUgc2FtZSBzZXJpZXM/ICh5b3UNCj4gY2FuIGFkZCBtdDI3MTIgaW4gdGhlIHNhbWUg
+cGF0Y2ggYXMgbXQ4MTgzIGJpbmRpbmcgbWF5YmU/KQ0KDQogIFdlIHByZWZlciB0byBzZW5kIG10
+MjcxMiBhbmQgbXQ4MTgzIHRvZ2V0aGVyLiBBbmQgd2Ugd2FudCB0byBzZW5kIHRoaXMNCnBhdGNo
+IHByaW9yaXR5Lg0KDQogIFlvbmcuTGlhbmcNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+Im1lZGlhdGVrLG10NjU4OS13ZHQiOw0KPiA+ICsgICAgICAgcmVnID0gPDAgMHgxMDAwNzAwMCAw
+IDB4MTAwPjsNCj4gPiAgICAgICAgIHRpbWVvdXQtc2VjID0gPDEwPjsNCj4gPiArICAgICAgICNy
+ZXNldC1jZWxscyA9IDwxPjsNCj4gPiAgfTsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1i
+aW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmlu
+ZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDI3MTItcmVzZXRzLmgNCj4gPiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uOWU3ZWU3NjJmMDc2DQo+ID4gLS0tIC9k
+ZXYvbnVsbA0KPiA+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9t
+dDI3MTItcmVzZXRzLmgNCj4gPiBAQCAtMCwwICsxLDIyIEBADQo+ID4gKy8qIFNQRFgtTGljZW5z
+ZS1JZGVudGlmaWVyOiBHUEwtMi4wICovDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAoYykg
+MjAxOSBNZWRpYVRlayBJbmMuDQo+ID4gKyAqIEF1dGhvcjogWW9uZyBMaWFuZyA8eW9uZy5saWFu
+Z0BtZWRpYXRlay5jb20+DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2lmbmRlZiBfRFRfQklORElO
+R1NfUkVTRVRfQ09OVFJPTExFUl9NVDI3MTINCj4gPiArI2RlZmluZSBfRFRfQklORElOR1NfUkVT
+RVRfQ09OVFJPTExFUl9NVDI3MTINCj4gPiArDQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9J
+TkZSQV9TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDANCj4gPiArI2RlZmluZSBN
+VDI3MTJfVE9QUkdVX01NX1NXX1JTVCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAxDQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9NRkdfU1dfUlNUICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDINCj4gPiArI2RlZmluZSBNVDI3MTJfVE9QUkdVX1ZFTkNfU1df
+UlNUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMw0KPiA+ICsjZGVmaW5lIE1UMjcxMl9U
+T1BSR1VfVkRFQ19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA0DQo+ID4gKyNk
+ZWZpbmUgTVQyNzEyX1RPUFJHVV9JTUdfU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDUNCj4gPiArI2RlZmluZSBNVDI3MTJfVE9QUkdVX0lORlJBX0FPX1NXX1JTVCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgOA0KPiA+ICsjZGVmaW5lIE1UMjcxMl9UT1BSR1VfVVNCX1NXX1JT
+VCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA5DQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RP
+UFJHVV9BUE1JWEVEX1NXX1JTVCAgICAgICAgICAgICAgICAgICAgICAgICAgIDEwDQo+ID4gKw0K
+PiA+ICsjZGVmaW5lIE1UMjcxMl9UT1BSR1VfU1dfUlNUX05VTSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAxMQ0KPiA+ICsNCj4gPiArI2VuZGlmICAvKiBfRFRfQklORElOR1NfUkVTRVRf
+Q09OVFJPTExFUl9NVDI3MTIgKi8NCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5n
+cy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3Mv
+cmVzZXQtY29udHJvbGxlci9tdDgxODMtcmVzZXRzLmgNCj4gPiBpbmRleCA4ODA0ZTM0ZWJkZDQu
+LmExYmJkNDFlMGQxMiAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0
+LWNvbnRyb2xsZXIvbXQ4MTgzLXJlc2V0cy5oDQo+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5n
+cy9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaA0KPiA+IEBAIC03OCw0ICs3OCwyMSBA
+QA0KPiA+ICAjZGVmaW5lIE1UODE4M19JTkZSQUNGR19BT19JMkM3X1NXX1JTVCAgICAgICAgICAg
+ICAgICAgICAgICAgICAxMjYNCj4gPiAgI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfQU9fSTJDOF9T
+V19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgMTI3DQo+ID4NCj4gPiArI2RlZmluZSBNVDgx
+ODNfSU5GUkFDRkdfU1dfUlNUX05VTSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTI4DQo+
+ID4gKw0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfTU1fU1dfUlNUICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIDENCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX01G
+R19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMg0KPiA+ICsjZGVmaW5lIE1U
+ODE4M19UT1BSR1VfVkVOQ19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzDQo+
+ID4gKyNkZWZpbmUgTVQ4MTgzX1RPUFJHVV9WREVDX1NXX1JTVCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDQNCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX0lNR19TV19SU1QgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgNQ0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfTURf
+U1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDcNCj4gPiArI2Rl
+ZmluZSBNVDgxODNfVE9QUkdVX0NPTk5fU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgOQ0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfQ09OTl9NQ1VfU1dfUlNUICAgICAgICAg
+ICAgICAgICAgICAgICAgICAxMg0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfSVBVMF9TV19S
+U1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNA0KPiA+ICsjZGVmaW5lIE1UODE4M19U
+T1BSR1VfSVBVMV9TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNQ0KPiA+ICsj
+ZGVmaW5lIE1UODE4M19UT1BSR1VfQVVESU9fU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAxNw0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfQ0FNU1lTX1NXX1JTVCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAxOA0KPiA+ICsNCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdV
+X1NXX1JTVF9OVU0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTkNCj4gPiArDQo+ID4g
+ICNlbmRpZiAgLyogX0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQ4MTgzICovDQo+ID4g
+LS0NCj4gPiAyLjE4LjANCg0K
 
-Thanks for your review
-
-On 2020/1/7 17:58, Jerome Brunet wrote:
-> 
-> On Fri 20 Dec 2019 at 10:16, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> There are four I2C controllers in A1 series,
->> Share the same comptible with AXG. Compared to AXG,
->> Drive strength feature is newly added in A1.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->>
->> ---
->> This patch depends on A1 clock patchset at [0][3]
->>
->> Changes since v1 at [1]:
->> -change reg length to 0x20
->> -assign i2c bus alias in dts file
->> -add new feature note compared to AXG in changelog
->>
->> Changes since v2 at [2]:
->> -remove the dependence the commit description
->> -remove i2c alias in dtsi
->> -reorder the i2c nodes
->> -reorder the i2c pins
->>
->> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
->> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
->> [2] https://lkml.kernel.org/r/20191211032802.83309-1-jian.hu@amlogic.com
->> [3] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
->> ---
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 142 ++++++++++++++++++++++
->>   1 file changed, 142 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index eab2ecd36aa8..1542eeee699d 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -117,6 +117,16 @@
->>   				};
->>   			};
->>   
->> +			i2c0: i2c@1400 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x1400 0x0 0x20>;
->> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
->> +				status = "disabled";
->> +			};
->> +
->>   			uart_AO: serial@1c00 {
->>   				compatible = "amlogic,meson-gx-uart",
->>   					     "amlogic,meson-ao-uart";
->> @@ -136,6 +146,36 @@
->>   				clock-names = "xtal", "pclk", "baud";
->>   				status = "disabled";
->>   			};
->> +
->> +			i2c1: i2c@5c00 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x5c00 0x0 0x20>;
->> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
->> +				status = "disabled";
->> +			};
->> +
->> +			i2c2: i2c@6800 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x6800 0x0 0x20>;
->> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
->> +				status = "disabled";
->> +			};
->> +
->> +			i2c3: i2c@6c00 {
->> +				compatible = "amlogic,meson-axg-i2c";
->> +				reg = <0x0 0x6c00 0x0 0x20>;
->> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
->> +				status = "disabled";
->> +			};
->>   		};
->>   
->>   		gic: interrupt-controller@ff901000 {
->> @@ -171,3 +211,105 @@
->>   		#clock-cells = <0>;
->>   	};
->>   };
->> +
->> +&periphs_pinctrl {
-> 
-> Why is this not directly under the periphs_pinctrl node ?
-> 
-OK, I will put them under periphs_pinctrl node
->> +	i2c0_f9_pins:i2c0-f9 {
->                       ^
->                       Missing space here. Same for the other nodes
-> 
->> +		mux {
->> +			groups = "i2c0_sck_f9",
->> +				"i2c0_sda_f10";
->> +			function = "i2c0";
->> +			bias-pull-up;
-> 
-> Most device we have seen so far have the pull-up on the PCB.
-> 
-> If you look at the other dts file, the i2c pad bias is disabled. If the
-> pull-up resistor is missing on the PCB, this setting can overloaded in
-> the board dt.
-> 
-> Bottom line please put "bias-disable" or justify why a1 is different
-> from the SoC.
-Yes, there is pull-up resistor on PCB, I will replace it as
-'bias-disable'
-> 
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c0_f11_pins:i2c0-f11 {
->> +		mux {
->> +			groups = "i2c0_sck_f11",
->> +				"i2c0_sda_f12";
->> +			function = "i2c0";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c1_a_pins:i2c1-a {
->> +		mux {
->> +			groups = "i2c1_sck_a",
->> +				"i2c1_sda_a";
->> +			function = "i2c1";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c1_x_pins:i2c1-x {
->> +		mux {
->> +			groups = "i2c1_sck_x",
->> +				"i2c1_sda_x";
->> +			function = "i2c1";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_a4_pins:i2c2-a4 {
->> +		mux {
->> +			groups = "i2c2_sck_a4",
->> +				"i2c2_sda_a5";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_a8_pins:i2c2-a8 {
->> +		mux {
->> +			groups = "i2c2_sck_a8",
->> +				"i2c2_sda_a9";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_x0_pins:i2c2-x0 {
->> +		mux {
->> +			groups = "i2c2_sck_x0",
->> +				"i2c2_sda_x1";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c2_x15_pins:i2c2-x15 {
->> +		mux {
->> +			groups = "i2c2_sck_x15",
->> +				"i2c2_sda_x16";
->> +			function = "i2c2";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c3_f_pins:i2c3-f {
->> +		mux {
->> +			groups = "i2c3_sck_f",
->> +				"i2c3_sda_f";
->> +			function = "i2c3";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +
->> +	i2c3_x_pins:i2c3-x {
->> +		mux {
->> +			groups = "i2c3_sck_x",
->> +				"i2c3_sda_x";
->> +			function = "i2c3";
->> +			bias-pull-up;
->> +			drive-strength-microamp = <3000>;
->> +		};
->> +	};
->> +};
-> 
-> .
-> 
