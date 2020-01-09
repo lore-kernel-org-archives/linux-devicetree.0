@@ -2,90 +2,112 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C494C282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 19:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BDBC282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43766206ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 19:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578597422;
-	bh=CRRqeSCie+w4CJwWyv/PNUWCLkxIA/QXQ2H8s/BlBTw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=roMcffk42KmRDA3zSotU7dDzKKiCEiJRayI6uTP5HjOEyzfiGYtovYBAfsv1vZtyV
-	 FRuJZ3y/UQrkNEjEC2F0xL0hyF+QiOOqxsRb1Y8pII3t8pc2/xr86lEdG+++QtUh6A
-	 1hZh5lLB7sjIIkR9/oQBkOK6XolUxkKpbLaaJA30=
+	by mail.kernel.org (Postfix) with ESMTP id 5B38A2051A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 19:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgAITQ6 (ORCPT
+        id S1730316AbgAITcJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 14:16:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:35950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbgAITQ5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 14:16:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4501831B;
-        Thu,  9 Jan 2020 11:16:57 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF31F3F703;
-        Thu,  9 Jan 2020 11:16:56 -0800 (PST)
-Date:   Thu, 9 Jan 2020 19:16:54 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     saravanan sekar <sravanhome@gmail.com>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
-        sam@ravnborg.org, icenowy@aosc.io,
-        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] regulator: mpq7920: add mpq7920 regulator driver
-Message-ID: <20200109191654.GC3702@sirena.org.uk>
-References: <20200109112548.23914-1-sravanhome@gmail.com>
- <20200109112548.23914-4-sravanhome@gmail.com>
- <20200109132835.GA7768@sirena.org.uk>
- <aefe7c78-6bd9-bafd-9215-5784f8168400@gmail.com>
+        Thu, 9 Jan 2020 14:32:09 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:46294 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728823AbgAITcJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 14:32:09 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E612A80497;
+        Thu,  9 Jan 2020 20:32:04 +0100 (CET)
+Date:   Thu, 9 Jan 2020 20:32:03 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: display: simple: Add Satoz panel
+Message-ID: <20200109193203.GA22666@ravnborg.org>
+References: <20200109184037.9091-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qtZFehHsKgwS5rPz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aefe7c78-6bd9-bafd-9215-5784f8168400@gmail.com>
-X-Cookie: Killing turkeys causes winter.
+In-Reply-To: <20200109184037.9091-1-miquel.raynal@bootlin.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=oYh99mQ5AAAA:8
+        a=P-IC7800AAAA:8 a=iQciiuR6OtxbVP0T3JUA:9 a=CjuIK1q_8ugA:10
+        a=Dexii-P0nw1V_nRav-Pa:22 a=d3PnA9EDa4IxuAV0gXij:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Miquel.
 
---qtZFehHsKgwS5rPz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Jan 09, 2020 at 07:40:36PM +0100, Miquel Raynal wrote:
+> Satoz is a Chinese TFT manufacturer.
+> Website: http://www.sat-sz.com/English/index.html
+> 
+> Add the compatible for its SAT050AT40H12R2 5.0 inch LCD panel.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-On Thu, Jan 09, 2020 at 07:34:04PM +0100, saravanan sekar wrote:
+Applied this and the following patch to drm-misc-next.
+I manually resolved the conflict in panel-simple.yaml.
 
-> Means should I rebase this v6 patch to linux-next and send, or
-> of_parse_cb callback changes as separate patch on top of v5?
+Thanks,
 
-Send based on -next, no need to resend the other patches which were
-already applied.
+	Sam
 
---qtZFehHsKgwS5rPz
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4XfCYACgkQJNaLcl1U
-h9DiEgf/QUCnXEMlNCMPMbJFKITDyHLVu1W4kgM8q0ushmz1qMFgq/qz7U1dr0uZ
-ZBUvp4uPnhYS2GAkp/j8J8XGvlQVECwicxpyXzgnzkJIh8DLladDdZ8f/EhC7ZcB
-Xhb/c2u1vUwrEbPvkseIND71Aps8M75Kt6LfBa2TIuaJj7V2Xwo5atQGLkOKlEjN
-vgDhQUOWDF4sChPBb8RWzztAFIEKGFIcIMmNwumf5Xa03dTC9AueyjWXLROAyXuE
-wNKmWrLjR7kCMJ47TcD9Rwdw2ksEGB1a87BEouHEM0SQgw5M5QS+bdz6NW/VVaab
-Z2f+w42UfUUVAp7dn2vEFABx4w44kg==
-=BWkd
------END PGP SIGNATURE-----
-
---qtZFehHsKgwS5rPz--
+> ---
+> 
+> Changes since v4:
+> * Drop the satoz,sat050at40h12r2.yaml file in favor of the very new
+>   panel-simple.yaml common file. Just add the compatible there.
+> 
+> Changes since v3:
+> * Added the missing ".yaml" suffix in the $id.
+> * Removed the unnecessary "contains" assertion about the compatible.
+> * Added a precision : there is no public specification for this panel
+>   (known for the moment).
+> * Bindings checked with "make dt_binding_check"
+> 
+> Changes since v2:
+> * None.
+> 
+> Changes since v1:
+> * New patch
+> 
+>  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> index 090866260f4f..8a9c37640dc0 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> @@ -33,6 +33,8 @@ properties:
+>        - ampire,am-480272h3tmqw-t01h
+>          # Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
+>        - ampire,am800480r3tmqwa1h
+> +        # Satoz SAT050AT40H12R2 5.0" WVGA TFT LCD panel
+> +      - satoz,sat050at40h12r2
+>  
+>    backlight: true
+>    enable-gpios: true
+> -- 
+> 2.20.1
