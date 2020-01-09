@@ -6,165 +6,188 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49F9C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 06:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30401C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54AE2072E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 06:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D23206ED
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:07:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgAIGyv (ORCPT
+        id S1728069AbgAIHHW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 01:54:51 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:19459 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgAIGyv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 01:54:51 -0500
-Received: from [10.28.39.63] (10.28.39.63) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 9 Jan
- 2020 14:55:14 +0800
-Subject: Re: [PATCH v5 2/5] clk: meson: add support for A1 PLL clock ops
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191227094606.143637-1-jian.hu@amlogic.com>
- <20191227094606.143637-3-jian.hu@amlogic.com>
- <CAFBinCC4Fgn3QQ6H-TWO_Xx+USonzMDZDyvJBfYp-_6=pmKdLQ@mail.gmail.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <ee163cd0-a05e-5147-c307-e9870535b1dd@amlogic.com>
-Date:   Thu, 9 Jan 2020 14:55:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 9 Jan 2020 02:07:22 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44355 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgAIHHW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 02:07:22 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ipRuR-00076j-6t; Thu, 09 Jan 2020 08:07:11 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ipRuO-0005HR-BR; Thu, 09 Jan 2020 08:07:08 +0100
+Date:   Thu, 9 Jan 2020 08:07:08 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        jacopo+renesas@jmondi.org, laurent.pinchart@ideasonboard.com,
+        kernel@pengutronix.de, hans.verkuil@cisco.com, mchehab@kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v11 04/15] media: v4l2-fwnode: add initial connector
+ parsing support
+Message-ID: <20200109070708.arel6nepqs5ucl7b@pengutronix.de>
+References: <20190930093900.16524-1-m.felsch@pengutronix.de>
+ <20190930093900.16524-5-m.felsch@pengutronix.de>
+ <20191115233439.GB2696@mara.localdomain>
+ <20200108153626.we3zasacpriksczs@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCC4Fgn3QQ6H-TWO_Xx+USonzMDZDyvJBfYp-_6=pmKdLQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.63]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108153626.we3zasacpriksczs@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:58:36 up 54 days, 22:17, 46 users,  load average: 0.00, 0.04,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Martin
+Hi Sakari,
 
-Thanks for your review
+just a few questions about the below helper.
 
-On 2019/12/28 0:53, Martin Blumenstingl wrote:
-> Hi Jian,
+On 20-01-08 16:36, Marco Felsch wrote:
+> Hi Sakari,
 > 
-> On Fri, Dec 27, 2019 at 10:46 AM Jian Hu <jian.hu@amlogic.com> wrote:
-> [...]
->> @@ -294,9 +298,12 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
->>   {
->>          struct clk_regmap *clk = to_clk_regmap(hw);
->>          struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
->> +       int ret = 0;
->>
->> -       if (meson_parm_read(clk->map, &pll->rst) ||
->> -           !meson_parm_read(clk->map, &pll->en) ||
->> +       if (MESON_PARM_APPLICABLE(&pll->rst))
->> +               ret = meson_parm_read(clk->map, &pll->rst);
->> +
->> +       if (ret || !meson_parm_read(clk->map, &pll->en) ||
->>              !meson_parm_read(clk->map, &pll->l))
->>                  return 0;
-> I had to read this part twice to understand what it's doing because I
-> misunderstood what "ret" is used for (I thought that some "return ret"
-> is missing)
-> my proposal to make it easier to read:
-> ...
-> if (MESON_PARM_APPLICABLE(&pll->rst) &&
->      meson_parm_read(clk->map, &pll->rst))
->    return 0;
+> On 19-11-16 01:34, Sakari Ailus wrote:
+> > Hi Marco,
+> > 
+> > On Mon, Sep 30, 2019 at 11:38:49AM +0200, Marco Felsch wrote:
 > 
-> if (!meson_parm_read(clk->map, &pll->en) ||
->      !meson_parm_read(clk->map, &pll->l))
->                   return 0;
 > ...
 > 
-> please let me know what you think about this
-I was intended to use 'ret' to store the return value of pll->rst.
+> > > +int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
+> > > +				      struct v4l2_fwnode_connector *connector)
+> > > +{
+> > > +	struct fwnode_handle *remote_pp, *remote_ep;
+> > > +	const char *type_name;
+> > > +	unsigned int i = 0, ep_num = 0;
+> > > +	int err;
+> > > +
+> > > +	memset(connector, 0, sizeof(*connector));
+> > > +
+> > > +	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
+> > > +	if (!remote_pp)
+> > > +		return -ENOLINK;
+> 
+> I will align the API with the v4l2_fwnode_endpoint_alloc_parse()
+> function so the caller need to pass the connector fwnode handle.
 
-If pll->rst exists, it will get it. Otherwise, the ret will be zero.
+Should we really align this with v4l2_fwnode_endpoint_alloc_parse()? I
+have some concerns because this moves the step to the user. Using the
+current approach makes it easier for the user.
 
-Your proposal is a good way for it. I will use it.
+Regards,
+  Marco
+
+> > > +
+> > > +	/* Parse all common properties first. */
+> > > +	fwnode_graph_for_each_endpoint(remote_pp, remote_ep)
+> > > +		ep_num++;
+> > 
+> > If there are no endpoints, ep_num will be zero and kmalloc_array() will
+> > return NULL? There should be a way there are no endpoints, rather than
+> > returning -ENOMEM.
+> > 
+> > > +
+> > > +	connector->nr_of_links = ep_num;
+> > > +	connector->links = kmalloc_array(ep_num, sizeof(*connector->links),
+> > > +					 GFP_KERNEL);
+> > > +	if (!connector->links) {
+> > > +		err = -ENOMEM;
+> > > +		goto err_put_fwnode;
+> > > +	}
+> > > +
+> > > +	fwnode_graph_for_each_endpoint(remote_pp, remote_ep) {
+> > > +		err = v4l2_fwnode_parse_link(remote_ep, &connector->links[i]);
+> > 
+> > If you start parsing a connector starting from another device connected to
+> > it, nothing seems to prevent parsing the same links twice, in case the
+> > connector is connected to more than one sub-device.
+> > 
+> > Or do I miss something crucial here?
 > 
->> @@ -321,6 +328,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>          /* do nothing if the PLL is already enabled */
->>          if (clk_hw_is_enabled(hw))
->>                  return 0;
->> +       /*
->> +        * Compared with the previous SoCs, self-adaption module current
->> +        * is newly added for A1, keep the new power-on sequence to enable the
->> +        * PLL.
->> +        */
->> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->> +               /* Enable the pll */
->> +               meson_parm_write(clk->map, &pll->en, 1);
->> +               udelay(10);
->> +               /* Enable the pll self-adaption module current */
->> +               meson_parm_write(clk->map, &pll->current_en, 1);
->> +               udelay(40);
->> +               /* Enable lock detect module */
->> +               meson_parm_write(clk->map, &pll->l_detect, 1);
->> +               meson_parm_write(clk->map, &pll->l_detect, 0);
->> +               goto out;
->> +       }
-> in all other functions you are skipping the pll->rst register by
-> checking for MESON_PARM_APPLICABLE(&pll->rst)
-> I like that because it's a pattern which is easy to follow
+> Yes thats right but it seems that sharing connectors isn't supported at
+> all. All bridge drivers using connectors implementing the connector
+> handling by their self. Anyway, I will add a function parameter to check
+> that we parse only the endpoints connected to the calling sub-dev.
 > 
-> do you think we can make this part consistent with that?
-> I'm thinking of something like this (not compile-tested and I dropped
-> all comments, just so you get the idea):
-It is a good idea. I will test it.
-> ...
-> if (MESON_PARM_APPLICABLE(&pll->rst)
->    meson_parm_write(clk->map, &pll->rst, 1);
+> Regards,
+>   Marco
 > 
-> meson_parm_write(clk->map, &pll->en, 1);
+> > > +		if (err) {
+> > > +			fwnode_handle_put(remote_ep);
+> > > +			goto err_free_links;
+> > > +		}
+> > > +		i++;
+> > > +	}
+> > > +
+> > > +	/*
+> > > +	 * Links reference counting guarantees access -> no duplication needed
+> > > +	 */
+> > > +	fwnode_property_read_string(remote_pp, "label", &connector->label);
+> > > +
+> > > +	/* The connector-type is stored within the compatible string. */
+> > > +	err = fwnode_property_read_string(remote_pp, "compatible", &type_name);
+> > > +	if (err) {
+> > > +		err = -EINVAL;
+> > > +		goto err_free_links;
+> > > +	}
+> > > +	connector->type = v4l2_fwnode_string_to_connector_type(type_name);
+> > > +
+> > > +	/* Now parse the connector specific properties. */
+> > > +	switch (connector->type) {
+> > > +	case V4L2_CONN_COMPOSITE:
+> > > +	case V4L2_CONN_SVIDEO:
+> > > +		err = v4l2_fwnode_connector_parse_analog(remote_pp, connector);
+> > > +		break;
+> > > +	case V4L2_CONN_UNKNOWN:
+> > > +	default:
+> > > +		pr_err("Unknown connector type\n");
+> > > +		err = -EINVAL;
+> > > +		goto err_free_links;
+> > > +	}
+> > > +
+> > > +	fwnode_handle_put(remote_pp);
+> > > +
+> > > +	return err;
+> > > +
+> > > +err_free_links:
+> > > +	for (i = 0; i < ep_num; i++)
+> > > +		v4l2_fwnode_put_link(&connector->links[i]);
+> > > +	kfree(connector->links);
+> > > +err_put_fwnode:
+> > > +	fwnode_handle_put(remote_pp);
+> > > +
+> > > +	return err;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_alloc_parse);
+> > > +
 > 
-> if (MESON_PARM_APPLICABLE(&pll->rst))
->    meson_parm_write(clk->map, &pll->rst, 0);
 > 
-> if (MESON_PARM_APPLICABLE(&pll->current_en))
->    meson_parm_write(clk->map, &pll->current_en, 1);
-> 
-> if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
->    meson_parm_write(clk->map, &pll->l_detect, 1);
->    meson_parm_write(clk->map, &pll->l_detect, 0);
-> }
-> 
-> if (meson_clk_pll_wait_lock(hw))
-> ...
-> 
-> I see two (and a half) benefits here:
-> - if there's a PLL with neither the pll->current_en nor the pll->rst
-> registers then you get support for this implementation for free
-> - the if (MESON_PARM_APPLICABLE(...)) pattern is already used in the
-> driver, but only for one register (in your example when
-> MESON_PARM_APPLICABLE(&pll->current_en) exists you also modify the
-> pll->l_detect register, which I did not expect)
-> - only counts half: no use of "goto", which in my opinion makes it
-> very easy to read (just read from top to bottom, checking each "if")
-> 
-I see, I will verify it.
-> 
-> Martin
-> 
-> .
-> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
