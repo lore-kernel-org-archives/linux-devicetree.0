@@ -2,106 +2,87 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2496FC282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECACC282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB1EB2077B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73CC2077B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578575631;
-	bh=N89fqm/wSNPygiHhvlyg6BX8W3BVH5DxNVHnix5I0q4=;
+	s=default; t=1578576518;
+	bh=8FlOzoCP2VaezYfv8yGcdclpzGXdox7sbGfTsslZTiY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dW8vg1Te0eWtv0YkDkhgIf49neFSDlTWJMN0WcJEq9IJQcaBWAJQjrz3nSxtz06++
-	 xXifIRr2C5nezm1KU6NPy9Q81bmB0mgj8ac/C+KVPiAbVBFJYtAu/rCa1jDdtAqSxF
-	 CRV3rejmlUABhAbeCG81byVlTdaX5W+2ebufBQmM=
+	b=kdLmcpKEdTISYs5uSnevloRWPBhJPEP3jMUvF6z8J6ScGvbg3kBnaRyeDLhkcMlHq
+	 OF9Zhb+CgVFsgKyNVKY4tTx2JVBm8hyPtTzgUOynrzf7fXkxiYmkWwfwMFy467DAUz
+	 L0yzJr6EsZynbka0tBpfdgN7f029YC9Csf2T5Emw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbgAINNr (ORCPT
+        id S1729295AbgAIN2i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:13:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36394 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 08:28:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:59016 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbgAINNq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 08:13:46 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B2872072A;
-        Thu,  9 Jan 2020 13:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578575626;
-        bh=N89fqm/wSNPygiHhvlyg6BX8W3BVH5DxNVHnix5I0q4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VUmOXFJKEVw4ngBhuV61AJyMW263sFDGLq3mPSQlVnntw+BcrUeoN/nPzHQeIMbQk
-         DanmK4fpneCdJOfhYjy1YMkRL1yqZ/og4NTxthy+l+mzX+VJG67l+M2mJ6lQgTHvJu
-         5ALFsbNQpFxBuIGF6bVy79urSlWQurdkYuutl/Zc=
-Date:   Thu, 9 Jan 2020 14:13:43 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, anarsoul@gmail.com,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        megous@megous.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] ARM: dts: sun8i-r40: Add thermal sensor and
- thermal zones
-Message-ID: <20200109131343.mjyuj5ed2xwvmwd4@gilmour.lan>
-References: <20200106174639.20862-1-tiny.windzz@gmail.com>
- <20200106174639.20862-2-tiny.windzz@gmail.com>
- <20200107075816.ly6exfd4qtvfxxua@gilmour.lan>
- <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
+        id S1727861AbgAIN2i (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 08:28:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7206E31B;
+        Thu,  9 Jan 2020 05:28:37 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEEEF3F534;
+        Thu,  9 Jan 2020 05:28:36 -0800 (PST)
+Date:   Thu, 9 Jan 2020 13:28:35 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        mripard@kernel.org, shawnguo@kernel.org, heiko@sntech.de,
+        sam@ravnborg.org, icenowy@aosc.io,
+        laurent.pinchart@ideasonboard.com, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/4] regulator: mpq7920: add mpq7920 regulator driver
+Message-ID: <20200109132835.GA7768@sirena.org.uk>
+References: <20200109112548.23914-1-sravanhome@gmail.com>
+ <20200109112548.23914-4-sravanhome@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rudrzmim3rv4efom"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
 Content-Disposition: inline
-In-Reply-To: <662e157a-603f-7423-0491-f26f0fc8d7b6@linaro.org>
+In-Reply-To: <20200109112548.23914-4-sravanhome@gmail.com>
+X-Cookie: Necessity is a mother.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---rudrzmim3rv4efom
+--OXfL5xGRrasGEqWY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Daniel,
+On Thu, Jan 09, 2020 at 12:25:47PM +0100, Saravanan Sekar wrote:
+> Adding regulator driver for the device mpq7920.
+> The MPQ7920 PMIC device contains four DC-DC buck converters and
+> five regulators, is designed for automotive and accessed over I2C.
 
-On Thu, Jan 09, 2020 at 12:51:27PM +0100, Daniel Lezcano wrote:
-> On 07/01/2020 08:58, Maxime Ripard wrote:
-> > On Mon, Jan 06, 2020 at 05:46:39PM +0000, Yangtao Li wrote:
-> >> There are two sensors, sensor0 for CPU, sensor1 for GPU.
-> >>
-> >> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> >> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> >> Tested-on: sun8i-r40-bananapi-m2-ultra
-> >
-> > As far as I know, tested-on is not documented anywhere (and isn't
-> > really used either). I've removed it and applied, thanks!
->
-> I think this patch should go through my tree as it refers to a commit in
-> my branch.
+This doesn't apply against current code, please check and resend.
 
-I'm not quite sure to get why. Even though that patch depends on the
-one affecting the driver to be functional, it doesn't break anything
-when merged through arm-soc, and similarly yours doesn't affect any
-other tree if it's merged through your tree, so there's no dependency?
-
-Maxime
-
---rudrzmim3rv4efom
+--OXfL5xGRrasGEqWY
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhcnBwAKCRDj7w1vZxhR
-xcImAQDNbSqcmxp2wB1rwCZU6HKqVaiK8UsFDVOYa38x/E7CiAEAxs5cMCPyNob1
-HngPtTnq7ckkkdz5yvv7IEl2Ak4wcgE=
-=9f/6
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4XKoIACgkQJNaLcl1U
+h9CDdgf/bTjR+dsJEfEA7ydjVkffsHZoIdhND0nuXgydleN4eH2kE05CNTaafAOU
+FCs/pTjuZaG6lG4fDc7FglR4NOZxmI32wOpYwwqYjz9NF2EV0pm49tFPYAfvPo3/
+i+StQaOspnLdkvEymxxzxISY5Dc6n57pIThIa+R0+HHoKjmOJnpIHvShAM/lD0Lz
+TAi0mCwUZWBzkZwG6IpJj7i3PcjshNeDiIzgum/QKyP8405l4PlzqLH0CHNNLoWv
+AYn9+xrpViRU1P6RK5b6TBm8UvBTHXNgSfX7JpEKVoAcg8K6fXcjzTUuaA0ZFKt8
+PGlX0xcbeeM3FDK35H6wCQrQD8tcng==
+=afwH
 -----END PGP SIGNATURE-----
 
---rudrzmim3rv4efom--
+--OXfL5xGRrasGEqWY--
