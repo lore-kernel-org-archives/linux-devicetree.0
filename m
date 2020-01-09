@@ -2,348 +2,105 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B68C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316C7C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABEE2077C
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042CB2067D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 09:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Rga+FJxf"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S1Slievj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbgAIJTt (ORCPT
+        id S1729269AbgAIJVh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 04:19:49 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:51546 "EHLO
+        Thu, 9 Jan 2020 04:21:37 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:21428 "EHLO
         mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729455AbgAIJTp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 04:19:45 -0500
+        by vger.kernel.org with ESMTP id S1729297AbgAIJVh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 04:21:37 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578561584; h=References: In-Reply-To: Message-Id: Date:
- Subject: To: From: Sender;
- bh=lXmtee1BeZokNTz+OEvkB6jOsyRehn56L8ud+U97/rI=; b=Rga+FJxfK2WYVJD6ZaOl/NnsQAlGTes10CAzMpW83HNTX13OrRv27Evjp3/Y4tQknxRfBnE5
- pqlYKEvAqjirZeEYfRE4f3yyWj/MKUfzzkCZbeYsheaMbTo77+YmGCFayWQ2Z7+BbJj4cLzz
- vYjEbGLaei+uaRYxlLv2+Cgh5tI=
+ s=smtp; t=1578561697; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=HENFk0Bwme4xX25T8XYjrsnqX3dO66gOl56uwR9piXs=; b=S1Slievj2qko2Fc//+wVOdtjw7S77e/95jqfZOszrHklliuX9EJxqxOnkAXPQ+ZSHWW2sBXY
+ WKERJj3ZH7+3X8JtOukuF6jo/WqFZLK89DWg8yT4j6gTugrhggRyIvgfqBwCi9zwqMCfMefi
+ MGjaJ8hDNXTxaLsUaA6NbR3hkPE=
 X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e16f02a.7f9f6c7129d0-smtp-out-n03;
- Thu, 09 Jan 2020 09:19:38 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e16f09f.7f01651f0e30-smtp-out-n02;
+ Thu, 09 Jan 2020 09:21:35 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 78E5DC447A3; Thu,  9 Jan 2020 09:19:37 +0000 (UTC)
-Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id CC6B8C4479F; Thu,  9 Jan 2020 09:21:33 +0000 (UTC)
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sricharan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76F9AC447B2;
-        Thu,  9 Jan 2020 09:19:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 76F9AC447B2
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0A050C433A2;
+        Thu,  9 Jan 2020 09:21:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0A050C433A2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH V3 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, sivaprak@codeaurora.org
+References: <1578052177-6778-1-git-send-email-sricharan@codeaurora.org>
+ <1578052177-6778-2-git-send-email-sricharan@codeaurora.org>
+ <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
 From:   Sricharan R <sricharan@codeaurora.org>
-To:     agross@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
-        robh+dt@kernel.org, sivaprak@codeaurora.org,
-        sricharan@codeaurora.org
-Subject: [PATCH V4 4/5] arm64: dts: Add ipq6018 SoC and CP01 board support
-Date:   Thu,  9 Jan 2020 14:49:02 +0530
-Message-Id: <1578561543-23132-5-git-send-email-sricharan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
-References: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
+Message-ID: <ca9baad3-8065-4647-c6c5-7449b96f4f71@codeaurora.org>
+Date:   Thu, 9 Jan 2020 14:51:27 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdbjjzwdEgsDV2tGea0t3AMM_FRSd-Um3+2BrYDTGKoNxw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial device tree support for the Qualcomm IPQ6018 SoC and
-CP01 evaluation board.
+Hi Linus,
 
-Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/Makefile            |   1 +
- arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  30 ++++
- arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 215 +++++++++++++++++++++++++++
- 3 files changed, 246 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
- create mode 100644 arch/arm64/boot/dts/qcom/ipq6018.dtsi
+On 1/7/2020 5:25 PM, Linus Walleij wrote:
+> On Fri, Jan 3, 2020 at 12:49 PM Sricharan R <sricharan@codeaurora.org> wrote:
+> 
+>> Add device tree binding Documentation details for ipq6018
+>> pinctrl driver.
+>>
+>> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+>> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+>> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  [v3] Fixed the example dt node, inherited properties
+> 
+> Once you are done with patches 1 & 2, can I merge these
+> separately to the pinctrl tree?
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 973c0f0..204775f 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -2,6 +2,7 @@
- dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
- dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-longcheer-l8150.dtb
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
-new file mode 100644
-index 0000000..897b4b2
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * IPQ6018 CP01 board device tree source
-+ *
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "ipq6018.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. IPQ6018/AP-CP01-C1";
-+	compatible = "qcom,ipq6018-cp01", "qcom,ipq6018";
-+
-+	aliases {
-+		serial0 = &blsp1_uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+		bootargs-append = " swiotlb=1";
-+	};
-+};
-+
-+&blsp1_uart3 {
-+	pinctrl-0 = <&serial_3_pins>;
-+	pinctrl-names = "default";
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-new file mode 100644
-index 0000000..78fa30e
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -0,0 +1,215 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * IPQ6018 SoC device tree source
-+ *
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/qcom,gcc-ipq6018.h>
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	interrupt-parent = <&intc>;
-+
-+	clocks {
-+		sleep_clk: sleep-clk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		xo: xo {
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			#clock-cells = <0>;
-+		};
-+	};
-+
-+	cpus: cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x1>;
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x2>;
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		CPU3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			enable-method = "psci";
-+			reg = <0x3>;
-+			next-level-cache = <&L2_0>;
-+		};
-+
-+		L2_0: l2-cache {
-+			compatible = "cache";
-+			cache-level = <0x2>;
-+		};
-+	};
-+
-+	pmuv8: pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
-+					 IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	psci: psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		tz: tz@48500000 {
-+			reg = <0x0 0x48500000 0x0 0x00200000>;
-+			no-map;
-+		};
-+	};
-+
-+	soc: soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0 0xffffffff>;
-+		dma-ranges;
-+		compatible = "simple-bus";
-+
-+		tlmm: pinctrl@1000000 {
-+			compatible = "qcom,ipq6018-pinctrl";
-+			reg = <0x01000000 0x300000>;
-+			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&tlmm 0 80>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			serial_3_pins: serial3-pinmux {
-+				pins = "gpio44", "gpio45";
-+				function = "blsp2_uart";
-+				drive-strength = <8>;
-+				bias-pull-down;
-+			};
-+		};
-+
-+		gcc: gcc@1800000 {
-+			compatible = "qcom,gcc-ipq6018";
-+			reg = <0x01800000 0x80000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
-+		blsp1_uart3: serial@78b1000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0x078b1000 0x200>;
-+			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
-+				<&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			status = "disabled";
-+		};
-+
-+		intc: interrupt-controller@b000000 {
-+			compatible = "qcom,msm-qgic2";
-+			interrupt-controller;
-+			#interrupt-cells = <0x3>;
-+			reg =   <0x0b000000 0x1000>,  /*GICD*/
-+				<0x0b002000 0x1000>,  /*GICC*/
-+				<0x0b001000 0x1000>,  /*GICH*/
-+				<0x0b004000 0x1000>;  /*GICV*/
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		timer {
-+			compatible = "arm,armv8-timer";
-+			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+		};
-+
-+		timer@b120000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			compatible = "arm,armv7-timer-mem";
-+			reg = <0x0b120000 0x1000>;
-+			clock-frequency = <19200000>;
-+
-+			frame@b120000 {
-+				frame-number = <0>;
-+				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0b121000 0x1000>,
-+				      <0x0b122000 0x1000>;
-+			};
-+
-+			frame@b123000 {
-+				frame-number = <1>;
-+				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0xb123000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@b124000 {
-+				frame-number = <2>;
-+				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0b124000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@b125000 {
-+				frame-number = <3>;
-+				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0b125000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@b126000 {
-+				frame-number = <4>;
-+				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0b126000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@b127000 {
-+				frame-number = <5>;
-+				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0b127000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@b128000 {
-+				frame-number = <6>;
-+				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x0b128000 0x1000>;
-+				status = "disabled";
-+			};
-+		};
-+
-+	};
-+};
+Yeah, that should be fine. Posted a V4 and waiting for approval
+from Rob on the pinctrl bindings for Patch 1.
+
+Regards,
+ Sricharan
+
 -- 
-2.7.4
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
