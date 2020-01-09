@@ -2,112 +2,88 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC8AC32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7537EC32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267EB2072E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 07:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578556723;
-	bh=IxIDaYwn1hYLk4AjZMN5Qonq1h8D5Y/VRrDjQJUKNq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QS+8Zn+5MWcYX6+3NelslGjchdeGk0jA4VtAMUKOzStoytVkvVZLfIRzXqKHRwJ3S
-	 20f9FFi+o2GiyD2Mi5VNon9Cqq7jyqf8y51u9vWFB2B2SxHdoHYDub2sTqJQv8NryP
-	 IRDIKNLaXXrH3lkAFUErXZ33M0GPyklDgM4yhuGE=
+	by mail.kernel.org (Postfix) with ESMTP id 394922077C
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:05:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lbOEo8d0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgAIH6m (ORCPT
+        id S1728346AbgAIIFj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 02:58:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbgAIH6m (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 02:58:42 -0500
-Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 9 Jan 2020 03:05:39 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21462 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728331AbgAIIFj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 03:05:39 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578557138; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-Id: Date: Subject: To: From: Sender;
+ bh=BuUdAvhMRovZFUB4BJ0UiwY2Y6k8o8mctzHNiqvFTHc=; b=lbOEo8d05OJctLkz2OWU9xi2YTyFxYUfbsBe8T3vnk72WZ9zAW8b5mF074hRHEjEHQo0aO7L
+ 60VXy1gPJu25P9vAd3fcR0bt3R2+/KRrQIwCo/voFGnGk5oS7z+dLZ7C66nQYrub+kTXWnJH
+ geVXR0RCXZJt7n/QdtrXOQ3JMmQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e16ded1.7fc6d05c2148-smtp-out-n01;
+ Thu, 09 Jan 2020 08:05:37 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E44E8C447A5; Thu,  9 Jan 2020 08:05:35 +0000 (UTC)
+Received: from srichara1-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC10206ED;
-        Thu,  9 Jan 2020 07:58:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578556721;
-        bh=IxIDaYwn1hYLk4AjZMN5Qonq1h8D5Y/VRrDjQJUKNq0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q9FuoXicRdmdy8u3f4kO6XoaxwV4LHUFXa/jXJ1M8Hb5Kaj4P8nFNuYO0ld5JUzTP
-         LcKNnf/QO//ezjudN3G2NSzz0chy2/HbRRoosjYXlp156GJc5Vdueu/ym2rJfKJ55t
-         GoYrUkNzy6tzqDqUe8nm5NwIbog2TM9mBg9cNOVo=
-Date:   Thu, 9 Jan 2020 15:58:33 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Aapo Vienamo <aapo.vienamo@iki.fi>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: mxs: Enable usbphy1 and usb1 on apx4devkit DTS
-Message-ID: <20200109075832.GG4456@T480>
-References: <20191229131503.20843-1-aapo.vienamo@iki.fi>
+        (Authenticated sender: sricharan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD78EC4479C;
+        Thu,  9 Jan 2020 08:05:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BD78EC4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+From:   Sricharan R <sricharan@codeaurora.org>
+To:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-soc@vger.kernel.org, robh+dt@kernel.org,
+        sivaprak@codeaurora.org, sricharan@codeaurora.org, sboyd@kernel.org
+Subject: [PATCH V2 0/2] Add Global clock controller support for IPQ6018
+Date:   Thu,  9 Jan 2020 13:35:19 +0530
+Message-Id: <1578557121-423-1-git-send-email-sricharan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191229131503.20843-1-aapo.vienamo@iki.fi>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Dec 29, 2019 at 03:15:03PM +0200, Aapo Vienamo wrote:
-> Enable the USB host port on the APx4 development board.
-> 
-> Signed-off-by: Aapo Vienamo <aapo.vienamo@iki.fi>
-> ---
->  arch/arm/boot/dts/imx28-apx4devkit.dts | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
-> index 3a184d13887b..f00d201ce242 100644
-> --- a/arch/arm/boot/dts/imx28-apx4devkit.dts
-> +++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
-> @@ -183,6 +183,12 @@ auart2: serial@8006e000 {
->  				pinctrl-0 = <&auart2_2pins_a>;
->  				status = "okay";
->  			};
-> +
-> +			usbphy1: usbphy@8007e000 {
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&usb1_pins_a>;
-> +				status = "okay";
-> +			};
->  		};
->  	};
->  
-> @@ -193,6 +199,10 @@ mac0: ethernet@800f0000 {
->  			pinctrl-0 = <&mac0_pins_a>;
->  			status = "okay";
->  		};
-> +
-> +		usb1: usb@80090000 {
+The IPQ6018 is Qualcomm’s 802.11ax/u2019s SoC for Routers,
+Gateways and Access Points.
 
-We want to keep nodes with unit-address sorted in that address.  That
-said, usb@80090000 should go before ethernet@800f0000.
+[V2]
+ * Addressed sparse warnings reported by Kbuild test robot.
 
-Shawn
+This series adds Global clock controller support for ipq6018.
 
-> +		      status = "okay";
-> +		};
->  	};
->  
->  	regulators {
-> -- 
-> 2.24.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Sricharan R (2):
+  clk: qcom: Add DT bindings for ipq6018 gcc clock controller
+  clk: qcom: Add ipq6018 Global Clock Controller support
+
+ .../devicetree/bindings/clock/qcom,gcc.yaml        |    3 +-
+ drivers/clk/qcom/Kconfig                           |    8 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq6018.c                     | 4643 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq6018.h       |  262 ++
+ include/dt-bindings/reset/qcom,gcc-ipq6018.h       |  157 +
+ 6 files changed, 5073 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/qcom/gcc-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq6018.h
+ create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq6018.h
+
+-- 
+1.9.1
