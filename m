@@ -1,122 +1,78 @@
 Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,TVD_SUBJ_WIPE_DEBT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28702C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215CFC32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8FA12073A
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:25:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="esTMORPm"
+	by mail.kernel.org (Postfix) with ESMTP id E15012067D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgAIIZH (ORCPT
+        id S1728465AbgAIIiE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:25:07 -0500
-Received: from mail-eopbgr80042.outbound.protection.outlook.com ([40.107.8.42]:9440
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728347AbgAIIZH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 03:25:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=McjYQlRDKv1qB9yb9n4Ykg11XkgLZVxu37lBAIxNIwSVv040EgKh5jUzdGF0wjBEUb+9IEcvhZ5G4w2NsST1KUPKe+NUeQzZGLE84oIYqXMWzoeCM2zkLKS4v+Lx1guMCoP6rIYNRwVViQtqoX2pLcXAAxJNDkTv+yyPj91C/vvqD0hKZuDjy+SdxYppfCcf7ZTw291sjVLhe9AdS6Rq5OlK1P4p+mV8hAbCJkI27hQI0rZXo83XTu4SLxwtvH/c83Iilwx3xv0ywBQRwsUIOjk6lb9/jhzRY2bb+jwaoHfVbXF9io4b3awsYMIL/Ut/fDyoXVx64/5NPBvpHqQpwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kxZcaIEVu1vc+vQ6DJdLtThVQkvGXLSmK659Deghx6k=;
- b=aUoDdHMN8aeNtUz8BQgP4j2B9dqdEo9UYc4DDGBed1SiHgnIJlKggbVOqdOtHf5CBrvCl8unXWV4LCVxEF857Fi/yMG+ZBQPmUVXd1B2E3zilAJfKV8Hv5Oha8vvC6Sbv5vijH1+5qgawus+7giYk+uGdszosZrFsZDL0xc3PDHGF2t1tT9wErKks0ZjLgZfD7wbnkZY4tE2GDy0gydz5jyaatG9CkO3rm6pASiwsDj0RFmJeFl2EOlkgUHc+KdKVT0SkVe0zG1+9qqCjrezWThBRhHMjJNB0VDP/41G/z3zm2BXkPOoEhkmDDYK0RwDmdrfln//0K7N2MmSIyOmDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kxZcaIEVu1vc+vQ6DJdLtThVQkvGXLSmK659Deghx6k=;
- b=esTMORPm4Osxom9gV7sO39cyATBBFsRk+L5Z9ehE4+xxA8CRAIxU/CMBZYXV2nPvWbyEGKIzppoI5W4XW+0QGMdftJm/0Urbb1B4/Ga+/nUtKc5m1uGEVN8uq3nlqVo/2XnBqsbt5zL7YwySeqRq0zGlCyIJeoIpAqxp+0CviuA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3929.eurprd04.prod.outlook.com (52.134.70.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Thu, 9 Jan 2020 08:25:03 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d968:56ad:4c0c:616f]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d968:56ad:4c0c:616f%7]) with mapi id 15.20.2602.018; Thu, 9 Jan 2020
- 08:25:03 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "andreas@kemnade.info" <andreas@kemnade.info>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect power
- supply assignment
-Thread-Topic: [PATCH 1/5] ARM: dts: imx6qdl-sabresd: Remove incorrect power
- supply assignment
-Thread-Index: AQHVvrKzedU6q1PoEkWGPbnH76QqjKfiCd2AgAAE9sA=
-Date:   Thu, 9 Jan 2020 08:25:03 +0000
-Message-ID: <DB3PR0402MB39168406714A06869C33D037F5390@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1577670071-1322-1-git-send-email-Anson.Huang@nxp.com>
- <20200109080600.GH4456@T480>
-In-Reply-To: <20200109080600.GH4456@T480>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8074fc5f-98db-41f4-24b1-08d794dd6d0d
-x-ms-traffictypediagnostic: DB3PR0402MB3929:|DB3PR0402MB3929:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB39297396D9F4B5E859DA684EF5390@DB3PR0402MB3929.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 02778BF158
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(396003)(366004)(189003)(199004)(71200400001)(5660300002)(7416002)(33656002)(478600001)(4744005)(66946007)(76116006)(86362001)(66476007)(66446008)(54906003)(44832011)(316002)(66556008)(4326008)(81166006)(81156014)(64756008)(26005)(186003)(8676002)(7696005)(2906002)(6916009)(52536014)(6506007)(55016002)(9686003)(8936002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3929;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ct4VT7xi54cAKcaFBYGgJ6GMdhFkB9fRA1r+5w37wUJ+UlYTnFZvbD5UewQd21+d7EzKq2x4d/OJxUXFXMk7ED5I2M7MmO0godrkvoBtPFHpYOTzk8RR/ooeu9hBMTLqzhRtEczYk20hXaEzWY5GU+N/KYP2r0xr5mAOlhMiBXHWaCpPbga0K6lIWhBnY1HcEmYBGjTDHea5Yb0/a9YJAsveH2uCiPcMqkoKobNGYPAg388t8lxCHkePBAsIJjbSgUHprb4z8f7KSId0l2ho6ld9lxROiToPQdaRPsgp+uJRf6qxa5Dj5VCr9kN83660/9IslVKl6c0UjoUJzxc4gep9vCk2aieTJFcA3YMvzZeBPkumwKCYUtBp8IgaZBICEevbHRjp9Rd9CaSDyHiPIQ+wLzREC+mAwen/W80yqO9eadsIxbZV3/UtbOQh3rIxLofpAJWhUsHNl6FuP2y7YjtfFoPWM1xoEePjra6gO8MV4YM9cCkfGKH9Lj3aXPEE
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 9 Jan 2020 03:38:04 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:50605 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728435AbgAIIiE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 03:38:04 -0500
+Received: from localhost ([31.212.60.142]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MmkfQ-1jVdqE3mre-00juHp; Thu, 09 Jan 2020 09:37:49 +0100
+Date:   Thu, 9 Jan 2020 09:37:47 +0100
+From:   Andreas Klinger <ak@it-klinger.de>
+To:     jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        rpi-receiver@htl-steyr.ac.at, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] iio: srf04: add support for power management
+Message-ID: <20200109083745.GA5355@arbad>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8074fc5f-98db-41f4-24b1-08d794dd6d0d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2020 08:25:03.3466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0NLfMV3XHpwuV6F4cLNiVVrgJOG1HxrUI07u12NsA9QmxVwSLEmbVta0aVUFcx1PZIygKh5SHd18tonHMM9wdw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3929
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:taFnjaQNKRBcxh5H1aI/Wu0h2rIuWWnXiK4+hRD/o9IOhKPMUG0
+ CwisHIEb6ZgyXLFBu3EFQThoR+Nj88VIZ5Ls9qLRgJj0qNPgL8JBQII8NR5xwmZb+2uCxg8
+ AwYdTK1P3h2Mp02iUL6ybWrtQ4O+bzbkLG+gpNSNlyHGRhmj6scyqHSQ8tvKM89VLSe4FJY
+ 2SkZMaQ9rtWgDEKS/aBwQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lqokbqj0kWI=:u6UkQGAZDuBtCIZ6xY91ce
+ e+P2wkA7L4o4vcr/raqLmM/Rlu3BmRxnq2pPoNL7drMh1YVcn13RAoNap1NqZqFBX4Rt1r5CY
+ 5WUffRUAfwT/430wqXmD4sUKZquxRXcamics00Dzzz2WEws/UdAcn5AfSPHuFfdDUTdoGr/Lb
+ 5VOrVjPk7AeofTOzBQkJDhongWM/9NIt3baLUX7gw4tHRXURVzCt465pQeQblwgzuu5jyzw2e
+ b4B/Q6hCpNegrGUybUg7IOxF07tKGhneHdNCjjakRUD/sJy09QmeNDnsmShmjbR3BfdU8m0+h
+ p6gTO91eJ1jIMpoEnZG6uli3UGlYp+9JjjcBPEaIVBKToUQzW7L+472WzRRdhsfSfsmudFzQv
+ kFKvfdpVbSFXSlC5jqnv/GgzJsSIA4fnTOwCn+blmA0v7HsbuDSqmJbIw0QkTFLMcgmZCm+h4
+ a873SDhkAoCUDvejvEzixyxAdVyTEfzIpgS5yCceP0q+K25BaNL9U2HtBIdt/furyeTeHJAx8
+ IpxpJRovzgNmv45zxNfrEBHjHv27wYWJVBt1FJo0H+RwmPIE9/FDyavnsSMg31aCqeZ5jYGye
+ j8l13H3weG1ZnP0rhbvuFYTb18BIR2B5z8KafCagEx+YvTUA0dqzlkX1tns74VSEjntZXp9qK
+ 1Iu6FRWLMXq4X3fhYYqug4jxzUbbUsu7vEsHvumHWw6yZcx/RXidykp02rD+zdQC0TpDJ0QUG
+ BOhB+x5ig4smcrmrTmNpTgXmqo6groSeN+hVladKbMugI024aVpuB/5nNwbfJCZm0scWeA+oL
+ I9SwugfFWW7GzORXOZxixRiW6CPV+DkdD3hR+wfBIPeriLgZQBIGjGhGEqg49jDix79Jiz8J6
+ 7xlI5sllc8CiaHlROgGA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGksIFNoYXduDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzVdIEFSTTogZHRzOiBpbXg2cWRs
-LXNhYnJlc2Q6IFJlbW92ZSBpbmNvcnJlY3QNCj4gcG93ZXIgc3VwcGx5IGFzc2lnbm1lbnQNCj4g
-DQo+IE9uIE1vbiwgRGVjIDMwLCAyMDE5IGF0IDA5OjQxOjA3QU0gKzA4MDAsIEFuc29uIEh1YW5n
-IHdyb3RlOg0KPiA+IFRoZSB2ZGQzcDAncyBpbnB1dCBzaG91bGQgYmUgZnJvbSBleHRlcm5hbCBV
-U0IgVkJVUyBkaXJlY3RseSwgTk9UDQo+IA0KPiBTaG91bGRuJ3QgVVNCIFZCVVMgdXN1YWxseSBi
-ZSA1Vj8gIEl0IGRvZXNuJ3Qgc2VlbSB0byBtYXRjaCAzLjBWIHdoaWNoIGlzDQo+IHN1Z2dlc3Rl
-ZCBieSB2ZGQzcDAgbmFtZS4NCj4gDQo+ID4gUE1JQydzIHN3Miwgc28gcmVtb3ZlIHRoZSBwb3dl
-ciBzdXBwbHkgYXNzaWdubWVudCBmb3IgdmRkM3AwLg0KPiA+DQo+ID4gRml4ZXM6IDkzMzg1NTQ2
-YmEzNiAoIkFSTTogZHRzOiBpbXg2cWRsLXNhYnJlc2Q6IEFzc2lnbiBjb3JyZXNwb25kaW5nDQo+
-ID4gcG93ZXIgc3VwcGx5IGZvciBMRE9zIikNCj4gDQo+IElzIGl0IG9ubHkgYSBkZXNjcmlwdGlv
-biBjb3JyZWN0aW5nIG9yIGlzIGl0IGZpeGluZyBhIHJlYWwgcHJvYmxlbT8gIEknbSB0cnlpbmcg
-dG8NCj4gdW5kZXJzdGFuZCBpdCBpcyBhIDUuNS1yYyBtYXRlcmlhbCBvciBjYW4gYmUgYXBwbGll
-ZCBmb3IgNS42Lg0KPiANCg0KSXQgaXMgZml4aW5nIGEgcmVhbCBwcm9ibGVtIGFib3V0IFVTQiBM
-RE8gdm9sdGFnZSwgdGhhdCBpcyB3aHkgd2Ugbm90aWNlZCB0aGlzIGlzc3VlLg0KDQpUaGFua3Ms
-DQpBbnNvbi4NCg==
+This patchset adds support for power management for the srf04 iio driver.
+It was suggested by Franz for the purpose of saving energy on battery driven
+vehicles.
+
+Changes in v2:
+Thanks to Rob for pointing out some improvements in dt-binding:
+ - add minimum, maximum and default value for startup-time-ms
+ - drop schema reference
+
+Andreas Klinger (2):
+  dt-bindings: devantech-srf04.yaml: add pm feature
+  iio: srf04: add power management feature
+
+ .../iio/proximity/devantech-srf04.yaml        |  18 +++
+ drivers/iio/proximity/srf04.c                 | 104 +++++++++++++++++-
+ 2 files changed, 121 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
