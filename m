@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92B0C282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16E4C282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC802075D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88FC2206ED
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="WBiZ04BG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="YJV0pzx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbgAINwj (ORCPT
+        id S1731375AbgAINwr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:52:39 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41662 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731376AbgAINwj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:52:39 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c9so7463599wrw.8
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 05:52:37 -0800 (PST)
+        Thu, 9 Jan 2020 08:52:47 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44594 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731371AbgAINwh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:52:37 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q10so7441237wrm.11
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 05:52:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NCu2jl/XHfUALT1gSW/oUJuMvhaIfk+GEmxRnskvRww=;
-        b=WBiZ04BGf0FD0e3HDXi2zqqJES7l8wIRo5kwT1O3LHGWVo0iDVBf5TA5HzIEFbutg7
-         kpUTzFJjPnmXM0h7ETEg8JmgFtf9UqRhqAwlpTTalIxffO2dLm3XPZqNfKopczBXC7Ui
-         ZKKE1w56+xR9VK3Caa08qsUnp5SyN/JD2wztdynHE9OsL0DSLgZvIJXQcZDWKWUKe+6o
-         4M4CPAxrnDG28z7o53mVHI+9oaaB/qPWXgX4HRF0NniezhiF1ffsTNCtNwaOOei7ovM6
-         KZlLbV8Y6Tj6OZw7zDmN/ZsoQdWmTJDRQqwIUCIASQ2Tc+Jk0C/AiaZvY4NVyl2kDn6c
-         vYiQ==
+        bh=cY7VEq1SDPcCbR2gLted+yBjAeKIqKC5FGvxBvtyOjU=;
+        b=YJV0pzx6ld6r0Ittxt8eGiqDQWelxWmJaXiOraeu7kqgy6yUKEl5CjC6krtJ4rrrxp
+         4houNQ8Q8UXHox536aXCM7bWjnJil2sW4Ifwt+ACXDVydt8XuYEkC39UKfu0kzF+FufS
+         a7g15u0+b0YHpt7dOUYfYHYD9xA5DZpLdHpNvgf6yEZzC8ttI2NzhYTjJyAOiloqwbaj
+         bPWnY4DxpIgqUaZwfq9y210ggcbkH6fn+qB9lXXlVSK68lp3bFhfX08XzhhjgVZ3q8r6
+         30Q/n6atlyOxZY/9UzXlCX2VifEXBhYnOQqhehai/Oesy1RbkJkDpih43bF3FMS6g507
+         pd+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=NCu2jl/XHfUALT1gSW/oUJuMvhaIfk+GEmxRnskvRww=;
-        b=Sejt/nopw1GkPsNYtqMdB60B+bJW8StmwMCIn2OfbEUA8RctTFgQRkRypA9KJrEKTk
-         2m3+QjFYkx6g1IOrQiE19ddJsho4qinwvr+CpuaFHDVFSJbonOnURIi6eg3YFRnS0rlk
-         R+NQvomxq4XQw33gsyecM6UK65vchMtbwIu014pH/ZBUmMb6kBB33arxKI2IcdM0syCe
-         ql4CLcxHlGLPDoZ6+D48SIlXbIo2CICQL3IcVM7Ec81JPxDNMysKbMoOXpI3u4TkztjF
-         PuoSI9UIQVwpUwTVJ79yZ5HMmAwgSX1GAkhg1lnRJSPekIZ6Sb1n5P5tQHgr5hVJyLTg
-         VEkA==
-X-Gm-Message-State: APjAAAUzy6y3YfltYZNqyYTEaW5nRIa0v4EJsy1evRy7u2DDi4euHyFe
-        PjB0/uxXsSg9aqOujMeXRmjFhg==
-X-Google-Smtp-Source: APXvYqzlZUNpCtgZo0eIHsRriyQS9df0EhD997mMpVJO2gscTH1ejvVUUg0WzAxElifJzEkjuAAYQQ==
-X-Received: by 2002:adf:e6c5:: with SMTP id y5mr10940641wrm.210.1578577957079;
-        Thu, 09 Jan 2020 05:52:37 -0800 (PST)
+        bh=cY7VEq1SDPcCbR2gLted+yBjAeKIqKC5FGvxBvtyOjU=;
+        b=fPTcLLi8O/4NdqM59QXeS9jFcpl9TiIC2YDapzo2+6gkRYaTOX2OG0ZeQ2YGNgcgYJ
+         WmEvgqrVg9l7q06CG63QuwokG3zm5KZ7UUWFOkihkpBLtACILvoQNIIHP4+kCuGrnjnZ
+         by32anBwrKfMDwVGdgMyV4Mwwb7G6ayZCMM/eDhM9Jo85m+kc2r3cjx2f6pRcteBnKRg
+         ArcynCsqIbWFlY/5908e20iHYICbIqV5D/zM3JLnbW6hMJIExHvx/kwYFJm6VIsNSa1u
+         5Y2BOsSBjwzJpRUGzdtLCVzAAlxouVW3jnYFOYvFwmt2kC6WQTTN1zuvgnqFX4r7mxG7
+         xsHw==
+X-Gm-Message-State: APjAAAW/JLMmZ41rV40oLwKeivVfsd4kYKbkLc/5xpsTSNtxUeGb4IwR
+        bPDatMMseJJRFRN3o3eKRz+na8LNifH01A==
+X-Google-Smtp-Source: APXvYqxIdhdkFDDM3qDOhD9CTVBp8Wso36d/Vi3BKD/mngqoG1YAwUgO6ZuEWuzzKIDn2YcQz8XRbw==
+X-Received: by 2002:a5d:6ca1:: with SMTP id a1mr10795256wra.36.1578577955315;
+        Thu, 09 Jan 2020 05:52:35 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id l7sm8332605wrq.61.2020.01.09.05.52.36
+        by smtp.gmail.com with ESMTPSA id e6sm8476868wru.44.2020.01.09.05.52.34
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:52:36 -0800 (PST)
+        Thu, 09 Jan 2020 05:52:34 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-arm-kernel@lists.infradead.org, git@xilinx.com
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
@@ -64,9 +64,9 @@ Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] arm64: zynqmp: Setup default number of chipselects for zcu100
-Date:   Thu,  9 Jan 2020 14:52:22 +0100
-Message-Id: <227c68a635b031ce20ba2a48a950bf4407c01359.1578577931.git.michal.simek@xilinx.com>
+Subject: [PATCH v2 7/8] arm64: zynqmp: Remove broken-cd from zcu100-revC
+Date:   Thu,  9 Jan 2020 14:52:21 +0100
+Message-Id: <b068e60d4058ccb0d784a0cc35e8aecf5ffb98fd.1578577931.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1578577931.git.michal.simek@xilinx.com>
 References: <cover.1578577931.git.michal.simek@xilinx.com>
@@ -77,36 +77,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-There is only one chipselect on each connector.
-Define it directly in board dts file.
-There should be an option to use more chipselects via gpios.
+Card detect bit was broken on revA and it is working fine with revC
+board that's why this property can be removed.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
 Changes in v2: None
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-index 2b3757dd74cc..a109e82982ae 100644
+index dd60f7d85cc8..2b3757dd74cc 100644
 --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
 +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-@@ -250,11 +250,13 @@ wlcore: wifi@2 {
- &spi0 { /* Low Speed connector */
+@@ -226,7 +226,6 @@ &rtc {
+ &sdhci0 {
  	status = "okay";
- 	label = "LS-SPI0";
-+	num-cs = <1>;
+ 	no-1-8-v;
+-	broken-cd; /* CD has to be enabled by default */
+ 	disable-wp;
  };
  
- &spi1 { /* High Speed connector */
- 	status = "okay";
- 	label = "HS-SPI1";
-+	num-cs = <1>;
- };
- 
- &uart0 {
 -- 
 2.24.0
 
