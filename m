@@ -2,95 +2,169 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA810C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 06:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49F9C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 06:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFA72072E
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 06:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578551991;
-	bh=PzkmDwuLxg6i1Lv7mg1bZi42vACHL6CpISAFG/lE7II=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HNy8FHhAy3uuyJl28r8afklftPleBpS68sEMoH3sYWcxEZLxQG98msujdfVBcAqFz
-	 yAxuQ/R7QE2XXdcPbTTadCDxw5OrciNXaMHKV3hG/I+xduTc20SvoQz8ywWgRsHvX5
-	 8uE6nqt+qOwjux2AsqTK1GsC6025dSmo6j+jS5rE=
+	by mail.kernel.org (Postfix) with ESMTP id A54AE2072E
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 06:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbgAIGjv (ORCPT
+        id S1728115AbgAIGyv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 01:39:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbgAIGju (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 01:39:50 -0500
-Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFF052053B;
-        Thu,  9 Jan 2020 06:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578551990;
-        bh=PzkmDwuLxg6i1Lv7mg1bZi42vACHL6CpISAFG/lE7II=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vZdTpy6H9hUgnvR8ew1cTmAEURZTbZVGreLozb8akRHKWW9iRilK0MJaYA2HEe4lh
-         OX/9Hb8Klj2J1ZGqS6KObwrhUFdoOH89tQe/CmRzYZl7GTmgxJczpsS7UpWJHtRGnW
-         DJrjIZ+geEv8FWFEx4gJY9d7UwFoWGdQVp1/ew20=
-Date:   Thu, 9 Jan 2020 14:39:41 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     s.hauer@pengutronix.de, robh+dt@kernel.org, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        darshak.patel@einfochips.com, prajose.john@einfochips.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Add support for Thor96 board
-Message-ID: <20200109063940.GA4456@T480>
-References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
- <20200109033342.GA3281@Mani-XPS-13-9360>
+        Thu, 9 Jan 2020 01:54:51 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:19459 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgAIGyv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 01:54:51 -0500
+Received: from [10.28.39.63] (10.28.39.63) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 9 Jan
+ 2020 14:55:14 +0800
+Subject: Re: [PATCH v5 2/5] clk: meson: add support for A1 PLL clock ops
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191227094606.143637-1-jian.hu@amlogic.com>
+ <20191227094606.143637-3-jian.hu@amlogic.com>
+ <CAFBinCC4Fgn3QQ6H-TWO_Xx+USonzMDZDyvJBfYp-_6=pmKdLQ@mail.gmail.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <ee163cd0-a05e-5147-c307-e9870535b1dd@amlogic.com>
+Date:   Thu, 9 Jan 2020 14:55:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109033342.GA3281@Mani-XPS-13-9360>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAFBinCC4Fgn3QQ6H-TWO_Xx+USonzMDZDyvJBfYp-_6=pmKdLQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.63]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:03:42AM +0530, Manivannan Sadhasivam wrote:
-> Hi Shawn,
-> 
-> On Wed, Oct 30, 2019 at 02:31:20PM +0530, Manivannan Sadhasivam wrote:
-> > Hello,
-> > 
-> > This patchset adds support for Thor96 board from Einfochips. This board is
-> > one of the 96Boards Consumer Edition platform powered by the NXP i.MX8MQ
-> > SoC.
-> > 
-> > Following are the features supported currently:
-> > 
-> > 1. uSD
-> > 2. WiFi/BT
-> > 3. Ethernet
-> > 4. EEPROM (M24256)
-> > 5. NOR Flash (W25Q256JW)
-> > 6. 2xUSB3.0 ports and 1xUSB2.0 port at HS expansion
-> > 
-> > More information about this board can be found in Arrow website:
-> > https://www.arrow.com/en/products/i.imx8-thor96/arrow-development-tools
-> > 
-> > Link to 96Boards CE Specification: https://linaro.co/ce-specification
-> > 
-> > Expecting patch 1 to go through LED/Rob's tree, 4 through MTD tree
-> > and 2,3 through Freescale tree.
-> > 
-> 
-> Any update here? Patch 4 is already merged.
+Hi Martin
 
-Just applied patch #2 and #3.  For patch #1, it should go via LED or DT
-tree, I think.
+Thanks for your review
 
-Shawn
+On 2019/12/28 0:53, Martin Blumenstingl wrote:
+> Hi Jian,
+> 
+> On Fri, Dec 27, 2019 at 10:46 AM Jian Hu <jian.hu@amlogic.com> wrote:
+> [...]
+>> @@ -294,9 +298,12 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
+>>   {
+>>          struct clk_regmap *clk = to_clk_regmap(hw);
+>>          struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
+>> +       int ret = 0;
+>>
+>> -       if (meson_parm_read(clk->map, &pll->rst) ||
+>> -           !meson_parm_read(clk->map, &pll->en) ||
+>> +       if (MESON_PARM_APPLICABLE(&pll->rst))
+>> +               ret = meson_parm_read(clk->map, &pll->rst);
+>> +
+>> +       if (ret || !meson_parm_read(clk->map, &pll->en) ||
+>>              !meson_parm_read(clk->map, &pll->l))
+>>                  return 0;
+> I had to read this part twice to understand what it's doing because I
+> misunderstood what "ret" is used for (I thought that some "return ret"
+> is missing)
+> my proposal to make it easier to read:
+> ...
+> if (MESON_PARM_APPLICABLE(&pll->rst) &&
+>      meson_parm_read(clk->map, &pll->rst))
+>    return 0;
+> 
+> if (!meson_parm_read(clk->map, &pll->en) ||
+>      !meson_parm_read(clk->map, &pll->l))
+>                   return 0;
+> ...
+> 
+> please let me know what you think about this
+I was intended to use 'ret' to store the return value of pll->rst.
+
+If pll->rst exists, it will get it. Otherwise, the ret will be zero.
+
+Your proposal is a good way for it. I will use it.
+> 
+>> @@ -321,6 +328,23 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
+>>          /* do nothing if the PLL is already enabled */
+>>          if (clk_hw_is_enabled(hw))
+>>                  return 0;
+>> +       /*
+>> +        * Compared with the previous SoCs, self-adaption module current
+>> +        * is newly added for A1, keep the new power-on sequence to enable the
+>> +        * PLL.
+>> +        */
+>> +       if (MESON_PARM_APPLICABLE(&pll->current_en)) {
+>> +               /* Enable the pll */
+>> +               meson_parm_write(clk->map, &pll->en, 1);
+>> +               udelay(10);
+>> +               /* Enable the pll self-adaption module current */
+>> +               meson_parm_write(clk->map, &pll->current_en, 1);
+>> +               udelay(40);
+>> +               /* Enable lock detect module */
+>> +               meson_parm_write(clk->map, &pll->l_detect, 1);
+>> +               meson_parm_write(clk->map, &pll->l_detect, 0);
+>> +               goto out;
+>> +       }
+> in all other functions you are skipping the pll->rst register by
+> checking for MESON_PARM_APPLICABLE(&pll->rst)
+> I like that because it's a pattern which is easy to follow
+> 
+> do you think we can make this part consistent with that?
+> I'm thinking of something like this (not compile-tested and I dropped
+> all comments, just so you get the idea):
+It is a good idea. I will test it.
+> ...
+> if (MESON_PARM_APPLICABLE(&pll->rst)
+>    meson_parm_write(clk->map, &pll->rst, 1);
+> 
+> meson_parm_write(clk->map, &pll->en, 1);
+> 
+> if (MESON_PARM_APPLICABLE(&pll->rst))
+>    meson_parm_write(clk->map, &pll->rst, 0);
+> 
+> if (MESON_PARM_APPLICABLE(&pll->current_en))
+>    meson_parm_write(clk->map, &pll->current_en, 1);
+> 
+> if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
+>    meson_parm_write(clk->map, &pll->l_detect, 1);
+>    meson_parm_write(clk->map, &pll->l_detect, 0);
+> }
+> 
+> if (meson_clk_pll_wait_lock(hw))
+> ...
+> 
+> I see two (and a half) benefits here:
+> - if there's a PLL with neither the pll->current_en nor the pll->rst
+> registers then you get support for this implementation for free
+> - the if (MESON_PARM_APPLICABLE(...)) pattern is already used in the
+> driver, but only for one register (in your example when
+> MESON_PARM_APPLICABLE(&pll->current_en) exists you also modify the
+> pll->l_detect register, which I did not expect)
+> - only counts half: no use of "goto", which in my opinion makes it
+> very easy to read (just read from top to bottom, checking each "if")
+> 
+I see, I will verify it.
+> 
+> Martin
+> 
+> .
+> 
