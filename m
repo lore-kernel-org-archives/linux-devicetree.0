@@ -2,105 +2,128 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37FF0C282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55990C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF802067D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="eo1zaEGl"
+	by mail.kernel.org (Postfix) with ESMTP id 363022077B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731242AbgAINj1 (ORCPT
+        id S1730438AbgAINuH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:39:27 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34435 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728503AbgAINj0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:39:26 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so7487334wrr.1
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 05:39:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8iGe/BokIqYVIferI0k5q9JOZCEsfURHQgz30AC5VkQ=;
-        b=eo1zaEGlu59ZCciIZUQL5j6ovn7/ex11pNjDfx0qLWOl11Bjtz0XMgKZy0TWPgZTh1
-         13VxWDNHZ5MnvvZ5TI3NfsAxE6TMzyKuL8+N70jJW/ulwEj36FLWTemAxVlXlG6ZMssx
-         2ygvegR3HhcUGPYnLUtsv5ffMHjn78iXXaXArFzYMD5QUXUB75JfgPJmvfwEP6h9CM7B
-         DO3CxXA/jTy12gQ6hZSsuv0O7P6GF9VWR5hEK4psHT9gJqXtvBOArVITlIzmzT2eN1Eo
-         sUVwPFQoMPzuLeB3+KMVzuurypWqjTH+kr6Nj9yrdBoegpn/xO4gefFJsW/qIoumAJE9
-         fxrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=8iGe/BokIqYVIferI0k5q9JOZCEsfURHQgz30AC5VkQ=;
-        b=qZ/u8joDNo1nmrQiT6/MAmw8FPC91KMVea/hNyJh4GL8zpvcMA8MgKL6gNRz0Yg8Cq
-         R15LXyAQg011vNFmOuRZnUZunSoMYSaopvvQLg0pHlIkrIimZEXfSqrhyDs82j5vWQbA
-         SwS+QekMb007zQgLmmV3tcZcXE5FBWXATPp5f/LAF8UhAqbqOWw8Vx2n6n1l2crOTh/F
-         QCCY9S89JgW1RyQlHRpRC31UCvsxUtc2WGf2DVQDMCME+3BHUajALpF8zrQDXnnLw57r
-         fUjRlhnuLDKAB456ym4J4tfsbTz295YLvAkaLzqOjpGL1Rm0iO/VQclYKYhW1XgZzsku
-         Gfdw==
-X-Gm-Message-State: APjAAAVVR1OjUQqNRSuh6ujHv995pjpGVDOlYpIkZXxoucyMMymdCvMQ
-        K6skNdnXF01vyXJ64cj1fq1N7w==
-X-Google-Smtp-Source: APXvYqxHNk75iP2xMF1ahG95r2ei7cIYSOulT5oG4ZmfepYBGl7fgDQ4d6VHHMHAzCG3BfSnypjb0g==
-X-Received: by 2002:a5d:4cc9:: with SMTP id c9mr10782702wrt.70.1578577164608;
-        Thu, 09 Jan 2020 05:39:24 -0800 (PST)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id d10sm8455126wrw.64.2020.01.09.05.39.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:39:24 -0800 (PST)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
+        Thu, 9 Jan 2020 08:50:07 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:56591 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728435AbgAINuH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:50:07 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 628BD3C04C0;
+        Thu,  9 Jan 2020 14:50:04 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id SnVdHi-5nOMk; Thu,  9 Jan 2020 14:49:59 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 0D9103C00B7;
+        Thu,  9 Jan 2020 14:49:59 +0100 (CET)
+Received: from lxhi-065.adit-jv.com (10.72.93.66) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 9 Jan 2020
+ 14:49:58 +0100
+Date:   Thu, 9 Jan 2020 14:49:56 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] arm64: zynqmp: Fix the si570 clock frequency on zcu111
-Date:   Thu,  9 Jan 2020 14:39:13 +0100
-Message-Id: <f16ade8e75ef9f9eeb133145d510b142c13121e8.1578577147.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1578577147.git.michal.simek@xilinx.com>
-References: <cover.1578577147.git.michal.simek@xilinx.com>
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
+Message-ID: <20200109134843.GA2558@lxhi-065.adit-jv.com>
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-6-geert+renesas@glider.be>
+ <20191203105103.GA20470@x230>
+ <CAMuHMdVLaGt5GTXzUbUHrBHn5q--t3JfxO6P_j0GnnhixV+UfA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVLaGt5GTXzUbUHrBHn5q--t3JfxO6P_j0GnnhixV+UfA@mail.gmail.com>
+X-Originating-IP: [10.72.93.66]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
+Hi Geert,
 
-The si570 clock frequency should be 156.25MHz as per datasheet.
+On Thu, Jan 09, 2020 at 02:35:10PM +0100, Geert Uytterhoeven wrote:
+> On Tue, Dec 3, 2019 at 11:51 AM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
+> >
+> > FWIW/FTR, doing some blind creation and deletion of gpio aggregator
+> > chips [1] on R-Car H3ULCB overnight, kmemleak reported once [2]. Not
+> > sure this is something 100% reproducible.
+> >
+> > [1] while true; do \
+> >    echo e6055400.gpio 12,13 > /sys/bus/platform/drivers/gpio-aggregator/new_device; \
+> >    echo gpio-aggregator.0 > /sys/bus/platform/drivers/gpio-aggregator/delete_device; \
+> >    done
+> >
+> > [2] unreferenced object 0xffff0006d2c2e000 (size 128):
+> >   comm "kworker/3:1", pid 55, jiffies 4294676978 (age 38546.676s)
+> >   hex dump (first 32 bytes):
+> >     00 d9 d2 d3 06 00 ff ff 0c 00 e0 0f ff ff ff ff  ................
+> >     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> >   backtrace:
+> >     [<00000000a8e18c13>] slab_post_alloc_hook+0x8c/0x94
+> >     [<000000006f419a4f>] __kmalloc+0x170/0x218
+> >     [<0000000060d185ea>] kobj_map+0x78/0x1c0
+> >     [<00000000c96645f3>] cdev_add+0x68/0x94
+> >     [<00000000a7a5a8ac>] cdev_device_add+0x74/0x90
+> >     [<00000000497871d3>] gpiochip_setup_dev+0x84/0x1f0
+> >     [<00000000b993f95f>] gpiochip_add_data_with_key+0xbcc/0x11f0
+> >     [<00000000fd728c0e>] devm_gpiochip_add_data+0x60/0xa8
+> >     [<00000000442e34c1>] gpio_aggregator_probe+0x210/0x3c8
+> >     [<00000000076e13fb>] platform_drv_probe+0x70/0xe4
+> >     [<00000000de84b58b>] really_probe+0x2d8/0x434
+> >     [<00000000c95c9784>] driver_probe_device+0x15c/0x16c
+> >     [<00000000afb7dd4f>] __device_attach_driver+0xdc/0x120
+> >     [<00000000efa40cae>] bus_for_each_drv+0x12c/0x154
+> >     [<00000000c149acef>] __device_attach+0x148/0x1e0
+> >     [<00000000a74fd158>] device_initial_probe+0x24/0x30
+> 
+> This is the allocation of the GPIO character device, which is allocated
+> in response to the creation of the GPIO chip, from .probe().
+> As that is done using devm_gpiochip_add_data(), the chardev should be
+> deallocated automatically by devm_gpio_chip_release() when
+> platform_device_unregister() is called.
+> 
+> Weird...
 
-Signed-off-by: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+It might have been a false positive. Kmemleak is not w/o flaws.
+I will retest and report later. In any case, it does not look
+severe to me.
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-index 022c732005ee..cb2e46833a7b 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-@@ -317,7 +317,7 @@ si570_2: clock-generator@5d { /* USER MGT SI570 - u49 */
- 				reg = <0x5d>;
- 				temperature-stability = <50>;
- 				factory-fout = <156250000>;
--				clock-frequency = <148500000>;
-+				clock-frequency = <156250000>;
- 				clock-output-names = "si570_mgt";
- 			};
- 		};
 -- 
-2.24.0
-
+Best Regards,
+Eugeniu
