@@ -2,159 +2,139 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA3BC33CA2
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 11:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C147EC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 12:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1782075D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 11:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1232080D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 12:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAILz1 (ORCPT
+        id S1730713AbgAIMBn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 06:55:27 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:58043 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730049AbgAILz1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 06:55:27 -0500
-Received: from [10.18.38.198] (10.18.38.198) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 9 Jan
- 2020 19:55:50 +0800
-Subject: Re: [PATCH v4 1/6] dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@baylibre.com>
-CC:     Yue Wang <yue.wang@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-References: <1578537045-23260-1-git-send-email-hanjie.lin@amlogic.com>
- <1578537045-23260-2-git-send-email-hanjie.lin@amlogic.com>
- <f69e38e8-4f31-3297-9f21-9ceb5be27f6e@baylibre.com>
-From:   Hanjie Lin <hanjie.lin@amlogic.com>
-Message-ID: <5f89de05-857e-ac05-b67d-e3ab51ee5363@amlogic.com>
-Date:   Thu, 9 Jan 2020 19:55:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 9 Jan 2020 07:01:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:57970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729113AbgAIMBm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 07:01:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E422D31B;
+        Thu,  9 Jan 2020 04:01:41 -0800 (PST)
+Received: from [10.1.32.29] (e122027.cambridge.arm.com [10.1.32.29])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF2CD3F534;
+        Thu,  9 Jan 2020 04:01:38 -0800 (PST)
+Subject: Re: [PATCH v2 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        hsinyi@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200108052337.65916-1-drinkcat@chromium.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <79fe7055-c11b-c9f6-64e5-48e3d5687dfe@arm.com>
+Date:   Thu, 9 Jan 2020 12:01:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <f69e38e8-4f31-3297-9f21-9ceb5be27f6e@baylibre.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200108052337.65916-1-drinkcat@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.38.198]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 2020/1/9 17:21, Neil Armstrong wrote:
-> On 09/01/2020 03:30, Hanjie Lin wrote:
->> Add the Amlogic A1 Family USB2 PHY Bindings
->>
->> It supports Host mode only.
->>
->> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
->> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
->> ---
->>  .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    | 56 ++++++++++++++++++++++
->>  1 file changed, 56 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
->> new file mode 100644
->> index 00000000..dd2e3a6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
->> @@ -0,0 +1,56 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +# Copyright 2019 Amlogic, Inc
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/phy/amlogic,meson-a1-usb2-phy.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Amlogic A1 USB2 PHY
->> +
->> +maintainers:
->> +  - Yue Wang <yue.wang@amlogic.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: amlogic,meson-a1-usb2-phy
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: xtal_usb_phy
->> +
->> +  resets:
->> +    maxItems: 1
+On 08/01/2020 05:23, Nicolas Boichat wrote:
+> Hi!
 > 
-> Please use reset-names like the g12a bindings.
+> Sorry for the long delay since https://patchwork.kernel.org/patch/11132381/,
+> finally got around to give this a real try.
 > 
-> Neil
+> The main purpose of this series is to upstream the dts change and the binding
+> document, but I wanted to see how far I could probe the GPU, to check that the
+> binding is indeed correct. The rest of the patches are RFC/work-in-progress, but
+> I think some of them could already be picked up.
+> 
+> So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
+> backports to get the latest panfrost driver (I should probably try on
+> linux-next at some point but this was the path of least resistance).
+> 
+> I tested it as a module as it's more challenging (originally probing would
+> work built-in, on boot, but not as a module, as I didn't have the power
+> domain changes, and all power domains are on by default during boot).
+> 
+> Probing logs looks like this, currently:
+> [  221.867726] panfrost 13040000.gpu: clock rate = 511999970
+> [  221.867929] panfrost 13040000.gpu: Linked as a consumer to regulator.14
+> [  221.868600] panfrost 13040000.gpu: Linked as a consumer to regulator.31
+> [  221.870586] panfrost 13040000.gpu: Linked as a consumer to genpd:0:13040000.gpu
+> [  221.871492] panfrost 13040000.gpu: Linked as a consumer to genpd:1:13040000.gpu
+> [  221.871866] panfrost 13040000.gpu: Linked as a consumer to genpd:2:13040000.gpu
+> [  221.872427] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 minor 0x3 status 0x0
+> [  221.872439] panfrost 13040000.gpu: features: 00000000,13de77ff, issues: 00000000,00000400
+> [  221.872445] panfrost 13040000.gpu: Features: L2:0x07120206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
+> [  221.872449] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
+> [  221.873526] panfrost 13040000.gpu: error powering up gpu stack
+> [  221.878088] [drm] Initialized panfrost 1.1.0 20180908 for 13040000.gpu on minor 2
+> [  221.940817] panfrost 13040000.gpu: error powering up gpu stack
+> [  222.018233] panfrost 13040000.gpu: error powering up gpu stack
+> (repeated)
+
+It's interesting that it's only the stack that is failing. In hardware there's a dependency: L2->stack->shader - so in theory the shader cores shouldn't be able to power up either. There are some known hardware bugs here though[1]:
+
+	MODULE_PARM_DESC(corestack_driver_control,
+			"Let the driver power on/off the GPU core stack independently "
+			"without involving the Power Domain Controller. This should "
+			"only be enabled on platforms for which integration of the PDC "
+			"to the Mali GPU is known to be problematic.");
+
+[1] https://github.com/ianmacd/d2s/blob/master/drivers/gpu/arm/b_r16p0/backend/gpu/mali_kbase_pm_driver.c#L57
+
+It might be worth just dropping the code for powering up/down stacks and let the GPU's own dependency management handle it.
+
+Steve
+
+> 
+> So the GPU is probed, but there's an issue when powering up the STACK, not
+> quite sure why, I'll try to have a deeper look, at some point.
+> 
+> Thanks!
+> 
+> Nicolas
+> 
+> v2:
+>   - Use sram instead of mali_sram as SRAM supply name.
+>   - Rename mali@ to gpu@.
+>   - Add dt-bindings changes
+>   - Stacking patches after the device tree change that allow basic
+>     probing (still incomplete and broken).
+> 
+> Nicolas Boichat (7):
+>    dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+>    arm64: dts: mt8183: Add node for the Mali GPU
+>    drm/panfrost: Improve error reporting in panfrost_gpu_power_on
+>    drm/panfrost: Add support for a second regulator for the GPU
+>    drm/panfrost: Add support for multiple power domain support
+>    RFC: drm/panfrost: Add bifrost compatible string
+>    RFC: drm/panfrost: devfreq: Add support for 2 regulators
+> 
+>   .../bindings/gpu/arm,mali-bifrost.yaml        |  20 ++++
+>   arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 ++
+>   arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 104 +++++++++++++++++
+>   drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  18 +++
+>   drivers/gpu/drm/panfrost/panfrost_device.c    | 108 ++++++++++++++++--
+>   drivers/gpu/drm/panfrost/panfrost_device.h    |   7 ++
+>   drivers/gpu/drm/panfrost/panfrost_drv.c       |   1 +
+>   drivers/gpu/drm/panfrost/panfrost_gpu.c       |  15 ++-
+>   8 files changed, 267 insertions(+), 13 deletions(-)
 > 
 
-Ok, Neil
-
-I will revert reset-names change to keep consistence with G12A in next version.
-
-Thanks,
-Hanjie
-
->> +
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +  power-domains:
->> +     maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - "#phy-cells"
->> +  - power-domains
->> +
->> +examples:
->> +  - |
->> +    usb2_phy1: phy@40000 {
->> +      status = "okay";
->> +      compatible = "amlogic,a1-usb2-phy";
->> +      clocks = <&clkc_periphs 2>;
->> +      clock-names = "xtal_usb_phy";
->> +      reg = <0x0 0x40000 0x0 0x2000>;
->> +      resets = <&reset RESET_USBPHY>;
->> +      #phy-cells = <0>;
->> +      power-domains = <&pwrc PWRC_USB_ID>;
->> +    };
->>
-> 
-> .
-> 
