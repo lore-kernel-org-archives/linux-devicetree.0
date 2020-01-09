@@ -2,136 +2,108 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B50AC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33038C282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4D82077B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 062E82077B
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="vw351ySw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730368AbgAINfY (ORCPT
+        id S1727749AbgAINjT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:35:24 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:32975 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728974AbgAINfY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:35:24 -0500
-Received: by mail-qk1-f194.google.com with SMTP id d71so5980868qkc.0;
-        Thu, 09 Jan 2020 05:35:23 -0800 (PST)
+        Thu, 9 Jan 2020 08:39:19 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50620 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgAINjT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:39:19 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a5so2978929wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 05:39:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=btljfB67qHdrjxduirx8+8GpyguI3bz2CxoaGmxzpS8=;
+        b=vw351ySwviRIJKPA8Q0zzDXwDtsIhYFO4r0RObdb9vUY30tiXmPeFopdEye82KVX/r
+         l6ilqipW3OsfTTRaqaxhlw7wlY/IbiX+8wmHW9sH+Im2zFTVvYah0o7YjujMM2eClwne
+         ZBE/BFdcdRxGU2zUNVRgf3h0JtBoJNIPBByULotXTamyZjRTFKVbBUsA2Qsg2vaNfS9M
+         cbTmiJt4D2KW+EqSUWGJSk+WVpbzd7silXU2LZY0a7YAB0VK8L4XeLhMdyYCjRPI1tBG
+         fL/BPbqESrXFmdN8uEpV9a/kCNncgAwtdCBW2TtH62KZWTTkSIgxKuppky3NSJhS6/+G
+         +ZqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vK5UxuBrViNaXxuMZEsGhiSGSEMvZsYzv98RipTZfGg=;
-        b=s1UNeLX8809o92ijYT5HikWwRFLcu3yDQDRjnyKAI3ebjg2fw+tfkA63SKrKZ4oBFL
-         NIAGPKWgDpMm/V/drl8ia7BooYxzmGsh0P61Ngn5+cI33GRhHTq7p3YNe1O7rqu06t8I
-         BrTAjNLP/CXJoN79JWAh9ZFmZl9UzyAMP1oqYg4Zinish8Dj+TawkkuwJqxsF9tshQKy
-         qJTwa8sTmtqNz5RiNLSl/sP+yIfrjDtvlqCS+cPwZxBtnUXL1Kj73Hm01HAsUpGB6LRj
-         G6tnHxD7Qn6GOVF2BezCUyTbQrH0u5QggPci7aK+P3AWfkY7S2UKNkasHuMiXyHI/6B+
-         CwcA==
-X-Gm-Message-State: APjAAAVS5wq1mKhWdJbXO+NZrAucozVXb5UecaIWxEAiAwEq8xnGIt1n
-        dHA/FkrW/xvc5RsM7mc28c+qhG6e1MqbfRvD8KQ=
-X-Google-Smtp-Source: APXvYqyRXgYk8j5kdfM4/WS8TEs831mjz2YcxqkRufdK/tyDKS85bDKPS8c3TecGMtuEwZvySvABfGqCivPuJ6qeC0Q=
-X-Received: by 2002:a05:620a:134f:: with SMTP id c15mr9195003qkl.115.1578576923178;
- Thu, 09 Jan 2020 05:35:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-6-geert+renesas@glider.be> <20191203105103.GA20470@x230>
-In-Reply-To: <20191203105103.GA20470@x230>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 9 Jan 2020 14:35:10 +0100
-Message-ID: <CAMuHMdVLaGt5GTXzUbUHrBHn5q--t3JfxO6P_j0GnnhixV+UfA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-To:     Eugeniu Rosca <roscaeugeniu@gmail.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=btljfB67qHdrjxduirx8+8GpyguI3bz2CxoaGmxzpS8=;
+        b=NVogrocRq699lD8na4F0HiLIThTRRLUwtNWpqcPQZ1YvdV1NlfV10JfcRsHDmQyXcN
+         HSiuLwMfLxnCpWfWqX2zlUMLm8qY2/ntJK71H/e1CfwQDODOdUhBMgl5025xNQ+AD5ZB
+         Nxndh13q6guqM4KNoYJ23MrJm71p6DjaU0H42sNqepnwkfIZjfEEdr0vDQe8rPm9yBCy
+         eXQTbdI+eLaelYw0qTKed4zRbB3s9yrtN7g0v82PRtp5N+qUBr1/wWFgNo5H/0DHPqbO
+         jGumONlqXkIRGIro1ArEIjNdSpOB+S8mN18c5THN1+/tMwPo5XEgloY5d+0m87+UYOEf
+         LazA==
+X-Gm-Message-State: APjAAAUxjOSJEYaY3WwdUfzOKaD+bJowlURWv8JEXlph8V8Jm9EFJ0df
+        HGvKhMFDSyxd9S6lzcIoj5Zkig==
+X-Google-Smtp-Source: APXvYqy1FNte4go1SSvuH+JEJzPEKxJcLvB0V5zulbJ2Nj6EAR0N22snabejqCaDbAolNSQ2vR76Ag==
+X-Received: by 2002:a05:600c:2254:: with SMTP id a20mr5021431wmm.97.1578577157386;
+        Thu, 09 Jan 2020 05:39:17 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id z123sm3036704wme.18.2020.01.09.05.39.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 Jan 2020 05:39:16 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] arm64: zynqmp: Various DT fixes
+Date:   Thu,  9 Jan 2020 14:39:09 +0100
+Message-Id: <cover.1578577147.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Eugeniu,
+Hi,
 
-On Tue, Dec 3, 2019 at 11:51 AM Eugeniu Rosca <roscaeugeniu@gmail.com> wrote:
-> On Wed, Nov 27, 2019 at 09:42:51AM +0100, Geert Uytterhoeven wrote:
-> > +static int gpio_aggregator_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     struct gpio_desc **descs;
-> > +     struct gpiochip_fwd *fwd;
-> > +     int i, n;
->
-> FWIW/FTR, doing some blind creation and deletion of gpio aggregator
-> chips [1] on R-Car H3ULCB overnight, kmemleak reported once [2]. Not
-> sure this is something 100% reproducible.
->
-> [1] while true; do \
->    echo e6055400.gpio 12,13 > /sys/bus/platform/drivers/gpio-aggregator/new_device; \
->    echo gpio-aggregator.0 > /sys/bus/platform/drivers/gpio-aggregator/delete_device; \
->    done
->
-> [2] unreferenced object 0xffff0006d2c2e000 (size 128):
->   comm "kworker/3:1", pid 55, jiffies 4294676978 (age 38546.676s)
->   hex dump (first 32 bytes):
->     00 d9 d2 d3 06 00 ff ff 0c 00 e0 0f ff ff ff ff  ................
->     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<00000000a8e18c13>] slab_post_alloc_hook+0x8c/0x94
->     [<000000006f419a4f>] __kmalloc+0x170/0x218
->     [<0000000060d185ea>] kobj_map+0x78/0x1c0
->     [<00000000c96645f3>] cdev_add+0x68/0x94
->     [<00000000a7a5a8ac>] cdev_device_add+0x74/0x90
->     [<00000000497871d3>] gpiochip_setup_dev+0x84/0x1f0
->     [<00000000b993f95f>] gpiochip_add_data_with_key+0xbcc/0x11f0
->     [<00000000fd728c0e>] devm_gpiochip_add_data+0x60/0xa8
->     [<00000000442e34c1>] gpio_aggregator_probe+0x210/0x3c8
->     [<00000000076e13fb>] platform_drv_probe+0x70/0xe4
->     [<00000000de84b58b>] really_probe+0x2d8/0x434
->     [<00000000c95c9784>] driver_probe_device+0x15c/0x16c
->     [<00000000afb7dd4f>] __device_attach_driver+0xdc/0x120
->     [<00000000efa40cae>] bus_for_each_drv+0x12c/0x154
->     [<00000000c149acef>] __device_attach+0x148/0x1e0
->     [<00000000a74fd158>] device_initial_probe+0x24/0x30
+I am sending various DT fixes which have been found over the xilinx
+release.
+1-2 patches are fixing reported description issues
+3-6 patches are actual fixes.
 
-This is the allocation of the GPIO character device, which is allocated
-in response to the creation of the GPIO chip, from .probe().
-As that is done using devm_gpiochip_add_data(), the chardev should be
-deallocated automatically by devm_gpio_chip_release() when
-platform_device_unregister() is called.
+Thanks,
+Michal
 
-Weird...
 
-Gr{oetje,eeting}s,
+Michal Simek (5):
+  arm64: zynqmp: Fix address for tca6416_u97 chip on zcu104
+  arm64: zynqmp: Turn comment to gpio-line-names
+  arm64: zynqmp: Setup clock-output-names for si570 chips
+  arm64: zynqmp: Remove broken-cd from zcu100-revC
+  arm64: zynqmp: Setup default number of chipselects for zcu100
 
-                        Geert
+Venkatesh Yadav Abbarapu (1):
+  arm64: zynqmp: Fix the si570 clock frequency on zcu111
+
+ .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    |  3 +-
+ .../boot/dts/xilinx/zynqmp-zcu102-revA.dts    | 45 +++++--------------
+ .../boot/dts/xilinx/zynqmp-zcu104-revA.dts    |  4 +-
+ .../boot/dts/xilinx/zynqmp-zcu106-revA.dts    |  2 +
+ .../boot/dts/xilinx/zynqmp-zcu111-revA.dts    |  4 +-
+ 5 files changed, 20 insertions(+), 38 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.24.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
