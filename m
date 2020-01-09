@@ -2,113 +2,107 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B017C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAC3C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB6F2067D
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06D12073A
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 08:50:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="abGVxG8c"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PBJuGVD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgAIIqc (ORCPT
+        id S1728819AbgAIIub (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 03:46:32 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49930 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728448AbgAIIqc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 03:46:32 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0098j471008889;
-        Thu, 9 Jan 2020 09:46:20 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=uLATKF9ODz3kL4U3DLHRNE8pm/VoFFXN89GnTjH1WkU=;
- b=abGVxG8c7OxepqjZZQzy4p8LDf0vbN++fRIq9wAPLeOABBnWmLpMfqslmtrsgvINEdj7
- HCo9leQUvagMKl5kHeGMRuQ7y+6mHKhpUz93qBDUYWCcMQ7WAepVtcPsVCRV32/EYhxN
- Ajh5nxOnxPZq7vrDOOahTppdiurgyOfy4s/pBaN0WS8OEH2TFn7U9bvf0FPGKb4nzaUM
- geYLwaFwOBleCeogpzEs8ciocGvugqBT3yGy8af28wJTOny85HpMBkPhkxI7AUIvMk9M
- QEepVW/3XyK/VF1H5YFQLHlf+sVF9Euq/eJessKycjpnBR4TpRxOVDclhpVU8j3g8R4B NA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2xdw8b14d1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Jan 2020 09:46:20 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23CD510003E;
-        Thu,  9 Jan 2020 09:46:14 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EA514221FD0;
-        Thu,  9 Jan 2020 09:46:13 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 9 Jan
- 2020 09:46:13 +0100
-Subject: Re: [PATCH v2] ARM: dts: stm32: update mlahb node according to the
- bindings
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>
-References: <20191219121815.22987-1-arnaud.pouliquen@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <1df021db-98c4-706d-391a-393c40a3aff3@st.com>
-Date:   Thu, 9 Jan 2020 09:46:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 03:50:31 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47144 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728792AbgAIIua (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 03:50:30 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0098oMEB107738;
+        Thu, 9 Jan 2020 02:50:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578559822;
+        bh=BmZz4GM008QcVUfmXOfqaIwBn3aJlcL0leg79D9LVbc=;
+        h=From:To:CC:Subject:Date;
+        b=PBJuGVD4APjXiqg5yVm2jm2kE686Ss/0yy8YL8/wnbe6WqursScxnydg6qEV+ISlL
+         l7413nX2pi+v+PQu0TGngxBYQpgjWVqmTsSswrVCFY1PNOn6G7AFigVV37h/tNOGDz
+         eSkyKr94s8rP/kSA+j08kQ4n3a2xU5k84fBgh4Fc=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0098oMhY073027
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 9 Jan 2020 02:50:22 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 9 Jan
+ 2020 02:50:22 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 9 Jan 2020 02:50:22 -0600
+Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0098oJc7055573;
+        Thu, 9 Jan 2020 02:50:20 -0600
+From:   Faiz Abbas <faiz_abbas@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>,
+        <t-kristo@ti.com>, <faiz_abbas@ti.com>
+Subject: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
+Date:   Thu, 9 Jan 2020 14:21:52 +0530
+Message-ID: <20200109085152.10573-1-faiz_abbas@ti.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <20191219121815.22987-1-arnaud.pouliquen@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_02:2020-01-08,2020-01-09 signatures=0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Arnaud
+According to the latest AM65x Data Manual[1], a different output tap
+delay value is optimum for a given speed mode. Update these values.
 
-On 12/19/19 1:18 PM, Arnaud Pouliquen wrote:
-> Update of the mlahb node according to to DT bindings using json-schema
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp151.dtsi | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-> index 3dd570b10181..047051c56ef7 100644
-> --- a/arch/arm/boot/dts/stm32mp151.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp151.dtsi
-> @@ -1669,10 +1669,11 @@
->   		};
->   	};
->   
-> -	mlahb {
-> -		compatible = "simple-bus";
-> +	mlahb: ahb {
-> +		compatible = "st,mlahb", "simple-bus";
->   		#address-cells = <1>;
->   		#size-cells = <1>;
-> +		ranges;
->   		dma-ranges = <0x00000000 0x38000000 0x10000>,
->   			     <0x10000000 0x10000000 0x60000>,
->   			     <0x30000000 0x30000000 0x60000>;
-> 
+[1] http://www.ti.com/lit/gpn/am6526
 
-Applied on stm32-next.
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
 
-Thanks
-Alex
+This patch depends on my two kernel series posted here:
+https://patchwork.kernel.org/project/linux-mmc/list/?series=225425
+https://patchwork.kernel.org/project/linux-mmc/list/?series=225459
+
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index efb24579922c..c8d812fdfa0a 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -253,7 +253,17 @@
+ 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+ 		mmc-ddr-1_8v;
+ 		mmc-hs200-1_8v;
+-		ti,otap-del-sel = <0x2>;
++		ti,otap-del-sel-legacy = <0x0>;
++		ti,otap-del-sel-mmc-hs = <0x0>;
++		ti,otap-del-sel-sd-hs = <0x0>;
++		ti,otap-del-sel-sdr12 = <0x0>;
++		ti,otap-del-sel-sdr25 = <0x0>;
++		ti,otap-del-sel-sdr50 = <0x8>;
++		ti,otap-del-sel-sdr104 = <0x5>;
++		ti,otap-del-sel-ddr50 = <0x5>;
++		ti,otap-del-sel-ddr52 = <0x5>;
++		ti,otap-del-sel-hs200 = <0x5>;
++		ti,otap-del-sel-hs400 = <0x0>;
+ 		ti,trm-icp = <0x8>;
+ 		dma-coherent;
+ 	};
+-- 
+2.19.2
+
