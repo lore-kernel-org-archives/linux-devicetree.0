@@ -1,77 +1,45 @@
-Return-Path: <SRS0=aplZ=25=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E3AC282DD
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 23:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66C0C282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 00:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDC6206F0
-	for <linux-devicetree@archiver.kernel.org>; Wed,  8 Jan 2020 23:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3237206ED
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 00:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TsV31oHu"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="pyTObPhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbgAHX4O (ORCPT
+        id S1726758AbgAIAaT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 8 Jan 2020 18:56:14 -0500
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:34670 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgAHX4O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 18:56:14 -0500
-Received: by mail-pg1-f173.google.com with SMTP id r11so2319989pgf.1;
-        Wed, 08 Jan 2020 15:56:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VHrL6v0Uw66YhBXxgwYhRKU+mM7wW3ICLAPhDHJZnZI=;
-        b=TsV31oHuYUrTWDADB0GeSf5Ja4Tx3vAEdFTZ8j+GUSukv2yUeP3xYSVmNbL5onBIZ+
-         EIQewAW2KgMjdB9iNQ5sfc4KqbA4Tk7I+jhdfxcaW42H/HIEYBeHTWFQBDdsZXAAyXSL
-         IDmGATtPwKHWhODhEtheqIvBz3XaHEAO/O32HNxSYcN8WU6YPOGpgftrx23vgmanYUAC
-         br9BuxyflB8m96uqOfy7ZMIKQlKRDL6r/FToT2AqhPrHtzPiHZiNOPJiMJ/vfH0Dup/1
-         WyOLSVtsIOCSoHi7m38s/pDvmwgwjep8bm1gm0rOPj26Bt6MMW9zPnar3bYm/POBvnOX
-         LTQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VHrL6v0Uw66YhBXxgwYhRKU+mM7wW3ICLAPhDHJZnZI=;
-        b=idq5qY11bdXyyRzSDJMYPqJZ01589wS7c/53axVtSagDTAgdSRPrUbY7Hx8yMH0tgX
-         Sa09TKuObfvE/fY/F4tI/msFLSOtkqBW3JHuW2kNvONawu4YRAktjfEMXzP/Hj5T2DcM
-         Tn54oONaCF05Q2WUdM3bFV9I0R3RJ3oH8qlrUmH+M6FdZgBmQxD1Orlargwr3/CkgRB4
-         xux9i5wTrOAKbzR9tb4A4+fAm2UdH6zSbppros1jw2z/QuXSjsb/Qw5tr39XB6q3BHK6
-         I3cnIiwIbTqJvbTuMugL5tTN1lR6vCQpi12hVxu4aSzu9/QomS++IDXkvuZTQtQV5Y45
-         bpfA==
-X-Gm-Message-State: APjAAAW5mxL5lVFdfhKI4oetWrba1Ae9J34YnkhQmJu43mAiIUjDYM0w
-        6Mt1vhKRid56bzauhXXzuQo=
-X-Google-Smtp-Source: APXvYqyln/X9tK1/v1SDPoi3Eb0DxxrKu9hBOdTHuIzAqjt73KadruyPy2BLeoTIyq0V1/1+8PV8ng==
-X-Received: by 2002:aa7:946c:: with SMTP id t12mr8030393pfq.137.1578527773391;
-        Wed, 08 Jan 2020 15:56:13 -0800 (PST)
-Received: from localhost ([100.118.89.215])
-        by smtp.gmail.com with ESMTPSA id y6sm4810131pgc.10.2020.01.08.15.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jan 2020 15:56:12 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
+        Wed, 8 Jan 2020 19:30:19 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:42952 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbgAIAaT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 8 Jan 2020 19:30:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1578529817; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=NHhHx7ZlRF7eivXl3/VLwz7qgS0NV8FmX8RqxK46cCo=;
+        b=pyTObPhS2panfCUwZeh7TMkP5NeDmK0j6O7a4knVlSYsQ+W4IE7vgiMVmfs8ratrnVHNQ8
+        azPFgtapRx/ZtkTyaZZPWiLbqLM+4I7duxshzMlUiD3PNsJTfGaeuwn3zkM5x7N7kmGX/e
+        m/uImfSjxz7ikrsJtAYdM8xNIOVM2Pw=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Sam Ravnborg <sam@ravnborg.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/2] dt-bindings: display: panel: Add AUO B116XAK01 panel bindings
-Date:   Wed,  8 Jan 2020 15:53:55 -0800
-Message-Id: <20200108235356.918189-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] dt-bindings: panel-simple: Add compatible for GiantPlus GPM940B0
+Date:   Wed,  8 Jan 2020 21:29:59 -0300
+Message-Id: <20200109003000.119516-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -79,23 +47,45 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+Add a compatible string for the GiantPlus GPM740B0 3" QVGA TFT LCD
+panel, and remove the old giantplus,gpm740b0.txt documentation which is
+now obsolete.
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/display/panel/giantplus,gpm940b0.txt    | 12 ------------
+ .../bindings/display/panel/panel-simple.yaml         |  2 ++
+ 2 files changed, 2 insertions(+), 12 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
 
+diff --git a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt b/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
+deleted file mode 100644
+index 3dab52f92c26..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/giantplus,gpm940b0.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-GiantPlus 3.0" (320x240 pixels) 24-bit TFT LCD panel
+-
+-Required properties:
+-- compatible: should be "giantplus,gpm940b0"
+-- power-supply: as specified in the base binding
+-
+-Optional properties:
+-- backlight: as specified in the base binding
+-- enable-gpios: as specified in the base binding
+-
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
 diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 090866260f4f..5f1d765447bc 100644
+index 090866260f4f..c1a77d9105a2 100644
 --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
 +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
 @@ -33,6 +33,8 @@ properties:
        - ampire,am-480272h3tmqw-t01h
          # Ampire AM-800480R3TMQW-A1H 7.0" WVGA TFT LCD panel
        - ampire,am800480r3tmqwa1h
-+        # AUO B116XAK01 eDP TFT LCD panel
-+      - auo,b116xa01
++        # GiantPlus GPM940B0 3.0" QVGA TFT LCD panel
++      - giantplus,gpm940b0
  
    backlight: true
    enable-gpios: true
