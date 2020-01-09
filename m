@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6952C282DD
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742BDC33CA1
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B13D2077B
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A47F2067D
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 13:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="FX03olbd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="NzBNdntB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbgAINjZ (ORCPT
+        id S1730930AbgAINjb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 08:39:25 -0500
-Received: from mail-wm1-f53.google.com ([209.85.128.53]:54153 "EHLO
-        mail-wm1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbgAINjY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:39:24 -0500
-Received: by mail-wm1-f53.google.com with SMTP id m24so2959232wmc.3
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 05:39:23 -0800 (PST)
+        Thu, 9 Jan 2020 08:39:31 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35783 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731267AbgAINja (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 08:39:30 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so2894925wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 05:39:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=monstr-eu.20150623.gappssmtp.com; s=20150623;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jefvAhdoN3UgGXE+/GJYxeZcqaINGsrauh5HiUc9SKE=;
-        b=FX03olbdaMwjq0QX1vku2430i8PqYnGFl/yHiDYfyz2aXtozJouHqMTLNstihuaAJm
-         L0LtTLK8/r2PpVi+EmKGA7NQAj9pndbSRwe3vRP9UKAEr1mkAYB+4ym04gJslw/GGQOS
-         E+2T7l57hXSczLtq7RGxEZ/WzuMPou9/7SNqB4NfXURbf5p7Sud9wJVChFOr5qrxhPBi
-         jXbWU6SL605TfBbaHzBZeDasYDw8oOUMyUYQyfW5ULeoz4RJi6PLRpTlcpc1yFZSy1N5
-         UexALQmf7bJ18J0XI3KCC4YBM/C6GhYmlAQDRhilvPP3qbrX2OBc4tKXsJgzxaXyiW6V
-         rLYA==
+        bh=3uTRVYc3CwuaK7vmscKhsuq+TjWl2SbzmcNvk0jneyE=;
+        b=NzBNdntB5n+8cI1SL4hqMv75gF5qlYVZoch0u5XZUNN4uJshZpMC51TbpQMMmZfbz4
+         /2T+YoXIspoZOzWP7ZZp2UN/RCcGF882X7PoCZ86N8BWE6MXAmqVVqSbBKbeYE0XmQZM
+         tESlcMvjCBE24H8bTMS5E1AGelx5r61vXOojuK8GbCRdchRQ7lVB++1TT7gVfM0usSD/
+         iS2T3WgMxXxWXF8QWlfW6xUiRoJsABW+Z/uoss5qUGF9PvrlI5gZR64dLhTr351ioKeX
+         mZoxh4DBVAjdM3a6aLJzGN/bXBq4dBjShu18PMl/Dt1UcljrSlVPQpSfzbDbBmJc7DPu
+         FEpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=jefvAhdoN3UgGXE+/GJYxeZcqaINGsrauh5HiUc9SKE=;
-        b=ADAYY7ccDlaGx2wuwFKJT5rVbO0t+Cjn7CS241RaT1MICmDnnmnEoKTN0npul6TjPj
-         IU6iYmlaT22Yp1UUqicpVMwAhAgNdSz4JcrXU+LDehWs8Qq8zMwBz9idNGlWEGf+1ApJ
-         IicuvpssWciJ+5fS2/UOzHT0FwTbbjD1rlHu9wqUGdrvwzSNL77A9TGSHjVcUXWzbZ6D
-         La7iNxz83/V6/ZVgRCwqEJ7rVjWbPPfJZusuZZ2RyHczfMubfpL71mHzPOtHKcfTvYgr
-         HcvcY9TkFnpojdECdZcN7Bzs1p6WanS42ld3vMpV9xXz6ZRcz0u9Ko/a9prQ3i1Tk/kQ
-         rKOg==
-X-Gm-Message-State: APjAAAWAPX564+l24FtI6k9HQ1EeB7CEY6sJxUKaKpcG/ozhHTskmTSh
-        3pXgetJ4n9YIBamkCT3fxMD2Og==
-X-Google-Smtp-Source: APXvYqxIHYCHekeETdVXxsgFVv8p5nrAUCoaoagczmqG8qo/8aCZYJcOinlwacLZu9ja4n6Mve8MFA==
-X-Received: by 2002:a1c:6755:: with SMTP id b82mr4938237wmc.126.1578577162830;
-        Thu, 09 Jan 2020 05:39:22 -0800 (PST)
+        bh=3uTRVYc3CwuaK7vmscKhsuq+TjWl2SbzmcNvk0jneyE=;
+        b=CeVddAvHVv4rfNneEWbMA4VQlp10qeiVyZTflZc7G6YBi0nLKNrLQ3LpwB3Lx12y//
+         cIyVWx6+CBNbomyhxNODNiwD2LT1Q81TggYMLgpwWJcWALxGstEZxIzAmQqyewPUPhDH
+         kHc0822MG/7fs3yQp/xP2BaQ08dCa46q9SI8Z/DGumlwhxg1ho9OQpwLVbEhWAS1X7rk
+         x54hAZKQyIKmHtmimjbLK3k0Ue5IxY6Z9lB0QEBBufU5wJ/5SGPZoy2PxtRyqTWOTvZ+
+         LkP0TRvA7MeOUAX+rYHdUlkYcBUaSrMvNbbIV72wZ2hzvit6JmhpR6H10XcaSTQ/dMeC
+         GQjg==
+X-Gm-Message-State: APjAAAUbkJd6REO1VIJH7hLX9rYpmWj+fiKE3HmI1WDtTEN78wc/oUky
+        iOqiXfu2MDkOYW80MG5v9QLYxw==
+X-Google-Smtp-Source: APXvYqxf0QTNnxUA/HlCe/Xc2QU9JGp9/9H2D79UhXJ9ShL1knOd6pTuDj94GA14KOuiRGe/kR1Lvw==
+X-Received: by 2002:a1c:720a:: with SMTP id n10mr4856590wmc.74.1578577168009;
+        Thu, 09 Jan 2020 05:39:28 -0800 (PST)
 Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id o4sm8255006wrx.25.2020.01.09.05.39.21
+        by smtp.gmail.com with ESMTPSA id s8sm7846492wrt.57.2020.01.09.05.39.27
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 Jan 2020 05:39:22 -0800 (PST)
+        Thu, 09 Jan 2020 05:39:27 -0800 (PST)
 From:   Michal Simek <michal.simek@xilinx.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        Harini Katakam <harini.katakam@xilinx.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Rajan Vaja <rajan.vaja@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] arm64: zynqmp: Setup clock-output-names for si570 chips
-Date:   Thu,  9 Jan 2020 14:39:12 +0100
-Message-Id: <7d46b2e92382df23996d95254fa025faccac7dae.1578577147.git.michal.simek@xilinx.com>
+Subject: [PATCH 6/6] arm64: zynqmp: Setup default number of chipselects for zcu100
+Date:   Thu,  9 Jan 2020 14:39:15 +0100
+Message-Id: <0565b9a88830f0d995d666a9c4bf346641a2b040.1578577147.git.michal.simek@xilinx.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <cover.1578577147.git.michal.simek@xilinx.com>
 References: <cover.1578577147.git.michal.simek@xilinx.com>
@@ -77,79 +77,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If there are more instances of si570 clock-output-names property
-should be used for differentiation of clock output.
-The patch is adding this optional properties for all zynqmp boards with
-si570 chip.
+There is only one chipselect on each connector.
+Define it directly in board dts file.
+There should be an option to use more chipselects via gpios.
 
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 2 ++
- arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts | 2 ++
- arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts | 2 ++
- 3 files changed, 6 insertions(+)
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-index c96e8416fa7e..845671447f60 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-@@ -389,6 +389,7 @@ si570_1: clock-generator@5d { /* USER SI570 - u42 */
- 				temperature-stability = <50>;
- 				factory-fout = <300000000>;
- 				clock-frequency = <300000000>;
-+				clock-output-names = "si570_user";
- 			};
- 		};
- 		i2c@3 {
-@@ -402,6 +403,7 @@ si570_2: clock-generator@5d { /* USER MGT SI570 - u56 */
- 				temperature-stability = <50>; /* copy from zc702 */
- 				factory-fout = <156250000>;
- 				clock-frequency = <148500000>;
-+				clock-output-names = "si570_mgt";
- 			};
- 		};
- 		i2c@4 {
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-index ae62fe4287c2..822de6f04725 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
-@@ -388,6 +388,7 @@ si570_1: clock-generator@5d { /* USER SI570 - u42 */
- 				temperature-stability = <50>;
- 				factory-fout = <300000000>;
- 				clock-frequency = <300000000>;
-+				clock-output-names = "si570_user";
- 			};
- 		};
- 		i2c@3 {
-@@ -401,6 +402,7 @@ si570_2: clock-generator@5d { /* USER MGT SI570 - u56 */
- 				temperature-stability = <50>; /* copy from zc702 */
- 				factory-fout = <156250000>;
- 				clock-frequency = <148500000>;
-+				clock-output-names = "si570_mgt";
- 			};
- 		};
- 		i2c@4 {
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-index b3c29947d6b3..022c732005ee 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
-@@ -304,6 +304,7 @@ si570_1: clock-generator@5d { /* USER SI570 - u47 */
- 				temperature-stability = <50>;
- 				factory-fout = <300000000>;
- 				clock-frequency = <300000000>;
-+				clock-output-names = "si570_user";
- 			};
- 		};
- 		i2c@3 {
-@@ -317,6 +318,7 @@ si570_2: clock-generator@5d { /* USER MGT SI570 - u49 */
- 				temperature-stability = <50>;
- 				factory-fout = <156250000>;
- 				clock-frequency = <148500000>;
-+				clock-output-names = "si570_mgt";
- 			};
- 		};
- 		i2c@4 {
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+index 2b3757dd74cc..a109e82982ae 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+@@ -250,11 +250,13 @@ wlcore: wifi@2 {
+ &spi0 { /* Low Speed connector */
+ 	status = "okay";
+ 	label = "LS-SPI0";
++	num-cs = <1>;
+ };
+ 
+ &spi1 { /* High Speed connector */
+ 	status = "okay";
+ 	label = "HS-SPI1";
++	num-cs = <1>;
+ };
+ 
+ &uart0 {
 -- 
 2.24.0
 
