@@ -2,101 +2,141 @@ Return-Path: <SRS0=GIEZ=26=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F085C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B266C282DD
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5C8206ED
-	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E38A20721
+	for <linux-devicetree@archiver.kernel.org>; Thu,  9 Jan 2020 16:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578587298;
+	bh=kTsYYJNEpy/rKFvoGjVkiTpYVFGVhoNN/c3irxPdSBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E+pNimaCMx+avOmF+3mFElpoihzSkQKEGFdAlfc0XQuiTDjrdop5FCgLM+aaxTexb
+	 Zkwhxb83Y7p8qjvTgU+Oy38+w5NqbtwDU7jEgc643TUcoJB1CXtwKspGzwglzgqQ7O
+	 wVwM79clL7RvWDbh8oJYf4m9YpLqJ7SotncuRSMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387462AbgAIQKH (ORCPT
+        id S1732798AbgAIQ2S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 11:10:07 -0500
-Received: from wp126.webpack.hosteurope.de ([80.237.132.133]:56728 "EHLO
-        wp126.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731832AbgAIQKG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 11:10:06 -0500
-X-Greylist: delayed 1668 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Jan 2020 11:10:05 EST
-Received: from [2003:a:659:3f00:1e6f:65ff:fe31:d1d5] (helo=hermes.fivetechno.de); authenticated
-        by wp126.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1ipZws-0004wt-5f; Thu, 09 Jan 2020 16:42:14 +0100
-X-Virus-Scanned: by amavisd-new 2.11.1 using newest ClamAV at
-        linuxbbg.five-lan.de
-Received: from roc-pc (p5098d998.dip0.t-ipconnect.de [80.152.217.152])
-        (authenticated bits=0)
-        by hermes.fivetechno.de (8.15.2/8.14.5/SuSE Linux 0.8) with ESMTPSA id 009FgCHr032463
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 9 Jan 2020 16:42:13 +0100
-From:   Markus Reichl <m.reichl@fivetechno.de>
-To:     linux-rockchip@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 9 Jan 2020 11:28:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:34268 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728840AbgAIQ2R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 11:28:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE6271FB;
+        Thu,  9 Jan 2020 08:28:16 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52D173F703;
+        Thu,  9 Jan 2020 08:28:16 -0800 (PST)
+Date:   Thu, 9 Jan 2020 16:28:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Markus Reichl <m.reichl@fivetechno.de>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH 3/3] arm64: dts: rockchip: Enable sdio0 and uart0 on rk3399-roc-pc-mezzanine
-Date:   Thu,  9 Jan 2020 16:42:10 +0100
-Message-Id: <20200109154211.1530-1-m.reichl@fivetechno.de>
-X-Mailer: git-send-email 2.20.1
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
+ for the GPU
+Message-ID: <20200109162814.GB3702@sirena.org.uk>
+References: <20200108052337.65916-1-drinkcat@chromium.org>
+ <20200108052337.65916-5-drinkcat@chromium.org>
+ <20200108132302.GA3817@sirena.org.uk>
+ <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
+ <09ddfac3-da8d-c039-92a0-d0f51dc3fea5@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;m.reichll@fivetechno.de;1578586205;388935da;
-X-HE-SMSGID: 1ipZws-0004wt-5f
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="St7VIuEGZ6dlpu13"
+Content-Disposition: inline
+In-Reply-To: <09ddfac3-da8d-c039-92a0-d0f51dc3fea5@arm.com>
+X-Cookie: Killing turkeys causes winter.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The mezzanine board carries an E key type M.2 slot. This is
-connected to USB, SDIO and UART0. Enable sdio and uart0 for use
-with wlan and/or bt M.2 cards.
 
-Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
----
-Wifi via SDIO has been tested with Laird ST60-2230C (Marvell 88W8997)
-Bluetoth via USB has been tested with Intel 9260
-Bluetooth via UART has not been tested.
----
-Patch 1/3 of this series has been merged already [1]
-Patch 2/3 of this series needs further discussion [2]
-[1] https://lkml.org/lkml/2019/12/10/516
-[2] https://lkml.org/lkml/2019/12/10/517
----
- .../dts/rockchip/rk3399-roc-pc-mezzanine.dts  | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+--St7VIuEGZ6dlpu13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-index 2db9d32ad54a..2acb3d500fb9 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
-@@ -70,3 +70,24 @@ pcie_perst: pcie-perst {
- 		};
- 	};
- };
-+
-+&sdio0 {
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	keep-power-in-suspend;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc3v3_ngff>;
-+	vqmmc-supply = <&vcc_1v8>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
-+	status = "okay";
-+};
--- 
-2.24.0
+On Thu, Jan 09, 2020 at 02:14:42PM +0000, Steven Price wrote:
+> On 08/01/2020 22:52, Nicolas Boichat wrote:
 
+> > That'd be a bit awkward to match, though... Currently all bifrost
+> > share the same compatible "arm,mali-bifrost", and it'd seem
+> > weird/wrong to match "mediatek,mt8183-mali" in this driver? I have no
+> > idea if any other Mali implementation will require a second regulator,
+> > but with the MT8183 we do need it, see below.
+
+This doesn't sound particularly hard, just new.  Plenty of other devices
+have quirks done based on the SoC they're in or the IP revision, this
+would just be another of those quirks.
+
+> > Well if devfreq was working (see patch 7
+> > https://patchwork.kernel.org/patch/11322851/ for a partial
+> > implementation), it would adjust both mali and sram regulators, see
+> > the OPP table in patch 2
+> > (https://patchwork.kernel.org/patch/11322825/): SRAM voltage needs to
+> > be increased for frequencies >=698Mhz.
+
+> > Now if you have some better idea how to implement this, I'm all ears!
+
+Set a flag based on the compatible, then base runtime decisions off
+that.
+
+> I'm not sure if it's better, but could we just encode the list of
+> regulators into device tree. I'm a bit worried about special casing an
+> "sram" regulator given that other platforms might have a similar
+> situation but call the second regulator a different name.
+
+Obviously the list of regulators bound on a given platform is encoded in
+the device tree but you shouldn't really be relying on that to figure
+out what to request in the driver - the driver should know what it's
+expecting.  Bear in mind that getting regulator stuff wrong can result
+in physical damage to the system so it pays to be careful and to
+consider that platform integrators have a tendency to rely on things
+that just happen to work but aren't a good idea or accurate
+representations of the system.  It's certainly *possible* to do
+something like that, the information is there, but I would not in any
+way recommend doing things that way as it's likely to not be robust.
+
+The possibility that the regulator setup may vary on other platforms
+(which I'd expect TBH) does suggest that just requesting a bunch of
+supply names optionally and hoping that we got all the ones that are
+important on a given platform is going to lead to trouble down the line.
+
+Steve, please fix your mail client to word wrap within paragraphs at
+something substantially less than 80 columns.  Doing this makes your
+messages much easier to read and reply to.
+
+--St7VIuEGZ6dlpu13
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4XVJ0ACgkQJNaLcl1U
+h9AYxwf+KvXLp3chGCrua6k7mYwzuRnBu6lxudNUYlU35S6W/jvj7j24xoetg2SJ
+9bvm5PnWREES8yFnNE3P0v0XhwZ7KP223VeOsNEUEXaD34txxpfgIsFJ0pBSl5MY
+2s7l8R4CSe0EYuBc2Rg1g+KGb8mOwvdVaOYKdgMXHiscQ4Iq2QNNA+1kVjLFGE72
+kTPnycN7SvQLsxzJbMm7zday5eObx2CHrfxZjdlnSjGnao7fIcyIRnc6rjSf4VkG
++WjOYltzHe0oe9yfN+4+wjawAPt5OIr9BeD3L/Vdm9Lvy59wTPuairTYgV1e0+oV
+GDQ1CHWCdcr1P9Yi96zKy/4P4eEShw==
+=+CID
+-----END PGP SIGNATURE-----
+
+--St7VIuEGZ6dlpu13--
