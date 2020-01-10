@@ -2,295 +2,332 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D812C33CA4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 20:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB47C282DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B1120838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 20:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D87720842
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F6c17n0i"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CLh5YwP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgAJUSI (ORCPT
+        id S1726909AbgAJVSu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:18:08 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33818 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgAJUSI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 15:18:08 -0500
-Received: by mail-lj1-f195.google.com with SMTP id z22so3434113ljg.1
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 12:18:06 -0800 (PST)
+        Fri, 10 Jan 2020 16:18:50 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:50596 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbgAJVSt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 16:18:49 -0500
+Received: by mail-pj1-f67.google.com with SMTP id r67so1467810pjb.0
+        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 13:18:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p7X3KlANjpxdNl9a1sZU+uCS/p7SKrv18Rt0/HVppPM=;
-        b=F6c17n0i2XrG4FGLw3qtnI9ct7tMYvoXK8pZoMIyVUW7TZwbhqW6iBVxNLqA9SeHBi
-         IHAem+NEvgo9s9JUyOxEy9I9ciOJL9waTPRMOzIBsO7bCBF/aB6N4EOg5s3JOkOHH5VL
-         0ec4vVyMFbhSpa3nTcxxWc3n16debPbWTkjvCiyeG4I8R0dFDSVr3dOSSBnVtwPBoR4Q
-         Uc5a95WtgMUQ0iA/afPmRhKoKbxuZNevC2m/j3Yk7vCA6nasgHYJBqE7X4mN3Jj7K8TZ
-         uFLLj+LvNtiDlPhNpQ9EORYzm1uIODuWMuPOB0A2cIyR7W3LflZkZeHvnCIMgypogzgf
-         b11w==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OsFwSWP/xRcH1cmWjjdOujlzZsNfP9UNbHn7pdTBcQ8=;
+        b=CLh5YwP6LHsUQIyC9mN3P/Pg6C/S9QYnJlr15b9bT9RP+Kp9FIHfpxVng5kKNRMvc9
+         ml078eP3iGkhrrYHUX2IcROXMuWrGDGyJ/JrEcvvSKnVM11SbdFl6qYyKjzWCWvgtS3r
+         XHA4I0+/qe5Ne71x/ra9yKEZGpWsd5/I7Pce8eyEf3xTxL7T4bI81leeuE+8upkMJAbX
+         N6myHqYe5mi7ZJNtkU8u33N6Ad1k567Qat7fIACFtxTbpD/vgrgRjZEDoJL40QbdGyLk
+         WLg4Gnel81hnCp/7QyA5V8lKrvRSN0+GyZun5sY14gkkBo/ARul8hzRbtD8i7im6NpJU
+         qSNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p7X3KlANjpxdNl9a1sZU+uCS/p7SKrv18Rt0/HVppPM=;
-        b=Pk5CM1MoETHPhOx8sYcCvgiERjn29x6+KG0BAPis/fTi/h1Uv+JsTdsilbeJ6H/rdy
-         w8R+r7h6aUN2PE7JZrad3MGApdxje1QQr2e7266ptY6xBjuxZCUvGLbOwZjG9wkVbN/z
-         NJyq7PwW99ucToFE+ic4OsXStdZsxtGKMhJculjiA/Dp2BODDuUS6TB6rgcEBOuWbBzd
-         xL8d7B6vAMN3GiLGTAv2EFxi+IhHjB2sqJljnLzIkhORGKYG5HijgLPwXotvY7/oEGeY
-         XPWKncZyI4sjhhk4Jy94Flk1Vg5kw4ChSgWN5McfQHRFbKXEd5iQ+I/6ofvaZmyojzAm
-         epCA==
-X-Gm-Message-State: APjAAAW3xYEYoq75fD96Dt/lu1NNjCgzVB1sy2xP3cNxk+8nIyHlGwGa
-        UUUYFYK2KoNEnZL6qJ+mB/HXElYm4Y4=
-X-Google-Smtp-Source: APXvYqwLvvtmEum+o+V0t6yp4yiJgfq6T5NoV+OgRLFQOO6MpO+yzH64/Ki5IIt6LwCU6OmHJswRFw==
-X-Received: by 2002:a2e:8745:: with SMTP id q5mr3692895ljj.208.1578687485271;
-        Fri, 10 Jan 2020 12:18:05 -0800 (PST)
-Received: from [192.168.119.5] (office.dev.rtsoft.ru. [62.117.114.130])
-        by smtp.gmail.com with ESMTPSA id h24sm1471900ljl.80.2020.01.10.12.18.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 12:18:04 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
- binding
-To:     Rob Herring <robh@kernel.org>
-Cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, peter.griffin@linaro.org,
-        ezequiel@collabora.com
-References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
- <20191227122114.23075-2-andrey.konovalov@linaro.org>
- <20200104215322.GA548@bogus>
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-Message-ID: <530e69f9-cfda-5a4a-e5d5-42401ea74d32@linaro.org>
-Date:   Fri, 10 Jan 2020 23:18:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OsFwSWP/xRcH1cmWjjdOujlzZsNfP9UNbHn7pdTBcQ8=;
+        b=BqU1VdV/XpylRK9VgOAeaXIprelUetWEM+Hyy6HWOGg9XP6qKbcjVI6yCTNH8rsraa
+         d5vQR633+cIEtNiBbpkMa5GseZs4q4oa7BlltRPQBLb50WboTGaeLkZeqI4hGFrVy/SJ
+         WGG1ciObZJWAwwhJ0kaTITS0WqRxixu7SuYEEyGqwlxfQDCYnbEjwHjOC7HLhpNn2x9H
+         IUCBmFtAB8hYuI82fJCuChBY7v49st1qdUzlzDdGULZOTmgYfJxZeHFtW821LoQz5F1X
+         +q26ZxMJYZw84iRbJaxs7rdlgwznaZqnsfkJl8RiwG6/6OxylFrFl7sn0Pj6Uef+M0zf
+         5Mng==
+X-Gm-Message-State: APjAAAXQgWAf0josmLyB6q5D/jKq8yaoUkUE8E3X3T7zT40m90pelgtf
+        ncjQc18ER5GCWxgsY4nEQ28/4A==
+X-Google-Smtp-Source: APXvYqx5QmlYIay+9x5p3d39RnJ0qBXKwVRiBcjtJHV6SP2kiIY+6PRsneuynDu/VlVsrI00LhHKPw==
+X-Received: by 2002:a17:90a:9d8a:: with SMTP id k10mr7230861pjp.91.1578691128908;
+        Fri, 10 Jan 2020 13:18:48 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id b8sm4148927pfr.64.2020.01.10.13.18.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 13:18:47 -0800 (PST)
+Date:   Fri, 10 Jan 2020 14:18:46 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200110211846.GA11555@xps15>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200104215322.GA548@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191227053215.423811-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Bjorn,
 
-Thanks for the review!
-
-On 05.01.2020 00:53, Rob Herring wrote:
-> On Fri, Dec 27, 2019 at 03:21:13PM +0300, Andrey Konovalov wrote:
->> Add YAML device tree binding for IMX219 CMOS image sensor, and
->> the relevant MAINTAINERS entries.
->>
->> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
->> ---
->>   .../devicetree/bindings/media/i2c/imx219.yaml | 134 ++++++++++++++++++
->>   MAINTAINERS                                   |   8 ++
->>   2 files changed, 142 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/imx219.yaml b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
->> new file mode 100644
->> index 000000000000..b58aa49a7c03
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/imx219.yaml
->> @@ -0,0 +1,134 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/i2c/imx219.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Sony 1/4.0-Inch 8Mpixel CMOS Digital Image Sensor
->> +
->> +maintainers:
->> +  - Dave Stevenson <dave.stevenson@raspberrypi.com>
->> +
->> +description: |-
->> +  The Sony imx219 is a 1/4.0-inch CMOS active pixel digital image sensor
->> +  with an active array size of 3280H x 2464V. It is programmable through
->> +  I2C interface. The I2C address is fixed to 0x10 as per sensor data sheet.
->> +  Image data is sent through MIPI CSI-2, which is configured as either 2 or
->> +  4 data lanes.
->> +
->> +properties:
->> +  compatible:
->> +    const: sony,imx219
->> +
->> +  reg:
->> +    description: I2C device address
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: xclk
->> +
->> +  VDIG-supply:
->> +    description:
->> +      Digital I/O voltage supply, 1.8 volts
->> +
->> +  VANA-supply:
->> +    description:
->> +      Analog voltage supply, 2.8 volts
->> +
->> +  VDDL-supply:
->> +    description:
->> +      Digital core voltage supply, 1.2 volts
->> +
->> +  xclr-gpios:
->> +    description: |-
->> +      Reference to the GPIO connected to the xclr pin, if any.
->> +      Must be released (set high) after all supplies are applied.
->> +
->> +  camera-clk:
->> +    type: object
->> +
->> +    description: Clock source for imx219
+On Thu, Dec 26, 2019 at 09:32:09PM -0800, Bjorn Andersson wrote:
+> A region in IMEM is used to communicate load addresses of remoteproc to
+> post mortem debug tools. Implement a driver that can be used to store
+> this information in order to enable these tools to process collected
+> ramdumps.
 > 
-> This clock is external to the sensor, so a node for a fixed clock should
-> be too.
-
-Done in v3.
-
->> +
->> +    properties:
->> +      clock-frequency: true
->> +
->> +    required:
->> +      - clock-frequency
->> +
->> +  # See ../video-interfaces.txt for more details
->> +  port:
->> +    type: object
->> +    properties:
->> +      endpoint:
->> +        type: object
->> +        properties:
->> +          clock-lanes:
->> +            const: 0
->> +
->> +          data-lanes:
->> +            description: |-
->> +              Should be <1 2> for two-lane operation, or <1 2 3 4> for
->> +              four-lane operation.
->> +            oneOf:
->> +              - const: [[ 1, 2 ]]
->> +              - const: [[ 1, 2, 3, 4 ]]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 > 
-> Not sure if this actually works. If it does, it exposes how we encode
-> the DT yaml format which we don't want to do here.
-
-It does work - I am still not quite comfortable with json schema, and got
-to the above by looking at the files produced by 'make dt_binding_check'.
-
-
-> It should be:
+> Changes since v1:
+> - Added helper to probe defer clients
+> - Fixed logical bug in slot scan
+> - Added SPDX header in header file
 > 
-> oneOf:
->    - items:
->        - const: 1
->        - const: 2
->    - items:
->        - const: 1
->        - const: 2
->        - const: 3
->        - const: 4
+>  drivers/remoteproc/Kconfig         |   3 +
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/qcom_pil_info.c | 150 +++++++++++++++++++++++++++++
+>  drivers/remoteproc/qcom_pil_info.h |   8 ++
+>  4 files changed, 162 insertions(+)
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.c
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.h
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 94afdde4bc9f..0798602e355a 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -85,6 +85,9 @@ config KEYSTONE_REMOTEPROC
+>  	  It's safe to say N here if you're not interested in the Keystone
+>  	  DSPs or just want to use a bare minimum kernel.
+>  
+> +config QCOM_PIL_INFO
+> +	tristate
+> +
+>  config QCOM_RPROC_COMMON
+>  	tristate
+>  
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index 00f09e658cb3..c1b46e9033cb 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+>  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
+> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
+>  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
+>  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
+>  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+> new file mode 100644
+> index 000000000000..b0897ae9eae5
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.c
+> @@ -0,0 +1,150 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019 Linaro Ltd.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
 
-Thanks, got it.
+These should be in alphabetical order if there is no depencencies
+between them, something checkpatch complains about.
 
-> Really, I think you shouldn't need the 2nd case as that should be the
-> default.
+> +
+> +struct pil_reloc_entry {
+> +	char name[8];
 
-I've tried to implement that in v3 of the patch set.
+Please add a #define for the name length and reuse it in qcom_pil_info_store()
+
+> +	__le64 base;
+> +	__le32 size;
+> +} __packed;
+> +
+> +#define PIL_INFO_SIZE	200
+> +#define PIL_INFO_ENTRIES (PIL_INFO_SIZE / sizeof(struct pil_reloc_entry))
+> +
+> +struct pil_reloc {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	u32 offset;
+> +	int val_bytes;
+> +
+> +	struct pil_reloc_entry entries[PIL_INFO_ENTRIES];
+> +};
+> +
+> +static struct pil_reloc *_reloc;
+> +static DEFINE_MUTEX(reloc_mutex);
+> +
+> +/**
+> + * qcom_pil_info_store() - store PIL information of image in IMEM
+> + * @image:	name of the image
+> + * @base:	base address of the loaded image
+> + * @size:	size of the loaded image
+> + */
+> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
+> +{
+> +	struct pil_reloc_entry *entry;
+> +	int idx = -1;
+> +	int i;
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	if (!_reloc)
+
+Since it is available, I would use function qcom_pil_info_available().  Also
+checkpatch complains about indentation problems related to the 'if' condition
+but I can't see what makes it angry.
+
+> +		goto unlock;
+> +
+> +	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
+> +		if (!_reloc->entries[i].name[0]) {
+> +			if (idx == -1)
+> +				idx = i;
+> +			continue;
+> +		}
+> +
+> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
+> +			idx = i;
+> +			goto found;
+> +		}
+> +	}
+> +
+> +	if (idx == -1) {
+> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
+> +		goto unlock;
+
+Given how this function is used in the next patch I think an error should be
+reported to the caller.
+
+> +	}
+> +
+> +found:
+> +	entry = &_reloc->entries[idx];
+> +	stracpy(entry->name, image);
+
+Function stracpy() isn't around in mainline.
+
+> +	entry->base = base;
+> +	entry->size = size;
+> +
+> +	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
+> +			  entry, sizeof(*entry) / _reloc->val_bytes);
+
+Same here - the error code should be handled and reported to the caller.  
+
+> +
+> +unlock:
+> +	mutex_unlock(&reloc_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
+> +
+> +/**
+> + * qcom_pil_info_available() - query if the pil info is probed
+> + *
+> + * Return: boolean indicating if the pil info device is probed
+> + */
+> +bool qcom_pil_info_available(void)
+> +{
+> +	return !!_reloc;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
+> +
+> +static int pil_reloc_probe(struct platform_device *pdev)
+> +{
+> +	struct pil_reloc *reloc;
+> +
+> +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
+> +	if (!reloc)
+> +		return -ENOMEM;
+> +
+> +	reloc->dev = &pdev->dev;
+> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> +	if (IS_ERR(reloc->map))
+> +		return PTR_ERR(reloc->map);
+> +
+> +	if (of_property_read_u32(pdev->dev.of_node, "offset", &reloc->offset))
+> +		return -EINVAL;
+> +
+> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
+> +	if (reloc->val_bytes < 0)
+> +		return -EINVAL;
+> +
+> +	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
+> +			  sizeof(reloc->entries) / reloc->val_bytes);
+
+Error code handling.
 
 Thanks,
-Andrey
+Mathieu
 
->> +
->> +          clock-noncontinuous:
->> +            type: boolean
->> +            description: |-
->> +              Presence of this boolean property decides whether the MIPI CSI-2
->> +              clock is continuous or non-continuous.
->> +
->> +        required:
->> +          - clock-lanes
->> +          - data-lanes
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - VANA-supply
->> +  - VDIG-supply
->> +  - VDDL-supply
->> +  - port
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    i2c0 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        imx219: sensor@10 {
->> +            compatible = "sony,imx219";
->> +            reg = <0x10>;
->> +            clocks = <&imx219_clk>;
->> +            clock-names = "xclk";
->> +            VANA-supply = <&imx219_vana>;   /* 2.8v */
->> +            VDIG-supply = <&imx219_vdig>;   /* 1.8v */
->> +            VDDL-supply = <&imx219_vddl>;   /* 1.2v */
->> +
->> +            imx219_clk: camera-clk {
->> +                compatible = "fixed-clock";
->> +                #clock-cells = <0>;
->> +                clock-frequency = <24000000>;
->> +            };
->> +
->> +            port {
->> +                imx219_0: endpoint {
->> +                    remote-endpoint = <&csi1_ep>;
->> +                    clock-lanes = <0>;
->> +                    data-lanes = <1 2>;
->> +                    clock-noncontinuous;
->> +                };
->> +            };
->> +        };
->> +    };
->> +
->> +...
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index ffa3371bc750..f7b6c24ec081 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -15350,6 +15350,14 @@ S:	Maintained
->>   F:	drivers/media/i2c/imx214.c
->>   F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->>   
->> +SONY IMX219 SENSOR DRIVER
->> +M:	Dave Stevenson <dave.stevenson@raspberrypi.com>
->> +L:	linux-media@vger.kernel.org
->> +T:	git git://linuxtv.org/media_tree.git
->> +S:	Maintained
->> +F:	drivers/media/i2c/imx219.c
->> +F:	Documentation/devicetree/bindings/media/i2c/imx219.yaml
->> +
->>   SONY IMX258 SENSOR DRIVER
->>   M:	Sakari Ailus <sakari.ailus@linux.intel.com>
->>   L:	linux-media@vger.kernel.org
->> -- 
->> 2.17.1
->>
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = reloc;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pil_reloc_remove(struct platform_device *pdev)
+> +{
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = NULL;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pil_reloc_of_match[] = {
+> +	{ .compatible = "qcom,pil-reloc-info" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
+> +
+> +static struct platform_driver pil_reloc_driver = {
+> +	.probe = pil_reloc_probe,
+> +	.remove = pil_reloc_remove,
+> +	.driver = {
+> +		.name = "qcom-pil-reloc-info",
+> +		.of_match_table = pil_reloc_of_match,
+> +	},
+> +};
+> +module_platform_driver(pil_reloc_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+> new file mode 100644
+> index 000000000000..0372602fae1d
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __QCOM_PIL_INFO_H__
+> +#define __QCOM_PIL_INFO_H__
+> +
+> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
+> +bool qcom_pil_info_available(void);
+> +
+> +#endif
+> -- 
+> 2.24.0
+> 
