@@ -2,121 +2,69 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF32BC33CA3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32CEC282DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF555205F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831FF2072A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:27:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="buTMyw3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgAJQU1 (ORCPT
+        id S1728167AbgAJQ1W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:20:27 -0500
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:25465 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbgAJQU0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 11:20:26 -0500
-Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa4.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: LrzaHbSQy37L8CEyNm9sxZucOUH5zKlVbNSkSOctqn2dAInOP4KemBehINfeWmnpa7GQqPWezN
- nUPDt1IWXdJhHAWpmKbYpm6tVPRZK62QGj+M6EqMgToCB44RUdz5sDdkN5RQTf218fqSM9aWoJ
- U/JKGr7Ei20tlYQnRdjF46lspCy+gAB/FgMy3SStBZnQcIVgbePADoX7R7SBkQ9SZncs5r55Yr
- /Y4NnGZI5P+TTWL03GP+WrA0lBfKIujdiiZDHJbczWT0ipOBmz+5YuLwhRzeYs3QqepWUdwyXJ
- S0s=
-X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="60748452"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 09:20:25 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 10 Jan 2020 09:20:23 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 10 Jan 2020 09:20:15 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
-        <eugen.hristev@microchip.com>, <jic23@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <mchehab@kernel.org>, <lee.jones@linaro.org>,
-        <radu_nicolae.pirea@upb.ro>, <richard.genoud@gmail.com>,
-        <tudor.ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <wg@grandegger.com>,
-        <mkl@pengutronix.de>, <a.zummo@towertech.it>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-can@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 12/17] dt-bindings: atmel,at91rm9200-rtc: add microchip,sam9x60-rtc
-Date:   Fri, 10 Jan 2020 18:18:04 +0200
-Message-ID: <1578673089-3484-13-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 10 Jan 2020 11:27:22 -0500
+Received: from hermes.aosc.io ([199.195.250.187]:50199 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727928AbgAJQ1V (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:27:21 -0500
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 66D9846D63;
+        Fri, 10 Jan 2020 16:26:58 +0000 (UTC)
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 0/3] Add support for Goodix GT917S touch controller
+Date:   Sat, 11 Jan 2020 00:26:05 +0800
+Message-Id: <20200110162608.1066397-1-icenowy@aosc.io>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1578673640;
+        h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding;
+        bh=AEELeAYC9NorjTDpv0ZPmU+f+AUS/ubfkAjO8sKqkms=;
+        b=buTMyw3xNyyea/7/JQOp3p5bcLP5d/Zj/pCu8JDVc5f05oqIs+giGnRdTJX02jndXItUPn
+        Y2OpBjQofcUNML/uilEu8WZUYC0Sq3p4ZbhVdWMuh/SVXWiyn7i9Bl5HZ31zjyuyiV6YDg
+        UQjHKqDpP2lQq1afHEPCZyccEZ6/YEI=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add microchip,sam9x60-rtc to DT bindings documentation.
+This patchset introduces support for Goodix GT917S touch controller.
 
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
+The major difference with other touch controllers from Goodix is that
+the ID string is no longer number-only (it contains a 'S'), so an
+additional patch is introduced for migrating the ID to a string.
 
-Hi Alexandre,
+Icenowy Zheng (3):
+  dt-bindings: input: touchscreen: add compatible string for Goodix
+    GT917S
+  Input: goodix - use string-based chip ID
+  Input: goodix - Add support for Goodix GT917S
 
-I kept this patch as in v1 (same for patch
-"dt-bindings: atmel-tcb: add microchip,sam9x60-tcb").
-I'm waiting your response to this version and take an action aftewards.
+ .../bindings/input/touchscreen/goodix.txt     |  1 +
+ drivers/input/touchscreen/goodix.c            | 41 +++++++++----------
+ 2 files changed, 21 insertions(+), 21 deletions(-)
 
-Thank you,
-Claudiu Beznea
-
- Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
-index 5d3791e789c6..35eab9138d0b 100644
---- a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
-@@ -1,7 +1,8 @@
- Atmel AT91RM9200 Real Time Clock
- 
- Required properties:
--- compatible: should be: "atmel,at91rm9200-rtc" or "atmel,at91sam9x5-rtc"
-+- compatible: should be: "atmel,at91rm9200-rtc", "atmel,at91sam9x5-rtc" or
-+  "microchip,sam9x60-rtc"
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: rtc alarm/event interrupt
 -- 
-2.7.4
+2.23.0
 
