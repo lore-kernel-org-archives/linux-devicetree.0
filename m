@@ -2,145 +2,212 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAC6C282DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72FDC282DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B66B2080D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CB020842
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="SKsdT2gG";
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="eudbFuiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgAJR3s (ORCPT
+        id S1728016AbgAJRhb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:29:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:57040 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgAJR3s (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:29:48 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DEAABB25C;
-        Fri, 10 Jan 2020 17:29:46 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>,
+        Fri, 10 Jan 2020 12:37:31 -0500
+Received: from mx08-00252a01.pphosted.com ([91.207.212.211]:34482 "EHLO
+        mx08-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726131AbgAJRha (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:37:30 -0500
+Received: from pps.filterd (m0102629.ppops.net [127.0.0.1])
+        by mx08-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00AHZ2Z3002809
+        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 17:37:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
+ cc : references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp;
+ bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
+ b=SKsdT2gGEEFjWm1OQs24C9xp18p7AQ8nXeW7wBy0MdVcQvkx8mmsnwOjQadzeLaFc5oZ
+ 6Bkt0NhzFQeQt3p2NR2JFyrE50JZVeKz5et+SDg1d7gyIoxGObSzdgfQisqexzVMb2Pl
+ KmS51h4bTAbDO/P7rGw8d+wHaBsyqw/bd4i8MMqurPVC0ehdo8Wnjyiz0+NPesa0l77S
+ +NF9ntLnzu081++BYRsnWcxI0xh5x6vat0n9rb/oMAS7388FCuXU7a+Y9hy89SsVkHGh
+ DtXDQFqCgDGakfVSGXZjlE/DpbSZZ856j5r9Qpsr6x1QCdAGsaR2M1rUz3EtsoRIBfOQ aw== 
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        by mx08-00252a01.pphosted.com with ESMTP id 2xag2su2hk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
+        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 17:37:28 +0000
+Received: by mail-wm1-f71.google.com with SMTP id t16so1121516wmt.4
+        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 09:37:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
+        b=eudbFuiFpxiYBXsumIrZk5v2K0RcDambijz9CR6j4vfIhiv09EPkoC4Iap4aOXhjY+
+         e+apgz4raC1u6K55M2t+JqSWdpUTU/zP/n9j7vF7ORpWW6Zlu5RnTlpFfvNX+U4ji1lw
+         dKpMDCFcBBdGskvbgur3sLBTJFj7Sa2nq4DTeo56U2IhqUIvRnxA0otUH4DD9ExXC9hh
+         COAU07dXao/SesrTu7gpROWkTTOKgKv+F9qYoA3m5/gCd9YGfmN0+ktaUGgeZAg6C6uo
+         iMEHthpBZop+6pORS/khftnO2rEEOlIYRx+oCuEjF1fI24AeJA+DHXQAitgdsCaGXuzZ
+         VuQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
+        b=l4NVAf1BJVZVl7IhMqxsOYz7xmli2W6AZcQ20B0afiE9NGggEY6wyrGMJ5JAvDMAzg
+         vS+7rtz70RjQT9OYAqe4MZ9ZyNDB4GkMQqqwwqQe/SCiHwiN0Hqq2y5w9i8WDvaFQ46x
+         pmx0eXuRVS5sLMKMavbPZi0dmV0Sx3JmCSLUtk2VLgpC+wwVST1LhEYxwlglQ+uihRD5
+         5naZJeNUOGQnMZh2GkR7L3FuQLoHuHLrBrM7XxnJAmkyibet4yLCnLyiB0S/6LQPPZ1n
+         mZ1aV/i7EMppUQ4Oeawlb2jDjU23bRoh1QygDZuheoq0uaon7QmAIec/gk+coTuO1fQQ
+         sRVA==
+X-Gm-Message-State: APjAAAX25mOXnSPAsN46gwlGqI48lDlvs6M+LYVlozjKQIgKJoW+MPDn
+        BVyNlzTh4PmGW8jRegByFOJ2cr490LBqfqVltsHgvchXeZef0/MHqHsxqEz77DRVtDlztchMsw7
+        zPnReJ4M1IW1d8sXKdy9JkA==
+X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687588wrt.362.1578677848171;
+        Fri, 10 Jan 2020 09:37:28 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx44UlbuVmiPyz5iGzy41EJVez9kdBqhJkQVvHkfelCDcd0A4HMd0i0npDRAlfsoN/TmkGfzg==
+X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687563wrt.362.1578677847921;
+        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
+Received: from ?IPv6:2a00:1098:3142:14:910a:522a:cf5c:edd0? ([2a00:1098:3142:14:910a:522a:cf5c:edd0])
+        by smtp.gmail.com with ESMTPSA id d14sm3100880wru.9.2020.01.10.09.37.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
+Subject: Re: [PATCH] ARM: dts: bcm283x: Unify CMA configuration
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
         bcm-kernel-feedback-list@broadcom.com,
         Stefan Wahren <wahrenst@gmx.net>
-Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
+Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: bcm283x: Unify CMA configuration
-Date:   Fri, 10 Jan 2020 18:29:35 +0100
-Message-Id: <20200110172935.19709-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.24.1
+References: <20200110172935.19709-1-nsaenzjulienne@suse.de>
+From:   Phil Elwell <phil@raspberrypi.org>
+Message-ID: <c5bb42a8-e1c2-3e21-dc1d-d36a069bf97f@raspberrypi.org>
+Date:   Fri, 10 Jan 2020 17:37:25 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200110172935.19709-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-With the introduction of the Raspberry Pi 4 we were forced to explicitly
-configure CMA's location, since arm64 defaults it into the ZONE_DMA32
-memory area, which is not good enough to perform DMA operations on that
-device. To bypass this limitation a dedicated CMA DT node was created,
-explicitly indicating the acceptable memory range and size.
+Hi Nicolas,
 
-That said, compatibility between boards is a must on the Raspberry Pi
-ecosystem so this creates a common CMA DT node so as for DT overlays to
-be able to update CMA's properties regardless of the board being used.
+On 10/01/2020 17:29, Nicolas Saenz Julienne wrote:
+> With the introduction of the Raspberry Pi 4 we were forced to explicitly
+> configure CMA's location, since arm64 defaults it into the ZONE_DMA32
+> memory area, which is not good enough to perform DMA operations on that
+> device. To bypass this limitation a dedicated CMA DT node was created,
+> explicitly indicating the acceptable memory range and size.
+> 
+> That said, compatibility between boards is a must on the Raspberry Pi
+> ecosystem so this creates a common CMA DT node so as for DT overlays to
+> be able to update CMA's properties regardless of the board being used.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+> 
+> If this doesn't make it into v5.5 I'd be tempted to add:
+> Fixes: d98a8dbdaec6 ("ARM: dts: bcm2711: force CMA into first GB of memory")
+> 
+>   arch/arm/boot/dts/bcm2711.dtsi | 33 +++++++++++++--------------------
+>   arch/arm/boot/dts/bcm283x.dtsi | 13 +++++++++++++
+>   2 files changed, 26 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index 8687534d4528..c8e4041308e0 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -12,26 +12,6 @@ / {
+>   
+>   	interrupt-parent = <&gicv2>;
+>   
+> -	reserved-memory {
+> -		#address-cells = <2>;
+> -		#size-cells = <1>;
+> -		ranges;
+> -
+> -		/*
+> -		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+> -		 * that's not good enough for the BCM2711 as some devices can
+> -		 * only address the lower 1G of memory (ZONE_DMA).
+> -		 */
+> -		linux,cma {
+> -			compatible = "shared-dma-pool";
+> -			size = <0x2000000>; /* 32MB */
+> -			alloc-ranges = <0x0 0x00000000 0x40000000>;
+> -			reusable;
+> -			linux,cma-default;
+> -		};
+> -	};
+> -
+> -
+>   	soc {
+>   		/*
+>   		 * Defined ranges:
+> @@ -869,6 +849,19 @@ pin-rts {
+>   	};
+>   };
+>   
+> +&rmem {
+> +	#address-cells = <2>;
+> +};
+> +
+> +&cma {
+> +	/*
+> +	 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+> +	 * that's not good enough for the BCM2711 as some devices can
+> +	 * only address the lower 1G of memory (ZONE_DMA).
+> +	 */
+> +	alloc-ranges = <0x0 0x00000000 0x40000000>;
+> +};
+> +
+>   &i2c0 {
+>   	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
+>   	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> index 839491628e87..6128baed83c2 100644
+> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> @@ -30,6 +30,19 @@ chosen {
+>   		stdout-path = "serial0:115200n8";
+>   	};
+>   
+> +	rmem: reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		cma: linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			size = <0x4000000>; /* 64MB */
+> +			reusable;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+>   	thermal-zones {
+>   		cpu_thermal: cpu-thermal {
+>   			polling-delay-passive = <0>;
+> 
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+For what it's worth,
 
-If this doesn't make it into v5.5 I'd be tempted to add:
-Fixes: d98a8dbdaec6 ("ARM: dts: bcm2711: force CMA into first GB of memory")
+Reviewed-by: Phil Elwell <phil@raspberrypi.org>
 
- arch/arm/boot/dts/bcm2711.dtsi | 33 +++++++++++++--------------------
- arch/arm/boot/dts/bcm283x.dtsi | 13 +++++++++++++
- 2 files changed, 26 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index 8687534d4528..c8e4041308e0 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -12,26 +12,6 @@ / {
- 
- 	interrupt-parent = <&gicv2>;
- 
--	reserved-memory {
--		#address-cells = <2>;
--		#size-cells = <1>;
--		ranges;
--
--		/*
--		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
--		 * that's not good enough for the BCM2711 as some devices can
--		 * only address the lower 1G of memory (ZONE_DMA).
--		 */
--		linux,cma {
--			compatible = "shared-dma-pool";
--			size = <0x2000000>; /* 32MB */
--			alloc-ranges = <0x0 0x00000000 0x40000000>;
--			reusable;
--			linux,cma-default;
--		};
--	};
--
--
- 	soc {
- 		/*
- 		 * Defined ranges:
-@@ -869,6 +849,19 @@ pin-rts {
- 	};
- };
- 
-+&rmem {
-+	#address-cells = <2>;
-+};
-+
-+&cma {
-+	/*
-+	 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-+	 * that's not good enough for the BCM2711 as some devices can
-+	 * only address the lower 1G of memory (ZONE_DMA).
-+	 */
-+	alloc-ranges = <0x0 0x00000000 0x40000000>;
-+};
-+
- &i2c0 {
- 	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
- 	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 839491628e87..6128baed83c2 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -30,6 +30,19 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	rmem: reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		cma: linux,cma {
-+			compatible = "shared-dma-pool";
-+			size = <0x4000000>; /* 64MB */
-+			reusable;
-+			linux,cma-default;
-+		};
-+	};
-+
- 	thermal-zones {
- 		cpu_thermal: cpu-thermal {
- 			polling-delay-passive = <0>;
--- 
-2.24.1
-
+Phil
