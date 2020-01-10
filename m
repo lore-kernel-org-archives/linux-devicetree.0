@@ -2,204 +2,144 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EADC33CA4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F75CC33CA4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECC22072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561DB2082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lqnu7dJK"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q7++ne3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbgAJKBh (ORCPT
+        id S1727513AbgAJKIY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:01:37 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39075 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727412AbgAJKBh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 05:01:37 -0500
-Received: by mail-lf1-f68.google.com with SMTP id y1so1007415lfb.6
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 02:01:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8fk3K/Nw5FtKa609DTMLMya0M9CeyHh4Kw2lRtmzNV0=;
-        b=Lqnu7dJKJV2YLmxAgxlgERWTyhT/wzKWMJxJPsD62jHLixRB5+t6R/rVXWrWAZSc+d
-         Sm2fzhTNdzymXjTUTj82VnILY6VvccRCBLDy3mQ72AyV5f8FiQDwHAmzUpGRFmP/Rjyc
-         mcwWUU+EvEKkL7gtNKOrl3KhTt8Dp5Pq7aps9EHTKQTVofvpKpWlnKr882C7jHR+A3Xu
-         Mm+Z35+ilyQcR9UeilXEjHuV+ueDM1OAYvKm8caz+H9/WbXASc0frcJYdmjUf5KUJFAg
-         6nQLH+0+gcQOCPLkP9jkw6ipHfSZDgsfMtwYQncdAVQuaM1x2DhwRAiQ08e3M4Kwh8Ux
-         ErsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8fk3K/Nw5FtKa609DTMLMya0M9CeyHh4Kw2lRtmzNV0=;
-        b=prqbEg5nCBcjZYzUFIqHxkiiDJI8Q7vvq9FYV1S54ChF4ghb5jB9VG92X0w3lW3rZ2
-         zDOPYGyzim2BzTDTCXkTV92yBG53gUStHCpwSb3iutNF97+W3h7ucYz9AykRC/3ZV/qb
-         KIZ7PWwRhnmBvxNQ9za6YjDqy9H9w3luwh39nJ+mDN5dkNHibndbgfyAFy7cRCVYjaqH
-         jc+n7fAjqwU3gglw5h3L8BRLkCoKVqNhvwhoRgSLTWnP1s9wwAzfz8UJRtNa2pmUjJq+
-         cvFZhu7yAwpZ2lZsaWywJJFmXw0lAHsn5xYGgCseqoJFsymjzK2fVFT1JieeUtYi04T+
-         9CfQ==
-X-Gm-Message-State: APjAAAX9XeaFihWsH5YAEIOQgy0V5X8ntnZ3SaOTH9cHtgLP9QqRRJjH
-        qWBxawkY5/hRLmoXDkqKfr9v1g==
-X-Google-Smtp-Source: APXvYqwEiM86h6vT/VXuePuFQtAz8n7aZ5Vm/lTgGd1pob0/m6P+wQcFhx3/dcblyGETMGQnjDj0OA==
-X-Received: by 2002:a19:f514:: with SMTP id j20mr1626835lfb.31.1578650494620;
-        Fri, 10 Jan 2020 02:01:34 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id s13sm738096lje.35.2020.01.10.02.01.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 02:01:33 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-input@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Minkyu Kang <mk7.kang@samsung.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Oskar Andero <oskar.andero@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 1/2 v3] iio: light: Add DT bindings for GP2AP002
-Date:   Fri, 10 Jan 2020 11:01:26 +0100
-Message-Id: <20200110100127.15519-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Fri, 10 Jan 2020 05:08:24 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:58767 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727539AbgAJKIX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 05:08:23 -0500
+X-UUID: 2ca0150a18fd4d6698ea54d17c03c9c8-20200110
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FYP5p0wxJ3QFwXLMGPYrw3vhC17+4GD5PVgVtXVVOhQ=;
+        b=q7++ne3AnzWXWNTq4xNmouj5aa2eDIdlw9sI08/AJ9rMRXmfJLWQPH7JNajbssaEgwEInkfipZG1OEArM7j0VrO1/CGzQMcXpfHV7zAsvIzJee/zsfMX4SgzOmBN5TXLN1ngB2npMiEzvkyKPmwgO6F6tcri2K125pg+ug/bR9s=;
+X-UUID: 2ca0150a18fd4d6698ea54d17c03c9c8-20200110
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <jungo.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 568683733; Fri, 10 Jan 2020 18:08:17 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 10 Jan 2020 18:07:49 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 10 Jan 2020 18:08:54 +0800
+Message-ID: <1578650895.3348.18.camel@mtksdccf07>
+Subject: Re: [v6, 3/5] media: videodev2.h: Add new boottime timestamp type
+From:   Jungo Lin <jungo.lin@mediatek.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+CC:     <tfiga@chromium.org>, <laurent.pinchart@ideasonboard.com>,
+        <matthias.bgg@gmail.com>, <mchehab@kernel.org>,
+        <linux-media@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <ddavenport@chromium.org>, <robh@kernel.org>,
+        <Sean.Cheng@mediatek.com>, <sj.huang@mediatek.com>,
+        <frederic.chen@mediatek.com>, <Jerry-ch.Chen@mediatek.com>,
+        <frankie.chiu@mediatek.com>, <ryan.yu@mediatek.com>,
+        <Rynn.Wu@mediatek.com>, <yuzhao@chromium.org>,
+        <zwisler@chromium.org>, <shik@chromium.org>,
+        <suleiman@chromium.org>
+Date:   Fri, 10 Jan 2020 18:08:15 +0800
+In-Reply-To: <081d7d77-2bf7-0fc2-60ea-8ba8faa5b6af@xs4all.nl>
+References: <Jungo Lin <jungo.lin@mediatek.com>
+         <20191219054930.29513-1-jungo.lin@mediatek.com>
+         <20191219054930.29513-4-jungo.lin@mediatek.com>
+         <081d7d77-2bf7-0fc2-60ea-8ba8faa5b6af@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the GP2AP002 light
-and proximity sensor.
-
-As with other early proximity sensors (~2010) the light
-sensor and proximity sensors were combined into a single
-component.
-
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Cc: Minkyu Kang <mk7.kang@samsung.com>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Jonathan Bakker <xc-racer2@live.ca>
-Cc: Oskar Andero <oskar.andero@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@vger.kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v3:
-- Drop the maxitems on the supplies, it is already 1
-- Drop quotes around "alsout"
-- Limit the sharp hysteresis to 8 bits as it should be
-- Use /bits/ 8 in the example so it is correct
----
- .../bindings/iio/light/sharp,gp2ap002.yaml    | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-new file mode 100644
-index 000000000000..12aa16f24772
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/sharp,gp2ap002.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sharp GP2AP002A00F and GP2AP002S00F proximity and ambient light sensors
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  Proximity and ambient light sensor with IR LED for the proximity
-+  sensing and an analog output for light intensity. The ambient light
-+  sensor output is not available on the GP2AP002S00F variant.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sharp,gp2ap002a00f
-+      - sharp,gp2ap002s00f
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: an interrupt for proximity, usually a GPIO line
-+
-+  vdd-supply:
-+    description: VDD power supply a phandle to a regulator
-+
-+  vio-supply:
-+    description: VIO power supply a phandle to a regulator
-+
-+  io-channels:
-+    maxItems: 1
-+    description: ALSOUT ADC channel to read the ambient light
-+
-+  io-channel-names:
-+    const: alsout
-+
-+  sharp,proximity-far-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description: |
-+      Hysteresis setting for "far" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "far away" object in front of the sensor.
-+
-+  sharp,proximity-close-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description: |
-+      Hysteresis setting for "close" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "close" object in front of the sensor.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - sharp,proximity-far-hysteresis
-+  - sharp,proximity-close-hysteresis
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      light-sensor@44 {
-+        compatible = "sharp,gp2ap002a00f";
-+        reg = <0x44>;
-+        interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-+        vdd-supply = <&vdd_regulator>;
-+        vio-supply = <&vio_regulator>;
-+        io-channels = <&adc_channel>;
-+        io-channel-names = "alsout";
-+        sharp,proximity-far-hysteresis = /bits/ 8 <0x2f>;
-+        sharp,proximity-close-hysteresis = /bits/ 8 <0x0f>;
-+      };
-+    };
-+
-+...
--- 
-2.21.0
+SGkgSGFuczoNCg0KQXBwcmVjaWF0ZSB5b3VyIGNvbW1lbnRzIG9uIHRoaXMgcGF0Y2guDQoNCk9u
+IFR1ZSwgMjAyMC0wMS0wNyBhdCAxNToxMCArMDEwMCwgSGFucyBWZXJrdWlsIHdyb3RlOg0KPiBP
+biAxMi8xOS8xOSA2OjQ5IEFNLCBKdW5nbyBMaW4gd3JvdGU6DQo+ID4gRm9yIENhbWVyYSBBUihB
+dWdtZW50ZWQgUmVhbGl0eSkgYXBwbGljYXRpb24gcmVxdWlyZXMgY2FtZXJhIHRpbWVzdGFtcHMN
+Cj4gPiB0byBiZSByZXBvcnRlZCB3aXRoIENMT0NLX0JPT1RUSU1FIHRvIHN5bmMgdGltZXN0YW1w
+IHdpdGggb3RoZXIgc2Vuc29yDQo+ID4gc291cmNlcy4NCj4gPiANCj4gPiBUaGUgYm9vdHRpbWUg
+dGltZXN0YW1wIGlzIGlkZW50aWNhbCB0byBtb25vdG9uaWMgdGltZXN0YW1wLA0KPiA+IGV4Y2Vw
+dCBpdCBhbHNvIGluY2x1ZGVzIGFueSB0aW1lIHRoYXQgdGhlIHN5c3RlbSBpcyBzdXNwZW5kZWQu
+DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSnVuZ28gTGluIDxqdW5nby5saW5AbWVkaWF0ZWsu
+Y29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMgZnJvbSB2NjoNCj4gPiAgLSBObyBjaGFuZ2UuDQo+
+ID4gLS0tDQo+ID4gIERvY3VtZW50YXRpb24vbWVkaWEvdWFwaS92NGwvYnVmZmVyLnJzdCB8IDEx
+ICsrKysrKysrKystDQo+ID4gIGluY2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaCAgICAgICAg
+ICB8ICAyICsrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
+dGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL21lZGlhL3VhcGkv
+djRsL2J1ZmZlci5yc3QgYi9Eb2N1bWVudGF0aW9uL21lZGlhL3VhcGkvdjRsL2J1ZmZlci5yc3QN
+Cj4gPiBpbmRleCA5MTQ5YjU3NzI4ZTUuLmY0NWJmY2U3ZmRkZCAxMDA2NDQNCj4gPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL21lZGlhL3VhcGkvdjRsL2J1ZmZlci5yc3QNCj4gPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL21lZGlhL3VhcGkvdjRsL2J1ZmZlci5yc3QNCj4gPiBAQCAtNjYyLDEzICs2NjIsMjIg
+QEAgQnVmZmVyIEZsYWdzDQo+ID4gICAgICAgIC0gMHgwMDAwMjAwMA0KPiA+ICAgICAgICAtIFRo
+ZSBidWZmZXIgdGltZXN0YW1wIGhhcyBiZWVuIHRha2VuIGZyb20gdGhlIGBgQ0xPQ0tfTU9OT1RP
+TklDYGANCj4gPiAgCWNsb2NrLiBUbyBhY2Nlc3MgdGhlIHNhbWUgY2xvY2sgb3V0c2lkZSBWNEwy
+LCB1c2UNCj4gPiAtCTpjOmZ1bmM6YGNsb2NrX2dldHRpbWVgLg0KPiA+ICsJOmM6ZnVuYzpgY2xv
+Y2tfZ2V0dGltZWAgdXNpbmcgY2xvY2sgSURzIGBgQ0xPQ0tfTU9OT1RPTklDYGAuDQo+IA0KPiBJ
+RHMgLT4gSUQNCj4gDQoNCk9rLCBmaXggaW4gbmV4dCB2ZXJzaW9uLg0KDQo+ID4gICAgICAqIC4u
+IF9gVjRMMi1CVUYtRkxBRy1USU1FU1RBTVAtQ09QWWA6DQo+ID4gIA0KPiA+ICAgICAgICAtIGBg
+VjRMMl9CVUZfRkxBR19USU1FU1RBTVBfQ09QWWBgDQo+ID4gICAgICAgIC0gMHgwMDAwNDAwMA0K
+PiA+ICAgICAgICAtIFRoZSBDQVBUVVJFIGJ1ZmZlciB0aW1lc3RhbXAgaGFzIGJlZW4gdGFrZW4g
+ZnJvbSB0aGUgY29ycmVzcG9uZGluZw0KPiA+ICAJT1VUUFVUIGJ1ZmZlci4gVGhpcyBmbGFnIGFw
+cGxpZXMgb25seSB0byBtZW0ybWVtIGRldmljZXMuDQo+ID4gKyAgICAqIC4uIF9gVjRMMl9CVUZf
+RkxBR19USU1FU1RBTVBfQk9PVElNRWA6DQo+IA0KPiBZb3UgbWlzdHlwZWQgQk9PVFRJTUUgYXMg
+Qk9PVElNRSBpbiBhIGxvdCBvZiBwbGFjZXMuIFBsZWFzZSBjaGVjay4NCj4gDQoNCk9rLCBmaXgg
+dGhpcyB0eXBvIGluIG5leHQgdmVyc2lvbi4NCg0KPiA+ICsNCj4gPiArICAgICAgLSBgYFY0TDJf
+QlVGX0ZMQUdfVElNRVNUQU1QX0JPT1RJTUVgYA0KPiA+ICsgICAgICAtIDB4MDAwMDgwMDANCj4g
+PiArICAgICAgLSBUaGUgYnVmZmVyIHRpbWVzdGFtcCBoYXMgYmVlbiB0YWtlbiBmcm9tIHRoZSBg
+YENMT0NLX0JPT1RUSU1FYGANCj4gPiArCWNsb2NrLiBUbyBhY2Nlc3MgdGhlIHNhbWUgY2xvY2sg
+b3V0c2lkZSBWNEwyLCB1c2UNCj4gPiArCTpjOmZ1bmM6YGNsb2NrX2dldHRpbWVgIHVzaW5nIGNs
+b2NrIElEcyBgYENMT0NLX0JPT1RUSU1FYGAuDQo+IA0KPiBJRHMgLT4gSUQNCj4gDQoNCkRpdHRv
+Lg0KDQo+ID4gKwlJZGVudGljYWwgdG8gQ0xPQ0tfTU9OT1RPTklDLCBleGNlcHQgaXQgYWxzbyBp
+bmNsdWRlcyBhbnkgdGltZSB0aGF0DQo+ID4gKwl0aGUgc3lzdGVtIGlzIHN1c3BlbmRlZC4NCj4g
+PiAgICAgICogLi4gX2BWNEwyLUJVRi1GTEFHLVRTVEFNUC1TUkMtTUFTS2A6DQo+ID4gIA0KPiA+
+ICAgICAgICAtIGBgVjRMMl9CVUZfRkxBR19UU1RBTVBfU1JDX01BU0tgYA0KPiA+IGRpZmYgLS1n
+aXQgYS9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmggYi9pbmNsdWRlL3VhcGkvbGludXgv
+dmlkZW9kZXYyLmgNCj4gPiBpbmRleCAwNDQ4MWM3MTdmZWUuLjc0ZWY5NDcyZTcwMiAxMDA2NDQN
+Cj4gPiAtLS0gYS9pbmNsdWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgNCj4gPiArKysgYi9pbmNs
+dWRlL3VhcGkvbGludXgvdmlkZW9kZXYyLmgNCj4gPiBAQCAtMTA2MCw2ICsxMDYwLDggQEAgc3Rh
+dGljIGlubGluZSBfX3U2NCB2NGwyX3RpbWV2YWxfdG9fbnMoY29uc3Qgc3RydWN0IHRpbWV2YWwg
+KnR2KQ0KPiA+ICAjZGVmaW5lIFY0TDJfQlVGX0ZMQUdfVElNRVNUQU1QX1VOS05PV04JCTB4MDAw
+MDAwMDANCj4gPiAgI2RlZmluZSBWNEwyX0JVRl9GTEFHX1RJTUVTVEFNUF9NT05PVE9OSUMJMHgw
+MDAwMjAwMA0KPiA+ICAjZGVmaW5lIFY0TDJfQlVGX0ZMQUdfVElNRVNUQU1QX0NPUFkJCTB4MDAw
+MDQwMDANCj4gPiArI2RlZmluZSBWNEwyX0JVRl9GTEFHX1RJTUVTVEFNUF9CT09USU1FCQkweDAw
+MDA4MDAwDQo+IA0KPiBUaGlzIHNob3VsZCBiZSAweDAwMDA2MDAwLg0KPiANCj4gKGZsYWdzICYg
+VjRMMl9CVUZfRkxBR19USU1FU1RBTVBfTUFTSykgaXMgYSB2YWx1ZSB0aGF0IGRldGVybWluZXMg
+dGhlIHRpbWVzdGFtcA0KPiBzb3VyY2UsIHNvIHRoZXNlIHRpbWVzdGFtcCBkZWZpbmVzIGFyZSB2
+YWx1ZXMsIG5vdCBiaXRtYXNrcy4NCj4gDQo+IEhvd2V2ZXIsIEkgZG9uJ3QgbGlrZSB5b3VyIGFw
+cHJvYWNoLiBXaGV0aGVyIHRvIHVzZSBNT05PVE9OSUMgb3IgQk9PVFRJTUUgaXMgcmVhbGx5DQo+
+IGEgdXNlcnNwYWNlIGRlY2lzaW9uLCBhbmQgbG9ja2luZyBhIGRyaXZlciB0byBvbmUgb2YgdGhl
+c2UgdHdvIG9wdGlvbnMgc2VlbXMNCj4gd3JvbmcgdG8gbWUuDQo+IA0KPiBJbnN0ZWFkIGFkZCBu
+ZXcgVjRMMl9CVUZfRkxBR19VU0VfQk9PVFRJTUUgZmxhZyB0aGF0IHVzZXJzcGFjZSBjYW4gc2V0
+IHdoZW4gcXVldWluZw0KPiB0aGUgYnVmZmVyIGFuZCB0aGF0IGluZGljYXRlcyB0aGF0IGluc3Rl
+YWQgb2YgdGhlIE1PTk9UT05JQyB0aW1lc3RhbXAsIGl0IHNob3VsZCByZXR1cm4NCj4gdGhlIEJP
+T1RUSU1FIHRpbWVzdGFtcC4gVGhpcyByZXF1aXJlcyBhIHNpbXBsZSBoZWxwZXIgZnVuY3Rpb24g
+dGhhdCByZXR1cm5zIGVpdGhlcg0KPiBrdGltZV9nZXRfbnMgb3Iga3RpbWVfZ2V0X2Jvb3R0aW1l
+X25zIGJhc2VkIG9uIHRoZSB2YjJfdjRsMl9idWZmZXIgZmxhZ3MgZmllbGQuDQo+IA0KPiBJdCdz
+IGRlZmluaXRlbHkgbW9yZSB3b3JrIChhbHRob3VnaCBpdCBjYW4gYmUgbGltaXRlZCB0byBkcml2
+ZXJzIHRoYXQgdXNlIHZiMiksDQo+IGJ1dCBtdWNoIG1vcmUgdXNlZnVsLg0KPiANCj4gUmVnYXJk
+cywNCj4gDQo+IAlIYW5zDQo+IA0KDQpBZ3JlZS4NCldlIHdpbGwgYWRkIG5ldyBWNEwyX0JVRl9G
+TEFHX1VTRV9CT09UVElNRSBmbGFnICgweDAwMDA2MDAwLikgdG8gcmVwbGFjZQ0KdGhpcyBWNEwy
+X0JVRl9GTEFHX1RJTUVTVEFNUF9CT09USU1FIGZsYWcgZm9yIGJldHRlciB1c2FnZS4NCg0KPiA+
+ICsNCj4gPiAgLyogVGltZXN0YW1wIHNvdXJjZXMuICovDQo+ID4gICNkZWZpbmUgVjRMMl9CVUZf
+RkxBR19UU1RBTVBfU1JDX01BU0sJCTB4MDAwNzAwMDANCj4gPiAgI2RlZmluZSBWNEwyX0JVRl9G
+TEFHX1RTVEFNUF9TUkNfRU9GCQkweDAwMDAwMDAwDQo+ID4gDQo+IA0KDQpTaW5jZXJlbHkNCg0K
+SnVuZ28NCg==
 
