@@ -2,203 +2,107 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60EDC33CA3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51EEC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDA32077C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F32206ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kyE5WbVD"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xLOFpQf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbgAJKMv (ORCPT
+        id S1727365AbgAJKSU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:12:51 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33207 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727364AbgAJKMv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 05:12:51 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n25so1056289lfl.0
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 02:12:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fQ3AvsTOvN2lt6VoCrrcei0UKFhdLdIsH4yixnuLa3k=;
-        b=kyE5WbVDVncQ83eWxFYnHwuIO4on0+uCzONsHYZk9JU4/wZ8gxgImU1EJc31YG0q5x
-         qGjO7znn7L28cBuEjVWUS1yx+CbbkzvPGNov7rMdbn2yz3HWaaIss4luq5yAf7EhCRi4
-         6j9oIGLYvnuNj0XirRn9sj10I44IqzTVZ95zwF7tApE4TJrOFlndqBdQ5o+ew0dd8t1L
-         NGA3tCluT+8GvIuNaEhxuZh9mdenzo9eCAZCiK3W5vi+mUGnZk6zAoNpeeTnbB21VCL1
-         +9Y8k1fhw1yI7zduN3cGQJNkud3vbB/e5qrWJ2kWxNysM5rNKAjtx6GCgX51LJ4PLFBt
-         RU4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fQ3AvsTOvN2lt6VoCrrcei0UKFhdLdIsH4yixnuLa3k=;
-        b=onDIKsXRO1BR1ddXbCPUdTvxSZjxB2Ddw4mcYb6WzbOP9/TtaKpF7ipu4pX/sVBmHy
-         xdzZkM6D4rz/8E3LxMWqetxdenkD3ISVGIZdK86Vu52jxVazyUJC2ag65cooeSL3NPib
-         LJ3O5oJxnJQ3qJFdSaNLPQqgj3uXoE9dqUi11ShHH60PQVMpBFxwOLdSkH6Cv9X6TqFM
-         tmLrFlunPIrE05rALlBIuMmStCghtk2onuGZBOrboFObtSnKFKNTvNpk7geT1V6iKVKc
-         Fm8iIcT4jK4ENpKiEN7/8oPHQqsNjZjUyNsjkecbgAqehti02AZKRQx6h98rroH02F87
-         vDnQ==
-X-Gm-Message-State: APjAAAUjSsU8FkcGnl8IQ8VdddErSoYl+pv7ks21B4tQdX7gN8grHj1c
-        n76fh1ZMkMEnTnA6nzdzVhGkgw==
-X-Google-Smtp-Source: APXvYqxIqWX62Yhbh9cxP2oXScdnXjTjmA4Dz4GcXs69CvwK9IueOqMCxN2l8kLTrV+9PEW6QyncNA==
-X-Received: by 2002:a19:3f51:: with SMTP id m78mr1877716lfa.70.1578651168048;
-        Fri, 10 Jan 2020 02:12:48 -0800 (PST)
-Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
-        by smtp.gmail.com with ESMTPSA id s23sm736278lji.70.2020.01.10.02.12.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 02:12:46 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-input@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Minkyu Kang <mk7.kang@samsung.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Oskar Andero <oskar.andero@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Fri, 10 Jan 2020 05:18:20 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:55986 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbgAJKST (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jan 2020 05:18:19 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578651499; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=Sur98Trxip0lS2J0kZIUVd9Xdj/kghewp4wUiHEmGZQ=; b=xLOFpQf0UHbuO9fDt+bzAHl2u/k8esojldvGS4T27SGzSnd1pyMKHZNfSOEIlSM4ZfG0754p
+ rkhtptakVoWjPMxYLpokasBspocqOpNJLKRgYqGC3OvzWkDXJ56PYaP/ECjr/UXRq3qSubOW
+ vErzlfV+JKWD8OjNO3BYwDmEb50=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e184f66.7f29f206d960-smtp-out-n02;
+ Fri, 10 Jan 2020 10:18:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 38DF1C4479C; Fri, 10 Jan 2020 10:18:14 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67727C433A2;
+        Fri, 10 Jan 2020 10:18:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67727C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH 1/2 v3] iio: light: Add DT bindings for GP2AP002
-Date:   Fri, 10 Jan 2020 11:12:42 +0100
-Message-Id: <20200110101242.16077-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.21.0
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: sc7180: Add iommus property to QUP0 and QUP1
+Date:   Fri, 10 Jan 2020 15:48:02 +0530
+Message-Id: <20200110101802.4491-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the GP2AP002 light
-and proximity sensor.
+Define iommus property for QUP0 and QUP1 with the proper SID
+and mask. Below SMMU global faults are seen without this during
+boot and when using i2c touchscreen.
 
-As with other early proximity sensors (~2010) the light
-sensor and proximity sensors were combined into a single
-component.
+QUP0:
+arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x00000043, GFSYNR2 0x00000000
 
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Cc: Minkyu Kang <mk7.kang@samsung.com>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Jonathan Bakker <xc-racer2@live.ca>
-Cc: Oskar Andero <oskar.andero@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+QUP1:
+arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x000004c3, GFSYNR2 0x00000000
+
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
-ChangeLog v1->v3:
-- Drop the maxitems on the supplies, it is already 1
-- Drop quotes around "alsout"
-- Limit the sharp hysteresis to 8 bits as it should be
-- Use /bits/ 8 in the example so it is correct
----
- .../bindings/iio/light/sharp,gp2ap002.yaml    | 85 +++++++++++++++++++
- 1 file changed, 85 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-new file mode 100644
-index 000000000000..12aa16f24772
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/sharp,gp2ap002.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sharp GP2AP002A00F and GP2AP002S00F proximity and ambient light sensors
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  Proximity and ambient light sensor with IR LED for the proximity
-+  sensing and an analog output for light intensity. The ambient light
-+  sensor output is not available on the GP2AP002S00F variant.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sharp,gp2ap002a00f
-+      - sharp,gp2ap002s00f
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: an interrupt for proximity, usually a GPIO line
-+
-+  vdd-supply:
-+    description: VDD power supply a phandle to a regulator
-+
-+  vio-supply:
-+    description: VIO power supply a phandle to a regulator
-+
-+  io-channels:
-+    maxItems: 1
-+    description: ALSOUT ADC channel to read the ambient light
-+
-+  io-channel-names:
-+    const: alsout
-+
-+  sharp,proximity-far-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description: |
-+      Hysteresis setting for "far" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "far away" object in front of the sensor.
-+
-+  sharp,proximity-close-hysteresis:
-+    $ref: /schemas/types.yaml#/definitions/uint8
-+    description: |
-+      Hysteresis setting for "close" object detection, this setting is
-+      device-unique and adjust the optical setting for proximity detection
-+      of a "close" object in front of the sensor.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - sharp,proximity-far-hysteresis
-+  - sharp,proximity-close-hysteresis
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      light-sensor@44 {
-+        compatible = "sharp,gp2ap002a00f";
-+        reg = <0x44>;
-+        interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-+        vdd-supply = <&vdd_regulator>;
-+        vio-supply = <&vio_regulator>;
-+        io-channels = <&adc_channel>;
-+        io-channel-names = "alsout";
-+        sharp,proximity-far-hysteresis = /bits/ 8 <0x2f>;
-+        sharp,proximity-close-hysteresis = /bits/ 8 <0x0f>;
-+      };
-+    };
-+
-+...
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 8011c5fe2a31..01e431f49c18 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -338,6 +338,7 @@ qupv3_id_0: geniqup@8c0000 {
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+ 			ranges;
++			iommus = <&apps_smmu 0x43 0x0>;
+ 			status = "disabled";
+ 
+ 			i2c0: i2c@880000 {
+@@ -546,6 +547,7 @@ qupv3_id_1: geniqup@ac0000 {
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+ 			ranges;
++			iommus = <&apps_smmu 0x4c3 0x0>;
+ 			status = "disabled";
+ 
+ 			i2c6: i2c@a80000 {
 -- 
-2.21.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
