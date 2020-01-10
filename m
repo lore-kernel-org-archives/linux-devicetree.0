@@ -2,765 +2,129 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A849DC33C99
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 06:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA355C33C99
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 06:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B29420721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 06:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BB620673
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 06:54:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L73UyRH5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sKUMJWsX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbgAJGiZ (ORCPT
+        id S1731547AbgAJGyZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 01:38:25 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42267 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731455AbgAJGiZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 01:38:25 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 4so631744pfz.9;
-        Thu, 09 Jan 2020 22:38:25 -0800 (PST)
+        Fri, 10 Jan 2020 01:54:25 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45144 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731455AbgAJGyY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 01:54:24 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so523808pgk.12
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 22:54:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=W8tX50BrKCAet3F0yJGlo9yzdS9aF8SwNQ6hNK9VrFQ=;
-        b=L73UyRH51kEG2k1TtcSD/oFoyMloKNpfd/17VN131H9YjD5cw7wYTfmf1Ht/9EaOBp
-         xjk9RYWbImy7XjEEm/dVoKmTx5POswNk7lgecenx+CjX6uNlU/fJswelc8y6GfyE0cve
-         Tnfq/F4ylVbCTx9hsGi36Kb1cgkEUlQ1Q3BNa66omM1lOJzgM3LdjObCz1o2+yndlTWH
-         91Igs72KUxEUMME3xeMROk3PcQebu8xqpLFa6ffM9OHx5/zA1eGKMQG5TtCqVC9V34Bb
-         NNqnSKM3Nuwf2B4XcT9GWwuMKmzxJwR9FekqQCDsBE+yws0l76ePEjd3Jr5pTUiqy3oq
-         nbzQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YhPLZOvbusu+BDcW4xtLEV0ezjrgdDBJUzmow7dtjMQ=;
+        b=sKUMJWsXvcFP9jEO0Hl4uUyNvbyljQCLxhGsldiqDRvsC8IpLpEay5tiVJTep7pkQo
+         oRqBgROQLiR2Dvoq/TyO1UMoQhdyRJ3wjy/MPdywSKlfQfgIT8OA5zHb8eDxN8hur6+m
+         bmj0RfiXa6xUTOzhi3oi6cDzqHFZQqMWYm1TGCbkHjBAjoW1ygXyRXpF3uzJoPIuknpy
+         U45mfuGgCk9q6RAjFHyZZE2ggGK2YJciePz/phNcN5zwDp79efcs1taM0Ee8bj8mvq6Z
+         Vmx+d9BNX8QdTcgXvWiC6oEoF3c/fN21NQ2PM/PN7y0A+ZT+UCIE+AziDVobHNKrEQ5H
+         6cpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=W8tX50BrKCAet3F0yJGlo9yzdS9aF8SwNQ6hNK9VrFQ=;
-        b=fWaf/eMaIXgm7eXORxV3ycJrXwJWWbIV7fTlQ04+VFbcx9Drvlhttu4wnzt3IphqPm
-         EqOeWb9UxGTdEWGL2j3r7dy/5/ThgH+WHrzBEc/DvHwzk5ZSrb0k0EVU4Kz85Y7RhTMA
-         n3I5K3T0RV/eB2aGLWqGIgYv23DBRjo0+4mwaHH/UhnuxPY6MXeW4PoYGg2rqW/ktrpl
-         un8cdb5AouhJb5r8A+i6g7wMF9jnmWwTgIX0Ta9m9KcVUw44Snyey+nm2iPD+o8c/TTX
-         ep3z0RBTQw0BliVpcyzk52ANZfKWyT9G2RqkDFDr+ue5reheJlv5HsRhbaFvf4mNQMSd
-         XkPA==
-X-Gm-Message-State: APjAAAVmJ1RIdCdvqylBlbMQleMz+xowcUVQWjIjyEB/z7HQT8muaIuK
-        v0tNoNPkfyf3VuweQGsOvXc=
-X-Google-Smtp-Source: APXvYqwq1A9uRnhLOKZc6zv/EUCyw5O1VT0eb8hQWBm4rCzjrQDOQbUY3AR37qp1pqRc+f8n1IPFsQ==
-X-Received: by 2002:a63:7311:: with SMTP id o17mr2328132pgc.29.1578638304461;
-        Thu, 09 Jan 2020 22:38:24 -0800 (PST)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id m19sm1102021pjv.10.2020.01.09.22.38.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 22:38:23 -0800 (PST)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     soc@kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
-Date:   Fri, 10 Jan 2020 14:37:55 +0800
-Message-Id: <20200110063755.19804-3-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110063755.19804-1-zhang.lyra@gmail.com>
-References: <20200110063755.19804-1-zhang.lyra@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YhPLZOvbusu+BDcW4xtLEV0ezjrgdDBJUzmow7dtjMQ=;
+        b=PyN1JoBMNVdY+/YGeW6q85lpQLCqz7d8MVziNAH0WSo3IfjwhNU+lfWW/aOeTju88D
+         O/U3TIIKWFGFDzpMfQ4Q2MXLTWVcPQQFd982zzgxy9ac20VGkK6i/xhVDv05oac8Ejzr
+         OlFAHmd4TYw2izhHyh3Z3Zk6Y9aojfPefP69t6hFSQTaWPyu4sP2PQV0r0/qcRnUS4yl
+         HNwmehCJC+1H36xsuzfUW4QJhCtTgpNPsDGrzg6S688iS9iWCUDVA3LbLUvWmwmxH7a6
+         9wFZsME3aDXp8D2zOWSaHa75+245W+xPx2ZVmUzrUKl1KygpPD54OzuZQVE16qjYPIOY
+         10Hw==
+X-Gm-Message-State: APjAAAV0pW20oMDp8u6OP7YuJfP7SYEqhRxYvGn3RP2TKN9yGwNYWIz1
+        5ld3r8YEyT9WNDc/1oliEp/cuA==
+X-Google-Smtp-Source: APXvYqyqmwrNqG8WUg323dOQJc2jziGsBSe/4bAS5Q+Tv3gJE3iTY9fjXWBEohxRSFWlHgkV0K65JA==
+X-Received: by 2002:a63:4824:: with SMTP id v36mr2501774pga.343.1578639263873;
+        Thu, 09 Jan 2020 22:54:23 -0800 (PST)
+Received: from localhost ([122.172.140.51])
+        by smtp.gmail.com with ESMTPSA id i3sm1384035pfo.72.2020.01.09.22.54.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jan 2020 22:54:23 -0800 (PST)
+Date:   Fri, 10 Jan 2020 12:24:20 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
+        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/3] OPP: Add support for bandwidth OPP tables
+Message-ID: <20200110065420.3bp4fjj2wbezoyrc@vireshk-i7>
+References: <20191207002424.201796-1-saravanak@google.com>
+ <20191207002424.201796-3-saravanak@google.com>
+ <20200108105348.p4y3s2mbuchiu4mf@vireshk-i7>
+ <CAGETcx8QEV+_+d2yt_+bE09mi4qyHZDHPJqPiDXv_HgJPgQJoQ@mail.gmail.com>
+ <20200109043108.fzvk3hp7vodtw6zy@vireshk-i7>
+ <CAGETcx_1B8AfxBuJ9Mbq8BNx-fYyP8pOnF6caN=ooyPARaaJ3A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGETcx_1B8AfxBuJ9Mbq8BNx-fYyP8pOnF6caN=ooyPARaaJ3A@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+On 09-01-20, 10:35, Saravana Kannan wrote:
+> Agreed for the example you are giving where PM domains/voltages are
+> dropped automatically when dropping the device freq to suspend freq.
+> I'm just wondering about a different scenario where if some power
+> domain needed to be at say 0.5v when it's suspended (no consumer using
+> it)
 
-Add basic DT to support Unisoc's SC9863A, with this patch,
-the board sp9863a-1h10 can run into console.
+The domain should be powered off in this case I think.
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- arch/arm64/boot/dts/sprd/Makefile         |   3 +-
- arch/arm64/boot/dts/sprd/sc9863a.dtsi     | 523 ++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sharkl3.dtsi     |  78 ++++
- arch/arm64/boot/dts/sprd/sp9863a-1h10.dts |  39 ++
- 4 files changed, 642 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/sprd/sc9863a.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sharkl3.dtsi
- create mode 100644 arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
+> to not lose state, or to come back up without brownouts, etc then
+> suspend OPP for PM domains might be useful. But I don't know enough
+> about that to speak with authority, so I'll leave it at this.
+> 
+> I see this suspend-opp as a way to mark to what level the bandwidth
+> needs to be dropped to/brought back up from during suspend/resume by
+> the driver making interconnect bandwidth requests. For example, what
+> if the CPU -> DDR needed to be at some level to avoid suspend/resume
+> issues (say CPU bug with respect to timing/latencies)? In this
+> example, the CPU driver would be the one making bandwidth requests for
+> CPU -> DDR bandwidth during normal operation and during
+> suspend/resume. So it's basically exactly the same way it would treat
+> CPU freq OPP.
 
-diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
-index 2bdc23804f40..f4f1f5148cc2 100644
---- a/arch/arm64/boot/dts/sprd/Makefile
-+++ b/arch/arm64/boot/dts/sprd/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
--			sp9860g-1h10.dtb
-+			sp9860g-1h10.dtb	\
-+			sp9863a-1h10.dtb
-diff --git a/arch/arm64/boot/dts/sprd/sc9863a.dtsi b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-new file mode 100644
-index 000000000000..cd80756c888d
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sc9863a.dtsi
-@@ -0,0 +1,523 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SC9863A SoC DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "sharkl3.dtsi"
-+
-+/ {
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&CPU0>;
-+				};
-+				core1 {
-+					cpu = <&CPU1>;
-+				};
-+				core2 {
-+					cpu = <&CPU2>;
-+				};
-+				core3 {
-+					cpu = <&CPU3>;
-+				};
-+				core4 {
-+					cpu = <&CPU4>;
-+				};
-+				core5 {
-+					cpu = <&CPU5>;
-+				};
-+				core6 {
-+					cpu = <&CPU6>;
-+				};
-+				core7 {
-+					cpu = <&CPU7>;
-+				};
-+			};
-+		};
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x200>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x300>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU4: cpu@400 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x400>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU5: cpu@500 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x500>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU6: cpu@600 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x600>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+
-+		CPU7: cpu@700 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a55";
-+			reg = <0x0 0x700>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CORE_PD>;
-+		};
-+	};
-+
-+	idle-states {
-+		entry-method = "arm,psci";
-+		CORE_PD: core-pd {
-+			compatible = "arm,idle-state";
-+			entry-latency-us = <4000>;
-+			exit-latency-us = <4000>;
-+			min-residency-us = <10000>;
-+			local-timer-stop;
-+			arm,psci-suspend-param = <0x00010000>;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>, /* Physical Secure PPI */
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>, /* Physical Non-Secure PPI */
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>, /* Virtual PPI */
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>; /* Hipervisor PPI */
-+	};
-+
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	soc {
-+		gic: interrupt-controller@14000000 {
-+			compatible = "arm,gic-v3";
-+			#interrupt-cells = <3>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			redistributor-stride = <0x0 0x20000>;	/* 128KB stride */
-+			#redistributor-regions = <1>;
-+			interrupt-controller;
-+			reg = <0x0 0x14000000 0 0x20000>,	/* GICD */
-+			      <0x0 0x14040000 0 0x100000>;	/* GICR */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		funnel@10001000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x10001000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_soc_out_port: endpoint {
-+						remote-endpoint = <&etb_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					funnel_soc_in_port: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etb@10003000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x10003000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			in-ports {
-+				port {
-+					etb_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_soc_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12001000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12001000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_little_out_port: endpoint {
-+						remote-endpoint =
-+						<&etf_little_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_little_in_port0: endpoint {
-+						remote-endpoint = <&etm0_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_little_in_port1: endpoint {
-+						remote-endpoint = <&etm1_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel_little_in_port2: endpoint {
-+						remote-endpoint = <&etm2_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					funnel_little_in_port3: endpoint {
-+						remote-endpoint = <&etm3_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@12002000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x12002000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_little_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_in_port0>;
-+					};
-+				};
-+			};
-+
-+			in-port {
-+				port {
-+					etf_little_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etf@12003000 {
-+			compatible = "arm,coresight-tmc", "arm,primecell";
-+			reg = <0 0x12003000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etf_big_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_ca55_in_port1>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				port {
-+					etf_big_in: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_out_port>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12004000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12004000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_ca55_out_port: endpoint {
-+						remote-endpoint =
-+						<&funnel_soc_in_port>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_ca55_in_port0: endpoint {
-+						remote-endpoint =
-+						<&etf_little_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_ca55_in_port1: endpoint {
-+						remote-endpoint =
-+						<&etf_big_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		funnel@12005000 {
-+			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
-+			reg = <0 0x12005000 0 0x1000>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					funnel_big_out_port: endpoint {
-+						remote-endpoint =
-+						<&etf_big_in>;
-+					};
-+				};
-+			};
-+
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					funnel_big_in_port0: endpoint {
-+						remote-endpoint = <&etm4_out>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					funnel_big_in_port1: endpoint {
-+						remote-endpoint = <&etm5_out>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					funnel_big_in_port2: endpoint {
-+						remote-endpoint = <&etm6_out>;
-+					};
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					funnel_big_in_port3: endpoint {
-+						remote-endpoint = <&etm7_out>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13040000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13040000 0 0x1000>;
-+			cpu = <&CPU0>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm0_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13140000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13140000 0 0x1000>;
-+			cpu = <&CPU1>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm1_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13240000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13240000 0 0x1000>;
-+			cpu = <&CPU2>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm2_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13340000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13340000 0 0x1000>;
-+			cpu = <&CPU3>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm3_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_little_in_port3>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13440000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13440000 0 0x1000>;
-+			cpu = <&CPU4>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm4_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13540000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13540000 0 0x1000>;
-+			cpu = <&CPU5>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm5_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13640000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13640000 0 0x1000>;
-+			cpu = <&CPU6>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm6_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port2>;
-+					};
-+				};
-+			};
-+		};
-+
-+		etm@13740000 {
-+			compatible = "arm,coresight-etm4x", "arm,primecell";
-+			reg = <0 0x13740000 0 0x1000>;
-+			cpu = <&CPU7>;
-+			clocks = <&ext_26m>;
-+			clock-names = "apb_pclk";
-+
-+			out-ports {
-+				port {
-+					etm7_out: endpoint {
-+						remote-endpoint =
-+						<&funnel_big_in_port3>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sharkl3.dtsi b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-new file mode 100644
-index 000000000000..0222128b10f7
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sharkl3.dtsi
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc Sharkl3 platform DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	soc: soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		apb@70000000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x0 0x70000000 0x10000000>;
-+
-+			uart0: serial@0 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x0 0x100>;
-+				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart1: serial@100000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x100000 0x100>;
-+				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart2: serial@200000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x200000 0x100>;
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart3: serial@300000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x300000 0x100>;
-+				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+
-+			uart4: serial@400000 {
-+				compatible = "sprd,sc9863a-uart",
-+					     "sprd,sc9836-uart";
-+				reg = <0x400000 0x100>;
-+				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_26m>;
-+				status = "disabled";
-+			};
-+		};
-+	};
-+
-+	ext_26m: ext-26m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <26000000>;
-+		clock-output-names = "ext-26m";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-new file mode 100644
-index 000000000000..5c32c1596337
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sp9863a-1h10.dts
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Unisoc SP9863A-1h10 boards DTS file
-+ *
-+ * Copyright (C) 2019, Unisoc Inc.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sc9863a.dtsi"
-+
-+/ {
-+	model = "Spreadtrum SP9863A-1H10 Board";
-+
-+	compatible = "sprd,sp9863a-1h10", "sprd,sc9863a";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x80000000>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+		bootargs = "earlycon";
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
+I understand your concerns but to me it all looks hypothetical right
+now. I am not saying we won't support suspend-opp for interconnect or
+domains, but that we should do it only if it is required.
+
+> Btw, I don't have a strong opinion on this. But, even if we do only a
+> rate comparison, what does it even mean to compare rates for genpd or
+> BW opp tables?
+
+We will never do the comparison because those tables will never have
+the suspend OPP in the respective tables.
+
 -- 
-2.20.1
-
+viresh
