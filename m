@@ -4,21 +4,21 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184F1C33CA2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5420C33C99
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE332072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F6C2072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgAJFnF (ORCPT
+        id S1726610AbgAJFnH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:43:05 -0500
+        Fri, 10 Jan 2020 00:43:07 -0500
 Received: from mail-sh.amlogic.com ([58.32.228.43]:21526 "EHLO
         mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgAJFnF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 00:43:05 -0500
+        with ESMTP id S1726655AbgAJFnG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 00:43:06 -0500
 Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
  (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 10 Jan 2020
  13:43:28 +0800
@@ -43,9 +43,9 @@ CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
         Jian Hu <jian.hu@amlogic.com>,
         Victor Wan <victor.wan@amlogic.com>,
         Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v5 1/6] dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
-Date:   Fri, 10 Jan 2020 13:42:32 +0800
-Message-ID: <1578634957-54826-2-git-send-email-hanjie.lin@amlogic.com>
+Subject: [PATCH v5 2/6] dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
+Date:   Fri, 10 Jan 2020 13:42:33 +0800
+Message-ID: <1578634957-54826-3-git-send-email-hanjie.lin@amlogic.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com>
 References: <1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com>
@@ -57,85 +57,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Amlogic A1 Family USB2 PHY Bindings
+The Amlogic A1 SoC Family embeds 1 USB Controllers:
+ - a DWC3 IP configured as Host for USB2 and USB3
 
-It supports Host mode only.
+A glue connects the controllers to the USB2 PHY of A1 SoC.
 
 Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
 Signed-off-by: Yue Wang <yue.wang@amlogic.com>
 ---
- .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+ .../devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml  | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
-new file mode 100644
-index 00000000..8f8f5d3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Amlogic, Inc
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/phy/amlogic,meson-a1-usb2-phy.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Amlogic A1 USB2 PHY
-+
-+maintainers:
+diff --git a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+index 4efb77b..f4595a3 100644
+--- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
++++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+@@ -9,6 +9,8 @@ title: Amlogic Meson G12A DWC3 USB SoC Controller Glue
+ 
+ maintainers:
+   - Neil Armstrong <narmstrong@baylibre.com>
++  - Hanjie Lin <hanjie.lin@amlogic.com>
 +  - Yue Wang <yue.wang@amlogic.com>
+ 
+ description: |
+   The Amlogic G12A embeds a DWC3 USB IP Core configured for USB2 and USB3
+@@ -22,10 +24,14 @@ description: |
+   The DWC3 Glue controls the PHY routing and power, an interrupt line is
+   connected to the Glue to serve as OTG ID change detection.
+ 
++  The Amlogic A1 embeds a DWC3 USB IP Core configured for USB2 in
++  host-only mode.
 +
-+properties:
-+  compatible:
-+    const: amlogic,meson-a1-usb2-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
+ properties:
+   compatible:
+     enum:
+       - amlogic,meson-g12a-usb-ctrl
++      - amlogic,meson-a1-usb-ctrl
+ 
+   ranges: true
+ 
+@@ -37,6 +43,11 @@ properties:
+ 
+   clocks:
+     minItems: 1
++    maxItems: 4
 +
 +  clock-names:
-+    items:
-+      - const: xtal
-+
-+  resets:
-+    maxItems: 1
-+
-+  reset-names:
-+    items:
-+     - const: phy
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  power-domains:
-+     maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - "#phy-cells"
-+  - power-domains
-+
-+examples:
-+  - |
-+    usb2_phy1: phy@40000 {
-+      status = "okay";
-+      compatible = "amlogic,a1-usb2-phy";
-+      clocks = <&clkc_periphs 2>;
-+      clock-names = "xtal";
-+      reg = <0x0 0x40000 0x0 0x2000>;
-+      resets = <&reset RESET_USBPHY>;
-+      reset-names = "phy";
-+      #phy-cells = <0>;
-+      power-domains = <&pwrc PWRC_USB_ID>;
-+    };
++    minItems: 1
++    maxItems: 4
+ 
+   resets:
+     minItems: 1
 -- 
 2.7.4
 
