@@ -2,128 +2,102 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF529C33C99
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBF4C33C99
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DA72077C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE702080D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ugPkvx1r"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NKCRyL+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgAJHBq (ORCPT
+        id S1726295AbgAJHEf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:01:46 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34396 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbgAJHBp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 02:01:45 -0500
-Received: by mail-pj1-f68.google.com with SMTP id s94so1617505pjc.1
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 23:01:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3lXSs26I3wGImS7PjlRCzszP97Zcz7qic/VgP0ssNd4=;
-        b=ugPkvx1rLtZXxhEYXIWg2OwEtYgmXZkT7SoavpBZ5DNn9Cej1ydJjHZEHicrV4MfVZ
-         NeK3xhRNUAb4nVseqqQG38o5elE5JgigX+wQovkXoGX/nHbknVACCA255Ye1joc9LqJb
-         MMU6Z/tulGuel8VTKi/LrIQikdtqSsweXHSbxco4jvjHAW+63JF5spFg1vJwb5YWg8lG
-         pljb8AMfvEIlPr0+vev7MXLlVIY/lB6LGHaq7AWJCAb65o8PY8weHrMKrFzfzCoeHrd0
-         aSHogVLh7bmTFZ/B/VVK9U+KI4a2z0EKpVFK6Sf4LdhFn0JxkbbgQkFokBnqMXSigx0n
-         WGxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3lXSs26I3wGImS7PjlRCzszP97Zcz7qic/VgP0ssNd4=;
-        b=AMYxIVI2krCuhSuc0sz2KnYdR1G+uHdFz2fxRM50v5KwPcm70j4c/ecrZPM7Bs9aRO
-         rnOdk84+Fatj16Vc53hguws1vJKtZU7m9HkULuUAHu3tzVVJvn4QVwBuKDX+CcIJfWqK
-         BAixzRvKt2B/kFbgo1Q4voZ8VAGSWWqIudm7DOwcdXkYxwgdKeaOmEZsZ0vQTztRfIIo
-         mKZ7++U56JMRazWZiCp7jxX1kCfBJ5OPzdBSoC8jdZhNdMYfvECP//FMOn5EJnRnImxH
-         SsYDPJniHPSwd2lRyMiHGhIsotWfiNR4I8CSzvEFWp6xmgqz5KjtkqoR4aul7O+d20cm
-         zBaQ==
-X-Gm-Message-State: APjAAAUz+zRFpYiJSfQj6oGS9J4cqoyoSgzLdAC0XYYzC9ARnZfTonFK
-        yWIF3zsUbR21CFQ0h0MkGt4RWg==
-X-Google-Smtp-Source: APXvYqwcHxSntks6ca+zn8Ku5M5DI1ACFUm8wuF7NB9Nt7J0Q9XlY9PQzsc/RT9UFe0UTbOaG4QUUg==
-X-Received: by 2002:a17:902:8f97:: with SMTP id z23mr2542710plo.170.1578639705002;
-        Thu, 09 Jan 2020 23:01:45 -0800 (PST)
-Received: from localhost ([122.172.140.51])
-        by smtp.gmail.com with ESMTPSA id 200sm1414725pfz.121.2020.01.09.23.01.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jan 2020 23:01:44 -0800 (PST)
-Date:   Fri, 10 Jan 2020 12:31:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Sweeney, Sean" <seansw@qti.qualcomm.com>,
-        David Dai <daidavid1@codeaurora.org>, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 3/3] OPP: Add helper function for bandwidth OPP tables
-Message-ID: <20200110070142.gn3fnpytxhu3dqti@vireshk-i7>
-References: <20191207002424.201796-1-saravanak@google.com>
- <20191207002424.201796-4-saravanak@google.com>
- <20200108111947.q5aafrlz26tnk3nq@vireshk-i7>
- <CAGETcx_T7VONkSd-r9CY-5OpZBZ2iD0tFoCf0+d8CY2b5zgr9g@mail.gmail.com>
- <20200109044051.62ocfpt44q25q6qi@vireshk-i7>
- <CAGETcx-UWFSaZ8q1iiFVFUEPLN8t1uFb-u6v4VJiMarS21RLRQ@mail.gmail.com>
+        Fri, 10 Jan 2020 02:04:35 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:32701 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726598AbgAJHEf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 02:04:35 -0500
+X-UUID: 1d66aa46506b476ca302409391d1c1e9-20200110
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=P3n5D3Gnhy1NP5hvBdfMtlX5qxR8Gfe2dv5Rnak/iM4=;
+        b=NKCRyL+IQH4InU6kj0lC7MK1MX+8njEDuQyH1yChSocxJYcsPMfGDXXRHWNaN3fXlURrsBPuPe340RSrTKvqNvsaplaYSPAl7IkJ9F152yhbauweGnAhcYCMoOdVSKnehFJHer0VR/3ekkBc4AR05GKpK6KFHW1zcq1jCzIWJmU=;
+X-UUID: 1d66aa46506b476ca302409391d1c1e9-20200110
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 896783736; Fri, 10 Jan 2020 15:04:28 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 10 Jan 2020 15:03:55 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 10 Jan 2020 15:03:55 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
+        Jiaxin Yu <jiaxin.yu@mediatek.com>
+Subject: [PATCH v11 0/3] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Fri, 10 Jan 2020 15:04:19 +0800
+Message-ID: <1578639862-14480-1-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGETcx-UWFSaZ8q1iiFVFUEPLN8t1uFb-u6v4VJiMarS21RLRQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 09-01-20, 10:44, Saravana Kannan wrote:
-> Agree, the OPP framework itself shouldn't be responsible. And I'm not
-> doing anything here? Just giving those devices a way to look up what
-> their suspend bandwidth is? So they can vote for it when they suspend?
+VGhpcyBzZXJpZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzIGFuZCBN
+VDI3MTIsIGFuZCBhdWRpbyB3aWxsIHVzZSBpdCBpbiANCm1hY2hpbmUgZHJpdmVyIGR1cmluZyBi
+b290dXAsIHRoZXkgZGVwZW5kIG9uIHRoZSBmb3ItbmV4dC4NCg0KdjExIGNoYW5nZXM6DQoJMS4g
+Q3JlYXRlIGEgbmV3IHBhdGNoIGZvciBNVDI3MTIuDQoNCnYxMCBjaGFuZ2VzOg0KCTEuIE1vZGlm
+eSBtdGstd2R0LnR4dCBkdC1iaW5kaW5ncy4NCg0KdjkgY2hhbmdlczoNCgkxLiBSZW1vdmUgQ2hh
+bmdlLUlkLg0KDQp2OCBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBjYXN0OiAoc3RydWN0IG10a193ZHRf
+ZGF0YSAqKQ0KDQp2NyBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBubyB1c2UgY29kZS4NCg0KdjYgY2hh
+bmdlczoNCgkxLiBTaW1wbGlmeSB0b3BydWdfcmVzZXRfYXNzZXJ0KCkgJiB0b3BydWdfcmVzZXRf
+ZGVhc3NlcnQoKS4NCgkyLiBBZGQgbWVtYmVycyBmb3IgbXQyNzEyX2RhdGEgJiBtdDgxODNfZGF0
+YS4NCg0KdjUgY2hhbmdlczoNCgkxLiBBZGQgU2lnbmVkLW9mZi1ieSB0YWcgYW5kIFJldmlld2Vk
+LWJ5IHRhZy4NCg0KdjQgY2hhbmdlczoNCgkxLiBGaXhlZCB3cm9uZyBzaWduZWQtb2ZmIGFzIGNv
+cnJlY3QgbWFpbCBzdWZmaXguDQoJMi4gRml4ZWQgcGF0Y2ggc3ViamVjdCB0aGF0IGFkZCBwYXRj
+aCB2ZXJzaW9uLg0KDQp2MyBjaGFuZ2VzOg0KCTEuIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvMTExNjQyODMvIGFuZCANCgkgICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
+L3BhdGNoLzExMTY0MzA1LyBoYXMgYmVlbiBtZXJnZWQuDQoJMi4gQ2hhbmdlIHRoZSBuYW1lIG9m
+IG10a193ZHRfY29tcGF0aWJsZSB0byBtdGtfd2R0X2RhdGEuDQoJMy4gUmVtb3ZlIHRvcHJndV9y
+ZXNldCBzdHJ1Y3QgYW5kIHVzZSBtdGtfd2R0X2RldiBpbnN0ZWFkLg0KCTQuIEdldCB0aGUgdmFs
+dWUgb2Ygc3dfcnN0X251bSBmcm9tIC5oIGZpbGUuDQoJNS4gQWRkZGQgbXQyNzEyLXJlc2V0cy5o
+IGZvciBtdDI3MTIuDQoJNi4gSW1wcm92ZSBjb21taXQgbWVzc2FnZS4NCg0KdjIgY2hhbmdlczoN
+CgkxLiByZW1vdmUgIldJUCIgdGhhdCBpbiB0aGUgdGl0bGUgb2YgcGF0Y2hlcw0KCTIuIGFkZCBo
+eXBlciBsaW5rIGZvciB0aGUgcGF0Y2ggdGhhdCBkZXBlbmRzIG9uDQoJMy4gcGF0Y2h3b3JrIGxp
+c3Q6DQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQyODUvDQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTUvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTkvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQyODMvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTExNjQzMDUvDQoNCnYxIGNoYW5nZXM6DQoJMS4gcGF0Y2h3b3JrIGxpc3Q6DQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQxNzMvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQxODEvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQxODUvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTExNjQxODcvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEx
+NjQxNzUvDQoNCkppYXhpbiBZdSAoMyk6DQogIGR0LWJpbmRpbmdzOiBtZWRpYXRlazogbXQ4MTgz
+OiBBZGQgI3Jlc2V0LWNlbGxzDQogIHdhdGNoZG9nOiBtdGtfd2R0OiBtdDgxODM6IEFkZCByZXNl
+dCBjb250cm9sbGVyDQogIHdhdGNoZG9nOiBtdGtfd2R0OiBtdDI3MTI6IEFkZCByZXNldCBjb250
+cm9sbGVyDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCAg
+fCAgMTAgKy0NCiBkcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYyAgICAgICAgICAgICAgICAgICAg
+fCAxMDUgKysrKysrKysrKysrKysrKystDQogLi4uL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJl
+c2V0cy5oICAgICAgICAgIHwgIDIyICsrKysNCiAuLi4vcmVzZXQtY29udHJvbGxlci9tdDgxODMt
+cmVzZXRzLmggICAgICAgICAgfCAgMTcgKysrDQogNCBmaWxlcyBjaGFuZ2VkLCAxNTAgaW5zZXJ0
+aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1i
+aW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KDQotLSANCjIuMTguMA0K
 
-I think this will originate by itself from the device in case of
-interconnects as well and you don't need to separately have that for
-interconnects.
-
-For example, the device (lets say GPU) will have one of its OPP (and
-frequency, maybe the lowest one) marked as suspend-OPP. Then the
-driver which is doing the co-relation normally between GPU/DDR/Cache
-OPPs should be able to do this conversion as well without any extra
-help from the interconnect table.
-
-If the minimum freq of the device correspond to the minimum freq of
-the DDR/Cache during normal operation, that should still work during
-suspend times, isn't it ?
-
-> Ok, but you want this done only for "exact" or for all the other
-> helpers too?
-
-All helpers that you need for PM domains and interconnects.
-
-> Also, this means that I'll have to implement a
-> _opp_compare_key2() or whatever because the generic one that
-> automatically picks the key is still needed for the generic code. Is
-> that fine by you?
-
-I am not concerned about the number of helpers but their optimization.
-I will leave it for you to do that and review it when I see how you
-have done it :)
-
--- 
-viresh
