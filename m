@@ -2,107 +2,88 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9E2C282DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B00C282DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93225214D8
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:05:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="vuQ7Q5FL"
+	by mail.kernel.org (Postfix) with ESMTP id ECA9920661
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgAJRFr (ORCPT
+        id S1726131AbgAJRHl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:05:47 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43700 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgAJRFr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 12:05:47 -0500
-Received: by mail-il1-f193.google.com with SMTP id v69so2294825ili.10
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 09:05:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P79x9K14eJzNJIAEvO9N1GVK52JW7FS8fTo6U5mtEGI=;
-        b=vuQ7Q5FLfnHpT+uAZM9i8bVxaYqaOYNcjTqL+mC+WFQLramWqV11SGCpGk4scxDXsl
-         OOJNnIjvLL5pysvLKUQRyHHFPTzOupZVsfHjkq2Ppd7ljF8jBzZeiikoYZQoD6iW9FGw
-         dosDs78LvoZwWFZecyzdgLgY6F6E9DlJjeab6+7u4kdApiSww6GMWawGTRMjqBw3RG3r
-         NMaD4wDpT+c5fTjmLqdfqUgiVoSv1uQMo8aHGaq0N+pQB34MJ2iGtn2WKw8EZJVcSvk8
-         Prh6ApJC3nRKKyqqfkf8OwOwXDyaVqIC8sN9oJyO+9Ieq8BJdgHf+aRGSDngm4z56iDf
-         Smtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P79x9K14eJzNJIAEvO9N1GVK52JW7FS8fTo6U5mtEGI=;
-        b=VkVFoOxkUmvoneyr6U7juP5GwHzyJZp89Ya+mpmKAiiNzHOmB1AiKdBhN6tOqWDoq2
-         Rcd0kMj8PXHqGS6eebZI+NxECC+WnS+IwiBepV/CvC6XEJeq3OXNfuRVb8bP8wo4DZxG
-         KHPCOG15tOLKVVK4qfQ0CQIlaNALcIDxwo/QmUGj5yGsFmVdeyqfZpI9LPUfhfXDN3Eg
-         Sdv5rNpZQDrfyomjBV7tE5T+nFgwNnquQiP7fBt15RX0yOMMOmpx2K70FvV0Rv6RCtck
-         XDnUQFLxKjv5ZfTrhvRC1e3nrteyCTtaKypHtvXAnYIsYX5Sszt4VKQpKK6DHQDkpjWu
-         NzTQ==
-X-Gm-Message-State: APjAAAWOLHvCyWqtvYbD44j3BlqvgaJjUOuxVz0/UOIQmbl4qrRXgRgW
-        V1v7Ua9A67Az2zUihDwxYLM0pb/i22uZIgrkosf7fg==
-X-Google-Smtp-Source: APXvYqxPmWQR2WBHSl0G0RqnbscifyfX9p3jXXDhLckarRBifM62npqEJAFZKBt+I42Cfqt9FdgR8x/w9JFpVyJNXvo=
-X-Received: by 2002:a92:1711:: with SMTP id u17mr3529002ill.72.1578675946291;
- Fri, 10 Jan 2020 09:05:46 -0800 (PST)
+        Fri, 10 Jan 2020 12:07:41 -0500
+Received: from asavdk3.altibox.net ([109.247.116.14]:60940 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbgAJRHl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 12:07:41 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id C2B4420053;
+        Fri, 10 Jan 2020 18:07:34 +0100 (CET)
+Date:   Fri, 10 Jan 2020 18:07:33 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/5] dt-bindings: vendor-prefix: add Shenzhen Feixin
+ Photoelectics Co., Ltd
+Message-ID: <20200110170733.GA25099@ravnborg.org>
+References: <20200110155225.1051749-1-icenowy@aosc.io>
+ <20200110155225.1051749-2-icenowy@aosc.io>
 MIME-Version: 1.0
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 10 Jan 2020 09:05:35 -0800
-Message-ID: <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110155225.1051749-2-icenowy@aosc.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=Ms75YHVibuC86ioFB_8A:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 7:33 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Tue, Dec 17, 2019 at 02:50:15AM +0000, Z.q. Hou wrote:
-> > Hi Lorenzo,
-> >
-> > The v9 patches have addressed the comments from Andrew, and it has
-> > been dried about 1 month, can you help to apply them?
->
-> We shall have a look beginning of next week, sorry for the delay
-> in getting back to you.
+Hi Icenowy.
 
-Note that the patch set no longer applies since the refactorings
-conflict with new development by others.
+On Fri, Jan 10, 2020 at 11:52:21PM +0800, Icenowy Zheng wrote:
+> Shenzhen Feixin Photoelectics Co., Ltd is a company to provide LCD
+> modules.
+> 
+> Add its vendor prefix.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 
-Zhiqiang, can you rebase and post a new version of the patch set?
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 
-
--Olof
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> index 3dab8150dae7..a6d53bbbe33d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+> @@ -335,6 +335,8 @@ patternProperties:
+>      description: Fastrax Oy
+>    "^fcs,.*":
+>      description: Fairchild Semiconductor
+> +  "^feixin,.*":
+> +    description: Shenzhen Feixin Photoelectic Co., Ltd
+>    "^feiyang,.*":
+>      description: Shenzhen Fly Young Technology Co.,LTD.
+>    "^firefly,.*":
+> -- 
+> 2.23.0
