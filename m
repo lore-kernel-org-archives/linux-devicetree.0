@@ -2,82 +2,134 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B41C32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44AEC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6CB2072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B04420709
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:24:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V3QsRsYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731088AbgAJDJF (ORCPT
+        id S1730975AbgAJDYx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 22:09:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:39046 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730952AbgAJDJF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 22:09:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2925411D4;
-        Thu,  9 Jan 2020 19:09:05 -0800 (PST)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5672B3F703;
-        Thu,  9 Jan 2020 19:08:57 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will@kernel.org
-Cc:     mark.rutland@arm.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
-        ira.weiny@intel.com, Anshuman Khandual <anshuman.khandual@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH V11 3/5] of/fdt: Mark boot memory with MEMBLOCK_BOOT
-Date:   Fri, 10 Jan 2020 08:39:13 +0530
-Message-Id: <1578625755-11792-4-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
-References: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
+        Thu, 9 Jan 2020 22:24:53 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8006 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730952AbgAJDYw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 22:24:52 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e17ee710001>; Thu, 09 Jan 2020 19:24:33 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 09 Jan 2020 19:24:51 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 09 Jan 2020 19:24:51 -0800
+Received: from [10.2.166.245] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
+ 2020 03:24:50 +0000
+Subject: Re: [PATCH v7 00/21] Move PMC clocks into Tegra PMC driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
+        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <4e9fab30-14b5-bf1f-dc91-fd57ef614503@gmail.com>
+ <61a78ba8-4cc3-f6a6-513b-36daa9be32f0@nvidia.com>
+Message-ID: <37a9676b-e0e5-7e80-5ee4-abfca361dcf7@nvidia.com>
+Date:   Thu, 9 Jan 2020 19:24:48 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <61a78ba8-4cc3-f6a6-513b-36daa9be32f0@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578626673; bh=rLf/QjKzyFFss3Mf1qSUcXhqXJRt3WjVr1A+lKgOzEo=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=V3QsRsYTaYw2LdB5vT5bnrqmRjR4ZzgotD2Bn9TQEaaoKX6sukwXVPIOJHloTDcEx
+         OJ4gb0zknbiJ47LX6JCBiIVV3oOVUduvOene3zZdNEwsj3Ti8iaIpzWEhXLuDBxrRu
+         dHCOj+L/TeaNg4qvopZcXUlNyqQP5WuYXzCt+5f4iks2QZW9DIB3AJHUgrHLmOKghU
+         UIcq6/+mgE0MFiY8rpV3NVlQmmPZhn6HZOXvKYNi7wJF01wD1lLqgnjoeR2xWrzFCC
+         SNIoQOF8U1gIohGO9XT0FphO7rPkzb29F4QqA8RaYExQQVFNOJwGt4yEv+/4S/sOV6
+         XXXmF1hoKfSlw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-early_init_dt_add_memory_arch() adds memory into memblock on both UEFI and
-DT based arm64 systems. Lets mark these as boot memory right after they get
-into memblock. All other platforms using this default implementation for
-early_init_dt_add_memory_arch() will also have this memblock flag set on
-boot memory ranges but will be upto the platforms if they would like to
-use it or not. On arm64 platform this flag will be used to identify boot
-memory at runtime and reject any attempt to remove them.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/of/fdt.c | 1 +
- 1 file changed, 1 insertion(+)
+On 1/9/20 5:39 PM, Sowjanya Komatineni wrote:
+>
+> On 1/9/20 11:44 AM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 08.01.2020 07:24, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> This patch series moves Tegra PMC clocks from clock driver to pmc=20
+>>> driver
+>>> along with the device trees changes and audio driver which uses one of
+>>> the pmc clock for audio mclk.
+>>>
+>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+>>> are currently registered by Tegra clock driver using clk_regiser_mux=20
+>>> and
+>>> clk_register_gate which performs direct Tegra PMC register access.
+>>>
+>>> When Tegra PMC is in secure mode, any access from non-secure world will
+>>> not go through.
+>>>
+>>> This patch series adds these Tegra PMC clocks and blink controls to=20
+>>> Tegra
+>>> PMC driver with PMC as clock provider and removes them from Tegra clock
+>>> driver.
+>>>
+>>> PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru=20
+>>> Tegra210
+>>> and clock driver does inital parent configuration for it and enables=20
+>>> them.
+>>> But this clock should be taken care by audio driver as there is no need
+>>> to have this clock pre enabled.
+>>>
+>>> So, this series also includes patch that updates ASoC driver to take
+>>> care of parent configuration for mclk if device tree don't specify
+>>> initial parent configuration using assigned-clock-parents and controls
+>>> audio mclk enable/disable during ASoC machine startup and shutdown.
+>>>
+>>> DTs are also updated to use clk_out_1 as audio mclk rather than=20
+>>> extern1.
+>>>
+>>> This series also includes a patch for mclk fallback to extern1 when
+>>> retrieving mclk fails to have this backward compatible of new DT with
+>>> old kernels.
+>> Suspend-resume doesn't work anymore, reverting this series helps. I
+>> don't have any other information yet, please take a look.
+> Thanks Dmitry. Will test suspend resume and check..
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 2cdf64d..a2ae2c88 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1143,6 +1143,7 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
- 		base = phys_offset;
- 	}
- 	memblock_add(base, size);
-+	memblock_mark_boot(base, size);
- }
- 
- int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
--- 
-2.7.4
+I see if we leave audio mclk (cdev1) enabled during=20
+tegra_asoc_utils_init, suspend resume works.
+
+Without audio mclk enabled during tegra_asoc_utils_init, somehow it=20
+prevents entry to suspend on Tegra30 platform.
+
+Will look in detail..
 
