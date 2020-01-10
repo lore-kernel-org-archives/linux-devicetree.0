@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80516C33CA1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC92C32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABF320678
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE28B2072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbgAJCRP (ORCPT
+        id S1730794AbgAJCRO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:17:15 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:51534 "EHLO inva021.nxp.com"
+        Thu, 9 Jan 2020 21:17:14 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:51490 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbgAJCRP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:17:15 -0500
+        id S1730756AbgAJCRO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 21:17:14 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CC0620005C;
-        Fri, 10 Jan 2020 03:17:13 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B3CDE20052E;
+        Fri, 10 Jan 2020 03:17:11 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F15372016AF;
-        Fri, 10 Jan 2020 03:17:05 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A558D200525;
+        Fri, 10 Jan 2020 03:17:04 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81285402D7;
-        Fri, 10 Jan 2020 10:16:57 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E7E35402C1;
+        Fri, 10 Jan 2020 10:16:55 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
         stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
@@ -35,9 +35,9 @@ To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] dt-bindings: pinctrl: Convert i.MX8MN to json-schema
-Date:   Fri, 10 Jan 2020 10:13:08 +0800
-Message-Id: <1578622388-23370-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/3] dt-bindings: pinctrl: Convert i.MX8MM to json-schema
+Date:   Fri, 10 Jan 2020 10:13:07 +0800
+Message-Id: <1578622388-23370-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
 References: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
@@ -47,29 +47,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX8MN pinctrl binding to DT schema format using json-schema
+Convert the i.MX8MM pinctrl binding to DT schema format using json-schema
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.txt        | 39 -------------
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.yaml       | 67 ++++++++++++++++++++++
- 2 files changed, 67 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
+ .../bindings/pinctrl/fsl,imx8mm-pinctrl.txt        | 36 ------------
+ .../bindings/pinctrl/fsl,imx8mm-pinctrl.yaml       | 67 ++++++++++++++++++++++
+ 2 files changed, 67 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
 deleted file mode 100644
-index 330716c..0000000
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
+index e4e01c0..0000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
 +++ /dev/null
-@@ -1,39 +0,0 @@
--* Freescale IMX8MN IOMUX Controller
+@@ -1,36 +0,0 @@
+-* Freescale IMX8MM IOMUX Controller
 -
 -Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
 -for common binding part and usage.
 -
 -Required properties:
--- compatible: "fsl,imx8mn-iomuxc"
+-- compatible: "fsl,imx8mm-iomuxc"
 -- reg: should contain the base physical address and size of the iomuxc
 -  registers.
 -
@@ -77,8 +77,8 @@ index 330716c..0000000
 -- fsl,pins: each entry consists of 6 integers and represents the mux and config
 -  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
 -  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
--  <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last integer CONFIG is
--  the pad setting value like pull-up on this pin. Please refer to i.MX8M Nano
+-  <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last integer CONFIG is
+-  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Mini
 -  Reference Manual for detailed CONFIG settings.
 -
 -Examples:
@@ -89,32 +89,29 @@ index 330716c..0000000
 -};
 -
 -iomuxc: pinctrl@30330000 {
--        compatible = "fsl,imx8mn-iomuxc";
+-        compatible = "fsl,imx8mm-iomuxc";
 -        reg = <0x0 0x30330000 0x0 0x10000>;
 -
 -        pinctrl_uart1: uart1grp {
 -                fsl,pins = <
--			MX8MN_IOMUXC_UART1_RXD_UART1_DCE_RX	0x140
--			MX8MN_IOMUXC_UART1_TXD_UART1_DCE_TX	0x140
--			MX8MN_IOMUXC_UART3_RXD_UART1_DCE_CTS_B	0x140
--			MX8MN_IOMUXC_UART3_TXD_UART1_DCE_RTS_B	0x140
--			MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6	0x19
+-                        MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX             0x140
+-                        MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX             0x140
 -                >;
 -        };
 -};
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
 new file mode 100644
-index 0000000..44bf4e0
+index 0000000..2ef2fe3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
 @@ -0,0 +1,67 @@
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mn-pinctrl.yaml#
++$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mm-pinctrl.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale IMX8MN IOMUX Controller
++title: Freescale IMX8MM IOMUX Controller
 +
 +maintainers:
 +  - Anson Huang <Anson.Huang@nxp.com>
@@ -125,7 +122,7 @@ index 0000000..44bf4e0
 +
 +properties:
 +  compatible:
-+    const: fsl,imx8mn-iomuxc
++    const: fsl,imx8mm-iomuxc
 +
 +# Client device subnode's properties
 +patternProperties:
@@ -144,9 +141,9 @@ index 0000000..44bf4e0
 +          each entry consists of 6 integers and represents the mux and config
 +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
 +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-+          be found in <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last
++          be found in <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last
 +          integer CONFIG is the pad setting value like pull-up on this pin. Please
-+          refer to i.MX8M Nano Reference Manual for detailed CONFIG settings.
++          refer to i.MX8M Mini Reference Manual for detailed CONFIG settings.
 +
 +    required:
 +      - fsl,pins
@@ -163,7 +160,7 @@ index 0000000..44bf4e0
 +  # Pinmux controller node
 +  - |
 +    iomuxc: pinctrl@30330000 {
-+        compatible = "fsl,imx8mn-iomuxc";
++        compatible = "fsl,imx8mm-iomuxc";
 +        reg = <0x30330000 0x10000>;
 +
 +        pinctrl_uart2: uart2grp {
