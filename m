@@ -2,88 +2,109 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F7C33C99
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB1DC33C99
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72BC62073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:16:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c0XSGiUB"
+	by mail.kernel.org (Postfix) with ESMTP id E06AB20842
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgAJHQT (ORCPT
+        id S1725965AbgAJHQW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:16:19 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63053 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbgAJHQS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:16:18 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578640578; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=+T5bfhKwhIRutpNEoM3STa+mJOWH/4Y71kETTJnBQZM=; b=c0XSGiUB/9Kl6pmWeJkOsNngGn//k9ixYyJnQyLRH6UVKrcQ4yuRwjYjxKrHApTqN9w2FD0K
- 1gmFnPNnXmviFRBFL20OwHSafj+EeJNHrgNwyaI+DPyHsk0vNVqJEvbcotfgqftDY0ttTGUw
- eYXLJ12EYqTAxITAZcD5l8WqdaI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1824c0.7fccb40d2228-smtp-out-n01;
- Fri, 10 Jan 2020 07:16:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C9326C4479F; Fri, 10 Jan 2020 07:16:16 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F5E8C433CB;
-        Fri, 10 Jan 2020 07:16:13 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F5E8C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH 0/2] ath10k: Enable QDSS clock on sm8150
-References: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
-Date:   Fri, 10 Jan 2020 09:16:11 +0200
-In-Reply-To: <20191223054855.3020665-1-bjorn.andersson@linaro.org> (Bjorn
-        Andersson's message of "Sun, 22 Dec 2019 21:48:53 -0800")
-Message-ID: <87zhevsrwk.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 10 Jan 2020 02:16:22 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55403 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbgAJHQW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 02:16:22 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ipoWd-0001oM-Qd; Fri, 10 Jan 2020 08:16:07 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ipoWc-00084N-CC; Fri, 10 Jan 2020 08:16:06 +0100
+Date:   Fri, 10 Jan 2020 08:16:06 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     robh+dt@kernel.org, andriy.shevchenko@linux.intel.com,
+        bparrot@ti.com, andy.shevchenko@gmail.com,
+        simon.budig@kernelconcepts.de, hdegoede@redhat.com, fcooper@ti.com,
+        mripard@kernel.org, alexandre.belloni@bootlin.com,
+        shawnguo@kernel.org, devicetree@vger.kernel.org,
+        kernel@pengutronix.de, linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 6/6] Input: edt-ft5x06 - improve power management
+ operations
+Message-ID: <20200110071606.g42csvhgtriddqj4@pengutronix.de>
+References: <20200108111050.19001-1-m.felsch@pengutronix.de>
+ <20200108111050.19001-7-m.felsch@pengutronix.de>
+ <20200110010957.GP8314@dtor-ws>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110010957.GP8314@dtor-ws>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:06:45 up 55 days, 22:25, 49 users,  load average: 0.03, 0.08,
+ 0.05
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Bjorn Andersson <bjorn.andersson@linaro.org> writes:
+Hi Dmitry,
 
-> On SM8150 the WiFi firmware depends on the QDSS clock ticking, or the system
-> will reset due to an NoC error. So this adds an optional clock to the ath10k
-> binding and makes sure it's enabled while the WiFi firmware needs it.
->
-> Bjorn Andersson (2):
->   ath10k: Add optional qdss clk
->   arm64: dts: qcom: sm8150: Specify qdss clock for wifi
->
->  .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 2 +-
->  arch/arm64/boot/dts/qcom/sm8150.dtsi                          | 4 ++--
->  drivers/net/wireless/ath/ath10k/snoc.c                        | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
+On 20-01-09 17:09, Dmitry Torokhov wrote:
+> Hi Marco,
+> 
+> On Wed, Jan 08, 2020 at 12:10:50PM +0100, Marco Felsch wrote:
+> > +static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
+> > +{
+> > +	struct i2c_client *client = to_i2c_client(dev);
+> > +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
+> > +	int ret;
+> > +
+> > +	if (device_may_wakeup(dev))
+> > +		return 0;
+> > +
+> > +	ret = regulator_enable(tsdata->vcc);
+> > +	if (ret)
+> > +		dev_warn(dev, "Failed to enable vcc\n");
+> 
+> I wonder if we should not return error here instead of continuing. If
+> device is not powered up properly we'll have hard time communicating
+> with it.
 
-Via which tree are these supposed to go? I'll take patch 1 and arm
-mantainers take patch 2, or what?
+That's a reasonable point.
+
+> The same is for suspend: maybe we should abort if we can't switch off
+> regulator or write to the device.
+
+I have no strong opinion about that case but IMHO it's okay to go further
+if we can't switch it off. Instead we should print a warning.
+
+Regards,
+  Marco
+
+> Thanks.
+> 
+> -- 
+> Dmitry
+> 
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
