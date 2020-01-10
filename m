@@ -2,107 +2,160 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51EEC33CA2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B33C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F32206ED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8D62082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 10:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xLOFpQf0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H4Tlzh2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbgAJKSU (ORCPT
+        id S1727752AbgAJKyJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:18:20 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:55986 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727345AbgAJKST (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:18:19 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578651499; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=Sur98Trxip0lS2J0kZIUVd9Xdj/kghewp4wUiHEmGZQ=; b=xLOFpQf0UHbuO9fDt+bzAHl2u/k8esojldvGS4T27SGzSnd1pyMKHZNfSOEIlSM4ZfG0754p
- rkhtptakVoWjPMxYLpokasBspocqOpNJLKRgYqGC3OvzWkDXJ56PYaP/ECjr/UXRq3qSubOW
- vErzlfV+JKWD8OjNO3BYwDmEb50=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e184f66.7f29f206d960-smtp-out-n02;
- Fri, 10 Jan 2020 10:18:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 38DF1C4479C; Fri, 10 Jan 2020 10:18:14 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 67727C433A2;
-        Fri, 10 Jan 2020 10:18:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 67727C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: sc7180: Add iommus property to QUP0 and QUP1
-Date:   Fri, 10 Jan 2020 15:48:02 +0530
-Message-Id: <20200110101802.4491-1-saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.24.0
+        Fri, 10 Jan 2020 05:54:09 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42138 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727746AbgAJKyI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 05:54:08 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e10so1130817edv.9
+        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 02:54:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=683GIdX4ExqgOWlzGwnCnJgXWPRG2CE2zHJsuw1s5ls=;
+        b=H4Tlzh2pg0fFdLHuLzlkIhdnf4CpDMxqOgedxrWfrGenE/IU59XNl7FXRi5bQJ/1ga
+         kSD/4M6L0K3TbMwAcDPTSMspdd6HQFIXMtopS+opK+gSLf0qVHYvhMpMNc2LvzCELyUh
+         v9wUmPz9216Cd8HNirKPA2jT8h1deqDZChBwq2fx74ca9pIIpM0fUOoQxWu+nSX+iGsq
+         9Y2BpsqtGfLIpOtwNHPHNIoMLKK80/OPX/jDNB3JzfJ/6ZI5G2wn/oqE3TfAVT//XvLi
+         vJyv1+8nY7K3NdKwJ9PqOqDZvPGPa6YRxlxE6Jdl8UoKlLh4+ihZXloaktSoepfVHWPX
+         pnmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=683GIdX4ExqgOWlzGwnCnJgXWPRG2CE2zHJsuw1s5ls=;
+        b=PXr8vZkt7JR36+CeUCarOrILE4rG3JGiXDiFromWdCnuDhrPPSwZhtGAGzQC0ufeIA
+         HnmLSom8oZcV2sQYrUu7WQ61GucBZ0bp2NuYS2G119ZhClMYr5tf0EUGu6nQbQN2kYbC
+         cy13KRliSztqh41kFpCG1KkyBgsOJMHjMGPT709E++APvA8F92Ga9gjw4EwTP4w+II21
+         r54XdVooa5Ww+7QkUUYDnh7+Zovac1aobmaUxqxuZi5tM6muqpFX3nY5koOl+woJfZH4
+         qu5GQ5iQQns2xe70NIuq7ZSf9A/ZuEHRiZwugqsv8410NTZkMmRfnfvqRy0gm515Qxz1
+         dtSw==
+X-Gm-Message-State: APjAAAU/qtb3yt5T9bCRPowWWeS4d/1SY0T2ZB0z+lRmEYVBQBB/2uIw
+        cO78g4PASnM+haiG5yint/yj3Q==
+X-Google-Smtp-Source: APXvYqwXi2p9od8RKzdFKvWzNSqewAgaEw93sWpDYWUInbFQeII2xkI489wglJJwYeOqJClu81XBJQ==
+X-Received: by 2002:a17:906:84d7:: with SMTP id f23mr636627ejy.106.1578653646262;
+        Fri, 10 Jan 2020 02:54:06 -0800 (PST)
+Received: from [192.168.27.209] ([37.157.136.193])
+        by smtp.googlemail.com with ESMTPSA id f13sm26014edq.26.2020.01.10.02.54.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 02:54:05 -0800 (PST)
+Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+ <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+ <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
+ <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <988e49aa-469d-17a1-ca25-982c63536e6e@linaro.org>
+Date:   Fri, 10 Jan 2020 12:54:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Define iommus property for QUP0 and QUP1 with the proper SID
-and mask. Below SMMU global faults are seen without this during
-boot and when using i2c touchscreen.
+Hi Hans,
 
-QUP0:
-arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x00000043, GFSYNR2 0x00000000
+On 1/9/20 10:57 AM, Hans Verkuil wrote:
+> On 1/9/20 8:41 AM, Stanimir Varbanov wrote:
+>> Hi Hans,
+>>
+>> On 1/8/20 6:09 PM, Hans Verkuil wrote:
+>>> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
+>>>> This event indicate that the source color bit-depth is changed
+>>>> during run-time. The client must get the new format and re-allocate
+>>>> buffers for it. This can usually happens with video decoder (encoders)
+>>>> when the bit-stream color bit-depth is changed from 8 to 10bits
+>>>> or vice versa.
+>>>>
+>>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>> ---
+>>>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+>>>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>>>  include/uapi/linux/videodev2.h                  | 1 +
+>>>>  3 files changed, 9 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>> index 42659a3d1705..fad853d440cf 100644
+>>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>> @@ -402,7 +402,13 @@ call.
+>>>>  	that many Video Capture devices are not able to recover from a temporary
+>>>>  	loss of signal and so restarting streaming I/O is required in order for
+>>>>  	the hardware to synchronize to the video signal.
+>>>> -
+>>>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
+>>>> +      - 0x0002
+>>>> +      - This event gets triggered when color bit-depth change is detected
+>>>> +	from a video decoder. Applications will have to query the new pixel
+>>>> +	format and re-negotiate the queue. In most cases the streaming must be
+>>>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
+>>>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
+>>>
+>>> I think this is too specific for decoders. Something similar to the
+>>> CH_RESOLUTION description would be more appropriate:
+>>>
+>>>       - This event gets triggered when a color bit-depth change (but not a
+>>> 	resolution change!) is detected	at an input. This can come from an
+>>
+>> What you mean by "but not a resolution change" here? Resolution change
+>> and bit-depth change cannot occur on the same time, or something else.
+> 
+> What I was trying to say is that a resolution change implies a possible bit-depth
+> change as well, whereas V4L2_EVENT_SRC_CH_COLOR_DEPTH is only set if there is
+> a bit-depth change but no resolution change.
+> 
+> V4L2_EVENT_SRC_CH_RESOLUTION requires that userspace does a full resync to the
+> new format, CH_COLOR_DEPTH implies that only the bit depth changed.
 
-QUP1:
-arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
-arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x000004c3, GFSYNR2 0x00000000
+CH_COLOR_DEPTH implies format re-negotiation as well. In Venus case
+8->10bit change will change the format of OPB buffers (now it is not
+possible because of lack of v4l modifiers) and DPB buffers becomes
+compressed raw buffers (to optimize bandwidth).
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+> 
+> Which actually makes me wonder: is there a difference between the two change flags
+> w.r.t. userspace behavior? If there is, then that should be carefully documented,
+> if there isn't, then is this new flag really needed?
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 8011c5fe2a31..01e431f49c18 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -338,6 +338,7 @@ qupv3_id_0: geniqup@8c0000 {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
-+			iommus = <&apps_smmu 0x43 0x0>;
- 			status = "disabled";
- 
- 			i2c0: i2c@880000 {
-@@ -546,6 +547,7 @@ qupv3_id_1: geniqup@ac0000 {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
- 			ranges;
-+			iommus = <&apps_smmu 0x4c3 0x0>;
- 			status = "disabled";
- 
- 			i2c6: i2c@a80000 {
+Looking into semantics of v4l events, CH_COLOR_DEPTH makes sense because
+it describes what actually changed (similar to CH_RESOLUTION). I would
+say that v4l2_event::type V4L2_EVENT_SOURCE_CHANGE implies format
+re-negotiation and v4l2_event::src_change just informs userland what
+exactly is changed.
+
+I'll postpone this patch until we have clear vision what will be the
+usage in user-space.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+regards,
+Stan
