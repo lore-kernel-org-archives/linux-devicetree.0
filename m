@@ -2,146 +2,182 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ED0C33C99
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE0DC33CA2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 04:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214DE2072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:32:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RdwJnl4S"
+	by mail.kernel.org (Postfix) with ESMTP id 1A32C2072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 04:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbgAJDcK (ORCPT
+        id S1731245AbgAJEJZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 22:32:10 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16554 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730973AbgAJDcK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 22:32:10 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e17f0060000>; Thu, 09 Jan 2020 19:31:18 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Jan 2020 19:32:09 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Jan 2020 19:32:09 -0800
-Received: from [10.2.166.245] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
- 2020 03:32:07 +0000
-Subject: Re: [PATCH v7 00/21] Move PMC clocks into Tegra PMC driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
-        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
- <4e9fab30-14b5-bf1f-dc91-fd57ef614503@gmail.com>
- <61a78ba8-4cc3-f6a6-513b-36daa9be32f0@nvidia.com>
- <37a9676b-e0e5-7e80-5ee4-abfca361dcf7@nvidia.com>
-Message-ID: <62751d2d-2b7d-509b-e236-363d2bb29b02@nvidia.com>
-Date:   Thu, 9 Jan 2020 19:32:06 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <37a9676b-e0e5-7e80-5ee4-abfca361dcf7@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578627079; bh=h+UK0T0ZVoq0xlRJgSEmpib8ESf+rXQ95WyAK46QTis=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=RdwJnl4St7LW5RgLOTnTJzx7marVTEg5gBkDL5je4bCIpErjkEECgt74tcuUIV7xj
-         AMquKzInk/UBSYXTInphlHW3tm3N6CDNDLOYBNeHnH7CG02uMU2ZQOPq0NvdbLjSmp
-         PTIXdFLTCx0vtXfKDRKJcaIpyLZhVsargsilGQS8/ASADPwMK6ZtfvIhKXowHiLzBS
-         b6R11TGDsHjqjD6e8KR47qe1D/1uwMnH1MsREsrfAeeM3/BKcrt0mSPDXiBlxpm6hH
-         8yHwU0e5sepSvC8LRGKxJsF22wM7R4tUGq1PLHDrj/JHdpeJte6/3X6KP2R9aXkTlZ
-         O0qZR+YvJKVHw==
+        Thu, 9 Jan 2020 23:09:25 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:51400 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731239AbgAJEJZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 23:09:25 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 155C0200546;
+        Fri, 10 Jan 2020 05:09:22 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CA512007BC;
+        Fri, 10 Jan 2020 05:09:15 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8C0ED402C1;
+        Fri, 10 Jan 2020 12:09:06 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V2 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to json-schema
+Date:   Fri, 10 Jan 2020 12:05:18 +0800
+Message-Id: <1578629120-25793-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Convert the i.MX8MQ pinctrl binding to DT schema format using json-schema
 
-On 1/9/20 7:24 PM, Sowjanya Komatineni wrote:
->
-> On 1/9/20 5:39 PM, Sowjanya Komatineni wrote:
->>
->> On 1/9/20 11:44 AM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 08.01.2020 07:24, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> This patch series moves Tegra PMC clocks from clock driver to pmc=20
->>>> driver
->>>> along with the device trees changes and audio driver which uses one of
->>>> the pmc clock for audio mclk.
->>>>
->>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
->>>> are currently registered by Tegra clock driver using=20
->>>> clk_regiser_mux and
->>>> clk_register_gate which performs direct Tegra PMC register access.
->>>>
->>>> When Tegra PMC is in secure mode, any access from non-secure world=20
->>>> will
->>>> not go through.
->>>>
->>>> This patch series adds these Tegra PMC clocks and blink controls to=20
->>>> Tegra
->>>> PMC driver with PMC as clock provider and removes them from Tegra=20
->>>> clock
->>>> driver.
->>>>
->>>> PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru=20
->>>> Tegra210
->>>> and clock driver does inital parent configuration for it and=20
->>>> enables them.
->>>> But this clock should be taken care by audio driver as there is no=20
->>>> need
->>>> to have this clock pre enabled.
->>>>
->>>> So, this series also includes patch that updates ASoC driver to take
->>>> care of parent configuration for mclk if device tree don't specify
->>>> initial parent configuration using assigned-clock-parents and controls
->>>> audio mclk enable/disable during ASoC machine startup and shutdown.
->>>>
->>>> DTs are also updated to use clk_out_1 as audio mclk rather than=20
->>>> extern1.
->>>>
->>>> This series also includes a patch for mclk fallback to extern1 when
->>>> retrieving mclk fails to have this backward compatible of new DT with
->>>> old kernels.
->>> Suspend-resume doesn't work anymore, reverting this series helps. I
->>> don't have any other information yet, please take a look.
->> Thanks Dmitry. Will test suspend resume and check..
->
-> I see if we leave audio mclk (cdev1) enabled during=20
-> tegra_asoc_utils_init, suspend resume works.
->
-> Without audio mclk enabled during tegra_asoc_utils_init, somehow it=20
-> prevents entry to suspend on Tegra30 platform.
->
-> Will look in detail..
->
-audio mclk is only needed for audio and werid that having it not enabled=20
-all the time like in current clock driver prevents suspend entry on Tegra30
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V1:
+	- use "grp$" instead of "-grp$";
+	- use space instead of tab for "ref$";
+	- add missed "reg" property;
+	- remove the "maxItem" for "fsl,pins" to avoid build warning, as the item number is changable.
+---
+ .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 -----------
+ .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       | 69 ++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 36 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
 
-Looks like this issue is masked earlier with having mclk enabled all the=20
-time by clock driver.
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+deleted file mode 100644
+index 66de750..0000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
++++ /dev/null
+@@ -1,36 +0,0 @@
+-* Freescale IMX8MQ IOMUX Controller
+-
+-Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+-for common binding part and usage.
+-
+-Required properties:
+-- compatible: "fsl,imx8mq-iomuxc"
+-- reg: should contain the base physical address and size of the iomuxc
+-  registers.
+-
+-Required properties in sub-nodes:
+-- fsl,pins: each entry consists of 6 integers and represents the mux and config
+-  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+-  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+-  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
+-  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
+-  Reference Manual for detailed CONFIG settings.
+-
+-Examples:
+-
+-&uart1 {
+-       pinctrl-names = "default";
+-       pinctrl-0 = <&pinctrl_uart1>;
+-};
+-
+-iomuxc: pinctrl@30330000 {
+-        compatible = "fsl,imx8mq-iomuxc";
+-        reg = <0x0 0x30330000 0x0 0x10000>;
+-
+-        pinctrl_uart1: uart1grp {
+-                fsl,pins = <
+-                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
+-                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
+-                >;
+-        };
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+new file mode 100644
+index 0000000..96bab6d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mq-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale IMX8MQ IOMUX Controller
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description:
++  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
++  for common binding part and usage.
++
++properties:
++  compatible:
++    const: fsl,imx8mq-iomuxc
++
++  reg:
++    maxItems: 1
++
++# Client device subnode's properties
++patternProperties:
++  'grp$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++
++    properties:
++      fsl,pins:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++        description:
++          each entry consists of 6 integers and represents the mux and config
++          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
++          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
++          be found in <arch/arm64/boot/dts/freescale/imx8mq-pinfunc.h>. The last
++          integer CONFIG is the pad setting value like pull-up on this pin. Please
++          refer to i.MX8M Quad Reference Manual for detailed CONFIG settings.
++
++    required:
++      - fsl,pins
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  # Pinmux controller node
++  - |
++    iomuxc: pinctrl@30330000 {
++        compatible = "fsl,imx8mq-iomuxc";
++        reg = <0x30330000 0x10000>;
++
++        pinctrl_uart1: uart1grp {
++            fsl,pins = <
++                0x234 0x49C 0x4F4 0x0 0x0	0x49
++                0x238 0x4A0 0x4F4 0x0 0x0	0x49
++            >;
++        };
++    };
++
++...
+-- 
+2.7.4
 
