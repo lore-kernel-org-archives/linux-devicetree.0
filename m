@@ -2,315 +2,179 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4175FC32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 01:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80516C33CA1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09BF92072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 01:53:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c9L+frf0"
+	by mail.kernel.org (Postfix) with ESMTP id 5ABF320678
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbgAJBxa (ORCPT
+        id S1730756AbgAJCRP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:53:30 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40035 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730604AbgAJBxa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 20:53:30 -0500
-Received: by mail-qv1-f68.google.com with SMTP id dp13so100528qvb.7
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 17:53:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/fMVlCqxH7TYnGng6weJicBdaodJmAWTQi+tUFgHll4=;
-        b=c9L+frf0rw+duLwmB6qHSNoiIPfTUYtK8oqEW7QzYzMerHKt6OccqOlSyTHGvVCTqf
-         Kin2nhmdMCTXyrZ3pw0bAwscFkyMqEwCL5cFVp2kPDTnY8aCLuzokcQrA8pyvA+Npe19
-         454L+KinqcoARRXLI9n3K/XrRuEzoeRSNtmtw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/fMVlCqxH7TYnGng6weJicBdaodJmAWTQi+tUFgHll4=;
-        b=CrzVCA8HcDV4Se8dWWxrS9x/7K7zHx5xcncy3hX9iVFd2NBITykHDbyhBnEZTg9fqs
-         0I7OxAHuC9f3TPmXs+caXN4sjh6U4JbfG4G5DHy+V/weJTZBnJ5dJbKfZC5+FTrEXWs4
-         twmsqcjx64bR1Vn4gjR0rzPDfU7CVOy963HD96KUjacxA6zYR3K3em2nRV50L7hOLdtB
-         kLLEoVean1aP7newA1iCg0hM1q4uH4Db8HfA6CEEv2xICt1WvGFWl/kfLVsBTNHjr+MS
-         /UlrxiHdPxBGkc/pHE1eNS+KC66Dj/5tJp6Kx2iw1QlPU/iRy3/6aiOSoQ0HaZthy0C0
-         iN3w==
-X-Gm-Message-State: APjAAAXWmJO2DepVJ715nqBW2FfW/46k67jd821+YULz9Qfh5wO0NYUs
-        YiA5skcsPXQiMy4GtPdAcXYJLifdcA6HnFdMP7Dd9g==
-X-Google-Smtp-Source: APXvYqwwMn64xtYJxSAfST4HD4Mcg/Ska64cyK6bvZ7Sz6NVYCLT+MPjgY36iu8O+DTFs0t+m6y7JWQK0aWzGRuwboU=
-X-Received: by 2002:a0c:c345:: with SMTP id j5mr555882qvi.156.1578621209242;
- Thu, 09 Jan 2020 17:53:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-6-drinkcat@chromium.org>
- <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com>
-In-Reply-To: <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 10 Jan 2020 09:53:18 +0800
-Message-ID: <CANMq1KBcNr=1_poBHrA_SDo_h-5i3e5TMqASEVaDj5LevsRcOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] drm/panfrost: Add support for multiple power
- domain support
-To:     Steven Price <steven.price@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jan 2020 21:17:15 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:51534 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730668AbgAJCRP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 21:17:15 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CC0620005C;
+        Fri, 10 Jan 2020 03:17:13 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F15372016AF;
+        Fri, 10 Jan 2020 03:17:05 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81285402D7;
+        Fri, 10 Jan 2020 10:16:57 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 3/3] dt-bindings: pinctrl: Convert i.MX8MN to json-schema
+Date:   Fri, 10 Jan 2020 10:13:08 +0800
+Message-Id: <1578622388-23370-3-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
+References: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+Ulf to keep me honest on the power domains
+Convert the i.MX8MN pinctrl binding to DT schema format using json-schema
 
-On Thu, Jan 9, 2020 at 10:08 PM Steven Price <steven.price@arm.com> wrote:
->
-> On 08/01/2020 05:23, Nicolas Boichat wrote:
-> > When there is a single power domain per device, the core will
-> > ensure the power domains are all switched on.
-> >
-> > However, when there are multiple ones, as in MT8183 Bifrost GPU,
-> > we need to handle them in driver code.
-> >
-> >
-> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > ---
-> >
-> > The downstream driver we use on chromeos-4.19 currently uses 2
-> > additional devices in device tree to accomodate for this [1], but
-> > I believe this solution is cleaner.
->
-> I'm not sure what is best, but it seems odd to encode this into the Panfr=
-ost driver itself - it doesn't have any knowledge of what to do with these =
-power domains. The naming of the domains looks suspiciously like someone th=
-ought that e.g. only half of the cores could be powered, but it doesn't loo=
-k like that was implemented in the chromeos driver linked and anyway that i=
-s *meant* to be automatic in the hardware! (I.e. if you only power up one c=
-ores in one core stack then the PDC should only enable the power domain for=
- that set of cores).
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../bindings/pinctrl/fsl,imx8mn-pinctrl.txt        | 39 -------------
+ .../bindings/pinctrl/fsl,imx8mn-pinctrl.yaml       | 67 ++++++++++++++++++++++
+ 2 files changed, 67 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
 
-This is actually implemented in the Chrome OS driver [1]. IMHO power
-domains are a bit confusing [2]:
- i. If there's only 1 power domain in the device, then the core takes
-care of power on the domain (based on pm_runtime)
- ii. If there's more than 1 power domain, then the device needs to
-link the domains manually.
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
+deleted file mode 100644
+index 330716c..0000000
+--- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-* Freescale IMX8MN IOMUX Controller
+-
+-Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+-for common binding part and usage.
+-
+-Required properties:
+-- compatible: "fsl,imx8mn-iomuxc"
+-- reg: should contain the base physical address and size of the iomuxc
+-  registers.
+-
+-Required properties in sub-nodes:
+-- fsl,pins: each entry consists of 6 integers and represents the mux and config
+-  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
+-  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
+-  <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last integer CONFIG is
+-  the pad setting value like pull-up on this pin. Please refer to i.MX8M Nano
+-  Reference Manual for detailed CONFIG settings.
+-
+-Examples:
+-
+-&uart1 {
+-       pinctrl-names = "default";
+-       pinctrl-0 = <&pinctrl_uart1>;
+-};
+-
+-iomuxc: pinctrl@30330000 {
+-        compatible = "fsl,imx8mn-iomuxc";
+-        reg = <0x0 0x30330000 0x0 0x10000>;
+-
+-        pinctrl_uart1: uart1grp {
+-                fsl,pins = <
+-			MX8MN_IOMUXC_UART1_RXD_UART1_DCE_RX	0x140
+-			MX8MN_IOMUXC_UART1_TXD_UART1_DCE_TX	0x140
+-			MX8MN_IOMUXC_UART3_RXD_UART1_DCE_CTS_B	0x140
+-			MX8MN_IOMUXC_UART3_TXD_UART1_DCE_RTS_B	0x140
+-			MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6	0x19
+-                >;
+-        };
+-};
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
+new file mode 100644
+index 0000000..44bf4e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mn-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale IMX8MN IOMUX Controller
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description:
++  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
++  for common binding part and usage.
++
++properties:
++  compatible:
++    const: fsl,imx8mn-iomuxc
++
++# Client device subnode's properties
++patternProperties:
++  '-grp$':
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++
++    properties:
++      fsl,pins:
++        allOf:
++	  - $ref: /schemas/types.yaml#/definitions/uint32-array
++        maxItems: 6
++        description:
++          each entry consists of 6 integers and represents the mux and config
++          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
++          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
++          be found in <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last
++          integer CONFIG is the pad setting value like pull-up on this pin. Please
++          refer to i.MX8M Nano Reference Manual for detailed CONFIG settings.
++
++    required:
++      - fsl,pins
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  # Pinmux controller node
++  - |
++    iomuxc: pinctrl@30330000 {
++        compatible = "fsl,imx8mn-iomuxc";
++        reg = <0x30330000 0x10000>;
++
++        pinctrl_uart2: uart2grp {
++            fsl,pins = <
++                0x23C 0x4A4 0x4FC 0x0 0x0	0x140
++                0x240 0x4A8 0x000 0x0 0x0	0x140
++            >;
++        };
++    };
++
++...
+-- 
+2.7.4
 
-So the Chrome OS [1] driver takes approach (i), by creating 3 devices,
-each with 1 power domain that is switched on/off automatically using
-pm_runtime.
-
-This patch takes approach (ii) with device links to handle the extra domain=
-s.
-
-I believe the latter is more upstream-friendly, but, as always,
-suggestions welcome.
-
-[2] https://elixir.bootlin.com/linux/latest/source/drivers/base/power/domai=
-n.c#L2466
-
-> Steve
->
-> >
-> > [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/r=
-efs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbas=
-e_runtime_pm.c#31
-> >
-> > drivers/gpu/drm/panfrost/panfrost_device.c | 87 ++++++++++++++++++++--
-> >   drivers/gpu/drm/panfrost/panfrost_device.h |  4 +
-> >   2 files changed, 83 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/d=
-rm/panfrost/panfrost_device.c
-> > index a0b0a6fef8b4e63..c6e9e059de94a4d 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> > @@ -5,6 +5,7 @@
-> >   #include <linux/clk.h>
-> >   #include <linux/reset.h>
-> >   #include <linux/platform_device.h>
-> > +#include <linux/pm_domain.h>
-> >   #include <linux/regulator/consumer.h>
-> >
-> >   #include "panfrost_device.h"
-> > @@ -131,6 +132,67 @@ static void panfrost_regulator_fini(struct panfros=
-t_device *pfdev)
-> >       regulator_disable(pfdev->regulator_sram);
-> >   }
-> >
-> > +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
-> > +{
-> > +     int i;
-> > +
-> > +     for (i =3D 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
-> > +             if (!pfdev->pm_domain_devs[i])
-> > +                     break;
-> > +
-> > +             if (pfdev->pm_domain_links[i])
-> > +                     device_link_del(pfdev->pm_domain_links[i]);
-> > +
-> > +             dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
-> > +     }
-> > +}
-> > +
-> > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
-> > +{
-> > +     int err;
-> > +     int i, num_domains;
-> > +
-> > +     num_domains =3D of_count_phandle_with_args(pfdev->dev->of_node,
-> > +                                              "power-domains",
-> > +                                              "#power-domain-cells");
-> > +     /* Single domains are handled by the core. */
-> > +     if (num_domains < 2)
-> > +             return 0;
-> > +
-> > +     if (num_domains > ARRAY_SIZE(pfdev->pm_domain_devs)) {
-> > +             dev_err(pfdev->dev, "Too many pm-domains: %d\n", num_doma=
-ins);
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     for (i =3D 0; i < num_domains; i++) {
-> > +             pfdev->pm_domain_devs[i] =3D
-> > +                     dev_pm_domain_attach_by_id(pfdev->dev, i);
-> > +             if (IS_ERR(pfdev->pm_domain_devs[i])) {
-> > +                     err =3D PTR_ERR(pfdev->pm_domain_devs[i]);
-> > +                     pfdev->pm_domain_devs[i] =3D NULL;
-> > +                     dev_err(pfdev->dev,
-> > +                             "failed to get pm-domain %d: %d\n", i, er=
-r);
-> > +                     goto err;
-> > +             }
-> > +
-> > +             pfdev->pm_domain_links[i] =3D device_link_add(pfdev->dev,
-> > +                             pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNT=
-IME |
-> > +                             DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
-> > +             if (!pfdev->pm_domain_links[i]) {
-> > +                     dev_err(pfdev->pm_domain_devs[i],
-> > +                             "adding device link failed!\n");
-> > +                     err =3D -ENODEV;
-> > +                     goto err;
-> > +             }
-> > +     }
-> > +
-> > +     return 0;
-> > +
-> > +err:
-> > +     panfrost_pm_domain_fini(pfdev);
-> > +     return err;
-> > +}
-> > +
-> >   int panfrost_device_init(struct panfrost_device *pfdev)
-> >   {
-> >       int err;
-> > @@ -161,37 +223,45 @@ int panfrost_device_init(struct panfrost_device *=
-pfdev)
-> >               goto err_out1;
-> >       }
-> >
-> > +     err =3D panfrost_pm_domain_init(pfdev);
-> > +     if (err) {
-> > +             dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
-> > +             goto err_out2;
-> > +     }
-> > +
-> >       res =3D platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
-> >       pfdev->iomem =3D devm_ioremap_resource(pfdev->dev, res);
-> >       if (IS_ERR(pfdev->iomem)) {
-> >               dev_err(pfdev->dev, "failed to ioremap iomem\n");
-> >               err =3D PTR_ERR(pfdev->iomem);
-> > -             goto err_out2;
-> > +             goto err_out3;
-> >       }
-> >
-> >       err =3D panfrost_gpu_init(pfdev);
-> >       if (err)
-> > -             goto err_out2;
-> > +             goto err_out3;
-> >
-> >       err =3D panfrost_mmu_init(pfdev);
-> >       if (err)
-> > -             goto err_out3;
-> > +             goto err_out4;
-> >
-> >       err =3D panfrost_job_init(pfdev);
-> >       if (err)
-> > -             goto err_out4;
-> > +             goto err_out5;
-> >
-> >       err =3D panfrost_perfcnt_init(pfdev);
-> >       if (err)
-> > -             goto err_out5;
-> > +             goto err_out6;
-> >
-> >       return 0;
-> > -err_out5:
-> > +err_out6:
-> >       panfrost_job_fini(pfdev);
-> > -err_out4:
-> > +err_out5:
-> >       panfrost_mmu_fini(pfdev);
-> > -err_out3:
-> > +err_out4:
-> >       panfrost_gpu_fini(pfdev);
-> > +err_out3:
-> > +     panfrost_pm_domain_fini(pfdev);
-> >   err_out2:
-> >       panfrost_reset_fini(pfdev);
-> >   err_out1:
-> > @@ -208,6 +278,7 @@ void panfrost_device_fini(struct panfrost_device *p=
-fdev)
-> >       panfrost_mmu_fini(pfdev);
-> >       panfrost_gpu_fini(pfdev);
-> >       panfrost_reset_fini(pfdev);
-> > +     panfrost_pm_domain_fini(pfdev);
-> >       panfrost_regulator_fini(pfdev);
-> >       panfrost_clk_fini(pfdev);
-> >   }
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/d=
-rm/panfrost/panfrost_device.h
-> > index a124334d69e7e93..92d471676fc7823 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> > @@ -19,6 +19,7 @@ struct panfrost_job;
-> >   struct panfrost_perfcnt;
-> >
-> >   #define NUM_JOB_SLOTS 3
-> > +#define MAX_PM_DOMAINS 3
-> >
-> >   struct panfrost_features {
-> >       u16 id;
-> > @@ -62,6 +63,9 @@ struct panfrost_device {
-> >       struct regulator *regulator;
-> >       struct regulator *regulator_sram;
-> >       struct reset_control *rstc;
-> > +     /* pm_domains for devices with more than one. */
-> > +     struct device *pm_domain_devs[MAX_PM_DOMAINS];
-> > +     struct device_link *pm_domain_links[MAX_PM_DOMAINS];
-> >
-> >       struct panfrost_features features;
-> >
-> >
->
