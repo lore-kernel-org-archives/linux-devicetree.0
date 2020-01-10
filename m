@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B8AC282DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 21:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EABC282DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 21:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1208B2084D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 21:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3A42082E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 21:23:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SrYbrwOB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C0q6/1S+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgAJVUC (ORCPT
+        id S1726859AbgAJVXK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:20:02 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36184 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgAJVUC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 16:20:02 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so1318309plm.3
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 13:20:02 -0800 (PST)
+        Fri, 10 Jan 2020 16:23:10 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34308 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgAJVXK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 16:23:10 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s94so2133531pjc.1
+        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 13:23:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Qf123HPwVYH24BsrOwH9DTDjLwXeUU5UpZOEyqKD1/A=;
-        b=SrYbrwOBvi8YgWQmPD6TBUR0HaApGFKkfko8steRJpOfH97xMvMB80rEzKj1lR9huN
-         TVXiNGXuIxjSVDHmQBjyLv6TEzlTd9SeVSuxbHeiMcrepA/tQdT2Wx3o5g/zu47G6Nh3
-         zpR1H/OE07oj8PjrX9REQD3uBCnr4axHS5LCu25EHyNOR6z4AJhdeD6tdtr+Hj6l3Spe
-         0jJcakJML9HkXZAZUhAaFIdcjch5Q9kzS7TPiqwdTTGLaIcYiOO1ypI4UgvnP2lXReQJ
-         C1HQ90ZegMJb3o9X54jbcf96SDHKb/ilCQIs5LVB/ujPI+2axYegihfU2YmkgtjorR6/
-         tqGA==
+        bh=VST9xLJ8WnLxxccbOuFlca0tJzmP4xh6QpIGCCsCQ1M=;
+        b=C0q6/1S+66Udbo7b16QlqaOUBiiXfZJEXD/A7UQbu9o6ULFUyTZPlVw9L1EjIrNhJr
+         0YdYz/Cezy8UdgHxeRfOmck7ZZy/ejXKcWtYnHSfVfrV+9hHVoXQEl96dm+s5mm2AHua
+         soPbjtsPXohCZMOYYpXEGtpXgwVbvP8NkrdaciNAND3G8SCdaMQPyQYawiStu1iboaDF
+         jW2Uha8Mn9QilVBwKXJuJr+J9pe1GdwCdJEbs9x2bbwoW8hneBUoyROpsMnvTHrQhDKu
+         RzceI6f/45xe4nO/tINacflU7WNtL2bIBeWkBmr0vPPotUWoqFyVsq64Ff+escs6mWWv
+         Vt3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qf123HPwVYH24BsrOwH9DTDjLwXeUU5UpZOEyqKD1/A=;
-        b=Rm4gBfHJmAaIyVkPSwcLx292mytu7vJQnl/jaNe4DyRe+UIiW4bjVVZueoZ5/wCMU0
-         T+Azh7GNnC6LxmZHTQZCGQK80Ua0HcZUj1dghvVSAg+Hj3o6x8px0unFe+PhUhzmutvl
-         59rLYeHDKeU7Mr5Ec9eNberzqXTp2ikBpcJqM0iO9TuJ4qCNGkeJNRsTFDjZU+bO5O1K
-         SahkJ7aS1n7DgPFumYo1l2w7vax8zIhFuxhNw7zkJPRjR39XDWqztle/aH+WKmfQpRxL
-         QGfboErC7s1Wo0LrK+xT8q+h4Fqm+xq4jc+BCaAUZQuksTjPGHkH0zm4WMpFe2vKnyFB
-         1nMw==
-X-Gm-Message-State: APjAAAXuLQSCU9x4uyah/riodMYKkmzbDujg9biLh+QgsLGJWTBvk70H
-        krDzWeIT0YNEryr8hj+XIfwyAA==
-X-Google-Smtp-Source: APXvYqx5ehAQdNJrU1S3f50NENDT3/Y9q/7LAu1x49IqkJdtDXGCdZ5QwiDu4ib99ThKPS/H+994SQ==
-X-Received: by 2002:a17:902:9a41:: with SMTP id x1mr615582plv.169.1578691201459;
-        Fri, 10 Jan 2020 13:20:01 -0800 (PST)
+        bh=VST9xLJ8WnLxxccbOuFlca0tJzmP4xh6QpIGCCsCQ1M=;
+        b=sSm/LHOkCapaH5r780T625r9TI8OsvHPpmLNaf5gMHLWjgvxzPEASJJaSay9jzSlNJ
+         l5iONgTivgXmVwH0iJvH3UUXc9tl5I5kpsy0cqdSnkG2Coa43vD3x44mAc8iWl12BXfi
+         4Oo5ZgPtvCUNmJB3F/LLcasOR6Lf1n7Frrz3+XkCyHEZiKeebS5D8pEcvTxU+RxYyfMN
+         mmAY91kzWLxncngtYH7NrC5F32hO3Z0QPTu9rlB02imY/8jDzH8wOaERpyGdZ/zOyh+9
+         byhFijsFSGhnRveYQHbooVcCaSgL8hf3sXNG1Al3MEHDb8Ii6ykwEXPo3klmyz+fPlaL
+         d75g==
+X-Gm-Message-State: APjAAAWij3QDXujS99Gc9q4ueldJgpmsE451wKNlqGSVmEmZuh7vsIM9
+        usTLAZiG88C14fM+xMPuXGcz5w==
+X-Google-Smtp-Source: APXvYqyohTo62l6sHxhZmJoPUXlZqFbswgZNCb+vVQd/xONNCazHsQ0Do7KLPCPNOHA/rE7z94OZ+Q==
+X-Received: by 2002:a17:902:16a:: with SMTP id 97mr601827plb.163.1578691389688;
+        Fri, 10 Jan 2020 13:23:09 -0800 (PST)
 Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id i23sm4014003pfo.11.2020.01.10.13.20.00
+        by smtp.gmail.com with ESMTPSA id i68sm4207847pfe.173.2020.01.10.13.23.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 13:20:01 -0800 (PST)
-Date:   Fri, 10 Jan 2020 14:19:58 -0700
+        Fri, 10 Jan 2020 13:23:09 -0800 (PST)
+Date:   Fri, 10 Jan 2020 14:23:07 -0700
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -65,261 +65,110 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         Sibi Sankar <sibis@codeaurora.org>,
         Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: Re: [PATCH v2 3/8] remoteproc: qcom: Update IMEM PIL info on load
-Message-ID: <20200110211958.GB11555@xps15>
+Subject: Re: [PATCH v2 6/8] remoteproc: Introduce "panic" callback in ops
+Message-ID: <20200110212307.GC11555@xps15>
 References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-4-bjorn.andersson@linaro.org>
+ <20191227053215.423811-7-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191227053215.423811-4-bjorn.andersson@linaro.org>
+In-Reply-To: <20191227053215.423811-7-bjorn.andersson@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 26, 2019 at 09:32:10PM -0800, Bjorn Andersson wrote:
-> Update the PIL info region structure in IMEM with information about
-> where the firmware for various remoteprocs are loaded.
+On Thu, Dec 26, 2019 at 09:32:13PM -0800, Bjorn Andersson wrote:
+> Introduce a "panic" function in the remoteproc ops table, to allow
+> remoteproc instances to perform operations needed in order to aid in
+> post mortem system debugging, such as flushing caches etc, when the
+> kernel panics.
 > 
 > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
 > 
 > Changes since v1:
-> - Squashed patches for the individual drivers into one
-> - Probe defer on qcom_pil_info_available()
+> - None
 > 
->  drivers/remoteproc/Kconfig          |  3 +++
->  drivers/remoteproc/qcom_q6v5_adsp.c | 19 ++++++++++++++++---
->  drivers/remoteproc/qcom_q6v5_mss.c  |  6 ++++++
->  drivers/remoteproc/qcom_q6v5_pas.c  | 18 +++++++++++++++---
->  drivers/remoteproc/qcom_wcnss.c     | 17 ++++++++++++++---
->  5 files changed, 54 insertions(+), 9 deletions(-)
+>  drivers/remoteproc/remoteproc_core.c | 17 +++++++++++++++++
+>  include/linux/remoteproc.h           |  4 ++++
+>  2 files changed, 21 insertions(+)
 > 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 0798602e355a..84922bb922e0 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -135,6 +135,7 @@ config QCOM_Q6V5_PAS
->  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
->  	depends on QCOM_SYSMON || QCOM_SYSMON=n
->  	select MFD_SYSCON
-> +	select QCOM_PIL_INFO
->  	select QCOM_MDT_LOADER
->  	select QCOM_Q6V5_COMMON
->  	select QCOM_RPROC_COMMON
-> @@ -152,6 +153,7 @@ config QCOM_Q6V5_WCSS
->  	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
->  	depends on QCOM_SYSMON || QCOM_SYSMON=n
->  	select MFD_SYSCON
-> +	select QCOM_PIL_INFO
->  	select QCOM_MDT_LOADER
->  	select QCOM_Q6V5_COMMON
->  	select QCOM_RPROC_COMMON
-> @@ -183,6 +185,7 @@ config QCOM_WCNSS_PIL
->  	depends on QCOM_SMEM
->  	depends on QCOM_SYSMON || QCOM_SYSMON=n
->  	select QCOM_MDT_LOADER
-> +	select QCOM_PIL_INFO
->  	select QCOM_RPROC_COMMON
->  	select QCOM_SCM
->  	help
-> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-> index e953886b2eb7..1a942c92d974 100644
-> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> @@ -26,6 +26,7 @@
->  #include <linux/soc/qcom/smem_state.h>
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 307df98347ba..779f19d6d8e7 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1832,6 +1832,17 @@ void rproc_shutdown(struct rproc *rproc)
+>  }
+>  EXPORT_SYMBOL(rproc_shutdown);
 >  
->  #include "qcom_common.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_q6v5.h"
->  #include "remoteproc_internal.h"
->  
-> @@ -82,6 +83,7 @@ struct qcom_adsp {
->  	unsigned int halt_lpass;
->  
->  	int crash_reason_smem;
-> +	const char *info_name;
->  
->  	struct completion start_done;
->  	struct completion stop_done;
-> @@ -164,10 +166,17 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
->  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
->  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> +	int ret;
+> +static int rproc_panic_handler(struct notifier_block *nb, unsigned long event,
+> +			       void *ptr)
+> +{
+> +	struct rproc *rproc = container_of(nb, struct rproc, panic_nb);
 > +
-> +	ret = qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> +				    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
+> +	if (rproc->state == RPROC_RUNNING)
+> +		rproc->ops->panic(rproc);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+>  /**
+>   * rproc_get_by_phandle() - find a remote processor by phandle
+>   * @phandle: phandle to the rproc
+> @@ -2057,6 +2068,12 @@ struct rproc *rproc_alloc(struct device *dev, const char *name,
+>  		rproc->ops->get_boot_addr = rproc_elf_get_boot_addr;
+>  	}
+>  
+> +	/* Register panic notifier for remoteprocs with "panic" callback */
+> +	if (rproc->ops->panic) {
+> +		rproc->panic_nb.notifier_call = rproc_panic_handler;
+> +		atomic_notifier_chain_register(&panic_notifier_list, &rproc->panic_nb);
 
 Line over 80 characters.
 
-> +				    &adsp->mem_reloc);
-> +	if (ret)
-> +		return ret;
->  
-> -	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> -			     &adsp->mem_reloc);
-> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
+> +	}
 > +
-> +	return 0;
->  }
+>  	mutex_init(&rproc->lock);
 >  
->  static int adsp_start(struct rproc *rproc)
-> @@ -413,6 +422,9 @@ static int adsp_probe(struct platform_device *pdev)
->  	struct rproc *rproc;
->  	int ret;
+>  	idr_init(&rproc->notifyids);
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad66683ad0..7836c528d309 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -369,6 +369,7 @@ enum rsc_handling_status {
+>   *			expects to find it
+>   * @sanity_check:	sanity check the fw image
+>   * @get_boot_addr:	get boot address to entry point specified in firmware
+> + * @panic:	optional callback to react to system panic
+>   */
+>  struct rproc_ops {
+>  	int (*start)(struct rproc *rproc);
+> @@ -383,6 +384,7 @@ struct rproc_ops {
+>  	int (*load)(struct rproc *rproc, const struct firmware *fw);
+>  	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
+>  	u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+> +	void (*panic)(struct rproc *rproc);
+>  };
 >  
-> +	if (!qcom_pil_info_available())
-> +		return -EPROBE_DEFER;
-> +
->  	desc = of_device_get_match_data(&pdev->dev);
->  	if (!desc)
->  		return -EINVAL;
-> @@ -427,6 +439,7 @@ static int adsp_probe(struct platform_device *pdev)
->  	adsp = (struct qcom_adsp *)rproc->priv;
->  	adsp->dev = &pdev->dev;
->  	adsp->rproc = rproc;
-> +	adsp->info_name = desc->sysmon_name;
->  	platform_set_drvdata(pdev, adsp);
+>  /**
+> @@ -481,6 +483,7 @@ struct rproc_dump_segment {
+>   * @auto_boot: flag to indicate if remote processor should be auto-started
+>   * @dump_segments: list of segments in the firmware
+>   * @nb_vdev: number of vdev currently handled by rproc
+> + * @panic_nb: notifier_block for remoteproc's panic handler
+>   */
+>  struct rproc {
+>  	struct list_head node;
+> @@ -514,6 +517,7 @@ struct rproc {
+>  	bool auto_boot;
+>  	struct list_head dump_segments;
+>  	int nb_vdev;
+> +	struct notifier_block panic_nb;
+>  };
 >  
->  	ret = adsp_alloc_memory_region(adsp);
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 471128a2e723..6360e69b54e4 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -28,6 +28,7 @@
->  
->  #include "remoteproc_internal.h"
->  #include "qcom_common.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_q6v5.h"
->  
->  #include <linux/qcom_scm.h>
-> @@ -1052,6 +1053,8 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  	else if (ret < 0)
->  		dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
->  
-> +	qcom_pil_info_store("modem", mpss_reloc, qproc->mpss_size);
-> +
->  release_firmware:
->  	release_firmware(fw);
->  out:
-> @@ -1400,6 +1403,9 @@ static int q6v5_probe(struct platform_device *pdev)
->  	if (desc->need_mem_protection && !qcom_scm_is_available())
->  		return -EPROBE_DEFER;
->  
-> +	if (!qcom_pil_info_available())
-> +		return -EPROBE_DEFER;
-> +
->  	mba_image = desc->hexagon_mba_image;
->  	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
->  					    0, &mba_image);
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index b890e6e305f3..4dcdf1301e50 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -25,6 +25,7 @@
->  #include <linux/soc/qcom/smem_state.h>
->  
->  #include "qcom_common.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_q6v5.h"
->  #include "remoteproc_internal.h"
->  
-> @@ -64,6 +65,7 @@ struct qcom_adsp {
->  	int pas_id;
->  	int crash_reason_smem;
->  	bool has_aggre2_clk;
-> +	const char *info_name;
->  
->  	struct completion start_done;
->  	struct completion stop_done;
-> @@ -117,11 +119,17 @@ static void adsp_pds_disable(struct qcom_adsp *adsp, struct device **pds,
->  static int adsp_load(struct rproc *rproc, const struct firmware *fw)
->  {
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> +	int ret;
-> +
-> +	ret = qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
-> +			    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> +			    &adsp->mem_reloc);
-> +	if (ret)
-> +		return ret;
->  
-> -	return qcom_mdt_load(adsp->dev, fw, rproc->firmware, adsp->pas_id,
-> -			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> -			     &adsp->mem_reloc);
-> +	qcom_pil_info_store(adsp->info_name, adsp->mem_reloc, adsp->mem_size);
->  
-> +	return 0;
->  }
->  
->  static int adsp_start(struct rproc *rproc)
-> @@ -376,6 +384,9 @@ static int adsp_probe(struct platform_device *pdev)
->  	if (!qcom_scm_is_available())
->  		return -EPROBE_DEFER;
->  
-> +	if (!qcom_pil_info_available())
-> +		return -EPROBE_DEFER;
-> +
->  	fw_name = desc->firmware_name;
->  	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
->  				      &fw_name);
-> @@ -396,6 +407,7 @@ static int adsp_probe(struct platform_device *pdev)
->  	adsp->rproc = rproc;
->  	adsp->pas_id = desc->pas_id;
->  	adsp->has_aggre2_clk = desc->has_aggre2_clk;
-> +	adsp->info_name = desc->sysmon_name;
->  	platform_set_drvdata(pdev, adsp);
->  
->  	ret = adsp_alloc_memory_region(adsp);
-> diff --git a/drivers/remoteproc/qcom_wcnss.c b/drivers/remoteproc/qcom_wcnss.c
-> index dc135754bb9c..2c1cefeacf97 100644
-> --- a/drivers/remoteproc/qcom_wcnss.c
-> +++ b/drivers/remoteproc/qcom_wcnss.c
-> @@ -27,6 +27,7 @@
->  
->  #include "qcom_common.h"
->  #include "remoteproc_internal.h"
-> +#include "qcom_pil_info.h"
->  #include "qcom_wcnss.h"
->  
->  #define WCNSS_CRASH_REASON_SMEM		422
-> @@ -145,10 +146,17 @@ void qcom_wcnss_assign_iris(struct qcom_wcnss *wcnss,
->  static int wcnss_load(struct rproc *rproc, const struct firmware *fw)
->  {
->  	struct qcom_wcnss *wcnss = (struct qcom_wcnss *)rproc->priv;
-> +	int ret;
-> +
-> +	ret = qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
-> +			    wcnss->mem_region, wcnss->mem_phys,
-> +			    wcnss->mem_size, &wcnss->mem_reloc);
-> +	if (ret)
-> +		return ret;
->  
-> -	return qcom_mdt_load(wcnss->dev, fw, rproc->firmware, WCNSS_PAS_ID,
-> -			     wcnss->mem_region, wcnss->mem_phys,
-> -			     wcnss->mem_size, &wcnss->mem_reloc);
-> +	qcom_pil_info_store("wcnss", wcnss->mem_reloc, wcnss->mem_size);
-> +
-> +	return 0;
->  }
->  
->  static void wcnss_indicate_nv_download(struct qcom_wcnss *wcnss)
-> @@ -469,6 +477,9 @@ static int wcnss_probe(struct platform_device *pdev)
->  	if (!qcom_scm_is_available())
->  		return -EPROBE_DEFER;
->  
-> +	if (!qcom_pil_info_available())
-> +		return -EPROBE_DEFER;
-> +
->  	if (!qcom_scm_pas_supported(WCNSS_PAS_ID)) {
->  		dev_err(&pdev->dev, "PAS is not available for WCNSS\n");
->  		return -ENXIO;
+>  /**
 > -- 
 > 2.24.0
 > 
