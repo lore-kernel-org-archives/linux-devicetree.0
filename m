@@ -2,153 +2,146 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C2BC282DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39ADC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF45206ED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:12:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPkSw08S"
+	by mail.kernel.org (Postfix) with ESMTP id A061720721
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 16:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgAJQMK (ORCPT
+        id S1728624AbgAJQSn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:12:10 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37206 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbgAJQMK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 11:12:10 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so2552815wmf.2;
-        Fri, 10 Jan 2020 08:12:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xkMOmNmLa62Vpfa8/ICLyRTkAbbIVBU7ErtKb0uzIMQ=;
-        b=aPkSw08SMUilULHj7HsZy/gdCwo3Abv1ABNWaL48dKNFzHJDyXA/Yz4/F0YVY1jkDo
-         lhP+Pox6M56eJW/hGKC6Tij4PUxV3RJrHSSUiKta+i1LBsgvkc/rfQNL3pHfSYonDvCq
-         +BZU5WF2BhqM37KlGhgv7jAgx7Vmx46Fw67w7QekdaKwOSMdbmhbOBgCer1EjC4riXaB
-         uNWGAtr+tWsO7JOtMKgs/8fv2p4oVebAwKgpiQJU9jRIQig/UaTuvTbRNhgSOPYuwm14
-         QYYo8gkDPgpY2c/UygtbWCK5g7gibLoVKxF9R82X8vXy/n0U19hq2NJaZC0BEuhPafF3
-         3YBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xkMOmNmLa62Vpfa8/ICLyRTkAbbIVBU7ErtKb0uzIMQ=;
-        b=QJV+ZhQxSSFYutTihLY8rxZdwlFquCMOXAnJHKp7U+EHS2lKCOq4sjckOr/rmu4md4
-         7BeNcK8JwKScIkXbqOGuTLyc1hqjE64NUqF7bFCR3BTG4bhCCXRtXX4ZapsF/M7caFSs
-         rKq84pHYsUgjoL+RvdtNJDtMOot3uPjx2qRW8UH7mToXaMsfUds1cG5gKIdT3OwiA04A
-         rJQW7BT23JdGxrS/vPR9qjuLzx3EOUDzw/JOjIk0RVbOsQ9O6x0oFBSctgMv9mcvlG1f
-         3t29+9NIaPUXWigf/Bl4iIk/+T7p7dH9v+Xq3W2mYhno8CI2VO+lYj8z2GHe6BJJN9WT
-         uf7g==
-X-Gm-Message-State: APjAAAVsitahzmJyvGASlNeG4cwxeLbZlba9ZdmE1xj+kewj7A9RmE05
-        zp8nm1fTbPqHNz8+1UuQ3Rs=
-X-Google-Smtp-Source: APXvYqzAXbMEDqrzxi6gn4Xy/KMH6yHFAQP4FHoyyt5JulLOcl6Xolbecb4sqUX5qD/e9+jnjevHCw==
-X-Received: by 2002:a1c:a982:: with SMTP id s124mr5063032wme.132.1578672728261;
-        Fri, 10 Jan 2020 08:12:08 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id x10sm2713533wrp.58.2020.01.10.08.12.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Jan 2020 08:12:07 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: fix dwmmc clock name for px30 and rk3308
-Date:   Fri, 10 Jan 2020 17:12:00 +0100
-Message-Id: <20200110161200.22755-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 10 Jan 2020 11:18:43 -0500
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:25289 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgAJQSn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 11:18:43 -0500
+Received-SPF: Pass (esa4.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa4.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa4.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa4.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: bgvyRviLtSMBagCbW5xU15eyDlYUnS2bKX3SApzPK+ZELkixZqoDg+qhOMwxYIVA+B81vBgAh4
+ ppcuQyjdNHfre+ii56Ui0NDTNRyalmYKsAZwv7Y5N4StRauxz+AIxC6ZeLkAy0WkVr3zZswTpO
+ ycLeK0lAg4BY5nkGnFCiVtmYJlN5R4cebLc3cwgAzPHcX8DmpXiiCQGUGsPhbNv8wX4QPUlWx3
+ 3IlYCASxr2soI/fh9+iytkkHg8n3/Yrz8/wmRBH9CWxEb+H7syfZEGmAnIdK8lyzQeD7gnPaBg
+ a/Q=
+X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
+   d="scan'208";a="60748306"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 09:18:41 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Jan 2020 09:18:40 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 10 Jan 2020 09:18:32 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
+        <eugen.hristev@microchip.com>, <jic23@kernel.org>,
+        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <mchehab@kernel.org>, <lee.jones@linaro.org>,
+        <radu_nicolae.pirea@upb.ro>, <richard.genoud@gmail.com>,
+        <tudor.ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <wg@grandegger.com>,
+        <mkl@pengutronix.de>, <a.zummo@towertech.it>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-can@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 00/17] add device tree for SAM9X60 SoC and SAM9X60-EK board
+Date:   Fri, 10 Jan 2020 18:17:52 +0200
+Message-ID: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-An experimental test with the command below gives this error:
-px30-evb.dt.yaml: dwmmc@ff390000: clock-names:2:
-'ciu-drive' was expected
-rk3308-evb.dt.yaml: dwmmc@ff480000: clock-names:2:
-'ciu-drive' was expected
+This series add device tree for SAM9X60 SoC and SAM9X60-EK board.
+Allong with these, there are patches that documents some compatibles
+for SAM9X60's IPs.
 
-'ciu-drv' is not a valid dwmmc clock name,
-so fix this by changing it to 'ciu-drive'.
+Changes in v2:
+- replace patch "dt-bindings: at_xdmac: add entry for microchip compatibles"
+  by patches:
+	- dt-bindings: at_xdmac: add microchip,sam9x60-dma
+	- dt-bindings: at_xdmac: remove wildcard.
+- replace patch "dt-bindings: atmel-usart: add microchip,<chip>-usart"
+  by patches:
+	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+	- dt-bindings: atmel-usart: remove wildcard
+- remove patch "dt-bindings: spi_atmel: add microchip,sam9x60-spi"
+  as it was accepted
+- collect reviewed-by tags
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+Claudiu Beznea (16):
+  dt-bindings: at_xdmac: remove wildcard.
+  dt-bindings: at_xdmac: add microchip,sam9x60-dma
+  dt-bindings: atmel-can: add microchip,sam9x60-can
+  dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
+  dt-bindings: atmel-isi: add microchip,sam9x60-isi
+  dt-bindings: at91-sama5d2_adc: add microchip,sam9x60-adc
+  dt-bindings: atmel-matrix: add microchip,sam9x60-matrix
+  dt-bindings: atmel-nand: add microchip,sam9x60-pmecc
+  dt-bindings: atmel-sysreg: add microchip,sam9x60-ddramc
+  dt-bindings: atmel-smc: add microchip,sam9x60-smc
+  dt-bindings: atmel-gpbr: add microchip,sam9x60-gpbr
+  dt-bindings: atmel,at91rm9200-rtc: add microchip,sam9x60-rtc
+  dt-bindings: atmel-usart: remove wildcard
+  dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+  dt-bindings: arm: add sam9x60-ek board
+  ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Sandeep Sheriker Mallikarjun (1):
+  ARM: dts: at91: sam9x60: add device tree for soc and board
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 9a0f77ea4..07fe187cf 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -885,7 +885,7 @@
- 		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		pinctrl-names = "default";
-@@ -900,7 +900,7 @@
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		pinctrl-names = "default";
-@@ -915,7 +915,7 @@
- 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index 8bdc66c62..fa0d55f1a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -591,7 +591,7 @@
- 		bus-width = <4>;
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		pinctrl-names = "default";
-@@ -606,7 +606,7 @@
- 		bus-width = <8>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		status = "disabled";
-@@ -619,7 +619,7 @@
- 		bus-width = <4>;
- 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu-drv", "ciu-sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		max-frequency = <150000000>;
- 		pinctrl-names = "default";
+ .../devicetree/bindings/arm/atmel-at91.yaml        |   6 +
+ .../devicetree/bindings/arm/atmel-sysregs.txt      |   1 +
+ .../devicetree/bindings/dma/atmel-xdma.txt         |   4 +-
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   2 +-
+ .../devicetree/bindings/media/atmel-isi.txt        |   2 +-
+ .../devicetree/bindings/mfd/atmel-gpbr.txt         |   4 +-
+ .../devicetree/bindings/mfd/atmel-matrix.txt       |   1 +
+ .../devicetree/bindings/mfd/atmel-smc.txt          |   1 +
+ .../devicetree/bindings/mfd/atmel-tcb.txt          |   4 +-
+ .../devicetree/bindings/mfd/atmel-usart.txt        |  11 +-
+ .../devicetree/bindings/mtd/atmel-nand.txt         |   1 +
+ .../devicetree/bindings/net/can/atmel-can.txt      |   3 +-
+ .../bindings/rtc/atmel,at91rm9200-rtc.txt          |   3 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/at91-sam9x60ek.dts               | 647 +++++++++++++++++++
+ arch/arm/boot/dts/sam9x60.dtsi                     | 691 +++++++++++++++++++++
+ arch/arm/configs/at91_dt_defconfig                 |   4 +
+ 17 files changed, 1373 insertions(+), 14 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
+ create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
+
 -- 
-2.11.0
+2.7.4
 
