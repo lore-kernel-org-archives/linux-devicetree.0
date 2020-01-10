@@ -2,188 +2,162 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7246DC33C99
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 04:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC62C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 04:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372C620721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 04:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FCB2073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 04:33:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="xriLT65/"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GOPPgTN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731174AbgAJE3N (ORCPT
+        id S1731417AbgAJEdf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 23:29:13 -0500
-Received: from mail-mw2nam12on2078.outbound.protection.outlook.com ([40.107.244.78]:20813
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731162AbgAJE3N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 23:29:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EztRJQ6ynTVijnx8+6q5amTvheNrDvxRsTtUObp4afHJgQ/I0PCmDHyAGUQH0IdQomH9PzhQCTw8gkWkrycZ4A0XM8kgqbldKJmLhvCc/TpVK3JO0cQQgvFOkpbYHVHhNvwSDxniTNeu91KzD5r1bQj/1N8Sq3rOgNXpdDRa/fbJV/7QX56t6wPuMXwtp3fHdlemWWXjrqLtMJMCI2OKh/2TFxAGgpllSSvF1vnye0llLyCmP+2t4IFS5mnREnRquXT4We3/JyZgdbpCePProii+csb1GIwK90OTYclHck6oXvdGHKjoQJlEr6oDscJ9kAvtbluFpg1aJVTI5Vp3oA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GFfuDWrzCVGvAfyLlmgKf/nyRqL2jQilEuiHFfbRoDA=;
- b=TihYqb4ahsDUBqZaSUdaK/Ah63vQ2bPVBqZKDzD2mGdLYnKGnb1D+ImjwFsCjClkia1JW3dHfA3BC4Q+BuU2d4o6lsvBO8vWAOzoxlBa1vujmfykK1fZzwPO3PVsu6oNqMTWQFjD5QOQW6DuPLoJvvAfaa0GhScpv4r1BtwbH4nD6ZAZbeHg/apbSyQWjK/mLJAItkFoC9oK4cMvDBoooOlHmkdjP4gU0D3o2WscyKGVQVqZxYoX9ZVsfMa1CZw2E9A0GehtnbaDvcngYkEGRTfDbMJVJ92tvhn4+uqcQs1xYfCCbheaD7FBgaqNaHFIeguyVpKFHUEva1IzL6JQHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
- dkim=pass header.d=labundy.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GFfuDWrzCVGvAfyLlmgKf/nyRqL2jQilEuiHFfbRoDA=;
- b=xriLT65/4YAZIVAspSqJvxyMkhJbFtwqX3dZbsc/omXjStxgN9IABrj0gELXq2lAs3HryFe47hoRk5P7bQ5qZFSZV4XoervIQkHcVcPBqLrooYb8iGNcvYwJ2xPTk1gfvoZudc885DASG83vTJKpGXBphKSEJgBQLv5/1jPVxSA=
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
- SN6PR08MB4480.namprd08.prod.outlook.com (52.135.71.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Fri, 10 Jan 2020 04:29:08 +0000
-Received: from SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::7c80:2b62:5d9a:2139]) by SN6PR08MB5053.namprd08.prod.outlook.com
- ([fe80::7c80:2b62:5d9a:2139%4]) with mapi id 15.20.2623.010; Fri, 10 Jan 2020
- 04:29:08 +0000
-Received: from labundy.com (136.49.227.119) by SN6PR16CA0068.namprd16.prod.outlook.com (2603:10b6:805:ca::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11 via Frontend Transport; Fri, 10 Jan 2020 04:29:03 +0000
-From:   Jeff LaBundy <jeff@labundy.com>
-To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>
-Subject: Re: [PATCH v2 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Thread-Topic: [PATCH v2 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Thread-Index: AQHVrij+8yO8xEtV+ECzt9/U9i+G6qexaTEAgAEU0QCAAHrSgIAIuWeAgADVNACABeTNAIAAXxsAgAE1m4CAAsXugIAPxXqAgAiwCACABEQ3gA==
-Date:   Fri, 10 Jan 2020 04:29:08 +0000
-Message-ID: <20200110042851.GA23906@labundy.com>
-References: <20191210000252.GA6361@labundy.com>
- <20191210072227.434hyv5wl3rwztqx@pengutronix.de>
- <20191215203607.GA31390@labundy.com>
- <20191216091912.r4onikojbkbmguag@pengutronix.de>
- <20191220031924.GA2658@labundy.com>
- <20191220085948.iagsdpjqd6ixdo7j@pengutronix.de>
- <20191221032755.GA3051@labundy.com>
- <20191222214851.kapsro6b6qylke43@pengutronix.de>
- <20200101223933.GB14339@labundy.com>
- <20200107111940.ymiey7npx6rrppqz@pengutronix.de>
-In-Reply-To: <20200107111940.ymiey7npx6rrppqz@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR16CA0068.namprd16.prod.outlook.com
- (2603:10b6:805:ca::45) To SN6PR08MB5053.namprd08.prod.outlook.com
- (2603:10b6:805:78::25)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jeff@labundy.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [136.49.227.119]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b42492d3-832d-49f4-33f6-08d79585a1ea
-x-ms-traffictypediagnostic: SN6PR08MB4480:
-x-microsoft-antispam-prvs: <SN6PR08MB448088F2923080493736E34BD3380@SN6PR08MB4480.namprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02788FF38E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39830400003)(34096005)(366004)(396003)(346002)(136003)(199004)(189003)(4326008)(66446008)(66556008)(8676002)(16526019)(81156014)(8936002)(64756008)(2906002)(7416002)(52116002)(7696005)(66946007)(6916009)(55016002)(66476007)(186003)(26005)(966005)(54906003)(81166006)(316002)(33656002)(1076003)(36756003)(8886007)(66574012)(71200400001)(2616005)(86362001)(956004)(508600001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB4480;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: labundy.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +34nBxNzacjjgFgExyPsoTGISBNRfBk9j0NvStgcdU6THundArt1o8brlwIJ8sfkxho+3g4wTtCXKC5U1VS6PwS3+C0BEaSYbgkOtAHTQgHnORM0cpzn+6NEFe7Lmq3UphlamNLMWTMyL28dSI9LqjwZoT/hl1Hkrx/s0ws6Urlu+rtfBFttTOAsdcqQ7Lj57y5EYfWdG/s4Ty62QYsjjaXVAHssJBhEpThirJ5qQ+LnNrnEzBmkdU82u1TYHb21tNDDkGgQgsBqta/KIY961y/8cO71IGIMzPsSPaszhq0Dddst9aQLsyZbD2ztVKAjllVgERyPBQxYdBYRqwctHR3pVKzANfc5DWa2q6G6Ap/lN4V4rnQ4bHRy67KU5R5nmbPVeZI83t4s8bue6m9R8/jazcSk9S1LOUpQJJNEsASb9G1lJYu5Z9KCOYTDJGdtD6zvHdAiWuxC1BrQ5/Vf6ZgXtRr0svMsQ70JRMKw6wY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <0BD0E6A2A1A1C145924E6F804C26EE79@namprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: labundy.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b42492d3-832d-49f4-33f6-08d79585a1ea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 04:29:08.3749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ro7/kc+o+NMx/h+LZl3lVNfWKBD/ENE/1qAE9CGtJDCi6txZWey7FwpBoejOnPC790k4A8+l+pMzltH+Ea0BDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB4480
+        Thu, 9 Jan 2020 23:33:35 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:17818 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731401AbgAJEdc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 23:33:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578630811; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=WfYVZRY7NUJGi0SdNulsMWXe+awHuELnsj9TepITErQ=; b=GOPPgTN9+He7rAM2e/Vk0MKLKqtlZii1iVZbngrYNw38Y6r12wzct7+WGBB4Qo7HZh7ovofA
+ RHONmImdryeixWyyU7iCdUDCZuqEwH8KaRIqAqumHCQA5wYyecU7Kc4Kh+COhyylnCPRKHTl
+ kLEXl7bxuWrqfu+cOEo5PMyV43A=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e17fe97.7fc7ecb89ed8-smtp-out-n01;
+ Fri, 10 Jan 2020 04:33:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E8393C447A4; Fri, 10 Jan 2020 04:33:26 +0000 (UTC)
+Received: from davidai-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: daidavid1)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A492C433A2;
+        Fri, 10 Jan 2020 04:33:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2A492C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
+From:   David Dai <daidavid1@codeaurora.org>
+To:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org
+Cc:     David Dai <daidavid1@codeaurora.org>, evgreen@google.com,
+        sboyd@kernel.org, ilina@codeaurora.org, seansw@qti.qualcomm.com,
+        elder@linaro.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v2 6/6] arm64: dts: sdm845: Redefine interconnect provider DT nodes
+Date:   Thu,  9 Jan 2020 20:33:04 -0800
+Message-Id: <1578630784-962-7-git-send-email-daidavid1@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org>
+References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Uwe,
+Add the DT nodes for each of the Network-On-Chip interconnect
+buses found on SDM845 based platform and redefine the rsc_hlos
+child node as a bcm-voter device to better represent the hardware.
 
-On Tue, Jan 07, 2020 at 12:19:40PM +0100, Uwe Kleine-K=F6nig wrote:
-> Hi Jeff,
->=20
-> On Wed, Jan 01, 2020 at 10:39:36PM +0000, Jeff LaBundy wrote:
-> > On Sun, Dec 22, 2019 at 10:48:51PM +0100, Uwe Kleine-K=F6nig wrote:
-> > > On Sat, Dec 21, 2019 at 03:28:01AM +0000, Jeff LaBundy wrote:
-> > > > Based on your other feedback, I'm moving forward under the impressi=
-on that
-> > > > you'll still accept option (2); please let me know if I have misund=
-erstood
-> > > > (thank you for being flexible).
-> > >=20
-> > > Yeah, that's fine. If in the end it shows that this is a bad idea we =
-can
-> > > still change to (3).
-> >=20
-> > Sounds great. As soon as 5.5-rc5 lands this weekend, I'll rebase v3 and
-> > send it out.
-> >=20
-> > I failed to catch this in my previous reply, but the comment I've added
-> > to iqs620_pwm_get_state actually reads as follows:
-> >=20
-> > /*
-> >  * Since the device cannot generate a 0% duty cycle, requests to do so
-> >  * force subsequent calls to iqs620_pwm_get_state to report the output
-> >  * as disabled with duty cycle equal to that which was in use prior to
-> >  * the request. This is not ideal, but is the best compromise based on
-> >  * the capabilities of the device.
-> >  */
-> >=20
-> > This matches the present implementation, not your proposed comment that
-> > claims duty cycle is clamped to 1 / 256 ms following a request for a 0%
-> > duty cycle.
->=20
-> Yeah, if that's the mechanism that is actually implemented, that's fine
-> of course.
->=20
-> > This seems OK since the concept of a duty cycle or period aren't really
-> > relevant if the output is disabled in my opinion. However if you prefer
-> > I update iqs620_pwm_apply to clamp duty cycle to 1 / 256 ms (instead of
-> > leaving it untouched) in this case, please let me know.
->=20
-> For a disabled PWM the duty_cycle and period are not relevant, for an
-> enabled PWM running with 0% the period matters (at least in theory)
-> however.
->=20
+Signed-off-by: David Dai <daidavid1@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 58 insertions(+), 3 deletions(-)
 
-Agreed in full. We should be covered here since we report the (fixed)
-period in all cases.
-
-> Best regards
-> Uwe
->=20
-> --=20
-> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
-  |
-> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
-|
-
-I managed to send out v3 this past weekend; please let me know if you
-have any further feedback or you find it to be satisfactory.
-
-Kind regards,
-Jeff LaBundy
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index ddb1f23..7c617a9 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1364,6 +1364,55 @@
+ 			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		mem_noc: interconnect@1380000 {
++			compatible = "qcom,sdm845-mem-noc";
++			reg = <0 0x01380000 0 0x27200>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		dc_noc: interconnect@14e0000 {
++			compatible = "qcom,sdm845-dc-noc";
++			reg = <0 0x014e0000 0 0x400>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		config_noc: interconnect@1500000 {
++			compatible = "qcom,sdm845-config-noc";
++			reg = <0 0x01500000 0 0x5080>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		system_noc: interconnect@1620000 {
++			compatible = "qcom,sdm845-system-noc";
++			reg = <0 0x01620000 0 0x18080>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		aggre1_noc: interconnect@16e0000 {
++			compatible = "qcom,sdm845-aggre1-noc";
++			reg = <0 0x016e0000 0 0xd080>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		aggre2_noc: interconnect@1700000 {
++			compatible = "qcom,sdm845-aggre2-noc";
++			reg = <0 0x01700000 0 0x3b100>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
++		mmss_noc: interconnect@1740000 {
++			compatible = "qcom,sdm845-mmss-noc";
++			reg = <0 0x01740000 0 0x1c1000>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+@@ -3100,6 +3149,13 @@
+ 			#mbox-cells = <1>;
+ 		};
+ 
++		gladiator_noc: interconnect@17900000 {
++			compatible = "qcom,sdm845-gladiator-noc";
++			reg = <0 0x17900000 0 0xd080>;
++			#interconnect-cells = <1>;
++			qcom,bcm-voters = <&apps_bcm_voter>;
++		};
++
+ 		apps_rsc: rsc@179c0000 {
+ 			label = "apps_rsc";
+ 			compatible = "qcom,rpmh-rsc";
+@@ -3174,9 +3230,8 @@
+ 				};
+ 			};
+ 
+-			rsc_hlos: interconnect {
+-				compatible = "qcom,sdm845-rsc-hlos";
+-				#interconnect-cells = <1>;
++			apps_bcm_voter: bcm-voter {
++				compatible = "qcom,sdm845-bcm-voter";
+ 			};
+ 		};
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
