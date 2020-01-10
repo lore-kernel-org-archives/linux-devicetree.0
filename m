@@ -4,172 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7C5C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B41C32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2A820678
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6CB2072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 03:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbgAJCRM (ORCPT
+        id S1731088AbgAJDJF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:17:12 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:34798 "EHLO inva020.nxp.com"
+        Thu, 9 Jan 2020 22:09:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:39046 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbgAJCRM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:17:12 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B3131A14B2;
-        Fri, 10 Jan 2020 03:17:10 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 184491A0574;
-        Fri, 10 Jan 2020 03:17:03 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9ADAC40285;
-        Fri, 10 Jan 2020 10:16:54 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 1/3] dt-bindings: pinctrl: Convert i.MX8MQ to json-schema
-Date:   Fri, 10 Jan 2020 10:13:06 +0800
-Message-Id: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
+        id S1730952AbgAJDJF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 9 Jan 2020 22:09:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2925411D4;
+        Thu,  9 Jan 2020 19:09:05 -0800 (PST)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5672B3F703;
+        Thu,  9 Jan 2020 19:08:57 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, will@kernel.org
+Cc:     mark.rutland@arm.com, david@redhat.com, cai@lca.pw,
+        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
+        ira.weiny@intel.com, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: [PATCH V11 3/5] of/fdt: Mark boot memory with MEMBLOCK_BOOT
+Date:   Fri, 10 Jan 2020 08:39:13 +0530
+Message-Id: <1578625755-11792-4-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
+References: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the i.MX8MQ pinctrl binding to DT schema format using json-schema
+early_init_dt_add_memory_arch() adds memory into memblock on both UEFI and
+DT based arm64 systems. Lets mark these as boot memory right after they get
+into memblock. All other platforms using this default implementation for
+early_init_dt_add_memory_arch() will also have this memblock flag set on
+boot memory ranges but will be upto the platforms if they would like to
+use it or not. On arm64 platform this flag will be used to identify boot
+memory at runtime and reject any attempt to remove them.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 36 ------------
- .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml       | 67 ++++++++++++++++++++++
- 2 files changed, 67 insertions(+), 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+ drivers/of/fdt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-deleted file mode 100644
-index 66de750..0000000
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--* Freescale IMX8MQ IOMUX Controller
--
--Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
--for common binding part and usage.
--
--Required properties:
--- compatible: "fsl,imx8mq-iomuxc"
--- reg: should contain the base physical address and size of the iomuxc
--  registers.
--
--Required properties in sub-nodes:
--- fsl,pins: each entry consists of 6 integers and represents the mux and config
--  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
--  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
--  imx8mq-pinfunc.h under device tree source folder.  The last integer CONFIG is
--  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Quad
--  Reference Manual for detailed CONFIG settings.
--
--Examples:
--
--&uart1 {
--       pinctrl-names = "default";
--       pinctrl-0 = <&pinctrl_uart1>;
--};
--
--iomuxc: pinctrl@30330000 {
--        compatible = "fsl,imx8mq-iomuxc";
--        reg = <0x0 0x30330000 0x0 0x10000>;
--
--        pinctrl_uart1: uart1grp {
--                fsl,pins = <
--                        MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX             0x49
--                        MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX             0x49
--                >;
--        };
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-new file mode 100644
-index 0000000..09b6d50
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mq-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IMX8MQ IOMUX Controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+description:
-+  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-+  for common binding part and usage.
-+
-+properties:
-+  compatible:
-+    const: fsl,imx8mq-iomuxc
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-grp$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      fsl,pins:
-+        allOf:
-+	  - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        maxItems: 6
-+        description:
-+          each entry consists of 6 integers and represents the mux and config
-+          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-+          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-+          be found in <arch/arm64/boot/dts/freescale/imx8mq-pinfunc.h>. The last
-+          integer CONFIG is the pad setting value like pull-up on this pin. Please
-+          refer to i.MX8M Quad Reference Manual for detailed CONFIG settings.
-+
-+    required:
-+      - fsl,pins
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    iomuxc: pinctrl@30330000 {
-+        compatible = "fsl,imx8mq-iomuxc";
-+        reg = <0x30330000 0x10000>;
-+
-+        pinctrl_uart1: uart1grp {
-+            fsl,pins = <
-+                0x234 0x49C 0x4F4 0x0 0x0	0x49
-+                0x238 0x4A0 0x4F4 0x0 0x0	0x49
-+            >;
-+        };
-+    };
-+
-+...
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 2cdf64d..a2ae2c88 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1143,6 +1143,7 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+ 		base = phys_offset;
+ 	}
+ 	memblock_add(base, size);
++	memblock_mark_boot(base, size);
+ }
+ 
+ int __init __weak early_init_dt_mark_hotplug_memory_arch(u64 base, u64 size)
 -- 
 2.7.4
 
