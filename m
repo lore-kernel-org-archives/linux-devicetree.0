@@ -2,135 +2,96 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E1AC32771
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 01:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7093DC32771
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 01:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B34C2075D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 01:20:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQ9PP0kq"
+	by mail.kernel.org (Postfix) with ESMTP id 4E50D206ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 01:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbgAJBUR (ORCPT
+        id S1730570AbgAJB1Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:20:17 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46286 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730500AbgAJBUR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 20:20:17 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z124so155875pgb.13;
-        Thu, 09 Jan 2020 17:20:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7qHBXesr8QwkRbtaOO3IQUgTasNvUcS3WaDX6rref+o=;
-        b=VQ9PP0kq9emuyO9zctbmMsV5NyHq8XW7Vh1JXS/aXmo4wPrzwkuuIr6EyjoK+/J9KT
-         TzGek5TwC27brWx80ESHo4XMoWZ9S71kKr3hpupVLRGrXrJw555pViT1X19RgwfzoIrE
-         Vgfht5QpYcYU8/+Bd7km+YAkVQ4FN8Bb5EASTSP4SzakzJg0HABpOIPpvcXjf6bXVUfr
-         PH2RMEQ9kWfbabqRKgszqenRNh+xCrw72EO4G64fRS1uv5QMyQJne+0Ut3o0sUd5nnA3
-         4sVpFmWTicK1mdCP/05JPz1XWI9uQD/ORIeS9sOy0xK6F+OvX0zAwzimukIcDkHKhZm0
-         k5XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7qHBXesr8QwkRbtaOO3IQUgTasNvUcS3WaDX6rref+o=;
-        b=BQnGGeHH1/fzWIge5Nb3N3hFKQWGpRvKHjfmWSXEFgxVBfoxRiJjvAmy3aHw2HMC46
-         6qfEft/1gJNbAUBC6Np0EcSqt6hcRZHqOV80DKCkGezfhOHi3wRPPxQQOujWwa/axdoL
-         5qVVdTVZCdeui+CFcwBdCLMWGtxaFGfJYXiu7XTgJjQUtJSJg7XgOZnpT+3TYpX5DK1K
-         ktH0lqO2ImWGhrKrsoJgMJwCiELzyQFlKqJWieBZmocLbdN1FeKvEbYyKYXBtG95hbZ2
-         I1R0gpObA/vwbg4/lOFiE2dfPmSEQOBhKAv4P2k0ZFWTqbppHdWQvBCsQA/q2R0Qz5u9
-         QHBg==
-X-Gm-Message-State: APjAAAWg+NvxlFtE2UR5lydq0InWmqyrh3Qm3YULAbKOOpsyaS4gyxaM
-        M1+27yKEDb85la68/JMJxss=
-X-Google-Smtp-Source: APXvYqyrq1wKaVn4zIBzDao2JVWanRP644J1Yd9W7FW2nZwgfcda20aUAmsP0hDomJYYu/i1QhwmcQ==
-X-Received: by 2002:aa7:8ad9:: with SMTP id b25mr926611pfd.70.1578619216147;
-        Thu, 09 Jan 2020 17:20:16 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id b1sm283458pjw.4.2020.01.09.17.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 17:20:15 -0800 (PST)
-Date:   Thu, 9 Jan 2020 17:20:13 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        fengping yu <fengping.yu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 2/2] drivers: input: keyboard
-Message-ID: <20200110012013.GR8314@dtor-ws>
-References: <20200108062923.14684-1-fengping.yu@mediatek.com>
- <20200108062923.14684-3-fengping.yu@mediatek.com>
- <1578473162.12131.13.camel@mtksdaap41>
- <20200108112609.GN32742@smile.fi.intel.com>
+        Thu, 9 Jan 2020 20:27:24 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:35351 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730557AbgAJB1Y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 9 Jan 2020 20:27:24 -0500
+Received: from [10.18.38.198] (10.18.38.198) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Fri, 10 Jan
+ 2020 09:27:47 +0800
+Subject: Re: [PATCH v4 1/6] dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+CC:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1578537045-23260-1-git-send-email-hanjie.lin@amlogic.com>
+ <1578537045-23260-2-git-send-email-hanjie.lin@amlogic.com>
+ <CAFBinCDt97E4236obhm0GV58MtoC2qYAZbqPoJd8tyROGW4cvw@mail.gmail.com>
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+Message-ID: <9fc103f4-a388-a65e-f621-846f03f77b3a@amlogic.com>
+Date:   Fri, 10 Jan 2020 09:27:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108112609.GN32742@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFBinCDt97E4236obhm0GV58MtoC2qYAZbqPoJd8tyROGW4cvw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.38.198]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 01:26:09PM +0200, Andy Shevchenko wrote:
-> On Wed, Jan 08, 2020 at 04:46:02PM +0800, Yingjoe Chen wrote:
-> > On Wed, 2020-01-08 at 14:29 +0800, fengping yu wrote:
-> 
-> > > +	tasklet_init(&keypad->tasklet, kpd_keymap_handler,
-> > > +		     (unsigned long)keypad);
-> > > +
-> > > +	writew((u16)(keypad->key_debounce & KPD_DEBOUNCE_MASK),
-> > > +		     keypad->base + KP_DEBOUNCE);
-> > 
-> > You use a 13 bits mask and set it directly to KP_DEBOUNCE register. Are
-> > you sure the debounce unit is ms?
-> > 
-> > > +
-> > > +	/* register IRQ */
-> > > +	err = request_irq(keypad->irqnr, kpd_irq_handler, IRQF_TRIGGER_NONE,
-> > > +			  KPD_NAME, keypad);
-> > 
-> > please consider using devm_request_irq, otherwise you have to free it in
-> > _remove function.
-> 
-> No, you may not use devm_*_irq() when tasklets are in use. There is a nasty
-> race condition.
-> 
-> Actually the rule of thumb is to NOT use devm_*_irq() unless you exactly know
-> what you are doing.
-> 
-> P.S. Why simple not to switch to threaded IRQ handler and drop tasklet? In such
-> case devm_*_irq() is fine.
 
-Actually, we are simply reading iomem data and forward it to input
-subsystem, there is no need to use threaded interrupt nor the tasklet.
 
-Thanks.
+On 2020/1/10 1:12, Martin Blumenstingl wrote:
+> On Thu, Jan 9, 2020 at 3:30 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+> [...]
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: xtal_usb_phy
+> the "usb_phy" part of "xtal_usb_phy" seems redundant to me:
+> it's the XTAL clock input (this is what I'd expect as clock-name) of
+> the USB PHY (this is already part of the node name).
+> in addition to keeping the reset-names consistent (as Neil suggested)
+> please also use the same clock-names as G12
+> 
 
--- 
-Dmitry
+Of course.
+
+I will use "xtal" name in next version.
+
+Thanks,
+Hanjie
+
+> 
+> Thank you!
+> Martin
+> 
+> .
+> 
