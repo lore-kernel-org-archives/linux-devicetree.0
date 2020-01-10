@@ -2,212 +2,94 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72FDC282DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553D8C282DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CB020842
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1D2206ED
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 17:41:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="SKsdT2gG";
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="eudbFuiF"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="RKyYJqPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgAJRhb (ORCPT
+        id S1727815AbgAJRlX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:37:31 -0500
-Received: from mx08-00252a01.pphosted.com ([91.207.212.211]:34482 "EHLO
-        mx08-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726131AbgAJRha (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:37:30 -0500
-Received: from pps.filterd (m0102629.ppops.net [127.0.0.1])
-        by mx08-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00AHZ2Z3002809
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 17:37:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
- cc : references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp;
- bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
- b=SKsdT2gGEEFjWm1OQs24C9xp18p7AQ8nXeW7wBy0MdVcQvkx8mmsnwOjQadzeLaFc5oZ
- 6Bkt0NhzFQeQt3p2NR2JFyrE50JZVeKz5et+SDg1d7gyIoxGObSzdgfQisqexzVMb2Pl
- KmS51h4bTAbDO/P7rGw8d+wHaBsyqw/bd4i8MMqurPVC0ehdo8Wnjyiz0+NPesa0l77S
- +NF9ntLnzu081++BYRsnWcxI0xh5x6vat0n9rb/oMAS7388FCuXU7a+Y9hy89SsVkHGh
- DtXDQFqCgDGakfVSGXZjlE/DpbSZZ856j5r9Qpsr6x1QCdAGsaR2M1rUz3EtsoRIBfOQ aw== 
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        by mx08-00252a01.pphosted.com with ESMTP id 2xag2su2hk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 17:37:28 +0000
-Received: by mail-wm1-f71.google.com with SMTP id t16so1121516wmt.4
-        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 09:37:28 -0800 (PST)
+        Fri, 10 Jan 2020 12:41:23 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45863 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727181AbgAJRlW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 12:41:22 -0500
+Received: by mail-io1-f67.google.com with SMTP id i11so2924406ioi.12
+        for <devicetree@vger.kernel.org>; Fri, 10 Jan 2020 09:41:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
-        b=eudbFuiFpxiYBXsumIrZk5v2K0RcDambijz9CR6j4vfIhiv09EPkoC4Iap4aOXhjY+
-         e+apgz4raC1u6K55M2t+JqSWdpUTU/zP/n9j7vF7ORpWW6Zlu5RnTlpFfvNX+U4ji1lw
-         dKpMDCFcBBdGskvbgur3sLBTJFj7Sa2nq4DTeo56U2IhqUIvRnxA0otUH4DD9ExXC9hh
-         COAU07dXao/SesrTu7gpROWkTTOKgKv+F9qYoA3m5/gCd9YGfmN0+ktaUGgeZAg6C6uo
-         iMEHthpBZop+6pORS/khftnO2rEEOlIYRx+oCuEjF1fI24AeJA+DHXQAitgdsCaGXuzZ
-         VuQQ==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZbQyo97E12JiQyYySbTSdZx19yjj8JSBt+Y0Mb9k/oE=;
+        b=RKyYJqPd9zuWTcr8+5KldE2tUJzeO2CN3ViQHERbo0EJnK2GKt99YpaYTAiJb4Ru7V
+         L8jtDu76+CEmTMv/62SLLtA8lhEBzxkCF73LFgIxoIsYtEdYhrLfX3WWUJvzkxnV+PlD
+         mY/KFBBHoV3tFwOisY9SqD34FzfRtJwFsIk+FQMKE8iZ0H8xlTySuNZDVTzQaGrcxTKk
+         hiz1QSdziqkh/JXGLpAlkHsD8uJvusD+mkaWRJmUG/BAV27rUpTMCCJRDD/eDgRq8ct9
+         Ht8ybkxZGyzWdDDy42ylwsuJy1Unws2UoLugSiKDK8AhAtZ+93BVEQKajyLwFEqBjKyE
+         +jlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
-        b=l4NVAf1BJVZVl7IhMqxsOYz7xmli2W6AZcQ20B0afiE9NGggEY6wyrGMJ5JAvDMAzg
-         vS+7rtz70RjQT9OYAqe4MZ9ZyNDB4GkMQqqwwqQe/SCiHwiN0Hqq2y5w9i8WDvaFQ46x
-         pmx0eXuRVS5sLMKMavbPZi0dmV0Sx3JmCSLUtk2VLgpC+wwVST1LhEYxwlglQ+uihRD5
-         5naZJeNUOGQnMZh2GkR7L3FuQLoHuHLrBrM7XxnJAmkyibet4yLCnLyiB0S/6LQPPZ1n
-         mZ1aV/i7EMppUQ4Oeawlb2jDjU23bRoh1QygDZuheoq0uaon7QmAIec/gk+coTuO1fQQ
-         sRVA==
-X-Gm-Message-State: APjAAAX25mOXnSPAsN46gwlGqI48lDlvs6M+LYVlozjKQIgKJoW+MPDn
-        BVyNlzTh4PmGW8jRegByFOJ2cr490LBqfqVltsHgvchXeZef0/MHqHsxqEz77DRVtDlztchMsw7
-        zPnReJ4M1IW1d8sXKdy9JkA==
-X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687588wrt.362.1578677848171;
-        Fri, 10 Jan 2020 09:37:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx44UlbuVmiPyz5iGzy41EJVez9kdBqhJkQVvHkfelCDcd0A4HMd0i0npDRAlfsoN/TmkGfzg==
-X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687563wrt.362.1578677847921;
-        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
-Received: from ?IPv6:2a00:1098:3142:14:910a:522a:cf5c:edd0? ([2a00:1098:3142:14:910a:522a:cf5c:edd0])
-        by smtp.gmail.com with ESMTPSA id d14sm3100880wru.9.2020.01.10.09.37.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
-Subject: Re: [PATCH] ARM: dts: bcm283x: Unify CMA configuration
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <wahrenst@gmx.net>
-Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200110172935.19709-1-nsaenzjulienne@suse.de>
-From:   Phil Elwell <phil@raspberrypi.org>
-Message-ID: <c5bb42a8-e1c2-3e21-dc1d-d36a069bf97f@raspberrypi.org>
-Date:   Fri, 10 Jan 2020 17:37:25 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZbQyo97E12JiQyYySbTSdZx19yjj8JSBt+Y0Mb9k/oE=;
+        b=rRsKzRrrJRU+7YFFNDofvOv72ytf4LqxB4wGVeMhbIQ5ssD8fG75659HGa1E4YD3jf
+         cwOjkpWmJTaPn4hWyAIihWLtxUoepDnmwKWIDLwF+e9z9yHig+W4g80fGSKgbU59+/2C
+         E1JAiGnPukAGevyY/sxtlcBKWDiaUCLnotj8kkLSdDzE0GFKjsPT5cvPJJ8Cz5dPReFS
+         8TJL8kG22AuYo8lenIvoj/I6Z5vcmS1D1wEFimXDM8DWL4ClIpgN9OyOHH5hVN4sCVbB
+         aUGt6nkynmH/hg9+6kKuYSccGnSKRB4gK1fdPwvEf9TK0nZrLnf36IvblKjegNdIgp0s
+         hZ8Q==
+X-Gm-Message-State: APjAAAV/WJQso9be9chwkw23I9dm+BI6whtYVo3DT/NRa+be1kz/OSZz
+        fuqBrD5P7oJdzrsh4IsOtNoicEKVZ5AZJbq4Pp+46g==
+X-Google-Smtp-Source: APXvYqzxTQ4SoPYj84MBP2256b9N8PKJf0z7eKjlQ4rhKSqiQW9tWF5+C8Bg+6bi9ottTHxKKTZIFAGBUbF/pJe2gXs=
+X-Received: by 2002:a6b:3a8a:: with SMTP id h132mr3396308ioa.207.1578678080202;
+ Fri, 10 Jan 2020 09:41:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200110172935.19709-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
+References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
+In-Reply-To: <20200110063755.19804-3-zhang.lyra@gmail.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Fri, 10 Jan 2020 09:41:08 -0800
+Message-ID: <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nicolas,
+Hi,
 
-On 10/01/2020 17:29, Nicolas Saenz Julienne wrote:
-> With the introduction of the Raspberry Pi 4 we were forced to explicitly
-> configure CMA's location, since arm64 defaults it into the ZONE_DMA32
-> memory area, which is not good enough to perform DMA operations on that
-> device. To bypass this limitation a dedicated CMA DT node was created,
-> explicitly indicating the acceptable memory range and size.
-> 
-> That said, compatibility between boards is a must on the Raspberry Pi
-> ecosystem so this creates a common CMA DT node so as for DT overlays to
-> be able to update CMA's properties regardless of the board being used.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
-> 
-> If this doesn't make it into v5.5 I'd be tempted to add:
-> Fixes: d98a8dbdaec6 ("ARM: dts: bcm2711: force CMA into first GB of memory")
-> 
->   arch/arm/boot/dts/bcm2711.dtsi | 33 +++++++++++++--------------------
->   arch/arm/boot/dts/bcm283x.dtsi | 13 +++++++++++++
->   2 files changed, 26 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-> index 8687534d4528..c8e4041308e0 100644
-> --- a/arch/arm/boot/dts/bcm2711.dtsi
-> +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> @@ -12,26 +12,6 @@ / {
->   
->   	interrupt-parent = <&gicv2>;
->   
-> -	reserved-memory {
-> -		#address-cells = <2>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -
-> -		/*
-> -		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-> -		 * that's not good enough for the BCM2711 as some devices can
-> -		 * only address the lower 1G of memory (ZONE_DMA).
-> -		 */
-> -		linux,cma {
-> -			compatible = "shared-dma-pool";
-> -			size = <0x2000000>; /* 32MB */
-> -			alloc-ranges = <0x0 0x00000000 0x40000000>;
-> -			reusable;
-> -			linux,cma-default;
-> -		};
-> -	};
-> -
-> -
->   	soc {
->   		/*
->   		 * Defined ranges:
-> @@ -869,6 +849,19 @@ pin-rts {
->   	};
->   };
->   
-> +&rmem {
-> +	#address-cells = <2>;
-> +};
-> +
-> +&cma {
-> +	/*
-> +	 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-> +	 * that's not good enough for the BCM2711 as some devices can
-> +	 * only address the lower 1G of memory (ZONE_DMA).
-> +	 */
-> +	alloc-ranges = <0x0 0x00000000 0x40000000>;
-> +};
-> +
->   &i2c0 {
->   	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
->   	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index 839491628e87..6128baed83c2 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -30,6 +30,19 @@ chosen {
->   		stdout-path = "serial0:115200n8";
->   	};
->   
-> +	rmem: reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		cma: linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			size = <0x4000000>; /* 64MB */
-> +			reusable;
-> +			linux,cma-default;
-> +		};
-> +	};
-> +
->   	thermal-zones {
->   		cpu_thermal: cpu-thermal {
->   			polling-delay-passive = <0>;
-> 
+On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> Add basic DT to support Unisoc's SC9863A, with this patch,
+> the board sp9863a-1h10 can run into console.
+>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-For what it's worth,
+You reposting a patch that we have already applied, and there's also
+no changelog for it in the description.
 
-Reviewed-by: Phil Elwell <phil@raspberrypi.org>
+If you need to change the contents to fix something, you need to send
+a patch for the delta by now, with the usual expectations of
+explaining why the fix is needed, etc.
 
-Phil
+
+Thanks,
+
+-Olof
