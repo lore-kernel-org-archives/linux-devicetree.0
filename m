@@ -2,29 +2,30 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15565C33CA5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E5AC33CA6
 	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 15:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D300620838
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 15:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13D9020842
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 15:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="pHtq9Nly"
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="A+4v81Hg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgAJP7k (ORCPT
+        id S1728382AbgAJP7k (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Fri, 10 Jan 2020 10:59:40 -0500
-Received: from hermes.aosc.io ([199.195.250.187]:49075 "EHLO hermes.aosc.io"
+Received: from hermes.aosc.io ([199.195.250.187]:49073 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgAJP7k (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        id S1728363AbgAJP7k (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Fri, 10 Jan 2020 10:59:40 -0500
+X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jan 2020 10:59:38 EST
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 6D15B46F0B;
-        Fri, 10 Jan 2020 15:54:25 +0000 (UTC)
+        by hermes.aosc.io (Postfix) with ESMTPSA id D7EB646F00;
+        Fri, 10 Jan 2020 15:54:01 +0000 (UTC)
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <mripard@kernel.org>,
@@ -36,566 +37,641 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 5/5] arm64: dts: allwinner: a64: add support for PineTab
-Date:   Fri, 10 Jan 2020 23:52:25 +0800
-Message-Id: <20200110155225.1051749-6-icenowy@aosc.io>
+Subject: [PATCH 3/5] drm/panel: Add Feixin K101 IM2BA02 panel
+Date:   Fri, 10 Jan 2020 23:52:23 +0800
+Message-Id: <20200110155225.1051749-4-icenowy@aosc.io>
 In-Reply-To: <20200110155225.1051749-1-icenowy@aosc.io>
 References: <20200110155225.1051749-1-icenowy@aosc.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
-        t=1578671672;
+        t=1578671655;
         h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding:in-reply-to:references;
-        bh=z+Kq6A63EtwlyKQSQFuPbKcJuYB32CgiQCu9q4IqV/Y=;
-        b=pHtq9Nly1pmrgFO8+ONHrKabdpP931tSndQPVOWxlsmdW4Xq9j4hFGAlwycy4zCDHJczTH
-        9iUKKqnQUYZMAA/DkqONv6N9WYk/MKSdkwJ2UE98bi9KbZzlt9ybjHj+wG1PfW1Sy6L5DA
-        1/1UqZA1W3mJvPQhFiudPsRse3LGa2Q=
+        bh=HhxqYbcym76AyZ01mXGB1Ndza2Hl48l3K63abywjQpg=;
+        b=A+4v81HgWCL4+wUAJxX1d3JRZRmW4h38IRqhMQcJUnGYA4OSUWOSNKS2VodDywjr+5mMLq
+        OIJPQLEt0htJy9xS7ogX/nhrGjaltNq53w7odBEHddpALWR/6kdPyvnH+E0LL9WcryQJtO
+        ACmRoAMY0re4/37RbQ29HbZsn7B4kbY=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PineTab is a 10.1" tablet by Pine64 with Allwinner A64 inside.
+Feixin K101 IM2BA02 is a 800x1280 4-lane MIPI-DSI LCD panel.
 
-It includes the following peripherals:
-
-USB:
-- A microUSB Type-B port connected to the OTG-capable USB PHY of
-Allwinner A64. The ID pin is connected to a GPIO of the A64 SoC, and the
-Vbus is connected to the Vbus of AXP803 PMIC. These enables OTG
-functionality on this port.
-- A USB Type-A port is connected to the internal hub attached to the
-non-OTG USB PHY of Allwinner A64.
-- There are reserved pins for an external keyboard connected to the
-internal hub.
-
-Power:
-- The microUSB port has its Vbus connected to AXP803, mentioned above.
-- A DC jack (of a strange size, 2.5mm outer diameter) is connected to
-the ACIN of AXP803.
-- A Li-Polymer battery is connected to the battery pins of AXP803.
-
-Storage:
-- An tradition Pine64 eMMC slot is on the board, mounted with an eMMC
-module by factory.
-- An external microSD slot is hidden under a protect case.
-
-Display:
-- A MIPI-DSI LCD panel (800x1280) is connected to the DSI port of A64 SoC.
-- A mini HDMI port.
-
-Input:
-- A touch panel attached to a Goodix GT9271 touch controller.
-- Volume keys connected to the LRADC of the A64 SoC.
-
-Camera:
-- An OV5640 CMOS camera is at rear, connected to the CSI bus of A64 SoC.
-- A GC2145 CMOS camera is at front, shares the same CSI bus with OV5640.
-
-Audio:
-- A headphone jack is conencted to the SoC's internal codec.
-- A speaker connected is to the Line Out port of SoC's internal codec, via
-an amplifier.
-
-Misc:
-- Debug UART is muxed with the headphone jack, with the switch next to
-the microSD slot.
-- A bosch BMA223 accelerometer is connected to the I2C bus of A64 SoC.
-- Wi-Fi and Bluetooth are available via a RTL8723CS chip, similar to the
-one in Pinebook.
-
-This commit adds a basically usable device tree for it, implementing
-most of the features mentioned above. HDMI is not supported now because
-bad LCD-HDMI coexistence situation of mainline A64 display driver, and
-the front camera currently lacks a driver and a facility to share the
-bus with the rear one.
+Add a panel driver for it.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../boot/dts/allwinner/sun50i-a64-pinetab.dts | 461 ++++++++++++++++++
- 2 files changed, 462 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
+ MAINTAINERS                                   |   6 +
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-feixin-k101-im2ba02.c | 548 ++++++++++++++++++
+ 4 files changed, 564 insertions(+)
+ create mode 100644 drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index cf4f78617c3f..6dad63881cd3 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-lts.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinebook.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinetab.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 908399316455..ef7d13125344 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5218,6 +5218,12 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
+ S:	Maintained
+ F:	drivers/gpu/drm/tve200/
+ 
++DRM DRIVER FOR FEIXIN K101 IM2BA02 MIPI-DSI LCD PANELS
++M:	Icenowy Zheng <icenowy@aosc.io>
++S:	Maintained
++F:	drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
++F:	Documentation/devicetree/bindings/display/panel/feixin,k101-im2ba02.yaml
++
+ DRM DRIVER FOR FEIYANG FY07024DI26A30-D MIPI-DSI LCD PANELS
+ M:	Jagan Teki <jagan@amarulasolutions.com>
+ S:	Maintained
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+index ae44ac2ec106..4641ec804e5e 100644
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -50,6 +50,15 @@ config DRM_PANEL_SIMPLE
+ 	  that it can be automatically turned off when the panel goes into a
+ 	  low power state.
+ 
++config DRM_PANEL_FEIXIN_K101_IM2BA02
++	tristate "Feixin K101 IM2BA02 panel"
++	depends on OF
++	depends on DRM_MIPI_DSI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  Say Y here if you want to enable support for the Feixin K101 IM2BA02
++	  4-lane 800x1280 MIPI DSI panel.
++
+ config DRM_PANEL_FEIYANG_FY07024DI26A30D
+ 	tristate "Feiyang FY07024DI26A30-D MIPI-DSI LCD panel"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+index 7c4d3c581fd4..442c17ccc62e 100644
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -3,6 +3,7 @@ obj-$(CONFIG_DRM_PANEL_ARM_VERSATILE) += panel-arm-versatile.o
+ obj-$(CONFIG_DRM_PANEL_BOE_HIMAX8279D) += panel-boe-himax8279d.o
+ obj-$(CONFIG_DRM_PANEL_LVDS) += panel-lvds.o
+ obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
++obj-$(CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02) += panel-feixin-k101-im2ba02.o
+ obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
+ obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
+ obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9881C) += panel-ilitek-ili9881c.o
+diff --git a/drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c b/drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
 new file mode 100644
-index 000000000000..1dfa3668636e
+index 000000000000..45a62bdabb3f
 --- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
-@@ -0,0 +1,461 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++++ b/drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
+@@ -0,0 +1,548 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Copyright (C) 2019 Icenowy Zheng <icenowy@aosc.xyz>
-+ *
++ * Copyright (C) 2019-2020 Icenowy Zheng <icenowy@aosc.io>
 + */
 +
-+/dts-v1/;
++#include <linux/gpio/consumer.h>
++#include <linux/delay.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/regulator/consumer.h>
 +
-+#include "sun50i-a64.dtsi"
++#include <drm/drm_mipi_dsi.h>
++#include <drm/drm_modes.h>
++#include <drm/drm_panel.h>
++#include <drm/drm_print.h>
 +
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pwm/pwm.h>
++#define K101_IM2BA02_INIT_CMD_LEN	2
 +
-+/ {
-+	model = "PineTab";
-+	compatible = "pine64,pinetab", "allwinner,sun50i-a64";
++struct k101_im2ba02 {
++	struct drm_panel	panel;
++	struct mipi_dsi_device	*dsi;
 +
-+	aliases {
-+		serial0 = &uart0;
-+		ethernet0 = &rtl8723cs;
-+	};
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
-+		default-brightness-level = <8>;
-+		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* PD23 */
-+		power-supply = <&vdd_bl>;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	i2c-csi {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&pio 4 13 GPIO_ACTIVE_HIGH>; /* PE13 */
-+		scl-gpios = <&pio 4 12 GPIO_ACTIVE_HIGH>; /* PE12 */
-+		i2c-gpio,delay-us = <5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* Rear camera */
-+		ov5640: camera@3c {
-+			compatible = "ovti,ov5640";
-+			reg = <0x3c>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&csi_mclk_pin>;
-+			clocks = <&ccu CLK_CSI_MCLK>;
-+			clock-names = "xclk";
-+
-+			AVDD-supply = <&reg_dldo3>;
-+			DOVDD-supply = <&reg_aldo1>;
-+			DVDD-supply = <&reg_eldo3>;
-+			reset-gpios = <&pio 4 14 GPIO_ACTIVE_LOW>; /* PE14 */
-+			powerdown-gpios = <&pio 4 15 GPIO_ACTIVE_HIGH>; /* PE15 */
-+
-+			port {
-+				ov5640_ep: endpoint {
-+					remote-endpoint = <&csi_ep>;
-+					bus-width = <8>;
-+					hsync-active = <1>; /* Active high */
-+					vsync-active = <0>; /* Active low */
-+					data-active = <1>;  /* Active high */
-+					pclk-sample = <1>;  /* Rising */
-+				};
-+			};
-+		};
-+	};
-+
-+	speaker_amp: audio-amplifier {
-+		compatible = "simple-audio-amplifier";
-+		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-+		sound-name-prefix = "Speaker Amp";
-+	};
-+
-+	vdd_bl: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "bl-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
-+		enable-active-high;
-+	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-+		post-power-on-delay-ms = <200>;
-+	};
++	struct regulator	*dvdd;
++	struct regulator	*avdd;
++	struct regulator	*cvdd;
++	struct gpio_desc	*reset;
 +};
 +
-+&codec {
-+	status = "okay";
++static inline struct k101_im2ba02 *panel_to_k101_im2ba02(struct drm_panel *panel)
++{
++	return container_of(panel, struct k101_im2ba02, panel);
++}
++
++struct k101_im2ba02_init_cmd {
++	u8 data[K101_IM2BA02_INIT_CMD_LEN];
 +};
 +
-+&codec_analog {
-+	hpvcc-supply = <&reg_eldo1>;
-+	status = "okay";
++static const struct k101_im2ba02_init_cmd k101_im2ba02_init_cmds[] = {
++	/* Switch to page 0 */
++	{ .data = { 0xE0, 0x00 } },
++
++	/* Seems to be some password */
++	{ .data = { 0xE1, 0x93} },
++	{ .data = { 0xE2, 0x65 } },
++	{ .data = { 0xE3, 0xF8 } },
++
++	/* Lane number, 0x02 - 3 lanes, 0x03 - 4 lanes */
++	{ .data = { 0x80, 0x03 } },
++
++	/* Sequence control */
++	{ .data = { 0x70, 0x02 } },
++	{ .data = { 0x71, 0x23 } },
++	{ .data = { 0x72, 0x06 } },
++
++	/* Switch to page 1 */
++	{ .data = { 0xE0, 0x01 } },
++
++	/* Set VCOM */
++	{ .data = { 0x00, 0x00 } },
++	{ .data = { 0x01, 0x66 } },
++	/* Set VCOM_Reverse */
++	{ .data = { 0x03, 0x00 } },
++	{ .data = { 0x04, 0x25 } },
++
++	/* Set Gamma Power, VG[MS][PN] */
++	{ .data = { 0x17, 0x00 } },
++	{ .data = { 0x18, 0x6D } },
++	{ .data = { 0x19, 0x00 } },
++	{ .data = { 0x1A, 0x00 } },
++	{ .data = { 0x1B, 0xBF } }, /* VGMN = -4.5V */
++	{ .data = { 0x1C, 0x00 } },
++
++	/* Set Gate Power */
++	{ .data = { 0x1F, 0x3E } }, /* VGH_R = 15V */
++	{ .data = { 0x20, 0x28 } }, /* VGL_R = -11V */
++	{ .data = { 0x21, 0x28 } }, /* VGL_R2 = -11V */
++	{ .data = { 0x22, 0x0E } }, /* PA[6:4] = 0, PA[0] = 0 */
++
++	/* Set Panel */
++	{ .data = { 0x37, 0x09 } }, /* SS = 1, BGR = 1 */
++
++	/* Set RGBCYC */
++	{ .data = { 0x38, 0x04 } }, /* JDT = 100 column inversion */
++	{ .data = { 0x39, 0x08 } }, /* RGB_N_EQ1 */
++	{ .data = { 0x3A, 0x12 } }, /* RGB_N_EQ2 */
++	{ .data = { 0x3C, 0x78 } }, /* set EQ3 for TE_H */
++	{ .data = { 0x3D, 0xFF } }, /* set CHGEN_ON */
++	{ .data = { 0x3E, 0xFF } }, /* set CHGEN_OFF */
++	{ .data = { 0x3F, 0x7F } }, /* set CHGEN_OFF2 */
++
++	/* Set TCON parameter */
++	{ .data = { 0x40, 0x06 } }, /* RSO = 800 points */
++	{ .data = { 0x41, 0xA0 } }, /* LN = 1280 lines */
++
++	/* Set power voltage */
++	{ .data = { 0x55, 0x0F } }, /* DCDCM */
++	{ .data = { 0x56, 0x01 } },
++	{ .data = { 0x57, 0x69 } },
++	{ .data = { 0x58, 0x0A } },
++	{ .data = { 0x59, 0x0A } },
++	{ .data = { 0x5A, 0x45 } },
++	{ .data = { 0x5B, 0x15 } },
++
++	/* Set gamma */
++	{ .data = { 0x5D, 0x7C } },
++	{ .data = { 0x5E, 0x65 } },
++	{ .data = { 0x5F, 0x55 } },
++	{ .data = { 0x60, 0x49 } },
++	{ .data = { 0x61, 0x44 } },
++	{ .data = { 0x62, 0x35 } },
++	{ .data = { 0x63, 0x3A } },
++	{ .data = { 0x64, 0x23 } },
++	{ .data = { 0x65, 0x3D } },
++	{ .data = { 0x66, 0x3C } },
++	{ .data = { 0x67, 0x3D } },
++	{ .data = { 0x68, 0x5D } },
++	{ .data = { 0x69, 0x4D } },
++	{ .data = { 0x6A, 0x56 } },
++	{ .data = { 0x6B, 0x48 } },
++	{ .data = { 0x6C, 0x45 } },
++	{ .data = { 0x6D, 0x38 } },
++	{ .data = { 0x6E, 0x25 } },
++	{ .data = { 0x6F, 0x00 } },
++	{ .data = { 0x70, 0x7C } },
++	{ .data = { 0x71, 0x65 } },
++	{ .data = { 0x72, 0x55 } },
++	{ .data = { 0x73, 0x49 } },
++	{ .data = { 0x74, 0x44 } },
++	{ .data = { 0x75, 0x35 } },
++	{ .data = { 0x76, 0x3A } },
++	{ .data = { 0x77, 0x23 } },
++	{ .data = { 0x78, 0x3D } },
++	{ .data = { 0x79, 0x3C } },
++	{ .data = { 0x7A, 0x3D } },
++	{ .data = { 0x7B, 0x5D } },
++	{ .data = { 0x7C, 0x4D } },
++	{ .data = { 0x7D, 0x56 } },
++	{ .data = { 0x7E, 0x48 } },
++	{ .data = { 0x7F, 0x45 } },
++	{ .data = { 0x80, 0x38 } },
++	{ .data = { 0x81, 0x25 } },
++	{ .data = { 0x82, 0x00 } },
++
++	/* Switch to page 2, for GIP */
++	{ .data = { 0xE0, 0x02 } },
++
++	{ .data = { 0x00, 0x1E } },
++	{ .data = { 0x01, 0x1E } },
++	{ .data = { 0x02, 0x41 } },
++	{ .data = { 0x03, 0x41 } },
++	{ .data = { 0x04, 0x43 } },
++	{ .data = { 0x05, 0x43 } },
++	{ .data = { 0x06, 0x1F } },
++	{ .data = { 0x07, 0x1F } },
++	{ .data = { 0x08, 0x1F } },
++	{ .data = { 0x09, 0x1F } },
++	{ .data = { 0x0A, 0x1E } },
++	{ .data = { 0x0B, 0x1E } },
++	{ .data = { 0x0C, 0x1F } },
++	{ .data = { 0x0D, 0x47 } },
++	{ .data = { 0x0E, 0x47 } },
++	{ .data = { 0x0F, 0x45 } },
++	{ .data = { 0x10, 0x45 } },
++	{ .data = { 0x11, 0x4B } },
++	{ .data = { 0x12, 0x4B } },
++	{ .data = { 0x13, 0x49 } },
++	{ .data = { 0x14, 0x49 } },
++	{ .data = { 0x15, 0x1F } },
++
++	{ .data = { 0x16, 0x1E } },
++	{ .data = { 0x17, 0x1E } },
++	{ .data = { 0x18, 0x40 } },
++	{ .data = { 0x19, 0x40 } },
++	{ .data = { 0x1A, 0x42 } },
++	{ .data = { 0x1B, 0x42 } },
++	{ .data = { 0x1C, 0x1F } },
++	{ .data = { 0x1D, 0x1F } },
++	{ .data = { 0x1E, 0x1F } },
++	{ .data = { 0x1F, 0x1f } },
++	{ .data = { 0x20, 0x1E } },
++	{ .data = { 0x21, 0x1E } },
++	{ .data = { 0x22, 0x1f } },
++	{ .data = { 0x23, 0x46 } },
++	{ .data = { 0x24, 0x46 } },
++	{ .data = { 0x25, 0x44 } },
++	{ .data = { 0x26, 0x44 } },
++	{ .data = { 0x27, 0x4A } },
++	{ .data = { 0x28, 0x4A } },
++	{ .data = { 0x29, 0x48 } },
++	{ .data = { 0x2A, 0x48 } },
++	{ .data = { 0x2B, 0x1f } },
++
++	{ .data = { 0x2C, 0x1F } },
++	{ .data = { 0x2D, 0x1F } },
++	{ .data = { 0x2E, 0x42 } },
++	{ .data = { 0x2F, 0x42 } },
++	{ .data = { 0x30, 0x40 } },
++	{ .data = { 0x31, 0x40 } },
++	{ .data = { 0x32, 0x1E } },
++	{ .data = { 0x33, 0x1E } },
++	{ .data = { 0x34, 0x1F } },
++	{ .data = { 0x35, 0x1F } },
++	{ .data = { 0x36, 0x1E } },
++	{ .data = { 0x37, 0x1E } },
++	{ .data = { 0x38, 0x1F } },
++	{ .data = { 0x39, 0x48 } },
++	{ .data = { 0x3A, 0x48 } },
++	{ .data = { 0x3B, 0x4A } },
++	{ .data = { 0x3C, 0x4A } },
++	{ .data = { 0x3D, 0x44 } },
++	{ .data = { 0x3E, 0x44 } },
++	{ .data = { 0x3F, 0x46 } },
++	{ .data = { 0x40, 0x46 } },
++	{ .data = { 0x41, 0x1F } },
++
++	{ .data = { 0x42, 0x1F } },
++	{ .data = { 0x43, 0x1F } },
++	{ .data = { 0x44, 0x43 } },
++	{ .data = { 0x45, 0x43 } },
++	{ .data = { 0x46, 0x41 } },
++	{ .data = { 0x47, 0x41 } },
++	{ .data = { 0x48, 0x1E } },
++	{ .data = { 0x49, 0x1E } },
++	{ .data = { 0x4A, 0x1E } },
++	{ .data = { 0x4B, 0x1F } },
++	{ .data = { 0x4C, 0x1E } },
++	{ .data = { 0x4D, 0x1E } },
++	{ .data = { 0x4E, 0x1F } },
++	{ .data = { 0x4F, 0x49 } },
++	{ .data = { 0x50, 0x49 } },
++	{ .data = { 0x51, 0x4B } },
++	{ .data = { 0x52, 0x4B } },
++	{ .data = { 0x53, 0x45 } },
++	{ .data = { 0x54, 0x45 } },
++	{ .data = { 0x55, 0x47 } },
++	{ .data = { 0x56, 0x47 } },
++	{ .data = { 0x57, 0x1F } },
++
++	{ .data = { 0x58, 0x10 } },
++	{ .data = { 0x59, 0x00 } },
++	{ .data = { 0x5A, 0x00 } },
++	{ .data = { 0x5B, 0x30 } },
++	{ .data = { 0x5C, 0x02 } },
++	{ .data = { 0x5D, 0x40 } },
++	{ .data = { 0x5E, 0x01 } },
++	{ .data = { 0x5F, 0x02 } },
++	{ .data = { 0x60, 0x30 } },
++	{ .data = { 0x61, 0x01 } },
++	{ .data = { 0x62, 0x02 } },
++	{ .data = { 0x63, 0x6A } },
++	{ .data = { 0x64, 0x6A } },
++	{ .data = { 0x65, 0x05 } },
++	{ .data = { 0x66, 0x12 } },
++	{ .data = { 0x67, 0x74 } },
++	{ .data = { 0x68, 0x04 } },
++	{ .data = { 0x69, 0x6A } },
++	{ .data = { 0x6A, 0x6A } },
++	{ .data = { 0x6B, 0x08 } },
++
++	{ .data = { 0x6C, 0x00 } },
++	{ .data = { 0x6D, 0x04 } },
++	{ .data = { 0x6E, 0x04 } },
++	{ .data = { 0x6F, 0x88 } },
++	{ .data = { 0x70, 0x00 } },
++	{ .data = { 0x71, 0x00 } },
++	{ .data = { 0x72, 0x06 } },
++	{ .data = { 0x73, 0x7B } },
++	{ .data = { 0x74, 0x00 } },
++	{ .data = { 0x75, 0x07 } },
++	{ .data = { 0x76, 0x00 } },
++	{ .data = { 0x77, 0x5D } },
++	{ .data = { 0x78, 0x17 } },
++	{ .data = { 0x79, 0x1F } },
++	{ .data = { 0x7A, 0x00 } },
++	{ .data = { 0x7B, 0x00 } },
++	{ .data = { 0x7C, 0x00 } },
++	{ .data = { 0x7D, 0x03 } },
++	{ .data = { 0x7E, 0x7B } },
++
++	{ .data = { 0xE0, 0x04 } },
++	{ .data = { 0x2B, 0x2B } },
++	{ .data = { 0x2E, 0x44 } },
++
++	{ .data = { 0xE0, 0x01 } },
++	{ .data = { 0x0E, 0x01 } },
++
++	{ .data = { 0xE0, 0x03 } },
++	{ .data = { 0x98, 0x2F } },
++
++	{ .data = { 0xE0, 0x00 } },
++	{ .data = { 0xE6, 0x02 } },
++	{ .data = { 0xE7, 0x02 } },
++
++	{ .data = { 0x11, 0x00 } },
 +};
 +
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
++static const struct k101_im2ba02_init_cmd timed_cmds[] = {
++	{ .data = { 0x29, 0x00 } },
++	{ .data = { 0x35, 0x00 } },
 +};
 +
-+&csi {
-+	status = "okay";
++static int k101_im2ba02_prepare(struct drm_panel *panel)
++{
++	struct k101_im2ba02 *ctx = panel_to_k101_im2ba02(panel);
++	struct mipi_dsi_device *dsi = ctx->dsi;
++	unsigned int i;
++	int ret;
 +
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	ret = regulator_enable(ctx->avdd);
++	if (ret)
++		return ret;
 +
-+		csi_ep: endpoint {
-+			remote-endpoint = <&ov5640_ep>;
-+			bus-width = <8>;
-+			hsync-active = <1>; /* Active high */
-+			vsync-active = <0>; /* Active low */
-+			data-active = <1>;  /* Active high */
-+			pclk-sample = <1>;  /* Rising */
-+		};
-+	};
++	msleep(20);
++
++	ret = regulator_enable(ctx->dvdd);
++	if (ret)
++		return ret;
++
++	msleep(20);
++
++	ret = regulator_enable(ctx->cvdd);
++	if (ret)
++		return ret;
++
++	msleep(30);
++
++	gpiod_set_value(ctx->reset, 1);
++	msleep(50);
++
++	gpiod_set_value(ctx->reset, 0);
++	msleep(50);
++
++	gpiod_set_value(ctx->reset, 1);
++	msleep(200);
++
++	for (i = 0; i < ARRAY_SIZE(k101_im2ba02_init_cmds); i++) {
++		const struct k101_im2ba02_init_cmd *cmd = &k101_im2ba02_init_cmds[i];
++
++		ret = mipi_dsi_dcs_write_buffer(dsi, cmd->data, K101_IM2BA02_INIT_CMD_LEN);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int k101_im2ba02_enable(struct drm_panel *panel)
++{
++	struct k101_im2ba02 *ctx = panel_to_k101_im2ba02(panel);
++	const struct k101_im2ba02_init_cmd *cmd = &timed_cmds[1];
++	int ret;
++
++	msleep(150);
++
++	ret = mipi_dsi_dcs_set_display_on(ctx->dsi);
++	if (ret < 0)
++		return ret;
++
++	msleep(50);
++
++	return mipi_dsi_dcs_write_buffer(ctx->dsi, cmd->data, K101_IM2BA02_INIT_CMD_LEN);
++	if (ret < 0)
++		return ret;
++}
++
++static int k101_im2ba02_disable(struct drm_panel *panel)
++{
++	struct k101_im2ba02 *ctx = panel_to_k101_im2ba02(panel);
++
++	return mipi_dsi_dcs_set_display_off(ctx->dsi);
++}
++
++static int k101_im2ba02_unprepare(struct drm_panel *panel)
++{
++	struct k101_im2ba02 *ctx = panel_to_k101_im2ba02(panel);
++	int ret;
++
++	ret = mipi_dsi_dcs_set_display_off(ctx->dsi);
++	if (ret < 0)
++		DRM_DEV_ERROR(panel->dev, "failed to set display off: %d\n",
++			      ret);
++
++	ret = mipi_dsi_dcs_enter_sleep_mode(ctx->dsi);
++	if (ret < 0)
++		DRM_DEV_ERROR(panel->dev, "failed to enter sleep mode: %d\n",
++			      ret);
++
++	msleep(200);
++
++	gpiod_set_value(ctx->reset, 0);
++
++	msleep(20);
++
++	regulator_disable(ctx->cvdd);
++
++	msleep(20);
++
++	regulator_disable(ctx->dvdd);
++
++	msleep(20);
++
++	regulator_disable(ctx->avdd);
++
++	return 0;
++}
++
++static const struct drm_display_mode k101_im2ba02_default_mode = {
++	.clock = 70000,
++	.vrefresh = 60,
++
++	.hdisplay = 800,
++	.hsync_start = 800 + 20,
++	.hsync_end = 800 + 20 + 20,
++	.htotal = 800 + 20 + 20 + 20,
++
++	.vdisplay = 1280,
++	.vsync_start = 1280 + 16,
++	.vsync_end = 1280 + 16 + 4,
++	.vtotal = 1280 + 16 + 4 + 4,
++
++	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
++	.width_mm	= 136,
++	.height_mm	= 217,
 +};
 +
-+&dai {
-+	status = "okay";
++static int k101_im2ba02_get_modes(struct drm_panel *panel,
++				  struct drm_connector *connector)
++{
++	struct k101_im2ba02 *ctx = panel_to_k101_im2ba02(panel);
++	struct drm_display_mode *mode;
++
++	mode = drm_mode_duplicate(connector->dev, &k101_im2ba02_default_mode);
++	if (!mode) {
++		DRM_DEV_ERROR(&ctx->dsi->dev, "failed to add mode %ux%ux@%u\n",
++			      k101_im2ba02_default_mode.hdisplay,
++			      k101_im2ba02_default_mode.vdisplay,
++			      k101_im2ba02_default_mode.vrefresh);
++		return -ENOMEM;
++	}
++
++	drm_mode_set_name(mode);
++
++	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
++	connector->display_info.width_mm = mode->width_mm;
++	connector->display_info.height_mm = mode->height_mm;
++	drm_mode_probed_add(connector, mode);
++
++	return 1;
++}
++
++static const struct drm_panel_funcs k101_im2ba02_funcs = {
++	.disable = k101_im2ba02_disable,
++	.unprepare = k101_im2ba02_unprepare,
++	.prepare = k101_im2ba02_prepare,
++	.enable = k101_im2ba02_enable,
++	.get_modes = k101_im2ba02_get_modes,
 +};
 +
-+&de {
-+	status = "okay";
++static int k101_im2ba02_dsi_probe(struct mipi_dsi_device *dsi)
++{
++	struct k101_im2ba02 *ctx;
++	int ret;
++
++	ctx = devm_kzalloc(&dsi->dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	mipi_dsi_set_drvdata(dsi, ctx);
++	ctx->dsi = dsi;
++
++	ctx->dvdd = devm_regulator_get(&dsi->dev, "dvdd");
++	if (IS_ERR(ctx->dvdd)) {
++		DRM_DEV_ERROR(&dsi->dev, "Couldn't get dvdd regulator\n");
++		return PTR_ERR(ctx->dvdd);
++	}
++
++	ctx->avdd = devm_regulator_get(&dsi->dev, "avdd");
++	if (IS_ERR(ctx->avdd)) {
++		DRM_DEV_ERROR(&dsi->dev, "Couldn't get avdd regulator\n");
++		return PTR_ERR(ctx->avdd);
++	}
++
++	ctx->cvdd = devm_regulator_get(&dsi->dev, "cvdd");
++	if (IS_ERR(ctx->cvdd)) {
++		DRM_DEV_ERROR(&dsi->dev, "Couldn't get cvdd regulator\n");
++		return PTR_ERR(ctx->cvdd);
++	}
++
++	ctx->reset = devm_gpiod_get(&dsi->dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(ctx->reset)) {
++		DRM_DEV_ERROR(&dsi->dev, "Couldn't get our reset GPIO\n");
++		return PTR_ERR(ctx->reset);
++	}
++
++	drm_panel_init(&ctx->panel, &dsi->dev, &k101_im2ba02_funcs,
++		       DRM_MODE_CONNECTOR_DSI);
++
++	ret = drm_panel_of_backlight(&ctx->panel);
++	if (ret)
++		return ret;
++
++	ret = drm_panel_add(&ctx->panel);
++	if (ret < 0)
++		return ret;
++
++	dsi->mode_flags = MIPI_DSI_MODE_VIDEO;
++	dsi->format = MIPI_DSI_FMT_RGB888;
++	dsi->lanes = 4;
++
++	ret = mipi_dsi_attach(dsi);
++	if (ret < 0) {
++		drm_panel_remove(&ctx->panel);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int k101_im2ba02_dsi_remove(struct mipi_dsi_device *dsi)
++{
++	struct k101_im2ba02 *ctx = mipi_dsi_get_drvdata(dsi);
++
++	mipi_dsi_detach(dsi);
++	drm_panel_remove(&ctx->panel);
++
++	return 0;
++}
++
++static const struct of_device_id k101_im2ba02_of_match[] = {
++	{ .compatible = "feixin,k101-im2ba02", },
++	{ }
 +};
++MODULE_DEVICE_TABLE(of, k101_im2ba02_of_match);
 +
-+&dphy {
-+	status = "okay";
++static struct mipi_dsi_driver k101_im2ba02_driver = {
++	.probe = k101_im2ba02_dsi_probe,
++	.remove = k101_im2ba02_dsi_remove,
++	.driver = {
++		.name = "feixin-k101-im2ba02",
++		.of_match_table = k101_im2ba02_of_match,
++	},
 +};
++module_mipi_dsi_driver(k101_im2ba02_driver);
 +
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "feixin,k101-im2ba02";
-+		reg = <0>;
-+		avdd-supply = <&reg_dc1sw>;
-+		dvdd-supply = <&reg_dc1sw>;
-+		cvdd-supply = <&reg_ldo_io1>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* PD24 */
-+		backlight = <&backlight>;
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	status = "okay";
-+
-+	touchscreen@5d {
-+		compatible = "goodix,gt9271";
-+		reg = <0x5d>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 4 IRQ_TYPE_LEVEL_HIGH>; /* PH4 */
-+		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+		AVDD28-supply = <&reg_ldo_io1>;
-+	};
-+};
-+
-+&i2c0_pins {
-+	bias-pull-up;
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+
-+	bma223@18 {
-+		compatible = "bosch,bma223", "bosch,bma222e";
-+		reg = <0x18>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <7 5 IRQ_TYPE_LEVEL_HIGH>; /* PH5 */
-+		mount-matrix = "0", "-1", "0",
-+			       "-1", "0", "0",
-+			       "0", "0", "-1";
-+	};
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_aldo3>;
-+	status = "okay";
-+
-+	button-200 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <200000>;
-+	};
-+
-+	button-400 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <400000>;
-+	};
-+};
-+
-+&mixer1 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-+	disable-wp;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_dldo4>;
-+	vqmmc-supply = <&reg_eldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	rtl8723cs: wifi@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	vqmmc-supply = <&reg_dcdc1>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&pwm {
-+	status = "okay";
-+};
-+
-+&r_rsb {
-+	status = "okay";
-+
-+	axp803: pmic@3a3 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		x-powers,drive-vbus-en;
-+	};
-+};
-+
-+#include "axp803.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&battery_power_supply {
-+	status = "okay";
-+};
-+
-+&reg_aldo1 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "dovdd-csi";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pl";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2700000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pll-avcc";
-+};
-+
-+&reg_dc1sw {
-+	regulator-name = "vcc-lcd";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-3v3";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1300000>;
-+	regulator-name = "vdd-cpux";
-+};
-+
-+/* DCDC3 is polyphased with DCDC2 */
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_dcdc6 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-sys";
-+};
-+
-+&reg_dldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-hdmi-dsi-sensor";
-+};
-+
-+&reg_dldo3 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "avdd-csi";
-+};
-+
-+&reg_dldo4 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
-+&reg_drivevbus {
-+	regulator-name = "usb0-vbus";
-+	status = "okay";
-+};
-+
-+&reg_eldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "cpvdd";
-+};
-+
-+&reg_eldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcca-1v8";
-+};
-+
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "dvdd-1v8-csi";
-+};
-+
-+&reg_fldo1 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-1v2-hsic";
-+};
-+
-+&reg_fldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-cpus";
-+};
-+
-+&reg_ldo_io0 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-usb";
-+	status = "okay";
-+};
-+
-+&reg_ldo_io1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-enable-ramp-delay = <3500000>;
-+	regulator-name = "vcc-touchscreen";
-+	status = "okay";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc";
-+};
-+
-+&sound {
-+	status = "okay";
-+	simple-audio-card,aux-devs = <&codec_analog>, <&speaker_amp>;
-+	simple-audio-card,widgets = "Microphone", "Internal Microphone Left",
-+				    "Microphone", "Internal Microphone Right",
-+				    "Headphone", "Headphone Jack",
-+				    "Speaker", "Internal Speaker";
-+	simple-audio-card,routing =
-+			"Left DAC", "AIF1 Slot 0 Left",
-+			"Right DAC", "AIF1 Slot 0 Right",
-+			"Speaker Amp INL", "LINEOUT",
-+			"Speaker Amp INR", "LINEOUT",
-+			"Internal Speaker", "Speaker Amp OUTL",
-+			"Internal Speaker", "Speaker Amp OUTR",
-+			"Headphone Jack", "HP",
-+			"AIF1 Slot 0 Left ADC", "Left ADC",
-+			"AIF1 Slot 0 Right ADC", "Right ADC",
-+			"Internal Microphone Left", "MBIAS",
-+			"MIC1", "Internal Microphone Left",
-+			"Internal Microphone Right", "HBIAS",
-+			"MIC2", "Internal Microphone Right";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 7 9 GPIO_ACTIVE_HIGH>; /* PH9 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_drivevbus>;
-+	usb1_vbus-supply = <&reg_ldo_io0>;
-+	status = "okay";
-+};
++MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.io>");
++MODULE_DESCRIPTION("Feixin K101 IM2BA02 MIPI-DSI LCD panel");
++MODULE_LICENSE("GPL");
 -- 
 2.23.0
 
