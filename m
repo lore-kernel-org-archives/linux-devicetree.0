@@ -2,125 +2,105 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7841CC33CA2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E52CC33CA3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B962082E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3451E2080D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="n72BZQ67"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w/heI5Ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgAJHIj (ORCPT
+        id S1725977AbgAJHP5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:08:39 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:45218 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgAJHIj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:08:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=449GfKH7sH7qx3uVz7I+DZvudTQJS9ufr7oEB5vY7Bc=; b=n72BZQ67zmmXppM/xkdr0487Kv
-        veCzIUlqMEvfTPlQiEU+MY2d7q6mdgXHkJh42V45xkQ1in2Lg/wZMkoG5SEFnA4GA/VyhufBrk4cW
-        DK3rVmmk87TlII2wB9F/360lSMWaegs2aBeQKC6gzLzmZFywL4JzudH+wEEccF709Zt4=;
-Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ipoPD-0003jT-04; Fri, 10 Jan 2020 08:08:27 +0100
-Received: from localhost.lan ([::1] helo=localhost)
-        by localhost with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ipoPA-0001VA-Rz; Fri, 10 Jan 2020 08:08:24 +0100
-Date:   Fri, 10 Jan 2020 08:08:24 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org
-Subject: Re: [PATCH v5 0/5] Add rtc support for rn5t618 mfd
-Message-ID: <20200110080824.727a612d@kemnade.info>
-In-Reply-To: <20191220122416.31881-1-andreas@kemnade.info>
-References: <20191220122416.31881-1-andreas@kemnade.info>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Fri, 10 Jan 2020 02:15:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42146 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgAJHP5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 02:15:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q6so720866wro.9
+        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 23:15:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9OKjM0NiA29A1YJnbOkfMLLtP+OMdLBmVsUr4YFKYmI=;
+        b=w/heI5CiX5CG06QP7Sv0cxrLLmnMMNh5cvAR7T4TCmnIz8Eg3fbiQMZwB2YUCUpzbx
+         mmUosVo3fH6aOf6Aw9xKPmPZaT8+jdHft0aUNvd2tlXM5ANa9UjfFpFSb57+ymTYjG/2
+         pmxgcgaIyHPJWXiJr293yDtYme/mtd7L/Ak/YuEKAWw/I7xuaRqZVe1bFAEd9cpRytTN
+         8ysCaE+HPdU//NOzq5Yzx8gqKE6Qa7hl0Pjp7FgaKVgfeZQOTmnyBEh7OOHhgjv7kBn9
+         PyVyqewx7EOuO4LrYCozQosfklyZ3gAuvuPuSG21SND9Z7ck4iaNLeZ0n3+gj/x48gi1
+         MOxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9OKjM0NiA29A1YJnbOkfMLLtP+OMdLBmVsUr4YFKYmI=;
+        b=J6NmhzRapJtFlyBFghg/UmE8Y2bvchDZY9i57VDPfFe+uF14BiFx/rHLSx9ijQ4xED
+         F417SHqHEnIer0uNYOj7Nb8oeyMku0wdRd8fHwuSNZFsFDRwClvF/dyAbKZqLemIWaLC
+         bMPKSp8cpgsW3oO9oF9iC6R5aT6tb1SHbB0KJKEgL0HnZcmKzEZIMcxyjikhHXJz0wWW
+         McsY+3IYIN5mQjC1t0qcIkYO3T8JfBvgDOKYjsA5UKSyYwzcTrR85L7Tin+VADAdxk0P
+         UHl+x8aj0xmRkIud0smygQCYDyEEPAM4L1L3gKESi8FTQU0rmSIhDrwRwZ82DcQAzP14
+         FU5Q==
+X-Gm-Message-State: APjAAAUMJesokJQRJ3ssIR17Qt9easJzbMu9PGntou0Vrn3+JohjSvm3
+        b6jF1q+lg2pJcqx1krUILLI8GQ==
+X-Google-Smtp-Source: APXvYqyrMC4qUZGMDa4vTDXPc+WMRe1Cedi+NXO2t/JRWGPthrCa8hHpKeJ8ml5/0kP4fhuDUvDeMQ==
+X-Received: by 2002:a5d:65cf:: with SMTP id e15mr1802033wrw.126.1578640555220;
+        Thu, 09 Jan 2020 23:15:55 -0800 (PST)
+Received: from myrica (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
+        by smtp.gmail.com with ESMTPSA id x17sm1129827wrt.74.2020.01.09.23.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 23:15:54 -0800 (PST)
+Date:   Fri, 10 Jan 2020 08:15:47 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
+        robh+dt@kernel.org, guohanjun@huawei.com, bhelgaas@google.com,
+        zhangfei.gao@linaro.org, robin.murphy@arm.com,
+        linux-arm-kernel@lists.infradead.org, lenb@kernel.org
+Subject: Re: [PATCH v4 00/13] iommu: Add PASID support to Arm SMMUv3
+Message-ID: <20200110071547.GA959441@myrica>
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20200109143618.GA942461@myrica>
+ <20200109144100.GD12236@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109144100.GD12236@willie-the-truck>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 09, 2020 at 02:41:01PM +0000, Will Deacon wrote:
+> On Thu, Jan 09, 2020 at 03:36:18PM +0100, Jean-Philippe Brucker wrote:
+> > On Thu, Dec 19, 2019 at 05:30:20PM +0100, Jean-Philippe Brucker wrote:
+> > > Add support for Substream ID and PASIDs to the SMMUv3 driver. Since v3
+> > > [1], I added review and tested tags where appropriate and applied the
+> > > suggested changes, shown in the diff below. Thanks all!
+> > > 
+> > > I'm testing using the zip accelerator on the Hisilicon KunPeng920 and
+> > > Zhangfei's uacce module [2]. The full SVA support, which I'll send out
+> > > early next year, is available on my branch sva/zip-devel at
+> > > https://jpbrucker.net/git/linux/
+> > 
+> > Is there anything more I should do for the PASID support? Ideally I'd like
+> > to get this in v5.6 so I can focus on the rest of the SVA work and on
+> > performance improvements.
+> 
+> Apologies, I'm just behind with review what with the timing of the new
+> year. You're on the list, but I was hoping to get Robin's TCR stuff dusted
+> off so that Jordan doesn't have to depend on patches languishing on the
+> mailing list and there's also the nvidia stuff to review as well.
+> 
+> Going as fast as I can!
 
-I hope everyone went well into new year, are there any open
-issues left here preveting applying these patches?
+No worries, I just wanted to check that it didn't slip through the cracks.
 
-On Fri, 20 Dec 2019 13:24:11 +0100
-Andreas Kemnade <andreas@kemnade.info> wrote:
-
-> In the variant RC5T619 the mfd has an RTC. This patchset adds
-> support for it. To do so it adds the missing register defines in 
-> rn5t618.h and general irq handling for that.
-> It seems that the irq definitions are the same except missing RTC
-missing words ... for the rn5t618 ...
-
-> but due to missing ability to test that I do not add them here.
-> 
-> The rtc driver itself is based on 
-> https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
-> but heavily reworked.
-> 
-> It was tested on the Kobo Clara HD.
-> 
-> For cleaning up there is a separate off-topic patch:
-> mfd: rn5t618: cleanup i2c_device_id
-> 
-> Changes in v5:
-> - static rn5t618_irq_init
-> - PLATFORM_DEVID_NONE
-> - added some Acked-Bys
-> 
-> Changes in v4:
-> - use macros for IRQ definitions
-> - merge rn5t618-core.c and rn5t618-irq.c
-> 
-> Changes in v3:
-> - alignment cleanup
-> - output cleanup, remove useless toggling of alarm flag in rtc probe
-> - updated bindings description, so patch 1/5 becomes 2/6 and so on
-> 
-> Changes in v2:
-> - no dead code in irq code
-> - various improvements and cleanups in rtc driver itself
-> 
-> Andreas Kemnade (5):
->   dt-bindings: mfd: rn5t618: Document optional property interrupts
->   mfd: rn5t618: add IRQ support
->   mfd: rn5t618: add RTC related registers
->   mfd: rn5t618: add more subdevices
->   rtc: rc5t619: add ricoh rc5t619 RTC driver
-> 
->  Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
->  drivers/mfd/Kconfig                               |   1 +
->  drivers/mfd/rn5t618.c                             | 109 +++++-
->  drivers/rtc/Kconfig                               |  10 +
->  drivers/rtc/Makefile                              |   1 +
->  drivers/rtc/rtc-rc5t619.c                         | 444 ++++++++++++++++++++++
->  include/linux/mfd/rn5t618.h                       |  26 ++
->  7 files changed, 593 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/rtc/rtc-rc5t619.c
-> 
-> -- 
-> 2.11.0
-> 
-> 
+Thanks,
+Jean
