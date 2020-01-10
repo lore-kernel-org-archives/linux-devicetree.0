@@ -2,213 +2,143 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC20C282DD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 23:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AD5C282DD
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 23:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A21B20721
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 23:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FhlWPsFo"
+	by mail.kernel.org (Postfix) with ESMTP id 107B820721
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 23:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578700255;
+	bh=Psrf5lv/ppB1Eke5z2SmhdxBqDuAwAx/qdkZaUu9VVE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VYWvYlgRZI+YvrPmmt0gGeLYcAY4gKAowbcynkpEZ+tk1owl1J/+/uOf9fZNyhzVt
+	 0Rf5vnT3BtZEsUSCFXtlOuODafr1rI5bjUoDD2DBWGk0mAYc8HfDvtnj8YS283Lhh9
+	 TJUipyum0LH4MMY7xzl3CrLxoEukh5k4ImJ6VLUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbgAJXOu (ORCPT
+        id S1727725AbgAJXuv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 18:14:50 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1800 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727324AbgAJXOu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 18:14:50 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1905360000>; Fri, 10 Jan 2020 15:13:58 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 10 Jan 2020 15:14:49 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 10 Jan 2020 15:14:49 -0800
-Received: from [10.2.160.1] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
- 2020 23:14:48 +0000
-Subject: Re: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for
- audio mclk
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
-        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <josephl@nvidia.com>, <daniel.lezcano@linaro.org>,
-        <mmaddireddy@nvidia.com>, <markz@nvidia.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
- <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
- <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
- <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
- <a3c5293b-9ed4-3266-f792-38b980e54b1e@nvidia.com>
- <745b8c7b-4fe3-c9ea-284e-b89546e8ad87@nvidia.com>
- <705edf9b-d1bc-8090-017e-fa4ad445f9fb@nvidia.com>
- <135f0c0b-86d1-9b1a-af02-c14c4b5308c4@gmail.com>
- <575aa30e-1b5a-2a2d-5893-3f6832f416f1@nvidia.com>
- <9bca6c3e-bfe0-7130-b233-3f25c436f76e@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <dcfd35f3-7fdd-fdc9-1c77-bcb63bcabd5b@nvidia.com>
-Date:   Fri, 10 Jan 2020 15:14:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 10 Jan 2020 18:50:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727728AbgAJXuu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jan 2020 18:50:50 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE2720721;
+        Fri, 10 Jan 2020 23:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578700249;
+        bh=Psrf5lv/ppB1Eke5z2SmhdxBqDuAwAx/qdkZaUu9VVE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RyAJxfEhipfX45wJw4VWB4489hI3tx/LI/DKYK81YE5sxB6y4oLTnOj6K2pLaFpWH
+         X/bGxKeJeXoTyygz7VMX6KIEqLvKo8m6hkFVWcHEIGnpoQ9CZ/TS7LLcZv1DW9h+0P
+         h+A02PJ+4Zlsv01fp8PTE4paS/SLmyfJ8T8KwIzE=
+Received: by mail-qv1-f44.google.com with SMTP id x1so1614906qvr.8;
+        Fri, 10 Jan 2020 15:50:49 -0800 (PST)
+X-Gm-Message-State: APjAAAXuFSG2wENR+1m85jfETmuuh8F+Lddm5jBcc3H/KX1d5aW242On
+        b3ZwxLvBp1cp+AjMG6PGLp+04GehOB1sOVrCGg==
+X-Google-Smtp-Source: APXvYqx9u0dSkeb2HRMFumNFpMD+qH1eg54SR01fXYhsCkTKiKQocTuTy1z4bsE+SNdpO7cAVu6ScL5LMUHkrng/LpY=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr1149115qvn.79.1578700248840;
+ Fri, 10 Jan 2020 15:50:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <9bca6c3e-bfe0-7130-b233-3f25c436f76e@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578698038; bh=u0UQrhfGeSXOXRblMCVznbZgOmAsjauC4YT/s6lv+3I=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=FhlWPsFobB3l+M+5f6REuvNqb/Zt8Sys2EVmyPFbVa3H0Q8QoQUivYd8nbHJIFcvn
-         C4CsxNXXBkrOmR7uLrDTYBf9j9+zzNcI1IK8tOVYsvPFr2bbosfBiy2ZFx1vDrrqSA
-         DeE5ENz7x+6CQpZLp4pntzsrOXpb6kyWNu4SBJrRaKc+WvztS5jZyZTtx9vjaZpE3S
-         tZbHwKq+/NxWLVvoGBQPFUCfgpU458fEKgxekOMnCzs5T8FtDyZgpM/lew9Sqe7T+J
-         GseV6t5YT60kZ0p8ZD5DsK75HuYD5dWn3JRdpjlM5GRELniOlhm2KVuKpV9A6OLI+t
-         De7DQkEWvCidw==
+References: <20191211232345.24810-1-robh@kernel.org> <5386e959-f9c4-2748-ed08-34ab361aee2c@nvidia.com>
+In-Reply-To: <5386e959-f9c4-2748-ed08-34ab361aee2c@nvidia.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 10 Jan 2020 17:50:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLmth0bYcG2VnxU-jk_VoC4TgvWD8_e6r1_8WqVwYGq0g@mail.gmail.com>
+Message-ID: <CAL_JsqLmth0bYcG2VnxU-jk_VoC4TgvWD8_e6r1_8WqVwYGq0g@mail.gmail.com>
+Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 1/10/20 3:02 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
+On Tue, Jan 7, 2020 at 4:22 AM Jon Hunter <jonathanh@nvidia.com> wrote:
 >
+> Hi Rob,
 >
-> 11.01.2020 01:13, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 1/10/20 2:05 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 10.01.2020 20:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> On 1/9/20 10:52 AM, Sowjanya Komatineni wrote:
->>>>> On 1/7/20 10:28 PM, Sameer Pujar wrote:
->>>>>> On 1/8/2020 11:18 AM, Sowjanya Komatineni wrote:
->>>>>>> On 1/7/20 9:34 PM, Sameer Pujar wrote:
->>>>>>>> On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
->>>>>>>>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc
->>>>>>>>> clocks
->>>>>>>>> are moved to Tegra PMC driver with pmc as clock provider and usin=
-g
->>>>>>>>> pmc
->>>>>>>>> clock ids.
->>>>>>>>>
->>>>>>>>> New device tree uses clk_out_1 from pmc clock provider.
->>>>>>>>>
->>>>>>>>> So, this patch adds implementation for mclk fallback to extern1
->>>>>>>>> when
->>>>>>>>> retrieving mclk returns -ENOENT to be backward compatible of new
->>>>>>>>> device
->>>>>>>>> tree with older kernels.
->>>>>>>>>
->>>>>>>>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>> ---
->>>>>>>>>     sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
->>>>>>>>>     1 file changed, 10 insertions(+), 1 deletion(-)
->>>>>>>>>
->>>>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>> index 9cfebef74870..9a5f81039491 100644
->>>>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>> @@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct
->>>>>>>>> tegra_asoc_utils_data *data,
->>>>>>>>>         data->clk_cdev1 =3D devm_clk_get(dev, "mclk");
->>>>>>>>>         if (IS_ERR(data->clk_cdev1)) {
->>>>>>>>>             dev_err(data->dev, "Can't retrieve clk cdev1\n");
->>>>>>>> This error print can be moved inside below if, when this actually
->>>>>>>> meant to be an error condition.
->>>>>>>>
->>>>>>> Want to show error even if mclk retrieval returns ENOENT to clearly
->>>>>>> indicate mclk does not exist along with message of falling back to
->>>>>>> extern1.
->>>>>> Yes, but falling back essentially means 'mclk' is not available and
->>>>>> fallback print is not an error.
->>>>>> Not a major issue though, you can consider updating. Otherwise LGTM.
->>>>>>
->>>>> Will update
->>>>>>>>> -        return PTR_ERR(data->clk_cdev1);
->>>>>>>>> +        if (PTR_ERR(data->clk_cdev1) !=3D -ENOENT)
->>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
->>>>>>>>> +        /* Fall back to extern1 */
->>>>>>>>> +        data->clk_cdev1 =3D devm_clk_get(dev, "extern1");
->>>>>>>>> +        if (IS_ERR(data->clk_cdev1)) {
->>>>>>>>> +            dev_err(data->dev, "Can't retrieve clk extern1\n");
->>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
->>>>>>>>> +        }
->>>>>>>>> +
->>>>>>>>> +        dev_err(data->dev, "Falling back to extern1\n");
->>>>>>>> This can be a info print?
->>>>> Will use dev_info
->>>>>>>>>         }
->>>>>>>>>           /*
->>>>> Dmitry/Rob, there was discussion in v3 regarding backporting mclk
->>>>> fallback.
->>>>>
->>>>> Dmitry wanted Rob to confirm on this
->>>>>
->>>>> I think openSUSE Leap could be one of those distros that use LTS kern=
-el
->>>>> with newer device-trees, but that's not 100%. Maybe Rob could help
->>>>> clarifying that.
->>>>>
->>>>> Dmitry/Rob, Can you please confirm if mclk fallback patch need
->>>>> backport to have new device tree work with old kernels?
->>>>>
->>>> Dmitry,
->>>>
->>>> Can you please confirm if we need to backport this mclk fallback patch=
-?
->>>>
->>> Seems only T210 was making use of the CaR's TEGRA*_CLK_CLK_OUT_*, thus
->>> the backporting isn't needed.
->> Thanks Dmitry
->>> Also, please use 'git rebase --exec make ...' to make sure that all
->>> patches are compiling without problems. The removal of the legacy clock
->>> IDs should be done after the device-trees changes, otherwise it looks
->>> like DTBs compilation will fail. It's possible that the order of the
->>> patches could be changed if Thierry will chose to split this series int=
-o
->>> several pull requests, nevertheless all patches should compile and work
->>> in the original order.
->> OK, Will move patches of device tree updates to use new DT ID prior to
->> removal of old ID.
-> Oh, wait. But then the newer device-trees won't work with the stable
-> kernels, so it actually won't hurt to backport this change.
-ok will add Fixes tag to have this mclk fallback patch backported.
+> On 11/12/2019 23:23, Rob Herring wrote:
+> > The phandle cache was added to speed up of_find_node_by_phandle() by
+> > avoiding walking the whole DT to find a matching phandle. The
+> > implementation has several shortcomings:
+> >
+> >   - The cache is designed to work on a linear set of phandle values.
+> >     This is true for dtc generated DTs, but not for other cases such as
+> >     Power.
+> >   - The cache isn't enabled until of_core_init() and a typical system
+> >     may see hundreds of calls to of_find_node_by_phandle() before that
+> >     point.
+> >   - The cache is freed and re-allocated when the number of phandles
+> >     changes.
+> >   - It takes a raw spinlock around a memory allocation which breaks on
+> >     RT.
+> >
+> > Change the implementation to a fixed size and use hash_32() as the
+> > cache index. This greatly simplifies the implementation. It avoids
+> > the need for any re-alloc of the cache and taking a reference on nodes
+> > in the cache. We only have a single source of removing cache entries
+> > which is of_detach_node().
+> >
+> > Using hash_32() removes any assumption on phandle values improving
+> > the hit rate for non-linear phandle values. The effect on linear values
+> > using hash_32() is about a 10% collision. The chances of thrashing on
+> > colliding values seems to be low.
+> >
+> > To compare performance, I used a RK3399 board which is a pretty typical
+> > system. I found that just measuring boot time as done previously is
+> > noisy and may be impacted by other things. Also bringing up secondary
+> > cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
+> > With no caching, calls to of_find_node_by_phandle() take about 20124 us
+> > for 1248 calls. There's an additional 288 calls before time keeping is
+> > up. Using the average time per hit/miss with the cache, we can calculate
+> > these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
+> > and 13319 us with no cache or an uninitialized cache.
+> >
+> > Comparing the 3 implementations the time spent in
+> > of_find_node_by_phandle() is:
+> >
+> > no cache:        20124 us (+ 13319 us)
+> > 128 entry cache:  5134 us (+ 690 us)
+> > current cache:     819 us (+ 13319 us)
+> >
+> > We could move the allocation of the cache earlier to improve the
+> > current cache, but that just further complicates the situation as it
+> > needs to be after slab is up, so we can't do it when unflattening (which
+> > uses memblock).
+> >
+> > Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
 >
-> Secondly, please move the "Use device managed resource APIs to get the
-> clock" after the ASoC patches with the stable tags, such that the stable
-> patches could be applied cleanly.
-OK
->
-> Lastly, please separate the assigned-clocks change from the the audio
-> mclk enable/disable into a standalone patch. These changes are not
-> interdependent, unless I'm missing something.
+> With next-20200106 I have noticed a regression on Tegra210 where it
+> appears that only one of the eMMC devices is being registered. Bisect is
+> pointing to this patch and reverting on top of next fixes the problem.
+> That is as far as I have got so far, so if you have any ideas, please
+> let me know. Unfortunately, there do not appear to be any obvious errors
+> from the bootlog.
 
-But parent configuration when assigned-clock-parents are not in DT are=20
-needed along with mclk enable
+I guess that's tegra210-p2371-2180.dts because none of the others have
+2 SD hosts enabled. I don't see anything obvious though. Are you doing
+any runtime mods to the DT?
 
-as we are removing audio clocks parent configuration and enabling them=20
-together from clock driver.
+Can you try just removing the cache lookup at the beginning? Pretty
+sure that will work as that's pretty much what we had before any
+cache. Next try dumping out the phandle values and node ptr values.
 
-So doesn't both parent configuration and enabling mclk together need to=20
-be in same patch to match what we are removing from clock driver?
-
+Rob
