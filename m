@@ -2,105 +2,88 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E52CC33CA3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F7C33C99
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3451E2080D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72BC62073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 07:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w/heI5Ci"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="c0XSGiUB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgAJHP5 (ORCPT
+        id S1726162AbgAJHQT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:15:57 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42146 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbgAJHP5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 02:15:57 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q6so720866wro.9
-        for <devicetree@vger.kernel.org>; Thu, 09 Jan 2020 23:15:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9OKjM0NiA29A1YJnbOkfMLLtP+OMdLBmVsUr4YFKYmI=;
-        b=w/heI5CiX5CG06QP7Sv0cxrLLmnMMNh5cvAR7T4TCmnIz8Eg3fbiQMZwB2YUCUpzbx
-         mmUosVo3fH6aOf6Aw9xKPmPZaT8+jdHft0aUNvd2tlXM5ANa9UjfFpFSb57+ymTYjG/2
-         pmxgcgaIyHPJWXiJr293yDtYme/mtd7L/Ak/YuEKAWw/I7xuaRqZVe1bFAEd9cpRytTN
-         8ysCaE+HPdU//NOzq5Yzx8gqKE6Qa7hl0Pjp7FgaKVgfeZQOTmnyBEh7OOHhgjv7kBn9
-         PyVyqewx7EOuO4LrYCozQosfklyZ3gAuvuPuSG21SND9Z7ck4iaNLeZ0n3+gj/x48gi1
-         MOxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9OKjM0NiA29A1YJnbOkfMLLtP+OMdLBmVsUr4YFKYmI=;
-        b=J6NmhzRapJtFlyBFghg/UmE8Y2bvchDZY9i57VDPfFe+uF14BiFx/rHLSx9ijQ4xED
-         F417SHqHEnIer0uNYOj7Nb8oeyMku0wdRd8fHwuSNZFsFDRwClvF/dyAbKZqLemIWaLC
-         bMPKSp8cpgsW3oO9oF9iC6R5aT6tb1SHbB0KJKEgL0HnZcmKzEZIMcxyjikhHXJz0wWW
-         McsY+3IYIN5mQjC1t0qcIkYO3T8JfBvgDOKYjsA5UKSyYwzcTrR85L7Tin+VADAdxk0P
-         UHl+x8aj0xmRkIud0smygQCYDyEEPAM4L1L3gKESi8FTQU0rmSIhDrwRwZ82DcQAzP14
-         FU5Q==
-X-Gm-Message-State: APjAAAUMJesokJQRJ3ssIR17Qt9easJzbMu9PGntou0Vrn3+JohjSvm3
-        b6jF1q+lg2pJcqx1krUILLI8GQ==
-X-Google-Smtp-Source: APXvYqyrMC4qUZGMDa4vTDXPc+WMRe1Cedi+NXO2t/JRWGPthrCa8hHpKeJ8ml5/0kP4fhuDUvDeMQ==
-X-Received: by 2002:a5d:65cf:: with SMTP id e15mr1802033wrw.126.1578640555220;
-        Thu, 09 Jan 2020 23:15:55 -0800 (PST)
-Received: from myrica (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
-        by smtp.gmail.com with ESMTPSA id x17sm1129827wrt.74.2020.01.09.23.15.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 23:15:54 -0800 (PST)
-Date:   Fri, 10 Jan 2020 08:15:47 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, sudeep.holla@arm.com, rjw@rjwysocki.net,
-        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
-        robh+dt@kernel.org, guohanjun@huawei.com, bhelgaas@google.com,
-        zhangfei.gao@linaro.org, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org, lenb@kernel.org
-Subject: Re: [PATCH v4 00/13] iommu: Add PASID support to Arm SMMUv3
-Message-ID: <20200110071547.GA959441@myrica>
-References: <20191219163033.2608177-1-jean-philippe@linaro.org>
- <20200109143618.GA942461@myrica>
- <20200109144100.GD12236@willie-the-truck>
+        Fri, 10 Jan 2020 02:16:19 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:63053 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbgAJHQS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:16:18 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578640578; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=+T5bfhKwhIRutpNEoM3STa+mJOWH/4Y71kETTJnBQZM=; b=c0XSGiUB/9Kl6pmWeJkOsNngGn//k9ixYyJnQyLRH6UVKrcQ4yuRwjYjxKrHApTqN9w2FD0K
+ 1gmFnPNnXmviFRBFL20OwHSafj+EeJNHrgNwyaI+DPyHsk0vNVqJEvbcotfgqftDY0ttTGUw
+ eYXLJ12EYqTAxITAZcD5l8WqdaI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1824c0.7fccb40d2228-smtp-out-n01;
+ Fri, 10 Jan 2020 07:16:16 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C9326C4479F; Fri, 10 Jan 2020 07:16:16 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8F5E8C433CB;
+        Fri, 10 Jan 2020 07:16:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F5E8C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH 0/2] ath10k: Enable QDSS clock on sm8150
+References: <20191223054855.3020665-1-bjorn.andersson@linaro.org>
+Date:   Fri, 10 Jan 2020 09:16:11 +0200
+In-Reply-To: <20191223054855.3020665-1-bjorn.andersson@linaro.org> (Bjorn
+        Andersson's message of "Sun, 22 Dec 2019 21:48:53 -0800")
+Message-ID: <87zhevsrwk.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109144100.GD12236@willie-the-truck>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:41:01PM +0000, Will Deacon wrote:
-> On Thu, Jan 09, 2020 at 03:36:18PM +0100, Jean-Philippe Brucker wrote:
-> > On Thu, Dec 19, 2019 at 05:30:20PM +0100, Jean-Philippe Brucker wrote:
-> > > Add support for Substream ID and PASIDs to the SMMUv3 driver. Since v3
-> > > [1], I added review and tested tags where appropriate and applied the
-> > > suggested changes, shown in the diff below. Thanks all!
-> > > 
-> > > I'm testing using the zip accelerator on the Hisilicon KunPeng920 and
-> > > Zhangfei's uacce module [2]. The full SVA support, which I'll send out
-> > > early next year, is available on my branch sva/zip-devel at
-> > > https://jpbrucker.net/git/linux/
-> > 
-> > Is there anything more I should do for the PASID support? Ideally I'd like
-> > to get this in v5.6 so I can focus on the rest of the SVA work and on
-> > performance improvements.
-> 
-> Apologies, I'm just behind with review what with the timing of the new
-> year. You're on the list, but I was hoping to get Robin's TCR stuff dusted
-> off so that Jordan doesn't have to depend on patches languishing on the
-> mailing list and there's also the nvidia stuff to review as well.
-> 
-> Going as fast as I can!
+Bjorn Andersson <bjorn.andersson@linaro.org> writes:
 
-No worries, I just wanted to check that it didn't slip through the cracks.
+> On SM8150 the WiFi firmware depends on the QDSS clock ticking, or the system
+> will reset due to an NoC error. So this adds an optional clock to the ath10k
+> binding and makes sure it's enabled while the WiFi firmware needs it.
+>
+> Bjorn Andersson (2):
+>   ath10k: Add optional qdss clk
+>   arm64: dts: qcom: sm8150: Specify qdss clock for wifi
+>
+>  .../devicetree/bindings/net/wireless/qcom,ath10k.txt          | 2 +-
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi                          | 4 ++--
+>  drivers/net/wireless/ath/ath10k/snoc.c                        | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-Jean
+Via which tree are these supposed to go? I'll take patch 1 and arm
+mantainers take patch 2, or what?
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
