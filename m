@@ -2,111 +2,129 @@ Return-Path: <SRS0=Jntx=27=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A82C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5342C33C99
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20602080D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QZAvK398"
+	by mail.kernel.org (Postfix) with ESMTP id A5A1B2077C
+	for <linux-devicetree@archiver.kernel.org>; Fri, 10 Jan 2020 05:43:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725799AbgAJFHE (ORCPT
+        id S1726273AbgAJFnE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:07:04 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36733 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgAJFHE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 00:07:04 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r19so771259ljg.3;
-        Thu, 09 Jan 2020 21:07:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=DR/csZpOtlFwPUHSslKZ8t2JxeV60nIvwDhXAUm3/D0=;
-        b=QZAvK398MN6OnXyXajGrojpY2ka0rixjwuNfnJymJA5MsddwzVX0a2DKuIaU3UBVcT
-         JSEgD+iP2fMVHC+e/MWwad3C1Cy2BY4OnZ4QE/C4gXeKQMUmKUddHprwv879Rv39GLan
-         YVcuCIAv2r04eNNHAhm0bjocC4H/Ogk3LLFBxSPPsXNFkWsCN8sEbEtaV680d371gkUI
-         Fzk8BlzIkrVDG78szO91R86LGvongnKnEq9rb1ASejLdtyuunOUTQEVYzl+lGm4jDPK1
-         qNKGYQv8YBucoZrXpqK2ZL8ZrZz/xiu7dOTMYIleXGB+y45oS5G7qtSJcjkeD5O7Zjg0
-         seZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=DR/csZpOtlFwPUHSslKZ8t2JxeV60nIvwDhXAUm3/D0=;
-        b=Q0dflK6SADSn4wwjAOpmrW2Oe6w0zVmJt3mxzn3uWnhWcvigp16u/Uic9OC5oKYxWH
-         n3VbshP4N7n5zRhqDM5enguiVHpXSp8P/IJcGw4jqOL3QWUW4N2yRu6B4jeZMehBn8G1
-         5WiTty8vWnf6yiNuNeC0YDxf3YwKu0tDmOhcfqEXnZKhGOeYY7S+iuqMWiYVXFmASGzk
-         ETnnL7wlCKIFA+cqzYztBAZQhcvOKB/lZ7/pf8vCeInKXm96JckvYvw9Dgkb/zqxZh3w
-         8hg51r4Ti0mwIhgQiZHb8bvJKHAIjqFu9PKkeACFhWCUX5IpLPAdR1WqKG2uWAZK7Ym2
-         /Wtw==
-X-Gm-Message-State: APjAAAU7NagPSyBdrrVlfE0BkuLq+WhqXV+GFQI10BSC/kRWnY99QkYn
-        /MLsPgFf9QCJTdaHqVav95BU/0HAwikmLyJebpw=
-X-Google-Smtp-Source: APXvYqy8VXuT5WbOs+qRrXtcCTu2FXb1F4RB6SFVExvT9YXcXtl0TazRO+jKkMpAHn/mPQNVWK1SlhgxNra+mRRtMD0=
-X-Received: by 2002:a2e:556:: with SMTP id 83mr1204265ljf.127.1578632821868;
- Thu, 09 Jan 2020 21:07:01 -0800 (PST)
+        Fri, 10 Jan 2020 00:43:04 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:21526 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbgAJFnD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 10 Jan 2020 00:43:03 -0500
+Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 10 Jan 2020
+ 13:43:28 +0800
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>
+CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH v5 0/6] arm64: meson: Add support for USB on Amlogic A1
+Date:   Fri, 10 Jan 2020 13:42:31 +0800
+Message-ID: <1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <1577023823-9615-1-git-send-email-akinobu.mita@gmail.com>
- <1577023823-9615-2-git-send-email-akinobu.mita@gmail.com> <20200108161331.GA18546@bogus>
-In-Reply-To: <20200108161331.GA18546@bogus>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Fri, 10 Jan 2020 14:06:49 +0900
-Message-ID: <CAC5umygcuGTKw=8NO+yM4z=MpAiw62Eo6p0vky_soTRmn0Y1Wg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] hwmon: (pwm-fan) add option to stop fan on shutdown
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-hwmon@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.18.11.213]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-2020=E5=B9=B41=E6=9C=889=E6=97=A5(=E6=9C=A8) 1:13 Rob Herring <robh@kernel.=
-org>:
->
-> On Sun, Dec 22, 2019 at 11:10:22PM +0900, Akinobu Mita wrote:
-> > The pwm-fan driver leaves the fun running when shutting down the system=
-.
-> > (On the other hand the gpio-fan driver stops it.)
->
-> Seemms like we should have consistent behavior independent of what the
-> underlying implementation uses. Is there actually a case you'd want to
-> leave the fan on? It seems strange to disable in suspend and leave on in
-> shutdown.
+This patchset adds support for USB on Amlogic A1 SoCs.
 
-I agree.  I was trying to keep the current behavior unchanged, so I added
-"disable-state-shutdown" property.  But I can't think of any case we want
-to leave the fun on in shutdown.
+This patchset is composed with :
+- bindings of the PHY
+- bindings of the USB Control Glue
+- PHY Driver
+- USB Control Glue driver
+- dts of the PHY
+- dts of the USB Controller
 
-So it's better to change the shutdown behavior and remove the option
-completely or add "retain-state-shutdown" property instead.
-(The "retain-state-shutdown" property is inspired by gpio-leds)
+The Amlogic A1 USB Complex is composed of :
+- 1 DWC3 USB controller for USB2 Host functionality
+- 1 USB2 PHY for USB2 Host functionality
 
-> Wouldn't the shutdown state depend if the PWM off state is high or low?
-> IIRC, i.MX PWM has a quirk that the PWM disabled state is high. Doesn't
+The USB Control Glue setups the clocks and the reset about DWC3 USB
+controller, and binds to the USB2 PHY. It also configures the 8bit
+UTMI interfaces for the USB2 PHY, including setting USB2 phy mode.
 
-It could be possible to affect the shutdown behavior for pwm-fan.
-There are three i.MX PWM drivers (pwm-imx1, pwm-imx27, and pwm-tpm).
-Do you remember which one actually have such limitation?
+The USB2 PHY driver initializes the phy analog settings, phy PLL 
+setup and phy tuning.
 
-Maybe it should be handled by the PWM controller/chip driver and PWM core.
-From the perspective of PWM user drivers for now, we have nothing to do
-other than setting duty cycle zero and then disable PWM for stopping the
-pwm-fan.
+This patchset is based on A1 clock/power domain/reset series at [0].
 
-> it also depend on what the PWM driver does in shutdown?
+Changes since v1:[1]
+ - integrate glue and phy drivers into g12a's
+ 
+Changes since v2:[2]
+ - modify amlogic,meson-g12a-usb-ctrl.yaml with dt_binding_check tool
+ - phy/glue driver use of_device_get_match_data to distinguish A1 from G12A
 
-I think so.  But as far as I can see, no PWM drivers implement shutdown
-callback.
+Changes since v3:[3]
+ - fix bindings mistakes of the PHY according Rob's comments
+ - fix bindings mistakes of the USB Control Glue according Rob's comments
+ - phy driver add xtal_usb_phy clock which moved from glue driver
+ - glue driver use otg_mode instead of soc_id to support otg function
+
+Changes since v4:[4]
+ - phy driver revert reset-names changes
+ - phy driver change clock name to "xtal" to consistent with g12a
+ - glue driver add drvdata otg_switch_supported
+
+[0]
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=185477
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=180055
+https://patchwork.kernel.org/project/linux-amlogic/list/?series=189643
+
+[1] : https://lore.kernel.org/linux-amlogic/1574405757-76184-1-git-send-email-hanjie.lin@amlogic.com
+
+[2] : https://lore.kernel.org/linux-amlogic/1576636944-196192-1-git-send-email-hanjie.lin@amlogic.com
+
+[3] : https://lore.kernel.org/linux-amlogic/1577428606-69855-1-git-send-email-hanjie.lin@amlogic.com
+
+[4] : https://lore.kernel.org/linux-amlogic/1578537045-23260-1-git-send-email-hanjie.lin@amlogic.com
+
+Hanjie Lin (6):
+  dt-bindings: phy: Add Amlogic A1 USB2 PHY Bindings
+  dt-bindings: usb: dwc3: Add the Amlogic A1 Family DWC3 Glue Bindings
+  phy: amlogic: Add Amlogic A1 USB2 PHY Driver
+  usb: dwc3: Add Amlogic A1 DWC3 glue
+  arm64: dts: meson: a1: Enable USB2 PHY
+  arm64: dts: meson: a1: Enable DWC3 controller
+
+ .../bindings/phy/amlogic,meson-a1-usb2-phy.yaml    | 62 +++++++++++++++
+ .../bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml  | 11 +++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 44 +++++++++++
+ drivers/phy/amlogic/phy-meson-g12a-usb2.c          | 85 ++++++++++++++-------
+ drivers/usb/dwc3/dwc3-meson-g12a.c                 | 89 ++++++++++++++++------
+ 5 files changed, 243 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-a1-usb2-phy.yaml
+
+-- 
+2.7.4
+
