@@ -2,105 +2,106 @@ Return-Path: <SRS0=eKwZ=3A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E50C282DD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 16:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73B5C282DD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956662087F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 16:47:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McZsbVfV"
+	by mail.kernel.org (Postfix) with ESMTP id B378020880
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578763603;
+	bh=ktFS9YWjiT6ht7tc+v11qTbRy7B1vTvUdZZhKJ0Egnw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IzlzuYbYuP/hrzz4VUmlKLquGJCWgbg3i5NAA/7e4pvCkkvclTBTEYbmc80FALgC/
+	 LPabEfeJzEmsuqzZtFK1sk53cj13T/v/Sl5v8mc/s+eaJIEhJYhddRXzgMoprfj+FT
+	 qoPQsiw9KwXkD95NkLp6q7tYOFtHTdTdlwLBy0G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgAKQrN (ORCPT
+        id S1730552AbgAKR0n (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 11:47:13 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33797 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730347AbgAKQrN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 11:47:13 -0500
-Received: by mail-pl1-f193.google.com with SMTP id x17so2089815pln.1;
-        Sat, 11 Jan 2020 08:47:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PrT/z7/QcgRp7HzvVg/dSsByVx/WL6L0i0y6qJMBrjA=;
-        b=McZsbVfV527vavF6N4/WnAbDpTy4/VdpfdTOs9jzeRy2N4hARTx0hLH3u/5j0AloGu
-         cQNOm4Rq5OqT1/9eo85FhOnRm2fTGqDHKimua3OVpFkZzUCys9wsM4jcBV9Xkw1uJlwV
-         PkU0e6LCRs7dew5z/ltxrIa+bbfWtubOHEqQCC4Ox5CHBdlDIEBZJ4xjpn1wx5lgX8Zo
-         jJSDP9oDMqb3sma3aYO9Rh6QFrfUbhgqHKVnAX6j9dUV0fHDfKjGWErmvZkPwri/KCE8
-         jhmpq4pvaqUaVG96xUAGvCKeDJNsIZInMZGiDomfbZByJSCuxR0uhqTyETg8YnktzlSz
-         Vddw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PrT/z7/QcgRp7HzvVg/dSsByVx/WL6L0i0y6qJMBrjA=;
-        b=NwB+E7Pe/K8FGJBGxHTin1zn/K19Zv22FPxvyVbJbB/g6dfuY/allRMEnDUZafEDgq
-         WGD6/3lq0NHNtkYkC1RFnq5YsS/38y5E2UG0b+07V3gIhiJc9JMChlvFM21xUTQZXOcu
-         ar5tGEKUX5P23mr+b6tGxblVLrzOFP02NCpUzllFXeK8getZhUeQf5HCvvrgeWJkUKRR
-         JfA9jEZ3yZEhwDN7lkcTxf9XwewM8L/L6oNhlvh6z2duGWRL/9ifAt0bOx/Rh8gDdDao
-         m0pfJ2st/IM9EOEo2VhCLdZijGoaTJwGvnM6YlDjkBLmg/RCt9QLp6IHl4N7PSobKO2u
-         RjQw==
-X-Gm-Message-State: APjAAAVDGIyAf0X9vqvsMpyZ3uUIeQTvPWp2XpRpiB0tsnTKnLYxt6cW
-        Mf/lAwv8j8vwbymiO1XFZSYJfxdc
-X-Google-Smtp-Source: APXvYqxSxC5wl0fKHukdALLUXbMHLjnDvfWNJX8Qv28W1kXKGHxzhdlltxTBd+/vbq3K2BdJS9ZUqA==
-X-Received: by 2002:a17:902:59c9:: with SMTP id d9mr5551382plj.184.1578761232147;
-        Sat, 11 Jan 2020 08:47:12 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 68sm7069241pge.14.2020.01.11.08.47.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 11 Jan 2020 08:47:11 -0800 (PST)
-Date:   Sat, 11 Jan 2020 08:47:10 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
-        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
-Message-ID: <20200111164710.GA7295@roeck-us.net>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-2-m.felsch@pengutronix.de>
+        Sat, 11 Jan 2020 12:26:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730533AbgAKR0n (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Jan 2020 12:26:43 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA2B6206ED;
+        Sat, 11 Jan 2020 17:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578763602;
+        bh=ktFS9YWjiT6ht7tc+v11qTbRy7B1vTvUdZZhKJ0Egnw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MVi3m3sZJlBPvA51bmf/sgXDrDsOxKOQ3pU47IiGlF7fi3vkjBCtPAK/evnvnIW0b
+         N/SukqfHK00DO9Ix+FNtpuGle7O6iweMUvBkPN1rhwNke2cKxyRlMapRr32lo+/7M0
+         RZy/zc7DJGUoa0MATrwjwkCRusi9Lwsxx0M2bLKM=
+Date:   Sat, 11 Jan 2020 18:26:39 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] arm64: dts: sun50i: H6: Add SPI controllers nodes
+ and pinmuxes
+Message-ID: <20200111172639.to3lhzros6ca5hj2@gilmour.lan>
+References: <20200108101006.150706-1-andre.przywara@arm.com>
+ <20200108101006.150706-2-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108095704.23233-2-m.felsch@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200108101006.150706-2-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 10:57:02AM +0100, Marco Felsch wrote:
-> The watchdog driver compatible is "dlg,da9062-watchdog" and not
-> "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
-> fwnode. As result the watchdog driver can't parse the devicetree.
-> 
-> Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
+On Wed, Jan 08, 2020 at 10:10:05AM +0000, Andre Przywara wrote:
+> The Allwinner H6 SoC contains two SPI controllers similar to the H3/A64,
+> but with the added capability of 3-wire and 4-wire operation modes.
+> For now the driver does not support those, but the SPI registers are
+> fully backwards-compatible, just adding bits and registers which were
+> formerly reserved. So we can use the existing driver for the "normal" SPI
+> modes, for instance to access the SPI NOR flash soldered on the PineH64
+> board.
+> We use an H6 specific compatible string in addition to the existing H3
+> string, so when the driver later gains Quad SPI support, it should work
+> automatically without any DT changes.
+>
+> Tested by accessing the SPI flash on a Pine H64 board (SPI0), also
+> connecting another SPI flash to the SPI1 header pins.
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > ---
->  drivers/mfd/da9062-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> index e69626867c26..9143de7b77b8 100644
-> --- a/drivers/mfd/da9062-core.c
-> +++ b/drivers/mfd/da9062-core.c
-> @@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] = {
->  		.name		= "da9062-watchdog",
->  		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
->  		.resources	= da9062_wdt_resources,
-> -		.of_compatible  = "dlg,da9062-wdt",
-> +		.of_compatible  = "dlg,da9062-watchdog",
->  	},
->  	{
->  		.name		= "da9062-thermal",
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> index 3329283e38ab..40835850893e 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> @@ -338,6 +338,30 @@
+>  				bias-pull-up;
+>  			};
+>
+> +			/omit-if-no-ref/
+> +			spi0_pins: spi0-pins {
+> +				pins = "PC0", "PC2", "PC3";
+> +				function = "spi0";
+> +			};
+> +
+> +			/omit-if-no-ref/
+> +			spi0_cs_pin: spi0-cs-pin {
+> +				pins = "PC5";
+> +				function = "spi0";
+> +			};
+
+It seems suspicious to use it in the Pine H64, since PC5 is also used
+by the eMMC (and this prevents either the SPI or the emmc controller
+to probe, depending on which probed first).
+
+Maxime
