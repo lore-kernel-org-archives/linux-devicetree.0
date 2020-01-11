@@ -2,193 +2,136 @@ Return-Path: <SRS0=eKwZ=3A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880BAC282DD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D970C33CA4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53C90206ED
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C5920866
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:46:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SuLv0ONw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k81VG9u2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730631AbgAKRcy (ORCPT
+        id S1730681AbgAKRqh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 12:32:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44660 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730629AbgAKRcy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 12:32:54 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so4647375wrm.11
-        for <devicetree@vger.kernel.org>; Sat, 11 Jan 2020 09:32:52 -0800 (PST)
+        Sat, 11 Jan 2020 12:46:37 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33041 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730683AbgAKRqh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 12:46:37 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n25so3911868lfl.0
+        for <devicetree@vger.kernel.org>; Sat, 11 Jan 2020 09:46:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:subject:to:cc:references:autocrypt:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=70ytUnmhwrudFnoecGdHNYxLDAnPBHWwG+JwR7zpRzg=;
-        b=SuLv0ONworow06A1GrBG0SxavmzPr8zr8Fl9spDYFV9z6ZHyEAZW6AuUm8u98hU2Zt
-         PecGHmaYYzIubki2Zd+4luz5aFb7PctL9kZXH7NmAVuh2tXAs6HMS6kqY5O40vwLnD9J
-         YiHZ5wJW+jyHo5FgA21YiQkrp4JJpJTl2NcceIbcL0nR+x/Mt2QqwrZ9LTPK9ab3/jXS
-         evAzKbS0nWMwpJPrT0//iOkKvg/H2ujMY/hAL1gY0yqX1SY5+HrwzFk56olnYmjnCn+Z
-         PxntDUXxEv+4e7FECG7/nUmJhmNE5XSzfDHJbXKqyyQ0FSXz8fcdNpI0nSIx965U2HmJ
-         XalA==
+        bh=qFxZxIBjVPGHT4QdW7YVQeQ/1Ejq4ndiF3qT3HqOqtA=;
+        b=k81VG9u2Fb4PxriTEm9rW5yrC4pkqURrQaaxHj0h8eYd60WT1LaMRv61DKAU06kXoi
+         2qQHoeeE2oTk/Ea+vHUp0ewyuIK89nwdGrooWzt5W65a+9ODQbpHvSmaSZJ1xTacohBb
+         2FsEG1spzmfVp1/g7dXG90KbbiCo2CsRGsRNwP8dWAPea3AMek1CfEzHAVrSSoFq9TDr
+         kkZY3smhV+UYy49Pl+1Kt0LJWi0GKq7VwE329y+0K9Ae1/yHNPz1KOj38YmfPi+z6ETa
+         be2jhnyB4RxM0IUJKuyTwDVrw2RvzWh/H9nXhr30P0x3i5IDYF2OOyrNChYvnzT0talW
+         jceQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=70ytUnmhwrudFnoecGdHNYxLDAnPBHWwG+JwR7zpRzg=;
-        b=iZ4A1aRj3VWK10c3y0ugwpSuOLrb3k3r5/g8pU84yF6P8h+YL0EE8KlQ8ktviy48O3
-         pA27QTpLKPbKUaBpM4vfbXDpSLd9yKDpmA8gKNJuD+Dfcsd1PtP/ZlvBrp6uArREWL4P
-         OHMX/BCuMgnzBG+1+qJzFhwZhv9pnHfsojf/8UQZVbrMYGtlZy/ulkyBs/G9ZSUwby5E
-         wqLTzKRX62PvKHdEZ0vlQC/vDutJButGgdfrziQopSxT9wqCbaoofq22oIi73A4lekff
-         mWElZysNYFuQITbk+IK1P2gF38CPXBHUxon2c8Yo4QFePgMVDkegXhwS3rwMSv+lxZ8l
-         FG3w==
-X-Gm-Message-State: APjAAAWlK8CyhVNS0YqNpbnag2nC/tBaTzHALhgXXSsnPPKw2Df0OI8N
-        Fd61LE1hK/y0Z3CIpI0Vr1Vx9g==
-X-Google-Smtp-Source: APXvYqxY5lhsuUtXeUGtuYVPVFEUaUnqsgaHxl05NrdQXsthYod7+GEM8gQgCgvmyjRvWo6RfNZFPQ==
-X-Received: by 2002:adf:81c2:: with SMTP id 60mr9453590wra.8.1578763971982;
-        Sat, 11 Jan 2020 09:32:51 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:b8db:7f65:1d72:db78? ([2a01:e34:ed2f:f020:b8db:7f65:1d72:db78])
-        by smtp.googlemail.com with ESMTPSA id 60sm7259666wrn.86.2020.01.11.09.32.49
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qFxZxIBjVPGHT4QdW7YVQeQ/1Ejq4ndiF3qT3HqOqtA=;
+        b=H5/LMJ2hR2psa2WZPrFXjUowSDCx6jLNa8gj/gkVKIPfF3MMtisdtM0rJiFJmICMe9
+         v/bSf8+fU7P8GNwDdG0p/UZvlvdF96Fi+rm/J0M0F0j2H8fuMtVTwY8cyUBlC0Vg+xRP
+         clxb58DLnNBM3o6AHBizzMATCG0MqucCLJXimZ39RyXrHw1L/fKAUQn9yBG55/W7784c
+         k7xp+s7t6v1pXUoB7GGmy+pjZETsk5iEtdIkh9zH/LynqPkjKhk41k6qP12IrtRQaOUN
+         /LodgAjKJvw2QVrAaxCIutgtEzMA713OHM6utWmqzo1mt+X2t+7Xr9pGAM1mZn/4nDiQ
+         Ne/g==
+X-Gm-Message-State: APjAAAWbtcuEmc5pDNzfDLns1wIuVWsL3xE5koCB8OKW/X4M/77lxkAU
+        d5MIq2ulTxu+jl2VpYUJ8cr40kcKiYk=
+X-Google-Smtp-Source: APXvYqwObFERCqedOglKM8N8BlxmMPlOWqkW2EtxhBCbT2+xn5dWgrsG9TVkB5cMescaOCwDb2x6dQ==
+X-Received: by 2002:a19:491a:: with SMTP id w26mr5654165lfa.98.1578764795477;
+        Sat, 11 Jan 2020 09:46:35 -0800 (PST)
+Received: from [192.168.118.123] (95-28-65-22.broadband.corbina.ru. [95.28.65.22])
+        by smtp.gmail.com with ESMTPSA id t10sm2884788lji.61.2020.01.11.09.46.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jan 2020 09:32:51 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/2] DT: bindings: Add cooling cells for idle states
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191219221932.15930-1-daniel.lezcano@linaro.org>
- <20200108140333.GA12276@bogus>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
- sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
- 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
- 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
- 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
- xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
- P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
- 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
- wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
- eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
- Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
- CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
- CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
- U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
- UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
- KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
- ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
- 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
- UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
- d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
- 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
- z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
- Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
- 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
- 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
- eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
- NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
- 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
- gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
- qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
- OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
- gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
- 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
- PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
- F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
- WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
- 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
- +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
- dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
- XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
- bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
- JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
- W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
- qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
- l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
- BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
- 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
- eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
- t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
- i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
- X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
- fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
-Message-ID: <3b94b423-ca26-b96f-90fa-2662dbc523d8@linaro.org>
-Date:   Sat, 11 Jan 2020 18:32:48 +0100
+        Sat, 11 Jan 2020 09:46:34 -0800 (PST)
+Subject: Re: [PATCH v3 0/2] Add IMX219 CMOS image sensor support
+To:     Ezequiel Garcia <ezequiel@collabora.com>, mchehab@kernel.org,
+        robh+dt@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        peter.griffin@linaro.org, dave.stevenson@raspberrypi.com,
+        sakari.ailus@linux.intel.com
+References: <20200110200915.22575-1-andrey.konovalov@linaro.org>
+ <b1ce520494275ea2b9bd63af6ef12e9e8ac3c122.camel@collabora.com>
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+Message-ID: <5ffcdaad-159b-795b-2029-f3009d0249cf@linaro.org>
+Date:   Sat, 11 Jan 2020 20:46:33 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200108140333.GA12276@bogus>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <b1ce520494275ea2b9bd63af6ef12e9e8ac3c122.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Ezequiel,
 
+On 11.01.2020 07:45, Ezequiel Garcia wrote:
+> Hello Andrey,
+> 
+> Thanks for submitting a new version.
+> 
+> On Fri, 2020-01-10 at 23:09 +0300, Andrey Konovalov wrote:
+>> This patchset adds support for IMX219 CMOS image sensor from Sony.
+>> Sony IMX219 is an 8MPix, 1/4.0-inch CMOS active pixel digital image sensor
+>> with an active array size of 3280H x 2464V. It is programmable through
+>> I2C interface. Image data are sent through MIPI CSI-2, which can be configured
+>> as either 2 or 4 data lanes, but this driver currently only supports 2 lanes.
+>> The currently supported resolutions are 3280x2464 @ 15fps, 1920x1080 @ 30fps
+>> (cropped FOV), and 1640x1232 (2x2 binned) @ 30fps.
+>>
+>> The driver has been tested with Raspberry Pi Camera Module v2 connected to
+>> Raspberry Pi Zero W.
+>>
+>> Changes since v2 [1]:
+>>
+>> dt-bindings:
+>>    - "clock-names" property removed
+>>    - "xclr-gpios" property renamed to "reset-gpios"
+>>    - the camera-clk mode moved out of sensor device node
+>>    - "clock-lanes" property removed (the sensor doesn't support lane reordering)
+>>    - "clock-noncontinuous" description made more clear (thanks Sakari)
+>>    - "data-lanes" property reworked: it is now optional, and if it is not
+>>      present the driver should assume four-lane operation. For two-lane
+>>      operation (the only mode supported by the current driver) this property
+>>      must be present and set to <1 2>
+>>
+>> imx219 sensor driver:
+>>    - "xclr-gpios" property renamed to "reset-gpios", the corresponding
+>>      struct gpio_desc field in the imx219 structure is renamed to reset_gpio
+>>    - in the driver probe() a test to check that the number of CSI-2 data lanes
+>>      is supported by the driver was added
+>>    - devm_clk_get() is now called with NULL as the 2nd argument, as there is
+>>      just single clock, and there is no need to use clock ID
+>>    - error messages are added when the driver fails to get regulators, to init
+>>      media entity pads, or to register sensor sub-device
+>>
+> 
+> It seems you missed Sakari's review comments on v2,
+> see https://patchwork.linuxtv.org/patch/60925/#114407
 
-On Wed, 8 Jan 2020 at 15:03, Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Dec 19, 2019 at 11:19:27PM +0100, Daniel Lezcano wrote:
-> > Add DT documentation to add an idle state as a cooling device. The CPU
-> > is actually the cooling device but the definition is already used by
-> > frequency capping. As we need to make cpufreq capping and idle
-> > injection to co-exist together on the system in order to mitigate at
-> > different trip points, the CPU can not be used as the cooling device
-> > for idle injection. The idle state can be seen as an hardware feature
-> > and therefore as a component for the passive mitigation.
-> >
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/idle-states.txt | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
->
-> This is now a schema in my tree. Can you rebase on that and I'll pick up
-> the binding change.
+Hm.. Indeed. I missed Sakari's comments on the imx219.c v2 somehow.
+I'll post an updated patchset shortly.
 
-Mmh, I'm now having some doubts about this binding because it will
-restrict any improvement of the cooling device for the future.
+Thanks!
+Andrey
 
-It looks like adding a node to the CPU for the cooling device is more
-adequate.
-eg:
-CPU0: cpu@300 {
-   device_type = "cpu";
-   compatible = "arm,cortex-a9";
-   reg = <0x300>;
-   /* cpufreq controls */
-   operating-points = <998400 0
-          800000 0
-          400000 0
-          200000 0>;
-   clocks = <&prcmu_clk PRCMU_ARMSS>;
-   clock-names = "cpu";
-   clock-latency = <20000>;
-   #cooling-cells = <2>;
-   thermal-idle {
-      #cooling-cells = <2>;
-   };
-};
-
-[ ... ]
-
-cooling-device = <&{/cpus/cpu@300/thermal-idle}
-			THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-
-A quick test with different configurations combination shows it is much
-more flexible and it is open for future changes.
-
-What do you think?
-
+> Thanks!
+> Eze
+> 
+> 
+> 
