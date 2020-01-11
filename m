@@ -2,106 +2,193 @@ Return-Path: <SRS0=eKwZ=3A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73B5C282DD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880BAC282DD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B378020880
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:26:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578763603;
-	bh=ktFS9YWjiT6ht7tc+v11qTbRy7B1vTvUdZZhKJ0Egnw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IzlzuYbYuP/hrzz4VUmlKLquGJCWgbg3i5NAA/7e4pvCkkvclTBTEYbmc80FALgC/
-	 LPabEfeJzEmsuqzZtFK1sk53cj13T/v/Sl5v8mc/s+eaJIEhJYhddRXzgMoprfj+FT
-	 qoPQsiw9KwXkD95NkLp6q7tYOFtHTdTdlwLBy0G0=
+	by mail.kernel.org (Postfix) with ESMTP id 53C90206ED
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 17:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SuLv0ONw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgAKR0n (ORCPT
+        id S1730631AbgAKRcy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 12:26:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbgAKR0n (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jan 2020 12:26:43 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA2B6206ED;
-        Sat, 11 Jan 2020 17:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578763602;
-        bh=ktFS9YWjiT6ht7tc+v11qTbRy7B1vTvUdZZhKJ0Egnw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MVi3m3sZJlBPvA51bmf/sgXDrDsOxKOQ3pU47IiGlF7fi3vkjBCtPAK/evnvnIW0b
-         N/SukqfHK00DO9Ix+FNtpuGle7O6iweMUvBkPN1rhwNke2cKxyRlMapRr32lo+/7M0
-         RZy/zc7DJGUoa0MATrwjwkCRusi9Lwsxx0M2bLKM=
-Date:   Sat, 11 Jan 2020 18:26:39 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] arm64: dts: sun50i: H6: Add SPI controllers nodes
- and pinmuxes
-Message-ID: <20200111172639.to3lhzros6ca5hj2@gilmour.lan>
-References: <20200108101006.150706-1-andre.przywara@arm.com>
- <20200108101006.150706-2-andre.przywara@arm.com>
+        Sat, 11 Jan 2020 12:32:54 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44660 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730629AbgAKRcy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 12:32:54 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q10so4647375wrm.11
+        for <devicetree@vger.kernel.org>; Sat, 11 Jan 2020 09:32:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:subject:to:cc:references:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=70ytUnmhwrudFnoecGdHNYxLDAnPBHWwG+JwR7zpRzg=;
+        b=SuLv0ONworow06A1GrBG0SxavmzPr8zr8Fl9spDYFV9z6ZHyEAZW6AuUm8u98hU2Zt
+         PecGHmaYYzIubki2Zd+4luz5aFb7PctL9kZXH7NmAVuh2tXAs6HMS6kqY5O40vwLnD9J
+         YiHZ5wJW+jyHo5FgA21YiQkrp4JJpJTl2NcceIbcL0nR+x/Mt2QqwrZ9LTPK9ab3/jXS
+         evAzKbS0nWMwpJPrT0//iOkKvg/H2ujMY/hAL1gY0yqX1SY5+HrwzFk56olnYmjnCn+Z
+         PxntDUXxEv+4e7FECG7/nUmJhmNE5XSzfDHJbXKqyyQ0FSXz8fcdNpI0nSIx965U2HmJ
+         XalA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=70ytUnmhwrudFnoecGdHNYxLDAnPBHWwG+JwR7zpRzg=;
+        b=iZ4A1aRj3VWK10c3y0ugwpSuOLrb3k3r5/g8pU84yF6P8h+YL0EE8KlQ8ktviy48O3
+         pA27QTpLKPbKUaBpM4vfbXDpSLd9yKDpmA8gKNJuD+Dfcsd1PtP/ZlvBrp6uArREWL4P
+         OHMX/BCuMgnzBG+1+qJzFhwZhv9pnHfsojf/8UQZVbrMYGtlZy/ulkyBs/G9ZSUwby5E
+         wqLTzKRX62PvKHdEZ0vlQC/vDutJButGgdfrziQopSxT9wqCbaoofq22oIi73A4lekff
+         mWElZysNYFuQITbk+IK1P2gF38CPXBHUxon2c8Yo4QFePgMVDkegXhwS3rwMSv+lxZ8l
+         FG3w==
+X-Gm-Message-State: APjAAAWlK8CyhVNS0YqNpbnag2nC/tBaTzHALhgXXSsnPPKw2Df0OI8N
+        Fd61LE1hK/y0Z3CIpI0Vr1Vx9g==
+X-Google-Smtp-Source: APXvYqxY5lhsuUtXeUGtuYVPVFEUaUnqsgaHxl05NrdQXsthYod7+GEM8gQgCgvmyjRvWo6RfNZFPQ==
+X-Received: by 2002:adf:81c2:: with SMTP id 60mr9453590wra.8.1578763971982;
+        Sat, 11 Jan 2020 09:32:51 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:b8db:7f65:1d72:db78? ([2a01:e34:ed2f:f020:b8db:7f65:1d72:db78])
+        by smtp.googlemail.com with ESMTPSA id 60sm7259666wrn.86.2020.01.11.09.32.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jan 2020 09:32:51 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/2] DT: bindings: Add cooling cells for idle states
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191219221932.15930-1-daniel.lezcano@linaro.org>
+ <20200108140333.GA12276@bogus>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3b94b423-ca26-b96f-90fa-2662dbc523d8@linaro.org>
+Date:   Sat, 11 Jan 2020 18:32:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108101006.150706-2-andre.przywara@arm.com>
+In-Reply-To: <20200108140333.GA12276@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 10:10:05AM +0000, Andre Przywara wrote:
-> The Allwinner H6 SoC contains two SPI controllers similar to the H3/A64,
-> but with the added capability of 3-wire and 4-wire operation modes.
-> For now the driver does not support those, but the SPI registers are
-> fully backwards-compatible, just adding bits and registers which were
-> formerly reserved. So we can use the existing driver for the "normal" SPI
-> modes, for instance to access the SPI NOR flash soldered on the PineH64
-> board.
-> We use an H6 specific compatible string in addition to the existing H3
-> string, so when the driver later gains Quad SPI support, it should work
-> automatically without any DT changes.
->
-> Tested by accessing the SPI flash on a Pine H64 board (SPI0), also
-> connecting another SPI flash to the SPI1 header pins.
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> index 3329283e38ab..40835850893e 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -338,6 +338,30 @@
->  				bias-pull-up;
->  			};
->
-> +			/omit-if-no-ref/
-> +			spi0_pins: spi0-pins {
-> +				pins = "PC0", "PC2", "PC3";
-> +				function = "spi0";
-> +			};
-> +
-> +			/omit-if-no-ref/
-> +			spi0_cs_pin: spi0-cs-pin {
-> +				pins = "PC5";
-> +				function = "spi0";
-> +			};
+Hi Rob,
 
-It seems suspicious to use it in the Pine H64, since PC5 is also used
-by the eMMC (and this prevents either the SPI or the emmc controller
-to probe, depending on which probed first).
 
-Maxime
+On Wed, 8 Jan 2020 at 15:03, Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Dec 19, 2019 at 11:19:27PM +0100, Daniel Lezcano wrote:
+> > Add DT documentation to add an idle state as a cooling device. The CPU
+> > is actually the cooling device but the definition is already used by
+> > frequency capping. As we need to make cpufreq capping and idle
+> > injection to co-exist together on the system in order to mitigate at
+> > different trip points, the CPU can not be used as the cooling device
+> > for idle injection. The idle state can be seen as an hardware feature
+> > and therefore as a component for the passive mitigation.
+> >
+> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/idle-states.txt | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+>
+> This is now a schema in my tree. Can you rebase on that and I'll pick up
+> the binding change.
+
+Mmh, I'm now having some doubts about this binding because it will
+restrict any improvement of the cooling device for the future.
+
+It looks like adding a node to the CPU for the cooling device is more
+adequate.
+eg:
+CPU0: cpu@300 {
+   device_type = "cpu";
+   compatible = "arm,cortex-a9";
+   reg = <0x300>;
+   /* cpufreq controls */
+   operating-points = <998400 0
+          800000 0
+          400000 0
+          200000 0>;
+   clocks = <&prcmu_clk PRCMU_ARMSS>;
+   clock-names = "cpu";
+   clock-latency = <20000>;
+   #cooling-cells = <2>;
+   thermal-idle {
+      #cooling-cells = <2>;
+   };
+};
+
+[ ... ]
+
+cooling-device = <&{/cpus/cpu@300/thermal-idle}
+			THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+
+A quick test with different configurations combination shows it is much
+more flexible and it is open for future changes.
+
+What do you think?
+
