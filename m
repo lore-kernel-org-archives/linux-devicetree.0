@@ -2,53 +2,42 @@ Return-Path: <SRS0=eKwZ=3A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD21C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA76CC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE7120842
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578741582;
-	bh=iHeSVqu29bQYYiae+/3FvBEFDlhvViddgtavK8UMSzQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NPcL8LGO4dwTb4+hcWbio7XH/DA8kqEVG0X6rhDbUQhNoAULrG53c+TYZ58CPSmi0
-	 UFdj3W6p3Y7cjCMgM3FaUOnVBJoYstOhXLENmKquuz9+sgz1M3AmSepbV4hYcoab2w
-	 tkojvEpIZvQTXQLwNHOaByjhYsBPpqG9vRzgRRs8=
+	by mail.kernel.org (Postfix) with ESMTP id AD66120842
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:52:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgAKLTm (ORCPT
+        id S1729059AbgAKLwn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 06:19:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbgAKLTm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jan 2020 06:19:42 -0500
+        Sat, 11 Jan 2020 06:52:43 -0500
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:56288 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbgAKLwm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 06:52:42 -0500
+X-Greylist: delayed 388 seconds by postgrey-1.27 at vger.kernel.org; Sat, 11 Jan 2020 06:52:41 EST
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEBC2082E;
-        Sat, 11 Jan 2020 11:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578741580;
-        bh=iHeSVqu29bQYYiae+/3FvBEFDlhvViddgtavK8UMSzQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OEcF9y98vRXvBRtYxnXIfU85W+nmsio+xD06Dpk0gxk6wIqhDlNsBAEh32BdRf7Vu
-         QaQzkZmpkgMSQWMrtgAwLjCGUbF5sEVH0uFariPUdP3hIWQYh8sgkrOOo0rkq6YQW3
-         dKmVFxmRd8IhvV1Qxu7xvf3PAAsbaVlf8I0gRHso=
-Date:   Sat, 11 Jan 2020 11:19:35 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] iio: chemical: atlas-sensor: add DO-SM module support
-Message-ID: <20200111111935.4e36839d@archlinux>
-In-Reply-To: <CAJCx=gnsfVV1egJ8BWzEMAWZnLHYw3qY7_t6MaRwnPJDLa+Z2Q@mail.gmail.com>
-References: <20200106090335.21717-1-matt.ranostay@konsulko.com>
-        <CAJCx=gnsfVV1egJ8BWzEMAWZnLHYw3qY7_t6MaRwnPJDLa+Z2Q@mail.gmail.com>
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 473809E778E;
+        Sat, 11 Jan 2020 11:46:11 +0000 (GMT)
+Date:   Sat, 11 Jan 2020 11:46:09 +0000
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     Artur Rojek <contact@artur-rojek.eu>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
+Message-ID: <20200111114609.1979a8ff@archlinux>
+In-Reply-To: <20200105001639.142061-3-contact@artur-rojek.eu>
+References: <20200105001639.142061-1-contact@artur-rojek.eu>
+        <20200105001639.142061-3-contact@artur-rojek.eu>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,206 +47,273 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 6 Jan 2020 17:07:58 +0800
-Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+On Sun,  5 Jan 2020 01:16:37 +0100
+Artur Rojek <contact@artur-rojek.eu> wrote:
 
-> On Mon, Jan 6, 2020 at 5:04 PM Matt Ranostay <matt.ranostay@konsulko.com> wrote:
-> >
-> > Atlas Scientific DO-SM OEM sensor reads disolved oxygen in
-> > a solution. This is reported back as mg/L which maps directly
-> > to ppm and so the IIO_CONCENTRATION channel type can be used.
-> >
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+> Implement support for the touchscreen mode found in JZ47xx SoCs ADC.
+This needs more description.  
 
-Seems straight forward to me.
+Looks like it enables a kfifo and also selects the callback buffer
+stuff to run with a generic touchscreen iio-> input driver.
 
-My only thought is that we perhaps want to think about how we distinguish
-between 'what' the concentration is of?
+A few other bits inline, but basically fine.
 
-Doesn't need to be solved today though.
+I've never really thought about whether we support a CB buffer
+without anything on the IIO side.   That should be possible,
+but I'm not sure what odd corner cases will turn up.  I'm guessing
+there are some, or you'd not have bothered exposing it here?
+
+Thanks
 
 Jonathan
 
 
-> > ---
-> >  .../bindings/iio/chemical/atlas,do-sm.txt     | 21 ++++++
-> >  drivers/iio/chemical/atlas-sensor.c           | 64 +++++++++++++++++--
-> >  2 files changed, 81 insertions(+), 4 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
-> > new file mode 100644
-> > index 000000000000..fc741ea794c4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
-> > @@ -0,0 +1,21 @@
-> > +* Atlas Scientific DO-SM OEM sensor
-> > +
-> > +http://www.atlas-scientific.com/_files/_datasheets/_oem/DO_oem_datasheet.pdf
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible: must be "atlas,do-sm"
-> > +  - reg: the I2C address of the sensor
-> > +  - interrupts: the sole interrupt generated by the device
-> > +
-> > +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> > +  node bindings.
-> > +
-> > +Example:
-> > +
-> > +atlas@64 {  
 > 
-> Noticed this should be 67.. But won't submit a v2 till some feedback.
+> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> Tested-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/iio/adc/Kconfig       |   3 +
+>  drivers/iio/adc/ingenic-adc.c | 120 +++++++++++++++++++++++++++++++++-
+>  2 files changed, 121 insertions(+), 2 deletions(-)
 > 
-> - Matt
-> 
-> > +       compatible = "atlas,do-sm";
-> > +       reg = <0x67>;
-> > +       interrupt-parent = <&gpio1>;
-> > +       interrupts = <16 2>;
-> > +};
-> > diff --git a/drivers/iio/chemical/atlas-sensor.c b/drivers/iio/chemical/atlas-sensor.c
-> > index 2f0a6fed2589..42ad1ed76144 100644
-> > --- a/drivers/iio/chemical/atlas-sensor.c
-> > +++ b/drivers/iio/chemical/atlas-sensor.c
-> > @@ -48,6 +48,11 @@
-> >  #define ATLAS_REG_EC_CALIB_STATUS_LOW          BIT(2)
-> >  #define ATLAS_REG_EC_CALIB_STATUS_HIGH         BIT(3)
-> >
-> > +#define ATLAS_REG_DO_CALIB_STATUS              0x09
-> > +#define ATLAS_REG_DO_CALIB_STATUS_MASK         0x03
-> > +#define ATLAS_REG_DO_CALIB_STATUS_PRESSURE     BIT(0)
-> > +#define ATLAS_REG_DO_CALIB_STATUS_DO           BIT(1)
-> > +
-> >  #define ATLAS_REG_PH_TEMP_DATA         0x0e
-> >  #define ATLAS_REG_PH_DATA              0x16
-> >
-> > @@ -60,14 +65,19 @@
-> >  #define ATLAS_REG_ORP_CALIB_STATUS     0x0d
-> >  #define ATLAS_REG_ORP_DATA             0x0e
-> >
-> > +#define ATLAS_REG_DO_TEMP_DATA         0x12
-> > +#define ATLAS_REG_DO_DATA              0x22
-> > +
-> >  #define ATLAS_PH_INT_TIME_IN_MS                450
-> >  #define ATLAS_EC_INT_TIME_IN_MS                650
-> >  #define ATLAS_ORP_INT_TIME_IN_MS       450
-> > +#define ATLAS_DO_INT_TIME_IN_MS                450
-> >
-> >  enum {
-> >         ATLAS_PH_SM,
-> >         ATLAS_EC_SM,
-> >         ATLAS_ORP_SM,
-> > +       ATLAS_DO_SM,
-> >  };
-> >
-> >  struct atlas_data {
-> > @@ -121,7 +131,7 @@ static const struct iio_chan_spec atlas_ph_channels[] = {
-> >         },
-> >  };
-> >
-> > -#define ATLAS_EC_CHANNEL(_idx, _addr) \
-> > +#define ATLAS_CONCENTRATION_CHANNEL(_idx, _addr) \
-> >         {\
-> >                 .type = IIO_CONCENTRATION, \
-> >                 .indexed = 1, \
-> > @@ -152,8 +162,8 @@ static const struct iio_chan_spec atlas_ec_channels[] = {
-> >                         .endianness = IIO_BE,
-> >                 },
-> >         },
-> > -       ATLAS_EC_CHANNEL(0, ATLAS_REG_TDS_DATA),
-> > -       ATLAS_EC_CHANNEL(1, ATLAS_REG_PSS_DATA),
-> > +       ATLAS_CONCENTRATION_CHANNEL(0, ATLAS_REG_TDS_DATA),
-> > +       ATLAS_CONCENTRATION_CHANNEL(1, ATLAS_REG_PSS_DATA),
-> >         IIO_CHAN_SOFT_TIMESTAMP(3),
-> >         {
-> >                 .type = IIO_TEMP,
-> > @@ -182,6 +192,19 @@ static const struct iio_chan_spec atlas_orp_channels[] = {
-> >         IIO_CHAN_SOFT_TIMESTAMP(1),
-> >  };
-> >
-> > +static const struct iio_chan_spec atlas_do_channels[] = {
-> > +       ATLAS_CONCENTRATION_CHANNEL(0, ATLAS_REG_DO_DATA),
-> > +       IIO_CHAN_SOFT_TIMESTAMP(1),
-> > +       {
-> > +               .type = IIO_TEMP,
-> > +               .address = ATLAS_REG_DO_TEMP_DATA,
-> > +               .info_mask_separate =
-> > +                       BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
-> > +               .output = 1,
-> > +               .scan_index = -1
-> > +       },
-> > +};
-> > +
-> >  static int atlas_check_ph_calibration(struct atlas_data *data)
-> >  {
-> >         struct device *dev = &data->client->dev;
-> > @@ -262,7 +285,31 @@ static int atlas_check_orp_calibration(struct atlas_data *data)
-> >                 dev_warn(dev, "device has not been calibrated\n");
-> >
-> >         return 0;
-> > -};
-> > +}
-> > +
-> > +static int atlas_check_do_calibration(struct atlas_data *data)
-> > +{
-> > +       struct device *dev = &data->client->dev;
-> > +       int ret;
-> > +       unsigned int val;
-> > +
-> > +       ret = regmap_read(data->regmap, ATLAS_REG_DO_CALIB_STATUS, &val);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_MASK)) {
-> > +               dev_warn(dev, "device has not been calibrated\n");
-> > +               return 0;
-> > +       }
-> > +
-> > +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_PRESSURE))
-> > +               dev_warn(dev, "device missing atmospheric pressure calibration\n");
-> > +
-> > +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_DO))
-> > +               dev_warn(dev, "device missing dissolved oxygen calibration\n");
-> > +
-> > +       return 0;
-> > +}
-> >
-> >  struct atlas_device {
-> >         const struct iio_chan_spec *channels;
-> > @@ -295,6 +342,13 @@ static struct atlas_device atlas_devices[] = {
-> >                                 .calibration = &atlas_check_orp_calibration,
-> >                                 .delay = ATLAS_ORP_INT_TIME_IN_MS,
-> >         },
-> > +       [ATLAS_DO_SM] = {
-> > +                               .channels = atlas_do_channels,
-> > +                               .num_channels = 3,
-> > +                               .data_reg = ATLAS_REG_DO_DATA,
-> > +                               .calibration = &atlas_check_do_calibration,
-> > +                               .delay = ATLAS_DO_INT_TIME_IN_MS,
-> > +       },
-> >  };
-> >
-> >  static int atlas_set_powermode(struct atlas_data *data, int on)
-> > @@ -507,6 +561,7 @@ static const struct i2c_device_id atlas_id[] = {
-> >         { "atlas-ph-sm", ATLAS_PH_SM},
-> >         { "atlas-ec-sm", ATLAS_EC_SM},
-> >         { "atlas-orp-sm", ATLAS_ORP_SM},
-> > +       { "atlas-do-sm", ATLAS_DO_SM},
-> >         {}
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, atlas_id);
-> > @@ -515,6 +570,7 @@ static const struct of_device_id atlas_dt_ids[] = {
-> >         { .compatible = "atlas,ph-sm", .data = (void *)ATLAS_PH_SM, },
-> >         { .compatible = "atlas,ec-sm", .data = (void *)ATLAS_EC_SM, },
-> >         { .compatible = "atlas,orp-sm", .data = (void *)ATLAS_ORP_SM, },
-> > +       { .compatible = "atlas,do-sm", .data = (void *)ATLAS_DO_SM, },
-> >         { }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, atlas_dt_ids);
-> > --
-> > 2.20.1
-> >  
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 5d8540b7b427..dabbf15032af 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -446,6 +446,9 @@ config INA2XX_ADC
+>  config INGENIC_ADC
+>  	tristate "Ingenic JZ47xx SoCs ADC driver"
+>  	depends on MIPS || COMPILE_TEST
+> +	select IIO_BUFFER
+> +	select IIO_BUFFER_CB
+
+Feels like IIO_BUFFER_CB should be selected by the driver that
+uses that functionality rather than this one.
+
+> +	select IIO_KFIFO_BUF
+>  	help
+>  	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC unit.
+>  
+> diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
+> index 7a24bc1dabe1..4dbf15fdd95d 100644
+> --- a/drivers/iio/adc/ingenic-adc.c
+> +++ b/drivers/iio/adc/ingenic-adc.c
+> @@ -8,7 +8,10 @@
+>  
+>  #include <dt-bindings/iio/adc/ingenic,adc.h>
+>  #include <linux/clk.h>
+> +#include <linux/iio/buffer.h>
+>  #include <linux/iio/iio.h>
+> +#include <linux/iio/kfifo_buf.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> @@ -20,6 +23,8 @@
+>  #define JZ_ADC_REG_CFG			0x04
+>  #define JZ_ADC_REG_CTRL			0x08
+>  #define JZ_ADC_REG_STATUS		0x0c
+> +#define JZ_ADC_REG_ADSAME		0x10
+> +#define JZ_ADC_REG_ADWAIT		0x14
+>  #define JZ_ADC_REG_ADTCH		0x18
+>  #define JZ_ADC_REG_ADBDAT		0x1c
+>  #define JZ_ADC_REG_ADSDAT		0x20
+> @@ -28,6 +33,9 @@
+>  #define JZ_ADC_REG_ENABLE_PD		BIT(7)
+>  #define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
+>  #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
+> +#define JZ_ADC_REG_CFG_PULL_UP(n)	((n) << 16)
+> +#define JZ_ADC_REG_CFG_SAMPLE_NUM(n)	((n) << 10)
+> +#define JZ_ADC_REG_CFG_TOUCH_OPS_MASK	(BIT(31) | GENMASK(23, 10))
+>  #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
+>  #define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+>  #define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
+> @@ -44,6 +52,14 @@
+>  #define JZ4770_ADC_BATTERY_VREF			6600
+>  #define JZ4770_ADC_BATTERY_VREF_BITS		12
+>  
+> +#define JZ_ADC_IRQ_AUX			BIT(0)
+> +#define JZ_ADC_IRQ_BATTERY		BIT(1)
+> +#define JZ_ADC_IRQ_TOUCH		BIT(2)
+> +#define JZ_ADC_IRQ_PEN_DOWN		BIT(3)
+> +#define JZ_ADC_IRQ_PEN_UP		BIT(4)
+> +#define JZ_ADC_IRQ_PEN_DOWN_SLEEP	BIT(5)
+> +#define JZ_ADC_IRQ_SLEEP		BIT(7)
+> +
+>  struct ingenic_adc;
+>  
+>  struct ingenic_adc_soc_data {
+> @@ -411,6 +427,30 @@ static const struct iio_info ingenic_adc_info = {
+>  };
+>  
+>  static const struct iio_chan_spec ingenic_channels[] = {
+> +	{
+> +		.extend_name = "touchscreen_xp",
+
+Note that adding extended names:
+
+1) Needs documenting as it create ABI - so something in
+Documentation/ABI/testing/sysfs-bus-iio-*
+
+2) Breaks any generic userspace application.
+
+Why can't we use modified and an axis to identify this?
+
+
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_XP,
+> +		.scan_index = 0,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16
+> +		},
+> +	},
+> +	{
+> +		.extend_name = "touchscreen_yp",
+> +		.type = IIO_POSITIONRELATIVE,
+> +		.indexed = 1,
+> +		.channel = INGENIC_ADC_TOUCH_YP,
+> +		.scan_index = 1,
+> +		.scan_type = {
+> +			.sign = 'u',
+> +			.realbits = 12,
+> +			.storagebits = 16
+> +		},
+> +	},
+>  	{
+>  		.extend_name = "aux",
+>  		.type = IIO_VOLTAGE,
+> @@ -418,6 +458,7 @@ static const struct iio_chan_spec ingenic_channels[] = {
+>  				      BIT(IIO_CHAN_INFO_SCALE),
+>  		.indexed = 1,
+>  		.channel = INGENIC_ADC_AUX,
+> +		.scan_index = -1
+>  	},
+>  	{
+>  		.extend_name = "battery",
+> @@ -428,6 +469,7 @@ static const struct iio_chan_spec ingenic_channels[] = {
+>  						BIT(IIO_CHAN_INFO_SCALE),
+>  		.indexed = 1,
+>  		.channel = INGENIC_ADC_BATTERY,
+> +		.scan_index = -1
+>  	},
+>  	{ /* Must always be last in the array. */
+>  		.extend_name = "aux2",
+> @@ -436,16 +478,70 @@ static const struct iio_chan_spec ingenic_channels[] = {
+>  				      BIT(IIO_CHAN_INFO_SCALE),
+>  		.indexed = 1,
+>  		.channel = INGENIC_ADC_AUX2,
+> +		.scan_index = -1
+>  	},
+>  };
+>  
+> +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
+> +{
+> +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +
+> +	clk_enable(adc->clk);
+> +	/* It takes significant time for the touchscreen hw to stabilize. */
+> +	msleep(50);
+> +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
+> +			       JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
+> +			       JZ_ADC_REG_CFG_PULL_UP(4));
+> +	writew(80, adc->base + JZ_ADC_REG_ADWAIT);
+> +	writew(2, adc->base + JZ_ADC_REG_ADSAME);
+> +	writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
+> +	writel(0, adc->base + JZ_ADC_REG_ADTCH);
+> +	ingenic_adc_enable(adc, 2, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ingenic_adc_buffer_disable(struct iio_dev *iio_dev)
+> +{
+> +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +
+> +	ingenic_adc_enable(adc, 2, false);
+> +	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+> +	writeb(0xff, adc->base + JZ_ADC_REG_STATUS);
+> +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK, 0);
+> +	writew(0, adc->base + JZ_ADC_REG_ADSAME);
+> +	writew(0, adc->base + JZ_ADC_REG_ADWAIT);
+> +	clk_disable(adc->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_buffer_setup_ops ingenic_buffer_setup_ops = {
+> +	.postenable = &ingenic_adc_buffer_enable,
+> +	.predisable = &ingenic_adc_buffer_disable
+> +};
+> +
+> +static irqreturn_t ingenic_adc_irq(int irq, void *data)
+> +{
+> +	struct iio_dev *iio_dev = data;
+> +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> +	u32 tdat;
+> +
+> +	tdat = readl(adc->base + JZ_ADC_REG_ADTCH);
+> +	iio_push_to_buffers(iio_dev, &tdat);
+> +	writeb(JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_STATUS);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int ingenic_adc_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+>  	struct iio_dev *iio_dev;
+>  	struct ingenic_adc *adc;
+>  	const struct ingenic_adc_soc_data *soc_data;
+> -	int ret;
+> +	struct iio_buffer *buffer;
+> +	int irq, ret;
+>  
+>  	soc_data = device_get_match_data(dev);
+>  	if (!soc_data)
+> @@ -460,6 +556,18 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  	mutex_init(&adc->aux_lock);
+>  	adc->soc_data = soc_data;
+>  
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(dev, "Failed to get irq: %d\n", irq);
+> +		return irq;
+> +	}
+> +	ret = devm_request_irq(dev, irq, ingenic_adc_irq, 0,
+> +			       dev_name(dev), iio_dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to request irq: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	adc->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(adc->base))
+>  		return PTR_ERR(adc->base);
+> @@ -499,7 +607,8 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  
+>  	iio_dev->dev.parent = dev;
+>  	iio_dev->name = "jz-adc";
+> -	iio_dev->modes = INDIO_DIRECT_MODE;
+> +	iio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
+> +	iio_dev->setup_ops = &ingenic_buffer_setup_ops;
+>  	iio_dev->channels = ingenic_channels;
+>  	iio_dev->num_channels = ARRAY_SIZE(ingenic_channels);
+>  	/* Remove AUX2 from the list of supported channels. */
+> @@ -507,6 +616,13 @@ static int ingenic_adc_probe(struct platform_device *pdev)
+>  		iio_dev->num_channels -= 1;
+>  	iio_dev->info = &ingenic_adc_info;
+>  
+> +	buffer = devm_iio_kfifo_allocate(dev);
+> +	if (!buffer) {
+> +		dev_err(dev, "Unable to add IIO buffer\n");
+> +		return -ENOMEM;
+> +	}
+> +	iio_device_attach_buffer(iio_dev, buffer);
+> +
+>  	ret = devm_iio_device_register(dev, iio_dev);
+>  	if (ret)
+>  		dev_err(dev, "Unable to register IIO device\n");
 
