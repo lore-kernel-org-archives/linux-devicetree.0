@@ -2,243 +2,131 @@ Return-Path: <SRS0=eKwZ=3A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529CFC33CA3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 15:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F57CC282DD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 16:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F18B20842
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 15:32:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEqUPqIN"
+	by mail.kernel.org (Postfix) with ESMTP id 3F86820661
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 16:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgAKPcL (ORCPT
+        id S1730337AbgAKQQQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 10:32:11 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37185 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729958AbgAKPcL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 10:32:11 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so5253133ljg.4;
-        Sat, 11 Jan 2020 07:32:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Jzwxp3lWZeyeoVo+7adSEFYxLkJCA6sCkYkRhViRSF4=;
-        b=WEqUPqINVv8iSLFS7PGBWB0tCktQhyTKsxEAX2Hut6ihWFSzNO9B7XQFwzJc/b6bCy
-         6d9qK6otsCJyMu74C7I6i5PQDwUFog69bZVU5zYz9lYfZEoLKG2Yn/hlz7JJYrHVWAIg
-         wpWT83V1yBDp2uYSSoMpEpjsDLEKo7s9Z1p7+j4CeD3F6zsTNcGIag3yxNuui2SUnY/P
-         ICK5Gb832cKL1x3VePNWO1zMnQDVr+AE0wshMPUX2JBJFFDiuGaYg1cfZYg8mlPwZV81
-         0joAxyaW0t6s++vzIiadLscFoYbOdw8LlxN+OaYafgo7reKk4wwie/SMysivS7/PxPoL
-         pk4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Jzwxp3lWZeyeoVo+7adSEFYxLkJCA6sCkYkRhViRSF4=;
-        b=qsrShAcAbFND1zuutDYGkaP+NLPNt/Vy0G4PxLp+Dg/OtsYSlpDyLrsddPKuj8BhO7
-         ewHLI1a0prvhfJ6S3BrsD9kL1Crdstg2UUGRMJdt2DcMRTGqTzesfXbeEHh17hwU5bDR
-         rq+2UPN9utNeB05R2xzLJGdh0D009aY47cp0W0t8gNLyVK/0GzD0NdWRmOpwl1DKK+0t
-         hvfYbqc9wKp8KndG3TfiWXTRHYFHkrz/3K6+YuvED9ZLVHupmJ96X/8Pe9enSxk+TYQ2
-         cffxM7OXfUk1Rw1uGKkFRhADGTBzdMtX5gCp4W6SVSvkU4UdELJ6FFoyyXuOAutngm5T
-         dPZQ==
-X-Gm-Message-State: APjAAAUqXKTvbxh8A7m2aw9k3PWozs3gs4RXOkzFNgw1g7ffURcKnZMO
-        QIFcvQuQM1Aprc704yfx6OR+nVnr
-X-Google-Smtp-Source: APXvYqz7GKZn3IvrC1VjsoXBOdrMCrzr8YTMIOnxEhesELZ/ZaMW6I+1WG0TxSzkPry/rXlXazFEkA==
-X-Received: by 2002:a2e:9e03:: with SMTP id e3mr6129684ljk.186.1578756727755;
-        Sat, 11 Jan 2020 07:32:07 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id d4sm2845137lfn.42.2020.01.11.07.32.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jan 2020 07:32:07 -0800 (PST)
-Subject: Re: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for
- audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, broonie@kernel.org, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, mperttunen@nvidia.com,
-        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, josephl@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
- <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
- <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
- <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
- <a3c5293b-9ed4-3266-f792-38b980e54b1e@nvidia.com>
- <745b8c7b-4fe3-c9ea-284e-b89546e8ad87@nvidia.com>
- <705edf9b-d1bc-8090-017e-fa4ad445f9fb@nvidia.com>
- <135f0c0b-86d1-9b1a-af02-c14c4b5308c4@gmail.com>
- <575aa30e-1b5a-2a2d-5893-3f6832f416f1@nvidia.com>
- <9bca6c3e-bfe0-7130-b233-3f25c436f76e@gmail.com>
- <dcfd35f3-7fdd-fdc9-1c77-bcb63bcabd5b@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1319c4d2-7929-43e1-c036-45396f28c2fa@gmail.com>
-Date:   Sat, 11 Jan 2020 18:32:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <dcfd35f3-7fdd-fdc9-1c77-bcb63bcabd5b@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Sat, 11 Jan 2020 11:16:16 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:46109 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730319AbgAKQQQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 11:16:16 -0500
+Received: from localhost.localdomain ([37.4.249.154]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MMWcT-1j9DUG0YRr-00JcDG; Sat, 11 Jan 2020 17:15:51 +0100
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH V4 1/4] dt-bindings: Add Broadcom AVS RO thermal
+Date:   Sat, 11 Jan 2020 17:15:39 +0100
+Message-Id: <1578759342-4550-2-git-send-email-stefan.wahren@i2se.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578759342-4550-1-git-send-email-stefan.wahren@i2se.com>
+References: <1578759342-4550-1-git-send-email-stefan.wahren@i2se.com>
+X-Provags-ID: V03:K1:c1+Mg9NKoWCLsN8E1wZaMxrh5a2EHZsNfpj80gj1+uD4c7oIiwg
+ B3VvaHwXDziW/0JZNSoLmcZX8rLv0yBvdngyCtKwW1gYSC5Tb2b7wF6GswrAYW9I+WHKu/o
+ LTaFSb+hdE937/T5VA55+bpUm7bMwoXxhCnwMuCcO7Kvivv9lh/LFNaaELpESpgXuR7c5Od
+ yOjaNwupb1GP1TMr/Lp0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bDV4gChWJ6A=:zVDMyHIm0wg/sFXJsxBFfg
+ vngWYXC+y1Ggagzjk+77JYoa5b8mlaU7s3yQysh/DUcYDchjc2QE+oKBV2X/cMebilELriIOu
+ GhmEp0SQpix3GArGJMKuMqF1IxCI15L9gjDGX/RNoJVqFqxqgGOs647EWR1TAcGe12Xl/UFzF
+ yQQ3cDZ/IbLfKTKf3FUm27gVfsJFK+as6TGliiefFdHgdRg2HE4hklN4EPR3EFivwP8bpboNc
+ 3ZvgkRDm7duKqdiWFQSZ1zB6e0WeTBhbrJ9UZaT6D7af6Bu/U6072B+qAUgA+2w0h1zJUppqH
+ Hr8vvVFWdZo3nyqjZ+qiB6EJ8QkkeU9rCxBlxU7ZjF9IInhJBOamwjbNAudlesivbMfVy0jzz
+ a+JlGtygizahGncvqBM+hLVuYgPeMvUBieneXCq24uAVJEFch9oUeUn3bEulqZ0Sj/2gRFe63
+ wqRPYahB1wAEch+A/wKcVMj7y37TTMtvm0A84VT9UnkEE56//NhE5gL7BUmA7m2MfABMb4aVg
+ vKkjETfAuqYxj0A2yh6+v5cOyztnjBG/zt8+/eryT11h91mPcDtd5ltWmSuhVeqomXNIjaDIJ
+ JxoEgCFbd/fAHqE/tczrz0Of38IQjktzXm96FpwwLa8u8hKjLBcf6oYjOJv5sNgbDoZBHu7YR
+ 1Gvjse1+vdz6hef6XU/FO/D3xqp+taSVj9IUZIOsV1lGBaeVUcI1zVA1quOEhVza36sLDPamj
+ xGoaGYGp0FYhbEdG3ZlTLzHLtZM8N0nE5YZ0cunW8Yv5NPSCTwZ0oBp6hnT6Y1eeBAyM+K+7W
+ apIiRHo9Vaa68SxMS4JXRGizA4wnUmXXPxX0Jbo4/0YDzMSDHc+JBLFeDxKTbgmlLlAY5+4en
+ QmlpyU4MCCmOIQr/pmA6q3/sIYrU2c0p6DC4rPrwA=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-11.01.2020 02:14, Sowjanya Komatineni пишет:
-> 
-> On 1/10/20 3:02 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 11.01.2020 01:13, Sowjanya Komatineni пишет:
->>> On 1/10/20 2:05 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 10.01.2020 20:04, Sowjanya Komatineni пишет:
->>>>> On 1/9/20 10:52 AM, Sowjanya Komatineni wrote:
->>>>>> On 1/7/20 10:28 PM, Sameer Pujar wrote:
->>>>>>> On 1/8/2020 11:18 AM, Sowjanya Komatineni wrote:
->>>>>>>> On 1/7/20 9:34 PM, Sameer Pujar wrote:
->>>>>>>>> On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
->>>>>>>>>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc
->>>>>>>>>> clocks
->>>>>>>>>> are moved to Tegra PMC driver with pmc as clock provider and
->>>>>>>>>> using
->>>>>>>>>> pmc
->>>>>>>>>> clock ids.
->>>>>>>>>>
->>>>>>>>>> New device tree uses clk_out_1 from pmc clock provider.
->>>>>>>>>>
->>>>>>>>>> So, this patch adds implementation for mclk fallback to extern1
->>>>>>>>>> when
->>>>>>>>>> retrieving mclk returns -ENOENT to be backward compatible of new
->>>>>>>>>> device
->>>>>>>>>> tree with older kernels.
->>>>>>>>>>
->>>>>>>>>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>> ---
->>>>>>>>>>     sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
->>>>>>>>>>     1 file changed, 10 insertions(+), 1 deletion(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> index 9cfebef74870..9a5f81039491 100644
->>>>>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> @@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct
->>>>>>>>>> tegra_asoc_utils_data *data,
->>>>>>>>>>         data->clk_cdev1 = devm_clk_get(dev, "mclk");
->>>>>>>>>>         if (IS_ERR(data->clk_cdev1)) {
->>>>>>>>>>             dev_err(data->dev, "Can't retrieve clk cdev1\n");
->>>>>>>>> This error print can be moved inside below if, when this actually
->>>>>>>>> meant to be an error condition.
->>>>>>>>>
->>>>>>>> Want to show error even if mclk retrieval returns ENOENT to clearly
->>>>>>>> indicate mclk does not exist along with message of falling back to
->>>>>>>> extern1.
->>>>>>> Yes, but falling back essentially means 'mclk' is not available and
->>>>>>> fallback print is not an error.
->>>>>>> Not a major issue though, you can consider updating. Otherwise LGTM.
->>>>>>>
->>>>>> Will update
->>>>>>>>>> -        return PTR_ERR(data->clk_cdev1);
->>>>>>>>>> +        if (PTR_ERR(data->clk_cdev1) != -ENOENT)
->>>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
->>>>>>>>>> +        /* Fall back to extern1 */
->>>>>>>>>> +        data->clk_cdev1 = devm_clk_get(dev, "extern1");
->>>>>>>>>> +        if (IS_ERR(data->clk_cdev1)) {
->>>>>>>>>> +            dev_err(data->dev, "Can't retrieve clk extern1\n");
->>>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
->>>>>>>>>> +        }
->>>>>>>>>> +
->>>>>>>>>> +        dev_err(data->dev, "Falling back to extern1\n");
->>>>>>>>> This can be a info print?
->>>>>> Will use dev_info
->>>>>>>>>>         }
->>>>>>>>>>           /*
->>>>>> Dmitry/Rob, there was discussion in v3 regarding backporting mclk
->>>>>> fallback.
->>>>>>
->>>>>> Dmitry wanted Rob to confirm on this
->>>>>>
->>>>>> I think openSUSE Leap could be one of those distros that use LTS
->>>>>> kernel
->>>>>> with newer device-trees, but that's not 100%. Maybe Rob could help
->>>>>> clarifying that.
->>>>>>
->>>>>> Dmitry/Rob, Can you please confirm if mclk fallback patch need
->>>>>> backport to have new device tree work with old kernels?
->>>>>>
->>>>> Dmitry,
->>>>>
->>>>> Can you please confirm if we need to backport this mclk fallback
->>>>> patch?
->>>>>
->>>> Seems only T210 was making use of the CaR's TEGRA*_CLK_CLK_OUT_*, thus
->>>> the backporting isn't needed.
->>> Thanks Dmitry
->>>> Also, please use 'git rebase --exec make ...' to make sure that all
->>>> patches are compiling without problems. The removal of the legacy clock
->>>> IDs should be done after the device-trees changes, otherwise it looks
->>>> like DTBs compilation will fail. It's possible that the order of the
->>>> patches could be changed if Thierry will chose to split this series
->>>> into
->>>> several pull requests, nevertheless all patches should compile and work
->>>> in the original order.
->>> OK, Will move patches of device tree updates to use new DT ID prior to
->>> removal of old ID.
->> Oh, wait. But then the newer device-trees won't work with the stable
->> kernels, so it actually won't hurt to backport this change.
-> ok will add Fixes tag to have this mclk fallback patch backported.
->>
->> Secondly, please move the "Use device managed resource APIs to get the
->> clock" after the ASoC patches with the stable tags, such that the stable
->> patches could be applied cleanly.
-> OK
->>
->> Lastly, please separate the assigned-clocks change from the the audio
->> mclk enable/disable into a standalone patch. These changes are not
->> interdependent, unless I'm missing something.
-> 
-> But parent configuration when assigned-clock-parents are not in DT are
-> needed along with mclk enable
-> 
-> as we are removing audio clocks parent configuration and enabling them
-> together from clock driver.
-> 
-> So doesn't both parent configuration and enabling mclk together need to
-> be in same patch to match what we are removing from clock driver?
-> 
+Since the BCM2711 doesn't have a AVS TMON block, the thermal information
+must be retrieved from the AVS ring oscillator block. This block is part
+of the AVS monitor which contains a bunch of raw sensors.
 
-All current stable kernels happen to work without any visible problems
-because of the non-critical clk-enable refcounting bug that masks the
-problem. Thus the mclk will be enabled in stable kernels without any
-extra changes and the assigned-clock-parents shouldn't affect that.
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ .../bindings/thermal/brcm,avs-ro-thermal.yaml      | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
 
-Please make sure that every patch in this series:
+diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+new file mode 100644
+index 0000000..98e7b57
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/brcm,avs-ro-thermal.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom AVS ring oscillator thermal
++
++maintainers:
++  - Stefan Wahren <wahrenst@gmx.net>
++
++description: |+
++  The thermal node should be the child of a syscon node with the
++  required property:
++
++  - compatible: Should be one of the following:
++                "brcm,bcm2711-avs-monitor", "syscon", "simple-mfd"
++
++  Refer to the the bindings described in
++  Documentation/devicetree/bindings/mfd/syscon.txt
++
++properties:
++  compatible:
++    const: brcm,bcm2711-thermal
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++        avs-monitor@7d5d2000 {
++                compatible = "brcm,bcm2711-avs-monitor",
++                             "syscon", "simple-mfd";
++                reg = <0x7d5d2000 0xf00>;
++
++                thermal: thermal {
++                        compatible = "brcm,bcm2711-thermal";
++                        #thermal-sensor-cells = <0>;
++                };
++        };
++...
+-- 
+2.7.4
 
-1) Compiles without any errors and warnings.
-
-2) Works, i.e. you should be able to checkout any commit and kernel
-should boot/work without any regressions.
-
-3) Stable patches could be cherry-picked into stable kernels without
-merge conflicts.
-
-To achieve that you'll need to sort patches in the correct order and do
-some basic testing.
