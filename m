@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87370C33CA4
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 10:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD21C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D01A2087F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 10:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE7120842
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578739862;
-	bh=cTuWgKCN3FBK/E/Nnb+VWrwvbZTJ2ygu/AkLoz8trO0=;
+	s=default; t=1578741582;
+	bh=iHeSVqu29bQYYiae+/3FvBEFDlhvViddgtavK8UMSzQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tpYsKdkJKafHJWPYa1H6EjM3o8NRRWI3oBL1JRQFJzekgdTRydb3/rojyHQL6zyy1
-	 6BYqbpnt9cQsd6aIP3pV3Dezd/cebOXTQYehsNQ02g647dFUNyZpMNLg7EYL+gnCYp
-	 /DR5k1eT7ScdHeIcPnCalmPrtYfL3bXeB3XZhnmw=
+	b=NPcL8LGO4dwTb4+hcWbio7XH/DA8kqEVG0X6rhDbUQhNoAULrG53c+TYZ58CPSmi0
+	 UFdj3W6p3Y7cjCMgM3FaUOnVBJoYstOhXLENmKquuz9+sgz1M3AmSepbV4hYcoab2w
+	 tkojvEpIZvQTXQLwNHOaByjhYsBPpqG9vRzgRRs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgAKKvB (ORCPT
+        id S1729490AbgAKLTm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:51:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45188 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 06:19:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728974AbgAKKvB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:51:01 -0500
+        id S1729177AbgAKLTm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 11 Jan 2020 06:19:42 -0500
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 508E920848;
-        Sat, 11 Jan 2020 10:50:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEBC2082E;
+        Sat, 11 Jan 2020 11:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578739860;
-        bh=cTuWgKCN3FBK/E/Nnb+VWrwvbZTJ2ygu/AkLoz8trO0=;
+        s=default; t=1578741580;
+        bh=iHeSVqu29bQYYiae+/3FvBEFDlhvViddgtavK8UMSzQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uyUYba7N1OZqK69x8xhFPT8qFwy2xCFwzShFbBJhd+Pmt8Sr4pmjv7UKqW7Tyq6JR
-         7au2OQM0TuxWoZVhR2B0X6EIieDCjJrbnYfYGvTg9Uh2wxp1bz6vGCkf3GAqX0oyKB
-         qHrCFZfi/euO+G4vuZcfIT0jPFPmhp/hrBj4gmBQ=
-Date:   Sat, 11 Jan 2020 10:50:55 +0000
+        b=OEcF9y98vRXvBRtYxnXIfU85W+nmsio+xD06Dpk0gxk6wIqhDlNsBAEh32BdRf7Vu
+         QaQzkZmpkgMSQWMrtgAwLjCGUbF5sEVH0uFariPUdP3hIWQYh8sgkrOOo0rkq6YQW3
+         dKmVFxmRd8IhvV1Qxu7xvf3PAAsbaVlf8I0gRHso=
+Date:   Sat, 11 Jan 2020 11:19:35 +0000
 From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, rpi-receiver@htl-steyr.ac.at,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: srf04: add power management feature
-Message-ID: <20200111105055.42c814ca@archlinux>
-In-Reply-To: <20200109083926.GA5377@arbad>
-References: <20200109083926.GA5377@arbad>
+To:     Matt Ranostay <matt.ranostay@konsulko.com>
+Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] iio: chemical: atlas-sensor: add DO-SM module support
+Message-ID: <20200111111935.4e36839d@archlinux>
+In-Reply-To: <CAJCx=gnsfVV1egJ8BWzEMAWZnLHYw3qY7_t6MaRwnPJDLa+Z2Q@mail.gmail.com>
+References: <20200106090335.21717-1-matt.ranostay@konsulko.com>
+        <CAJCx=gnsfVV1egJ8BWzEMAWZnLHYw3qY7_t6MaRwnPJDLa+Z2Q@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -59,205 +58,206 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 9 Jan 2020 09:39:28 +0100
-Andreas Klinger <ak@it-klinger.de> wrote:
+On Mon, 6 Jan 2020 17:07:58 +0800
+Matt Ranostay <matt.ranostay@konsulko.com> wrote:
 
-> Add suspend and resume operations for being used by optional power
-> management.
-> 
-> The suspend function is switching off an GPIO which can be used by the
-> hardware to switch power off. The resume function is switching the GPIO
-> on and sleeps an adjustable time to give the device a chance to be up
-> and running.
-> 
-> If activated the driver gets into autosuspend after some time of
-> inactivity.
-> 
-Generally we try to avoid introducing ifdef CONFIG_PM where
-possible, because it tends to be error prone.  Mostly
-marking functions __maybe_unused is sufficient.
+> On Mon, Jan 6, 2020 at 5:04 PM Matt Ranostay <matt.ranostay@konsulko.com> wrote:
+> >
+> > Atlas Scientific DO-SM OEM sensor reads disolved oxygen in
+> > a solution. This is reported back as mg/L which maps directly
+> > to ppm and so the IIO_CONCENTRATION channel type can be used.
+> >
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
 
-Otherwise looks good to me.
+Seems straight forward to me.
+
+My only thought is that we perhaps want to think about how we distinguish
+between 'what' the concentration is of?
+
+Doesn't need to be solved today though.
 
 Jonathan
 
 
-> Suggested-by: Franz Parzer <rpi-receiver@htl-steyr.ac.at>
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  drivers/iio/proximity/srf04.c | 104 +++++++++++++++++++++++++++++++++-
->  1 file changed, 103 insertions(+), 1 deletion(-)
+> > ---
+> >  .../bindings/iio/chemical/atlas,do-sm.txt     | 21 ++++++
+> >  drivers/iio/chemical/atlas-sensor.c           | 64 +++++++++++++++++--
+> >  2 files changed, 81 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt b/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
+> > new file mode 100644
+> > index 000000000000..fc741ea794c4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/chemical/atlas,do-sm.txt
+> > @@ -0,0 +1,21 @@
+> > +* Atlas Scientific DO-SM OEM sensor
+> > +
+> > +http://www.atlas-scientific.com/_files/_datasheets/_oem/DO_oem_datasheet.pdf
+> > +
+> > +Required properties:
+> > +
+> > +  - compatible: must be "atlas,do-sm"
+> > +  - reg: the I2C address of the sensor
+> > +  - interrupts: the sole interrupt generated by the device
+> > +
+> > +  Refer to interrupt-controller/interrupts.txt for generic interrupt client
+> > +  node bindings.
+> > +
+> > +Example:
+> > +
+> > +atlas@64 {  
 > 
-> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-> index 01eb8cc63076..b19d910298d6 100644
-> --- a/drivers/iio/proximity/srf04.c
-> +++ b/drivers/iio/proximity/srf04.c
-> @@ -45,6 +45,7 @@
->  #include <linux/sched.h>
->  #include <linux/interrupt.h>
->  #include <linux/delay.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
->  
-> @@ -56,6 +57,7 @@ struct srf04_data {
->  	struct device		*dev;
->  	struct gpio_desc	*gpiod_trig;
->  	struct gpio_desc	*gpiod_echo;
-> +	struct gpio_desc	*gpiod_power;
->  	struct mutex		lock;
->  	int			irqnr;
->  	ktime_t			ts_rising;
-> @@ -63,6 +65,7 @@ struct srf04_data {
->  	struct completion	rising;
->  	struct completion	falling;
->  	const struct srf04_cfg	*cfg;
-> +	int			startup_time_ms;
->  };
->  
->  static const struct srf04_cfg srf04_cfg = {
-> @@ -97,6 +100,9 @@ static int srf04_read(struct srf04_data *data)
->  	u64 dt_ns;
->  	u32 time_ns, distance_mm;
->  
-> +	if (data->gpiod_power)
-> +		pm_runtime_get_sync(data->dev);
-> +
->  	/*
->  	 * just one read-echo-cycle can take place at a time
->  	 * ==> lock against concurrent reading calls
-> @@ -110,6 +116,11 @@ static int srf04_read(struct srf04_data *data)
->  	udelay(data->cfg->trigger_pulse_us);
->  	gpiod_set_value(data->gpiod_trig, 0);
->  
-> +	if (data->gpiod_power) {
-> +		pm_runtime_mark_last_busy(data->dev);
-> +		pm_runtime_put_autosuspend(data->dev);
-> +	}
-> +
->  	/* it should not take more than 20 ms until echo is rising */
->  	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
->  	if (ret < 0) {
-> @@ -268,6 +279,26 @@ static int srf04_probe(struct platform_device *pdev)
->  		return PTR_ERR(data->gpiod_echo);
->  	}
->  
-> +#ifdef CONFIG_PM
-> +	data->gpiod_power = devm_gpiod_get_optional(dev, "power",
-> +								GPIOD_OUT_LOW);
-
-As the gpio is optional anyway and the various runtime pm calls will be stubbed
-out if CONFIG_PM is not enabled, it seems to me that we can just always leave
-this code in place.  So drop the CONFIG_PM protection.
-
-> +	if (IS_ERR(data->gpiod_power)) {
-> +		dev_err(dev, "failed to get power-gpios: err=%ld\n",
-> +						PTR_ERR(data->gpiod_power));
-> +		return PTR_ERR(data->gpiod_power);
-> +	}
-> +	if (data->gpiod_power) {
-> +
-> +		if (of_property_read_u32(dev->of_node, "startup-time-ms",
-> +						&data->startup_time_ms))
-> +			data->startup_time_ms = 100;
-> +		dev_dbg(dev, "using power gpio: startup-time-ms=%d\n",
-> +							data->startup_time_ms);
-> +	}
-> +#else
-> +	data->gpiod_power = NULL;
-> +#endif
-> +
->  	if (gpiod_cansleep(data->gpiod_echo)) {
->  		dev_err(data->dev, "cansleep-GPIOs not supported\n");
->  		return -ENODEV;
-> @@ -296,14 +327,85 @@ static int srf04_probe(struct platform_device *pdev)
->  	indio_dev->channels = srf04_chan_spec;
->  	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
->  
-> -	return devm_iio_device_register(dev, indio_dev);
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret < 0) {
-> +		dev_err(data->dev, "iio_device_register: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (data->gpiod_power) {
-> +		pm_runtime_set_autosuspend_delay(data->dev, 1000);
-> +		pm_runtime_use_autosuspend(data->dev);
-> +
-> +		ret = pm_runtime_set_active(data->dev);
-> +		if (ret) {
-> +			dev_err(data->dev, "pm_runtime_set_active: %d\n", ret);
-> +			iio_device_unregister(indio_dev);
-> +		}
-> +
-> +		pm_runtime_enable(data->dev);
-> +		pm_runtime_idle(data->dev);
-> +	}
-> +
-> +	return ret;
->  }
->  
-> +static int srf04_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +
-> +	if (data->gpiod_power) {
-> +		pm_runtime_disable(data->dev);
-> +		pm_runtime_set_suspended(data->dev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM
-
-If we drop CONFIG_PM these will need to be marked __maybe_unused.
-
-> +static int srf04_pm_runtime_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = container_of(dev,
-> +						struct platform_device, dev);
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +
-> +	gpiod_set_value(data->gpiod_power, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int srf04_pm_runtime_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = container_of(dev,
-> +						struct platform_device, dev);
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +
-> +	gpiod_set_value(data->gpiod_power, 1);
-> +	msleep(data->startup_time_ms);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops srf04_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(srf04_pm_runtime_suspend,
-> +				srf04_pm_runtime_resume, NULL)
-> +};
-> +#endif
-> +
->  static struct platform_driver srf04_driver = {
->  	.probe		= srf04_probe,
-> +	.remove		= srf04_remove,
->  	.driver		= {
->  		.name		= "srf04-gpio",
->  		.of_match_table	= of_srf04_match,
-> +#ifdef CONFIG_PM
-> +		.pm		= &srf04_pm_ops,
-> +#endif
->  	},
->  };
->  
+> Noticed this should be 67.. But won't submit a v2 till some feedback.
+> 
+> - Matt
+> 
+> > +       compatible = "atlas,do-sm";
+> > +       reg = <0x67>;
+> > +       interrupt-parent = <&gpio1>;
+> > +       interrupts = <16 2>;
+> > +};
+> > diff --git a/drivers/iio/chemical/atlas-sensor.c b/drivers/iio/chemical/atlas-sensor.c
+> > index 2f0a6fed2589..42ad1ed76144 100644
+> > --- a/drivers/iio/chemical/atlas-sensor.c
+> > +++ b/drivers/iio/chemical/atlas-sensor.c
+> > @@ -48,6 +48,11 @@
+> >  #define ATLAS_REG_EC_CALIB_STATUS_LOW          BIT(2)
+> >  #define ATLAS_REG_EC_CALIB_STATUS_HIGH         BIT(3)
+> >
+> > +#define ATLAS_REG_DO_CALIB_STATUS              0x09
+> > +#define ATLAS_REG_DO_CALIB_STATUS_MASK         0x03
+> > +#define ATLAS_REG_DO_CALIB_STATUS_PRESSURE     BIT(0)
+> > +#define ATLAS_REG_DO_CALIB_STATUS_DO           BIT(1)
+> > +
+> >  #define ATLAS_REG_PH_TEMP_DATA         0x0e
+> >  #define ATLAS_REG_PH_DATA              0x16
+> >
+> > @@ -60,14 +65,19 @@
+> >  #define ATLAS_REG_ORP_CALIB_STATUS     0x0d
+> >  #define ATLAS_REG_ORP_DATA             0x0e
+> >
+> > +#define ATLAS_REG_DO_TEMP_DATA         0x12
+> > +#define ATLAS_REG_DO_DATA              0x22
+> > +
+> >  #define ATLAS_PH_INT_TIME_IN_MS                450
+> >  #define ATLAS_EC_INT_TIME_IN_MS                650
+> >  #define ATLAS_ORP_INT_TIME_IN_MS       450
+> > +#define ATLAS_DO_INT_TIME_IN_MS                450
+> >
+> >  enum {
+> >         ATLAS_PH_SM,
+> >         ATLAS_EC_SM,
+> >         ATLAS_ORP_SM,
+> > +       ATLAS_DO_SM,
+> >  };
+> >
+> >  struct atlas_data {
+> > @@ -121,7 +131,7 @@ static const struct iio_chan_spec atlas_ph_channels[] = {
+> >         },
+> >  };
+> >
+> > -#define ATLAS_EC_CHANNEL(_idx, _addr) \
+> > +#define ATLAS_CONCENTRATION_CHANNEL(_idx, _addr) \
+> >         {\
+> >                 .type = IIO_CONCENTRATION, \
+> >                 .indexed = 1, \
+> > @@ -152,8 +162,8 @@ static const struct iio_chan_spec atlas_ec_channels[] = {
+> >                         .endianness = IIO_BE,
+> >                 },
+> >         },
+> > -       ATLAS_EC_CHANNEL(0, ATLAS_REG_TDS_DATA),
+> > -       ATLAS_EC_CHANNEL(1, ATLAS_REG_PSS_DATA),
+> > +       ATLAS_CONCENTRATION_CHANNEL(0, ATLAS_REG_TDS_DATA),
+> > +       ATLAS_CONCENTRATION_CHANNEL(1, ATLAS_REG_PSS_DATA),
+> >         IIO_CHAN_SOFT_TIMESTAMP(3),
+> >         {
+> >                 .type = IIO_TEMP,
+> > @@ -182,6 +192,19 @@ static const struct iio_chan_spec atlas_orp_channels[] = {
+> >         IIO_CHAN_SOFT_TIMESTAMP(1),
+> >  };
+> >
+> > +static const struct iio_chan_spec atlas_do_channels[] = {
+> > +       ATLAS_CONCENTRATION_CHANNEL(0, ATLAS_REG_DO_DATA),
+> > +       IIO_CHAN_SOFT_TIMESTAMP(1),
+> > +       {
+> > +               .type = IIO_TEMP,
+> > +               .address = ATLAS_REG_DO_TEMP_DATA,
+> > +               .info_mask_separate =
+> > +                       BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
+> > +               .output = 1,
+> > +               .scan_index = -1
+> > +       },
+> > +};
+> > +
+> >  static int atlas_check_ph_calibration(struct atlas_data *data)
+> >  {
+> >         struct device *dev = &data->client->dev;
+> > @@ -262,7 +285,31 @@ static int atlas_check_orp_calibration(struct atlas_data *data)
+> >                 dev_warn(dev, "device has not been calibrated\n");
+> >
+> >         return 0;
+> > -};
+> > +}
+> > +
+> > +static int atlas_check_do_calibration(struct atlas_data *data)
+> > +{
+> > +       struct device *dev = &data->client->dev;
+> > +       int ret;
+> > +       unsigned int val;
+> > +
+> > +       ret = regmap_read(data->regmap, ATLAS_REG_DO_CALIB_STATUS, &val);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_MASK)) {
+> > +               dev_warn(dev, "device has not been calibrated\n");
+> > +               return 0;
+> > +       }
+> > +
+> > +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_PRESSURE))
+> > +               dev_warn(dev, "device missing atmospheric pressure calibration\n");
+> > +
+> > +       if (!(val & ATLAS_REG_DO_CALIB_STATUS_DO))
+> > +               dev_warn(dev, "device missing dissolved oxygen calibration\n");
+> > +
+> > +       return 0;
+> > +}
+> >
+> >  struct atlas_device {
+> >         const struct iio_chan_spec *channels;
+> > @@ -295,6 +342,13 @@ static struct atlas_device atlas_devices[] = {
+> >                                 .calibration = &atlas_check_orp_calibration,
+> >                                 .delay = ATLAS_ORP_INT_TIME_IN_MS,
+> >         },
+> > +       [ATLAS_DO_SM] = {
+> > +                               .channels = atlas_do_channels,
+> > +                               .num_channels = 3,
+> > +                               .data_reg = ATLAS_REG_DO_DATA,
+> > +                               .calibration = &atlas_check_do_calibration,
+> > +                               .delay = ATLAS_DO_INT_TIME_IN_MS,
+> > +       },
+> >  };
+> >
+> >  static int atlas_set_powermode(struct atlas_data *data, int on)
+> > @@ -507,6 +561,7 @@ static const struct i2c_device_id atlas_id[] = {
+> >         { "atlas-ph-sm", ATLAS_PH_SM},
+> >         { "atlas-ec-sm", ATLAS_EC_SM},
+> >         { "atlas-orp-sm", ATLAS_ORP_SM},
+> > +       { "atlas-do-sm", ATLAS_DO_SM},
+> >         {}
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, atlas_id);
+> > @@ -515,6 +570,7 @@ static const struct of_device_id atlas_dt_ids[] = {
+> >         { .compatible = "atlas,ph-sm", .data = (void *)ATLAS_PH_SM, },
+> >         { .compatible = "atlas,ec-sm", .data = (void *)ATLAS_EC_SM, },
+> >         { .compatible = "atlas,orp-sm", .data = (void *)ATLAS_ORP_SM, },
+> > +       { .compatible = "atlas,do-sm", .data = (void *)ATLAS_DO_SM, },
+> >         { }
+> >  };
+> >  MODULE_DEVICE_TABLE(of, atlas_dt_ids);
+> > --
+> > 2.20.1
+> >  
 
