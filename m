@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394FBC282DD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 20:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05832C282DD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 20:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E860F2071A
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 20:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C372920842
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 20:50:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="GF+UHv17"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="hJUBjxnQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbgAKUpY (ORCPT
+        id S1731157AbgAKUut (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 15:45:24 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45465 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731283AbgAKUpY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 15:45:24 -0500
-Received: by mail-ed1-f67.google.com with SMTP id v28so4985628edw.12;
-        Sat, 11 Jan 2020 12:45:22 -0800 (PST)
+        Sat, 11 Jan 2020 15:50:49 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33986 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731128AbgAKUus (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 15:50:48 -0500
+Received: by mail-ed1-f68.google.com with SMTP id l8so5033651edw.1;
+        Sat, 11 Jan 2020 12:50:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fptJHxfJcn8XPXLFZgO9QVg2TjNMVukyouEJjCWDXV8=;
-        b=GF+UHv17+im9hGltahc9unerkHkyQ5OVQwSM50qplG7IuREOcD9QMEgYUblCEqN3N/
-         0OPv7W8dvRSeoheT6OzralJLFc/pzzaOVIpL/4AsoHIHWeAvrs9l1ohuyF0cllD182AO
-         nol87ON0HLhrbhewaDhNPnOO/XyY7xHUhu6BA/DiC0dQ0ljBV2Jw33WUVlttfemgj74x
-         oBpj2x1V9D2QBf6OHoEUjhmVo0mxOGwPVoNGxvK7np5dmL6UTj8SeB2PDfKMKFx2mDUb
-         GxcVozLSn++R9TAG1YaHI/GWTRuQOjDj24OnYvwWI6bTNlkkcalppgx2r/YDVv5Zdztr
-         t6Sg==
+        bh=Z1allRQVVIcRb3GsPlExTsGVhorTeSQyvjX+yCE+qh8=;
+        b=hJUBjxnQ14Mkg+v0KZ6c/t3nrYWqpGIc4sggWABjJRnGUyE8mJZqSJlWevR+X2pXLM
+         LQSpClltwxH4ooVGw4tHTB7JHmbb1UXYc905RnfaGPl+4J7rl3o46naKcJtWdi3V6V56
+         /TMMbfEbpBJ01C3LFZPaUGan+dJaiT4c8Pxd94x0Ut8sbRA97vGiBJNbgq7xGxIxQnhp
+         Up1nQRDJ9JeBKdnQU4B6yRXhH6N57MPmMCHXeoyAEHpZzEykyCldLD1aQkir+dw1Pn+F
+         FBUrNk6ERO1+Vf5Gx12umJkOkHkqBzc16yNhfNr7QJmEIdJfFGeCXpUUCgI4JdMUqm87
+         Rpvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fptJHxfJcn8XPXLFZgO9QVg2TjNMVukyouEJjCWDXV8=;
-        b=cG15VuGeop+FtJY9tFrtCOji7taKaaNyt4dAZc4x3MZ6edW9vdOkKDxAeWB4V8wi25
-         km9Kkg3PkL2n1c+mlzxjOcUtQqN0bA4Kl4IVXLQUiAOLT9dUieT73RziOe5Qna4votM0
-         klNn6JUjUniKfl45VneOAKxF8HSwbkMo1duDQXK3UU7FRyxVjU2n9oTk6Qvljx4XMVAp
-         btDNV5zr+vpqDpWrzyOkn8XIbyRgVv75qe2aJQSuNjZuS8mFhtqVkFHSuCM/ha1ULYcR
-         geQvIiDDfFijoU9JHu5Z8wb7CHa9CxEJIC1YLF/uSrmi3NU4x7OLHfeUBdSS1XECKZ57
-         z85A==
-X-Gm-Message-State: APjAAAW3iqej/k095SLxBC7Ew7iuXlIbNFFY1+leoK5c2EEuY0UmU4E+
-        8Jk3CMkasScF3seYvPCxOtKMpVcjzxs9QyheqoFPYmuG
-X-Google-Smtp-Source: APXvYqxx35msRJwJFzncZx/Qn0rrX3K1+YRYlLX5GGk8pBBABXjfJI1q8LiSfcgC2cSU3qRDnzBHHHafnSeTQ/+zoKg=
-X-Received: by 2002:aa7:d94d:: with SMTP id l13mr7296961eds.328.1578775522271;
- Sat, 11 Jan 2020 12:45:22 -0800 (PST)
+        bh=Z1allRQVVIcRb3GsPlExTsGVhorTeSQyvjX+yCE+qh8=;
+        b=Q0OTccCZvAuHwL8evYVPxXS/EVeWUihjlJ2zK/Er6fxVv0ZEvxRbzmIZUOMQrrHBUF
+         nQt23uob9Ccl01Np3cLXKsKODW/JYkW0NiHjaU8wyeeyjX4hvN3YNdNgYznjfQB9tYIo
+         o9PpGQabpZwFtdYP9pNvjtCK9g1qNcdd5TSZMM4hO3Z8Cp4FfX/624MNVYAtdJ1LdDpk
+         9U/ZzHyqWG2D8Z16wJViVD/YbCzvNdEKaqv1CFvixw4SjQGROrSXWtERF0miWKoZxjbf
+         wvawa7CrF2pPeZPo4/9GSv49suIgFnJfPXYVil9ChVEq9qgoZSYxxIGhDjOnanfs/mzy
+         WPNA==
+X-Gm-Message-State: APjAAAUYL65Mv94Jj4Ppqo6tqGibbNwFh14Sp7Col4CTtg4c9JUqyUnM
+        OfwmB1e9ifw/+FamRsJNy4XCOD4t5FeElQcfRo8vfvlK
+X-Google-Smtp-Source: APXvYqwtaXUZxukv72KXhDvEgYsMrVJcbOLsej/ezPWjeRTXXD9cuqhLaJNWOoMJYBnJuHEu/7anl+4YWFW8qwXN598=
+X-Received: by 2002:a17:906:27cb:: with SMTP id k11mr9466692ejc.301.1578775846889;
+ Sat, 11 Jan 2020 12:50:46 -0800 (PST)
 MIME-Version: 1.0
-References: <1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com> <1578634957-54826-5-git-send-email-hanjie.lin@amlogic.com>
-In-Reply-To: <1578634957-54826-5-git-send-email-hanjie.lin@amlogic.com>
+References: <1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com> <1578634957-54826-3-git-send-email-hanjie.lin@amlogic.com>
+In-Reply-To: <1578634957-54826-3-git-send-email-hanjie.lin@amlogic.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Sat, 11 Jan 2020 21:45:11 +0100
-Message-ID: <CAFBinCCFUDst_-QtSuNioAa3ckt5GzTFDAhZWh3zu42VRByPpw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
+Date:   Sat, 11 Jan 2020 21:50:35 +0100
+Message-ID: <CAFBinCCZSBWdKQwmcvponuUu_aiTnDCyRiPqKDgqfNkJQoq06w@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] dt-bindings: usb: dwc3: Add the Amlogic A1 Family
+ DWC3 Glue Bindings
 To:     Hanjie Lin <hanjie.lin@amlogic.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
@@ -86,30 +87,26 @@ Hi Hanjie,
 
 On Fri, Jan 10, 2020 at 6:43 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
 [...]
-> -       devm_add_action_or_reset(dev,
-> -                                (void(*)(void *))clk_disable_unprepare,
-> -                                priv->clk);
-> +       ret = clk_bulk_prepare_enable(priv->drvdata->num_clks,
-> +                                     priv->drvdata->clks);
-I don't see clk_bulk_disable_unprepare in dwc3_meson_g12a_remove()
-please test that the clocks are all disabled (see
-/sys/kernel/debug/clk/clk_summary for example) when unloading all USB
-related kernel modules
+> @@ -37,6 +43,11 @@ properties:
+>
+>    clocks:
+>      minItems: 1
+> +    maxItems: 4
+the driver parses one clock for G12A/G12B/SM1 and three clocks for A1
+if there is a fourth clock: do we need to manage it in the driver?
+(note: dt-bindings always represent the hardware, so if there's a
+fourth clock which the driver doesn't need then it's perfectly valid
+to describe it here. a comment which clock this is helps in the
+code-review process)
 
-> +
-> +       if (!priv->drvdata->otg_switch_supported)
-> +               goto setup_pm_runtime;
-my brain doesn't like the goto in this place because this is not an
-error condition. I was about to write that
-usb_role_switch_unregister() is now skipped even though we're calling
-usb_role_switch_register().
-
-I want to hear Neil's opinion on this because I got confused while
-reading the code again.
-my proposal is to move all of this OTG related code from
-dwc3_meson_g12a_probe() into a new function, for example called
-dwc3_meson_g12a_otg_init()
-then only call that function when OTG switching is supported
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 4
+I let Rob comment on this, personally I prefer naming the clocks explicitly
+also I think clock-names has to be a mandatory property for A1 (see
+Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
+for an example which makes properties mandatory depending on the
+compatible string)
 
 
 Martin
