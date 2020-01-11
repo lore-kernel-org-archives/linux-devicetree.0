@@ -2,352 +2,175 @@ Return-Path: <SRS0=eKwZ=3A=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DE1C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03029C33CA4
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 15:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35B82187F
-	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 11:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B8E20848
+	for <linux-devicetree@archiver.kernel.org>; Sat, 11 Jan 2020 15:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="EYeLJEoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgAKLyp (ORCPT
+        id S1729932AbgAKP3e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 11 Jan 2020 06:54:45 -0500
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:56318 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbgAKLyp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 06:54:45 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id CB4399E7485;
-        Sat, 11 Jan 2020 11:54:42 +0000 (GMT)
-Date:   Sat, 11 Jan 2020 11:54:40 +0000
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] input: joystick: Add ADC attached joystick driver.
-Message-ID: <20200111115440.35f6cbfd@archlinux>
-In-Reply-To: <20200105001639.142061-5-contact@artur-rojek.eu>
-References: <20200105001639.142061-1-contact@artur-rojek.eu>
-        <20200105001639.142061-5-contact@artur-rojek.eu>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 Jan 2020 10:29:34 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38766 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729926AbgAKP3d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 11 Jan 2020 10:29:33 -0500
+Received: by mail-lj1-f193.google.com with SMTP id w1so5248934ljh.5
+        for <devicetree@vger.kernel.org>; Sat, 11 Jan 2020 07:29:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+yyz8Q0QX9xYsWJoU0+FyOfRmn5JGVzY0Qs3w+7UtAg=;
+        b=EYeLJEoh5Ypto/JQ3a+tfiWQLR2ymhe/P1LrB6znfOyDal9+j3hZCeRcFn57i/il52
+         jX0lzr12VmeYREHmYMhvQqnsA51acM38xUxlwM8p7HvJt1ZA3rnmQiahWOyuZRZDlKDv
+         5zN0JzjFiLAGVn5z95fKfGw17gjmvU8/QMCF/MHAUxBWF91Nb3UBoeF95Ds3spT/uCxT
+         wADnlQVBdXNYc9OQ15wDWpmHBqlGDgLcD2d+vErc4Ad4/EO4mSghsKwg1ksC/6phGDXq
+         J0HW+xEoVDFD4nGf33C7aSfWdpH5PND+gxT4S5ubasP0NqXWGkv4VidHnOOuYyd0OTjz
+         TaPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=+yyz8Q0QX9xYsWJoU0+FyOfRmn5JGVzY0Qs3w+7UtAg=;
+        b=qD99ZtT/sCvpUC/EWrjBHNBUZRZCz+ScysLAokiuc18IRqrDBZ7cQEzvFDGL3w1KIi
+         aiN1sl2Lr/BshWG/USVOpjf6gM8KndGXewtdwJzTX+IcOz1vd3DVaHwxCdOVW6atBPAn
+         VV+5EIa7JDAH+lklvUphqAbdud/w9JuAKjgWW7SeEKhvQbbUVARsNMOt/l8ZvinNqJVe
+         +l6deWh2rW8XiJCWETx/8Xpxei+wauXv1/lkIiWkf05T3GLEYMjiIeYYOLkyMeb7VCRv
+         zLg1wEdCDSxKWw1YE/c8jrP8tP7YBm8AeU20RQMpX5fsvaqJUxZv6g6fngaIDcJjYPza
+         dd7g==
+X-Gm-Message-State: APjAAAXJUr/swBqrB/eap7Fd1HxBA4Tj2rz1KAtSTdQ/1zgwNejfLC1q
+        MKaThPa2NzU/0JdHhPkfTQV8Ww==
+X-Google-Smtp-Source: APXvYqxotAwRwA2HmV4//JkAfwQxXY+vp5mgQ9RHqHBLD2c/gKUaVLFzna4/fqCub7KMfJGufTx9DQ==
+X-Received: by 2002:a2e:80cc:: with SMTP id r12mr6032098ljg.154.1578756570955;
+        Sat, 11 Jan 2020 07:29:30 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:867:6876:dd67:e9de:b279:534b])
+        by smtp.gmail.com with ESMTPSA id q11sm2704957ljm.76.2020.01.11.07.29.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 Jan 2020 07:29:30 -0800 (PST)
+Subject: Re: [PATCH v3] RFC: dt-bindings: Create DT bindings for SATA
+ controllers
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-ide@vger.kernel.org
+References: <20200110081743.10086-1-linus.walleij@linaro.org>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <438c2afd-c751-8548-f7c8-c79ebfbe6a45@cogentembedded.com>
+Date:   Sat, 11 Jan 2020 18:29:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200110081743.10086-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun,  5 Jan 2020 01:16:39 +0100
-Artur Rojek <contact@artur-rojek.eu> wrote:
+On 01/10/2020 11:17 AM, Linus Walleij wrote:
 
-> Add a driver for joystick devices connected to ADC controllers
-> supporting the Industrial I/O subsystem.
+> I need to create subnodes for drives connected to SATA
+> host controllers, and this needs to be supported
+> generally, so create a common YAML binding for
+> "sata" that will support subnodes with ports.
 > 
-> Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
-> Tested-by: Paul Cercueil <paul@crapouillou.net>
-
-Looks pretty good, but I'd like to see a little more sanity checking
-on probe that the channels are in a format this driver can actually
-handle.  Given we can check channel size and consistency etc early
-it would be better to fail to probe than just report error data later.
-
-Thanks,
-
-Jonathan
-
+> This has been designed as a subset of
+> ata/ahci-platform.txt with the bare essentials and
+> should be possible to extend or superset to cover the
+> common bindings.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  drivers/input/joystick/Kconfig        |  10 ++
->  drivers/input/joystick/Makefile       |   1 +
->  drivers/input/joystick/adc-joystick.c | 230 ++++++++++++++++++++++++++
->  3 files changed, 241 insertions(+)
->  create mode 100644 drivers/input/joystick/adc-joystick.c
+> ChangeLog v2->v3:
+> - Split off into its own RFC patch
+> - Only support sata-port@ in this binding
+> - Opt to support devices 0..14 on the sata-port in
+>   line with ahci-platforn.txt not modeling the port
+>   multiplier in the device tree at all.
+> ChangeLog v1->v2:
+> - Use ide@ and sata@ as node names.
+> - Use ide-port@ and sata-port@ for the ports toward the
+>   drives, rather than letting the subnodes be the drives
+>   themselves.
+> ---
+>  .../devicetree/bindings/ata/sata-common.yaml  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/sata-common.yaml
 > 
-> diff --git a/drivers/input/joystick/Kconfig b/drivers/input/joystick/Kconfig
-> index 940b744639c7..efbc20ec5099 100644
-> --- a/drivers/input/joystick/Kconfig
-> +++ b/drivers/input/joystick/Kconfig
-> @@ -42,6 +42,16 @@ config JOYSTICK_A3D
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called a3d.
->  
-> +config JOYSTICK_ADC
-> +	tristate "Simple joystick connected over ADC"
-> +	depends on IIO
-> +	select IIO_BUFFER_CB
-> +	help
-> +	  Say Y here if you have a simple joystick connected over ADC.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called adc-joystick.
-> +
->  config JOYSTICK_ADI
->  	tristate "Logitech ADI digital joysticks and gamepads"
->  	select GAMEPORT
-> diff --git a/drivers/input/joystick/Makefile b/drivers/input/joystick/Makefile
-> index 8656023f6ef5..58232b3057d3 100644
-> --- a/drivers/input/joystick/Makefile
-> +++ b/drivers/input/joystick/Makefile
-> @@ -6,6 +6,7 @@
->  # Each configuration option enables a list of files.
->  
->  obj-$(CONFIG_JOYSTICK_A3D)		+= a3d.o
-> +obj-$(CONFIG_JOYSTICK_ADC)		+= adc-joystick.o
->  obj-$(CONFIG_JOYSTICK_ADI)		+= adi.o
->  obj-$(CONFIG_JOYSTICK_AMIGA)		+= amijoy.o
->  obj-$(CONFIG_JOYSTICK_AS5011)		+= as5011.o
-> diff --git a/drivers/input/joystick/adc-joystick.c b/drivers/input/joystick/adc-joystick.c
+> diff --git a/Documentation/devicetree/bindings/ata/sata-common.yaml b/Documentation/devicetree/bindings/ata/sata-common.yaml
 > new file mode 100644
-> index 000000000000..0dfc4218dafa
+> index 000000000000..9f6718a69dfd
 > --- /dev/null
-> +++ b/drivers/input/joystick/adc-joystick.c
-> @@ -0,0 +1,230 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Input driver for joysticks connected over ADC.
-> + * Copyright (c) 2019-2020 Artur Rojek <contact@artur-rojek.eu>
-> + */
-> +#include <linux/ctype.h>
-> +#include <linux/input.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/consumer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
+> +++ b/Documentation/devicetree/bindings/ata/sata-common.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/ata/sata-common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +struct adc_joystick_axis {
-> +	u32 code;
-> +	s32 range[2];
-> +	s32 fuzz;
-> +	s32 flat;
-> +};
+> +title: Common Properties for Serial AT attachment (SATA) controllers
 > +
-> +struct adc_joystick {
-> +	struct input_dev *input;
-> +	struct iio_cb_buffer *buffer;
-> +	struct adc_joystick_axis *axes;
-> +	struct iio_channel *chans;
-> +	int num_chans;
-> +};
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
 > +
-> +static int adc_joystick_handle(const void *data, void *private)
-> +{
-> +	struct adc_joystick *joy = private;
-> +	enum iio_endian endianness;
-> +	int bytes, msb, val, i;
-> +	bool sign;
+> +description: |
+> +  This document defines device tree properties common to most Serial
+> +  AT attachment (SATA) storage devices. It doesn't constitue a device tree
+> +  binding specification by itself but is meant to be referenced by device
+> +  tree bindings.
 > +
-> +	/* Assume all channels have the same storage size. */
+> +  The SATA controller-specific device tree bindings are responsible for
+> +  defining whether each property is required or optional.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^sata(@.*)?$"
+> +    description:
+> +      Specifies the host controller node. SATA host controller nodes are named
+> +      "sata"
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^sata-port@[0-1]$":
+> +    description: |
+> +      DT nodes for ports connected on the SATA host. The master drive will have
+> +      ID number 0 and the slave drive will have ID number 1. The SATA port
 
-Would be better to check that and report an error if not!
+   Mhm... SATA doesn't have master/slave drives, there's only 1 drive pert port, IIRC.
 
-> +	bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
+> +      nodes will be named "sata-port".
+> +    type: object
 > +
-> +	for (i = 0; i < joy->num_chans; ++i) {
-> +		endianness = joy->chans[i].channel->scan_type.endianness;
-> +		msb = joy->chans[i].channel->scan_type.realbits - 1;
-> +		sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
+> +    properties:
+> +      reg:
+> +        minimum: 0
+> +        maximum: 14
+> +        description:
+> +          The ID number of the drive port SATA can potentially use a port
+> +          multiplier making it possible to connect up to 15 disks to a single
+> +          SATA port.
 > +
-> +		switch (bytes) {
-> +		case 1:
-> +			val = ((const u8 *)data)[i];
-> +			break;
-> +		case 2:
-> +			val = ((const u16 *)data)[i];
-> +			if (endianness == IIO_BE)
-> +				val = be16_to_cpu(val);
-> +			else if (endianness == IIO_LE)
-> +				val = le16_to_cpu(val);
-> +			break;
-> +		default:
+> +...
 
-Good to have sanity checked this earlier and refused to probe.
-
-> +			return -EINVAL;
-> +		}
-> +
-> +		val >>= joy->chans[i].channel->scan_type.shift;
-> +		if (sign)
-> +			val = sign_extend32(val, msb);
-> +		else
-> +			val &= GENMASK(msb, 0);
-> +		input_report_abs(joy->input, joy->axes[i].code, val);
-> +	}
-> +
-> +	input_sync(joy->input);
-> +
-> +	return 0;
-> +}
-> +
-> +static int adc_joystick_open(struct input_dev *dev)
-> +{
-> +	struct adc_joystick *joy = input_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = iio_channel_start_all_cb(joy->buffer);
-> +	if (ret)
-> +		dev_err(dev->dev.parent, "Unable to start callback buffer");
-> +
-> +	return ret;
-> +}
-> +
-> +static void adc_joystick_close(struct input_dev *dev)
-> +{
-> +	struct adc_joystick *joy = input_get_drvdata(dev);
-> +
-> +	iio_channel_stop_all_cb(joy->buffer);
-> +}
-> +
-> +static void adc_joystick_disable(void *data)
-> +{
-> +	iio_channel_release_all_cb(data);
-
-Given what it does, and the fact it basically matches the iio_channel_get_all_cb call,
-seems like an odd name for this function.
-
-> +}
-> +
-> +static int adc_joystick_set_axes(struct device *dev, struct adc_joystick *joy)
-> +{
-> +	struct adc_joystick_axis *axes;
-> +	struct fwnode_handle *child;
-> +	int num_axes, i = 0;
-> +
-> +	num_axes = device_get_child_node_count(dev);
-> +	if (!num_axes) {
-> +		dev_err(dev, "Unable to find child nodes");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (num_axes != joy->num_chans) {
-> +		dev_err(dev, "Got %d child nodes for %d channels",
-> +			num_axes, joy->num_chans);
-> +		return -EINVAL;
-> +	}
-> +
-> +	axes = devm_kmalloc_array(dev, num_axes, sizeof(*axes), GFP_KERNEL);
-> +	if (!axes)
-> +		return -ENOMEM;
-> +
-> +	device_for_each_child_node(dev, child) {
-> +		if (fwnode_property_read_u32(child, "linux,abs-code",
-> +					     &axes[i].code)) {
-> +			dev_err(dev, "linux,abs-code invalid or missing");
-> +			goto err;
-> +		}
-> +
-> +		if (fwnode_property_read_u32_array(child, "linux,abs-range",
-> +						   axes[i].range, 2)) {
-> +			dev_err(dev, "linux,abs-range invalid or missing");
-> +			goto err;
-> +		}
-> +
-> +		fwnode_property_read_u32(child, "linux,abs-fuzz",
-> +					 &axes[i].fuzz);
-> +		fwnode_property_read_u32(child, "linux,abs-flat",
-> +					 &axes[i].flat);
-> +
-> +		input_set_abs_params(joy->input, axes[i].code, axes[i].range[0],
-> +				     axes[i].range[1], axes[i].fuzz,
-> +				     axes[i].flat);
-> +		input_set_capability(joy->input, EV_ABS, axes[i].code);
-> +
-> +		++i;
-> +	}
-> +
-> +	joy->axes = axes;
-> +
-> +	return 0;
-> +
-> +err:
-> +	fwnode_handle_put(child);
-> +	return -EINVAL;
-> +}
-> +
-> +static int adc_joystick_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct adc_joystick *joy;
-> +	struct input_dev *input;
-> +	int ret;
-> +
-> +	joy = devm_kzalloc(dev, sizeof(*joy), GFP_KERNEL);
-> +	if (!joy)
-> +		return -ENOMEM;
-> +
-> +	joy->chans = devm_iio_channel_get_all(dev);
-> +	if (IS_ERR(joy->chans)) {
-> +		ret = PTR_ERR(joy->chans);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "Unable to get IIO channels");
-> +		return ret;
-> +	}
-> +
-> +	/* Count how many channels we got. NULL terminated. */
-> +	while (joy->chans[joy->num_chans].indio_dev)
-> +		joy->num_chans++;
-> +
-> +	input = devm_input_allocate_device(dev);
-> +	if (!input) {
-> +		dev_err(dev, "Unable to allocate input device");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	joy->input = input;
-> +	input->name = pdev->name;
-> +	input->id.bustype = BUS_HOST;
-> +	input->open = adc_joystick_open;
-> +	input->close = adc_joystick_close;
-> +
-> +	ret = adc_joystick_set_axes(dev, joy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	input_set_drvdata(input, joy);
-> +	ret = input_register_device(input);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to register input device: %d", ret);
-> +		return ret;
-> +	}
-> +
-> +	joy->buffer = iio_channel_get_all_cb(dev, adc_joystick_handle, joy);
-> +	if (IS_ERR(joy->buffer)) {
-> +		dev_err(dev, "Unable to allocate callback buffer");
-> +		return PTR_ERR(joy->buffer);
-> +	}
-> +
-> +	ret = devm_add_action_or_reset(dev, adc_joystick_disable, joy->buffer);
-> +	if (ret)
-> +		dev_err(dev, "Unable to add action");
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct of_device_id adc_joystick_of_match[] = {
-> +	{ .compatible = "adc-joystick", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, adc_joystick_of_match);
-> +
-> +static struct platform_driver adc_joystick_driver = {
-> +	.driver = {
-> +		.name = "adc-joystick",
-> +		.of_match_table = of_match_ptr(adc_joystick_of_match),
-> +	},
-> +	.probe = adc_joystick_probe,
-> +};
-> +module_platform_driver(adc_joystick_driver);
-> +
-> +MODULE_DESCRIPTION("Input driver for joysticks connected over ADC");
-> +MODULE_AUTHOR("Artur Rojek <contact@artur-rojek.eu>");
-> +MODULE_LICENSE("GPL");
-
+MBR, Sergei
