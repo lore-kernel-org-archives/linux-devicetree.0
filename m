@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D70DC33CA2
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 08:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8FDC32771
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 08:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D6F21569
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 08:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18CB2064C
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 08:22:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ih7aFdi3"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="iS/Wa9Mu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732450AbgALIVQ (ORCPT
+        id S1732382AbgALIWP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 03:21:16 -0500
-Received: from forward101j.mail.yandex.net ([5.45.198.241]:46935 "EHLO
-        forward101j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732369AbgALIVP (ORCPT
+        Sun, 12 Jan 2020 03:22:15 -0500
+Received: from forward106j.mail.yandex.net ([5.45.198.249]:38382 "EHLO
+        forward106j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732380AbgALIWP (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jan 2020 03:21:15 -0500
+        Sun, 12 Jan 2020 03:22:15 -0500
 Received: from forward103q.mail.yandex.net (forward103q.mail.yandex.net [IPv6:2a02:6b8:c0e:50:0:640:b21c:d009])
-        by forward101j.mail.yandex.net (Yandex) with ESMTP id CC09F1BE0FD6;
-        Sun, 12 Jan 2020 11:15:12 +0300 (MSK)
-Received: from mxback5q.mail.yandex.net (mxback5q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:b716:ad89])
-        by forward103q.mail.yandex.net (Yandex) with ESMTP id C4DD661E0004;
-        Sun, 12 Jan 2020 11:15:12 +0300 (MSK)
+        by forward106j.mail.yandex.net (Yandex) with ESMTP id 7AB3B11A0A31;
+        Sun, 12 Jan 2020 11:16:25 +0300 (MSK)
+Received: from mxback8q.mail.yandex.net (mxback8q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:b38f:32ec])
+        by forward103q.mail.yandex.net (Yandex) with ESMTP id 7395861E000A;
+        Sun, 12 Jan 2020 11:16:25 +0300 (MSK)
 Received: from vla1-ee05250d997a.qloud-c.yandex.net (vla1-ee05250d997a.qloud-c.yandex.net [2a02:6b8:c0d:3495:0:640:ee05:250d])
-        by mxback5q.mail.yandex.net (mxback/Yandex) with ESMTP id RzsfWlDwcB-FCcCWsp6;
-        Sun, 12 Jan 2020 11:15:12 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578816912;
-        bh=cQb47U+3vGM7o7PpBCUiXtwksEyD9C8rtuU6Jf0f18c=;
+        by mxback8q.mail.yandex.net (mxback/Yandex) with ESMTP id x630NXtli7-GPpeQjPA;
+        Sun, 12 Jan 2020 11:16:25 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578816985;
+        bh=+I+2B6DVh3pvC30SC/PFZ8sM04FtO0EJQ8OdPf7+0Hg=;
         h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=ih7aFdi3uOQVS/LHF5ZEDVK0GFR25LKrxqK4zPsaVM3Okh9AbNRuMLs63YqOuNSWa
-         MzsMEI8fW3rzhb6ZviZ6vSOhajYyYurUcd2uj4EDPWvXsxyldrZqGT79fo3U9QFBpe
-         CFZpUpIu506WIb8n7YJs4aP8W/hRnjdYjPqBKtyc=
-Authentication-Results: mxback5q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla1-ee05250d997a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 3jM5RHRYtF-F1V4Kccv;
-        Sun, 12 Jan 2020 11:15:07 +0300
+        b=iS/Wa9MuAAbRyZ6I81eOjQIeLCHX0EdkTnBHC11/J2/IAkN6okfSyJbnT6cM9lZad
+         lGyB6p37cRyZTXGCKGAcYW9wGoJEBYLAdFkFbkdzM7HdVHRSE+L9L/+uQ+Kxl2lYnT
+         QL0UnSO6uZjVLceZfqAc3+DHcES9lwmDm5iQTGyM=
+Authentication-Results: mxback8q.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by vla1-ee05250d997a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 3jM5RHRYtF-FnV41IQM;
+        Sun, 12 Jan 2020 11:15:54 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
@@ -49,9 +49,9 @@ Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
         jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
         robh+dt@kernel.org, mark.rutland@arm.co,
         devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v3 04/10] irqchip: Add driver for Loongson-3 HyperTransport PIC controller
-Date:   Sun, 12 Jan 2020 16:14:10 +0800
-Message-Id: <20200112081416.722218-5-jiaxun.yang@flygoat.com>
+Subject: [PATCH v3 09/10] MIPS: Loongson64: Add generic dts
+Date:   Sun, 12 Jan 2020 16:14:15 +0800
+Message-Id: <20200112081416.722218-10-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200112081416.722218-1-jiaxun.yang@flygoat.com>
 References: <20200112081416.722218-1-jiaxun.yang@flygoat.com>
@@ -62,242 +62,254 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This controller appeared on Loongson-3 family of chips to receive interrupts
-from PCH PIC.
+Add generic device dts for Loongson-3 devices.
+They seems identical but will be different later.
+Some PCH devices like PCI Host Bridge is still enabled by platform
+code for now.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/include/asm/i8259.h        |   1 +
- drivers/irqchip/Kconfig              |   9 ++
- drivers/irqchip/Makefile             |   1 +
- drivers/irqchip/irq-i8259.c          |   6 +-
- drivers/irqchip/irq-loongson-htpic.c | 147 +++++++++++++++++++++++++++
- 5 files changed, 161 insertions(+), 3 deletions(-)
- create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+ arch/mips/Kconfig                             |  6 +-
+ arch/mips/boot/dts/Makefile                   |  1 +
+ arch/mips/boot/dts/loongson/Makefile          |  5 ++
+ .../boot/dts/loongson/loongson3-package.dtsi  | 62 +++++++++++++++++++
+ .../dts/loongson/loongson3_4core_rs780e.dts   | 25 ++++++++
+ .../dts/loongson/loongson3_8core_rs780e.dts   | 25 ++++++++
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   | 26 ++++++++
+ arch/mips/include/asm/mach-loongson64/irq.h   |  3 +-
+ 8 files changed, 150 insertions(+), 3 deletions(-)
+ create mode 100644 arch/mips/boot/dts/loongson/Makefile
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3-package.dtsi
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
 
-diff --git a/arch/mips/include/asm/i8259.h b/arch/mips/include/asm/i8259.h
-index 97a5e41ed1ab..1ec3dbb1588f 100644
---- a/arch/mips/include/asm/i8259.h
-+++ b/arch/mips/include/asm/i8259.h
-@@ -36,6 +36,7 @@ extern raw_spinlock_t i8259A_lock;
- extern void make_8259A_irq(unsigned int irq);
- 
- extern void init_i8259_irqs(void);
-+extern struct irq_domain *of_init_i8259_irqs(struct device_node *node);
- 
- /**
-  * i8159_set_poll() - Override the i8259 polling function
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3f220648151b..2d9fadb1b5d5 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -508,4 +508,13 @@ config LOONGSON_IOINTC
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 4b83507499f4..47909e733c2d 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -489,9 +489,11 @@ config MACH_LOONGSON64
+ 	select SYS_SUPPORTS_HIGHMEM
+ 	select SYS_SUPPORTS_LITTLE_ENDIAN
+ 	select SYS_SUPPORTS_ZBOOT
+-	select LOONGSON_MC146818
+ 	select ZONE_DMA32
+ 	select NUMA
++	select COMMON_CLK
++	select USE_OF
++	select BUILTIN_DTB
  	help
- 	  Support for the Loongson I/O Interrupt Controller.
+ 	  This enables the support of Loongson-2/3 family of machines.
  
-+config LOONGSON_HTPIC
-+	bool "Loongson3 HyperTransport PIC Controller"
-+	depends on MACH_LOONGSON64
-+	default y
-+	select IRQ_DOMAIN
-+	select GENERIC_IRQ_CHIP
-+	select I8259
-+	help
-+	  Support for the Loongson-3 HyperTransport PIC Controller.
- endmenu
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 3e98241401b3..96ed00da097d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -105,3 +105,4 @@ obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
- obj-$(CONFIG_LOONGSON_IOINTC)		+= irq-loongson-iointc.o
-+obj-$(CONFIG_LOONGSON_HTPIC)		+= irq-loongson-htpic.o
-diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
-index d000870d9b6b..9d79acce6c0c 100644
---- a/drivers/irqchip/irq-i8259.c
-+++ b/drivers/irqchip/irq-i8259.c
-@@ -309,7 +309,7 @@ static const struct irq_domain_ops i8259A_ops = {
-  * driver compatibility reasons interrupts 0 - 15 to be the i8259
-  * interrupts even if the hardware uses a different interrupt numbering.
-  */
--struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
-+struct irq_domain * __init of_init_i8259_irqs(struct device_node *node)
- {
- 	struct irq_domain *domain;
+@@ -3085,7 +3087,7 @@ endchoice
+ choice
+ 	prompt "Kernel command line type" if !CMDLINE_OVERRIDE
+ 	default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
+-					 !MIPS_MALTA && \
++					 !MACH_LOONGSON64 && !MIPS_MALTA && \
+ 					 !CAVIUM_OCTEON_SOC
+ 	default MIPS_CMDLINE_FROM_BOOTLOADER
  
-@@ -330,7 +330,7 @@ struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
- 
- void __init init_i8259_irqs(void)
- {
--	__init_i8259_irqs(NULL);
-+	of_init_i8259_irqs(NULL);
- }
- 
- static void i8259_irq_dispatch(struct irq_desc *desc)
-@@ -351,7 +351,7 @@ int __init i8259_of_init(struct device_node *node, struct device_node *parent)
- 	struct irq_domain *domain;
- 	unsigned int parent_irq;
- 
--	domain = __init_i8259_irqs(node);
-+	domain = of_init_i8259_irqs(node);
- 
- 	parent_irq = irq_of_parse_and_map(node, 0);
- 	if (!parent_irq) {
-diff --git a/drivers/irqchip/irq-loongson-htpic.c b/drivers/irqchip/irq-loongson-htpic.c
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index 1e79cab8e269..d429a69bfe30 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -4,6 +4,7 @@ subdir-y	+= cavium-octeon
+ subdir-y	+= img
+ subdir-y	+= ingenic
+ subdir-y	+= lantiq
++subdir-y	+= loongson
+ subdir-y	+= mscc
+ subdir-y	+= mti
+ subdir-y	+= netlogic
+diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loongson/Makefile
 new file mode 100644
-index 000000000000..fa33176157d6
+index 000000000000..c0cedbaa9a78
 --- /dev/null
-+++ b/drivers/irqchip/irq-loongson-htpic.c
-@@ -0,0 +1,147 @@
++++ b/arch/mips/boot/dts/loongson/Makefile
+@@ -0,0 +1,5 @@
++# SPDX_License_Identifier: GPL_2.0
++dtb-$(CONFIG_MACH_LOONGSON64)	+= loongson3_4core_rs780e.dtb loongson3_8core_rs780e.dtb\
++
++
++obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/loongson/loongson3-package.dtsi b/arch/mips/boot/dts/loongson/loongson3-package.dtsi
+new file mode 100644
+index 000000000000..8a8d8c442dfe
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3-package.dtsi
+@@ -0,0 +1,62 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson HTPIC IRQ support
-+ */
 +
-+#include <linux/init.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irq.h>
-+#include <linux/io.h>
-+#include <linux/syscore_ops.h>
++#include <dt-bindings/interrupt-controller/irq.h>
 +
-+#include <asm/i8259.h>
++/ {
++	#address-cells = <2>;
++	#size-cells = <2>;
 +
-+#define HTPIC_MAX_PARENT_IRQ	4
-+#define HTINT_NUM_VECTORS	8
-+#define HTINT_EN_OFF		0x20
++	cpuintc: interrupt-controller {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
 +
-+struct loongson_htpic {
-+	void __iomem *base;
-+	struct irq_domain *domain;
++	package0: bus@1fe00000 {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
++			0 0x3ff00000 0 0x3ff00000 0x100000
++			0xefd 0xfb000000 0xefd 0xfb000000 0x10000000 /* 3A HT Config Space */
++			0x1efd 0xfb000000 0x1efd 0xfb000000 0x10000000 /* 3B HT Config Space */>;
++
++		iointc: interrupt-controller@3ff01400 {
++			compatible = "loongson,iointc-1.0";
++			reg = <0 0x3ff01400 0x64>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			interrupt-parent = <&cpuintc>;
++			interrupts = <2>, <3>;
++			interrupt-names = "int0", "int1";
++
++			loongson,parent_int_map = <0xf0ffffff>, /* int0 */
++						<0x0f000000>, /* int1 */
++						<0x00000000>, /* int2 */
++						<0x00000000>; /* int3 */	
++
++		};
++
++		cpu_uart0: serial@1fe001e0 {
++			compatible = "ns16550a";
++			reg = <0 0x1fe001e0 0x8>;
++			clock-frequency = <33000000>;
++			interrupt-parent = <&iointc>;
++			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
++			no-loopback-test;
++		};
++
++		cpu_uart1: serial@1fe001e8 {
++			status = "disabled";
++			compatible = "ns16550a";
++			reg = <0 0x1fe001e8 0x8>;
++			clock-frequency = <33000000>;
++			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-parent = <&iointc>;
++			no-loopback-test;
++		};
++	};
++};
+diff --git a/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+new file mode 100644
+index 000000000000..ef50ed9a4d59
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include "loongson3-package.dtsi"
++#include "rs780e-pch.dtsi"
++
++/ {
++	compatible = "loongson,loongson3-4core-780e";
 +};
 +
-+struct loongson_htpic *htpic;
++&package0 {
++	htpic: interrupt-controller@efdfb000080 {
++		compatible = "loongson,htpic-1.0";
++		reg = <0xefd 0xfb000080 0x40>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
 +
-+static void htpic_irq_dispatch(struct irq_desc *desc)
-+{
-+	struct loongson_htpic *priv = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	uint32_t pending;
++		interrupt-parent = <&iointc>;
++		interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
++				<25 IRQ_TYPE_LEVEL_HIGH>,
++				<26 IRQ_TYPE_LEVEL_HIGH>,
++				<27 IRQ_TYPE_LEVEL_HIGH>;
++	};
++};
+diff --git a/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+new file mode 100644
+index 000000000000..409473f1751b
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+	chained_irq_enter(chip, desc);
-+	pending = readl(priv->base);
-+	/* Ack all irqs */
-+	writel(pending, priv->base);
++/dts-v1/;
 +
-+	if (!pending)
-+		spurious_interrupt();
++#include "loongson3-package.dtsi"
++#include "rs780e-pch.dtsi"
 +
-+	while (pending) {
-+		int bit = __ffs(pending);
-+
-+		if (unlikely(bit > 15))
-+			spurious_interrupt();
-+
-+		generic_handle_irq(irq_linear_revmap(priv->domain, bit));
-+		pending &= ~BIT(bit);
-+	}
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void htpic_reg_init(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < HTINT_NUM_VECTORS; i++) {
-+		uint32_t val;
-+
-+		/* Disable all HT Vectors */
-+		writel(0x0, htpic->base + HTINT_EN_OFF + i * 0x4);
-+		val = readl(htpic->base + i * 0x4);
-+		/* Ack all possible pending IRQs */
-+		writel(GENMASK(31, 0), htpic->base + i * 0x4);
-+	}
-+
-+	/* Enable 16 vectors for PIC */
-+	writel(0xffff, htpic->base + HTINT_EN_OFF);
-+}
-+
-+static void htpic_resume(void)
-+{
-+	htpic_reg_init();
-+}
-+
-+struct syscore_ops htpic_syscore_ops = {
-+	.resume		= htpic_resume,
++/ {
++	compatible = "loongson,loongson3-8core-780e";
 +};
 +
-+int __init htpic_of_init(struct device_node *node, struct device_node *parent)
-+{
-+	unsigned int parent_irq[4];
-+	int i, err;
-+	int num_parents = 0;
++&package0 {
++	htpic: interrupt-controller@1efdfb000080 {
++		compatible = "loongson,htpic-1.0";
++		reg = <0x1efd 0xfb000080 0x40>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
 +
-+	if (htpic) {
-+		pr_err("loongson-htpic: Only one htpic is allowed in the system\n");
-+		return -ENODEV;
-+	}
++		interrupt-parent = <&iointc>;
++		interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
++				<25 IRQ_TYPE_LEVEL_HIGH>,
++				<26 IRQ_TYPE_LEVEL_HIGH>,
++				<27 IRQ_TYPE_LEVEL_HIGH>;
++	};
++};
+diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+new file mode 100644
+index 000000000000..45c54d555fa4
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+	htpic = kzalloc(sizeof(*htpic), GFP_KERNEL);
-+	if (!htpic) {
-+		err = -ENOMEM;
-+		goto out_free;
-+	}
++/ {
++	bus@10000000 {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges = <0 0x10000000 0 0x10000000 0 0x10000000
++				0 0x40000000 0 0x40000000 0 0x40000000
++				0xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Space */>;
 +
-+	htpic->base = of_iomap(node, 0);
-+	if (!htpic->base) {
-+		pr_err("loongson-htpic: Failed to map io\n");
-+		err = -ENODEV;
-+		goto out_free;
-+	}
++		isa {
++			compatible = "isa";
++			#address-cells = <2>;
++			#size-cells = <1>;
++			ranges = <1 0 0 0 0x1000>;
 +
-+	htpic->domain = of_init_i8259_irqs(node);
-+	if (!htpic->domain) {
-+		pr_err("loongson-htpic: Failed to initialize i8259 irqs\n");
-+		err = -ENOMEM;
-+		goto out_iounmap;
-+	}
-+
-+	for (i = 0; i < HTPIC_MAX_PARENT_IRQ; i++) {
-+		parent_irq[i] = irq_of_parse_and_map(node, 0);
-+		if (parent_irq[i] < 0)
-+			break;
-+
-+		num_parents++;
-+	}
-+
-+	if (!num_parents) {
-+		pr_err("loongson-htpic: Failed to get parent irqs\n");
-+		err = -ENODEV;
-+		goto out_remove_domain;
-+	}
-+
-+	htpic_reg_init();
-+
-+	for (i = 0; i < num_parents; i++) {
-+		irq_set_chained_handler_and_data(parent_irq[i],
-+						htpic_irq_dispatch, htpic);
-+	}
-+
-+	register_syscore_ops(&htpic_syscore_ops);
-+
-+	return 0;
-+
-+out_remove_domain:
-+	irq_domain_remove(htpic->domain);
-+out_iounmap:
-+	iounmap(htpic->base);
-+out_free:
-+	kfree(htpic);
-+	return err;
-+}
-+
-+IRQCHIP_DECLARE(loongson_htpic, "loongson,htpic-1.0", htpic_of_init);
++			rtc0: rtc@70 {
++				compatible = "motorola,mc146818";
++				reg = <1 0x70 0x8>;
++				interrupts = <8>;
++				interrupt-parent = <&htpic>;
++			};
++		};
++	};
++};
+diff --git a/arch/mips/include/asm/mach-loongson64/irq.h b/arch/mips/include/asm/mach-loongson64/irq.h
+index 12208119aac0..20e3d4e67788 100644
+--- a/arch/mips/include/asm/mach-loongson64/irq.h
++++ b/arch/mips/include/asm/mach-loongson64/irq.h
+@@ -4,8 +4,9 @@
+ 
+ #include <boot_param.h>
+ 
++#define NR_IRQS 512
+ /* cpu core interrupt numbers */
+-#define MIPS_CPU_IRQ_BASE 56
++#define MIPS_CPU_IRQ_BASE 16
+ 
+ #include_next <irq.h>
+ #endif /* __ASM_MACH_LOONGSON64_IRQ_H_ */
 -- 
 2.24.1
 
