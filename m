@@ -7,180 +7,200 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A70C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 08:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105E9C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 11:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D50F21569
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 08:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC64024649
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 11:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="rGO//L39"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mH3A73cZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732405AbgALIXC (ORCPT
+        id S1732656AbgALLNs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 03:23:02 -0500
-Received: from forward102p.mail.yandex.net ([77.88.28.102]:57625 "EHLO
-        forward102p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732371AbgALIXB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jan 2020 03:23:01 -0500
-Received: from forward101q.mail.yandex.net (forward101q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb98])
-        by forward102p.mail.yandex.net (Yandex) with ESMTP id 7407B1D40C97;
-        Sun, 12 Jan 2020 11:16:37 +0300 (MSK)
-Received: from mxback1q.mail.yandex.net (mxback1q.mail.yandex.net [IPv6:2a02:6b8:c0e:39:0:640:25b3:aea5])
-        by forward101q.mail.yandex.net (Yandex) with ESMTP id 6F23ACF40007;
-        Sun, 12 Jan 2020 11:16:37 +0300 (MSK)
-Received: from vla1-ee05250d997a.qloud-c.yandex.net (vla1-ee05250d997a.qloud-c.yandex.net [2a02:6b8:c0d:3495:0:640:ee05:250d])
-        by mxback1q.mail.yandex.net (mxback/Yandex) with ESMTP id Q7ZMkSEcVy-Gb8Gorow;
-        Sun, 12 Jan 2020 11:16:37 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578816997;
-        bh=ZF4UnfCbDyKUT35YCijKiYicTuas0pwMkPes6YsV4VA=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=rGO//L39Zj4/svE77D63WP2DeNDcMUQVQbRvIeL4hYCZtYiRD1yH6liD4+RE6Uvt3
-         U71+gxf/Ob8xe4zbGBrphlZHNVDmCBJr7Dll8MPqpvATeB3NDWtohrz8+JTOEl4eTz
-         jNoMDCDTXIxiFEHwj7/2gjmxXkSyhq3fB7j8+iDQ=
-Authentication-Results: mxback1q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla1-ee05250d997a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 3jM5RHRYtF-GPV4YZPD;
-        Sun, 12 Jan 2020 11:16:30 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.co,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v3 10/10] MIPS: Loongson64: Load built-in dtbs
-Date:   Sun, 12 Jan 2020 16:14:16 +0800
-Message-Id: <20200112081416.722218-11-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200112081416.722218-1-jiaxun.yang@flygoat.com>
-References: <20200112081416.722218-1-jiaxun.yang@flygoat.com>
+        Sun, 12 Jan 2020 06:13:48 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34777 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732649AbgALLNr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 06:13:47 -0500
+Received: by mail-lj1-f196.google.com with SMTP id z22so6882001ljg.1
+        for <devicetree@vger.kernel.org>; Sun, 12 Jan 2020 03:13:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lBXyzQei435C4TzmaHRwGhDla2uBHLmX41nbjZkSq8=;
+        b=mH3A73cZfDv2+qpk/1a/sqnblMtq88TaTkdakE3nKsGgGDFDZzoQUH1pjR/M0twFHI
+         +1GwzqzqZHpAmPbHu2OJcQACC+gsW+7aDqk7U1YdzHxQlo/OapT6ln9ZIjzmF5Y0LM6y
+         F0LGa4i0AupkJqYnXmudxYbptnVS1yrEcEDBD7ht2uvdLUQghMpn3bFaQiVCSX7tcsoc
+         yLRfpsYWdxqGZcU2NNKzZuJatupMygqErinwV4gCy7m/nfn7JuSeswVyY/qCZ9IT5zOe
+         KXnRsxBbTFz9vH2Do1xFslcMR3wOz1dUUElj1GxAgodup67+Hu9VA6KDu5DZ2T0xZIYD
+         srbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lBXyzQei435C4TzmaHRwGhDla2uBHLmX41nbjZkSq8=;
+        b=E0fckEYxv6a6ny9zp7A02FZidQtZgxnqDgyz/guABFLC1sMZl+RK+hzY0j0kn6BIla
+         CiQgdxJ8V7A1YxzGffs5ZTkRQGNdlMYL4XNfjUa62LLTn2UkvkjIBDsRMJT7WhBeZZSy
+         dD2A2DZHIxEiWu1LEWngyxRivui98hLYD/kI+NK4/4jeUSkY+cAfkt0n5g1LoUsbR51O
+         DO2NsTX9Ec/uIimOBniwrlpnZqVxqxCK+fu6Zm22esfAG5E00jECnIK4kU4JkfcrlD2b
+         HD62rd3JJ1wuEv1hI4nKJ6NaahN3wBaVKirfOGZubbBzgjzXP8+5DarHB18OAGDgrbnH
+         SILQ==
+X-Gm-Message-State: APjAAAXE/foPIBCJ51+uhNenpahV9SMzdpr22GSkA6z18Wc27VZMsgIU
+        lvgnwO3AHR//4BIURCsoS2CMFg==
+X-Google-Smtp-Source: APXvYqyxgKMi2Fm7zMCKS3ET+AjXq3JANMYh0URRm5aTB3P+YTJEOov0csj/+cW/HoF/odh0ezdSpA==
+X-Received: by 2002:a2e:b4e7:: with SMTP id s7mr7696530ljm.58.1578827625064;
+        Sun, 12 Jan 2020 03:13:45 -0800 (PST)
+Received: from localhost.bredbandsbolaget (c-5ac9225c.014-348-6c756e10.bbcust.telenor.se. [92.34.201.90])
+        by smtp.gmail.com with ESMTPSA id i4sm4636723lji.0.2020.01.12.03.13.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 03:13:43 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-input@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Minkyu Kang <mk7.kang@samsung.com>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Oskar Andero <oskar.andero@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH 1/2 v4] iio: light: Add DT bindings for GP2AP002
+Date:   Sun, 12 Jan 2020 12:13:40 +0100
+Message-Id: <20200112111341.21388-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Load proper dtb according to firmware passed parameters and
-CPU PRID.
+This adds device tree bindings for the GP2AP002 light
+and proximity sensor.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+As with other early proximity sensors (~2010) the light
+sensor and proximity sensors were combined into a single
+component.
+
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Cc: Minkyu Kang <mk7.kang@samsung.com>
+Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: Jonathan Bakker <xc-racer2@live.ca>
+Cc: Oskar Andero <oskar.andero@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../asm/mach-loongson64/builtin_dtbs.h        | 13 +++++++++++
- .../include/asm/mach-loongson64/loongson.h    |  1 +
- arch/mips/loongson64/env.c                    | 23 +++++++++++++++++++
- arch/mips/loongson64/setup.c                  | 16 +++++++++++++
- 4 files changed, 53 insertions(+)
- create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+ChangeLog v3->v4:
+- Resend with the changes in the main patch.
+ChangeLog v1->v3:
+- Drop the maxitems on the supplies, it is already 1
+- Drop quotes around "alsout"
+- Limit the sharp hysteresis to 8 bits as it should be
+- Use /bits/ 8 in the example so it is correct
+---
+ .../bindings/iio/light/sharp,gp2ap002.yaml    | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
 
-diff --git a/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+diff --git a/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
 new file mode 100644
-index 000000000000..853c6d80887b
+index 000000000000..12aa16f24772
 --- /dev/null
-+++ b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *
-+ * Built-in Generic dtbs for MACH_LOONGSON64
-+ */
++++ b/Documentation/devicetree/bindings/iio/light/sharp,gp2ap002.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/sharp,gp2ap002.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#ifndef __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
-+#define __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
++title: Sharp GP2AP002A00F and GP2AP002S00F proximity and ambient light sensors
 +
-+extern u32 __dtb_loongson3_4core_rs780e_begin[];
-+extern u32 __dtb_loongson3_8core_rs780e_begin[];
-+#endif
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson.h b/arch/mips/include/asm/mach-loongson64/loongson.h
-index a8fce112a9b0..fde1b75c45ea 100644
---- a/arch/mips/include/asm/mach-loongson64/loongson.h
-+++ b/arch/mips/include/asm/mach-loongson64/loongson.h
-@@ -25,6 +25,7 @@ extern const struct plat_smp_ops loongson3_smp_ops;
- /* loongson-specific command line, env and memory initialization */
- extern void __init prom_init_memory(void);
- extern void __init prom_init_env(void);
-+extern void *loongson_fdt_blob;
- 
- /* irq operation functions */
- extern void mach_irq_dispatch(unsigned int pending);
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 0daeb7bcf023..2554ef11170d 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -17,6 +17,7 @@
- #include <asm/bootinfo.h>
- #include <loongson.h>
- #include <boot_param.h>
-+#include <builtin_dtbs.h>
- #include <workarounds.h>
- 
- u32 cpu_clock_freq;
-@@ -120,6 +121,28 @@ void __init prom_init_env(void)
- 		loongson_sysconf.cores_per_node - 1) /
- 		loongson_sysconf.cores_per_node;
- 
-+	if ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64C) {
-+		switch (read_c0_prid() & PRID_REV_MASK) {
-+		case PRID_REV_LOONGSON3A_R1:
-+		case PRID_REV_LOONGSON3A_R2_0:
-+		case PRID_REV_LOONGSON3A_R2_1:
-+		case PRID_REV_LOONGSON3A_R3_0:
-+		case PRID_REV_LOONGSON3A_R3_1:
-+			loongson_fdt_blob = __dtb_loongson3_4core_rs780e_begin;
-+			break;
-+		case PRID_REV_LOONGSON3B_R1:
-+		case PRID_REV_LOONGSON3B_R2:
-+			loongson_fdt_blob = __dtb_loongson3_8core_rs780e_begin;
-+			break;
-+		default:
-+			break;
-+		}
-+	}
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
 +
++description: |
++  Proximity and ambient light sensor with IR LED for the proximity
++  sensing and an analog output for light intensity. The ambient light
++  sensor output is not available on the GP2AP002S00F variant.
 +
-+	if (!loongson_fdt_blob)
-+		pr_err("Failed to determine built-in Loongson64 dtb\n");
++properties:
++  compatible:
++    enum:
++      - sharp,gp2ap002a00f
++      - sharp,gp2ap002s00f
 +
- 	loongson_sysconf.pci_mem_start_addr = eirq_source->pci_mem_start_addr;
- 	loongson_sysconf.pci_mem_end_addr = eirq_source->pci_mem_end_addr;
- 	loongson_sysconf.pci_io_base = eirq_source->pci_io_start_addr;
-diff --git a/arch/mips/loongson64/setup.c b/arch/mips/loongson64/setup.c
-index 4fd27f4f90ed..6fe3ffffcaa6 100644
---- a/arch/mips/loongson64/setup.c
-+++ b/arch/mips/loongson64/setup.c
-@@ -8,9 +8,15 @@
- 
- #include <asm/wbflush.h>
- #include <asm/bootinfo.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_fdt.h>
++  reg:
++    maxItems: 1
 +
-+#include <asm/prom.h>
- 
- #include <loongson.h>
- 
-+void *loongson_fdt_blob;
++  interrupts:
++    maxItems: 1
++    description: an interrupt for proximity, usually a GPIO line
 +
- static void wbflush_loongson(void)
- {
- 	asm(".set\tpush\n\t"
-@@ -27,4 +33,14 @@ EXPORT_SYMBOL(__wbflush);
- 
- void __init plat_mem_setup(void)
- {
-+	if (loongson_fdt_blob)
-+		__dt_setup_arch(loongson_fdt_blob);
-+}
++  vdd-supply:
++    description: VDD power supply a phandle to a regulator
 +
-+void __init device_tree_init(void)
-+{
-+	if (!initial_boot_params)
-+		return;
++  vio-supply:
++    description: VIO power supply a phandle to a regulator
 +
-+	unflatten_and_copy_device_tree();
- }
++  io-channels:
++    maxItems: 1
++    description: ALSOUT ADC channel to read the ambient light
++
++  io-channel-names:
++    const: alsout
++
++  sharp,proximity-far-hysteresis:
++    $ref: /schemas/types.yaml#/definitions/uint8
++    description: |
++      Hysteresis setting for "far" object detection, this setting is
++      device-unique and adjust the optical setting for proximity detection
++      of a "far away" object in front of the sensor.
++
++  sharp,proximity-close-hysteresis:
++    $ref: /schemas/types.yaml#/definitions/uint8
++    description: |
++      Hysteresis setting for "close" object detection, this setting is
++      device-unique and adjust the optical setting for proximity detection
++      of a "close" object in front of the sensor.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - sharp,proximity-far-hysteresis
++  - sharp,proximity-close-hysteresis
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      light-sensor@44 {
++        compatible = "sharp,gp2ap002a00f";
++        reg = <0x44>;
++        interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++        vdd-supply = <&vdd_regulator>;
++        vio-supply = <&vio_regulator>;
++        io-channels = <&adc_channel>;
++        io-channel-names = "alsout";
++        sharp,proximity-far-hysteresis = /bits/ 8 <0x2f>;
++        sharp,proximity-close-hysteresis = /bits/ 8 <0x0f>;
++      };
++    };
++
++...
 -- 
-2.24.1
+2.21.0
 
