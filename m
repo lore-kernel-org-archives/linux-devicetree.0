@@ -2,76 +2,74 @@ Return-Path: <SRS0=cAWA=3B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00FCC32771
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 06:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDEC5C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 06:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90AAA214D8
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 06:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8EF20842
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 06:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578809355;
-	bh=Heu80LHCoPJcbS3RqgvNvmIR7Uh41kQ9EeMPtb6yrP0=;
+	s=default; t=1578810263;
+	bh=dA7Y+M1xkDoiyTBWHECvmy971XxNXYZ+AlF7WdltObY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ksGNEwjvCWzc1yGnZpM0rI2UwmZqT+jq5Qw6O5np6cMgVIOCdTZjFO65mCRVrGGzo
-	 pnDo5vymCaDjFpOKyHly/6JnI10rgRzVdoP3vgqYpIWaA4Xw/JapT8p2OU2389fvj1
-	 RXRZq+Ph7q7QsPNXmiRB2mnPWb3QRPrO3tB6vTBE=
+	b=1NOtYMpz2lOaeXBTgQcyvjSxico+KRy8vrudi2HBSb22hy/TJIZDJvn+BIoUgU0vu
+	 ICr1O4GkG+9CFjunsQcq6UY1MC67fLcKg2Y5YX4Yxg+XA+7tQ+R+NBRHMIW1N7PI5I
+	 anwsMcyNa/blk7ltDo2eOg66dpDEbXJrMxpLI218=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbgALGJO (ORCPT
+        id S1732284AbgALGYU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 01:09:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
+        Sun, 12 Jan 2020 01:24:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732256AbgALGJO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jan 2020 01:09:14 -0500
+        id S1732246AbgALGYU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jan 2020 01:24:20 -0500
 Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E69D72084D;
-        Sun, 12 Jan 2020 06:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2484720842;
+        Sun, 12 Jan 2020 06:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578809354;
-        bh=Heu80LHCoPJcbS3RqgvNvmIR7Uh41kQ9EeMPtb6yrP0=;
+        s=default; t=1578810259;
+        bh=dA7Y+M1xkDoiyTBWHECvmy971XxNXYZ+AlF7WdltObY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JcubbLrL47hwtFgDulYq855+Bm5soO0vJ1tGx8/eBpAN5zNtpMbB0xuwVlFsCGSjw
-         rnoj1JK4nZTheXAJ+O95le9bNr3zkuGNHvBL5C8fo5MBaJ0Hgsp8FiuG0BdB/1PJfl
-         bTWeV151u59oNBiRdXhy2ke3SSdwRSTm+SWBest4=
-Date:   Sun, 12 Jan 2020 14:09:00 +0800
+        b=ff5qBEpTpO4/M1KGlt2oOdQbkiMcOTVxyuE4Uawg5KmaJoNkrpkUirg/dOvcx87e/
+         oULdsE6v98K2CWAUvaeUx4vSk/4xwG4VaJbnbIeOz/bu6kGX+E0fIC6Wq7qNObrH7j
+         Gj16/tr489q4V1cL513W7T3AFs3+HPqzdNttvBuc=
+Date:   Sun, 12 Jan 2020 14:24:09 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com,
-        will@kernel.org, bjorn.andersson@linaro.org, olof@lixom.net,
-        maxime@cerno.tech, leonard.crestez@nxp.com, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, ping.bai@nxp.com, abel.vesa@nxp.com,
-        nsekhar@ti.com, t-kristo@ti.com, peng.fan@nxp.com,
-        yuehaibing@huawei.com, aisheng.dong@nxp.com, sfr@canb.auug.org.au,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 1/4] clk: imx: gate4: Switch imx_clk_gate4_flags() to
- clk_hw based API
-Message-ID: <20200112060859.GA27570@T480>
-References: <1578448417-17760-1-git-send-email-Anson.Huang@nxp.com>
+To:     Robert Jones <rjones@gateworks.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v7 0/5] ARM: dts: imx: Add GW59xx Gateworks specials
+Message-ID: <20200112062407.GB27570@T480>
+References: <20200108154424.15736-1-rjones@gateworks.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578448417-17760-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200108154424.15736-1-rjones@gateworks.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 09:53:34AM +0800, Anson Huang wrote:
-> Switch the imx_clk_gate4_flags() function to clk_hw based API, rename
-> accordingly and add a macro for clk based legacy. This allows us to
-> move closer to a clear split between consumer and provider clk APIs.
+On Wed, Jan 08, 2020 at 07:44:19AM -0800, Robert Jones wrote:
+> Robert Jones (4):
+>   dt-bindings: arm: fsl: Add Gateworks Ventana i.MX6DL/Q compatibles
+>   ARM: dts: imx: Add GW5907 board support
+>   ARM: dts: imx: Add GW5913 board support
+>   ARM: dts: imx: Add GW5912 board support
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Tim Harvey (1):
+>   ARM: dts: imx: Add GW5910 board support
 
 Applied all, thanks.
