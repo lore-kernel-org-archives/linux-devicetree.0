@@ -2,59 +2,60 @@ Return-Path: <SRS0=cAWA=3B=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA7BC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 19:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED16C33CA2
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 19:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 032BD2253D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 19:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF152253D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 12 Jan 2020 19:54:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSneU5os"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTq8olhq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733236AbgALTyN (ORCPT
+        id S2387424AbgALTy2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 14:54:13 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:39279 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732957AbgALTyN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 14:54:13 -0500
-Received: by mail-pj1-f66.google.com with SMTP id e11so1784324pjt.4;
-        Sun, 12 Jan 2020 11:54:12 -0800 (PST)
+        Sun, 12 Jan 2020 14:54:28 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42435 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387413AbgALTyX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 14:54:23 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 4so3815042pfz.9;
+        Sun, 12 Jan 2020 11:54:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yud86Z6TCLSzd0rR4y2aIB+ldRZqkAROXID9MEYSFRY=;
-        b=LSneU5osfAdaRa9Vis9gXCnleS2SMgQoqlVF/rEy1osnQVkvwuFe6u8RCRMr3wWcMp
-         E2rVGBfMju31g+0ewn3GNANjbuulCUd5V3VSGix2PEO57fWsxVASbXyz063zxmSX+XZ6
-         21MfAudMiQ53BiNHLWuWOCk46PTajisQUTlYp12+Hq8cRLcU4xYaHFC7HKaZyb0AFOQK
-         ci32Mh6d2ppBTnOStnwnILDtlMzErf0hYp8e2dEqBAvpolSLU4p/rVnj/NIbqtbt3+o7
-         VAzJ1mknsTEVjFU6k2PN6nIR0G6R8KarlkyXSkuNfUMpvHcCRQauRPeQQK69GlR3XB22
-         f5yw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9M3dlkPvAA74ZA3Dz07VUPHZPdx7oFweuiEOAHoWN1M=;
+        b=GTq8olhq3p+o5nwwODwkds2g5yTd6UB+6v/XDM8BPwRZeMADFiH8YZ1Ni44TcURnBj
+         VvRlqpR+kB20Ux7C7kDIkqObcxLq4ib2T5CkIgL4wVHMOefExmqIdzW4vfevzhzNJ1HQ
+         iw8CudWouK/PM5OBRvSOya7XbJRj/CUOgKshFFrvreQt0cUxiKDcK3CpRovxgDlZ37h7
+         hEsFT/1OTxgZsSZswWeTz9pBqI+wBig1Kt6JZQNjzO54UA9kUY0OchqgIZyJuqHCDJKc
+         Cvm1jF3yy5DMjMDzQcqVodvcUqqjprYeoO/zsu3PBKe/o78N2NZYIrqnRYeyxN7TsfJb
+         +ePQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yud86Z6TCLSzd0rR4y2aIB+ldRZqkAROXID9MEYSFRY=;
-        b=PSVwbEp4mAkmA1mKMKmDBMVw+9r3v5Aein29muCX/5uCFlLPLK8rgzaiXeWbs5wZEE
-         2eXx9FhlqwP+HA4tKXJt6vH3gE7I/II6dwg2b6AeLxg2jIx/C6y2y0B9gAiUiWAdGKCV
-         ICAvLZHrvFtftxIDz1cyIWWGZKGiI5acmxdmZOle5R6826kOjZmXkzTBmmvcdrfiU95U
-         jeVb6c1AJ2J/R8g7Up5QV9O7h8M4ZBtorzObsTtieOnKW4zhoKMPsNjfXf3DbOHyg06a
-         VxIHM20fw+RgKkufCgrOj5L4BsmAF4/Tk11xJSvMxOuSR6DDMVdMhU3UOzUa+WLGy/Oi
-         7qnQ==
-X-Gm-Message-State: APjAAAWaypDa4CyW3x5wQag00zyNB2SmMrkSqdLqaw9+0sxJt4VcKaSz
-        xp933umjKe7iEULfY4s5wFw=
-X-Google-Smtp-Source: APXvYqzg3ZTlrgWnSzwGAoyDQpR2QVy2mV1UbfhCVOs0nnzZiJ5QYI/WrPy1+HK2WaVmhK9ISXkm4A==
-X-Received: by 2002:a17:902:aa85:: with SMTP id d5mr17395774plr.16.1578858851944;
-        Sun, 12 Jan 2020 11:54:11 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9M3dlkPvAA74ZA3Dz07VUPHZPdx7oFweuiEOAHoWN1M=;
+        b=DMnztNyvwGZ9aqie5YXFj3bydX0Sk8p0j/zQX10uU7xFzBEQU1LBtcSSyeOqf8guoE
+         o1fG7nuvjki6VkHHW+3YIZUSD7ylmisk5ZuT6nI/A5dvozbL7zLR1VUEPxb7yC1Va3Ta
+         yLedO6r7WV5jDOfnLUm8SFWQEX4YMrGnBBi9vPj0x2ithjqy13MSbr8QfXwVLQNZrtte
+         NTfjRRJLAgYWt2Kxx1/vcN4L/AdHhlFcDMS8EmnwTSOaaNDhGosPEXqPluAycGUeqZ6g
+         zyys2va1CQ+vv6URDxZSd49Tq9ihFlgO+gAC/46BTmUlWA80tmrqYxhBFCuv7ELjqXG9
+         bKfg==
+X-Gm-Message-State: APjAAAUl7YhwlYaNAOU6uL2kGW+tVGGmcCzPiOY+VVTAr/t8D7TjKRJv
+        mrtK/hSjmRaYxlU+DfSDJ/s=
+X-Google-Smtp-Source: APXvYqxgtDha2wIIkYQ0s11XiURON/vwog3S3qZJcZWdKW6/HnjDdywO8lijSbdzd2JcnS/+b7qgug==
+X-Received: by 2002:a63:4a0e:: with SMTP id x14mr17052016pga.360.1578858862865;
+        Sun, 12 Jan 2020 11:54:22 -0800 (PST)
 Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id u128sm11418702pfu.60.2020.01.12.11.54.10
+        by smtp.gmail.com with ESMTPSA id n24sm11082138pff.12.2020.01.12.11.54.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 11:54:11 -0800 (PST)
+        Sun, 12 Jan 2020 11:54:22 -0800 (PST)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
@@ -62,17 +63,17 @@ Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
         Sharat Masetty <smasetty@codeaurora.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Clark <robdclark@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Douglas Anderson <dianders@chromium.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org (open list),
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 0/4] drm/msm: use firmware-name to find zap fw
-Date:   Sun, 12 Jan 2020 11:53:56 -0800
-Message-Id: <20200112195405.1132288-1-robdclark@gmail.com>
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 4/4] arm64: dts: sdm845: move gpu zap nodes to per-device dts
+Date:   Sun, 12 Jan 2020 11:54:00 -0800
+Message-Id: <20200112195405.1132288-5-robdclark@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200112195405.1132288-1-robdclark@gmail.com>
+References: <20200112195405.1132288-1-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -82,36 +83,111 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Rob Clark <robdclark@chromium.org>
 
-For devices which use zap fw to take the GPU out of secure mode on
-reset, the firmware is likely to be signed with a device specific key.
-Meaning that we can't have a single filesystem (or /lib/firmware) that
-works on multiple devices.
+We want to specify per-device firmware-name, so move the zap node into
+the .dts file for individual boards/devices.  This lets us get rid of
+the /delete-node/ for cheza, which does not use zap.
 
-So allow a firmware-name to be specified in the zap-shader node in dt.
-This moves the zap-shader node out of the core sdm845.dtsi and into per-
-device dts files.  Which also removes the need for /delete-node/ in
-sdm845-cheza.dtsi (as cheza devices do not use zap).
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+v2: use 'sdm845' for subdir for devices that use test-key signed fw
 
-This aligns with how Bjorn has been handling the similar situation with
-adsp/cdsp/mpss fw:
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi           | 1 -
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 7 +++++++
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts              | 7 +++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi                 | 6 +-----
+ arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 7 +++++++
+ 5 files changed, 22 insertions(+), 6 deletions(-)
 
-   https://patchwork.kernel.org/patch/11160089/
-
-Rob Clark (4):
-  drm/msm: support firmware-name for zap fw (v2)
-  drm/msm: allow zapfw to not be specified in gpulist
-  dt-bindings: drm/msm/gpu: Document firmware-name
-  arm64: dts: sdm845: move gpu zap nodes to per-device dts
-
- .../devicetree/bindings/display/msm/gpu.txt   |  3 ++
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |  1 -
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |  7 +++
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |  7 +++
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |  6 +--
- .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts |  7 +++
- drivers/gpu/drm/msm/adreno/adreno_gpu.c       | 50 +++++++++++++++----
- 7 files changed, 64 insertions(+), 17 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 9a4ff57fc877..2db79c1ecdac 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -165,7 +165,6 @@ panel_in_edp: endpoint {
+ /delete-node/ &venus_mem;
+ /delete-node/ &cdsp_mem;
+ /delete-node/ &cdsp_pas;
+-/delete-node/ &zap_shader;
+ /delete-node/ &gpu_mem;
+ 
+ /* Increase the size from 120 MB to 128 MB */
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index d100f46791a6..6cd9201ffbbd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -352,6 +352,13 @@ &gcc {
+ 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+ };
+ 
++&gpu {
++	zap-shader {
++		memory-region = <&gpu_mem>;
++		firmware-name = "qcom/sdm845/a630_zap.mbn";
++	};
++};
++
+ &pm8998_gpio {
+ 	vol_up_pin_a: vol-up-active {
+ 		pins = "gpio6";
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index c57548b7b250..09ad37b0dd71 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -360,6 +360,13 @@ &gcc {
+ 			   <GCC_LPASS_SWAY_CLK>;
+ };
+ 
++&gpu {
++	zap-shader {
++		memory-region = <&gpu_mem>;
++		firmware-name = "qcom/sdm845/a630_zap.mbn";
++	};
++};
++
+ &i2c10 {
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index ddb1f23c936f..601c57cc9b6d 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2804,7 +2804,7 @@ dsi1_phy: dsi-phy@ae96400 {
+ 			};
+ 		};
+ 
+-		gpu@5000000 {
++		gpu: gpu@5000000 {
+ 			compatible = "qcom,adreno-630.2", "qcom,adreno";
+ 			#stream-id-cells = <16>;
+ 
+@@ -2824,10 +2824,6 @@ gpu@5000000 {
+ 
+ 			qcom,gmu = <&gmu>;
+ 
+-			zap_shader: zap-shader {
+-				memory-region = <&gpu_mem>;
+-			};
+-
+ 			gpu_opp_table: opp-table {
+ 				compatible = "operating-points-v2";
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+index 13dc619687f3..b255be3a4a0a 100644
+--- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -245,6 +245,13 @@ &gcc {
+ 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+ };
+ 
++&gpu {
++	zap-shader {
++		memory-region = <&gpu_mem>;
++		firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn";
++	};
++};
++
+ &i2c1 {
+ 	status = "okay";
+ 	clock-frequency = <400000>;
 -- 
 2.24.1
 
