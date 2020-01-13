@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB634C35240
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4258CC4741C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC96A2082E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2461122314
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgAMFhp (ORCPT
+        id S1729830AbgAMFhu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 00:37:45 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:32912 "EHLO inva020.nxp.com"
+        Mon, 13 Jan 2020 00:37:50 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:42304 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgAMFhp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 00:37:45 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 89A1C1A01C0;
-        Mon, 13 Jan 2020 06:37:43 +0100 (CET)
+        id S1725978AbgAMFhu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:37:50 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2DAC9200F2C;
+        Mon, 13 Jan 2020 06:37:48 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5B8A81A01A4;
-        Mon, 13 Jan 2020 06:37:30 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 58661200F0E;
+        Mon, 13 Jan 2020 06:37:35 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 246E540285;
-        Mon, 13 Jan 2020 13:37:17 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B1879402A0;
+        Mon, 13 Jan 2020 13:37:21 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
@@ -43,39 +43,48 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
         dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 1/7] dt-bindings: fsl-imx-sdma: Add i.MX8MM/i.MX8MN/i.MX8MP compatible string
-Date:   Mon, 13 Jan 2020 13:33:16 +0800
-Message-Id: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 3/7] dt-bindings: imx-ocotp: Add i.MX8MP compatible
+Date:   Mon, 13 Jan 2020 13:33:18 +0800
+Message-Id: <1578893602-14395-3-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
+References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add imx8mm/imx8mn/imx8mp sdma support.
+Add compatible and description for i.MX8MP.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 New patch
 ---
- Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-index 9d8bbac..c9e9740 100644
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -10,6 +10,9 @@ Required properties:
-       "fsl,imx6q-sdma"
-       "fsl,imx7d-sdma"
-       "fsl,imx8mq-sdma"
-+      "fsl,imx8mm-sdma"
-+      "fsl,imx8mn-sdma"
-+      "fsl,imx8mp-sdma"
-   The -to variants should be preferred since they allow to determine the
-   correct ROM script addresses needed for the driver to work without additional
-   firmware.
+diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+index 904dadf..6e346d5 100644
+--- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
++++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
+@@ -2,7 +2,7 @@ Freescale i.MX6 On-Chip OTP Controller (OCOTP) device tree bindings
+ 
+ This binding represents the on-chip eFuse OTP controller found on
+ i.MX6Q/D, i.MX6DL/S, i.MX6SL, i.MX6SX, i.MX6UL, i.MX6ULL/ULZ, i.MX6SLL,
+-i.MX7D/S, i.MX7ULP, i.MX8MQ, i.MX8MM and i.MX8MN SoCs.
++i.MX7D/S, i.MX7ULP, i.MX8MQ, i.MX8MM, i.MX8MN and i.MX8MP SoCs.
+ 
+ Required properties:
+ - compatible: should be one of
+@@ -17,6 +17,7 @@ Required properties:
+ 	"fsl,imx8mq-ocotp" (i.MX8MQ),
+ 	"fsl,imx8mm-ocotp" (i.MX8MM),
+ 	"fsl,imx8mn-ocotp" (i.MX8MN),
++	"fsl,imx8mp-ocotp" (i.MX8MP),
+ 	followed by "syscon".
+ - #address-cells : Should be 1
+ - #size-cells : Should be 1
 -- 
 2.7.4
 
