@@ -2,159 +2,76 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6540AC33CAD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D46C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D7B2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891892081E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbgAMKTP (ORCPT
+        id S1727289AbgAMK1Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:19:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:37098 "EHLO foss.arm.com"
+        Mon, 13 Jan 2020 05:27:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:37190 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgAMKTP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:19:15 -0500
+        id S1727014AbgAMK1Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:27:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0D1C13D5;
-        Mon, 13 Jan 2020 02:19:14 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0189D3F534;
-        Mon, 13 Jan 2020 02:19:14 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:19:12 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 02/12] PCI: mobiveil: Move the host initialization into
- a routine
-Message-ID: <20200113101912.GH42593@e119886-lin.cambridge.arm.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-3-Zhiqiang.Hou@nxp.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6570413D5;
+        Mon, 13 Jan 2020 02:27:15 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AC473F534;
+        Mon, 13 Jan 2020 02:27:14 -0800 (PST)
+Subject: Re: [PATCH] arm64: dts: rockchip: add reg property to brcmf sub node
+To:     Heiko Stuebner <heiko@sntech.de>, Johan Jonker <jbx6244@gmail.com>
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20200110142128.13522-1-jbx6244@gmail.com>
+ <CA+z=w3UjX71Nw7W+iiGkQh=UJkPMsEn1phSdp25d--O8QM-ETQ@mail.gmail.com>
+ <2116127.mXfZQK7onI@phil>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6159eaa4-4729-0c3d-0967-e855e2652772@arm.com>
+Date:   Mon, 13 Jan 2020 10:27:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120034451.30102-3-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <2116127.mXfZQK7onI@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:45:30AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On 13/01/2020 9:26 am, Heiko Stuebner wrote:
+> Hi Johan,
 > 
-> Move the host initialization related operations into a new
-> routine to make it can be reused by other incoming platform's
-
-s/to make/such that/
-
-'function' is probably a better word than 'routine'.
-
-
-> PCIe host driver, in which the Mobiveil GPEX is integrated.
+> Am Freitag, 10. Januar 2020, 16:40:24 CET schrieb Johan Jonker:
+>> Hi,
+>>
+>> Question for Heiko or rob+dt.
+>> Where would should #address-cells and #size-cells go in the dts or to the dtsi.
+>> In case they become required in a futhure rockchip-dw-mshc.yaml?
+>> ie. Should we patch all XXX rockchip,rk3288-dw-mshc nodes with them?
 > 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> V9:
->  - New patch splited from the #1 of V8 patches to make it easy to review.
+> I don't think it is a required property for the dw-mmc itself, as only
+> in special-cases do you need subnodes there. Like emmc and sd-cards
+> are completely probeable without needing further information and
+> only the wifi/bt chips _might_ need these.
 > 
->  drivers/pci/controller/pcie-mobiveil.c | 38 +++++++++++++++-----------
->  1 file changed, 22 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 5fd26e376af2..97f682ca7c7a 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -873,27 +873,15 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
->  	return 0;
->  }
->  
-> -static int mobiveil_pcie_probe(struct platform_device *pdev)
-> +int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+> So I don't think that this is a property of the controller itself, but te
+> connected card - hence should stay in the board file.
 
-This is no longer static - but do you need to add a header file somewhere?
+Indeed, and in general dtc already warns about those properties being 
+present unnecessarily, e.g.:
 
+arch/arm64/boot/dts/rockchip/rk3399.dtsi:1812.27-1847.4: Warning 
+(avoid_unnecessary_addr_size): /mipi@ff968000: unnecessary 
+#address-cells/#size-cells without "ranges" or child "reg" property
 
->  {
-> -	struct mobiveil_pcie *pcie;
-> +	struct root_port *rp = &pcie->rp;
-> +	struct pci_host_bridge *bridge = rp->bridge;
-> +	struct device *dev = &pcie->pdev->dev;
->  	struct pci_bus *bus;
->  	struct pci_bus *child;
-> -	struct pci_host_bridge *bridge;
-> -	struct device *dev = &pdev->dev;
-> -	struct root_port *rp;
->  	int ret;
->  
-> -	/* allocate the PCIe port */
-> -	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-> -	if (!bridge)
-> -		return -ENOMEM;
-> -
-> -	pcie = pci_host_bridge_priv(bridge);
-> -	rp = &pcie->rp;
-> -	rp->bridge = bridge;
-> -
-> -	pcie->pdev = pdev;
-> -
->  	ret = mobiveil_pcie_parse_dt(pcie);
->  	if (ret) {
->  		dev_err(dev, "Parsing DT failed, ret: %x\n", ret);
-> @@ -956,6 +944,24 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int mobiveil_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct mobiveil_pcie *pcie;
-> +	struct pci_host_bridge *bridge;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
-
-You've lost the comment that was above this.
-
-Thanks,
-
-Andrew Murray
-
-> +	if (!bridge)
-> +		return -ENOMEM;
-> +
-> +	pcie = pci_host_bridge_priv(bridge);
-> +	pcie->rp.bridge = bridge;
-> +
-> +	pcie->pdev = pdev;
-> +
-> +	return mobiveil_pcie_host_probe(pcie);
-> +}
-> +
->  static const struct of_device_id mobiveil_pcie_of_match[] = {
->  	{.compatible = "mbvl,gpex40-pcie",},
->  	{},
-> -- 
-> 2.17.1
-> 
+Robin.
