@@ -2,347 +2,130 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85634C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775B9C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E058207E0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:16:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YDHohf1K"
+	by mail.kernel.org (Postfix) with ESMTP id 542CA2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgAMTQ0 (ORCPT
+        id S1728516AbgAMTVP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:16:26 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35224 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgAMTQZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 14:16:25 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 15so7759370lfr.2
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 11:16:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dUwDacYUh/t92nk2z+Fd8fOh+O7ehOpwl6CVFWhcbVc=;
-        b=YDHohf1K/uzaW70oM8K+tFn4PdfqSz0N/NZH9ntZxW9frInRrBGZzsyKjl2+0M+AcS
-         1Vg+3VGkvVbnSlqp1KFIhpgzZajaJbSb6qbc6QCiEvOVXMXQBUp4Gp5vDtTvUtRIhBnf
-         1om3f+2iwVsO4KkBsMUMvJhaMcD5jYQ9qHWyiEE3T/3WtWFnnHicTNS3rgC6QZ0fYiwJ
-         qwGGzBpykBSuKHLdUHCVycVCOncxoeIZVRjzqzDo57f5mgm2jABbl6HakXd3o08kJMcn
-         EyOYHFEpIQHyF57gtRLh9L2LcL+X1Mnw9Bz2LPTGqSyEElrYuOC3C+dR4EPFHH3CGdyZ
-         tgwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dUwDacYUh/t92nk2z+Fd8fOh+O7ehOpwl6CVFWhcbVc=;
-        b=NUOQ+rXJ3NZ8jGCuhHkVPtqjapufJnbPw9h9xkMnqGsz41LOV4eEdIgZuKlvD50hY+
-         9s5mREUBUq7tvnxqoc/0IhoG1/aVDPQLKhpryKWdllFKX9nOWgkAxSdnMkEwuzKw741h
-         sMjHWnBDJ7kbWL/p2JHQpkmTALP2W2uQHJS4zp0aGQlVLnQ/POzfQobxZkbAqvFktWkn
-         /L+hk5KV3BQeklItLDUukLffV7Cf21LCgHLncdqITfRR+xftDDtxLUXWaaRW4AgMwdvH
-         TGtQNnvJ+U2IDz+BULlMMskYBmzniEOYoPeRyS/dDfNSIqK2EEl+k5LLe0Sbyroo9lsw
-         oCGQ==
-X-Gm-Message-State: APjAAAWYMP7PXiP+B/nEPKPaYgGLJmoX4iP7JG1jylRFu67w8n7o5SUY
-        GMllptXmcfX59AzZ5tJjSKTd7A==
-X-Google-Smtp-Source: APXvYqzDZP/sgAFQX21Aw2uKPStJX8IsmVVnNdFPVi3OlnowrvpZAL7fc3EaMNH/9HOYZPBnxe9Bgg==
-X-Received: by 2002:a05:6512:c7:: with SMTP id c7mr10654185lfp.120.1578942983317;
-        Mon, 13 Jan 2020 11:16:23 -0800 (PST)
-Received: from [192.168.119.5] (office.dev.rtsoft.ru. [62.117.114.130])
-        by smtp.gmail.com with ESMTPSA id r15sm6366541ljh.11.2020.01.13.11.16.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 11:16:22 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] media: i2c: Add driver for Sony IMX219 sensor
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        peter.griffin@linaro.org, ezequiel@collabora.com,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>
-References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
- <20191227122114.23075-3-andrey.konovalov@linaro.org>
- <20191227145547.GE861@valkosipuli.retiisi.org.uk>
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-Message-ID: <d3f1591b-1a98-e876-b977-96e1210e9c49@linaro.org>
-Date:   Mon, 13 Jan 2020 22:16:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 14:21:15 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:53513 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgAMTVO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 14:21:14 -0500
+Received: from [192.168.1.176] ([37.4.249.154]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Myb8P-1jaHOY1U5t-00z0Cc; Mon, 13 Jan 2020 20:20:59 +0100
+Subject: Re: [PATCH V5 0/4] ARM: Enable thermal support for Raspberry Pi 4
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+References: <1578941778-23321-1-git-send-email-stefan.wahren@i2se.com>
+ <250b15ef-636f-d964-3eba-0067c07e5a9c@linaro.org>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <4a2b7974-db0f-bd0d-21f5-ccdc0ad2bc30@i2se.com>
+Date:   Mon, 13 Jan 2020 20:20:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191227145547.GE861@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <250b15ef-636f-d964-3eba-0067c07e5a9c@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:mFQrqbK9TfoYCgrdE6SQRQZMmKAXp5p6YUdmRjVHubNgVfsQhex
+ 7KkCmDzwibuUN0GbVPNaO37hw+//GFEVodYsbZTOb6q1BOnZJ6eDGJCnadDYmI8BEJbc0Ci
+ Yu8vl3qh8sBNTUjRRx3Vm48xTd4K5RriaF2fwu6+cJ6xU5qmahjV+F0Su92H12SopH6OYVS
+ Q+Vd2G3IsW8N8uZoWypqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nZUeCEUdzKU=:ULAgnOXzCCBftYuwLx1CmJ
+ dXU7WxuiIdWpAgkgcCiiAyCwVWzpPbPbLDMvA9LpBPNuDjPoCIxVXL8P0tKAJzH0dT6XvP9KA
+ GGM/b4GjpGGzXfpZG7SoACSBprrUQOJIF+K1jkK+ifQt55B6fQCcip4/cMhZvXngNSZkjv+SS
+ pSaUW8HvSzAETVIIqVdBwdgteFJRM6OURCor0IYyxdHFrPCp2P8NoYrzpciunwR5pln1ReiGP
+ bPnpBzqEeDYdJElb3nZ1xZjIS2Uaqo6mxk+bo386ADw2/Ew9CMRqCIFcJtosedhZJyO4U0hdo
+ DCfC1pP/3FO0Q3elgf/xNUBDWuihKRtTKBW+UMXno0vYu7LQVdcS03LBBwCyIvCmEuAMHzw1k
+ WVNIkt/sj4wSLyJMTM4Y8I0J/ObJVKZqHLz77FrSSRAbq0i1jDr4UnGy3THzD+EUq10BAxHbb
+ Kxm7/00vjXwWe/OsVWtUW0upXItjr9+U1STosdOVO8RQR0Tnb5h326SlcFOeWqiWmJvVjTSjk
+ AznvSzu1fpAYyLSBZANWtEQpaUoSN5Eor8f3pOn/HrISfUWguti1NxvIlg5+IXWMJ55vzPYlO
+ TgcesdfM9+768V9uzq5KF6PhWh8QmSQ8njTakBTuvEbZ1CoVQ/GwEG4PLn/cUPKrTNko74YA2
+ n7Roy+BRM/q8r9M3CxiXUhvc47vNAXX9blc86P7ebHOpaJ9iCPcjyj0R8E8ibN/YT+SE/sLBj
+ ScyQkHrxRkW1R6RMbw85VQQl3p2Zih7Nfmxy6yQh6TyywmenhCGY1wkiozvGDSMmEEgJrdfW7
+ jlZNoZZ2Tc8BVrNg+vsuaBKcADvSQsD6i788xnSoXwF0wKZB9fqhGuFzujzkbwAjsmTFZNxtz
+ 5qy7YKU6BFbECqDJxequIz+16BQyyBIndXmB8x1Aw=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+Hi Daniel,
 
-Sorry for delayed reply..
-(your email got into a wrong folder, and I might not find it there if Ezequiel
-did not warn me that I didn't address the comments from your review)
+Am 13.01.20 um 20:10 schrieb Daniel Lezcano:
+> Hi Stefan,
+>
+> how do you want the series merged?
 
-On 27.12.2019 17:55, Sakari Ailus wrote:
-> Hi Andrey,
-> 
-> On Fri, Dec 27, 2019 at 03:21:14PM +0300, Andrey Konovalov wrote:
->> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
->>
->> Adds a driver for the 8MPix Sony IMX219 CSI2 sensor.
->> Whilst the sensor supports 2 or 4 CSI2 data lanes, this driver
->> currently only supports 2 lanes.
->> 8MPix @ 15fps, 1080P @ 30fps (cropped FOV), and 1640x1232 (2x2 binned)
->> @ 30fps are currently supported.
->>
->> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
->> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
->> ---
->>   drivers/media/i2c/Kconfig  |   12 +
->>   drivers/media/i2c/Makefile |    1 +
->>   drivers/media/i2c/imx219.c | 1240 ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 1253 insertions(+)
->>   create mode 100644 drivers/media/i2c/imx219.c
+i'm not BCM2835 maintainer anymore, so the final decision is up to
+Nicolas or Florian.
 
-<snip>
+But if i can make a wish, it would be nice to take as much as possible
+via the thermal tree, because Nicolas already sent the pull requests for
+5.6.
 
->> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
->> new file mode 100644
->> index 000000000000..28b55c61cd77
->> --- /dev/null
->> +++ b/drivers/media/i2c/imx219.c
+Thanks
+Stefan
 
-<snip>
-
->> +/* Power/clock management functions */
->> +static int imx219_power_on(struct device *dev)
->> +{
->> +	struct i2c_client *client = to_i2c_client(dev);
->> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
->> +	struct imx219 *imx219 = to_imx219(sd);
->> +	int ret;
->> +
->> +	ret = regulator_bulk_enable(IMX219_NUM_SUPPLIES,
->> +				    imx219->supplies);
->> +	if (ret) {
->> +		dev_err(&client->dev, "%s: failed to enable regulators\n",
->> +			__func__);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(imx219->xclk);
->> +	if (ret) {
->> +		dev_err(&client->dev, "%s: failed to enable clock\n",
->> +			__func__);
->> +		goto reg_off;
->> +	}
->> +
->> +	gpiod_set_value_cansleep(imx219->xclr_gpio, 1);
->> +	msleep(IMX219_XCLR_DELAY_MS);
-> 
-> I guess 10 ms is ok albeit it'd be nicer if you calculated the required
-> delay instead.
-
-I think this 10 ms delay actually serves two purposes here. It is
-not only the delay after XCLR pin is set high (reset de-asserted),
-but it also lets the camera power supplies voltages to settle after
-regulator_bulk_enable() called few lines above.
-
-So I would make the delay a sum of 1) the value which depends on
-input clock frequency (the driver currently supports 24MHz only)
-and 2) a fixed value of 8 ms or so to account for the power supplies
-settle time. So that the sum would be the same 10 ms for 24MHz input
-clock.
-Does it makes sense?
-
-<snip>
-
->> +static int imx219_probe(struct i2c_client *client,
->> +			const struct i2c_device_id *id)
->> +{
->> +	struct device *dev = &client->dev;
->> +	struct fwnode_handle *endpoint;
->> +	struct imx219 *imx219;
->> +	int ret;
->> +
->> +	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
->> +	if (!imx219)
->> +		return -ENOMEM;
->> +
->> +	imx219->dev = dev;
-> 
-> Instead of putting a dev field to struct imx219, you can find the device in
-> struct i2c_client.dev, which you can get by:
-> 
-> 	v4l2_get_subdevdata(imx219->sd)
-> 
->> +
->> +	v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
->> +
->> +	/* Get CSI2 bus config */
->> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
->> +						  NULL);
->> +	if (!endpoint) {
->> +		dev_err(dev, "endpoint node not found\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &imx219->ep);
->> +	fwnode_handle_put(endpoint);
->> +	if (ret) {
->> +		dev_err(dev, "Could not parse endpoint\n");
->> +		return ret;
->> +	}
->> +
->> +	/* Get system clock (xclk) */
->> +	imx219->xclk = devm_clk_get(dev, "xclk");
->> +	if (IS_ERR(imx219->xclk)) {
->> +		dev_err(dev, "failed to get xclk\n");
->> +		return PTR_ERR(imx219->xclk);
->> +	}
->> +
->> +	imx219->xclk_freq = clk_get_rate(imx219->xclk);
->> +	if (imx219->xclk_freq != IMX219_XCLK_FREQ) {
->> +		dev_err(dev, "xclk frequency not supported: %d Hz\n",
->> +			imx219->xclk_freq);
->> +		return -EINVAL;
->> +	}
-> 
-> Could you also check the link frequencies (the link-frequencies property
-> that also should be added to DT bindings) matches with what is possible
-> with the given xclk frequency? Please see e.g. imx319 driver for an
-> example.
-
-The driver only supports single xclk frequency and single link-frequency
-(hardcoded in the registers value tables). So the check will be more like
-the one in imx290 driver (error out if the link-frequency property isn't
-equal to the pre#define-d default value).
-
->> +
->> +	ret = imx219_get_regulators(imx219);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Request optional enable pin */
->> +	imx219->xclr_gpio = devm_gpiod_get_optional(dev, "xclr",
->> +						    GPIOD_OUT_HIGH);
->> +
->> +	/*
->> +	 * The sensor must be powered for imx219_identify_module()
->> +	 * to be able to read the CHIP_ID register
->> +	 */
->> +	ret = imx219_power_on(dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = imx219_identify_module(imx219);
->> +	if (ret)
->> +		goto error_power_off;
->> +
->> +	/* Set default mode to max resolution */
->> +	imx219->mode = &supported_modes[0];
->> +
->> +	ret = imx219_init_controls(imx219);
->> +	if (ret)
->> +		goto error_power_off;
->> +
->> +	/* Initialize subdev */
->> +	imx219->sd.internal_ops = &imx219_internal_ops;
->> +	imx219->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
->> +	imx219->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
->> +
->> +	/* Initialize source pad */
->> +	imx219->pad.flags = MEDIA_PAD_FL_SOURCE;
->> +
->> +	ret = media_entity_pads_init(&imx219->sd.entity, 1, &imx219->pad);
->> +	if (ret)
->> +		goto error_handler_free;
->> +
->> +	ret = v4l2_async_register_subdev_sensor_common(&imx219->sd);
->> +	if (ret < 0)
->> +		goto error_media_entity;
->> +
->> +	/* Enable runtime PM and turn off the device */
->> +	pm_runtime_set_active(dev);
->> +	pm_runtime_enable(dev);
->> +	pm_runtime_idle(dev);
->> +
->> +	return 0;
->> +
->> +error_media_entity:
->> +	media_entity_cleanup(&imx219->sd.entity);
->> +
->> +error_handler_free:
->> +	imx219_free_controls(imx219);
->> +
->> +error_power_off:
->> +	imx219_power_off(dev);
->> +
->> +	return ret;
->> +}
->> +
->> +static int imx219_remove(struct i2c_client *client)
->> +{
->> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
->> +	struct imx219 *imx219 = to_imx219(sd);
->> +
->> +	v4l2_async_unregister_subdev(sd);
->> +	media_entity_cleanup(&sd->entity);
->> +	imx219_free_controls(imx219);
->> +
->> +	pm_runtime_disable(&client->dev);
->> +	pm_runtime_set_suspended(&client->dev);
-> 
-> imx219_power_off(), if the sensor is powered on here. Please see e.g. the
-> smiapp driver regarding this.
-
-It should be powered off here.
-
-The sensor is powered on when streaming is started, and is powered off when
-it is stopped: if the enable argument is false, imx219_set_stream() calls
-pm_runtime_put().
-IOW, it follows the imx319 driver as the example of power management.
-
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id imx219_dt_ids[] = {
->> +	{ .compatible = "sony,imx219" },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, imx219_dt_ids);
->> +
->> +static const struct dev_pm_ops imx219_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(imx219_suspend, imx219_resume)
->> +	SET_RUNTIME_PM_OPS(imx219_power_off, imx219_power_on, NULL)
->> +};
->> +
->> +static struct i2c_driver imx219_i2c_driver = {
->> +	.driver = {
->> +		.name = "imx219",
->> +		.of_match_table	= imx219_dt_ids,
->> +		.pm = &imx219_pm_ops,
->> +	},
->> +	.probe = imx219_probe,
-> 
-> Could you use .probe_new, and remove the i2c_device_id argument?
-
-I'll fix this and all the other issues I didn't comment on in this email
-in the v4 of the patch set.
-
-Thanks,
-Andrey
-
->> +	.remove = imx219_remove,
->> +};
->> +
->> +module_i2c_driver(imx219_i2c_driver);
->> +
->> +MODULE_AUTHOR("Dave Stevenson <dave.stevenson@raspberrypi.com");
->> +MODULE_DESCRIPTION("Sony IMX219 sensor driver");
->> +MODULE_LICENSE("GPL v2");
-> 
