@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF49C33CAB
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD843C33CAA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52853207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A359A207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dga3vaeq"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qJtjjLz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725992AbgAMJVc (ORCPT
+        id S1726277AbgAMJYF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:21:32 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:24859 "EHLO
+        Mon, 13 Jan 2020 04:24:05 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:62972 "EHLO
         mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726236AbgAMJVb (ORCPT
+        by vger.kernel.org with ESMTP id S1726163AbgAMJYF (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:21:31 -0500
+        Mon, 13 Jan 2020 04:24:05 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578907291; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=wxayuM7YhfwYilxsAE0qeMuwKkzeNtCmh0wiR65083c=; b=dga3vaeqHZgNLB0D98JNB4E2pkSdRffgL1i+gs+/9yBaV0T+McyzJWv8RhUbq3xfiOHLuYkp
- TlhDTNeeNkfI9AsD2I3anhZbjWvX+XIIDTEME8eMFeVAcHPGh5ki0kLiMNgwFeM6jgicE0qx
- Vo9UywJYYINUVq98Eza5B7VqsCI=
+ s=smtp; t=1578907444; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=E2fgNtG+WIKahbblJ85apQtJqKTonOXKBjBUc4D+Mb8=; b=qJtjjLz/xU2jj3YxiadmPBEwmat3mumKHQyHKxTVzydJqMojI1EahMbp7NvPytembJT+NNOa
+ Ud+ytYfsHqRGIwkT79XOBoUMd7pwoi1UbSisgfpl1HkL0uM8mFMsHLXaxVSQtW7lDVnp+FQm
+ 3lUnKuRMuRXryx/aMI9/bIVafcc=
 X-Mailgun-Sending-Ip: 104.130.122.25
 X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1c3699.7f2d367b7ce0-smtp-out-n03;
- Mon, 13 Jan 2020 09:21:29 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e1c3732.7fd053feb998-smtp-out-n02;
+ Mon, 13 Jan 2020 09:24:02 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DD089C433CB; Mon, 13 Jan 2020 09:21:28 +0000 (UTC)
+        id 0D95EC447A2; Mon, 13 Jan 2020 09:24:02 +0000 (UTC)
 Received: from sthella-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sthella)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C16D9C43383;
-        Mon, 13 Jan 2020 09:21:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C16D9C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E1811C433CB;
+        Mon, 13 Jan 2020 09:23:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E1811C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthella@codeaurora.org
 From:   Shyam Kumar Thella <sthella@codeaurora.org>
@@ -50,9 +50,9 @@ To:     agross@kernel.org, srinivas.kandagatla@linaro.org,
 Cc:     Shyam Kumar Thella <sthella@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-Date:   Mon, 13 Jan 2020 14:51:11 +0530
-Message-Id: <1578907271-2576-1-git-send-email-sthella@codeaurora.org>
+Subject: [PATCH v4] dt-bindings: nvmem: add binding for QTI SPMI SDAM
+Date:   Mon, 13 Jan 2020 14:53:50 +0530
+Message-Id: <1578907430-2941-1-git-send-email-sthella@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -70,7 +70,7 @@ Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
 
 diff --git a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
 new file mode 100644
-index 0000000..f2e640f
+index 0000000..4526fbf
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
 @@ -0,0 +1,83 @@
@@ -112,6 +112,7 @@ index 0000000..f2e640f
 +required:
 +  - compatible
 +  - reg
++  - ranges
 +
 +patternProperties:
 +  "^.*@[0-9a-f]+$":
@@ -137,7 +138,6 @@ index 0000000..f2e640f
 +
 +    required:
 +      - reg
-+      - ranges
 +
 +    additionalProperties: false
 +
