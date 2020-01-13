@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91714C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89580C35241
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733352082E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5A92187F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 05:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732306AbgAMFhy (ORCPT
+        id S1726946AbgAMFhr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 00:37:54 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:33076 "EHLO inva020.nxp.com"
+        Mon, 13 Jan 2020 00:37:47 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:42232 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729184AbgAMFhw (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 00:37:52 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 628CB1A01C0;
-        Mon, 13 Jan 2020 06:37:50 +0100 (CET)
+        id S1725978AbgAMFhr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:37:47 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 77050200F27;
+        Mon, 13 Jan 2020 06:37:45 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 344DE1A005B;
-        Mon, 13 Jan 2020 06:37:37 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4933A20038F;
+        Mon, 13 Jan 2020 06:37:32 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 05801402BB;
-        Mon, 13 Jan 2020 13:37:23 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6C352402C7;
+        Mon, 13 Jan 2020 13:37:19 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
@@ -43,9 +43,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
         dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 4/7] dt-bindings: spi: imx: Add i.MX8MM/i.MX8MN/i.MX8MP compatible
-Date:   Mon, 13 Jan 2020 13:33:19 +0800
-Message-Id: <1578893602-14395-4-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/7] dt-bindings: mmc: fsl-imx-esdhc: add i.MX8MP compatible string
+Date:   Mon, 13 Jan 2020 13:33:17 +0800
+Message-Id: <1578893602-14395-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
 References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
@@ -55,31 +55,27 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add compatbile for imx8mm/imx8mn/imx8mp.
+Add compatible string for imx8mp
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 New patch
 ---
- Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 2d32641..33bc58f 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -10,7 +10,10 @@ Required properties:
-   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
-   - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
--  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8M
-+  - "fsl,imx8mq-ecspi" for SPI compatible with the one integrated on i.MX8MQ
-+  - "fsl,imx8mm-ecspi" for SPI compatible with the one integrated on i.MX8MM
-+  - "fsl,imx8mn-ecspi" for SPI compatible with the one integrated on i.MX8MN
-+  - "fsl,imx8mp-ecspi" for SPI compatible with the one integrated on i.MX8MP
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain CSPI/eCSPI interrupt
- - clocks : Clock specifiers for both ipg and per clocks.
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+index 2fb466c..c93643f 100644
+--- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
++++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+@@ -21,6 +21,7 @@ Required properties:
+ 	       "fsl,imx8mq-usdhc"
+ 	       "fsl,imx8mm-usdhc"
+ 	       "fsl,imx8mn-usdhc"
++	       "fsl,imx8mp-usdhc"
+ 	       "fsl,imx8qxp-usdhc"
+ 
+ Optional properties:
 -- 
 2.7.4
 
