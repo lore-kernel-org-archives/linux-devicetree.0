@@ -4,106 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886CCC33CAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C99C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE29207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C14D207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578956531;
-	bh=ZVJCKcmluivQaj5X7FSCb0b0MTOmY3kKJZnoxwSa5eg=;
+	s=default; t=1578956538;
+	bh=wCn4/894KniO2ftSZq/2Wivodp6I96UmXRF8C4cmB2c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H/qCxTWAlXuhH0HyW7H981I+7RBL+xOxbvADIP9J1jfFAP2nXNwv3uJEZ+0ocPmhA
-	 xqPvmvcoMb4z/USfCF5EaJOKAGsaC2iqwZRDuThv3Vhj5jciYGrVOE8aa6cSpXYq7O
-	 GZoEBz7w+yYqaWImPqfYCWmZ9jne3rIj3mRGTuic=
+	b=xOJhiWNsEiBxueX7dLm1z+WAt/rv7GvYHuTiErzmf6ybYk1zFEnXM+1rMhsPOdyks
+	 h/0awjv/Ot12c2WZdH4aGuFYHR0vf065u65pyGl1q/7QxYKyGJqU2ZFz/Gk/pxQknQ
+	 OeSxzjKnfrCeLKH3u6szg/wXq7gxyIYZAPpTCDJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgAMXCK (ORCPT
+        id S1729146AbgAMXCR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 18:02:10 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41448 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729146AbgAMXCK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 18:02:10 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so9988067oie.8
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 15:02:10 -0800 (PST)
+        Mon, 13 Jan 2020 18:02:17 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36288 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728924AbgAMXCR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 18:02:17 -0500
+Received: by mail-ot1-f68.google.com with SMTP id m2so5827098otq.3
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 15:02:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tx39+4MJaLHivIxZTseGmPGOiWsM4jlyAIk8H9s0Snw=;
-        b=jd/EmydXRdG8+HMTG69ssGg5/zunR7yPcqqQCtIhpupJeLY2PL5DYsZ0NiDqp37Mir
-         lfWyTx/8a/gY9qpQrSrKM4ia7sn2y5sbM9rnfEDINpeD4/LGU8AYXHf6Pz5LK7YP9+on
-         sWPkL+/cBRk+xPv81PGXq97/kfVJSfDDdtX3dDdeXx8KDv9t/7dz28L1iepLztFhYZWM
-         mmy5qAt6Qt0Npugx+ocNCYnxSupwWvA/J3aXdVTv1lafl4Q5bk7j8bBGehwpPxePIrx1
-         1wle5qlEWszLo2cv0YSMb5RPnD8mo+AI8qiaM7XE6dLV+GzC2kK68hVm26tKIwFWPQYy
-         EtWA==
-X-Gm-Message-State: APjAAAW9RYlxljUCmSMwpGZFUnNxLcI8ufXPwgBIVKkZ5vxNQvIQbeN1
-        EzwaWrlu6l0Ga0Q+iWjmn4ydmVY=
-X-Google-Smtp-Source: APXvYqzHld42dYMuLYQQn9jgUFVCGILU4Rk4gHnoewPCZ5rxJxYa3DekOjyS/yKMnajI/Ch6yLMlkw==
-X-Received: by 2002:aca:5588:: with SMTP id j130mr13954697oib.122.1578956529139;
-        Mon, 13 Jan 2020 15:02:09 -0800 (PST)
+        bh=18X4W8z+4oQOA0zZ9sp8Kgk/QX1t7Hw3G5i41pFALn8=;
+        b=sFFgh64oK1gj5BGEqg1DNzrXFc/kWLyuVsL+ZxgX08Max5/xAogda/LOWxz3+M1wFY
+         TH8hKOgzdeHNbkQIcYESm/WJ/lfIkE7jx/xKQms9bMNlVS/QVcUqubD0CqTdGa2sTdSE
+         +6eP3KqpMpLyPG87dVYyB4VKm+0AQR0ppPxjHIjaG5KbnZ6Jj8BrfMQOdlKDvF0lh7Y9
+         XVLyfFzq5HwwDUqtepXFuIkbjeMrUeyOzv3X7y2qxp23ubFr8qMw5rquyUt7HGHF+uDu
+         7JYSEiyS0VunEdeF/YIGkTCDwTaTQwltvFO90w4HsbHPZ4C/FRYSTRMlsNxzTiylBLvq
+         3QlA==
+X-Gm-Message-State: APjAAAWmIjgeVhkWlHS2314ZlCFu02zSYPdqyxGsrrKkMLV9SB2EDVNx
+        GaBhMR55onTMbrPekcofBh6Q9Ms=
+X-Google-Smtp-Source: APXvYqwEt14sbgocNspMZ0Ka5W2x+RbfTq/XT870EcfgM82RRZ1hTcea6qGOEhgUvQoW7zSEho1uGA==
+X-Received: by 2002:a05:6830:15ca:: with SMTP id j10mr12259939otr.190.1578956536850;
+        Mon, 13 Jan 2020 15:02:16 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d11sm4658616otl.20.2020.01.13.15.02.08
+        by smtp.gmail.com with ESMTPSA id w72sm3991922oie.49.2020.01.13.15.02.16
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 15:02:08 -0800 (PST)
+        Mon, 13 Jan 2020 15:02:16 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
         id 22198d
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 17:02:07 -0600
-Date:   Mon, 13 Jan 2020 17:02:07 -0600
+        Mon, 13 Jan 2020 17:02:15 -0600
+Date:   Mon, 13 Jan 2020 17:02:15 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     devicetree@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         linux-ide@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2 v3] dt-bindings: Create DT bindings for PATA
- controllers
-Message-ID: <20200113230207.GA31662@bogus>
+Subject: Re: [PATCH 2/2 v3] dt-bindings: Convert Faraday FTIDE010 to DT schema
+Message-ID: <20200113230215.GA32053@bogus>
 References: <20200110081411.9806-1-linus.walleij@linaro.org>
+ <20200110081411.9806-2-linus.walleij@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110081411.9806-1-linus.walleij@linaro.org>
+In-Reply-To: <20200110081411.9806-2-linus.walleij@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jan 2020 09:14:10 +0100, Linus Walleij wrote:
-> I need to create subnodes for drives connected to PATA
-> host controllers, and this needs to be supported generally,
-> so create a common YAML binding for "ide" that will support
-> subnodes with ports.
-> 
-> This has been designed as a subset of
-> ata/ahci-platform.txt with the bare essentials and
-> should be possible to extend or superset to cover the
-> common bindings.
+On Fri, 10 Jan 2020 09:14:11 +0100, Linus Walleij wrote:
+> This uses the new pata-common.yaml schema to
+> convert the Faraday FTIDE010 to DT schema.
 > 
 > Cc: Rob Herring <robh+dt@kernel.org>
 > Cc: devicetree@vger.kernel.org
 > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
 > ChangeLog v2->v3:
-> - Only support PATA controllers for now since it is all I
->   need right now. SATA controller have complex topology and
->   might need more elaborate subnodes, possibly a subnode for
->   the multiplier itself, so I will split that off into its
->   own RFC patch.
+> - Rebase on the new common binding for just PATA
+>   controllers.
 > ChangeLog v1->v2:
-> - Use ide@ and sata@ as node names.
-> - Use ide-port@ and sata-port@ for the ports toward the
->   drives, rather than letting the subnodes be the drives
->   themselves.
+> - Rename the node for the example controller to "ide@"
+> - Rename the drives to ports, so ide-port@0 etc instead of
+>   drive@0.
 > ---
->  .../devicetree/bindings/ata/pata-common.yaml  | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/pata-common.yaml
+>  .../bindings/ata/faraday,ftide010.txt         | 38 --------
+>  .../bindings/ata/faraday,ftide010.yaml        | 89 +++++++++++++++++++
+>  2 files changed, 89 insertions(+), 38 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
+>  create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.yaml
 > 
 
 Applied, thanks.
