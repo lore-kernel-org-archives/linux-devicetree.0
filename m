@@ -7,87 +7,93 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158B3C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:04:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84540C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A6D207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554C220678
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 23:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578956687;
-	bh=7czF/m6N1dcTrI0lqKC6TqK4RmmtDKQReHm07gZrV6A=;
+	s=default; t=1578957781;
+	bh=RQM+9o794JyseShsGZlk+7c2MeDzDfFzM+Ne+i98JrY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X5LSJHSV5xHcUiF0qKp90jiO7gOeR5bABDBGQmIplD/+Gh9Coq89sEooHqQe48Yrp
-	 SkpuqxTX+4Q9PAfY0SxNedsTQ/at1EhROw1gx5S7lsJ24opa5n5DgMpNUzsS6ffY27
-	 tzMQaXMlO2nuXa5VcG+JrzecdbAXcaUcbz7RXcHk=
+	b=s5eOU3wOec+6Bg22HnKL0KPeLgVx3i7XMSBrV1n1U600bTNKnaAVe8BZfh6hjGNEo
+	 U3jIRF/ZXD9GJxdV+Jy2biOOwitikSC/nJjUNuWNRIGCIoYo+6RpYAYHtWYT3u3QGN
+	 oUJiS169F9cLcL9Pl7F0bpxi0NA9l/AuRMEKk/hk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgAMXEr (ORCPT
+        id S1729253AbgAMXXA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 18:04:47 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34790 "EHLO
+        Mon, 13 Jan 2020 18:23:00 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42794 "EHLO
         mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728829AbgAMXEr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 18:04:47 -0500
-Received: by mail-ot1-f68.google.com with SMTP id a15so10706579otf.1
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 15:04:46 -0800 (PST)
+        with ESMTP id S1727382AbgAMXXA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 18:23:00 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so10718435otd.9
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 15:23:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j72A3ysn20dtwXavsRrsZ0TJajmTyr3n32DpYKMjbOU=;
-        b=q9EybEnKz35KDD3WlCXprP/QbQwW5StgT4bEDPBRd6efm5KDnIIBksCK9bKWdwFNdm
-         /InmQ7HjwDwid0H1SVYrJomy+qx6UB+fD7xnqqtDRDS/bSyDcgMPXrlrnTaDDy1bbrSn
-         7/sxK/ZExn0OOzj9z5mo01t+5gEhx9RFfMeACzki74ozQwFmnN4PJsl2chnBWJVdkuD8
-         vnh3q63ouqz5DviEpPIlEfv9kv9cpJpylYxUHGNgxEqCtfQmtObcD2rbC1F4FjcK4ym/
-         Sz0ITI7N1isT+oNRT3EOmmX3stDs3mOvDUvPRGvnFEuEIPuUejKB9iwQs9xAi+CV7eHG
-         xGDw==
-X-Gm-Message-State: APjAAAXe5vq3N5so0jjx+cbfoxRXQLcs9SRXD1KlqcJ9qsyP06EQp4DV
-        rV86H+IcD/HQUmPplWZGkIpQOZk=
-X-Google-Smtp-Source: APXvYqyccB0gwQLeqdolBMk+U48u4Moz6S0kzbjMj8AZ3JzR8Aln3jSsmbWg35lHSh3Y3hXpt2ZnHw==
-X-Received: by 2002:a05:6830:1257:: with SMTP id s23mr14835109otp.241.1578956686245;
-        Mon, 13 Jan 2020 15:04:46 -0800 (PST)
+        bh=F2iDZ52lWikDVmU5g/bwIONEfUCTF197jf9k+MTeRXI=;
+        b=NWedeaCCYZI9QCJEdL1LBd0oKDSWldJSEAdAanWS3GFzV5fWhu2H8xBW2kUoVUBUVS
+         jLsodqbWrG7EUachO28hKw/c0xUQMciURlk7gzaGhbmV+MQ5+wzSTWBVxbrH0FKcRpFP
+         i+xd2aRWISVHQo4n1UVi5ORipNCXYsPZ5tFRas3tghHnPKNlS3P60f9M+hxbAR9k57eI
+         Dpkn6Riu0Cz4eOxwbaDNcJSmTauyG0tRTsKFLrIGIfVexmoKexFXzMcahVxyNUDhqVci
+         D+H+1duSwwZIJV0jE80zPy5DaXo8LOkrFnoJa6QAP9PabsiEoXfiaQvgExHSUd4lKmUG
+         KcIg==
+X-Gm-Message-State: APjAAAUBB9w7PkuH5MdHayEDM/TMzUZy/iGKkK9m/xBOd5EwQpLmb7cP
+        8PHIb56uqWdm4DkyCFAlsXQXnVY=
+X-Google-Smtp-Source: APXvYqz6MMixhRySBcywMBVaoRU1fqZq5AnPCmLPAabDFXTk0WXZPlD7StWvzzEBMXlv8agXMxKmhA==
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr13739836otk.89.1578957779537;
+        Mon, 13 Jan 2020 15:22:59 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q13sm4667830otc.5.2020.01.13.15.04.44
+        by smtp.gmail.com with ESMTPSA id w27sm4677255oti.65.2020.01.13.15.22.58
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 15:04:45 -0800 (PST)
+        Mon, 13 Jan 2020 15:22:58 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
         id 220b00
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 17:04:44 -0600
-Date:   Mon, 13 Jan 2020 17:04:44 -0600
+        Mon, 13 Jan 2020 17:22:57 -0600
+Date:   Mon, 13 Jan 2020 17:22:57 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        peter.griffin@linaro.org, dave.stevenson@raspberrypi.com,
-        ezequiel@collabora.com, sakari.ailus@linux.intel.com,
-        Andrey Konovalov <andrey.konovalov@linaro.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: media: i2c: Add IMX219 CMOS sensor
- binding
-Message-ID: <20200113230444.GA3528@bogus>
-References: <20200110200915.22575-1-andrey.konovalov@linaro.org>
- <20200110200915.22575-2-andrey.konovalov@linaro.org>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+        ludovic.desroches@microchip.com, vkoul@kernel.org,
+        eugen.hristev@microchip.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, mchehab@kernel.org,
+        lee.jones@linaro.org, radu_nicolae.pirea@upb.ro,
+        richard.genoud@gmail.com, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        wg@grandegger.com, mkl@pengutronix.de, a.zummo@towertech.it,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH v2 01/17] dt-bindings: at_xdmac: remove wildcard
+Message-ID: <20200113232257.GA30124@bogus>
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578673089-3484-2-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110200915.22575-2-andrey.konovalov@linaro.org>
+In-Reply-To: <1578673089-3484-2-git-send-email-claudiu.beznea@microchip.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 10 Jan 2020 23:09:14 +0300, Andrey Konovalov wrote:
-> Add YAML device tree binding for IMX219 CMOS image sensor, and
-> the relevant MAINTAINERS entries.
+On Fri, 10 Jan 2020 18:17:53 +0200, Claudiu Beznea wrote:
+> Remove wildcard and use the available compatible.
 > 
-> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
->  .../devicetree/bindings/media/i2c/imx219.yaml | 104 ++++++++++++++++++
->  MAINTAINERS                                   |   8 ++
->  2 files changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx219.yaml
+>  Documentation/devicetree/bindings/dma/atmel-xdma.txt | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
