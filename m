@@ -2,124 +2,134 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66081C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5BEC33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C63A21556
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3DAD2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578931423;
-	bh=neJb72YXp6s8khd3M+sDHOIXDMZ+inlm1nduyUTfmJ8=;
+	s=default; t=1578932217;
+	bh=AeGdxtFYv6B45SjFDAyM4c28mlz6pcoolDL44HF+hDM=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vjg6PLaR862ALMcQpBnn50q2szFg7gHgzq/wCIP3r2lIfONJP/y6vC5Wj8LqSrKjn
-	 nJK6JzOxwI01qhWzcvbgAOl6uIOlnIIGkp1eMNgUf+Hge00HA/l9svmKJghbzAOsg+
-	 45BPDUYgb5IrCWf/y2IA5Qjf495deKE6vfHnlnbk=
+	b=itBG5nfDo+TOZCO5MUhqofb+BGZD+xRDbi65HhZKUfS45aRaqautgrJ5B6jh15YMK
+	 26pI/cynCDKv2UHw3XJsyhKhQi1uKdd89ivR+JosSj/ixxEBatrlgyn5zLanegicPv
+	 DTj/sNdjhmSaxRrVNOXZiSSSeU/RJnOwRYxwyX2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgAMQDm (ORCPT
+        id S1728808AbgAMQQ4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:03:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 11:16:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbgAMQDm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:03:42 -0500
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        id S1726943AbgAMQQ4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:16:56 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E0C921569;
-        Mon, 13 Jan 2020 16:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1980F21739;
+        Mon, 13 Jan 2020 16:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578931421;
-        bh=neJb72YXp6s8khd3M+sDHOIXDMZ+inlm1nduyUTfmJ8=;
+        s=default; t=1578932215;
+        bh=AeGdxtFYv6B45SjFDAyM4c28mlz6pcoolDL44HF+hDM=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fuCbOrbFfPqtssGmTY+U7q71BYXLE5zG0A39Bn4/Sf6BM8VDQndXRlTSLCTd8Qaj1
-         P8n3y//pF25mCeIok2S4hMs4zchCaaHxB3SgtxK4ic5Pu0175Ct0uO9C9Oru8gfSRm
-         5ltopaqpvVWDB61dl06alcECfrut3x2GkJPpve8Y=
-Received: by mail-qk1-f178.google.com with SMTP id w127so8907042qkb.11;
-        Mon, 13 Jan 2020 08:03:41 -0800 (PST)
-X-Gm-Message-State: APjAAAXFlrziIhK7etczCXKPIzIVFW1SuIyoUDI6Gk5pV9zCOQ9YdCai
-        MTV7trrb9fxL8OGbAPptjXT/CgMWj9kmGIWaag==
-X-Google-Smtp-Source: APXvYqzfaLWR9NE8f7Lx5aPC8z78SAai6ksBMPH1TFuK29zEkpH5PZGXT/fOSQi9p9fQpHTMeB5ZGo8bgzDKGyS8Dqs=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr15480464qkl.119.1578931420737;
- Mon, 13 Jan 2020 08:03:40 -0800 (PST)
+        b=1nPZwM1JD9cJhZmfTEm7I3y9KfKMRejD2Cl7ChyeNRkVLW9ULezoEJ2wLgpe2wq4j
+         9rKeRhFGLi0aos3ofCEpqA9Gy3TP0Vee9NmwORwYEleD9UcDixoUSMitsnIcgeQ5Dc
+         1SwvwVFk1pZLSjCt0eeycaZwpSAUDo1C47hH/UXU=
+Received: by mail-qk1-f182.google.com with SMTP id z14so8971771qkg.9;
+        Mon, 13 Jan 2020 08:16:55 -0800 (PST)
+X-Gm-Message-State: APjAAAWVCK8mHGGgYEvCcxWwZLApKBGS8i0dvrTkUClTzDrDkf4n5NSB
+        agkKsoUuHyKGHtkHmW7yTmMVvbtJaEQcRhJggw==
+X-Google-Smtp-Source: APXvYqzt1b0Fu7JzU4XE0WbY6F3nq42qgTHD8h4dI4vWSjWclkB5P1MZophjyrXiyLG+1Hvm4ULiDbZeKA51r0PL+bg=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr17017668qkg.152.1578932214227;
+ Mon, 13 Jan 2020 08:16:54 -0800 (PST)
 MIME-Version: 1.0
-References: <1577023823-9615-1-git-send-email-akinobu.mita@gmail.com>
- <1577023823-9615-2-git-send-email-akinobu.mita@gmail.com> <20200108161331.GA18546@bogus>
- <CAC5umygcuGTKw=8NO+yM4z=MpAiw62Eo6p0vky_soTRmn0Y1Wg@mail.gmail.com>
-In-Reply-To: <CAC5umygcuGTKw=8NO+yM4z=MpAiw62Eo6p0vky_soTRmn0Y1Wg@mail.gmail.com>
+References: <20191219221932.15930-1-daniel.lezcano@linaro.org>
+ <20200108140333.GA12276@bogus> <3b94b423-ca26-b96f-90fa-2662dbc523d8@linaro.org>
+In-Reply-To: <3b94b423-ca26-b96f-90fa-2662dbc523d8@linaro.org>
 From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 13 Jan 2020 10:03:29 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLDz+zk0Ah4YN1EUm_qzFjbjLFmcoKUX1ZGGeZpAzdeNA@mail.gmail.com>
-Message-ID: <CAL_JsqLDz+zk0Ah4YN1EUm_qzFjbjLFmcoKUX1ZGGeZpAzdeNA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] hwmon: (pwm-fan) add option to stop fan on shutdown
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Guenter Roeck <linux@roeck-us.net>
+Date:   Mon, 13 Jan 2020 10:16:42 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK8gu-Ts_aMpcXgtvqW=gWGLTrUvNWDm+8fB7--62FmnQ@mail.gmail.com>
+Message-ID: <CAL_JsqK8gu-Ts_aMpcXgtvqW=gWGLTrUvNWDm+8fB7--62FmnQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] DT: bindings: Add cooling cells for idle states
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 11:07 PM Akinobu Mita <akinobu.mita@gmail.com> wrote=
-:
+On Sat, Jan 11, 2020 at 11:32 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 >
-> 2020=E5=B9=B41=E6=9C=889=E6=97=A5(=E6=9C=A8) 1:13 Rob Herring <robh@kerne=
-l.org>:
+> Hi Rob,
+>
+>
+> On Wed, 8 Jan 2020 at 15:03, Rob Herring <robh@kernel.org> wrote:
 > >
-> > On Sun, Dec 22, 2019 at 11:10:22PM +0900, Akinobu Mita wrote:
-> > > The pwm-fan driver leaves the fun running when shutting down the syst=
-em.
-> > > (On the other hand the gpio-fan driver stops it.)
+> > On Thu, Dec 19, 2019 at 11:19:27PM +0100, Daniel Lezcano wrote:
+> > > Add DT documentation to add an idle state as a cooling device. The CPU
+> > > is actually the cooling device but the definition is already used by
+> > > frequency capping. As we need to make cpufreq capping and idle
+> > > injection to co-exist together on the system in order to mitigate at
+> > > different trip points, the CPU can not be used as the cooling device
+> > > for idle injection. The idle state can be seen as an hardware feature
+> > > and therefore as a component for the passive mitigation.
+> > >
+> > > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/idle-states.txt | 11 +++++++++++
+> > >  1 file changed, 11 insertions(+)
 > >
-> > Seemms like we should have consistent behavior independent of what the
-> > underlying implementation uses. Is there actually a case you'd want to
-> > leave the fan on? It seems strange to disable in suspend and leave on i=
-n
-> > shutdown.
+> > This is now a schema in my tree. Can you rebase on that and I'll pick up
+> > the binding change.
 >
-> I agree.  I was trying to keep the current behavior unchanged, so I added
-> "disable-state-shutdown" property.  But I can't think of any case we want
-> to leave the fun on in shutdown.
+> Mmh, I'm now having some doubts about this binding because it will
+> restrict any improvement of the cooling device for the future.
 >
-> So it's better to change the shutdown behavior and remove the option
-> completely or add "retain-state-shutdown" property instead.
-> (The "retain-state-shutdown" property is inspired by gpio-leds)
+> It looks like adding a node to the CPU for the cooling device is more
+> adequate.
+> eg:
+> CPU0: cpu@300 {
+>    device_type = "cpu";
+>    compatible = "arm,cortex-a9";
+>    reg = <0x300>;
+>    /* cpufreq controls */
+>    operating-points = <998400 0
+>           800000 0
+>           400000 0
+>           200000 0>;
+>    clocks = <&prcmu_clk PRCMU_ARMSS>;
+>    clock-names = "cpu";
+>    clock-latency = <20000>;
+>    #cooling-cells = <2>;
+>    thermal-idle {
+>       #cooling-cells = <2>;
+>    };
+> };
+>
+> [ ... ]
+>
+> cooling-device = <&{/cpus/cpu@300/thermal-idle}
+>                         THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>
+> A quick test with different configurations combination shows it is much
+> more flexible and it is open for future changes.
+>
+> What do you think?
 
-I would just turn off the fan in shutdown and see if anyone complains.
+Why do you need #cooling-cells in both cpu node and a child node? It's
+really only 1 device.
 
-> > Wouldn't the shutdown state depend if the PWM off state is high or low?
-> > IIRC, i.MX PWM has a quirk that the PWM disabled state is high. Doesn't
->
-> It could be possible to affect the shutdown behavior for pwm-fan.
-> There are three i.MX PWM drivers (pwm-imx1, pwm-imx27, and pwm-tpm).
-> Do you remember which one actually have such limitation?
-
-No. I believe the fix was to use pinctrl modes to force the state. And
-I think the issue was for suspend rather than shutdown (but it seems
-unlikely you'd want the fan off in suspend and on in shutdown).
-
->
-> Maybe it should be handled by the PWM controller/chip driver and PWM core=
-.
-> From the perspective of PWM user drivers for now, we have nothing to do
-> other than setting duty cycle zero and then disable PWM for stopping the
-> pwm-fan.
->
-> > it also depend on what the PWM driver does in shutdown?
->
-> I think so.  But as far as I can see, no PWM drivers implement shutdown
-> callback.
-
-Do they need to? I'd assume most SoC's are powered off or put in reset
-which makes the PWN pin go low.
+Maybe you could add another cell to contain an idle state node if that helps?
 
 Rob
