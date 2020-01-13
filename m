@@ -2,78 +2,155 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE74FC33CAC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 03:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E25C32771
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 03:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C641C222D9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 03:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A78F8206D6
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 03:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732970AbgAMDKY (ORCPT
+        id S1733204AbgAMDcz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:10:24 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:33200 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733064AbgAMDKY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:10:24 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FB561A01AE;
-        Mon, 13 Jan 2020 04:10:22 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 133471A12E7;
-        Mon, 13 Jan 2020 04:10:14 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 45976402BB;
-        Mon, 13 Jan 2020 11:10:03 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        catalin.marinas@arm.com, will@kernel.org,
-        bjorn.andersson@linaro.org, maxime@cerno.tech, olof@lixom.net,
-        dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V8 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by default
-Date:   Mon, 13 Jan 2020 11:06:05 +0800
-Message-Id: <1578884765-29907-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578884765-29907-1-git-send-email-Anson.Huang@nxp.com>
-References: <1578884765-29907-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Sun, 12 Jan 2020 22:32:55 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46212 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732961AbgAMDcz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 22:32:55 -0500
+Received: by mail-io1-f65.google.com with SMTP id t26so8298489ioi.13;
+        Sun, 12 Jan 2020 19:32:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jtJ5n8bvLyOE+deBSBgZkyAEPr+Moq3BE/Wzkoo8Gwc=;
+        b=DecjkbC4A5B80De2Y//7TaLVOnf4MRht3jJCHdfa8Iy171xkOqRDBMhQZeLI2UNzsG
+         jXz+4FkfbyfzFMJAggS/GtNNtipRvfKWr5B/V7L6IDJ3U4zGDEeAzrTPO7fkUalALRAx
+         tsH88r/IwmoCv3lokb6YuG6DvQl0JUp7sjpzkwTgbKDk/4yIDzqPFmVJEZAO6irdBp5J
+         Hi9hkA7mhpZR2vo4S6zpr2ntHrk2FP3S5AAppj8kIBMUplBP7tXFBQTG6d/2DR/z1w0B
+         bRIxqVSje4RYQTjLYA4572cWf4DysoyYkLde7DidW1U1vyJ79ZKCMKmuJv1CHIXkZMSW
+         FjqQ==
+X-Gm-Message-State: APjAAAV5tX4wIddUdtuIlqqGLB1KbrE/EUQVmxwZAefu3qpdLmRIztUr
+        /5xxTrLHgHO7X4pSO3hSUqd3EhgTPVKEe05IWc4=
+X-Google-Smtp-Source: APXvYqza8aMS/tYZ+uop2NYOv26ngRJNYJPtaRsA2dDhrQBDYih57vE/XL5eneMMy8BoheZ2FasTsR2fVAXey3NLiOc=
+X-Received: by 2002:a6b:4e0b:: with SMTP id c11mr9716656iob.143.1578886374641;
+ Sun, 12 Jan 2020 19:32:54 -0800 (PST)
+MIME-Version: 1.0
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com> <20200112081416.722218-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200112081416.722218-1-jiaxun.yang@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Mon, 13 Jan 2020 11:38:04 +0800
+Message-ID: <CAAhV-H4Q0z6R6RrUwDdNYj++YkqrAWRpC=RfhGY6-5_Kj1O-jA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] Modernize Loongson64 Machine
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable CONFIG_PINCTRL_IMX8MP by default to support i.MX8MP
-pinctrl driver.
+Hi, Jiaxun,
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
----
-No changes.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Sun, Jan 12, 2020 at 4:21 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>
+> Loongson have a long history of contributing their code to mainline kernel.
+> However, it seems like recent years, they are focusing on maintain a kernel by themselves
+> rather than contribute there code to the community.
+>
+> Kernel is progress rapidly too. Their code slept in mainline for a long peroid without proper
+> maintainance and became outdated.
+>
+> This patchset brings modern DeviceTree and irqchip support to the Loongson64 machine, and leaves
+> Loongson 2e/f alone since they are too legacy to touch.
+I think you can provide a irqchip hierarchy for Loongson3 here. i.e.,
+the flowchart of cpuintc, iointc, htpic, i8259, and so on.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index fdbc2cd..635de88 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -402,6 +402,7 @@ CONFIG_PINCTRL_SINGLE=y
- CONFIG_PINCTRL_MAX77620=y
- CONFIG_PINCTRL_IMX8MM=y
- CONFIG_PINCTRL_IMX8MN=y
-+CONFIG_PINCTRL_IMX8MP=y
- CONFIG_PINCTRL_IMX8MQ=y
- CONFIG_PINCTRL_IMX8QXP=y
- CONFIG_PINCTRL_IPQ8074=y
--- 
-2.7.4
+Huacai
 
+>
+> PCI and some legacy I/O device will be converted later, together with LS7A PCH support.
+>
+> v1:
+> - dt-bindings fixup according to Rob's comments
+> - irqchip fixup according to Marc's comments
+> - ls3-iointc: Make Core&IP map per-IRQ
+> - Regenerate kconfigs
+> - Typo & style improvements
+>
+> v2:
+> - dt-bindings: Fix IOINTC, collect Rob's review tag
+> - dtbs: Drop CPU Node, merge different ways according to Huacai and Paul's comments
+>
+> v3:
+> - Split code have been merged
+> - Fix IOINTC binding to allow map any child IRQ to and parent
+> - Convert "HTINTC" into "HTPIC", which mixed HT vectors processing and i8259
+> - Naming style fix according to Huacai's suggestions
+>
+> Jiaxun Yang (10):
+>   dt-bindings: Document loongson vendor-prefix
+>   irqchip: Add driver for Loongson I/O interrupt controller
+>   dt-bindings: interrupt-controller: Add Loongson IOINTC
+>   irqchip: Add driver for Loongson-3 HyperTransport PIC controller
+>   dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
+>   irqchip: mips-cpu: Convert to simple domain
+>   MIPS: Loongson64: Drop legacy IRQ code
+>   dt-bindings: mips: Add loongson boards
+>   MIPS: Loongson64: Add generic dts
+>   MIPS: Loongson64: Load built-in dtbs
+>
+>  .../interrupt-controller/loongson,htpic.yaml  |  59 +++
+>  .../interrupt-controller/loongson,iointc.yaml |  92 +++++
+>  .../bindings/mips/loongson/devices.yaml       |  29 ++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  arch/mips/Kconfig                             |   6 +-
+>  arch/mips/boot/dts/Makefile                   |   1 +
+>  arch/mips/boot/dts/loongson/Makefile          |   5 +
+>  .../boot/dts/loongson/loongson3-package.dtsi  |  62 ++++
+>  .../dts/loongson/loongson3_4core_rs780e.dts   |  25 ++
+>  .../dts/loongson/loongson3_8core_rs780e.dts   |  25 ++
+>  arch/mips/boot/dts/loongson/rs780e-pch.dtsi   |  26 ++
+>  arch/mips/include/asm/i8259.h                 |   1 +
+>  .../include/asm/mach-loongson64/boot_param.h  |   2 +
+>  .../asm/mach-loongson64/builtin_dtbs.h        |  13 +
+>  arch/mips/include/asm/mach-loongson64/irq.h   |  32 +-
+>  .../include/asm/mach-loongson64/loongson.h    |   1 +
+>  arch/mips/loongson64/Makefile                 |   2 +-
+>  arch/mips/loongson64/env.c                    |  23 ++
+>  arch/mips/loongson64/init.c                   |   6 +
+>  arch/mips/loongson64/irq.c                    | 162 ---------
+>  arch/mips/loongson64/setup.c                  |  16 +
+>  arch/mips/loongson64/smp.c                    |  28 +-
+>  drivers/irqchip/Kconfig                       |  18 +
+>  drivers/irqchip/Makefile                      |   2 +
+>  drivers/irqchip/irq-i8259.c                   |   6 +-
+>  drivers/irqchip/irq-loongson-htpic.c          | 147 ++++++++
+>  drivers/irqchip/irq-loongson-iointc.c         | 338 ++++++++++++++++++
+>  drivers/irqchip/irq-mips-cpu.c                |   2 +-
+>  28 files changed, 915 insertions(+), 216 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htpic.yaml
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,iointc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+>  create mode 100644 arch/mips/boot/dts/loongson/Makefile
+>  create mode 100644 arch/mips/boot/dts/loongson/loongson3-package.dtsi
+>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+>  create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+>  delete mode 100644 arch/mips/loongson64/irq.c
+>  create mode 100644 drivers/irqchip/irq-loongson-htpic.c
+>  create mode 100644 drivers/irqchip/irq-loongson-iointc.c
+>
+> --
+> 2.24.1
+>
