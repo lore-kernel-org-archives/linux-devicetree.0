@@ -2,269 +2,137 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF30C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 02:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D494C33CAB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 03:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1277E22314
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 02:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6AE121744
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 03:00:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fvY0DzsK"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YD96E6mb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732866AbgAMCPU (ORCPT
+        id S1733138AbgAMC77 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 21:15:20 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11469 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732487AbgAMCPU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 21:15:20 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1bd2a20000>; Sun, 12 Jan 2020 18:14:58 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 12 Jan 2020 18:15:17 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 12 Jan 2020 18:15:17 -0800
-Received: from [10.19.108.118] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
- 2020 02:15:15 +0000
-Subject: Re: [PATCH v5 3/5] dt-bindings: phy: tegra: Add Tegra194 support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Rob Herring <robh@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <nkristam@nvidia.com>
-References: <20200103081814.9848-1-jckuo@nvidia.com>
- <20200103081814.9848-4-jckuo@nvidia.com> <20200103223940.GA9205@bogus>
- <baa9b5f4-74be-0ab4-0b24-bf926cf3207c@nvidia.com>
- <4c3f3776-65e2-aafd-7bb9-fa69df301cb6@nvidia.com>
- <20200110112650.GB2233456@ulmo>
-X-Nvconfidentiality: public
-From:   JC Kuo <jckuo@nvidia.com>
-Message-ID: <dc6853d2-2178-b781-6bc6-23e4ed38ccb2@nvidia.com>
-Date:   Mon, 13 Jan 2020 10:15:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200110112650.GB2233456@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+        Sun, 12 Jan 2020 21:59:59 -0500
+Received: from mail-am6eur05on2066.outbound.protection.outlook.com ([40.107.22.66]:6094
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732849AbgAMC77 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 12 Jan 2020 21:59:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UQ/fXNeddAEIzeBNh8nCASiiaSZvKmLrvlQ7yXA7+/bYwjmAG13eC3ggIfLXvYXG7dKzPkS9MUiXPsJlMmsjw/MlW3AvQ0nU2XLBDv7/u9f+PjKlf91eHxbqrjxSbsn2L+jCtXbG5tmEfL3ev16v9o9A83NJBoyhc7YiLoZF1Bt1oW6owaQ1846lIHWTVg9eLq+ANwhHfFsrrEtsa2bpH/Bp9jEGyI/v4dKzRe6xTgPUMLgmrhhrWdTwnD4v1MBqUoIEzVcufncXVNm8NbiI/JQPRgdkoGuc6rAtsqxpYUx0cUdj/gFv/sSJkqVd/bnzinb5gwVplM5desJSx8QSpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X1F/lRAlMXXuLd1x9KQyx7Se/qJyLkT6kNmdjQYChkE=;
+ b=jEkR+Dg9koLonOB6XU0FFqqBvKv1FrDJZ1IkiwuOhv5FNXyrSWPIF6QoiMWwqk1WqtcakVW7HKhZ+Aj9FjOyogOYjMQOoeRy0Rh4J3GtqxvAknAzHBzBPMZg5IhjRulu5egVVJ2UokbM7FKVC1Se3GAPo4l4+xMlk9ajxCM1FnCA6rRKJr/rae4v7SPA01TZjUCspGmb+azwJhMDbjc/5PYPxTI0fDu64L1BRt2wejfpniXrbOr7/W8O6fbRap5kZ1cLztdLxJ5EjAFHRCD0GOgjYz9+npwVi6pmvs/+APJtT1g20jCJfM/v5djscBCdI7iXVH5GeL5UHOAiG85cTw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X1F/lRAlMXXuLd1x9KQyx7Se/qJyLkT6kNmdjQYChkE=;
+ b=YD96E6mbInBkU4q2xNQweLqdvjjYSsGY9+UJCkSoUozBDtqC190EoxVcaF3JVvU1J1qrTgjP1eZvVu1qdDt/VIYjJ98FyLlE4hmjip1kzUZ+ilgPWXhrR+u9BnuZjvheHQlUn3SijLFEmuoK1vJfzlIk700yoHkb7apGMNjnk5o=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3833.eurprd04.prod.outlook.com (52.134.67.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.12; Mon, 13 Jan 2020 02:59:51 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 02:59:51 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V7 1/3] dt-bindings: imx: Add pinctrl binding doc for
+ i.MX8MP
+Thread-Topic: [PATCH V7 1/3] dt-bindings: imx: Add pinctrl binding doc for
+ i.MX8MP
+Thread-Index: AQHVx2ymLMSOG+yTuUKcujoHYHbAfKfmlP0AgAFWx+A=
+Date:   Mon, 13 Jan 2020 02:59:50 +0000
+Message-ID: <DB3PR0402MB3916191387B9B7673AE7CA88F5350@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1578629498-26747-1-git-send-email-Anson.Huang@nxp.com>
+ <20200112063125.GC27570@T480>
+In-Reply-To: <20200112063125.GC27570@T480>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578881698; bh=VfhchbKgOZx7krVcK3EI9o3Udj7ufQOUyty7hnxpDjw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fvY0DzsKMOOEqRT5BycfN+QfhdLFNzZrPo4ySYR0Dbnu4h80Tb01qr+tiBDRMalQi
-         8+5CTyvq2vvpIUb7a7vwsIfIDe9ceONUS7pE1eUr37N6pgggRi9rptcealfIXEs+RG
-         HmPwIbNGtECrVx8GxcsdXRAm9TIpa7p/xVIq0j6H/4jySFoHoM7XjJ2x51zKgTRuxk
-         KvU2SOtZLPEvUPC+VE4cMZ6OoaGsSb4hW6YkX9Vsrktgr6rw6w/+aJhdhAt93r4UVY
-         9dFI3aHZX9gLn+yZVqVJ6dzLMm1GP5OiTdXRbBvzECRKf7Au8PlpwGmrq9ou+4wNwC
-         HUj16VGTgMNJA==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 539c94f1-662b-48c7-83d6-08d797d4a870
+x-ms-traffictypediagnostic: DB3PR0402MB3833:|DB3PR0402MB3833:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38334AA20137D3E9C2BDB1C7F5350@DB3PR0402MB3833.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(39860400002)(346002)(199004)(189003)(55016002)(2906002)(8936002)(81156014)(33656002)(6506007)(8676002)(44832011)(54906003)(7696005)(81166006)(5660300002)(9686003)(6916009)(7416002)(86362001)(4326008)(4744005)(186003)(76116006)(316002)(66946007)(52536014)(66476007)(66556008)(64756008)(66446008)(478600001)(71200400001)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3833;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2hpmPUvBpe8QAldcTbPkZmzYYVOxRE9b3WM5X3WCaTDasXRHbXFjBGQ6i6MGpialIBZFoqIbdrsOdp0uTyxVZMNKi7dOxoCmoA3a+qKwqmI9ozCXmANl6Xj8ze5JdSlBDd4WFtrr5yNqrMIvcv7vMJ0T0OYWYEoaQuZpJvi7J3HqeFFkEyYpXXwutdeaKQ3AbU784ylDl+c/54/jR+f3YhvuQiapZSlfR/PRNoxSt6JaQh0XdqyUBqY9bdSWAsiqyzIApE6CLTRMbWpBMZ1icGjUnfmDR+QSUHTvgTLwwYgA0X4c0QQqMXUA5HUWW7Dv1DBR/LacaG43EThdHgE2ympEsnkc7K09i7P0eezFu4zcxqg3ZDyUL/R434AftD8/aQ33d/nTOSmabnruW8haYjvYZLUXHSJwH7ZNeo63T2sBYtnn1OA3VWBVMjVLkdRU
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 539c94f1-662b-48c7-83d6-08d797d4a870
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 02:59:50.9472
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: SZi02F/zRLxvfuO/9i4TEegEt60eGIye0zbE0+iOOp4xKLceVQSBxAT8dQxDu7Q006aZp8fi7fSMchNLlW0+iQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3833
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/10/20 7:26 PM, Thierry Reding wrote:
-> On Thu, Jan 09, 2020 at 09:31:27AM +0800, JC Kuo wrote:
->> Hi Rob,
->> For now we have two options.
->> 1. reusing the existing "maximum-speed" which is documented in usb/generic.txt
->> Pro: no need to add new property
->> Con: only "super-speed" and "super-speed-plus" are valid for Tegra XUSB PADCTL,
->> therefore extra code/document change is required.
->>
->> +	if (device_property_present(&port->dev, "maximum-speed")) {
->> +		maximum_speed =  usb_get_maximum_speed(&port->dev);
->> +		if (maximum_speed == USB_SPEED_SUPER)
->> +			usb3->disable_gen2 = true;
->> +		else if (maximum_speed == USB_SPEED_SUPER_PLUS)
->> +			usb3->disable_gen2 = false;
->> +		else
->> +			return -EINVAL;
->> +	}
->>
->> 2. introducing a new proprietary "nvidia,disable-gen2" property
->> Pro: its logic perfectly matches the need, and code change is minimum
->>
->> +        usb3->disable_gen2 = of_property_read_bool(np, "nvidia,disable-gen2");
->>
->> Con: it's a new and proprietary property.
->>
->> Please let me know which one do you prefer or there is something else
->> works better.
-> 
-> I think the first version is much clearer. maximum-speed = "super-speed"
-> is very clear and explicit. nvidia,disable-gen2 is less so. While it may
-> be true in this case what "disable-gen2" does, using the generic
-> bindings has the advantage that it'll be more familiar to people already
-> familiar with other USB device tree bindings.
-> 
-> Also, the nvidia,disable-gen2 property only perfectly matches the need
-> because it reflects the name of the variable. If you rewrote the code to
-> do something like this:
-> 
-> 	if (port->maximum_speed <= USB_SPEED_SUPER) {
-> 		/* disable gen2 */
-> 		...
-> 	}
-
-"low-speed/full-speed/high-speed/wireless" options are invalid to a usb3 port
-because a usb3 port is not capable of operating at
-low-/full-/high-speed/wireless protocols. Therefore,
-maximum-speed="low-/full-/high-speed/wireless" is something more like completely
-disabling the usb3 port than just disabling super-speed-plus.
-
-I see using an existing "maximum-speed" is preferred. Please review code change
-in v5 and let me know if anything could be improved further.
-
-> 
-> Then all of a sudden the "maximum-speed" property is a perfect match. In
-> general, bindings should be natural to the domain of the bus or device
-> that they describe rather than a reflection of how the driver programs
-> the device's registers.
-> 
-> On a side-note: we should also update the usb/generic.txt binding to
-> describe the "super-speed-plus" value for the maximum-speed property.
-Yes, I feel the same. I will send a patch for it.
-
-Thanks,
-JC
-
-> 
-> Thierry
-> 
->> Thanks,
->> JC
->>
->>
->> On 1/6/20 3:10 PM, JC Kuo wrote:
->>> On 1/4/20 6:39 AM, Rob Herring wrote:
->>>> On Fri, Jan 03, 2020 at 04:18:12PM +0800, JC Kuo wrote:
->>>>> Extend the bindings to cover the set of features found in Tegra194.
->>>>> Note that, technically, there are four more supplies connected to the
->>>>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
->>>>> , but the power sequencing requirements of Tegra194 require these to be
->>>>> under the control of the PMIC.
->>>>>
->>>>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
->>>>> is possible for some platforms have long signal trace that could not
->>>>> provide sufficient electrical environment for Gen 2 speed. This patch
->>>>> adds a "maximum-speed" property to usb3 ports which can be used to
->>>>> specify the maximum supported speed for any particular USB 3.1 port.
->>>>> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
->>>>> property should carry "super-speed".
->>>>>
->>>>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
->>>>> ---
->>>>> Changes in v5:
->>>>> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
->>>>> Changes in v4: none
->>>>> Changes in v3: none
->>>>> Changes in v2:
->>>>> - fix a typo
->>>>>
->>>>>  .../phy/nvidia,tegra124-xusb-padctl.txt        | 18 ++++++++++++++++++
->>>>>  1 file changed, 18 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>>> index 9fb682e47c29..7d0089006e67 100644
->>>>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>>> @@ -37,6 +37,7 @@ Required properties:
->>>>>    - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padctl"
->>>>>    - Tegra210: "nvidia,tegra210-xusb-padctl"
->>>>>    - Tegra186: "nvidia,tegra186-xusb-padctl"
->>>>> +  - Tegra194: "nvidia,tegra194-xusb-padctl"
->>>>>  - reg: Physical base address and length of the controller's registers.
->>>>>  - resets: Must contain an entry for each entry in reset-names.
->>>>>  - reset-names: Must include the following entries:
->>>>> @@ -62,6 +63,10 @@ For Tegra186:
->>>>>  - vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
->>>>>  - vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
->>>>>  
->>>>> +For Tegra194:
->>>>> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must supply
->>>>> +  3.3 V.
->>>>> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
->>>>>  
->>>>>  Pad nodes:
->>>>>  ==========
->>>>> @@ -154,6 +159,11 @@ For Tegra210, the list of valid PHY nodes is given below:
->>>>>  - sata: sata-0
->>>>>    - functions: "usb3-ss", "sata"
->>>>>  
->>>>> +For Tegra194, the list of valid PHY nodes is given below:
->>>>> +- usb2: usb2-0, usb2-1, usb2-2, usb2-3
->>>>> +  - functions: "xusb"
->>>>> +- usb3: usb3-0, usb3-1, usb3-2, usb3-3
->>>>> +  - functions: "xusb"
->>>>>  
->>>>>  Port nodes:
->>>>>  ===========
->>>>> @@ -221,6 +231,11 @@ Optional properties:
->>>>>    is internal. In the absence of this property the port is considered to be
->>>>>    external.
->>>>>  
->>>>> +- maximum-speed: Only for Tegra194. A string property that specifies maximum
->>>>> +  supported speed of a usb3 port. Valid values are:
->>>>> +  - "super-speed-plus": default, the usb3 port supports USB 3.1 Gen 2 speed.
->>>>
->>>> Not defined as a valid value in usb/generic.txt. '-gen2' instead of 
->>>> '-plus' would be clearer IMO. However, is there any need to define the 
->>>> maximum speed possible? The purpose of this property is to limit the 
->>>> speed below the max.
->>>>
->>> usb_get_maximum_speed(), which parses "maximum-speed" property, indeed handles
->>> string "super-speed-plus". Should "super-speed-plus" be documented in
->>> usb/generic.txt"?
->>>
->>> static const char *const speed_names[] = {
->>> 	[USB_SPEED_UNKNOWN] = "UNKNOWN",
->>> 	[USB_SPEED_LOW] = "low-speed",
->>> 	[USB_SPEED_FULL] = "full-speed",
->>> 	[USB_SPEED_HIGH] = "high-speed",
->>> 	[USB_SPEED_WIRELESS] = "wireless",
->>> 	[USB_SPEED_SUPER] = "super-speed",
->>> 	[USB_SPEED_SUPER_PLUS] = "super-speed-plus",
->>> };
->>>
->>> A proprietary "nvidia,disable-gen2" property was proposed in earlier revision to
->>> "limit the speed below the max". I like it because it fit our needs better and
->>> requires only one line of code change.
->>>
->>>    usb3->disable_gen2 = of_property_read_bool(np, "nvidia,disable-gen2");
->>>
->>> Should I fallback to that approach?
->>>
->>> Thanks,
->>> JC
->>>
->>>>> +  - "super-speed": the usb3 port supports USB 3.1 Gen 1 speed only.
->>>>> +
->>>>>  For Tegra124 and Tegra132, the XUSB pad controller exposes the following
->>>>>  ports:
->>>>>  - 3x USB2: usb2-0, usb2-1, usb2-2
->>>>> @@ -233,6 +248,9 @@ For Tegra210, the XUSB pad controller exposes the following ports:
->>>>>  - 2x HSIC: hsic-0, hsic-1
->>>>>  - 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
->>>>>  
->>>>> +For Tegra194, the XUSB pad controller exposes the following ports:
->>>>> +- 4x USB2: usb2-0, usb2-1, usb2-2, usb2-3
->>>>> +- 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
->>>>>  
->>>>>  Examples:
->>>>>  =========
->>>>> -- 
->>>>> 2.17.1
->>>>>
+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjcgMS8zXSBkdC1iaW5kaW5nczogaW14OiBBZGQgcGlu
+Y3RybCBiaW5kaW5nIGRvYyBmb3INCj4gaS5NWDhNUA0KPiANCj4gT24gRnJpLCBKYW4gMTAsIDIw
+MjAgYXQgMTI6MTE6MzZQTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gQWRkIGJpbmRp
+bmcgZG9jIGZvciBpLk1YOE1QIHBpbmN0cmwgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEFi
+ZWwgVmVzYSA8YWJlbC52ZXNhQG54cC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBzaW5jZSBWNjoNCj4gPiAJ
+LSB1c2UgImdycCQiIGluc3RlYWQgb2YgIi1ncnAkIjsNCj4gPiAJLSB1c2Ugc3BhY2UgaW5zdGVh
+ZCBvZiB0YWIgZm9yICJyZWYkIjsNCj4gPiAJLSBhZGQgbWlzc2VkICJyZWciIHByb3BlcnR5Ow0K
+PiA+IAktIHJlbW92ZSB0aGUgIm1heEl0ZW0iIGZvciAiZnNsLHBpbnMiIHRvIGF2b2lkIGJ1aWxk
+IHdhcm5pbmcsIGFzIHRoZQ0KPiBpdGVtIG51bWJlciBpcyBjaGFuZ2FibGUuDQo+ID4gLS0tDQo+
+ID4gIC4uLi9iaW5kaW5ncy9waW5jdHJsL2ZzbCxpbXg4bXAtcGluY3RybC55YW1sICAgICAgIHwg
+IDY5ICsrDQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcC1waW5mdW5j
+LmggICAgIHwgOTMxDQo+ICsrKysrKysrKysrKysrKysrKysrKw0KPiANCj4gSSBrbm93IHRoZSBi
+aW5kaW5nIGRvYyByZWZlcnMgdG8gdGhpcyBpbXg4bXAtcGluZnVuYy5oLiAgQnV0IHRoZSBvbmx5
+DQo+IHVzZXIgb2YgdGhlIGhlYWRlciBpcyBpbXg4bXAgZHRzLCBzbyB0aGUgaGVhZGVyIHNob3Vs
+ZCBiZSBwYXJ0IG9mIGR0cw0KPiBzZXJpZXMsIHdoaWxlIHRoaXMgYmluZGluZyBkb2MgcGF0Y2gg
+d2lsbCBiZSBzZW50IHZpYSBwaW5jdHJsIHN1YnN5c3RlbQ0KPiB0cmVlLg0KDQpPSywgSSB3aWxs
+IG1vdmUgdGhlIGhlYWRlciBmaWxlIHRvIERUIHBhdGNoIHNlcmllcyBhbmQgc2VuZCBhIFY4IHBh
+dGNoIHNldA0KDQpUaGFua3MsDQpBbnNvbi4NCg0K
