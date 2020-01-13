@@ -4,80 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923BFC33CAD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B11C33CAE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FF520CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B7AE2080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qogD2atn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="woLsoFo8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgAMKtI (ORCPT
+        id S1726878AbgAMKwo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:49:08 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37467 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727494AbgAMKtI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 05:49:08 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so8047985wru.4
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 02:49:06 -0800 (PST)
+        Mon, 13 Jan 2020 05:52:44 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37535 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgAMKwn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 05:52:43 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f129so9079000wmf.2
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 02:52:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=dJIJ8TE4q3821mbA7gJOKY19l0UD3HWAsSMco9Ho4C4=;
-        b=qogD2atniaYCyI+/ifYIEcWu0V0PymnKN5/DklSu2Q4CvaU6deYGL7xeYrU+1J1fQU
-         Rmv2wQhpmhJ+Y0ILck2SjdXhNBseiONexmAAbjKPytHvfsdhT420A3BcAZHBIDnVQLCL
-         FMOQpm4+eFMt5GjRyinK4Zd+33Un3U1F7pkaankp0GfRewgn3jSFcm6Fv6CN/eYaft8J
-         oBRPRxTWKkOT//lmiXWR7rRIyi8MEEeZ0NyQQfeMAsjRVvOO4jKZmiDlobBWRsFpZNgr
-         GDvbnwjdx+np/tTfKXodm7ZhiFBssr+weWL+G4dSA7XVxgkVbK83X1B9lg5a4MGRRezG
-         i27g==
+        bh=ZgZbNBWe0oTcqdIBNdNvd74B3ro0WVKyi3/VTdqw3xE=;
+        b=woLsoFo8w6H55+I2zLR2KHGqFepzum+orJMMrLzKCgk1ZJK212giD75NsNz8DNfjlP
+         vodvnf5v+e7GXZsYfps9azChJyoplTYXHzTXHM6oJ8gDA7ltgi33YYzABGb6l8CIE9c5
+         hMv3K6ZPvkOFnsDgXeVZqXsNofOaN8AiM2PHq7+IHOIDZdKR7nbPDShmz6x3+Mf3CWix
+         bYGxSqk6ZFO9B7Icj1OsAaDdjqD8AaCjk+XeSlKSNfEIGojIYHc/p9hLrJ9fOIcRGaJF
+         i8L4nWE354nw10ZeJTDo5wwrjCjl7fJ905rU03Czk/VeCDLFgkEzPkWz1mCBWhND4DST
+         82BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=dJIJ8TE4q3821mbA7gJOKY19l0UD3HWAsSMco9Ho4C4=;
-        b=IoBsKNOTAwR8bt7qYwt52d7Hlr/sLfbc39CyK9VRAXiglVcDxrntlhZg+CHqXDYzqR
-         WuvnymUQH1aNJoBrnU8KXxrGO2ImN7oJPzwSq/Rms95FJJYiNA6+YVqa5hAbuyduUa4M
-         DkcrwPqvI8A5INrvBS45zjhrabvNZqtpNIFBgkpQWBhcKYRgq/otrYPiZ4xd87V3LFP1
-         181E04AFS8YOfTSF9vGEfmuO6x/E30fOan0mEMwU8VYvjimTmbMp5GD/8Iw0xJZvy61v
-         GI9AksQ9QgssmmVqaIthCssgpyow/6/cWjYz8ZJtKz7fqwbY5bF0LQ8nsKBMPwbvE26i
-         8F1A==
-X-Gm-Message-State: APjAAAXHVnBDrtt4yEeWERhegYXDZC52PwLA9CN0zNXNPnCKa5tfeHwM
-        dxnq2vN8yhlhBbje62nBo07e+g==
-X-Google-Smtp-Source: APXvYqy01VtgOwE8RelnBXw+DBfdhJ79MbFiqHSSGoaBGghKby8swpt+ETldAaRCE1dZVQMt3+xneQ==
-X-Received: by 2002:a5d:488c:: with SMTP id g12mr17615554wrq.67.1578912546094;
-        Mon, 13 Jan 2020 02:49:06 -0800 (PST)
+        bh=ZgZbNBWe0oTcqdIBNdNvd74B3ro0WVKyi3/VTdqw3xE=;
+        b=ZFsovL6QWdG48mCo1XMryTmFuwPtEOOIsFvG8zSxd8eT2hKupA/F30GIymqrNZeBhn
+         86Ia1vP4t7SYY9RRGtKTp6ETTDxX0CHEDipHHTa+ewA2k+yS/PWswEerJ4rYgrDlqOqg
+         0Vq+xBwj9lAS/NtjARSf4wEiyPqJbku6n5KW5IzX4qQBWHWPmh4nl9XL1i5VGBioqkVO
+         vq/nNoFOLBNVALCL6uIIl/NvtkO+1fHN5UXq/wAt0Tq7LOKP/fNSuQvVyDj8+wiGedEl
+         4peQyD6H1FYSCkmqbmISeoTMJhYEmAlvmGVVNed0TngcLfmt/yDumlZ8IDBlMoZmaKSy
+         oe0g==
+X-Gm-Message-State: APjAAAWGeD8FnHOSNFAA2ziyN8zQuwIjBa6P5mxq7zR7KaznvawizTRh
+        B2P+KdxQydQr/I4ybfK1NGGmCA==
+X-Google-Smtp-Source: APXvYqx8Vm7CK6+Z+RiNNpP0t0i/mmfam2P7FFBzWOE/l3fKY62yfP75eVxj2Ys8ub0l0x8bGFfDQQ==
+X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr19619532wmg.110.1578912761970;
+        Mon, 13 Jan 2020 02:52:41 -0800 (PST)
 Received: from dell ([95.147.198.95])
-        by smtp.gmail.com with ESMTPSA id e8sm14583552wrt.7.2020.01.13.02.49.05
+        by smtp.gmail.com with ESMTPSA id x14sm13574924wmj.42.2020.01.13.02.52.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 02:49:05 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:49:26 +0000
+        Mon, 13 Jan 2020 02:52:41 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:53:01 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
         "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-Message-ID: <20200113104926.GE5414@dell>
-References: <20191227111235.GA3370@localhost.localdomain>
- <20200107130155.GK14821@dell>
- <CAL_JsqJzaS1G-ODb4A5QGdhhJ+SXXYPY0nXvKfJnZKoRP+WmAA@mail.gmail.com>
- <821646c01d3efbba1eaabc7f5da8048fe4f25bbd.camel@fi.rohmeurope.com>
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200113105301.GF5414@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200107124124.GI14821@dell>
+ <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <821646c01d3efbba1eaabc7f5da8048fe4f25bbd.camel@fi.rohmeurope.com>
+In-Reply-To: <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -86,59 +100,61 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
 
-> Hi de Ho Peeps,
+> Hello Lee,
 > 
-> On Tue, 2020-01-07 at 09:37 -0600, Rob Herring wrote:
-> > On Tue, Jan 7, 2020 at 7:01 AM Lee Jones <lee.jones@linaro.org>
-> > wrote:
-> > > On Fri, 27 Dec 2019, Matti Vaittinen wrote:
-> > > 
-> > > > Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml.
-> > > > Split
-> > > > the binding document to two separate documents (own documents for
-> > > > BD71837
-> > > > and BD71847) as they have different amount of regulators. This
-> > > > way we can
-> > > > better enforce the node name check for regulators. ROHM is also
-> > > > providing
-> > > > BD71850 - which is almost identical to BD71847 - main difference
-> > > > is some
-> > > > initial regulator states. The BD71850 can be driven by same
-> > > > driver and it
-> > > > has same buck/LDO setup as BD71847 - add it to BD71847 binding
-> > > > document and
-> > > > introduce compatible for it.
-> > > > 
-> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com
-> > > > >
-> > > > ---
-> > > > 
-> > > > changes since v1:
-> > > > - constrains to short and long presses.
-> > > > - reworded commit message to shorten a line exceeding 75 chars
-> > > > - added 'additionalProperties: false'
-> > > > - removed 'clock-names' from example node
-> > > > 
-> > > >  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
-> > > >  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236
-> > > > ++++++++++++++++++
-> > > >  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222
-> > > > ++++++++++++++++
-> > > >  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
-> > > >  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
-> > > >  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
-> > > 
-> > > Can you split these out per-subsystem, so that I can apply the MFD
-> > > changes please?
+> On Tue, 2020-01-07 at 12:41 +0000, Lee Jones wrote:
+> > On Mon, 30 Dec 2019, Matti Vaittinen wrote:
 > > 
-> > That's not going to work any more. The MFD binding references the
-> > child bindings and the complete example(s) resides in the MFD
-> > binding.
-> 
-> So is it Ok to take all of these in MFD tree - or how should this be
-> done? Can Rob get them in after acks from Lee/Mark?
+> > > Few ROHM PMICs allow setting the voltage states for different
+> > > system states
+> > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC
+> > > specific
+> > > mechanisms. bd718x7 driver implemented device-tree parsing
+> > > functions for
+> > > these state specific voltages. The parsing functions can be re-used 
+> > > by
+> > > other ROHM chip drivers like bd71828. Split the generic functions
+> > > from
+> > > bd718x7-regulator.c to rohm-regulator.c and export them for other
+> > > modules
+> > > to use.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > ---
 
-I'm happy to take all of them, but will need Mark's Ack.
+[...]
+
+> > > +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
+> > > +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config
+> > > *dvs,
+> > > +				  struct device_node *np,
+> > > +				  const struct regulator_desc *desc,
+> > > +				  struct regmap *regmap);
+> > 
+> > Does these really need to live in the parent's header file?
+> 
+> I don't know what would be a better place?
+
+You don't have a regulator header file?
+
+It seems over-kill to create one for this, so leave it as is.
+
+> > What other call-sites are there?
+> 
+> After this series the bd718x7-regulator.c and bd71828-regulator.c are
+> the in-tree drivers using these. rohm-regulator.c is implementing them.
+> And I hope we see yet another driver landing in later this year. 
+> 
+> Anyways, I will investigate if I can switch this to some common (not
+> rohm specific) DT bindings at some point (I've scheduled this study to
+> March) - If I can then they should live in regulator core headers.
+> 
+> But changing the existing properties should again be own set of patches
+> and I'd prefer doing that work independently of this series and not
+> delaying the BD71828 due to not-yet-evaluated bd718x7 property changes.
+
+That's fine.
 
 -- 
 Lee Jones [李琼斯]
