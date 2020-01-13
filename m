@@ -2,260 +2,195 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02ABC33CB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 15:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2DBC33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762C321569
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 15:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="EQ0CtAli"
+	by mail.kernel.org (Postfix) with ESMTP id 93B592081E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578930157;
+	bh=RVsyyyEak92HbEk5ozmzJ7WvLdzHYvkt6miQWJICS50=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pWcvj/iJVS5EYK6wmOnrsnqv+xicDTLj3Y2x7+LJDF2IasIlc6tpyCH5uGFpjXDcJ
+	 LtCCdOkV1bnssXGCWfO2zDcZ0gJI7DsXPD7R51KF5DBPhEcNWapfKQJV8rSNskgZlT
+	 LOTbITSzagWA1E+leHMD1ASOpbAktWIpTLE0Cqtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgAMPTK (ORCPT
+        id S1726567AbgAMPmh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:19:10 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39221 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgAMPTH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 10:19:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so8987311wrt.6
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 07:19:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=RcjIDWDVSFqwyRgsaPp3Vy+ROhKcQV4EgfHtXMY+e7g=;
-        b=EQ0CtAli3rZ72cdsDppAxkuycO7PGoTVnQafNsmoRTzj7cAFMX8/GwK4xMVDBhq1aE
-         +r3a4Wd+KDvsq6ckO+WqtbgLk7fSVbEqkCIMlUerT7pCGOdHp7JXOKGB/mtdUXIGrQRw
-         OezCCx+5yLpG9+PAIxm0m6YETM8lmCOGwxwOKbAHx9LlLpU6xnJc+rhRiSRtcB1fI4oa
-         bcEG/l7rXKGW6/uLBCDaq1a6YpsbJ9t3mTbWGflXKAIKVtbb1gNTVwqX+XrD7W1QZRm0
-         N0LdrpDVyg0RkkEjRut1mOWYoZAyS70oIUPcUwCzTptZY4k60LlEDdJLDOFYUkqRTlVn
-         Iy3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=RcjIDWDVSFqwyRgsaPp3Vy+ROhKcQV4EgfHtXMY+e7g=;
-        b=feK2W4UgkQoMIII2PrnzBlkPNZgCyHjuGlNysKAFGB2IPjGwVryqAylTXF4RFnUxmP
-         gLz+/fjqMop9e7LGSRm0pklKs7R0Wng4cQjxAqii0pvbKTnxzrsphkg3RruMCKbjPBsd
-         DhBKkq3oGKEg874fQDYRbS2PXMe3pPMbm2TbDDlVN13kMp+VrT0FWk0cqiTbfgtQovKL
-         q75m1WSBiGQMoXCiGKz6YQmPr4WsjEm4Mob8mc/g3IzVFeULm9KdL69DMVP69xoAFzma
-         yf9Hkm1obVikL3cDsVtSOBujN68GYsWU6BMB3Kz1SaXVuaxcZKXGL+ko4EJuvo/yLp60
-         crAQ==
-X-Gm-Message-State: APjAAAXVwcNVSEp7eSzrPe7m5E4jUSXSk7idvff9Ry8F08KdGOZJENfu
-        ojPd+SUeEsiN8yxmjhSTT1kopQ==
-X-Google-Smtp-Source: APXvYqzeQuDGVXi8qqElZcHwRL3UYxFgDNdwJBDQDD7a/u0wjGtLH4bY1MrjGS6yOaYRzO7DpHzUrw==
-X-Received: by 2002:a05:6000:1288:: with SMTP id f8mr19204986wrx.66.1578928744119;
-        Mon, 13 Jan 2020 07:19:04 -0800 (PST)
-Received: from [192.168.1.5] (amarseille-656-1-2-65.w90-8.abo.wanadoo.fr. [90.8.156.65])
-        by smtp.gmail.com with ESMTPSA id n14sm14122682wmi.26.2020.01.13.07.19.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 07:19:03 -0800 (PST)
-Subject: Re: [PATCH v2 3/3] media: platform: meson-ao-cec-g12a: add wakeup
- support
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>, narmstrong@baylibre.com,
-        mchehab@kernel.org, khilman@baylibre.com,
-        devicetree@vger.kernel.org
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191213132956.11074-1-glaroque@baylibre.com>
- <20191213132956.11074-4-glaroque@baylibre.com>
- <cccc0cda-7403-1378-40c8-291b11bf868a@xs4all.nl>
- <0a07b5cc-a7dc-2983-89de-a1894ae6a469@baylibre.com>
- <75278f35-c4c2-90bc-cc54-8c3b5bbdd7e1@xs4all.nl>
-From:   guillaume La Roque <glaroque@baylibre.com>
-Message-ID: <f937eedc-c0e6-7a32-70b1-809e1b73e8a3@baylibre.com>
-Date:   Mon, 13 Jan 2020 16:19:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 10:42:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727286AbgAMPmg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jan 2020 10:42:36 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E45A21739;
+        Mon, 13 Jan 2020 15:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578930155;
+        bh=RVsyyyEak92HbEk5ozmzJ7WvLdzHYvkt6miQWJICS50=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zsMXx19K/zG854+NtB/NSsH0j0812u2mBkgKLZHL36fLhfQBHrThEZkuTyd99dmPY
+         rmgmR7O0wWFyxqDN1663OT1yr9EMHeTgq0S8YqbPQjjnWSnUyQpgjxAHP5MF8E+Qsy
+         PgeAOpFuIKlp0GsxxajNArfw9mrxd+/ArZxe+g1Y=
+Received: by mail-qk1-f176.google.com with SMTP id x129so8842308qke.8;
+        Mon, 13 Jan 2020 07:42:35 -0800 (PST)
+X-Gm-Message-State: APjAAAUB75kPCkO9P+Z3R9Fm5hpA5I5Sk5KA8v1vdX/Bp4CVVGcYF5Wg
+        BzTH8SPrj5xZ3omss6RCArmJ09jTkAfj7jg2Kg==
+X-Google-Smtp-Source: APXvYqzd0iEA7ClpG/m//hBuec06RmDCtwQlY/Y+ZnupRPmSRvxene/XYpn3ed7tl82meicsVhfecOBtCK0sGE5Gue4=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr15396199qkl.119.1578930154331;
+ Mon, 13 Jan 2020 07:42:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <75278f35-c4c2-90bc-cc54-8c3b5bbdd7e1@xs4all.nl>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
+ <20200108163943.GA26863@bogus> <8aeb91730552357db340f8bfb21e6d15@codeaurora.org>
+ <CAL_JsqL5Gh2A3KfCgRFv+B50Y4PPF1b+qq8vY6yKhbea6KPAkw@mail.gmail.com> <b4f2fcc0d0a6724d77947f917f114d80@codeaurora.org>
+In-Reply-To: <b4f2fcc0d0a6724d77947f917f114d80@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 13 Jan 2020 09:42:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLZN9F9=1sqFkoaWpwNKDOUAgOMrc9cqk-iohMxkeM-8A@mail.gmail.com>
+Message-ID: <CAL_JsqLZN9F9=1sqFkoaWpwNKDOUAgOMrc9cqk-iohMxkeM-8A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
+To:     Shyam Kumar Thella <sthella@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 1/13/20 2:30 PM, Hans Verkuil wrote:
-> On 1/10/20 4:06 PM, guillaume La Roque wrote:
->> Hi Hans,
->>
->> On 1/7/20 3:36 PM, Hans Verkuil wrote:
->>> Hi Guillaume,
->>>
->>> On 12/13/19 2:29 PM, Guillaume La Roque wrote:
->>>> add register configuration to activate wakeup feature in bl301
->>>>
->>>> Tested-by: Kevin Hilman <khilman@baylibre.com>
->>>> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->>>> ---
->>>>  drivers/media/platform/meson/ao-cec-g12a.c | 33 ++++++++++++++++++++++
->>>>  1 file changed, 33 insertions(+)
->>>>
->>>> diff --git a/drivers/media/platform/meson/ao-cec-g12a.c b/drivers/media/platform/meson/ao-cec-g12a.c
->>>> index 891533060d49..85850b974126 100644
->>>> --- a/drivers/media/platform/meson/ao-cec-g12a.c
->>>> +++ b/drivers/media/platform/meson/ao-cec-g12a.c
->>>> @@ -25,6 +25,7 @@
->>>>  #include <media/cec.h>
->>>>  #include <media/cec-notifier.h>
->>>>  #include <linux/clk-provider.h>
->>>> +#include <linux/mfd/syscon.h>
->>>>  
->>>>  /* CEC Registers */
->>>>  
->>>> @@ -168,6 +169,18 @@
->>>>  
->>>>  #define CECB_WAKEUPCTRL		0x31
->>>>  
->>>> +#define CECB_FUNC_CFG_REG		0xA0
->>>> +#define CECB_FUNC_CFG_MASK		GENMASK(6, 0)
->>>> +#define CECB_FUNC_CFG_CEC_ON		0x01
->>>> +#define CECB_FUNC_CFG_OTP_ON		0x02
->>>> +#define CECB_FUNC_CFG_AUTO_STANDBY	0x04
->>>> +#define CECB_FUNC_CFG_AUTO_POWER_ON	0x08
->>>> +#define CECB_FUNC_CFG_ALL		0x2f
->>>> +#define CECB_FUNC_CFG_NONE		0x0
->>>> +
->>>> +#define CECB_LOG_ADDR_REG	0xA4
->>>> +#define CECB_LOG_ADDR_MASK	GENMASK(22, 16)
->>>> +
->>>>  struct meson_ao_cec_g12a_data {
->>>>  	/* Setup the internal CECB_CTRL2 register */
->>>>  	bool				ctrl2_setup;
->>>> @@ -177,6 +190,7 @@ struct meson_ao_cec_g12a_device {
->>>>  	struct platform_device		*pdev;
->>>>  	struct regmap			*regmap;
->>>>  	struct regmap			*regmap_cec;
->>>> +	struct regmap			*regmap_ao_sysctrl;
->>>>  	spinlock_t			cec_reg_lock;
->>>>  	struct cec_notifier		*notify;
->>>>  	struct cec_adapter		*adap;
->>>> @@ -518,6 +532,13 @@ meson_ao_cec_g12a_set_log_addr(struct cec_adapter *adap, u8 logical_addr)
->>>>  					 BIT(logical_addr - 8));
->>>>  	}
->>>>  
->>>> +	if (ao_cec->regmap_ao_sysctrl)
->>>> +		ret |= regmap_update_bits(ao_cec->regmap_ao_sysctrl,
->>>> +					 CECB_LOG_ADDR_REG,
->>>> +					 CECB_LOG_ADDR_MASK,
->>>> +					 FIELD_PREP(CECB_LOG_ADDR_MASK,
->>>> +						    logical_addr));
->>>> +
->>>>  	/* Always set Broadcast/Unregistered 15 address */
->>>>  	ret |= regmap_update_bits(ao_cec->regmap_cec, CECB_LADD_HIGH,
->>>>  				  BIT(CEC_LOG_ADDR_UNREGISTERED - 8),
->>>> @@ -618,6 +639,13 @@ static int meson_ao_cec_g12a_adap_enable(struct cec_adapter *adap, bool enable)
->>>>  		regmap_write(ao_cec->regmap_cec, CECB_CTRL2,
->>>>  			     FIELD_PREP(CECB_CTRL2_RISE_DEL_MAX, 2));
->>>>  
->>>> +	if (ao_cec->regmap_ao_sysctrl) {
->>>> +		regmap_update_bits(ao_cec->regmap_ao_sysctrl,
->>>> +				   CECB_FUNC_CFG_REG,
->>>> +				   CECB_FUNC_CFG_MASK,
->>>> +				   CECB_FUNC_CFG_ALL);
->>> What exactly is enabled here? Looking at CECB_FUNC_CFG_ALL it seems to
->>> enable automatic standby (I presume when the STANDBY message is received?)
->>> and power on (I presume when SET_STREAM_PATH is received?).
->> this register and flags are used by bl301 part.
->>
->> amlogic implemented a task to check cec event/message.
->>
->> for power on in bl301 it's not only on SET_STREAM_PATH but also on :
->>
->> USER_CONTROL_PRESSED
->> TEXT_VIEW_ON
-> Not IMAGE_VIEW_ON?
-
-sorry i forgot it , yes on IMAGE_VIEW_ON too
-
-
+On Fri, Jan 10, 2020 at 2:54 AM <sthella@codeaurora.org> wrote:
 >
->> ACTIVE_SOURCE
->> ROUTING_CHANGE
->>
->> when in CECB_FUNC_CFG_REG register we put  CECB_FUNC_CFG_CEC_ON and  CECB_FUNC_CFG_AUTO_POWER_ON
->>
->> it's not possible to change this
-> Too bad since ACTIVE_SOURCE and ROUTING_CHANGE should not power on a CEC device.
->
-> See section 11.5.2 in the HDMI 2.0 Specification for more details, if you have
-> that spec.
+> On 2020-01-09 21:01, Rob Herring wrote:
+> > On Thu, Jan 9, 2020 at 4:57 AM <sthella@codeaurora.org> wrote:
+> >>
+> >> On 2020-01-08 22:09, Rob Herring wrote:
+> >> > On Tue, Dec 24, 2019 at 11:02:12AM +0530, Shyam Kumar Thella wrote:
+> >> >> QTI SDAM allows PMIC peripherals to access the shared memory that is
+> >> >> available on QTI PMICs. Add documentation for it.
+> >> >>
+> >> >> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
+> >> >> ---
+> >> >>  .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79
+> >> >> ++++++++++++++++++++++
+> >> >>  1 file changed, 79 insertions(+)
+> >> >>  create mode 100644
+> >> >> Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >>
+> >> >> diff --git
+> >> >> a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >> b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >> new file mode 100644
+> >> >> index 0000000..8961a99
+> >> >> --- /dev/null
+> >> >> +++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >> @@ -0,0 +1,79 @@
+> >> >> +# SPDX-License-Identifier: GPL-2.0
+> >> >
+> >> > Dual license new bindings:
+> >> >
+> >> > (GPL-2.0-only OR BSD-2-Clause)
+> >> >
+> >> > Please spread the word in QCom.
+> >> Sure. I will add Dual license in next patchset.
+> >> >
+> >> >> +%YAML 1.2
+> >> >> +---
+> >> >> +$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
+> >> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> >> +
+> >> >> +title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
+> >> >> +
+> >> >> +maintainers:
+> >> >> +  - Shyam Kumar Thella <sthella@codeaurora.org>
+> >> >> +
+> >> >> +description: |
+> >> >> +  The SDAM provides scratch register space for the PMIC clients. This
+> >> >> +  memory can be used by software to store information or communicate
+> >> >> +  to/from the PBUS.
+> >> >> +
+> >> >> +allOf:
+> >> >> +  - $ref: "nvmem.yaml#"
+> >> >> +
+> >> >> +properties:
+> >> >> +  compatible:
+> >> >> +    enum:
+> >> >> +      - qcom,spmi-sdam
+> >> >> +
+> >> >> +  reg:
+> >> >> +    maxItems: 1
+> >> >> +
+> >> >> +  "#address-cells":
+> >> >> +    const: 1
+> >> >> +
+> >> >> +  "#size-cells":
+> >> >> +    const: 1
+> >> >
+> >> > ranges? The child addresses should be translateable I assume.
+> >> The addresses are not memory mapped on the CPU's address domain. They
+> >> are the SPMI addresses which can be accessed over SPMI controller.
+> >
+> > Doesn't have to be a CPU address. Are the child offsets within the
+> > range defined in the parent 'reg'? If so, then it should have
+> > 'ranges'.
+> Yes the child offsets fall within parent reg's address space.
+> I will add ranges in the next patch set.
+> >
+> >> >
+> >> >> +
+> >> >> +required:
+> >> >> +  - compatible
+> >> >> +  - reg
+> >> >> +
+> >> >> +patternProperties:
+> >> >> +  "^.*@[0-9a-f]+$":
+> >> >> +    type: object
+> >> >> +
+> >> >> +    properties:
+> >> >> +      reg:
+> >> >> +        maxItems: 1
+> >> >> +        description:
+> >> >> +          Offset and size in bytes within the storage device.
+> >> >> +
+> >> >> +      bits:
+> >> >
+> >> > Needs a type reference.
+> >> Yes. I will add a reference in the next patch set.
+> >> >
+> >> >> +        maxItems: 1
+> >> >> +        items:
+> >> >> +          items:
+> >> >> +            - minimum: 0
+> >> >> +              maximum: 7
+> >> >> +              description:
+> >> >> +                Offset in bit within the address range specified by
+> >> >> reg.
+> >> >> +            - minimum: 1
+> >> >
+> >> > max is 7?
+> >> I don't think it is limited to 7 as it is the size within the address
+> >> range specified by reg. If the address range is more than a byte size
+> >> can be more.
+> >
+> > Then why is the maximum offset 7?
+> I see. Offset can be more than 7 within the address range specified in
+> case
+> of data cells with more than a byte. I will remove maximum in the next
+> patch set.
 
+That's the wrong thing to do though. If the offset is more than 7, you
+should just increase 'reg' value. IOW, 'bits' should only be used to
+express bit position up to the minimum alignment of 'reg'. I guess you
+could have an unaligned multi-byte field, so I guess this is fine
+as-is.
 
-i will return your comment to amlogic but not sure they do change in bl301.
-
-
->
->>> Do you really want to automatically handle STANDBY that way? What does this
->>> do on the hardware level anyway? Isn't this something that should be
->>> controlled in userspace?
->> in fact i do a new check in bl301 code amlogic do nothing on STANDBY so i will clean code
->>
->> and activate real option supported by bl301
->>
->>> Similar questions for power on: you may not always want to enable this feature
->>> since it depends very much on the precise use-case.
->>>
->>> And which messages it reacts to in order to do a power-on needs to be
->>> documented since this differs depending on whether the CEC adapter is
->>> used for a TV or for a playback device. This feature may be hardwired for
->>> a playback device only, in which case it should probably be disabled if
->>> the CEC adapter is configured as a TV.
->>>
->>> In any case I would like to see some more details about how this works,
->>> especially since this is the first implementation of such a feature.
->>>
->>> I suspect that some userspace API might be needed to get the right level
->>> of control of such a feature.
->> i will send v3 next week with some comments and fix ( disable are missing for example)
->>
->> actual usercase is for android TV.
->>
->> when cec was enable android TV want to be wakeup by cec event.
->>
->>
->>> Regards,
->>>
->>> 	Hans
->>>
->> thanks for your review
-> No problem!
->
-> 	Hans
->
->> Regards
->>
->> Guillaume
->>
->>>> +	}
->>>> +
->>>>  	meson_ao_cec_g12a_irq_setup(ao_cec, true);
->>>>  
->>>>  	return 0;
->>>> @@ -685,6 +713,11 @@ static int meson_ao_cec_g12a_probe(struct platform_device *pdev)
->>>>  		goto out_probe_adapter;
->>>>  	}
->>>>  
->>>> +	ao_cec->regmap_ao_sysctrl = syscon_regmap_lookup_by_phandle
->>>> +		(pdev->dev.of_node, "amlogic,ao-sysctrl");
->>>> +	if (IS_ERR(ao_cec->regmap_ao_sysctrl))
->>>> +		dev_warn(&pdev->dev, "ao-sysctrl syscon regmap lookup failed.\n");
->>>> +
->>>>  	irq = platform_get_irq(pdev, 0);
->>>>  	ret = devm_request_threaded_irq(&pdev->dev, irq,
->>>>  					meson_ao_cec_g12a_irq,
->>>>
-
-Regards
-
-Guillaume
-
+Rob
