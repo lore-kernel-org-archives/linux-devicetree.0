@@ -2,337 +2,121 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAB2C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 11:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EFFC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70BC8207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 11:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE6720CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PodXF9h5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YrwMozSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgAMLwp (ORCPT
+        id S1726180AbgAMMCH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:52:45 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36001 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728676AbgAMLwp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 06:52:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z3so8254522wru.3
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 03:52:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/85bRh7DZx/BqYPph+OQ0tMRg11cLCfIvkNDwt3UDaY=;
-        b=PodXF9h5M+GQnNOoDYRyu2xI9UgBnt7R7b2MeYdJLfbMf7k91vUVzsmlC8iznOX3Zq
-         pWBwt/Kd6slRFtQmtM7FMKrUd8751sITb7pk/TTHWMGrIDOB1u3fwpNWDSxiHD5o6D3f
-         DtxoVSN5nuPOa6B4fxvmTGULiwYrWjYvEPupX31iAQmgRq/mEFFrngiQC8ZgYMpRbcXJ
-         DjsA4sinyeY3JG/KAlVwgGdZrR9vCEeVxSzfp2Bsrx5s1kzfROeLrHCoqN13pmeHKs72
-         FnfTge+bW2YiQ0cmkxhhUMvWXqkKJqN1hUmlgUC5LDC/GTAPbF2PlIWc8VDI85iOfCL/
-         DI1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/85bRh7DZx/BqYPph+OQ0tMRg11cLCfIvkNDwt3UDaY=;
-        b=J32Atpbc0ld7AukiF6lrhBEqQgph9JWwe+80ZsutoBHZ3rmbKonnK6kieD8xiIIlxb
-         z+iN8BnDG74FfsEPxwjwkRoIjosj/TvQq03W/U0NAlzyb4Wz0fCQ6DpHXRFm06WLKsgg
-         +Lb0dqM4siHcTTCkW3MG41G8upnd6XP3jYVfIl7oO5qddWN3H9dnIt2sj5EYiYbjHF+U
-         fd0OsLER6yTQWq2w8BRlaGnGrTAyTCyKOC8rrakJjfryHUeJc8wSsjhFW7ey4tke7OFZ
-         iSRh6owZVUzdUnLJyM6DYmDMC/QU+9MdEsH+dx37fzoJTlskvNl4JUT3LLfdXqaCiGyf
-         41SA==
-X-Gm-Message-State: APjAAAWZEGJNIH4kTTs65CbT6z6h17glcyF9wAG0qCLoQc0nGysNXNVS
-        JiBLRIDb35c4Ygj03E2wcg/A9UrwmdkX2A==
-X-Google-Smtp-Source: APXvYqxL7vwl2ympNdggit+5Vx+qZ4N7gmasa6xVw3HVQknojAyvSyCgEZqWuFZ+zgWHJUmtK0XsDg==
-X-Received: by 2002:a5d:5273:: with SMTP id l19mr18287388wrc.175.1578916362078;
-        Mon, 13 Jan 2020 03:52:42 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:257b:a7b6:7749:8057? ([2a01:e34:ed2f:f020:257b:a7b6:7749:8057])
-        by smtp.googlemail.com with ESMTPSA id 16sm13768886wmi.0.2020.01.13.03.52.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 03:52:41 -0800 (PST)
-Subject: Re: [PATCH V4 2/4] thermal: Add BCM2711 thermal driver
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-References: <1578759342-4550-1-git-send-email-stefan.wahren@i2se.com>
- <1578759342-4550-3-git-send-email-stefan.wahren@i2se.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a4f3bb11-c2ba-a679-bebf-33c762de5f8d@linaro.org>
-Date:   Mon, 13 Jan 2020 12:52:40 +0100
+        Mon, 13 Jan 2020 07:02:07 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56356 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgAMMCH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 07:02:07 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00DC1x5L110807;
+        Mon, 13 Jan 2020 06:01:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578916919;
+        bh=H2gDMp/Ne//Z1zeRNw2FyZRd1bmJxMtU/ICfn0o8bn8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YrwMozSeEbxwQYqZ6eHn1HJ3hd1lE3Yu+JqwShV2x7AxkYNy/lfmrsFa+3GZ5XHGY
+         z3XwTeT/DjEawhQCRX5xHHSkxsGfEHKTyHVYVxndDTo0wDDr7LloI6vD7LgvPlYzYK
+         R77R8LHCocu0S85+vVqV+2PGlRh++FMvx4pLxlJQ=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00DC1xwq104092
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 13 Jan 2020 06:01:59 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
+ Jan 2020 06:01:58 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 13 Jan 2020 06:01:58 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00DC1uN6105432;
+        Mon, 13 Jan 2020 06:01:57 -0600
+Subject: Re: [PATCH 2/3] ARM: dts: am437x-gp/epos-evm: drop unused panel
+ timings
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Tony Lindgren <tony@atomide.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jyri Sarha <jsarha@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+References: <20191114093950.4101-1-tomi.valkeinen@ti.com>
+ <20191114093950.4101-3-tomi.valkeinen@ti.com>
+ <20191202130459.GH4929@pendragon.ideasonboard.com>
+ <20191211165331.GC43123@atomide.com>
+ <45dae8f7-2f5e-6948-5a05-dc8a09ace1fa@ti.com>
+ <20191212203550.GB4892@pendragon.ideasonboard.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <add3d8af-6977-68e6-fb77-2fa748c4714a@ti.com>
+Date:   Mon, 13 Jan 2020 14:01:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1578759342-4550-3-git-send-email-stefan.wahren@i2se.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191212203550.GB4892@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 11/01/2020 17:15, Stefan Wahren wrote:
-> This adds the thermal sensor driver for the Broadcom BCM2711 SoC,
-> which is placed on the Raspberry Pi 4. The driver only provides
-> SoC temperature reading so far.
+On 12/12/2019 22:35, Laurent Pinchart wrote:
+> Hi Tomi,
 > 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  drivers/thermal/broadcom/Kconfig           |   7 ++
->  drivers/thermal/broadcom/Makefile          |   1 +
->  drivers/thermal/broadcom/bcm2711_thermal.c | 129 +++++++++++++++++++++++++++++
->  3 files changed, 137 insertions(+)
->  create mode 100644 drivers/thermal/broadcom/bcm2711_thermal.c
+> On Thu, Dec 12, 2019 at 11:37:51AM +0200, Tomi Valkeinen wrote:
+>> On 11/12/2019 18:53, Tony Lindgren wrote:
+>>> * Laurent Pinchart <laurent.pinchart@ideasonboard.com> [191202 13:05]:
+>>>> Hi Tomi,
+>>>>
+>>>> Thank you for the patch.
+>>>>
+>>>> On Thu, Nov 14, 2019 at 11:39:49AM +0200, Tomi Valkeinen wrote:
+>>>>> panel-simple now handled panel osd070t1718-19ts, and we no longer need
+>>>>> the panel timings in the DT file. So remove them.
+>>>>
+>>>> Should you in that case drop the panel-dpi compatible string too, as the
+>>>> panel-dpi bindings require panel timings in DT ?
+>>>
+>>> Yeah sounds like if panel-dpi is no longer usable for this device it
+>>> should be dropped from the compatible list.
+>>
+>> Ok, I agree.
+>>
+>> Looking at the dts files, panel-dpi is used in a bunch of boards. But
+>> we even have 3 dts files with panel-dpi, without the detailed panel
+>> model in compatible...
+>>
+>> Fixing those will break the compatibility with old dtbs and new
+>> kernel, unless we add timings-from-dt to a panel driver that handles
+>> panel-dpi.
 > 
-> diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-> index cf43e15..061f1db 100644
-> --- a/drivers/thermal/broadcom/Kconfig
-> +++ b/drivers/thermal/broadcom/Kconfig
-> @@ -1,4 +1,11 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +config BCM2711_THERMAL
-> +	tristate "Broadcom AVS RO thermal sensor driver"
-> +	depends on ARCH_BCM2835 || COMPILE_TEST
-> +	depends on THERMAL_OF && MFD_SYSCON
-> +	help
-> +	  Support for thermal sensors on Broadcom BCM2711 SoCs.
-> +
->  config BCM2835_THERMAL
->  	tristate "Thermal sensors on bcm2835 SoC"
->  	depends on ARCH_BCM2835 || COMPILE_TEST
-> diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
-> index 490ab1f..c917b24 100644
-> --- a/drivers/thermal/broadcom/Makefile
-> +++ b/drivers/thermal/broadcom/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> +obj-$(CONFIG_BCM2711_THERMAL)		+= bcm2711_thermal.o
->  obj-$(CONFIG_BCM2835_THERMAL)		+= bcm2835_thermal.o
->  obj-$(CONFIG_BRCMSTB_THERMAL)		+= brcmstb_thermal.o
->  obj-$(CONFIG_BCM_NS_THERMAL)		+= ns-thermal.o
-> diff --git a/drivers/thermal/broadcom/bcm2711_thermal.c b/drivers/thermal/broadcom/bcm2711_thermal.c
-> new file mode 100644
-> index 0000000..b1d3c4d
-> --- /dev/null
-> +++ b/drivers/thermal/broadcom/bcm2711_thermal.c
-> @@ -0,0 +1,129 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Broadcom AVS RO thermal sensor driver
-> + *
-> + * based on brcmstb_thermal
-> + *
-> + * Copyright (C) 2020 Stefan Wahren
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/thermal.h>
-> +
-> +#include "../thermal_hwmon.h"
-> +
-> +#define AVS_RO_TEMP_STATUS		0x200
-> + #define AVS_RO_TEMP_STATUS_valid_msk	(BIT(16) | BIT(10))
-> + #define AVS_RO_TEMP_STATUS_data_msk	GENMASK(9, 0)
+> I know, and I don't have a perfect answer for this :-( I don't see a
+> third option, it's either breaking DT backward compatibility or adding
+> timings parsing to a panel driver (either a new panel-dpi driver or to
+> panel-simple). What's your preferred option ?
 
-extra spaces above and please keep uppercase for the macro.
+Hmm, I just realized that changing these will break omapfb. It relies on panel-dpi and timings from 
+DT...
 
-> +struct bcm2711_thermal_priv {
-> +	struct regmap *regmap;
-> +	struct device *dev;
-
-There is no gain of adding this pointer for the sake of adding a simple
-trace in get_temp. Moreover, if the reading fails, the log will be
-flooded with the error. Returning an error is enough, up to the caller
-to handle the error and print something or not in this case.
-
-> +	struct thermal_zone_device *thermal;
-> +};
-> +
-> +static int bcm2711_get_temp(void *data, int *temp)
-> +{
-> +	struct bcm2711_thermal_priv *priv = data;
-> +	int slope = thermal_zone_get_slope(priv->thermal);
-> +	int offset = thermal_zone_get_offset(priv->thermal);
-> +	u32 val;
-> +	int ret;
-> +	long t;
-> +
-> +	ret = regmap_read(priv->regmap, AVS_RO_TEMP_STATUS, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!(val & AVS_RO_TEMP_STATUS_valid_msk)) {
-> +		dev_err(priv->dev, "reading not valid\n");
-> +		return -EIO;
-> +	}
-> +
-> +	val &= AVS_RO_TEMP_STATUS_data_msk;
-> +
-> +	/* Convert a HW code to a temperature reading (millidegree celsius) */
-> +	t = slope * val + offset;
-> +	if (t < 0)
-> +		*temp = 0;
-> +	else
-> +		*temp = t;
-
-	*temp = t < 0 ? 0 : t;
-
-> +	return 0;
-> +}
-> +
-> +static const struct thermal_zone_of_device_ops bcm2711_thermal_of_ops = {
-> +	.get_temp	= bcm2711_get_temp,
-> +};
-> +
-> +static const struct of_device_id bcm2711_thermal_id_table[] = {
-> +	{ .compatible = "brcm,bcm2711-thermal" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm2711_thermal_id_table);
-> +
-> +static int bcm2711_thermal_probe(struct platform_device *pdev)
-> +{
-> +	struct thermal_zone_device *thermal;
-> +	struct bcm2711_thermal_priv *priv;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *parent;
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	/* get regmap from syscon node */
-> +	parent = of_get_parent(dev->of_node); /* parent should be syscon node */
-> +	regmap = syscon_node_to_regmap(parent);
-> +	of_node_put(parent);
-> +	if (IS_ERR(regmap)) {
-> +		ret = PTR_ERR(regmap);
-> +		dev_err(dev, "failed to get regmap: %d\n", ret);
-> +		return ret;
-> +	}
-> +	priv->regmap = regmap;
-> +	priv->dev = dev;
-> +
-> +	thermal = devm_thermal_zone_of_sensor_register(dev, 0, priv,
-> +						       &bcm2711_thermal_of_ops);
-> +	if (IS_ERR(thermal)) {
-> +		ret = PTR_ERR(thermal);
-> +		dev_err(dev, "could not register sensor: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->thermal = thermal;
-> +
-> +	thermal->tzp->no_hwmon = false;
-> +	ret = thermal_add_hwmon_sysfs(thermal);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver bcm2711_thermal_driver = {
-> +	.probe = bcm2711_thermal_probe,
-> +	.driver = {
-> +		.name = "bcm2711_thermal",
-> +		.of_match_table = bcm2711_thermal_id_table,
-> +	},
-> +};
-> +module_platform_driver(bcm2711_thermal_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Stefan Wahren");
-> +MODULE_DESCRIPTION("Broadcom AVS RO thermal sensor driver");
-> 
-
+  Tomi
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
