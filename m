@@ -2,137 +2,83 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27260C33CA8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFA3C33CA8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082FC21569
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD412080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgAMJR5 (ORCPT
+        id S1727331AbgAMJU6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:17:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37746 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgAMJR5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:17:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AAFC8B00A;
-        Mon, 13 Jan 2020 09:17:53 +0000 (UTC)
-Date:   Mon, 13 Jan 2020 10:17:51 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v9 09/12] lib/vsprintf: Make use of fwnode API to obtain
- node names and separators
-Message-ID: <20200113091751.d63u7jbyh6p2rj23@pathway.suse.cz>
-References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
- <20191003123219.11237-10-sakari.ailus@linux.intel.com>
- <20200102222041.GA29067@roeck-us.net>
- <20200103112145.GM19828@paasikivi.fi.intel.com>
- <20200103144253.y6fnw44oe7asyniz@pathway.suse.cz>
- <20200103183555.GA28369@roeck-us.net>
+        Mon, 13 Jan 2020 04:20:58 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49659 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbgAMJU5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 04:20:57 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iqvtm-0001CV-TL; Mon, 13 Jan 2020 10:20:38 +0100
+Message-ID: <44fba44a4617443c7e5c602eb786b3818f106c3f.camel@pengutronix.de>
+Subject: Re: [PATCH v11 1/3] dt-bindings: mediatek: mt8183: Add #reset-cells
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Yong Liang <yong.liang@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
+        <Jiaxin.Yu@mediatek.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Chang-An Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B6=E5=AE=89=29?= 
+        <Chang-An.Chen@mediatek.com>,
+        Freddy Hsin =?UTF-8?Q?=28=E8=BE=9B=E6=81=92=E8=B1=90=29?= 
+        <Freddy.Hsin@mediatek.com>,
+        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
+        <Yingjoe.Chen@mediatek.com>, Stephen Boyd <sboyd@kernel.org>
+Date:   Mon, 13 Jan 2020 10:20:37 +0100
+In-Reply-To: <1578906770.20923.22.camel@mhfsdcap03>
+References: <1578639862-14480-1-git-send-email-jiaxin.yu@mediatek.com>
+         <1578639862-14480-2-git-send-email-jiaxin.yu@mediatek.com>
+         <CANMq1KBNuJDEn57d0ysc2XG0ezWEvJ2Pm88YihDiSZJ=-E=W9g@mail.gmail.com>
+         <1578906770.20923.22.camel@mhfsdcap03>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103183555.GA28369@roeck-us.net>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri 2020-01-03 10:35:55, Guenter Roeck wrote:
-> On Fri, Jan 03, 2020 at 03:42:53PM +0100, Petr Mladek wrote:
-> > On Fri 2020-01-03 13:21:45, Sakari Ailus wrote:
-> > > Hi Guenter,
+On Mon, 2020-01-13 at 17:12 +0800, Yong Liang wrote:
+> On Mon, 2020-01-13 at 14:10 +0800, Nicolas Boichat wrote:
+> > Jiaxin,
+> > 
+> > On Fri, Jan 10, 2020 at 3:04 PM Jiaxin Yu <jiaxin.yu@mediatek.com> wrote:
+> > > Add #reset-cells property and update example
 > > > 
-> > > On Thu, Jan 02, 2020 at 02:20:41PM -0800, Guenter Roeck wrote:
-> > > > Hi,
-> > > > 
-> > > > On Thu, Oct 03, 2019 at 03:32:16PM +0300, Sakari Ailus wrote:
-> > > > > Instead of implementing our own means of discovering parent nodes, node
-> > > > > names or counting how many parents a node has, use the newly added
-> > > > > functions in the fwnode API to obtain that information.
-> > > > > 
-> > > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > > > > ---
-> > > > 
-> > > > This patch results in a lockdep splat when running one of my qemu
-> > > > emulations. See below for log and bisect results. A complete log
-> > > > is available at
-> > > > https://kerneltests.org/builders/qemu-arm-master/builds/1408/steps/qemubuildcommand/logs/stdio
-> > > > 
-> > > > Guenter
-> > > 
-> > > Thank you for reporting this.
-> > > 
-> > > I looked into the issue, and indeed I can conform the patch introduces this
-> > > as it takes the devtree_lock for printing the name of the fwnode. There is
-> > 
-> > I guess that you meant "is not".
-> > 
-> > 
-> > > however chance of a deadlock in practice as the code in mm/slub.c does not
-> > > deal with fwnodes (in which case acquiring devtree_lock could be possible),
-> > > maybe for other reasons as well. The patch however introduces an unpleasant
-> > > source of such warnings.
-> > 
-> > I agree that it is a false positive. alloc/free is called in OF code
-> > under devtree_lock. But OF code is not called from alloc/free (slub.c)
-> > and it should not happen.
-> > 
-> 
-> Assuming that memory allocation is indeed called from code holding
-> devtree_lock: The problem, as I see it, is that the order of acquiring
-> locks is different. In OF code, the order is
-> 	devtree_lock
-> 	(&n->list_lock)->rlock
+> > > Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> > > Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+> > > Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> > > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Yes, this happens when alloc is called in OF code under devtree_lock.
+You can keep my R-b on all three patches, this one specifically referred
+to the dt-bindings/reset-controller header files.
 
-> Elsewhere, in %pOF print sequences, it is
-> 	(&n->list_lock)->rlock
-> 	devtree_lock
+regards
+Philipp
 
-I believe that this order does not exist in reality. lockep "just"
-connected this the two locks via logbuf_lock. When printk() is
-called in the allocator:
-
-	(&n->list_lock)->rlock
-	logbuf_lock
-
-and when %pOF is used in printk():
-
-	logbuf_lock
-	devtree_lock
-
-From this two lockdep assumes that it might be possible to
-use %pOF in printk() from allocator code:
-
-	(&n->list_lock)->rlock
-	logbuf_lock
-	devtree_lock
-
-But I believe that this does not make sense and never happen reality.
-
-That said, I would still prefer when %pOF could be implemented
-without the lock. It would make it usable anywhere without any
-risk of deadlock.
-
-Sakari, what is your opinion, please?
-
-Best Regards,
-Petr
