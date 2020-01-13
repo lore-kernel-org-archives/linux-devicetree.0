@@ -2,135 +2,337 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33992C33CAD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 11:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAB2C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 11:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0471A20CC7
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 11:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BC8207FF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 11:52:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PodXF9h5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgAMLtn (ORCPT
+        id S1726277AbgAMLwp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:49:43 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:62732 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgAMLtn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 06:49:43 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-ba-5e1c595373c1
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 16.5F.08102.3595C1E5; Mon, 13 Jan 2020 12:49:39 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 13 Jan 2020 12:49:27 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Thread-Topic: [PATCH v8 08/12] regulator: bd718x7: Split driver to common
- and bd718x7 specific parts
-Thread-Index: AQHVvvUCH6xbXbWt3UKhkzpPOHFEqKffIN0AgAFNNwCACAJ9gIAAD8yA
-Date:   Mon, 13 Jan 2020 11:49:26 +0000
-Message-ID: <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-         <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200107124124.GI14821@dell>
-         <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
-         <20200113105301.GF5414@dell>
-In-Reply-To: <20200113105301.GF5414@dell>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <558A385D28CECC4E84770D5C5B7DB969@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 13 Jan 2020 06:52:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36001 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728676AbgAMLwp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 06:52:45 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z3so8254522wru.3
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 03:52:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/85bRh7DZx/BqYPph+OQ0tMRg11cLCfIvkNDwt3UDaY=;
+        b=PodXF9h5M+GQnNOoDYRyu2xI9UgBnt7R7b2MeYdJLfbMf7k91vUVzsmlC8iznOX3Zq
+         pWBwt/Kd6slRFtQmtM7FMKrUd8751sITb7pk/TTHWMGrIDOB1u3fwpNWDSxiHD5o6D3f
+         DtxoVSN5nuPOa6B4fxvmTGULiwYrWjYvEPupX31iAQmgRq/mEFFrngiQC8ZgYMpRbcXJ
+         DjsA4sinyeY3JG/KAlVwgGdZrR9vCEeVxSzfp2Bsrx5s1kzfROeLrHCoqN13pmeHKs72
+         FnfTge+bW2YiQ0cmkxhhUMvWXqkKJqN1hUmlgUC5LDC/GTAPbF2PlIWc8VDI85iOfCL/
+         DI1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=/85bRh7DZx/BqYPph+OQ0tMRg11cLCfIvkNDwt3UDaY=;
+        b=J32Atpbc0ld7AukiF6lrhBEqQgph9JWwe+80ZsutoBHZ3rmbKonnK6kieD8xiIIlxb
+         z+iN8BnDG74FfsEPxwjwkRoIjosj/TvQq03W/U0NAlzyb4Wz0fCQ6DpHXRFm06WLKsgg
+         +Lb0dqM4siHcTTCkW3MG41G8upnd6XP3jYVfIl7oO5qddWN3H9dnIt2sj5EYiYbjHF+U
+         fd0OsLER6yTQWq2w8BRlaGnGrTAyTCyKOC8rrakJjfryHUeJc8wSsjhFW7ey4tke7OFZ
+         iSRh6owZVUzdUnLJyM6DYmDMC/QU+9MdEsH+dx37fzoJTlskvNl4JUT3LLfdXqaCiGyf
+         41SA==
+X-Gm-Message-State: APjAAAWZEGJNIH4kTTs65CbT6z6h17glcyF9wAG0qCLoQc0nGysNXNVS
+        JiBLRIDb35c4Ygj03E2wcg/A9UrwmdkX2A==
+X-Google-Smtp-Source: APXvYqxL7vwl2ympNdggit+5Vx+qZ4N7gmasa6xVw3HVQknojAyvSyCgEZqWuFZ+zgWHJUmtK0XsDg==
+X-Received: by 2002:a5d:5273:: with SMTP id l19mr18287388wrc.175.1578916362078;
+        Mon, 13 Jan 2020 03:52:42 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:257b:a7b6:7749:8057? ([2a01:e34:ed2f:f020:257b:a7b6:7749:8057])
+        by smtp.googlemail.com with ESMTPSA id 16sm13768886wmi.0.2020.01.13.03.52.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 03:52:41 -0800 (PST)
+Subject: Re: [PATCH V4 2/4] thermal: Add BCM2711 thermal driver
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
+References: <1578759342-4550-1-git-send-email-stefan.wahren@i2se.com>
+ <1578759342-4550-3-git-send-email-stefan.wahren@i2se.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ xsFNBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABzSpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz7Cwa4EEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAh
+ CRCP9LjScWdVJxYhBCTWJvJTvp6H5s5b9I/0uNJxZ1Un69gQAJK0ODuKzYl0TvHPU8W7uOeu
+ U7OghN/DTkG6uAkyqW+iIVi320R5QyXN1Tb6vRx6+yZ6mpJRW5S9fO03wcD8Sna9xyZacJfO
+ UTnpfUArs9FF1pB3VIr95WwlVoptBOuKLTCNuzoBTW6jQt0sg0uPDAi2dDzf+21t/UuF7I3z
+ KSeVyHuOfofonYD85FkQJN8lsbh5xWvsASbgD8bmfI87gEbt0wq2ND5yuX+lJK7FX4lMO6gR
+ ZQ75g4KWDprOO/w6ebRxDjrH0lG1qHBiZd0hcPo2wkeYwb1sqZUjQjujlDhcvnZfpDGR4yLz
+ 5WG+pdciQhl6LNl7lctNhS8Uct17HNdfN7QvAumYw5sUuJ+POIlCws/aVbA5+DpmIfzPx5Ak
+ UHxthNIyqZ9O6UHrVg7SaF3rvqrXtjtnu7eZ3cIsfuuHrXBTWDsVwub2nm1ddZZoC530BraS
+ d7Y7eyKs7T4mGwpsi3Pd33Je5aC/rDeF44gXRv3UnKtjq2PPjaG/KPG0fLBGvhx0ARBrZLsd
+ 5CTDjwFA4bo+pD13cVhTfim3dYUnX1UDmqoCISOpzg3S4+QLv1bfbIsZ3KDQQR7y/RSGzcLE
+ z164aDfuSvl+6Myb5qQy1HUQ0hOj5Qh+CzF3CMEPmU1v9Qah1ThC8+KkH/HHjPPulLn7aMaK
+ Z8t6h7uaAYnGzjMEXZLIEhYJKwYBBAHaRw8BAQdAGdRDglTydmxI03SYiVg95SoLOKT5zZW1
+ 7Kpt/5zcvt3CwhsEGAEIACAWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXZLIEgIbAgCvCRCP
+ 9LjScWdVJ40gBBkWCAAdFiEEbinX+DPdhovb6oob3uarTi9/eqYFAl2SyBIAIQkQ3uarTi9/
+ eqYWIQRuKdf4M92Gi9vqihve5qtOL396pnZGAP0c3VRaj3RBEOUGKxHzcu17ZUnIoJLjpHdk
+ NfBnWU9+UgD/bwTxE56Wd8kQZ2e2UTy4BM8907FsJgAQLL4tD2YZggwWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ5CaD/0YQyfUzjpR1GnCSkbaLYTEUsyaHuWPI/uSpKTtcbttpYv+QmYsIwD9
+ 8CeH3zwY0Xl/1fE9Hy59z6Vxv9YVapLx0nPDOA1zDVNq2MnutxHb8t+Imjz4ERCxysqtfYrv
+ gao3E/h0c8SEeh+bh5MkjwmU8CwZ3doWyiVdULKESe7/Gs5OuhFzaDVPCpWdsKdCAGyUuP/+
+ qRWwKGVpWP0Rrt6MTK24Ibeu3xEZO8c3XOEXH5d9nf6YRqBEIizAecoCr00E9c+6BlRS0AqR
+ OQC3/Mm7rWtco3+WOridqVXkko9AcZ8AiM5nu0F8AqYGKg0y7vkL2LOP8us85L0p57MqIR1u
+ gDnITlTY0x4RYRWJ9+k7led5WsnWlyv84KNzbDqQExTm8itzeZYW9RvbTS63r/+FlcTa9Cz1
+ 5fW3Qm0BsyECvpAD3IPLvX9jDIR0IkF/BQI4T98LQAkYX1M/UWkMpMYsL8tLObiNOWUl4ahb
+ PYi5Yd8zVNYuidXHcwPAUXqGt3Cs+FIhihH30/Oe4jL0/2ZoEnWGOexIFVFpue0jdqJNiIvA
+ F5Wpx+UiT5G8CWYYge5DtHI3m5qAP9UgPuck3N8xCihbsXKX4l8bdHfziaJuowief7igeQs/
+ WyY9FnZb0tl29dSa7PdDKFWu+B+ZnuIzsO5vWMoN6hMThTl1DxS+jc7ATQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABwsGNBBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwAIQkQj/S40nFnVScWIQQk1ibyU76eh+bO
+ W/SP9LjScWdVJ/g6EACFYk+OBS7pV9KZXncBQYjKqk7Kc+9JoygYnOE2wN41QN9Xl0Rk3wri
+ qO7PYJM28YjK3gMT8glu1qy+Ll1bjBYWXzlsXrF4szSqkJpm1cCxTmDOne5Pu6376dM9hb4K
+ l9giUinI4jNUCbDutlt+Cwh3YuPuDXBAKO8YfDX2arzn/CISJlk0d4lDca4Cv+4yiJpEGd/r
+ BVx2lRMUxeWQTz+1gc9ZtbRgpwoXAne4iw3FlR7pyg3NicvR30YrZ+QOiop8psWM2Fb1PKB9
+ 4vZCGT3j2MwZC50VLfOXC833DBVoLSIoL8PfTcOJOcHRYU9PwKW0wBlJtDVYRZ/CrGFjbp2L
+ eT2mP5fcF86YMv0YGWdFNKDCOqOrOkZVmxai65N9d31k8/O9h1QGuVMqCiOTULy/h+FKpv5q
+ t35tlzA2nxPOX8Qj3KDDqVgQBMYJRghZyj5+N6EKAbUVa9Zq8xT6Ms2zz/y7CPW74G1GlYWP
+ i6D9VoMMi6ICko/CXUZ77OgLtMsy3JtzTRbn/wRySOY2AsMgg0Sw6yJ0wfrVk6XAMoLGjaVt
+ X4iPTvwocEhjvrO4eXCicRBocsIB2qZaIj3mlhk2u4AkSpkKm9cN0KWYFUxlENF4/NKWMK+g
+ fGfsCsS3cXXiZpufZFGr+GoHwiELqfLEAQ9AhlrHGCKcgVgTOI6NHg==
+Message-ID: <a4f3bb11-c2ba-a679-bebf-33c762de5f8d@linaro.org>
+Date:   Mon, 13 Jan 2020 12:52:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTSRjHM7vb7VBdXSvItKLGPY0viS8kGsYc5/FFXGNiVCLnaQRXWWgV
-        WrJtDWjuwkU5oWiCr2gjVUkRgpxIhaAG1FTQWowGabGKqMSXqJhyFz2NuR6666LwZeaZ+c/v
-        +f8/PANJ/QBthGaLXZQsQi5H66hrtf81zkv7NSFj4d6WH7GnK6TFeyNntPh9ZYDCR/qf0/hk
-        +x0NLuts0uDe5vMUfvJvB8AfgiUEPhytIfA/+x5r8IWTUYC7L5+gcfPbcwDfOBukcfX9LgKf
-        qPZTuCuwDPcFOmhc3NauxUM9jVRKHF/vrgf8YLhYy7vrd/GXXH1a3ltXSvOPelpp/ma4heAr
-        3J8IvvbsRy3/zjt1tW7DmOQtgn1HmjnHsmDp5jGmob/va/MjhgLXwSVF4JjBCWIgYhehe6Fz
-        GifQQT0bAuhVZ9nwwQ9QSThIOwGENJuMnA+0ChDLJiKP/wWl1CTrgaj5j23Kk4msiHo/ZKtP
-        slFJ5Cqt1qmobXf715piZ6KmaPBrG4ZdhW7/v59UreoI5Pf1AUWIYeeglkAFodSAnYJKiyKE
-        6hWPvC8/atTQLPK03iXVOg69fjY0fM+htk/9lJKHlPs0XF6goinoyJ/u4cjT0eGy/uEME9Ct
-        48+pcjDJNcrBNUK7RtGuUbRrFH0KaOoAyhPMuTmCXUycL4mO+ZLVlCdvW615XqAOzPuL4LNv
-        hQ8QEPiAARJcHNOzbnKGftwWa1ahSbCZMiVHrmjzAQRJLpbx3jFm6JksoXCnKFm/SZMhxcUz
-        s/oPbNKzitd2UcwXpW9qAoQcYgZ+ScjQT5DEHLEg25xrH5EJGKM01xljbaIlS5QEh92UqUxH
-        pk0eD0UaK/u+XC/jjC1fyJNvVTQAkmD568oqEl7qcMvrrTqPvLZXVleRespitYjGeOZuuoyx
-        CmZyWL6bvgHxEHATmdlKprHyD/re841sR8h2um6DYmcXRiRjERAetEz7yWH/a62w9uGTow3p
-        L7rO3DiwcuPq07Rw2otaHaHOigZz0wrNHsn1w3iLYOr2NQ4M9nqjS2rvpf4Wty/VyS186pkG
-        3pH+YEgTuR4GNcYavjCltWTTMcPu6OJxVxwMLF5z6NRgUkHlLgBnEOW/b+eelS7fmZT8c/pK
-        W5ijbCYhcS4p2YQvO4W4lP4DAAA=
+In-Reply-To: <1578759342-4550-3-git-send-email-stefan.wahren@i2se.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGVsbG8gTGVlLA0KDQpPbiBNb24sIDIwMjAtMDEtMTMgYXQgMTA6NTMgKzAwMDAsIExlZSBKb25l
-cyB3cm90ZToNCj4gT24gV2VkLCAwOCBKYW4gMjAyMCwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToN
-Cj4gDQo+ID4gSGVsbG8gTGVlLA0KPiA+IA0KPiA+IE9uIFR1ZSwgMjAyMC0wMS0wNyBhdCAxMjo0
-MSArMDAwMCwgTGVlIEpvbmVzIHdyb3RlOg0KPiA+ID4gT24gTW9uLCAzMCBEZWMgMjAxOSwgTWF0
-dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IEZldyBST0hNIFBNSUNzIGFsbG93
-IHNldHRpbmcgdGhlIHZvbHRhZ2Ugc3RhdGVzIGZvciBkaWZmZXJlbnQNCj4gPiA+ID4gc3lzdGVt
-IHN0YXRlcw0KPiA+ID4gPiBsaWtlIFJVTiwgSURMRSwgU1VTUEVORCBhbmQgTFBTUi4gU3RhdGVz
-IGFyZSB0aGVuIGNoYW5nZWQgdmlhDQo+ID4gPiA+IFNvQw0KPiA+ID4gPiBzcGVjaWZpYw0KPiA+
-ID4gPiBtZWNoYW5pc21zLiBiZDcxOHg3IGRyaXZlciBpbXBsZW1lbnRlZCBkZXZpY2UtdHJlZSBw
-YXJzaW5nDQo+ID4gPiA+IGZ1bmN0aW9ucyBmb3INCj4gPiA+ID4gdGhlc2Ugc3RhdGUgc3BlY2lm
-aWMgdm9sdGFnZXMuIFRoZSBwYXJzaW5nIGZ1bmN0aW9ucyBjYW4gYmUgcmUtDQo+ID4gPiA+IHVz
-ZWQgDQo+ID4gPiA+IGJ5DQo+ID4gPiA+IG90aGVyIFJPSE0gY2hpcCBkcml2ZXJzIGxpa2UgYmQ3
-MTgyOC4gU3BsaXQgdGhlIGdlbmVyaWMNCj4gPiA+ID4gZnVuY3Rpb25zDQo+ID4gPiA+IGZyb20N
-Cj4gPiA+ID4gYmQ3MTh4Ny1yZWd1bGF0b3IuYyB0byByb2htLXJlZ3VsYXRvci5jIGFuZCBleHBv
-cnQgdGhlbSBmb3INCj4gPiA+ID4gb3RoZXINCj4gPiA+ID4gbW9kdWxlcw0KPiA+ID4gPiB0byB1
-c2UuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPA0K
-PiA+ID4gPiBtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gPiA+IEFja2Vk
-LWJ5OiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+DQo+ID4gPiA+IC0tLQ0KPiANCj4g
-Wy4uLl0NCj4gDQo+ID4gPiA+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfUkVHVUxBVE9SX1JPSE0p
-DQo+ID4gPiA+ICtpbnQgcm9obV9yZWd1bGF0b3Jfc2V0X2R2c19sZXZlbHMoY29uc3Qgc3RydWN0
-IHJvaG1fZHZzX2NvbmZpZw0KPiA+ID4gPiAqZHZzLA0KPiA+ID4gPiArCQkJCSAgc3RydWN0IGRl
-dmljZV9ub2RlICpucCwNCj4gPiA+ID4gKwkJCQkgIGNvbnN0IHN0cnVjdCByZWd1bGF0b3JfZGVz
-Yw0KPiA+ID4gPiAqZGVzYywNCj4gPiA+ID4gKwkJCQkgIHN0cnVjdCByZWdtYXAgKnJlZ21hcCk7
-DQo+ID4gPiANCj4gPiA+IERvZXMgdGhlc2UgcmVhbGx5IG5lZWQgdG8gbGl2ZSBpbiB0aGUgcGFy
-ZW50J3MgaGVhZGVyIGZpbGU/DQo+ID4gDQo+ID4gSSBkb24ndCBrbm93IHdoYXQgd291bGQgYmUg
-YSBiZXR0ZXIgcGxhY2U/DQo+IA0KPiBZb3UgZG9uJ3QgaGF2ZSBhIHJlZ3VsYXRvciBoZWFkZXIg
-ZmlsZT8NCj4gDQo+IEl0IHNlZW1zIG92ZXIta2lsbCB0byBjcmVhdGUgb25lIGZvciB0aGlzLCBz
-byBsZWF2ZSBpdCBhcyBpcy4NCj4gDQo+ID4gPiBXaGF0IG90aGVyIGNhbGwtc2l0ZXMgYXJlIHRo
-ZXJlPw0KPiA+IA0KPiA+IEFmdGVyIHRoaXMgc2VyaWVzIHRoZSBiZDcxOHg3LXJlZ3VsYXRvci5j
-IGFuZCBiZDcxODI4LXJlZ3VsYXRvci5jDQo+ID4gYXJlDQo+ID4gdGhlIGluLXRyZWUgZHJpdmVy
-cyB1c2luZyB0aGVzZS4gcm9obS1yZWd1bGF0b3IuYyBpcyBpbXBsZW1lbnRpbmcNCj4gPiB0aGVt
-Lg0KPiA+IEFuZCBJIGhvcGUgd2Ugc2VlIHlldCBhbm90aGVyIGRyaXZlciBsYW5kaW5nIGluIGxh
-dGVyIHRoaXMgeWVhci4gDQo+ID4gDQo+ID4gQW55d2F5cywgSSB3aWxsIGludmVzdGlnYXRlIGlm
-IEkgY2FuIHN3aXRjaCB0aGlzIHRvIHNvbWUgY29tbW9uDQo+ID4gKG5vdA0KPiA+IHJvaG0gc3Bl
-Y2lmaWMpIERUIGJpbmRpbmdzIGF0IHNvbWUgcG9pbnQgKEkndmUgc2NoZWR1bGVkIHRoaXMgc3R1
-ZHkNCj4gPiB0bw0KPiA+IE1hcmNoKSAtIElmIEkgY2FuIHRoZW4gdGhleSBzaG91bGQgbGl2ZSBp
-biByZWd1bGF0b3IgY29yZSBoZWFkZXJzLg0KPiA+IA0KPiA+IEJ1dCBjaGFuZ2luZyB0aGUgZXhp
-c3RpbmcgcHJvcGVydGllcyBzaG91bGQgYWdhaW4gYmUgb3duIHNldCBvZg0KPiA+IHBhdGNoZXMN
-Cj4gPiBhbmQgSSdkIHByZWZlciBkb2luZyB0aGF0IHdvcmsgaW5kZXBlbmRlbnRseSBvZiB0aGlz
-IHNlcmllcyBhbmQgbm90DQo+ID4gZGVsYXlpbmcgdGhlIEJENzE4MjggZHVlIHRvIG5vdC15ZXQt
-ZXZhbHVhdGVkIGJkNzE4eDcgcHJvcGVydHkNCj4gPiBjaGFuZ2VzLg0KPiANCj4gVGhhdCdzIGZp
-bmUuDQoNCg0KR2xhZCB0byBoZWFyIDopIEJ5IHRoZSB3YXksIEkgYWxyZWFkeSBzZW50IHRoZSB2
-OSA7KQ0KDQpCciwNCglNYXR0aQ0KDQo=
+On 11/01/2020 17:15, Stefan Wahren wrote:
+> This adds the thermal sensor driver for the Broadcom BCM2711 SoC,
+> which is placed on the Raspberry Pi 4. The driver only provides
+> SoC temperature reading so far.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/thermal/broadcom/Kconfig           |   7 ++
+>  drivers/thermal/broadcom/Makefile          |   1 +
+>  drivers/thermal/broadcom/bcm2711_thermal.c | 129 +++++++++++++++++++++++++++++
+>  3 files changed, 137 insertions(+)
+>  create mode 100644 drivers/thermal/broadcom/bcm2711_thermal.c
+> 
+> diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
+> index cf43e15..061f1db 100644
+> --- a/drivers/thermal/broadcom/Kconfig
+> +++ b/drivers/thermal/broadcom/Kconfig
+> @@ -1,4 +1,11 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> +config BCM2711_THERMAL
+> +	tristate "Broadcom AVS RO thermal sensor driver"
+> +	depends on ARCH_BCM2835 || COMPILE_TEST
+> +	depends on THERMAL_OF && MFD_SYSCON
+> +	help
+> +	  Support for thermal sensors on Broadcom BCM2711 SoCs.
+> +
+>  config BCM2835_THERMAL
+>  	tristate "Thermal sensors on bcm2835 SoC"
+>  	depends on ARCH_BCM2835 || COMPILE_TEST
+> diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
+> index 490ab1f..c917b24 100644
+> --- a/drivers/thermal/broadcom/Makefile
+> +++ b/drivers/thermal/broadcom/Makefile
+> @@ -1,4 +1,5 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> +obj-$(CONFIG_BCM2711_THERMAL)		+= bcm2711_thermal.o
+>  obj-$(CONFIG_BCM2835_THERMAL)		+= bcm2835_thermal.o
+>  obj-$(CONFIG_BRCMSTB_THERMAL)		+= brcmstb_thermal.o
+>  obj-$(CONFIG_BCM_NS_THERMAL)		+= ns-thermal.o
+> diff --git a/drivers/thermal/broadcom/bcm2711_thermal.c b/drivers/thermal/broadcom/bcm2711_thermal.c
+> new file mode 100644
+> index 0000000..b1d3c4d
+> --- /dev/null
+> +++ b/drivers/thermal/broadcom/bcm2711_thermal.c
+> @@ -0,0 +1,129 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Broadcom AVS RO thermal sensor driver
+> + *
+> + * based on brcmstb_thermal
+> + *
+> + * Copyright (C) 2020 Stefan Wahren
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/thermal.h>
+> +
+> +#include "../thermal_hwmon.h"
+> +
+> +#define AVS_RO_TEMP_STATUS		0x200
+> + #define AVS_RO_TEMP_STATUS_valid_msk	(BIT(16) | BIT(10))
+> + #define AVS_RO_TEMP_STATUS_data_msk	GENMASK(9, 0)
+
+extra spaces above and please keep uppercase for the macro.
+
+> +struct bcm2711_thermal_priv {
+> +	struct regmap *regmap;
+> +	struct device *dev;
+
+There is no gain of adding this pointer for the sake of adding a simple
+trace in get_temp. Moreover, if the reading fails, the log will be
+flooded with the error. Returning an error is enough, up to the caller
+to handle the error and print something or not in this case.
+
+> +	struct thermal_zone_device *thermal;
+> +};
+> +
+> +static int bcm2711_get_temp(void *data, int *temp)
+> +{
+> +	struct bcm2711_thermal_priv *priv = data;
+> +	int slope = thermal_zone_get_slope(priv->thermal);
+> +	int offset = thermal_zone_get_offset(priv->thermal);
+> +	u32 val;
+> +	int ret;
+> +	long t;
+> +
+> +	ret = regmap_read(priv->regmap, AVS_RO_TEMP_STATUS, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!(val & AVS_RO_TEMP_STATUS_valid_msk)) {
+> +		dev_err(priv->dev, "reading not valid\n");
+> +		return -EIO;
+> +	}
+> +
+> +	val &= AVS_RO_TEMP_STATUS_data_msk;
+> +
+> +	/* Convert a HW code to a temperature reading (millidegree celsius) */
+> +	t = slope * val + offset;
+> +	if (t < 0)
+> +		*temp = 0;
+> +	else
+> +		*temp = t;
+
+	*temp = t < 0 ? 0 : t;
+
+> +	return 0;
+> +}
+> +
+> +static const struct thermal_zone_of_device_ops bcm2711_thermal_of_ops = {
+> +	.get_temp	= bcm2711_get_temp,
+> +};
+> +
+> +static const struct of_device_id bcm2711_thermal_id_table[] = {
+> +	{ .compatible = "brcm,bcm2711-thermal" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm2711_thermal_id_table);
+> +
+> +static int bcm2711_thermal_probe(struct platform_device *pdev)
+> +{
+> +	struct thermal_zone_device *thermal;
+> +	struct bcm2711_thermal_priv *priv;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *parent;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	/* get regmap from syscon node */
+> +	parent = of_get_parent(dev->of_node); /* parent should be syscon node */
+> +	regmap = syscon_node_to_regmap(parent);
+> +	of_node_put(parent);
+> +	if (IS_ERR(regmap)) {
+> +		ret = PTR_ERR(regmap);
+> +		dev_err(dev, "failed to get regmap: %d\n", ret);
+> +		return ret;
+> +	}
+> +	priv->regmap = regmap;
+> +	priv->dev = dev;
+> +
+> +	thermal = devm_thermal_zone_of_sensor_register(dev, 0, priv,
+> +						       &bcm2711_thermal_of_ops);
+> +	if (IS_ERR(thermal)) {
+> +		ret = PTR_ERR(thermal);
+> +		dev_err(dev, "could not register sensor: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	priv->thermal = thermal;
+> +
+> +	thermal->tzp->no_hwmon = false;
+> +	ret = thermal_add_hwmon_sysfs(thermal);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver bcm2711_thermal_driver = {
+> +	.probe = bcm2711_thermal_probe,
+> +	.driver = {
+> +		.name = "bcm2711_thermal",
+> +		.of_match_table = bcm2711_thermal_id_table,
+> +	},
+> +};
+> +module_platform_driver(bcm2711_thermal_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Stefan Wahren");
+> +MODULE_DESCRIPTION("Broadcom AVS RO thermal sensor driver");
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
