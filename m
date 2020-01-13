@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5440C33CB0
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5374C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A032C20678
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C5321739
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgAMQoX (ORCPT
+        id S1728986AbgAMQog (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:44:23 -0500
-Received: from out28-49.mail.aliyun.com ([115.124.28.49]:56635 "EHLO
-        out28-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgAMQoX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 11:44:23 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4632446|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.571545-0.0205303-0.407925;DS=CONTINUE|ham_enroll_verification|0.0125564-0.000309334-0.987134;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07389;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=25;RT=25;SR=0;TI=SMTPD_---.GbRhA7M_1578933839;
+        Mon, 13 Jan 2020 11:44:36 -0500
+Received: from out28-51.mail.aliyun.com ([115.124.28.51]:46768 "EHLO
+        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbgAMQog (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 11:44:36 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2512184|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0266138-0.00157687-0.971809;DS=CONTINUE|ham_system_inform|0.0297817-0.00180406-0.968414;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=25;RT=25;SR=0;TI=SMTPD_---.GbRhA7M_1578933839;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GbRhA7M_1578933839)
           by smtp.aliyun-inc.com(10.147.40.233);
-          Tue, 14 Jan 2020 00:44:13 +0800
+          Tue, 14 Jan 2020 00:44:19 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         ebiederm@xmission.com, keescook@chromium.org, ak@linux.intel.com,
         krzk@kernel.org, paul@crapouillou.net, prasannatsmkumar@gmail.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Date:   Tue, 14 Jan 2020 00:43:30 +0800
-Message-Id: <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH 6/6] MIPS: CI20: Update defconfig to support SMP.
+Date:   Tue, 14 Jan 2020 00:43:33 +0800
+Message-Id: <1578933813-80122-8-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578933813-80122-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <Introduce SMP support for CI20 (based on JZ4780).>
@@ -51,79 +51,23 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the available properties for the SoC root node and the
-CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+Add "CONFIG_SMP=y" and "CONFIG_NR_CPUS=2" to support SMP.
 
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- .../bindings/mips/ingenic/ingenic,cpu.txt          | 32 ++++++++++++++++++++++
- .../bindings/mips/ingenic/ingenic,soc,txt          | 18 ++++++++++++
- 2 files changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
+ arch/mips/configs/ci20_defconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
-new file mode 100644
-index 00000000..f23e9be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
-@@ -0,0 +1,32 @@
-+Bindings for Ingenic XBurst family CPUs.
-+
-+Required properties:
-+- device_type: Must be "cpu".
-+- compatible: One of:
-+  - "ingenic,xburst".
-+  - "ingenic,xburst2".
-+- reg: The number of the CPU.
-+
-+Example:
-+cpus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	cpu0: cpu@0 {
-+		device_type = "cpu";
-+		compatible = "ingenic,xburst";
-+		reg = <0>;
-+
-+		clocks = <&cgu JZ4780_CLK_CPU>;
-+		clock-names = "cpu";
-+	};
-+
-+	cpu1: cpu@1 {
-+		device_type = "cpu";
-+		compatible = "ingenic,xburst";
-+		reg = <1>;
-+
-+		clocks = <&cgu JZ4780_CLK_CORE1>;
-+		clock-names = "cpu";
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
-new file mode 100644
-index 00000000..c731fa3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
-@@ -0,0 +1,18 @@
-+Bindings for Ingenic SoCs with XBurst CPU inside.
-+
-+Required properties:
-+- compatible: One of:
-+  - "ingenic,jz4740".
-+  - "ingenic,jz4725b".
-+  - "ingenic,jz4760".
-+  - "ingenic,jz4760b".
-+  - "ingenic,jz4770".
-+  - "ingenic,jz4780".
-+  - "ingenic,x1000".
-+  - "ingenic,x1000e".
-+  - "ingenic,x1500".
-+
-+Example:
-+#address-cells = <1>;
-+#size-cells = <1>;
-+compatible = "ingenic,jz4780";
+diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
+index be41df2..3aadb2e 100644
+--- a/arch/mips/configs/ci20_defconfig
++++ b/arch/mips/configs/ci20_defconfig
+@@ -1,3 +1,5 @@
++CONFIG_SMP=y
++CONFIG_NR_CPUS=2
+ # CONFIG_LOCALVERSION_AUTO is not set
+ CONFIG_KERNEL_XZ=y
+ CONFIG_SYSVIPC=y
 -- 
 2.7.4
 
