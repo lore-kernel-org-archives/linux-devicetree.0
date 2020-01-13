@@ -2,205 +2,104 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126B0C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 18:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5602CC33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 18:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0493207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 18:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D6C214AF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 18:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lzbZp2lH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXHlDgiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgAMSSL (ORCPT
+        id S1728633AbgAMSdy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:18:11 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33068 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgAMSSL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 13:18:11 -0500
-Received: by mail-pf1-f196.google.com with SMTP id z16so5258260pfk.0
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 10:18:10 -0800 (PST)
+        Mon, 13 Jan 2020 13:33:54 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37353 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728516AbgAMSdy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 13:33:54 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so10835961wmf.2;
+        Mon, 13 Jan 2020 10:33:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J17YeTOEpSo1FzyDOd+9aTAz8l6C4D4MHcZ+fgWk1Mo=;
-        b=lzbZp2lH/gU4yPLMC6wYwDVhgGCuadvdlO8VX6DZQrbqAzclxITjWEIKq2Cl0jbIcH
-         Pb8rfbp3ZyzD/ei8vViUF082DNsG9iO8XsvKWbhCH0UhNEiqZ0iHet659p8zuGShBJ8J
-         oex8GmqQsyyu5bKGxGtL87Enz1KnBZJyEXUdo=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZXLr4jt3Z0ly6bJlY2S1K+QAkB0UsTXiQL9zQoG2s4c=;
+        b=mXHlDgiSO7p/uX3R9XNTgDdGIu/YGZA6qA1uL9FgkaEBt6vhBsjXg3YO9i7CMOhB3j
+         MuaaxXJs/7qCYAEOy2rl0yDccD8H+XsP1E4tFJlOvdnNzUnD0BS58a3jfG/MalY4chV0
+         dOr1o8A8uUET4aVYVcbOfbaTOTLCHvjclGvrZHrFOgqByKRWF+qdD17NoRYOZLFIxhHw
+         dVpVKw9JiDqQN8uveu+hdDr0HHc1vnPKJI8ooC9hXAW2MKWtxD6feQNOS4M+xLC11235
+         ln/lgNKbndSLF+653ME1m/3cWrD6ygFqw8OM/mUwQF8A2ApvzcXk4Bt4GOH+ySRbDtCN
+         hmlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J17YeTOEpSo1FzyDOd+9aTAz8l6C4D4MHcZ+fgWk1Mo=;
-        b=nYX6ZKYd64Btzyi8RJcO+nXsOPzcrS7U9LWhD5+HvN9q1+Jx3Af5tqEX7fwNTD1fs/
-         qsBhUv/mt0WqoU+T855FmeYZr4xnNWiAzEDgoGALuceUaxwvVpbo+snA93Y3gYxCUcz+
-         UlTSTRwGH2DLh1+20OTxvnpxIJh9//+msKFSQBiCiYP5G0YRXgmTjHJonNcCe78Kjbmc
-         1FX3Mok3ynBggA3KuoASO7psjz7zXhysXmmUvCL6eO7YcQeuYltx/9EhbLcTzfZArbSN
-         2GHa8keJiqZDKdZiQM3q9Q0ral5uaOBMaz2VOwtFX0xMcBJryY+6P9MDI4U6/KsNi2L8
-         Cqbg==
-X-Gm-Message-State: APjAAAWTkyrPrdZIFjJ1dQzdcJKfWJnsL6W/WQyhfdyylcBtMGicRQBz
-        68UDUCDInmC4hRF9vMtdQtj82w==
-X-Google-Smtp-Source: APXvYqyO2vTrtNquO0tteVK8jK7Phzfpow0bBhbfaw7+obCd30pnX73il3H6mcF4Pibd+xR5fcY2gA==
-X-Received: by 2002:a62:c541:: with SMTP id j62mr21026945pfg.237.1578939490112;
-        Mon, 13 Jan 2020 10:18:10 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id z22sm15206346pfr.83.2020.01.13.10.18.09
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZXLr4jt3Z0ly6bJlY2S1K+QAkB0UsTXiQL9zQoG2s4c=;
+        b=ateiwigVuuCKHyvddOUuh6Z7ttbpm67aH4q+aGn/+IV9P4X0jtoWesMK0SKJ73q+g9
+         e0c6n/7Uc8aNsHfUVccNpLNBrB5OT1Rl3Tcf7i3XbsK+o6ueZ0FkQX8nBrvqUfCDGWY7
+         c5mvtVdcd5jZTMv5Mlh7p+GGwvLI8esyupMRyeeq8WZnRzEbPIdiMhjidpwBJ+tTyAA0
+         X0vYfiOm+ZWYcIbIhBQh126z/yugWbyBkFkjWKPOxjurkhZiCMo8h2X1VO7fIW8aPEk6
+         TGmWy+Z2qpjF01Q8lvKUAH6MDJQRWdgLJvSwSIc0B0datf1SQIW/DwT9ids0b2VldaSj
+         /3Hw==
+X-Gm-Message-State: APjAAAUms9voyA1oSVlF1P0BKEwyrMH9lEXgRLvdzkVBG+f+vf08/E0M
+        x35BXs0JRBEF/aPJ9cIdUm/EDdSD
+X-Google-Smtp-Source: APXvYqyGePBR9ORItEnsI4A/VolH7tK5HABxUgERqXN9F5gLMCg+0OuRxmIZVKfdKncZ1preY0W6VA==
+X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr21557885wmk.172.1578940433124;
+        Mon, 13 Jan 2020 10:33:53 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id n1sm15518360wrw.52.2020.01.13.10.33.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 10:18:09 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:18:07 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: add mt8173 elm and hana
- board
-Message-ID: <20200113181807.GH89495@google.com>
-References: <20200110073730.213789-1-hsinyi@chromium.org>
- <20200110073730.213789-3-hsinyi@chromium.org>
- <cce7b5a4-7e5e-99c7-c647-fbb2d58ff3e0@collabora.com>
+        Mon, 13 Jan 2020 10:33:52 -0800 (PST)
+Subject: =?UTF-8?Q?Re=3a_=5bRFC_PATCH_v1_00/10=5d_Enable_RK3066_NANDC_for_MK?=
+ =?UTF-8?B?ODA444CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNl?=
+ =?UTF-8?Q?s+shawn=2elin=3drock-chips=2ecom=40lists=2einfradead=2eorg?=
+ =?UTF-8?B?5Luj5Y+R44CR?=
+To:     Shawn Lin <shawn.lin@rock-chips.com>, miquel.raynal@bootlin.com
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org, vigneshr@ti.com,
+        richard@nod.at, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, heiko@sntech.de,
+        =?UTF-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
+References: <20200108205338.11369-1-jbx6244@gmail.com>
+ <aad92eb5-00ed-5071-c206-491eff243537@rock-chips.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <73cb4b1a-aad3-c613-a642-1887905e3932@gmail.com>
+Date:   Mon, 13 Jan 2020 19:33:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cce7b5a4-7e5e-99c7-c647-fbb2d58ff3e0@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <aad92eb5-00ed-5071-c206-491eff243537@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Shawn,
 
-On Mon, Jan 13, 2020 at 10:29:51AM +0100, Enric Balletbo i Serra wrote:
-> Hi Hsin-Yi,
-> 
-> Apart from the maintainer comments, a few more comments ...
-> 
-> cc'ing Matthias and Doug who I know played a bit with the pwm-backlight for the
-> uprev of the veyron devices, and you might be interested in his feedback in general.
-> 
-> On 10/1/20 8:37, Hsin-Yi Wang wrote:
-> > Elm is Acer Chromebook R13. Hana is Lenovo Chromebook. Both uses mt8173
-> > SoC.
-> > 
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> > Changes in v2:
-> > - remove downstream nodes and unused nodes
-> > - use GPIO_ACTIVE_LOW for ps8640 gpios
-> > - move trackpad to hana
-> > ---
-> >  arch/arm64/boot/dts/mediatek/Makefile         |    3 +
-> >  .../dts/mediatek/mt8173-elm-hana-rev7.dts     |   27 +
-> >  .../boot/dts/mediatek/mt8173-elm-hana.dts     |   16 +
-> >  .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   60 +
-> >  arch/arm64/boot/dts/mediatek/mt8173-elm.dts   |   15 +
-> >  arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  | 1040 +++++++++++++++++
-> >  6 files changed, 1161 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dts
-> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+Thank you for your notice.
+In that case I think that I produce a version 2 "light",
+where I address only a small amount of the TODO's and leave all other
+things up to you, so that you can do what suits you best.
+Hope that RK3066 support for MTD can be included.(Linux and Uboot)
 
-<snip>
+Thanks
 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> > new file mode 100644
-> > index 000000000000..2ac738bebe04
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> > @@ -0,0 +1,1040 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright 2016 MediaTek Inc.
-> > + */
-> > +
-> > +#include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include "mt8173.dtsi"
-> > +
-> > +/ {
-> > +	aliases {
-> > +		serial0 = &uart0;
-> > +		serial1 = &uart1;
-> > +		serial2 = &uart2;
-> > +		serial3 = &uart3;
-> > +	};
-> 
-> I think this should be in mt8173.dtsi?
-> 
-> > +
-> > +	memory@40000000 {
-> > +		device_type = "memory";
-> > +		reg = <0 0x40000000 0 0x80000000>;
-> > +	};
-> > +
-> > +	backlight_lcd: backlight_lcd {
-> 
-> nit: Not sure if you need to change or not, but this node is usually called
-> backlight: backlight without the _lcd. Note that this imply a userspace change
-> but /sys/class/backlight/backlight is more aligned with other boards (I guess)
-> when you have only one backlight. See for example:
-> 
->  git grep backlight arch/arm64/boot/*
-> 
-> > +		compatible = "pwm-backlight";
-> > +		pwms = <&pwm0 0 1000000>;
-> > +		brightness-levels = <
-> > +			  0  16  32  48  64  80  96 112
-> > +			128 144 160 176 192 208 224 240
-> > +			255
-> > +		>;
-> > +		default-brightness-level = <9>;
-> 
-> The reason you see the display too dark is because userspace sets and remembers
-> the default value you have using the above configuration which is only 16
-> levels. So after removing the two above properties you should set a new
-> brightness from userspace.
-> 
-> AFAIK 16 levels is not enough to have fancy backlight effects on Chrome OS
-> userspace, at least is not enough for Rockchip devices so I suppose is the same
-> for Mediatek.
-> 
-> You have to options here.
-> 
-> A) Remove brightness-levels and default-brightness-level. This will end with a
-> non-linear brightness curve for the backlight up to 4095 levels.
-> 
-> # cat max_brightness
-> 4095
-> 
-> B) Use the num-interpolated-steps and default-brightness-level properties. This
-> will end with a linear curve brightness. Similar to what is done for veyron
-> devices but in this case with more levels because the PWM to control the
-> backlight is 16-bits instead of 8-bits for veyron devices.
-> 
-> *
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/rk3288-veyron-edp.dtsi#n42
-> 
-> My guess is that you're interested on option B here to be coherent with other
-> Chromebooks.
+On 1/13/20 2:55 AM, Shawn Lin wrote:
 
-You could evaluate either way. One of the reasons to chose the interpolated-steps
-for veyron was that some veyron panels require a minimum backlight level to
-work properly. This can be easily configured with the linear curve, but
-currently not with the non-linear one. Another reason was to keep the backlight
-curve of a released device unaltered, though I think that's not strictly
-required as long as the behavior with the non-linear curve is close/good enough.
-
-Chrome OS user space supports both types of curves, for a new device I would
-probably start with a non-linear curve, and only change that if the resulting
-behavior doesn't meet expectations for some reason.
+> 
+> Hi Johan,
+> 
+> I loop in the author of the original NANDC driver who is now gonna to
+> develop a new version of NANDC driver in near future that supports more
+> features like bad block supoort. Maybe he could share his TODO.
+> 
