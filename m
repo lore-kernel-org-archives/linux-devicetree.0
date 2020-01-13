@@ -2,104 +2,143 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3FEC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923BFC33CAD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E797220661
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FF520CC7
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 10:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v3vjyNLs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qogD2atn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgAMKkK (ORCPT
+        id S1728769AbgAMKtI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:40:10 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39780 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgAMKkK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 05:40:10 -0500
-Received: by mail-wm1-f67.google.com with SMTP id 20so9027324wmj.4
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 02:40:08 -0800 (PST)
+        Mon, 13 Jan 2020 05:49:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37467 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727494AbgAMKtI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 05:49:08 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w15so8047985wru.4
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 02:49:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=8woBrjBV2pJrpCEHmipp5tCMuainYmDSO6QY88461Bw=;
-        b=v3vjyNLsU/ZP+duwAMBIiT/jTK8pe+/ftmLtCCvrnYszggFFYPTlNqj9hvYjDOOUmq
-         EpgQZglWUe1m2gz3HugJRucSZwcNiMfPUkj7Eav0XFDbxrEr/ahC36GknblhDRjc7ahH
-         zQjHyJwdJJhf+QMpI0IDbA/wNfOcZ2FznT70pmF8lv26V2byaqL3jChP1ohJIt0TXMcH
-         Udb7ZfjiUa/aUwIvQJ7yybd9UwrI/FtTqZdU9m8cJaaQQFkFmDImu/OE3+WU9PajHTUo
-         4c92RFQuMMUFx5sEkOfW1ctKcz6VghA9q4Ry+EEEAp7p2MtqTeW+fEIsng1iLqdHdWrY
-         gs/A==
+        bh=dJIJ8TE4q3821mbA7gJOKY19l0UD3HWAsSMco9Ho4C4=;
+        b=qogD2atniaYCyI+/ifYIEcWu0V0PymnKN5/DklSu2Q4CvaU6deYGL7xeYrU+1J1fQU
+         Rmv2wQhpmhJ+Y0ILck2SjdXhNBseiONexmAAbjKPytHvfsdhT420A3BcAZHBIDnVQLCL
+         FMOQpm4+eFMt5GjRyinK4Zd+33Un3U1F7pkaankp0GfRewgn3jSFcm6Fv6CN/eYaft8J
+         oBRPRxTWKkOT//lmiXWR7rRIyi8MEEeZ0NyQQfeMAsjRVvOO4jKZmiDlobBWRsFpZNgr
+         GDvbnwjdx+np/tTfKXodm7ZhiFBssr+weWL+G4dSA7XVxgkVbK83X1B9lg5a4MGRRezG
+         i27g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=8woBrjBV2pJrpCEHmipp5tCMuainYmDSO6QY88461Bw=;
-        b=tyaBgE0rI5FD3dGDHQMfh2LLpLN56kaFxk6AoqPBbbgaYtJSKw/zkv3GNQNVbwA7ix
-         xxI8ak94LSwoCc4eR/B1OmCfI7RNNe3/lZp1JJSpqJ9SF8K63r1PTgDawiDI0B+sFjRd
-         MrwR+QE/6Z0MI8rAjvtsissA+wMj7kD398I2lOzfXUibX6wcOsHdd37voaOuz3Tcgfro
-         DfZnmdFTi9mYKe/dK3AbkwUKphDQ4SzVWUGn+vfVIJqeoWCpc4JIaUfQy+40VmAP2cvL
-         ZHBj9a3IZDYZ6KWzq5QkbLB9M1tyaoMuPC7zOEHrEmu5mSGCEb3AbStSszulXvg7UL8s
-         MnCg==
-X-Gm-Message-State: APjAAAWW2igXvT/5GcEZYD833UmZ2pFOm0oajh0LRMrKBFeGMOqvpKUA
-        2r0dX1EUyJPE7N/q+XpHWicaOw==
-X-Google-Smtp-Source: APXvYqzahBcdOwjWkOf5gPeQ+ARXeltCNOTaht2mJFVatu9RTi95f0Vd/GWdieYkCfCRg7L1Uj2Cnw==
-X-Received: by 2002:a1c:e108:: with SMTP id y8mr18978661wmg.147.1578912008310;
-        Mon, 13 Jan 2020 02:40:08 -0800 (PST)
+        bh=dJIJ8TE4q3821mbA7gJOKY19l0UD3HWAsSMco9Ho4C4=;
+        b=IoBsKNOTAwR8bt7qYwt52d7Hlr/sLfbc39CyK9VRAXiglVcDxrntlhZg+CHqXDYzqR
+         WuvnymUQH1aNJoBrnU8KXxrGO2ImN7oJPzwSq/Rms95FJJYiNA6+YVqa5hAbuyduUa4M
+         DkcrwPqvI8A5INrvBS45zjhrabvNZqtpNIFBgkpQWBhcKYRgq/otrYPiZ4xd87V3LFP1
+         181E04AFS8YOfTSF9vGEfmuO6x/E30fOan0mEMwU8VYvjimTmbMp5GD/8Iw0xJZvy61v
+         GI9AksQ9QgssmmVqaIthCssgpyow/6/cWjYz8ZJtKz7fqwbY5bF0LQ8nsKBMPwbvE26i
+         8F1A==
+X-Gm-Message-State: APjAAAXHVnBDrtt4yEeWERhegYXDZC52PwLA9CN0zNXNPnCKa5tfeHwM
+        dxnq2vN8yhlhBbje62nBo07e+g==
+X-Google-Smtp-Source: APXvYqy01VtgOwE8RelnBXw+DBfdhJ79MbFiqHSSGoaBGghKby8swpt+ETldAaRCE1dZVQMt3+xneQ==
+X-Received: by 2002:a5d:488c:: with SMTP id g12mr17615554wrq.67.1578912546094;
+        Mon, 13 Jan 2020 02:49:06 -0800 (PST)
 Received: from dell ([95.147.198.95])
-        by smtp.gmail.com with ESMTPSA id c5sm14403122wmb.9.2020.01.13.02.40.07
+        by smtp.gmail.com with ESMTPSA id e8sm14583552wrt.7.2020.01.13.02.49.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 02:40:07 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:40:28 +0000
+        Mon, 13 Jan 2020 02:49:05 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:49:26 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, stwiss.opensource@diasemi.com,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        Adam.Thomson.Opensource@diasemi.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] input: misc: da9063_onkey: add mode change support
-Message-ID: <20200113104028.GB5414@dell>
-References: <20191127132304.22924-1-m.felsch@pengutronix.de>
- <20191127132304.22924-3-m.felsch@pengutronix.de>
- <20200108084800.x2doud4v6m3ssz6s@pengutronix.de>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
+Message-ID: <20200113104926.GE5414@dell>
+References: <20191227111235.GA3370@localhost.localdomain>
+ <20200107130155.GK14821@dell>
+ <CAL_JsqJzaS1G-ODb4A5QGdhhJ+SXXYPY0nXvKfJnZKoRP+WmAA@mail.gmail.com>
+ <821646c01d3efbba1eaabc7f5da8048fe4f25bbd.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200108084800.x2doud4v6m3ssz6s@pengutronix.de>
+In-Reply-To: <821646c01d3efbba1eaabc7f5da8048fe4f25bbd.camel@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 08 Jan 2020, Marco Felsch wrote:
+On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
 
-> Hi Lee,
+> Hi de Ho Peeps,
 > 
-> I forgot to add you to review the mfd part, sorry. Please can you have a
-> look on it?
+> On Tue, 2020-01-07 at 09:37 -0600, Rob Herring wrote:
+> > On Tue, Jan 7, 2020 at 7:01 AM Lee Jones <lee.jones@linaro.org>
+> > wrote:
+> > > On Fri, 27 Dec 2019, Matti Vaittinen wrote:
+> > > 
+> > > > Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml.
+> > > > Split
+> > > > the binding document to two separate documents (own documents for
+> > > > BD71837
+> > > > and BD71847) as they have different amount of regulators. This
+> > > > way we can
+> > > > better enforce the node name check for regulators. ROHM is also
+> > > > providing
+> > > > BD71850 - which is almost identical to BD71847 - main difference
+> > > > is some
+> > > > initial regulator states. The BD71850 can be driven by same
+> > > > driver and it
+> > > > has same buck/LDO setup as BD71847 - add it to BD71847 binding
+> > > > document and
+> > > > introduce compatible for it.
+> > > > 
+> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com
+> > > > >
+> > > > ---
+> > > > 
+> > > > changes since v1:
+> > > > - constrains to short and long presses.
+> > > > - reworded commit message to shorten a line exceeding 75 chars
+> > > > - added 'additionalProperties: false'
+> > > > - removed 'clock-names' from example node
+> > > > 
+> > > >  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
+> > > >  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236
+> > > > ++++++++++++++++++
+> > > >  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222
+> > > > ++++++++++++++++
+> > > >  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
+> > > >  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
+> > > >  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
+> > > 
+> > > Can you split these out per-subsystem, so that I can apply the MFD
+> > > changes please?
+> > 
+> > That's not going to work any more. The MFD binding references the
+> > child bindings and the complete example(s) resides in the MFD
+> > binding.
+> 
+> So is it Ok to take all of these in MFD tree - or how should this be
+> done? Can Rob get them in after acks from Lee/Mark?
 
-[...]
-
-> > --- a/drivers/mfd/da9062-core.c
-> > +++ b/drivers/mfd/da9062-core.c
-> > @@ -510,6 +510,7 @@ static const struct regmap_range da9062_aa_writeable_ranges[] = {
-> >  	regmap_reg_range(DA9062AA_VLDO1_B, DA9062AA_VLDO4_B),
-> >  	regmap_reg_range(DA9062AA_BBAT_CONT, DA9062AA_BBAT_CONT),
-> >  	regmap_reg_range(DA9062AA_GP_ID_0, DA9062AA_GP_ID_19),
-> > +	regmap_reg_range(DA9062AA_CONFIG_I, DA9062AA_CONFIG_I),
-> >  };
-> >  
-> >  static const struct regmap_range da9062_aa_volatile_ranges[] = {
-
-Looks fine.
+I'm happy to take all of them, but will need Mark's Ack.
 
 -- 
 Lee Jones [李琼斯]
