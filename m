@@ -2,115 +2,111 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ACBC33CA9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 01:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C70C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 01:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E252C21556
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 01:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E9F22314
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 01:45:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsrlKaUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732866AbgAMBcw (ORCPT
+        id S1732487AbgAMBpB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 20:32:52 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:55777 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732864AbgAMBcw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 20:32:52 -0500
-Received: from [10.18.38.198] (10.18.38.198) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 13 Jan
- 2020 09:33:17 +0800
-Subject: Re: [PATCH v5 4/6] usb: dwc3: Add Amlogic A1 DWC3 glue
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     Rob Herring <robh@kernel.org>, Victor Wan <victor.wan@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <linux-usb@vger.kernel.org>, Yue Wang <yue.wang@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        <devicetree@vger.kernel.org>, Liang Yang <liang.yang@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Carlo Caione <carlo@caione.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Jerome Brunet <jbrunet@baylibre.com>
-References: <1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com>
- <1578634957-54826-5-git-send-email-hanjie.lin@amlogic.com>
- <CAFBinCCFUDst_-QtSuNioAa3ckt5GzTFDAhZWh3zu42VRByPpw@mail.gmail.com>
-From:   Hanjie Lin <hanjie.lin@amlogic.com>
-Message-ID: <092ef08a-120e-4972-2f02-fa9d99aed059@amlogic.com>
-Date:   Mon, 13 Jan 2020 09:33:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Sun, 12 Jan 2020 20:45:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38861 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgAMBpB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 20:45:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so6972723wrh.5;
+        Sun, 12 Jan 2020 17:44:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=znJUBdsKtgEwaqOljiJ5EK/1WMSAL9tXrpMQjheFjHs=;
+        b=IsrlKaUQ30FPFeUfmzEnivEsohh548kKdNxG4LU2anUO1HksC6D6K7pmSZokMFC6gK
+         GQR+Dab0mjjrscxb+RNcIBhpJavvfoopbcEUaMAB95TcFeWpUfdkRWCzCDl/7KAbNAVe
+         /BhdzEAPGIf2FDVLo5YDNnEfDGHFaPfKMFj+wWWyy0zzQGSRnSChbVKX7YL8tXYbu1EU
+         3iIqcwh87j5OOysOcs1KGKKxMIFH/ieTF9i1cTrut1D1pQP5mGBujavxP2pxWxUmz8e8
+         kqEyOelKx/8Bubzn3mqh0BXnCH4FAJ5GVi72+Wce+nRiP93wd0NDsxWjbf6E7bGZq4SM
+         Iz7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=znJUBdsKtgEwaqOljiJ5EK/1WMSAL9tXrpMQjheFjHs=;
+        b=G5lqQbRal07wqiKjCh8IVvzBD//sRiLyBk/bQWVFKrl9xkVrm/FETNuBzv+tf5fWAc
+         x1mPujQDzTOHATsJU5bgZJyzpUYo4Y5Gm6Vuv5O6oHWjKiTmrSqbz3f7W/Hq6Y5fIEot
+         9QEyTHO4hxEvOXnPwdeOVZSGBf64R9xOq6HJzxgcT7Jd6sPfbgXaopdTKtwcS2fQTqB2
+         KNgOgfsh7bj3Z8npCz5CjDq5jo2fVFeTaPd10uixFQdbIt/6KP6ib57UM2Ur44k8Vori
+         w4G1PVyV/nCjI0bt/UhAhABQUpuFZjkZNJZTkid+IFanKfsJKFP2aWDek9I/NcOaizWo
+         3vXQ==
+X-Gm-Message-State: APjAAAUPkDyLzl6EaQi9LDWz9W5LnG2SMyPjccjaPMwATUbzFnzyIcMR
+        G8GjCrXuoRnXV7XeUEInHzH1gkKv/AxlIn2fgRM=
+X-Google-Smtp-Source: APXvYqxEkdvBQ9aEz55XkTJia5J/yxixfzNCbd2z1PzezHPGyfdv+shkuWFIdWmXEf6iRgjHh6jgGG5kuQj4cy2uKzM=
+X-Received: by 2002:a5d:6748:: with SMTP id l8mr15805825wrw.188.1578879898836;
+ Sun, 12 Jan 2020 17:44:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCCFUDst_-QtSuNioAa3ckt5GzTFDAhZWh3zu42VRByPpw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.18.38.198]
-X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
- (10.18.11.5)
+References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
+ <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
+In-Reply-To: <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Mon, 13 Jan 2020 09:44:21 +0800
+Message-ID: <CAAfSe-tx+S_tc1y0c5wobQy2xygNr01b3LOqQ4FQtHoDNhHNeA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
+To:     Olof Johansson <olof@lixom.net>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sat, 11 Jan 2020 at 01:41, Olof Johansson <olof@lixom.net> wrote:
+>
+> Hi,
+>
+> On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> >
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > Add basic DT to support Unisoc's SC9863A, with this patch,
+> > the board sp9863a-1h10 can run into console.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> You reposting a patch that we have already applied, and there's also
+> no changelog for it in the description.
 
+Oh, I have to explain a bit.
 
-On 2020/1/12 4:45, Martin Blumenstingl wrote:
-> Hi Hanjie,
-> 
-> On Fri, Jan 10, 2020 at 6:43 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
-> [...]
->> -       devm_add_action_or_reset(dev,
->> -                                (void(*)(void *))clk_disable_unprepare,
->> -                                priv->clk);
->> +       ret = clk_bulk_prepare_enable(priv->drvdata->num_clks,
->> +                                     priv->drvdata->clks);
-> I don't see clk_bulk_disable_unprepare in dwc3_meson_g12a_remove()
-> please test that the clocks are all disabled (see
-> /sys/kernel/debug/clk/clk_summary for example) when unloading all USB
-> related kernel modules
-> 
+I was expecting an email which inform me that the patch was got merged.
+That's the reason I resent this patchset.
 
-Ok, 
+About the changelog, this new patchset actually had a cover-letter[1]
+in which I documented a little changes (which was not important now).
 
-I will check and fix this if missing here.
+Thanks for your help,
+Chunyan
 
-Thanks,
-
-Hanjie
-
-
->> +
->> +       if (!priv->drvdata->otg_switch_supported)
->> +               goto setup_pm_runtime;
-> my brain doesn't like the goto in this place because this is not an
-> error condition. I was about to write that
-> usb_role_switch_unregister() is now skipped even though we're calling
-> usb_role_switch_register().
-> 
-> I want to hear Neil's opinion on this because I got confused while
-> reading the code again.
-> my proposal is to move all of this OTG related code from
-> dwc3_meson_g12a_probe() into a new function, for example called
-> dwc3_meson_g12a_otg_init()
-> then only call that function when OTG switching is supported
-> 
-> 
-> Martin
-> 
-> _______________________________________________
-> linux-amlogic mailing list
-> linux-amlogic@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-amlogic
-> 
-> .
-> 
+[1] https://lkml.org/lkml/2020/1/10/36
+>
+> If you need to change the contents to fix something, you need to send
+> a patch for the delta by now, with the usual expectations of
+> explaining why the fix is needed, etc.
+>
+>
+> Thanks,
+>
+> -Olof
