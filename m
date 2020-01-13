@@ -2,63 +2,100 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFB7C33CA8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAE9C33CA8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5912080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98AB42080D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:56:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dYNPjK0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgAMJwa (ORCPT
+        id S1725992AbgAMJ4V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:52:30 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:53478 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgAMJwa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:52:30 -0500
-Received: from wf0253.dip.tu-dresden.de ([141.76.180.253] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iqwOY-00029x-Vk; Mon, 13 Jan 2020 10:52:27 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: rockchip: add reg property to brcmf sub node for rk3188-bqedison2qc
-Date:   Mon, 13 Jan 2020 10:52:26 +0100
-Message-ID: <2805256.31IRENKq1c@phil>
-In-Reply-To: <20200110134420.11280-1-jbx6244@gmail.com>
-References: <20200110134420.11280-1-jbx6244@gmail.com>
+        Mon, 13 Jan 2020 04:56:21 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:26206 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725978AbgAMJ4U (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:56:20 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578909380; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Q/2ImYuKYZGan94DZJlYZatYbdTBLNMNXpcAS+vGAww=; b=dYNPjK0csn1Nk1nvIwljabkz6Ndk/wne6Uxj6REQpr1BjSw7gbiMadge9AbvvWKda1W5hSsk
+ /DfAZh+0K2Gb801lsOx/9Z7qXGmPkiBIzo5htWDnQp1ehrS9vGdFgcv529LFnL1rwiOHS83v
+ lSmA4R7MHotkRLLRqwj+LsboWJc=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1c3ec3.7f2ac18796c0-smtp-out-n01;
+ Mon, 13 Jan 2020 09:56:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 70B34C433CB; Mon, 13 Jan 2020 09:56:19 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7CB59C4479C;
+        Mon, 13 Jan 2020 09:56:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7CB59C4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
+ <1577421760-1174-2-git-send-email-tdas@codeaurora.org>
+ <5b16d051146224c1efad40c4548dd0c4@codeaurora.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <d4793817-d6bd-b0ab-2b59-2c27c9edbdbe@codeaurora.org>
+Date:   Mon, 13 Jan 2020 15:26:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <5b16d051146224c1efad40c4548dd0c4@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am Freitag, 10. Januar 2020, 14:44:20 CET schrieb Johan Jonker:
-> An experimental test with the command below gives this error:
-> rk3188-bqedison2qc.dt.yaml: dwmmc@10218000: wifi@1:
-> 'reg' is a required property
+Thanks Sibi, will take care of mapping the entire region.
+
++      reg = <0x041aa000 0x100>;
 > 
-> So fix this by adding a reg property to the brcmf sub node.
-> Also add #address-cells and #size-cells to prevent more warnings.
+> Bjorn/me had a discussion about the size
+> a while back, we should use the entire
+> reg space instead of fragmenting it.
 > 
-> make ARCH=arm dtbs_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+> reg = <0x041a8000 0x8000>;
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> We should just use ^^ instead.
+> 
+>> +      #clock-cells = <1>;
+>> +    };
+>> +...
+>> -- 
+>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+>> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
 
-applied for 5.6
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-Thanks
-Heiko
-
-
+--
