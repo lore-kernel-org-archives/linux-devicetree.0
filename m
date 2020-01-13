@@ -2,111 +2,182 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C70C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 01:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D260C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 02:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E9F22314
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 01:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsrlKaUQ"
+	by mail.kernel.org (Postfix) with ESMTP id 02305214AF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 02:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732487AbgAMBpB (ORCPT
+        id S1732594AbgAMCFr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 20:45:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38861 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbgAMBpB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 20:45:01 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so6972723wrh.5;
-        Sun, 12 Jan 2020 17:44:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=znJUBdsKtgEwaqOljiJ5EK/1WMSAL9tXrpMQjheFjHs=;
-        b=IsrlKaUQ30FPFeUfmzEnivEsohh548kKdNxG4LU2anUO1HksC6D6K7pmSZokMFC6gK
-         GQR+Dab0mjjrscxb+RNcIBhpJavvfoopbcEUaMAB95TcFeWpUfdkRWCzCDl/7KAbNAVe
-         /BhdzEAPGIf2FDVLo5YDNnEfDGHFaPfKMFj+wWWyy0zzQGSRnSChbVKX7YL8tXYbu1EU
-         3iIqcwh87j5OOysOcs1KGKKxMIFH/ieTF9i1cTrut1D1pQP5mGBujavxP2pxWxUmz8e8
-         kqEyOelKx/8Bubzn3mqh0BXnCH4FAJ5GVi72+Wce+nRiP93wd0NDsxWjbf6E7bGZq4SM
-         Iz7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=znJUBdsKtgEwaqOljiJ5EK/1WMSAL9tXrpMQjheFjHs=;
-        b=G5lqQbRal07wqiKjCh8IVvzBD//sRiLyBk/bQWVFKrl9xkVrm/FETNuBzv+tf5fWAc
-         x1mPujQDzTOHATsJU5bgZJyzpUYo4Y5Gm6Vuv5O6oHWjKiTmrSqbz3f7W/Hq6Y5fIEot
-         9QEyTHO4hxEvOXnPwdeOVZSGBf64R9xOq6HJzxgcT7Jd6sPfbgXaopdTKtwcS2fQTqB2
-         KNgOgfsh7bj3Z8npCz5CjDq5jo2fVFeTaPd10uixFQdbIt/6KP6ib57UM2Ur44k8Vori
-         w4G1PVyV/nCjI0bt/UhAhABQUpuFZjkZNJZTkid+IFanKfsJKFP2aWDek9I/NcOaizWo
-         3vXQ==
-X-Gm-Message-State: APjAAAUPkDyLzl6EaQi9LDWz9W5LnG2SMyPjccjaPMwATUbzFnzyIcMR
-        G8GjCrXuoRnXV7XeUEInHzH1gkKv/AxlIn2fgRM=
-X-Google-Smtp-Source: APXvYqxEkdvBQ9aEz55XkTJia5J/yxixfzNCbd2z1PzezHPGyfdv+shkuWFIdWmXEf6iRgjHh6jgGG5kuQj4cy2uKzM=
-X-Received: by 2002:a5d:6748:: with SMTP id l8mr15805825wrw.188.1578879898836;
- Sun, 12 Jan 2020 17:44:58 -0800 (PST)
+        Sun, 12 Jan 2020 21:05:47 -0500
+Received: from lucky1.263xmail.com ([211.157.147.135]:47476 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgAMCFr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 21:05:47 -0500
+X-Greylist: delayed 608 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Jan 2020 21:05:45 EST
+Received: from localhost (unknown [192.168.167.32])
+        by lucky1.263xmail.com (Postfix) with ESMTP id D031C4FED9;
+        Mon, 13 Jan 2020 09:55:29 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.37] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P42449T140532558391040S1578880527820565_;
+        Mon, 13 Jan 2020 09:55:28 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <94200a1cdef87e531379bdde04cd5b27>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: zyf@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Cc:     shawn.lin@rock-chips.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, vigneshr@ti.com, richard@nod.at,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        robh+dt@kernel.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, heiko@sntech.de,
+        =?UTF-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
+Subject: =?UTF-8?Q?Re=3a_=5bRFC_PATCH_v1_00/10=5d_Enable_RK3066_NANDC_for_MK?=
+ =?UTF-8?B?ODA444CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNl?=
+ =?UTF-8?Q?s+shawn=2elin=3drock-chips=2ecom=40lists=2einfradead=2eorg?=
+ =?UTF-8?B?5Luj5Y+R44CR?=
+To:     Johan Jonker <jbx6244@gmail.com>, miquel.raynal@bootlin.com
+References: <20200108205338.11369-1-jbx6244@gmail.com>
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+Message-ID: <aad92eb5-00ed-5071-c206-491eff243537@rock-chips.com>
+Date:   Mon, 13 Jan 2020 09:55:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
- <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
-In-Reply-To: <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Mon, 13 Jan 2020 09:44:21 +0800
-Message-ID: <CAAfSe-tx+S_tc1y0c5wobQy2xygNr01b3LOqQ4FQtHoDNhHNeA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
-To:     Olof Johansson <olof@lixom.net>
-Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200108205338.11369-1-jbx6244@gmail.com>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 11 Jan 2020 at 01:41, Olof Johansson <olof@lixom.net> wrote:
->
-> Hi,
->
-> On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> >
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> >
-> > Add basic DT to support Unisoc's SC9863A, with this patch,
-> > the board sp9863a-1h10 can run into console.
-> >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
->
-> You reposting a patch that we have already applied, and there's also
-> no changelog for it in the description.
++ Yifeng Zhao
 
-Oh, I have to explain a bit.
+On 2020/1/9 4:53, Johan Jonker wrote:
+> DISCLAIMER: Use at your own risk.
+> Status: For testing only!
+> 
+> Version: V1
+> 
+> Title: Enable RK3066 NANDC for MK808.
+> 
+> The majority of Rockchip devices use a closed source FTL driver
+> to reduce wear leveling. This patch serie proposes
+> an experimental raw NAND controller driver for basic tasks
+> in order to get the bindings and the nodes accepted for in the dts files.
+> 
+> What does it do:
+> 
+> On module load this driver will reserve its resources.
+> After initialization the MTD framework will then try to detect
+> the type and number of NAND chips. When all conditions are met,
+> it registers it self as MTD device.
+> This driver is then ready to receive user commands
+> such as to read and write NAND pages.
+> 
+> Test examples:
+> 
+> # dd if-/dev/mtd0 of=dd.bin bs=8192 count=4
+> 
+> # nanddump -a -l 32768 -f nanddump.bin /dev/mtd0
+> 
+> Not tested:
+> 
+> NANDC version 9.
+> NAND raw write.
+> RK3066 still has no support for Uboot.
+> Any write command would interfere with data structures made by the boot loader.
+> 
+> Etc.
+> 
+> Problems:
+> 
+> No bad block support. Most devices use a FTL bad block map with tags
+> that must be located on specific page locations which is outside
+> the scope of the raw MTD framework.
+> 
 
-I was expecting an email which inform me that the patch was got merged.
-That's the reason I resent this patchset.
 
-About the changelog, this new patchset actually had a cover-letter[1]
-in which I documented a little changes (which was not important now).
+Hi Johan,
 
-Thanks for your help,
-Chunyan
+I loop in the author of the original NANDC driver who is now gonna to
+develop a new version of NANDC driver in near future that supports more
+features like bad block supoort. Maybe he could share his TODO.
 
-[1] https://lkml.org/lkml/2020/1/10/36
->
-> If you need to change the contents to fix something, you need to send
-> a patch for the delta by now, with the usual expectations of
-> explaining why the fix is needed, etc.
->
->
-> Thanks,
->
-> -Olof
+> No partition support. A FTL driver will store at random locations and
+> a linear user specific layout does not fit within
+> the generic character of this basic driver.
+> 
+> Etc.
+> 
+> Chris Zhong (1):
+>    ARM: dts: rockchip: add nandc node for rk3066a/rk3188
+> 
+> Dingqiang Lin (2):
+>    arm64: dts: rockchip: add nandc node for px30
+>    arm64: dts: rockchip: add nandc node for rk3308
+> 
+> Jianqun Xu (1):
+>    ARM: dts: rockchip: add nandc nodes for rk3288
+> 
+> Johan Jonker (2):
+>    dt-bindings: mtd: add rockchip nand controller bindings
+>    ARM: dts: rockchip: rk3066a-mk808: enable nandc node
+> 
+> Jon Lin (1):
+>    ARM: dts: rockchip: add nandc node for rv1108
+> 
+> Wenping Zhang (1):
+>    ARM: dts: rockchip: add nandc node for rk322x
+> 
+> Yifeng Zhao (1):
+>    mtd: nand: raw: add rockchip nand controller driver
+> 
+> Zhaoyifeng (1):
+>    arm64: dts: rockchip: add nandc node for rk3368
+> 
+>   .../devicetree/bindings/mtd/rockchip,nandc.yaml    |   78 ++
+>   arch/arm/boot/dts/rk3066a-mk808.dts                |    9 +
+>   arch/arm/boot/dts/rk322x.dtsi                      |   11 +
+>   arch/arm/boot/dts/rk3288.dtsi                      |   24 +
+>   arch/arm/boot/dts/rk3xxx.dtsi                      |   11 +
+>   arch/arm/boot/dts/rv1108.dtsi                      |   11 +
+>   arch/arm64/boot/dts/rockchip/px30.dtsi             |   15 +
+>   arch/arm64/boot/dts/rockchip/rk3308.dtsi           |   11 +
+>   arch/arm64/boot/dts/rockchip/rk3368.dtsi           |   12 +
+>   drivers/mtd/nand/raw/Kconfig                       |    8 +
+>   drivers/mtd/nand/raw/Makefile                      |    1 +
+>   drivers/mtd/nand/raw/rockchip_nandc.c              | 1224 ++++++++++++++++++++
+>   12 files changed, 1415 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mtd/rockchip,nandc.yaml
+>   create mode 100644 drivers/mtd/nand/raw/rockchip_nandc.c
+> 
+> --
+> 2.11.0
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+> 
+> 
+
+
