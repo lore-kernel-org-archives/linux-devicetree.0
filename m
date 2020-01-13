@@ -2,144 +2,127 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7467BC33CAE
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 04:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD87C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 04:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429AC214AF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 04:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C338522314
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 04:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WsBWMEtE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YtzQLMTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387503AbgAMEfN (ORCPT
+        id S2387525AbgAMEoX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:35:13 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10958 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387474AbgAMEfN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 23:35:13 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1bf34a0000>; Sun, 12 Jan 2020 20:34:18 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 12 Jan 2020 20:35:11 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 12 Jan 2020 20:35:11 -0800
-Received: from [10.24.192.96] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
- 2020 04:35:08 +0000
-Subject: Re: [Patch V2 01/18] dt-bindings: phy: tegra-xusb: Add
- usb-role-switch
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        JC Kuo <jckuo@nvidia.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
- <1576660591-10383-2-git-send-email-nkristam@nvidia.com>
- <20191219130503.GG1440537@ulmo>
- <fe47fd52-efd0-4f84-d1e4-4bce5571e425@nvidia.com>
- <20200110111633.GA2233456@ulmo>
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <6eb31a50-472f-439c-3bc7-bcad1c0c9ff4@nvidia.com>
-Date:   Mon, 13 Jan 2020 10:07:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 12 Jan 2020 23:44:23 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38300 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387474AbgAMEoX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 12 Jan 2020 23:44:23 -0500
+Received: by mail-qt1-f194.google.com with SMTP id n15so8063216qtp.5
+        for <devicetree@vger.kernel.org>; Sun, 12 Jan 2020 20:44:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RyRzsNkAooAl3CXmjsa9W0SlFMm2BfQr/u0cFTqztIs=;
+        b=YtzQLMTYi/kldBF6YYcIPuroqqYIvxXUvFONigR4Dfl8w2speTLhMOoGxcDZYw9OM1
+         FgtbFKU2OvsDiZvseynxkHwklMLh5YKPOusMg0dToNRHh+bLHTwU9e0XaYmOYIn/vI94
+         dEcwcU+iGg0HkoyHc5LThywaVg+FZ5hhITBYE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RyRzsNkAooAl3CXmjsa9W0SlFMm2BfQr/u0cFTqztIs=;
+        b=FVMpK93E3oVa8v2Tznd8lLqffqL2T1eNy459QZRoYH3rxa1t2m+TQZbkBSpWUaNUuT
+         kEs+0nbiaMpqL9lBsb9Z34BfHmp67TwCjUEkjIGhsl3rG3BeGt0Xo6SbVnrdqlGuA6iD
+         duYJfO/09r/hrU4Bcgd9GoWmjNTnV5cjWDrDZ+GwdnnILyxmFhQE3dgtLz7y0H/y4HnA
+         HQq8F2Ise0QG2h3uqBekok+4JjvUXX3EDJNaSs+c0jpEQyl2T6uk/KUwofDKAZ5uJ4jK
+         y2KdS4xLSVrj3l62HvJu6JlxiN8fVQ2MDorKjcLkS8IZDM1GyYxIGbHApy7CGQZO77RU
+         zE4w==
+X-Gm-Message-State: APjAAAV5XA3cHvuix7j1W0xW+HKRX6hIufHY5kAsRW/viMN14neei14s
+        BU7unskBSpyK7lamx4G0aZ8mfdQZxxB2Amkbkwl0UA==
+X-Google-Smtp-Source: APXvYqy3LB6U150QIptmA2JsO9/a4I+iPJJewaoaUQbDRBc1Zx9V28Z/ANjOmYw2SHIkmhQ0FjMPTtUiqVGwYQaYARk=
+X-Received: by 2002:ac8:750b:: with SMTP id u11mr12533148qtq.174.1578890662186;
+ Sun, 12 Jan 2020 20:44:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200110111633.GA2233456@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578890059; bh=ahbQ/S5bwZQeCgRAcPe/SQefbnQj07L0nfH3z9X6qrM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=WsBWMEtE/xX7NnovBHwpO5f+SsTyMwTUbTO/0ZVBxMKV0xml5+ColYwaizFRHh0nG
-         +iSFNveIIGtet5fYoTGkIsFZi0agHepKyqkmKIoSrMeizWqvkmNM4E2cHRCr7K6OYI
-         +yIHx50VhHSOUF4XG57nB5rXSTFGJEHV79FgjueqJ8gsVOOjQuWHmjt1BiDtshbRi9
-         FdmIFcL7bGobL9mGT0Dc8kU8QdyBGg/8Z3RIRmJWMr/wzFNNpMQLGstfZ34vR0ulpi
-         VDHz7zmbIoS3EkEWO/ij8TMwWAAMTg10V71+MU/rZfwUUHldWrEbqLuPxgKcbV6h8r
-         RP76q+O5e/Xwg==
+References: <20191227141405.3396-1-yong.liang@mediatek.com>
+ <20191227141405.3396-2-yong.liang@mediatek.com> <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
+ <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com> <2bbd8f47-fe68-574c-cbe9-bcc680dd4c84@gmail.com>
+In-Reply-To: <2bbd8f47-fe68-574c-cbe9-bcc680dd4c84@gmail.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 13 Jan 2020 12:44:11 +0800
+Message-ID: <CANMq1KCXMUP=5ijqLsZ67MvO2ROFkG0vSX64KqmWtYKm7w8f2g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Yong Liang <yong.liang@mediatek.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, wim@linux-watchdog.org,
+        linux@roeck-us.net, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Fri, Jan 10, 2020 at 6:09 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>
+>
+>
+> On 08/01/2020 10:14, Nicolas Boichat wrote:
+> > On Wed, Jan 8, 2020 at 4:56 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> >>
+> >> minor nit, s/amr64/arm64/ in the commit title.
+> >>
+> >> On Fri, Dec 27, 2019 at 10:15 PM Yong Liang <yong.liang@mediatek.com> wrote:
+> >>>
+> >>> From: "yong.liang" <yong.liang@mediatek.com>
+> >>>
+> >>> 1. Include mt8183-reset.h and add reset-cells in infracfg
+> >>> in dtsi file
+> >
+> > Err, wait, doesn't this depend on
+> > http://lists.infradead.org/pipermail/linux-mediatek/2020-January/026170.html
+> > ?
+> >
+>
+> That's all a bit confusing, I thought we are fine to add the reset cells to
+> infracfg as we have the resets defined in
+> 64ebb57a3df6 ("clk: reset: Modify reset-controller driver")
 
-On 10-01-2020 16:46, Thierry Reding wrote:
-> On Fri, Dec 20, 2019 at 04:08:30PM +0800, JC Kuo wrote:
->> On 12/19/19 9:05 PM, Thierry Reding wrote:
->>> On Wed, Dec 18, 2019 at 02:46:14PM +0530, Nagarjuna Kristam wrote:
->>>> Add usb-role-switch property for Tegra210 and Tegra186 platforms. This
->>>> entry is used by XUSB pad controller driver to register for role changes
->>>> for OTG/Peripheral capable USB 2 ports.
->>>>
->>>> Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
->>>> ---
->>>> V2:
->>>>   - Moved usb-role-switch to seperate Required section as suggested by Thierry.
->>>>   - Added reference to usb/usb-conn-gpio.txt for connector subnode.
->>>> ---
->>>>   .../devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt         | 6 ++++++
->>>>   1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>> index 9fb682e..23bf354 100644
->>>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>> @@ -174,6 +174,12 @@ Required properties:
->>>>     - "device": for USB device mode
->>>>     - "otg": for USB OTG mode
->>>>   
->>>> +Required properties for OTG/Peripheral capable USB2 ports:
->>>> +- usb-role-switch: Boolean property to indicate that the port support OTG or
->>> "supports", and also, why if it supports OTG*or*  peripheral? Doesn't
->>> OTG imply peripheral? OTG means it can be either peripheral or host,
->>> right? So I think the end of that sentence can be just:
->>>
->>> 	"... the port supports OTG."
->> An USB OTG port is capable of both USB host and peripheral operations. An USB
->> peripheral port can only act as an USB peripheral.
->>
->> The micro USB ports found on Jetson TX1/TX2 platforms are micro-AB ports which
->> should implement both host and peripheral capabilities. We say such ports
->> support OTG. The micro USB port found on Jetson Nano is a micro-B port which
->> should implement peripheral capability only. We say such ports support
->> peripheral, rather than OTG.
-> I the port supports only peripheral mode, why do we need to have a
-> usb-role-switch property? Shouldn't we in that case have a mode property
-> with value "device"?
-> 
-> usb-mode-switch is only needed if mode = "otg", isn't it? In all other
-> cases the functionality is fixed (either host or peripheral) and the
-> mode cannot be switched.
-> 
-> Thierry
+You're right, we're fine. But at least in theory, we should still have
+the binding documentation that I linked above.
 
-usb-role-switch is needed when mode == "otg" or "peripheral".
+I will try to pick up all the required patches, split them across
+8183/2712 and resend as one series.
 
-Device mode is detected via vbus GPIO irrespective of mode being 
-peripheral only or OTG.
-Host mode is detected via id-gpio, in OTG case.
-
-When mode is peripheral, role changes happens between USB_ROLE_DEVICE 
-and USB_ROLE_NONE, which are generally based on Vbus GPIO(hot plug) 
-detection.
-
-When mode is otg, role changes happens between USB_ROLE_HOST, 
-USB_ROLE_DEVICE and USB_ROLE_NONE, which are detected via id-gpio, 
-vbus-gpio and no detection respectively.
-
--Nagarjuna
+> That's why I took this part from:
+> https://lore.kernel.org/linux-mediatek/20191226093930.22413-1-yong.liang@mediatek.com/
+>
+> Please let me know if I'm wrong and I'll drop it.
+>
+> Regards,
+> Matthias
+>
+> >>> 2. Add watchdog device node
+> >
+> > Can we have a patch with just this change instead, since you're
+> > sending the binding with it.
+> >
+> >>>
+> >>> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> >>
+> >> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+> >>
+> >>> ---
+> >>>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
+> >>>  1 file changed, 8 insertions(+)
+> >>> [snip]
