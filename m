@@ -2,122 +2,185 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C226C33CAD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 12:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C5BC33CAD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 12:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFE52084D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 12:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC7B206DA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 12:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C9IirWiC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gUIejq+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgAMMEn (ORCPT
+        id S1726450AbgAMMKx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:04:43 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33174 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgAMMEn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 07:04:43 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00DC4ZJr097265;
-        Mon, 13 Jan 2020 06:04:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578917075;
-        bh=A1XedcPXvbRKBkpZOeHIwI2DnTHQR9L7cGA4caxJfWM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=C9IirWiCen5nn6EKNJxu2zG6GMegSEUoZyLcXB+Ot2bp2WPoVTBLeR5rZIfXNOB2H
-         mOwUt9NcK4eHimYZA68dhxzeWZdfnLCacOMvO29BkpnWBOfv3h5rclEKJ/1FU/WQLA
-         su4LNtKKR999Qu4Pm504oQOqA/UWmrz0rtUUSqf4=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00DC4ZM0102040
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jan 2020 06:04:35 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 06:04:34 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 06:04:34 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00DC4Wd8035858;
-        Mon, 13 Jan 2020 06:04:33 -0600
-Subject: Re: [PATCH 3/3] drm/panel: simple: fix osd070t1718_19ts sync drive
- edge
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>, Jyri Sarha <jsarha@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-References: <20191114093950.4101-1-tomi.valkeinen@ti.com>
- <20191114093950.4101-4-tomi.valkeinen@ti.com>
- <20191202130717.GI4929@pendragon.ideasonboard.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <beb62b97-f45e-2cbc-6e2b-a05f1ef60e29@ti.com>
-Date:   Mon, 13 Jan 2020 14:04:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 07:10:53 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33338 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgAMMKw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 07:10:52 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b6so8323896wrq.0
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 04:10:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WBfLyLnxB/57Tfgm5ZKZyPtCmfHaakxN3M7SxJ598pA=;
+        b=gUIejq+FCx8Kd6HvjLMU8Nn1XtbcJ8M/jb0ryLOxB4/zVBuKYX4Af8SLra9eJs4rcB
+         mghg3QF8PPQNWvjwOAiVdwcSKLrvUlD57Ufq0i7SOK/qR+0UNHRDR60OFB5lvntqzNTu
+         cu/o0c5QoHplbht9CBc/FT8dE/Qs9MJ/hHR+zNX6ciZxIM+gEzATdOQ6DekDQYvxm+Hq
+         coYzl5K4gougiM/zugUm0SpSjhtHCDP5PDewrpJ7SkFqDI7kQoZhX7RBBi+Kp8J/QRj8
+         b9h5efbNYhOIsDtIFMb0+S+PQKoOuQsMHi34A9odAr2wmItf2LEGgYfuYCF0f/xhMBSL
+         mEyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WBfLyLnxB/57Tfgm5ZKZyPtCmfHaakxN3M7SxJ598pA=;
+        b=nngrZ5nHdaUZxXdxWb3U2VKPPAgRvOd+ZTlEzbUFMWJPhR+vWn1HftuwqPRh03Bj8U
+         jZco4y3412bK1TD7VQOYyVrWvwWkA30rwl3QtPeJLJnhJo4nq4VCV37fhkSPDyO1Szr4
+         1On0enH4iN0Zm+CqGndWy8nhSNoRK3/nxIWdO9M/EnDh/MYTlV2egwewJ93duxNoUpCz
+         lIA5olSljlXW06O3gOSe7OmptAAjHF6N9vp2Tn19D3SlwG80FLWCA/dTXqHIv1MAK9al
+         bFLoNzScAu+TAmXVKcJugL/PLm6N/t+s5uhC18pjAq99dWnPBjlYHeboMC0MpUiAoF4T
+         qhQA==
+X-Gm-Message-State: APjAAAUVPLKOgsGla6f7HYgWlTXE6wR5sBhzD/9SiGBImiGH/9W90X/B
+        ncxWZ01BztP9oYVU6JFQrxuWqg==
+X-Google-Smtp-Source: APXvYqwEQVVqvqvjsj+6jgiSXpHXeqdDkCbyvYTNsbrb9Hsh7vYWqFLAsxhpBg00+gIiid7GIRicMQ==
+X-Received: by 2002:adf:edd0:: with SMTP id v16mr18025079wro.310.1578917449742;
+        Mon, 13 Jan 2020 04:10:49 -0800 (PST)
+Received: from dell ([95.147.198.95])
+        by smtp.gmail.com with ESMTPSA id s3sm14052259wmh.25.2020.01.13.04.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 04:10:49 -0800 (PST)
+Date:   Mon, 13 Jan 2020 12:11:09 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200113121109.GG5414@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200107124124.GI14821@dell>
+ <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
+ <20200113105301.GF5414@dell>
+ <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20191202130717.GI4929@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Thierry,
+On Mon, 13 Jan 2020, Vaittinen, Matti wrote:
 
-On 02/12/2019 15:07, Laurent Pinchart wrote:
-> Hi Tomi,
+> Hello Lee,
 > 
-> Thank you for the patch.
+> On Mon, 2020-01-13 at 10:53 +0000, Lee Jones wrote:
+> > On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
+> > 
+> > > Hello Lee,
+> > > 
+> > > On Tue, 2020-01-07 at 12:41 +0000, Lee Jones wrote:
+> > > > On Mon, 30 Dec 2019, Matti Vaittinen wrote:
+> > > > 
+> > > > > Few ROHM PMICs allow setting the voltage states for different
+> > > > > system states
+> > > > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via
+> > > > > SoC
+> > > > > specific
+> > > > > mechanisms. bd718x7 driver implemented device-tree parsing
+> > > > > functions for
+> > > > > these state specific voltages. The parsing functions can be re-
+> > > > > used 
+> > > > > by
+> > > > > other ROHM chip drivers like bd71828. Split the generic
+> > > > > functions
+> > > > > from
+> > > > > bd718x7-regulator.c to rohm-regulator.c and export them for
+> > > > > other
+> > > > > modules
+> > > > > to use.
+> > > > > 
+> > > > > Signed-off-by: Matti Vaittinen <
+> > > > > matti.vaittinen@fi.rohmeurope.com>
+> > > > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > > > ---
+> > 
+> > [...]
+> > 
+> > > > > +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
+> > > > > +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config
+> > > > > *dvs,
+> > > > > +				  struct device_node *np,
+> > > > > +				  const struct regulator_desc
+> > > > > *desc,
+> > > > > +				  struct regmap *regmap);
+> > > > 
+> > > > Does these really need to live in the parent's header file?
+> > > 
+> > > I don't know what would be a better place?
+> > 
+> > You don't have a regulator header file?
+> > 
+> > It seems over-kill to create one for this, so leave it as is.
+> > 
+> > > > What other call-sites are there?
+> > > 
+> > > After this series the bd718x7-regulator.c and bd71828-regulator.c
+> > > are
+> > > the in-tree drivers using these. rohm-regulator.c is implementing
+> > > them.
+> > > And I hope we see yet another driver landing in later this year. 
+> > > 
+> > > Anyways, I will investigate if I can switch this to some common
+> > > (not
+> > > rohm specific) DT bindings at some point (I've scheduled this study
+> > > to
+> > > March) - If I can then they should live in regulator core headers.
+> > > 
+> > > But changing the existing properties should again be own set of
+> > > patches
+> > > and I'd prefer doing that work independently of this series and not
+> > > delaying the BD71828 due to not-yet-evaluated bd718x7 property
+> > > changes.
+> > 
+> > That's fine.
 > 
-> On Thu, Nov 14, 2019 at 11:39:50AM +0200, Tomi Valkeinen wrote:
->> The panel datasheet says that the panel samples at falling edge, but
->> does not say anything about h/v sync signals. Testing shows that if the
->> sync signals are driven on falling edge, the picture on the panel will
->> be slightly shifted right.
->>
->> Setting sync drive edge to the same as data drive edge fixes this issue.
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> 
-> I don't have access to the documentation, but this makes sense, so
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
->> ---
->>   drivers/gpu/drm/panel/panel-simple.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
->> index 5d487686d25c..0784536ae6af 100644
->> --- a/drivers/gpu/drm/panel/panel-simple.c
->> +++ b/drivers/gpu/drm/panel/panel-simple.c
->> @@ -2397,7 +2397,8 @@ static const struct panel_desc osddisplays_osd070t1718_19ts = {
->>   		.height = 91,
->>   	},
->>   	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
->> -	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE,
->> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
->> +		DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
->>   	.connector_type = DRM_MODE_CONNECTOR_DPI,
->>   };
->>   
-> 
+> Glad to hear :) By the way, I already sent the v9 ;)
 
-Can you pick this one up?
-
-  Tomi
+It's in my queue.
 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
