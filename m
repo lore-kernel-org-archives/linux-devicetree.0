@@ -2,314 +2,163 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 341EBC33CAA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 08:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF37C33CA8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 08:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0090E20678
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 08:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rYZZxqHU"
+	by mail.kernel.org (Postfix) with ESMTP id 0C27A214D8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 08:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578905975;
+	bh=JfZwSTOrI3J7CIa5OdM8C3bfShk23rBqMg7ZmqPnXd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qq0T6LoO2tN7kEdK5SRtT1XoL33gW56ozHNTUaZmK1IJg32K5ZNEmqtA5mBYftTTh
+	 TNa4RMCWQ1GmRy5Jdp4ylyj4lalpdDogCvtAZd6b8T1rYMYHZgMrxuwKd0+kB6RudC
+	 dCDSpVeeIW/WtHaf24YIUOo00vE+TPqnbCm3NHB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAMI5G (ORCPT
+        id S1725815AbgAMI7e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:57:06 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35516 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbgAMI5F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 03:57:05 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00D8uPmw052759;
-        Mon, 13 Jan 2020 02:56:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578905785;
-        bh=qiluW+qBpvQyARnjqX2JEhlxa6K7JfbnE7vKlMFGKsQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rYZZxqHUR9N6nLKtsz38/NT5IEKxu8f9c1YxZL9P8v4I0w5+jmY2yA0ez7Q6zyJKp
-         pyNkqSeWVw4w1aHLDlCFPt7dNX3XcYKPred2L+ha0F+yxZi3sGUARnEdBOpBD7GgGE
-         Y58DBXtybW3uCVrjHg/Cy0PdnHf5Uyuk0E9rsh7U=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00D8uPvS120096;
-        Mon, 13 Jan 2020 02:56:25 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 02:56:24 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 02:56:24 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00D8uGnf076383;
-        Mon, 13 Jan 2020 02:56:17 -0600
-Subject: Re: [v3 3/6] PCI: endpoint: Add support to handle multiple base for
- mapping outbound memory
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <53d74632-34ee-f7f7-656f-a93a6c10e7ba@ti.com>
- <CA+V-a8tHkqkxE_5DMtt6PbJyGz1vfKZUezE5nOFmJXarJAugkw@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <2b4dd351-76ee-60bd-bd91-20d5f1ac4e79@ti.com>
-Date:   Mon, 13 Jan 2020 14:28:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 13 Jan 2020 03:59:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgAMI7e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 13 Jan 2020 03:59:34 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A09820678;
+        Mon, 13 Jan 2020 08:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578905972;
+        bh=JfZwSTOrI3J7CIa5OdM8C3bfShk23rBqMg7ZmqPnXd0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Oi9IO6MWKgGI+YoNaP20pa1l4rq2n7FBdgy/pBOn4XJCDISx2Jdz3ni2uErW4Ldz2
+         cWG4w1zm8qisUTJI8kAGS2iXzgfSOqAuQwq9GzZNo8NOW7hBs4Wl2kDoXd9byaG6+U
+         TBfAuEQKR39d2TFLq3Hr+4Z3HC0pneZIvN7Sr7ak=
+Date:   Mon, 13 Jan 2020 09:59:29 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?utf-8?B?QW5kcsOp?= Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] arm64: dts: sun50i: H6: Add SPI controllers nodes
+ and pinmuxes
+Message-ID: <20200113085929.24iseck4fljw5njh@gilmour.lan>
+References: <20200108101006.150706-1-andre.przywara@arm.com>
+ <20200108101006.150706-2-andre.przywara@arm.com>
+ <20200111172639.to3lhzros6ca5hj2@gilmour.lan>
+ <cea0a8ed-fcf7-53c8-daf9-cf27408d83f9@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+V-a8tHkqkxE_5DMtt6PbJyGz1vfKZUezE5nOFmJXarJAugkw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ir7fewqs7mlcjtw5"
+Content-Disposition: inline
+In-Reply-To: <cea0a8ed-fcf7-53c8-daf9-cf27408d83f9@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
 
-On 10/01/20 11:38 PM, Lad, Prabhakar wrote:
-> Hi Kishon,
-> 
-> Thank you for the review.
-> 
-> On Thu, Jan 9, 2020 at 6:25 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Prabhakar,
->>
->> On 08/01/20 9:52 PM, Lad Prabhakar wrote:
->>> R-Car PCIe controller has support to map multiple memory regions for
->>> mapping the outbound memory in local system also the controller limits
->>> single allocation for each region (that is, once a chunk is used from the
->>> region it cannot be used to allocate a new one). This features inspires to
->>> add support for handling multiple memory bases in endpoint framework.
->>>
->>> With this patch pci_epc_mem_init() now accepts multiple regions, also
->>> page_size for each memory region is passed during initialization so as
->>> to handle single allocation for each region by setting the page_size to
->>> window_size.
->>>
->>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->>> ---
->>>  .../pci/controller/cadence/pcie-cadence-ep.c  |  12 +-
->>>  .../pci/controller/dwc/pcie-designware-ep.c   |  31 ++-
->>>  drivers/pci/controller/pcie-rockchip-ep.c     |  14 +-
->>>  drivers/pci/endpoint/functions/pci-epf-test.c |  29 +--
->>>  drivers/pci/endpoint/pci-epc-core.c           |   7 +-
->>>  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++++----
->>>  include/linux/pci-epc.h                       |  46 ++--
->>>  7 files changed, 245 insertions(+), 93 deletions(-)
->>>
->> .
->> .
->> <snip>
->> .
->> .
->>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->>> index 2091508c1620..289c266c2d90 100644
->>> --- a/drivers/pci/endpoint/pci-epc-core.c
->>> +++ b/drivers/pci/endpoint/pci-epc-core.c
->>> @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>>   * @epc: the EPC device on which address is allocated
->>>   * @func_no: the endpoint function number in the EPC device
->>>   * @phys_addr: physical address of the local system
->>> + * @window: index to the window region where PCI address will be mapped
->>>   * @pci_addr: PCI address to which the physical address should be mapped
->>>   * @size: the size of the allocation
->>>   *
->>>   * Invoke to map CPU address with PCI address.
->>>   */
->>>  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
->>> -                  phys_addr_t phys_addr, u64 pci_addr, size_t size)
->>> +                  phys_addr_t phys_addr, int window,
->>> +                  u64 pci_addr, size_t size)
->>>  {
->>>       int ret;
->>>       unsigned long flags;
->>> @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
->>>               return 0;
->>>
->>>       spin_lock_irqsave(&epc->lock, flags);
->>> -     ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
->>> +     ret = epc->ops->map_addr(epc, func_no, phys_addr,
->>> +                              window, pci_addr, size);
->>>       spin_unlock_irqrestore(&epc->lock, flags);
->>>
->>>       return ret;
->>> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
->>> index d2b174ce15de..f205f7819292 100644
->>> --- a/drivers/pci/endpoint/pci-epc-mem.c
->>> +++ b/drivers/pci/endpoint/pci-epc-mem.c
->>> @@ -38,57 +38,77 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->>>  /**
->>>   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
->>>   * @epc: the EPC device that invoked pci_epc_mem_init
->>> - * @phys_base: the physical address of the base
->>> - * @size: the size of the address space
->>> - * @page_size: size of each page
->>> + * @windows: pointer to windows supported by the device
->>> + * @num_windows: number of windows device supports
->>>   *
->>>   * Invoke to initialize the pci_epc_mem structure used by the
->>>   * endpoint functions to allocate mapped PCI address.
->>>   */
->>> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
->>> -                    size_t page_size)
->>> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
->>> +                    int num_windows)
->>>  {
->>> -     int ret;
->>> -     struct pci_epc_mem *mem;
->>> -     unsigned long *bitmap;
->>> +     struct pci_epc_mem *mem = NULL;
->>> +     unsigned long *bitmap = NULL;
->>>       unsigned int page_shift;
->>> -     int pages;
->>> +     size_t page_size;
->>>       int bitmap_size;
->>> +     int pages;
->>> +     int ret;
->>> +     int i;
->>>
->>> -     if (page_size < PAGE_SIZE)
->>> -             page_size = PAGE_SIZE;
->>> +     epc->mem_windows = 0;
->>>
->>> -     page_shift = ilog2(page_size);
->>> -     pages = size >> page_shift;
->>> -     bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->>> +     if (!windows)
->>> +             return -EINVAL;
->>>
->>> -     mem = kzalloc(sizeof(*mem), GFP_KERNEL);
->>> -     if (!mem) {
->>> -             ret = -ENOMEM;
->>> -             goto err;
->>> -     }
->>> +     if (num_windows <= 0)
->>> +             return -EINVAL;
->>>
->>> -     bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> -     if (!bitmap) {
->>> -             ret = -ENOMEM;
->>> -             goto err_mem;
->>> -     }
->>> +     epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
->>> +     if (!epc->mem)
->>> +             return -EINVAL;
->>> +
->>> +     for (i = 0; i < num_windows; i++) {
->>> +             page_size = windows[i].page_size;
->>> +             if (page_size < PAGE_SIZE)
->>> +                     page_size = PAGE_SIZE;
->>> +             page_shift = ilog2(page_size);
->>> +             pages = windows[i].size >> page_shift;
->>> +             bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->>> +
->>> +             mem = kzalloc(sizeof(*mem), GFP_KERNEL);
->>> +             if (!mem) {
->>> +                     ret = -ENOMEM;
->>> +                     goto err_mem;
->>> +             }
->>>
->>> -     mem->bitmap = bitmap;
->>> -     mem->phys_base = phys_base;
->>> -     mem->page_size = page_size;
->>> -     mem->pages = pages;
->>> -     mem->size = size;
->>> +             bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> +             if (!bitmap) {
->>> +                     ret = -ENOMEM;
->>> +                     goto err_mem;
->>> +             }
->>>
->>> -     epc->mem = mem;
->>> +             mem->bitmap = bitmap;
->>> +             mem->window.phys_base = windows[i].phys_base;
->>> +             mem->page_size = page_size;
->>> +             mem->pages = pages;
->>> +             mem->window.size = windows[i].size;
->>> +             mem->window.map_size = 0;
->>> +
->>> +             epc->mem[i] = mem;
->>> +     }
->>> +     epc->mem_windows = num_windows;
->>>
->>>       return 0;
->>>
->>>  err_mem:
->>> -     kfree(mem);
->>> +     for (; i >= 0; i--) {
->>
->> mem has to be reinitialized for every iteration of the loop.
-> not sure what exactly you mean here, could you please elaborate.
+--ir7fewqs7mlcjtw5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You are invoking "kfree(mem->bitmap);" in a loop without re-initializing
-mem. Refer pci_epc_mem_exit() where you are doing the free properly.
+On Sun, Jan 12, 2020 at 03:12:19PM +0000, Andr=E9 Przywara wrote:
+> On 11/01/2020 17:26, Maxime Ripard wrote:
+>
+> Hi Maxime,
+>
+> > On Wed, Jan 08, 2020 at 10:10:05AM +0000, Andre Przywara wrote:
+> >> The Allwinner H6 SoC contains two SPI controllers similar to the H3/A6=
+4,
+> >> but with the added capability of 3-wire and 4-wire operation modes.
+> >> For now the driver does not support those, but the SPI registers are
+> >> fully backwards-compatible, just adding bits and registers which were
+> >> formerly reserved. So we can use the existing driver for the "normal" =
+SPI
+> >> modes, for instance to access the SPI NOR flash soldered on the PineH64
+> >> board.
+> >> We use an H6 specific compatible string in addition to the existing H3
+> >> string, so when the driver later gains Quad SPI support, it should work
+> >> automatically without any DT changes.
+> >>
+> >> Tested by accessing the SPI flash on a Pine H64 board (SPI0), also
+> >> connecting another SPI flash to the SPI1 header pins.
+> >>
+> >> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> >> ---
+> >>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
+> >>  1 file changed, 54 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64=
+/boot/dts/allwinner/sun50i-h6.dtsi
+> >> index 3329283e38ab..40835850893e 100644
+> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+> >> @@ -338,6 +338,30 @@
+> >>  				bias-pull-up;
+> >>  			};
+> >>
+> >> +			/omit-if-no-ref/
+> >> +			spi0_pins: spi0-pins {
+> >> +				pins =3D "PC0", "PC2", "PC3";
+> >> +				function =3D "spi0";
+> >> +			};
+> >> +
+> >> +			/omit-if-no-ref/
+> >> +			spi0_cs_pin: spi0-cs-pin {
+> >> +				pins =3D "PC5";
+> >> +				function =3D "spi0";
+> >> +			};
+> >
+> > It seems suspicious to use it in the Pine H64, since PC5 is also used
+> > by the eMMC (and this prevents either the SPI or the emmc controller
+> > to probe, depending on which probed first).
+>
+> Argh, good catch! I saw that AW changed the pin sharing between SPI and
+> MMC2 slightly, but didn't actually check that they made it worse :-(
+> Because this time it's the MMC CMD pin affected, and not the somewhat
+> optional DS pin as in the A64.
+> So I see we can't really have both at the same time. So what about this:
+>
+> We keep the SPI flash chip described as in patch 2/2 (as it's soldered
+> on every board), but mark it as disabled and explain this in a comment.
+> This way we can't access it under Linux, but keep a potential eMMC chip
+> accessible.
+>
+> In U-Boot's DT copy we could deviate and mark it as "okay", as U-Boot
+> doesn't use both eMMC and SPI at the same time. I need to check whether
+> this works or we would need to move the pinmux setup out of the probe
+> routine into something later.
+>
+> And we could go one step further: If U-Boot detects an eMMC connected
+> (it's on a socket and so optional), it changes the SPI flash status to
+> "disabled", to allow EFI apps and kernels using this DT to access the
+> eMMC - which is far more useful than the SPI flash.
+> Otherwise (no eMMC connected) it can stay at "okay", as there would be
+> no conflict.
+>
+> Does this make sense?
 
-> 
->>> +             kfree(mem->bitmap);
->>> +             kfree(epc->mem[i]);
->>> +     }
->>> +     kfree(epc->mem);
->>>
->>> -err:
->>> -return ret;
->>> +     return ret;
->>>  }
->>>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
->>>
->>> @@ -101,48 +121,127 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
->>>   */
->>>  void pci_epc_mem_exit(struct pci_epc *epc)
->>>  {
->>> -     struct pci_epc_mem *mem = epc->mem;
->>> +     struct pci_epc_mem *mem;
->>> +     int i;
->>> +
->>> +     if (!epc->mem_windows)
->>> +             return;
->>> +
->>> +     for (i = 0; i <= epc->mem_windows; i++) {
->>> +             mem = epc->mem[i];
+It does, it seems like a good plan
 
-Missing the above line in the error handling above.
+Maxime
 
+--ir7fewqs7mlcjtw5
+Content-Type: application/pgp-signature; name="signature.asc"
 
->>> +             kfree(mem->bitmap);
->>> +             kfree(epc->mem[i]);
->>> +     }
+-----BEGIN PGP SIGNATURE-----
 
-Thanks
-Kishon
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhwxcQAKCRDj7w1vZxhR
+xeN3AP472p91nx9oqXRJe6+0u8r0T386EdVwUUHUSJGHeqdtzwEA8UiwW9E3F42A
+/XZ5acoOflKaj0ShNtTko85S2oaFWQM=
+=8bva
+-----END PGP SIGNATURE-----
+
+--ir7fewqs7mlcjtw5--
