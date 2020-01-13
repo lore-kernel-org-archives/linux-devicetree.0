@@ -8,53 +8,53 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45755C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 21:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE3FC33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 21:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1759A24656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 21:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B361222C4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 21:07:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utfA3alr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvNq4fxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgAMVHv (ORCPT
+        id S1728797AbgAMVH4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:07:51 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45411 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726086AbgAMVHu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 16:07:50 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so4292305pls.12;
-        Mon, 13 Jan 2020 13:07:50 -0800 (PST)
+        Mon, 13 Jan 2020 16:07:56 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38033 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728792AbgAMVH4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 16:07:56 -0500
+Received: by mail-pg1-f193.google.com with SMTP id a33so5298817pgm.5;
+        Mon, 13 Jan 2020 13:07:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LyQkYDM/KZKONjplFnyoxpxnLT5IGwQv8MiMr7YPN3I=;
-        b=utfA3alrv7tHpghnKdkmJ3E0IqLvR/zXbdnViKLkrLfW8ko7gw7GTfXLrgEkbIqSJe
-         OmHci07hmtJ8jlSGaF8s1zDVjPIzQbipUsLUzcvg4+SmZNpGatNqyPmtr4yXj5HXue9w
-         v+le4kOlRgwDbA7LBe4l6BQhXCP+r7kjMT7xUiEmxzx6IYN+SGFsaTbYx6zfeKDTOSE3
-         QtJB3IIApfjxmV/26ONJgL9AMVrAS5+lJNBUc25L8k0i0m0dkVyHBKAeM9wZkok2+SRZ
-         bp1R7RwtXcAXMCWfGMM4Ej4kts9WxU5aHmRNFNAidPjM9ZZjSZVaBdYTKjYI9xzrHzX4
-         LKGA==
+        bh=c4EwOwGyRZn732m62F/bmkLNPBHupsvQnM8EZTJTEOU=;
+        b=TvNq4fxIGcMuRSTocpaToEWweIJ2INFcSGkfkTb2PGFYP4PexLnpNWn0jgZYGYkBrv
+         VcgNEUh9ux0x752QjnvpckLrBNTTBhvRbXKtk3vwZq8JrI/K3L+8JDPweSfGXHyj/NDp
+         SvdW6n05jJp7R3pUNZSHm0PkJ2hw1hb2HhRkTO/XwdTOK6H3f1xhiznskz7KsLuroa/l
+         9xL/gQ8ciwMwcwuf7vlBvbai/qoolqJVhLzDwQXYFaAQUJloAe5eBq1QOfzWp/0ZmigB
+         FnOcocIKY7rYAWBeSySjqqTjLIRtFhGBdyrIyskrV6zXFmRPVx0TZeQbIzuOaZttRLWi
+         WKRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LyQkYDM/KZKONjplFnyoxpxnLT5IGwQv8MiMr7YPN3I=;
-        b=bmQelJIxYO49s4259czJBJ5LNRvwRe0S2x6fR5C4IpKWiBtfY8UM7lHZT1FdxCgXCz
-         5+yqG1+FK8mfUpDgh4EqCr7IdfJqhzeVtnzTv3S72JWbCfdsn0vb19N88z+/K/0Vp5py
-         GPM+0u6bhv7jhWvF5EueUG1srb74WBL0VB4aBs41Pjh4i/SoNNRbOdjMJbrr7kj8ocpo
-         K8KyJHlQRDqV52sJl0PDGRn3OM/mW60/mRj9+00RKqxhlZgJbb/LNaNbxR7+5v1p2oOu
-         SdrFpPE7F69p7+jTZemYpT7U4ZVks9wlcs3ei8MLjdFFxEPS5PGCoYnfGBV6U2dWHbFd
-         JNiQ==
-X-Gm-Message-State: APjAAAXDdQFvTBPSgFMFi4fXVq+E2nfNU+ELGfXBSdy/ZPTAp/t46vVF
-        ct/RXtssMjmbRQeT1qwzHXjDeqml8il7og==
-X-Google-Smtp-Source: APXvYqzliCyBk9qFpUk4+wdWthbVhifyZvXlrNnXV9vrs6fPOu67hIWB75V3MJEl+WkyzYcNilvw3g==
-X-Received: by 2002:a17:90a:9b88:: with SMTP id g8mr24522340pjp.72.1578949669444;
-        Mon, 13 Jan 2020 13:07:49 -0800 (PST)
+        bh=c4EwOwGyRZn732m62F/bmkLNPBHupsvQnM8EZTJTEOU=;
+        b=pIjvVw/BQQtIPS+rCdIFUvnWsUwm8G+rYCX/FNSWxUBMEGpktTM1STI+CgfhLYBKmR
+         1mG2y3/jr6VDeOfuX8di0KjhnBeypO7iCvB/ypgOjIp7v1+yZ27p8Qw0nNP22y3a6s6x
+         PYlpGA+wgq13qfEkzhllQBGymkI0C89pJwBigO4huK5Tl/Nt1C0vteX+JLSFg3HHP6wi
+         XM6yoR05r6wuEcAYGSQ23VDlZhcV+0dr5h4CwCeKkks+qwvwNV3lv+1XC+u12DG6rZ2a
+         /FnHIBkY0qzCQuQtrWjYb73kwTqor6/EwTztsNX+LlQCnfnduaObp3C8NB+QtvIsD8Uz
+         2FBQ==
+X-Gm-Message-State: APjAAAV7eTCKku5Z2arcRamOkL3L9C/hp0DAslj1hvecO5nDKQW8rSqR
+        tHRWxIWDRtpN60sakRKcUEJo422yILBKiA==
+X-Google-Smtp-Source: APXvYqx1R7S8pIV0K8TV9qoZ4dBSE0XGBn6qp4kgOM11WVqKY4FU4nvS/xhY19oqkjyQfl1iY2QsUg==
+X-Received: by 2002:a63:a43:: with SMTP id z3mr22981828pgk.232.1578949674958;
+        Mon, 13 Jan 2020 13:07:54 -0800 (PST)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id s1sm14195827pgv.87.2020.01.13.13.07.47
+        by smtp.gmail.com with ESMTPSA id s1sm14195827pgv.87.2020.01.13.13.07.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 13:07:49 -0800 (PST)
+        Mon, 13 Jan 2020 13:07:54 -0800 (PST)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>,
@@ -72,9 +72,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>,
         Takao Orito <orito.takao@socionext.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH 1/6] dt-bindings: mmc: brcm,sdhci-brcmstb: Add support for 7216b0
-Date:   Mon, 13 Jan 2020 16:07:01 -0500
-Message-Id: <20200113210706.11972-2-alcooperx@gmail.com>
+Subject: [PATCH 3/6] mmc: sdhci-brcmstb: Fix driver to defer on clk_get defer
+Date:   Mon, 13 Jan 2020 16:07:03 -0500
+Message-Id: <20200113210706.11972-4-alcooperx@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200113210706.11972-1-alcooperx@gmail.com>
 References: <20200113210706.11972-1-alcooperx@gmail.com>
@@ -83,74 +83,44 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add 7216b0 with supports CQE, HS400, HS400-ES and SDR104.
+The new SCMI clock protocol driver does not get probed that early in
+boot. Brcmstb drivers typically have the following code when getting
+a clock:
+
+        priv->clk = devm_clk_get(&pdev->dev, NULL);
+        if (IS_ERR(priv->clk)) {
+                dev_err(&pdev->dev, "Clock not found in Device Tree\n");
+                priv->clk = NULL;
+        }
+
+This commit changes the driver to do what is below.
+
+        priv->clk = devm_clk_get(&pdev->dev, NULL);
+        if (IS_ERR(priv->clk)) {
+                if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
+                        return -EPROBE_DEFER;
+                dev_err(&pdev->dev, "Clock not found in Device Tree\n");
+                priv->clk = NULL;
+        }
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- .../bindings/mmc/brcm,sdhci-brcmstb.txt       | 41 +++++++++++++------
- 1 file changed, 28 insertions(+), 13 deletions(-)
+ drivers/mmc/host/sdhci-brcmstb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
-index 733b64a4d8eb..ae2074184528 100644
---- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
-+++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
-@@ -11,28 +11,43 @@ Required properties:
- - compatible: should be one of the following
-   - "brcm,bcm7425-sdhci"
-   - "brcm,bcm7445-sdhci"
-+  - "brcm,bcm7216-sdhci"
+diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
+index daa89ca232a2..218176b79b6a 100644
+--- a/drivers/mmc/host/sdhci-brcmstb.c
++++ b/drivers/mmc/host/sdhci-brcmstb.c
+@@ -91,6 +91,8 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
  
- Refer to clocks/clock-bindings.txt for generic clock consumer properties.
- 
- Example:
- 
--	sdhci@f03e0100 {
--		compatible = "brcm,bcm7425-sdhci";
--		reg = <0xf03e0000 0x100>;
--		interrupts = <0x0 0x26 0x0>;
--		sdhci,auto-cmd12;
--		clocks = <&sw_sdio>;
-+	sdhci@84b0000 {
- 		sd-uhs-sdr50;
- 		sd-uhs-ddr50;
-+		sd-uhs-sdr104;
-+		sdhci,auto-cmd12;
-+		compatible = "brcm,bcm7216-sdhci",
-+			   "brcm,bcm7445-sdhci",
-+			   "brcm,sdhci-brcmstb";
-+		reg = <0x84b0000 0x260 0x84b0300 0x200>;
-+		reg-names = "host", "cfg";
-+		interrupts = <0x0 0x26 0x4>;
-+		interrupt-names = "sdio0_0";
-+		clocks = <&scmi_clk 245>;
-+		clock-names = "sw_sdio";
- 	};
- 
--	sdhci@f03e0300 {
-+	sdhci@84b1000 {
-+		mmc-ddr-1_8v;
-+		mmc-hs200-1_8v;
-+		mmc-hs400-1_8v;
-+		mmc-hs400-enhanced-strobe;
-+		supports-cqe;
- 		non-removable;
- 		bus-width = <0x8>;
--		compatible = "brcm,bcm7425-sdhci";
--		reg = <0xf03e0200 0x100>;
--		interrupts = <0x0 0x27 0x0>;
--		sdhci,auto-cmd12;
--		clocks = <sw_sdio>;
--		mmc-hs200-1_8v;
-+		compatible = "brcm,bcm7216-sdhci",
-+			   "brcm,bcm7445-sdhci",
-+			   "brcm,sdhci-brcmstb";
-+		reg = <0x84b1000 0x260 0x84b1300 0x200>;
-+		reg-names = "host", "cfg";
-+		interrupts = <0x0 0x27 0x4>;
-+		interrupt-names = "sdio1_0";
-+		clocks = <&scmi_clk 245>;
-+		clock-names = "sw_sdio";
- 	};
+ 	clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
++		if (PTR_ERR(clk) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
+ 		dev_err(&pdev->dev, "Clock not found in Device Tree\n");
+ 		clk = NULL;
+ 	}
 -- 
 2.17.1
 
