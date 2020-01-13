@@ -2,364 +2,198 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726C4C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 14:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F41C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 15:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4848E2080D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 14:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A6C207E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 15:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="TduK/K81"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fH8PxRJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgAMO7V (ORCPT
+        id S1728512AbgAMPHB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:59:21 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:33186 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728646AbgAMO7V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 09:59:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1578927557; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QylB/cC3XR0W6TSZItoFx03/arcyZMHUAVM0VFmVRqM=;
-        b=TduK/K81V72pl7QRPORYrRvjVH7jZNCriEnqdiEI2SIFNy1rvzz2Y/C7VBOzdjdG3FeANP
-        tLRMfKAAEXe7CiXAfUBX8+inXGUXr2pEamSHLh3txsviWt4xamjT/m05aYO3aL5Hn7Hts7
-        0K+LTDPqWKp3GMXZvXTwNDMGnPPwi4A=
-Date:   Mon, 13 Jan 2020 11:59:00 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
-To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc:     Artur Rojek <contact@artur-rojek.eu>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <1578927540.3.0@crapouillou.net>
-In-Reply-To: <20200111114609.1979a8ff@archlinux>
-References: <20200105001639.142061-1-contact@artur-rojek.eu>
-        <20200105001639.142061-3-contact@artur-rojek.eu>
-        <20200111114609.1979a8ff@archlinux>
+        Mon, 13 Jan 2020 10:07:01 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35827 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgAMPHA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 10:07:00 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so10053981wmb.0;
+        Mon, 13 Jan 2020 07:06:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AwN2IRmBbgF51wtzzucPKwlBt/f3JlaSzZFnNgcNVdw=;
+        b=fH8PxRJ8A4LPfKZfoSVUvflX4RSFeMP6AICq5d2z4yNRj4uL571tI1AZ/I+FlV/CZ6
+         uwrtr0sciAXwcNn8aohd8HXqL9Hirqa1ySpmYDtpuEAr0I4OmOLDO2YWm7q6cD4pA7hL
+         D/mqFN9Wvtba8rfvAT+2Cew4TzFwGfR7yFiQMdCs0k2b/zflOBFjyAVl91lB3yynYQlb
+         oXt7NL6VU61o2Qj2FGu/57l3KqawZCvg8UZLGkbwIOVdGYVqe+XekEzYT87LIWUHjv2R
+         hLmI29JQokzMVbsXw7f1bjUN4pRL9CfmVyByK9yaAp5xk2AVIJ593wsf+Mc6T+GY4UQc
+         5RnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AwN2IRmBbgF51wtzzucPKwlBt/f3JlaSzZFnNgcNVdw=;
+        b=dx4d3FuIFPxPq6EhefjmGULPtjjwlpnLzkdM04j9dP6s9Bh3RqQzS6kEIg3UwmWiDN
+         sVvgfdTCPaO6rUEpEXeniPcNOGUHu7qj4yUxCm8hb9aE6haCB16LJ5jkQgacC5urU+Cu
+         9D5yFPfXLihwAdqNlTw/yZZab8y/6IsH7CGmCqqPugI2KgILido5O5xiOQOu7YEiDoWQ
+         k2XO24I9I1O9ytPa+RtL+7qSGLHBjwTKxJpXJHqQ6oLYmFuK6X/5Y6FgeOPMg319afWt
+         Dpaao0TvVrPd7pMRs3BBQQsJjHuv3AtZhS3JlbtVVD+tvJ6w5flf0Ga0Mwf8z/27Behx
+         umSA==
+X-Gm-Message-State: APjAAAU17Wk0em0iTOAckhmAOft04Vbuoii9p3D42lBp0O1lVv5FKSo/
+        zCcJHRHi834IvnigtStCb+4=
+X-Google-Smtp-Source: APXvYqxc+/c9wA/gbPWZ+Ltiu+ig50WRaCqSeSAy/w1p+OZq6Zsre8YPC0LCBl2zKbLeMPViJmOKfw==
+X-Received: by 2002:a05:600c:251:: with SMTP id 17mr19923698wmj.88.1578928018314;
+        Mon, 13 Jan 2020 07:06:58 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id r68sm14640221wmr.43.2020.01.13.07.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 07:06:56 -0800 (PST)
+Date:   Mon, 13 Jan 2020 16:06:56 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     JC Kuo <jckuo@nvidia.com>, balbi@kernel.org,
+        gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V2 01/18] dt-bindings: phy: tegra-xusb: Add
+ usb-role-switch
+Message-ID: <20200113150656.GB2436168@ulmo>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-2-git-send-email-nkristam@nvidia.com>
+ <20191219130503.GG1440537@ulmo>
+ <fe47fd52-efd0-4f84-d1e4-4bce5571e425@nvidia.com>
+ <20200110111633.GA2233456@ulmo>
+ <6eb31a50-472f-439c-3bc7-bcad1c0c9ff4@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Content-Disposition: inline
+In-Reply-To: <6eb31a50-472f-439c-3bc7-bcad1c0c9ff4@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jonathan,
 
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Le sam., janv. 11, 2020 at 11:46, Jonathan Cameron=20
-<jic23@jic23.retrosnub.co.uk> a =E9crit :
-> On Sun,  5 Jan 2020 01:16:37 +0100
-> Artur Rojek <contact@artur-rojek.eu> wrote:
+On Mon, Jan 13, 2020 at 10:07:08AM +0530, Nagarjuna Kristam wrote:
 >=20
->>  Implement support for the touchscreen mode found in JZ47xx SoCs ADC.
-> This needs more description.
+> On 10-01-2020 16:46, Thierry Reding wrote:
+> > On Fri, Dec 20, 2019 at 04:08:30PM +0800, JC Kuo wrote:
+> > > On 12/19/19 9:05 PM, Thierry Reding wrote:
+> > > > On Wed, Dec 18, 2019 at 02:46:14PM +0530, Nagarjuna Kristam wrote:
+> > > > > Add usb-role-switch property for Tegra210 and Tegra186 platforms.=
+ This
+> > > > > entry is used by XUSB pad controller driver to register for role =
+changes
+> > > > > for OTG/Peripheral capable USB 2 ports.
+> > > > >=20
+> > > > > Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
+> > > > > ---
+> > > > > V2:
+> > > > >   - Moved usb-role-switch to seperate Required section as suggest=
+ed by Thierry.
+> > > > >   - Added reference to usb/usb-conn-gpio.txt for connector subnod=
+e.
+> > > > > ---
+> > > > >   .../devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt    =
+     | 6 ++++++
+> > > > >   1 file changed, 6 insertions(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra12=
+4-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-x=
+usb-padctl.txt
+> > > > > index 9fb682e..23bf354 100644
+> > > > > --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-=
+padctl.txt
+> > > > > +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-=
+padctl.txt
+> > > > > @@ -174,6 +174,12 @@ Required properties:
+> > > > >     - "device": for USB device mode
+> > > > >     - "otg": for USB OTG mode
+> > > > > +Required properties for OTG/Peripheral capable USB2 ports:
+> > > > > +- usb-role-switch: Boolean property to indicate that the port su=
+pport OTG or
+> > > > "supports", and also, why if it supports OTG*or*  peripheral? Doesn=
+'t
+> > > > OTG imply peripheral? OTG means it can be either peripheral or host,
+> > > > right? So I think the end of that sentence can be just:
+> > > >=20
+> > > > 	"... the port supports OTG."
+> > > An USB OTG port is capable of both USB host and peripheral operations=
+=2E An USB
+> > > peripheral port can only act as an USB peripheral.
+> > >=20
+> > > The micro USB ports found on Jetson TX1/TX2 platforms are micro-AB po=
+rts which
+> > > should implement both host and peripheral capabilities. We say such p=
+orts
+> > > support OTG. The micro USB port found on Jetson Nano is a micro-B por=
+t which
+> > > should implement peripheral capability only. We say such ports support
+> > > peripheral, rather than OTG.
+> > I the port supports only peripheral mode, why do we need to have a
+> > usb-role-switch property? Shouldn't we in that case have a mode property
+> > with value "device"?
+> >=20
+> > usb-mode-switch is only needed if mode =3D "otg", isn't it? In all other
+> > cases the functionality is fixed (either host or peripheral) and the
+> > mode cannot be switched.
+> >=20
+> > Thierry
 >=20
-> Looks like it enables a kfifo and also selects the callback buffer
-> stuff to run with a generic touchscreen iio-> input driver.
+> usb-role-switch is needed when mode =3D=3D "otg" or "peripheral".
 >=20
-> A few other bits inline, but basically fine.
+> Device mode is detected via vbus GPIO irrespective of mode being peripher=
+al
+> only or OTG.
+> Host mode is detected via id-gpio, in OTG case.
 >=20
-> I've never really thought about whether we support a CB buffer
-> without anything on the IIO side.   That should be possible,
-> but I'm not sure what odd corner cases will turn up.  I'm guessing
-> there are some, or you'd not have bothered exposing it here?
+> When mode is peripheral, role changes happens between USB_ROLE_DEVICE and
+> USB_ROLE_NONE, which are generally based on Vbus GPIO(hot plug) detection.
+>=20
+> When mode is otg, role changes happens between USB_ROLE_HOST,
+> USB_ROLE_DEVICE and USB_ROLE_NONE, which are detected via id-gpio, vbus-g=
+pio
+> and no detection respectively.
 
-I'm sorry, what do you mean by "nothing on the IIO side"?
+Right, that makes perfect sense. Thanks for putting it so clearly. With
+the "support" -> "supports" typo fixed, this patch:
 
+Acked-by: Thierry Reding <treding@nvidia.com>
 
->=20
-> Thanks
->=20
-> Jonathan
->=20
->=20
->>=20
->>  Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
->>  Tested-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>   drivers/iio/adc/Kconfig       |   3 +
->>   drivers/iio/adc/ingenic-adc.c | 120=20
->> +++++++++++++++++++++++++++++++++-
->>   2 files changed, 121 insertions(+), 2 deletions(-)
->>=20
->>  diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>  index 5d8540b7b427..dabbf15032af 100644
->>  --- a/drivers/iio/adc/Kconfig
->>  +++ b/drivers/iio/adc/Kconfig
->>  @@ -446,6 +446,9 @@ config INA2XX_ADC
->>   config INGENIC_ADC
->>   	tristate "Ingenic JZ47xx SoCs ADC driver"
->>   	depends on MIPS || COMPILE_TEST
->>  +	select IIO_BUFFER
->>  +	select IIO_BUFFER_CB
->=20
-> Feels like IIO_BUFFER_CB should be selected by the driver that
-> uses that functionality rather than this one.
->=20
->>  +	select IIO_KFIFO_BUF
->>   	help
->>   	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC=20
->> unit.
->>=20
->>  diff --git a/drivers/iio/adc/ingenic-adc.c=20
->> b/drivers/iio/adc/ingenic-adc.c
->>  index 7a24bc1dabe1..4dbf15fdd95d 100644
->>  --- a/drivers/iio/adc/ingenic-adc.c
->>  +++ b/drivers/iio/adc/ingenic-adc.c
->>  @@ -8,7 +8,10 @@
->>=20
->>   #include <dt-bindings/iio/adc/ingenic,adc.h>
->>   #include <linux/clk.h>
->>  +#include <linux/iio/buffer.h>
->>   #include <linux/iio/iio.h>
->>  +#include <linux/iio/kfifo_buf.h>
->>  +#include <linux/interrupt.h>
->>   #include <linux/io.h>
->>   #include <linux/iopoll.h>
->>   #include <linux/kernel.h>
->>  @@ -20,6 +23,8 @@
->>   #define JZ_ADC_REG_CFG			0x04
->>   #define JZ_ADC_REG_CTRL			0x08
->>   #define JZ_ADC_REG_STATUS		0x0c
->>  +#define JZ_ADC_REG_ADSAME		0x10
->>  +#define JZ_ADC_REG_ADWAIT		0x14
->>   #define JZ_ADC_REG_ADTCH		0x18
->>   #define JZ_ADC_REG_ADBDAT		0x1c
->>   #define JZ_ADC_REG_ADSDAT		0x20
->>  @@ -28,6 +33,9 @@
->>   #define JZ_ADC_REG_ENABLE_PD		BIT(7)
->>   #define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
->>   #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
->>  +#define JZ_ADC_REG_CFG_PULL_UP(n)	((n) << 16)
->>  +#define JZ_ADC_REG_CFG_SAMPLE_NUM(n)	((n) << 10)
->>  +#define JZ_ADC_REG_CFG_TOUCH_OPS_MASK	(BIT(31) | GENMASK(23, 10))
->>   #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
->>   #define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
->>   #define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
->>  @@ -44,6 +52,14 @@
->>   #define JZ4770_ADC_BATTERY_VREF			6600
->>   #define JZ4770_ADC_BATTERY_VREF_BITS		12
->>=20
->>  +#define JZ_ADC_IRQ_AUX			BIT(0)
->>  +#define JZ_ADC_IRQ_BATTERY		BIT(1)
->>  +#define JZ_ADC_IRQ_TOUCH		BIT(2)
->>  +#define JZ_ADC_IRQ_PEN_DOWN		BIT(3)
->>  +#define JZ_ADC_IRQ_PEN_UP		BIT(4)
->>  +#define JZ_ADC_IRQ_PEN_DOWN_SLEEP	BIT(5)
->>  +#define JZ_ADC_IRQ_SLEEP		BIT(7)
->>  +
->>   struct ingenic_adc;
->>=20
->>   struct ingenic_adc_soc_data {
->>  @@ -411,6 +427,30 @@ static const struct iio_info ingenic_adc_info=20
->> =3D {
->>   };
->>=20
->>   static const struct iio_chan_spec ingenic_channels[] =3D {
->>  +	{
->>  +		.extend_name =3D "touchscreen_xp",
->=20
-> Note that adding extended names:
->=20
-> 1) Needs documenting as it create ABI - so something in
-> Documentation/ABI/testing/sysfs-bus-iio-*
->=20
-> 2) Breaks any generic userspace application.
->=20
-> Why can't we use modified and an axis to identify this?
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'm in a good place to know that extended names are bad. The problem=20
-here is that Xn/Yn channels will be added later (we have a board that=20
-has one joystick connected to Xp/Yp, and a second joystick connected to=20
-Xn/Yn). I assume that it is not possible to have two channels with the=20
-same type and modifier?
+-----BEGIN PGP SIGNATURE-----
 
-Alternatively I believe we could also have the first two channels as=20
-X/Y single-ended, and then two channels as X/Y differential, and do=20
-some easy math in the joystick driver, but that would make it pretty=20
-hardware-specific.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4ch40ACgkQ3SOs138+
+s6EXWxAAhA3qkr4dwr/BpJvUBpto03CcTHQ3yV4woWvaZxHs63oSXPuCwPH7i/xS
+e65s0sn9EV9QKBqxv6SehSlutGOnY108jbFEee9rHs0kidOEqJ9KXHCpXcEb6aX7
+LqRNHrJbZAqJaxE8ESl3L07qDGl8SaAtdfZEIB0taqON2jvg2nALXU3QeCMG9WRZ
+0TXhUqQdBIGopsh5rAo68YnYR9M72x/IRoE1Qa4t0o/FlnkuL3yA/3YwLP5epT/4
+tSThMSmuVCh9vF5TqbnRkXBzKCbAGBJt91odL1WkCJpVKM7VaNcRAJJY8p4/Qwlo
+m52OPNzfNPTtPbs+DbO+1PvDSJ3KR5yZbt42eIUtBVOt+R1P+EbDvKAwz1pAxvyO
+dT3++fDIuRnnNCKt4n76tpEg5j8jN0ll3MDlo21iSjTuIt3tgIXiRggsc9Oc5ZQ7
+FFhfX6hRZ62KTw5ivbmstgQTxeFecvN7JE7e14SBgkg4i7UakcVcxUDJDuS6A+IL
+psXp1i7TURnb61hlKmSry91JagO0edTxEoxKGgL5dgCe/SmyLFmI6W3T8PtaW+L9
+td4eKAhi3AP3Y8tUVXJykCy06nD57vna1GJ/ku/PbYNiV5ge2amZMECdz0kKaGQP
+PvTUxuCaCeFfvHRU4fGuTn/D7XfHD95gr9e8TQFddsQWwt8Xmzs=
+=/QZt
+-----END PGP SIGNATURE-----
 
-Cheers,
--Paul
-
->=20
->>  +		.type =3D IIO_POSITIONRELATIVE,
->>  +		.indexed =3D 1,
->>  +		.channel =3D INGENIC_ADC_TOUCH_XP,
->>  +		.scan_index =3D 0,
->>  +		.scan_type =3D {
->>  +			.sign =3D 'u',
->>  +			.realbits =3D 12,
->>  +			.storagebits =3D 16
->>  +		},
->>  +	},
->>  +	{
->>  +		.extend_name =3D "touchscreen_yp",
->>  +		.type =3D IIO_POSITIONRELATIVE,
->>  +		.indexed =3D 1,
->>  +		.channel =3D INGENIC_ADC_TOUCH_YP,
->>  +		.scan_index =3D 1,
->>  +		.scan_type =3D {
->>  +			.sign =3D 'u',
->>  +			.realbits =3D 12,
->>  +			.storagebits =3D 16
->>  +		},
->>  +	},
->>   	{
->>   		.extend_name =3D "aux",
->>   		.type =3D IIO_VOLTAGE,
->>  @@ -418,6 +458,7 @@ static const struct iio_chan_spec=20
->> ingenic_channels[] =3D {
->>   				      BIT(IIO_CHAN_INFO_SCALE),
->>   		.indexed =3D 1,
->>   		.channel =3D INGENIC_ADC_AUX,
->>  +		.scan_index =3D -1
->>   	},
->>   	{
->>   		.extend_name =3D "battery",
->>  @@ -428,6 +469,7 @@ static const struct iio_chan_spec=20
->> ingenic_channels[] =3D {
->>   						BIT(IIO_CHAN_INFO_SCALE),
->>   		.indexed =3D 1,
->>   		.channel =3D INGENIC_ADC_BATTERY,
->>  +		.scan_index =3D -1
->>   	},
->>   	{ /* Must always be last in the array. */
->>   		.extend_name =3D "aux2",
->>  @@ -436,16 +478,70 @@ static const struct iio_chan_spec=20
->> ingenic_channels[] =3D {
->>   				      BIT(IIO_CHAN_INFO_SCALE),
->>   		.indexed =3D 1,
->>   		.channel =3D INGENIC_ADC_AUX2,
->>  +		.scan_index =3D -1
->>   	},
->>   };
->>=20
->>  +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
->>  +{
->>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
->>  +
->>  +	clk_enable(adc->clk);
->>  +	/* It takes significant time for the touchscreen hw to stabilize.=20
->> */
->>  +	msleep(50);
->>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
->>  +			       JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
->>  +			       JZ_ADC_REG_CFG_PULL_UP(4));
->>  +	writew(80, adc->base + JZ_ADC_REG_ADWAIT);
->>  +	writew(2, adc->base + JZ_ADC_REG_ADSAME);
->>  +	writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
->>  +	writel(0, adc->base + JZ_ADC_REG_ADTCH);
->>  +	ingenic_adc_enable(adc, 2, true);
->>  +
->>  +	return 0;
->>  +}
->>  +
->>  +static int ingenic_adc_buffer_disable(struct iio_dev *iio_dev)
->>  +{
->>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
->>  +
->>  +	ingenic_adc_enable(adc, 2, false);
->>  +	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
->>  +	writeb(0xff, adc->base + JZ_ADC_REG_STATUS);
->>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK, 0);
->>  +	writew(0, adc->base + JZ_ADC_REG_ADSAME);
->>  +	writew(0, adc->base + JZ_ADC_REG_ADWAIT);
->>  +	clk_disable(adc->clk);
->>  +
->>  +	return 0;
->>  +}
->>  +
->>  +static const struct iio_buffer_setup_ops ingenic_buffer_setup_ops=20
->> =3D {
->>  +	.postenable =3D &ingenic_adc_buffer_enable,
->>  +	.predisable =3D &ingenic_adc_buffer_disable
->>  +};
->>  +
->>  +static irqreturn_t ingenic_adc_irq(int irq, void *data)
->>  +{
->>  +	struct iio_dev *iio_dev =3D data;
->>  +	struct ingenic_adc *adc =3D iio_priv(iio_dev);
->>  +	u32 tdat;
->>  +
->>  +	tdat =3D readl(adc->base + JZ_ADC_REG_ADTCH);
->>  +	iio_push_to_buffers(iio_dev, &tdat);
->>  +	writeb(JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_STATUS);
->>  +
->>  +	return IRQ_HANDLED;
->>  +}
->>  +
->>   static int ingenic_adc_probe(struct platform_device *pdev)
->>   {
->>   	struct device *dev =3D &pdev->dev;
->>   	struct iio_dev *iio_dev;
->>   	struct ingenic_adc *adc;
->>   	const struct ingenic_adc_soc_data *soc_data;
->>  -	int ret;
->>  +	struct iio_buffer *buffer;
->>  +	int irq, ret;
->>=20
->>   	soc_data =3D device_get_match_data(dev);
->>   	if (!soc_data)
->>  @@ -460,6 +556,18 @@ static int ingenic_adc_probe(struct=20
->> platform_device *pdev)
->>   	mutex_init(&adc->aux_lock);
->>   	adc->soc_data =3D soc_data;
->>=20
->>  +	irq =3D platform_get_irq(pdev, 0);
->>  +	if (irq < 0) {
->>  +		dev_err(dev, "Failed to get irq: %d\n", irq);
->>  +		return irq;
->>  +	}
->>  +	ret =3D devm_request_irq(dev, irq, ingenic_adc_irq, 0,
->>  +			       dev_name(dev), iio_dev);
->>  +	if (ret < 0) {
->>  +		dev_err(dev, "Failed to request irq: %d\n", ret);
->>  +		return ret;
->>  +	}
->>  +
->>   	adc->base =3D devm_platform_ioremap_resource(pdev, 0);
->>   	if (IS_ERR(adc->base))
->>   		return PTR_ERR(adc->base);
->>  @@ -499,7 +607,8 @@ static int ingenic_adc_probe(struct=20
->> platform_device *pdev)
->>=20
->>   	iio_dev->dev.parent =3D dev;
->>   	iio_dev->name =3D "jz-adc";
->>  -	iio_dev->modes =3D INDIO_DIRECT_MODE;
->>  +	iio_dev->modes =3D INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
->>  +	iio_dev->setup_ops =3D &ingenic_buffer_setup_ops;
->>   	iio_dev->channels =3D ingenic_channels;
->>   	iio_dev->num_channels =3D ARRAY_SIZE(ingenic_channels);
->>   	/* Remove AUX2 from the list of supported channels. */
->>  @@ -507,6 +616,13 @@ static int ingenic_adc_probe(struct=20
->> platform_device *pdev)
->>   		iio_dev->num_channels -=3D 1;
->>   	iio_dev->info =3D &ingenic_adc_info;
->>=20
->>  +	buffer =3D devm_iio_kfifo_allocate(dev);
->>  +	if (!buffer) {
->>  +		dev_err(dev, "Unable to add IIO buffer\n");
->>  +		return -ENOMEM;
->>  +	}
->>  +	iio_device_attach_buffer(iio_dev, buffer);
->>  +
->>   	ret =3D devm_iio_device_register(dev, iio_dev);
->>   	if (ret)
->>   		dev_err(dev, "Unable to register IIO device\n");
->=20
-
-=
-
+--hQiwHBbRI9kgIhsi--
