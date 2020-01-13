@@ -2,163 +2,181 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF37C33CA8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 08:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4705CC33CA8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C27A214D8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 08:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578905975;
-	bh=JfZwSTOrI3J7CIa5OdM8C3bfShk23rBqMg7ZmqPnXd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qq0T6LoO2tN7kEdK5SRtT1XoL33gW56ozHNTUaZmK1IJg32K5ZNEmqtA5mBYftTTh
-	 TNa4RMCWQ1GmRy5Jdp4ylyj4lalpdDogCvtAZd6b8T1rYMYHZgMrxuwKd0+kB6RudC
-	 dCDSpVeeIW/WtHaf24YIUOo00vE+TPqnbCm3NHB8=
+	by mail.kernel.org (Postfix) with ESMTP id 0D8292081E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 09:13:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ezmMER8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgAMI7e (ORCPT
+        id S1726375AbgAMJNM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:59:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgAMI7e (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:59:34 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A09820678;
-        Mon, 13 Jan 2020 08:59:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578905972;
-        bh=JfZwSTOrI3J7CIa5OdM8C3bfShk23rBqMg7ZmqPnXd0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oi9IO6MWKgGI+YoNaP20pa1l4rq2n7FBdgy/pBOn4XJCDISx2Jdz3ni2uErW4Ldz2
-         cWG4w1zm8qisUTJI8kAGS2iXzgfSOqAuQwq9GzZNo8NOW7hBs4Wl2kDoXd9byaG6+U
-         TBfAuEQKR39d2TFLq3Hr+4Z3HC0pneZIvN7Sr7ak=
-Date:   Mon, 13 Jan 2020 09:59:29 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     =?utf-8?B?QW5kcsOp?= Przywara <andre.przywara@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] arm64: dts: sun50i: H6: Add SPI controllers nodes
- and pinmuxes
-Message-ID: <20200113085929.24iseck4fljw5njh@gilmour.lan>
-References: <20200108101006.150706-1-andre.przywara@arm.com>
- <20200108101006.150706-2-andre.przywara@arm.com>
- <20200111172639.to3lhzros6ca5hj2@gilmour.lan>
- <cea0a8ed-fcf7-53c8-daf9-cf27408d83f9@arm.com>
+        Mon, 13 Jan 2020 04:13:12 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:45538 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726277AbgAMJNM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 04:13:12 -0500
+X-UUID: e9ae8e593eaf4fbe878ed6859cea4a3c-20200113
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=03EqN3IpDnYeVpvM1ObMsu1BpXwziE5X5TdFsnPY33Q=;
+        b=ezmMER8TvMpJHbek6FFuMM7i8A56A4U3tGXsBA/IV8Qjj+SvxHtmgQXNDolhqm9tkt2tOLzSdLGDoITgvHjubptDC9jzT3kkbHhZtWa/nuGrBAzPB14xN2k5DDX/kS6Nv8cApHTZvqwQCEDjlkcqWjL4Y/yGeJzKOr4TOlMZFH8=;
+X-UUID: e9ae8e593eaf4fbe878ed6859cea4a3c-20200113
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.liang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 231635423; Mon, 13 Jan 2020 17:12:56 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 13 Jan
+ 2020 17:11:42 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 13 Jan 2020 17:12:16 +0800
+Message-ID: <1578906770.20923.22.camel@mhfsdcap03>
+Subject: Re: [PATCH v11 1/3] dt-bindings: mediatek: mt8183: Add #reset-cells
+From:   Yong Liang <yong.liang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
+        <Jiaxin.Yu@mediatek.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Chang-An Chen =?UTF-8?Q?=28=E9=99=B3=E6=98=B6=E5=AE=89=29?= 
+        <Chang-An.Chen@mediatek.com>,
+        Freddy Hsin =?UTF-8?Q?=28=E8=BE=9B=E6=81=92=E8=B1=90=29?= 
+        <Freddy.Hsin@mediatek.com>,
+        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
+        <Yingjoe.Chen@mediatek.com>, Stephen Boyd <sboyd@kernel.org>
+Date:   Mon, 13 Jan 2020 17:12:50 +0800
+In-Reply-To: <CANMq1KBNuJDEn57d0ysc2XG0ezWEvJ2Pm88YihDiSZJ=-E=W9g@mail.gmail.com>
+References: <1578639862-14480-1-git-send-email-jiaxin.yu@mediatek.com>
+         <1578639862-14480-2-git-send-email-jiaxin.yu@mediatek.com>
+         <CANMq1KBNuJDEn57d0ysc2XG0ezWEvJ2Pm88YihDiSZJ=-E=W9g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ir7fewqs7mlcjtw5"
-Content-Disposition: inline
-In-Reply-To: <cea0a8ed-fcf7-53c8-daf9-cf27408d83f9@arm.com>
+X-TM-SNTS-SMTP: DF2A40E9DBFE98B116BEB7409F16A843F2BF153D6F6462540D4A00352B2557502000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+T24gTW9uLCAyMDIwLTAxLTEzIGF0IDE0OjEwICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+IEppYXhpbiwNCj4gDQo+IE9uIEZyaSwgSmFuIDEwLCAyMDIwIGF0IDM6MDQgUE0gSmlheGlu
+IFl1IDxqaWF4aW4ueXVAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFkZCAjcmVzZXQt
+Y2VsbHMgcHJvcGVydHkgYW5kIHVwZGF0ZSBleGFtcGxlDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiB5b25nLmxpYW5nIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBKaWF4aW4gWXUgPGppYXhpbi55dUBtZWRpYXRlay5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFlp
+bmdqb2UgQ2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTog
+UGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4NCj4gPiBSZXZpZXdlZC1ieTog
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiBSZXZpZXdlZC1ieTogR3VlbnRlciBS
+b2VjayA8Z3JvZWNrN0BnbWFpbC5jb20+DQo+IA0KPiBGcm9tIHByZXZpb3VzIGZlZWRiYWNrDQo+
+IChodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMzE4Njg3LyMyMzA4NjIxMSks
+IGl0IHNlZW1zIGxpa2UNCj4gd2UgbG9zdCB0cmFjayBvZiB3aGljaCBleGFjdCB2ZXJzaW9uIGhh
+ZCB0aGUgUmV2aWV3ZWQtQnksIHNvIEknZCBqdXN0DQo+IGRyb3AgYWxsIHRob3NlIHRhZ3MgYW5k
+IGxldCBwZW9wbGUgcmV2aWV3IGFnYWluLg0KPiANCiAgTmVlZCBJIGRvIHNvbWV0aW5nPw0KPiA+
+IC0tLQ0KPiANCj4gSXQgd291bGQgaGF2ZSBiZWVuIG5pY2UgdG8gbWVudGlvbiB0aGF0IHRoaXMg
+cGF0Y2ggZGVwZW5kcyBvbg0KPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEx
+MzExMjQxLyAoYXMgeW91ciBleGFtcGxlIG1ha2VzDQo+IHVzZSBvZiBpdCBiZWxvdykuDQoNCiAg
+Q2FuIEkgZHJvcCB0aGUgbXRrLXdkdC50eHQgb2YNCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvMTEzMTEyNDEvPw0KICBBbmQgSSB3YW50IGFkZCA4MTgzIGluIG10ay13ZHQudHh0
+IGluIHRoaXMgcGF0Y2guDQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL210
+ay13ZHQudHh0ICB8IDEwICsrKysrKy0tLQ0KPiA+ICAuLi4vcmVzZXQtY29udHJvbGxlci9tdDI3
+MTItcmVzZXRzLmggICAgICAgICAgfCAyMiArKysrKysrKysrKysrKysrKysrDQo+ID4gIC4uLi9y
+ZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaCAgICAgICAgICB8IDE3ICsrKysrKysrKysr
+KysrDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
+LSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29u
+dHJvbGxlci9tdDI3MTItcmVzZXRzLmgNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCj4gPiBpbmRleCA5
+MjE4MWI2NDhmNTIuLjVhNzZhYzI2MmY4ZCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCj4gPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbXRrLXdkdC50eHQNCj4gPiBA
+QCAtNCw2ICs0LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPg0KPiA+ICAtIGNvbXBhdGli
+bGUgc2hvdWxkIGNvbnRhaW46DQo+ID4gICAgICAgICAibWVkaWF0ZWssbXQyNzAxLXdkdCIsICJt
+ZWRpYXRlayxtdDY1ODktd2R0IjogZm9yIE1UMjcwMQ0KPiA+ICsgICAgICAgIm1lZGlhdGVrLG10
+MjcxMi13ZHQiLCAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDI3MTINCj4gDQo+IFBsZWFz
+ZSBzZXBhcmF0ZSB0aGlzIGFzIGFub3RoZXIgcGF0Y2guDQogIFNvIEkgY2FuIHNlbmQgbXRrLXdk
+dC5jKE1UMjcxMikgYW5kIG10MjcxMi1yZXNldHMuaCBpbiBvbmUgcGF0Y2ggYW5kDQpzZW5kIG10
+ay13ZHQuYyhNVDgxODMpIGFuZCBtdDgxODMtcmVzZXRzLmggaW4gYW5vdGhlciBwYXRjaD8NCj4g
+DQo+ID4gICAgICAgICAibWVkaWF0ZWssbXQ2NTg5LXdkdCI6IGZvciBNVDY1ODkNCj4gPiAgICAg
+ICAgICJtZWRpYXRlayxtdDY3OTctd2R0IiwgIm1lZGlhdGVrLG10NjU4OS13ZHQiOiBmb3IgTVQ2
+Nzk3DQo+ID4gICAgICAgICAibWVkaWF0ZWssbXQ3NjIyLXdkdCIsICJtZWRpYXRlayxtdDY1ODkt
+d2R0IjogZm9yIE1UNzYyMg0KPiA+IEBAIC0xNCwxMSArMTUsMTQgQEAgUmVxdWlyZWQgcHJvcGVy
+dGllczoNCj4gPg0KPiA+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICAtIHRpbWVvdXQtc2Vj
+OiBjb250YWlucyB0aGUgd2F0Y2hkb2cgdGltZW91dCBpbiBzZWNvbmRzLg0KPiA+ICstICNyZXNl
+dC1jZWxsczogU2hvdWxkIGJlIDEuDQo+ID4NCj4gPiAgRXhhbXBsZToNCj4gPg0KPiA+IC13ZHQ6
+IHdhdGNoZG9nQDEwMDAwMDAwIHsNCj4gPiAtICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWss
+bXQ2NTg5LXdkdCI7DQo+ID4gLSAgICAgICByZWcgPSA8MHgxMDAwMDAwMCAweDE4PjsNCj4gPiAr
+d2F0Y2hkb2c6IHdhdGNoZG9nQDEwMDA3MDAwIHsNCj4gPiArICAgICAgIGNvbXBhdGlibGUgPSAi
+bWVkaWF0ZWssbXQ4MTgzLXdkdCIsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIm1lZGlhdGVr
+LG10NjU4OS13ZHQiOw0KPiA+ICsgICAgICAgcmVnID0gPDAgMHgxMDAwNzAwMCAwIDB4MTAwPjsN
+Cj4gPiAgICAgICAgIHRpbWVvdXQtc2VjID0gPDEwPjsNCj4gPiArICAgICAgICNyZXNldC1jZWxs
+cyA9IDwxPjsNCj4gPiAgfTsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9y
+ZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVz
+ZXQtY29udHJvbGxlci9tdDI3MTItcmVzZXRzLmgNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0K
+PiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uOWU3ZWU3NjJmMDc2DQo+ID4gLS0tIC9kZXYvbnVsbA0K
+PiA+ICsrKyBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDI3MTItcmVz
+ZXRzLmgNCj4gPiBAQCAtMCwwICsxLDIyIEBADQo+ID4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlm
+aWVyOiBHUEwtMi4wICovDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAoYykgMjAxOSBNZWRp
+YVRlayBJbmMuDQo+ID4gKyAqIEF1dGhvcjogWW9uZyBMaWFuZyA8eW9uZy5saWFuZ0BtZWRpYXRl
+ay5jb20+DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2lmbmRlZiBfRFRfQklORElOR1NfUkVTRVRf
+Q09OVFJPTExFUl9NVDI3MTINCj4gPiArI2RlZmluZSBfRFRfQklORElOR1NfUkVTRVRfQ09OVFJP
+TExFUl9NVDI3MTINCj4gPiArDQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9JTkZSQV9TV19S
+U1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDANCj4gPiArI2RlZmluZSBNVDI3MTJfVE9Q
+UkdVX01NX1NXX1JTVCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxDQo+
+ID4gKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9NRkdfU1dfUlNUICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDINCj4gPiArI2RlZmluZSBNVDI3MTJfVE9QUkdVX1ZFTkNfU1dfUlNUICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgMw0KPiA+ICsjZGVmaW5lIE1UMjcxMl9UT1BSR1VfVkRF
+Q19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA0DQo+ID4gKyNkZWZpbmUgTVQy
+NzEyX1RPUFJHVV9JTUdfU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDUNCj4g
+PiArI2RlZmluZSBNVDI3MTJfVE9QUkdVX0lORlJBX0FPX1NXX1JTVCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgOA0KPiA+ICsjZGVmaW5lIE1UMjcxMl9UT1BSR1VfVVNCX1NXX1JTVCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICA5DQo+ID4gKyNkZWZpbmUgTVQyNzEyX1RPUFJHVV9BUE1J
+WEVEX1NXX1JTVCAgICAgICAgICAgICAgICAgICAgICAgICAgIDEwDQo+ID4gKw0KPiA+ICsjZGVm
+aW5lIE1UMjcxMl9UT1BSR1VfU1dfUlNUX05VTSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAxMQ0KPiA+ICsNCj4gPiArI2VuZGlmICAvKiBfRFRfQklORElOR1NfUkVTRVRfQ09OVFJPTExF
+Ul9NVDI3MTIgKi8NCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1j
+b250cm9sbGVyL210ODE4My1yZXNldHMuaCBiL2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29u
+dHJvbGxlci9tdDgxODMtcmVzZXRzLmgNCj4gPiBpbmRleCA4ODA0ZTM0ZWJkZDQuLmExYmJkNDFl
+MGQxMiAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xs
+ZXIvbXQ4MTgzLXJlc2V0cy5oDQo+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9yZXNldC1j
+b250cm9sbGVyL210ODE4My1yZXNldHMuaA0KPiA+IEBAIC03OCw0ICs3OCwyMSBAQA0KPiA+ICAj
+ZGVmaW5lIE1UODE4M19JTkZSQUNGR19BT19JMkM3X1NXX1JTVCAgICAgICAgICAgICAgICAgICAg
+ICAgICAxMjYNCj4gPiAgI2RlZmluZSBNVDgxODNfSU5GUkFDRkdfQU9fSTJDOF9TV19SU1QgICAg
+ICAgICAgICAgICAgICAgICAgICAgMTI3DQo+ID4NCj4gPiArI2RlZmluZSBNVDgxODNfSU5GUkFD
+RkdfU1dfUlNUX05VTSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTI4DQo+ID4gKw0KPiA+
+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfTU1fU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDENCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX01GR19TV19SU1Qg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMg0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BS
+R1VfVkVOQ19TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzDQo+ID4gKyNkZWZp
+bmUgTVQ4MTgzX1RPUFJHVV9WREVDX1NXX1JTVCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDQNCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX0lNR19TV19SU1QgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgNQ0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfTURfU1dfUlNUICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDcNCj4gPiArI2RlZmluZSBNVDgx
+ODNfVE9QUkdVX0NPTk5fU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOQ0KPiA+
+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfQ09OTl9NQ1VfU1dfUlNUICAgICAgICAgICAgICAgICAg
+ICAgICAgICAxMg0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfSVBVMF9TV19SU1QgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAxNA0KPiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfSVBV
+MV9TV19SU1QgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNQ0KPiA+ICsjZGVmaW5lIE1U
+ODE4M19UT1BSR1VfQVVESU9fU1dfUlNUICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxNw0K
+PiA+ICsjZGVmaW5lIE1UODE4M19UT1BSR1VfQ0FNU1lTX1NXX1JTVCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAxOA0KPiA+ICsNCj4gPiArI2RlZmluZSBNVDgxODNfVE9QUkdVX1NXX1JTVF9O
+VU0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMTkNCj4gPiArDQo+ID4gICNlbmRpZiAg
+LyogX0RUX0JJTkRJTkdTX1JFU0VUX0NPTlRST0xMRVJfTVQ4MTgzICovDQo+ID4gLS0NCj4gPiAy
+LjE4LjANCg0K
 
---ir7fewqs7mlcjtw5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jan 12, 2020 at 03:12:19PM +0000, Andr=E9 Przywara wrote:
-> On 11/01/2020 17:26, Maxime Ripard wrote:
->
-> Hi Maxime,
->
-> > On Wed, Jan 08, 2020 at 10:10:05AM +0000, Andre Przywara wrote:
-> >> The Allwinner H6 SoC contains two SPI controllers similar to the H3/A6=
-4,
-> >> but with the added capability of 3-wire and 4-wire operation modes.
-> >> For now the driver does not support those, but the SPI registers are
-> >> fully backwards-compatible, just adding bits and registers which were
-> >> formerly reserved. So we can use the existing driver for the "normal" =
-SPI
-> >> modes, for instance to access the SPI NOR flash soldered on the PineH64
-> >> board.
-> >> We use an H6 specific compatible string in addition to the existing H3
-> >> string, so when the driver later gains Quad SPI support, it should work
-> >> automatically without any DT changes.
-> >>
-> >> Tested by accessing the SPI flash on a Pine H64 board (SPI0), also
-> >> connecting another SPI flash to the SPI1 header pins.
-> >>
-> >> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> >> ---
-> >>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 54 ++++++++++++++++++++
-> >>  1 file changed, 54 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64=
-/boot/dts/allwinner/sun50i-h6.dtsi
-> >> index 3329283e38ab..40835850893e 100644
-> >> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> >> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> >> @@ -338,6 +338,30 @@
-> >>  				bias-pull-up;
-> >>  			};
-> >>
-> >> +			/omit-if-no-ref/
-> >> +			spi0_pins: spi0-pins {
-> >> +				pins =3D "PC0", "PC2", "PC3";
-> >> +				function =3D "spi0";
-> >> +			};
-> >> +
-> >> +			/omit-if-no-ref/
-> >> +			spi0_cs_pin: spi0-cs-pin {
-> >> +				pins =3D "PC5";
-> >> +				function =3D "spi0";
-> >> +			};
-> >
-> > It seems suspicious to use it in the Pine H64, since PC5 is also used
-> > by the eMMC (and this prevents either the SPI or the emmc controller
-> > to probe, depending on which probed first).
->
-> Argh, good catch! I saw that AW changed the pin sharing between SPI and
-> MMC2 slightly, but didn't actually check that they made it worse :-(
-> Because this time it's the MMC CMD pin affected, and not the somewhat
-> optional DS pin as in the A64.
-> So I see we can't really have both at the same time. So what about this:
->
-> We keep the SPI flash chip described as in patch 2/2 (as it's soldered
-> on every board), but mark it as disabled and explain this in a comment.
-> This way we can't access it under Linux, but keep a potential eMMC chip
-> accessible.
->
-> In U-Boot's DT copy we could deviate and mark it as "okay", as U-Boot
-> doesn't use both eMMC and SPI at the same time. I need to check whether
-> this works or we would need to move the pinmux setup out of the probe
-> routine into something later.
->
-> And we could go one step further: If U-Boot detects an eMMC connected
-> (it's on a socket and so optional), it changes the SPI flash status to
-> "disabled", to allow EFI apps and kernels using this DT to access the
-> eMMC - which is far more useful than the SPI flash.
-> Otherwise (no eMMC connected) it can stay at "okay", as there would be
-> no conflict.
->
-> Does this make sense?
-
-It does, it seems like a good plan
-
-Maxime
-
---ir7fewqs7mlcjtw5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhwxcQAKCRDj7w1vZxhR
-xeN3AP472p91nx9oqXRJe6+0u8r0T386EdVwUUHUSJGHeqdtzwEA8UiwW9E3F42A
-/XZ5acoOflKaj0ShNtTko85S2oaFWQM=
-=8bva
------END PGP SIGNATURE-----
-
---ir7fewqs7mlcjtw5--
