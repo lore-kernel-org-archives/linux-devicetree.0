@@ -2,195 +2,347 @@ Return-Path: <SRS0=lLbR=3C=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA77C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85634C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A2A24682
-	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E058207E0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 13 Jan 2020 19:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmVIYEgv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YDHohf1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgAMTKc (ORCPT
+        id S1728516AbgAMTQ0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:10:32 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35326 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729033AbgAMTKb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 14:10:31 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so9787733wro.2
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 11:10:30 -0800 (PST)
+        Mon, 13 Jan 2020 14:16:26 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35224 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgAMTQZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 14:16:25 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 15so7759370lfr.2
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 11:16:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8tyaB6DyDQRPO/u0/e65UBlB4NIJVB2+IVwcy9xmtlA=;
-        b=TmVIYEgvjPDn8M9j1RJnkz0YuL1ejPZ/4ZxPgu/LpCsy4qlTkUmhNeEAHrZY08Typ3
-         VE6qJ4dzfxrBk+DOYUjMd0jO6a/Kn+Z30mpZYkajRvl1r5G06YLm77MatqIBg7gJhzZb
-         isO39CoKFeX8bW9Ll+Xz9qVfEjnPA2ND9KNmLxzu76WU2EqELUSIyRlYRkRpYCvH2Cj2
-         OjxkavETBMJn6+hRRmQw3KxJDvP4T65lD90Z2hU4NFGAkGIT8v4XdCYE5goZ9QKDEYUo
-         F2D0YjKuOOvMFwB4NVZm9//iXNKE+jfF8Fp9sHAw8INtLTIzCHnOBIXvHSS3v/SgutHg
-         ZRGQ==
+        bh=dUwDacYUh/t92nk2z+Fd8fOh+O7ehOpwl6CVFWhcbVc=;
+        b=YDHohf1K/uzaW70oM8K+tFn4PdfqSz0N/NZH9ntZxW9frInRrBGZzsyKjl2+0M+AcS
+         1Vg+3VGkvVbnSlqp1KFIhpgzZajaJbSb6qbc6QCiEvOVXMXQBUp4Gp5vDtTvUtRIhBnf
+         1om3f+2iwVsO4KkBsMUMvJhaMcD5jYQ9qHWyiEE3T/3WtWFnnHicTNS3rgC6QZ0fYiwJ
+         qwGGzBpykBSuKHLdUHCVycVCOncxoeIZVRjzqzDo57f5mgm2jABbl6HakXd3o08kJMcn
+         EyOYHFEpIQHyF57gtRLh9L2LcL+X1Mnw9Bz2LPTGqSyEElrYuOC3C+dR4EPFHH3CGdyZ
+         tgwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8tyaB6DyDQRPO/u0/e65UBlB4NIJVB2+IVwcy9xmtlA=;
-        b=Vj5ttqI7AUoX+jijF/2VOzR55dLzlLcVy1/SVbjGKAb12DRFm7qjHQwfznageSwCxn
-         n/i4G5PiadCDDlU6jblV39c+G+0bVaFDzEXLPt6WqGmtY65SNpz6jWydrvWmDTphS+mZ
-         zVwhhdSoYpHbmhBA0z7Qk/CUrwOSexZ9dc00iBta60xwDS4ZjRe5PSsyU/i5aEjq5S/b
-         /BYHQ9+7S4wpVcZdNk0WbB9Vxva1hvaPE2qJ52S/Nl62guY65kbmyAYLsehf07Wmz0If
-         W2USasN3nMlhPM19/++pU/8Oo9udfDLrNn2yeZMO2qjzozZZVPtE7itqKFRAAYeu8WEF
-         +T8g==
-X-Gm-Message-State: APjAAAWbtwUVhU6EFEpqWh9+ir+IaQiUDnzyNBMzAJRbw1Nafz2bve2e
-        PzHINu8Q6Ag2KBe5GRxfbqjvwalWFB2zcw==
-X-Google-Smtp-Source: APXvYqxg6v7ESY4YwpWcswj+iqQL1jaWvZGBgEAfRQoQmHLKX4fHH6hp7wvim51lb3Dv6WLHXgoqCw==
-X-Received: by 2002:a5d:480f:: with SMTP id l15mr5613188wrq.305.1578942628908;
-        Mon, 13 Jan 2020 11:10:28 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:257b:a7b6:7749:8057? ([2a01:e34:ed2f:f020:257b:a7b6:7749:8057])
-        by smtp.googlemail.com with ESMTPSA id v3sm16034622wru.32.2020.01.13.11.10.26
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dUwDacYUh/t92nk2z+Fd8fOh+O7ehOpwl6CVFWhcbVc=;
+        b=NUOQ+rXJ3NZ8jGCuhHkVPtqjapufJnbPw9h9xkMnqGsz41LOV4eEdIgZuKlvD50hY+
+         9s5mREUBUq7tvnxqoc/0IhoG1/aVDPQLKhpryKWdllFKX9nOWgkAxSdnMkEwuzKw741h
+         sMjHWnBDJ7kbWL/p2JHQpkmTALP2W2uQHJS4zp0aGQlVLnQ/POzfQobxZkbAqvFktWkn
+         /L+hk5KV3BQeklItLDUukLffV7Cf21LCgHLncdqITfRR+xftDDtxLUXWaaRW4AgMwdvH
+         TGtQNnvJ+U2IDz+BULlMMskYBmzniEOYoPeRyS/dDfNSIqK2EEl+k5LLe0Sbyroo9lsw
+         oCGQ==
+X-Gm-Message-State: APjAAAWYMP7PXiP+B/nEPKPaYgGLJmoX4iP7JG1jylRFu67w8n7o5SUY
+        GMllptXmcfX59AzZ5tJjSKTd7A==
+X-Google-Smtp-Source: APXvYqzDZP/sgAFQX21Aw2uKPStJX8IsmVVnNdFPVi3OlnowrvpZAL7fc3EaMNH/9HOYZPBnxe9Bgg==
+X-Received: by 2002:a05:6512:c7:: with SMTP id c7mr10654185lfp.120.1578942983317;
+        Mon, 13 Jan 2020 11:16:23 -0800 (PST)
+Received: from [192.168.119.5] (office.dev.rtsoft.ru. [62.117.114.130])
+        by smtp.gmail.com with ESMTPSA id r15sm6366541ljh.11.2020.01.13.11.16.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 11:10:27 -0800 (PST)
-Subject: Re: [PATCH V5 0/4] ARM: Enable thermal support for Raspberry Pi 4
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org
-References: <1578941778-23321-1-git-send-email-stefan.wahren@i2se.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <250b15ef-636f-d964-3eba-0067c07e5a9c@linaro.org>
-Date:   Mon, 13 Jan 2020 20:10:26 +0100
+        Mon, 13 Jan 2020 11:16:22 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] media: i2c: Add driver for Sony IMX219 sensor
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        peter.griffin@linaro.org, ezequiel@collabora.com,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+ <20191227122114.23075-3-andrey.konovalov@linaro.org>
+ <20191227145547.GE861@valkosipuli.retiisi.org.uk>
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+Message-ID: <d3f1591b-1a98-e876-b977-96e1210e9c49@linaro.org>
+Date:   Mon, 13 Jan 2020 22:16:21 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1578941778-23321-1-git-send-email-stefan.wahren@i2se.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191227145547.GE861@valkosipuli.retiisi.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Sakari,
 
-Hi Stefan,
+Sorry for delayed reply..
+(your email got into a wrong folder, and I might not find it there if Ezequiel
+did not warn me that I didn't address the comments from your review)
 
-how do you want the series merged?
+On 27.12.2019 17:55, Sakari Ailus wrote:
+> Hi Andrey,
+> 
+> On Fri, Dec 27, 2019 at 03:21:14PM +0300, Andrey Konovalov wrote:
+>> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+>>
+>> Adds a driver for the 8MPix Sony IMX219 CSI2 sensor.
+>> Whilst the sensor supports 2 or 4 CSI2 data lanes, this driver
+>> currently only supports 2 lanes.
+>> 8MPix @ 15fps, 1080P @ 30fps (cropped FOV), and 1640x1232 (2x2 binned)
+>> @ 30fps are currently supported.
+>>
+>> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+>> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+>> ---
+>>   drivers/media/i2c/Kconfig  |   12 +
+>>   drivers/media/i2c/Makefile |    1 +
+>>   drivers/media/i2c/imx219.c | 1240 ++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 1253 insertions(+)
+>>   create mode 100644 drivers/media/i2c/imx219.c
 
-On 13/01/2020 19:56, Stefan Wahren wrote:
-> This series enables thermal support for the Raspberry Pi 4. Neither the
-> bcm2835_thermal nor the brcmstb_thermal are suitable for the BCM2711.
-> So add a new thermal driver to read out the SoC temperature from the
-> AVS RO block of the BCM2711.
-> 
-> Changes in V5:
-> - git the rid of device member in private structure
-> - improve readability of bcm2711_get_temp
-> - avoid trace message in get_temp callback
-> 
-> Changes in V4:
-> - change my email address to avoid spurious characters
-> 
-> Changes in V3:
-> - add Rob's, Florian's and Nicolas' reviewed-by/tested-by
-> - adjust binding license
-> - make error pointer handling consistent
-> 
-> Changes in V2:
-> - rebase on thermal/linux-next
-> - convert binding to YAML
-> - make AVS RO block a subnode of AVS monitor and access it via syscon
-> - drop unnecessary TSENS clock and get the rid of remove callback
-> - add Florian's reviewed-by to last/unchanged patch
-> 
-> Stefan Wahren (4):
->   dt-bindings: Add Broadcom AVS RO thermal
->   thermal: Add BCM2711 thermal driver
->   ARM: dts: bcm2711: Enable thermal
->   ARM: configs: Build BCM2711 thermal as module
-> 
->  .../bindings/thermal/brcm,avs-ro-thermal.yaml      |  45 ++++++++
->  arch/arm/boot/dts/bcm2711.dtsi                     |  12 ++
->  arch/arm/configs/multi_v7_defconfig                |   1 +
->  arch/arm64/configs/defconfig                       |   1 +
->  drivers/thermal/broadcom/Kconfig                   |   7 ++
->  drivers/thermal/broadcom/Makefile                  |   1 +
->  drivers/thermal/broadcom/bcm2711_thermal.c         | 123 +++++++++++++++++++++
->  7 files changed, 190 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
->  create mode 100644 drivers/thermal/broadcom/bcm2711_thermal.c
-> 
+<snip>
 
+>> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+>> new file mode 100644
+>> index 000000000000..28b55c61cd77
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/imx219.c
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+<snip>
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>> +/* Power/clock management functions */
+>> +static int imx219_power_on(struct device *dev)
+>> +{
+>> +	struct i2c_client *client = to_i2c_client(dev);
+>> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+>> +	struct imx219 *imx219 = to_imx219(sd);
+>> +	int ret;
+>> +
+>> +	ret = regulator_bulk_enable(IMX219_NUM_SUPPLIES,
+>> +				    imx219->supplies);
+>> +	if (ret) {
+>> +		dev_err(&client->dev, "%s: failed to enable regulators\n",
+>> +			__func__);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(imx219->xclk);
+>> +	if (ret) {
+>> +		dev_err(&client->dev, "%s: failed to enable clock\n",
+>> +			__func__);
+>> +		goto reg_off;
+>> +	}
+>> +
+>> +	gpiod_set_value_cansleep(imx219->xclr_gpio, 1);
+>> +	msleep(IMX219_XCLR_DELAY_MS);
+> 
+> I guess 10 ms is ok albeit it'd be nicer if you calculated the required
+> delay instead.
 
+I think this 10 ms delay actually serves two purposes here. It is
+not only the delay after XCLR pin is set high (reset de-asserted),
+but it also lets the camera power supplies voltages to settle after
+regulator_bulk_enable() called few lines above.
+
+So I would make the delay a sum of 1) the value which depends on
+input clock frequency (the driver currently supports 24MHz only)
+and 2) a fixed value of 8 ms or so to account for the power supplies
+settle time. So that the sum would be the same 10 ms for 24MHz input
+clock.
+Does it makes sense?
+
+<snip>
+
+>> +static int imx219_probe(struct i2c_client *client,
+>> +			const struct i2c_device_id *id)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct fwnode_handle *endpoint;
+>> +	struct imx219 *imx219;
+>> +	int ret;
+>> +
+>> +	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
+>> +	if (!imx219)
+>> +		return -ENOMEM;
+>> +
+>> +	imx219->dev = dev;
+> 
+> Instead of putting a dev field to struct imx219, you can find the device in
+> struct i2c_client.dev, which you can get by:
+> 
+> 	v4l2_get_subdevdata(imx219->sd)
+> 
+>> +
+>> +	v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
+>> +
+>> +	/* Get CSI2 bus config */
+>> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+>> +						  NULL);
+>> +	if (!endpoint) {
+>> +		dev_err(dev, "endpoint node not found\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &imx219->ep);
+>> +	fwnode_handle_put(endpoint);
+>> +	if (ret) {
+>> +		dev_err(dev, "Could not parse endpoint\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* Get system clock (xclk) */
+>> +	imx219->xclk = devm_clk_get(dev, "xclk");
+>> +	if (IS_ERR(imx219->xclk)) {
+>> +		dev_err(dev, "failed to get xclk\n");
+>> +		return PTR_ERR(imx219->xclk);
+>> +	}
+>> +
+>> +	imx219->xclk_freq = clk_get_rate(imx219->xclk);
+>> +	if (imx219->xclk_freq != IMX219_XCLK_FREQ) {
+>> +		dev_err(dev, "xclk frequency not supported: %d Hz\n",
+>> +			imx219->xclk_freq);
+>> +		return -EINVAL;
+>> +	}
+> 
+> Could you also check the link frequencies (the link-frequencies property
+> that also should be added to DT bindings) matches with what is possible
+> with the given xclk frequency? Please see e.g. imx319 driver for an
+> example.
+
+The driver only supports single xclk frequency and single link-frequency
+(hardcoded in the registers value tables). So the check will be more like
+the one in imx290 driver (error out if the link-frequency property isn't
+equal to the pre#define-d default value).
+
+>> +
+>> +	ret = imx219_get_regulators(imx219);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/* Request optional enable pin */
+>> +	imx219->xclr_gpio = devm_gpiod_get_optional(dev, "xclr",
+>> +						    GPIOD_OUT_HIGH);
+>> +
+>> +	/*
+>> +	 * The sensor must be powered for imx219_identify_module()
+>> +	 * to be able to read the CHIP_ID register
+>> +	 */
+>> +	ret = imx219_power_on(dev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = imx219_identify_module(imx219);
+>> +	if (ret)
+>> +		goto error_power_off;
+>> +
+>> +	/* Set default mode to max resolution */
+>> +	imx219->mode = &supported_modes[0];
+>> +
+>> +	ret = imx219_init_controls(imx219);
+>> +	if (ret)
+>> +		goto error_power_off;
+>> +
+>> +	/* Initialize subdev */
+>> +	imx219->sd.internal_ops = &imx219_internal_ops;
+>> +	imx219->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+>> +	imx219->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+>> +
+>> +	/* Initialize source pad */
+>> +	imx219->pad.flags = MEDIA_PAD_FL_SOURCE;
+>> +
+>> +	ret = media_entity_pads_init(&imx219->sd.entity, 1, &imx219->pad);
+>> +	if (ret)
+>> +		goto error_handler_free;
+>> +
+>> +	ret = v4l2_async_register_subdev_sensor_common(&imx219->sd);
+>> +	if (ret < 0)
+>> +		goto error_media_entity;
+>> +
+>> +	/* Enable runtime PM and turn off the device */
+>> +	pm_runtime_set_active(dev);
+>> +	pm_runtime_enable(dev);
+>> +	pm_runtime_idle(dev);
+>> +
+>> +	return 0;
+>> +
+>> +error_media_entity:
+>> +	media_entity_cleanup(&imx219->sd.entity);
+>> +
+>> +error_handler_free:
+>> +	imx219_free_controls(imx219);
+>> +
+>> +error_power_off:
+>> +	imx219_power_off(dev);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int imx219_remove(struct i2c_client *client)
+>> +{
+>> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+>> +	struct imx219 *imx219 = to_imx219(sd);
+>> +
+>> +	v4l2_async_unregister_subdev(sd);
+>> +	media_entity_cleanup(&sd->entity);
+>> +	imx219_free_controls(imx219);
+>> +
+>> +	pm_runtime_disable(&client->dev);
+>> +	pm_runtime_set_suspended(&client->dev);
+> 
+> imx219_power_off(), if the sensor is powered on here. Please see e.g. the
+> smiapp driver regarding this.
+
+It should be powered off here.
+
+The sensor is powered on when streaming is started, and is powered off when
+it is stopped: if the enable argument is false, imx219_set_stream() calls
+pm_runtime_put().
+IOW, it follows the imx319 driver as the example of power management.
+
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id imx219_dt_ids[] = {
+>> +	{ .compatible = "sony,imx219" },
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, imx219_dt_ids);
+>> +
+>> +static const struct dev_pm_ops imx219_pm_ops = {
+>> +	SET_SYSTEM_SLEEP_PM_OPS(imx219_suspend, imx219_resume)
+>> +	SET_RUNTIME_PM_OPS(imx219_power_off, imx219_power_on, NULL)
+>> +};
+>> +
+>> +static struct i2c_driver imx219_i2c_driver = {
+>> +	.driver = {
+>> +		.name = "imx219",
+>> +		.of_match_table	= imx219_dt_ids,
+>> +		.pm = &imx219_pm_ops,
+>> +	},
+>> +	.probe = imx219_probe,
+> 
+> Could you use .probe_new, and remove the i2c_device_id argument?
+
+I'll fix this and all the other issues I didn't comment on in this email
+in the v4 of the patch set.
+
+Thanks,
+Andrey
+
+>> +	.remove = imx219_remove,
+>> +};
+>> +
+>> +module_i2c_driver(imx219_i2c_driver);
+>> +
+>> +MODULE_AUTHOR("Dave Stevenson <dave.stevenson@raspberrypi.com");
+>> +MODULE_DESCRIPTION("Sony IMX219 sensor driver");
+>> +MODULE_LICENSE("GPL v2");
+> 
