@@ -2,101 +2,97 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C82BC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE9DC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3EB24656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151F52084D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579021074;
+	bh=I7zCUFSxCilOiygfJOrKMG+d9QBWeV+zMVpsSsqTMqc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZD0TZJZpH0FdRp/OihtD1AQUHaW0OQmigltz/kXWoPzKDtvzrYkrucLVWXbNTg8MH
+	 CJFhfL2Bjy7GZxN6re14BqGxKrtH6tKDClTyTAmUA8WAvq4AktlIJYeM+uAjxKhtcN
+	 A6O8RQhpLR1/K9PX0oADHRkYSKFPiGX+tpkJh+NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgANQqS (ORCPT
+        id S1728712AbgANQ5u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:46:18 -0500
-Received: from muru.com ([72.249.23.125]:50930 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbgANQqR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:46:17 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 60F9F816C;
-        Tue, 14 Jan 2020 16:46:58 +0000 (UTC)
-Date:   Tue, 14 Jan 2020 08:46:13 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     linux-omap@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Matthijs van Duin <matthijsvanduin@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] ARM: dts: Configure omap5 AESS
-Message-ID: <20200114164613.GR5885@atomide.com>
-References: <20200114150937.18304-1-tony@atomide.com>
- <52905C15-A2D1-4372-9781-D602D0B274B6@goldelico.com>
+        Tue, 14 Jan 2020 11:57:50 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34292 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbgANQ5t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 11:57:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=I7zCUFSxCilOiygfJOrKMG+d9QBWeV+zMVpsSsqTMqc=; b=kWHKHJJ6ilFEWZ2bNlW/Xb26V
+        zGRDUEUZTnDadH1LnqM1ADZMn4ilWGec89HluanPHUxhNrpUyJ3xZqFAI5s2Q4E86vFSN9IF7T4Nf
+        gKE/KbbvYrjzJ3hSOsZPEkWNhP/YMZAWYoawaW2j8vSPiJajqf9hZ0l7gGfmHbxfE3+PY=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1irPVc-0001hW-7R; Tue, 14 Jan 2020 16:57:40 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id ACA3ED01965; Tue, 14 Jan 2020 16:57:39 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 16:57:39 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+Cc:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lkp@intel.com" <lkp@intel.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>
+Subject: Re: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
+Message-ID: <20200114165739.GC3897@sirena.org.uk>
+References: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
+ <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="avNtfD0ffNO6L/9g"
 Content-Disposition: inline
-In-Reply-To: <52905C15-A2D1-4372-9781-D602D0B274B6@goldelico.com>
+In-Reply-To: <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [200114 16:38]:
-> Hi Tony,
-> 
-> > Am 14.01.2020 um 16:09 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > We are missing AESS for omap5. Looks like it's similar to what we have
-> > for omap4, and this gets ti-sysc interconnect target module driver to
-> > detect it properly.
-> > 
-> > Note that we currently have no child device driver available for it.
-> 
-> What I have is a non-working and no more compiling driver originally written by
-> Peter Ujfalusi and reworked by Andrej Utkin. We did have it almost running on
-> v4.14 or so except problems with firmware versions and headers...
-> 
-> There we used classical hwmods and I could revert them now to try your new patches.
-> Unfortunately, I could only compile-test your two patches but nothing with AESS.
-> 
-> We had tried to follow kernel API changes in the sound subsystem but today it is
-> not even compiling any more :(
-> 
-> So getting a working device driver is an even bigger task than SGX was.
 
-OK. Well hopefully that's at least a little bit easier now though.
+--avNtfD0ffNO6L/9g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> > Cc: Matthijs van Duin <matthijsvanduin@gmail.com>
-> > Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > Cc: Tero Kristo <t-kristo@ti.com>
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> > 
-> > Note that this depends on "[PATCH] clk: ti: omap5: Add missing AESS clock".
-> > 
-> > arch/arm/boot/dts/omap5-l4-abe.dtsi | 16 ++++++++++++++--
-> > 1 file changed, 14 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/omap5-l4-abe.dtsi b/arch/arm/boot/dts/omap5-l4-abe.dtsi
-> > --- a/arch/arm/boot/dts/omap5-l4-abe.dtsi
-> > +++ b/arch/arm/boot/dts/omap5-l4-abe.dtsi
-> > @@ -426,8 +426,20 @@ target-module@c0000 {			/* 0x401c0000, ap 30 1e.0 */
-> > 		};
-> > 
-> > 		target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
-> 
-> Here its may be good to have an "aess" label.
+On Tue, Jan 14, 2020 at 04:26:18PM +0000, Joakim Tjernlund wrote:
 
-Care to clarify what you have in mind? The module is generic, aess
-device will be the child node.
+> Don't you need to "undo" ioremap, irq etc. in case of later errors?
 
-How about just a comment for aess?
+Better, convert to devm_=20
 
-Regards,
+--avNtfD0ffNO6L/9g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Tony
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d8wIACgkQJNaLcl1U
+h9DBpgf/ZMWk7TuStHKbaJC0YfEaWwp2D/yVzYAISxxSeNvL25vQlQlFJe6YGYR0
+2KK5vLMxNaH1Vf6vhet00ClpsdinZt7Jx91tzaplblsKxlPbraf4tSs6USCdy5Iq
+kSgUDnJvxiQSMnoTjJOkMh/ee/2LJQtVnYB+XirIqI9YWfqAZLrgm/PfqUnNq5vG
++g9nCJ3/RKsLQGb9VmbmXwMy5gVCj3u41aMoX9XDDgoayy1IZPWRIsBTIzUmmCLZ
+A5OhXxnxucHDkAMXjiHE+jmgPEC1LUV+JIBydgN7Z+ryBNvTeLXDTFbnavabBb3Q
+RaQCF+kEphOgL9A5QfgIkwmkUwtCtg==
+=SVwD
+-----END PGP SIGNATURE-----
+
+--avNtfD0ffNO6L/9g--
