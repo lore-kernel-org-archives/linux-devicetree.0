@@ -2,192 +2,173 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E10C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C5CC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871BA24679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DBF2465A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF7zoJ7j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="HP/1n8up"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgANSPb (ORCPT
+        id S1727102AbgANS3T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:15:31 -0500
-Received: from mail-wm1-f50.google.com ([209.85.128.50]:51687 "EHLO
-        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728057AbgANSPb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 13:15:31 -0500
-Received: by mail-wm1-f50.google.com with SMTP id d73so14950853wmd.1;
-        Tue, 14 Jan 2020 10:15:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=W98ArnC1pumbkemZi5CT4h5r3WVttDYJlBmsQmIg0jQ=;
-        b=fF7zoJ7j84HEur4t7vRP9pCOgqJjTAb/waoTBzB6upPg9OCfMW1o8tRwWRD44Zlzvi
-         BD196qmmaHG6J7HTFyH65ejY8dxJ1FoDGFZFVONsppNApMeJS3mZz1uc72HzL7/0OQRg
-         XhZhmTGhSqnsycsg/OkvufN/xiXB/zvOO/cMVJ8R4AVLLNApTUzk5zrEVaUBEbxiCBVg
-         vLA4koAzrpmL5+iJ05VC3pNOKWaPH/qa08NW5p+cwsvBo+VsD1IuOSB5Ej3EtrD7yrQj
-         UO5/qr0FND18rZkOwahQ3LoqxT3kLIx9Ay6Fxn958eWoTi4yKCnWWA2dAjfjm1hAEgH6
-         z5uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=W98ArnC1pumbkemZi5CT4h5r3WVttDYJlBmsQmIg0jQ=;
-        b=n99pne/1Ke88aPER1Y7uZfjkbJxFywJGJ+7xr/bSStaF9bVpDLEbVpK8Ez6r2D6PPO
-         LbVpP0dftBX0LhDQKlchOZC3r5krNBFy5RGO+A8+jHFK6b8IkzmbK5tBeCYeAD6Sk6aq
-         SqWzhA9jOTblQy7fync03MYA8/se0ZcagwyLLJTmIde+0RgL9mWAyY2mGtiViwr2tLML
-         RfTNpaUqQmeUNVW6fo72AYdom0OfBW1UxGuKRf9K+Welpkhmt2246zc7NzhchWUiKdeQ
-         lWPD6PagIf8SMiTHdPrt//4QWf3yoLkMUL20Rlf1NSDezVpCLiKIoUVAwoOhaaIbHfhH
-         IgIg==
-X-Gm-Message-State: APjAAAXG8P1gNoD1fM3qJo7tIGb1MqqEpNr1QytLYs0ozSrtZZzUmfK7
-        gzEDnT9imhZkvevUUbceYCM=
-X-Google-Smtp-Source: APXvYqyBzCnuumI4Fh0LYRvwsVkumU0eVccJWmdeyhY0NNwAMNcFiksNL4cpvcirakHVrE5qBG0dyQ==
-X-Received: by 2002:a7b:cb97:: with SMTP id m23mr28099001wmi.37.1579025728196;
-        Tue, 14 Jan 2020 10:15:28 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id z187sm20427839wme.16.2020.01.14.10.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 10:15:27 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [RFC 2/2] dt-bindings: firmware: tegra186-bpmp: Document interconnects property
-Date:   Tue, 14 Jan 2020 19:15:19 +0100
-Message-Id: <20200114181519.3402385-2-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114181519.3402385-1-thierry.reding@gmail.com>
-References: <20200114181519.3402385-1-thierry.reding@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 14 Jan 2020 13:29:19 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:25569 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANS3T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 13:29:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579026557;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=4eH815wjmGTQGs+W/6mMPH6V/M4/712HINAuLDXrFIQ=;
+        b=HP/1n8upJ01wMJADw4yLVNbrNzM2wIZ2fwQQUOt20XhyIN8ZzUh0diIrJHI99VlNax
+        Hz/nTRgtX/EfdXZpeRnlx9FydeJVygS0j48R+72jUspbiUHaRZvPKEYOVg10HbgCZLCk
+        +WeMWmML0lY/rtxwVSsg2xmjj1fmp98tL0U1YwhQx68lyatfK8lSamR9P2wadNBmbk+b
+        a6MjngS6W2Oj2rtldhqbNr5n6i1UiI+xHWxn+7K8rpb7p9TXObG2dYvEs53Re6Io/WdD
+        ddNDS8drs0sJMyJfR+JwJ/FWhyGYNIiuboUxa2D4XIWgxfAHvhubOz8q4XbUomIz7WYy
+        XlcA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXA4FNWc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id c04ea5w0EITBPuS
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 14 Jan 2020 19:29:11 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] ARM: dts: Configure omap5 AESS
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200114171634.GS5885@atomide.com>
+Date:   Tue, 14 Jan 2020 19:29:10 +0100
+Cc:     linux-omap@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Matthijs van Duin <matthijsvanduin@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <632E66D6-47EF-44CF-BF02-B0F5A215D904@goldelico.com>
+References: <20200114150937.18304-1-tony@atomide.com> <52905C15-A2D1-4372-9781-D602D0B274B6@goldelico.com> <20200114164613.GR5885@atomide.com> <D51230C4-2642-4388-959F-313A3382AB99@goldelico.com> <20200114171634.GS5885@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
 
-Document the interconnects property that is used to describe the paths
-from and to system memory from and to the BPMP.
+> Am 14.01.2020 um 18:16 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [200114 17:05]:
+>>> Am 14.01.2020 um 17:46 schrieb Tony Lindgren <tony@atomide.com>:
+>>> Care to clarify what you have in mind? The module is generic, aess
+>>> device will be the child node.
+>>=20
+>> The existing driver is hooked into the sound root-node and looks for =
+a
+>> ti,aess =3D <&aess>; link:
+>>=20
+>> / {
+>> 	sound: sound {
+>> 		compatible =3D "ti,abe-twl6040";
+>> 		ti,model =3D "omap5-uevm";
+>>=20
+>> 		ti,jack-detection;
+>> 		ti,mclk-freq =3D <19200000>;
+>>=20
+>> 		ti,mcpdm =3D <&mcpdm>;
+>> 		ti,mcbsp1 =3D <&mcbsp1>;
+>> 		ti,mcbsp2 =3D <&mcbsp2>;
+>> 		ti,mcbsp3 =3D <&mcbsp3>;
+>>=20
+>> 		ti,twl6040 =3D <&twl6040>;
+>> 		ti,aess =3D <&aess>;
+>>=20
+>> 		...
+>> 	};
+>> };
+>>=20
+>> Well, this could be simply wrong... I.e. the aess node should request
+>> all the phandles to mcpdm and mcbsps because it is connected to.
+>=20
+> The aess label above should be in the child aess node, not in the
+> target-module.
+>=20
+>> Or it is right to use the sound node to "connect" all subsystems.
+>=20
+> Sounds like that's all taken care of nowadays with the generic
+> graph binding:
+>=20
+> Documentation/devicetree/bindings/graph.txt
+>=20
+> See also snd-soc-audio-graph-card and various users for it:
+>=20
+> Documentation/devicetree/bindings/sound/audio-graph-card.txt
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Rob, Georgi,
+Ok. Will become a major rework of the driver...
+On the other hand the audio graph library could simplify a lot of =
+things.
 
-after the initial RFC that I did for adding interconnect properties on
-Tegra, I realized that the description wasn't complete. This is an
-attempt at a more accurate description, but unfortunately I'm not sure
-if it's even correct in terms of the interconnect bindings.
+>=20
+>> Then the "aess" core could also become the child node of the =
+target-module:
+>>=20
+>> target-module@f1000 {			/* 0x401f1000, ap 32 =
+20.0 */
+>> 	...
+>> 	aess: aess {
+>> 		compatible =3D "ti,aess";
+>> 		status =3D "disabled";
+>> 	};
+>> };
+>=20
+> Yeah this is how it should be :)
+>=20
+>> Although it looks better this way, it may make it even one step
+>> more difficult to resurrect the old code...
+>=20
+> Well the old phandles and properties should work the same, just put =
+them
+> into the child aess node. No need to stuff anything else there at the
+> target-module level AFAIK.
 
-The problem here is that on Tegra, each device has multiple paths to
-system memory, and I have no good idea on what to pick as the default.
-They are all basically the same path, but each provides extra controls
-to configure the "interconnect".
+What it might need is to make the aess driver a completely separate =
+module
+loaded identified through the compatible record.
 
-Any ideas on how to resolve this? Let me know if the DT bindings and
-example don't make things clear enough.
+>=20
+>> And DT maintainers are not happy with otherwise undefined compatible
+>> definitions.
+>>=20
+>> So maybe:
+>>=20
+>> target-module@f1000 {			/* 0x401f1000, ap 32 =
+20.0 */
+>> 	...
+>>=20
+>> 	aess: aess {
+>> 		/* revisit
+>> 		compatible =3D "ti,aess";
+>> 		status =3D "disabled";
+>> 		*/
+>> 	};
+>> };
+>=20
+> But we have no binding and no driver for the aess at this point..
 
-Thierry
+That is why I propose a comment around it...
+But I am not sure if empty nodes are even allowed.
 
- .../firmware/nvidia,tegra186-bpmp.yaml        | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
+> If and when the aess driver work the child node can be just added :)
 
-diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-index dabf1c1aec2f..d40fcd836e90 100644
---- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-+++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-@@ -43,6 +43,24 @@ properties:
-       - enum:
-           - nvidia,tegra186-bpmp
- 
-+  interconnects:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: A list of phandle and specifier pairs that describe the
-+      interconnect paths to and from the BPMP.
-+
-+  interconnect-names:
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    description: One string for each pair of phandle and specifier in the
-+      "interconnects" property.
-+    # XXX We need at least one of these to be named dma-mem so that the core
-+    # will set the DMA mask based on the DMA parent, but all of these go to
-+    # system memory eventually.
-+    items:
-+      - const: dma-mem
-+      - const: dma-mem
-+      - const: dma-mem
-+      - const: dma-mem
-+
-   iommus:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-     description: |
-@@ -152,8 +170,43 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/clock/tegra186-clock.h>
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-     #include <dt-bindings/mailbox/tegra186-hsp.h>
-+    #include <dt-bindings/memory/tegra186-mc.h>
-+
-+    mc: memory-controller@2c00000 {
-+        compatible = "nvidia,tegra186-mc";
-+        reg = <0x02c00000 0xb0000>;
-+        interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-+        status = "disabled";
-+
-+        #interconnect-cells = <1>;
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        ranges = <0x02c00000 0x0 0x02c00000 0x0 0xb0000>;
-+
-+        /*
-+         * Memory clients have access to all 40 bits that the memory
-+         * controller can address.
-+         */
-+        dma-ranges = <0x0 0x0 0x0 0x100 0x0>;
-+
-+        #memory-controller-cells = <0>;
-+
-+        emc: external-memory-controller@2c60000 {
-+            compatible = "nvidia,tegra186-emc";
-+            reg = <0x0 0x02c60000 0x0 0x50000>;
-+            interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&bpmp TEGRA186_CLK_EMC>;
-+            clock-names = "emc";
-+
-+            #interconnect-cells = <0>;
-+
-+            nvidia,bpmp = <&bpmp>;
-+        };
-+    };
- 
-     hsp_top0: hsp@3c00000 {
-         compatible = "nvidia,tegra186-hsp";
-@@ -187,6 +240,12 @@ examples:
- 
-     bpmp {
-         compatible = "nvidia,tegra186-bpmp";
-+        interconnects = <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPR>,
-+                        <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc>,
-+                        <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPDMAR>,
-+                        <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc>;
-+        interconnect-names = "dma-mem", "dma-mem", "dma-mem", "dma-mem";
-+
-         iommus = <&smmu TEGRA186_SID_BPMP>;
-         mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
-         shmem = <&cpu_bpmp_tx &cpu_bpmp_rx>;
--- 
-2.24.1
+Yes, surely. So it is up to you to decide.
+
+Best regards,
+Nikolaus
 
