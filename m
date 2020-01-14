@@ -6,230 +6,81 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9694C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 21:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2553C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 22:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF7024673
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 21:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6EA2467A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 22:06:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579039172;
-	bh=zJWCWSOhHDeEqNF2yErLCC2xC0maaTa3qYu5FhuOrh8=;
+	s=default; t=1579039586;
+	bh=ak2pDlNLJqO6I6B08zZGpFxARQfKyArhMmTzeALdBzg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yKxhqxoysoQLx3IgTxhdkTm0XN97hvFVRF+wXrxQChqgQX6lgEGQpS+rlLEr/HhBF
-	 6sdfQvcJZqHbPbqg1SiFMlHeaUlQ0PzN9UPN/XYIg5uZzwwN+OhkygFmumU0g7xbCl
-	 lbBAP8/S9PPWcwWPl7+29kTUqfqIg6ifQGOLJ5Hw=
+	b=iKZduNtGPRkCRwhnciX5BDcD7oz3LQ78Trw6ycbj4FXgLPhrauJEvUFAzqzAS1TTo
+	 10oKgWIjEybm5fo+rG+DwsAOy5S0b5K2/+ElsSOsWKPqxOokf6ir+JNzLTl1Cf3rkc
+	 m87N0rdYBH6DNwTeixk+qEjh5WDxBiPynlSnzBgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgANV7c (ORCPT
+        id S1728650AbgANWG0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 16:59:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 17:06:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANV7b (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 16:59:31 -0500
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        id S1727102AbgANWG0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 17:06:26 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81C3024673;
-        Tue, 14 Jan 2020 21:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D6A42467A;
+        Tue, 14 Jan 2020 22:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579039170;
-        bh=zJWCWSOhHDeEqNF2yErLCC2xC0maaTa3qYu5FhuOrh8=;
+        s=default; t=1579039585;
+        bh=ak2pDlNLJqO6I6B08zZGpFxARQfKyArhMmTzeALdBzg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MsxBFZ1sSqm0ONGM+VzeO01CT3AFqKClr8dIYzHrYGReVdFEiaOG3tA9Yhj8qpCQo
-         8Wx6wN11xc8saLCW00kPko8DwdFnhakLEL6Szm2xnn26iE1a27+dvTAmLLGopZ8p+1
-         r/tSFPNF8wX/35xMMEMKTzGE1rWGs0AwxAoeBVG8=
-Received: by mail-qv1-f54.google.com with SMTP id dp13so6434035qvb.7;
-        Tue, 14 Jan 2020 13:59:30 -0800 (PST)
-X-Gm-Message-State: APjAAAWlYbidPYhkwxXxU/qv1qPx7n1xbZOFYDTS4/flLtNuKL0qBOJ1
-        7ieAFf82cmyAUACz9OVgt4eBoOJFE7767fSu0g==
-X-Google-Smtp-Source: APXvYqwq7E+CYgVOvhkNu4ZwbkCIUECyJO9AoKk6K3ct3z+22Upakg4Zec8xFRF4mmPeyUbM0xZt2DUav5zMOi1Fn3c=
-X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr22537735qvo.20.1579039169569;
- Tue, 14 Jan 2020 13:59:29 -0800 (PST)
+        b=cCHYW6a6nJENELdOdK6d5nUAFMYQgVeYuz0JQ2jjuOWRxbT6HzRipISp8KrAwsE/u
+         F/vedVKRrWV1TGVEFP49MpODow/BWFG/HfxVyMOseoLizNfjTCK+IV0hg2gGnBtLiF
+         agiqjC7Y7MER9MoUJUEyXAw7L8s6/5hGa5SBtf1A=
+Received: by mail-qv1-f45.google.com with SMTP id dp13so6443169qvb.7;
+        Tue, 14 Jan 2020 14:06:25 -0800 (PST)
+X-Gm-Message-State: APjAAAUC0xIx0b9UnZe4i1mzE7Endwv1r8JAa+1+RwflJkU+aj0HmUmj
+        lqDi2M+8TCfSYopIYp2tZpI11scoEJ84BBKszw==
+X-Google-Smtp-Source: APXvYqzGWrbxNauf9xa5MkJ+ERHGXWd3WsUXlRzV0Dnb14EolrJehn1vVApCKSXYdX1ws1nunVbJjQJrO0ev1wSrlWM=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr21746759qvu.136.1579039584558;
+ Tue, 14 Jan 2020 14:06:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
- <20191127105522.31445-5-miquel.raynal@bootlin.com> <20191209113506.41341ed4@collabora.com>
- <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com> <20200114191052.0a16d116@xps13>
-In-Reply-To: <20200114191052.0a16d116@xps13>
+References: <20200114213809.27166-1-jbx6244@gmail.com>
+In-Reply-To: <20200114213809.27166-1-jbx6244@gmail.com>
 From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 14 Jan 2020 15:59:18 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLp6++g9ArSm9guuHeywETanCaLvSKVmV3vV5EYfvUDvg@mail.gmail.com>
-Message-ID: <CAL_JsqLp6++g9ArSm9guuHeywETanCaLvSKVmV3vV5EYfvUDvg@mail.gmail.com>
-Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+Date:   Tue, 14 Jan 2020 16:06:13 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
+Message-ID: <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/3] dt-bindings: mmc: combine common mmc and
+ dw-mshc properties
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
         devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Bernhard Frauendienst <kernel@nospam.obeliks.de>
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 12:11 PM Miquel Raynal
-<miquel.raynal@bootlin.com> wrote:
+On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
 >
-> Hi Rob,
->
-> Rob Herring <robh+dt@kernel.org> wrote on Tue, 14 Jan 2020 11:46:18
-> -0600:
->
-> > On Mon, Dec 9, 2019 at 4:35 AM Boris Brezillon
-> > <boris.brezillon@collabora.com> wrote:
-> > >
-> > > On Wed, 27 Nov 2019 11:55:22 +0100
-> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > >
-> > > > Introduce a generic way to define concatenated MTD devices. This may
-> > > > be very useful in the case of ie. stacked SPI-NOR. Partitions to
-> > > > concatenate are described in an additional property of the partitions
-> > > > subnode:
-> > > >
-> > > >         flash0 {
-> > > >                 partitions {
-> > > >                         compatible = "fixed-partitions";
-> > > >                         part-concat = <&flash0_part1>, <&flash1_part0>;
-> > > >
-> > > >                       part0@0 {
-> > > >                               label = "part0_0";
-> > > >                               reg = <0x0 0x800000>;
-> > > >                       };
-> > > >
-> > > >                       flash0_part1: part1@800000 {
-> > > >                               label = "part0_1";
-> > > >                               reg = <0x800000 0x800000>;
-> > >
-> > > So, flash0_part1 and flash0_part2 will be created even though the user
-> > > probably doesn't need them?
-> >
-> > I don't follow?
->
-> Well, one will have to create "fake" partitions in order to concatenate
-> them with this solution, instead of just concatenating the devices (in
-> the case where you want to concatenate the entire devices). But the real
-> debate is below, on the representation.
+> Combine the common properties for mmc and dw-mshc in
+> mmc-controller-common.yaml
 
-So concatenating multiple devices without partitions defined in DT? To
-support that, then we need to link flash nodes rather than partition
-nodes.
+Commit messages should explain the why, not what.
 
-> > > >                       };
-> > > >                 };
-> > > >         };
-> > > >
-> > > >         flash1 {
-> > > >                 partitions {
-> > > >                         compatible = "fixed-partitions";
-> > > >
-> > > >                       flash0_part1: part1@0 {
-> > > >                               label = "part1_0";
-> > > >                               reg = <0x0 0x800000>;
-> > > >                       };
-> > > >
-> > > >                       part0@800000 {
-> > > >                               label = "part1_1";
-> > > >                               reg = <0x800000 0x800000>;
-> > > >                       };
-> > > >                 };
-> > > >         };
-> > >
-> > > IMHO this representation is far from intuitive. At first glance it's not
-> > > obvious which partitions are linked together and what's the name of the
-> > > resulting concatenated part. I definitely prefer the solution where we
-> > > have a virtual device describing the concatenation. I also understand
-> > > that this goes against the #1 DT rule: "DT only decribes HW blocks, not
-> > > how they should be used/configured", but maybe we can find a compromise
-> > > here, like moving this description to the /chosen node?
-> > >
-> > > chosen {
-> > >         flash-arrays {
-> > >                 /*
-> > >                  * my-flash-array is the MTD name if label is
-> > >                  * not present.
-> > >                  */
-> > >                 my-flash-array {
-> > >                         /*
-> > >                          * We could have
-> > >                          * compatible = "flash-array";
-> > >                          * but we can also do without it.
-> > >                          */
-> > >                         label = "foo";
-> > >                         flashes = <&flash1 &flash2 ...>;
-> > >                         partitions {
-> > >                                 /* usual partition description. */
-> > >                                 ...
-> > >                         };
-> > >                 };
-> > >         };
-> > > };
-> > >
-> > > Rob, what do you think?
-> >
-> > I don't think chosen is the right place to put all the partition
-> > information. It's not something the bootloader configures.
-> >
-> > This suffers from the same issue I have with the original proposal. It
-> > will not work for existing s/w. There's only 1 logical partition that
->
-> I don't get why it would not work? Current hardware will just not have
-> the concatenation support, that's all. How is this a problem?
+AFAICT, the only reason is to not have a node name of 'mmc'. That's
+entirely the reason why it is defined. Fix your node names to use the
+standard name.
 
-No one has multiple flash devices on any h/w already? If I already
-have a working system that can load and boot a kernel off an MTD
-partition, but could benefit from concatenating other partitions (i.e.
-rootfs), why should I have to modify my bootloader(s)?
 
-> > concatenated. The rest of the partitions shouldn't need any special
-> > handling. So we really only need some way to say 'link these 2
-> > partitions into 1 logical partition'. Though perhaps one could want to
-> > combine any number of physical partitions into logical partitions, but
-> > then none of the proposals could support that. Then again, maybe
->
-> Yes, the flash-array proposal supports having more than two
-> partitions/devices concatenated, it is also already supported by the
-> driver (you don't care about this, but I do :) ).
-
-I meant for N devices, you'd only have at most N-1 concatenated
-partitions as there are N-1 device boundaries. Whereas you could
-define any partition could be combined with any other number of
-partitions regardless of where they lie. The types of things you can
-do with LVM and disk partitions is what I'm thinking of.
-
-> > that's a userspace problem like with disks.
->
-> I see one big issue with this solution: what about bootloaders?
-
-Similar to how it works with disks. Bootloaders (at a minimum)
-understand physical partitions. Later stages understand logical
-partitions.
-
-> The root cause for such idea is that, in my case, the 2 MTD devices are
-> too small to contain the images needed to boot. The perfect solution is
-> to merge the two devices virtually in one single device and let U-Boot
-> read it like one.
-
-Got any actual h/w that the flash devices are smaller than a
-kernel+ramdisk yet had the $ and board space to put multiple devices
-down?
-
-What about the stages before u-boot? Assume they all use DT, why
-require adding this support before a stage that actually needs it.
-
-> I need to have the same representation both in U-Boot and Linux, hence
-> a userspace tool and a kernel command line argument do not work, right?
-
-I never said u-boot can't gain support for this, it's just requiring
-it to from the start even if you only wanted to have a concatenated
-partition for your rootfs or non-boot partition. Only the kernel would
-need to understand concatenating partitions vs. every component that
-reads the partitions.
 
 Rob
