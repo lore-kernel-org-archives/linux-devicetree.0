@@ -2,363 +2,323 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABE7C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 08:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61067C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 08:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC292084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 08:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17257222C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 08:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJZy9hG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgANIIj (ORCPT
+        id S1729106AbgANIKR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 03:08:39 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47749 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgANIIj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 03:08:39 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irHFV-0003lE-Oj; Tue, 14 Jan 2020 09:08:29 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irHFU-0000FI-J4; Tue, 14 Jan 2020 09:08:28 +0100
-Date:   Tue, 14 Jan 2020 09:08:28 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200114080828.vv7ilksklt27ysh3@pengutronix.de>
-References: <1578271620-2159-1-git-send-email-jeff@labundy.com>
- <1578271620-2159-5-git-send-email-jeff@labundy.com>
+        Tue, 14 Jan 2020 03:10:17 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40523 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgANIKR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 03:10:17 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w21so11765983otj.7;
+        Tue, 14 Jan 2020 00:10:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ADoHczfnfwvTHTvwEzQykNkOfVFkdqsmaGJm2GfcQqg=;
+        b=EJZy9hG0LMeuJBkesqHDRBgsI1lak03o5EWwTcPsm0XV1Sjy9jZeGHd+x8m9HSLUUu
+         kGnImO9rXK+21uKSB0+arziaUPK61JW7/fLPTYI6IBlLAMpa1uDDltoEkaxgngi/Y7fd
+         9A+k0su7mh/0T+7fB3mlyf81lFyFel7S1J/YiQAyHgEIWnARtzzmn7Z/E06rvh73IJRr
+         9Kn49GH4VsA31yuyv9gIwwI4cu5jzWZNbD6wZwJjk+KC7texmBP2WJHF8SLqcVBOeMje
+         3OKg3EKsyxNhvSNukICOYTnjLGYCFI6qKEGNkKrOlPGb5qQ9bygr2jO3cvYxCAn8sXow
+         cNRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ADoHczfnfwvTHTvwEzQykNkOfVFkdqsmaGJm2GfcQqg=;
+        b=bZ70+cscHcEhJc7fKPZk1AxB3jkYsXPG/Hve10fVdcZbzBHPgXOtlIZ4iCv5XoqMxT
+         2xeKMiYc9tM4QiduykUf1X9CEf61vLiFS9CASUDtWGsRrP+yA5JkBNH23nZk6Rvgd1RJ
+         xBRsQydg58r5wBXue55284Bv4DA7JOTrs5J+MQy/IabhThoSknwSPYHLCo7ZPDp3hXXr
+         8ka2mldK2OuSnqZw4vc3Bv1p21tOuYqvi90BsuXo7n1uu6qiXN4NCfzuKIAuOMgfNuzM
+         XbokTi3TJdvMfaDWN7dBPP7c8Njxl9f7nFejXahNQDHLiQz2ogp4c/RTqRp6rgOJUFjC
+         2ozA==
+X-Gm-Message-State: APjAAAX/yQPICkRY6k/kM4jva3jxi1Mgolw46QPe0KBwsMrdO5UgOmoo
+        EdWxXv/gauqAMLV7+6u7Q7jT8FTOrx8tX/eKItM=
+X-Google-Smtp-Source: APXvYqygXu/f7SsTk/IQwbPRIFhQDBJ91FPpJ8e2VaIQ7vAfiBxNzcLSBq8YksHvkEr0WgUlfuhm6rV7ESZA9BHenTw=
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr16417215otp.44.1578989415836;
+ Tue, 14 Jan 2020 00:10:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1578271620-2159-5-git-send-email-jeff@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200108162211.22358-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <53d74632-34ee-f7f7-656f-a93a6c10e7ba@ti.com> <CA+V-a8tHkqkxE_5DMtt6PbJyGz1vfKZUezE5nOFmJXarJAugkw@mail.gmail.com>
+ <2b4dd351-76ee-60bd-bd91-20d5f1ac4e79@ti.com>
+In-Reply-To: <2b4dd351-76ee-60bd-bd91-20d5f1ac4e79@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 14 Jan 2020 08:09:49 +0000
+Message-ID: <CA+V-a8vZUU52f1683Eu2=C_w--mN0Z6mpP38d-9MssRUY0wEpQ@mail.gmail.com>
+Subject: Re: [v3 3/6] PCI: endpoint: Add support to handle multiple base for
+ mapping outbound memory
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Simon Horman <horms@verge.net.au>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Jeff,
+Hi Kishon,
 
-On Mon, Jan 06, 2020 at 12:48:02AM +0000, Jeff LaBundy wrote:
-> This patch adds support for the Azoteq IQS620A, capable of generating
-> a 1-kHz PWM output with duty cycle between ~0.4% and 100% (inclusive).
+On Mon, Jan 13, 2020 at 8:56 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On 10/01/20 11:38 PM, Lad, Prabhakar wrote:
+> > Hi Kishon,
+> >
+> > Thank you for the review.
+> >
+> > On Thu, Jan 9, 2020 at 6:25 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> Hi Prabhakar,
+> >>
+> >> On 08/01/20 9:52 PM, Lad Prabhakar wrote:
+> >>> R-Car PCIe controller has support to map multiple memory regions for
+> >>> mapping the outbound memory in local system also the controller limits
+> >>> single allocation for each region (that is, once a chunk is used from the
+> >>> region it cannot be used to allocate a new one). This features inspires to
+> >>> add support for handling multiple memory bases in endpoint framework.
+> >>>
+> >>> With this patch pci_epc_mem_init() now accepts multiple regions, also
+> >>> page_size for each memory region is passed during initialization so as
+> >>> to handle single allocation for each region by setting the page_size to
+> >>> window_size.
+> >>>
+> >>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >>> ---
+> >>>  .../pci/controller/cadence/pcie-cadence-ep.c  |  12 +-
+> >>>  .../pci/controller/dwc/pcie-designware-ep.c   |  31 ++-
+> >>>  drivers/pci/controller/pcie-rockchip-ep.c     |  14 +-
+> >>>  drivers/pci/endpoint/functions/pci-epf-test.c |  29 +--
+> >>>  drivers/pci/endpoint/pci-epc-core.c           |   7 +-
+> >>>  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++++----
+> >>>  include/linux/pci-epc.h                       |  46 ++--
+> >>>  7 files changed, 245 insertions(+), 93 deletions(-)
+> >>>
+> >> .
+> >> .
+> >> <snip>
+> >> .
+> >> .
+> >>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> >>> index 2091508c1620..289c266c2d90 100644
+> >>> --- a/drivers/pci/endpoint/pci-epc-core.c
+> >>> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> >>> @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+> >>>   * @epc: the EPC device on which address is allocated
+> >>>   * @func_no: the endpoint function number in the EPC device
+> >>>   * @phys_addr: physical address of the local system
+> >>> + * @window: index to the window region where PCI address will be mapped
+> >>>   * @pci_addr: PCI address to which the physical address should be mapped
+> >>>   * @size: the size of the allocation
+> >>>   *
+> >>>   * Invoke to map CPU address with PCI address.
+> >>>   */
+> >>>  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> >>> -                  phys_addr_t phys_addr, u64 pci_addr, size_t size)
+> >>> +                  phys_addr_t phys_addr, int window,
+> >>> +                  u64 pci_addr, size_t size)
+> >>>  {
+> >>>       int ret;
+> >>>       unsigned long flags;
+> >>> @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
+> >>>               return 0;
+> >>>
+> >>>       spin_lock_irqsave(&epc->lock, flags);
+> >>> -     ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
+> >>> +     ret = epc->ops->map_addr(epc, func_no, phys_addr,
+> >>> +                              window, pci_addr, size);
+> >>>       spin_unlock_irqrestore(&epc->lock, flags);
+> >>>
+> >>>       return ret;
+> >>> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+> >>> index d2b174ce15de..f205f7819292 100644
+> >>> --- a/drivers/pci/endpoint/pci-epc-mem.c
+> >>> +++ b/drivers/pci/endpoint/pci-epc-mem.c
+> >>> @@ -38,57 +38,77 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
+> >>>  /**
+> >>>   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
+> >>>   * @epc: the EPC device that invoked pci_epc_mem_init
+> >>> - * @phys_base: the physical address of the base
+> >>> - * @size: the size of the address space
+> >>> - * @page_size: size of each page
+> >>> + * @windows: pointer to windows supported by the device
+> >>> + * @num_windows: number of windows device supports
+> >>>   *
+> >>>   * Invoke to initialize the pci_epc_mem structure used by the
+> >>>   * endpoint functions to allocate mapped PCI address.
+> >>>   */
+> >>> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
+> >>> -                    size_t page_size)
+> >>> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
+> >>> +                    int num_windows)
+> >>>  {
+> >>> -     int ret;
+> >>> -     struct pci_epc_mem *mem;
+> >>> -     unsigned long *bitmap;
+> >>> +     struct pci_epc_mem *mem = NULL;
+> >>> +     unsigned long *bitmap = NULL;
+> >>>       unsigned int page_shift;
+> >>> -     int pages;
+> >>> +     size_t page_size;
+> >>>       int bitmap_size;
+> >>> +     int pages;
+> >>> +     int ret;
+> >>> +     int i;
+> >>>
+> >>> -     if (page_size < PAGE_SIZE)
+> >>> -             page_size = PAGE_SIZE;
+> >>> +     epc->mem_windows = 0;
+> >>>
+> >>> -     page_shift = ilog2(page_size);
+> >>> -     pages = size >> page_shift;
+> >>> -     bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> >>> +     if (!windows)
+> >>> +             return -EINVAL;
+> >>>
+> >>> -     mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> >>> -     if (!mem) {
+> >>> -             ret = -ENOMEM;
+> >>> -             goto err;
+> >>> -     }
+> >>> +     if (num_windows <= 0)
+> >>> +             return -EINVAL;
+> >>>
+> >>> -     bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> >>> -     if (!bitmap) {
+> >>> -             ret = -ENOMEM;
+> >>> -             goto err_mem;
+> >>> -     }
+> >>> +     epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
+> >>> +     if (!epc->mem)
+> >>> +             return -EINVAL;
+> >>> +
+> >>> +     for (i = 0; i < num_windows; i++) {
+> >>> +             page_size = windows[i].page_size;
+> >>> +             if (page_size < PAGE_SIZE)
+> >>> +                     page_size = PAGE_SIZE;
+> >>> +             page_shift = ilog2(page_size);
+> >>> +             pages = windows[i].size >> page_shift;
+> >>> +             bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+> >>> +
+> >>> +             mem = kzalloc(sizeof(*mem), GFP_KERNEL);
+> >>> +             if (!mem) {
+> >>> +                     ret = -ENOMEM;
+> >>> +                     goto err_mem;
+> >>> +             }
+> >>>
+> >>> -     mem->bitmap = bitmap;
+> >>> -     mem->phys_base = phys_base;
+> >>> -     mem->page_size = page_size;
+> >>> -     mem->pages = pages;
+> >>> -     mem->size = size;
+> >>> +             bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> >>> +             if (!bitmap) {
+> >>> +                     ret = -ENOMEM;
+> >>> +                     goto err_mem;
+> >>> +             }
+> >>>
+> >>> -     epc->mem = mem;
+> >>> +             mem->bitmap = bitmap;
+> >>> +             mem->window.phys_base = windows[i].phys_base;
+> >>> +             mem->page_size = page_size;
+> >>> +             mem->pages = pages;
+> >>> +             mem->window.size = windows[i].size;
+> >>> +             mem->window.map_size = 0;
+> >>> +
+> >>> +             epc->mem[i] = mem;
+> >>> +     }
+> >>> +     epc->mem_windows = num_windows;
+> >>>
+> >>>       return 0;
+> >>>
+> >>>  err_mem:
+> >>> -     kfree(mem);
+> >>> +     for (; i >= 0; i--) {
+> >>
+> >> mem has to be reinitialized for every iteration of the loop.
+> > not sure what exactly you mean here, could you please elaborate.
+>
+> You are invoking "kfree(mem->bitmap);" in a loop without re-initializing
+> mem. Refer pci_epc_mem_exit() where you are doing the free properly.
+>
+good catch will fix that.
 
-Overall a very nice driver, some minor issues below.
+Cheers,
+--Prabhakar
 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-> ---
-> Changes in v3:
->   - Updated the commit message to say "~0.4%" instead of "0.4%"
->   - Clarified the effect of duty cycle and state changes in the 'Limitations'
->     section and added a restriction regarding 0% duty cycle
->   - Added a comment in iqs620_pwm_apply to explain how duty cycle is derived
->   - Updated iqs620_pwm_apply to disable the output first and enable it last to
->     prevent temporarily driving a stale duty cycle
->   - Rounded the calculation for duty cycle up and down in iqs620_pwm_get_state
->     and iqs620_pwm_apply, respectively
->   - Added a comment in iqs620_pwm_get_state to explain what it reports follow-
->     ing requests to set duty cycle to 0%
->   - Added a lock to prevent back-to-back access of IQS620_PWR_SETTINGS_PWM_OUT
->     and IQS620_PWM_DUTY_CYCLE from being interrupted
->   - Updated iqs620_pwm_notifier to reference pwm->state directly as opposed to
->     calling pwm_get_state
->   - Moved notifier unregistration back to a device-managed action
->   - Added a completion to prevent iqs620_pwm_notifier from referencing the
->     pwm_chip structure until it has been initialized by pwmchip_add
-> 
-> Changes in v2:
->   - Merged 'Copyright' and 'Author' lines into one in introductory comments
->   - Added 'Limitations' section to introductory comments
->   - Replaced 'error' with 'ret' throughout
->   - Added const qualifier to state argument of iqs620_pwm_apply and removed all
->     modifications to the variable's contents
->   - Updated iqs620_pwm_apply to return -ENOTSUPP or -EINVAL if the requested
->     polarity is inverted or the requested period is below 1 ms, respectively
->   - Updated iqs620_pwm_apply to disable the PWM output if duty cycle is zero
->   - Added iqs620_pwm_get_state
->   - Eliminated tabbed alignment of pwm_ops and platform_driver struct members
->   - Moved notifier unregistration to already present iqs620_pwm_remove, which
->     eliminated the need for a device-managed action and ready flag
->   - Added a comment in iqs620_pwm_probe to explain the order of operations
->   - Changed Kconfig "depends on" logic to MFD_IQS62X || COMPILE_TEST
-> 
->  drivers/pwm/Kconfig       |  10 ++
->  drivers/pwm/Makefile      |   1 +
->  drivers/pwm/pwm-iqs620a.c | 254 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 265 insertions(+)
->  create mode 100644 drivers/pwm/pwm-iqs620a.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index bd21655..60bcf6c 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -222,6 +222,16 @@ config PWM_IMX_TPM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx-tpm.
-> 
-> +config PWM_IQS620A
-> +	tristate "Azoteq IQS620A PWM support"
-> +	depends on MFD_IQS62X || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for the Azoteq IQS620A multi-function
-> +	  sensor.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called pwm-iqs620a.
-> +
->  config PWM_JZ4740
->  	tristate "Ingenic JZ47xx PWM support"
->  	depends on MACH_INGENIC
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 9a47507..a59c710 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
->  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-> +obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
->  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-> diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
-> new file mode 100644
-> index 0000000..ee5d8b5
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-iqs620a.c
-> @@ -0,0 +1,254 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Azoteq IQS620A PWM Generator
-> + *
-> + * Copyright (C) 2019 Jeff LaBundy <jeff@labundy.com>
-> + *
-> + * Limitations:
-> + * - The period is fixed to 1 ms and is generated continuously despite changes
-> + *   to the duty cycle or enable/disable state.
-> + * - Changes to the duty cycle or enable/disable state take effect immediately
-> + *   and may result in a glitch during the period in which the change is made.
-> + * - The device cannot generate a 0% duty cycle. For duty cycles below 1 / 256
-> + *   ms, the output is disabled and relies upon an external pull-down resistor
-> + *   to hold the GPIO3/LTX pin low.
-> + */
-> +
-> +#include <linux/completion.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/iqs62x.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/notifier.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +#define IQS620_PWR_SETTINGS			0xD2
-> +#define IQS620_PWR_SETTINGS_PWM_OUT		BIT(7)
-> +
-> +#define IQS620_PWM_DUTY_CYCLE			0xD8
-> +
-> +#define IQS620_PWM_PERIOD_NS			1000000
-> +
-> +struct iqs620_pwm_private {
-> +	struct iqs62x_core *iqs62x;
-> +	struct pwm_chip chip;
-> +	struct notifier_block notifier;
-> +	struct completion chip_ready;
-> +	struct mutex lock;
-> +};
-> +
-> +static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	struct iqs62x_core *iqs62x;
-> +	int duty_scale, ret;
-> +
-> +	if (state->polarity != PWM_POLARITY_NORMAL)
-> +		return -ENOTSUPP;
-> +
-> +	if (state->period < IQS620_PWM_PERIOD_NS)
-> +		return -EINVAL;
-> +
-> +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> +	iqs62x = iqs620_pwm->iqs62x;
-> +
-> +	mutex_lock(&iqs620_pwm->lock);
-> +
-> +	/*
-> +	 * The duty cycle generated by the device is calculated as follows:
-> +	 *
-> +	 * duty_cycle = (IQS620_PWM_DUTY_CYCLE + 1) / 256 * 1 ms
-> +	 *
-> +	 * ...where IQS620_PWM_DUTY_CYCLE is a register value between 0 and 255
-> +	 * (inclusive). Therefore the lowest duty cycle the device can generate
-> +	 * while the output is enabled is 1 / 256 ms.
-> +	 *
-> +	 * For lower duty cycles (e.g. 0), the PWM output is simply disabled to
-> +	 * allow an on-board pull-down resistor to hold the GPIO3/LTX pin low.
-> +	 */
-> +	duty_scale = state->duty_cycle * 256 / IQS620_PWM_PERIOD_NS;
-
-minor optimisation: You could do the division before grabbing the lock.
-(But unsure if this actually gives a better result or the compiler is
-clever enough to do this.)
-
-> +
-> +	if (!state->enabled || !duty_scale) {
-> +		ret = regmap_update_bits(iqs62x->map, IQS620_PWR_SETTINGS,
-> +					 IQS620_PWR_SETTINGS_PWM_OUT, 0);
-> +		if (ret)
-> +			goto err_mutex;
-> +	}
-> +
-> +	if (duty_scale) {
-> +		ret = regmap_write(iqs62x->map, IQS620_PWM_DUTY_CYCLE,
-> +				   min(duty_scale - 1, 0xFF));
-> +		if (ret)
-> +			goto err_mutex;
-> +	}
-> +
-> +	if (state->enabled && duty_scale)
-> +		ret = regmap_update_bits(iqs62x->map, IQS620_PWR_SETTINGS,
-> +					 IQS620_PWR_SETTINGS_PWM_OUT, 0xFF);
-> +
-> +err_mutex:
-> +	mutex_unlock(&iqs620_pwm->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static void iqs620_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				 struct pwm_state *state)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	struct iqs62x_core *iqs62x;
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> +	iqs62x = iqs620_pwm->iqs62x;
-> +
-> +	mutex_lock(&iqs620_pwm->lock);
-> +
-> +	/*
-> +	 * Since the device cannot generate a 0% duty cycle, requests to do so
-> +	 * cause subsequent calls to iqs620_pwm_get_state to report the output
-> +	 * as disabled with duty cycle equal to that which was in use prior to
-> +	 * the request. This is not ideal, but is the best compromise based on
-> +	 * the capabilities of the device.
-> +	 */
-> +	ret = regmap_read(iqs62x->map, IQS620_PWR_SETTINGS, &val);
-> +	if (ret)
-> +		goto err_mutex;
-> +	state->enabled = val & IQS620_PWR_SETTINGS_PWM_OUT;
-> +
-> +	ret = regmap_read(iqs62x->map, IQS620_PWM_DUTY_CYCLE, &val);
-> +	if (ret)
-> +		goto err_mutex;
-> +	state->duty_cycle = DIV_ROUND_UP((val + 1) * IQS620_PWM_PERIOD_NS, 256);
-> +	state->period = IQS620_PWM_PERIOD_NS;
-> +
-> +err_mutex:
-> +	mutex_unlock(&iqs620_pwm->lock);
-> +
-> +	if (ret)
-> +		dev_err(iqs620_pwm->chip.dev, "Failed to get state: %d\n", ret);
-> +}
-> +
-
-I thought we dicussed having a comment here, saying something like:
-
-	The device might reset when [...] and as a result looses it's
-	configuration. So the registers must be rewritten when this
-	happens to restore the expected operation.
-
-Is it worth to issue a warning when this happens?
-
-> +static int iqs620_pwm_notifier(struct notifier_block *notifier,
-> +			       unsigned long event_flags, void *context)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +	int ret;
-> +
-> +	iqs620_pwm = container_of(notifier, struct iqs620_pwm_private,
-> +				  notifier);
-> +
-> +	if (!completion_done(&iqs620_pwm->chip_ready) ||
-> +	    !(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
-> +		return NOTIFY_DONE;
-
-Is here a (relevant?) race?  Consider the notifier triggers just when
-pwmchip_add returned, (maybe even a consumer configured the device) and
-before complete_all() is called. With my limited knowledge about
-notifiers I'd say waiting for the completion here might be reasonable
-and safe.
-
-> +	ret = iqs620_pwm_apply(&iqs620_pwm->chip, &iqs620_pwm->chip.pwms[0],
-> +			       &iqs620_pwm->chip.pwms[0].state);
-> +	if (ret) {
-> +		dev_err(iqs620_pwm->chip.dev,
-> +			"Failed to re-initialize device: %d\n", ret);
-> +		return NOTIFY_BAD;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static const struct pwm_ops iqs620_pwm_ops = {
-> +	.apply = iqs620_pwm_apply,
-> +	.get_state = iqs620_pwm_get_state,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static void iqs620_pwm_notifier_unregister(void *context)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm = context;
-> +	int ret;
-> +
-> +	ret = blocking_notifier_chain_unregister(&iqs620_pwm->iqs62x->nh,
-> +						 &iqs620_pwm->notifier);
-> +	if (ret)
-> +		dev_err(iqs620_pwm->chip.dev,
-> +			"Failed to unregister notifier: %d\n", ret);
-
-	dev_err(iqs620_pwm->chip.dev,
-		"Failed to unregister notifier: %pe\n", ERR_PTR(ret));
-
-gives a nicer output. (Also applies to other error messages of course.)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> >
+> >>> +             kfree(mem->bitmap);
+> >>> +             kfree(epc->mem[i]);
+> >>> +     }
+> >>> +     kfree(epc->mem);
+> >>>
+> >>> -err:
+> >>> -return ret;
+> >>> +     return ret;
+> >>>  }
+> >>>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+> >>>
+> >>> @@ -101,48 +121,127 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
+> >>>   */
+> >>>  void pci_epc_mem_exit(struct pci_epc *epc)
+> >>>  {
+> >>> -     struct pci_epc_mem *mem = epc->mem;
+> >>> +     struct pci_epc_mem *mem;
+> >>> +     int i;
+> >>> +
+> >>> +     if (!epc->mem_windows)
+> >>> +             return;
+> >>> +
+> >>> +     for (i = 0; i <= epc->mem_windows; i++) {
+> >>> +             mem = epc->mem[i];
+>
+> Missing the above line in the error handling above.
+>
+>
+> >>> +             kfree(mem->bitmap);
+> >>> +             kfree(epc->mem[i]);
+> >>> +     }
+>
+> Thanks
+> Kishon
