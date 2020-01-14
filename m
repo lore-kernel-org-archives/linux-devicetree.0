@@ -2,108 +2,130 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF296C33CAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 04:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04571C33CAD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 06:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E3324655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 04:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF5FD2187F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 06:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="YzrR6SiP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CTycFTIk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgANE7t (ORCPT
+        id S1728640AbgANGl7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 23:59:49 -0500
-Received: from forward100o.mail.yandex.net ([37.140.190.180]:36273 "EHLO
-        forward100o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727331AbgANE7t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 23:59:49 -0500
-Received: from forward102q.mail.yandex.net (forward102q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:516:4e7d])
-        by forward100o.mail.yandex.net (Yandex) with ESMTP id 721D34AC1143;
-        Tue, 14 Jan 2020 07:59:46 +0300 (MSK)
-Received: from mxback6q.mail.yandex.net (mxback6q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:9de5:975f])
-        by forward102q.mail.yandex.net (Yandex) with ESMTP id 6B5967F2001D;
-        Tue, 14 Jan 2020 07:59:46 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback6q.mail.yandex.net (mxback/Yandex) with ESMTP id zJNr872U7L-xhv4HC7P;
-        Tue, 14 Jan 2020 07:59:45 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578977985;
-        bh=6Cyzs5wumIUEXhKYoOJBtaXB0/ZKou1qqhe1zk9UI/A=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=YzrR6SiP0oG1WQ7DbN37izmaJeR9CfEMOrJBYGGgufSSqp2hik1sQDF5Ar0y4AYkL
-         buO45ByXcp6oGuJbsauXEBndI+R1ZXC1zXmuARLSqBEN90EkJUQdG7f1zu6+sTNGgD
-         JCUzFyBjRkyeBLmg84auPPPHktSFSxCtG2DabCF4=
-Authentication-Results: mxback6q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla1-0bfbe4c1c324.qloud-c.yandex.net with HTTP;
-        Tue, 14 Jan 2020 07:59:43 +0300
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Envelope-From: yjx@flygoat.com
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Tue, 14 Jan 2020 01:41:59 -0500
+Received: from mail-eopbgr10042.outbound.protection.outlook.com ([40.107.1.42]:27269
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727083AbgANGl7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 01:41:59 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S7YpMePCQQCGnAZC0pMT9Rrt9SQ8rOtNcnZoEYw46ds4Yxpzk/spjH9/yUdtk0PbQkq3HfOG8B3nSG4tJot4n00rqVYNpsPxhmaRlEtxCiQbk1M45IWxAXLKtVI5iu8cM7v4KP8XmfBTWMaKt2+PlQRwQ4wDbU0BlxkwYAPOs47rmc6fuULtjJrLt10/utv46dvh9GUbloZOjBR/2YbCVJZARRYf6Egx+W/d47GZtY1Y0P97JXFVuPuCOfqXZ2OnHEZCypf/YxBY2LEew6UqmFFRzb85+5Ei+SmaGJ+0t6GRH6gGsoaY4XTeFO/repHg2jl5QSCoKhVgzt/wkI6GSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lVjCQmZghlZKNk2xiESWeIe9k1jk7X3jcT/AWY2e7js=;
+ b=R8pBFdlm6T9HBH4X1zr3drAtHDjJ3Nk/f39uUlBVNRXGCpTAx+ydUT16LxKXBNKsru36Pr8OijjGl7HLC5H7zqzOALiy+D4iYbnZM913+SazLTg6L/DSK9saTAcWcLTevOaHVlfG22IExXDsVV0Ety/zNyFyOaBmIhRx+qCTm4qstOXnHH23I/Q2DAM+qdCAZF8JRm6CwBcdhrrmxnb+a9VKJQhlfCixMMjYm+UHEXvV0LGQsQlicwk+tEY81dvxnYMDEkdVdSDUmPPCqwQMGaFY7/Os8R5zvFNkh29KCdgw46XVJiPWPmJdKJYlRwD0WDns0MXwdadM5+lF5cyIgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lVjCQmZghlZKNk2xiESWeIe9k1jk7X3jcT/AWY2e7js=;
+ b=CTycFTIkzAXA/vugLd6ilL3EEH0TRmIfPNXEPTxKhhZUXLjgV0A+W/jlhnPhenPecDawccur+SefOsUPTa9kFVgS1LZMGWW+AZpU5x5q56VGOTaLvZqcuVAeZsAxn5+cgQOOA7Mzpit7kfYItTakWD7jkEwr/xkXTSadC/yKFgo=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4404.eurprd04.prod.outlook.com (52.135.149.33) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Tue, 14 Jan 2020 06:41:49 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.015; Tue, 14 Jan 2020
+ 06:41:49 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK2PR02CA0140.apcprd02.prod.outlook.com (2603:1096:202:16::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2623.10 via Frontend Transport; Tue, 14 Jan 2020 06:41:46 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "paul.burton@mips.com" <paul.burton@mips.com>,
-        "paulburton@kernel.org" <paulburton@kernel.org>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "syq@debian.org" <syq@debian.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "chenhc@lemote.com" <chenhc@lemote.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "paul@crapouillou.net" <paul@crapouillou.net>,
-        "prasannatsmkumar@gmail.com" <prasannatsmkumar@gmail.com>,
-        "sernia.zhou@foxmail.com" <sernia.zhou@foxmail.com>,
-        "zhenwenjin@gmail.com" <zhenwenjin@gmail.com>
-In-Reply-To: <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
-References: <Introduce SMP support for CI20 (based on JZ4780).>
-         <1578933813-80122-1-git-send-email-zhouyanjie@wanyeetech.com> <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
-Subject: Re: [PATCH 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] dt-bindings: arm-boards: typo fix
+Thread-Topic: [PATCH] dt-bindings: arm-boards: typo fix
+Thread-Index: AQHVyqWyFUR1J0wI/kyxNhwHRPBOSA==
+Date:   Tue, 14 Jan 2020 06:41:49 +0000
+Message-ID: <1578983860-23747-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR02CA0140.apcprd02.prod.outlook.com
+ (2603:1096:202:16::24) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 94598f12-5639-4005-3c00-08d798bcd4d1
+x-ms-traffictypediagnostic: AM0PR04MB4404:|AM0PR04MB4404:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB44042B159B41BE16E10E312388340@AM0PR04MB4404.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(346002)(376002)(136003)(199004)(189003)(316002)(81156014)(478600001)(66946007)(52116002)(110136005)(54906003)(4744005)(81166006)(36756003)(6506007)(8676002)(8936002)(64756008)(66556008)(66476007)(44832011)(186003)(66446008)(71200400001)(5660300002)(16526019)(69590400006)(86362001)(2906002)(6512007)(956004)(6486002)(4326008)(26005)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4404;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BN2zgY/qEzfMQFTaHAMPU9lmlDhr+C6Hty6jSzhapYCE9BtmlV9Ak1JIxljlAyJ9srbWsmiLLTE1mnBchjgzYhqgCfk2Nhs1jFiKDSMtF52dVtx2YuE2Gu14g3zUdLp6/m2LhgIqZUyjJ4JYdfxUmZ2eqYZtklDB01cCP78rvAjmo74sV6dVfkX1UW4BjxI7YJGCZnXDD0ju8MSrjwnghOF0zdsbD9UGRFkSfAhauJ4BN6jXlOs2dGVBt/SSBjSWB2nGq0fx5LTgcnUXXJ35k1glJVOly4nQ88nP7fg2jqmteDex8H/8bEB7p6Pww2zCNbMqCGZg4CdNOUrlHFcV3ntTRuYpeTD106VWmoIbjvIGDuaFc5vNjlo/5He6eBPXoVKm6vhaNNIK9VR9cbcmMZg5a/04itbzdmOCYaLBHVi4y0jm6ajCz1rESGKpsOtjpnWLcfx5CxhYBCcyJIHAeKFZq0C4QAl+kBFFlDJNESkATc2QCQjhkpyk6Q4X4Vvb
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Tue, 14 Jan 2020 12:59:43 +0800
-Message-Id: <30183031578977983@vla1-0bfbe4c1c324.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94598f12-5639-4005-3c00-08d798bcd4d1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 06:41:49.2307
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kZPbzLFxdfQdGtdbK0JrvE7Ki8iEFB6kn6BoWoPQt3CTQkpIYqzVonl5rII6JY/FgOYLTQL8WkrXqV60B8UiXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4404
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+From: Peng Fan <peng.fan@nxp.com>
 
+Typo fix, "withe" -> "with".
 
-14.01.2020, 00:44, "周琰杰 (Zhou Yanjie)" <zhouyanjie@wanyeetech.com>:
-> Document the available properties for the SoC root node and the
-> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
->
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
->  .../bindings/mips/ingenic/ingenic,cpu.txt | 32 ++++++++++++++++++++++
->  .../bindings/mips/ingenic/ingenic,soc,txt | 18 ++++++++++++
->  2 files changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
->  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
->
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ Documentation/devicetree/bindings/arm/arm-boards | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-We'd better use schemas for the document.
+diff --git a/Documentation/devicetree/bindings/arm/arm-boards b/Documentati=
+on/devicetree/bindings/arm/arm-boards
+index b2a9f9f8430b..96b1dad58253 100644
+--- a/Documentation/devicetree/bindings/arm/arm-boards
++++ b/Documentation/devicetree/bindings/arm/arm-boards
+@@ -121,7 +121,7 @@ Required properties (in root node):
+ Required nodes:
+=20
+ - soc: some node of the RealView platforms must be the SoC
+-  node that contain the SoC-specific devices, withe the compatible
++  node that contain the SoC-specific devices, with the compatible
+   string set to one of these tuples:
+    "arm,realview-eb-soc", "simple-bus"
+    "arm,realview-pb1176-soc", "simple-bus"
+--=20
+2.16.4
 
-See[1]
-
-Thanks.
-
-[1]: https://lwn.net/Articles/771621/
---
-Jiaxun Yang
