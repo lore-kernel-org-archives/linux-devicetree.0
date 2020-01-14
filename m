@@ -2,61 +2,133 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E42C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7134C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAFB324656
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90CA2465A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgANRJj (ORCPT
+        id S1726270AbgANRQj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:09:39 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:45429 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgANRJj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 12:09:39 -0500
-Received: from xps13.lan (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B4C1E20000B;
-        Tue, 14 Jan 2020 17:09:32 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v4 1/4] mtd: concat: Fix a comment referring to an unknown symbol
-Date:   Tue, 14 Jan 2020 18:09:22 +0100
-Message-Id: <20200114170922.2381-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113171505.26128-2-miquel.raynal@bootlin.com>
-References: 
+        Tue, 14 Jan 2020 12:16:39 -0500
+Received: from muru.com ([72.249.23.125]:50950 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726195AbgANRQj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:16:39 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id A61F9816C;
+        Tue, 14 Jan 2020 17:17:19 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 09:16:34 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     linux-omap@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Matthijs van Duin <matthijsvanduin@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH] ARM: dts: Configure omap5 AESS
+Message-ID: <20200114171634.GS5885@atomide.com>
+References: <20200114150937.18304-1-tony@atomide.com>
+ <52905C15-A2D1-4372-9781-D602D0B274B6@goldelico.com>
+ <20200114164613.GR5885@atomide.com>
+ <D51230C4-2642-4388-959F-313A3382AB99@goldelico.com>
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: e152100f7c9b2ac4a09cd55775fa3ea0945c7684
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D51230C4-2642-4388-959F-313A3382AB99@goldelico.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2019-11-13 at 17:15:02 UTC, Miquel Raynal wrote:
-> Fix the comment describing what the mtd_concat_destroy() function
-> does. It referrers to the concat_mtd_devs symbol which has never
-> existed (at least not since the beginning of the Git era).
+* H. Nikolaus Schaller <hns@goldelico.com> [200114 17:05]:
+> > Am 14.01.2020 um 17:46 schrieb Tony Lindgren <tony@atomide.com>:
+> > Care to clarify what you have in mind? The module is generic, aess
+> > device will be the child node.
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> The existing driver is hooked into the sound root-node and looks for a
+> ti,aess = <&aess>; link:
+> 
+> / {
+> 	sound: sound {
+> 		compatible = "ti,abe-twl6040";
+> 		ti,model = "omap5-uevm";
+> 
+> 		ti,jack-detection;
+> 		ti,mclk-freq = <19200000>;
+> 
+> 		ti,mcpdm = <&mcpdm>;
+> 		ti,mcbsp1 = <&mcbsp1>;
+> 		ti,mcbsp2 = <&mcbsp2>;
+> 		ti,mcbsp3 = <&mcbsp3>;
+> 
+> 		ti,twl6040 = <&twl6040>;
+> 		ti,aess = <&aess>;
+> 
+> 		...
+> 	};
+> };
+> 
+> Well, this could be simply wrong... I.e. the aess node should request
+> all the phandles to mcpdm and mcbsps because it is connected to.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next.
+The aess label above should be in the child aess node, not in the
+target-module.
 
-Miquel
+> Or it is right to use the sound node to "connect" all subsystems.
+
+Sounds like that's all taken care of nowadays with the generic
+graph binding:
+
+Documentation/devicetree/bindings/graph.txt
+
+See also snd-soc-audio-graph-card and various users for it:
+
+Documentation/devicetree/bindings/sound/audio-graph-card.txt
+
+> Then the "aess" core could also become the child node of the target-module:
+> 
+> target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
+> 	...
+> 	aess: aess {
+> 		compatible = "ti,aess";
+> 		status = "disabled";
+> 	};
+> };
+
+Yeah this is how it should be :)
+
+> Although it looks better this way, it may make it even one step
+> more difficult to resurrect the old code...
+
+Well the old phandles and properties should work the same, just put them
+into the child aess node. No need to stuff anything else there at the
+target-module level AFAIK.
+
+> And DT maintainers are not happy with otherwise undefined compatible
+> definitions.
+> 
+> So maybe:
+> 
+> target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
+> 	...
+> 
+> 	aess: aess {
+> 		/* revisit
+> 		compatible = "ti,aess";
+> 		status = "disabled";
+> 		*/
+> 	};
+> };
+
+But we have no binding and no driver for the aess at this point..
+If and when the aess driver work the child node can be just added :)
+
+Regards,
+
+Tony
