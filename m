@@ -3,241 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A09C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FC1C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B99912187F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C50624656
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:26:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="dkAqSitw"
+	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="IfdDcPIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726375AbgANQYs (ORCPT
+        id S1726121AbgANQ0e (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:24:48 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.5]:44142 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbgANQYr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:24:47 -0500
-Received: from [46.226.52.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-a.eu-west-1.aws.symcld.net id A9/5C-28428-94BED1E5; Tue, 14 Jan 2020 16:24:41 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRWlGSWpSXmKPExsWSoc9hruvxWjb
-  OYPpvTYv5R86xWqyaupPF4v7Xo4wWl3fNYbO4sW4fu8WThWeYLD7susps0br3CLsDh8emVZ1s
-  Hneu7WHz6P9r4LHzewO7x+dNcgGsUayZeUn5FQmsGVvbLzEWLBCvmPbyP3sD4xXhLkYuDkaBp
-  cwSv5o3skI4x1gkXvw9zgjhbGaU+N37kw3EYRE4wSwxt/c8excjJ4eQQD+TxLNNtiAJIYG7jB
-  Kndn1kBUmwCVhITD7xAKxDROAkk0T/uZdMIA6zwGdGiZd9e1lAqoQFnCXmX3wBZHMAVblIvDj
-  BDBIWETCSeH/nFyOIzSKgKnFiw3cwm1cgVmLh10+sEJvzJB7vfwR2BaeArcTpr51gNYwCshJf
-  GleDzWEWEJe49WQ+E4gtISAgsWTPeWYIW1Ti5eN/rBD1qRInm24wQsR1JM5efwJlK0nMm3sEy
-  paVuDS/G8r2lVj3dDOUrSWx7/49qJkWEku6W8FekRBQkfh3qBLCzJE4u70QokJNYsbWlVDXyE
-  j0n50BDmoJgQ0sEs2/NrNPYNSfheRqCFtHYsHuT2wQtrbEsoWvmWeBQ0JQ4uTMJywLGFlWMVo
-  kFWWmZ5TkJmbm6BoaGOgaGhrpGloaA7GJXmKVbqJeaqlueWpxia6hXmJ5sV5xZW5yTopeXmrJ
-  JkZgIkspOHhoB+PKr2/1DjFKcjApifKK7JGNE+JLyk+pzEgszogvKs1JLT7EKMPBoSTBW/4KK
-  CdYlJqeWpGWmQNMqjBpCQ4eJRHebS+B0rzFBYm5xZnpEKlTjLocE17OXcQsxJKXn5cqJc5bCT
-  JDAKQoozQPbgQswV9ilJUS5mVkYGAQ4ilILcrNLEGVf8UozsGoJMzbAzKFJzOvBG7TK6AjmIC
-  OmH8K7IiSRISUVANT+7En9jW3phwL3Zz8Z0fMBaOt3nJlfCc2KJ7qn/mIf/In8RmJTYe0vIq1
-  syffvtK8YIvsfZbj9hnXk35GSni/DfYS1/j+vD+i9WK/hN+8vdM5du7x2/h9valXce/cv4daD
-  l1lcE48faKE52v12q4pFnPvlt7wWCw7Iczf/mPaTRuulINO9XUb3yzaNv26pumze1M8Tm3N5V
-  i5gk8+uD7p6sSTlTmrHxtfMJu0XOv1h1OZWu+jflzkj+tXqHEMqjm6+rN58LwmRfPdUWov2D5
-  P4CrbyxV+aK9B+Y+CSTN8pBnfBipe+WayWfO1j3WURqzbnNc6Zu8f5Uw5y1NUNJ+7odE2uI/r
-  nYe+c1nlcnYmJZbijERDLeai4kQArs9lEGsEAAA=
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-35.tower-268.messagelabs.com!1579019080!370895!1
-X-Originating-IP: [104.47.8.55]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 28516 invoked from network); 14 Jan 2020 16:24:40 -0000
-Received: from mail-am5eur03lp2055.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.55)
-  by server-35.tower-268.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 14 Jan 2020 16:24:40 -0000
+        Tue, 14 Jan 2020 11:26:34 -0500
+Received: from mail-dm6nam10on2050.outbound.protection.outlook.com ([40.107.93.50]:6027
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725904AbgANQ0e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:26:34 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OZcDVqPCQE3hzCldTsji3XuxW4bq+GJvWloOEuTHLH+neviaDY+vLNA+Kt1sOjJU0eO2pmyFiy4h3Myj6k/plg3oMSoWTj1tyD6IboTne74OljyQan324e/ygQvR1x4KAMofWf9ZIuBPuowVDPvo9dTcXoJvgE8OnAkk75czEUkuRdE7gS1/U2rl0G7Q9wu6HkGcnmdMKPz49+54mzAgxHgm0KZkSfY2xvV/hyETlPP9CGlemDWbzkOqlGe1vuCPIUibHbpCU0PTJo2xqVPQ6uKvC7/4QDeHjOjoZk2QguavV8lS6vVI9KmiipdtGFYHLQyWZEBmDF1SkqMLHZvRQA==
+ b=QCSBwrcYeKcA9zkIFq8U/cH3np3uqHS2nWR2Y71HiiIpL7eFRV3PRoBFAEn2nkX/raLmaBgVyYfQdrAZSuZ+/h6OUDcfP8dNKs+j1+bHsBGYrT0qwT7Kyahipl32es3cOwzVdrqEPtZqqtBuQmn62W6yWvLdT8NysNJJJddpaYyiIFYFXMu0ZyFde4WqSAkel4E6iUqYF2kdLebR8OhTuWrTdxglIB3CWryYP577STKrk2LTt+HsBpKLcRlY4JdpHnTxim+HZGr6jzBrMns4O9tAPhPRJDoyklYhfzkurcUcHT/yiGeKq+TqV91BRDDv0H8mtHu7qgZ5wGyTzOnrEg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pt3eHUu6Qf9g8+zkrrcUkMzxSTI9Se3UoDErqxrNE0c=;
- b=nkO56dgp+o23OBPl6Dk8+ZH3QZ673YcOHy3fzmSgiMWkv8oPeRRs0aCyxHVEvARdULTobgN7JGS9uDDPi8MAVM0W4k8QKJdDslwYXVHW8WLnQTe4sGUjg6utQJw/31KaCvZXZYCnSmuwmGV+Qfyw+H9a2QxSoKF3UD7L4ByfUGVhCtOS1sMhiUeY96mU2t4rf2UAbDwxxRIwKEZzMvFwGOQlCUnK81WtS7r565FHA6tMT0gzYEpp+49ie2cPP1cIXg5kCOyF8uW5rDl0SVVPTIdTqzI+ZdrweVK1KQMtRPNPaGO96nXRK4T4EaIaxMmXFSZKtzQiRplnM07pSTUkYw==
+ bh=QHy/C5++OemYKYAG8zWr6nCPTuRvwJJfOwocbfcEbHc=;
+ b=bT95sRS6/E9Z0t31l7Q8zMCrp0oqRRBFJ1ial5ozVK8Hho679rmfpAoGO6aM6eIVrlb/Ac4aFG2nAvdI3hF4wMs92BQI8hyKSKIBbUF7wMoxbXbbcy+RcBagutFHJ5+4RWR4kXE+c+MDARVPNjNi/YgMn2i/1OpdqI/O72Tov88HIy3HqJV72b3/Uzt/gfN2G7Uh1FGA3I2Viq1L8BlxKI8cu7t3qB3M0d1DjJ8sCIR0jXuedZIWNf1MpgJZv3eZIjHPeuLJtgl0xzVS6qOFjaN+TADgrw505gKr7BQSc2HOT7DPCZlWnMZuoFvwzGB0ru0FC/+0s/2VGU1fw1gI8w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
+ smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
+ dkim=pass header.d=infinera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pt3eHUu6Qf9g8+zkrrcUkMzxSTI9Se3UoDErqxrNE0c=;
- b=dkAqSitw9wCWiKP9O49nLJ8UM/wtgaxyolWmAmLgeDWiBaC8t7Gu2kgzaQ8RtaVDFU6y/bR7ZhbWbWwIGd3kw27GljqOnq1a13I/XJ/UKRFIn0WxWO50gFEmji2zDdujZz+fgSlluX9l9QBrc7xkNjVQWmNmvLJebaLZIp6rJ/0=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM (20.179.2.151) with Microsoft SMTP
+ bh=QHy/C5++OemYKYAG8zWr6nCPTuRvwJJfOwocbfcEbHc=;
+ b=IfdDcPIP6e8L0EogBpxhGyYbYo/DrvKPABgSEzVo3ODnRwHrF+2SQLfbUeefmfX/bZVA4kvLzRFVNIKvv/tlu1PBjU3NtV6VMMDcwDHe/xk8YaCwQfoZXjUQSXhevk4AMaHXw7BBiBM2jXEXaEzipIW9D5ln3fY2f8sdPCfORJo=
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com (20.179.77.152) by
+ BN8PR10MB3524.namprd10.prod.outlook.com (20.179.79.219) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Tue, 14 Jan 2020 16:24:39 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3%5]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 16:24:39 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+ 15.20.2623.9; Tue, 14 Jan 2020 16:26:18 +0000
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::6922:a072:d75e:74ef]) by BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::6922:a072:d75e:74ef%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 16:26:18 +0000
+From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "broonie@kernel.org" <broonie@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [PATCH 3/3] watchdog: da9062: add power management ops
-Thread-Topic: [PATCH 3/3] watchdog: da9062: add power management ops
-Thread-Index: AQHVxgoI80GM0h8rl02lD5uhhW9tpKfqYSMg
-Date:   Tue, 14 Jan 2020 16:24:39 +0000
-Message-ID: <AM6PR10MB2263254FB395E307C777DBDE80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-4-m.felsch@pengutronix.de>
-In-Reply-To: <20200108095704.23233-4-m.felsch@pengutronix.de>
+        "lkp@intel.com" <lkp@intel.com>,
+        "geert@linux-m68k.org" <geert@linux-m68k.org>
+Subject: Re: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
+Thread-Topic: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
+Thread-Index: AQHVyvSaV4B/R2znCEqweeHE7izY96fqWMiA
+Date:   Tue, 14 Jan 2020 16:26:18 +0000
+Message-ID: <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
+References: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
+In-Reply-To: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
+x-originating-ip: [88.131.87.201]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eec37010-e0cd-4ada-69c7-08d7990e40d4
-x-ms-traffictypediagnostic: AM6PR10MB2726:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB2726E949BA84C327477A03C0A7340@AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-ms-office365-filtering-correlation-id: fc679e57-a0a1-4f2b-e643-08d7990e7bc9
+x-ms-traffictypediagnostic: BN8PR10MB3524:
+x-microsoft-antispam-prvs: <BN8PR10MB352454091E4AC3AC8EC28539F4340@BN8PR10MB3524.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
 x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(39850400004)(346002)(189003)(199004)(64756008)(478600001)(2906002)(4326008)(66556008)(66476007)(66446008)(66946007)(316002)(110136005)(54906003)(76116006)(55236004)(52536014)(26005)(8936002)(6506007)(53546011)(5660300002)(81156014)(8676002)(86362001)(81166006)(186003)(55016002)(9686003)(71200400001)(7696005)(33656002)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2726;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(136003)(376002)(346002)(39860400002)(199004)(189003)(6506007)(4326008)(5660300002)(6486002)(6512007)(36756003)(66476007)(66556008)(478600001)(64756008)(8936002)(81166006)(81156014)(8676002)(2906002)(66446008)(76116006)(91956017)(66946007)(71200400001)(316002)(54906003)(26005)(86362001)(2616005)(186003)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR10MB3524;H:BN8PR10MB3540.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: infinera.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Doy7jHxljcYk60Rb4wSivmT2GUDQCxQGC84ZRbiMFeeHS2c877x9/wsxQVWXyQ7HTmyUo6XFAcciSy36MHwqJ9OIzOb+TU5eRM4QQlvYClr9+nx8k7DB4BHntIQ9XuoVRv7QbVvresNFhbnOWgz8nbRRmZju1H+GeG+5pQuG0qHOxHQMMYwIsGb9CGXtdq1cz8WkFEKPkevkOstPIrGPq1fsDkYFtrXMyE20GAjCK0uB2lkOC3mxRmV1kdX9eXgMJOfRtMHdrOx+2lGamfohCt1QewceSjdcNsnbikQvDMk+efl43hsiSjU6zkL6B56k90W7sgH8lSPiLytDx2Cz0VkdIqTU19KhPuKk4Bn+y8b1K76Hya2WYBXDkNFbe0Oy1AZ+7O3TYjRT4cEV0CYN75etT7mKpXAeoIkwoW70odTqFAwfZlej56Lcpe3rxbAErVrH1mDZR/2Rnddhfe1vLKyqK3DaMJ31EJ6l2acrnIWu9Ow59MWeAL8DqVWIU6x4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: cfP5hGgiG2GVd4C0ge3c6tp2HCcYKSmkM1m3QSvBoXpOFO2j+CyfF/kAlePXm759PuzzCC1d4rhiacDw/XsiBDJV/cr7c1VFug4dreXo2e5fMZy2uy4zSYzxe+cGfedkwreWhOErUD4YEEW/stqODPOvvHOoX41SX3crwaVse9Tvj/26jn6GAGiNf1v70SA1oWqYeXkJWXlc/F+tD9UKd0hgY0sGgpBhOBqSf3TjkPbTcruzRkbjgeKBFfCRW4ADt1d2ND5veqemrDJbAqx6+aIHLrXyRfUHrID5XNGeXxOoCA9kFpp2spckILibO7RrtF9HWCnm2wgJLiHMqTtprNkvycvdOjM5f8EbT2iB7lBPltcv/zRIZ4f3b/iP2vFGvdNA2Nzrbw8cgNoe27GIOPHcXcUvgaCJWWtJyXo1ygYiRDdQbVSYByuYMNhZYYCH
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <75EE43E45520CF4BBC8B477E9A2C63F7@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eec37010-e0cd-4ada-69c7-08d7990e40d4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:24:39.0909
+X-OriginatorOrg: infinera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc679e57-a0a1-4f2b-e643-08d7990e7bc9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:26:18.0556
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wbRY4TDHC+i6bDMSQpWdw65HvvJzzVbtkeC/ZeLQWLd78XSYvE8UXTh4YMFcKIuXggdWpUAR/b03FbBf2Ufbd/DL++S9yzNq5idZ2h6FywY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2726
+X-MS-Exchange-CrossTenant-userprincipalname: j8kzUAkVImhXUWvrGTWmaeeL+9YiJJfW3Yjzbpdw4uuEcnvRuHJjt9S1Dgw2vPikP+mt9XHOW1LM/BXBnyBPfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3524
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 08 January 2020 09:57, Marco Felsch wrote:
-
-> Disable the watchdog during suspend if it is enabled and re-enable it on
-> resume. So we can sleep without the interruptions.
->=20
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-
-> ---
-> v2:
-> - add dlg,use-sw-pm check to differentiate between automatic and manual
->   disabling/enabling.
-> ---
->  drivers/watchdog/da9062_wdt.c | 37
-> +++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->=20
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.=
-c
-> index e149e66a6ea9..c9b9d6394525 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -15,6 +15,7 @@
->  #include <linux/jiffies.h>
->  #include <linux/mfd/da9062/registers.h>
->  #include <linux/mfd/da9062/core.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/of.h>
->=20
-> @@ -30,6 +31,7 @@ static const unsigned int wdt_timeout[] =3D { 0, 2, 4, =
-8, 16, 32,
-> 65, 131 };
->  struct da9062_watchdog {
->  	struct da9062 *hw;
->  	struct watchdog_device wdtdev;
-> +	bool use_sw_pm;
->  };
->=20
->  static unsigned int da9062_wdt_timeout_to_sel(unsigned int secs)
-> @@ -198,6 +200,8 @@ static int da9062_wdt_probe(struct platform_device
-> *pdev)
->  	if (!wdt)
->  		return -ENOMEM;
->=20
-> +	wdt->use_sw_pm =3D device_property_present(dev, "dlg,use-sw-pm");
-> +
->  	wdt->hw =3D chip;
->=20
->  	wdt->wdtdev.info =3D &da9062_watchdog_info;
-> @@ -212,6 +216,7 @@ static int da9062_wdt_probe(struct platform_device
-> *pdev)
->  	watchdog_set_restart_priority(&wdt->wdtdev, 128);
->=20
->  	watchdog_set_drvdata(&wdt->wdtdev, wdt);
-> +	dev_set_drvdata(dev, &wdt->wdtdev);
->=20
->  	ret =3D devm_watchdog_register_device(dev, &wdt->wdtdev);
->  	if (ret < 0)
-> @@ -220,10 +225,42 @@ static int da9062_wdt_probe(struct platform_device
-> *pdev)
->  	return da9062_wdt_ping(&wdt->wdtdev);
->  }
->=20
-> +static int __maybe_unused da9062_wdt_suspend(struct device *dev)
-> +{
-> +	struct watchdog_device *wdd =3D dev_get_drvdata(dev);
-> +	struct da9062_watchdog *wdt =3D watchdog_get_drvdata(wdd);
-> +
-> +	if (!wdt->use_sw_pm)
-> +		return 0;
-> +
-> +	if (watchdog_active(wdd))
-> +		return da9062_wdt_stop(wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused da9062_wdt_resume(struct device *dev)
-> +{
-> +	struct watchdog_device *wdd =3D dev_get_drvdata(dev);
-> +	struct da9062_watchdog *wdt =3D watchdog_get_drvdata(wdd);
-> +
-> +	if (!wdt->use_sw_pm)
-> +		return 0;
-> +
-> +	if (watchdog_active(wdd))
-> +		return da9062_wdt_start(wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(da9062_wdt_pm_ops,
-> +			 da9062_wdt_suspend, da9062_wdt_resume);
-> +
->  static struct platform_driver da9062_wdt_driver =3D {
->  	.probe =3D da9062_wdt_probe,
->  	.driver =3D {
->  		.name =3D "da9062-watchdog",
-> +		.pm =3D &da9062_wdt_pm_ops,
->  		.of_match_table =3D da9062_compatible_id_table,
->  	},
->  };
-> --
-> 2.20.1
-
+T24gVHVlLCAyMDIwLTAxLTE0IGF0IDE2OjAyICswMDAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
+Og0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBv
+cmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
+cyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
+Cj4gDQo+IA0KPiBObyBuZWVkIHRvICdnb3RvIGVycjsnIGZvciBqdXN0IGRvaW5nIGEgcmV0dXJu
+Lg0KPiByZXR1cm4gZGlyZWN0bHkgZnJvbSB3aGVyZSB0aGUgZXJyb3IgaGFwcGVucy4NCj4gDQo+
+IFNpZ25lZC1vZmYtYnk6IENocmlzdG9waGUgTGVyb3kgPGNocmlzdG9waGUubGVyb3lAYy1zLmZy
+Pg0KPiAtLS0NCj4gdjM6IHJlYmFzZSBvbiB0b2RheSdzIHNwaS9mb3ItbmV4dCBhbmQgdXNpbmcg
+UFRSX0VSUl9PUl9aRVJPKCkgaW4gb25lIHBsYWNlLg0KPiAtLS0NCj4gIGRyaXZlcnMvc3BpL3Nw
+aS1mc2wtc3BpLmMgfCAyNyArKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvc3BpL3NwaS1mc2wtc3BpLmMgYi9kcml2ZXJzL3NwaS9zcGktZnNsLXNwaS5j
+DQo+IGluZGV4IGZiNDE1OWFkNmJmNi4uM2I4MTc3MmZlYTBkIDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL3NwaS9zcGktZnNsLXNwaS5jDQo+ICsrKyBiL2RyaXZlcnMvc3BpL3NwaS1mc2wtc3BpLmMN
+Cj4gQEAgLTcwNiw4ICs3MDYsOCBAQCBzdGF0aWMgaW50IG9mX2ZzbF9zcGlfcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqb2ZkZXYpDQo+ICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpu
+cCA9IG9mZGV2LT5kZXYub2Zfbm9kZTsNCj4gICAgICAgICBzdHJ1Y3Qgc3BpX21hc3RlciAqbWFz
+dGVyOw0KPiAgICAgICAgIHN0cnVjdCByZXNvdXJjZSBtZW07DQo+IC0gICAgICAgaW50IGlycSA9
+IDAsIHR5cGU7DQo+IC0gICAgICAgaW50IHJldCA9IC1FTk9NRU07DQo+ICsgICAgICAgaW50IGly
+cSwgdHlwZTsNCj4gKyAgICAgICBpbnQgcmV0Ow0KPiANCj4gICAgICAgICByZXQgPSBvZl9tcGM4
+eHh4X3NwaV9wcm9iZShvZmRldik7DQo+ICAgICAgICAgaWYgKHJldCkNCj4gQEAgLTcyMiwxMCAr
+NzIyLDggQEAgc3RhdGljIGludCBvZl9mc2xfc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
+Y2UgKm9mZGV2KQ0KPiANCj4gICAgICAgICAgICAgICAgIGlmIChzcGlzZWxfYm9vdCkgew0KPiAg
+ICAgICAgICAgICAgICAgICAgICAgICBwaW5mby0+aW1tcl9zcGlfY3MgPSBpb3JlbWFwKGdldF9p
+bW1yYmFzZSgpICsgSU1NUl9TUElfQ1NfT0ZGU0VULCA0KTsNCj4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgaWYgKCFwaW5mby0+aW1tcl9zcGlfY3MpIHsNCj4gLSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICByZXQgPSAtRU5PTUVNOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGdvdG8gZXJyOw0KPiAtICAgICAgICAgICAgICAgICAgICAgICB9DQo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGlmICghcGluZm8tPmltbXJfc3BpX2NzKQ0KPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiAgICAgICAgICAgICAgICAgfQ0KPiAg
+I2VuZGlmDQo+ICAgICAgICAgICAgICAgICAvKg0KPiBAQCAtNzQ0LDI0ICs3NDIsMTUgQEAgc3Rh
+dGljIGludCBvZl9mc2xfc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKm9mZGV2KQ0K
+PiANCj4gICAgICAgICByZXQgPSBvZl9hZGRyZXNzX3RvX3Jlc291cmNlKG5wLCAwLCAmbWVtKTsN
+Cj4gICAgICAgICBpZiAocmV0KQ0KPiAtICAgICAgICAgICAgICAgZ290byBlcnI7DQo+ICsgICAg
+ICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiANCj4gICAgICAgICBpcnEgPSBwbGF0Zm9ybV9nZXRf
+aXJxKG9mZGV2LCAwKTsNCj4gLSAgICAgICBpZiAoaXJxIDwgMCkgew0KPiAtICAgICAgICAgICAg
+ICAgcmV0ID0gaXJxOw0KPiAtICAgICAgICAgICAgICAgZ290byBlcnI7DQo+IC0gICAgICAgfQ0K
+PiArICAgICAgIGlmIChpcnEgPCAwKQ0KPiArICAgICAgICAgICAgICAgcmV0dXJuIGlycTsNCj4g
+DQo+ICAgICAgICAgbWFzdGVyID0gZnNsX3NwaV9wcm9iZShkZXYsICZtZW0sIGlycSk7DQo+IC0g
+ICAgICAgaWYgKElTX0VSUihtYXN0ZXIpKSB7DQo+IC0gICAgICAgICAgICAgICByZXQgPSBQVFJf
+RVJSKG1hc3Rlcik7DQo+IC0gICAgICAgICAgICAgICBnb3RvIGVycjsNCj4gLSAgICAgICB9DQo+
+IC0NCg0KRG9uJ3QgeW91IG5lZWQgdG8gInVuZG8iIGlvcmVtYXAsIGlycSBldGMuIGluIGNhc2Ug
+b2YgbGF0ZXIgZXJyb3JzPw0KDQo+IC0gICAgICAgcmV0dXJuIDA7DQo+IA0KPiAtZXJyOg0KPiAt
+ICAgICAgIHJldHVybiByZXQ7DQo+ICsgICAgICAgcmV0dXJuIFBUUl9FUlJfT1JfWkVSTyhtYXN0
+ZXIpOw0KPiAgfQ0KPiANCj4gIHN0YXRpYyBpbnQgb2ZfZnNsX3NwaV9yZW1vdmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqb2ZkZXYpDQo+IC0tDQo+IDIuMTMuMw0KPiANCg0K
