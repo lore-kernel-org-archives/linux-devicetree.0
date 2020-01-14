@@ -2,139 +2,92 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CC6C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F9BC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC10C24658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:02:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="S+UxuITg"
+	by mail.kernel.org (Postfix) with ESMTP id DBF18222C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:04:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgANQCn (ORCPT
+        id S1728656AbgANQE0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:02:43 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:14061 "EHLO pegase1.c-s.fr"
+        Tue, 14 Jan 2020 11:04:26 -0500
+Received: from muru.com ([72.249.23.125]:50908 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbgANQCn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:02:43 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47xwG81WBfz9txb0;
-        Tue, 14 Jan 2020 17:02:40 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=S+UxuITg; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id HgM0nnBSpLFA; Tue, 14 Jan 2020 17:02:40 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47xwG80TLSz9txZy;
-        Tue, 14 Jan 2020 17:02:40 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1579017760; bh=xN6Ppzc+LMdYKzWDRSnBwvud8ZwuGgv8OWrBjgrESDM=;
-        h=From:Subject:To:Cc:Date:From;
-        b=S+UxuITgoSpswC3s5breEl/xE6gr4caOs/HbwtLch+p5VEZn8GzhzsaBErtCt1hX3
-         qUXPik8yymwHIWSN4FxUjdVGUoP1K+AsYCo7/u95BIdeCQLIZIqLal4B1IMU18hGt9
-         LbuL4FPLuiL/eYmNtFXvpt48S6PCnqDM4OzpCwBg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8E11D8B7EC;
-        Tue, 14 Jan 2020 17:02:41 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id zw9swoOyGvDa; Tue, 14 Jan 2020 17:02:41 +0100 (CET)
-Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4FE008B7E8;
-        Tue, 14 Jan 2020 17:02:41 +0100 (CET)
-Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id F152C6381B; Tue, 14 Jan 2020 16:02:40 +0000 (UTC)
-Message-Id: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jan 2020 16:02:40 +0000 (UTC)
+        id S1725904AbgANQE0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:04:26 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 23E5D816C;
+        Tue, 14 Jan 2020 16:05:07 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 08:04:22 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
+Message-ID: <20200114160422.GQ5885@atomide.com>
+References: <20191211140720.10539-1-bparrot@ti.com>
+ <20191212174123.GF35479@atomide.com>
+ <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
+ <20191213152938.GK35479@atomide.com>
+ <20200113165413.i6nbi2i7xyue4fti@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113165413.i6nbi2i7xyue4fti@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-No need to 'goto err;' for just doing a return.
-return directly from where the error happens.
+* Benoit Parrot <bparrot@ti.com> [200113 16:51]:
+> Tony Lindgren <tony@atomide.com> wrote on Fri [2019-Dec-13 07:29:38 -0800]:
+> > * Tero Kristo <t-kristo@ti.com> [191213 07:43]:
+> > > On 12/12/2019 19:41, Tony Lindgren wrote:
+> > > > * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
+> > > > > This patch series adds the missing camera endpoint (ov2659) as well as
+> > > > > the required source clocks nodes for the sensor.
+> > > > > 
+> > > > > On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
+> > > > > clock nodes/tree was removed as it was unsed at the time, we are
+> > > > > re-adding the needed clock nodes here.
+> > > > 
+> > > > Tero, it seems I can already pick this series?
+> > > 
+> > > I believe it is ready if you approve the clkout1 clock patch.
+> > 
+> > OK yeah looks fine.
+> > 
+> > > > Or ou want to queue the changes to am43xx-clocks.dtsi along with all
+> > > > your other clock patches?
+> > > 
+> > > Well, I have actually never queued any omap2+ dts patches myself, and I
+> > > don't think there would be too many of those coming for next merge either.
+> > 
+> > OK will queue this series then. For the other ones from Benoit
+> > looks like we need an immutable clock branch before I can apply
+> > anything.
+> 
+> Tony, Tero,
+> 
+> Are these merged anyware now?
+> I still don't see any of these on linux-next?
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
-v3: rebase on today's spi/for-next and using PTR_ERR_OR_ZERO() in one place.
----
- drivers/spi/spi-fsl-spi.c | 27 ++++++++-------------------
- 1 file changed, 8 insertions(+), 19 deletions(-)
+Tero any news on getting some immutable clock changes branch done?
+Looks like there are quite a few pending clock patches right now,
+probably best to set them all into a branch that I can also merge
+in.
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index fb4159ad6bf6..3b81772fea0d 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -706,8 +706,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 	struct device_node *np = ofdev->dev.of_node;
- 	struct spi_master *master;
- 	struct resource mem;
--	int irq = 0, type;
--	int ret = -ENOMEM;
-+	int irq, type;
-+	int ret;
- 
- 	ret = of_mpc8xxx_spi_probe(ofdev);
- 	if (ret)
-@@ -722,10 +722,8 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 
- 		if (spisel_boot) {
- 			pinfo->immr_spi_cs = ioremap(get_immrbase() + IMMR_SPI_CS_OFFSET, 4);
--			if (!pinfo->immr_spi_cs) {
--				ret = -ENOMEM;
--				goto err;
--			}
-+			if (!pinfo->immr_spi_cs)
-+				return -ENOMEM;
- 		}
- #endif
- 		/*
-@@ -744,24 +742,15 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
- 
- 	ret = of_address_to_resource(np, 0, &mem);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	irq = platform_get_irq(ofdev, 0);
--	if (irq < 0) {
--		ret = irq;
--		goto err;
--	}
-+	if (irq < 0)
-+		return irq;
- 
- 	master = fsl_spi_probe(dev, &mem, irq);
--	if (IS_ERR(master)) {
--		ret = PTR_ERR(master);
--		goto err;
--	}
--
--	return 0;
- 
--err:
--	return ret;
-+	return PTR_ERR_OR_ZERO(master);
- }
- 
- static int of_fsl_spi_remove(struct platform_device *ofdev)
--- 
-2.13.3
+> And by "these" I mean this one and both
+>  ARM: dts: dra7: add vpe nodes
+>  ARM: dts: dra7: add cal nodes
 
+Yeah looks good to me other than the clock dependency.
+
+Regards,
+
+Tony
