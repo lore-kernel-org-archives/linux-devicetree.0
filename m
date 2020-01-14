@@ -2,112 +2,100 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49B6C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BABC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A6E24682
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="N6mHiyV6"
+	by mail.kernel.org (Postfix) with ESMTP id 1D70824682
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgANPGK (ORCPT
+        id S1729108AbgANPGN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:06:10 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46967 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgANPGK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 10:06:10 -0500
-Received: by mail-qt1-f196.google.com with SMTP id e25so1372679qtr.13
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 07:06:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hG/77GxvunOSI8YW5THsJSlnBGvFxXbdDmptWBr5SD0=;
-        b=N6mHiyV6eoZw07syH/QFAGLQCob29tWC3bWYJntBg7Fwk4caieH6rUR5uik11ISsC8
-         JE8M6Y1hmnFKDooA5iGz5t52+Czb03pUToS+duHyS/suRwYBNnC3uIWUYI8oM3f/r/6k
-         s27UD7W/41Ci/W8OPhVObyStVWxeyJoBvtvPiQroko53bu3AvYeYGjC9FbS546NE8/hM
-         M1chhPRqXQY6PRZuWrhIEWnTULFi05hn5TAxOSvTgPPFIvpd7zxqWg23QUb3j8hDD37V
-         tCaxJmBg+Qb5B9JzG46etyRkvEgyVravi7Hr3/dVOetD/tnkMCVo1LlQ20vPE/Xd7W5U
-         qdvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hG/77GxvunOSI8YW5THsJSlnBGvFxXbdDmptWBr5SD0=;
-        b=Wu2bvO++PD2NptoIYfckKA5Kkux+2A6w6K4INFqpdpB/N7M5h2JrLvprxBxkji+ghR
-         5Avt7fKDxBrci15ZhuIVstdhTxt6GoTSeyLhO8ZwquXziIHCdru7MBa1sj5a7XD+eDz6
-         FdSBUn8PhEx8zGgxghVRh6cfPrP0hEpBQbtyyThhVswdGxJP39JiryLDBfUW7ZYk6iGf
-         ZbeIbS+LCzbQKJDon5ArglpRjB+8+Ri3o1qi2/1y8doSE82p5vMiwpaGiFokO/pDoAEz
-         x/Dtr6AD0phuQ85krQljq0PiF/61LSuHegksXWGlInnFD1Stfliv1nxNOCRznfIuoLvQ
-         R6ew==
-X-Gm-Message-State: APjAAAX1vBSXk8sCutrsgVovq60X/Ew6+QMmuekhWkpIpZX3FBFG/dM7
-        kc+J0ip2RFmNOn9dZqIVRShkrPS7IJQ6Sx/pKkMfJQvJ
-X-Google-Smtp-Source: APXvYqyf/27+jnNcvaqjSCP+utuwjxx/iZBpThAVSG3EWNIUHVsrc1r3oe+sZn1Tl911eWYzrDbqSIAajn/zP9bjvqs=
-X-Received: by 2002:ac8:3703:: with SMTP id o3mr3962163qtb.208.1579014368945;
- Tue, 14 Jan 2020 07:06:08 -0800 (PST)
+        Tue, 14 Jan 2020 10:06:13 -0500
+Received: from muru.com ([72.249.23.125]:50846 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgANPGN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 10:06:13 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 82556804F;
+        Tue, 14 Jan 2020 15:06:53 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Tero Kristo <t-kristo@ti.com>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-omap@vger.kernel.org,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Matthijs van Duin <matthijsvanduin@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] clk: ti: omap5: Add missing AESS clock
+Date:   Tue, 14 Jan 2020 07:06:07 -0800
+Message-Id: <20200114150607.18092-1-tony@atomide.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200107092922.18408-1-ktouil@baylibre.com> <20200107092922.18408-5-ktouil@baylibre.com>
- <20200108205447.GA16981@bogus> <CAMpxmJXffr-S51udNmUyMHz687jAoBKrYspNypfUUqjOD45zxQ@mail.gmail.com>
- <20200114144214.GA1898224@kroah.com>
-In-Reply-To: <20200114144214.GA1898224@kroah.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 14 Jan 2020 16:05:57 +0100
-Message-ID: <CAMpxmJW8edEZw81iQkwDr-Umdb1ibb85s=EshQs4yXRFh5LP=A@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] dt-bindings: at25: add reference for the wp-gpios property
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        baylibre-upstreaming@groups.io,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-wt., 14 sty 2020 o 15:42 Greg KH <gregkh@linuxfoundation.org> napisa=C5=82(=
-a):
->
-> On Thu, Jan 09, 2020 at 10:47:56AM +0100, Bartosz Golaszewski wrote:
-> > =C5=9Br., 8 sty 2020 o 21:54 Rob Herring <robh@kernel.org> napisa=C5=82=
-(a):
-> > >
-> > > On Tue,  7 Jan 2020 10:29:21 +0100, Khouloud Touil wrote:
-> > > > As the at25 uses the NVMEM subsystem, and the property is now being
-> > > > handled, adding reference for it in the device tree binding documen=
-t,
-> > > > which allows to specify the GPIO line to which the write-protect pi=
-n
-> > > > is connected.
-> > > >
-> > > > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/eeprom/at25.txt | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > >
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> >
-> > Hi Greg,
-> >
-> > AT25 patches usually go through the char-misc tree. In this case
-> > however, the change depends on the other patches in this series. Can
-> > you ack this and I'll take it through the AT24 tree exceptionally?
->
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Looks like we're missing AESS clock for omap5. This is similar to what
+omap4 has.
 
-Patch applied with Greg's Ack.
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Matthijs van Duin <matthijsvanduin@gmail.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/clk/ti/clk-54xx.c         | 15 +++++++++++++++
+ include/dt-bindings/clock/omap5.h |  1 +
+ 2 files changed, 16 insertions(+)
 
-Bart
+diff --git a/drivers/clk/ti/clk-54xx.c b/drivers/clk/ti/clk-54xx.c
+--- a/drivers/clk/ti/clk-54xx.c
++++ b/drivers/clk/ti/clk-54xx.c
+@@ -35,6 +35,20 @@ static const struct omap_clkctrl_reg_data omap5_dsp_clkctrl_regs[] __initconst =
+ 	{ 0 },
+ };
+ 
++static const char * const omap5_aess_fclk_parents[] __initconst = {
++	"abe_clk",
++	NULL,
++};
++
++static const struct omap_clkctrl_div_data omap5_aess_fclk_data __initconst = {
++	.max_div = 2,
++};
++
++static const struct omap_clkctrl_bit_data omap5_aess_bit_data[] __initconst = {
++	{ 24, TI_CLK_DIVIDER, omap5_aess_fclk_parents, &omap5_aess_fclk_data },
++	{ 0 },
++};
++
+ static const char * const omap5_dmic_gfclk_parents[] __initconst = {
+ 	"abe_cm:clk:0018:26",
+ 	"pad_clks_ck",
+@@ -122,6 +136,7 @@ static const struct omap_clkctrl_bit_data omap5_timer8_bit_data[] __initconst =
+ 
+ static const struct omap_clkctrl_reg_data omap5_abe_clkctrl_regs[] __initconst = {
+ 	{ OMAP5_L4_ABE_CLKCTRL, NULL, 0, "abe_iclk" },
++	{ OMAP5_AESS_CLKCTRL, omap5_aess_bit_data, CLKF_SW_SUP, "abe_cm:clk:0008:24" },
+ 	{ OMAP5_MCPDM_CLKCTRL, NULL, CLKF_SW_SUP, "pad_clks_ck" },
+ 	{ OMAP5_DMIC_CLKCTRL, omap5_dmic_bit_data, CLKF_SW_SUP, "abe_cm:clk:0018:24" },
+ 	{ OMAP5_MCBSP1_CLKCTRL, omap5_mcbsp1_bit_data, CLKF_SW_SUP, "abe_cm:clk:0028:24" },
+diff --git a/include/dt-bindings/clock/omap5.h b/include/dt-bindings/clock/omap5.h
+--- a/include/dt-bindings/clock/omap5.h
++++ b/include/dt-bindings/clock/omap5.h
+@@ -16,6 +16,7 @@
+ 
+ /* abe clocks */
+ #define OMAP5_L4_ABE_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
++#define OMAP5_AESS_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
+ #define OMAP5_MCPDM_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
+ #define OMAP5_DMIC_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x38)
+ #define OMAP5_MCBSP1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x48)
+-- 
+2.24.1
