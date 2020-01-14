@@ -2,243 +2,324 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A725C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E61C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0063924679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39733222C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:02:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KjiA8IFV"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DWk0khVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgANP4A (ORCPT
+        id S1726342AbgANQCc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:56:00 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:52909 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729073AbgANPz7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 10:55:59 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 4D29D22F54;
-        Tue, 14 Jan 2020 16:55:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1579017356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ct+aRr3TCzgVYVm23SiKR4zjf2kwIVnO+TG3pSdmezY=;
-        b=KjiA8IFV8kh9MFDYSMCamYHUdpAMT8W1rARrucZWoMZ/ZsX32xNmVzsBsC6z4Ea+zRZjS7
-        yOUENZSRAKYyVxPldWIFsKdaqdiDOqgqD3Ky8TJY3DfAJjRO6xO/Egpg3NQF550qrx8uKd
-        sMPt6cOJqVVi530tOVFjbRAsNC0CjVc=
+        Tue, 14 Jan 2020 11:02:32 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52480 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgANQCc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:02:32 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EFqmCb023389;
+        Tue, 14 Jan 2020 17:01:55 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=iqcbAO7gn5oc2a+bEcf0WOjlJoRulApDnHTG5smDQ34=;
+ b=DWk0khVZQxpCW7NxPaFvTtniHCfvkDLVAsv5oVI0FSt7q8G4/RtcRqOT+KOIsoNbTRSc
+ l1VmZtujDMkOFgjxAaqefoqNxQb9G8WKVqcOBL1Ir+u6SW4NfagLfjZ0FQLwK9IC6oym
+ YaCXXUL+ZJBODdlCll1CNR935UKHZmdOZKzFyhWSF8mTA1cTQl/r25KU1ZLcd44hQ2Tl
+ TApcE4LAReDFVWKGkv+z0mr02RMokcLgCf4KhvfBKehWZxlJVMaJQSuUHdHtKRGo2lu6
+ uRQvl5itEy/A7DfyZYMFJHfZmyx1HICO4oezIsP1KmppLA/qokU4li0N6II4gC9fy+Tw 7w== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf7jpebd8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jan 2020 17:01:55 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A2FB1100044;
+        Tue, 14 Jan 2020 17:01:54 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AC7A2C38A2;
+        Tue, 14 Jan 2020 17:01:54 +0100 (CET)
+Received: from [10.48.0.71] (10.75.127.46) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 17:01:53 +0100
+Subject: Re: [PATCH v2] dt-bindings: iio: adc: stm32-adc: convert bindings to
+ json-schema
+To:     Rob Herring <robh@kernel.org>
+CC:     <jic23@kernel.org>, <alexandre.torgue@st.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
+        <olivier.moysan@st.com>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1575649028-10909-1-git-send-email-fabrice.gasnier@st.com>
+ <20191217234345.GA7738@bogus>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <cadc76a7-7e9d-1f0a-21fd-2d7942dbe5c9@st.com>
+Date:   Tue, 14 Jan 2020 17:01:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191217234345.GA7738@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 14 Jan 2020 16:55:56 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 3/3] clk: fsl-sai: new driver
-In-Reply-To: <20200102231101.11834-3-michael@walle.cc>
-References: <20200102231101.11834-1-michael@walle.cc>
- <20200102231101.11834-3-michael@walle.cc>
-Message-ID: <6069b1edf7796f3eff0d68c398eefff2@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 4D29D22F54
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         NEURAL_HAM(-0.00)[-0.813];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_04:2020-01-14,2020-01-14 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 2020-01-03 00:11, schrieb Michael Walle:
-> With this driver it is possible to use the BCLK pin of the SAI module 
-> as
-> a generic clock output. This is esp. useful if you want to drive a 
-> clock
-> to an audio codec. Because the output only allows integer divider 
-> values
-> the audio codec needs an integrated PLL.
+On 12/18/19 12:43 AM, Rob Herring wrote:
+> On Fri, Dec 06, 2019 at 05:17:08PM +0100, Fabrice Gasnier wrote:
+>> Convert the STM32 ADC binding to DT schema format using json-schema
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>> Note: this applies on top of IIO tree currently (iio-for-5.5c).
+>>
+>> Changes in V2:
+>> - Take almost all of Rob suggestions (removed reg generic description,
+>>   added minItems, maxItems, st,max-clk-rate-hz range, drop some pipes,
+>>   simplify clock-names, remove unneeded allOfs)
+>> - For now, keep all in one file despite there are lots of if/thens in the
+>>   bindings
+>> ---
+>>  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 149 -------
+>>  .../devicetree/bindings/iio/adc/st,stm32-adc.yaml  | 454 +++++++++++++++++++++
+>>  2 files changed, 454 insertions(+), 149 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> 
 
-Ping :)
 
-> ---
-> changes since v2:
->  - convert to platform driver, thus also use devm_ functions
->  - use new style to get the parent clock by using parent_data
->    and the new clk_hw_register_composite_pdata()
+[snip]
+
+>> +
+>> +      st,adc-channels:
+>> +        description: |
+>> +          List of single-ended channels muxed for this ADC. It can have up to:
+>> +            - 16 channels, numbered from 0 to 15 (for in0..in15) on stm32f4
+>> +            - 20 channels, numbered from 0 to 19 (for in0..in19) on stm32h7 and
+>> +              stm32mp1.
+>> +        allOf:
+>> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +
+
+[snip]
+
+>> +
+>> +    allOf:
+>> +      - if:
+>> +          properties:
+>> +            compatible:
+>> +              contains:
+>> +                const: st,stm32f4-adc
+>> +
+>> +        then:
+>> +          properties:
+>> +            reg:
+>> +              enum:
+>> +                - 0x0
+>> +                - 0x100
+>> +                - 0x200
+>> +
+>> +            interrupts:
+>> +              minimum: 0
+>> +              maximum: 2
+>> +
+>> +            assigned-resolution-bits:
+>> +              enum: [6, 8, 10, 12]
+>> +              default: 12
+>> +
+>> +            st,adc-channels:
+>> +              minItems: 1
+>> +              maxItems: 16
+>> +              minimum: 0
+>> +              maximum: 15
 > 
-> changes since v1:
->  - none
+> You are mixing array and scalar constraints here. You need:
 > 
->  drivers/clk/Kconfig       | 12 +++++
->  drivers/clk/Makefile      |  1 +
->  drivers/clk/clk-fsl-sai.c | 92 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+)
->  create mode 100644 drivers/clk/clk-fsl-sai.c
+> minItems: 1
+> maxItems:16
+> items:
+>   minimum: 0
+>   maximum: 15
 > 
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 45653a0e6ecd..dd1a5abc4ce8 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -174,6 +174,18 @@ config COMMON_CLK_CS2000_CP
->  	help
->  	  If you say yes here you get support for the CS2000 clock 
-> multiplier.
+> Update dtschema. It will now catch this. There's a few others too.
+
+Hi Rob,
+
+Sorry for the late reply. I updated dtschema. Now it catches it.
+
+I've tried your suggestion, but when I test it, I don't get any error on
+maxItems.
+
+In the example: "st,adc-channels = <0>, <1>, ... more than 16 items;"
+
+Is it possible I face some other issue with dtschema ?
+
+I tried another way below... Not sure that's correct. But it catches
+errors on maxItems:
+
+            st,adc-channels:
+              allOf:
+                - minItems: 1
+                  maxItems: 16
+              items:
+                minimum: 0
+                maximum: 15
+
+Error message is ... "is too long" with bad example above.
+
+Please advise,
+Regards,
+Fabrice
+
 > 
-> +config COMMON_CLK_FSL_SAI
-> +	bool "Clock driver for BCLK of Freescale SAI cores"
-> +	depends on ARCH_LAYERSCAPE || COMPILE_TEST
-> +	help
-> +	  This driver supports the Freescale SAI (Synchronous Audio 
-> Interface)
-> +	  to be used as a generic clock output. Some SoCs have restrictions
-> +	  regarding the possible pin multiplexer settings. Eg. on some SoCs
-> +	  two SAI interfaces can only be enabled together. If just one is
-> +	  needed, the BCLK pin of the second one can be used as general
-> +	  purpose clock output. Ideally, it can be used to drive an audio
-> +	  codec (sometimes known as MCLK).
-> +
->  config COMMON_CLK_GEMINI
->  	bool "Clock driver for Cortina Systems Gemini SoC"
->  	depends on ARCH_GEMINI || COMPILE_TEST
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 0696a0c1ab58..ec23fd956228 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -29,6 +29,7 @@ obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
->  obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
->  obj-$(CONFIG_ARCH_EFM32)		+= clk-efm32gg.o
->  obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
-> +obj-$(CONFIG_COMMON_CLK_FSL_SAI)	+= clk-fsl-sai.o
->  obj-$(CONFIG_COMMON_CLK_GEMINI)		+= clk-gemini.o
->  obj-$(CONFIG_COMMON_CLK_ASPEED)		+= clk-aspeed.o
->  obj-$(CONFIG_MACH_ASPEED_G6)		+= clk-ast2600.o
-> diff --git a/drivers/clk/clk-fsl-sai.c b/drivers/clk/clk-fsl-sai.c
-> new file mode 100644
-> index 000000000000..0221180a4dd7
-> --- /dev/null
-> +++ b/drivers/clk/clk-fsl-sai.c
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Freescale SAI BCLK as a generic clock driver
-> + *
-> + * Copyright 2020 Michael Walle <michael@walle.cc>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +
-> +#define I2S_CSR		0x00
-> +#define I2S_CR2		0x08
-> +#define CSR_BCE_BIT	28
-> +#define CR2_BCD		BIT(24)
-> +#define CR2_DIV_SHIFT	0
-> +#define CR2_DIV_WIDTH	8
-> +
-> +struct fsl_sai_clk {
-> +	struct clk_divider div;
-> +	struct clk_gate gate;
-> +	spinlock_t lock;
-> +};
-> +
-> +static int fsl_sai_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct fsl_sai_clk *sai_clk;
-> +	struct clk_parent_data pdata = { .index = 0 };
-> +	void __iomem *base;
-> +	struct clk_hw *hw;
-> +	struct resource *res;
-> +
-> +	sai_clk = devm_kzalloc(dev, sizeof(*sai_clk), GFP_KERNEL);
-> +	if (!sai_clk)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	spin_lock_init(&sai_clk->lock);
-> +
-> +	sai_clk->gate.reg = base + I2S_CSR;
-> +	sai_clk->gate.bit_idx = CSR_BCE_BIT;
-> +	sai_clk->gate.lock = &sai_clk->lock;
-> +
-> +	sai_clk->div.reg = base + I2S_CR2;
-> +	sai_clk->div.shift = CR2_DIV_SHIFT;
-> +	sai_clk->div.width = CR2_DIV_WIDTH;
-> +	sai_clk->div.lock = &sai_clk->lock;
-> +
-> +	/* set clock direction, we are the BCLK master */
-> +	writel(CR2_BCD, base + I2S_CR2);
-> +
-> +	hw = clk_hw_register_composite_pdata(dev, dev->of_node->name,
-> +					     &pdata, 1, NULL, NULL,
-> +					     &sai_clk->div.hw,
-> +					     &clk_divider_ops,
-> +					     &sai_clk->gate.hw,
-> +					     &clk_gate_ops,
-> +					     CLK_SET_RATE_GATE);
-> +	if (IS_ERR(hw))
-> +		return PTR_ERR(hw);
-> +
-> +	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, hw);
-> +}
-> +
-> +static const struct of_device_id of_fsl_sai_clk_ids[] = {
-> +	{ .compatible = "fsl,vf610-sai-clock" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, of_fsl_sai_clk_ids);
-> +
-> +static struct platform_driver fsl_sai_clk_driver = {
-> +	.probe = fsl_sai_clk_probe,
-> +	.driver		= {
-> +		.name	= "fsl-sai-clk",
-> +		.of_match_table = of_fsl_sai_clk_ids,
-> +	},
-> +};
-> +module_platform_driver(fsl_sai_clk_driver);
-> +
-> +MODULE_DESCRIPTION("Freescale SAI bitclock-as-a-clock driver");
-> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:fsl-sai-clk");
+> 
+>> +
+>> +            st,adc-diff-channels: false
+>> +
+>> +            st,min-sample-time-nsecs:
+>> +              minItems: 1
+>> +              maxItems: 16
+>> +              minimum: 80
+>> +
+>> +          required:
+>> +            - clocks
+>> +
+>> +      - if:
+>> +          properties:
+>> +            compatible:
+>> +              contains:
+>> +                enum:
+>> +                  - st,stm32h7-adc
+>> +                  - st,stm32mp1-adc
+>> +
+>> +        then:
+>> +          properties:
+>> +            reg:
+>> +              enum:
+>> +                - 0x0
+>> +                - 0x100
+>> +
+>> +            interrupts:
+>> +              minimum: 0
+>> +              maximum: 1
+>> +
+>> +            assigned-resolution-bits:
+>> +              enum: [8, 10, 12, 14, 16]
+>> +              default: 16
+>> +
+>> +            st,adc-channels:
+>> +              minItems: 1
+>> +              maxItems: 20
+>> +              minimum: 0
+>> +              maximum: 19
+>> +
+>> +            st,min-sample-time-nsecs:
+>> +              minItems: 1
+>> +              maxItems: 20
+>> +              minimum: 40
+>> +
+>> +    additionalProperties: false
+>> +
+>> +    anyOf:
+>> +      - required:
+>> +          - st,adc-channels
+>> +      - required:
+>> +          - st,adc-diff-channels
+>> +
+>> +    required:
+>> +      - compatible
+>> +      - reg
+>> +      - interrupts
+>> +      - '#io-channel-cells'
+>> +
+>> +examples:
+>> +  - |
+>> +    // Example 1: with stm32f429
+>> +      adc123: adc@40012000 {
+>> +        compatible = "st,stm32f4-adc-core";
+>> +        reg = <0x40012000 0x400>;
+>> +        interrupts = <18>;
+>> +        clocks = <&rcc 0 168>;
+>> +        clock-names = "adc";
+>> +        st,max-clk-rate-hz = <36000000>;
+>> +        vdda-supply = <&vdda>;
+>> +        vref-supply = <&vref>;
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <1>;
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        adc@0 {
+>> +          compatible = "st,stm32f4-adc";
+>> +          #io-channel-cells = <1>;
+>> +          reg = <0x0>;
+>> +          clocks = <&rcc 0 168>;
+>> +          interrupt-parent = <&adc123>;
+>> +          interrupts = <0>;
+>> +          st,adc-channels = <8>;
+>> +          dmas = <&dma2 0 0 0x400 0x0>;
+>> +          dma-names = "rx";
+>> +          assigned-resolution-bits = <8>;
+>> +        };
+>> +        // ...
+>> +        // other adc child nodes follow...
+>> +      };
+>> +
+>> +  - |
+>> +    // Example 2: with stm32mp157c to setup ADC1 with:
+>> +    // - channel 1 as single-ended
+>> +    // - channels 2 & 3 as differential (with resp. 6 & 7 negative inputs)
+>> +      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +      #include <dt-bindings/clock/stm32mp1-clks.h>
+>> +      adc12: adc@48003000 {
+>> +        compatible = "st,stm32mp1-adc-core";
+>> +        reg = <0x48003000 0x400>;
+>> +        interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+>> +                     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+>> +        clocks = <&rcc ADC12>, <&rcc ADC12_K>;
+>> +        clock-names = "bus", "adc";
+>> +        booster-supply = <&booster>;
+>> +        vdd-supply = <&vdd>;
+>> +        vdda-supply = <&vdda>;
+>> +        vref-supply = <&vref>;
+>> +        st,syscfg = <&syscfg>;
+>> +        interrupt-controller;
+>> +        #interrupt-cells = <1>;
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        adc@0 {
+>> +          compatible = "st,stm32mp1-adc";
+>> +          #io-channel-cells = <1>;
+>> +          reg = <0x0>;
+>> +          interrupt-parent = <&adc12>;
+>> +          interrupts = <0>;
+>> +          st,adc-channels = <1>;
+>> +          st,adc-diff-channels = <2 6>, <3 7>;
+>> +          st,min-sample-time-nsecs = <5000>;
+>> +          dmas = <&dmamux1 9 0x400 0x05>;
+>> +          dma-names = "rx";
+>> +        };
+>> +        // ...
+>> +        // other adc child node follow...
+>> +      };
+>> +
+>> +...
+>> -- 
+>> 2.7.4
+>>
