@@ -2,147 +2,90 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0420C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27083C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B752B207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwYJRLnx"
+	by mail.kernel.org (Postfix) with ESMTP id EA4A324672
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:42:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgANKex (ORCPT
+        id S1726169AbgANKmk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:34:53 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46899 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgANKex (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 05:34:53 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n9so6368228pff.13
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 02:34:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6WEFAP/ApgeJPueS6Gwwt3D0c6EozVsVjbD7xwCYDMU=;
-        b=jwYJRLnx31hznR5hOFu8AioG9hqIqaf7k2DcfPbD3O8HfcTL9Q4y5r7HAQ7I5Rd/JX
-         nq08HH8qf7mLFDLvXFIY6+ZPUZSzszeUAy0KJOKzW6+2HqLumlMhF0FdUiCRe+10goY5
-         +zbSgzWFwO21bcTFU/LWVACI19dkAwqLmY/2JmPN4k/zzHFUVsEYoRSZI/ZR/mF6nCqZ
-         vOLikz16Cx7JZFlC4SiZzzott0saT9FrIynGeQxSYHERd9Whw3B5FGclUPkbn4Q/IQhI
-         Vvlinrd6GIxLe4Z9JSG022SbvfOqP6rziyhdl9ki1hPjHscOyYJm4iIE4Qt7590Bzhfk
-         9W6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6WEFAP/ApgeJPueS6Gwwt3D0c6EozVsVjbD7xwCYDMU=;
-        b=KR+EpdoV028HwWRqtBbAM87LL4EJFggt1cEaGFpWlhM1W9hidAdf7uHlsInYuTOWlB
-         kih1o9rKXolzkaHjmElpeJ+HPtxQxJWILDhPUuj68PrGiawiyI+nDROkz08r0XLaSgWz
-         oCTERevZoVTl7k0ScfqDHq9TbwNdUxkKAe0nNklL377+mP1Zva3Opx6zwVPk6XOzNSoh
-         7nkI8WkhnekdKw8yNaoVA7npdcInFN5N1wcM0G8D/HlmDflKLvbhtExmSYKdOOsyXxMU
-         J51GyosRYXGtbzVH4rJAmG5nz3Lajzg0kH9DIQ1CuUT46GB274PitY1ssj2DpnNdOa8B
-         gsgQ==
-X-Gm-Message-State: APjAAAW/b1E3FXmWYhdnG1pHv+3bgJZaLappcCeV4pD2YZSXmQF+Wr6u
-        OjxeZ/trJnawIqouSvQnwrlIiQ==
-X-Google-Smtp-Source: APXvYqxyC3sfXYgjfIHc/g5DWfKMYs4YAP31hjMYEZtc13r8kBnIiS+sBTrIKQKYIA9GFDXA3LMrEw==
-X-Received: by 2002:a63:6e04:: with SMTP id j4mr25629136pgc.175.1578998092064;
-        Tue, 14 Jan 2020 02:34:52 -0800 (PST)
-Received: from localhost ([122.172.140.51])
-        by smtp.gmail.com with ESMTPSA id m19sm16555830pjv.10.2020.01.14.02.34.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 Jan 2020 02:34:51 -0800 (PST)
-Date:   Tue, 14 Jan 2020 16:04:48 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        vincent.guittot@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, adharmap@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>, sibis@codeaurora.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        kernel-team@android.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] Introduce Bandwidth OPPs for interconnects
-Message-ID: <20200114103448.odnvqawnqb3twst5@vireshk-i7>
-References: <20191207002424.201796-1-saravanak@google.com>
+        Tue, 14 Jan 2020 05:42:40 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:42287 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgANKmk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 05:42:40 -0500
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 5F75A240015;
+        Tue, 14 Jan 2020 10:42:37 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 11:42:37 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     robh+dt@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+        a.zummo@towertech.it, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] dt-bindings: atmel-usart: remove wildcard
+Message-ID: <20200114104237.GM3137@piout.net>
+References: <1578997397-23165-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578997397-23165-5-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191207002424.201796-1-saravanak@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <1578997397-23165-5-git-send-email-claudiu.beznea@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 06-12-19, 16:24, Saravana Kannan wrote:
-> gpu_cache_opp_table: gpu_cache_opp_table {
-> 	compatible = "operating-points-v2";
+On 14/01/2020 12:23:14+0200, Claudiu Beznea wrote:
+> Remove chip whildcard and introduce the list of compatibles instead.
 > 
-> 	gpu_cache_3000: opp-3000 {
-> 		opp-peak-KBps = <3000000>;
-> 		opp-avg-KBps = <1000000>;
-> 	};
-> 	gpu_cache_6000: opp-6000 {
-> 		opp-peak-KBps = <6000000>;
-> 		opp-avg-KBps = <2000000>;
-> 	};
-> 	gpu_cache_9000: opp-9000 {
-> 		opp-peak-KBps = <9000000>;
-> 		opp-avg-KBps = <9000000>;
-> 	};
-> };
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/atmel-usart.txt | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 > 
-> gpu_ddr_opp_table: gpu_ddr_opp_table {
-> 	compatible = "operating-points-v2";
-> 
-> 	gpu_ddr_1525: opp-1525 {
-> 		opp-peak-KBps = <1525000>;
-> 		opp-avg-KBps = <452000>;
-> 	};
-> 	gpu_ddr_3051: opp-3051 {
-> 		opp-peak-KBps = <3051000>;
-> 		opp-avg-KBps = <915000>;
-> 	};
-> 	gpu_ddr_7500: opp-7500 {
-> 		opp-peak-KBps = <7500000>;
-> 		opp-avg-KBps = <3000000>;
-> 	};
-> };
-> 
-> gpu_opp_table: gpu_opp_table {
-> 	compatible = "operating-points-v2";
-> 	opp-shared;
-> 
-> 	opp-200000000 {
-> 		opp-hz = /bits/ 64 <200000000>;
-> 	};
-> 	opp-400000000 {
-> 		opp-hz = /bits/ 64 <400000000>;
-> 	};
-> };
-> 
-> gpu@7864000 {
-> 	...
-> 	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-usart.txt b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
+> index 699fd3c9ace8..778e8310606a 100644
+> --- a/Documentation/devicetree/bindings/mfd/atmel-usart.txt
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
+> @@ -1,10 +1,9 @@
+>  * Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
+>  
+>  Required properties for USART:
+> -- compatible: Should be "atmel,<chip>-usart" or "atmel,<chip>-dbgu"
+> -  The compatible <chip> indicated will be the first SoC to support an
+> -  additional mode or an USART new feature.
+> -  For the dbgu UART, use "atmel,<chip>-dbgu", "atmel,<chip>-usart"
+> +- compatible: Should be one of the following:
+> +	- "atmel,at91rm9200-dbgu", "atmel,at91rm9200-usart"
+> +	- "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart"
 
-Okay, I got confused a bit again after some interaction with Sibi
-today. The multiple phandle thing in the operating-points-v2 property
-is there specifically for nodes that can provide multiple devices,
-like PM domains where the provider may end up providing multiple
-domains.
+All the uarts are not dbgus, so this need to be:
 
-But I am not sure what you are going to do with the list of phandles
-you have set for the GPU here.
+ - "atmel,at91rm9200-usart"
+ - "atmel,at91sam9260-usart"
+ - "atmel,at91rm9200-dbgu", "atmel,at91rm9200-usart"
+ - "atmel,at91sam9260-dbgu", "atmel,at91sam9260-usart"
 
-We can not add multiple OPP tables for a single device right now.
+Also, you need to update drivers/soc/atmel/soc.c
+
+>  - reg: Should contain registers location and length
+>  - interrupts: Should contain interrupt
+>  - clock-names: tuple listing input clock names.
+> -- 
+> 2.7.4
+> 
 
 -- 
-viresh
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
