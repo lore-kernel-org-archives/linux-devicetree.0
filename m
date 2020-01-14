@@ -2,322 +2,176 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608A7C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FACC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D853424672
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R6l/wPkA"
+	by mail.kernel.org (Postfix) with ESMTP id 9540624680
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579023992;
+	bh=mXc8/w8tY8RXyg7swtRyAC0oYcXKe+2puA+wT86utiY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JZTLB/KScpxynC/Km4z2aoSzYnWI75gyhCvDZbNBHdRUxdO7X5bcIEm/C7ubiNxEx
+	 zEsUJKneWqSY7JqZpXM7Wg5TF2/3D9Yabnt6NO7WG1/BGE4Of95W6caDk8ZJ7MvEYx
+	 PMp8FKYmLC5Fi1+Bw430CJSQo4leLHvTQNlG8wpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgANR3N (ORCPT
+        id S1726523AbgANRqc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:29:13 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39745 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbgANR3N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 12:29:13 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y1so10449987lfb.6
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 09:29:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cOPoDyHHe7c/QrCl65j4vL8tiyrDQaiPvJ1cy+BrJy8=;
-        b=R6l/wPkAwLaqTFmLQ5g4E4C2zNwYsVHlYye65aXueZZG0RJf/bWtt5T90zPqXT9SPJ
-         x2Fyj/sbTy0xpxGqjnCEi9woHbbY8pfBVDGaa/mQoQ3g/IlHZugoHPv5x59825Guaal4
-         tZ+22HyB/vklOnk4e1rDHHMR/yePT3mZPYR6A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cOPoDyHHe7c/QrCl65j4vL8tiyrDQaiPvJ1cy+BrJy8=;
-        b=QepXRe3oDMU0gzSmkGHigLIuUIldAmig4lRDAWi1Oi/Xk25HANc2vxypmKNQAi1UVb
-         dYxs3ow70gHyQG+BmLvR6eB8PuFFkGKBPr5szWHx2HE3Ai2rBrfRVkLdmqgYlHspy6ad
-         G1OrGtsywI5/v/kn50QZHQgFZ0WpsPDcyY9vw9IC+ZRj3NSWwuDAQ3FbXjQWLqCgPB7R
-         hztJzz+k2zjm9tDEviElkB5A2zFwc4pGYTJ52wlQ2mW7qwd/1m2USd8L6bOnomaVUFsm
-         E5XJ+NFLzanWKfC9AGnqW0Y/tKRMBr0fzNmeiBdVxpJAf58wChp80PQEPkhZz0TysUpZ
-         J6CA==
-X-Gm-Message-State: APjAAAVFhAg/yuadUnAOGow4hsYWeHT8A22IpmRbyNa2BU5qvU7iZajw
-        LVEVrw4hu+6ut3sXGbZz4WyoL3hxzzQ=
-X-Google-Smtp-Source: APXvYqxkKqosRD09/ZHWbXAWMn4x/RepdhP94GUYDCy57A/AON8sZGFPSlTa4XFI4KHYLYrmUNbQCg==
-X-Received: by 2002:a19:c210:: with SMTP id l16mr2403032lfc.35.1579022949687;
-        Tue, 14 Jan 2020 09:29:09 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id v26sm7931909ljv.92.2020.01.14.09.29.08
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jan 2020 09:29:09 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id u71so15234153lje.11
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 09:29:08 -0800 (PST)
-X-Received: by 2002:a2e:b017:: with SMTP id y23mr15701704ljk.229.1579022947877;
- Tue, 14 Jan 2020 09:29:07 -0800 (PST)
+        Tue, 14 Jan 2020 12:46:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726450AbgANRqb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:46:31 -0500
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D123C24681;
+        Tue, 14 Jan 2020 17:46:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579023991;
+        bh=mXc8/w8tY8RXyg7swtRyAC0oYcXKe+2puA+wT86utiY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jO2fxggsWM5N6fDuJsQiwOrF47A7M0Zj6PjohQnWobjCR2xHQjoywTjQap5QCKX8p
+         iEHdg2y8Kch7ICsK2mTl/kaCOS2AZf0wjHLqfkXREssRjYVgcCkJO3lxmKlNWts9AG
+         dRkXSvn9hiTVctu5Dd87ETssj41Oqiq2Rxjbt8u4=
+Received: by mail-qv1-f52.google.com with SMTP id dc14so6037980qvb.9;
+        Tue, 14 Jan 2020 09:46:30 -0800 (PST)
+X-Gm-Message-State: APjAAAXkpB4KgiaGNEqeW/iP84Opo/o+5MG/ssKz862MTnAqtXW4W8eB
+        aiReoBGJYseiQ3afaSaf84gLbjvUqHw+uSHZrw==
+X-Google-Smtp-Source: APXvYqyzXMJ62ahYNuL6VK1Cf8ZGH/+06Kwo7FdWPAvSiMHBuwB7fFnCgD4KmcvFWnoyxKzjiFXuvKUl+MLXk2qpQcg=
+X-Received: by 2002:a0c:f68f:: with SMTP id p15mr17346460qvn.79.1579023989888;
+ Tue, 14 Jan 2020 09:46:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20191219054506.20565-1-sibis@codeaurora.org> <20191219054506.20565-3-sibis@codeaurora.org>
- <CAE=gft56MhTCBX+EQt8=DMdK96Wj8Kg4ww7TbLjj_oON0zbKyw@mail.gmail.com> <4a72f7691f9ee1d887bca9b1109da6df@codeaurora.org>
-In-Reply-To: <4a72f7691f9ee1d887bca9b1109da6df@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 14 Jan 2020 09:28:31 -0800
-X-Gmail-Original-Message-ID: <CAE=gft4Mys6qLVRb9O3YrXhcBM+YQYovHK51ZJRSgSvv3UDpfw@mail.gmail.com>
-Message-ID: <CAE=gft4Mys6qLVRb9O3YrXhcBM+YQYovHK51ZJRSgSvv3UDpfw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] remoteproc: mss: q6v5-mss: Add modem support on SC7180
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben Cohen <ohad@wizery.com>,
+References: <20191127105522.31445-1-miquel.raynal@bootlin.com>
+ <20191127105522.31445-5-miquel.raynal@bootlin.com> <20191209113506.41341ed4@collabora.com>
+In-Reply-To: <20191209113506.41341ed4@collabora.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 14 Jan 2020 11:46:18 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
+Message-ID: <CAL_JsqJP3-h7bPAommzt7KQKoohZpkk=RMxfN1j3rXbisD4eCA@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] mtd: Add driver for concatenating devices
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Bernhard Frauendienst <kernel@nospam.obeliks.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:06 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+On Mon, Dec 9, 2019 at 4:35 AM Boris Brezillon
+<boris.brezillon@collabora.com> wrote:
 >
-> Hey Evan,
+> On Wed, 27 Nov 2019 11:55:22 +0100
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 >
-> Thanks for the review!
-> sry for the delayed response
->
-> On 2020-01-08 02:51, Evan Green wrote:
-> > On Wed, Dec 18, 2019 at 9:45 PM Sibi Sankar <sibis@codeaurora.org>
-> > wrote:
-> >>
-> >> Add the out of reset sequence support for modem sub-system on SC7180
-> >> SoCs. It requires access to an additional halt nav register to put
-> >> the modem back into reset.
-> >>
-> >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> >> ---
-> >>  drivers/remoteproc/qcom_q6v5_mss.c | 199
-> >> ++++++++++++++++++++++++++++-
-> >>  1 file changed, 198 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
-> >> b/drivers/remoteproc/qcom_q6v5_mss.c
-> >> index 164fc2a53ef11..51f451311f5fc 100644
-> >> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> >> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> >> @@ -68,6 +68,9 @@
-> >>  #define AXI_HALTREQ_REG                        0x0
-> >>  #define AXI_HALTACK_REG                        0x4
-> >>  #define AXI_IDLE_REG                   0x8
-> >> +#define NAV_AXI_HALTREQ_BIT            BIT(0)
-> >> +#define NAV_AXI_HALTACK_BIT            BIT(1)
-> >> +#define NAV_AXI_IDLE_BIT               BIT(2)
-> >>
-> >>  #define HALT_ACK_TIMEOUT_MS            100
-> >>
-> >> @@ -101,9 +104,11 @@
-> >>  #define QDSP6SS_ACC_OVERRIDE_VAL               0x20
-> >>
-> >>  /* QDSP6v65 parameters */
-> >> +#define QDSP6SS_CORE_CBCR              0x20
-> >>  #define QDSP6SS_SLEEP                   0x3C
-> >>  #define QDSP6SS_BOOT_CORE_START         0x400
-> >>  #define QDSP6SS_BOOT_CMD                0x404
-> >> +#define QDSP6SS_BOOT_STATUS            0x408
-> >>  #define SLEEP_CHECK_MAX_LOOPS           200
-> >>  #define BOOT_FSM_TIMEOUT                10000
-> >>
-> >> @@ -131,6 +136,7 @@ struct rproc_hexagon_res {
-> >>         int version;
-> >>         bool need_mem_protection;
-> >>         bool has_alt_reset;
-> >> +       bool has_halt_nav;
-> >>  };
-> >>
-> >>  struct q6v5 {
-> >> @@ -141,9 +147,14 @@ struct q6v5 {
-> >>         void __iomem *rmb_base;
-> >>
-> >>         struct regmap *halt_map;
-> >> +       struct regmap *halt_nav_map;
-> >> +       struct regmap *conn_map;
-> >> +
-> >>         u32 halt_q6;
-> >>         u32 halt_modem;
-> >>         u32 halt_nc;
-> >> +       u32 halt_nav;
-> >> +       u32 conn_box;
-> >>
-> >>         struct reset_control *mss_restart;
-> >>         struct reset_control *pdc_reset;
-> >> @@ -187,6 +198,7 @@ struct q6v5 {
-> >>         struct qcom_sysmon *sysmon;
-> >>         bool need_mem_protection;
-> >>         bool has_alt_reset;
-> >> +       bool has_halt_nav;
-> >>         int mpss_perm;
-> >>         int mba_perm;
-> >>         const char *hexagon_mdt_image;
-> >> @@ -198,6 +210,7 @@ enum {
-> >>         MSS_MSM8974,
-> >>         MSS_MSM8996,
-> >>         MSS_MSM8998,
-> >> +       MSS_SC7180,
-> >>         MSS_SDM845,
-> >>  };
-> >>
-> >> @@ -396,6 +409,18 @@ static int q6v5_reset_assert(struct q6v5 *qproc)
-> >>                 reset_control_assert(qproc->pdc_reset);
-> >>                 ret = reset_control_reset(qproc->mss_restart);
-> >>                 reset_control_deassert(qproc->pdc_reset);
-> >> +       } else if (qproc->has_halt_nav) {
-> >> +               /* SWAR using CONN_BOX_SPARE_0 for pipeline glitch
-> >> issue */
+> > Introduce a generic way to define concatenated MTD devices. This may
+> > be very useful in the case of ie. stacked SPI-NOR. Partitions to
+> > concatenate are described in an additional property of the partitions
+> > subnode:
 > >
-> > Can you elaborate more in this comment, or remove it? Right now it
-> > doesn't help me since I don't know what SWAR is, I don't see a
+> >         flash0 {
+> >                 partitions {
+> >                         compatible = "fixed-partitions";
+> >                         part-concat = <&flash0_part1>, <&flash1_part0>;
+> >
+> >                       part0@0 {
+> >                               label = "part0_0";
+> >                               reg = <0x0 0x800000>;
+> >                       };
+> >
+> >                       flash0_part1: part1@800000 {
+> >                               label = "part0_1";
+> >                               reg = <0x800000 0x800000>;
 >
-> SWAR -> software work around
->
-> I'll have to stop with the dumb
-> abbreviations
+> So, flash0_part1 and flash0_part2 will be created even though the user
+> probably doesn't need them?
 
-heh I've never heard that one before. SWWA?
+I don't follow?
 
 >
-> > reference to CONN_BOX_SPARE_0 in the code, I don't know what a
+> >                       };
+> >                 };
+> >         };
+> >
+> >         flash1 {
+> >                 partitions {
+> >                         compatible = "fixed-partitions";
+> >
+> >                       flash0_part1: part1@0 {
+> >                               label = "part1_0";
+> >                               reg = <0x0 0x800000>;
+> >                       };
+> >
+> >                       part0@800000 {
+> >                               label = "part1_1";
+> >                               reg = <0x800000 0x800000>;
+> >                       };
+> >                 };
+> >         };
 >
-> conn_box_spare_0 is at an offset
-> 0xb3e4 in the conn_map which is
-> described in the bindings.
+> IMHO this representation is far from intuitive. At first glance it's not
+> obvious which partitions are linked together and what's the name of the
+> resulting concatenated part. I definitely prefer the solution where we
+> have a virtual device describing the concatenation. I also understand
+> that this goes against the #1 DT rule: "DT only decribes HW blocks, not
+> how they should be used/configured", but maybe we can find a compromise
+> here, like moving this description to the /chosen node?
 >
-> > CONN_BOX is, and I don't know any details about the glitch issue :)
+> chosen {
+>         flash-arrays {
+>                 /*
+>                  * my-flash-array is the MTD name if label is
+>                  * not present.
+>                  */
+>                 my-flash-array {
+>                         /*
+>                          * We could have
+>                          * compatible = "flash-array";
+>                          * but we can also do without it.
+>                          */
+>                         label = "foo";
+>                         flashes = <&flash1 &flash2 ...>;
+>                         partitions {
+>                                 /* usual partition description. */
+>                                 ...
+>                         };
+>                 };
+>         };
+> };
 >
-> lol, yes I get that the comment does
-> not give details on the glitch. It
-> was targeted towards explaining why
-> there is a deviation in the reset_
-> assert sequence from the other SoCs.
-> If you still feel the comment does
-> not add any value I can get it
-> removed.
+> Rob, what do you think?
 
-Maybe just infusing some of the clarity you described here would be enough.
+I don't think chosen is the right place to put all the partition
+information. It's not something the bootloader configures.
 
->
-> >
-> >> +               reset_control_assert(qproc->pdc_reset);
-> >> +               regmap_update_bits(qproc->conn_map, qproc->conn_box,
-> >> +                                  BIT(0), BIT(0));
-> >
-> > Make a register name #define for this bit?
->
-> we'll have to make one up for it
-> since conn_box_spare_0 does not
-> have any predefined bits and seems
-> to be used to implement some missing
-> functionality.
+This suffers from the same issue I have with the original proposal. It
+will not work for existing s/w. There's only 1 logical partition that
+concatenated. The rest of the partitions shouldn't need any special
+handling. So we really only need some way to say 'link these 2
+partitions into 1 logical partition'. Though perhaps one could want to
+combine any number of physical partitions into logical partitions, but
+then none of the proposals could support that. Then again, maybe
+that's a userspace problem like with disks.
 
-Hm, so its functionality is controlled by firmware? Or was just
-defined super late in hardware so as to be termed spare through many
-earlier spins of the hardware? Making one up sounds fine, it's just
-nice for readability to get a sense of what exactly this bit is when
-we toggle it.
+To throw out another option, what if the first device contains the
+complete partitions for both devices with some property in one or both
+devices pointing to the other device? That would make the partitions
+in the 1st device still accessible to existing s/w (unless it bounds
+checks the partitions).
 
->
-> >
-> >> +               regmap_update_bits(qproc->halt_nav_map,
-> >> qproc->halt_nav,
-> >> +                                  NAV_AXI_HALTREQ_BIT, 0);
-> >> +               reset_control_assert(qproc->mss_restart);
-> >> +               reset_control_deassert(qproc->pdc_reset);
-> >> +               regmap_update_bits(qproc->conn_map, qproc->conn_box,
-> >> +                                  BIT(0), 0);
-> >> +               ret = reset_control_deassert(qproc->mss_restart);
-> >>         } else {
-> >>                 ret = reset_control_assert(qproc->mss_restart);
-> >>         }
-> >> @@ -413,6 +438,8 @@ static int q6v5_reset_deassert(struct q6v5 *qproc)
-> >>                 ret = reset_control_reset(qproc->mss_restart);
-> >>                 writel(0, qproc->rmb_base + RMB_MBA_ALT_RESET);
-> >>                 reset_control_deassert(qproc->pdc_reset);
-> >> +       } else if (qproc->has_halt_nav) {
-> >> +               ret = reset_control_reset(qproc->mss_restart);
-> >>         } else {
-> >>                 ret = reset_control_deassert(qproc->mss_restart);
-> >>         }
-> >> @@ -499,6 +526,54 @@ static int q6v5proc_reset(struct q6v5 *qproc)
-> >>                         return ret;
-> >>                 }
-> >>
-> >> +               goto pbl_wait;
-> >
-> > Ick, this could benefit from a refactor that pulls those sorta-common
-> > steps "Remove IO clamp" through "Start core execution" into a helper
-> > function and then calls the new function from each case that needs it.
-> >
-> >> +       } else if (qproc->version == MSS_SC7180) {
-> >> +               val = readl(qproc->reg_base + QDSP6SS_SLEEP);
-> >> +               val |= 0x1;
-> >
-> > It'd be nice if there were defines for these magic 0x1 values in this
-> > hunk too.
-> >
-> >> +               writel(val, qproc->reg_base + QDSP6SS_SLEEP);
-> >> +
-> >> +               ret = readl_poll_timeout(qproc->reg_base +
-> >> QDSP6SS_SLEEP,
-> >> +                                        val, !(val & BIT(31)), 1,
-> >> +                                        SLEEP_CHECK_MAX_LOOPS);
-> >> +               if (ret) {
-> >> +                       dev_err(qproc->dev, "QDSP6SS Sleep clock timed
-> >> out\n");
-> >> +                       return -ETIMEDOUT;
-> >> +               }
-> >
-> > This toggling of the sleep bit is the same as sdm845, it could also be
-> > put into a helper function.
->
-> https://patchwork.kernel.org/patch/11250301/
-> https://patchwork.kernel.org/patch/11250317/
->
-> I did club ^^ a portion of the out of
-> reset sequence together reducing
-> code duplication initially but that
-> made the entire thing unreadable.
->
-> The general consensus at that time
-> was to introduce a patch for sc7180
-> that is most readable and have a
-> cleanup later with a lot of helper
-> functions and less branching like
-> you suggested.
-
-Sounds good.
-
->
-> >
-> >> +
-> >> +               /* Turn on the XO clock needed for PLL setup */
-> >> +               val = readl(qproc->reg_base + QDSP6SS_XO_CBCR);
-> >> +               val |= 0x1;
-> >> +               writel(val, qproc->reg_base + QDSP6SS_XO_CBCR);
-> >> +
-> >> +               ret = readl_poll_timeout(qproc->reg_base +
-> >> QDSP6SS_XO_CBCR,
-> >> +                                        val, !(val & BIT(31)), 1,
-> >> +                                        SLEEP_CHECK_MAX_LOOPS);
-> >
-> > Nit: SLEEP_CHECK_MAX_LOOPS isn't a loop count, it should really have
-> > been named something like SLEEP_CHECK_TIMEOUT_US. Could be done in a
-> > separate change.
->
-> I'll skip this for now. I'll
-> make sure that this gets named
-> appropriately during the
-> planned refactor.
-
-Thanks!
+Rob
