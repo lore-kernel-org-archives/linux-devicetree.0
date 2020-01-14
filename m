@@ -2,165 +2,169 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BA4C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081BFC33CA9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3071E2084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D55207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:21:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FBLmig+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgANHSe (ORCPT
+        id S1728901AbgANHVR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:18:34 -0500
-Received: from mail.manjaro.org ([176.9.38.148]:47426 "EHLO manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbgANHSe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 02:18:34 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by manjaro.org (Postfix) with ESMTP id 4DF2836E5165;
-        Tue, 14 Jan 2020 08:18:32 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jj5y9M-JQFUd; Tue, 14 Jan 2020 08:18:29 +0100 (CET)
-Subject: Re: [RESEND 1/2] power: supply: add CW2015 Fuel Gauge driver
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200109113955.2882-1-t.schramm@manjaro.org>
- <20200109113955.2882-2-t.schramm@manjaro.org>
- <20200114020616.3pg4yssrtuwxjd32@earth.universe>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <9e24dab6-2e53-b3b4-c323-ab9bf10df3af@manjaro.org>
-Date:   Tue, 14 Jan 2020 08:17:55 +0100
+        Tue, 14 Jan 2020 02:21:17 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39419 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728831AbgANHVR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:21:17 -0500
+Received: by mail-qt1-f193.google.com with SMTP id e5so11607184qtm.6
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 23:21:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qu8L9/P7G3E9Yw4p+SvLP/VGjTn+xJR8yruIENAwmw8=;
+        b=FBLmig+XuYQLjy+MeDi4VsXucyJ6x0+XdvVzpi5nWJqWnehAgKtDnYacLVqKcbPzIH
+         UyGqW0OT0p1dWpNDMovF2Lm9I6w7iFZU/8ULTFeHFJQ9p5LA9Zgyc+J1gC6Hyp8txp+1
+         vMsvum9BkFPYlPeoCokHaWZR/Gb75cRTzLyB4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qu8L9/P7G3E9Yw4p+SvLP/VGjTn+xJR8yruIENAwmw8=;
+        b=PpqvRQBuWUCdFRhmAo28iK9UjzJe39zC2R3MLjRq1IOr+enPKn8bUJMu1+LZMAqH66
+         PeVgNR0V4Opmfvr12laK6iWc2MKaff4D1QaNURvHP8hxUsOiAXNVQ8DDKmhqWTqujLd6
+         0Jv2o4lUKWoiZXMjb+lNqgt4VPLGX8csC39Vsh0kPPYF23oka9iCOKkUYYriwjPH8gR6
+         wOs4TVfbt7yIgrnLlep0SJb+OQmGYXuirJhUgzaA7FBikrEkpbmOYgeHT4dRr1JHX9Oc
+         cEF1m0PmxCns0Ho+3VB2LAJh9DiLGN6vsdQmcR9i/xgQ8HLDXuA1Qm4z8TpekpURJI4J
+         pfTQ==
+X-Gm-Message-State: APjAAAUf9r12R9kAjMMBlvH329bImwaHHPQl4sTjtZuX4fPLW5CB/Gv+
+        B3fOZXF9lFWCDY5bgKs7/69gw2iPyM5w+/6ZCiukGw==
+X-Google-Smtp-Source: APXvYqy5dTRwvBZSp2Sl2oa5uqtPjgwo9dLYORqfUzS4GprMz5UdJxHfSaILw3N4vb/BqqZHf3UJ8KY/Bw2G5cK4+Kc=
+X-Received: by 2002:ac8:4446:: with SMTP id m6mr2448249qtn.159.1578986475520;
+ Mon, 13 Jan 2020 23:21:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200114020616.3pg4yssrtuwxjd32@earth.universe>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-5-drinkcat@chromium.org>
+ <20200108132302.GA3817@sirena.org.uk> <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
+ <09ddfac3-da8d-c039-92a0-d0f51dc3fea5@arm.com> <20200109162814.GB3702@sirena.org.uk>
+ <a40baddb-cbab-d8fc-3fd9-0582f1b5b24e@arm.com> <20200109194930.GD3702@sirena.org.uk>
+ <90993401-6896-bf95-a15a-d99c465ec12a@arm.com>
+In-Reply-To: <90993401-6896-bf95-a15a-d99c465ec12a@arm.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 14 Jan 2020 15:21:04 +0800
+Message-ID: <CANMq1KBnUZ8v62=P734BrwPYwojWiqnvweewUY7OQjym-xuQ2Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
+ for the GPU
+To:     Steven Price <steven.price@arm.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sebastian,
-
-thanks for the review!
-
->> +#ifdef CONFIG_OF
->> +static int cw2015_parse_dt(struct cw_battery *cw_bat)
->> +{
->> +	struct device *dev = &cw_bat->client->dev;
->> +	struct device_node *node = dev->of_node;
->> +	struct property *prop;
->> +	int length;
->> +	u32 value;
->> +	int ret;
->> +	struct cw_bat_platform_data *data = &cw_bat->plat_data;
->> +
->> +	if (!node)
->> +		return -ENODEV;
->> +
->> +	memset(data, 0, sizeof(*data));
->> +
->> +	/* determine the number of config info */
->> +	prop = of_find_property(node, PREFIX"bat-config-info", &length);
->> +	if (!prop)
->> +		return -EINVAL;
->> +
->> +	length /= sizeof(u32);
->> +
->> +	if (length > 0) {
->> +		size_t size = sizeof(*data->cw_bat_config_info) * length;
->> +
->> +		data->cw_bat_config_info = devm_kzalloc(dev, size, GFP_KERNEL);
->> +		if (!data->cw_bat_config_info)
->> +			return -ENOMEM;
->> +
->> +		ret = of_property_read_u32_array(node, PREFIX"bat-config-info",
->> +						 data->cw_bat_config_info,
->> +						 length);
->> +		if (ret < 0)
->> +			return ret;
->> +	}
-> 
-> In its current state it does not look like data for DT. What
-> information is stored in this "config info"?
+On Fri, Jan 10, 2020 at 7:30 PM Steven Price <steven.price@arm.com> wrote:
 >
-Truth is: I don't know. The format of this blob is neither disclosed nor 
-even mentioned by publicly available datasheets.
-As far as I can tell it is information about the battery used, most 
-likely data on chemistry and design capacity of the pack.
-Since this depends on the cell built into a device I'd expect it to be 
-located in the DT.
-
->> +	cw_bat->bat_mode = MODE_BATTERY;
->> +	cw_bat->monitor_sec = CW2015_DEFAULT_MONITOR_SEC *
->> +			      CW2015_TIMER_MS_COUNTS;
->> +
->> +	prop = of_find_property(node, PREFIX"voltage-divider", &length);
->> +	if (prop) {
->> +		length /= sizeof(u32);
->> +		if (length != 2) {
->> +			dev_err(dev, "Length of voltage divider array must be "
->> +				"2, not %u\n", length);
->> +			return -EINVAL;
->> +		}
->> +		ret = of_property_read_u32_index(node, PREFIX"voltage-divider",
->> +						 0, &data->divider_high);
->> +		if (ret) {
->> +			dev_err(dev, "Failed to read value of high side "
->> +				"voltage divider resistor: %d\n", ret);
->> +			return ret;
->> +		}
->> +		ret = of_property_read_u32_index(node, PREFIX"voltage-divider",
->> +						 1, &data->divider_low);
->> +		if (ret) {
->> +			dev_err(dev, "Failed to read value of low side "
->> +				"voltage divider resistor: %d\n", ret);
->> +			return ret;
->> +		}
->> +	}
->> +
->> +	ret = of_property_read_u32(node, PREFIX"divider-res2", &value);
->> +	if (ret < 0)
->> +		value = 0;
->> +	data->divider_low = value;
->> +
->> +	ret = of_property_read_u32(node, PREFIX"virtual-power", &value);
->> +	if (ret < 0)
->> +		value = 0;
->> +	cw_bat->bat_mode = value;
-> 
-> of_property_read_bool
-> 
->> +	ret = of_property_read_u32(node, PREFIX"monitor-interval", &value);
->> +	if (ret < 0)
->> +		dev_err(dev, "monitor-interval missing!\n");
->> +	else
->> +		cw_bat->monitor_sec = value * CW2015_TIMER_MS_COUNTS;
->> +
->> +	ret = of_property_read_u32(node, PREFIX"design-capacity", &value);
->> +	if (ret < 0) {
->> +		dev_err(dev, "design-capacity missing!\n");
->> +		data->design_capacity = 2000;
->> +	} else {
->> +		data->design_capacity = value;
->> +	}
->> +
->> +	of_property_read_u8(node, PREFIX"alert-level", &cw_bat->alert_level);
->> +	if (cw_bat->alert_level > 100) {
->> +		dev_err(dev, "invalid alert_level, clamping to 100 %%\n");
->> +		cw_bat->alert_level = 100;
->> +	}
-> 
-> This does not belong into DT.
+> On 09/01/2020 19:49, Mark Brown wrote:
+> > On Thu, Jan 09, 2020 at 04:53:02PM +0000, Steven Price wrote:
+> >> On 09/01/2020 16:28, Mark Brown wrote:
+> >>> On Thu, Jan 09, 2020 at 02:14:42PM +0000, Steven Price wrote:
+> >
+> >>>> I'm not sure if it's better, but could we just encode the list of
+> >>>> regulators into device tree. I'm a bit worried about special casing an
+> >>>> "sram" regulator given that other platforms might have a similar
+> >>>> situation but call the second regulator a different name.
+> >
+> >>> Obviously the list of regulators bound on a given platform is encoded in
+> >>> the device tree but you shouldn't really be relying on that to figure
+> >>> out what to request in the driver - the driver should know what it's
+> >>> expecting.
+> >
+> >> From a driver perspective we don't expect to have to worry about power
+> >> domains/multiple regulators - the hardware provides a bunch of power
+> >> registers to turn on/off various parts of the hardware and this should be
+> >> linked (in hardware) to a PDC which sorts it out. The GPU/PDC handles the
+> >> required sequencing. So it *should* be a case of turn power/clocks on and
+> >> go.
+> >
+> > Ah, the well abstracted and consistent hardware with which we are all so
+> > fortunate to work :) .  More seriously perhaps the thing to do here is
+> > create a driver that provides a soft PDC and then push all the special
+> > case handling into that?  It can then get instantiated based on the
+> > compatible or perhaps represented directly in the device tree if that
+> > makes sense.
 >
-Is there any interface that allows setting a hardware battery alert 
-level? Or should I just drop it altogether?
+> That makes sense to me.
+>
+> >> However certain integrations may have quirks such that there are physically
+> >> multiple supplies. These are expected to all be turned on before using the
+> >> GPU. Quite how this is best represented is something I'm not sure about.
+> >
+> > If they're always on and don't ever change then that's really easy to
+> > represent in the DT without involving drivers, it's when you need to
+> > actively manage them that it's more effort.
+>
+> Sorry, I should have been more clear. They are managed as a group - so
+> either the entire GPU is powered off, or powered on. There's no support
+> in Panfrost or mali_kbase for attempting to power part of the GPU.
+>
+> >>> Bear in mind that getting regulator stuff wrong can result
+> >>> in physical damage to the system so it pays to be careful and to
+> >>> consider that platform integrators have a tendency to rely on things
+> >>> that just happen to work but aren't a good idea or accurate
+> >>> representations of the system.  It's certainly *possible* to do
+> >>> something like that, the information is there, but I would not in any
+> >>> way recommend doing things that way as it's likely to not be robust.
+> >
+> >>> The possibility that the regulator setup may vary on other platforms
+> >>> (which I'd expect TBH) does suggest that just requesting a bunch of
+> >>> supply names optionally and hoping that we got all the ones that are
+> >>> important on a given platform is going to lead to trouble down the line.
+> >
+> >> Certainly if we miss a regulator the GPU isn't going to work properly (some
+> >> cores won't be able to power up successfully). However at the moment the
+> >> driver will happily do this if someone provides it with a DT which includes
+> >> regulators that it doesn't know about. So I'm not sure how adding special
+> >> case code for a SoC would help here.
+> >
+> > I thought this SoC neeed to vary the voltage on both rails as part of
+> > the power management?  Things like that can lead to hardware damage if
+> > we go out of spec far enough for long enough - there can be requirements
+> > like keeping one rail a certain voltage above another or whatever.
+>
+> Yes, you are correct. My concern is that a DT which specifies a new
+> regulator (e.g. "sram2") would be accepted by an old kernel (because it
+> wouldn't know to look for the new regulator) but wouldn't know to
+> control the regulator. It could then create a situation which puts the
+> board out of spec - potentially in a damaging way. Hence I'd like to
+> express the regulator structure in such a way that old kernels wouldn't
+> "half-work". Your "soft-PDC" approach would seem to fit that requirement.
 
-Tobias
+FYI, I sent a v3 here: https://patchwork.kernel.org/patch/11331373/
+that addresses _some_ of these concerns.
+
+I'm not quite sure how to describe the regulators in a way that we can
+check that the device tree does not specific extra ones (apart from
+doing some string matching on all properties?), and I don't think I'm
+best placed to implement the soft-PDC idea. See my comment on that
+patch.
+
+Thanks!
