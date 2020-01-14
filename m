@@ -2,162 +2,149 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E32C33CAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDA4C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC882084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F3FA2072B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q+YC/e1C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L0iyokzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgANHIZ (ORCPT
+        id S1728810AbgANHQJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:08:25 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:16065 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728831AbgANHIY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 02:08:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578985703; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=ZVAjfFnR5g5tt+dHhDf+Jgdpgx3yDYML3pSfUkW0yvY=; b=Q+YC/e1CX1YEBiqQAuwYuY3jOOzfcdEKVbF++UA8qPSN1ctGqeUjAts93PNnAn8ua9BEYKYB
- KqV0PBpoeAkNAXvZ41fzRNXpfW/d8qOVCVEWKWyZ/5t8GRMga6bsNSoMHHGjJQ9YxUMQByZA
- cLk9ZYFsnhoeV6zv2KeGvfTrVGI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1d68e7.7f9d94fbdae8-smtp-out-n03;
- Tue, 14 Jan 2020 07:08:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 240D6C433A2; Tue, 14 Jan 2020 07:08:23 +0000 (UTC)
-Received: from sthella-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sthella)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6CEEBC43383;
-        Tue, 14 Jan 2020 07:08:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6CEEBC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthella@codeaurora.org
-From:   Shyam Kumar Thella <sthella@codeaurora.org>
-To:     agross@kernel.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     Shyam Kumar Thella <sthella@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-Date:   Tue, 14 Jan 2020 12:38:12 +0530
-Message-Id: <1578985692-20309-1-git-send-email-sthella@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 14 Jan 2020 02:16:09 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39638 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728746AbgANHQJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:16:09 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b137so5965786pga.6
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 23:16:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PgN1A3/jcSNW9U7ZQPj+hV6TF/FYO27/H6WZlglC4Rc=;
+        b=L0iyokzQjznU7jd7+4yRIjZG4W+Kh/QVfHxO9R/YomTTvZh7b8xaC5TCZUUYDfVDXN
+         P2IwRlrn+TbuhVEJfj6oijTp7NO3dd3UJHVeEFZdgB8J3r0aXarKK7Nsjb9D57P/urEw
+         WzCncn51xRlztqYXPBSbDrfgKBb5vo2D7zGwA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PgN1A3/jcSNW9U7ZQPj+hV6TF/FYO27/H6WZlglC4Rc=;
+        b=iL/Fg7EdwSroMouy4eBMPhsFnF+BR2/bB2SEWyCUOjWxV9maztrChookPQ0hLu/Jim
+         FPLs3bPboP/TFCAsEa8FQYR12E/5Jz9DSatYGK1F3+TKSMcaJNGXdCnop4avbsj2vw3N
+         elnjWNXcFrR1dS2E6iALqIiGYbS1tjLwiHR7dRcr5FsawFZVITcE8Jwn+lltecpwTDlL
+         4NjMndVPUgcy/2so7m4eh3wRIVaED193cFjM29QuIDgQulB3tt5ZYADnA72MS+bR49MK
+         MRPrEKjZpVOX2HCznNiTYVt+Rxjtt01pfUQcE6bdwAZFXjx4n10PGjekzy4fWX6DzHhI
+         MTlg==
+X-Gm-Message-State: APjAAAXZrhCqloEXsu8hpxuBf0p5KLe8t4GpXXiA2Oq4iEX1YUZ2W/Nw
+        f7B7khc7qZUn3V0Wnz5P/QU8uw==
+X-Google-Smtp-Source: APXvYqzMqBBdzwBKGKEOl+Tc4G0Gj7LZPgMyixK0fqjyI+joZwzSNKerDHvLgKupoGqp6US/0o9C2A==
+X-Received: by 2002:a63:ed4a:: with SMTP id m10mr22776522pgk.99.1578986168173;
+        Mon, 13 Jan 2020 23:16:08 -0800 (PST)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
+        by smtp.gmail.com with ESMTPSA id b4sm17092976pfd.18.2020.01.13.23.16.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 23:16:07 -0800 (PST)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org
+Subject: [PATCH v3 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
+Date:   Tue, 14 Jan 2020 15:15:55 +0800
+Message-Id: <20200114071602.47627-1-drinkcat@chromium.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QTI SDAM allows PMIC peripherals to access the shared memory that is
-available on QTI PMICs. Add documentation for it.
+Hi!
 
-Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
----
- .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 84 ++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+Follow-up on the v2: https://patchwork.kernel.org/cover/11322801/ .
 
-diff --git a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-new file mode 100644
-index 0000000..7bbd4e6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
-+
-+maintainers:
-+  - Shyam Kumar Thella <sthella@codeaurora.org>
-+
-+description: |
-+  The SDAM provides scratch register space for the PMIC clients. This
-+  memory can be used by software to store information or communicate
-+  to/from the PBUS.
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,spmi-sdam
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - ranges
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+        description:
-+          Offset and size in bytes within the storage device.
-+
-+      bits:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        maxItems: 1
-+        items:
-+          items:
-+            - minimum: 0
-+              maximum: 7
-+              description:
-+                Offset in bit within the address range specified by reg.
-+            - minimum: 1
-+              description:
-+                Size in bit within the address range specified by reg.
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+examples:
-+  - |
-+      sdam_1: nvram@b000 {
-+          #address-cells = <1>;
-+          #size-cells = <1>;
-+          compatible = "qcom,spmi-sdam";
-+          reg = <0xb000 0x100>;
-+          ranges = <0 0xb000 0x100>;
-+
-+          /* Data cells */
-+          restart_reason: restart@50 {
-+              reg = <0x50 0x1>;
-+              bits = <6 2>;
-+          };
-+      };
-+...
+The main purpose of this series is to upstream the dts change and the binding
+document, but I wanted to see how far I could probe the GPU, to check that the
+binding is indeed correct. The rest of the patches are RFC/work-in-progress, but
+I think some of them could already be picked up.
+
+So this is tested on MT8183 with a chromeos-4.19 kernel, and a ton of
+backports to get the latest panfrost driver (I should probably try on
+linux-next at some point but this was the path of least resistance).
+
+I tested it as a module as it's more challenging (originally probing would
+work built-in, on boot, but not as a module, as I didn't have the power
+domain changes, and all power domains are on by default during boot).
+
+Probing logs looks like this, currently. They look sane.
+[  501.319728] panfrost 13040000.gpu: clock rate = 511999970
+[  501.320041] panfrost 13040000.gpu: Linked as a consumer to regulator.14
+[  501.320102] panfrost 13040000.gpu: Linked as a consumer to regulator.31
+[  501.320651] panfrost 13040000.gpu: Linked as a consumer to genpd:0:13040000.gpu
+[  501.320954] panfrost 13040000.gpu: Linked as a consumer to genpd:1:13040000.gpu
+[  501.321062] panfrost 13040000.gpu: Linked as a consumer to genpd:2:13040000.gpu
+[  501.321734] panfrost 13040000.gpu: mali-g72 id 0x6221 major 0x0 minor 0x3 status 0x0
+[  501.321741] panfrost 13040000.gpu: features: 00000000,13de77ff, issues: 00000000,00000400
+[  501.321747] panfrost 13040000.gpu: Features: L2:0x07120206 Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002830 AS:0xff JS:0x7
+[  501.321752] panfrost 13040000.gpu: shader_present=0x7 l2_present=0x1
+[  501.324951] [drm] Initialized panfrost 1.1.0 20180908 for 13040000.gpu on minor 2
+
+Some more changes are still required to get devfreq working, and of course
+I do not have a userspace driver to test this with.
+
+Thanks!
+
+Nicolas
+
+v3 (see individual patches, too):
+ - Match a specific mediatek,mt8183-mali instead of the generic bifrost,
+   as this instance requires 2 special cases:
+    - 2 regulators
+    - 3 power domains
+
+v2:
+ - Use sram instead of mali_sram as SRAM supply name.
+ - Rename mali@ to gpu@.
+ - Add dt-bindings changes
+ - Stacking patches after the device tree change that allow basic
+   probing (still incomplete and broken).
+
+Nicolas Boichat (7):
+  dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+  arm64: dts: mt8183: Add node for the Mali GPU
+  drm/panfrost: Improve error reporting in panfrost_gpu_power_on
+  drm/panfrost: Add support for multiple regulators
+  drm/panfrost: Add support for multiple power domains
+  RFC: drm/panfrost: Add mt8183-mali compatible string
+  RFC: drm/panfrost: devfreq: Add support for 2 regulators
+
+ .../bindings/gpu/arm,mali-bifrost.yaml        |  18 +++
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 104 +++++++++++++++
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  17 +++
+ drivers/gpu/drm/panfrost/panfrost_device.c    | 120 +++++++++++++++---
+ drivers/gpu/drm/panfrost/panfrost_device.h    |  25 +++-
+ drivers/gpu/drm/panfrost/panfrost_drv.c       |  38 ++++--
+ drivers/gpu/drm/panfrost/panfrost_gpu.c       |  11 +-
+ 8 files changed, 310 insertions(+), 30 deletions(-)
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+2.25.0.rc1.283.g88dfdc4193-goog
+
