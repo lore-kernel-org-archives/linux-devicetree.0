@@ -2,128 +2,155 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14BAC33CA9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1AAC33CA9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C738207E0
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7F52084D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:24:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EpulRLGm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgANHYa (ORCPT
+        id S1729123AbgANHYm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:24:30 -0500
-Received: from lucky1.263xmail.com ([211.157.147.134]:35210 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbgANHYa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:24:30 -0500
-Received: from localhost (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 983A34D08A;
-        Tue, 14 Jan 2020 15:24:24 +0800 (CST)
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P5437T140292994864896S1578986620990337_;
-        Tue, 14 Jan 2020 15:24:25 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <808cfcb29a022183481baf5b4f977dfe>
-X-RL-SENDER: shawn.lin@rock-chips.com
-X-SENDER: lintao@rock-chips.com
-X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Shawn Lin <shawn.lin@rock-chips.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 3/6] PCI: dwc: Skip allocating own MSI domain if using external MSI domain
-Date:   Tue, 14 Jan 2020 15:22:57 +0800
-Message-Id: <1578986580-71974-4-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
+        Tue, 14 Jan 2020 02:24:42 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13902 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729108AbgANHYl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:24:41 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1d6ca40003>; Mon, 13 Jan 2020 23:24:20 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jan 2020 23:24:40 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jan 2020 23:24:40 -0800
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 07:24:39 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 14 Jan 2020 07:24:39 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.169.242]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e1d6cb70001>; Mon, 13 Jan 2020 23:24:39 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 14/22] arm64: tegra: Add clock-cells property to Tegra PMC node
+Date:   Mon, 13 Jan 2020 23:24:19 -0800
+Message-ID: <1578986667-16041-15-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
+References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578986661; bh=gkcJtn8jnkfrlt7lseMCLMoUPqIVSBgfxdajsl9lga0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=EpulRLGmG6edAApwn7XEGi81PvEOv19bNVEl+ky9Aw4yuY2g8EL5onn5ZrlFZypKz
+         y9LWMisxjssQEPmGWyo6QEoZ+oDXN9aLSuJPGat7v/Hw6X7QfRZ8sAM50UCfFGW+sV
+         m4v65ReZ/DDoincIGSgvEIDX8pGLzcb6ucIELEx0W4dgkFJq7IwwQgeUOpTAKYM8BE
+         LkoD3qIu500JZ4mnP8RXo3pE63vHIKRy9efxU93O6CefwZnU0eymQ6WJBeib1tORjw
+         /87IT7ecGyUDrih8sYHiUg/pSbLjyd76GSuyzU0ej6hNjodPkDCqUtVxTcQ6pOexJU
+         bLaedu3PfZzyg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On some platform, external MSI domain is using instead of the one
-created by designware driver. For instance, if using GIC-V3-ITS
-as a MSI domain, we only need set msi-map in the devicetree but
-never need any bit in the designware driver to handle MSI stuff.
-So skip allocating its own MSI domain for that case.
+Tegra132 and Tegra210 PMC block has clk_out_1, clk_out_2, clk_out_3,
+and a blink clock as a part of PMC.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
+These clocks are moved from clock driver to pmc driver with pmc as a
+clock provider.
+
+Clock ids for these clocks are defined in pmc dt-bindings.
+
+This patch updated device tree to include pmc dt-binding and adds
+#clock-cells property with one clock specifier to pmc node.
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
+ arch/arm64/boot/dts/nvidia/tegra132.dtsi | 4 +++-
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 6 ++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
- drivers/pci/controller/dwc/pcie-designware-host.c | 10 +++++++++-
- drivers/pci/controller/dwc/pcie-designware.h      |  1 +
- 2 files changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 395feb8..e78d094 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -257,6 +257,10 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct fwnode_handle *fwnode = of_node_to_fwnode(pci->dev->of_node);
+diff --git a/arch/arm64/boot/dts/nvidia/tegra132.dtsi b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
+index 631a7f77c386..79b1e3b01096 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra132.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra132.dtsi
+@@ -6,6 +6,7 @@
+ #include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/thermal/tegra124-soctherm.h>
++#include <dt-bindings/soc/tegra-pmc.h>
  
-+	/* Rely on the external MSI domain */
-+	if (pp->msi_ext)
-+		return 0;
-+
- 	pp->irq_domain = irq_domain_create_linear(fwnode, pp->num_vectors,
- 					       &dw_pcie_msi_domain_ops, pp);
- 	if (!pp->irq_domain) {
-@@ -278,6 +282,9 @@ int dw_pcie_allocate_domains(struct pcie_port *pp)
+ / {
+ 	compatible = "nvidia,tegra132", "nvidia,tegra124";
+@@ -577,11 +578,12 @@
+ 		clock-names = "rtc";
+ 	};
  
- void dw_pcie_free_msi(struct pcie_port *pp)
- {
-+	if (pp->msi_ext)
-+		return;
-+
- 	if (pp->msi_irq) {
- 		irq_set_chained_handler(pp->msi_irq, NULL);
- 		irq_set_handler_data(pp->msi_irq, NULL);
-@@ -413,7 +420,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	if (ret)
- 		pci->num_viewport = 2;
+-	pmc@7000e400 {
++	tegra_pmc: pmc@7000e400 {
+ 		compatible = "nvidia,tegra124-pmc";
+ 		reg = <0x0 0x7000e400 0x0 0x400>;
+ 		clocks = <&tegra_car TEGRA124_CLK_PCLK>, <&clk32k_in>;
+ 		clock-names = "pclk", "clk32k_in";
++		#clock-cells = <1>;
+ 	};
  
--	if (pci_msi_enabled()) {
-+	if (pci_msi_enabled() &&
-+	    !pp->msi_ext) {
- 		/*
- 		 * If a specific SoC driver needs to change the
- 		 * default number of vectors, it needs to implement
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index a22ea59..eeafa52 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -201,6 +201,7 @@ struct pcie_port {
- 	u32			irq_mask[MAX_MSI_CTRLS];
- 	struct pci_bus		*root_bus;
- 	raw_spinlock_t		lock;
-+	int			msi_ext;
- 	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
- };
+ 	fuse@7000f800 {
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 48c63256ba7f..3e73b76249f9 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -7,6 +7,7 @@
+ #include <dt-bindings/reset/tegra210-car.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/thermal/tegra124-soctherm.h>
++#include <dt-bindings/soc/tegra-pmc.h>
+ 
+ / {
+ 	compatible = "nvidia,tegra210";
+@@ -770,16 +771,17 @@
+ 		compatible = "nvidia,tegra210-rtc", "nvidia,tegra20-rtc";
+ 		reg = <0x0 0x7000e000 0x0 0x100>;
+ 		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-parent = <&pmc>;
++		interrupt-parent = <&tegra_pmc>;
+ 		clocks = <&tegra_car TEGRA210_CLK_RTC>;
+ 		clock-names = "rtc";
+ 	};
+ 
+-	pmc: pmc@7000e400 {
++	tegra_pmc: pmc@7000e400 {
+ 		compatible = "nvidia,tegra210-pmc";
+ 		reg = <0x0 0x7000e400 0x0 0x400>;
+ 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
+ 		clock-names = "pclk", "clk32k_in";
++		#clock-cells = <1>;
+ 		#interrupt-cells = <2>;
+ 		interrupt-controller;
  
 -- 
-1.9.1
-
-
+2.7.4
 
