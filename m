@@ -2,106 +2,80 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B6FC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B95C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE182465A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB602465A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:06:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgANRFK (ORCPT
+        id S1727556AbgANRGX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:05:10 -0500
-Received: from out28-97.mail.aliyun.com ([115.124.28.97]:54322 "EHLO
-        out28-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbgANRFK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 12:05:10 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1414993|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0564114-0.00543623-0.938152;DS=CONTINUE|ham_system_inform|0.0788228-0.00257501-0.918602;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03308;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=20;RT=20;SR=0;TI=SMTPD_---.Gc2hy8j_1579021451;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gc2hy8j_1579021451)
-          by smtp.aliyun-inc.com(10.147.41.120);
-          Wed, 15 Jan 2020 01:04:42 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, mark.rutland@arm.com, syq@debian.org,
-        ralf@linux-mips.org, rick.tyliu@ingenic.com, jason@lakedaemon.net,
-        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        ebiederm@xmission.com
-Subject: [PATCH 2/2] MIPS: CU1000-Neo: Refresh defconfig to support HWMON and WiFi.
-Date:   Wed, 15 Jan 2020 01:03:48 +0800
-Message-Id: <1579021428-43535-4-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579021428-43535-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579021428-43535-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Tue, 14 Jan 2020 12:06:23 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58159 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANRGX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 12:06:23 -0500
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 5A41EC0004;
+        Tue, 14 Jan 2020 17:06:17 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-mtd@lists.infradead.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Marek Vasut <marex@denx.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-kernel@vger.kernel.org,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Dinh Nguyen <dinguyen@kernel.org>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 3/5] dt-bindings: mtd: denali_dt: document reset property
+Date:   Tue, 14 Jan 2020 18:06:07 +0100
+Message-Id: <20200114170607.1762-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220113155.28177-4-yamada.masahiro@socionext.com>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: 66ab41b69859dd499fa251d9e8155370e7447afa
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Refresh CU1000-Neo's defconfig to support ADS7830 based HWMON
-and AP6212A WiFi module.
+On Fri, 2019-12-20 at 11:31:53 UTC, Masahiro Yamada wrote:
+> According to the Denali NAND Flash Memory Controller User's Guide,
+> this IP has two reset signals.
+> 
+>   rst_n:     reset most of FFs in the controller core
+>   reg_rst_n: reset all FFs in the register interface, and in the
+>              initialization sequencer
+> 
+> This commit specifies these reset signals.
+> 
+> It is possible to control them separately from the IP point of view
+> although they might be often tied up together in actual SoC integration.
+> 
+> At least for the upstream platforms, Altera/Intel SOCFPGA and Socionext
+> UniPhier, the reset controller seems to provide only 1-bit control for
+> the NAND controller. If it is the case, the resets property should
+> reference to the same phandles for "nand" and "reg" resets, like this:
+> 
+>     resets = <&nand_rst>, <&nand_rst>;
+>     reset-names = "nand", "reg";
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
- arch/mips/configs/cu1000-neo_defconfig | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-diff --git a/arch/mips/configs/cu1000-neo_defconfig b/arch/mips/configs/cu1000-neo_defconfig
-index 9f988ed..9b05a8f 100644
---- a/arch/mips/configs/cu1000-neo_defconfig
-+++ b/arch/mips/configs/cu1000-neo_defconfig
-@@ -34,8 +34,10 @@ CONFIG_HZ_100=y
- CONFIG_CMA=y
- CONFIG_CMA_AREAS=7
- CONFIG_NET=y
-+CONFIG_PACKET=y
- CONFIG_UNIX=y
- CONFIG_INET=y
-+CONFIG_CFG80211=y
- CONFIG_UEVENT_HELPER=y
- CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
-@@ -44,6 +46,7 @@ CONFIG_DEVTMPFS=y
- CONFIG_NETDEVICES=y
- CONFIG_STMMAC_ETH=y
- CONFIG_SMSC_PHY=y
-+CONFIG_BRCMFMAC=y
- # CONFIG_INPUT_MOUSEDEV is not set
- # CONFIG_INPUT_KEYBOARD is not set
- # CONFIG_INPUT_MOUSE is not set
-@@ -58,10 +61,12 @@ CONFIG_SERIAL_8250_RUNTIME_UARTS=3
- CONFIG_SERIAL_8250_INGENIC=y
- CONFIG_SERIAL_OF_PLATFORM=y
- # CONFIG_HW_RANDOM is not set
-+CONFIG_I2C=y
-+CONFIG_I2C_JZ4780=y
- CONFIG_GPIO_SYSFS=y
-+CONFIG_SENSORS_ADS7828=y
- CONFIG_WATCHDOG=y
- CONFIG_JZ4740_WDT=y
--# CONFIG_HWMON is not set
- # CONFIG_LCD_CLASS_DEVICE is not set
- # CONFIG_BACKLIGHT_CLASS_DEVICE is not set
- # CONFIG_VGA_CONSOLE is not set
-@@ -83,6 +88,7 @@ CONFIG_PROC_KCORE=y
- # CONFIG_PROC_PAGE_MONITOR is not set
- CONFIG_TMPFS=y
- CONFIG_CONFIGFS_FS=y
-+CONFIG_NFS_FS=y
- CONFIG_NLS=y
- CONFIG_NLS_CODEPAGE_936=y
- CONFIG_NLS_CODEPAGE_950=y
--- 
-2.7.4
-
+Miquel
