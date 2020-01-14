@@ -2,305 +2,167 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB0BC33CA9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBA8C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E52E2187F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBAC222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LBQ+5gca"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="WzQ93q0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgANHYb (ORCPT
+        id S1729160AbgANH1c (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:24:31 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13835 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728868AbgANHYb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:24:31 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1d6c980000>; Mon, 13 Jan 2020 23:24:09 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jan 2020 23:24:28 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jan 2020 23:24:28 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
- 2020 07:24:28 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 14 Jan 2020 07:24:28 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.169.242]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e1d6cab0000>; Mon, 13 Jan 2020 23:24:28 -0800
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 00/22] Move PMC clocks into Tegra PMC driver
-Date:   Mon, 13 Jan 2020 23:24:05 -0800
-Message-ID: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Tue, 14 Jan 2020 02:27:32 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:2584 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728899AbgANH1b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 02:27:31 -0500
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00E7QLjw029195;
+        Tue, 14 Jan 2020 02:27:09 -0500
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2051.outbound.protection.outlook.com [104.47.37.51])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2xfbvb6xqe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jan 2020 02:27:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MoFPOxgjyjkX+VQruGxb4nnBt9wpqkgRFLDCZ73uwvYc6I0NKrsxUJFgx9ewVYxrLpoxT+5M0rTMx3wERhhomk1ExJ9jgCBWL/F00dpGEha2AGREVKtopD1MBlHbbEdQNtHmPUdMZsPsMBuyxTtkiFHpGF4JS4nV4iGvsKgDjGSHHTSACrwV7/QKJL0P7qne5OT0ATgGKeQzMJ2PxyU5+vzTVtjbCZc/WvtwRShwP0BJ7A820xHr+HvtGlTK9h4csx/zB35pkqxbtwRKoNggs0L1YB/ImSxOFKuw994r9I6X/cDmMIC3yOkIeMT1GYe0Flig4DRaqVT17REDmOtCcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FXv3V7i8gxyrH/8nZ7nvF+9GgDcdQ6ODxN+ENSOO6F4=;
+ b=bi/b83c7v4v0wB092i9XdLCXZgCVM5srxWTGvDW/5FEAd96weEmuD4M/mD127xOFuq4pBGi4CYO4qbHt9d+/fSSLmEnKEKOXDkEZ6Gsr3U06uvRq6RbJQhV83uwR+B6JM+iYRMR42Irw2YsLKDp+yXB/GWJQiiSxU9RWaENNvz2hbiokqSImcuI29pPr8jiqk87GLdOTQ0OFvcFKBFjEWxJ1zYIBl8WbZW3A8aHJVkL5E0Z/s+Xjy83cxEXl8rdA7XMM5fITFYknnScAwttPrcSzcgf+2V0KIaghdaS49m1DoNjJz+O45/g7itRPRCgoVLfrJrUtcvRQkuURgsH5iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FXv3V7i8gxyrH/8nZ7nvF+9GgDcdQ6ODxN+ENSOO6F4=;
+ b=WzQ93q0E8mOdXRN5OjBpp+8h2FcefEd+sVZ95y58iS+X8SCQK9pAUntoY3L+OEBG+PggiMStqYXfD2iveXB0TT9GFFyoMeG6s55N+Cj9OhQEAoPEUnCH/wEIAG6K9wMiOk865QT1tpJdWo+WsAf6e19m9qPSmm0QKXZQ5oEgwZ8=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5272.namprd03.prod.outlook.com (20.180.4.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Tue, 14 Jan 2020 07:27:08 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::dce7:7fec:f33f:ad39]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::dce7:7fec:f33f:ad39%7]) with mapi id 15.20.2623.015; Tue, 14 Jan 2020
+ 07:27:08 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "Bia, Beniamin" <Beniamin.Bia@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+CC:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "biabeniamin@outlook.com" <biabeniamin@outlook.com>
+Subject: Re: [PATCH 1/3] iio: amplifiers: hmc425a: Add support for HMC425A
+ step attenuator with gpio interface
+Thread-Topic: [PATCH 1/3] iio: amplifiers: hmc425a: Add support for HMC425A
+ step attenuator with gpio interface
+Thread-Index: AQHVyhvEEIAnedXVb0WyMiMRJByquKfpE+4AgACwfgA=
+Date:   Tue, 14 Jan 2020 07:27:08 +0000
+Message-ID: <5925b4f1d47306ec4376a296a1146ff024239044.camel@analog.com>
+References: <20200113141555.16117-1-beniamin.bia@analog.com>
+         <5ae63616-5749-da51-b0b2-85cdcaa948f3@metafoo.de>
+In-Reply-To: <5ae63616-5749-da51-b0b2-85cdcaa948f3@metafoo.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 93d07e32-63a5-4af4-a2ef-08d798c329b1
+x-ms-traffictypediagnostic: CH2PR03MB5272:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR03MB52722574CA650F723DC022CDF9340@CH2PR03MB5272.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(39860400002)(376002)(366004)(396003)(189003)(199004)(64756008)(6506007)(478600001)(5660300002)(66476007)(966005)(2906002)(6486002)(66556008)(8676002)(81156014)(66446008)(81166006)(53546011)(76116006)(4326008)(86362001)(66946007)(7416002)(110136005)(54906003)(2616005)(36756003)(71200400001)(6512007)(26005)(316002)(186003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5272;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pT2dyXY/vUtuRvloq0waWIeBA2j6OpgloVC2CunuEZs2En0udlQYg9Pig+HgwanB22JajQQQ0cmWa4HNFubz0W6mZhY337+b/b4D6tR2sThkIfrWGfEQTZydMKWwdU+q/upioRQ5HEGGp4UDFvJ3LfG512sg6PVk1zcJXubTSxk+41PQY827uxeCXtF07COGFV8VO6YKK5bknsVqN43H0VqBfizXfH/gD6DPN4Z0paihbkEIRjUEP8XXept7Lb4yp9voQVO+uiISjfX4e7XGSBotmIanWPJnMxjeuOwHcqc87YO3dUQolKF97TBT2946j4yuMebhzCvYdSXXxW58xMJVdXtVhuT5k/nSGM9We3scp2Kw2P6ip93Oc26vycvF4PQj6hQ6e12tKNgpz2bTugu+SQRMkxI0kpMkEODRJ1PDm9Y9LscW57L/LxAGSTJqbObTrX2pl/+wnN7pXMEp0K6GibKn5f/ljyvx4/+4myo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <492776969DF61D4EB8807DF9477039AB@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578986649; bh=7WylSY1DJeI83R7D+xmb3QKjNosazZzuiWJshenlt+I=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=LBQ+5gcaD2NYmKbXgoJpeDgkjbBDM6HMLZEWWDyuYbrVILHd0xAnraZipy26XM5vd
-         fH3IDtoSS/azuN2atugVr0QF0PYcHCwTXOZnM8DQJRWYVATBaOYQkHSeNcvwbXxMCq
-         1ya4DGe+XQBWtKIdaMlvfPKcCYvLkDSOQhrPjFh7SlbfsDPmrF3b7RrhCdjy7PFNT0
-         4aF4GBcTxO8AmwVKzHtgG6LPAK2H03Ht7du9xFttrCjRL372mBGbmfjgqDD8ODgfSp
-         hSAxOsFFtmCUKqOu2Sf9b+KCNqQKE+Wi59ygDw+sE5qY0eTogmgy+lmd7zEFvVkur6
-         3jKlViD6M8mmA==
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93d07e32-63a5-4af4-a2ef-08d798c329b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 07:27:08.0203
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oP3fg7wqqj1FOZHlSkmfscv3DTg3OJQjhQxrfRykfyYVMOaDydgXo3PLB4ArP8KiVLODnk2lTLffg40kiAKlRCVTaXasoynqgSfa1py2PyA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5272
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_01:2020-01-13,2020-01-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ adultscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001140064
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch series moves Tegra PMC clocks from clock driver to pmc driver
-along with the device trees changes and audio driver which uses one of
-the pmc clock for audio mclk.
-
-Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
-are currently registered by Tegra clock driver using clk_regiser_mux and
-clk_register_gate which performs direct Tegra PMC register access.
-
-When Tegra PMC is in secure mode, any access from non-secure world will
-not go through.
-
-This patch series adds these Tegra PMC clocks and blink controls to Tegra
-PMC driver with PMC as clock provider and removes them from Tegra clock
-driver.
-
-PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru Tegra210
-and clock driver does inital parent configuration for it and enables them.
-But this clock should be taken care by audio driver as there is no need
-to have this clock pre enabled.
-
-So, this series also includes patch that updates ASoC utils to take
-care of parent configuration for mclk if device tree don't specify
-initial parent configuration using assigned-clock-parents and enable
-audio mclk during utils init.
-
-DTs are also updated to use clk_out_1 as audio mclk rather than extern1.
-
-This series also includes a patch for mclk fallback to extern1 when
-retrieving mclk fails to have this backward compatible of new DT with
-old kernels.
-
-[v8]:	Changes between v7 and v8 are
-	- v7 minor feedback
-
-	- Audio mclk is needed only for audio, but there is some unknown
-	  dependency of audio mclk and suspend-resume on Tegra30 where when
-	  mclk is disable, suspend-resume doesn't work.
-	  So v8 undoes v7 change of mclk enable and disable during machine
-	  startup and shutdown and keeps audio mclk enabled in ASoC driver
-	  tegra_asoc_utils_init.
-
-	- change in the patches order.
-
-	  Note:
-	  - Patches 1 thru 5 are to change CLK_M_DIV clocks to OSC_DIV clocks.
-	    OSC_DIV clocks uses same ID as CLK_M_DIV clocks during the
-	    transition to replace CLK_M_DIV with OSC_DIV.
-	  - Patches 8 and 10 registers pmc clocks as pmc_clk_out_1/2/3, and
-	    pmc_blink to avoid using same clock names as pmc clocks from
-	    tegra_car provider to have them functionally work with all the
-	    transition patches.
-	  - Patch 11 adds audio mclk fallback to extern1 to have new DT work
-	    with old kernels. This patch need to be back-ported.
-	  - Patch 18 adds audio mclk parent configuration when DT doesn't
-	    specify parent configs. This patch retrieves pmc_clk_out_1 as audio
-	    mclk so added this patch after all DT updates to use pmc clocks
-	    from tegra_pmc.
-	  - Patch 19 does audio mclk enable during utils init to have it
-	    enabled all the time.
-	  - Patch 20 and 21 removes PMC clocks from clock driver and their IDs
-	    at the end of PMC clocks transition to tegra_pmc.
-	
-
-[v7]:	Changes between v6 and v7 are
-	- v6 minor feedback
-	- Added DT id for Tegra OSC to use in device tree for pmc clock
-	  parent.
-
-[v6]:	Changes between v5 and v6 are
-	- v5 feedback
-	- Added ASoC machine startup and shutdown callbacks to control audio
-	  mclk enable/disable and removed default mclk enable from clock driver.
-	- Updated tegra_asoc_utils_set_rate to disable mclk only during PLLA
-	  rate change and removed disabling PLLA as its already taken care by
-	  pll clock driver.
-	- Removed tegra_asoc_utils_set_rate call from utils_init as set_rate
-	  is set during machine hw_params and during utils_init mclk is
-	  already in disabled state and this causes warning during mclk disable
-	  in utils_set_rate.
-
-[v5]:	Changes between v4 and v5 are
-	- v4 feedback
-	- updated dt-binding pmc YAML schema with more description on power
-	  gate nodes and pad configuration state nodes.
-	- update tegra_asoc_utils_set_rate to disable audio mclk only if
-	  its in enable state.
-
-[v4]:	Changes between v3 and v4 are
-	- v3 Feedback
-	- Updated clocks clk_m_div2 and clk_m_div4 as osc_div2 and osc_div4.
-	  Tegra don't have clk_m_div2, clk_m_div4 and they should actually
-	  be osc_div2 and osc_div4 clocks from osc pads.
-	- Fixed PMC clock parents to use osc, osc_div2, osc_div4.
-	  This is not a functional bug fix but correction to use proper parent
-	  name.
-	- Register each PMC clock as single clock rather than separate
-	  mux and gate clocks.
-	- Update ASoC utils to use resource managed APIs rather than
-	  using clk_get and clk_put.
-	- Updated device tree and ASoC driver to use clk_out_1 instead of
-	  clk_out_1_mux as PMC clocks are registered as single clock.
-	- Update clock driver init_table to not enable audio related clocks
-	  as ASoC utils will do audio clock enables.
-
-[v3]:	Changes between v2 and v3 are
-	- Removes set parent of clk_out_1_mux to extern1 and enabling
-	  extern1 from the clock driver.
-	- Doesn't enable clk_out_1 and blink by default in pmc driver
-	- Updates ASoC driver to take care of audio mclk parent
-	  configuration incase if device tree don't specify assigned
-	  clock parent properties and enables mclk using both clk_out_1
-	  and extern1.
-	- updates all device trees using extern1 as mclk in sound node
-	  to use clk_out_1 from pmc.
-	- patch for YAML format pmc dt-binding
-	- Includes v2 feedback
-
-[v2]:	Changes between v1 and v2 are
-	- v2 includes patches for adding clk_out_1, clk_out_2, clk_out_3,
-	  blink controls to Tegra PMC driver and removing clk-tegra-pmc.
-	- feedback related to pmc clocks in Tegra PMC driver from v1
-	- Removed patches for WB0 PLLM overrides and PLLE IDDQ PMC programming
-	  by the clock driver using helper functions from Tegra PMC.
-
- 	  Note:
-	  To use helper functions from PMC driver, PMC early init need to
-	  happen prior to using helper functions and these helper functions are
-	  for PLLM Override and PLLE IDDQ programming in PMC during PLLM/PLLE
-	  clock registration which happen in clock_init prior to Tegra PMC
-	  probe.
-	  Moving PLLM/PLLE clocks registration to happen after Tegra PMC
-	  impacts other clocks EMC, MC and corresponding tegra_emc_init and
-	  tegra_mc_init.
-	  This implementation of configuring PMC registers thru helper
-	  functions in clock driver needs proper changes across PMC, Clock,
-	  EMC and MC inits to have it work across all Tegra platforms.
-
-	  Currently PLLM Override is not enabled in the bootloader so proper
-	  patches for this fix will be taken care separately.
-
-[v1]:	v1 includes patches for below fixes.
-	- adding clk_out_1, clk_out_2, clk_out_3, blink controls to Tegra PMC
-	  driver and removing clk-tegra-pmc.
-	- updated clock provider from tegra_car to pmc in the device tree
-	  tegra210-smaug.dts that uses clk_out_2.
-	- Added helper functions in PMC driver for WB0 PLLM overrides and PLLE
-	  IDDQ programming to use by clock driver and updated clock driver to
-	  use these helper functions and removed direct PMC access from clock
-	  driver and all pmc base address references in clock driver.
-
-Sowjanya Komatineni (22):
-  dt-bindings: clock: tegra: Add IDs for OSC clocks
-  clk: tegra: Add support for OSC_DIV fixed clocks
-  clk: tegra: Add Tegra OSC to clock lookup
-  clk: tegra: Fix Tegra PMC clock out parents
-  clk: tegra: Remove CLK_M_DIV fixed clocks
-  dt-bindings: tegra: Convert Tegra PMC bindings to YAML
-  dt-bindings: soc: tegra-pmc: Add Tegra PMC clock bindings
-  soc: tegra: Add Tegra PMC clocks registration into PMC driver
-  dt-bindings: soc: tegra-pmc: Add id for Tegra PMC 32KHz blink clock
-  soc: tegra: Add support for 32KHz blink clock
-  ASoC: tegra: Add fallback implementation for audio mclk
-  ASoC: tegra: Use device managed resource APIs to get the clock
-  ARM: dts: tegra: Add clock-cells property to pmc
-  arm64: tegra: Add clock-cells property to Tegra PMC node
-  ARM: tegra: Update sound node clocks in device tree
-  arm64: tegra: smaug: Change clk_out_2 provider to pmc
-  ASoC: nau8825: change Tegra clk_out_2 provider to tegra_pmc
-  ASoC: tegra: Add audio mclk parent configuration
-  ASoC: tegra: Enable audio mclk during tegra_asoc_utils_init
-  clk: tegra: Remove tegra_pmc_clk_init along with clk ids
-  dt-bindings: clock: tegra: Remove pmc clock ids from clock dt-bindings
-  clk: tegra: Remove audio clocks configuration from clock driver
-
- .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 300 -----------------
- .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml     | 354 +++++++++++++++++++++
- .../devicetree/bindings/sound/nau8825.txt          |   2 +-
- arch/arm/boot/dts/tegra114-dalmore.dts             |   8 +-
- arch/arm/boot/dts/tegra114.dtsi                    |   4 +-
- arch/arm/boot/dts/tegra124-apalis-v1.2.dtsi        |   8 +-
- arch/arm/boot/dts/tegra124-apalis.dtsi             |   8 +-
- arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   8 +-
- arch/arm/boot/dts/tegra124-nyan.dtsi               |   8 +-
- arch/arm/boot/dts/tegra124-venice2.dts             |   8 +-
- arch/arm/boot/dts/tegra124.dtsi                    |   4 +-
- arch/arm/boot/dts/tegra20.dtsi                     |   4 +-
- arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi         |   8 +-
- arch/arm/boot/dts/tegra30-apalis.dtsi              |   8 +-
- arch/arm/boot/dts/tegra30-beaver.dts               |   8 +-
- arch/arm/boot/dts/tegra30-cardhu.dtsi              |   8 +-
- arch/arm/boot/dts/tegra30-colibri.dtsi             |   8 +-
- arch/arm/boot/dts/tegra30.dtsi                     |   4 +-
- arch/arm64/boot/dts/nvidia/tegra132.dtsi           |   4 +-
- arch/arm64/boot/dts/nvidia/tegra210-smaug.dts      |   2 +-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +-
- drivers/clk/tegra/Makefile                         |   1 -
- drivers/clk/tegra/clk-id.h                         |  12 +-
- drivers/clk/tegra/clk-tegra-fixed.c                |  37 ++-
- drivers/clk/tegra/clk-tegra-pmc.c                  | 122 -------
- drivers/clk/tegra/clk-tegra114.c                   |  43 +--
- drivers/clk/tegra/clk-tegra124.c                   |  48 ++-
- drivers/clk/tegra/clk-tegra20.c                    |   9 +-
- drivers/clk/tegra/clk-tegra210.c                   |  32 +-
- drivers/clk/tegra/clk-tegra30.c                    |  33 +-
- drivers/clk/tegra/clk.h                            |   1 -
- drivers/soc/tegra/pmc.c                            | 354 +++++++++++++++++++++
- include/dt-bindings/clock/tegra114-car.h           |  18 +-
- include/dt-bindings/clock/tegra124-car-common.h    |  18 +-
- include/dt-bindings/clock/tegra20-car.h            |   2 +-
- include/dt-bindings/clock/tegra210-car.h           |  18 +-
- include/dt-bindings/clock/tegra30-car.h            |  18 +-
- include/dt-bindings/soc/tegra-pmc.h                |  16 +
- sound/soc/tegra/tegra_alc5632.c                    |   7 +-
- sound/soc/tegra/tegra_asoc_utils.c                 | 126 ++++----
- sound/soc/tegra/tegra_asoc_utils.h                 |   1 -
- sound/soc/tegra/tegra_max98090.c                   |  22 +-
- sound/soc/tegra/tegra_rt5640.c                     |  22 +-
- sound/soc/tegra/tegra_rt5677.c                     |   7 +-
- sound/soc/tegra/tegra_sgtl5000.c                   |   7 +-
- sound/soc/tegra/tegra_wm8753.c                     |  22 +-
- sound/soc/tegra/tegra_wm8903.c                     |  22 +-
- sound/soc/tegra/tegra_wm9712.c                     |   8 +-
- sound/soc/tegra/trimslice.c                        |  18 +-
- 49 files changed, 1041 insertions(+), 775 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
- delete mode 100644 drivers/clk/tegra/clk-tegra-pmc.c
- create mode 100644 include/dt-bindings/soc/tegra-pmc.h
-
--- 
-2.7.4
-
+T24gTW9uLCAyMDIwLTAxLTEzIGF0IDIxOjU3ICswMTAwLCBMYXJzLVBldGVyIENsYXVzZW4gd3Jv
+dGU6DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIDEvMTMvMjAgMzoxNSBQTSwgQmVuaWFtaW4gQmlh
+IHdyb3RlOg0KPiBbLi4uXQ0KPiA+ICtzdGF0aWMgaW50IGhtYzQyNWFfd3JpdGUoc3RydWN0IGlp
+b19kZXYgKmluZGlvX2RldiwgdTMyIHZhbHVlKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaG1jNDI1
+YV9zdGF0ZSAqc3QgPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPiA+ICsJaW50IGksICp2YWx1ZXM7
+DQo+ID4gKw0KPiA+ICsJdmFsdWVzID0ga21hbGxvY19hcnJheShzdC0+Y2hpcF9pbmZvLT5udW1f
+Z3Bpb3MsIHNpemVvZihpbnQpLA0KPiA+ICsJCQkgICAgICAgR0ZQX0tFUk5FTCk7DQo+ID4gKwlp
+ZiAoIXZhbHVlcykNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4gKwlmb3IgKGkg
+PSAwOyBpIDwgc3QtPmNoaXBfaW5mby0+bnVtX2dwaW9zOyBpKyspDQo+ID4gKwkJdmFsdWVzW2ld
+ID0gKHZhbHVlID4+IGkpICYgMTsNCj4gPiArDQo+ID4gKwlncGlvZF9zZXRfYXJyYXlfdmFsdWVf
+Y2Fuc2xlZXAoc3QtPmdwaW9zLT5uZGVzY3MsIHN0LT5ncGlvcy0+ZGVzYywNCj4gPiArCQkJCSAg
+ICAgICB2YWx1ZXMpOw0KPiANCj4gVGhpcyBBUEkgZ290IGNoYW5nZWQgYSB3aGlsZSBhZ28gaW4g
+dXBzdHJlYW0sIHNlZQ0KPiBodHRwczovL2dpdGh1Yi5jb20vYW5hbG9nZGV2aWNlc2luYy9saW51
+eC9jb21taXQvYjk3NjJiZWJjNjMzMmI0MGMzM2UwM2RlYTAzZTMwZmExMmQ5ZTNlZA0KPiANCj4g
+PiArCWtmcmVlKHZhbHVlcyk7DQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiBbLi4uXQ0KPiA+
+ICtzdGF0aWMgaW50IGhtYzQyNWFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
+Cj4gPiArew0KPiBbLi4uXQ0KPiA+ICsNCj4gPiArCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYs
+IGluZGlvX2Rldik7DQo+IA0KPiBkcnZkYXRhIGlzIG5ldmVyIGFjY2Vzc2VkLCBubyBuZWVkIHRv
+IHNldCBpdC4NCj4gDQo+ID4gKwltdXRleF9pbml0KCZzdC0+bG9jayk7DQo+ID4gKw0KPiA+ICsJ
+aW5kaW9fZGV2LT5kZXYucGFyZW50ID0gJnBkZXYtPmRldjsNCj4gPiArCWluZGlvX2Rldi0+bmFt
+ZSA9IG5wLT5uYW1lOw0KPiANCj4gSSBrbm93IEFESSBsaWtlcyB0byBkbyB0aGlzIGluIGl0cyBu
+b24gdXBzdHJlYW0gZHJpdmVycywgYnV0IHRoZSBhYm92ZQ0KPiBpcyBub3QgSUlPIEFCSSBjb21w
+bGlhbnQuIFRoZSBuYW1lIGlzIHN1cHBvc2VkIHRvIGlkZW50aWZ5IHRoZSB0eXBlIG9mDQo+IHRo
+ZSBkZXZpY2UsIHdoaWNoIG1lYW5zIGZvciB0aGlzIGRyaXZlciBzaG91bGQgYmUgc3RhdGljICJo
+bWM0MjVhIi4NCj4gTWF5YmUgY29uc2lkZXIgYWRkaW5nIGEgZmllbGQgdG8gdGhlIGhtYzQyNWFf
+Y2hpcF9pbmZvIGZvciB0aGlzLg0KDQpXZSd2ZSBhY3R1YWxseSBbcmVjZW50bHldIGhhZCBhIGRp
+c2N1c3Npb24gYWJvdXQgdGhpcyBpbnRlcm5hbGx5IHJlZ2FyZGluZw0KdGhlICdpbmRpb19kZXYt
+Pm5hbWUnLg0KDQpNYXliZSBpdCdzIGEgZ29vZCB0aW1lIHRvIGFzayBoZXJlIChub3cpLg0KQSBs
+b3Qgb2Ygb3VyIHVzZXJzcGFjZSBzdHVmZiBoYXZlIGJlZW4gc2VhcmNoaW5nIElJTyBkZXZpY2Vz
+IHZpYSB0aGUgJ25hbWUnDQpmaWVsZCBpbiBzeXNmcywgd2hpY2ggaXMgdGhlIG5hbWUgYXNzaWdu
+ZWQgaGVyZS4NClRoYXQgY3JlYXRlcyBhIHByb2JsZW0gd2hlbiB5b3UgaGF2ZSBtdWx0aXBsZSBk
+ZXZpY2VzIHdpdGggdGhlIHNhbWUgZHJpdmVyLg0KV2hpY2ggaXMgd2h5LCBvbmUgDQoNClNvLCB0
+aGVuIHNvbWUgcXVlc3Rpb25zIHdvdWxkIGJlOg0KSXMgYSBzZWFyY2hpbmcgZm9yIElJTyBkZXZp
+Y2VzIFtpbiB1c2Vyc3BhY2VdIGJhc2VkIG9uIElJTyBkZXZpY2UtbmFtZSBub3QNCnJlY29tbWVu
+ZGVkPyBJZiBub3QsIHdoYXQgd291bGQgYmU/IE9yIHdoYXQgd291bGQgYmUgYSBiZXR0ZXIgaWRl
+YT8NCg0KVGhlIEFCSSByZWFkcyBbaG9wZWZ1bGx5IEkgcHVsbGVkIHVwIHRoZSByaWdodCBmaWVs
+ZF06DQpXaGF0OiAgICAgICAgICAgL3N5cy9idXMvaWlvL2RldmljZXMvaWlvOmRldmljZVgvbmFt
+ZQ0KS2VybmVsVmVyc2lvbjogIDIuNi4zNQ0KQ29udGFjdDogICAgICAgIGxpbnV4LWlpb0B2Z2Vy
+Lmtlcm5lbC5vcmcNCkRlc2NyaXB0aW9uOg0KICAgICAgICAgICAgICAgIERlc2NyaXB0aW9uIG9m
+IHRoZSBwaHlzaWNhbCBjaGlwIC8gZGV2aWNlIGZvciBkZXZpY2UgWC4NCiAgICAgICAgICAgICAg
+ICBUeXBpY2FsbHkgYSBwYXJ0IG51bWJlci4NCg0KVGhlIHRleHQgaW4gZGVzY3JpcHRpb24gaXMg
+YSBiaXQgb3BlbiB0byBpbnRlcnByZXRhdGlvbiwgc28gSSBjYW4ndCBtYWtlIGFuDQphc3Nlc3Nt
+ZW50IG9mIHdoYXQgaXMgY29ycmVjdC4NCkluIGNhc2UgdGhlcmUgd2FzIGEgZGlzY3Vzc2lvbiBh
+Ym91dCB0aGlzLCBzb3JyeSBmb3IgcmVwZWF0aW5nIHNvbWUgdGhpbmdzDQpub3cuDQoNCg0KPiAN
+Cj4gPiArCWluZGlvX2Rldi0+aW5mbyA9ICZobWM0MjVhX2luZm87DQo+ID4gKwlpbmRpb19kZXYt
+Pm1vZGVzID0gSU5ESU9fRElSRUNUX01PREU7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIGRldm1faWlv
+X2RldmljZV9yZWdpc3RlcigmcGRldi0+ZGV2LCBpbmRpb19kZXYpOw0KPiA+ICt9DQo=
