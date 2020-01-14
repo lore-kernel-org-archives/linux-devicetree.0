@@ -2,112 +2,121 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D944EC33CB2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC40C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBF72467E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:21:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="LjQRYpxP"
+	by mail.kernel.org (Postfix) with ESMTP id 6FB5B24676
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579005215;
+	bh=GNo7GoNGEwHDf9hL6DaV/TE/xXi0XLmG1ZXEKYk5VPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aPkamKLHsqWwS7+hx1NN5R4OaQEdhcofoza86H2yIqzmKqUEWhu2QesgAxUKr4+uh
+	 UTqy05Uc1SQkUyYxiMO993r/jTX1lIq0IMREp6ije8gIcD5zD4A0nRRYYF373H+sH0
+	 5+CV1AcaaYIWHB6u2UetHG/8nIfH/BOH6Yj0SXdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgANMVQ (ORCPT
+        id S1726175AbgANMde (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:21:16 -0500
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:60729 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbgANMVQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:21:16 -0500
-Received: from [IPv6:2001:420:44c1:2577:11b:d594:936e:b16a]
- ([IPv6:2001:420:44c1:2577:11b:d594:936e:b16a])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id rLBviFvU2pLtbrLByieypI; Tue, 14 Jan 2020 13:21:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1579004473; bh=el/sCcXKoLi1FEc8sscgQSjCYSmbdJMyDT1iZnQSnSU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=LjQRYpxPLh+sE48zdnmzx1dYwbjH4bXf1Ow+L9xGtnyLYk22ootoKM/W9LPRAIgKT
-         LLdOswZfIOJ19EhGCDm2XmYZWdtI6Xuyl8dC5s7pZAnPOnHvgDHSBKUIFmgTQIhTVG
-         ij0tC8LIc6YqFte/+lbYjCbxQhtShNEKnJZi5/TjgcBt3gomJpQPEu7aOO69F69zpN
-         OZPkGFql/MkFGntWAnRLCI4yBg5FtwfYVadZ5t73EwJzQSaPTnFRe9rfkiRcwhvAGE
-         0ir1vP7bKiXOEArWvvZbnMYeMemda8rYy6AiZUejTxhRAkSw6FHwz7VxGtoaJJalpD
-         AZAylzCO9BqGw==
-Subject: Re: [PATCH v2 05/17] dt-bindings: atmel-isi: add
- microchip,sam9x60-isi
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, nicolas.ferre@microchip.com,
-        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
-        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mchehab@kernel.org, lee.jones@linaro.org,
-        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
-        mkl@pengutronix.de, a.zummo@towertech.it
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-6-git-send-email-claudiu.beznea@microchip.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <58d0a872-9f9e-ab64-b9e4-d6548b05142b@xs4all.nl>
-Date:   Tue, 14 Jan 2020 13:21:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 14 Jan 2020 07:33:34 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41290 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgANMde (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 07:33:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kd9ZO/CCEhqZWiHfuv2KB8A8I9ZY16copGuRmlFuYrU=; b=g8vgAnzdJRO4gINqS6LTdF/Vr
+        WxFo4qzT/9UTGg3hBLNNgvbLPAVGRbzAgwxyeDm/TLu09HhXpKh60OfLZetVFJYJrmzR/aEP0cwQM
+        OLjnSr/K6cQGwJ9Pa/LXjik8KToL7OedT11aRkFhkR0YcbH2pkUNP/oYB5OOSIsXin088=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1irLNs-000846-Pc; Tue, 14 Jan 2020 12:33:24 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 7A89AD01965; Tue, 14 Jan 2020 12:33:24 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 12:33:24 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Saravanan Sekar <sravanhome@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 2/4] dt-bindings: regulator: add document bindings for
+ mpq7920
+Message-ID: <20200114123324.GS3897@sirena.org.uk>
+References: <20200109112548.23914-1-sravanhome@gmail.com>
+ <20200109112548.23914-3-sravanhome@gmail.com>
+ <CAL_JsqJ4vTzyfAG2UWzzkhVkBSLDRPjdyDUFZJ9LrDmsFsQ1gA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1578673089-3484-6-git-send-email-claudiu.beznea@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDyyJ8A46d/VZ6mWF8HvSJL6XohAbYvGlIDN2xY5sRpRC0AJZrnUH0YX0+FSqCMhFZjpHxOyHfMDslHdlLv97QcDoHwck2Z9TrOv5t+lopMv/NRf0PUV
- 55QN8cKR2GeYA535VmrhiJJ3ojVhCtZHdqwlNqcXOOfA1jLuIJ84iCZRAPBbM5rNAMNY7EvoyTG6hFaMVlzvbuZ37zENLdycB1+4kebYsziUTwZWtoZuAnMk
- LMyouB9mCtPGzmRTzeL74XvIxJXSiMOXKUukMY9CZcdbxL+hqcyNHH1cvq0Ae2LxwdzWO4GARzgfg1BRhHkpDrmwNAST/Nzpp1yk+mYmUHUeCKMDd8m74vHt
- kAndHbAOE1qpMQD5koRQwLbarJX8A/2eAFJTImw2pecQ7825zIoL2og3ZAauw5oPkPbp/rESm4VQrrwIzQZTIdS19wLJw93WlMa24o0M4Pe9Z5x+vxoRp8Xp
- MMUfb2fVE69KZls7TdCcam6e05Yvra1yqVNR1HEStwiaFBzk/jI1Bo9NFI5Glm7TYVnbqxqMkf306iQCOo0qEXlt+P7vZcEiAVvNC8QVCAnZ33xDCOO1P0MJ
- t0xckD3lecqem5SKtKLXefkxwFCHpcH207vyGk/FUL9CikGLulLMLG70jX9Ld1ENlKvZKk+13vUDiYXETUhOLvxSM6cMGAGAw9ZxxcdL4ipi7AhZ8LDj/Hos
- Mkt9jvglBTYomM/KU9sebjVWgPJeviHg+luR+JN4Q5LWheX1ajixs/F7bHRcZ6vELvkzMcco4AX3I2EuQF4KMcH1Q96bO+BppQYyR75cNBcTiu6LbkouxWVm
- MW4NsCXcJ0fzeQoSgXBZIfj4wzfcvGDsqbwGk6u+aW6XLHkGAEIwPAz0wqV7xfW4B3Tt72thIoZ7yEUcb1NqMczIB0lX1EeMNRmoxXWuOAXv/Y3kllOdMvVM
- Ar5uaZEBf2ZZJczJNl00ZE/cL98RXshGjLQcLmOO0cOB+ZAxxE+2AbyLSmra4urIpIuGwP7z7WLnDrpuqSoBI65/nkfakNI++OOqwtpqiY5+Ovy2sTlhvJMP
- NKQilXVls4YsoomtfMm326htDEL8iehi87LtyVzJDdVEbpDuB6M944CpeFCi1lvlbLZKp/xm9YleC7sbhMLQVs92SnXK+0ICEfNtNZ1N8vaiu7fVSr1BFLjZ
- 8jCShZPcvKBaXW12eRihzGqkWpLj65UlbQwlDHhc7D924tsjBZuhfWnz7g69Vb/e/iBiBa4o3+DHoJJhFax7VwFnU7KuBXXDdERSFtOo/S6RRxadrFshFakC
- uUzp6UW6M/OChwP1r3uaki5uIkuF9f7/Jnmdj1J/6ho0dIxRF3nVLa/XFeZ5FVlRe4UOcaC31YtX32Em/eD2YPZuHMSsTxORpfBZpdDOFMwv4NAg26A=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="foM9DbudB2CcldhH"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ4vTzyfAG2UWzzkhVkBSLDRPjdyDUFZJ9LrDmsFsQ1gA@mail.gmail.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/10/20 5:17 PM, Claudiu Beznea wrote:
-> Add microchip,sam9x60-isi to DT bindings documentation.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/media/atmel-isi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
-> index 332513a151cc..8924c7545b63 100644
-> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
-> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
-> @@ -2,7 +2,7 @@ Atmel Image Sensor Interface (ISI)
->  ----------------------------------
->  
->  Required properties for ISI:
-> -- compatible: must be "atmel,at91sam9g45-isi".
-> +- compatible: must be "atmel,at91sam9g45-isi" or "microchip,sam9x60-isi".
->  - reg: physical base address and length of the registers set for the device.
->  - interrupts: should contain IRQ line for the ISI.
->  - clocks: list of clock specifiers, corresponding to entries in the clock-names
-> 
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+--foM9DbudB2CcldhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards,
+On Mon, Jan 13, 2020 at 10:56:55AM -0600, Rob Herring wrote:
+> On Thu, Jan 9, 2020 at 5:26 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
 
-	Hans
+> > Add device tree binding information for mpq7920 regulator driver.
+> > Example bindings for mpq7920 are added.
+
+> Mark, Please revert this. Not even close to valid schema and my
+> questions on v4 are unanswered.
+
+OK...  I didn't see any comments on V5.
+
+> > +      mps,switch-freq:
+
+> As I asked on v4, shouldn't this be a common property? Switching
+> frequency is a common property for switching regulators, right?
+
+It's not very common and where it's offered the valid values are
+generally highly constrained so I'm not sure it makes sense to do
+that, any device that does have this feature will want to specify
+the valid values for that particular device.
+
+--foM9DbudB2CcldhH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4dtRMACgkQJNaLcl1U
+h9CAuAf/bAfTT3rYtCh0iL5pJ5AemEgO/3RbG+Zke1dFVUaYwpEDpyfsxSysbSqm
+LIc4dsM+NPfiQ7LxzMfXNfzydbdj+1Ts+pVnlnJkbE7daQvZY008yEQghcswTD3M
+9qZWmJNCHZtH0knhDN2Zekoei9nWqHvLoYAC/X24QT/okiNFTRjIepKKYLobx3mm
+RkdwNumjL86O9EuYVgznLyFfr0BvmvqagpDhBV5KHdBQNUgHvr0JjQAKoVUR4N+A
+qoJSp3OTaBtLvHGUv1BhqLbITn4eRLlP3uKw+H5EgmMQKW75U6dGwmh6a+nswI7E
+Xp7ZiwxEKfBN252W1sexbJOmhkm+7A==
+=qm5x
+-----END PGP SIGNATURE-----
+
+--foM9DbudB2CcldhH--
