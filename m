@@ -2,154 +2,114 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93901C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2F3C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1862467C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579005950;
-	bh=5Xx/5E6xOw7Km9R4I0Y6ZaqaGkVDzTuF66OmQwdPn0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H7Hr80PMk/B3crM0zVQkE0SItXBz0HHBL7P35J5bL3+TVzaCJNPaSbuzFopoqoydF
-	 L27hw7cOw4G2691B/SFWjBHAGcIExohL9XMjBottygh4YLtL3xjHAd5xvl1J/SdVYI
-	 yK90GXkLOuFH8Z3V8Z0L4Zx/+4pdQW7W05eA+iD4=
+	by mail.kernel.org (Postfix) with ESMTP id 3C6EA207E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 12:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726195AbgANMpt (ORCPT
+        id S1728670AbgANMyG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 07:45:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726106AbgANMpt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 07:45:49 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 933DE2072B;
-        Tue, 14 Jan 2020 12:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579005948;
-        bh=5Xx/5E6xOw7Km9R4I0Y6ZaqaGkVDzTuF66OmQwdPn0E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bDc54IzA8ITZll+FHhUYtsE6hTFFY9uwR6VuweAldUJOd68jiEkQPnwPebJRTLQO+
-         /JK0iqybSZ6IFE7ctCE9JOcIWFAbKtuHzaLB8CQ1OvRQF4IwDwk7m4hMTAhOhYIATp
-         YxYGMSEdh6ZleqDwG8kEfIHWmFTlT3zfbWbqdSMM=
-Date:   Tue, 14 Jan 2020 12:45:42 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v4 13/13] iommu/arm-smmu-v3: Add support for PCI PASID
-Message-ID: <20200114124541.GE29222@willie-the-truck>
-References: <20191219163033.2608177-1-jean-philippe@linaro.org>
- <20191219163033.2608177-14-jean-philippe@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191219163033.2608177-14-jean-philippe@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 14 Jan 2020 07:54:06 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:61740 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbgANMyG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 07:54:06 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 14 Jan 2020 18:24:00 +0530
+Received: from dikshita-linux.qualcomm.com ([10.204.65.237])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 14 Jan 2020 18:23:49 +0530
+Received: by dikshita-linux.qualcomm.com (Postfix, from userid 347544)
+        id B80203588; Tue, 14 Jan 2020 18:23:48 +0530 (IST)
+From:   Dikshita Agarwal <dikshita@codeaurora.org>
+To:     linux-media@vger.kernel.org, stanimir.varbanov@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vgarodia@codeaurora.org,
+        Dikshita Agarwal <dikshita@codeaurora.org>
+Subject: [PATCH V4 3/4] venus: core: add sc7180 DT compatible and resource struct
+Date:   Tue, 14 Jan 2020 18:23:35 +0530
+Message-Id: <1579006416-11599-4-git-send-email-dikshita@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
+References: <1579006416-11599-1-git-send-email-dikshita@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:30:33PM +0100, Jean-Philippe Brucker wrote:
-> Enable PASID for PCI devices that support it. Since the SSID tables are
-> allocated by arm_smmu_attach_dev(), PASID has to be enabled early enough.
-> arm_smmu_dev_feature_enable() would be too late, since by that time the
+This add DT compatible string and resource structure for sc7180.
 
-What is arm_smmu_dev_feature_enable()?
+Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+---
+ drivers/media/platform/qcom/venus/core.c | 45 ++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-> main DMA domain has already been attached. Do it in add_device() instead.
-> 
-> Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 55 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index e62ca80f2f76..8e95ecad4c9a 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2644,6 +2644,53 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
->  	atomic_dec(&smmu_domain->nr_ats_masters);
->  }
->  
-> +static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
-> +{
-> +	int ret;
-> +	int features;
-> +	int num_pasids;
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return -ENODEV;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	features = pci_pasid_features(pdev);
-> +	if (features < 0)
-> +		return features;
-> +
-> +	num_pasids = pci_max_pasids(pdev);
-> +	if (num_pasids <= 0)
-> +		return num_pasids;
-> +
-> +	ret = pci_enable_pasid(pdev, features);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to enable PASID\n");
-> +		return ret;
-> +	}
-> +
-> +	master->ssid_bits = min_t(u8, ilog2(num_pasids),
-> +				  master->smmu->ssid_bits);
-> +	return 0;
-> +}
-> +
-> +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
-> +{
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev_is_pci(master->dev))
-> +		return;
-> +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	if (!pdev->pasid_enabled)
-> +		return;
-> +
-> +	master->ssid_bits = 0;
-> +	pci_disable_pasid(pdev);
-> +}
-> +
->  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
->  {
->  	unsigned long flags;
-> @@ -2852,13 +2899,16 @@ static int arm_smmu_add_device(struct device *dev)
->  
->  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
->  
-> +	/* Note that PASID must be enabled before, and disabled after ATS */
-> +	arm_smmu_enable_pasid(master);
+diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+index c7525d9..194b10b9 100644
+--- a/drivers/media/platform/qcom/venus/core.c
++++ b/drivers/media/platform/qcom/venus/core.c
+@@ -521,11 +521,56 @@ static __maybe_unused int venus_runtime_resume(struct device *dev)
+ 	.fwname = "qcom/venus-5.2/venus.mdt",
+ };
+ 
++static const struct freq_tbl sc7180_freq_table[] = {
++	{  0, 500000000 },
++	{  0, 434000000 },
++	{  0, 340000000 },
++	{  0, 270000000 },
++	{  0, 150000000 },
++};
++
++static const struct bw_tbl sc7180_bw_table_enc[] = {
++	{  972000,  750000, 0, 0, 0 },	/* 3840x2160@30 */
++	{  489600,  451000, 0, 0, 0 },	/* 1920x1080@60 */
++	{  244800,  234000, 0, 0, 0 },	/* 1920x1080@30 */
++};
++
++static const struct bw_tbl sc7180_bw_table_dec[] = {
++	{ 1036800, 1386000, 0, 1875000, 0 },	/* 4096x2160@30 */
++	{  489600,  865000, 0, 1146000, 0 },	/* 1920x1080@60 */
++	{  244800,  530000, 0,  583000, 0 },	/* 1920x1080@30 */
++};
++
++static const struct venus_resources sc7180_res = {
++	.freq_tbl = sc7180_freq_table,
++	.freq_tbl_size = ARRAY_SIZE(sc7180_freq_table),
++	.bw_tbl_enc = sc7180_bw_table_enc,
++	.bw_tbl_enc_size = ARRAY_SIZE(sc7180_bw_table_enc),
++	.bw_tbl_dec = sc7180_bw_table_dec,
++	.bw_tbl_dec_size = ARRAY_SIZE(sc7180_bw_table_dec),
++	.codec_freq_data = sdm845_codec_freq_data,
++	.codec_freq_data_size = ARRAY_SIZE(sdm845_codec_freq_data),
++	.clks = {"core", "iface", "bus" },
++	.clks_num = 3,
++	.vcodec0_clks = { "vcodec0_core", "vcodec0_bus" },
++	.vcodec_clks_num = 2,
++	.vcodec_pmdomains = { "venus", "vcodec0" },
++	.vcodec_pmdomains_num = 2,
++	.vcodec_num = 1,
++	.hfi_version = HFI_VERSION_4XX,
++	.vmem_id = VIDC_RESOURCE_NONE,
++	.vmem_size = 0,
++	.vmem_addr = 0,
++	.dma_mask = 0xe0000000 - 1,
++	.fwname = "qcom/venus-5.4/venus.mdt",
++};
++
+ static const struct of_device_id venus_dt_match[] = {
+ 	{ .compatible = "qcom,msm8916-venus", .data = &msm8916_res, },
+ 	{ .compatible = "qcom,msm8996-venus", .data = &msm8996_res, },
+ 	{ .compatible = "qcom,sdm845-venus", .data = &sdm845_res, },
+ 	{ .compatible = "qcom,sdm845-venus-v2", .data = &sdm845_res_v2, },
++	{ .compatible = "qcom,sc7180-venus", .data = &sc7180_res, },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, venus_dt_match);
+-- 
+1.9.1
 
-Is that part of the PCIe specs? If so, please can you add a citation to the
-comment?
-
-Are there any other ordering requirements, i.e. with respect to enabling
-substreams at the SMMU? For example, can a speculative ATS request provide
-a PASID?
-
-Will
