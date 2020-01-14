@@ -2,97 +2,190 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE9DC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D2C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151F52084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579021074;
-	bh=I7zCUFSxCilOiygfJOrKMG+d9QBWeV+zMVpsSsqTMqc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZD0TZJZpH0FdRp/OihtD1AQUHaW0OQmigltz/kXWoPzKDtvzrYkrucLVWXbNTg8MH
-	 CJFhfL2Bjy7GZxN6re14BqGxKrtH6tKDClTyTAmUA8WAvq4AktlIJYeM+uAjxKhtcN
-	 A6O8RQhpLR1/K9PX0oADHRkYSKFPiGX+tpkJh+NM=
+	by mail.kernel.org (Postfix) with ESMTP id 757C42465A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:04:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Iic2PdG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgANQ5u (ORCPT
+        id S1727083AbgANREc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:57:50 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34292 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726195AbgANQ5t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 11:57:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I7zCUFSxCilOiygfJOrKMG+d9QBWeV+zMVpsSsqTMqc=; b=kWHKHJJ6ilFEWZ2bNlW/Xb26V
-        zGRDUEUZTnDadH1LnqM1ADZMn4ilWGec89HluanPHUxhNrpUyJ3xZqFAI5s2Q4E86vFSN9IF7T4Nf
-        gKE/KbbvYrjzJ3hSOsZPEkWNhP/YMZAWYoawaW2j8vSPiJajqf9hZ0l7gGfmHbxfE3+PY=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irPVc-0001hW-7R; Tue, 14 Jan 2020 16:57:40 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id ACA3ED01965; Tue, 14 Jan 2020 16:57:39 +0000 (GMT)
-Date:   Tue, 14 Jan 2020 16:57:39 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-Cc:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lkp@intel.com" <lkp@intel.com>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>
-Subject: Re: [PATCH v3] spi: fsl: simplify error path in of_fsl_spi_probe()
-Message-ID: <20200114165739.GC3897@sirena.org.uk>
-References: <2a4a7e11b37cfa0558d68f0d35e90d6da858b059.1579017697.git.christophe.leroy@c-s.fr>
- <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="avNtfD0ffNO6L/9g"
-Content-Disposition: inline
-In-Reply-To: <b6d01fa02e659db911df63a79d825080f03dfcb8.camel@infinera.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 14 Jan 2020 12:04:32 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:32634 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgANREc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 12:04:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579021470;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=i4vTSHrZF74l95fwgGGq2i9iOXJ2vXfG6gNaBmjcx2Q=;
+        b=Iic2PdG82Ru3vYCytkhBNit3sP5phwm4CCz016S5+tuUGP86lYSfM6kibz9L2DgQlO
+        Ty7JxC6SmIC3Gs7/WUkz+Y5izMBrpQuC6YpuPD4sOj+sGeICBcSD+Jelu/vdh/QBu6uZ
+        fQgJbk++Kb/Sjem7klJmOyV3U5KWFUipps9rmaIapLXlpicPbUr4RV1ff6ilQhLBG/24
+        Go/L3R+k2GkkkcT2y4ynIByCykshEQLhBHxtugKVOnQV4iYrvU6hHBQ/obxJqFuNmQLk
+        DFZdTMmDrenB5rTe+W66eqylqyJpLhdBzDwFywBbXdPk4kNW7O+tNA7ffY0GHxqgqdee
+        LKyQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXA4FNWc="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id c04ea5w0EH4RPgE
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 14 Jan 2020 18:04:27 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] ARM: dts: Configure omap5 AESS
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200114164613.GR5885@atomide.com>
+Date:   Tue, 14 Jan 2020 18:04:26 +0100
+Cc:     linux-omap@vger.kernel.org,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        devicetree@vger.kernel.org,
+        Matthijs van Duin <matthijsvanduin@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D51230C4-2642-4388-959F-313A3382AB99@goldelico.com>
+References: <20200114150937.18304-1-tony@atomide.com> <52905C15-A2D1-4372-9781-D602D0B274B6@goldelico.com> <20200114164613.GR5885@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Tony,
 
---avNtfD0ffNO6L/9g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Am 14.01.2020 um 17:46 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [200114 16:38]:
+>> Hi Tony,
+>>=20
+>>> Am 14.01.2020 um 16:09 schrieb Tony Lindgren <tony@atomide.com>:
+>>>=20
+>>> We are missing AESS for omap5. Looks like it's similar to what we =
+have
+>>> for omap4, and this gets ti-sysc interconnect target module driver =
+to
+>>> detect it properly.
+>>>=20
+>>> Note that we currently have no child device driver available for it.
+>>=20
+>> What I have is a non-working and no more compiling driver originally =
+written by
+>> Peter Ujfalusi and reworked by Andrej Utkin. We did have it almost =
+running on
+>> v4.14 or so except problems with firmware versions and headers...
+>>=20
+>> There we used classical hwmods and I could revert them now to try =
+your new patches.
+>> Unfortunately, I could only compile-test your two patches but nothing =
+with AESS.
+>>=20
+>> We had tried to follow kernel API changes in the sound subsystem but =
+today it is
+>> not even compiling any more :(
+>>=20
+>> So getting a working device driver is an even bigger task than SGX =
+was.
+>=20
+> OK. Well hopefully that's at least a little bit easier now though.
+>=20
+>>> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+>>> Cc: Matthijs van Duin <matthijsvanduin@gmail.com>
+>>> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> Cc: Tero Kristo <t-kristo@ti.com>
+>>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>>> ---
+>>>=20
+>>> Note that this depends on "[PATCH] clk: ti: omap5: Add missing AESS =
+clock".
+>>>=20
+>>> arch/arm/boot/dts/omap5-l4-abe.dtsi | 16 ++++++++++++++--
+>>> 1 file changed, 14 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/arch/arm/boot/dts/omap5-l4-abe.dtsi =
+b/arch/arm/boot/dts/omap5-l4-abe.dtsi
+>>> --- a/arch/arm/boot/dts/omap5-l4-abe.dtsi
+>>> +++ b/arch/arm/boot/dts/omap5-l4-abe.dtsi
+>>> @@ -426,8 +426,20 @@ target-module@c0000 {			/* =
+0x401c0000, ap 30 1e.0 */
+>>> 		};
+>>>=20
+>>> 		target-module@f1000 {			/* 0x401f1000, =
+ap 32 20.0 */
+>>=20
+>> Here its may be good to have an "aess" label.
+>=20
+> Care to clarify what you have in mind? The module is generic, aess
+> device will be the child node.
 
-On Tue, Jan 14, 2020 at 04:26:18PM +0000, Joakim Tjernlund wrote:
+The existing driver is hooked into the sound root-node and looks for a
+ti,aess =3D <&aess>; link:
 
-> Don't you need to "undo" ioremap, irq etc. in case of later errors?
+/ {
+	sound: sound {
+		compatible =3D "ti,abe-twl6040";
+		ti,model =3D "omap5-uevm";
 
-Better, convert to devm_=20
+		ti,jack-detection;
+		ti,mclk-freq =3D <19200000>;
 
---avNtfD0ffNO6L/9g
-Content-Type: application/pgp-signature; name="signature.asc"
+		ti,mcpdm =3D <&mcpdm>;
+		ti,mcbsp1 =3D <&mcbsp1>;
+		ti,mcbsp2 =3D <&mcbsp2>;
+		ti,mcbsp3 =3D <&mcbsp3>;
 
------BEGIN PGP SIGNATURE-----
+		ti,twl6040 =3D <&twl6040>;
+		ti,aess =3D <&aess>;
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d8wIACgkQJNaLcl1U
-h9DBpgf/ZMWk7TuStHKbaJC0YfEaWwp2D/yVzYAISxxSeNvL25vQlQlFJe6YGYR0
-2KK5vLMxNaH1Vf6vhet00ClpsdinZt7Jx91tzaplblsKxlPbraf4tSs6USCdy5Iq
-kSgUDnJvxiQSMnoTjJOkMh/ee/2LJQtVnYB+XirIqI9YWfqAZLrgm/PfqUnNq5vG
-+g9nCJ3/RKsLQGb9VmbmXwMy5gVCj3u41aMoX9XDDgoayy1IZPWRIsBTIzUmmCLZ
-A5OhXxnxucHDkAMXjiHE+jmgPEC1LUV+JIBydgN7Z+ryBNvTeLXDTFbnavabBb3Q
-RaQCF+kEphOgL9A5QfgIkwmkUwtCtg==
-=SVwD
------END PGP SIGNATURE-----
+		...
+	};
+};
 
---avNtfD0ffNO6L/9g--
+Well, this could be simply wrong... I.e. the aess node should request
+all the phandles to mcpdm and mcbsps because it is connected to.
+
+Or it is right to use the sound node to "connect" all subsystems.
+
+Then the "aess" core could also become the child node of the =
+target-module:
+
+target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
+	...
+	aess: aess {
+		compatible =3D "ti,aess";
+		status =3D "disabled";
+	};
+};
+
+Although it looks better this way, it may make it even one step
+more difficult to resurrect the old code...
+
+And DT maintainers are not happy with otherwise undefined compatible
+definitions.
+
+So maybe:
+
+target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
+	...
+
+	aess: aess {
+		/* revisit
+		compatible =3D "ti,aess";
+		status =3D "disabled";
+		*/
+	};
+};
+
+BR,
+Nikolaus
+
