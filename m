@@ -2,381 +2,124 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F96C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5397C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6089824676
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADBB24679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Qys0t03B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nHwWTsMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgANLfF (ORCPT
+        id S1728826AbgANLwi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:35:05 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39009 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728826AbgANLfF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 06:35:05 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 20so13284464wmj.4
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 03:35:03 -0800 (PST)
+        Tue, 14 Jan 2020 06:52:38 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45027 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728914AbgANLwh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 06:52:37 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q10so11860856wrm.11
+        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 03:52:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k8AVVaO7HKE7x0zW0W7TyY5oUqGiTG9X8D5bWOykcck=;
-        b=Qys0t03BNzJF3zJ773pHzLMeM90dkAkHGg78pV1bbGqYUBorYOk90XE0g0bQUounYM
-         b7SFLJc5nZIzTIaakyunrVAyQp+BgWHl0Pm1H+X8DzRbPeso7IZLA0twNJVcUGQ/Cfsv
-         5dHsEMpum9DlyZmGR5JqdDY7it+au8/XQ0PlL2hQqzawvsuQW5v4vsvE6EKxl4Ug6PGl
-         borx5Umpwtk9Fxmqy3h8qqueujamxrCBhGmn2x/gBvfocqLmIKVZlXpuVdcfxk+cdqU7
-         l7DG1jDGapyncw9jc70dKqMbBknPFhWdcuTr9n1E+bDtvI85eO4jnIinmxZlao45LfuS
-         8ErQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IzwdNUfwlcqLxXSve6wb9StsyrN71lEbIfR41dllFLE=;
+        b=nHwWTsMXEiHgMlLp3rhEKjlY4oFiFN8uVx7EJmL5HpoMLn17G6GskriKC2J4FFqDUf
+         D5PQSR5bGBe2KBkkR2zFboV/+9i2TmSPBkL7OTbNdNiHX7nk7ICkuK4+TDYSmsObTwlN
+         OiLPLpXLq1/M83nG9MZ4HV3/E8nkRsHlO+3UGguEfdmsc46vGQLVsOn5TDTpRV54ob4n
+         pfPb5QzbcX59Yso+X81V+w/rj0PdB4UueRJp1lnyRPXgrA9EDAaNr1NIgCRHQnNRf4Px
+         4jf1EDSskOFU/ovVyTUDM3aMNE2/F5yIbTVFheDVn7pktx7l7R1XqxTCuWrnDyXVGPM4
+         Ul9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k8AVVaO7HKE7x0zW0W7TyY5oUqGiTG9X8D5bWOykcck=;
-        b=ScQw7nVkoyjQyLBH/I09lK3/HGlSEZZVRJEG4TiyFQzTlRvJ+32QG5dK6zTHDB5IrF
-         lbDw1koUzl25gvrC/kPM2PCYFcRx9r6S6onsXLZi5vOaPSGpp1jbbcPZLz75KMAiJ+wX
-         V52v4IKMTmXQD92Ky7D1k8/o92kqhT0dbFcMAylqa71pr65six2Q6YAwGPhQYuAatj4y
-         nLVmIrhxndSFNYFNu/P5s0iVHCjh4rJZDc/jSPuUQvgbn8vHLrHYcAxTWo0dn2xOz8Y3
-         7lJrniQhVXSQz5WO2yIfC+EVMft3Rj6bFBSZXgMQz6lbQJChV+IQudaL2MJZQuV/ZzQE
-         ZBTg==
-X-Gm-Message-State: APjAAAWf1So8rZXXCGBPP8B6A4PCrv+n2i13Bp+MbLcOYWP7ZaYpasUh
-        KT4KoO4JyNWrPxPvb5EtERlz8UhsZ1bAPkTsXK7Nl5e3TTU=
-X-Google-Smtp-Source: APXvYqzAYf3XnsT4uLsj3pPqm7yo7SkwtGNrbE8LVt0VZ3j9x/PAVK3RmKkwUPOFPlL1x9kxksGDcs5NrtNkmKQ9wDw=
-X-Received: by 2002:a1c:1f51:: with SMTP id f78mr25342578wmf.60.1579001703203;
- Tue, 14 Jan 2020 03:35:03 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IzwdNUfwlcqLxXSve6wb9StsyrN71lEbIfR41dllFLE=;
+        b=JQqAmM94qwsX4X4xGsnulQYIgtwkgZceD4gbnhrLyT6IiZ7X8dIy/RXyfRE04X2n9W
+         S2JHzOnz9OS6kXTgmEnc5Dm4gcQyiRj6FSpi2h4RGKvpt3UgtDuPThbJ42rau3L/JGYG
+         XE3YpXfvZSIgN/ghPjbqyL3wK7s6MWUx4RhSbWQXbKsv5S/DY7fm02mafknHPIeSt+n3
+         AIxVtOQIRilpAj+a/SxCuwlNvOtOu3XGh0WLvvH+wAT55yociGds+s8MW1lT1pwfxcYi
+         H7+RTg1yIdANGVarz529Kwtf3tqcJap8pALOFDqZk+qJzHwqSQenMF5cp5tw3BIv3f2O
+         w20g==
+X-Gm-Message-State: APjAAAWtpYHdZH+ic8ThHnCgRky5C1fZBi50YoHaCtVxCJupfjR4Gojn
+        En536fHMbNzCATWpMNMdCXBttQ==
+X-Google-Smtp-Source: APXvYqz9ANL4J4N9FkoeCEsa+reFmsBRsdemTWxAkjYGsn5VOn30+AuMczjNSCVZhAF6FpG81uDvcw==
+X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr24916169wru.220.1579002755460;
+        Tue, 14 Jan 2020 03:52:35 -0800 (PST)
+Received: from myrica ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id v22sm18105022wml.11.2020.01.14.03.52.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 03:52:34 -0800 (PST)
+Date:   Tue, 14 Jan 2020 12:52:30 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v4 06/13] iommu/arm-smmu-v3: Add context descriptor
+ tables allocators
+Message-ID: <20200114115230.GA1799@myrica>
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20191219163033.2608177-7-jean-philippe@linaro.org>
+ <20200114110651.GA29222@willie-the-truck>
 MIME-Version: 1.0
-References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
- <20191227122114.23075-3-andrey.konovalov@linaro.org> <20191227145547.GE861@valkosipuli.retiisi.org.uk>
- <d3f1591b-1a98-e876-b977-96e1210e9c49@linaro.org>
-In-Reply-To: <d3f1591b-1a98-e876-b977-96e1210e9c49@linaro.org>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Tue, 14 Jan 2020 11:34:46 +0000
-Message-ID: <CAPY8ntCwh6KXpx-tMhjVwF97hqayLRKVC8BC6DCZ0hqvkU-boA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] media: i2c: Add driver for Sony IMX219 sensor
-To:     Andrey Konovalov <andrey.konovalov@linaro.org>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>, mchehab@kernel.org,
-        robh+dt@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Peter Griffin <peter.griffin@linaro.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114110651.GA29222@willie-the-truck>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Andrey & Sakari
+On Tue, Jan 14, 2020 at 11:06:52AM +0000, Will Deacon wrote:
+> >  /* Context descriptor manipulation functions */
+> > +static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
+> > +					struct arm_smmu_cd_table *table,
+> > +					size_t num_entries)
+> > +{
+> > +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+> > +
+> > +	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
+> > +					 GFP_KERNEL);
+> > +	if (!table->ptr) {
+> > +		dev_warn(smmu->dev,
+> > +			 "failed to allocate context descriptor table\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
+> > +					struct arm_smmu_cd_table *table,
+> > +					size_t num_entries)
+> > +{
+> > +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+> > +
+> > +	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
+> > +}
+> 
+> I think we'd be better off taking the 'arm_smmu_s1_cfg' as a parameter here
+> instead of the table pointer and a num_entries value, since the code above
+> implies that we support partial freeing of the context descriptors.
+> 
+> I can do that as a follow-up patch if you agree. Thoughts?
 
-On Mon, 13 Jan 2020 at 19:16, Andrey Konovalov
-<andrey.konovalov@linaro.org> wrote:
->
-> Hi Sakari,
->
-> Sorry for delayed reply..
-> (your email got into a wrong folder, and I might not find it there if Ezequiel
-> did not warn me that I didn't address the comments from your review)
+Do you mean only changing the arguments of arm_smmu_free_cd_leaf_table(),
+or arm_smmu_alloc_cd_leaf_table() as well? For free() I agree, for alloc()
+I'm not sure it would look better.
 
-For some reason I missed getting Sakari's email too - apologies.
+For my tests I have a debug patch that allocates PASIDs randomly which
+quickly consumes DMA for leaf tables. So I do have to free the leaves
+individually when they aren't used, but it will be easy for me to update.
 
-> On 27.12.2019 17:55, Sakari Ailus wrote:
-> > Hi Andrey,
-> >
-> > On Fri, Dec 27, 2019 at 03:21:14PM +0300, Andrey Konovalov wrote:
-> >> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> >>
-> >> Adds a driver for the 8MPix Sony IMX219 CSI2 sensor.
-> >> Whilst the sensor supports 2 or 4 CSI2 data lanes, this driver
-> >> currently only supports 2 lanes.
-> >> 8MPix @ 15fps, 1080P @ 30fps (cropped FOV), and 1640x1232 (2x2 binned)
-> >> @ 30fps are currently supported.
-> >>
-> >> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> >> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-> >> ---
-> >>   drivers/media/i2c/Kconfig  |   12 +
-> >>   drivers/media/i2c/Makefile |    1 +
-> >>   drivers/media/i2c/imx219.c | 1240 ++++++++++++++++++++++++++++++++++++
-> >>   3 files changed, 1253 insertions(+)
-> >>   create mode 100644 drivers/media/i2c/imx219.c
->
-> <snip>
->
-> >> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> >> new file mode 100644
-> >> index 000000000000..28b55c61cd77
-> >> --- /dev/null
-> >> +++ b/drivers/media/i2c/imx219.c
->
-> <snip>
->
-> >> +/* Power/clock management functions */
-> >> +static int imx219_power_on(struct device *dev)
-> >> +{
-> >> +    struct i2c_client *client = to_i2c_client(dev);
-> >> +    struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> >> +    struct imx219 *imx219 = to_imx219(sd);
-> >> +    int ret;
-> >> +
-> >> +    ret = regulator_bulk_enable(IMX219_NUM_SUPPLIES,
-> >> +                                imx219->supplies);
-> >> +    if (ret) {
-> >> +            dev_err(&client->dev, "%s: failed to enable regulators\n",
-> >> +                    __func__);
-> >> +            return ret;
-> >> +    }
-> >> +
-> >> +    ret = clk_prepare_enable(imx219->xclk);
-> >> +    if (ret) {
-> >> +            dev_err(&client->dev, "%s: failed to enable clock\n",
-> >> +                    __func__);
-> >> +            goto reg_off;
-> >> +    }
-> >> +
-> >> +    gpiod_set_value_cansleep(imx219->xclr_gpio, 1);
-> >> +    msleep(IMX219_XCLR_DELAY_MS);
-> >
-> > I guess 10 ms is ok albeit it'd be nicer if you calculated the required
-> > delay instead.
->
-> I think this 10 ms delay actually serves two purposes here. It is
-> not only the delay after XCLR pin is set high (reset de-asserted),
-> but it also lets the camera power supplies voltages to settle after
-> regulator_bulk_enable() called few lines above.
->
-> So I would make the delay a sum of 1) the value which depends on
-> input clock frequency (the driver currently supports 24MHz only)
-> and 2) a fixed value of 8 ms or so to account for the power supplies
-> settle time. So that the sum would be the same 10 ms for 24MHz input
-> clock.
-> Does it makes sense?
-
-Regulator settling times shouldn't really be included here - that
-should be taken care of via the regulator framework (in the case of DT
-for regulator-fixed you define the startup-delay-us property).
-
-What level do you end up computing it to?
-
-This delay covers t4, t5 and t6 from figure 38 on page 77 of the datasheet[1]
-t4 is max 200usecs.
-t5 is 6ms.
-t6 is 32000 cycles of INCK. As you say INCK=24MHz is the only
-supported clock frequency at present, so 1.3ms. Minimum clock is 6MHz
-which will make this 5.3ms.
-
-t6 is in parallel with t5, but it is smaller than t5 even at the
-minimum clock frequency.
-Yes we can be programming the sensor over I2C after t5 but before t6,
-but you'd now want to be computing the number of I2C writes required,
-the speed of the I2C bus, and probably a few other parameters to
-ensure you don't violate t5. The sensor supports 1MHz CCI if INCK is
->11.4MHz. A quick check says we have around 60 register writes to
-initialise the sensor. 38 clocks (4 * (8 data bits + ACK) + start +
-end) to write each register, which I make 2.4ms. It is therefore
-possible to violate t5.
-
-Is it worth that level of computation, or do you just take t4+t5 at 6.2ms?
-
-I have been a bit naughty up until now in not setting startup-delay-us
-on the regulator definition and relying on this delay instead. The
-driver ought to do the right thing though and I'll fix my
-configuration.
-
-  Dave
-
-[1] https://github.com/rellimmot/Sony-IMX219-Raspberry-Pi-V2-CMOS
-
-> <snip>
->
-> >> +static int imx219_probe(struct i2c_client *client,
-> >> +                    const struct i2c_device_id *id)
-> >> +{
-> >> +    struct device *dev = &client->dev;
-> >> +    struct fwnode_handle *endpoint;
-> >> +    struct imx219 *imx219;
-> >> +    int ret;
-> >> +
-> >> +    imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
-> >> +    if (!imx219)
-> >> +            return -ENOMEM;
-> >> +
-> >> +    imx219->dev = dev;
-> >
-> > Instead of putting a dev field to struct imx219, you can find the device in
-> > struct i2c_client.dev, which you can get by:
-> >
-> >       v4l2_get_subdevdata(imx219->sd)
-> >
-> >> +
-> >> +    v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
-> >> +
-> >> +    /* Get CSI2 bus config */
-> >> +    endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-> >> +                                              NULL);
-> >> +    if (!endpoint) {
-> >> +            dev_err(dev, "endpoint node not found\n");
-> >> +            return -EINVAL;
-> >> +    }
-> >> +
-> >> +    ret = v4l2_fwnode_endpoint_parse(endpoint, &imx219->ep);
-> >> +    fwnode_handle_put(endpoint);
-> >> +    if (ret) {
-> >> +            dev_err(dev, "Could not parse endpoint\n");
-> >> +            return ret;
-> >> +    }
-> >> +
-> >> +    /* Get system clock (xclk) */
-> >> +    imx219->xclk = devm_clk_get(dev, "xclk");
-> >> +    if (IS_ERR(imx219->xclk)) {
-> >> +            dev_err(dev, "failed to get xclk\n");
-> >> +            return PTR_ERR(imx219->xclk);
-> >> +    }
-> >> +
-> >> +    imx219->xclk_freq = clk_get_rate(imx219->xclk);
-> >> +    if (imx219->xclk_freq != IMX219_XCLK_FREQ) {
-> >> +            dev_err(dev, "xclk frequency not supported: %d Hz\n",
-> >> +                    imx219->xclk_freq);
-> >> +            return -EINVAL;
-> >> +    }
-> >
-> > Could you also check the link frequencies (the link-frequencies property
-> > that also should be added to DT bindings) matches with what is possible
-> > with the given xclk frequency? Please see e.g. imx319 driver for an
-> > example.
->
-> The driver only supports single xclk frequency and single link-frequency
-> (hardcoded in the registers value tables). So the check will be more like
-> the one in imx290 driver (error out if the link-frequency property isn't
-> equal to the pre#define-d default value).
->
-> >> +
-> >> +    ret = imx219_get_regulators(imx219);
-> >> +    if (ret)
-> >> +            return ret;
-> >> +
-> >> +    /* Request optional enable pin */
-> >> +    imx219->xclr_gpio = devm_gpiod_get_optional(dev, "xclr",
-> >> +                                                GPIOD_OUT_HIGH);
-> >> +
-> >> +    /*
-> >> +     * The sensor must be powered for imx219_identify_module()
-> >> +     * to be able to read the CHIP_ID register
-> >> +     */
-> >> +    ret = imx219_power_on(dev);
-> >> +    if (ret)
-> >> +            return ret;
-> >> +
-> >> +    ret = imx219_identify_module(imx219);
-> >> +    if (ret)
-> >> +            goto error_power_off;
-> >> +
-> >> +    /* Set default mode to max resolution */
-> >> +    imx219->mode = &supported_modes[0];
-> >> +
-> >> +    ret = imx219_init_controls(imx219);
-> >> +    if (ret)
-> >> +            goto error_power_off;
-> >> +
-> >> +    /* Initialize subdev */
-> >> +    imx219->sd.internal_ops = &imx219_internal_ops;
-> >> +    imx219->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> >> +    imx219->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
-> >> +
-> >> +    /* Initialize source pad */
-> >> +    imx219->pad.flags = MEDIA_PAD_FL_SOURCE;
-> >> +
-> >> +    ret = media_entity_pads_init(&imx219->sd.entity, 1, &imx219->pad);
-> >> +    if (ret)
-> >> +            goto error_handler_free;
-> >> +
-> >> +    ret = v4l2_async_register_subdev_sensor_common(&imx219->sd);
-> >> +    if (ret < 0)
-> >> +            goto error_media_entity;
-> >> +
-> >> +    /* Enable runtime PM and turn off the device */
-> >> +    pm_runtime_set_active(dev);
-> >> +    pm_runtime_enable(dev);
-> >> +    pm_runtime_idle(dev);
-> >> +
-> >> +    return 0;
-> >> +
-> >> +error_media_entity:
-> >> +    media_entity_cleanup(&imx219->sd.entity);
-> >> +
-> >> +error_handler_free:
-> >> +    imx219_free_controls(imx219);
-> >> +
-> >> +error_power_off:
-> >> +    imx219_power_off(dev);
-> >> +
-> >> +    return ret;
-> >> +}
-> >> +
-> >> +static int imx219_remove(struct i2c_client *client)
-> >> +{
-> >> +    struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> >> +    struct imx219 *imx219 = to_imx219(sd);
-> >> +
-> >> +    v4l2_async_unregister_subdev(sd);
-> >> +    media_entity_cleanup(&sd->entity);
-> >> +    imx219_free_controls(imx219);
-> >> +
-> >> +    pm_runtime_disable(&client->dev);
-> >> +    pm_runtime_set_suspended(&client->dev);
-> >
-> > imx219_power_off(), if the sensor is powered on here. Please see e.g. the
-> > smiapp driver regarding this.
->
-> It should be powered off here.
->
-> The sensor is powered on when streaming is started, and is powered off when
-> it is stopped: if the enable argument is false, imx219_set_stream() calls
-> pm_runtime_put().
-> IOW, it follows the imx319 driver as the example of power management.
->
-> >> +
-> >> +    return 0;
-> >> +}
-> >> +
-> >> +static const struct of_device_id imx219_dt_ids[] = {
-> >> +    { .compatible = "sony,imx219" },
-> >> +    { /* sentinel */ }
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, imx219_dt_ids);
-> >> +
-> >> +static const struct dev_pm_ops imx219_pm_ops = {
-> >> +    SET_SYSTEM_SLEEP_PM_OPS(imx219_suspend, imx219_resume)
-> >> +    SET_RUNTIME_PM_OPS(imx219_power_off, imx219_power_on, NULL)
-> >> +};
-> >> +
-> >> +static struct i2c_driver imx219_i2c_driver = {
-> >> +    .driver = {
-> >> +            .name = "imx219",
-> >> +            .of_match_table = imx219_dt_ids,
-> >> +            .pm = &imx219_pm_ops,
-> >> +    },
-> >> +    .probe = imx219_probe,
-> >
-> > Could you use .probe_new, and remove the i2c_device_id argument?
->
-> I'll fix this and all the other issues I didn't comment on in this email
-> in the v4 of the patch set.
->
-> Thanks,
-> Andrey
->
-> >> +    .remove = imx219_remove,
-> >> +};
-> >> +
-> >> +module_i2c_driver(imx219_i2c_driver);
-> >> +
-> >> +MODULE_AUTHOR("Dave Stevenson <dave.stevenson@raspberrypi.com");
-> >> +MODULE_DESCRIPTION("Sony IMX219 sensor driver");
-> >> +MODULE_LICENSE("GPL v2");
-> >
+Thanks,
+Jean
