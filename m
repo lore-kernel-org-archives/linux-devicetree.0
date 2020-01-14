@@ -2,98 +2,117 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81448C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7A7C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578CF207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09E32468F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgANKHK (ORCPT
+        id S1729678AbgANKDz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:07:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:52696 "EHLO mx2.suse.de"
+        Tue, 14 Jan 2020 05:03:55 -0500
+Received: from mga18.intel.com ([134.134.136.126]:4432 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729238AbgANKHJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E44BEAFAE;
-        Tue, 14 Jan 2020 10:07:06 +0000 (UTC)
-Subject: Re: [PATCH] arm64: dts: realtek: rtd16xx: Add memory reservations
-To:     linux-realtek-soc@lists.infradead.org,
-        James Tai <james.tai@realtek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20200103060441.1109-1-afaerber@suse.de>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <5c2a472c-39f7-f8e0-6df8-0d02d07990df@suse.de>
-Date:   Tue, 14 Jan 2020 11:07:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        id S1729299AbgANKDx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:03:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 02:03:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
+   d="scan'208";a="397461736"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 14 Jan 2020 02:03:52 -0800
+Received: from [10.226.39.11] (unknown [10.226.39.11])
+        by linux.intel.com (Postfix) with ESMTP id 9DAA75802B1;
+        Tue, 14 Jan 2020 02:03:51 -0800 (PST)
+Subject: Re: [PATCH] dt-bindings: reset: intel,rcu-gw: Fix intel,global-reset
+ schema
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Philipp Zabel <p.zabel@pengutronix.de>
+References: <20200113214515.3950-1-robh@kernel.org>
+ <6594eba7-fb23-b741-4490-da27573fe132@linux.intel.com>
+Message-ID: <6cbc1500-6526-f985-6060-962ffd87ac25@linux.intel.com>
+Date:   Tue, 14 Jan 2020 18:03:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200103060441.1109-1-afaerber@suse.de>
+In-Reply-To: <6594eba7-fb23-b741-4490-da27573fe132@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Am 03.01.20 um 07:04 schrieb Andreas Färber:
-> Reserve memory regions for RPC and TEE.
-> 
-> Fixes: e5a9e237608d ("arm64: dts: realtek: Add RTD1619 SoC and Realtek Mjolnir EVB")
-> Cc: James Tai <james.tai@realtek.com>
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->   arch/arm64/boot/dts/realtek/rtd16xx.dtsi | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
+Hi Rob,
 
-Ping! @Realtek: Please check the numbers.
+My bad, please ignore my response.
+I just directly jumped into the error and felt you are suggesting me to 
+send a separate patch to fix the error.
+After sending the mail i realized by reading the subject that you 
+already submitted the fix patch.
+Please ignore it,
 
-Thanks,
-Andreas
+Thanks for doing it.
+Regards,
+Dilip
 
-> diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-> index 3c70a0da329e..4dc6c9f13c43 100644
-> --- a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-> +++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
-> @@ -14,6 +14,25 @@
->   	#address-cells = <1>;
->   	#size-cells = <1>;
->   
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		rpc_comm: rpc@2f000 {
-> +			reg = <0x2f000 0x1000>;
-> +		};
-> +
-> +		rpc_ringbuf: rpc@1ffe000 {
-> +			reg = <0x1ffe000 0x4000>;
-> +		};
-> +
-> +		tee: tee@10100000 {
-> +			reg = <0x10100000 0xf00000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->   	cpus {
->   		#address-cells = <1>;
->   		#size-cells = <0>;
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+On 1/14/2020 5:54 PM, Dilip Kota wrote:
+>
+> On 1/14/2020 5:45 AM, Rob Herring wrote:
+>> The intel,rcu-gw binding example has an error:
+>>
+>> Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml:
+>>    reset-controller@e0000000: intel,global-reset: [[16, 30]] is too 
+>> short
+>>
+>> The error isn't really correct as the problem is in how the data is
+>> encoded and the schema is not fixed up by the tooling correctly.
+>> However, array properties should describe the elements in the array, so
+>> lets do that which fixes the error in the process.
+>
+> Sure, i will add the change describing the array properties and push 
+> as a fix patch.
+>
+>
+> Regards,
+>
+> Dilip
+>
+>>
+>> Fixes: b7ab0cb00d08 ("dt-bindings: reset: Add YAML schemas for the 
+>> Intel Reset controller")
+>> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+>> Cc: Dilip Kota <eswara.kota@linux.intel.com>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml 
+>> b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+>> index 246dea8a2ec9..8ac437282659 100644
+>> --- a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+>> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+>> @@ -23,7 +23,11 @@ properties:
+>>       description: Global reset register offset and bit offset.
+>>       allOf:
+>>         - $ref: /schemas/types.yaml#/definitions/uint32-array
+>> -      - maxItems: 2
+>> +    items:
+>> +      - description: Register offset
+>> +      - description: Register bit offset
+>> +        minimum: 0
+>> +        maximum: 31
+>>       "#reset-cells":
+>>       minimum: 2
