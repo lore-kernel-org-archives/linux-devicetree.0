@@ -2,198 +2,273 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42794C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9C2C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DDB24679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:08:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyALs+fz"
+	by mail.kernel.org (Postfix) with ESMTP id 1433E2467D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:12:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579011133;
+	bh=z7fi7mTnGrxlQpOo6jCdbb+V9IOBcmR5uq9RP9iLmNc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lm8gU4c3C3zHklTm+fQByFefTUc+0q4Pjo2GZ1Q/HAuM4mENHAY2iLjGArCE0IZCm
+	 z2dXmNFppX7CMdGLWqaGuKAY2nqvP8pNm/7p4tq8eteS1VOH3HT9pRQZ2oggi2h0cS
+	 EXwQPefjh1HTc6Tarnl93Rf1HacBNOmZnd423y7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgANOIg (ORCPT
+        id S1728813AbgANOMM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:08:36 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36711 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgANOIg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 09:08:36 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x184so6651109pfb.3;
-        Tue, 14 Jan 2020 06:08:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ss3fXpszwhFSMMEOeRY8BC0FGonewknATivLpFC0dKA=;
-        b=EyALs+fzbsRIiCfGPl36ceRz4CXPRoQwXwLTA3ronMpxWpGf16DrxPQ8GPhepIi2vg
-         s5PWBUBN4bF1fcTeq2hVW1CS1qu2FxD20E7pUKXZ0idbGGJOYJkRm9YW8kud6/e3Dg8Y
-         qVpbMbr0moNtwgx0wkLKILyx/WhUhttjVONlBkmodhCLMbhedVvB0NocFMuhUkAkEutf
-         dzlkMX8aM2EGpNc0TZW5yywSIS4qXnloLIPnX4KeKSs07nahVcKkvshxcpUn4bLgCc5W
-         CnYMN02SEiADQATn6aTZHCVZZVtzgo49XhnICouVVn/h9UmLquNNUMZChIGsNFE136Rc
-         C1XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ss3fXpszwhFSMMEOeRY8BC0FGonewknATivLpFC0dKA=;
-        b=Vi0HVT0MJaEyvqR5m2rgV5VJHA5jTkcVpP+v065NPNLY3BdtJyDiaAsTmE5KU2JduJ
-         bjSwP3cVtEjExOWwHGyPZi8ONr4MV0v6ExYNmMHweu5mNJouFoxw51owrA3m2pfCDuIe
-         t3moIcOl0VrwRGo3JhdwjaMlFnpvVzmD/J6mx2SGFTz5XtiCXp7zxEvpJtOSluTlh8xN
-         bqtCJ8t6/voeFZ+E3mrbMRDFPf/tVRXhvq0iNpMgxG+sdGnJnG44hcqZ3qiRf4ShqXgw
-         7jAiTEhMVjW7JltJ5RW/Map7uWpsc/n0zHpefbgGwwZNFVzX1X2ALvcmoePtqApU2fHP
-         HA9g==
-X-Gm-Message-State: APjAAAWgzfVijmrbIoFiVO92e2CmicKz+pffIuLQxdf/DyFzO5+QiU3U
-        mH2uM0SByGRAcwAuhyLZYEo=
-X-Google-Smtp-Source: APXvYqzGqn6wM6quVswhTbDrDAA94Dqvd4nw6Di48Jmia3y8Dktekesp0n+CL0t3U1kzyLf2h/aHQg==
-X-Received: by 2002:a62:1c95:: with SMTP id c143mr24761321pfc.219.1579010915833;
-        Tue, 14 Jan 2020 06:08:35 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u2sm17509223pgc.19.2020.01.14.06.08.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 06:08:35 -0800 (PST)
-Date:   Tue, 14 Jan 2020 06:08:34 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Vadim Pasternak <vadimp@mellanox.com>
-Cc:     robh+dt@kernel.org, vijaykhemka@fb.com,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH hwmon-next v1 6/6] docs: hwmon: Include 'xdpe12284.rst'
- into docs
-Message-ID: <20200114140834.GA3386@roeck-us.net>
-References: <20200113150841.17670-1-vadimp@mellanox.com>
- <20200113150841.17670-7-vadimp@mellanox.com>
+        Tue, 14 Jan 2020 09:12:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgANOMM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:12:12 -0500
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02A6F24689;
+        Tue, 14 Jan 2020 14:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579011131;
+        bh=z7fi7mTnGrxlQpOo6jCdbb+V9IOBcmR5uq9RP9iLmNc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xxmlnhFQSnyWi4goNAcyLC60V5ArHcYgAODgnNj7wJLRh9fW98Rdr+wpKth3DGclK
+         OwHPMd02aPmIcmVNASeHY3NC2XoqxfdmZvb/ih9BvhMGy2eFh7mhNtAe6jxaTBD3zJ
+         47FAJjGw6iKNdtUgVHawevDoS/2AE21oQ2wYTS1A=
+Received: by mail-qk1-f178.google.com with SMTP id j9so12216364qkk.1;
+        Tue, 14 Jan 2020 06:12:10 -0800 (PST)
+X-Gm-Message-State: APjAAAVd3IN2v/QwuTiVuEoLo4EdBo5XQhaoNI3fTT2sgPnj72hpDGRg
+        V8QcmRJJgcnnaDbIOwWXYkZXU4DidyfVgPqcXQ==
+X-Google-Smtp-Source: APXvYqw7yF4tiQEfMetRPvV+XOkBRWxhX/TeIi33YKag4uDi0xsOT3vkZOZaB3zS7m6pAuWbolnHy+itf/anGdGEU3k=
+X-Received: by 2002:a37:85c4:: with SMTP id h187mr22370588qkd.223.1579011130047;
+ Tue, 14 Jan 2020 06:12:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113150841.17670-7-vadimp@mellanox.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1578899321-1365-1-git-send-email-qiangqing.zhang@nxp.com>
+ <1578899321-1365-2-git-send-email-qiangqing.zhang@nxp.com>
+ <20200113210344.GA4615@bogus> <DB7PR04MB461863B36162325EF1BB6251E6340@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <DB7PR04MB4618E5E7ACE8698BBE24E989E6340@DB7PR04MB4618.eurprd04.prod.outlook.com>
+In-Reply-To: <DB7PR04MB4618E5E7ACE8698BBE24E989E6340@DB7PR04MB4618.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jan 2020 08:11:58 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq++ZtPCV58eg-O5t2+L82MCsX8Tp262nsO4mNykVZmxYw@mail.gmail.com>
+Message-ID: <CAL_Jsq++ZtPCV58eg-O5t2+L82MCsX8Tp262nsO4mNykVZmxYw@mail.gmail.com>
+Subject: Re: [PATCH V4 RESEND 1/2] dt-bindings/irq: add binding for NXP INTMUX
+ interrupt multiplexer
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc:     "maz@kernel.org" <maz@kernel.org>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Andy Duan <fugang.duan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 03:08:41PM +0000, Vadim Pasternak wrote:
-> Add documentation for 'xdpe122' devices.
-> 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+On Tue, Jan 14, 2020 at 2:22 AM Joakim Zhang <qiangqing.zhang@nxp.com> wrot=
+e:
+>
+>
+> > -----Original Message-----
+> > From: Joakim Zhang <qiangqing.zhang@nxp.com>
+> > Sent: 2020=E5=B9=B41=E6=9C=8814=E6=97=A5 10:44
+> > To: Rob Herring <robh@kernel.org>
+> > Cc: maz@kernel.org; jason@lakedaemon.net; tglx@linutronix.de;
+> > mark.rutland@arm.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > kernel@pengutronix.de; festevam@gmail.com; linux-kernel@vger.kernel.org=
+;
+> > devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; dl-li=
+nux-imx
+> > <linux-imx@nxp.com>; Andy Duan <fugang.duan@nxp.com>
+> > Subject: RE: [PATCH V4 RESEND 1/2] dt-bindings/irq: add binding for NXP
+> > INTMUX interrupt multiplexer
+> >
+> >
+> > > -----Original Message-----
+> > > From: Rob Herring <robh@kernel.org>
+> > > Sent: 2020=E5=B9=B41=E6=9C=8814=E6=97=A5 5:04
+> > > To: Joakim Zhang <qiangqing.zhang@nxp.com>
+> > > Cc: maz@kernel.org; jason@lakedaemon.net; tglx@linutronix.de;
+> > > mark.rutland@arm.com; shawnguo@kernel.org; s.hauer@pengutronix.de;
+> > > kernel@pengutronix.de; festevam@gmail.com;
+> > > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
+> > > linux-arm-kernel@lists.infradead.org; dl-linux-imx
+> > > <linux-imx@nxp.com>; Andy Duan <fugang.duan@nxp.com>
+> > > Subject: Re: [PATCH V4 RESEND 1/2] dt-bindings/irq: add binding for
+> > > NXP INTMUX interrupt multiplexer
+> > >
+> > > On Mon, Jan 13, 2020 at 03:08:40PM +0800, Joakim Zhang wrote:
+> > > > This patch adds the DT bindings for the NXP INTMUX interrupt
+> > > > multiplexer for i.MX8 family SoCs.
+> > > >
+> > > > Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> > > > ---
+> > > >  .../interrupt-controller/fsl,intmux.yaml      | 77
+> > +++++++++++++++++++
+> > > >  1 file changed, 77 insertions(+)
+> > > >  create mode 100644
+> > > > Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.y=
+a
+> > > > ml
+> > >
+> > > Please run 'make dt_binding_check' and fix the errors:
+> > >
+> > > Documentation/devicetree/bindings/interrupt-controller/fsl,intmux.yam=
+l:
+> > > while scanning for the next token found character that cannot start a=
+ny token
+> > >   in "<unicode string>", line 60, column 1
+> > Got it. Will keep in mind. Thanks.
+> >
+> > > >
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux=
+.
+> > > > ya
+> > > > ml
+> > > > b/Documentation/devicetree/bindings/interrupt-controller/fsl,intmux=
+.
+> > > > ya
+> > > > ml
+> > > > new file mode 100644
+> > > > index 000000000000..4dba532fe0bd
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,in=
+t
+> > > > +++ mu
+> > > > +++ x.yaml
+> > > > @@ -0,0 +1,77 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
+> > > > +---
+> > > > +$id:
+> > > > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2=
+Fde
+> > > > +vi
+> > > >
+> > >
+> > +cetree.org%2Fschemas%2Finterrupt-controller%2Ffsl%2Cintmux.yaml%23&a
+> > > m
+> > > >
+> > >
+> > +p;data=3D02%7C01%7Cqiangqing.zhang%40nxp.com%7Cdc2443dc111149805c7
+> > > 208d7
+> > > >
+> > >
+> > +986c157f%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63714546
+> > > 2291934
+> > > >
+> > >
+> > +492&amp;sdata=3DAo4iuj2D48KAeC%2FvQvJqUUxGJEjSY0HyL5ZlT2XrSrg%3D&
+> > > amp;re
+> > > > +served=3D0
+> > > > +$schema:
+> > > > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2=
+Fde
+> > > > +vi
+> > > >
+> > >
+> > +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Cqia
+> > > ngqing
+> > > >
+> > >
+> > +.zhang%40nxp.com%7Cdc2443dc111149805c7208d7986c157f%7C686ea1d3b
+> > > c2b4c6
+> > > >
+> > >
+> > +fa92cd99c5c301635%7C0%7C0%7C637145462291934492&amp;sdata=3DYoHb
+> > > TO5C8Nlq
+> > > > +YYoWTNufaIxnvdtPUZaKzvwK49I9Zdc%3D&amp;reserved=3D0
+> > > > +
+> > > > +title: Freescale INTMUX interrupt multiplexer
+> > > > +
+> > > > +maintainers:
+> > > > +  - Marc Zyngier <maz@kernel.org>
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    items:
+> > > > +      const: fsl,imx-intmux
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  interrupts:
+> > > > +    minItems: 1
+> > > > +    maxItems: 8
+> > > > +    description: |
+> > > > +      Should contain the parent interrupt lines (up to 8) used to =
+multiplex
+> > > > +      the input interrupts.
+> > > > +
+> > > > +  interrupt-controller: true
+> > > > +
+> > > > +  '#interrupt-cells':
+> > > > +    const: 2
+> > > > +
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +    description: ipg clock.
+> > > > +
+> > > > +  clock-names:
+> > > > +    items:
+> > > > +      const: ipg
+> > > > +
+> > > > +  fsl,intmux_chans:
+> > >
+> > > Don't use '_' in property names.
+> > Got it.
+> >
+> > > Is this any different from the length of 'interrupts' which you can c=
+ount?
+> > A bit different. Such as, the length of 'interrupts' is 8, but we can s=
+et
+> > fsl,intmux_chans value is 4. That means there are 8 channels, but actua=
+lly we
+> > only use 4 channels.
+> > If you think this make no sense, due to we can assign 4 items for 'inte=
+rrupts' to
+> > get the same result. So we can count the length of 'interrupts' to get =
+the
+> > channels configured, then this property is no need.
+> > Which one do you think is better?
+> >               interrupts =3D <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> >                            <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> >               fsl,intmux_chans =3D <4>;
+>
+> One more add, the number of channels is fixed to 8. It will make more cle=
+ar to users that it supports 8 channels with 8 items for 'interrupts', and =
+users can decide how many
+> channels they use with 'fsl,intmux_chans' property.
 
-Applied to hwmon-next (and added to index.rst).
+How does one decide how many? Why would you not use as many channels
+as possible (other than muxing interrupts or not doesn't really make a
+bit difference in servicing overhead)?
 
-Thanks,
-Guenter
+If you wanted to configure how many parent interrupts, wouldn't you
+also want to configure the routing of child interrupts to specific
+parent interrupts?
 
-> ---
->  Documentation/hwmon/xdpe12284.rst | 101 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 Documentation/hwmon/xdpe12284.rst
-> 
-> diff --git a/Documentation/hwmon/xdpe12284.rst b/Documentation/hwmon/xdpe12284.rst
-> new file mode 100644
-> index 000000000000..6b7ae98cc536
-> --- /dev/null
-> +++ b/Documentation/hwmon/xdpe12284.rst
-> @@ -0,0 +1,101 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +Kernel driver xdpe122
-> +=====================
-> +
-> +Supported chips:
-> +
-> +  * Infineon XDPE12254
-> +
-> +    Prefix: 'xdpe12254'
-> +
-> +  * Infineon XDPE12284
-> +
-> +    Prefix: 'xdpe12284'
-> +
-> +Authors:
-> +
-> +	Vadim Pasternak <vadimp@mellanox.com>
-> +
-> +Description
-> +-----------
-> +
-> +This driver implements support for Infineon Multi-phase XDPE122 family
-> +dual loop voltage regulators.
-> +The family includes XDPE12284 and XDPE12254 devices.
-> +The devices from this family complaint with:
-> +- Intel VR13 and VR13HC rev 1.3, IMVP8 rev 1.2 and IMPVP9 rev 1.3 DC-DC
-> +  converter specification.
-> +- Intel SVID rev 1.9. protocol.
-> +- PMBus rev 1.3 interface.
-> +
-> +Devices support linear format for reading input voltage, input and output current,
-> +input and output power and temperature.
-> +Device supports VID format for reading output voltage. The below modes are
-> +supported:
-> +- VR12.0 mode, 5-mV DAC - 0x01.
-> +- VR12.5 mode, 10-mV DAC - 0x02.
-> +- IMVP9 mode, 5-mV DAC - 0x03.
-> +- AMD mode 6.25mV - 0x10.
-> +
-> +Devices support two pages for telemetry.
-> +
-> +The driver provides for current: input, maximum and critical thresholds
-> +and maximum and critical alarms. Critical thresholds and critical alarm are
-> +supported only for current output.
-> +The driver exports the following attributes for via the sysfs files, where
-> +indexes 1, 2 are for "iin" and 3, 4 for "iout":
-> +
-> +**curr[3-4]_crit**
-> +
-> +**curr[3-4]_crit_alarm**
-> +
-> +**curr[1-4]_input**
-> +
-> +**curr[1-4]_label**
-> +
-> +**curr[1-4]_max**
-> +
-> +**curr[1-4]_max_alarm**
-> +
-> +The driver provides for voltage: input, critical and low critical thresholds
-> +and critical and low critical alarms.
-> +The driver exports the following attributes for via the sysfs files, where
-> +indexes 1, 2 are for "vin" and 3, 4 for "vout":
-> +
-> +**in[1-4]_crit**
-> +
-> +**in[1-4_crit_alarm**
-> +
-> +**in[1-4]_input**
-> +
-> +**in[1-4_label**
-> +
-> +**in[1-4]_lcrit**
-> +
-> +**in[1-41_lcrit_alarm**
-> +
-> +The driver provides for power: input and alarms. Power alarm is supported only
-> +for power input.
-> +The driver exports the following attributes for via the sysfs files, where
-> +indexes 1, 2 are for "pin" and 3, 4 for "pout":
-> +
-> +**power[1-2]_alarm**
-> +
-> +**power[1-4]_input**
-> +
-> +**power[1-4]_label**
-> +
-> +The driver provides for temperature: input, maximum and critical thresholds
-> +and maximum and critical alarms.
-> +The driver exports the following attributes for via the sysfs files:
-> +
-> +**temp[1-2]_crit**
-> +
-> +**temp[1-2]_crit_alarm**
-> +
-> +**temp[1-2]_input**
-> +
-> +**temp[1-2]_max**
-> +
-> +**temp[1-2]_max_alarm**
+So I would drop this property. You can define both how many parents
+and the routing with interrupt-map property, though I would not do
+that until you have a real need.
+
+Rob
