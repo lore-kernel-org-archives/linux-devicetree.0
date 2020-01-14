@@ -2,91 +2,170 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E1EC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF07C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831962467A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521CA207FF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QkBD7bGt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgANKI7 (ORCPT
+        id S1732440AbgANKN3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:59 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58487 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731178AbgANKI6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 05:08:58 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1irJ85-00031o-H6; Tue, 14 Jan 2020 11:08:57 +0100
-Message-ID: <d1f969346ad1758943e8f898244c69673f93f129.camel@pengutronix.de>
-Subject: Re: [PATCH] dt-bindings: reset: intel,rcu-gw: Fix
- intel,global-reset schema
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Date:   Tue, 14 Jan 2020 11:08:57 +0100
-In-Reply-To: <20200113214515.3950-1-robh@kernel.org>
-References: <20200113214515.3950-1-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 14 Jan 2020 05:13:29 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51633 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733177AbgANKN0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 05:13:26 -0500
+Received: by mail-wm1-f68.google.com with SMTP id d73so13041821wmd.1
+        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 02:13:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PVJ9vsBKjNHAquu2wHQplGsVSsF8ZvsB04D/QJeGvO0=;
+        b=QkBD7bGtsftShAVXrNLgP1GUir8zjpVH0BFB90Jq5fahbPDtUfMTZaLzyDbhXOmO2A
+         nmmqavi/LtNmqfhcGG7sHpIdRdVeANyAR8RL4ouV2QsNHaRbPadxRhtHfIck56dD+8uQ
+         amPWIBI+kZVA3StySeTyIOizmVdjxn4elq6Rdd/Vu1fbnzP1X5G5zN3FMNkpg/tfZKNO
+         UGRQ/dsX9XyZDxTxyBVv3AiujdGMR3zooptycedYQPYqK3O/q7SqsUJzB2EFcT7aHdzZ
+         U49U6xkIT+sSUuwO26vUpxKWZ8RlksiqQkZ2jKW9qn3klff/vprVctHRbtLhH98FzmK7
+         a1gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PVJ9vsBKjNHAquu2wHQplGsVSsF8ZvsB04D/QJeGvO0=;
+        b=ovOk/c2ohiRaPASizx8gw9iTexCCVKxK/1yakGPtUOur3giNaxCFJ2DLE9THViHGlB
+         4PdYbQ9gA9U6ovluN5HEu0lmE9EAeaOwodJBUW9zNUNHMvlSShSH1kBb4IRzn7KKvGbV
+         z2p3YVgSpFVSjZB2mn9TJV1RWs1ORNR4qH1zQXHmBQGQslLSekv7nkYTXOckOf7JfJ/m
+         4X2uEnqE0CX0ZIUcpJCepJPPJwDIKE1AcxQzVkK35IKmRSsSIhfmCwy6LaobxTit8OvI
+         2K0T72cwCjaITQyaH1JbEktY8lHu2dSgj0Gf55wKv0uacKyDO+N9vJcorskfGA9Dtmkr
+         0cKw==
+X-Gm-Message-State: APjAAAWal2LjiXEDnmHlIzBd/7e8YRt2hiJ6ckqjIfVJIempnkw7smWt
+        C/PmV2Z9Y5vS4lR3KWDvsEaQG2qh8eaY/HgLJHmXNA==
+X-Google-Smtp-Source: APXvYqxJZ24GiVlk9lUMDjJkGJEI6s3pmAanrQrR6ZjPBl+XBfGQsJAevyPjLoW5Oxheg/hE/D/XAZSaJTq3QWFkOzU=
+X-Received: by 2002:a1c:7205:: with SMTP id n5mr26748340wmc.9.1578996805060;
+ Tue, 14 Jan 2020 02:13:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <20200114094505.11855-1-ardb@kernel.org> <20200114094505.11855-3-ardb@kernel.org>
+In-Reply-To: <20200114094505.11855-3-ardb@kernel.org>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 14 Jan 2020 11:13:13 +0100
+Message-ID: <CAKv+Gu93rePi1MctP9ffr3wT2r-8OCBoO7Pw5ivWOcXgwfS4Hw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tpm: tis: add support for MMIO TPM on SynQuacer
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Peter_H=C3=BCwe?= <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Mon, 2020-01-13 at 15:45 -0600, Rob Herring wrote:
-> The intel,rcu-gw binding example has an error:
-> 
-> Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml:
->   reset-controller@e0000000: intel,global-reset: [[16, 30]] is too short
-> 
-> The error isn't really correct as the problem is in how the data is
-> encoded and the schema is not fixed up by the tooling correctly.
-> However, array properties should describe the elements in the array, so
-> lets do that which fixes the error in the process.
-> 
-> Fixes: b7ab0cb00d08 ("dt-bindings: reset: Add YAML schemas for the Intel Reset controller")
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Dilip Kota <eswara.kota@linux.intel.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+On Tue, 14 Jan 2020 at 10:46, Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
+> window that is backed by the SPI command sequencer in the SPI bus
+> controller. This arrangement has the limitation that only byte size
+> accesses are supported, and so we'll need to provide a separate set
+> of read and write accessors that take this into account.
+>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 > ---
->  Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> index 246dea8a2ec9..8ac437282659 100644
-> --- a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
-> @@ -23,7 +23,11 @@ properties:
->      description: Global reset register offset and bit offset.
->      allOf:
->        - $ref: /schemas/types.yaml#/definitions/uint32-array
-> -      - maxItems: 2
-> +    items:
-> +      - description: Register offset
-> +      - description: Register bit offset
-> +        minimum: 0
-> +        maximum: 31
->  
->    "#reset-cells":
->      minimum: 2
+>  drivers/char/tpm/tpm_tis.c | 31 ++++++++++++++++++--
+>  1 file changed, 29 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+> index e7df342a317d..693e48096035 100644
+> --- a/drivers/char/tpm/tpm_tis.c
+> +++ b/drivers/char/tpm/tpm_tis.c
+> @@ -32,6 +32,7 @@
+>
+>  struct tpm_info {
+>         struct resource res;
+> +       const struct tpm_tis_phy_ops *ops;
+>         /* irq > 0 means: use irq $irq;
+>          * irq = 0 means: autoprobe for an irq;
+>          * irq = -1 means: no irq support
+> @@ -186,6 +187,29 @@ static const struct tpm_tis_phy_ops tpm_tcg = {
+>         .write32 = tpm_tcg_write32,
+>  };
+>
+> +static int tpm_tcg_read16_bw(struct tpm_tis_data *data, u32 addr, u16 *result)
+> +{
+> +       return tpm_tcg_read_bytes(data, addr, 2, (u8 *)result);
+> +}
+> +
+> +static int tpm_tcg_read32_bw(struct tpm_tis_data *data, u32 addr, u32 *result)
+> +{
+> +       return tpm_tcg_read_bytes(data, addr, 4, (u8 *)result);
+> +}
+> +
+> +static int tpm_tcg_write32_bw(struct tpm_tis_data *data, u32 addr, u32 value)
+> +{
+> +       return tpm_tcg_write_bytes(data, addr, 4, (u8 *)&value);
+> +}
+> +
 
-Thank you, applied to reset/next.
+These are wrong - I'll need to respin. Apologies for the noise.
 
-regards
-Philipp
-
+> +static const struct tpm_tis_phy_ops tpm_tcg_bw = {
+> +       .read_bytes     = tpm_tcg_read_bytes,
+> +       .write_bytes    = tpm_tcg_write_bytes,
+> +       .read16         = tpm_tcg_read16_bw,
+> +       .read32         = tpm_tcg_read32_bw,
+> +       .write32        = tpm_tcg_write32_bw,
+> +};
+> +
+>  static int tpm_tis_init(struct device *dev, struct tpm_info *tpm_info)
+>  {
+>         struct tpm_tis_tcg_phy *phy;
+> @@ -210,7 +234,7 @@ static int tpm_tis_init(struct device *dev, struct tpm_info *tpm_info)
+>         if (itpm || is_itpm(ACPI_COMPANION(dev)))
+>                 phy->priv.flags |= TPM_TIS_ITPM_WORKAROUND;
+>
+> -       return tpm_tis_core_init(dev, &phy->priv, irq, &tpm_tcg,
+> +       return tpm_tis_core_init(dev, &phy->priv, irq, tpm_info->ops,
+>                                  ACPI_HANDLE(dev));
+>  }
+>
+> @@ -219,7 +243,7 @@ static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
+>  static int tpm_tis_pnp_init(struct pnp_dev *pnp_dev,
+>                             const struct pnp_device_id *pnp_id)
+>  {
+> -       struct tpm_info tpm_info = {};
+> +       struct tpm_info tpm_info = { .ops = &tpm_tcg };
+>         struct resource *res;
+>
+>         res = pnp_get_resource(pnp_dev, IORESOURCE_MEM, 0);
+> @@ -295,6 +319,8 @@ static int tpm_tis_plat_probe(struct platform_device *pdev)
+>                         tpm_info.irq = 0;
+>         }
+>
+> +       tpm_info.ops = of_device_get_match_data(&pdev->dev) ?: &tpm_tcg;
+> +
+>         return tpm_tis_init(&pdev->dev, &tpm_info);
+>  }
+>
+> @@ -311,6 +337,7 @@ static int tpm_tis_plat_remove(struct platform_device *pdev)
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id tis_of_platform_match[] = {
+>         {.compatible = "tcg,tpm-tis-mmio"},
+> +       {.compatible = "socionext,synquacer-tpm-mmio", .data = &tpm_tcg_bw},
+>         {},
+>  };
+>  MODULE_DEVICE_TABLE(of, tis_of_platform_match);
+> --
+> 2.20.1
+>
