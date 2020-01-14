@@ -2,99 +2,149 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BA8C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 13:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCB1C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 13:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A682187F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 13:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812492467A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 13:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579010286;
+	bh=4dlEZ5O6TRVm5SzbTpgu6LZbOg6cFR0SckRSi4OV/54=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SrX9pEt9gzAqoPSZ9jl2iYrLW/4Lco93uQMtdKcgh/DDR4i4vgPfXbCRzXp86BFd1
+	 3likyxTfPnQPXYI5V0V3hQ3CuobPH69vsU3nQuzHsn8Pl6MJSvSOQJA/iRUf2sScKS
+	 zKB6YJp/OMxr8cSx4BJBLuj+6vK9bfqT15QEcLmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgANNsv (ORCPT
+        id S1725904AbgANN6G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:48:51 -0500
-Received: from out28-121.mail.aliyun.com ([115.124.28.121]:44626 "EHLO
-        out28-121.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgANNsv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 08:48:51 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4116705|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0462401-0.00185986-0.9519;DS=CONTINUE|ham_enroll_verification|0.0103876-0.00146899-0.988143;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03268;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=25;RT=25;SR=0;TI=SMTPD_---.GbzNf-h_1579009702;
-Received: from 192.168.10.218(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GbzNf-h_1579009702)
-          by smtp.aliyun-inc.com(10.147.40.7);
-          Tue, 14 Jan 2020 21:48:24 +0800
-Subject: Re: [PATCH 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-References: <Introduce SMP support for CI20 (based on JZ4780).>
- <1578933813-80122-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
- <30183031578977983@vla1-0bfbe4c1c324.qloud-c.yandex.net>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "paul.burton@mips.com" <paul.burton@mips.com>,
-        "paulburton@kernel.org" <paulburton@kernel.org>,
-        "jhogan@kernel.org" <jhogan@kernel.org>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "syq@debian.org" <syq@debian.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "chenhc@lemote.com" <chenhc@lemote.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "paul@crapouillou.net" <paul@crapouillou.net>,
-        "prasannatsmkumar@gmail.com" <prasannatsmkumar@gmail.com>,
-        "sernia.zhou@foxmail.com" <sernia.zhou@foxmail.com>,
-        "zhenwenjin@gmail.com" <zhenwenjin@gmail.com>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E1DC6A7.9070601@wanyeetech.com>
-Date:   Tue, 14 Jan 2020 21:48:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Tue, 14 Jan 2020 08:58:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726115AbgANN6F (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:58:05 -0500
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31B9A214AF;
+        Tue, 14 Jan 2020 13:58:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579010284;
+        bh=4dlEZ5O6TRVm5SzbTpgu6LZbOg6cFR0SckRSi4OV/54=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a6CQDE6Wezc/6DTSxV/pveS7LqpaHtIKkU+/Yedn2RNU6GB51gi0d5eEO+zOzl5rt
+         D4RFGpRQeGE4fUKeWiZ4AOGvZ8uTyQy3g3rtaVeiAjBktgSGFLqZt1MqDWNaA7K704
+         QIz70Mvb6jFz3fO6dzqO3MOdMw5yoZeMGHBgXnvE=
+Received: by mail-qk1-f181.google.com with SMTP id d71so12171076qkc.0;
+        Tue, 14 Jan 2020 05:58:04 -0800 (PST)
+X-Gm-Message-State: APjAAAXhPLZZVcI+KK4IJZWuFYeblzyD19dueXUjOiyaN3x6kbI5+Lde
+        B/8EYqDDxxe+WBg+ws6HXoRscGy4C46IbNfF3A==
+X-Google-Smtp-Source: APXvYqxDqKJxTHzTxrkKkapIjfnZCCCiezeAbzCYinEtmifEiYCBaAW1f0BnGQVFtyjpo1uY/Yp9GeMVllEll9d5gZo=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr20045737qkl.119.1579010283333;
+ Tue, 14 Jan 2020 05:58:03 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <30183031578977983@vla1-0bfbe4c1c324.qloud-c.yandex.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <1578642914-838-1-git-send-email-Anson.Huang@nxp.com>
+ <20200113212735.GA9275@bogus> <DB3PR0402MB391644F6152A726A13B8F628F5340@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB391644F6152A726A13B8F628F5340@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jan 2020 07:57:52 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+ULw1xpBktnjKu_8eQtLg_s7Fi5Jm1yuT8O+cWo3E=ZQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+ULw1xpBktnjKu_8eQtLg_s7Fi5Jm1yuT8O+cWo3E=ZQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Convert i.MX8MQ to json-schema
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jiaxun,
-
-On 2020年01月14日 12:59, Jiaxun Yang wrote:
+On Mon, Jan 13, 2020 at 7:25 PM Anson Huang <anson.huang@nxp.com> wrote:
 >
-> 14.01.2020, 00:44, "周琰杰 (Zhou Yanjie)" <zhouyanjie@wanyeetech.com>:
->> Document the available properties for the SoC root node and the
->> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
->>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> ---
->>   .../bindings/mips/ingenic/ingenic,cpu.txt | 32 ++++++++++++++++++++++
->>   .../bindings/mips/ingenic/ingenic,soc,txt | 18 ++++++++++++
->>   2 files changed, 50 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
->>   create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
->>
-> We'd better use schemas for the document.
+> Hi, Rob
+>
+> > Subject: Re: [PATCH 1/3] dt-bindings: clock: Convert i.MX8MQ to json-schema
+> >
+> > On Fri, Jan 10, 2020 at 03:55:12PM +0800, Anson Huang wrote:
+> > > Convert the i.MX8MQ clock binding to DT schema format using
+> > > json-schema
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/clock/imx8mq-clock.txt     | 20 ------
+> > >  .../devicetree/bindings/clock/imx8mq-clock.yaml    | 72
+> > ++++++++++++++++++++++
+> > >  2 files changed, 72 insertions(+), 20 deletions(-)  delete mode
+> > > 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
+> >
+> > Fails 'make dt_binding_check':
+> >
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clock-names:0: 'ckil' was expected
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clock-names:1: 'osc_25m' was expected
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clock-names:2: 'osc_27m' was expected
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clock-names:3: 'clk_ext1' was expected
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clock-names:4: 'clk_ext2' was expected
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clock-names:5: 'clk_ext3' was expected
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clock-names: ['osc_32k', 'osc_24m', 'clk_ext1',
+> > 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
+> > /builds/robherring/linux-dt-
+> > review/Documentation/devicetree/bindings/clock/imx8mn-
+> > clock.example.dt.yaml:
+> > clock-controller@30380000: clocks: [[1], [2], [3], [4], [5], [6]] is too short
+>
+> I did NOT see build fail on my side, anything missed in my environment setup? The failure
+> log is for i.MX8MN, while this binding doc is i.MX8MQ, is it caused by the incorrect compatible
+> string which should be "fsl,imx8mq-ccm", but I made it "fsl,imx8mn-ccm" by mistake?
 
-I will change it in v2.
-
-Thanks and best regards!
+Notice that the error is in imx8mn-clock.example.dt.yaml, not
+imx8mq-clock.example.dt.yaml. So you must have DT_SCHEMA_FILES set and
+yes it is due to the compatible being wrong.
 
 >
-> See[1]
->
-> Thanks.
->
-> [1]: https://lwn.net/Articles/771621/
-> --
-> Jiaxun Yang
-
+> anson@anson-OptiPlex-790:~/workspace/stash/linux-next$ ./zeus.sh
+> *** Default configuration is based on 'defconfig'
+> #
+> # No change to .config
+> #
+>   CHKDT   Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+>   DTC     Documentation/devicetree/bindings/clock/imx8mq-clock.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/clock/imx8mq-clock.example.dt.yaml
