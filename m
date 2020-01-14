@@ -2,115 +2,169 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0324C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1308C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B6324684
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:13:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijdJg9u0"
+	by mail.kernel.org (Postfix) with ESMTP id 87F3624680
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579011433;
+	bh=aXlNmzU3c4DebfOZqxQIuf2kGpmEOcf7xtmQHre7OJk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=00dgs2vm7J7pUtfA46AERZaZ9uv16NHroD0FLGbRdZBzkYhVm2rDjvMNhAaUicI0a
+	 O6pH7qZpUQTV8bJLuGbpGtwyZTLZVn+TgsfmtUSJgF756TCzHT53dMmOQInhWOtdLY
+	 ccTSKYca8KyjJT0skvA0/xOwjTZLQZSDmmFLEWu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgANONj (ORCPT
+        id S1728935AbgANORJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:13:39 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55625 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgANONj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 09:13:39 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so5754641pjz.5;
-        Tue, 14 Jan 2020 06:13:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RqFXdgT3LlFr0BDIsZ4AkGZfGr6feSH5yxzOu+zCNSA=;
-        b=ijdJg9u0y8HQtUMQC6bTqYlb+yzR+A9CetjNaAiOUJ8y48b2GdY/MmEYcpEvTBchSU
-         QA+02mmmPreon+F8I+rs37vSly1Vj4ushL4+K+Dl5TeUgzWW3EllM5RJiVVHdX3lO8VA
-         BgPZ2FLkKWidqhteoQcwiMx6iD0nY2BPxZDaR4bHH1NvkH6sA8I8aCpfLBmZDoCiSZ10
-         /b/d44sjfOHnproo3KAhstLlbkMKMUUJ2LmgYksPDtLwNQrkKb6O+qXZH4P0q7SN+Pp7
-         7Sg/IzqGl2QRmHXTq/76dOIQHdWJEbm+VSZw+bTTrJDYMrWpT4rnrTNVQfe2yf6enM7R
-         Q2Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RqFXdgT3LlFr0BDIsZ4AkGZfGr6feSH5yxzOu+zCNSA=;
-        b=Ky6UweRvxD8f3RHqC0aZCzsJCscEGmrNxuCG/g8hX7pxJl5bJ2M5Vhx4xZh87hiar2
-         JjvMm71SOSvt0bcoytV97ITJDMJ+ktPb0SIFRo+GsrgXuPCAwUtu3Am/C4q7Jfo9XU1W
-         /VvIbFs7F6dmo+V3wA3HFVhN2X3IMeGa4IGYZScw78dGL+S5W27245rIqFzoCsyOBWUz
-         maIBL97A5i+64JnO7+ptfEL1vMYBRf0eH0Q5SiSnzRJrAr3MrGvtmUUcOspyDyTCcgWN
-         2lFppun1NbVYFN4pH6ZYDz3COkdlMfN/tWZ5J6HauDQEQU4MMNFCKMUla8U8N0tFcWuv
-         QUrQ==
-X-Gm-Message-State: APjAAAVB5AZ8MOgKtaZ2vYf2cAzv7nMLb/sQSUG8bQgJyvZ8qkjW+7DP
-        ZA9lJxT4BTuHI2Eh2eIIiWA=
-X-Google-Smtp-Source: APXvYqxjQGSoPS5oTAT9D0cQglVKshJ9Vv9jKAtTk9hoiRjnujw/stvy9RNQ7AGtuzfCkLCiyrYtQw==
-X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr29363741pjc.20.1579011218933;
-        Tue, 14 Jan 2020 06:13:38 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k10sm13391223pjq.14.2020.01.14.06.13.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 Jan 2020 06:13:38 -0800 (PST)
-Date:   Tue, 14 Jan 2020 06:13:37 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     linux-hwmon@vger.kernel.org, Michael.Hennerich@analog.com,
-        linux-kernel@vger.kernel.org, jdelvare@suse.com,
-        mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, biabeniamin@outlook.com
-Subject: Re: [PATCH v4 3/3] MAINTAINERS: add entry for ADM1177 driver
-Message-ID: <20200114141337.GA28002@roeck-us.net>
-References: <20200114112159.25998-1-beniamin.bia@analog.com>
- <20200114112159.25998-3-beniamin.bia@analog.com>
+        Tue, 14 Jan 2020 09:17:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33988 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbgANORI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:17:08 -0500
+Received: from localhost.localdomain (aaubervilliers-681-1-7-206.w90-88.abo.wanadoo.fr [90.88.129.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56EB92468B;
+        Tue, 14 Jan 2020 14:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579011428;
+        bh=aXlNmzU3c4DebfOZqxQIuf2kGpmEOcf7xtmQHre7OJk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y283MTURx/bz6qeJVYlyRxufy4OQzwRT+/RKaZbTkKKPRx9KkNxYxa38ldJI0MKTo
+         PhpPPic7On2n9h6QQ9BLKYRT/QN22QiLOMPlfe3cz/ABncAt3LpdvnQjdQ8vGtIQ6W
+         BwiFPQdK6rxTp6N2ALcE9tN9FEp57I+DthIxGnt4=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>, jarkko.sakkinen@linux.intel.com,
+        linux-arm-kernel@lists.infradead.org, masahisa.kojima@linaro.org,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
+        peterhuewe@gmx.de, jgg@ziepe.ca
+Subject: [PATCH v2 2/2] tpm: tis: add support for MMIO TPM on SynQuacer
+Date:   Tue, 14 Jan 2020 15:16:47 +0100
+Message-Id: <20200114141647.109347-3-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200114141647.109347-1-ardb@kernel.org>
+References: <20200114141647.109347-1-ardb@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200114112159.25998-3-beniamin.bia@analog.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 01:21:59PM +0200, Beniamin Bia wrote:
-> Add Beniamin Bia and Michael Hennerich as a maintainer for ADM1177 ADC.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+When fitted, the SynQuacer platform exposes its SPI TPM via a MMIO
+window that is backed by the SPI command sequencer in the SPI bus
+controller. This arrangement has the limitation that only byte size
+accesses are supported, and so we'll need to provide a separate set
+of read and write accessors that take this into account.
 
-Applied.
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ drivers/char/tpm/tpm_tis.c | 50 +++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 2 deletions(-)
 
-Thanks,
-Guenter
+diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
+index e7df342a317d..2466295fcfe8 100644
+--- a/drivers/char/tpm/tpm_tis.c
++++ b/drivers/char/tpm/tpm_tis.c
+@@ -32,6 +32,7 @@
+ 
+ struct tpm_info {
+ 	struct resource res;
++	const struct tpm_tis_phy_ops *ops;
+ 	/* irq > 0 means: use irq $irq;
+ 	 * irq = 0 means: autoprobe for an irq;
+ 	 * irq = -1 means: no irq support
+@@ -186,6 +187,48 @@ static const struct tpm_tis_phy_ops tpm_tcg = {
+ 	.write32 = tpm_tcg_write32,
+ };
+ 
++static int tpm_tcg_read16_bw(struct tpm_tis_data *data, u32 addr, u16 *result)
++{
++	struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
++
++	*result = (ioread8(phy->iobase + addr)) |
++		  (ioread8(phy->iobase + addr + 1) << 8);
++
++	return 0;
++}
++
++static int tpm_tcg_read32_bw(struct tpm_tis_data *data, u32 addr, u32 *result)
++{
++	struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
++
++	*result = (ioread8(phy->iobase + addr)) |
++		  (ioread8(phy->iobase + addr + 1) << 8) |
++		  (ioread8(phy->iobase + addr + 2) << 16) |
++		  (ioread8(phy->iobase + addr + 3) << 24);
++
++	return 0;
++}
++
++static int tpm_tcg_write32_bw(struct tpm_tis_data *data, u32 addr, u32 value)
++{
++	struct tpm_tis_tcg_phy *phy = to_tpm_tis_tcg_phy(data);
++
++	iowrite8(value, phy->iobase + addr);
++	iowrite8(value >> 8, phy->iobase + addr + 1);
++	iowrite8(value >> 16, phy->iobase + addr + 2);
++	iowrite8(value >> 24, phy->iobase + addr + 3);
++
++	return 0;
++}
++
++static const struct tpm_tis_phy_ops tpm_tcg_bw = {
++	.read_bytes	= tpm_tcg_read_bytes,
++	.write_bytes	= tpm_tcg_write_bytes,
++	.read16		= tpm_tcg_read16_bw,
++	.read32		= tpm_tcg_read32_bw,
++	.write32	= tpm_tcg_write32_bw,
++};
++
+ static int tpm_tis_init(struct device *dev, struct tpm_info *tpm_info)
+ {
+ 	struct tpm_tis_tcg_phy *phy;
+@@ -210,7 +253,7 @@ static int tpm_tis_init(struct device *dev, struct tpm_info *tpm_info)
+ 	if (itpm || is_itpm(ACPI_COMPANION(dev)))
+ 		phy->priv.flags |= TPM_TIS_ITPM_WORKAROUND;
+ 
+-	return tpm_tis_core_init(dev, &phy->priv, irq, &tpm_tcg,
++	return tpm_tis_core_init(dev, &phy->priv, irq, tpm_info->ops,
+ 				 ACPI_HANDLE(dev));
+ }
+ 
+@@ -219,7 +262,7 @@ static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
+ static int tpm_tis_pnp_init(struct pnp_dev *pnp_dev,
+ 			    const struct pnp_device_id *pnp_id)
+ {
+-	struct tpm_info tpm_info = {};
++	struct tpm_info tpm_info = { .ops = &tpm_tcg };
+ 	struct resource *res;
+ 
+ 	res = pnp_get_resource(pnp_dev, IORESOURCE_MEM, 0);
+@@ -295,6 +338,8 @@ static int tpm_tis_plat_probe(struct platform_device *pdev)
+ 			tpm_info.irq = 0;
+ 	}
+ 
++	tpm_info.ops = of_device_get_match_data(&pdev->dev) ?: &tpm_tcg;
++
+ 	return tpm_tis_init(&pdev->dev, &tpm_info);
+ }
+ 
+@@ -311,6 +356,7 @@ static int tpm_tis_plat_remove(struct platform_device *pdev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id tis_of_platform_match[] = {
+ 	{.compatible = "tcg,tpm-tis-mmio"},
++	{.compatible = "socionext,synquacer-tpm-mmio", .data = &tpm_tcg_bw},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, tis_of_platform_match);
+-- 
+2.20.1
 
-> ---
-> Changes in v4:
-> -nothing changed 
-> 
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bd5847e802de..a71f56d3b891 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -975,6 +975,15 @@ W:	http://ez.analog.com/community/linux-device-drivers
->  F:	drivers/iio/imu/adis16460.c
->  F:	Documentation/devicetree/bindings/iio/imu/adi,adis16460.yaml
->  
-> +ANALOG DEVICES INC ADM1177 DRIVER
-> +M:	Beniamin Bia <beniamin.bia@analog.com>
-> +M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> +L:	linux-hwmon@vger.kernel.org
-> +W:	http://ez.analog.com/community/linux-device-drivers
-> +S:	Supported
-> +F:	drivers/hwmon/adm1177.c
-> +F:	Documentation/devicetree/bindings/hwmon/adi,adm1177.yaml
-> +
->  ANALOG DEVICES INC ADP5061 DRIVER
->  M:	Stefan Popa <stefan.popa@analog.com>
->  L:	linux-pm@vger.kernel.org
