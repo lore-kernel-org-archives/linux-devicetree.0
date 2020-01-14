@@ -6,116 +6,128 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD6CC33CB2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D630C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55CED2467E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3682084D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579016416;
-	bh=Scmn4FCA0QfCQbkxnkpuG+cd4jIF88weR9x4vuOXxyY=;
+	s=default; t=1579016607;
+	bh=ZCTSH+k6xThdH79h0I5oh1zVw+T2m5gqrWX7QMFhKd4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hRhEqDFNy8kgQS2TiBFwMXte55uRJHlpQoq6J/Sit+N+7P3Cvq5kIVt4Pdcv0grqV
-	 cA5EjYVjxzohD5mCjbf8UhNpuYrbm/ywl+MQMa6UaaJBy+94Mo0j8R/phC8bTV7M0H
-	 ORQzX3OKyeCiDAqCNL7mmK3Neu+mAoFWzjfDFdPA=
+	b=yOZXZXYJjmhBORuHyQQrsUFu6sX+euHvd7zpHIpfa9eFAZyUGAWJiW+RKvtAK1iqS
+	 z3XqidCcKE8+d3bwcobvyUuC50HOQONTqAzCzgygzJqF0QI6b1DYTJRTyl2Q99G242
+	 W03/RU56eJmo+cYJHB78a8wmrjkvmEDRT1rSSzMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgANPkP (ORCPT
+        id S1727102AbgANPn0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:40:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgANPkP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:40:15 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0347B24672;
-        Tue, 14 Jan 2020 15:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579016414;
-        bh=Scmn4FCA0QfCQbkxnkpuG+cd4jIF88weR9x4vuOXxyY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gFNR/cA6IMsPOxcO2Es5EXCXzP/RoXRHPogu0/vZloph2th4hE/fDSssbR+DDMqFX
-         FarFFXlJyEiW6iDxZ/CBxreszI3AyzmBT3DlXxlqs6qtCGkxpyfcRBSswoLsp0yaQq
-         TeZJQV80X6NjbqmlAA/eCgQBDxHaMD0xYA+EiYNU=
-Date:   Tue, 14 Jan 2020 15:40:07 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v4 00/13] iommu: Add PASID support to Arm SMMUv3
-Message-ID: <20200114154007.GC2579@willie-the-truck>
-References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+        Tue, 14 Jan 2020 10:43:26 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49900 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANPn0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 10:43:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZCTSH+k6xThdH79h0I5oh1zVw+T2m5gqrWX7QMFhKd4=; b=UpQ1WewlV5QqhtFdaZ8w6ORpF
+        8M9iXrAUdbtW9g5RYjBjRrjEDY4WYvrb7K/SZOdWF5OskeoDuNHqszDZeK8AHaoLAH7unGua0Uiuf
+        Onsb4Voox3RhmYdBl7MgsARFkeAKvNV6JjYHwLu3CouBWfw4L+7XUAqTJXgQDH0Sexj5g=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1irOLa-0000KP-L6; Tue, 14 Jan 2020 15:43:14 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 2CE91D002CB; Tue, 14 Jan 2020 15:43:14 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 15:43:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20200114154314.GZ3897@sirena.org.uk>
+References: <20191212161019.GF4310@sirena.org.uk>
+ <20191212162152.5uu3feacduetysq7@pengutronix.de>
+ <20191212165124.GJ4310@sirena.org.uk>
+ <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
+ <20191216114454.GB4161@sirena.org.uk>
+ <20191217073533.GC31182@pengutronix.de>
+ <20191217125832.GF4755@sirena.org.uk>
+ <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
+ <20200107130911.GD4877@sirena.org.uk>
+ <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yhqQ34TVR4fE8mPU"
 Content-Disposition: inline
-In-Reply-To: <20191219163033.2608177-1-jean-philippe@linaro.org>
+In-Reply-To: <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
+X-Cookie: Programming is an unnatural act.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Dec 19, 2019 at 05:30:20PM +0100, Jean-Philippe Brucker wrote:
-> Add support for Substream ID and PASIDs to the SMMUv3 driver. Since v3
-> [1], I added review and tested tags where appropriate and applied the
-> suggested changes, shown in the diff below. Thanks all!
-> 
-> I'm testing using the zip accelerator on the Hisilicon KunPeng920 and
-> Zhangfei's uacce module [2]. The full SVA support, which I'll send out
-> early next year, is available on my branch sva/zip-devel at
-> https://jpbrucker.net/git/linux/
-> 
-> [1] https://lore.kernel.org/linux-iommu/20191209180514.272727-1-jean-philippe@linaro.org/
-> [2] https://lore.kernel.org/linux-iommu/1576465697-27946-1-git-send-email-zhangfei.gao@linaro.org/
-> 
-> Jean-Philippe Brucker (13):
->   iommu/arm-smmu-v3: Drop __GFP_ZERO flag from DMA allocation
->   dt-bindings: document PASID property for IOMMU masters
->   iommu/arm-smmu-v3: Parse PASID devicetree property of platform devices
->   ACPI/IORT: Parse SSID property of named component node
->   iommu/arm-smmu-v3: Prepare arm_smmu_s1_cfg for SSID support
->   iommu/arm-smmu-v3: Add context descriptor tables allocators
->   iommu/arm-smmu-v3: Add support for Substream IDs
->   iommu/arm-smmu-v3: Propagate ssid_bits
->   iommu/arm-smmu-v3: Prepare for handling arm_smmu_write_ctx_desc()
->     failure
->   iommu/arm-smmu-v3: Add second level of context descriptor table
->   iommu/arm-smmu-v3: Improve add_device() error handling
->   PCI/ATS: Add PASID stubs
->   iommu/arm-smmu-v3: Add support for PCI PASID
-> 
->  .../devicetree/bindings/iommu/iommu.txt       |   6 +
->  drivers/acpi/arm64/iort.c                     |  18 +
->  drivers/iommu/arm-smmu-v3.c                   | 467 +++++++++++++++---
->  drivers/iommu/of_iommu.c                      |   6 +-
->  include/linux/iommu.h                         |   2 +
->  include/linux/pci-ats.h                       |   3 +
->  6 files changed, 442 insertions(+), 60 deletions(-)
 
-This is close, and I've replied to all of the patches I have comments on.
-To summarise:
+--yhqQ34TVR4fE8mPU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  1-5	I could queue these now
-  6	I can make the small change we discussed
-  7	I can make the changes if you agree (but I'd prefer you to change to
-  	batch submission since I can't test this)
-  8	Good to go once above is solved
-  9	Need your opinion
-  10	Some refactoring needed (sorry)
-  11	Needs Robin's input
-  12	Good to go once above is solved
-  13	Need clarification on PCIe behaviour from you
+On Tue, Jan 07, 2020 at 02:38:11PM +0100, Marco Felsch wrote:
+> On 20-01-07 13:09, Mark Brown wrote:
+> > On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
 
-In other words, I could probably take the first 8 or 9 patches for 5.6 if
-you can resolve those issues asap.
+> > > The input signal is routed trough the da9062 gpio block to the
+> > > regualtors. You can't set any voltage value using a gpio instead you
+> > > decide which voltage setting is applied. The voltage values for
+> > > runtime/suspend comes from the dt-data. No it's not just a fast
+> > > switching option imagine the system suspend case where the cpu and soc
+> > > voltage can be reduced to a very low value. Older soc's like the imx6
+> > > signaling this state by a hard wired gpio line because the soc and
+> > > cpu cores don't work properly on such low voltage values. This is
+> > > my use case and I can't use the sequencer.
 
-Cheers,
+> > My point is that I can't tell any of this from the description.
 
-Will
+> Therefore I want to discuss the dt-binding documentation with you and
+> the others to get this done. Is the above description better to
+> understand the dt-binding?
+
+That text really doesn't feel like text that'd be idiomatic
+directly in a binding document but some of those ideas probably
+do need to be in the text I think.
+
+--yhqQ34TVR4fE8mPU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d4ZEACgkQJNaLcl1U
+h9CJjAf+Lyl6pKu3ywfkP8t2CeYxi0Fz9ndEKvYqp7nK6CZxn8OgX9Jjem3iwm4w
+vhgB2B06edcnP8wIDEgk8YUMirzG0/Rc475SlTvVg/1BYOaGftqksTiEZfHJf0qt
+4mcWgT+Agw3YzPMkM6kahAu243KxKHAwojM3iVV7gb9PX/rOVtInStggPxzdcxtk
+jQQo2RvYBo2mEBArehWE+PGGT2/JElQGTLyhRVx3BrhuAXXoNKuwkS9fUrVAnyk5
+m5kKBygRDyY4MdZ/a53/E8URMDJbctEtveN03mzI+QQ//PMDTufBPqSmURaODb5c
+PAal49kxIE8ZAfvvCgimhdhS3yzmTg==
+=m6uy
+-----END PGP SIGNATURE-----
+
+--yhqQ34TVR4fE8mPU--
