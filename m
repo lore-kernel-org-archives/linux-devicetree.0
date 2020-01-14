@@ -2,124 +2,114 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5397C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D70C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADBB24679
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:52:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nHwWTsMX"
+	by mail.kernel.org (Postfix) with ESMTP id 91EB724672
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579002847;
+	bh=5gv4rqr+ETxodMdG9qR822Ir48yIcBhQ3RsyKU/B3Bc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vc4vXabUGnD/QDi/tTJqLnfrLkcFZ20YCqj6bFxPkevBQ13zzZJhufWb53COJkUBt
+	 yeRaab/J9KgIkt0UY43dk4C9MZKcCYTjCojXFcAW4BcAkXAQjO9XVpkCKdPPA18tCk
+	 aTAce+60L5YBlCp0Fx2eDQkVUkzjadTp9BGPyJIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgANLwi (ORCPT
+        id S1728779AbgANLyH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:52:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45027 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728914AbgANLwh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 06:52:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so11860856wrm.11
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 03:52:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IzwdNUfwlcqLxXSve6wb9StsyrN71lEbIfR41dllFLE=;
-        b=nHwWTsMXEiHgMlLp3rhEKjlY4oFiFN8uVx7EJmL5HpoMLn17G6GskriKC2J4FFqDUf
-         D5PQSR5bGBe2KBkkR2zFboV/+9i2TmSPBkL7OTbNdNiHX7nk7ICkuK4+TDYSmsObTwlN
-         OiLPLpXLq1/M83nG9MZ4HV3/E8nkRsHlO+3UGguEfdmsc46vGQLVsOn5TDTpRV54ob4n
-         pfPb5QzbcX59Yso+X81V+w/rj0PdB4UueRJp1lnyRPXgrA9EDAaNr1NIgCRHQnNRf4Px
-         4jf1EDSskOFU/ovVyTUDM3aMNE2/F5yIbTVFheDVn7pktx7l7R1XqxTCuWrnDyXVGPM4
-         Ul9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IzwdNUfwlcqLxXSve6wb9StsyrN71lEbIfR41dllFLE=;
-        b=JQqAmM94qwsX4X4xGsnulQYIgtwkgZceD4gbnhrLyT6IiZ7X8dIy/RXyfRE04X2n9W
-         S2JHzOnz9OS6kXTgmEnc5Dm4gcQyiRj6FSpi2h4RGKvpt3UgtDuPThbJ42rau3L/JGYG
-         XE3YpXfvZSIgN/ghPjbqyL3wK7s6MWUx4RhSbWQXbKsv5S/DY7fm02mafknHPIeSt+n3
-         AIxVtOQIRilpAj+a/SxCuwlNvOtOu3XGh0WLvvH+wAT55yociGds+s8MW1lT1pwfxcYi
-         H7+RTg1yIdANGVarz529Kwtf3tqcJap8pALOFDqZk+qJzHwqSQenMF5cp5tw3BIv3f2O
-         w20g==
-X-Gm-Message-State: APjAAAWtpYHdZH+ic8ThHnCgRky5C1fZBi50YoHaCtVxCJupfjR4Gojn
-        En536fHMbNzCATWpMNMdCXBttQ==
-X-Google-Smtp-Source: APXvYqz9ANL4J4N9FkoeCEsa+reFmsBRsdemTWxAkjYGsn5VOn30+AuMczjNSCVZhAF6FpG81uDvcw==
-X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr24916169wru.220.1579002755460;
-        Tue, 14 Jan 2020 03:52:35 -0800 (PST)
-Received: from myrica ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id v22sm18105022wml.11.2020.01.14.03.52.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 03:52:34 -0800 (PST)
-Date:   Tue, 14 Jan 2020 12:52:30 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v4 06/13] iommu/arm-smmu-v3: Add context descriptor
- tables allocators
-Message-ID: <20200114115230.GA1799@myrica>
-References: <20191219163033.2608177-1-jean-philippe@linaro.org>
- <20191219163033.2608177-7-jean-philippe@linaro.org>
- <20200114110651.GA29222@willie-the-truck>
+        Tue, 14 Jan 2020 06:54:07 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59688 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727556AbgANLyH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 06:54:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lB6MZA50PMhE5+NlRK8xpuUi9p3Jd9Uo2guWBBEMUek=; b=Sxnje9gvx//7SQF2ycC46I8Z4
+        1z83g2m36A0efOCsgus46fAoDUDcMqopd+8gWFeIIJnMiOOpgI9XScTrMZHw9zroEofLrf3ZcMfJR
+        jNv8mBgiCZJx+9RtoQrDsMYzGEeWOrZhlm8MpkUFXklEdNVqFmduj5FEWt8a2uM9EY3Eo=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1irKlg-0007fv-8p; Tue, 14 Jan 2020 11:53:56 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id A61B1D01965; Tue, 14 Jan 2020 11:53:55 +0000 (GMT)
+Date:   Tue, 14 Jan 2020 11:53:55 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Saravanan Sekar <sravanhome@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 1/4] dt-bindings: Add an entry for Monolithic Power
+ System, MPS
+Message-ID: <20200114115355.GR3897@sirena.org.uk>
+References: <20200109112548.23914-1-sravanhome@gmail.com>
+ <20200109112548.23914-2-sravanhome@gmail.com>
+ <CAL_Jsq+jyVzSfXr1txMUm7VTk-LFunaukQQ-LoQj4OMHgyzRHQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="A7FgPGrDEcSmmdo/"
 Content-Disposition: inline
-In-Reply-To: <20200114110651.GA29222@willie-the-truck>
+In-Reply-To: <CAL_Jsq+jyVzSfXr1txMUm7VTk-LFunaukQQ-LoQj4OMHgyzRHQ@mail.gmail.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 11:06:52AM +0000, Will Deacon wrote:
-> >  /* Context descriptor manipulation functions */
-> > +static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
-> > +					struct arm_smmu_cd_table *table,
-> > +					size_t num_entries)
-> > +{
-> > +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-> > +
-> > +	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
-> > +					 GFP_KERNEL);
-> > +	if (!table->ptr) {
-> > +		dev_warn(smmu->dev,
-> > +			 "failed to allocate context descriptor table\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> > +static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
-> > +					struct arm_smmu_cd_table *table,
-> > +					size_t num_entries)
-> > +{
-> > +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
-> > +
-> > +	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
-> > +}
-> 
-> I think we'd be better off taking the 'arm_smmu_s1_cfg' as a parameter here
-> instead of the table pointer and a num_entries value, since the code above
-> implies that we support partial freeing of the context descriptors.
-> 
-> I can do that as a follow-up patch if you agree. Thoughts?
 
-Do you mean only changing the arguments of arm_smmu_free_cd_leaf_table(),
-or arm_smmu_alloc_cd_leaf_table() as well? For free() I agree, for alloc()
-I'm not sure it would look better.
+--A7FgPGrDEcSmmdo/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For my tests I have a debug patch that allocates PASIDs randomly which
-quickly consumes DMA for leaf tables. So I do have to free the leaves
-individually when they aren't used, but it will be easy for me to update.
+On Mon, Jan 13, 2020 at 11:14:39AM -0600, Rob Herring wrote:
+> On Thu, Jan 9, 2020 at 5:25 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
+> >
+> > Add an entry for Monolithic Power System, MPS
+> >
+> > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks,
-Jean
+> Mark, And revert this too. It's a duplicate of what I already have in
+> my tree and this one is not alphabetized correctly.
+
+OK...  I'm very surprised that you're asking me to revert a patch
+that you've acked though.
+
+--A7FgPGrDEcSmmdo/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4dq9IACgkQJNaLcl1U
+h9DYmwf/XQmHGqavvYH49xk8K7JAEHtmllFR3shlMUPwgFy7xmOmcyihfeC4P7ze
+9d4F/5qJyr+NKHwSxCqXvZ6tVJe9MmiDKfdGGjVNKXGL7MzYnXKH2hXQPlkjSfb8
+snzswHCDQG/foE+ELH3QMTv8Idi6Vph9A/avf4eEGRbFB8AWvSwcVZief9ZOtbP4
+TsXT9wv7TLyGevADxxbtlaGvErhQmPwRDgkZ+vPZs6hJfZGaL2rXagX86UbaF9en
+PR3I8zzxjWUUQYBURnsygvdLHpsARHLwLXUpS1HQVw31aHv7clCpeUYw2q44F7XD
+7DFMbh9xme5M781gk6nfNeRCDCQUuQ==
+=A9Lt
+-----END PGP SIGNATURE-----
+
+--A7FgPGrDEcSmmdo/--
