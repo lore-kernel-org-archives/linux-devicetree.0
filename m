@@ -2,70 +2,69 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B7EC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29CBC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59E124670
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578995178;
-	bh=oXoVf5FYzK2l54ZMTKBmt/diqvZDokYRd/mYU7Iuj7w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rR8Ki/PzJW3lSdwrcZbfgq8seIClwttextuokQgzCredgSbx1y4Zc1V2N0Fukiu4s
-	 v9XIGjGsii+cYhocfmvZ2UnNIzv26e0a7dWNZmddhNv8VqZwTSJE5FvenO7DpUWC5S
-	 ht4QZnxEmslrk7YcGM5peinbiDZ12PtgdDVpBrEc=
+	by mail.kernel.org (Postfix) with ESMTP id C8ECE24676
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbgANJqD (ORCPT
+        id S1728951AbgANJrM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:46:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgANJqD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:46:03 -0500
-Received: from dogfood.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5FCE24670;
-        Tue, 14 Jan 2020 09:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578995162;
-        bh=oXoVf5FYzK2l54ZMTKBmt/diqvZDokYRd/mYU7Iuj7w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ofFAsr0yMlwqOasIzmRJEYHG7eCD55Tw4XqWV8py/NHRxsNvvsm9h+vw/whb8uWXZ
-         6LhHsk/1b5w3U50AnfJon2zQ7Jyt2wPN4kOL/cG/Zp7TOb3w8YUjBw6r0CpUS/O3kn
-         t7N/DVvu3lAy41/P2bAc+9c+6VSwH5DisAhMffX4=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     jarkko.sakkinen@linux.intel.com
-Cc:     linux-arm-kernel@lists.infradead.org, masahisa.kojima@linaro.org,
-        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 0/2] synquacer: add TPM support
-Date:   Tue, 14 Jan 2020 10:45:03 +0100
-Message-Id: <20200114094505.11855-1-ardb@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 Jan 2020 04:47:12 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43333 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgANJrM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 04:47:12 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 326A12000F;
+        Tue, 14 Jan 2020 09:47:05 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 10:47:05 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mchehab@kernel.org, lee.jones@linaro.org,
+        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
+        mkl@pengutronix.de, a.zummo@towertech.it,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 01/17] dt-bindings: at_xdmac: remove wildcard
+Message-ID: <20200114094705.GB3137@piout.net>
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578673089-3484-2-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578673089-3484-2-git-send-email-claudiu.beznea@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds support for driving the TPM on Socionext SynQuacer platforms
-using the existing driver for a memory mapped TIS frame.
-
-Ard Biesheuvel (2):
-  dt-bindings: tpm-tis-mmio: add compatible string for SynQuacer TPM
-  tpm: tis: add support for MMIO TPM on SynQuacer
-
- Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt |  1 +
- drivers/char/tpm/tpm_tis.c                                      | 31 ++++++++++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
+On 10/01/2020 18:17:53+0200, Claudiu Beznea wrote:
+> Remove wildcard and use the available compatible.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/dma/atmel-xdma.txt | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+Applied, thanks.
 
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
