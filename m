@@ -2,169 +2,167 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081BFC33CA9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E2AC33CA9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D55207FF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:21:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FBLmig+X"
+	by mail.kernel.org (Postfix) with ESMTP id 6DA48207E0
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgANHVR (ORCPT
+        id S1728868AbgANHXw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:21:17 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39419 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728831AbgANHVR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:21:17 -0500
-Received: by mail-qt1-f193.google.com with SMTP id e5so11607184qtm.6
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 23:21:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qu8L9/P7G3E9Yw4p+SvLP/VGjTn+xJR8yruIENAwmw8=;
-        b=FBLmig+XuYQLjy+MeDi4VsXucyJ6x0+XdvVzpi5nWJqWnehAgKtDnYacLVqKcbPzIH
-         UyGqW0OT0p1dWpNDMovF2Lm9I6w7iFZU/8ULTFeHFJQ9p5LA9Zgyc+J1gC6Hyp8txp+1
-         vMsvum9BkFPYlPeoCokHaWZR/Gb75cRTzLyB4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qu8L9/P7G3E9Yw4p+SvLP/VGjTn+xJR8yruIENAwmw8=;
-        b=PpqvRQBuWUCdFRhmAo28iK9UjzJe39zC2R3MLjRq1IOr+enPKn8bUJMu1+LZMAqH66
-         PeVgNR0V4Opmfvr12laK6iWc2MKaff4D1QaNURvHP8hxUsOiAXNVQ8DDKmhqWTqujLd6
-         0Jv2o4lUKWoiZXMjb+lNqgt4VPLGX8csC39Vsh0kPPYF23oka9iCOKkUYYriwjPH8gR6
-         wOs4TVfbt7yIgrnLlep0SJb+OQmGYXuirJhUgzaA7FBikrEkpbmOYgeHT4dRr1JHX9Oc
-         cEF1m0PmxCns0Ho+3VB2LAJh9DiLGN6vsdQmcR9i/xgQ8HLDXuA1Qm4z8TpekpURJI4J
-         pfTQ==
-X-Gm-Message-State: APjAAAUf9r12R9kAjMMBlvH329bImwaHHPQl4sTjtZuX4fPLW5CB/Gv+
-        B3fOZXF9lFWCDY5bgKs7/69gw2iPyM5w+/6ZCiukGw==
-X-Google-Smtp-Source: APXvYqy5dTRwvBZSp2Sl2oa5uqtPjgwo9dLYORqfUzS4GprMz5UdJxHfSaILw3N4vb/BqqZHf3UJ8KY/Bw2G5cK4+Kc=
-X-Received: by 2002:ac8:4446:: with SMTP id m6mr2448249qtn.159.1578986475520;
- Mon, 13 Jan 2020 23:21:15 -0800 (PST)
-MIME-Version: 1.0
-References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-5-drinkcat@chromium.org>
- <20200108132302.GA3817@sirena.org.uk> <CANMq1KBo8ND+YDHaCw3yZZ0RUr69-NSUcVbqu38DuZvHUB-LFw@mail.gmail.com>
- <09ddfac3-da8d-c039-92a0-d0f51dc3fea5@arm.com> <20200109162814.GB3702@sirena.org.uk>
- <a40baddb-cbab-d8fc-3fd9-0582f1b5b24e@arm.com> <20200109194930.GD3702@sirena.org.uk>
- <90993401-6896-bf95-a15a-d99c465ec12a@arm.com>
-In-Reply-To: <90993401-6896-bf95-a15a-d99c465ec12a@arm.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 14 Jan 2020 15:21:04 +0800
-Message-ID: <CANMq1KBnUZ8v62=P734BrwPYwojWiqnvweewUY7OQjym-xuQ2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] drm/panfrost: Add support for a second regulator
- for the GPU
-To:     Steven Price <steven.price@arm.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        Tue, 14 Jan 2020 02:23:52 -0500
+Received: from lucky1.263xmail.com ([211.157.147.135]:56850 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbgANHXv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:23:51 -0500
+Received: from localhost (unknown [192.168.167.16])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 8D27B4FFD1;
+        Tue, 14 Jan 2020 15:23:49 +0800 (CST)
+X-MAIL-GRAY: 1
+X-MAIL-DELIVERY: 0
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P5437T140292994864896S1578986620990337_;
+        Tue, 14 Jan 2020 15:23:49 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <1d751e9ebff3152f419725f97733107b>
+X-RL-SENDER: shawn.lin@rock-chips.com
+X-SENDER: lintao@rock-chips.com
+X-LOGIN-NAME: shawn.lin@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Shawn Lin <shawn.lin@rock-chips.com>
+To:     Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 1/6] dt-bindings: add binding for Rockchip combo phy using an Innosilicon IP
+Date:   Tue, 14 Jan 2020 15:22:55 +0800
+Message-Id: <1578986580-71974-2-git-send-email-shawn.lin@rock-chips.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
+References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 7:30 PM Steven Price <steven.price@arm.com> wrote:
->
-> On 09/01/2020 19:49, Mark Brown wrote:
-> > On Thu, Jan 09, 2020 at 04:53:02PM +0000, Steven Price wrote:
-> >> On 09/01/2020 16:28, Mark Brown wrote:
-> >>> On Thu, Jan 09, 2020 at 02:14:42PM +0000, Steven Price wrote:
-> >
-> >>>> I'm not sure if it's better, but could we just encode the list of
-> >>>> regulators into device tree. I'm a bit worried about special casing an
-> >>>> "sram" regulator given that other platforms might have a similar
-> >>>> situation but call the second regulator a different name.
-> >
-> >>> Obviously the list of regulators bound on a given platform is encoded in
-> >>> the device tree but you shouldn't really be relying on that to figure
-> >>> out what to request in the driver - the driver should know what it's
-> >>> expecting.
-> >
-> >> From a driver perspective we don't expect to have to worry about power
-> >> domains/multiple regulators - the hardware provides a bunch of power
-> >> registers to turn on/off various parts of the hardware and this should be
-> >> linked (in hardware) to a PDC which sorts it out. The GPU/PDC handles the
-> >> required sequencing. So it *should* be a case of turn power/clocks on and
-> >> go.
-> >
-> > Ah, the well abstracted and consistent hardware with which we are all so
-> > fortunate to work :) .  More seriously perhaps the thing to do here is
-> > create a driver that provides a soft PDC and then push all the special
-> > case handling into that?  It can then get instantiated based on the
-> > compatible or perhaps represented directly in the device tree if that
-> > makes sense.
->
-> That makes sense to me.
->
-> >> However certain integrations may have quirks such that there are physically
-> >> multiple supplies. These are expected to all be turned on before using the
-> >> GPU. Quite how this is best represented is something I'm not sure about.
-> >
-> > If they're always on and don't ever change then that's really easy to
-> > represent in the DT without involving drivers, it's when you need to
-> > actively manage them that it's more effort.
->
-> Sorry, I should have been more clear. They are managed as a group - so
-> either the entire GPU is powered off, or powered on. There's no support
-> in Panfrost or mali_kbase for attempting to power part of the GPU.
->
-> >>> Bear in mind that getting regulator stuff wrong can result
-> >>> in physical damage to the system so it pays to be careful and to
-> >>> consider that platform integrators have a tendency to rely on things
-> >>> that just happen to work but aren't a good idea or accurate
-> >>> representations of the system.  It's certainly *possible* to do
-> >>> something like that, the information is there, but I would not in any
-> >>> way recommend doing things that way as it's likely to not be robust.
-> >
-> >>> The possibility that the regulator setup may vary on other platforms
-> >>> (which I'd expect TBH) does suggest that just requesting a bunch of
-> >>> supply names optionally and hoping that we got all the ones that are
-> >>> important on a given platform is going to lead to trouble down the line.
-> >
-> >> Certainly if we miss a regulator the GPU isn't going to work properly (some
-> >> cores won't be able to power up successfully). However at the moment the
-> >> driver will happily do this if someone provides it with a DT which includes
-> >> regulators that it doesn't know about. So I'm not sure how adding special
-> >> case code for a SoC would help here.
-> >
-> > I thought this SoC neeed to vary the voltage on both rails as part of
-> > the power management?  Things like that can lead to hardware damage if
-> > we go out of spec far enough for long enough - there can be requirements
-> > like keeping one rail a certain voltage above another or whatever.
->
-> Yes, you are correct. My concern is that a DT which specifies a new
-> regulator (e.g. "sram2") would be accepted by an old kernel (because it
-> wouldn't know to look for the new regulator) but wouldn't know to
-> control the regulator. It could then create a situation which puts the
-> board out of spec - potentially in a damaging way. Hence I'd like to
-> express the regulator structure in such a way that old kernels wouldn't
-> "half-work". Your "soft-PDC" approach would seem to fit that requirement.
+This IP could supports USB3.0 and PCIe.
 
-FYI, I sent a v3 here: https://patchwork.kernel.org/patch/11331373/
-that addresses _some_ of these concerns.
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 
-I'm not quite sure how to describe the regulators in a way that we can
-check that the device tree does not specific extra ones (apart from
-doing some string matching on all properties?), and I don't think I'm
-best placed to implement the soft-PDC idea. See my comment on that
-patch.
+---
 
-Thanks!
+ .../bindings/phy/rockchip,inno-combophy.yaml       | 84 ++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml
+new file mode 100644
+index 0000000..d647ab3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/rockchip,inno-combophy.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/rockchip,inno-combophy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Rockchip USB3.0/PCI-e combo phy
++
++maintainers:
++        - Shawn Lin <shawn.lin@rock-chips.com>
++        - William Wu <william.wu@rock-chips.com>
++
++properties:
++  "#phy-cells":
++    const: 1
++
++  compatible:
++    enum:
++      - rockchip,rk1808-combphy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: PLL reference clock
++
++  clock-names:
++    items:
++      - const: refclk
++
++  resets:
++    items:
++      - description: OTG unit reset line
++      - description: POR unit reset line
++      - description: APB interface reset line
++      - description: PIPE unit reset line
++
++  reset-names:
++    items:
++      - const: otg-rst
++      - const: combphy-por
++      - const: combphy-apb
++      - const: combphy-pipe
++
++  rockchip,combphygrf:
++    items:
++      - description: The grf for COMBPHY configuration and state registers.
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - rockchip,combphygrf
++
++additionalProperties: false
++
++examples:
++  - |
++    combphy_grf: syscon@fe018000 {
++        compatible = "rockchip,usb3phy-grf", "syscon";
++        reg = <0x0 0xfe018000 0x0 0x8000>;
++    };
++
++    combphy: phy@ff380000 {
++        compatible = "rockchip,rk1808-combphy";
++        reg = <0x0 0xff380000 0x0 0x10000>;
++        #phy-cells = <1>;
++        clocks = <&cru SCLK_PCIEPHY_REF>;
++        clock-names = "refclk";
++        assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
++        assigned-clock-rates = <25000000>;
++        resets = <&cru SRST_USB3_OTG_A>, <&cru SRST_PCIEPHY_POR>,
++                 <&cru SRST_PCIEPHY_P>, <&cru SRST_PCIEPHY_PIPE>;
++        reset-names = "otg-rst", "combphy-por",
++                      "combphy-apb", "combphy-pipe";
++        rockchip,combphygrf = <&combphy_grf>;
++    };
++
++...
+-- 
+1.9.1
+
+
+
