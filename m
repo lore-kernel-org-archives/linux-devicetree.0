@@ -2,177 +2,161 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB6DC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 19:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF12EC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 20:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D9E24676
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 19:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579029627;
-	bh=51mPKvKOvFBPcyebnpeFfrpdOAPyvnnFW5SZb3BDz5A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=noGJtFj0uPr84fpJIK7EFFwD6BiX3otX3xDFpxuqdntyGpqClyAQsAVmvN9ZN0UQc
-	 equCFr/MoK4Dlk+vjjpP0ZvEKyo2MUB6zqFtTz0rz03UyA8Dwnn/L/Tua7rN3to1iY
-	 pNHde7TaHQYe7TiwU5uAl7PYZYRFoZF1ImnAOsQc=
+	by mail.kernel.org (Postfix) with ESMTP id 975CE24673
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 20:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="U5UrGcnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgANTU0 (ORCPT
+        id S1728346AbgANUKz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:20:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANTUZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:20:25 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09D9B24679;
-        Tue, 14 Jan 2020 19:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579029624;
-        bh=51mPKvKOvFBPcyebnpeFfrpdOAPyvnnFW5SZb3BDz5A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0AzsTqV+6NRVdOwYlop8UGvirDY6l6CFWTp76WjFI/3G25rUyinXv5ASQPgWsOVJB
-         GomQpKA16rlD6ylSIvLNc5VHnSKssm/NbO/8Yw2Fo/Z0klQ0VVy4HF3/DXH09v5NM9
-         gg5eboqH985MWFANNYfhEI/QvEHQa1j0DAYBFmCs=
-Received: by mail-qt1-f179.google.com with SMTP id t3so13466245qtr.11;
-        Tue, 14 Jan 2020 11:20:24 -0800 (PST)
-X-Gm-Message-State: APjAAAXkfrlErTvvVstfO50qZEx6h/QYWNWp9B5OdmkKFSGrfC3j9/5b
-        VfChq1K3HRDu91ucGLDbwITNQVX6iHQ5mtA3BA==
-X-Google-Smtp-Source: APXvYqxtoC7YzVsJSq0poDkCvJI/CcjPKwVkad6yKqrUxD2hA8j7iTo4qnjLsj9KT03fSLGDVtvDkqcYswDEUHsVCD0=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr128832qtp.224.1579029623073;
- Tue, 14 Jan 2020 11:20:23 -0800 (PST)
+        Tue, 14 Jan 2020 15:10:55 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38924 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANUKz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 15:10:55 -0500
+Received: by mail-ed1-f68.google.com with SMTP id t17so13155185eds.6;
+        Tue, 14 Jan 2020 12:10:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9+kTGzipxG+2AUMOBSHrjhkVXKsRlWSVlekuyPDJ2KQ=;
+        b=U5UrGcnGMLeF8EkEKnq4SXQA0bZn1K6H76br30DCk6nDl7shLs9apRuVn7paVhhr+J
+         gMmnCx0Xyy4SbGAld5Dxx7hKCe3zVde+4D7GGrJUNuk6ou71aa4b0Jg6ZSopSLHmCYgh
+         z3ijcao7IeziK6LYdDKe/yJZ59wU1ezjYiR/PZxH3iZ5M9ycOIaoBShnoDIrQDV7pp61
+         rd5dofOqfUPsA5L0octRXnxmNVHNyuVUTKmF7HlpEGu3XMsHHloitIl9d7b1cvbccjHH
+         AEK6BgTvDmyC2dFB+JvqthCztEkGsWsfUUbUsltQkgU7F6PzRxC7X2a/kK64COrwmRvd
+         QEkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9+kTGzipxG+2AUMOBSHrjhkVXKsRlWSVlekuyPDJ2KQ=;
+        b=Zxq+C6zUlI78Xi6smZ641+LEcM9O1EJX3j1Eckb8BVL6ptOYdPaFHgUjTSt0FKiNEO
+         cu4OmXLLew0PQ7op1C4S5qhVNiHTlfMtERFL32IX842JJPIb7A/RXLhbuIio9+jq2C0X
+         MLVsWq0pexgx6rSrTSZKE+5RHzK5oqkMrY3XS4nT7lQbpqLj9DDHtBGV77LVHOc/YwMN
+         G0dsKeNIZAD0gXLdJUBxATrcdK32ImgJnm/F3NdSYqQ4bV1OsteUKBj7mZZxRQqHSyS5
+         y8zmZGceOtZQlYYi5+Fm+OazjHbeIWeErGJw1Rxzj7X82RIwqg6Ds7P0XUCU4F4oVZJY
+         u7pQ==
+X-Gm-Message-State: APjAAAVKC6HjoO4LqLsLjufU1xPYvVq138SDEz1pKRvwsDAy/VdIgHrZ
+        I7G+xAlPqwpZuB4MwmtlCZFlowZgKhhGj2G+we0=
+X-Google-Smtp-Source: APXvYqzsf7bCKRilpxan541+ugL4dAfOo0X8vA6AEhA9CtpMo2K4raWrA9d3K0IGQqHU1WDe0EVbnk1ga80LFRHazUc=
+X-Received: by 2002:a17:906:f245:: with SMTP id gy5mr23583417ejb.225.1579032653189;
+ Tue, 14 Jan 2020 12:10:53 -0800 (PST)
 MIME-Version: 1.0
-References: <1575649028-10909-1-git-send-email-fabrice.gasnier@st.com>
- <20191217234345.GA7738@bogus> <cadc76a7-7e9d-1f0a-21fd-2d7942dbe5c9@st.com>
-In-Reply-To: <cadc76a7-7e9d-1f0a-21fd-2d7942dbe5c9@st.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jan 2020 13:20:10 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJdw=WzMhp1d9E3131AuyO7in7bgR5X4NM1n7Ox4X0YXw@mail.gmail.com>
-Message-ID: <CAL_JsqJdw=WzMhp1d9E3131AuyO7in7bgR5X4NM1n7Ox4X0YXw@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        olivier moysan <olivier.moysan@st.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1578634957-54826-1-git-send-email-hanjie.lin@amlogic.com>
+ <1578634957-54826-3-git-send-email-hanjie.lin@amlogic.com>
+ <CAFBinCCZSBWdKQwmcvponuUu_aiTnDCyRiPqKDgqfNkJQoq06w@mail.gmail.com> <52566105-cbee-01d6-9110-f9954eabe22f@amlogic.com>
+In-Reply-To: <52566105-cbee-01d6-9110-f9954eabe22f@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 14 Jan 2020 21:10:41 +0100
+Message-ID: <CAFBinCDtPoKQh64VKmqOe=U0BLPE_Ef+scmK3h1uV9hLhT6Q1g@mail.gmail.com>
+Subject: Re: [PATCH v5 2/6] dt-bindings: usb: dwc3: Add the Amlogic A1 Family
+ DWC3 Glue Bindings
+To:     Hanjie Lin <hanjie.lin@amlogic.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Yue Wang <yue.wang@amlogic.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jian Hu <jian.hu@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:02 AM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->
-> On 12/18/19 12:43 AM, Rob Herring wrote:
-> > On Fri, Dec 06, 2019 at 05:17:08PM +0100, Fabrice Gasnier wrote:
-> >> Convert the STM32 ADC binding to DT schema format using json-schema
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> >> ---
-> >> Note: this applies on top of IIO tree currently (iio-for-5.5c).
-> >>
-> >> Changes in V2:
-> >> - Take almost all of Rob suggestions (removed reg generic description,
-> >>   added minItems, maxItems, st,max-clk-rate-hz range, drop some pipes,
-> >>   simplify clock-names, remove unneeded allOfs)
-> >> - For now, keep all in one file despite there are lots of if/thens in the
-> >>   bindings
-> >> ---
-> >>  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 149 -------
-> >>  .../devicetree/bindings/iio/adc/st,stm32-adc.yaml  | 454 +++++++++++++++++++++
-> >>  2 files changed, 454 insertions(+), 149 deletions(-)
-> >>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
-> >
-> >
->
->
-> [snip]
->
-> >> +
-> >> +      st,adc-channels:
-> >> +        description: |
-> >> +          List of single-ended channels muxed for this ADC. It can have up to:
-> >> +            - 16 channels, numbered from 0 to 15 (for in0..in15) on stm32f4
-> >> +            - 20 channels, numbered from 0 to 19 (for in0..in19) on stm32h7 and
-> >> +              stm32mp1.
-> >> +        allOf:
-> >> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +
->
-> [snip]
->
-> >> +
-> >> +    allOf:
-> >> +      - if:
-> >> +          properties:
-> >> +            compatible:
-> >> +              contains:
-> >> +                const: st,stm32f4-adc
-> >> +
-> >> +        then:
-> >> +          properties:
-> >> +            reg:
-> >> +              enum:
-> >> +                - 0x0
-> >> +                - 0x100
-> >> +                - 0x200
-> >> +
-> >> +            interrupts:
-> >> +              minimum: 0
-> >> +              maximum: 2
-> >> +
-> >> +            assigned-resolution-bits:
-> >> +              enum: [6, 8, 10, 12]
-> >> +              default: 12
-> >> +
-> >> +            st,adc-channels:
-> >> +              minItems: 1
-> >> +              maxItems: 16
-> >> +              minimum: 0
-> >> +              maximum: 15
-> >
-> > You are mixing array and scalar constraints here. You need:
-> >
-> > minItems: 1
-> > maxItems:16
-> > items:
-> >   minimum: 0
-> >   maximum: 15
-> >
-> > Update dtschema. It will now catch this. There's a few others too.
->
-> Hi Rob,
->
-> Sorry for the late reply. I updated dtschema. Now it catches it.
->
-> I've tried your suggestion, but when I test it, I don't get any error on
-> maxItems.
->
-> In the example: "st,adc-channels = <0>, <1>, ... more than 16 items;"
->
-> Is it possible I face some other issue with dtschema ?
+Hi Hanjie,
 
-The problem is how "<0>, <1>" vs. "<0 1>" gets encoded. While those
-are the same in the dtb, in yaml we have "[[0], [1]]" vs. "[[0, 1]]".
-Making the brackets significant is helpful for some things like
-phandle+args and 'reg' where we have a matrix of values, but for
-arrays it just gets in the way. I think as I suggested is the right
-form for the binding schema, and we need to either decide what's the
-correct way for brackets or improve the tool to accept both ways.
+On Mon, Jan 13, 2020 at 2:23 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+>
+>
+>
+> On 2020/1/12 4:50, Martin Blumenstingl wrote:
+> > Hi Hanjie,
+> >
+> > On Fri, Jan 10, 2020 at 6:43 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+> > [...]
+> >> @@ -37,6 +43,11 @@ properties:
+> >>
+> >>    clocks:
+> >>      minItems: 1
+> >> +    maxItems: 4
+> > the driver parses one clock for G12A/G12B/SM1 and three clocks for A1
+> > if there is a fourth clock: do we need to manage it in the driver?
+> > (note: dt-bindings always represent the hardware, so if there's a
+> > fourth clock which the driver doesn't need then it's perfectly valid
+> > to describe it here. a comment which clock this is helps in the
+> > code-review process)
+> >
+>
+> Hi Martin,
+>
+> Sorry for this confusing, I moved xtal_usb_phy clock from glue driver to phy,
+> but I missed this binding modification.
+> So actually A1 do only need these three clocks and no fourth clock exist, clock
+> and clock-names maxItems should be three here for A1.
+I see, thank you for clarifying this!
 
-Rob
+[...]
+> Do you mean something like this:
+>
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - amlogic,meson-g12a-usb-ctrl
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +         minItems: 1
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - amlogic,meson-a1-usb-ctrl
+> +
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            minItems: 3
+> +       clock-names:
+> +          items:
+> +            - const: usb_ctrl
+> +            - const: usb_bus
+> +            - const: xtal_usb_ctrl
+> +      required:
+> +        - clock-names
+this looks good to me (but keep in mind that I'm no expert on these
+yaml schemas)
+I wonder if we are allowed to shorten this by having one clocks
+property with minItems: 1 and maxItems: 3 (like you have in the
+original patch) and then only have a
+amlogic,meson-a1-usb-ctrl-specific "clock-names" property (and make
+that mandatory for A1 SoCs)
+
+
+Martin
