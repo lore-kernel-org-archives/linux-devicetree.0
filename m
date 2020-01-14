@@ -8,64 +8,66 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B7CC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E10C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495D224658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871BA24679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 18:15:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLDNbZ5u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF7zoJ7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgANSP2 (ORCPT
+        id S1727102AbgANSPb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:15:28 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42882 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgANSP2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 13:15:28 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q6so13118545wro.9;
-        Tue, 14 Jan 2020 10:15:27 -0800 (PST)
+        Tue, 14 Jan 2020 13:15:31 -0500
+Received: from mail-wm1-f50.google.com ([209.85.128.50]:51687 "EHLO
+        mail-wm1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728057AbgANSPb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 13:15:31 -0500
+Received: by mail-wm1-f50.google.com with SMTP id d73so14950853wmd.1;
+        Tue, 14 Jan 2020 10:15:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0P5glpoJdpBF0YSe5lgoVaYsIcQxbSvG8r8CUEJDp1s=;
-        b=iLDNbZ5ukUSPVmBRFK82mQFW0l7rdwdOHDpE/ogQ58S0r93xmYGgTDo6IkaoMijE5M
-         Goh5OWRfiai3JwDZgNmFwNVyw/9rtGGIwY0nNc2zkJs1iTyAyYTul/rvbF+1MC2TiAna
-         jChEnlb1eUACfPtcLaNDxhbs0X5xl2zfVFH9koMHF4qHSd/5wQzKjZVOXEZBtGaqYsHz
-         e/AMUM+dlSOkkeMaOZv4c60nWWIO++Lc0V0aSO9oa91JoEWg3ao9Iqz4XHZGGn+pQZO0
-         mVAGFKHI5fvg8QwMoqCrqwOr6x4La1vp1HS97pPzNTlQl/a/Fj0oKwXwnr37PTqgjHlG
-         cFNQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=W98ArnC1pumbkemZi5CT4h5r3WVttDYJlBmsQmIg0jQ=;
+        b=fF7zoJ7j84HEur4t7vRP9pCOgqJjTAb/waoTBzB6upPg9OCfMW1o8tRwWRD44Zlzvi
+         BD196qmmaHG6J7HTFyH65ejY8dxJ1FoDGFZFVONsppNApMeJS3mZz1uc72HzL7/0OQRg
+         XhZhmTGhSqnsycsg/OkvufN/xiXB/zvOO/cMVJ8R4AVLLNApTUzk5zrEVaUBEbxiCBVg
+         vLA4koAzrpmL5+iJ05VC3pNOKWaPH/qa08NW5p+cwsvBo+VsD1IuOSB5Ej3EtrD7yrQj
+         UO5/qr0FND18rZkOwahQ3LoqxT3kLIx9Ay6Fxn958eWoTi4yKCnWWA2dAjfjm1hAEgH6
+         z5uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0P5glpoJdpBF0YSe5lgoVaYsIcQxbSvG8r8CUEJDp1s=;
-        b=rMM6YwCfPl+1mTzSWchwXrp425+z6DfxFjaDHqsymYY4v2BmtZo8iKrHkHplIv80FM
-         Zcuz1LrM6ljQ0FdFP/5uah686um0E+29bJzC6k9aRuUAOPzq+ToKIcu7pgD73FJ6/Vh9
-         pyb8dz8qIU5ovY/EzFg4ubTT4GMRje3WOh6JWwojBnxdpR7njqMyIbZLWaKSCSuE3xkA
-         p8qYp+R5amPgblhvHDniUaXaWPRrcArgWHWQZEZMf0wtKd2ZK+RB0rmppeMz5Ou4rvug
-         KhKhqnoNfpc6XT2vZ7EnsEoAjcRAzlg+qn6sHUc/2R7LzwjEl+rPC47rXCfocDesn1Og
-         cOGA==
-X-Gm-Message-State: APjAAAWyaSiUjXAse4rWC+vLIuVQhuoqreTrb7j4+vp2HmUcU9oN3LCB
-        MknIL5WakDozKlJ6hO8qTVI=
-X-Google-Smtp-Source: APXvYqyT1DPFbckt54VA8UADUndMRcNwH2HnT8rQuoDO4clfOw2MNvvElIYe/H+2R6MSRZmHfddFxQ==
-X-Received: by 2002:adf:fd07:: with SMTP id e7mr26157430wrr.21.1579025726306;
-        Tue, 14 Jan 2020 10:15:26 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=W98ArnC1pumbkemZi5CT4h5r3WVttDYJlBmsQmIg0jQ=;
+        b=n99pne/1Ke88aPER1Y7uZfjkbJxFywJGJ+7xr/bSStaF9bVpDLEbVpK8Ez6r2D6PPO
+         LbVpP0dftBX0LhDQKlchOZC3r5krNBFy5RGO+A8+jHFK6b8IkzmbK5tBeCYeAD6Sk6aq
+         SqWzhA9jOTblQy7fync03MYA8/se0ZcagwyLLJTmIde+0RgL9mWAyY2mGtiViwr2tLML
+         RfTNpaUqQmeUNVW6fo72AYdom0OfBW1UxGuKRf9K+Welpkhmt2246zc7NzhchWUiKdeQ
+         lWPD6PagIf8SMiTHdPrt//4QWf3yoLkMUL20Rlf1NSDezVpCLiKIoUVAwoOhaaIbHfhH
+         IgIg==
+X-Gm-Message-State: APjAAAXG8P1gNoD1fM3qJo7tIGb1MqqEpNr1QytLYs0ozSrtZZzUmfK7
+        gzEDnT9imhZkvevUUbceYCM=
+X-Google-Smtp-Source: APXvYqyBzCnuumI4Fh0LYRvwsVkumU0eVccJWmdeyhY0NNwAMNcFiksNL4cpvcirakHVrE5qBG0dyQ==
+X-Received: by 2002:a7b:cb97:: with SMTP id m23mr28099001wmi.37.1579025728196;
+        Tue, 14 Jan 2020 10:15:28 -0800 (PST)
 Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id c4sm19616870wml.7.2020.01.14.10.15.25
+        by smtp.gmail.com with ESMTPSA id z187sm20427839wme.16.2020.01.14.10.15.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 10:15:25 -0800 (PST)
+        Tue, 14 Jan 2020 10:15:27 -0800 (PST)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Georgi Djakov <georgi.djakov@linaro.org>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: firmware: Convert Tegra186 BPMP bindings to json-schema
-Date:   Tue, 14 Jan 2020 19:15:18 +0100
-Message-Id: <20200114181519.3402385-1-thierry.reding@gmail.com>
+Subject: [RFC 2/2] dt-bindings: firmware: tegra186-bpmp: Document interconnects property
+Date:   Tue, 14 Jan 2020 19:15:19 +0100
+Message-Id: <20200114181519.3402385-2-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200114181519.3402385-1-thierry.reding@gmail.com>
+References: <20200114181519.3402385-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -75,346 +77,117 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Convert the Tegra186 BPMP bindings from the old free-form text format to
-a json-schema and fix things up so that existing device trees properly
-validate.
+Document the interconnects property that is used to describe the paths
+from and to system memory from and to the BPMP.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- .../firmware/nvidia,tegra186-bpmp.txt         | 107 ---------
- .../firmware/nvidia,tegra186-bpmp.yaml        | 209 ++++++++++++++++++
- 2 files changed, 209 insertions(+), 107 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
- create mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
+Rob, Georgi,
 
-diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-deleted file mode 100644
-index e44a13bc06ed..000000000000
---- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-+++ /dev/null
-@@ -1,107 +0,0 @@
--NVIDIA Tegra Boot and Power Management Processor (BPMP)
--
--The BPMP is a specific processor in Tegra chip, which is designed for
--booting process handling and offloading the power management, clock
--management, and reset control tasks from the CPU. The binding document
--defines the resources that would be used by the BPMP firmware driver,
--which can create the interprocessor communication (IPC) between the CPU
--and BPMP.
--
--Required properties:
--- compatible
--    Array of strings
--    One of:
--    - "nvidia,tegra186-bpmp"
--- mboxes : The phandle of mailbox controller and the mailbox specifier.
--- shmem : List of the phandle of the TX and RX shared memory area that
--	  the IPC between CPU and BPMP is based on.
--- #clock-cells : Should be 1.
--- #power-domain-cells : Should be 1.
--- #reset-cells : Should be 1.
--
--This node is a mailbox consumer. See the following files for details of
--the mailbox subsystem, and the specifiers implemented by the relevant
--provider(s):
--
--- .../mailbox/mailbox.txt
--- .../mailbox/nvidia,tegra186-hsp.txt
--
--This node is a clock, power domain, and reset provider. See the following
--files for general documentation of those features, and the specifiers
--implemented by this node:
--
--- .../clock/clock-bindings.txt
--- <dt-bindings/clock/tegra186-clock.h>
--- ../power/power-domain.yaml
--- <dt-bindings/power/tegra186-powergate.h>
--- .../reset/reset.txt
--- <dt-bindings/reset/tegra186-reset.h>
--
--The BPMP implements some services which must be represented by separate nodes.
--For example, it can provide access to certain I2C controllers, and the I2C
--bindings represent each I2C controller as a device tree node. Such nodes should
--be nested directly inside the main BPMP node.
--
--Software can determine whether a child node of the BPMP node represents a device
--by checking for a compatible property. Any node with a compatible property
--represents a device that can be instantiated. Nodes without a compatible
--property may be used to provide configuration information regarding the BPMP
--itself, although no such configuration nodes are currently defined by this
--binding.
--
--The BPMP firmware defines no single global name-/numbering-space for such
--services. Put another way, the numbering scheme for I2C buses is distinct from
--the numbering scheme for any other service the BPMP may provide (e.g. a future
--hypothetical SPI bus service). As such, child device nodes will have no reg
--property, and the BPMP node will have no #address-cells or #size-cells property.
--
--The shared memory bindings for BPMP
-------------------------------------
--
--The shared memory area for the IPC TX and RX between CPU and BPMP are
--predefined and work on top of sysram, which is an SRAM inside the chip.
--
--See ".../sram/sram.txt" for the bindings.
--
--Example:
--
--hsp_top0: hsp@3c00000 {
--	...
--	#mbox-cells = <2>;
--};
--
--sysram@30000000 {
--	compatible = "nvidia,tegra186-sysram", "mmio-sram";
--	reg = <0x0 0x30000000 0x0 0x50000>;
--	#address-cells = <2>;
--	#size-cells = <2>;
--	ranges = <0 0x0 0x0 0x30000000 0x0 0x50000>;
--
--	cpu_bpmp_tx: shmem@4e000 {
--		compatible = "nvidia,tegra186-bpmp-shmem";
--		reg = <0x0 0x4e000 0x0 0x1000>;
--		label = "cpu-bpmp-tx";
--		pool;
--	};
--
--	cpu_bpmp_rx: shmem@4f000 {
--		compatible = "nvidia,tegra186-bpmp-shmem";
--		reg = <0x0 0x4f000 0x0 0x1000>;
--		label = "cpu-bpmp-rx";
--		pool;
--	};
--};
--
--bpmp {
--	compatible = "nvidia,tegra186-bpmp";
--	mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
--	shmem = <&cpu_bpmp_tx &cpu_bpmp_rx>;
--	#clock-cells = <1>;
--	#power-domain-cells = <1>;
--	#reset-cells = <1>;
--
--	i2c {
--		compatible = "...";
--		...
--	};
--};
+after the initial RFC that I did for adding interconnect properties on
+Tegra, I realized that the description wasn't complete. This is an
+attempt at a more accurate description, but unfortunately I'm not sure
+if it's even correct in terms of the interconnect bindings.
+
+The problem here is that on Tegra, each device has multiple paths to
+system memory, and I have no good idea on what to pick as the default.
+They are all basically the same path, but each provides extra controls
+to configure the "interconnect".
+
+Any ideas on how to resolve this? Let me know if the DT bindings and
+example don't make things clear enough.
+
+Thierry
+
+ .../firmware/nvidia,tegra186-bpmp.yaml        | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+
 diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-new file mode 100644
-index 000000000000..dabf1c1aec2f
---- /dev/null
+index dabf1c1aec2f..d40fcd836e90 100644
+--- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
 +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.yaml
-@@ -0,0 +1,209 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/firmware/nvidia,tegra186-bpmp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+@@ -43,6 +43,24 @@ properties:
+       - enum:
+           - nvidia,tegra186-bpmp
+ 
++  interconnects:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description: A list of phandle and specifier pairs that describe the
++      interconnect paths to and from the BPMP.
 +
-+title: NVIDIA Tegra186 (and later) Boot and Power Management Processor (BPMP)
-+
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Jon Hunter <jonathanh@nvidia.com>
-+
-+description: |
-+  The BPMP is a specific processor in Tegra chip, which is designed for
-+  booting process handling and offloading the power management, clock
-+  management, and reset control tasks from the CPU. The binding document
-+  defines the resources that would be used by the BPMP firmware driver,
-+  which can create the interprocessor communication (IPC) between the
-+  CPU and BPMP.
-+
-+  The BPMP implements some services which must be represented by separate
-+  nodes. For example, it can provide access to certain I2C controllers, and
-+  the I2C bindings represent each I2C controller as a device tree node. Such
-+  nodes should be nested directly inside the main BPMP node.
-+
-+  Software can determine whether a child node of the BPMP node represents a
-+  device by checking for a compatible property. Any node with a compatible
-+  property represents a device that can be instantiated. Nodes without a
-+  compatible property may be used to provide configuration information
-+  regarding the BPMP itself, although no such configuration nodes are
-+  currently defined by this binding.
-+
-+  The BPMP firmware defines no single global name-/numbering-space for such
-+  services. Put another way, the numbering scheme for I2C buses is distinct
-+  from the numbering scheme for any other service the BPMP may provide (e.g.
-+  a future hypothetical SPI bus service). As such, child device nodes will
-+  have no "reg" property, and the BPMP node will have no "#address-cells" or
-+  "#size-cells" property.
-+
-+properties:
-+  compatible:
++  interconnect-names:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description: One string for each pair of phandle and specifier in the
++      "interconnects" property.
++    # XXX We need at least one of these to be named dma-mem so that the core
++    # will set the DMA mask based on the DMA parent, but all of these go to
++    # system memory eventually.
 +    items:
-+      - enum:
-+          - nvidia,tegra186-bpmp
++      - const: dma-mem
++      - const: dma-mem
++      - const: dma-mem
++      - const: dma-mem
 +
-+  iommus:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      The phandle of the IOMMU and the IOMMU specifier. See ../iommu/iommu.txt
-+      for details.
+   iommus:
+     $ref: /schemas/types.yaml#/definitions/phandle-array
+     description: |
+@@ -152,8 +170,43 @@ additionalProperties: false
+ 
+ examples:
+   - |
++    #include <dt-bindings/clock/tegra186-clock.h>
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+     #include <dt-bindings/mailbox/tegra186-hsp.h>
++    #include <dt-bindings/memory/tegra186-mc.h>
 +
-+  mboxes:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: |
-+      The phandle of the mailbox controller and the mailbox specifier. See
-+      ../mailbox/mailbox.txt and ../mailbox/nvidia,tegra186-hsp.txt for
-+      details.
++    mc: memory-controller@2c00000 {
++        compatible = "nvidia,tegra186-mc";
++        reg = <0x02c00000 0xb0000>;
++        interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
++        status = "disabled";
 +
-+  shmem:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description: List of phandles for the TX and RX shared memory areas used
-+      for interprocess communication between the CPU and the BPMP.
++        #interconnect-cells = <1>;
++        #address-cells = <2>;
++        #size-cells = <2>;
 +
-+      The shared memory area for the IPC TX and RX between CPU and BPMP are
-+      predefined and work on top of sysram, which is an SRAM inside the chip.
++        ranges = <0x02c00000 0x0 0x02c00000 0x0 0xb0000>;
 +
-+      See ../sram/sram.yaml for the bindings.
++        /*
++         * Memory clients have access to all 40 bits that the memory
++         * controller can address.
++         */
++        dma-ranges = <0x0 0x0 0x0 0x100 0x0>;
 +
-+  "#clock-cells":
-+    const: 1
++        #memory-controller-cells = <0>;
 +
-+  "#power-domain-cells":
-+    const: 1
++        emc: external-memory-controller@2c60000 {
++            compatible = "nvidia,tegra186-emc";
++            reg = <0x0 0x02c60000 0x0 0x50000>;
++            interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&bpmp TEGRA186_CLK_EMC>;
++            clock-names = "emc";
 +
-+  "#reset-cells":
-+    const: 1
++            #interconnect-cells = <0>;
 +
-+  i2c:
-+    type: object
-+    description: |
-+      The BPMP can provide serialized access to I2C controllers that have
-+      been assigned to it.
-+
-+    properties:
-+      compatible:
-+        items:
-+          - enum:
-+              - nvidia,tegra186-bpmp-i2c
-+
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      nvidia,bpmp-bus-id:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description: The bus ID of the I2C controller.
-+
-+    required:
-+      - compatible
-+      - "#address-cells"
-+      - "#size-cells"
-+      - nvidia,bpmp-bus-id
-+
-+    patternProperties:
-+      "^.*@[0-9a-f]+$":
-+        type: object
-+        description: I2C slave
-+        properties:
-+          reg:
-+            maxItems: 1
-+            description: I2C address of the slave
-+
-+        required:
-+          - reg
-+
-+    additionalProperties: false
-+
-+  thermal:
-+    type: object
-+    description:
-+      The BPMP provides functionality that exposes system temperature sensors
-+      and which can be used to trigger a system shutdown if the temperature
-+      for a given zone exceeds the specified thresholds.
-+
-+    properties:
-+      compatible:
-+        items:
-+          - enum:
-+              - nvidia,tegra186-bpmp-thermal
-+
-+      "#thermal-sensor-cells":
-+        description: The ID of the thermal zone.
-+        const: 1
-+
-+    required:
-+      - compatible
-+      - "#thermal-sensor-cells"
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - mboxes
-+  - shmem
-+  - "#clock-cells"
-+  - "#power-domain-cells"
-+  - "#reset-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/mailbox/tegra186-hsp.h>
-+
-+    hsp_top0: hsp@3c00000 {
-+        compatible = "nvidia,tegra186-hsp";
-+        reg = <0x03c00000 0xa0000>;
-+        interrupts = <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "doorbell";
-+        #mbox-cells = <2>;
-+    };
-+
-+    sysram@30000000 {
-+        compatible = "nvidia,tegra186-sysram", "mmio-sram";
-+        reg = <0x30000000 0x50000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges = <0x0 0x30000000 0x50000>;
-+
-+        cpu_bpmp_tx: shmem@4e000 {
-+            compatible = "nvidia,tegra186-bpmp-shmem";
-+            reg = <0x4e000 0x1000>;
-+            label = "cpu-bpmp-tx";
-+            pool;
-+        };
-+
-+        cpu_bpmp_rx: shmem@4f000 {
-+            compatible = "nvidia,tegra186-bpmp-shmem";
-+            reg = <0x4f000 0x1000>;
-+            label = "cpu-bpmp-rx";
-+            pool;
++            nvidia,bpmp = <&bpmp>;
 +        };
 +    };
+ 
+     hsp_top0: hsp@3c00000 {
+         compatible = "nvidia,tegra186-hsp";
+@@ -187,6 +240,12 @@ examples:
+ 
+     bpmp {
+         compatible = "nvidia,tegra186-bpmp";
++        interconnects = <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPR>,
++                        <&mc TEGRA186_MEMORY_CLIENT_BPMPW &emc>,
++                        <&emc &mc TEGRA186_MEMORY_CLIENT_BPMPDMAR>,
++                        <&mc TEGRA186_MEMORY_CLIENT_BPMPDMAW &emc>;
++        interconnect-names = "dma-mem", "dma-mem", "dma-mem", "dma-mem";
 +
-+    bpmp {
-+        compatible = "nvidia,tegra186-bpmp";
-+        iommus = <&smmu TEGRA186_SID_BPMP>;
-+        mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
-+        shmem = <&cpu_bpmp_tx &cpu_bpmp_rx>;
-+        #clock-cells = <1>;
-+        #power-domain-cells = <1>;
-+        #reset-cells = <1>;
-+
-+        i2c {
-+            compatible = "nvidia,tegra186-bpmp-i2c";
-+            nvidia,bpmp-bus-id = <5>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            status = "disabled";
-+        };
-+
-+        thermal {
-+            compatible = "nvidia,tegra186-bpmp-thermal";
-+            #thermal-sensor-cells = <1>;
-+        };
-+    };
+         iommus = <&smmu TEGRA186_SID_BPMP>;
+         mboxes = <&hsp_top0 TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
+         shmem = <&cpu_bpmp_tx &cpu_bpmp_rx>;
 -- 
 2.24.1
 
