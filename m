@@ -2,205 +2,227 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B5C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E38FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA43424655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 412C924679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="R8IHlH5q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+Iyq+RN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgANQ2q (ORCPT
+        id S1726379AbgANQaQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:28:46 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.67]:48592 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgANQ2p (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:28:45 -0500
-Received: from [46.226.52.204] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.eu-west-1.aws.symcld.net id 9F/47-19890-A3CED1E5; Tue, 14 Jan 2020 16:28:42 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFJsWRWlGSWpSXmKPExsWSoc9hrGv1Rjb
-  OYPdXRov5R86xWqyaupPF4v7Xo4wWl3fNYbO4sW4fu8WThWeYLD7susps0br3CLsDh8emVZ1s
-  Hneu7WHz6P9r4LHzewO7x+dNcgGsUayZeUn5FQmsGS///2QpWCRUMeveRuYGxsV8XYxcHIwCS
-  5klzqy9zALhHGORuLihiwnC2cwo8bv3JxuIwyJwglniYfNzMEdIoJ9J4uvlg8wQzl1Gicdfrg
-  NlODnYBCwkJp94AGaLCMRLHJ97FqyIWeAes8TS1c1MIAlhAReJSw+OM0EUuUpcX3gCqsFJYs2
-  6vcwgNouAKlDNYiCbg4NXIFZiyqNAiGWfGCU27+hjB6nhFLCVmPJ7ISuIzSggK/GlcTVYL7OA
-  uMStJ/PB5ksICEgs2XOeGcIWlXj5+B9UfarEyaYbjBBxHYmz159A2UoS8+YegbJlJS7N74ayf
-  SW27PjFAmFrSey7fw9qpoXEku5WFpA7JQRUJP4dqoQI50gcaNkMVaIm8fnpFShbRqL/7AxWkF
-  8kBNawSGxefodtAqP+LCRnQ9g6Egt2f2KDsLUlli18zQxi8woISpyc+YRlASPLKkaLpKLM9Iy
-  S3MTMHF1DAwNdQ0MjXUNLc10jQzO9xCrdJL3UUt3y1OISXUO9xPJiveLK3OScFL281JJNjMBk
-  llJw9MYOxt9f3uodYpTkYFIS5RXZIxsnxJeUn1KZkVicEV9UmpNafIhRhoNDSYK3/BVQTrAoN
-  T21Ii0zB5hYYdISHDxKIryir4HSvMUFibnFmekQqVOMuhwTXs5dxCzEkpeflyolzlsJMkMApC
-  ijNA9uBCzJX2KUlRLmZWRgYBDiKUgtys0sQZV/xSjOwagkzNsDMoUnM68EbtMroCOYgI6Yfwr
-  siJJEhJRUA1ONiU1pt7n8tyeOG+ssmoTmi9rp/ZA8zWEq4Ph15VXmsETTS6VXLD6Zy89dO2Ou
-  6p/ew19r36tWvdM0rrNs4RXJ7X6XziomePygYx9DAee9iSaXHnlM/yxRMY1ff7vpl/0WJ/d1O
-  puzL2nyT7nUJ/vMi0d9Wmqrke39Y8UV2f/WMOi4nvPIbYsQ3ZwptVzLIKjgYOCRfGGG5EUSXq
-  n5WzXszm9UmyT/M2zPXc8JojpPjrU1r91l87ufK9VZ/8vy7nvc5n1Rj3VuvhGslBRb3tX18rH
-  6Tta3N2Ykputq/FC5yBF2/GZunzND93rV1as2e1hrFK7kj3la+G+K3dzpyx6qWfyZu2xCzNTO
-  sqwVSizFGYmGWsxFxYkAvpYdrm0EAAA=
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-19.tower-292.messagelabs.com!1579019321!428579!1
-X-Originating-IP: [104.47.8.51]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 17206 invoked from network); 14 Jan 2020 16:28:41 -0000
-Received: from mail-am5eur03lp2051.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.51)
-  by server-19.tower-292.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 14 Jan 2020 16:28:41 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gndyR8QQzCU7RLVdPi30QMHtx0JrWsW1RmBbVZjeSMSqf4Ft+H4tnDAZC8StyP5nS7eN4sBFhfazGeTE+LCeu07NNgMthTBx6STJOHOn696xi5z8RmNbCVb1AY7NyR7yq+vHGWbLIfc5hc5pAfDDA94mmuEYDd+e2RYvwogbmA8XG1G1yuDH9byfsFC8cJbvabcx/45QZ5Hq3LxfRF8HsmJ+Re3lJT1OlBkNR2hKQfgS3RIbbqZZ5yRaTELTySYnYnnQ9g5rLEbTk2saNPuVcrMFxmDR1zpZGKIEF9f6Ykcj/eyistEthR4qI36jDs65YuMPCcGrhTLQL/rCt/R8aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LF3/WLv78X9y7gacjL5J4psv8DNA7gQmlO82+6YXhGk=;
- b=L0GMxE3t9alfS96F5lOkKWgUpuBQgKJp7BzjKqfJgE72OxJDqRsnwYaN3CW18A1jDZNw6F1UW3kB2Veo6E4N3SmxHeiGCpkj2m9vsiSTkhnIVwJmfUTuRIH8IOrUIFNxx1vPi0KhFHIXonrL50BZVybF61GlNZZFK75AN7SmqkVQ780cMaP9VMx4RPwT5g7POQNaQUT5lG0jbz6U4Xki5k1glL/ZlA4kG0F+SrFy8BircLy6s/eXSx8VAhQFxp5oiVR2y5u3wsB13M8ZVzz7cp8Y+Xgtc1M3UMEJ+HABzTirUgdyYVvt+cg9Mk2gq1nva1Ayu50eQFli8H7gwxj/0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
+        Tue, 14 Jan 2020 11:30:16 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39618 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728778AbgANQaQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 11:30:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 20so14449623wmj.4
+        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 08:30:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LF3/WLv78X9y7gacjL5J4psv8DNA7gQmlO82+6YXhGk=;
- b=R8IHlH5qGfBz3temhV0ALz87hYnhcxA5uFYtkE2celxXe9KyLCKyfyTheWHK7D/rtoXON3EhXDSZHKizEQkPV3N+Kum7Hc/915WJeRWx2EKrNQILsU1OcRS9jIGbpcTaSvBZrduBSkheuyaHgjKNxtLVWM5ases4omgqfTuY12A=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM (20.179.2.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Tue, 14 Jan 2020 16:28:40 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::9be:9fca:6def:97c3%5]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 16:28:40 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Marco Felsch <m.felsch@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-CC:     Support Opensource <Support.Opensource@diasemi.com>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        Steve Twiss <stwiss.opensource@diasemi.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: RE: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
-Thread-Topic: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
-Thread-Index: AQHVxgoH+VEwCd0goUCdzD0vjKNBfafqYIMggAABdYCAAACmIA==
-Date:   Tue, 14 Jan 2020 16:28:40 +0000
-Message-ID: <AM6PR10MB22632546AC9A4466B642BEFD80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-2-m.felsch@pengutronix.de>
- <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <20200114162359.weoirknje6yhcmds@pengutronix.de>
-In-Reply-To: <20200114162359.weoirknje6yhcmds@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41845e66-6efb-473a-5dc1-08d7990ed0d8
-x-ms-traffictypediagnostic: AM6PR10MB2726:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB2726222D05CF0690C4049704A7340@AM6PR10MB2726.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(39860400002)(346002)(189003)(199004)(64756008)(966005)(478600001)(2906002)(4326008)(66556008)(66476007)(66446008)(66946007)(316002)(110136005)(54906003)(76116006)(55236004)(52536014)(26005)(8936002)(6506007)(53546011)(5660300002)(81156014)(8676002)(86362001)(81166006)(186003)(55016002)(9686003)(71200400001)(7696005)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2726;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UY0ETwwWB1NC4jQJjjIyRfZgLyPA0HocCW7OweiydhtyjTfulqfcb6Gii7m9AGLpur6kaPBFzdeuwN6ZFDolbywaB6FSkyOzJuA6mh/OPe2s+J3oduf2O9k1JQn1itn+IWTiyK+IMLfRsuVKEAcLynyiLdjH5KQkBEJku/+OJxAwXOO0Q7OtSR3n11sWbOOiK8JMecT4PXCnbm3HO679+TvehW+sW057MarOt3imA+6cwnALlRXfT4ZIEAEcSZ+/ahOFiNFa5de91/AO15shTLd7T1qsmcb/dNbqBQucQkxpWg/eMXFbafmCw/KHVGAHARfs6oI0QC+W8kZ4cac+Csor21+FlEbskNUj7JOSIeeQ5GIwG1cnaX8modneSBT9fDScmAZQTIHl6/qqDKybKO8Z++25cx7AxXkjRBB0oCZbIi/s39FFIhWfQ0xkdh9tOho9tFwibhOVvJNznRMDOsWLPuzjPgpEISB0AAkh0qDB3otgvVndRQwE/KSDPAs8A1P61u37IuY5ED5Jn0BeRQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FxzudKMd6YPzfM/0BCFYKKllAjp2Gts8h1iV+G6imWk=;
+        b=s+Iyq+RN5AGDwxAr+7mKSPO+f5dVtM5aGFjxvkHZQBHQwXAqMg2vwzQPELgT1uodlp
+         JXy/DuVb0oRdwbqTf/mCxgl+cpu3UILK2AlyUaBXvCpExWHPCFV6DjDsEzNGUIwTZ5yM
+         izcUzJzY0MkhGcHsS3VehJ5SVpR5GInPz9A9d6+sBta87TRrKVLGgT/8YECNLDXfV+wN
+         deCf8GyzR05dexz2K+saRt/Eaug/UCfoJzH/YhFoJBGXqiTHp5FJxeXIrnqS8DzEb7YA
+         xOg8gP/zZKWgb5mblk2brIQs9wCO4ujce8asFWCePfF4zyW1ssuhO8NuuUWvdyKNz3K7
+         xxJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FxzudKMd6YPzfM/0BCFYKKllAjp2Gts8h1iV+G6imWk=;
+        b=s70X2kmvFcpr8Iltq5vsR81qldwBDKyjA5yB5A2ZBQcFPBVzMlShfte8FGGAzCmaIM
+         tBTCwyDWyW0QEHzO0S6jrI67AY3eJsAfKCMgWElce/PiP3V72CRLrmvIesp6bNdQRbZf
+         +Du2ZJHZ/q6yTVmeb0F5jpuQerBRj1XoTcCfjwGpEd0XeEC7SYisGLtPIn01LxtHhvgN
+         LYj6F7w2d86NBMZljeGDlY4NRkMNDu6WwsB/qG+9OdNaYRxm5KE+7bnX0KFjXzJbLTpt
+         xkT8O1OyVimyQz6IIDXBn7EMKv4Vs606Fj6gIx8TdVs7Tc5YiecQB0sZJFOr9enp8tS4
+         tFsA==
+X-Gm-Message-State: APjAAAVqRaNK16+SHZrGwQJRWecfS/OYFDWrMXL427k4opoa3fU7oYIp
+        RtWoZdpDwYPWaEi2o3/smXCQig==
+X-Google-Smtp-Source: APXvYqxmcTGf2eTNhXZGx1ouob2jWFN+Aj7RA5BSt55FfOJCn9ALBt2Ou920JluYTTjGalcW0fwmLw==
+X-Received: by 2002:a1c:740b:: with SMTP id p11mr29763542wmc.78.1579019414216;
+        Tue, 14 Jan 2020 08:30:14 -0800 (PST)
+Received: from myrica ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id u18sm19852028wrt.26.2020.01.14.08.30.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 08:30:13 -0800 (PST)
+Date:   Tue, 14 Jan 2020 17:30:09 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v4 07/13] iommu/arm-smmu-v3: Add support for Substream IDs
+Message-ID: <20200114163009.GA5319@myrica>
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20191219163033.2608177-8-jean-philippe@linaro.org>
+ <20200114123819.GC29222@willie-the-truck>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41845e66-6efb-473a-5dc1-08d7990ed0d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:28:40.7757
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xrlcAF6X62ThIJJxqBw3QYFfX5s1g24k7hBeL1xqlEqPTAq6iNRJY+NV2Gm49gsomItKfz42l63GrwV/ET5k3CKQcNHmyuqV1InPQcYzhdI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2726
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114123819.GC29222@willie-the-truck>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14 January 2020 16:24, Marco Felsch wrote:
+On Tue, Jan 14, 2020 at 12:38:19PM +0000, Will Deacon wrote:
+> > +static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
+> > +			     int ssid, bool leaf)
+> > +{
+> > +	size_t i;
+> > +	unsigned long flags;
+> > +	struct arm_smmu_master *master;
+> > +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> > +	struct arm_smmu_cmdq_ent cmd = {
+> > +		.opcode	= CMDQ_OP_CFGI_CD,
+> > +		.cfgi	= {
+> > +			.ssid	= ssid,
+> > +			.leaf	= leaf,
+> > +		},
+> > +	};
+> > +
+> > +	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
+> > +	list_for_each_entry(master, &smmu_domain->devices, domain_head) {
+> > +		for (i = 0; i < master->num_sids; i++) {
+> > +			cmd.cfgi.sid = master->sids[i];
+> > +			arm_smmu_cmdq_issue_cmd(smmu, &cmd);
+> > +		}
+> > +	}
+> > +	spin_unlock_irqrestore(&smmu_domain->devices_lock, flags);
+> > +
+> > +	arm_smmu_cmdq_issue_sync(smmu);
+> 
+> Can you send a follow-up patch converting this to batch submission, please?
 
-> On 20-01-14 16:19, Adam Thomson wrote:
-> > On 08 January 2020 09:57, Marco Felsch wrote:
-> >
-> > > The watchdog driver compatible is "dlg,da9062-watchdog" and not
-> > > "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node a=
-nd
-> > > fwnode. As result the watchdog driver can't parse the devicetree.
-> > >
-> >
-> > I do agree there's a mismatch between the documentation and the MFD cod=
-e.
-> > So in your DT are you specifying 'dlg,da9062-watchdog' and not 'dlg,da9=
-062-wdt'
-> > hence the issue? Are there any existing users who are using 'dlg,da9062=
--wdt' in
-> > their DT instead?
->=20
-> Yes the upstream available DT I'm currently using is:
-> arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi.
->=20
-> I grep the code and found no _upstream_ user of 'dlg,da9062-wdt' also
-> using this compatible would be a missmatch with the binding
-> documentation. So those DT's assuming a wrong binding. Therefore I fixed
-> it here and not within the watchdog driver.
+Ok
 
-Ok, no problem. Just wanted to be clear. In which case:
+> > +}
+> > +
+> >  static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
+> >  					struct arm_smmu_cd_table *table,
+> >  					size_t num_entries)
+> > @@ -1498,34 +1541,65 @@ static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
+> >  	return val;
+> >  }
+> >  
+> > -static void arm_smmu_write_ctx_desc(struct arm_smmu_device *smmu,
+> > -				    struct arm_smmu_s1_cfg *cfg)
+> > +static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+> > +				   int ssid, struct arm_smmu_ctx_desc *cd)
+> >  {
+> > -	u64 val;
+> > -	__le64 *cdptr = cfg->table.ptr;
+> > -
+> >  	/*
+> > -	 * We don't need to issue any invalidation here, as we'll invalidate
+> > -	 * the STE when installing the new entry anyway.
+> > +	 * This function handles the following cases:
+> > +	 *
+> > +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
+> > +	 * (2) Install a secondary CD, for SID+SSID traffic.
+> > +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
+> > +	 *     CD, then invalidate the old entry and mappings.
+> > +	 * (4) Remove a secondary CD.
+> >  	 */
+> > -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
+> > -#ifdef __BIG_ENDIAN
+> > -	      CTXDESC_CD_0_ENDI |
+> > -#endif
+> > -	      CTXDESC_CD_0_R | CTXDESC_CD_0_A | CTXDESC_CD_0_ASET |
+> > -	      CTXDESC_CD_0_AA64 | FIELD_PREP(CTXDESC_CD_0_ASID, cfg->cd.asid) |
+> > -	      CTXDESC_CD_0_V;
+> > +	u64 val;
+> > +	bool cd_live;
+> > +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> > +	__le64 *cdptr = smmu_domain->s1_cfg.table.ptr + ssid *
+> > +			CTXDESC_CD_DWORDS;
+> >  
+> > -	/* STALL_MODEL==0b10 && CD.S==0 is ILLEGAL */
+> > -	if (smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
+> > -		val |= CTXDESC_CD_0_S;
+> > +	val = le64_to_cpu(cdptr[0]);
+> > +	cd_live = !!(val & CTXDESC_CD_0_V);
+> >  
+> > -	cdptr[0] = cpu_to_le64(val);
+> > +	if (!cd) { /* (4) */
+> > +		val = 0;
+> > +	} else if (cd_live) { /* (3) */
+> > +		val &= ~CTXDESC_CD_0_ASID;
+> > +		val |= FIELD_PREP(CTXDESC_CD_0_ASID, cd->asid);
+> > +		/*
+> > +		 * Until CD+TLB invalidation, both ASIDs may be used for tagging
+> > +		 * this substream's traffic
+> > +		 */
+> 
+> I don't think you need to change anything here, but I do find it a little
+> scary that we can modify live CDs like this. However, given that the
+> hardware is permitted to cache the structures regardless of validity, it
+> appears to be the only option. Terrifying!
+> 
+> > +	} else { /* (1) and (2) */
+> > +		cdptr[1] = cpu_to_le64(cd->ttbr & CTXDESC_CD_1_TTB0_MASK);
+> 
+> Can you use FIELD_PREP here too?
 
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+No, FIELD_PREP will shift ttbr left by 4 bits
 
->=20
-> Regards,
->   Marco
->=20
-> > > Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > ---
-> > >  drivers/mfd/da9062-core.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
-> > > index e69626867c26..9143de7b77b8 100644
-> > > --- a/drivers/mfd/da9062-core.c
-> > > +++ b/drivers/mfd/da9062-core.c
-> > > @@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] =3D {
-> > >  		.name		=3D "da9062-watchdog",
-> > >  		.num_resources	=3D ARRAY_SIZE(da9062_wdt_resources),
-> > >  		.resources	=3D da9062_wdt_resources,
-> > > -		.of_compatible  =3D "dlg,da9062-wdt",
-> > > +		.of_compatible  =3D "dlg,da9062-watchdog",
-> > >  	},
-> > >  	{
-> > >  		.name		=3D "da9062-thermal",
-> > > --
-> > > 2.20.1
-> >
-> >
->=20
-> --
-> Pengutronix e.K.                           |                             =
-|
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  =
-|
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    =
-|
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
-|
+> > +		cdptr[2] = 0;
+> > +		cdptr[3] = cpu_to_le64(cd->mair);
+> > +
+> > +		/*
+> > +		 * STE is live, and the SMMU might read dwords of this CD in any
+> > +		 * order. Ensure that it observes valid values before reading
+> > +		 * V=1.
+> > +		 */
+> > +		arm_smmu_sync_cd(smmu_domain, ssid, true);
+> >  
+> > -	val = cfg->cd.ttbr & CTXDESC_CD_1_TTB0_MASK;
+> > -	cdptr[1] = cpu_to_le64(val);
+> > +		val = arm_smmu_cpu_tcr_to_cd(cd->tcr) |
+> > +#ifdef __BIG_ENDIAN
+> > +			CTXDESC_CD_0_ENDI |
+> > +#endif
+> > +			CTXDESC_CD_0_R | CTXDESC_CD_0_A | CTXDESC_CD_0_ASET |
+> > +			CTXDESC_CD_0_AA64 |
+> > +			FIELD_PREP(CTXDESC_CD_0_ASID, cd->asid) |
+> > +			CTXDESC_CD_0_V;
+> >  
+> > -	cdptr[3] = cpu_to_le64(cfg->cd.mair);
+> > +		/* STALL_MODEL==0b10 && CD.S==0 is ILLEGAL */
+> > +		if (smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
+> > +			val |= CTXDESC_CD_0_S;
+> > +	}
+> > +
+> > +	WRITE_ONCE(cdptr[0], cpu_to_le64(val));
+> 
+> Can you add a comment here citing 3.21.3 ("Configuration structures and
+> configuration invalidation completion") please? Specifically, the note that
+> states:
+> 
+>   | The size of single-copy atomic reads made by the SMMU is IMPLEMENTATION
+>   | DEFINED but must be at least 64 bits.
+> 
+> Because that's really crucial to the WRITE_ONCE() above!
+> 
+> Shouldn't we also do the same thing for the STE side of things? I think so,
+> and you can just comment of them with the quote and cite the comment from
+> the other callsite.
+
+Yes, makes sense
+
+Thanks,
+Jean
