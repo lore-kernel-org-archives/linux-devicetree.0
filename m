@@ -2,275 +2,176 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A62C33CAE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 06:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D14C33CAE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 06:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE26222C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 06:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C67F2084D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 06:58:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Y7EqqZfG"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E2zln4VL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgANGyK (ORCPT
+        id S1728813AbgANG6W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:54:10 -0500
-Received: from mail-eopbgr70059.outbound.protection.outlook.com ([40.107.7.59]:14092
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726995AbgANGyJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 01:54:09 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i49JN3ONqXB7CkVlQkb4rNxPDWEFpF4KX9OYdYxF/tuldy89NKTG5e+z2krd22JDrPka9oam/TTmLycd26NBUrQXz4hSS1h5XvmBVKMWZSbYx7Mpp3IyhGgHON8Qyv367Wxc4OGaZVIwvhksFJW2R5qZ17n3y3t67eGOSxbOfCuYjN2asFAU5SnKc7/wwYQFHz/phBOtT6dYS7jlLPpKa6yayW3fIIJ5UfrfT2+zEHemYJEEkb2DYKM9BsEJYKIGqnHrWEP2qsNTskBjb8Mfo1zNPj//7Myolyj8KQvEW7ksnrtDeD3fLkFfF+EzOWCFgGZF0eSrKeItmr14a8ChDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/oIM8Ulm936TfpqOX63JQ8tYdMJd77eLosJ016uxMys=;
- b=OaGP5bZLdZhBXbYUOutlhIx6uJiYCnsHF/for1SASrZhlLcAfmpnR6u89Smhh/Z/bK+8RgCpHYyzyBCX/V0Fo9B5gaBYMuUXbTOx+iMFGMEOF0oQ8ZvDSNzMB3MxsUJOiJZv8AK8+t7Bx/m6npcMxsmooJtMq+m+RBl9wmEqHdgkKShMmd6VR9j//GoGn3BTL3OfM55PAeGBOUvLTq7U+YiUVNr2UFvLM3x+dy7JP1frdOtmclDTxVlFW56Q/dEn/pdGgb/nV+jkC/N/lAL5EvYUNFlpitKqYIe5QgKCUE/WbPNjBe8NSWY7eFCPiT75TJMGnvgmma2zcKm1C3+9dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/oIM8Ulm936TfpqOX63JQ8tYdMJd77eLosJ016uxMys=;
- b=Y7EqqZfGP9B7w+FVtzjpP91qS06CYM5BbmK+E9xtgu+sv5az4XZ+FFem3XOVVzjo3fiHp141LeKGf4qvfP4etsbBeZ5n6rqNho4tzTAUkc6UhAkLMifunaS18RJbsJZHlISwyb8NO56eDC7X4wpyrO7+SU0aBLIxDEARSbPCQtI=
-Received: from AM6PR05MB5224.eurprd05.prod.outlook.com (20.177.196.210) by
- AM6PR05MB6214.eurprd05.prod.outlook.com (20.178.94.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Tue, 14 Jan 2020 06:54:03 +0000
-Received: from AM6PR05MB5224.eurprd05.prod.outlook.com
- ([fe80::bd4d:e8dc:9b58:3a7c]) by AM6PR05MB5224.eurprd05.prod.outlook.com
- ([fe80::bd4d:e8dc:9b58:3a7c%7]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
- 06:54:03 +0000
-From:   Vadim Pasternak <vadimp@mellanox.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "vijaykhemka@fb.com" <vijaykhemka@fb.com>,
-        "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Michael Shych <michaelsh@mellanox.com>,
-        Ofer Levy <oferl@mellanox.com>
-Subject: RE: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
- device list supported by driver
-Thread-Topic: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
- device list supported by driver
-Thread-Index: AQHVw7ccUo77+1Sy70mxGafA8mf8l6fcO+2AgAAG1qCAACN3gIAA8BkwgABkGgCAAA3mcIAAWQ8AgAAMj0CAAD4/AIAARClQgABwMwCAAVmVcIAAhSgAgAeQJhCAAJDrAIAApkaw
-Date:   Tue, 14 Jan 2020 06:54:03 +0000
-Message-ID: <AM6PR05MB522448927DE44812BECAFE74A2340@AM6PR05MB5224.eurprd05.prod.outlook.com>
-References: <05925e70-0079-2467-b703-eba8d8667eaf@roeck-us.net>
- <AM6PR05MB52242EA6A029D4C5F011A21BA23C0@AM6PR05MB5224.eurprd05.prod.outlook.com>
- <20200106210104.GA9219@roeck-us.net>
- <AM6PR05MB52247DB7AB2677F5F36BAAE9A23C0@AM6PR05MB5224.eurprd05.prod.outlook.com>
- <a76015b5-74e3-5f84-dfce-f5cce34c302a@roeck-us.net>
- <AM6PR05MB5224ED5368BD037051F5BF92A23F0@AM6PR05MB5224.eurprd05.prod.outlook.com>
- <5be3c6c4-81e8-7731-2b6e-39b7ad6531d5@roeck-us.net>
- <AM6PR05MB5224C166E608C3BBD09E4606A23E0@AM6PR05MB5224.eurprd05.prod.outlook.com>
- <20200108164748.GD28993@roeck-us.net>
- <AM6PR05MB5224026B612B674681E81DF9A2350@AM6PR05MB5224.eurprd05.prod.outlook.com>
- <20200113205614.GA24228@roeck-us.net>
-In-Reply-To: <20200113205614.GA24228@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vadimp@mellanox.com; 
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 16fa72b6-3e9a-4c5a-8813-08d798be8ad9
-x-ms-traffictypediagnostic: AM6PR05MB6214:|AM6PR05MB6214:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR05MB62148D31B9B969C22484A24FA2340@AM6PR05MB6214.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(199004)(189003)(6506007)(186003)(33656002)(53546011)(6916009)(4326008)(26005)(478600001)(55016002)(86362001)(8936002)(5660300002)(52536014)(71200400001)(9686003)(76116006)(316002)(107886003)(2906002)(66946007)(64756008)(66556008)(54906003)(66476007)(66446008)(7696005)(8676002)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB6214;H:AM6PR05MB5224.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iy6++AQHekBdX6mvglf9r4COhefBzir9nwN97i3RgYCYZni3h257Jxu1qpmqbCXHBiJxvAayQTSXJnBGxhExO0CmE0gas37HYHqBlIQ6giulsESG9L08O/5i/3mr0YRYBvJlPzxWxvwNlnaty19Mv69VI06mCSpOXwAkbqdYjsz583Q3/ysZ6RXLNE2L1VZBnzAN2w41YS41p+rr1t4XbMRuUjlE9PCmt82/ZwyNVYgM/qsKvxOUMoDjWaPcbITfreHxyCNa4Bi2ODJ9GAIpAt5Zz5vY5ImPSeUP4g2jv/d05vvX+mygfuIDuAqB0ciALz01oG+0+Q5ZWG2/GzY4jLxq/Nigw14fSrbBR3wGCwRwqqqtM2oe2hB5TyA8JKvuf0zjIMSboZKI0USqCX1vajVYMJZB8saEL+Nq3O33nvIm5TAJ1ibH9Hg4R+nmmwLS
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 Jan 2020 01:58:22 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34608 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728680AbgANG6V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 01:58:21 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00E6w9uc083037;
+        Tue, 14 Jan 2020 00:58:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578985089;
+        bh=9cisbpiJjEXM+HQ9q627buGSbHVcnQI341z9kbrIfpk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=E2zln4VLdz+OvOKCRs6j5Z7Du0EDOzB9HIjUXdSW05jU87ywExFVwbW3XoLMMBCOG
+         vdFFGdRPyLYLuSpIJZuhUKxzt/DieuQRL7BEBvkufGpUUoUxlskTSuvu0Eh9TQPh6v
+         mogPdLTRMSX0bxCiRxZygH1dpbHen2EaZUVzcg6E=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00E6w9ZU098404
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jan 2020 00:58:09 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
+ Jan 2020 00:58:09 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 14 Jan 2020 00:58:09 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00E6w5OR034860;
+        Tue, 14 Jan 2020 00:58:06 -0600
+Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
+To:     <santosh.shilimkar@oracle.com>, <vkoul@kernel.org>,
+        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
+CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>,
+        <t-kristo@ti.com>, <tony@atomide.com>, <j-keerthy@ti.com>,
+        <vigneshr@ti.com>, <frowand.list@gmail.com>
+References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+ <20191223110458.30766-3-peter.ujfalusi@ti.com>
+ <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
+ <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
+Date:   Tue, 14 Jan 2020 08:58:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16fa72b6-3e9a-4c5a-8813-08d798be8ad9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 06:54:03.5105
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xw9DF/qcBFdMILCV2v0wu8+X59uyc6YtwdxE+YwaFAUbdXgk43fFlgQk+ZwVrbLRw/+Lsl0KIl/RqFOfvGPaJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6214
+In-Reply-To: <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Santosh,
 
+On 13/01/2020 23.28, santosh.shilimkar@oracle.com wrote:
+> 
+> 
+> On 12/23/19 3:38 AM, Peter Ujfalusi wrote:
+>> Hi Santosh,
+>>
+>> On 23/12/2019 13.04, Peter Ujfalusi wrote:
+>>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>
+>>> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+>>> enable straightforward passing of work between a producer and a
+>>> consumer.
+>>> There is one RINGACC module per NAVSS on TI AM65x SoCs.
+>>>
+>>> The RINGACC converts constant-address read and write accesses to
+>>> equivalent
+>>> read or write accesses to a circular data structure in memory. The
+>>> RINGACC
+>>> eliminates the need for each DMA controller which needs to access ring
+>>> elements from having to know the current state of the ring (base
+>>> address,
+>>> current offset). The DMA controller performs a read or write access to a
+>>> specific address range (which maps to the source interface on the
+>>> RINGACC)
+>>> and the RINGACC replaces the address for the transaction with a new
+>>> address
+>>> which corresponds to the head or tail element of the ring (head for
+>>> reads,
+>>> tail for writes). Since the RINGACC maintains the state, multiple DMA
+>>> controllers or channels are allowed to coherently share the same
+>>> rings as
+>>> applicable. The RINGACC is able to place data which is destined towards
+>>> software into cached memory directly.
+>>>
+>>> Supported ring modes:
+>>> - Ring Mode
+>>> - Messaging Mode
+>>> - Credentials Mode
+>>> - Queue Manager Mode
+>>>
+>>> TI-SCI integration:
+>>>
+>>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
+>>> now
+>>> has control over Ringacc module resources management (RM) and Rings
+>>> configuration.
+>>>
+>>> The corresponding support of TI-SCI Ringacc module RM protocol
+>>> introduced as option through DT parameters:
+>>> - ti,sci: phandle on TI-SCI firmware controller DT node
+>>> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
+>>>
+>>> if both parameters present - Ringacc driver will configure/free/reset
+>>> Rings
+>>> using TI-SCI Message Ringacc RM Protocol.
+>>>
+>>> The Ringacc driver manages Rings allocation by itself now and requests
+>>> TI-SCI firmware to allocate and configure specific Rings only. It's done
+>>> this way because, Linux driver implements two stage Rings allocation and
+>>> configuration (allocate ring and configure ring) while TI-SCI Message
+>>> Protocol supports only one combined operation (allocate+configure).
+>>>
+>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> Reviewed-by: Tero Kristo <t-kristo@ti.com>
+>>> Tested-by: Keerthy <j-keerthy@ti.com>
+>>
+>> Can you please giver your Acked-by for the ringacc patches if they are
+>> still OK from your point of view as you had offered to take them before
+>> I got comments from Lokesh.
+>>
+> Sure. But you really need to split the series so that dma engine and
+> soc driver patches can be applied independently.
 
-> -----Original Message-----
-> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> Sent: Monday, January 13, 2020 10:56 PM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: robh+dt@kernel.org; vijaykhemka@fb.com; linux-hwmon@vger.kernel.org;
-> devicetree@vger.kernel.org; Michael Shych <michaelsh@mellanox.com>; Ofer
-> Levy <oferl@mellanox.com>
-> Subject: Re: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679) Extend
-> device list supported by driver
->=20
-> Hi Vadim,
->=20
-> On Mon, Jan 13, 2020 at 12:25:44PM +0000, Vadim Pasternak wrote:
-> >
-> >
-> > > -----Original Message-----
-> > > From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> > > Sent: Wednesday, January 08, 2020 6:48 PM
-> > > To: Vadim Pasternak <vadimp@mellanox.com>
-> > > Cc: robh+dt@kernel.org; vijaykhemka@fb.com;
-> > > linux-hwmon@vger.kernel.org; devicetree@vger.kernel.org; Michael
-> > > Shych <michaelsh@mellanox.com>
-> > > Subject: Re: [RFC PATCH hwmon-next v1 5/5] hwmon: (pmbus/tps53679)
-> > > Extend device list supported by driver
-> > >
-> > > On Wed, Jan 08, 2020 at 02:10:50PM +0000, Vadim Pasternak wrote:
-> > > >
-> > > > Hi Guenter,
-> > > >
-> > > > We are looking for possibility to provide some kind of flexible
-> > > > driver to handle different devices from different vendors, but
-> > > > which have common nature, like support of two pages for telemetry
-> > > > with same set of functions and same formats. (Actually driver
-> > > > could be flexible regarding the
-> > > number of pages).
-> > > >
-> > > > While the difference only in VID codes mapping.
-> > > >
-> > > > The motivation for that is to give free hand to HW design to
-> > > > choose which particular device to use on the same system type.
-> > > > There are two main reasons for such requirement:
-> > > > - Quality of device (we already had a serios problems with ucd9224 =
-and
-> > > >   tps53679, caused system meltdown). In such case the intention is =
-to move
-> > > >   to fallback devices in the next batches.
-> > > > - Device availability in stock. Sometimes vendors can't supply in t=
-ime the
-> > > >    necessary quantity.
-> > > >
-> > > > Currently there are the devices from three vendor: TI tps536xx,
-> > > > Infineon
-> > > > xdpe122 and MPS mp2975.
-> > > > All have different mapping of VID codes.
-> > > >
-> > > > It could be also few additional devices, which are supposed to be
-> > > > used as fallback devices.
-> > > >
-> > > > We have several very big customers ordering now huge quantity of
-> > > > our systems, which are very conservative regarding image upgrade.
-> > > > Means we can provide now support for tps536xx, xdpe122xx and
-> > > > mp2975 but in case new devices are coming soon, we will be able to
-> > > > support it in kernel for their image after year or even more.
-> > > >
-> > > > We can provide ACPI pmbus driver, which will read VID mapping from
-> > > > ACPI DSDT table. This mapping table will contain the names of
-> > > > available modes and specific vendor code for this mode. Like:
-> > > > PMBVR11=3D1
-> > > > PMBVR12=3D2
-> > > > PMBVR13=3D5
-> > > > PMBIMVP9=3D10
-> > > > And driver will set info->vrm_version[i] according to this mapping.
-> > > >
-> > >
-> > > The DSDT would have to provide all properties, not just the VID modes=
-.
-> > > At the very least that would have to be the number of pages, data
-> > > formats, vrm version, and the supported attributes per page. It
-> > > should be possible to also add m/b/R information for each of the
-> > > sensor classes, but I guess the actual implementation could be postpo=
-ned
-> until it is needed.
-> > >
-> > > This could all be done through the existing generic driver
-> > > (pmbus.c); it would not really require a new driver. ACPI/DSDT could
-> > > provide firmware properties, and pmbus.c could read those using
-> > > device_property API functions (eg device_property_read_u32(dev, "vrm-
-> mode")). Would that work for you ?
-> >
-> > Hi Guenter,
-> >
-> > We thought that it's possible to provide just modified DSDT with the
-> > specific configuration as an external table, which is loaded during sys=
-tem boot.
-> >
-> > It should not be integrated into BIOS image.
-> > We want to avoid releasing of new BIOS or new each time system
-> > configuration is changed.
-> > New BIOS is released only when new CPU type should be supported.
-> > Also BIOS overwriting is not an option, sine we have to support secured=
- BIOS.
-> >
-> > It should not be located in initrd.
-> > The new system batch is released with BIOS, SMBIOS and with customer's
-> > OS or with install environment like ONIE.
-> > Means no kernel changes.
-> > Also not all our customers use initrd.
-> >
-> > So, it seems there is no place, when we can locate modified DSDT and
-> > load it dynamically.
-> > But we should think more about possible methods for doing it.
-> >
-> > Today all the static devices are instantiated  from the user space.
-> > It's supposed to work for us while we have to support some pre-defined
-> > set of devices, for which we can detect the specific configuration
-> > through DMI tables (SKU in particular).
-> > But it'll not work for some new coming devices.
-> >
-> > We have a possibility to provide VID mapping info through CPLD device.
-> > But in this case we'll have to implement Mellanox specific PMBus
-> > driver aware of CPLD register map.
-> > Not sure if such approach is accepted?
-> >
->=20
-> How about a platform driver which loads the parameters into device proper=
-ties
-> from whatever location and instantiates the pmbus driver ?
-> The PMBus driver would then read the device attributes and instantiate it=
-self
-> accordingly.
->=20
-> If the other PMBus attributes can be auto-detected, it might actually be
-> sufficient to have a per-page vrm-mode property and otherwise use the aut=
-o-
-> detect mechanism of pmbus.c.
+The ringacc is a build and runtime dependency for the DMA. I have hoped
+that all of them can go via DMAengine (hence asking for your ACK on the
+drivers/soc/ti/ patches) for 5.6.
 
-Hi Guenter,
+> Can you please do that?
 
-I didn't think about such possibility.
-It sounds promising.
+This late in the merge window that would really mean that I will miss
+another release for the KS3 DMA...
+I can live with that if you can pick the ringacc for 5.6 and if Vinod
+takes the DMAengine core changes as well.
 
-So, we can add our platform driver to "drivers/platform/mellanox",
-which can:
-- fetch "vrm" mapping per each relevant device.
-- for each allocate device node, create properties table with vrm mode
- mapping like "vrm-mode-vr11", "vrm-mode-vr12", "vrm-mode-vr13",
- "vrm-mode-imvp9", "vrm-mode-amd625mv", coded accordingly to
- "enum vrm_version".
-- attach this node to "i2c_board_info" and instantiate it with
-  i2c_new_device() for "pmbus" type.=20
+That would leave only the DMA drivers for 5.7 and we can also queue up
+changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
+sa2ul, etc).
 
-And i"pmbus" will get these properties like
-device_property_read_8(dev, "vrm-mode-vr11")) etcetera.
+If they go independently and nothing makes it to 5.6 then 5.8 is the
+realistic target for the DMA support for the KS3 family of devices...
 
-Did I get your suggestion correctly?
+Regards,
+- Péter
 
-Thanks,
-Vadim.
-
->=20
-> Thanks,
-> Guenter
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
