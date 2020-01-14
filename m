@@ -4,141 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FD9C33CA9
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 02:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5C3C33CA9
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 03:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3842084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 02:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70087214AF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 03:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgANC4V (ORCPT
+        id S1729266AbgANDL2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 13 Jan 2020 21:56:21 -0500
-Received: from mga04.intel.com ([192.55.52.120]:21322 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728851AbgANC4V (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 13 Jan 2020 21:56:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 18:56:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,431,1571727600"; 
-   d="scan'208";a="247893351"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Jan 2020 18:56:20 -0800
-Received: from [10.226.38.20] (unknown [10.226.38.20])
-        by linux.intel.com (Postfix) with ESMTP id 2325A5802B1;
-        Mon, 13 Jan 2020 18:56:17 -0800 (PST)
-Subject: Re: [PATCH v10 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-References: <20191217015658.23017-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191217015658.23017-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_Jsq+qcR=3y1TQ+qrbfNW=_3kJ92eZP5eYvGYgteYWHyDVPw@mail.gmail.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <6d8b0b3d-f501-26d5-f48b-5e3e58b86f93@linux.intel.com>
-Date:   Tue, 14 Jan 2020 10:56:17 +0800
+        Mon, 13 Jan 2020 22:11:28 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:47518 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbgANDL1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 13 Jan 2020 22:11:27 -0500
+Received: from [10.18.29.227] (10.18.29.227) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 14 Jan
+ 2020 11:11:52 +0800
+Subject: Re: [PATCH v5 1/4] dt-bindings: power: add Amlogic secure power
+ domains bindings
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+References: <1573532930-39505-1-git-send-email-jianxin.pan@amlogic.com>
+ <1573532930-39505-2-git-send-email-jianxin.pan@amlogic.com>
+ <7ha76rdj35.fsf@baylibre.com>
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+Message-ID: <61dcfe1a-e987-aa40-34da-71150554f708@amlogic.com>
+Date:   Tue, 14 Jan 2020 11:11:52 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+qcR=3y1TQ+qrbfNW=_3kJ92eZP5eYvGYgteYWHyDVPw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <7ha76rdj35.fsf@baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.29.227]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+HI Kevin,
 
-On 14/1/2020 1:55 AM, Rob Herring wrote:
-> On Mon, Dec 16, 2019 at 7:57 PM Ramuthevar,Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Thanks for your review, I will put pwrc under secure-monitor node.
+
+On 2020/1/14 7:37, Kevin Hilman wrote:
+> Jianxin Pan <jianxin.pan@amlogic.com> writes:
+> 
+>> Add the bindings for the Amlogic Secure power domains, controlling the
+>> secure power domains.
 >>
->> Add a YAML schema to use the host controller driver with the
->> eMMC PHY on Intel's Lightning Mountain SoC.
+>> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
+>> power domain registers are in secure world.
 >>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 >> ---
->>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 56 ++++++++++++++++++++++
->>   1 file changed, 56 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>>  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 37 ++++++++++++++++++++++
+>>  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++++
+>>  2 files changed, 69 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>>  create mode 100644 include/dt-bindings/power/meson-a1-power.h
 >>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
 >> new file mode 100644
->> index 000000000000..ff7959c21af0
+>> index 00000000..2ed269f
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> @@ -0,0 +1,56 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+>> @@ -0,0 +1,37 @@
+>> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +# Copyright (c) 2019 Amlogic, Inc
+>> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
 >> +%YAML 1.2
 >> +---
->> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 >> +
->> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
+>> +title: Amlogic Meson Secure Power Domains
 >> +
 >> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +  - Jianxin Pan <jianxin.pan@amlogic.com>
 >> +
 >> +description: |+
->> +  Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
->> +  node is used to reference the base address of eMMC phy registers.
->> +
->> +  The eMMC PHY node should be the child of a syscon node with the
->> +  required property:
->> +
->> +  - compatible:         Should be one of the following:
->> +                        "intel,lgm-syscon", "syscon"
->> +  - reg:
->> +      maxItems: 1
+>> +  Meson Secure Power Domains used in A1/C1 SoCs.
 >> +
 >> +properties:
 >> +  compatible:
->> +      const: intel,lgm-emmc-phy
+>> +    enum:
+>> +      - amlogic,meson-a1-pwrc
 >> +
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
+>> +  "#power-domain-cells":
+>> +    const: 1
 >> +
 >> +required:
->> +  - "#phy-cells"
 >> +  - compatible
->> +  - reg
->> +  - clocks
+>> +  - "#power-domain-cells"
 >> +
 >> +examples:
 >> +  - |
->> +    sysconf: chiptop@e0200000 {
->> +      compatible = "intel,lgm-syscon", "syscon";
->> +      reg = <0xe0200000 0x100>;
->> +
->> +      emmc-phy: emmc-phy@a8 {
-> This fails in linux-next. Please run 'make dt_binding_check' and fix:
->
-> Error: Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:21.19-20
-> syntax error
-> FATAL ERROR: Unable to parse input tree
-Sorry for the trouble, will fix it .
->
-> The problem is labels can't have '-'.
-Thanks for the direction.
-Regards
-vadivel
->
-> Rob
+>> +    pwrc: power-controller {
+>> +          compatible = "amlogic,meson-a1-pwrc";
+>> +          #power-domain-cells = <1>;
+>> +          secure-monitor = <&sm>;
+> 
+> As requested by Rob, please put this under the secure-monitor node.
+> 
+> Kevin
+> 
+> .
+> 
+
