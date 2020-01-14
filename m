@@ -2,97 +2,125 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94471C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 098F0C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68DA62467A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579044698;
-	bh=OZuBL2XXxCUw/c1yIGlmQB5x308FiSkcvFtCTwXs4wE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z/GN6Pr3is3fIheUaG0U4cfyUs/3iPvonJZkCfe+Z2ZM6cBOzkoZUparH0txirBsF
-	 U2cv9kgnZP2YZd7IdCLXWJQuUIIqMp7T/l4stqyzYdkTjq7tE7rXnL3Xg30ujl3Z9F
-	 ceuPzbEoVP9K1LUnfd7HUmqncgfeiB4BOlTIM97I=
+	by mail.kernel.org (Postfix) with ESMTP id C3C76222C3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z/ATddr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgANXbh (ORCPT
+        id S1728746AbgANXeC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 18:31:37 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37508 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728892AbgANXbg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 18:31:36 -0500
-Received: by mail-ot1-f65.google.com with SMTP id k14so14447338otn.4
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 15:31:36 -0800 (PST)
+        Tue, 14 Jan 2020 18:34:02 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39491 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728650AbgANXeC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 18:34:02 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q10so7385106pfs.6;
+        Tue, 14 Jan 2020 15:34:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=yYq+18HeUcEIJUvMzPqlCK3z7OvqDSWg2p8T6vbs7w0=;
+        b=Z/ATddr3rviycwd3yUVGAxEfsWp9p9d0j4yq2F8R7+HmSNZg/V4ufcZhtmo42Mxycq
+         cyRTXv/rVg7PSpwHq1G52xEDDLzNfvZOhghVR4hGtXlf9eStOd/PhOIWt7rQRFG65YZa
+         zi5HQxX8eqw+DNq9qY4Q6LWpkRjLzs8i/Xe9qlJntc+4JlkLy4jgx2VrdSWWYAfC+bCc
+         Mi1KsOUh951Wsee0nIXBd8DfV6FGB7iWSny+PDHJUrNVH709XEcTPIZXOshoIDnr1x6F
+         1rZtEqpSK6FslwuMeDNkaBK5gbHbIhgxdXUkvheqzWoJvK2l7ds/Yl9O0jJFilwQFmkj
+         ACew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jAkgnrf4y6WZwtNfVCRDWdRSB0xmK/6Aa/25HCZGKjg=;
-        b=qPshBYbN+OAmmEWT00mCMNiesEdDycioBB0ZvKc6ROFs5e/KkD0vUTw781EtjXJSgO
-         T+hftX5dCTiJRUp0ODdsbpSqe5LwaRG0zZzohlYn8jnCi0em2Fo/2fBuRqJImXMVgtJM
-         b0fE9aw2lYuT5N0cBhaUSYk/rKQZc+/hz/6qkcsakc8TrOLb4nEK0Vd40BSbMOzB4HvY
-         XXvVJ2ft/uKyOel/nKLzc3SRubZjmqBBvnlS8JAnMjLHIQywq2pfFx21adUGDPA7Gu4j
-         OpKkIITemFfctVLZfyIORovHfQ5HhXy8ul6mkZqAouidUSySh3QG2Ackb1+oqgZveXYG
-         ybSg==
-X-Gm-Message-State: APjAAAXSiiD2NcqO7XgIYVXI4xW48pu81jytZiYg+Rl1EWyp53NCeGBu
-        e7/HmRtQYNX8npRKyWaZv3Fnva8=
-X-Google-Smtp-Source: APXvYqwOCjF2ggBPqa+yRys2vDN8YOOFrDnojfK7o1vVIk2j1GqFaSGGPPgH4E1EDCj550bbAjtwdA==
-X-Received: by 2002:a05:6830:2361:: with SMTP id r1mr675506oth.88.1579044695526;
-        Tue, 14 Jan 2020 15:31:35 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a24sm5089541oic.10.2020.01.14.15.31.34
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 15:31:34 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2209ae
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 14 Jan 2020 17:31:34 -0600
-Date:   Tue, 14 Jan 2020 17:31:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, hadess@hadess.net,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yannick.fertre@st.com,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: touchscreen: Convert Goodix
- touchscreen to json-schema
-Message-ID: <20200114233134.GA23810@bogus>
-References: <20200108091118.5130-1-benjamin.gaignard@st.com>
- <20200108091118.5130-3-benjamin.gaignard@st.com>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=yYq+18HeUcEIJUvMzPqlCK3z7OvqDSWg2p8T6vbs7w0=;
+        b=ZQih5S+ZKbBEk/NEsmt9tBI8vfTCpauTvH5zhDZgOiXWWOXg9u1JkVjFEf57qK2YUq
+         /p8dpRnheAyzY6d7GQjvAnpM1vG2dOY13rhVvN33g6e1gb98ZzKmXDbnOfqeZPQPCpLw
+         ThI3IuJy+VZHasnVXuv1xbop8/sO21QJIDkfwdSzAswUAWRfVDk4xgcjXTTxZyisFWcK
+         lvQIJGJv8P76Dqlo6y0eEgg2UTjLl3KtgXVBN7yxoDEeRyvHBXTufYHDvyZLjWV0ilYi
+         CKZgOkjfz5sKz1qR1kY4LFlND+LSrYr23Hjwm8XqC4llyNqrL0jxuqTWv+RRitGULAJZ
+         aVgA==
+X-Gm-Message-State: APjAAAU+9Vi/80sA/Y4V3IMtEeyuu88AivM7Mj/d3J7ZVniv55wb/ft0
+        yN4IydwWo91ePD0UwiQScZ4=
+X-Google-Smtp-Source: APXvYqyRgyNwX25uWnf/RhrIHpTOwItecu9mtenCGAl4NZ02AP5cSmmjCy7IyMVbtYFj8gUWZK3cJg==
+X-Received: by 2002:a62:ee11:: with SMTP id e17mr28449753pfi.48.1579044841465;
+        Tue, 14 Jan 2020 15:34:01 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:1:2ceb:5c73:b928:d080])
+        by smtp.gmail.com with ESMTPSA id t187sm19746078pfd.21.2020.01.14.15.34.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jan 2020 15:34:01 -0800 (PST)
+To:     Borislav Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac@vger.kernel.org, sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        shji@microsoft.com, wangglei@gmail.com
+From:   Shiping Ji <shiping.linux@gmail.com>
+Subject: [PATCH v8 1/2] dt-bindings: edac: arm-dmc520.txt
+Message-ID: <acb3a312-5ccd-362c-02ae-beee461a5f4b@gmail.com>
+Date:   Tue, 14 Jan 2020 15:34:00 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108091118.5130-3-benjamin.gaignard@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 8 Jan 2020 10:11:18 +0100, Benjamin Gaignard wrote:
-> Convert the Goodix binding to DT schema format using json-schema
-> 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
-> version 2:
-> - enumerate goodix's I2C adresses
-> - add description for irq-gpio property
-> - reference the common properties used by goodix
-> 
->  .../bindings/input/touchscreen/goodix.txt          | 50 --------------
->  .../bindings/input/touchscreen/goodix.yaml         | 78 ++++++++++++++++++++++
->  2 files changed, 78 insertions(+), 50 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.txt
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix.yaml
-> 
+This is the device tree bindings for new EDAC driver dmc520_edac.c.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+
+---
+     Changes in v8:
+         - Replaced the vendor specific interrupt-config property with interrupt-names
+
+---
+ .../devicetree/bindings/edac/arm-dmc520.txt   | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+
+diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+new file mode 100644
+index 000000000000..4a673f091918
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+@@ -0,0 +1,22 @@
++* ARM DMC-520 EDAC node
++
++Required properties:
++- compatible  : "brcm,dmc-520", "arm,dmc-520".
++- reg   : Address range of the DMC-520 registers.
++- interrupts  : DMC-520 interrupt numbers. The example below specifies
++     two interrupt lines for dram_ecc_errc_int and
++     dram_ecc_errd_int.
++- interrupt-names : This is an array of names corresponding to the interrupt
++     line numbers. The valid interrupt names are the followings:
++     ram_ecc_errc, ram_ecc_errd, dram_ecc_errc, dram_ecc_errd,
++     failed_access, failed_prog, link_err, temperature_event,
++     arch_fsm, phy_request
++
++Example:
++
++dmc0: dmc@200000 {
++ compatible = "brcm,dmc-520", "arm,dmc-520";
++ reg = <0x200000 0x80000>;
++ interrupts = <0x0 0x349 0x4>, <0x0 0x34B 0x4>;
++ interrupt-names = "dram_ecc_errc", "dram_ecc_errd";
++};
+-- 
+2.17.1
