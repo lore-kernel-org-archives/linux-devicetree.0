@@ -2,125 +2,317 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0F0C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68DBC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2622084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE2C2467E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 23:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tgOcFVfA"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ShJCmUzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgANXgY (ORCPT
+        id S1728921AbgANXjM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 18:36:24 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34560 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728656AbgANXgY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 18:36:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579044983; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=7+8Ma8yfcl2diOB4I5famBBLS13KA3B5gNUsRjC85BE=; b=tgOcFVfA4qpnrmUsjd7xH5z4P2sUDqkFNJB4mR+hv2pzWC+6fi8zNMZkuZqgBPfnIxzU4bee
- /ANYff1hnVWZ6QliXsc4eTr8i9rYf/jcdkimnV358QQjZ/E5unIX9XUNjvHJ43QX+Xz4JgtE
- uqbe9mXmpmFjqEKe7aNS4zTo790=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1e5076.7fad57bb9960-smtp-out-n02;
- Tue, 14 Jan 2020 23:36:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A47C1C4479F; Tue, 14 Jan 2020 23:36:21 +0000 (UTC)
-Received: from [10.46.162.237] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: daidavid1)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6722CC433CB;
-        Tue, 14 Jan 2020 23:36:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6722CC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=daidavid1@codeaurora.org
-Subject: Re: [PATCH v1 0/4] Split SDM845 interconnect nodes and consolidate
- RPMh support
-To:     Evan Green <evgreen@google.com>
-Cc:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-References: <1576475925-20601-1-git-send-email-daidavid1@codeaurora.org>
- <CAE=gft6sxsZfvPZZXKqbEMjCH_hGKXp_1MS3qTAz6hmMPfn09A@mail.gmail.com>
-From:   David Dai <daidavid1@codeaurora.org>
-Message-ID: <df9e58ef-7b97-7456-09fb-c13f53207cbb@codeaurora.org>
-Date:   Tue, 14 Jan 2020 15:36:19 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 14 Jan 2020 18:39:12 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51181 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728892AbgANXjM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 18:39:12 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1F38A891A9;
+        Wed, 15 Jan 2020 12:39:10 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1579045150;
+        bh=2gBER1PvepW7C/LmCCkcdmnlievV9RChs4q6y2glIWI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=ShJCmUzMKbd8oSdsPgEnQ5avBWUFdaVdlM0bBCSYD8lLYOh8r9maUFNpwZptdTGRA
+         TQVKo30T1zJe1QyziXtB1cSFI2DU219HXUlWHe1xxw/O3bMH8A2t49eTpxgnVlMB9T
+         PXNJpm3ssh1xT4JcbIyqNgFPDY14qvm+XQzUwvbeHiFkSSzslJq5fuyQQSGFXGcfX5
+         vA8NpuzlRcoXaiHLepzkDKiC4zDZ5Z06HvasTG1gWShd6Ekku5D+BewIa0K2QQJ3G3
+         v+q3cEVaB4LpNWdrryBqC0imJd1rfAYtcZmNyVCRMdyifBDYjSREUUpOh3+odfZyYH
+         GhhuYtqUP+C7w==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e1e511d0000>; Wed, 15 Jan 2020 12:39:09 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
+        by smtp (Postfix) with ESMTP id 73FDB13EF62;
+        Wed, 15 Jan 2020 12:39:08 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id C37E7280071; Wed, 15 Jan 2020 12:39:08 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     anthony.derosa@syscall7.com, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/2] spi: Add generic SPI multiplexer
+Date:   Wed, 15 Jan 2020 12:38:56 +1300
+Message-Id: <20200114233857.25933-3-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200114233857.25933-1-chris.packham@alliedtelesis.co.nz>
+References: <20200114233857.25933-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft6sxsZfvPZZXKqbEMjCH_hGKXp_1MS3qTAz6hmMPfn09A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Evan,
+Add a SPI device driver that sits in-band and provides a SPI controller
+which supports chip selects via a mux-control. This enables extra SPI
+devices to be connected with limited native chip selects.
 
-On 1/7/2020 3:45 PM, Evan Green wrote:
-> On Sun, Dec 15, 2019 at 9:59 PM David Dai <daidavid1@codeaurora.org> wrote:
->> While there are no current consumers of the SDM845 interconnect device in
->> devicetree, take this opportunity to redefine the interconnect device nodes
->> as the previous definitions of using a single child node under the apps_rsc
->> device did not accurately capture the description of the hardware.
->> The Network-On-Chip (NoC) interconnect devices should be represented in a
->> manner akin to QCS404 platforms[1] where there is a separation of NoC devices
->> and its RPM/RPMh counterparts.
->>
->> The bcm-voter devices are representing the RPMh devices that the interconnect
->> providers need to communicate with and there can be more than one instance of
->> the Bus Clock Manager (BCM) which can live under different instances of Resource
->> State Coordinators (RSC). There are display use cases where consumers may need
->> to target a different bcm-voter (Some display specific RSC) than the default,
->> and there needs to be a way to represent this connection in devicetree.
-> So for my own understanding, the problem here is that things want to
-> vote for interconnect bandwidth within a specific RSC context? Where
-> normally the RSC context is simply "Apps@EL1", we might also have
-> "Apps@EL3" for trustzone, or in the case we're coding for,
-> "display-specific RSC context". I guess this context might stay on
-> even if Apps@EL1 votes are entirely discounted or off?
-That's correct, the state of those votes are tied to the state of that 
-execution environment. So even if the Apps CPU goes into a low power 
-mode, other context specific vote will still stick.
->   So then would
-> there be an additional interconnect provider for "display context RSC"
-> next to apps_bcm_voter? Would that expose all the same nodes as
-> apps_bcm_voter, or a different set of nodes?
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/spi/Kconfig   |  12 +++
+ drivers/spi/Makefile  |   1 +
+ drivers/spi/spi-mux.c | 189 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 202 insertions(+)
+ create mode 100644 drivers/spi/spi-mux.c
 
-We trim down the topology to what each execution environment needs, so 
-each EE really only "sees" a subset of the entire SoC's topology. In 
-this specific case, the display context RSC would only expose a small 
-subset of the topology that Apps@EL1 would see.
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 870f7797b56b..90df945490d9 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -880,6 +880,18 @@ config SPI_ZYNQMP_GQSPI
+ #
+ # Add new SPI master controllers in alphabetical order above this line
+ #
++#
++
++comment "SPI Multiplexer support"
++
++config SPI_MUX
++	tristate "SPI multiplexer support"
++	select MULTIPLEXER
++	help
++	  This adds support for SPI multiplexers. Each SPI mux will be
++	  accessible as a SPI controller, the devices behind the mux will appea=
+r
++	  to be chip selects on this controller. It is still necessary to
++	  select one or more specific mux-controller drivers.
+=20
+ #
+ # There are lots of SPI device types, with sensors and memory
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index bb49c9e6d0a0..5f7593c84210 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_SPI_MASTER)		+=3D spi.o
+ obj-$(CONFIG_SPI_MEM)			+=3D spi-mem.o
+ obj-$(CONFIG_SPI_SPIDEV)		+=3D spidev.o
+ obj-$(CONFIG_SPI_LOOPBACK_TEST)		+=3D spi-loopback-test.o
++obj-$(CONFIG_SPI_MUX)			+=3D spi-mux.o
+=20
+ # SPI master controller drivers (bus)
+ obj-$(CONFIG_SPI_ALTERA)		+=3D spi-altera.o
+diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
+new file mode 100644
+index 000000000000..8481067be5ae
+--- /dev/null
++++ b/drivers/spi/spi-mux.c
+@@ -0,0 +1,189 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * General Purpose SPI multiplexer
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/err.h>
++#include <linux/slab.h>
++#include <linux/spi/spi.h>
++#include <linux/mux/consumer.h>
++
++#define SPI_MUX_NO_CS	((unsigned int)-1)
++
++/**
++ * DOC: Driver description
++ *
++ * This driver supports a MUX on an SPI bus. This can be useful when you=
+ need
++ * more chip selects than the hardware peripherals support, or than are
++ * available in a particular board setup.
++ *
++ * The driver will create an additional SPI controller. Devices added un=
+der the
++ * mux will be handled as 'chip selects' on this controller.
++ */
++
++/**
++ * struct spi_mux_priv - the basic spi_mux structure
++ * @spi:		pointer to the device struct attached to the parent
++ *			spi controller
++ * @current_cs:		The current chip select set in the mux
++ * @child_mesg_complete: The mux replaces the complete callback in the c=
+hild's
++ *			message to its own callback; this field is used by the
++ *			driver to store the child's callback during a transfer
++ * @child_mesg_context: Used to store the child's context to the callbac=
+k
++ * @child_mesg_dev:	Used to store the spi_device pointer to the child
++ * @mux:		mux_control structure used to provide chip selects for
++ *			downstream spi devices
++ */
++struct spi_mux_priv {
++	struct spi_device	*spi;
++	unsigned int		current_cs;
++
++	void			(*child_mesg_complete)(void *context);
++	void			*child_mesg_context;
++	struct spi_device	*child_mesg_dev;
++	struct mux_control	*mux;
++};
++
++/* should not get called when the parent controller is doing a transfer =
+*/
++static int spi_mux_select(struct spi_device *spi)
++{
++	struct spi_mux_priv *priv =3D spi_controller_get_devdata(spi->controlle=
+r);
++	int ret =3D 0;
++
++	if (priv->current_cs !=3D spi->chip_select) {
++		dev_dbg(&priv->spi->dev,
++			"setting up the mux for cs %d\n",
++			spi->chip_select);
++
++		/* copy the child device's settings except for the cs */
++		priv->spi->max_speed_hz =3D spi->max_speed_hz;
++		priv->spi->mode =3D spi->mode;
++		priv->spi->bits_per_word =3D spi->bits_per_word;
++
++		ret =3D mux_control_select(priv->mux, spi->chip_select);
++		if (ret)
++			return ret;
++
++		priv->current_cs =3D spi->chip_select;
++	}
++
++	return ret;
++}
++
++static int spi_mux_setup(struct spi_device *spi)
++{
++	struct spi_mux_priv *priv =3D spi_controller_get_devdata(spi->controlle=
+r);
++
++	/*
++	 * can be called multiple times, won't do a valid setup now but we will
++	 * change the settings when we do a transfer (necessary because we
++	 * can't predict from which device it will be anyway)
++	 */
++	return spi_setup(priv->spi);
++}
++
++static void spi_mux_complete_cb(void *context)
++{
++	struct spi_mux_priv *priv =3D (struct spi_mux_priv *)context;
++	struct spi_controller *ctlr =3D spi_get_drvdata(priv->spi);
++	struct spi_message *m =3D ctlr->cur_msg;
++
++	m->complete =3D priv->child_mesg_complete;
++	m->context =3D priv->child_mesg_context;
++	m->spi =3D priv->child_mesg_dev;
++	spi_finalize_current_message(ctlr);
++	mux_control_deselect(priv->mux);
++}
++
++static int spi_mux_transfer_one_message(struct spi_controller *ctlr,
++						struct spi_message *m)
++{
++	struct spi_mux_priv *priv =3D spi_controller_get_devdata(ctlr);
++	struct spi_device *spi =3D m->spi;
++	int ret;
++
++	ret =3D spi_mux_select(spi);
++	if (ret)
++		return ret;
++
++	/*
++	 * Replace the complete callback, context and spi_device with our own
++	 * pointers. Save originals
++	 */
++	priv->child_mesg_complete =3D m->complete;
++	priv->child_mesg_context =3D m->context;
++	priv->child_mesg_dev =3D m->spi;
++
++	m->complete =3D spi_mux_complete_cb;
++	m->context =3D priv;
++	m->spi =3D priv->spi;
++
++	/* do the transfer */
++	ret =3D spi_async(priv->spi, m);
++	return ret;
++}
++
++static int spi_mux_probe(struct spi_device *spi)
++{
++	struct spi_controller *ctlr;
++	struct spi_mux_priv *priv;
++	int ret;
++
++	ctlr =3D spi_alloc_master(&spi->dev, sizeof(*priv));
++	if (!ctlr)
++		return -ENOMEM;
++
++	spi_set_drvdata(spi, ctlr);
++	priv =3D spi_controller_get_devdata(ctlr);
++	priv->spi =3D spi;
++
++	priv->mux =3D devm_mux_control_get(&spi->dev, NULL);
++	ret =3D PTR_ERR_OR_ZERO(priv->mux);
++	if (ret) {
++		if (ret !=3D -EPROBE_DEFER)
++			dev_err(&spi->dev, "failed to get control-mux\n");
++		goto err_put_ctlr;
++	}
++
++	priv->current_cs =3D SPI_MUX_NO_CS;
++
++	/* supported modes are the same as our parent's */
++	ctlr->mode_bits =3D spi->controller->mode_bits;
++	ctlr->flags =3D spi->controller->flags;
++	ctlr->transfer_one_message =3D spi_mux_transfer_one_message;
++	ctlr->setup =3D spi_mux_setup;
++	ctlr->num_chipselect =3D mux_control_states(priv->mux);
++	ctlr->bus_num =3D -1;
++	ctlr->dev.of_node =3D spi->dev.of_node;
++
++	ret =3D devm_spi_register_controller(&spi->dev, ctlr);
++	if (ret)
++		goto err_put_ctlr;
++
++	return ret;
++
++err_put_ctlr:
++	spi_controller_put(ctlr);
++
++	return ret;
++}
++
++static const struct of_device_id spi_mux_of_match[] =3D {
++	{ .compatible =3D "spi-mux" },
++	{ },
++};
++
++static struct spi_driver spi_mux_driver =3D {
++	.probe  =3D spi_mux_probe,
++	.driver =3D {
++		.name   =3D "spi-mux",
++		.of_match_table =3D spi_mux_of_match,
++	},
++};
++
++module_spi_driver(spi_mux_driver);
++
++MODULE_DESCRIPTION("SPI multiplexer");
++MODULE_LICENSE("GPL");
+--=20
+2.25.0
 
->
-> Assuming it's exposing some of the same nodes as apps_bcm_voter, the
-> other way to do this would be increasing #interconnect-cells, and
-> putting the RSC context there. Did you choose not to go that way
-> because nearly all the clients would end up specifying the same thing
-> of "Apps@EL1"?
-That's correct, the majority of the consumers will stay with default 
-Apps@EL1 context.
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
