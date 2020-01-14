@@ -2,190 +2,140 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D2C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE8EC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757C42465A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CDD24676
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 17:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Iic2PdG8"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ZYSY1t4h";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="XC3dc04p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgANREc (ORCPT
+        id S1727331AbgANREh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:04:32 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:32634 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgANREc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 12:04:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1579021470;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=i4vTSHrZF74l95fwgGGq2i9iOXJ2vXfG6gNaBmjcx2Q=;
-        b=Iic2PdG82Ru3vYCytkhBNit3sP5phwm4CCz016S5+tuUGP86lYSfM6kibz9L2DgQlO
-        Ty7JxC6SmIC3Gs7/WUkz+Y5izMBrpQuC6YpuPD4sOj+sGeICBcSD+Jelu/vdh/QBu6uZ
-        fQgJbk++Kb/Sjem7klJmOyV3U5KWFUipps9rmaIapLXlpicPbUr4RV1ff6ilQhLBG/24
-        Go/L3R+k2GkkkcT2y4ynIByCykshEQLhBHxtugKVOnQV4iYrvU6hHBQ/obxJqFuNmQLk
-        DFZdTMmDrenB5rTe+W66eqylqyJpLhdBzDwFywBbXdPk4kNW7O+tNA7ffY0GHxqgqdee
-        LKyQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlaYXA4FNWc="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id c04ea5w0EH4RPgE
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Tue, 14 Jan 2020 18:04:27 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH] ARM: dts: Configure omap5 AESS
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20200114164613.GR5885@atomide.com>
-Date:   Tue, 14 Jan 2020 18:04:26 +0100
-Cc:     linux-omap@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Matthijs van Duin <matthijsvanduin@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D51230C4-2642-4388-959F-313A3382AB99@goldelico.com>
-References: <20200114150937.18304-1-tony@atomide.com> <52905C15-A2D1-4372-9781-D602D0B274B6@goldelico.com> <20200114164613.GR5885@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 14 Jan 2020 12:04:37 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:44076 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726450AbgANREh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:04:37 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 51DB8406E6;
+        Tue, 14 Jan 2020 17:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579021476; bh=Mm3MSZqC1zqJvH0MmChVvhHcosSr0ipdo2lXzi0QO5M=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=ZYSY1t4hQMiyegvX6Oa/w9qRIfEV9gP2M3pHMjNkOF1VLrFHUzlG/QpY0DQGFi2lU
+         knoLULLarUEffcTmYWVvvwFhQYu9asv7wII5QiPy2bVMgrlLEQuLc8+O7wzT4V0OqA
+         PwMOrxVdKUxTsaEKAqg+5XOOMf+8d446e8MpE+2ju1zWLvTimCeWkqOruZF0K8C7X4
+         gqH0ztHh42C8OruVrDgTk5sK1G0F4IKQIdw13K269GEpEuvv3hLXwzNN/lzgBbNxRJ
+         3KBGEGwbjJRCdKO/MvrnERDVX2axvpMy6/li39iUMulwBUkmPK1iFAFlzPzycvr+iX
+         wAUWrHtqeU9Ag==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 24581A0085;
+        Tue, 14 Jan 2020 17:04:36 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 14 Jan 2020 09:04:20 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 14 Jan 2020 09:04:19 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B0xlQDGHnMCakRBGBEgvhYnXStQZzYgb6qH0Y0qucyHUc2o9O1YiR76H/jdC51svEvztYniOuejDFNvsWp0wrG8v0tK2qOh3uUJi9Kn7m7YDRfxqL7YaRIOswzYjbDiijh7EYFBriuKXe6SdUVACQ/MKtoVCl1JyUi1GO4dsmLPugS2Ll7pl42UUK00rhw8oDM5XYdG0IGUYIo2LuSpZmO3bF0PFbuzmtc3ZhzNK5soLSM09IRpsmsV326DIiBGAZPvJcDpmXJr4iHmTwUeZW7ZDKGn9LeZQSsvQCnF1rRRVEqNcqIOwsSlMuqpX6l6KtEoa6oY4MBy0dRZHuiZlYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mm3MSZqC1zqJvH0MmChVvhHcosSr0ipdo2lXzi0QO5M=;
+ b=HVxOxjDHERJjALjwZpcVia6QT24T4H7T4Xa10QTpmsumLJNul6kTkD+DNRAJGeXFrz9GeIC1whCIcqp8NHZNl9/Cw7E9SBxaAclZ+Seuy+/sdeo0E3W025G/JOwLG0j4X6eL92uNt1EkbSDAslGuhP+wRc5AdywmG5Uc0pE4LlGR3LpP1nhSXCgVzkrl2KjzuiepxcT69nOd6WMzfevf6SzcUgZj2F1QhHYHC/B34YiHYuVe2W0nTpWHnxJyg2TTDISklHlTwGnrFx5hcNvPqXH1whxMbxC+S4s3X2Rbi7OmjfemBxzoc94JG/iKCcBBEbbIhqY1q3lXEhFmEEuoxw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mm3MSZqC1zqJvH0MmChVvhHcosSr0ipdo2lXzi0QO5M=;
+ b=XC3dc04pVlh1mzxwVEVgZ1XyRf+53DsFR7Fn49SrXOVOY1j/xJPcwKT+Ea/L7hBZOPuh2P5BMivct6DajNviRkLaOJUDssRlxjAftq199ntQkMwkUqb9+AuAgmwBDT+p67y8fmAtaMdSDHbndCylVGXArpQbiPzioM9AdgND/L4=
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com (20.178.54.89) by
+ BYAPR12MB3189.namprd12.prod.outlook.com (20.179.92.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Tue, 14 Jan 2020 17:04:18 +0000
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::39a1:22ee:7030:8333]) by BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::39a1:22ee:7030:8333%6]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 17:04:18 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 4/4] ARC: [plat-axs10x]: Add missing multicast filter
+ number to GMAC node
+Thread-Topic: [PATCH net 4/4] ARC: [plat-axs10x]: Add missing multicast filter
+ number to GMAC node
+Thread-Index: AQHVyvUfClf4TsxnMkuRbCyapjHT5KfqY2YA
+Date:   Tue, 14 Jan 2020 17:04:18 +0000
+Message-ID: <139baf42-2704-db1b-579b-50f35c86c6d7@synopsys.com>
+References: <cover.1579017787.git.Jose.Abreu@synopsys.com>
+ <b1abebaf6ac9a0176b82e179944a455fbf1d7a15.1579017787.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <b1abebaf6ac9a0176b82e179944a455fbf1d7a15.1579017787.git.Jose.Abreu@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-originating-ip: [149.117.75.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 00166dc8-5278-482b-8f3d-08d79913cb15
+x-ms-traffictypediagnostic: BYAPR12MB3189:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB3189BCD5223DCC9787C5B98BB6340@BYAPR12MB3189.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:612;
+x-forefront-prvs: 028256169F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(346002)(136003)(366004)(376002)(199004)(189003)(558084003)(76116006)(86362001)(316002)(64756008)(66946007)(36756003)(66476007)(26005)(66556008)(5660300002)(31696002)(6512007)(66446008)(478600001)(4326008)(110136005)(71200400001)(6486002)(31686004)(186003)(54906003)(2906002)(53546011)(8936002)(81156014)(2616005)(6506007)(81166006)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3189;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: an9ym0rcXWG/gzs48vn8cAKvuaAsdhonDPavf9SUus/e6yFOlEeGQ/qvTZ/im9HAC6JXmsdHKU+6c7f2QzZ2fxENO7VEWbQ0de6jmElTWgyBuD4FRNmXUKqASIhBneTE87U1B3qgXu7CPgm7RJRAz7/0LkSmQGuC66uhR+/XeRfXUAAG/WSrb2FUoLW7GLyOzhmdtsKR6HX1PoxDegN+lxIqeaIDQD7BnyfnNT2vYbTwBVT99+l5ihEuJqUlipBkBgg+mpB04IWOrMHc5cF9hTM6qWZb9aWn4+mTvBKEKZ4iGtQrHqOJn9sCIniFHgMhNmIWgVVLf8cn0s1GkNpCRuYXnEKGP2N+KrZF43GwPCnBHUKPENS9RgN4X7hv2Z+KIadPMX6Is65+EyVt3kd+Ryv12WrLWYMqpTIq1HblxHU+BUKgjXknFqb2L9cAVzkw
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CDDAF59D5ED969459334D80E14DDC0AB@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00166dc8-5278-482b-8f3d-08d79913cb15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 17:04:18.5561
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YHlzY9vp+Jte1XeVbiJSRWJHH0p7Z6/BWBO57emIdwga4qLydyxnKjPLwQQ/LxFllMcRRQ+vKHifBONmmWu+lQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3189
+X-OriginatorOrg: synopsys.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tony,
-
-> Am 14.01.2020 um 17:46 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * H. Nikolaus Schaller <hns@goldelico.com> [200114 16:38]:
->> Hi Tony,
->>=20
->>> Am 14.01.2020 um 16:09 schrieb Tony Lindgren <tony@atomide.com>:
->>>=20
->>> We are missing AESS for omap5. Looks like it's similar to what we =
-have
->>> for omap4, and this gets ti-sysc interconnect target module driver =
-to
->>> detect it properly.
->>>=20
->>> Note that we currently have no child device driver available for it.
->>=20
->> What I have is a non-working and no more compiling driver originally =
-written by
->> Peter Ujfalusi and reworked by Andrej Utkin. We did have it almost =
-running on
->> v4.14 or so except problems with firmware versions and headers...
->>=20
->> There we used classical hwmods and I could revert them now to try =
-your new patches.
->> Unfortunately, I could only compile-test your two patches but nothing =
-with AESS.
->>=20
->> We had tried to follow kernel API changes in the sound subsystem but =
-today it is
->> not even compiling any more :(
->>=20
->> So getting a working device driver is an even bigger task than SGX =
-was.
->=20
-> OK. Well hopefully that's at least a little bit easier now though.
->=20
->>> Cc: H. Nikolaus Schaller <hns@goldelico.com>
->>> Cc: Matthijs van Duin <matthijsvanduin@gmail.com>
->>> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> Cc: Tero Kristo <t-kristo@ti.com>
->>> Signed-off-by: Tony Lindgren <tony@atomide.com>
->>> ---
->>>=20
->>> Note that this depends on "[PATCH] clk: ti: omap5: Add missing AESS =
-clock".
->>>=20
->>> arch/arm/boot/dts/omap5-l4-abe.dtsi | 16 ++++++++++++++--
->>> 1 file changed, 14 insertions(+), 2 deletions(-)
->>>=20
->>> diff --git a/arch/arm/boot/dts/omap5-l4-abe.dtsi =
-b/arch/arm/boot/dts/omap5-l4-abe.dtsi
->>> --- a/arch/arm/boot/dts/omap5-l4-abe.dtsi
->>> +++ b/arch/arm/boot/dts/omap5-l4-abe.dtsi
->>> @@ -426,8 +426,20 @@ target-module@c0000 {			/* =
-0x401c0000, ap 30 1e.0 */
->>> 		};
->>>=20
->>> 		target-module@f1000 {			/* 0x401f1000, =
-ap 32 20.0 */
->>=20
->> Here its may be good to have an "aess" label.
->=20
-> Care to clarify what you have in mind? The module is generic, aess
-> device will be the child node.
-
-The existing driver is hooked into the sound root-node and looks for a
-ti,aess =3D <&aess>; link:
-
-/ {
-	sound: sound {
-		compatible =3D "ti,abe-twl6040";
-		ti,model =3D "omap5-uevm";
-
-		ti,jack-detection;
-		ti,mclk-freq =3D <19200000>;
-
-		ti,mcpdm =3D <&mcpdm>;
-		ti,mcbsp1 =3D <&mcbsp1>;
-		ti,mcbsp2 =3D <&mcbsp2>;
-		ti,mcbsp3 =3D <&mcbsp3>;
-
-		ti,twl6040 =3D <&twl6040>;
-		ti,aess =3D <&aess>;
-
-		...
-	};
-};
-
-Well, this could be simply wrong... I.e. the aess node should request
-all the phandles to mcpdm and mcbsps because it is connected to.
-
-Or it is right to use the sound node to "connect" all subsystems.
-
-Then the "aess" core could also become the child node of the =
-target-module:
-
-target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
-	...
-	aess: aess {
-		compatible =3D "ti,aess";
-		status =3D "disabled";
-	};
-};
-
-Although it looks better this way, it may make it even one step
-more difficult to resurrect the old code...
-
-And DT maintainers are not happy with otherwise undefined compatible
-definitions.
-
-So maybe:
-
-target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
-	...
-
-	aess: aess {
-		/* revisit
-		compatible =3D "ti,aess";
-		status =3D "disabled";
-		*/
-	};
-};
-
-BR,
-Nikolaus
-
+T24gMS8xNC8yMCA4OjA5IEFNLCBKb3NlIEFicmV1IHdyb3RlOg0KPiBBZGQgYSBtaXNzaW5nIHBy
+b3BlcnR5IHRvIEdNQUMgbm9kZSBzbyB0aGF0IG11bHRpY2FzdCBmaWx0ZXJpbmcgd29ya3MNCj4g
+Y29ycmVjdGx5Lg0KPg0KPiBGaXhlczogNTU2Y2MxYzVmNTI4ICgiQVJDOiBbYXhzMTAxXSBBZGQg
+c3VwcG9ydCBmb3IgQVhTMTAxIFNEUCAoc29mdHdhcmUgZGV2ZWxvcG1lbnQgcGxhdGZvcm0pIikN
+Cj4gU2lnbmVkLW9mZi1ieTogSm9zZSBBYnJldSA8Sm9zZS5BYnJldUBzeW5vcHN5cy5jb20+DQoN
+CkFkZGVkIHRvIGZvci1jdXJyLg0KDQpUaHgsDQotVmluZWV0DQo=
