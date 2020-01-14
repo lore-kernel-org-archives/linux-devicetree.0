@@ -2,68 +2,91 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1DEC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E1EC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA8624676
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 831962467A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgANJ5r (ORCPT
+        id S1730763AbgANKI7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:57:47 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:45733 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgANJ5r (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 04:57:47 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D8D49240019;
-        Tue, 14 Jan 2020 09:57:42 +0000 (UTC)
-Date:   Tue, 14 Jan 2020 10:57:42 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mchehab@kernel.org, lee.jones@linaro.org,
-        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
-        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
-        mkl@pengutronix.de, a.zummo@towertech.it,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v2 15/17] dt-bindings: arm: add sam9x60-ek board
-Message-ID: <20200114095742.GL3137@piout.net>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
- <1578673089-3484-16-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 14 Jan 2020 05:08:59 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58487 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731178AbgANKI6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 05:08:58 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1irJ85-00031o-H6; Tue, 14 Jan 2020 11:08:57 +0100
+Message-ID: <d1f969346ad1758943e8f898244c69673f93f129.camel@pengutronix.de>
+Subject: Re: [PATCH] dt-bindings: reset: intel,rcu-gw: Fix
+ intel,global-reset schema
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Date:   Tue, 14 Jan 2020 11:08:57 +0100
+In-Reply-To: <20200113214515.3950-1-robh@kernel.org>
+References: <20200113214515.3950-1-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578673089-3484-16-git-send-email-claudiu.beznea@microchip.com>
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 10/01/2020 18:18:07+0200, Claudiu Beznea wrote:
-> Add documentation for SAM9X60-EK board.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  Documentation/devicetree/bindings/arm/atmel-at91.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-Applied, thanks.
+Hi Rob,
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On Mon, 2020-01-13 at 15:45 -0600, Rob Herring wrote:
+> The intel,rcu-gw binding example has an error:
+> 
+> Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml:
+>   reset-controller@e0000000: intel,global-reset: [[16, 30]] is too short
+> 
+> The error isn't really correct as the problem is in how the data is
+> encoded and the schema is not fixed up by the tooling correctly.
+> However, array properties should describe the elements in the array, so
+> lets do that which fixes the error in the process.
+> 
+> Fixes: b7ab0cb00d08 ("dt-bindings: reset: Add YAML schemas for the Intel Reset controller")
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Dilip Kota <eswara.kota@linux.intel.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+> index 246dea8a2ec9..8ac437282659 100644
+> --- a/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+> +++ b/Documentation/devicetree/bindings/reset/intel,rcu-gw.yaml
+> @@ -23,7 +23,11 @@ properties:
+>      description: Global reset register offset and bit offset.
+>      allOf:
+>        - $ref: /schemas/types.yaml#/definitions/uint32-array
+> -      - maxItems: 2
+> +    items:
+> +      - description: Register offset
+> +      - description: Register bit offset
+> +        minimum: 0
+> +        maximum: 31
+>  
+>    "#reset-cells":
+>      minimum: 2
+
+Thank you, applied to reset/next.
+
+regards
+Philipp
+
