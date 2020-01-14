@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B106C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6D1C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C522187F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9474D2187F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ithCmGPB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WcPRp+7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgANHQ2 (ORCPT
+        id S1729081AbgANHQb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:16:28 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36588 "EHLO
+        Tue, 14 Jan 2020 02:16:31 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33751 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729058AbgANHQ1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:16:27 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a6so4881841plm.3
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 23:16:27 -0800 (PST)
+        with ESMTP id S1729076AbgANHQa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:16:30 -0500
+Received: by mail-pl1-f194.google.com with SMTP id ay11so4881448plb.0
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 23:16:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=e5zg+Nyx8gIh15cqNDiymw6e+al01EbMcgFt2zvz0/E=;
-        b=ithCmGPBDK/u6wxmb7C8KnWpF6VLxN1iVW9EKRTQdp6gCK/wkyNVGMrjLzSyYPtuZj
-         KT0dAo1mqlGPGF8vvWskaLxI8E4PJM7ppHVCuRSeKdX+EsfMf57sl+NMqrMkGaZe+a9e
-         jMDmnOEr16LjZs3JxaJxhJ4YKueNcn/vlkQrw=
+        bh=OSlwbkk1pzyLFKga0+D5pkXbBE5RP0e6plgOO4eYBJQ=;
+        b=WcPRp+7Mdnpj9rMQS/ieZ3gIzSidtcpvoi1VWauuCFrsi4euYkjOGWlPabSCB8OsXn
+         fY+YYvvLPmrGfP7dqyY3bXJOdPSwTJ5H54BELtP27PkE73ZBk5FuadDchNDNSvGGv0S4
+         eY1/zvVBMuRO/wV9+mzojLylgHcwdzX5frKms=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=e5zg+Nyx8gIh15cqNDiymw6e+al01EbMcgFt2zvz0/E=;
-        b=JjFGnu4ev/SA5VngpU+eLTX7T02+P7eKjFvZL1Td3vt/8WXSebpgXYc7fgTfDG6Ra+
-         J1Rzp0Po9KqHraotG7grtOv2aXzU4ihMF1gwue5/WVYXIK1WgeoIvA8PWDfbV/3fQtpf
-         XHBqpItJ9caXIZiKIzHPvZGKTw7sxIM3CMOGSANiFU/vsb8sd8VpTCiDq+DwdrUuWlWQ
-         UlQAN7JAWA2tchQOR5TfyXR3YxHUCKYbul7A043BATC/frQ7vOFp7wQ9UK78l6meai8p
-         XmiNyeVCpNggZTh7rX8acjKTsAxc0se/1d/STPupyIx+okSPjpYLB7w+KAhwGcTs7DND
-         VbXg==
-X-Gm-Message-State: APjAAAUbVlVjNw6MHsEF3wg7izwRVV7Zu9qZxibG1CuWf2YLUyPR9INV
-        yzEEUOLaV8iIUQhZIcMSH2uxAg==
-X-Google-Smtp-Source: APXvYqz4laPa/9RzoUxpMClNTomxEKcjjRkPSrqYnULimr14OR/2zncKlcPo6jiMuGgeOUer2Xg6RA==
-X-Received: by 2002:a17:902:fe90:: with SMTP id x16mr17202238plm.31.1578986186739;
-        Mon, 13 Jan 2020 23:16:26 -0800 (PST)
+        bh=OSlwbkk1pzyLFKga0+D5pkXbBE5RP0e6plgOO4eYBJQ=;
+        b=LypHn4yyJPciiSul11ameD0XKWJZQRzlNLKu4B+rv+7XJn3AjnFXV/B7RcEFiGTVRu
+         AGcCmGMwHA5wsqB32lcMyE86awU3lPGpeLWl3mIbrMc2m0aSTKokCWzsxmD+b8xIBaGz
+         r73DMSibqTV4Cxl+9vD2TSdRT20N/93mbrPl5zYPnx0DGOIEvSZHWHeQkUVbOEZwSjVn
+         Zdz0V0PrSgeUKuQ5oCmJGWBWzmXNs3cGt6Vkd84Bdkfwomq1DlGrqr9OzcYbkxqR4l/C
+         PJR0Nhxs8mb8H7EPgT1rIhcg3aNfbvgbBcLhQ8f0lp3Zvg/Gh80DEx9lBef04EkrU6XE
+         JdGw==
+X-Gm-Message-State: APjAAAVaLR3xcjVIIXqg/ZL7exQFKrLexLDGJEFBrF773ee2r93OPurL
+        NZwKyLZSkvAR/l2cycBFVu26HQ==
+X-Google-Smtp-Source: APXvYqxAVfz0yEjQZNh09tBVmqQhNTSo4PFJ0addejqjhSdLfGflyqf0R2L9U0djUMmD4gnScDcTBQ==
+X-Received: by 2002:a17:90a:bf92:: with SMTP id d18mr20309660pjs.21.1578986189911;
+        Mon, 13 Jan 2020 23:16:29 -0800 (PST)
 Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id b4sm17092976pfd.18.2020.01.13.23.16.23
+        by smtp.gmail.com with ESMTPSA id b4sm17092976pfd.18.2020.01.13.23.16.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 23:16:26 -0800 (PST)
+        Mon, 13 Jan 2020 23:16:29 -0800 (PST)
 From:   Nicolas Boichat <drinkcat@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -65,9 +65,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: [PATCH v3 6/7, RFC] drm/panfrost: Add mt8183-mali compatible string
-Date:   Tue, 14 Jan 2020 15:16:01 +0800
-Message-Id: <20200114071602.47627-7-drinkcat@chromium.org>
+Subject: [PATCH v3 7/7, RFC] drm/panfrost: devfreq: Add support for 2 regulators
+Date:   Tue, 14 Jan 2020 15:16:02 +0800
+Message-Id: <20200114071602.47627-8-drinkcat@chromium.org>
 X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 In-Reply-To: <20200114071602.47627-1-drinkcat@chromium.org>
 References: <20200114071602.47627-1-drinkcat@chromium.org>
@@ -78,46 +78,66 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-For testing only, the driver doesn't really work yet, AFAICT.
+The Bifrost GPU on MT8183 uses 2 regulators (core and SRAM) for
+devfreq, and provides OPP table with 2 sets of voltages.
+
+TODO: This is incomplete as we'll need add support for setting
+a pair of voltages as well.
 
 Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
 ---
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c | 17 +++++++++++++++++
+ drivers/gpu/drm/panfrost/panfrost_device.h  |  1 +
+ 2 files changed, 18 insertions(+)
 
-v3:
- - Match mt8183-mali instead of bifrost, as we require special
-   handling for the 2 regulators and 3 power domains.
-
-drivers/gpu/drm/panfrost/panfrost_drv.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index 42b87e29e605149..3379a3ea754ccde 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -592,6 +592,13 @@ static const struct panfrost_compatible default_data = {
- 	.num_pm_domains = 1, /* optional */
- };
+diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+index 413987038fbfccb..9c0987a3d71c597 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
++++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+@@ -79,6 +79,21 @@ int panfrost_devfreq_init(struct panfrost_device *pfdev)
+ 	struct devfreq *devfreq;
+ 	struct thermal_cooling_device *cooling;
  
-+const char * const mediatek_mt8183_supplies[] = { "mali", "sram" };
-+static const struct panfrost_compatible mediatek_mt8183_data = {
-+	.num_supplies = ARRAY_SIZE(mediatek_mt8183_supplies),
-+	.supply_names = mediatek_mt8183_supplies,
-+	.num_pm_domains = 3,
-+};
++	/* If we have 2 regulator, we need an OPP table with 2 voltages. */
++	if (pfdev->comp->num_supplies > 1) {
++		pfdev->devfreq.dev_opp_table =
++			dev_pm_opp_set_regulators(dev,
++					pfdev->comp->supply_names,
++					pfdev->comp->num_supplies);
++		if (IS_ERR(pfdev->devfreq.dev_opp_table)) {
++			ret = PTR_ERR(pfdev->devfreq.dev_opp_table);
++			pfdev->devfreq.dev_opp_table = NULL;
++			dev_err(dev,
++				"Failed to init devfreq opp table: %d\n", ret);
++			return ret;
++		}
++	}
 +
- static const struct of_device_id dt_match[] = {
- 	{ .compatible = "arm,mali-t604", .data = &default_data, },
- 	{ .compatible = "arm,mali-t624", .data = &default_data, },
-@@ -602,6 +609,8 @@ static const struct of_device_id dt_match[] = {
- 	{ .compatible = "arm,mali-t830", .data = &default_data, },
- 	{ .compatible = "arm,mali-t860", .data = &default_data, },
- 	{ .compatible = "arm,mali-t880", .data = &default_data, },
-+	{ .compatible = "mediatek,mt8183-mali",
-+		.data = &mediatek_mt8183_data },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, dt_match);
+ 	ret = dev_pm_opp_of_add_table(dev);
+ 	if (ret == -ENODEV) /* Optional, continue without devfreq */
+ 		return 0;
+@@ -119,6 +134,8 @@ void panfrost_devfreq_fini(struct panfrost_device *pfdev)
+ 	if (pfdev->devfreq.cooling)
+ 		devfreq_cooling_unregister(pfdev->devfreq.cooling);
+ 	dev_pm_opp_of_remove_table(&pfdev->pdev->dev);
++	if (pfdev->devfreq.dev_opp_table)
++		dev_pm_opp_put_regulators(pfdev->devfreq.dev_opp_table);
+ }
+ 
+ void panfrost_devfreq_resume(struct panfrost_device *pfdev)
+diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+index 143eab57180a2e1..30ba11cbf600847 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_device.h
++++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+@@ -108,6 +108,7 @@ struct panfrost_device {
+ 	struct {
+ 		struct devfreq *devfreq;
+ 		struct thermal_cooling_device *cooling;
++		struct opp_table *dev_opp_table;
+ 		ktime_t busy_time;
+ 		ktime_t idle_time;
+ 		ktime_t time_last_update;
 -- 
 2.25.0.rc1.283.g88dfdc4193-goog
 
