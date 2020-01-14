@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0063AC33CA9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D933C3F68F
 	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2375222C3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0286C222C4
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nyrwVyLc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YmLqYjt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgANHQk (ORCPT
+        id S1728868AbgANHQP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:16:40 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33139 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729030AbgANHQY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:16:24 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so5981955pgk.0
-        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 23:16:23 -0800 (PST)
+        Tue, 14 Jan 2020 02:16:15 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35687 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728855AbgANHQP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:16:15 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l24so5971438pgk.2
+        for <devicetree@vger.kernel.org>; Mon, 13 Jan 2020 23:16:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kL7MaPtbEc21MOhREjvhOgoDbupsHbrcTaafCHl6zWw=;
-        b=nyrwVyLcYnNR5mbm92LNGb5QtmCx+5pUoIH0aD8TvRWaA/To6hN3kVrNsRDENiENh9
-         y1BPUp40uFVRbuMzqrcmBYs+eWomH0z/SV1EzZnxa4zl0EM3jf+TUHwBnkr03hwwPk4+
-         rmBcnoqFF80mCeo3ILegZQxvfm8H/5T97yIao=
+        bh=0nAMwABlvSCq85Ew40FaRBYOhPfLosw2bX17FJGZVNI=;
+        b=YmLqYjt53Yi34BbEoChwfZpJQtyTZqV6RjrcBP2Xs9gqKCSYMyysxeCHjZKLlA6zZm
+         5zy03t9bwv0ssBSdslzzMCrsBrxpaMMFG/iiBlJ2f3MCzurncD8WvkVet9lureeAqtZE
+         sKJQONJX9aYp4Kk8kXBibRNOZrYZFxb+l+zBk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kL7MaPtbEc21MOhREjvhOgoDbupsHbrcTaafCHl6zWw=;
-        b=mbDIYouBZBJb/MErQ2YKeKLcHCevBuLKGtgLCRQJtXB7Cs/V2FaZx97eMnmeI8mzZf
-         jG5BVuSagrrK1Sh4j/doM0AV9hO2+B/1XHDZMeWt1MtjreNMG0yrPEMwNas6gO2Ptm2U
-         O9pnJMcDcDgh+a7veUifwnJL+NbdCr+AwA+V5raQ0paQWemSH/qqRRzaeugTBX5sNorI
-         cY6/VUHq+WgAnj15BWTDXAZCaTAyvkNPoN8I8eYTzSg+K3ztkoR1kgXuBLlgjSGghaY3
-         ut8OlUQSU/TETJcqnPuIypO/qiwGF9Q2V4O+DCsJ15qBr0uvE1pJOnAKtXHJ7A9tBF5T
-         fyAQ==
-X-Gm-Message-State: APjAAAVBlIamgETe9TyNqFUklU59wd11CDFZ9liIBi4qZ9rR3S2abduF
-        TXdquBypMKEb9XgnVs3ihfG8LA==
-X-Google-Smtp-Source: APXvYqz1Db5nZXfVgPpUvk0sMU7jCh8DwGo6ABq63Sc0zluJCZpvIMzGYhdDt6IlBlStywedDMXynA==
-X-Received: by 2002:a63:d62:: with SMTP id 34mr26391053pgn.268.1578986183441;
-        Mon, 13 Jan 2020 23:16:23 -0800 (PST)
+        bh=0nAMwABlvSCq85Ew40FaRBYOhPfLosw2bX17FJGZVNI=;
+        b=F4TTuphjhS5qCiPuc7jwrXEjE4pIxOHHXnVESAeKbNn0BxtG/MvkUl/KCprcXp2CyX
+         6xzfIRAPg167dw2FkEQpod9CXoNtrcFZ8uzfEF4MeaMRPWGECFxy0U659PF05sbUCQoK
+         hFEFCvBATd80OtaCUSTfqXuZ6eeYrecT/FYAqQGhbUWre7bQ1gx1r9vaR4R23df1IFr+
+         gT2a5F+fydvbHdBgzXTdEaoftyNlTpjoJrRNidzpx0N1aCuMuzLG9fZSjfOIIl7Hdu4Q
+         dYQ1GoPHKKaWZTHuKjUsBiIyxW2wsL5XSs8ZAmlOthQX3ySJprV6c79yNpoi/hrgjRSS
+         a9UA==
+X-Gm-Message-State: APjAAAUhe1kNscGUiIM43lvm0/itXXnS0QIpvbsijnKQLGVa8/764aQ8
+        1iKw6LFXAT4Bmxv52ObNc2TeKg==
+X-Google-Smtp-Source: APXvYqygdX3d2+SH80LajCEm65WgAAzi57FsVzK6xIrta+eJWwtRuwoAJvqcZlVIvnC7y+PEgpcy+g==
+X-Received: by 2002:a63:2d44:: with SMTP id t65mr26752292pgt.112.1578986174251;
+        Mon, 13 Jan 2020 23:16:14 -0800 (PST)
 Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:d8b7:33af:adcb:b648])
-        by smtp.gmail.com with ESMTPSA id b4sm17092976pfd.18.2020.01.13.23.16.20
+        by smtp.gmail.com with ESMTPSA id b4sm17092976pfd.18.2020.01.13.23.16.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 23:16:22 -0800 (PST)
+        Mon, 13 Jan 2020 23:16:13 -0800 (PST)
 From:   Nicolas Boichat <drinkcat@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -65,9 +65,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, hsinyi@chromium.org
-Subject: [PATCH v3 5/7] drm/panfrost: Add support for multiple power domains
-Date:   Tue, 14 Jan 2020 15:16:00 +0800
-Message-Id: <20200114071602.47627-6-drinkcat@chromium.org>
+Subject: [PATCH v3 2/7] arm64: dts: mt8183: Add node for the Mali GPU
+Date:   Tue, 14 Jan 2020 15:15:57 +0800
+Message-Id: <20200114071602.47627-3-drinkcat@chromium.org>
 X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 In-Reply-To: <20200114071602.47627-1-drinkcat@chromium.org>
 References: <20200114071602.47627-1-drinkcat@chromium.org>
@@ -78,232 +78,185 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When there is a single power domain per device, the core will
-ensure the power domain is switched on (so it is technically
-equivalent to having not power domain specified at all).
-
-However, when there are multiple domains, as in MT8183 Bifrost
-GPU, we need to handle them in driver code.
+Add a basic GPU node for mt8183.
 
 Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-
+Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
 ---
 
-The downstream driver we use on chromeos-4.19 currently uses 2
-additional devices in device tree to accomodate for this [1], but
-I believe this solution is cleaner.
+Upstreaming what matches existing bindings from our Chromium OS tree:
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/arch/arm64/boot/dts/mediatek/mt8183.dtsi#1348
 
-[1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+The evb part of this change depends on this patch to add PMIC dtsi:
+https://patchwork.kernel.org/patch/10928161/
+
+The binding we use with out-of-tree Mali drivers includes more
+clocks, this is used for devfreq: the out-of-tree driver switches
+clk_mux to clk_sub_parent (26Mhz), adjusts clk_main_parent, then
+switches clk_mux back to clk_main_parent:
+(see https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#423)
+clocks =
+        <&topckgen CLK_TOP_MFGPLL_CK>,
+        <&topckgen CLK_TOP_MUX_MFG>,
+        <&clk26m>,
+        <&mfgcfg CLK_MFG_BG3D>;
+clock-names =
+        "clk_main_parent",
+        "clk_mux",
+        "clk_sub_parent",
+        "subsys_mfg_cg";
 
 v3:
- - Use the compatible matching data to specify the number of power
-   domains. Note that setting 0 or 1 in num_pm_domains is equivalent
-   as the core will handle these 2 cases in the exact same way
-   (automatically, without driver intervention), and there should
-   be no adverse consequence in this case (the concern is about
-   switching on only some power domains and not others).
+ - No changes
 
- drivers/gpu/drm/panfrost/panfrost_device.c | 95 ++++++++++++++++++++--
- drivers/gpu/drm/panfrost/panfrost_device.h |  9 ++
- drivers/gpu/drm/panfrost/panfrost_drv.c    |  1 +
- 3 files changed, 97 insertions(+), 8 deletions(-)
+v2:
+ - Use sram instead of mali_sram as SRAM supply name.
+ - Rename mali@ to gpu@.
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index c30e0a3772a4f57..7c9766f76cc7689 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -5,6 +5,7 @@
- #include <linux/clk.h>
- #include <linux/reset.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
- #include <linux/regulator/consumer.h>
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts |   7 ++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 104 ++++++++++++++++++++
+ 2 files changed, 111 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+index 1fb195c683c3d01..7d609e0cd9b4975 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+@@ -7,6 +7,7 @@
  
- #include "panfrost_device.h"
-@@ -119,6 +120,75 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
- 			pfdev->regulators);
- }
+ /dts-v1/;
+ #include "mt8183.dtsi"
++#include "mt6358.dtsi"
  
-+static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
-+		if (!pfdev->pm_domain_devs[i])
-+			break;
-+
-+		if (pfdev->pm_domain_links[i])
-+			device_link_del(pfdev->pm_domain_links[i]);
-+
-+		dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
-+	}
-+}
-+
-+static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
-+{
-+	int err;
-+	int i, num_domains;
-+
-+	num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
-+						 "power-domains",
-+						 "#power-domain-cells");
-+
-+	/*
-+	 * Single domain is handled by the core, and, if only a single power
-+	 * the power domain is requested, the property is optional.
-+	 */
-+	if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
-+		return 0;
-+
-+	if (num_domains != pfdev->comp->num_pm_domains) {
-+		dev_err(pfdev->dev,
-+			"Incorrect number of power domains: %d provided, %d needed\n",
-+			num_domains, pfdev->comp->num_pm_domains);
-+		return -EINVAL;
-+	}
-+
-+	BUG_ON(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs));
-+
-+	for (i = 0; i < num_domains; i++) {
-+		pfdev->pm_domain_devs[i] =
-+			dev_pm_domain_attach_by_id(pfdev->dev, i);
-+		if (IS_ERR(pfdev->pm_domain_devs[i])) {
-+			err = PTR_ERR(pfdev->pm_domain_devs[i]);
-+			pfdev->pm_domain_devs[i] = NULL;
-+			dev_err(pfdev->dev,
-+				"failed to get pm-domain %d: %d\n", i, err);
-+			goto err;
-+		}
-+
-+		pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
-+				pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
-+				DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
-+		if (!pfdev->pm_domain_links[i]) {
-+			dev_err(pfdev->pm_domain_devs[i],
-+				"adding device link failed!\n");
-+			err = -ENODEV;
-+			goto err;
-+		}
-+	}
-+
-+	return 0;
-+
-+err:
-+	panfrost_pm_domain_fini(pfdev);
-+	return err;
-+}
-+
- int panfrost_device_init(struct panfrost_device *pfdev)
- {
- 	int err;
-@@ -149,37 +219,45 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 		goto err_out1;
- 	}
- 
-+	err = panfrost_pm_domain_init(pfdev);
-+	if (err) {
-+		dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
-+		goto err_out2;
-+	}
-+
- 	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
- 	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
- 	if (IS_ERR(pfdev->iomem)) {
- 		dev_err(pfdev->dev, "failed to ioremap iomem\n");
- 		err = PTR_ERR(pfdev->iomem);
--		goto err_out2;
-+		goto err_out3;
- 	}
- 
- 	err = panfrost_gpu_init(pfdev);
- 	if (err)
--		goto err_out2;
-+		goto err_out3;
- 
- 	err = panfrost_mmu_init(pfdev);
- 	if (err)
--		goto err_out3;
-+		goto err_out4;
- 
- 	err = panfrost_job_init(pfdev);
- 	if (err)
--		goto err_out4;
-+		goto err_out5;
- 
- 	err = panfrost_perfcnt_init(pfdev);
- 	if (err)
--		goto err_out5;
-+		goto err_out6;
- 
- 	return 0;
--err_out5:
-+err_out6:
- 	panfrost_job_fini(pfdev);
--err_out4:
-+err_out5:
- 	panfrost_mmu_fini(pfdev);
--err_out3:
-+err_out4:
- 	panfrost_gpu_fini(pfdev);
-+err_out3:
-+	panfrost_pm_domain_fini(pfdev);
- err_out2:
- 	panfrost_reset_fini(pfdev);
- err_out1:
-@@ -196,6 +274,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
- 	panfrost_mmu_fini(pfdev);
- 	panfrost_gpu_fini(pfdev);
- 	panfrost_reset_fini(pfdev);
-+	panfrost_pm_domain_fini(pfdev);
- 	panfrost_regulator_fini(pfdev);
- 	panfrost_clk_fini(pfdev);
- }
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-index 021f063ffb3747f..143eab57180a2e1 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-@@ -21,6 +21,7 @@ struct panfrost_perfcnt;
- 
- #define NUM_JOB_SLOTS 3
- #define MAX_REGULATORS 2
-+#define MAX_PM_DOMAINS 3
- 
- struct panfrost_features {
- 	u16 id;
-@@ -61,6 +62,11 @@ struct panfrost_compatible {
- 	/* Supplies count and names. */
- 	int num_supplies;
- 	const char * const *supply_names;
-+	/*
-+	 * Number of power domains required, note that values 0 and 1 are
-+	 * handled identically, as only values > 1 need special handling.
-+	 */
-+	int num_pm_domains;
+ / {
+ 	model = "MediaTek MT8183 evaluation board";
+@@ -30,6 +31,12 @@ &auxadc {
+ 	status = "okay";
  };
  
- struct panfrost_device {
-@@ -73,6 +79,9 @@ struct panfrost_device {
- 	struct clk *bus_clock;
- 	struct regulator_bulk_data regulators[MAX_REGULATORS];
- 	struct reset_control *rstc;
-+	/* pm_domains for devices with more than one. */
-+	struct device *pm_domain_devs[MAX_PM_DOMAINS];
-+	struct device_link *pm_domain_links[MAX_PM_DOMAINS];
++&gpu {
++	supply-names = "mali", "sram";
++	mali-supply = <&mt6358_vgpu_reg>;
++	sram-supply = <&mt6358_vsram_gpu_reg>;
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c_pins_0>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 1ade9153e5c265b..4da3f1ed1c15bf3 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -597,6 +597,110 @@ mfgcfg: syscon@13000000 {
+ 			#clock-cells = <1>;
+ 		};
  
- 	struct panfrost_features features;
- 	const struct panfrost_compatible* comp;
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index db3563b80150c9d..42b87e29e605149 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -589,6 +589,7 @@ const char * const default_supplies[] = { "mali" };
- static const struct panfrost_compatible default_data = {
- 	.num_supplies = ARRAY_SIZE(default_supplies),
- 	.supply_names = default_supplies,
-+	.num_pm_domains = 1, /* optional */
- };
- 
- static const struct of_device_id dt_match[] = {
++		gpu: gpu@13040000 {
++			compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
++			reg = <0 0x13040000 0 0x4000>;
++			interrupts =
++				<GIC_SPI 280 IRQ_TYPE_LEVEL_LOW>,
++				<GIC_SPI 279 IRQ_TYPE_LEVEL_LOW>,
++				<GIC_SPI 278 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-names = "job", "mmu", "gpu";
++
++			clocks = <&topckgen CLK_TOP_MFGPLL_CK>;
++
++			power-domains =
++				<&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>,
++				<&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>,
++				<&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
++
++			operating-points-v2 = <&gpu_opp_table>;
++		};
++
++		gpu_opp_table: opp_table0 {
++			compatible = "operating-points-v2";
++			opp-shared;
++
++			opp-300000000 {
++				opp-hz = /bits/ 64 <300000000>;
++				opp-microvolt = <625000>, <850000>;
++			};
++
++			opp-320000000 {
++				opp-hz = /bits/ 64 <320000000>;
++				opp-microvolt = <631250>, <850000>;
++			};
++
++			opp-340000000 {
++				opp-hz = /bits/ 64 <340000000>;
++				opp-microvolt = <637500>, <850000>;
++			};
++
++			opp-360000000 {
++				opp-hz = /bits/ 64 <360000000>;
++				opp-microvolt = <643750>, <850000>;
++			};
++
++			opp-380000000 {
++				opp-hz = /bits/ 64 <380000000>;
++				opp-microvolt = <650000>, <850000>;
++			};
++
++			opp-400000000 {
++				opp-hz = /bits/ 64 <400000000>;
++				opp-microvolt = <656250>, <850000>;
++			};
++
++			opp-420000000 {
++				opp-hz = /bits/ 64 <420000000>;
++				opp-microvolt = <662500>, <850000>;
++			};
++
++			opp-460000000 {
++				opp-hz = /bits/ 64 <460000000>;
++				opp-microvolt = <675000>, <850000>;
++			};
++
++			opp-500000000 {
++				opp-hz = /bits/ 64 <500000000>;
++				opp-microvolt = <687500>, <850000>;
++			};
++
++			opp-540000000 {
++				opp-hz = /bits/ 64 <540000000>;
++				opp-microvolt = <700000>, <850000>;
++			};
++
++			opp-580000000 {
++				opp-hz = /bits/ 64 <580000000>;
++				opp-microvolt = <712500>, <850000>;
++			};
++
++			opp-620000000 {
++				opp-hz = /bits/ 64 <620000000>;
++				opp-microvolt = <725000>, <850000>;
++			};
++
++			opp-653000000 {
++				opp-hz = /bits/ 64 <653000000>;
++				opp-microvolt = <743750>, <850000>;
++			};
++
++			opp-698000000 {
++				opp-hz = /bits/ 64 <698000000>;
++				opp-microvolt = <768750>, <868750>;
++			};
++
++			opp-743000000 {
++				opp-hz = /bits/ 64 <743000000>;
++				opp-microvolt = <793750>, <893750>;
++			};
++
++			opp-800000000 {
++				opp-hz = /bits/ 64 <800000000>;
++				opp-microvolt = <825000>, <925000>;
++			};
++		};
++
+ 		mmsys: syscon@14000000 {
+ 			compatible = "mediatek,mt8183-mmsys", "syscon";
+ 			reg = <0 0x14000000 0 0x1000>;
 -- 
 2.25.0.rc1.283.g88dfdc4193-goog
 
