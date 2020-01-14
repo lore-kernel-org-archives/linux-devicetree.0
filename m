@@ -2,233 +2,171 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1177C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AA8C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A2A24655
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35AC24658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 16:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QY0wpVGc";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="hiTdlU8Z"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="f59Lp2Vi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgANQO3 (ORCPT
+        id S1728748AbgANQTQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:14:29 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:41780 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726839AbgANQO3 (ORCPT
+        Tue, 14 Jan 2020 11:19:16 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.8]:49706 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726495AbgANQTP (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:14:29 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 1B4FB406C5;
-        Tue, 14 Jan 2020 16:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1579018468; bh=ANkLIcWK572m4euIqvA70RwL1TJCQd02P1eS11O8fwc=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=QY0wpVGc/0cffrDd5uQaF+Sd1BkH6aEq+WyFiF60uki06V5UbB6zADLQH2J4A254j
-         LYjdXUVJo9Z9osC6dsYRs0P8afVEmhkFsdM7Lx5H+loB3ZyA65ecGpaz8bAmhA/TJk
-         xsPhAR6ZnT07KE5K1NftP0TegxVGnlUUeQUNiBYfLa19KkLbw+qXQeYdQC2eZKEGLp
-         moI2DgwBRw0Pmz1zyMQuwkBksGPqfTQB0oFncMjMdg8epbob6ZwsB7Lpl9u+inyfar
-         KUIqtP4y+YTxmI5OH3kyRMcOQkvm8nFwvtxjAdDJZ1TgBWR/okjxCd7VLH77W5YvWL
-         hccna4M+0pAoA==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 5264BA007F;
-        Tue, 14 Jan 2020 16:14:27 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 14 Jan 2020 08:14:16 -0800
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Tue, 14 Jan 2020 08:14:15 -0800
+        Tue, 14 Jan 2020 11:19:15 -0500
+Received: from [46.226.52.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-8.bemta.az-a.eu-west-1.aws.symcld.net id 7D/12-02751-BF9ED1E5; Tue, 14 Jan 2020 16:19:07 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJJsWRWlGSWpSXmKPExsWSoc9jrfvrpWy
+  cQc8vXYv5R86xWqyaupPF4v7Xo4wWl3fNYbO4sW4fu8WThWeYLD7susps0br3CLsDh8emVZ1s
+  Hneu7WHz6P9r4LHzewO7x+dNcgGsUayZeUn5FQmsGS1vlzMWfOKs2H7jNFMD42qOLkYuDkaBp
+  cwSLy5/Y4JwjrFI9M04xwLhbGaU+N37kw3EYRE4wSzxoXE7K4gjJDCRSWLzmj+MXYycQM5dRo
+  ml331AbDYBC4nJJx6AdYgInGSS6D/3Emwws8BnRomXfXtZQKqEBVwkLj04zgRiiwi4SlxfeII
+  NwjaSWPThIDOIzSKgKrF9wyowm1cgVuLnmk2sENvyJFatnA5mcwrYSty88wnMZhSQlfjSuBqs
+  nllAXOLWk/lg8yUEBCSW7DnPDGGLSrx8/A+qPlXiZNMNRoi4jsTZ60+gbCWJeXOPQNmyEpfmd
+  0PZvhLPLs8FsjmAbC2J29u1IcIWEku6W1kgwioS/w5VQoRzJK5uu8kGYatJbJq4DcqWkeg/Ow
+  MciBIC75kl7p/ZwTyBUX8WkqshbB2JBbs/sUHY2hLLFr5mngUOCUGJkzOfsCxgZFnFaJFUlJm
+  eUZKbmJmja2hgoGtoaKRraGmka2RkoZdYpZuol1qqW55aXKJrqJdYXqxXXJmbnJOil5dasokR
+  mMpSCg482cH47eNbvUOMkhxMSqK8Intk44T4kvJTKjMSizPii0pzUosPMcpwcChJ8Fq8AMoJF
+  qWmp1akZeYA0ypMWoKDR0mEtwQkzVtckJhbnJkOkTrFqMsx4eXcRcxCLHn5ealS4rwCwCQtJA
+  BSlFGaBzcCluIvMcpKCfMyMjAwCPEUpBblZpagyr9iFOdgVBLmtQaZwpOZVwK36RXQEUxAR8w
+  /BXZESSJCSqqBqemh9b2CK5e/70g/PadGVrX9yowYPpZDhXXNR+fcfZB822LWr+c/BNYmbUjv
+  rXKS4J8eNluhfXbj1EaVb/ctkrWuRv9juDJHysHvYa1edWn+geveQTsS86NjtmyLf91daXAz6
+  YLwlYJzqxKuWz13M/Y4m2Z368K55Wk1MY3e0+rm2dbYznlhs7Ky6PONYz/XGR2cNLsmw3kaf0
+  Iak5sZE1+yY7Dr4p2+R+bsvbzcYGM3I49Q9NT8PvWDX+v1Lx2uzjfYt6DJ/nUOe8fkJnf5B+V
+  1K8RMs6pyZG/UmIT90Q6REp54z4ctpGxuyjTbf8IiJS5zpYK1i+cqGJh3X9W4pbvimqxegGLp
+  b94bX/YrsRRnJBpqMRcVJwIAzL34+mwEAAA=
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-10.tower-268.messagelabs.com!1579018746!371452!1
+X-Originating-IP: [104.47.12.59]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.25; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 10365 invoked from network); 14 Jan 2020 16:19:06 -0000
+Received: from mail-db3eur04lp2059.outbound.protection.outlook.com (HELO EUR04-DB3-obe.outbound.protection.outlook.com) (104.47.12.59)
+  by server-10.tower-268.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 14 Jan 2020 16:19:06 -0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PQ3wU0l6FrcnkiXLxxhyVMU9POPYrcCpRDUurbVlBg73yBo+FnTO/AWXuYh+7aILSV4GLAu8ADmu+tOVXx7D8YkeFM3c46IGo11ndop1rqVztpjaoCzB8lB8hgloXhW/etcPOr+v89Duiw81qJGe5dcl2Tj2xKdFUFfpN/qVYTNSUeiIyNlnlfHAV30vfiVla5JA3KzzICNOnCKVvKxIUveo/j9nDzNTv7MoBM01g6Vly0MkLczOjJDJ1eRj/tZdwz7GjGXnlKs5cKDTnw17q1MhjNGlaeuiAQOMcglhzmkhN5PsCzp10dYSfzGWm/WlP5STvIDn+ZqiA90o56kyZw==
+ b=LGeS2slT2Y1w1u8y9tEe/JP603djh2t15wDPeVwNv5DD8z+D9QZ9dUuHtTRmOausam2VXJjFf8jWkVi44B+4hrnskLx/a8nzQwP8xJ3Gvt/XVS+WPeVGclgiNXqci2fZZtnU/uFYODGj1xiaWIdwxQHmWkHfuapJe3ptt6x9v6F9yOmAZ7MGgTEvHo6u7FMwTDHmpbdjud3aGB+wBbFzNstdk9AML3Dj7QfS7ZFkG31heR1gOdE6+w2/5DbtVoQqK4gDAJOaqGDtItq+ZTxEx1XpXJ7T2D2LouEkFbqv4L+DxY1ccrZboeTqv6GsqRtyU0BXikeyAutmSc8ubrVl3g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ANkLIcWK572m4euIqvA70RwL1TJCQd02P1eS11O8fwc=;
- b=XEbXd5sGeyNpPFr3xYuF+aCoQ/nWYFtl26vjo+/qJ+du0f6YTHW7+7G4oAjtktdzwe8GeAoR+qzHfpuLn+LyAcOuY8JyYtoeoTBUeK2LQ/D8ouGwKicqID4RQUVtk1R+Xui9j5aR/UvXAMkF1aGwMW2hSZ2aBbRZbxE67nN9G2jwHn90wurimNFWmjYUXqZ5yQPVJoZXotnuzcZcpQiX6U6zIBvyBZwAErE4K7phkHT3N+IYtdITcbLPCZ8GaBwyw+JpSZppx9tOntV/NCXyy3cLtrOIStruvXzrqWhaKlQkznLEFm7PR43xrrg003cYrNzFRxpT1pvpYsZIn2Kxrg==
+ bh=svcHoSh7sOp0g5ayscJMDcOBjXVtcAI7SGWowf926eg=;
+ b=hSq1IODQFZf9UeER5+4p3keFz/4G9TSF6q8IA3LnB16fO2a4/HkTCZQHR0K5Z/lOmslZ4Vw6IHXbdbJpwjbaSWiOeBDnIMdaX2sNqp5Rz7fKTro+IEj7XIhnui+jeu1z+z2bPfrhzhbvfX08Nfpq6C8IkQmxHWTPcYWx7I7mS7pqyVFahBTep+TYxxM6ZQ4Mhmm+SN6j/jTCDK40H9+JrHNbY7XKmHEwgTxnkl+hd6OK3fvbOYeC3uLkvOoMzMiYRET9BdE/mi0KQnNmKpKSo2OuIfzTw8JGRBziP+7w3WVn8GkM5hZBLXbkgMB4038/aijoJH5Kl/9P3PMcbHKn1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ANkLIcWK572m4euIqvA70RwL1TJCQd02P1eS11O8fwc=;
- b=hiTdlU8ZigTMyUjBAdcoZpXmvIM5W3P27WJ87boe7HD9Y3FlCZLyDcNco43Pb2m7187SaI+TLGLUeTQgwTrOewQQpnfacxdTC6xOY23mwClSzI8NQxQBc/OB0ekuu4lfDWarAUkdcj//D8xt9LjEMiLgU0uS/sVLjP2LRmp16+g=
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
- CY4PR1201MB0069.namprd12.prod.outlook.com (10.172.77.17) with Microsoft SMTP
+ bh=svcHoSh7sOp0g5ayscJMDcOBjXVtcAI7SGWowf926eg=;
+ b=f59Lp2VizeeF9VzwfO5MgdomtV1dsAP7tIg0qeRnHw67zMkV8nsDTyeLDk4NZqWsGH/EqgxkroTNhkbzExssvS9ny9r/GQH2fw+aAvoqAM7N70kfOLyUEDJ2ebuYB7NrLcPkbtSVv0kSdaBLuJi2v6L0rB+5UBkIgfr2v7m534o=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
+ AM6PR10MB2518.EURPRD10.PROD.OUTLOOK.COM (20.177.115.31) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Tue, 14 Jan 2020 16:14:14 +0000
-Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::3977:e2ba:ce57:f79a]) by CY4PR1201MB0120.namprd12.prod.outlook.com
- ([fe80::3977:e2ba:ce57:f79a%5]) with mapi id 15.20.2623.015; Tue, 14 Jan 2020
- 16:14:14 +0000
-From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Vineet Gupta" <Vineet.Gupta1@synopsys.com>,
+ 15.20.2623.14; Tue, 14 Jan 2020 16:19:04 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9be:9fca:6def:97c3]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9be:9fca:6def:97c3%5]) with mapi id 15.20.2623.017; Tue, 14 Jan 2020
+ 16:19:04 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH net 4/4] ARC: [plat-axs10x]: Add missing multicast filter
- number to GMAC node
-Thread-Topic: [PATCH net 4/4] ARC: [plat-axs10x]: Add missing multicast filter
- number to GMAC node
-Thread-Index: AQHVyvUeEgWlF/s9XUGcbzZNh2Hp+qfqVPRw
-Date:   Tue, 14 Jan 2020 16:14:14 +0000
-Message-ID: <CY4PR1201MB0120587330B21F03600B4204A1340@CY4PR1201MB0120.namprd12.prod.outlook.com>
-References: <cover.1579017787.git.Jose.Abreu@synopsys.com>
- <b1abebaf6ac9a0176b82e179944a455fbf1d7a15.1579017787.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <b1abebaf6ac9a0176b82e179944a455fbf1d7a15.1579017787.git.Jose.Abreu@synopsys.com>
-Accept-Language: en-US
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
+Thread-Topic: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
+Thread-Index: AQHVxgoH+VEwCd0goUCdzD0vjKNBfafqYIMg
+Date:   Tue, 14 Jan 2020 16:19:04 +0000
+Message-ID: <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-2-m.felsch@pengutronix.de>
+In-Reply-To: <20200108095704.23233-2-m.felsch@pengutronix.de>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYWJyb2RraW5c?=
- =?us-ascii?Q?YXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRi?=
- =?us-ascii?Q?YTI5ZTM1Ylxtc2dzXG1zZy1lNjZkZWE5Ny0zNmU4LTExZWEtODAwMy04OGIx?=
- =?us-ascii?Q?MTFjZGUyMTdcYW1lLXRlc3RcZTY2ZGVhOTktMzZlOC0xMWVhLTgwMDMtODhi?=
- =?us-ascii?Q?MTExY2RlMjE3Ym9keS50eHQiIHN6PSIxMDA2IiB0PSIxMzIyMzQ5MjA1MjQ2?=
- =?us-ascii?Q?MzcwNzYiIGg9IlBBclVKc0tiWDc4M3ZTMCtrVUdDem1RSUtIOD0iIGlkPSIi?=
- =?us-ascii?Q?IGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUJRSkFB?=
- =?us-ascii?Q?Q1U0OFdvOWNyVkFab2tMck5veFVlZG1pUXVzMmpGUjUwT0FBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFIQUFBQUNrQ0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFRQUJBQUFBUlgyazFBQUFBQUFBQUFBQUFBQUFBSjRBQUFCbUFHa0Fi?=
- =?us-ascii?Q?Z0JoQUc0QVl3QmxBRjhBY0FCc0FHRUFiZ0J1QUdrQWJnQm5BRjhBZHdCaEFI?=
- =?us-ascii?Q?UUFaUUJ5QUcwQVlRQnlBR3NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
- =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3Qm5BR1lBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
- =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
- =?us-ascii?Q?bEFISUFjd0JmQUhNQVlRQnRBSE1BZFFCdUFHY0FYd0JqQUc4QWJnQm1BQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
- =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFjd0Jo?=
- =?us-ascii?Q?QUcwQWN3QjFBRzRBWndCZkFISUFaUUJ6QUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
- =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCekFHMEFhUUJqQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
- =?us-ascii?Q?QUFBQUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFi?=
- =?us-ascii?Q?Z0JsQUhJQWN3QmZBSE1BZEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1B?=
- =?us-ascii?Q?RzhBZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWRB?=
- =?us-ascii?Q?QnpBRzBBWXdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFI?=
- =?us-ascii?Q?a0FYd0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0IxQUcwQVl3QUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
- =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFad0IwQUhNQVh3QndBSElBYndCa0FIVUFZd0IwQUY4?=
- =?us-ascii?Q?QWRBQnlBR0VBYVFCdUFHa0FiZ0JuQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
- =?us-ascii?Q?ekFHRUFiQUJsQUhNQVh3QmhBR01BWXdCdkFIVUFiZ0IwQUY4QWNBQnNBR0VB?=
- =?us-ascii?Q?YmdBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSE1BWVFCc0FHVUFjd0Jm?=
- =?us-ascii?Q?QUhFQWRRQnZBSFFBWlFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
- =?us-ascii?Q?QUFBQ0FBQUFBQUNlQUFBQWN3QnVBSEFBY3dCZkFHd0FhUUJqQUdVQWJnQnpB?=
- =?us-ascii?Q?R1VBWHdCMEFHVUFjZ0J0QUY4QU1RQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFB?=
- =?us-ascii?Q?QUJ6QUc0QWNBQnpBRjhBYkFCcEFHTUFaUUJ1QUhNQVpRQmZBSFFBWlFCeUFH?=
- =?us-ascii?Q?MEFYd0J6QUhRQWRRQmtBR1VBYmdCMEFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFIWUFad0JmQUdzQVpR?=
- =?us-ascii?Q?QjVBSGNBYndCeUFHUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFB?=
- =?us-ascii?Q?QUFBQUFDQUFBQUFBQT0iLz48L21ldGE+?=
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abrodkin@synopsys.com; 
-x-originating-ip: [188.243.7.154]
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 500d3da6-61d9-48a7-b798-08d7990ccc5d
-x-ms-traffictypediagnostic: CY4PR1201MB0069:
+x-ms-office365-filtering-correlation-id: 20f9947f-a04a-4f11-4e5f-08d7990d7975
+x-ms-traffictypediagnostic: AM6PR10MB2518:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB0069252302F80AD7D818F999A1340@CY4PR1201MB0069.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-microsoft-antispam-prvs: <AM6PR10MB2518FAE2E4E7604D1EE00E58A7340@AM6PR10MB2518.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
 x-forefront-prvs: 028256169F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(39860400002)(376002)(346002)(199004)(189003)(86362001)(8936002)(66946007)(64756008)(66446008)(33656002)(66556008)(66476007)(55016002)(76116006)(52536014)(6636002)(6862004)(5660300002)(2906002)(478600001)(7696005)(4744005)(6506007)(53546011)(54906003)(8676002)(71200400001)(26005)(4326008)(186003)(81166006)(81156014)(9686003)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0069;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(26005)(55016002)(54906003)(71200400001)(8936002)(110136005)(8676002)(9686003)(81166006)(81156014)(55236004)(6506007)(53546011)(7696005)(498600001)(52536014)(86362001)(76116006)(66446008)(66476007)(66946007)(64756008)(33656002)(66556008)(186003)(2906002)(5660300002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2518;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WgMrK8tGLAXOWLY+MjreUMlNnspER6mj9oMFeE1UM93Uc+H9FgvGd+LxsV+/G8mwhIhCO7XZyrsGWH2u4BiFuJtzQIoZ2uymiaKKEakX5NSgreVGKB3w+GvzopKqbsTSyDFhKtkQoaOOz/bba6EYpL4yeYD7lyVy1IO7DWfkNQ10DhCpt3XPryaKRbRVRmeJ93VmQQGGSbZnBml98ibuymGkJ2d36MwOT/InLPiUry+s8drWCY/CeVtEB7FUh6n5GRkyZtWf5r1/9wRxrpC/ILKMsb61lbJB1OJzHOIfsJfn+lqmv6mW2AO4BYlMLQhBcFJrHB4hesYw3L0KzRwVp5pwVAOUIAa3R/xOAhdMSJh2BeuNLuh/pRCt2zrqx96phIMqZHQrHrXPzA65PCn54F/8Ih3exvHXFWgD1o6ORh5PBXukuzka0EDQs394om3Z
+x-microsoft-antispam-message-info: DIxcMtydyy7HJbqhoBe6a9p1EtFmrVVIq8+22rDFg0qrn3dK3i+hyxrm7S5I8ig4y/esYdNjSl4UK0VdSaaRA0uzpGzjNmFrdWng1glIUYwXWyLU5D7xLymbDvbzmD0MgoGcdRsYnU/IrGkENxWL/B3huol1m53PfPm5B+Yvl471w5mhSpga3kIYoFnEwnb511EWivg/JvaMTIsZjq+0z1kp5wZD47oPaRlI8TwzZKpMaxeQCOyK7N8TrKrI5eyHsJCADmW6ocWlDbeki+Ojf92hYFMOLl/HT4n8vzPZlA72xV45pNWznyT6K9qAEQ/GaFhoCHIzvKk89OFPAEB9ED4y1o+pi+WcAA3SAAf3hICy0dKPeXxYH7RgxlTE+yiB2i2lxf6PflouQRjw8U9D36KrF1TEbkCsdiKK8aP1NYm2dxabrIljNOPDPi6dpy6v
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 500d3da6-61d9-48a7-b798-08d7990ccc5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:14:14.1916
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20f9947f-a04a-4f11-4e5f-08d7990d7975
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jan 2020 16:19:04.6010
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1a7v2FKJDDvsqbIyJujV/uLJ0sNJyZSujfvRclRSnQl3GmluQ2r2nxK3DP7REC6fX++lXlE7lNtHdOURZgvkUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0069
-X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-userprincipalname: jYl8qDO9c1BnaSk0CLzNCC8LugoIOvff5lL5Kd7oE7IQ2FiCAPyhEL8eb7citcWXIhfkig1OqK4OSwhqfJUhv9Va4fLjd0I1lLd0IKFSP1s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2518
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jose,
+On 08 January 2020 09:57, Marco Felsch wrote:
 
-> -----Original Message-----
-> From: Jose Abreu <Jose.Abreu@synopsys.com>
-> Sent: Tuesday, January 14, 2020 7:09 PM
-> To: netdev@vger.kernel.org
-> Cc: Joao Pinto <jpinto@synopsys.com>; Jose Abreu <joabreu@synopsys.com>; =
-Alexey Brodkin
-> <abrodkin@synopsys.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <=
-mark.rutland@arm.com>; Vineet
-> Gupta <vgupta@synopsys.com>; devicetree@vger.kernel.org; linux-snps-arc@l=
-ists.infradead.org; linux-
-> kernel@vger.kernel.org
-> Subject: [PATCH net 4/4] ARC: [plat-axs10x]: Add missing multicast filter=
- number to GMAC node
+> The watchdog driver compatible is "dlg,da9062-watchdog" and not
+> "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
+> fwnode. As result the watchdog driver can't parse the devicetree.
 >=20
-> Add a missing property to GMAC node so that multicast filtering works
-> correctly.
->=20
-> Fixes: 556cc1c5f528 ("ARC: [axs101] Add support for AXS101 SDP (software =
-development platform)")
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+I do agree there's a mismatch between the documentation and the MFD code.
+So in your DT are you specifying 'dlg,da9062-watchdog' and not 'dlg,da9062-=
+wdt'
+hence the issue? Are there any existing users who are using 'dlg,da9062-wdt=
+' in
+their DT instead?
+
+> Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  drivers/mfd/da9062-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+> index e69626867c26..9143de7b77b8 100644
+> --- a/drivers/mfd/da9062-core.c
+> +++ b/drivers/mfd/da9062-core.c
+> @@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] =3D {
+>  		.name		=3D "da9062-watchdog",
+>  		.num_resources	=3D ARRAY_SIZE(da9062_wdt_resources),
+>  		.resources	=3D da9062_wdt_resources,
+> -		.of_compatible  =3D "dlg,da9062-wdt",
+> +		.of_compatible  =3D "dlg,da9062-watchdog",
+>  	},
+>  	{
+>  		.name		=3D "da9062-thermal",
+> --
+> 2.20.1
 
