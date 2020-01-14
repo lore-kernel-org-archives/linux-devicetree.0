@@ -2,215 +2,104 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDDFC33CAD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE14C4741C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCC7222C4
+	by mail.kernel.org (Postfix) with ESMTP id E636C207E0
 	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 07:25:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rykc2x8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgANHYr (ORCPT
+        id S1729151AbgANHYo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:24:47 -0500
-Received: from lucky1.263xmail.com ([211.157.147.130]:48156 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729015AbgANHYq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:24:46 -0500
-Received: from localhost (unknown [192.168.167.16])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 124AC7CF0C;
-        Tue, 14 Jan 2020 15:24:42 +0800 (CST)
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P5437T140292994864896S1578986620990337_;
-        Tue, 14 Jan 2020 15:24:42 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <f25456ee66a8a74a07826691950c75a3>
-X-RL-SENDER: shawn.lin@rock-chips.com
-X-SENDER: lintao@rock-chips.com
-X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Shawn Lin <shawn.lin@rock-chips.com>
-To:     Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 4/6] dt-bindings: rockchip: Add DesignWare based PCIe controller
-Date:   Tue, 14 Jan 2020 15:22:58 +0800
-Message-Id: <1578986580-71974-5-git-send-email-shawn.lin@rock-chips.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
+        Tue, 14 Jan 2020 02:24:44 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13262 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729129AbgANHYo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 02:24:44 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1d6c840001>; Mon, 13 Jan 2020 23:23:49 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jan 2020 23:24:43 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jan 2020 23:24:43 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 07:24:42 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 14 Jan 2020 07:24:42 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.169.242]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e1d6cb90003>; Mon, 13 Jan 2020 23:24:42 -0800
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <digetx@gmail.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 17/22] ASoC: nau8825: change Tegra clk_out_2 provider to tegra_pmc
+Date:   Mon, 13 Jan 2020 23:24:22 -0800
+Message-ID: <1578986667-16041-18-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
+References: <1578986667-16041-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
+MIME-Version: 1.0
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578986629; bh=pWNZAo13Br7GvFxHxRFIS/1sozX6HF632kX/lxY43iQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=rykc2x8E9KoeCszN8vs2smSy3V/kR1R6KO2wQH7JzY8CHfR+fOB22rgxYlOuVPZwX
+         nxa0iS4xlhZEPcTeEtdlslY8+/ZXH1SzyTgSuu77UuHgZnBKFhLuvb6AqIov3Y/oHR
+         2KYkzS0zA8qic9tDkZfOMqmIMsxGQAXba0PykfChJldHlsXdz2cuiZwT0RbUWjgoR+
+         gFxbQg5nQw3Xv0dQPG0dm2k9R0Z72m68wY9p3kbFOz7VxPfiXWdDtnDCtUaFyF1z/l
+         u1CPUJz+NI8OUqUx0U2fS/jewk5xeN5c5HW3SWb5BV4QKpk2B8BrDJ3ZPYwE/IahrH
+         JszxP08gG9FgQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Simon Xue <xxm@rock-chips.com>
+Tegra clk_out_1, clk_out_2, and clk_out_3 are part of PMC block and
+these clocks are moved from clock drvier to pmc driver with pmc as
+a provider for these clocks.
 
-Signed-off-by: Simon Xue <xxm@rock-chips.com>
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Update bindings document to use pmc as clock provider for clk_out_2 and
+change id to pmc clock id.
+
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
+ Documentation/devicetree/bindings/sound/nau8825.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../devicetree/bindings/pci/rockchip-dw-pcie.yaml  | 132 +++++++++++++++++++++
- 1 file changed, 132 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-new file mode 100644
-index 0000000..c5205f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DesignWare based PCIe RC controller on Rockchip SoCs
-+
-+maintainers:
-+        - Shawn Lin <shawn.lin@rock-chips.com>
-+        - Simon Xue <xxm@rock-chips.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk1808-pcie
-+      - snps,dw-pcie
-+
-+  reg:
-+    maxItems: 2
-+
-+  clocks:
-+    items:
-+      - description: High speed clock for PCIe
-+      - description: Low speed clock for PCIe
-+      - description: AHB clock for PCIe
-+      - description: APB clock for PCIe
-+      - description: Auxiliary clock for PCIe
-+
-+  clock-names:
-+    items:
-+      - const: hsclk
-+      - const: lsclk
-+      - const: aclk
-+      - const: pclk
-+      - const: sclk-aux
-+
-+  resets:
-+    items:
-+      - description: PCIe niu high reset line
-+      - description: PCIe niu low reset line
-+      - description: PCIe grf reset line
-+      - description: PCIe control reset line
-+      - description: PCIe control powerup reset line
-+      - description: PCIe control master reset line
-+      - description: PCIe control slave reset line
-+      - description: PCIe control dbi reset line
-+      - description: PCIe control button reset line
-+      - description: PCIe control power engine reset line
-+      - description: PCIe control core reset line
-+      - description: PCIe control non-sticky reset line
-+      - description: PCIe control sticky reset line
-+      - description: PCIe control power reset line
-+      - description: PCIe niu ahb reset line
-+      - description: PCIe niu apb reset line
-+
-+  reset-names:
-+    items:
-+      - const: niu-h
-+      - const: niu-l
-+      - const: grf-p
-+      - const: ctl-p
-+      - const: ctl-powerup
-+      - const: ctl-mst-a
-+      - const: ctl-slv-a
-+      - const: ctl-dbi-a
-+      - const: ctl-button
-+      - const: ctl-pe
-+      - const: ctl-core
-+      - const: ctl-nsticky
-+      - const: ctl-sticky
-+      - const: ctl-pwr
-+      - const: ctl-niu-a
-+      - const: ctl-niu-p
-+
-+  rockchip,usbpciegrf:
-+    items:
-+      - description: The grf for COMBPHY configuration and state registers.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - msi-map
-+  - num-lanes
-+  - phys
-+  - phy-names
-+  - resets
-+  - reset-names
-+  - rockchip,usbpciegrf
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    usb_pcie_grf: syscon@fe040000 {
-+        compatible = "rockchip,usb-pcie-grf", "syscon";
-+        reg = <0x0 0xfe040000 0x0 0x1000>;
-+    };
-+
-+    pcie0: pcie@fc400000 {
-+        compatible = "rockchip,rk1808-pcie", "snps,dw-pcie";
-+        reg = <0x0 0xfc000000 0x0 0x400000>,
-+              <0x0 0xfc400000 0x0 0x10000>;
-+        clocks = <&cru HSCLK_PCIE>, <&cru LSCLK_PCIE>,
-+                 <&cru ACLK_PCIE>, <&cru PCLK_PCIE>,
-+                 <&cru SCLK_PCIE_AUX>;
-+        clock-names = "hsclk", "lsclk",
-+                      "aclk", "pclk",
-+                      "sclk-aux";
-+        msi-map = <0x0 &its 0x0 0x1000>;
-+        num-lanes = <2>;
-+        phys = <&combphy PHY_TYPE_PCIE>;
-+        phy-names = "pcie-phy";
-+        resets = <&cru SRST_PCIE_NIU_H>, <&cru SRST_PCIE_NIU_L>,
-+                 <&cru SRST_PCIEGRF_P>, <&cru SRST_PCIECTL_P>,
-+                 <&cru SRST_PCIECTL_POWERUP>, <&cru SRST_PCIECTL_MST_A>,
-+                 <&cru SRST_PCIECTL_SLV_A>, <&cru SRST_PCIECTL_DBI_A>,
-+                 <&cru SRST_PCIECTL_BUTTON>, <&cru SRST_PCIECTL_PE>,
-+                 <&cru SRST_PCIECTL_CORE>, <&cru SRST_PCIECTL_NSTICKY>,
-+                 <&cru SRST_PCIECTL_STICKY>, <&cru SRST_PCIECTL_PWR>,
-+                 <&cru SRST_PCIE_NIU_A>, <&cru SRST_PCIE_NIU_P>;
-+        reset-names = "niu-h", "niu-l", "grf-p", "ctl-p",
-+                      "ctl-powerup", "ctl-mst-a", "ctl-slv-a",
-+                      "ctl-dbi-a", "ctl-button", "ctl-pe",
-+                      "ctl-core", "ctl-nsticky", "ctl-sticky",
-+                      "ctl-pwr", "ctl-niu-a", "ctl-niu-p";
-+        rockchip,usbpciegrf = <&usb_pcie_grf>;
-+    };
-+
-+...
+diff --git a/Documentation/devicetree/bindings/sound/nau8825.txt b/Documentation/devicetree/bindings/sound/nau8825.txt
+index d16d96839bcb..388a7bc60b1f 100644
+--- a/Documentation/devicetree/bindings/sound/nau8825.txt
++++ b/Documentation/devicetree/bindings/sound/nau8825.txt
+@@ -101,5 +101,5 @@ Example:
+       nuvoton,crosstalk-enable;
+ 
+       clock-names = "mclk";
+-      clocks = <&tegra_car TEGRA210_CLK_CLK_OUT_2>;
++      clocks = <&tegra_pmc TEGRA_PMC_CLK_OUT_2>;
+   };
 -- 
-1.9.1
-
-
+2.7.4
 
