@@ -2,103 +2,125 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DC5C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C7DC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE8DC24672
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 10:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809722467D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 11:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579000020;
+	bh=NUepL9I8VxhkL/G0N0NYGcEM4cH+wKLTDcaEIcpguBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m6nH/Q9HcvyIIYdpct/bIfTG44sGmPto6f53sC8MdiIyfhmlL8ukHV9XpyX20n6RM
+	 dymvUXZ+6iASN7pEz3TifC6q/D7aZQIwoo1fxre86pxWpWs6SMrxlV2qE9ZbWf++c+
+	 BryGCYDqURcGJ7Y8i9GzkUPp9p392qMB8a1tIlt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgANKrQ (ORCPT
+        id S1726053AbgANLG7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:47:16 -0500
-Received: from mga06.intel.com ([134.134.136.31]:15619 "EHLO mga06.intel.com"
+        Tue, 14 Jan 2020 06:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgANKrP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:47:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 02:47:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
-   d="scan'208";a="248013848"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga004.fm.intel.com with ESMTP; 14 Jan 2020 02:47:12 -0800
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, robh@kernel.org
-Cc:     kishon@ti.com, devicetree@vger.kernel.org,
-        cheol.yong.kim@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v1] dt-bindings: phy: Fix for intel,lgm-emmc-phy.yaml build error
-Date:   Tue, 14 Jan 2020 18:47:10 +0800
-Message-Id: <20200114104710.23135-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        id S1725956AbgANLG7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:06:59 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6F0206D5;
+        Tue, 14 Jan 2020 11:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579000018;
+        bh=NUepL9I8VxhkL/G0N0NYGcEM4cH+wKLTDcaEIcpguBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZUXDxIj3k1xuPdIk/43rzWfhLIyHVCsu6peTMrszGiIL2GjqQGiwJBY+YMhXjZ9Qu
+         hYIVZExluD75rG7RLmMDyAZDrmqM0ooSK5PGWTvVRgb5PqsNA9meXdzClU84zB9kZu
+         vjyxEKvFPeISAkzr+LkiY2R4VxGgYDHQba/bS0es=
+Date:   Tue, 14 Jan 2020 11:06:52 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v4 06/13] iommu/arm-smmu-v3: Add context descriptor
+ tables allocators
+Message-ID: <20200114110651.GA29222@willie-the-truck>
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20191219163033.2608177-7-jean-philippe@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191219163033.2608177-7-jean-philippe@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Thu, Dec 19, 2019 at 05:30:26PM +0100, Jean-Philippe Brucker wrote:
+> Support for SSID will require allocating context descriptor tables. Move
+> the context descriptor allocation to separate functions.
+> 
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 57 ++++++++++++++++++++++++++++++-------
+>  1 file changed, 46 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index b287e303b1d7..43d6a7ded6e4 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -568,6 +568,7 @@ struct arm_smmu_cd_table {
+>  struct arm_smmu_s1_cfg {
+>  	struct arm_smmu_cd_table	table;
+>  	struct arm_smmu_ctx_desc	cd;
+> +	u8				s1cdmax;
+>  };
+>  
+>  struct arm_smmu_s2_cfg {
+> @@ -1455,6 +1456,31 @@ static int arm_smmu_cmdq_issue_sync(struct arm_smmu_device *smmu)
+>  }
+>  
+>  /* Context descriptor manipulation functions */
+> +static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
+> +					struct arm_smmu_cd_table *table,
+> +					size_t num_entries)
+> +{
+> +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+> +
+> +	table->ptr = dmam_alloc_coherent(smmu->dev, size, &table->ptr_dma,
+> +					 GFP_KERNEL);
+> +	if (!table->ptr) {
+> +		dev_warn(smmu->dev,
+> +			 "failed to allocate context descriptor table\n");
+> +		return -ENOMEM;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static void arm_smmu_free_cd_leaf_table(struct arm_smmu_device *smmu,
+> +					struct arm_smmu_cd_table *table,
+> +					size_t num_entries)
+> +{
+> +	size_t size = num_entries * (CTXDESC_CD_DWORDS << 3);
+> +
+> +	dmam_free_coherent(smmu->dev, size, table->ptr, table->ptr_dma);
+> +}
 
-This patch fixes the devicetree binding yaml build errors
-in linux-next kernel Error: Documentation/devicetree/bindings/
-phy/intel,lgm-emmc-phy.example.dts:21.19-20
-syntax error FATAL ERROR: Unable to parse input tree
+I think we'd be better off taking the 'arm_smmu_s1_cfg' as a parameter here
+instead of the table pointer and a num_entries value, since the code above
+implies that we support partial freeing of the context descriptors.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reported-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/phy/intel,lgm-emmc-phy.yaml       | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+I can do that as a follow-up patch if you agree. Thoughts?
 
-diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-index ff7959c21af0..d9bd2e47dfe7 100644
---- a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-+++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-@@ -16,10 +16,7 @@ description: |+
-   The eMMC PHY node should be the child of a syscon node with the
-   required property:
- 
--  - compatible:         Should be one of the following:
--                        "intel,lgm-syscon", "syscon"
--  - reg:
--      maxItems: 1
-+  should be compatible strings are - "intel,lgm-syscon", "syscon"
- 
- properties:
-   compatible:
-@@ -34,6 +31,12 @@ properties:
-   clocks:
-     maxItems: 1
- 
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
- required:
-   - "#phy-cells"
-   - compatible
-@@ -45,8 +48,10 @@ examples:
-     sysconf: chiptop@e0200000 {
-       compatible = "intel,lgm-syscon", "syscon";
-       reg = <0xe0200000 0x100>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
- 
--      emmc-phy: emmc-phy@a8 {
-+      emmc_phy: emmc_phy@a8 {
-         compatible = "intel,lgm-emmc-phy";
-         reg = <0x00a8 0x10>;
-         clocks = <&emmc>;
--- 
-2.11.0
-
+Will
