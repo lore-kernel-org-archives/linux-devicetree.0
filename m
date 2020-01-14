@@ -2,108 +2,93 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613DCC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90780C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B0C24680
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEC224680
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 14:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579012772;
-	bh=DkkSSSCcpDI9HeBQHY1IX3M01OsOOAVdyk5wwFtEJpg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Agt4Gkh8E1ul0UQtKSp1ZdX2l1zCtiXXDcVCLp9i9m6I3akgIlHN+07cO4nf5oAo+
-	 EEyzXwL+l4Pw5ESw7Ed+9TIdCOckPWW/22GrZL4OzAzMYsx0YyUXgxzg8nNsMzHkKk
-	 ycrF5YmgKFx9/in45YnyB+Q1vVoUlkUbOBxDHS5s=
+	s=default; t=1579012938;
+	bh=c6LDYtQqnB7DdTApZcqmNGiY6xvHi2T3M3/D6FiMHZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kgayjIj7/tBcT1JH+1WzlU7YVbXl1uMSQieleJZr4mL0W1JDID6YpMwvXq/DiNSVr
+	 oqsFqhS8n1hvCTv7w98mDxLnvUvkEYn2NV4QwD+R5o83QPyCOJZvCBpIECrhxPunJ9
+	 d4EPHZZhnMuqg+dYMzlafTToQaYMjbMrreE/SKAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgANOjb (ORCPT
+        id S1728828AbgANOmS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 09:39:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50318 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 09:42:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbgANOjb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 09:39:31 -0500
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727285AbgANOmR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 09:42:17 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 318B824685;
-        Tue, 14 Jan 2020 14:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46E642467D;
+        Tue, 14 Jan 2020 14:42:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579012771;
-        bh=DkkSSSCcpDI9HeBQHY1IX3M01OsOOAVdyk5wwFtEJpg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2U3xxpKjVAikQnGWGZrNjaxs5Apbhn+ojqeT82/Vl3Q+wQDgqLlpmDMTKg9pEShuB
-         Pz8Zq2N3d+npGfUnohK9Rz+K8OHbYApz8F2lodPqA3EoKHPg5s0qzC6VBOmoJX0UvE
-         a+wZ37ge2JeKn1i4pujDAY5uE6WaQDtsu30JQgRY=
-Received: by mail-qt1-f182.google.com with SMTP id 5so12646014qtz.1;
-        Tue, 14 Jan 2020 06:39:31 -0800 (PST)
-X-Gm-Message-State: APjAAAVGPYbmZzjfBG1e69ix8GyFdn8TqS5lSmCpp+uWp+XtZpmY+ZMs
-        BnCnJqJDWQmQG7HXfrIZjIT8wWWy0xx43Q7r5Q==
-X-Google-Smtp-Source: APXvYqyyZlLy3kbLcDFKfECxJkAxHjCNepUAq3Vqf3Zhjrwf3ciIqlftYUmPRgi34c5gRrNnNETWFPxp2qXg/nkzX24=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr3886974qtp.224.1579012770304;
- Tue, 14 Jan 2020 06:39:30 -0800 (PST)
+        s=default; t=1579012936;
+        bh=c6LDYtQqnB7DdTApZcqmNGiY6xvHi2T3M3/D6FiMHZ8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GG71RzVGoQnmwIOM+Sjez36iAzpuKlEX/vL0U2OC8n9fVurxtuqYtE8Jbhii2w2wb
+         qghMy7naE0sJOsomIhpEmM0Nf3jhKVZFKqBGDmUzIfkNDytSL0ec35H+dF76QS5Fht
+         zjf4D6M+cmkYtt7ipHfr9fcMFynJnwVvLJNNHo+8=
+Date:   Tue, 14 Jan 2020 15:42:14 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        baylibre-upstreaming@groups.io,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 4/5] dt-bindings: at25: add reference for the wp-gpios
+ property
+Message-ID: <20200114144214.GA1898224@kroah.com>
+References: <20200107092922.18408-1-ktouil@baylibre.com>
+ <20200107092922.18408-5-ktouil@baylibre.com>
+ <20200108205447.GA16981@bogus>
+ <CAMpxmJXffr-S51udNmUyMHz687jAoBKrYspNypfUUqjOD45zxQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1577696078-21720-1-git-send-email-peng.fan@nxp.com>
- <20200104003634.GA6058@bogus> <AM0PR04MB4481917D6A969053CB85276F883C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4481917D6A969053CB85276F883C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 14 Jan 2020 08:39:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLsQmvM0Qsspj5n+1iy5X0TXaULonGtjKRkdOoSQVQmzw@mail.gmail.com>
-Message-ID: <CAL_JsqLsQmvM0Qsspj5n+1iy5X0TXaULonGtjKRkdOoSQVQmzw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx: drop "fsl,aips-bus"
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJXffr-S51udNmUyMHz687jAoBKrYspNypfUUqjOD45zxQ@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Jan 5, 2020 at 8:38 PM Peng Fan <peng.fan@nxp.com> wrote:
->
-> Hi Rob,
->
-> > Subject: Re: [PATCH] ARM: dts: imx: drop "fsl,aips-bus"
+On Thu, Jan 09, 2020 at 10:47:56AM +0100, Bartosz Golaszewski wrote:
+> śr., 8 sty 2020 o 21:54 Rob Herring <robh@kernel.org> napisał(a):
 > >
-> > On Mon, Dec 30, 2019 at 08:58:05AM +0000, Peng Fan wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
+> > On Tue,  7 Jan 2020 10:29:21 +0100, Khouloud Touil wrote:
+> > > As the at25 uses the NVMEM subsystem, and the property is now being
+> > > handled, adding reference for it in the device tree binding document,
+> > > which allows to specify the GPIO line to which the write-protect pin
+> > > is connected.
 > > >
-> > > There is no binding doc for "fsl,aips-bus", "simple-bus" is enough for
-> > > aips usage, so drop it.
+> > > Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/eeprom/at25.txt | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
 > >
-> > NAK. The AIPS bus has registers, so 'simple-bus' alone is not enough.
->
-> You mean the "reg" property below, right?
->                 aips-bus@2000000 { /* AIPS1 */
-> -                       compatible = "fsl,aips-bus", "simple-bus";
-> +                       compatible = "simple-bus";
->                         #address-cells = <1>;
->                         #size-cells = <1>;
->                         reg = <0x02000000 0x100000>;
->
-> But the reg property is not required, I think it could be removed.
-> There is no binding doc and driver for "fsl,aips-bus", so I think
-> It not make sense to have that compatible in dts.
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Hi Greg,
+> 
+> AT25 patches usually go through the char-misc tree. In this case
+> however, the change depends on the other patches in this series. Can
+> you ack this and I'll take it through the AT24 tree exceptionally?
 
-Well, there should be a binding doc, but whether or not there's a
-driver is irrelevant.
-
-From what I remember, either AIPS or SPBA bus has registers to allow
-user mode access or not. Something may need to configure those and it
-may want to use DT info to do that. It's not just Linux that you need
-to think about.
-
-Rob
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
