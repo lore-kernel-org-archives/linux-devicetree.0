@@ -2,113 +2,177 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B523C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB6DC33CB3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 19:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B6124673
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 19:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qm5G9CSi"
+	by mail.kernel.org (Postfix) with ESMTP id 38D9E24676
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 19:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579029627;
+	bh=51mPKvKOvFBPcyebnpeFfrpdOAPyvnnFW5SZb3BDz5A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=noGJtFj0uPr84fpJIK7EFFwD6BiX3otX3xDFpxuqdntyGpqClyAQsAVmvN9ZN0UQc
+	 equCFr/MoK4Dlk+vjjpP0ZvEKyo2MUB6zqFtTz0rz03UyA8Dwnn/L/Tua7rN3to1iY
+	 pNHde7TaHQYe7TiwU5uAl7PYZYRFoZF1ImnAOsQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgANTGs (ORCPT
+        id S1728734AbgANTU0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:06:48 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38633 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728844AbgANTG1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 14:06:27 -0500
-Received: by mail-pg1-f194.google.com with SMTP id a33so6818657pgm.5;
-        Tue, 14 Jan 2020 11:06:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/SGLTAdZJn5EJy2JzHgzjK5/AJ+qkCVgDvB3ahQxnHQ=;
-        b=Qm5G9CSi8hE6nPnKB0JHoF1ksIp45JPX3HX9vssDTwlZF4Rfy8IWq8WZsIfGUaH9sv
-         ZcXt/RoOwAMNw0W+DBimcFz0NHHlEnQjS7yrOba4yZe20ynilMcPvk5aqRF45lXWLZqy
-         jZtMMYTV6PHX4WUY+frShmcXUven7WUPwoW36tLU8UVW3noBGff2vxG63s5XrjaXppnB
-         hXlqvCjH16cL+ouJBOc87NujrFKXlQ68QlCGDNesz8niUqRtCESi7BQQlwQmEoGdBbSt
-         t5iCHJ/WDcw1FOO7PnDvGne5r9CkWnWxx2KVeS9GKtLAwFnYjmfcGyJxkodCXdiJaIhn
-         /cFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/SGLTAdZJn5EJy2JzHgzjK5/AJ+qkCVgDvB3ahQxnHQ=;
-        b=e+Mh/RW+T5UGSV5vs9aDsOyszlS7OeO+W3/bSoRWnskyT5fcTULO3fm+Ea+faNHb7P
-         Z5y/3dXFzPMRkNGHBhY30ekaoEPZ/L7EoOHHzomE/it5p0JL9D7rfRrfTkAWUzCtP4P2
-         qHMaoyThx2hQ7KQrdCF1XpEy+NgRly3jIuFTgAx512NzwpXTaOWqUrwswFOHSCe6uuk6
-         bW21n880DWabTyy4ABaECxYI1uMMPZJ0Z94FXBhqjX9zh8QOC+PM/QAcOP9mU7X/6lLf
-         e6fpV6JqZ0KUik/v5pATuBOAsvvVbpWaEKs3OEGCsQEHBYumvQI3U1JUcc4amEtLx8ob
-         6TKA==
-X-Gm-Message-State: APjAAAWU3fESTS7olFeeA3zQG/YQLMhB/k5uigcRE0BJkLj632SUo7Np
-        Rlz7T9MXU9uuk7sjh2oQ+TTt0Xam
-X-Google-Smtp-Source: APXvYqxW4WEv33MceQhvOoDvCOyqNa0lcjz4YBr8Xi3MM+oBNXj+5uUCXiO6j87tYXtC2qT/dxYIrw==
-X-Received: by 2002:aa7:8a99:: with SMTP id a25mr26927807pfc.42.1579028786488;
-        Tue, 14 Jan 2020 11:06:26 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a195sm19284528pfa.120.2020.01.14.11.06.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 11:06:25 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
-        DRIVER), Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Tue, 14 Jan 2020 14:20:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgANTUZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:20:25 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09D9B24679;
+        Tue, 14 Jan 2020 19:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579029624;
+        bh=51mPKvKOvFBPcyebnpeFfrpdOAPyvnnFW5SZb3BDz5A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0AzsTqV+6NRVdOwYlop8UGvirDY6l6CFWTp76WjFI/3G25rUyinXv5ASQPgWsOVJB
+         GomQpKA16rlD6ylSIvLNc5VHnSKssm/NbO/8Yw2Fo/Z0klQ0VVy4HF3/DXH09v5NM9
+         gg5eboqH985MWFANNYfhEI/QvEHQa1j0DAYBFmCs=
+Received: by mail-qt1-f179.google.com with SMTP id t3so13466245qtr.11;
+        Tue, 14 Jan 2020 11:20:24 -0800 (PST)
+X-Gm-Message-State: APjAAAXkfrlErTvvVstfO50qZEx6h/QYWNWp9B5OdmkKFSGrfC3j9/5b
+        VfChq1K3HRDu91ucGLDbwITNQVX6iHQ5mtA3BA==
+X-Google-Smtp-Source: APXvYqxtoC7YzVsJSq0poDkCvJI/CcjPKwVkad6yKqrUxD2hA8j7iTo4qnjLsj9KT03fSLGDVtvDkqcYswDEUHsVCD0=
+X-Received: by 2002:ac8:6747:: with SMTP id n7mr128832qtp.224.1579029623073;
+ Tue, 14 Jan 2020 11:20:23 -0800 (PST)
+MIME-Version: 1.0
+References: <1575649028-10909-1-git-send-email-fabrice.gasnier@st.com>
+ <20191217234345.GA7738@bogus> <cadc76a7-7e9d-1f0a-21fd-2d7942dbe5c9@st.com>
+In-Reply-To: <cadc76a7-7e9d-1f0a-21fd-2d7942dbe5c9@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 Jan 2020 13:20:10 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJdw=WzMhp1d9E3131AuyO7in7bgR5X4NM1n7Ox4X0YXw@mail.gmail.com>
+Message-ID: <CAL_JsqJdw=WzMhp1d9E3131AuyO7in7bgR5X4NM1n7Ox4X0YXw@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: iio: adc: stm32-adc: convert bindings to json-schema
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE)
-Subject: [PATCH v3 3/6] dt-bindings: thermal: Define BCM7216 thermal sensor compatible
-Date:   Tue, 14 Jan 2020 11:06:04 -0800
-Message-Id: <20200114190607.29339-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200114190607.29339-1-f.fainelli@gmail.com>
-References: <20200114190607.29339-1-f.fainelli@gmail.com>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        olivier moysan <olivier.moysan@st.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-BCM7216 is a 16nm process STB chip, which requires a different
-compatible string to differentiate different temperature formulas.
+On Tue, Jan 14, 2020 at 10:02 AM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>
+> On 12/18/19 12:43 AM, Rob Herring wrote:
+> > On Fri, Dec 06, 2019 at 05:17:08PM +0100, Fabrice Gasnier wrote:
+> >> Convert the STM32 ADC binding to DT schema format using json-schema
+> >>
+> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> >> ---
+> >> Note: this applies on top of IIO tree currently (iio-for-5.5c).
+> >>
+> >> Changes in V2:
+> >> - Take almost all of Rob suggestions (removed reg generic description,
+> >>   added minItems, maxItems, st,max-clk-rate-hz range, drop some pipes,
+> >>   simplify clock-names, remove unneeded allOfs)
+> >> - For now, keep all in one file despite there are lots of if/thens in the
+> >>   bindings
+> >> ---
+> >>  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 149 -------
+> >>  .../devicetree/bindings/iio/adc/st,stm32-adc.yaml  | 454 +++++++++++++++++++++
+> >>  2 files changed, 454 insertions(+), 149 deletions(-)
+> >>  delete mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-adc.yaml
+> >
+> >
+>
+>
+> [snip]
+>
+> >> +
+> >> +      st,adc-channels:
+> >> +        description: |
+> >> +          List of single-ended channels muxed for this ADC. It can have up to:
+> >> +            - 16 channels, numbered from 0 to 15 (for in0..in15) on stm32f4
+> >> +            - 20 channels, numbered from 0 to 19 (for in0..in19) on stm32h7 and
+> >> +              stm32mp1.
+> >> +        allOf:
+> >> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> >> +
+>
+> [snip]
+>
+> >> +
+> >> +    allOf:
+> >> +      - if:
+> >> +          properties:
+> >> +            compatible:
+> >> +              contains:
+> >> +                const: st,stm32f4-adc
+> >> +
+> >> +        then:
+> >> +          properties:
+> >> +            reg:
+> >> +              enum:
+> >> +                - 0x0
+> >> +                - 0x100
+> >> +                - 0x200
+> >> +
+> >> +            interrupts:
+> >> +              minimum: 0
+> >> +              maximum: 2
+> >> +
+> >> +            assigned-resolution-bits:
+> >> +              enum: [6, 8, 10, 12]
+> >> +              default: 12
+> >> +
+> >> +            st,adc-channels:
+> >> +              minItems: 1
+> >> +              maxItems: 16
+> >> +              minimum: 0
+> >> +              maximum: 15
+> >
+> > You are mixing array and scalar constraints here. You need:
+> >
+> > minItems: 1
+> > maxItems:16
+> > items:
+> >   minimum: 0
+> >   maximum: 15
+> >
+> > Update dtschema. It will now catch this. There's a few others too.
+>
+> Hi Rob,
+>
+> Sorry for the late reply. I updated dtschema. Now it catches it.
+>
+> I've tried your suggestion, but when I test it, I don't get any error on
+> maxItems.
+>
+> In the example: "st,adc-channels = <0>, <1>, ... more than 16 items;"
+>
+> Is it possible I face some other issue with dtschema ?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/thermal/brcm,avs-tmon.txt         | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+The problem is how "<0>, <1>" vs. "<0 1>" gets encoded. While those
+are the same in the dtb, in yaml we have "[[0], [1]]" vs. "[[0, 1]]".
+Making the brackets significant is helpful for some things like
+phandle+args and 'reg' where we have a matrix of values, but for
+arrays it just gets in the way. I think as I suggested is the right
+form for the binding schema, and we need to either decide what's the
+correct way for brackets or improve the tool to accept both ways.
 
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-index 43a9ed545944..74a9ef09db8b 100644
---- a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-+++ b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-@@ -3,9 +3,13 @@
- Thermal management core, provided by the AVS TMON hardware block.
- 
- Required properties:
--- compatible: must be "brcm,avs-tmon" and/or "brcm,avs-tmon-bcm7445"
-+- compatible: must be one of:
-+	"brcm,avs-tmon-bcm7216"
-+	"brcm,avs-tmon-bcm7445"
-+	"brcm,avs-tmon"
- - reg: address range for the AVS TMON registers
--- interrupts: temperature monitor interrupt, for high/low threshold triggers
-+- interrupts: temperature monitor interrupt, for high/low threshold triggers,
-+	      required except for "brcm,avs-tmon-bcm7216"
- - interrupt-names: should be "tmon"
- 
- Example:
--- 
-2.17.1
-
+Rob
