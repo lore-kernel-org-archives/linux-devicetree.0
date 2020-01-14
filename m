@@ -2,132 +2,243 @@ Return-Path: <SRS0=kXJJ=3D=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D630C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A725C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3682084D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579016607;
-	bh=ZCTSH+k6xThdH79h0I5oh1zVw+T2m5gqrWX7QMFhKd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yOZXZXYJjmhBORuHyQQrsUFu6sX+euHvd7zpHIpfa9eFAZyUGAWJiW+RKvtAK1iqS
-	 z3XqidCcKE8+d3bwcobvyUuC50HOQONTqAzCzgygzJqF0QI6b1DYTJRTyl2Q99G242
-	 W03/RU56eJmo+cYJHB78a8wmrjkvmEDRT1rSSzMc=
+	by mail.kernel.org (Postfix) with ESMTP id 0063924679
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 15:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="KjiA8IFV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbgANPn0 (ORCPT
+        id S1726839AbgANP4A (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:43:26 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49900 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANPn0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 10:43:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZCTSH+k6xThdH79h0I5oh1zVw+T2m5gqrWX7QMFhKd4=; b=UpQ1WewlV5QqhtFdaZ8w6ORpF
-        8M9iXrAUdbtW9g5RYjBjRrjEDY4WYvrb7K/SZOdWF5OskeoDuNHqszDZeK8AHaoLAH7unGua0Uiuf
-        Onsb4Voox3RhmYdBl7MgsARFkeAKvNV6JjYHwLu3CouBWfw4L+7XUAqTJXgQDH0Sexj5g=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irOLa-0000KP-L6; Tue, 14 Jan 2020 15:43:14 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 2CE91D002CB; Tue, 14 Jan 2020 15:43:14 +0000 (GMT)
-Date:   Tue, 14 Jan 2020 15:43:14 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20200114154314.GZ3897@sirena.org.uk>
-References: <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
- <20191212165124.GJ4310@sirena.org.uk>
- <20191216085525.csr2aglm5md4vtsw@pengutronix.de>
- <20191216114454.GB4161@sirena.org.uk>
- <20191217073533.GC31182@pengutronix.de>
- <20191217125832.GF4755@sirena.org.uk>
- <20200107083654.atgbjhrnhyax2gqq@pengutronix.de>
- <20200107130911.GD4877@sirena.org.uk>
- <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
+        Tue, 14 Jan 2020 10:56:00 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:52909 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729073AbgANPz7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 10:55:59 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 4D29D22F54;
+        Tue, 14 Jan 2020 16:55:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1579017356;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ct+aRr3TCzgVYVm23SiKR4zjf2kwIVnO+TG3pSdmezY=;
+        b=KjiA8IFV8kh9MFDYSMCamYHUdpAMT8W1rARrucZWoMZ/ZsX32xNmVzsBsC6z4Ea+zRZjS7
+        yOUENZSRAKYyVxPldWIFsKdaqdiDOqgqD3Ky8TJY3DfAJjRO6xO/Egpg3NQF550qrx8uKd
+        sMPt6cOJqVVi530tOVFjbRAsNC0CjVc=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yhqQ34TVR4fE8mPU"
-Content-Disposition: inline
-In-Reply-To: <20200107133811.rua5i6lflzyzlh24@pengutronix.de>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 14 Jan 2020 16:55:56 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 3/3] clk: fsl-sai: new driver
+In-Reply-To: <20200102231101.11834-3-michael@walle.cc>
+References: <20200102231101.11834-1-michael@walle.cc>
+ <20200102231101.11834-3-michael@walle.cc>
+Message-ID: <6069b1edf7796f3eff0d68c398eefff2@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 4D29D22F54
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.813];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Am 2020-01-03 00:11, schrieb Michael Walle:
+> With this driver it is possible to use the BCLK pin of the SAI module 
+> as
+> a generic clock output. This is esp. useful if you want to drive a 
+> clock
+> to an audio codec. Because the output only allows integer divider 
+> values
+> the audio codec needs an integrated PLL.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
---yhqQ34TVR4fE8mPU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ping :)
 
-On Tue, Jan 07, 2020 at 02:38:11PM +0100, Marco Felsch wrote:
-> On 20-01-07 13:09, Mark Brown wrote:
-> > On Tue, Jan 07, 2020 at 09:36:54AM +0100, Marco Felsch wrote:
-
-> > > The input signal is routed trough the da9062 gpio block to the
-> > > regualtors. You can't set any voltage value using a gpio instead you
-> > > decide which voltage setting is applied. The voltage values for
-> > > runtime/suspend comes from the dt-data. No it's not just a fast
-> > > switching option imagine the system suspend case where the cpu and soc
-> > > voltage can be reduced to a very low value. Older soc's like the imx6
-> > > signaling this state by a hard wired gpio line because the soc and
-> > > cpu cores don't work properly on such low voltage values. This is
-> > > my use case and I can't use the sequencer.
-
-> > My point is that I can't tell any of this from the description.
-
-> Therefore I want to discuss the dt-binding documentation with you and
-> the others to get this done. Is the above description better to
-> understand the dt-binding?
-
-That text really doesn't feel like text that'd be idiomatic
-directly in a binding document but some of those ideas probably
-do need to be in the text I think.
-
---yhqQ34TVR4fE8mPU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d4ZEACgkQJNaLcl1U
-h9CJjAf+Lyl6pKu3ywfkP8t2CeYxi0Fz9ndEKvYqp7nK6CZxn8OgX9Jjem3iwm4w
-vhgB2B06edcnP8wIDEgk8YUMirzG0/Rc475SlTvVg/1BYOaGftqksTiEZfHJf0qt
-4mcWgT+Agw3YzPMkM6kahAu243KxKHAwojM3iVV7gb9PX/rOVtInStggPxzdcxtk
-jQQo2RvYBo2mEBArehWE+PGGT2/JElQGTLyhRVx3BrhuAXXoNKuwkS9fUrVAnyk5
-m5kKBygRDyY4MdZ/a53/E8URMDJbctEtveN03mzI+QQ//PMDTufBPqSmURaODb5c
-PAal49kxIE8ZAfvvCgimhdhS3yzmTg==
-=m6uy
------END PGP SIGNATURE-----
-
---yhqQ34TVR4fE8mPU--
+> ---
+> changes since v2:
+>  - convert to platform driver, thus also use devm_ functions
+>  - use new style to get the parent clock by using parent_data
+>    and the new clk_hw_register_composite_pdata()
+> 
+> changes since v1:
+>  - none
+> 
+>  drivers/clk/Kconfig       | 12 +++++
+>  drivers/clk/Makefile      |  1 +
+>  drivers/clk/clk-fsl-sai.c | 92 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 105 insertions(+)
+>  create mode 100644 drivers/clk/clk-fsl-sai.c
+> 
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 45653a0e6ecd..dd1a5abc4ce8 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -174,6 +174,18 @@ config COMMON_CLK_CS2000_CP
+>  	help
+>  	  If you say yes here you get support for the CS2000 clock 
+> multiplier.
+> 
+> +config COMMON_CLK_FSL_SAI
+> +	bool "Clock driver for BCLK of Freescale SAI cores"
+> +	depends on ARCH_LAYERSCAPE || COMPILE_TEST
+> +	help
+> +	  This driver supports the Freescale SAI (Synchronous Audio 
+> Interface)
+> +	  to be used as a generic clock output. Some SoCs have restrictions
+> +	  regarding the possible pin multiplexer settings. Eg. on some SoCs
+> +	  two SAI interfaces can only be enabled together. If just one is
+> +	  needed, the BCLK pin of the second one can be used as general
+> +	  purpose clock output. Ideally, it can be used to drive an audio
+> +	  codec (sometimes known as MCLK).
+> +
+>  config COMMON_CLK_GEMINI
+>  	bool "Clock driver for Cortina Systems Gemini SoC"
+>  	depends on ARCH_GEMINI || COMPILE_TEST
+> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+> index 0696a0c1ab58..ec23fd956228 100644
+> --- a/drivers/clk/Makefile
+> +++ b/drivers/clk/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
+>  obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
+>  obj-$(CONFIG_ARCH_EFM32)		+= clk-efm32gg.o
+>  obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
+> +obj-$(CONFIG_COMMON_CLK_FSL_SAI)	+= clk-fsl-sai.o
+>  obj-$(CONFIG_COMMON_CLK_GEMINI)		+= clk-gemini.o
+>  obj-$(CONFIG_COMMON_CLK_ASPEED)		+= clk-aspeed.o
+>  obj-$(CONFIG_MACH_ASPEED_G6)		+= clk-ast2600.o
+> diff --git a/drivers/clk/clk-fsl-sai.c b/drivers/clk/clk-fsl-sai.c
+> new file mode 100644
+> index 000000000000..0221180a4dd7
+> --- /dev/null
+> +++ b/drivers/clk/clk-fsl-sai.c
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Freescale SAI BCLK as a generic clock driver
+> + *
+> + * Copyright 2020 Michael Walle <michael@walle.cc>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#define I2S_CSR		0x00
+> +#define I2S_CR2		0x08
+> +#define CSR_BCE_BIT	28
+> +#define CR2_BCD		BIT(24)
+> +#define CR2_DIV_SHIFT	0
+> +#define CR2_DIV_WIDTH	8
+> +
+> +struct fsl_sai_clk {
+> +	struct clk_divider div;
+> +	struct clk_gate gate;
+> +	spinlock_t lock;
+> +};
+> +
+> +static int fsl_sai_clk_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct fsl_sai_clk *sai_clk;
+> +	struct clk_parent_data pdata = { .index = 0 };
+> +	void __iomem *base;
+> +	struct clk_hw *hw;
+> +	struct resource *res;
+> +
+> +	sai_clk = devm_kzalloc(dev, sizeof(*sai_clk), GFP_KERNEL);
+> +	if (!sai_clk)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	spin_lock_init(&sai_clk->lock);
+> +
+> +	sai_clk->gate.reg = base + I2S_CSR;
+> +	sai_clk->gate.bit_idx = CSR_BCE_BIT;
+> +	sai_clk->gate.lock = &sai_clk->lock;
+> +
+> +	sai_clk->div.reg = base + I2S_CR2;
+> +	sai_clk->div.shift = CR2_DIV_SHIFT;
+> +	sai_clk->div.width = CR2_DIV_WIDTH;
+> +	sai_clk->div.lock = &sai_clk->lock;
+> +
+> +	/* set clock direction, we are the BCLK master */
+> +	writel(CR2_BCD, base + I2S_CR2);
+> +
+> +	hw = clk_hw_register_composite_pdata(dev, dev->of_node->name,
+> +					     &pdata, 1, NULL, NULL,
+> +					     &sai_clk->div.hw,
+> +					     &clk_divider_ops,
+> +					     &sai_clk->gate.hw,
+> +					     &clk_gate_ops,
+> +					     CLK_SET_RATE_GATE);
+> +	if (IS_ERR(hw))
+> +		return PTR_ERR(hw);
+> +
+> +	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get, hw);
+> +}
+> +
+> +static const struct of_device_id of_fsl_sai_clk_ids[] = {
+> +	{ .compatible = "fsl,vf610-sai-clock" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, of_fsl_sai_clk_ids);
+> +
+> +static struct platform_driver fsl_sai_clk_driver = {
+> +	.probe = fsl_sai_clk_probe,
+> +	.driver		= {
+> +		.name	= "fsl-sai-clk",
+> +		.of_match_table = of_fsl_sai_clk_ids,
+> +	},
+> +};
+> +module_platform_driver(fsl_sai_clk_driver);
+> +
+> +MODULE_DESCRIPTION("Freescale SAI bitclock-as-a-clock driver");
+> +MODULE_AUTHOR("Michael Walle <michael@walle.cc>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:fsl-sai-clk");
