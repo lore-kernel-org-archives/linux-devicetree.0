@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6A1C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1394C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BE5222C4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8A0C24672
+	for <linux-devicetree@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578994981;
-	bh=ZY32olhBC9Vu8GoFnoJlyKFKyLmpEDns5sByfyxWduo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vNReNbBYerOiO9Pb5alI58q1J5ZsN3huJ07Hrj31xFrjV6zs656+YW3wmKB0h2A1C
-	 5aC5TvyUwMZiLvxU6GYq9c3CW1D6iaxlOZUvXpvoSmoEXaP5VOM6fhCXtEYrEZ9GTK
-	 jqlVtebE8+Nb1CjEAbPJvcyI42ma21iDkpYZ4aFk=
+	s=default; t=1578995166;
+	bh=q26RMnhv4e6vnyl7On3dw2ZS7Ofbxt7I4hTv9fYgiXc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mYaW6yKP06CQAJHu2OJLUZO3H+BTK05mqvF+JtpvCLzUjkLptcVFbC8NkouPywCAQ
+	 1mNetrrkrqG7CzuyCVNJm9u/tBILCajGZEpwP3tgx49fvmjeWgsiH9DmyqZo0pd3eb
+	 VW090qCfNxohX0ndLKiajurM5T8kBfMBaVp6EpFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbgANJnB (ORCPT
+        id S1729031AbgANJqG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:43:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35420 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 04:46:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgANJnB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:43:01 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728998AbgANJqF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:46:05 -0500
+Received: from dogfood.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AF052084D;
-        Tue, 14 Jan 2020 09:43:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E582124673;
+        Tue, 14 Jan 2020 09:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578994980;
-        bh=ZY32olhBC9Vu8GoFnoJlyKFKyLmpEDns5sByfyxWduo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=J0meMBCO3EIcNZcCnTo3GjEw6jIjd/3BjqmkWnaw4uxOrcVNa27MEziWkOR6idYlY
-         fukBMrgtxqNzPUPw1yUafxPOgrX/CUbMLrp1qe+DZHx6tAUmFR/a4RtlEq1WLVXWnW
-         r+dv808jcPRdMXdnJvGTpLhxqpEmRnjm+2fsvM1o=
-Received: by wens.tw (Postfix, from userid 1000)
-        id 1F57B5FC9E; Tue, 14 Jan 2020 17:42:58 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: sun8i: a83t: Fix incorrect clk and reset macros for EMAC device
-Date:   Tue, 14 Jan 2020 17:42:52 +0800
-Message-Id: <20200114094252.8908-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        s=default; t=1578995164;
+        bh=q26RMnhv4e6vnyl7On3dw2ZS7Ofbxt7I4hTv9fYgiXc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XyydpypudDBcz8etUqufb5GnphOu22iRcWN0zlHbwPz1qgMRTO4QEmBwLSmlUsMHV
+         bZ/08I5PIoeMSmQhF2KQBhtfiwa9+uSxaLiBQf3k79JorHQ8QE7jq4xfPsn949mILa
+         Qzv+Yg/4y2fJdcgoxzQveBdcZQn63pqLSHcrRt6E=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org, masahisa.kojima@linaro.org,
+        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: tpm-tis-mmio: add compatible string for SynQuacer TPM
+Date:   Tue, 14 Jan 2020 10:45:04 +0100
+Message-Id: <20200114094505.11855-2-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200114094505.11855-1-ardb@kernel.org>
+References: <20200114094505.11855-1-ardb@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -56,45 +59,29 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+Add a compatible string for the SynQuacer TPM to the binding for a
+TPM exposed via a memory mapped TIS frame. The MMIO window behaves
+slightly differently on this hardware, so it requires its own
+identifier.
 
-When the raw numbers used for clk and reset indices in the EMAC device
-node were converted to the new macros, the order of the clk and reset
-properties was overlooked, and thus the incorrect macros were used.
-This results in the EMAC being non-responsive, as well as an oops due
-to incorrect usage of the reset control.
-
-Correct the macro types, and also reorder the clk and reset properties
-to match all the other device nodes.
-
-Fixes: 765866edb16a ("ARM: dts: sunxi: Use macros for references to CCU clocks")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
+ Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Error on my part. Hope no one was affected for too long.
-
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 74ac7ee9383c..e7b9bef1be6b 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -1006,10 +1006,10 @@ emac: ethernet@1c30000 {
- 			reg = <0x01c30000 0x104>;
- 			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
--			resets = <&ccu CLK_BUS_EMAC>;
--			reset-names = "stmmaceth";
--			clocks = <&ccu RST_BUS_EMAC>;
-+			clocks = <&ccu CLK_BUS_EMAC>;
- 			clock-names = "stmmaceth";
-+			resets = <&ccu RST_BUS_EMAC>;
-+			reset-names = "stmmaceth";
- 			status = "disabled";
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+index 7c6304426da1..b604c8688dc8 100644
+--- a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
++++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+@@ -12,6 +12,7 @@ Required properties:
+ - compatible: should contain a string below for the chip, followed by
+               "tcg,tpm-tis-mmio". Valid chip strings are:
+ 	          * "atmel,at97sc3204"
++		  * "socionext,synquacer-tpm-mmio"
+ - reg: The location of the MMIO registers, should be at least 0x5000 bytes
+ - interrupts: An optional interrupt indicating command completion.
  
- 			mdio: mdio {
 -- 
-2.24.1
+2.20.1
 
