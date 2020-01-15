@@ -2,129 +2,118 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD866C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDCDC32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84E4207E0
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB282465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:08:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DetHZawl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbgAOWG5 (ORCPT
+        id S1729469AbgAOWIE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:06:57 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34443 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgAOWG5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 17:06:57 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a15so17547832otf.1;
-        Wed, 15 Jan 2020 14:06:56 -0800 (PST)
+        Wed, 15 Jan 2020 17:08:04 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:47053 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729016AbgAOWIE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 17:08:04 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z124so8824095pgb.13;
+        Wed, 15 Jan 2020 14:08:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SJWP0dc8tNu8wLgOp289sHabmbIqUoct2rH5jSqMT58=;
+        b=DetHZawldPHHvcYPN8OOm8v4iwjr+CfbmF/SgvuhbeY6yzB2RxshNG003RkI5vMzRL
+         FGG2xM1d+UdEEBP4xmArKkAQ337ITqERyULuI8ReUSWl11J/81t5WrMX0KWyk3Cx0xA9
+         6TCnuKGuBSIUA+ONKYcLwf0LdE4Mr/wl6a82HzWbk+1YUrx5LN48Fmh9K2357BfAkqit
+         2SsIIwsVuE1rI6ipVLPNlgITV2SN5Goksr/HB2txOcNa5C3gEBFbq9NAwsS6Itvyc9Ip
+         R33QPOyMRe4QFugRH93Di7yJtHz6Xvfc76kCDNGX1mFuEhFl3+YUysTgwL8TRbEL6LYV
+         yotg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QA72jMIQiIcv6qKeAvOBZo5//ESBp/sElxNZhuRd/aw=;
-        b=Ku0iu43+DRp7ADCgca45A3oFR4oD6KSyxvayLrXjC1YHUgRX7tN9VwCUaRy3T+rs1d
-         HrDz7EMyz1DhwJfQ1AUHgaJZjIDig6WGjYe+yHk90CNXS7z5kCKJnRKawqAUMqFcQGJt
-         nm4lFsr+AuxGP41OLyp+FhHA3IIk/1bS4z3AFny+YxaCKXjCF5kJu2b5LK/tU/+LUgf6
-         3GJxh8RQYaGMzfnhpcOJIUCw4UvdyE3lYZsqr9YtMIp3PtdicX9+ldwaqMQbmy3xQ9WF
-         uDaAJdaGqWeuRWZqfhKkIKPgwcP20tZ4V9zReNN0apzTlKfIiNPo1UWg0RZVIoU29PFW
-         L++Q==
-X-Gm-Message-State: APjAAAWRWblEbCoV8Z5OTo5yqxGA+upBFl31WX3+iBWiAKObZi53GQ5I
-        z68KEOfGIXtyLZtChCRJIEcMjYACkx4JACjb/ac=
-X-Google-Smtp-Source: APXvYqwUReB61qJ2CDHEnYmnlWNvkGwBGaJEh4v0341plcso6oNlKga1A3x3SDtLiNVKbUvoihUE/WDHebZDXkh8m9k=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr4374295otd.39.1579126016415;
- Wed, 15 Jan 2020 14:06:56 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SJWP0dc8tNu8wLgOp289sHabmbIqUoct2rH5jSqMT58=;
+        b=ovW0PsjfLBAo4ayxXArmBROBzM8e2SZ4V94SjEbOGjuAUmRtBZk5/DrSp0LHln8CrE
+         UT4knEVwuXXyG9w+XV9MTLq32zavARP7nmBrPFJ2CXXp8ANXEFPHZSUILSbcq0lKuOch
+         APCOMnyq933VGdDDUy09L5b1oDX5riwVEtENXfuKmenqQwpe7BXjsZ+f7Jt5MTGxCYOH
+         QMW0lT4EammXZpjeevOJ2UoOd+Le8QTzr+EvYfwDn/olzUOrxG2qeGet7wjg49CAi4nB
+         OEFnxTo8SZsq6mL2SZ4E7hWtgDr9oHCD39UdrqiUkTDLBuN6Biqgnx7gJCWqwSWNektr
+         beEw==
+X-Gm-Message-State: APjAAAUvr4vIPn+v1iBZZpjS5SV2mHotrGYK+7OejLU2WmIgSM5yBirX
+        ZdLS9DsBkD/kOAx/LN5x1wI=
+X-Google-Smtp-Source: APXvYqyWsg9nZ7iS/q53dd4ttLoSRT/XWe5AeXPcI5W4HjRg03CpMwcnWHrKfBz6kd+WyBp4ymUhhg==
+X-Received: by 2002:a63:2308:: with SMTP id j8mr33867384pgj.86.1579126083966;
+        Wed, 15 Jan 2020 14:08:03 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:a:2ce2:5c73:b928:d080])
+        by smtp.gmail.com with ESMTPSA id v10sm21902345pgk.24.2020.01.15.14.08.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 14:08:03 -0800 (PST)
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     sashal@kernel.org, James Morse <james.morse@arm.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        shji@microsoft.com, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+ <20200115213848.GO20975@zn.tnic>
+ <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
+ <20200115220436.GP20975@zn.tnic>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <6a27f387-2c52-6587-1b21-c2e52c1b2436@gmail.com>
+Date:   Wed, 15 Jan 2020 14:08:02 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200115124548.3951-1-geert+renesas@glider.be>
- <20200115124548.3951-2-geert+renesas@glider.be> <20200115210104.GA28904@ravnborg.org>
-In-Reply-To: <20200115210104.GA28904@ravnborg.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 15 Jan 2020 23:06:45 +0100
-Message-ID: <CAMuHMdUEqWWKS_85pNSbAdFBUuGTEzgwE1bd9+x_mN_uzd254Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: sitronix,st7735r: Convert to
- DT schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200115220436.GP20975@zn.tnic>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+On 1/15/2020 2:05 PM, Borislav Petkov wrote:
+> On Wed, Jan 15, 2020 at 01:49:56PM -0800, Shiping Ji wrote:
+>> Lei will be the author of this driver in the git history. I could ask
+>> her to send the patch again if that's the correct way to go. Please
+>> confirm.
+> 
+> No need - you only have to send the patch with her From: at the
+> beginning. Btw, you make her an author in git by doing:
+> 
+> git commit --amend --author="Lei Wang <leiwang_git@outlook.com>"
+> 
+> But before you send again, let me take a look at the rest of the patch
+> first, tomorrow most likely.
+> 
+> Thx.
+> 
 
-On Wed, Jan 15, 2020 at 10:01 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> On Wed, Jan 15, 2020 at 01:45:44PM +0100, Geert Uytterhoeven wrote:
-> > Convert the DT binding documentation for Sitronix ST7735R displays to DT
-> > schema.
-> >
-> > Add a reference to the Adafruit 1.8" LCD while at it.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
->
-> > diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> > new file mode 100644
-> > index 0000000000000000..21bccc91f74255e1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
-> > @@ -0,0 +1,65 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> Use (GPL-2.0-only OR BSD-2-Clause) for new binding files.
+Got it, I will have the followings next:
 
-I used GPL-2.0-only, as this is a conversion of an existing binding file,
-covered by the default GPL-2.0-only of the Linux kernel source tree.
+From: Lei Wang <leiwang_git@outlook.com>
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/sitronix,st7735r.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sitronix ST7735R Display Panels Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - David Lechner <david@lechnology.com>
-> > +
-> > +description:
-> > +  This binding is for display panels using a Sitronix ST7735R controller in
-> > +  SPI mode.
-> > +
-> > +allOf:
-> > +  - $ref: panel/panel-common.yaml#
->
-> I am no binding expert so I do not know how to add it.
-> But the old binding described that this MUST be a child of spi.
-> This is missing here.
->
-> Other panels using spi does not have it - so it is probarly OK.
+<commit message>
 
-Yeah, I couldn't find any examples of expressing that requirement in yaml.
+Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+Signed-off-by: me
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--
+Best regards,
+Shiping Ji
