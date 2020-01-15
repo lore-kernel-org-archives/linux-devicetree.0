@@ -2,302 +2,106 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EA3C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F60EC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC9B2467A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C1B2467A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 10:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JrH3yMVM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="rF8UEv4+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbgAOJ5D (ORCPT
+        id S1729673AbgAOKMr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:57:03 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:43647 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbgAOJ5D (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 04:57:03 -0500
-Received: by mail-vs1-f67.google.com with SMTP id s16so10058581vsc.10
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 01:57:02 -0800 (PST)
+        Wed, 15 Jan 2020 05:12:47 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37590 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729575AbgAOKMr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 05:12:47 -0500
+Received: by mail-wr1-f66.google.com with SMTP id w15so15155557wru.4
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 02:12:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o56000SPWNtNfLS/UOhvjIjcXffjJW9nLc5ULePZ0jA=;
-        b=JrH3yMVM8562bX2/6XqoOwrSuuo6qJTMbhiK+o13In/riqnO/f/Z9la6qh57xv2UUc
-         jLXXAjF/88N2pn3dsnnQ0I2d3tzuNx/QYTo4WERSKnN5H3PgLNTZPR6ToKFZSVk1pW9e
-         Kk4G6thADhgL2VrGL4BNWE8kxiXK8/XCoU/gs=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=TphKRKgrx6UOwY938/z3zkU7XoFubfFhJvJRyw+ELVA=;
+        b=rF8UEv4+aHXN5U+ib7xcboRlT+K7H1VEqquEq+m7pEpwSQMFWwyN7guzslCrJoBYLW
+         b10OFL9WAPXXzizMArolKJSTLMvixZKpY52I7fDJeykkuO8Dbgki9oDi/vmP6GCjUZtB
+         xAXe20p9DG1M0X6Oo+c9IuhxHXQbgTq8Don5pILBFCXzx4gViqvNJ4XjJIzU39GpcF5N
+         QKksBAP5PAhksnj6Lx65spoPDoEBaph9dLDVYRbkwhGUqkkYVjP6+TnMhf/bNHby0aJA
+         9cO0GNII3uAE/jeHtsQoUeDtSVto0vEbEXh0MTbtkTHHPbRRCw/A9llmThD+IyBlYfOd
+         dfDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o56000SPWNtNfLS/UOhvjIjcXffjJW9nLc5ULePZ0jA=;
-        b=TA/FFEKBFK6+2z+Bs3Cj71YFlhoqkTtrMxmCC7PVHv6Q4PgaK8Kgy7csyzIESDQGIB
-         KEhWno2g7MOssflTusblBRpyYRwPMY/bhEYm2HDxQjdDxKqswfcRTnJBBlXdh850gIDN
-         Yh6p4WUs6IKygnTU7FvGN+ICjqKMitv0Xe4MxtVaZYPfDxKys7VbYOG4L1CzFTZ2iyw1
-         u+evzemUIKFg+2vUI7h2Zt9PKJcdEDpq2OPy0zKtAoixFipHf1/2TtIRg3R2VTB3mvhG
-         ifnAo0hbn14SCDfrgWbZMyQltk1UzosnL7Y3CIwBlUpwQUnCy/XnGp32jtnUIODP1mXP
-         4VsQ==
-X-Gm-Message-State: APjAAAUtbh4BxMNWbGIbjgTB9eFO61YXPGeah1e6qcxL7d+rQAk775Qw
-        EHfc2oYzbs7KU/yneS1vGti2WGK3rmzeAb3CjfB1aw==
-X-Google-Smtp-Source: APXvYqynIeAqmxnZJPVrUBX0HL4mFe2i1csabok42yOPSoE47RkIe1URyWw7Hs5Tsysc1003S9Ir62lLft7SIrvKOsY=
-X-Received: by 2002:a67:fd4e:: with SMTP id g14mr3950334vsr.182.1579082222132;
- Wed, 15 Jan 2020 01:57:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20200114021934.178057-1-ikjn@chromium.org> <ad5b6728-2435-9f97-870a-7107f5cc805b@collabora.com>
-In-Reply-To: <ad5b6728-2435-9f97-870a-7107f5cc805b@collabora.com>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Wed, 15 Jan 2020 17:56:51 +0800
-Message-ID: <CAATdQgDNqPtYRsStvbQsy7M7S_TMShGELwuKg8AjARDi_KN6Pg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Nicolas Boitchat <drinkcat@chromium.org>,
-        linux-input@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TphKRKgrx6UOwY938/z3zkU7XoFubfFhJvJRyw+ELVA=;
+        b=GbCtMzQD20Cf8iWOen+ECecy6II/CHCgT97+hKtNbL4CaBXBTZgyQLxSeKlVbtPCSy
+         TULdQpoLNbFxAnPEvBauEFCdpo7qJZFcE7bidWjz9zW9BudqaUr10CFKjGcDDDlYlZFU
+         +EIz/1H4+15tRyYWZ8UTn2XT9ovIMRC46rnevXD2Dv82YFMQ7P8j8r83rIPx0BFcjbvc
+         LO7296iPq+s59ZCzYxAd91N0sVgd2x3T7CHq6GlyFtjnVAGRIrq52EV3gY+rpjyUGEm5
+         S0BLdxGHmpgUwlV6rDdvv9k+w8RCU58LEv/c6iIB2HJ4ySBF9R11tQQH6obuOXIXFBJh
+         G6TA==
+X-Gm-Message-State: APjAAAUZNvMSmZRLEdbAe+66PIAqbp9FtQxzjHoIln46VMVLiD6UPHAj
+        bqfdsIbF7S0bSFOa5sAgYi61X+lDTr8=
+X-Google-Smtp-Source: APXvYqyiJAvF67CsgbnfTuZzZ394kjvs04rbDKyhZy7BpSwsCoiFjVC73kNMLzdKqGiznx/yeOH5YA==
+X-Received: by 2002:adf:ed83:: with SMTP id c3mr29669763wro.51.1579083165363;
+        Wed, 15 Jan 2020 02:12:45 -0800 (PST)
+Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g7sm23828223wrq.21.2020.01.15.02.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 02:12:44 -0800 (PST)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org
+Cc:     johan@kernel.org, nsaenzjulienne@suse.de,
+        linux-kernel@vger.kernel.org, khilman@baylibre.com
+Subject: [PATCH v7 0/2] add support of interrupt for host wakeup from devicetree in BCM HCI driver
+Date:   Wed, 15 Jan 2020 11:12:41 +0100
+Message-Id: <20200115101243.17094-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+add interrupts and interrupt-names properties to set host wakeup IRQ.
+actually driver find this IRQ from host-wakeup-gpios propety
+but some platforms are not supported gpiod_to_irq function.
+so to have possibility to use interrupt mode we need to add interrupts
+field in devicetree and support it in driver.
 
-<snip>
-> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> > ---
-> >  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ----------
-> >  .../devicetree/bindings/mfd/cros-ec.yaml      | 138 ++++++++++++++++++
->
-> This is not an mfd binding anymore, the old binding is in the wrong place,
-> please move to devicetree/bindings/chrome/google,cros-ec.yaml
->
-I think creating a new 'chrome' subdirectory should involve more
-discussions as there are
-other chrome related things in dt-binding.
-I'd like to convert the format first before moving forward.
+change sinve v6:
+- depracate host-wakeup-gpios 
 
-<snip>
-> > +description: |
-> > +  Google's ChromeOS EC is a Cortex-M device which talks to the AP and
-> > +  implements various function such as keyboard and battery charging.
->
-> I am not English native but I guess there are some typos. Lets take this
-> opportunity to rewrite fix some parts, please feel free to ignore them if I am
-> wrong.
->
-yeah, I'm not too. Honestly, there was nothing strange for me before
-you point out. :-)
-anyway I'm trying my best to fix those things mentioned (typos,
-removing LPC, rpmsg examples)
-and do some generalizations (e.g. Cortex --> microcontroller). send v2
-patch soon.
+change sinve v5:
+- add tags
 
-Thanks!
+change sinve v4 [1]:
+- add patch to update Documentation
+- use of_irq_get_byname to be more clear and move call in bcm_of_probe
+- update commit message
 
-> typo: functions?
->
-> > +  The EC can be connect through various means (I2C, SPI, LPC, RPMSG)
->
-> typo: 'connected' or 'is connected'
->
->
-> I'd add '(I2C, SPI and others)' where other is RPMSG, ISHP, and future transport
-> layers.
->
-> > +  and the compatible string used depends on the interface.
->
-> on the communication interface?
->
-> > +  Each connection method has its own driver which connects to the
-> > +  top level interface-agnostic EC driver. Other Linux driver
-> > +  (such as cros-ec-keyb for the matrix keyboard) connect to the
-> > +  top-level driver.
->
-> Not sure this part is clear an accurate to the reality, I'd just remove it.
+change since v3:
+- move on of_irq instead of platform_get_irq
 
-ACK
+change since v2:
+- fix commit message
 
->
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - description:
-> > +          For implementations of the EC is connected through I2C.
->
-> s/is/are connected/?
->
-> And the same change applies below.
->
-> > +        const: google,cros-ec-i2c
-> > +      - description:
-> > +          For implementations of the EC is connected through SPI.
-> > +        const: google,cros-ec-spi
->
-> > +      - description:
-> > +          For implementations of the EC is connected through LPC.
-> > +        const: google,cros-ec-lpc
->
-> This does not exist in mainline so remove it.
+change since v1:
+- rebase patch
 
-ACK
+[1] https://lore.kernel.org/linux-bluetooth/20191213105521.4290-1-glaroque@baylibre.com/
 
-<snip>
-> +        google,cros-ec-spi-pre-delay:
-> +          description: |
-> +            Some implementations of the EC need a little time to wake up
-> +            from sleep before they can receive SPI transfers
-> +            at a high clock rate. This property specifies the delay,
-> +            in usecs, between the assertion of the CS to the start of
-> +            the first clock pulse.
-> +        google,cros-ec-spi-msg-delay:
-> +          description: |
-> +            Some implementations of the EC require some additional
-> +            processing time in order to accept new transactions.
-> +            If the delay between transactions is not long enough
-> +            the EC may not be able to respond properly to
-> +            subsequent transactions and cause them to hang.
-> +            This property specifies the delay, in usecs,
-> +            introduced between transactions to account for the
-> +            time required by the EC to get back into a state
-> +            in which new data can be accepted.
+Guillaume La Roque (2):
+  dt-bindings: net: bluetooth: add interrupts properties
+  bluetooth: hci_bcm: enable IRQ capability from devicetree
 
-I will remove some details here ('some implementations need something' parts).
+ .../devicetree/bindings/net/broadcom-bluetooth.txt         | 7 +++++--
+ drivers/bluetooth/hci_bcm.c                                | 3 +++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-<snip>
+-- 
+2.17.1
 
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          const: google,cros-ec-lpc
-> > +    then:
-> > +      properties:
-> > +        reg:
-> > +          description: |
-> > +            List of (IO address, size) pairs defining the interface uses
-> > +      required:
-> > +        - reg
-> > +
->
-> Remove the LPC part.
-
-ACK
-
->
-> > +examples:
-> > +  - |+
-> > +    // Example for I2C
->
-> Use c style comments I guess
-
-Okay, I will use '#' outside of example context in v2.
-
->
-> > +    i2c@12ca0000 {
->
-> i2c0 {
->
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
->
-> nit: Add an empty line here
-
-ACK
-
->
-> > +        cros-ec@1e {
-> > +            reg = <0x1e>;
-> > +            compatible = "google,cros-ec-i2c";
->
-> The compatible on top
->
-> > +            interrupts = <14 0>;
-> > +            interrupt-parent = <&wakeup_eint>;
-> > +            wakeup-source;
-> > +        };
->
-> Just let's use an upstream example, i.e the snow one:
->
->    cros-ec@1e {
->         compatible = "google,cros-ec-i2c";
->         reg = <0x1e>;
->         interrupts = <6 IRQ_TYPE_NONE>;
->         interrupt-parent = <&gpx1>;
->    };
->
-> > +    };
-> > +  - |+
-> > +    // Example for SPI
-> > +    spi@131b0000 {
->
-> spi0 {
->
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
->
-> nit: Add an empty line here
-
-ACK
-
->
-> > +        ec@0 {
->
-> Use cros-ec@0, same name as before to be coherent
->
-> > +            compatible = "google,cros-ec-spi";
-> > +            reg = <0x0>;
-> > +            interrupts = <14 0>;
-> > +            interrupt-parent = <&wakeup_eint>;
->
-> What about selecting a more simple example, without the controller-data to not
-> confuse the reader.
->
-> > +            wakeup-source;
-> > +            spi-max-frequency = <5000000>;
-> > +            controller-data {
-> > +                cs-gpio = <&gpf0 3 4 3 0>;
-> > +                samsung,spi-cs;
-> > +                samsung,spi-feedback-delay = <2>;
-> > +            };
-> > +        };
-> > +    };
-> > +
->
-> I propose the veyron one.
->
->         cros-ec@0 {
->
->                 compatible = "google,cros-ec-spi";
->                 reg = <0>;
->                 google,cros-ec-spi-pre-delay = <30>;
->                 interrupt-parent = <&gpio7>;
->                 interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
->                 spi-max-frequency = <3000000>;
->         };
->
-> > +...
-> >
->
-
-Okay, but I will use interrupts = <99 0> instead of <RK_XXX IRQ_XXX>
-in here. :-)
-
-> Could we have a RPMSG example too?
-
-Okay
-
->
-> Thanks,
->  Enric
