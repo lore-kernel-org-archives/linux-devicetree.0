@@ -2,30 +2,29 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D734C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D1DC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C6F214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A85924656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgAORHM (ORCPT
+        id S1729061AbgAORHk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:07:12 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:38822 "EHLO
+        Wed, 15 Jan 2020 12:07:40 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:38830 "EHLO
         herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728928AbgAORHM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 12:07:12 -0500
-X-Greylist: delayed 2606 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 12:07:11 EST
+        with ESMTP id S1729028AbgAORHk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 12:07:40 -0500
 Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 00FGN3te021572;
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 00FGN3DI021574;
         Wed, 15 Jan 2020 18:23:03 +0200
 Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id DB60D60328; Wed, 15 Jan 2020 18:23:02 +0200 (IST)
+        id D85536032F; Wed, 15 Jan 2020 18:23:03 +0200 (IST)
 From:   Tomer Maimon <tmaimon77@gmail.com>
 To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
@@ -33,10 +32,12 @@ To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
 Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
         Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 0/4] spi: npcm-pspi: improve preformance modify reset and fix issue
-Date:   Wed, 15 Jan 2020 18:22:57 +0200
-Message-Id: <20200115162301.235926-1-tmaimon77@gmail.com>
+Subject: [PATCH v1 2/4] spi: npcm-pspi: improve spi transfer performance
+Date:   Wed, 15 Jan 2020 18:22:59 +0200
+Message-Id: <20200115162301.235926-3-tmaimon77@gmail.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200115162301.235926-1-tmaimon77@gmail.com>
+References: <20200115162301.235926-1-tmaimon77@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -44,24 +45,33 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch set modify Perphiral SPI NPCM driver as follow:
-	
-	- Improve transfer performance.
-	- Fix 16 bit send and receive support.
-	- Modify dt-binding documentation to support reset controller driver.
-	- Modify reset support to use reset controller driver
-	  NPCM reset driver: https://lkml.org/lkml/2019/11/7/429.
+Improving spi 8 bit per word mode transfer performance
+by using 16 bit per word transfer and receive when the data
+length is even and larger than one.
 
-Tomer Maimon (4):
-  spi: npcm-pspi: fix 16 bit send and receive support
-  spi: npcm-pspi: improve spi transfer performance
-  dt-binding: spi: add NPCM PSPI reset binding
-  spi: npcm-pspi: modify reset support
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ drivers/spi/spi-npcm-pspi.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- .../bindings/spi/nuvoton,npcm-pspi.txt        | 12 +---
- drivers/spi/spi-npcm-pspi.c                   | 57 +++++++++----------
- 2 files changed, 29 insertions(+), 40 deletions(-)
-
+diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
+index c74611abe2a9..eac7ba18b4b9 100644
+--- a/drivers/spi/spi-npcm-pspi.c
++++ b/drivers/spi/spi-npcm-pspi.c
+@@ -178,6 +178,13 @@ static void npcm_pspi_setup_transfer(struct spi_device *spi,
+ 		priv->mode = spi->mode;
+ 	}
+ 
++	/*
++	 * If transfer is even length, and 8 bits per word transfer,
++	 * then implement 16 bits-per-word transfer.
++	 */
++	if (priv->bits_per_word == 8 && !(t->len & 0x1))
++		t->bits_per_word = 16;
++
+ 	if (!priv->is_save_param || priv->bits_per_word != t->bits_per_word) {
+ 		npcm_pspi_set_transfer_size(priv, t->bits_per_word);
+ 		priv->bits_per_word = t->bits_per_word;
 -- 
 2.22.0
 
