@@ -2,118 +2,107 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDCDC32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F2DC32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB282465A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285D42465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:44:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DetHZawl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EXJ9Jpxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbgAOWIE (ORCPT
+        id S1730244AbgAOWoJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:08:04 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:47053 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729016AbgAOWIE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 17:08:04 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so8824095pgb.13;
-        Wed, 15 Jan 2020 14:08:04 -0800 (PST)
+        Wed, 15 Jan 2020 17:44:09 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:46710 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729442AbgAOWoJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 17:44:09 -0500
+Received: by mail-vk1-f195.google.com with SMTP id u6so5200904vkn.13
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 14:44:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SJWP0dc8tNu8wLgOp289sHabmbIqUoct2rH5jSqMT58=;
-        b=DetHZawldPHHvcYPN8OOm8v4iwjr+CfbmF/SgvuhbeY6yzB2RxshNG003RkI5vMzRL
-         FGG2xM1d+UdEEBP4xmArKkAQ337ITqERyULuI8ReUSWl11J/81t5WrMX0KWyk3Cx0xA9
-         6TCnuKGuBSIUA+ONKYcLwf0LdE4Mr/wl6a82HzWbk+1YUrx5LN48Fmh9K2357BfAkqit
-         2SsIIwsVuE1rI6ipVLPNlgITV2SN5Goksr/HB2txOcNa5C3gEBFbq9NAwsS6Itvyc9Ip
-         R33QPOyMRe4QFugRH93Di7yJtHz6Xvfc76kCDNGX1mFuEhFl3+YUysTgwL8TRbEL6LYV
-         yotg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EbsE7yB3eGOjL7w6M5aCw+NaQ3bQ1Ie1J3/rIfgrCSM=;
+        b=EXJ9JpxfQFkpbNO5ovU9r+uWdsKb6mmP3FVs0MzgAX1M0W5ezFJiXtx8rkazXI2s1M
+         +fUMgeM4ULCcj/ldqsgpEm3+8rYCC0mLe1fn9fAoRPYgkZL+X4xaIE0elUZk9iBF++/y
+         oNXg8Luw40ipFqpEBdGl33Y8JFZRautwdT438=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SJWP0dc8tNu8wLgOp289sHabmbIqUoct2rH5jSqMT58=;
-        b=ovW0PsjfLBAo4ayxXArmBROBzM8e2SZ4V94SjEbOGjuAUmRtBZk5/DrSp0LHln8CrE
-         UT4knEVwuXXyG9w+XV9MTLq32zavARP7nmBrPFJ2CXXp8ANXEFPHZSUILSbcq0lKuOch
-         APCOMnyq933VGdDDUy09L5b1oDX5riwVEtENXfuKmenqQwpe7BXjsZ+f7Jt5MTGxCYOH
-         QMW0lT4EammXZpjeevOJ2UoOd+Le8QTzr+EvYfwDn/olzUOrxG2qeGet7wjg49CAi4nB
-         OEFnxTo8SZsq6mL2SZ4E7hWtgDr9oHCD39UdrqiUkTDLBuN6Biqgnx7gJCWqwSWNektr
-         beEw==
-X-Gm-Message-State: APjAAAUvr4vIPn+v1iBZZpjS5SV2mHotrGYK+7OejLU2WmIgSM5yBirX
-        ZdLS9DsBkD/kOAx/LN5x1wI=
-X-Google-Smtp-Source: APXvYqyWsg9nZ7iS/q53dd4ttLoSRT/XWe5AeXPcI5W4HjRg03CpMwcnWHrKfBz6kd+WyBp4ymUhhg==
-X-Received: by 2002:a63:2308:: with SMTP id j8mr33867384pgj.86.1579126083966;
-        Wed, 15 Jan 2020 14:08:03 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:a:2ce2:5c73:b928:d080])
-        by smtp.gmail.com with ESMTPSA id v10sm21902345pgk.24.2020.01.15.14.08.03
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EbsE7yB3eGOjL7w6M5aCw+NaQ3bQ1Ie1J3/rIfgrCSM=;
+        b=EOH1dXJBu4BiFDybKEtpJNNLvd0Gr/wjzzeuM48ePvOxdGF9aEazatEa3fNwDoCjSR
+         vBn8XucydXoLOTgDw0gSyaHH+ytAZOEW684YFodRDCwnsuPPv0Wi47TtWm/xg2HOnUNM
+         W18jC46v/Iq4jTkSvw0fT9FN7cOARo0evrbET35GSrcih9g7kgwlExZOt3ttPDKMvcaD
+         tdQzSakxNt3I9jiUEnWCqukTok8I7d2cDG0QBLx7lw+vHIMvN8bw9QB9Imf+74LTZ9/J
+         UJO/f3FCGQHiuk2FKHJG+YLo+1P5UXkfHfpl1Q8npTpgUIjkFNL+Dj6JvfCaIC9y5Tas
+         wxIg==
+X-Gm-Message-State: APjAAAWrmv1OVBARe6OGIpYGAM3eqNi3xomr/Lguu0VlxcCqNvAv1gWB
+        EMqDAaRmUQPhL3bYiEap2q1HDbIpaco=
+X-Google-Smtp-Source: APXvYqwcLuwUOUvE+c6FJMZNeuT55Ans2aXigSXH1umg+BelM5R+d1RAHI9x/PFv7m/Rw/za6RkEuw==
+X-Received: by 2002:a1f:a2d6:: with SMTP id l205mr15703087vke.100.1579128247948;
+        Wed, 15 Jan 2020 14:44:07 -0800 (PST)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id a196sm5859158vke.14.2020.01.15.14.44.06
+        for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 14:08:03 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     sashal@kernel.org, James Morse <james.morse@arm.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
-        shji@microsoft.com, ruizhao@microsoft.com,
-        Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
-        wangglei@gmail.com
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
- <20200115213848.GO20975@zn.tnic>
- <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
- <20200115220436.GP20975@zn.tnic>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <6a27f387-2c52-6587-1b21-c2e52c1b2436@gmail.com>
-Date:   Wed, 15 Jan 2020 14:08:02 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 14:44:07 -0800 (PST)
+Received: by mail-ua1-f46.google.com with SMTP id h32so6937286uah.4
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 14:44:06 -0800 (PST)
+X-Received: by 2002:ab0:2006:: with SMTP id v6mr17735083uak.22.1579128246442;
+ Wed, 15 Jan 2020 14:44:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200115220436.GP20975@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200110101802.4491-1-saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200110101802.4491-1-saiprakash.ranjan@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 15 Jan 2020 14:43:55 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Voec=RNabf7eqMDd68J7KCgVpNwvUxaz6SVwGMnrCppQ@mail.gmail.com>
+Message-ID: <CAD=FV=Voec=RNabf7eqMDd68J7KCgVpNwvUxaz6SVwGMnrCppQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add iommus property to QUP0 and QUP1
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/15/2020 2:05 PM, Borislav Petkov wrote:
-> On Wed, Jan 15, 2020 at 01:49:56PM -0800, Shiping Ji wrote:
->> Lei will be the author of this driver in the git history. I could ask
->> her to send the patch again if that's the correct way to go. Please
->> confirm.
-> 
-> No need - you only have to send the patch with her From: at the
-> beginning. Btw, you make her an author in git by doing:
-> 
-> git commit --amend --author="Lei Wang <leiwang_git@outlook.com>"
-> 
-> But before you send again, let me take a look at the rest of the patch
-> first, tomorrow most likely.
-> 
-> Thx.
-> 
+Hi,
 
-Got it, I will have the followings next:
+On Fri, Jan 10, 2020 at 2:18 AM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Define iommus property for QUP0 and QUP1 with the proper SID
+> and mask. Below SMMU global faults are seen without this during
+> boot and when using i2c touchscreen.
+>
+> QUP0:
+> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x00000043, GFSYNR2 0x00000000
+>
+> QUP1:
+> arm-smmu 15000000.iommu: Unexpected global fault, this could be serious
+> arm-smmu 15000000.iommu: GFSR 0x00000002, GFSYNR0 0x00000002, GFSYNR1 0x000004c3, GFSYNR2 0x00000000
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
 
-From: Lei Wang <leiwang_git@outlook.com>
-
-<commit message>
-
-Signed-off-by: Lei Wang <leiwang_git@outlook.com>
-Signed-off-by: me
-
---
-Best regards,
-Shiping Ji
+Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
