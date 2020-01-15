@@ -2,205 +2,109 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A9FC3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B2DC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808C624671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6EB24679
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgAOLOn (ORCPT
+        id S1730002AbgAOLah (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:14:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:35200 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgAOLOn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 06:14:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B04FD31B;
-        Wed, 15 Jan 2020 03:14:42 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D2F83F6C4;
-        Wed, 15 Jan 2020 03:14:40 -0800 (PST)
-Subject: Re: [PATCH v8 08/15] coresight: cti: Enable CTI associated with
- devices.
-To:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        coresight@lists.linaro.org, linux-doc@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
-        robh+dt@kernel.org, maxime@cerno.tech, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, agross@kernel.org,
-        corbet@lwn.net
-References: <20200113213149.25599-1-mike.leach@linaro.org>
- <20200113213149.25599-9-mike.leach@linaro.org>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <396fc3a2-083b-29ef-2bb6-2fca066ea0ef@arm.com>
-Date:   Wed, 15 Jan 2020 11:14:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 06:30:37 -0500
+Received: from mail-sh.amlogic.com ([58.32.228.43]:38651 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729758AbgAOLag (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 06:30:36 -0500
+Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 15 Jan 2020
+ 19:31:02 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH v6 0/4] arm64: meson: add support for A1 Power Domains
+Date:   Wed, 15 Jan 2020 19:30:27 +0800
+Message-ID: <1579087831-94965-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200113213149.25599-9-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [116.236.93.172]
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/01/2020 21:31, Mike Leach wrote:
-> The CoreSight subsystem enables a path of devices from source to sink.
-> Any CTI devices associated with the path devices must be enabled at the
-> same time.
-> 
-> This patch adds an associated coresight_device element to the main
-> coresight device structure, and uses this to create associations between
-> the CTI and other devices based on the device tree data. The associated
-> device element is used to enable CTI in conjunction with the path elements.
-> 
-> CTI devices are reference counted so where a single CTI is associated with
-> multiple elements on the path, it will be enabled on the first associated
-> device enable, and disabled with the last associated device disable.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
->   drivers/hwtracing/coresight/coresight-cti.c   | 129 ++++++++++++++++++
->   drivers/hwtracing/coresight/coresight-cti.h   |   1 +
->   .../hwtracing/coresight/coresight-platform.c  |   1 +
->   drivers/hwtracing/coresight/coresight-priv.h  |  12 ++
->   drivers/hwtracing/coresight/coresight.c       |  71 +++++++++-
->   include/linux/coresight.h                     |   4 +
->   6 files changed, 213 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> index 77c2af247917..2be1b310e854 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> @@ -4,6 +4,7 @@
->    * Author: Mike Leach <mike.leach@linaro.org>
->    */
->   
-> +#include <linux/property.h>
->   #include "coresight-cti.h"
->   
->   /**
-> @@ -440,6 +441,131 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
->   	return err;
->   }
->   
-> +/*
-> + * Look for a matching connection device name in the list of connections.
-> + * If found then swap in the csdev name, set trig con association pointer
-> + * and return found.
-> + */
-> +static bool
-> +cti_match_fixup_csdev(struct cti_device *ctidev, const char *node_name,
-> +		      struct coresight_device *csdev)
-> +{
-> +	struct cti_trig_con *trig_con;
+This patchset introduces a "Secure Power Doamin Controller". In A1/C1, power
+controller registers such as PWRCTRL_FOCRSTN, PWRCTRL_PWR_OFF, PWRCTRL_MEM_PD
+and PWRCTRL_ISO_EN, are in the secure domain, and should be accessed from ATF
+by smc.
 
-super minor nit: Please use "struct cti_trig_con *tc;" consistent with
-the naming everywhere else. Helps a lot in reading the code, especially
-which has a lot of different structures.
+The secure-pwrc will not be probed before the secure watchdog patchset is merged 
+at [6], which adds of_platform_default_populate() in meson_sm_probe(). 
 
-> +	const char *csdev_name;
-> +
-> +	list_for_each_entry(trig_con, &ctidev->trig_cons, node) {
-> +		if (trig_con->con_dev_name) {
+Changes since v5 at [4]:                                                         
+ - Move sec-pwrc to child node of secure-monitor according to Rob's suggestion
+   at [5]
 
-This was allocated via devm_* and ...
+Changes since v4 at [3]:                                                         
+ - add SM_A1_ prefix for PWRC_SET/GET
+ - rename variable and update comments
 
-> +			if (!strcmp(node_name, trig_con->con_dev_name)) {
-> +				/* match: so swap in csdev name & dev */
-> +				kfree(trig_con->con_dev_name);
+Changes since v3 at [2]:                                                         
+ - remove phandle to secure-monitor node
 
-... we free it here using kfree() without devm_ being aware. This could
-cause double-free when the device is removed. This should either be
-devm_kfree() or simply overwritten with the new string and leave
-the device cleanup to free it.
+Changes since v2 at [1]:
+- update domain id
+- include dt-bindings in dts
 
-> +				csdev_name = dev_name(&csdev->dev);
-> +				trig_con->con_dev_name =
-> +					kstrdup(csdev_name, GFP_KERNEL);
+Changes since v1 at [0]:
+- use APIs from sm driver
+- rename pwrc_secure_get_power as Kevin suggested
+- add comments for always on domains
+- replace arch_initcall_sync with builtin_platform_driver
+- fix coding style
 
-Please use devm_kstrdup() here on the CTI device to have a consistent
-allocation.
+[0]  https://lore.kernel.org/linux-amlogic/1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com
+[1]  https://lore.kernel.org/linux-amlogic/1570695678-42623-1-git-send-email-jianxin.pan@amlogic.com
+[2]  https://lore.kernel.org/linux-amlogic/1571391167-79679-1-git-send-email-jianxin.pan@amlogic.com
+[3]  https://lore.kernel.org/linux-amlogic/1572868028-73076-1-git-send-email-jianxin.pan@amlogic.com
+[4]  https://lore.kernel.org/linux-amlogic/1573532930-39505-2-git-send-email-jianxin.pan@amlogic.com
+[5]  https://lore.kernel.org/linux-amlogic/07f0ed9d-0b1a-d84f-de8b-1967e56bbd21@amlogic.com/
+[6]  https://lore.kernel.org/linux-amlogic/1578973527-4759-3-git-send-email-xingyu.chen@amlogic.com
 
+Jianxin Pan (4):
+  firmware: meson_sm: Add secure power domain support
+  dt-bindings: power: add Amlogic secure power domains bindings
+  soc: amlogic: Add support for Secure power domains controller
+  arm64: dts: meson: a1: add secure power domain controller
 
-> +				trig_con->con_dev = csdev;
-> +				return true;
-> +			}
-> +		}
-> +	}
-> +	return false;
-> +}
-> 
+ .../bindings/power/amlogic,meson-sec-pwrc.yaml     |  40 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   6 +
+ drivers/firmware/meson/meson_sm.c                  |   2 +
+ drivers/soc/amlogic/Kconfig                        |  13 ++
+ drivers/soc/amlogic/Makefile                       |   1 +
+ drivers/soc/amlogic/meson-secure-pwrc.c            | 204 +++++++++++++++++++++
+ include/dt-bindings/power/meson-a1-power.h         |  32 ++++
+ include/linux/firmware/meson/meson_sm.h            |   2 +
+ 8 files changed, 300 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+ create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+ create mode 100644 include/dt-bindings/power/meson-a1-power.h
 
+-- 
+2.7.4
 
-> +/*
-> + * Removing the associated devices is easier.
-> + * A CTI will not have a value for csdev->ect_dev.
-> + */
-> +void cti_remove_assoc_from_csdev(struct coresight_device *csdev)
-> +{
-> +	struct cti_drvdata *ctidrv;
-> +	struct cti_trig_con *tc;
-> +	struct cti_device *ctidev;
-> +
-> +	mutex_lock(&ect_mutex);
-> +	if (csdev->ect_dev) {
-> +		ctidrv = csdev_to_cti_drvdata(csdev->ect_dev);
-> +		ctidev = &ctidrv->ctidev;
-> +		list_for_each_entry(tc, &ctidev->trig_cons, node) {
-> +			if (tc->con_dev == csdev->ect_dev) {
-> +				tc->con_dev = NULL;
-
-Should we clear/free the name too ?
-
-> +				break;
-> +			}
-> +		}
-> +		csdev->ect_dev = NULL;
-> +	}
-> +	mutex_unlock(&ect_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(cti_remove_assoc_from_csdev);
-> +
-
-...
-
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.h b/drivers/hwtracing/coresight/coresight-cti.h
-> index 469a06a1bb78..578d7e9ac67e 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.h
-> +++ b/drivers/hwtracing/coresight/coresight-cti.h
-> @@ -216,6 +216,7 @@ int cti_channel_setop(struct device *dev, enum cti_chan_set_op op,
->   		      u32 channel_idx);
->   struct coresight_platform_data *
->   coresight_cti_get_platform_data(struct device *dev);
-> +const char *cti_plat_get_node_name(struct fwnode_handle *fwnode);
->   
->   /* cti powered and enabled */
->   static inline bool cti_active(struct cti_config *cfg)
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 43418a2126ff..421d4fc95f41 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -313,6 +313,7 @@ static int of_get_coresight_platform_data(struct device *dev,
->   
->   	return 0;
->   }
-> +
-
-nit : spurious hunk ?
-
->   #else
->   static inline int
->   of_get_coresight_platform_data(struct device *dev,
-
-Otherwise looks good to me
-
-Suzuki
