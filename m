@@ -4,111 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B500C47409
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9878C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126CE2081E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E272081E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgAOVaY (ORCPT
+        id S1730097AbgAOVab (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:30:24 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8850 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730129AbgAOVaX (ORCPT
+        Wed, 15 Jan 2020 16:30:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1600 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730177AbgAOVaa (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 16:30:23 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FLRLWn068812;
-        Wed, 15 Jan 2020 16:30:04 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfaw1npek-1
+        Wed, 15 Jan 2020 16:30:30 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00FLRi7R133890;
+        Wed, 15 Jan 2020 16:30:06 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xhbpsjguf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 16:30:04 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00FLRJNB032518;
-        Wed, 15 Jan 2020 21:30:03 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 2xf75magxt-1
+        Wed, 15 Jan 2020 16:30:06 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00FLLJKp028152;
+        Wed, 15 Jan 2020 21:30:06 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04wdc.us.ibm.com with ESMTP id 2xf7520yek-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Jan 2020 21:30:03 +0000
+        Wed, 15 Jan 2020 21:30:05 +0000
 Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FLU1C661145482
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00FLU42j44499386
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 21:30:02 GMT
+        Wed, 15 Jan 2020 21:30:05 GMT
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2DDB6E052;
-        Wed, 15 Jan 2020 21:30:01 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D6D656E059;
+        Wed, 15 Jan 2020 21:30:04 +0000 (GMT)
 Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDB426E04C;
-        Wed, 15 Jan 2020 21:30:00 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 050BB6E04C;
+        Wed, 15 Jan 2020 21:30:04 +0000 (GMT)
 Received: from talon7.ibm.com (unknown [9.41.103.158])
         by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Jan 2020 21:30:00 +0000 (GMT)
+        Wed, 15 Jan 2020 21:30:03 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-aspeed@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         mark.rutland@arm.com, jason@lakedaemon.net, maz@kernel.org,
         robh+dt@kernel.org, tglx@linutronix.de, joel@jms.id.au,
         andrew@aj.id.au, eajames@linux.ibm.com
-Subject: [PATCH v6 09/12] ARM: dts: aspeed: ast2500: Add XDMA Engine
-Date:   Wed, 15 Jan 2020 15:29:47 -0600
-Message-Id: <1579123790-6894-10-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH v6 12/12] ARM: dts: aspeed: tacoma: Enable XDMA engine
+Date:   Wed, 15 Jan 2020 15:29:50 -0600
+Message-Id: <1579123790-6894-13-git-send-email-eajames@linux.ibm.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
 References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-15_03:2020-01-15,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- suspectscore=1 adultscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 phishscore=0 mlxlogscore=855 bulkscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=457
+ impostorscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ suspectscore=1 malwarescore=0 priorityscore=1501 adultscore=0 spamscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-2001150161
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a node for the XDMA engine with all the necessary information.
+Enable the XDMA engine node.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 1c40c8f..f3fb659 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+
- #include <dt-bindings/clock/aspeed-clock.h>
-+#include <dt-bindings/interrupt-controller/aspeed-scu-ic.h>
- 
- / {
- 	model = "Aspeed BMC";
-@@ -259,6 +260,17 @@
- 				interrupts = <0x19>;
- 			};
- 
-+			xdma: xdma@1e6e7000 {
-+				compatible = "aspeed,ast2500-xdma";
-+				reg = <0x1e6e7000 0x100>;
-+				clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-+				resets = <&syscon ASPEED_RESET_XDMA>;
-+				interrupts-extended = <&vic 6>, <&scu_ic ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI>;
-+				pcie-device = "bmc";
-+				aspeed,scu = <&syscon>;
-+				status = "disabled";
-+			};
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+index ff49ec7..3e6c309 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+@@ -800,3 +800,9 @@
+ 	pinctrl-0 = <&pinctrl_lpc_default>,
+ 		    <&pinctrl_lsirq_default>;
+ };
 +
- 			adc: adc@1e6e9000 {
- 				compatible = "aspeed,ast2500-adc";
- 				reg = <0x1e6e9000 0xb0>;
++&xdma {
++	status = "okay";
++	/* 1G DRAM with 8M VRAM which is reserved at the top. */
++	memory = <0xbf800000 0x00800000>;
++};
 -- 
 1.8.3.1
 
