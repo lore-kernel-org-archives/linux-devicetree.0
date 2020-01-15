@@ -4,70 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C706EC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A4BC33CB2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A121E2084D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02BF24671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579114761;
-	bh=WZ9dDHWNeKPrcS9rLHM1YBNJBUru5u8YXrlP60CMQVE=;
+	s=default; t=1579114768;
+	bh=sI7qjuFwHkU+C/ugTPZ02yC7mmhnfBVUf/WexK9dq9E=;
 	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
 	 From;
-	b=a9MfTCmLFdfAAlJ/961yhrBCsAGGtc+zx/i78wu0m4HVEVqAh2+kTXOhnFNAwkhk8
-	 wxMqwPQamkuomR25yiy3A+Vror8z1NI+cc9CReqxEttEl5XunTjNaHgerAjpAgOcCD
-	 wqcZUJmpVUOS8H+lJhEBMKosschSTnqbrKmwKtzA=
+	b=qsLzn6m9GMCIx+ibs/+yzOiEy3Xx+M2o9dqDS8CXEBXw0R6tUfOGjnbATmcsR7FPi
+	 4dQobaOmeCYw2wEZIukBCH9beZmAb6L13rQOJKvey9sUqZoIDZkzxnSgXXvnebYlxa
+	 1ReDcVhkwaTwIVlZw3UzAaer9VE6tUxjSAF9dJ/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgAOS7V (ORCPT
+        id S1729248AbgAOS71 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:59:21 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39833 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgAOS7V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 13:59:21 -0500
-Received: by mail-pj1-f65.google.com with SMTP id e11so339353pjt.4;
-        Wed, 15 Jan 2020 10:59:20 -0800 (PST)
+        Wed, 15 Jan 2020 13:59:27 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39844 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729236AbgAOS71 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 13:59:27 -0500
+Received: by mail-pj1-f66.google.com with SMTP id e11so339466pjt.4;
+        Wed, 15 Jan 2020 10:59:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
          :references:in-reply-to;
-        bh=1SLdAde/vZjeqxxnpKqcthZrj/PohN8IdFEkwjDaUug=;
-        b=kJ+xtP2rtOihK1qr2NRm5B92tj9k9BAUJppduOWS1pQJUqWUzobOsChk1kqWGn38dj
-         paZjPcrLdGpBOzIEZ/g7sHOvvhmAWDq4PPuiT8nLE7r1C+8j6ZZgtF4kEpkpuiSYpQFC
-         Bb0nXugdeuDyMtLQK3yWbTiOGUKKRRMgvy7c9dZ9A6fkjQtdhBCAdPYGgbLg7ZmOJu/1
-         bcp74AzXKLRLimeeWZdJIxZb0Pu7J5m98xKDhYtcl3WXFUuRg/rxD+Xapnpj6RwwW2tS
-         JfMiKy8A86jSKGdX7YSCZE33kfdEFpz9zyGjaVdNjRFQqN1AQa9IwkUj0S+ATs0uxW0h
-         +/iQ==
-X-Gm-Message-State: APjAAAVDIJKQKJBpjbAumVvsalJb9Vo/2RD1UhRq1uHuLuapilCk+ExA
-        nBIbEw5U9S3DNPf1rUNlqdA=
-X-Google-Smtp-Source: APXvYqxNfiIM/3c9cK63WOfpQCpjcgkqzvoGKHzmQe6lPV9XOL2x9uoLD1P3Z+lss4AuonnyJ3OMZg==
-X-Received: by 2002:a17:90a:21a7:: with SMTP id q36mr1544931pjc.140.1579114759985;
-        Wed, 15 Jan 2020 10:59:19 -0800 (PST)
+        bh=6gSo4RAPlYJmWVLazwjXSnCzKLp8vlmWill3n2LyNiY=;
+        b=CqQxHJcRMAe99p+rrj734cCdyjG17g36cIw01iS09XoA3p4kCpor+bzEMxOQp9BH0G
+         fLsoP4z/uVL0zDLonN5tnGVHMqlohJGjLoQ48gw2P3k7y8Q9UmjpILHRUAL5fXPNoeEo
+         x1ZhOVxNvC5+OPN5ZDRu+iNbHuKWC8bhIQ82FlppH0l8QKr/ST3iZlWl9AnYD6MTuYQ4
+         qfKuzVfXodJ+fTaOEsL6/jshWgMXXFaFrBxMvdnXuRgvxaZTXkqlJYiRF+RlwhJWB/h5
+         hcgSpAl0KDVwi2p8wu/UqWxkxSDqZMbFU+tzmxHwKCgY/hEiZXCcQxZsyug7U7g65n1O
+         M1ug==
+X-Gm-Message-State: APjAAAXzyt13uRIxR0Q5ZIA3OavIUGQ+M7b+6i67muFgb2Xkk0SvC64z
+        6j7eD8rwy3IabkDvSYeEcYQ=
+X-Google-Smtp-Source: APXvYqyZnMD8FGLhGq+S+3gD+ymfeRgcx+0vuUYpc28gAwsoI79XSISNo0pC8UxBf37Tlmk2Zi00VQ==
+X-Received: by 2002:a17:90a:e990:: with SMTP id v16mr1545811pjy.67.1579114766333;
+        Wed, 15 Jan 2020 10:59:26 -0800 (PST)
 Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id m3sm22395270pfh.116.2020.01.15.10.59.18
+        by smtp.gmail.com with ESMTPSA id z130sm21618156pgz.6.2020.01.15.10.59.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 10:59:19 -0800 (PST)
-Message-ID: <5e1f6107.1c69fb81.495b5.6c04@mx.google.com>
-Date:   Wed, 15 Jan 2020 10:59:18 -0800
+        Wed, 15 Jan 2020 10:59:25 -0800 (PST)
+Message-ID: <5e1f610d.1c69fb81.f807e.398f@mx.google.com>
+Date:   Wed, 15 Jan 2020 10:59:25 -0800
 From:   Paul Burton <paulburton@kernel.org>
-To:     =?utf-8?b?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
 CC:     linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
-        jhogan@kernel.org, mark.rutland@arm.com, syq@debian.org,
-        ralf@linux-mips.org, rick.tyliu@ingenic.com, jason@lakedaemon.net,
-        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        ebiederm@xmission.com
+CC:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
+        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.co,
+        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh@kernel.org>
 CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH 0/2] Add HWMON and WiFi support for CU1000-Neo.
-References:  <1579021428-43535-2-git-send-email-zhouyanjie@wanyeetech.com>
-In-Reply-To:  <1579021428-43535-2-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: Re: [PATCH v3 01/10] dt-bindings: Document loongson vendor-prefix
+References:  <20200112081416.722218-2-jiaxun.yang@flygoat.com>
+In-Reply-To:  <20200112081416.722218-2-jiaxun.yang@flygoat.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -75,35 +71,17 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 Hello,
 
-周琰杰 (Zhou Yanjie) wrote:
-> Add I2C0/I2C1/I2C2 nodes for X1000 and add I2C0, ADS7830,
-> MSC1, AP6212A, wlan_pwrseq nodes for CU1000-Neo. Refresh
-> CU1000-Neo's defconfig to support ADS7830 based HWMON
-> and AP6212A WiFi module.
-> 
-> 周琰杰 (Zhou Yanjie) (2):
->   MIPS: Ingenic: Add missing nodes for X1000 and CU1000-Neo.
->   MIPS: CU1000-Neo: Refresh defconfig to support HWMON and WiFi.
-> 
->  arch/mips/boot/dts/ingenic/cu1000-neo.dts | 71 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/ingenic/x1000.dtsi     | 45 ++++++++++++++++++++
->  arch/mips/configs/cu1000-neo_defconfig    |  8 +++-
+Jiaxun Yang wrote:
+> Loongson is a MIPS-compatible processor vendor.
 
-Series applied to mips-next.
+Applied to mips-next.
 
-> MIPS: Ingenic: Add missing nodes for X1000 and CU1000-Neo.
->   commit 0ba96b344a7f
->   https://git.kernel.org/mips/c/0ba96b344a7f
->   
->   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> commit 1590b1eb9370
+> https://git.kernel.org/mips/c/1590b1eb9370
 > 
-> MIPS: CU1000-Neo: Refresh defconfig to support HWMON and WiFi.
->   commit 1f33d9bcb995
->   https://git.kernel.org/mips/c/1f33d9bcb995
->   
->   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Paul Burton <paulburton@kernel.org>
 
 Thanks,
     Paul
