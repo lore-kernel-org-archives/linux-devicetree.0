@@ -2,64 +2,302 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07422C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EA3C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD2324679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC9B2467A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:57:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JrH3yMVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbgAOJz1 (ORCPT
+        id S1729504AbgAOJ5D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:55:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:34138 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729504AbgAOJz1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:55:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CCA031B;
-        Wed, 15 Jan 2020 01:55:26 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB2FB3F6C4;
-        Wed, 15 Jan 2020 01:55:24 -0800 (PST)
-Subject: Re: [PATCH v8 07/15] coresight: cti: Add device tree support for
- custom CTI.
-To:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        coresight@lists.linaro.org, linux-doc@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
-        robh+dt@kernel.org, maxime@cerno.tech, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, agross@kernel.org,
-        corbet@lwn.net
-References: <20200113213149.25599-1-mike.leach@linaro.org>
- <20200113213149.25599-8-mike.leach@linaro.org>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <a1883b7f-159b-f52c-c27b-dd6c9953bba3@arm.com>
-Date:   Wed, 15 Jan 2020 09:55:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 04:57:03 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:43647 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729539AbgAOJ5D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 04:57:03 -0500
+Received: by mail-vs1-f67.google.com with SMTP id s16so10058581vsc.10
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 01:57:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o56000SPWNtNfLS/UOhvjIjcXffjJW9nLc5ULePZ0jA=;
+        b=JrH3yMVM8562bX2/6XqoOwrSuuo6qJTMbhiK+o13In/riqnO/f/Z9la6qh57xv2UUc
+         jLXXAjF/88N2pn3dsnnQ0I2d3tzuNx/QYTo4WERSKnN5H3PgLNTZPR6ToKFZSVk1pW9e
+         Kk4G6thADhgL2VrGL4BNWE8kxiXK8/XCoU/gs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o56000SPWNtNfLS/UOhvjIjcXffjJW9nLc5ULePZ0jA=;
+        b=TA/FFEKBFK6+2z+Bs3Cj71YFlhoqkTtrMxmCC7PVHv6Q4PgaK8Kgy7csyzIESDQGIB
+         KEhWno2g7MOssflTusblBRpyYRwPMY/bhEYm2HDxQjdDxKqswfcRTnJBBlXdh850gIDN
+         Yh6p4WUs6IKygnTU7FvGN+ICjqKMitv0Xe4MxtVaZYPfDxKys7VbYOG4L1CzFTZ2iyw1
+         u+evzemUIKFg+2vUI7h2Zt9PKJcdEDpq2OPy0zKtAoixFipHf1/2TtIRg3R2VTB3mvhG
+         ifnAo0hbn14SCDfrgWbZMyQltk1UzosnL7Y3CIwBlUpwQUnCy/XnGp32jtnUIODP1mXP
+         4VsQ==
+X-Gm-Message-State: APjAAAUtbh4BxMNWbGIbjgTB9eFO61YXPGeah1e6qcxL7d+rQAk775Qw
+        EHfc2oYzbs7KU/yneS1vGti2WGK3rmzeAb3CjfB1aw==
+X-Google-Smtp-Source: APXvYqynIeAqmxnZJPVrUBX0HL4mFe2i1csabok42yOPSoE47RkIe1URyWw7Hs5Tsysc1003S9Ir62lLft7SIrvKOsY=
+X-Received: by 2002:a67:fd4e:: with SMTP id g14mr3950334vsr.182.1579082222132;
+ Wed, 15 Jan 2020 01:57:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200113213149.25599-8-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200114021934.178057-1-ikjn@chromium.org> <ad5b6728-2435-9f97-870a-7107f5cc805b@collabora.com>
+In-Reply-To: <ad5b6728-2435-9f97-870a-7107f5cc805b@collabora.com>
+From:   Ikjoon Jang <ikjn@chromium.org>
+Date:   Wed, 15 Jan 2020 17:56:51 +0800
+Message-ID: <CAATdQgDNqPtYRsStvbQsy7M7S_TMShGELwuKg8AjARDi_KN6Pg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mfd: Convert ChromeOS EC bindings to json-schema
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Nicolas Boitchat <drinkcat@chromium.org>,
+        linux-input@vger.kernel.org, Gwendal Grignou <gwendal@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/01/2020 21:31, Mike Leach wrote:
-> Adds support for CTIs whose connections are implementation defined at
-> hardware design time, and not constrained by v8 architecture.
-> 
-> These CTIs have no standard connection setup, all the settings have to
-> be defined in the device tree files. The patch creates a set of connections
-> and trigger signals based on the information provided.
-> 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> ---
+Hi,
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+<snip>
+> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > ---
+> >  .../devicetree/bindings/mfd/cros-ec.txt       |  76 ----------
+> >  .../devicetree/bindings/mfd/cros-ec.yaml      | 138 ++++++++++++++++++
+>
+> This is not an mfd binding anymore, the old binding is in the wrong place,
+> please move to devicetree/bindings/chrome/google,cros-ec.yaml
+>
+I think creating a new 'chrome' subdirectory should involve more
+discussions as there are
+other chrome related things in dt-binding.
+I'd like to convert the format first before moving forward.
+
+<snip>
+> > +description: |
+> > +  Google's ChromeOS EC is a Cortex-M device which talks to the AP and
+> > +  implements various function such as keyboard and battery charging.
+>
+> I am not English native but I guess there are some typos. Lets take this
+> opportunity to rewrite fix some parts, please feel free to ignore them if I am
+> wrong.
+>
+yeah, I'm not too. Honestly, there was nothing strange for me before
+you point out. :-)
+anyway I'm trying my best to fix those things mentioned (typos,
+removing LPC, rpmsg examples)
+and do some generalizations (e.g. Cortex --> microcontroller). send v2
+patch soon.
+
+Thanks!
+
+> typo: functions?
+>
+> > +  The EC can be connect through various means (I2C, SPI, LPC, RPMSG)
+>
+> typo: 'connected' or 'is connected'
+>
+>
+> I'd add '(I2C, SPI and others)' where other is RPMSG, ISHP, and future transport
+> layers.
+>
+> > +  and the compatible string used depends on the interface.
+>
+> on the communication interface?
+>
+> > +  Each connection method has its own driver which connects to the
+> > +  top level interface-agnostic EC driver. Other Linux driver
+> > +  (such as cros-ec-keyb for the matrix keyboard) connect to the
+> > +  top-level driver.
+>
+> Not sure this part is clear an accurate to the reality, I'd just remove it.
+
+ACK
+
+>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - description:
+> > +          For implementations of the EC is connected through I2C.
+>
+> s/is/are connected/?
+>
+> And the same change applies below.
+>
+> > +        const: google,cros-ec-i2c
+> > +      - description:
+> > +          For implementations of the EC is connected through SPI.
+> > +        const: google,cros-ec-spi
+>
+> > +      - description:
+> > +          For implementations of the EC is connected through LPC.
+> > +        const: google,cros-ec-lpc
+>
+> This does not exist in mainline so remove it.
+
+ACK
+
+<snip>
+> +        google,cros-ec-spi-pre-delay:
+> +          description: |
+> +            Some implementations of the EC need a little time to wake up
+> +            from sleep before they can receive SPI transfers
+> +            at a high clock rate. This property specifies the delay,
+> +            in usecs, between the assertion of the CS to the start of
+> +            the first clock pulse.
+> +        google,cros-ec-spi-msg-delay:
+> +          description: |
+> +            Some implementations of the EC require some additional
+> +            processing time in order to accept new transactions.
+> +            If the delay between transactions is not long enough
+> +            the EC may not be able to respond properly to
+> +            subsequent transactions and cause them to hang.
+> +            This property specifies the delay, in usecs,
+> +            introduced between transactions to account for the
+> +            time required by the EC to get back into a state
+> +            in which new data can be accepted.
+
+I will remove some details here ('some implementations need something' parts).
+
+<snip>
+
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          const: google,cros-ec-lpc
+> > +    then:
+> > +      properties:
+> > +        reg:
+> > +          description: |
+> > +            List of (IO address, size) pairs defining the interface uses
+> > +      required:
+> > +        - reg
+> > +
+>
+> Remove the LPC part.
+
+ACK
+
+>
+> > +examples:
+> > +  - |+
+> > +    // Example for I2C
+>
+> Use c style comments I guess
+
+Okay, I will use '#' outside of example context in v2.
+
+>
+> > +    i2c@12ca0000 {
+>
+> i2c0 {
+>
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+>
+> nit: Add an empty line here
+
+ACK
+
+>
+> > +        cros-ec@1e {
+> > +            reg = <0x1e>;
+> > +            compatible = "google,cros-ec-i2c";
+>
+> The compatible on top
+>
+> > +            interrupts = <14 0>;
+> > +            interrupt-parent = <&wakeup_eint>;
+> > +            wakeup-source;
+> > +        };
+>
+> Just let's use an upstream example, i.e the snow one:
+>
+>    cros-ec@1e {
+>         compatible = "google,cros-ec-i2c";
+>         reg = <0x1e>;
+>         interrupts = <6 IRQ_TYPE_NONE>;
+>         interrupt-parent = <&gpx1>;
+>    };
+>
+> > +    };
+> > +  - |+
+> > +    // Example for SPI
+> > +    spi@131b0000 {
+>
+> spi0 {
+>
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+>
+> nit: Add an empty line here
+
+ACK
+
+>
+> > +        ec@0 {
+>
+> Use cros-ec@0, same name as before to be coherent
+>
+> > +            compatible = "google,cros-ec-spi";
+> > +            reg = <0x0>;
+> > +            interrupts = <14 0>;
+> > +            interrupt-parent = <&wakeup_eint>;
+>
+> What about selecting a more simple example, without the controller-data to not
+> confuse the reader.
+>
+> > +            wakeup-source;
+> > +            spi-max-frequency = <5000000>;
+> > +            controller-data {
+> > +                cs-gpio = <&gpf0 3 4 3 0>;
+> > +                samsung,spi-cs;
+> > +                samsung,spi-feedback-delay = <2>;
+> > +            };
+> > +        };
+> > +    };
+> > +
+>
+> I propose the veyron one.
+>
+>         cros-ec@0 {
+>
+>                 compatible = "google,cros-ec-spi";
+>                 reg = <0>;
+>                 google,cros-ec-spi-pre-delay = <30>;
+>                 interrupt-parent = <&gpio7>;
+>                 interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
+>                 spi-max-frequency = <3000000>;
+>         };
+>
+> > +...
+> >
+>
+
+Okay, but I will use interrupts = <99 0> instead of <RK_XXX IRQ_XXX>
+in here. :-)
+
+> Could we have a RPMSG example too?
+
+Okay
+
+>
+> Thanks,
+>  Enric
