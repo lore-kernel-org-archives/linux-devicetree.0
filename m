@@ -2,239 +2,111 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A047C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C706EC33CB3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186AD2467A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3Yvbzc2"
+	by mail.kernel.org (Postfix) with ESMTP id A121E2084D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579114761;
+	bh=WZ9dDHWNeKPrcS9rLHM1YBNJBUru5u8YXrlP60CMQVE=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=a9MfTCmLFdfAAlJ/961yhrBCsAGGtc+zx/i78wu0m4HVEVqAh2+kTXOhnFNAwkhk8
+	 wxMqwPQamkuomR25yiy3A+Vror8z1NI+cc9CReqxEttEl5XunTjNaHgerAjpAgOcCD
+	 wqcZUJmpVUOS8H+lJhEBMKosschSTnqbrKmwKtzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgAOSw6 (ORCPT
+        id S1729072AbgAOS7V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:52:58 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39428 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgAOSw4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 13:52:56 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so16796594wrt.6;
-        Wed, 15 Jan 2020 10:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fKeq8tFcSLHJkn6QSQqYD/5g8utINbdDLtdwNyNEqW4=;
-        b=g3Yvbzc2/oSJbfhTH6JaJp2Qe9E1DGE7f7QjCd+z+Ij4tcyCxl2FfLxNq2ZV2xJMb/
-         an7c+Akg/FwWYUEcDwDw/vfxSgZkYEB+XRpPDDjkIjuNe8KTJuggT0go8chdesQzK41r
-         ScQiU7ArJmzpm1pobwp2EjOhJRgd6/K5chAGj+FzLtbbHKR0mG4umBN+XrYBkPcD3Vgm
-         Mpj6e/oVvYZjUFwusNQ/0b4oCMDU4EdrfCdcTy+oy1HoJ5ysZUjfghfLg8myoqx6MRm+
-         Dc0BPvdGD7VvS8+mn5tPHWl2E45CBef30B3QEYk8+C7lGCvrqwp1HSYF05PnEdYDBcF4
-         o4sQ==
+        Wed, 15 Jan 2020 13:59:21 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39833 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728949AbgAOS7V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 13:59:21 -0500
+Received: by mail-pj1-f65.google.com with SMTP id e11so339353pjt.4;
+        Wed, 15 Jan 2020 10:59:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fKeq8tFcSLHJkn6QSQqYD/5g8utINbdDLtdwNyNEqW4=;
-        b=MIyxSWY/wsTfJxstlidRA8CjHCdnhG/hf06pYRhSzlVwqTzu2GGFnYziFGK/jTyvg6
-         Q1Itc5kypRfUHf5uqD0STj1RbvkKP0D/cryZEHJEx5fjEcyXV6ifZTqaMYc43vtopQJG
-         sRglphW5bO7nGD0rPij33/JJAqN2h9HcnieMKqnq0G6ctKJ5fhRW6WO7FcGqVF9MsKVg
-         GXWFF1rgoangbBkZaVBjZXhtdaJ2cbs62GhH8mnRaTvaC1aCZqS8lSYfav8E3HYGVHHD
-         6ETElIiAjbURMrdgOvvWaeTndhurjWVS4umNEyQk5gHNPlW9TU4dVHqG7TnVQ9q0mXiW
-         24yQ==
-X-Gm-Message-State: APjAAAWXOneELfsMd/ZSDBruxRO7CPN0xRgU8h2bzwDHb7ehh/05T6lP
-        bN6eAplfC66ICi63g9EiaFE=
-X-Google-Smtp-Source: APXvYqzkLZfz2dbHy4Hqedrh3BrPKB+8frv2Otn76ljLVvnsbG51oSX9N6Z8/7bKT/Porz+sJ+Xf4w==
-X-Received: by 2002:a5d:68cf:: with SMTP id p15mr33079769wrw.31.1579114373365;
-        Wed, 15 Jan 2020 10:52:53 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id i5sm26296759wrv.34.2020.01.15.10.52.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jan 2020 10:52:53 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: rockchip: rename dwmmc node names to mmc
-Date:   Wed, 15 Jan 2020 19:52:44 +0100
-Message-Id: <20200115185244.18149-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200115185244.18149-1-jbx6244@gmail.com>
-References: <20200115185244.18149-1-jbx6244@gmail.com>
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=1SLdAde/vZjeqxxnpKqcthZrj/PohN8IdFEkwjDaUug=;
+        b=kJ+xtP2rtOihK1qr2NRm5B92tj9k9BAUJppduOWS1pQJUqWUzobOsChk1kqWGn38dj
+         paZjPcrLdGpBOzIEZ/g7sHOvvhmAWDq4PPuiT8nLE7r1C+8j6ZZgtF4kEpkpuiSYpQFC
+         Bb0nXugdeuDyMtLQK3yWbTiOGUKKRRMgvy7c9dZ9A6fkjQtdhBCAdPYGgbLg7ZmOJu/1
+         bcp74AzXKLRLimeeWZdJIxZb0Pu7J5m98xKDhYtcl3WXFUuRg/rxD+Xapnpj6RwwW2tS
+         JfMiKy8A86jSKGdX7YSCZE33kfdEFpz9zyGjaVdNjRFQqN1AQa9IwkUj0S+ATs0uxW0h
+         +/iQ==
+X-Gm-Message-State: APjAAAVDIJKQKJBpjbAumVvsalJb9Vo/2RD1UhRq1uHuLuapilCk+ExA
+        nBIbEw5U9S3DNPf1rUNlqdA=
+X-Google-Smtp-Source: APXvYqxNfiIM/3c9cK63WOfpQCpjcgkqzvoGKHzmQe6lPV9XOL2x9uoLD1P3Z+lss4AuonnyJ3OMZg==
+X-Received: by 2002:a17:90a:21a7:: with SMTP id q36mr1544931pjc.140.1579114759985;
+        Wed, 15 Jan 2020 10:59:19 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id m3sm22395270pfh.116.2020.01.15.10.59.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 10:59:19 -0800 (PST)
+Message-ID: <5e1f6107.1c69fb81.495b5.6c04@mx.google.com>
+Date:   Wed, 15 Jan 2020 10:59:18 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     =?utf-8?b?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+CC:     linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mark.rutland@arm.com, syq@debian.org,
+        ralf@linux-mips.org, rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        ebiederm@xmission.com
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH 0/2] Add HWMON and WiFi support for CU1000-Neo.
+References:  <1579021428-43535-2-git-send-email-zhouyanjie@wanyeetech.com>
+In-Reply-To:  <1579021428-43535-2-git-send-email-zhouyanjie@wanyeetech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current dts files with 'dwmmc' nodes are manually verified.
-In order to automate this process rockchip-dw-mshc.txt
-has to be converted to yaml. In the new setup
-rockchip-dw-mshc.yaml will inherit properties from
-mmc-controller.yaml and synopsys-dw-mshc-common.yaml.
-'dwmmc' will no longer be a valid name for a node,
-so change them all to 'mmc'
+Hello,
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 6 +++---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
- 5 files changed, 14 insertions(+), 14 deletions(-)
+周琰杰 (Zhou Yanjie) wrote:
+> Add I2C0/I2C1/I2C2 nodes for X1000 and add I2C0, ADS7830,
+> MSC1, AP6212A, wlan_pwrseq nodes for CU1000-Neo. Refresh
+> CU1000-Neo's defconfig to support ADS7830 based HWMON
+> and AP6212A WiFi module.
+> 
+> 周琰杰 (Zhou Yanjie) (2):
+>   MIPS: Ingenic: Add missing nodes for X1000 and CU1000-Neo.
+>   MIPS: CU1000-Neo: Refresh defconfig to support HWMON and WiFi.
+> 
+>  arch/mips/boot/dts/ingenic/cu1000-neo.dts | 71 +++++++++++++++++++++++++++++++
+>  arch/mips/boot/dts/ingenic/x1000.dtsi     | 45 ++++++++++++++++++++
+>  arch/mips/configs/cu1000-neo_defconfig    |  8 +++-
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 07fe187cf..32e752312 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -879,7 +879,7 @@
- 		status = "disabled";
- 	};
- 
--	sdmmc: dwmmc@ff370000 {
-+	sdmmc: mmc@ff370000 {
- 		compatible = "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff370000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-@@ -894,7 +894,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio: dwmmc@ff380000 {
-+	sdio: mmc@ff380000 {
- 		compatible = "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff380000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-@@ -909,7 +909,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff390000 {
-+	emmc: mmc@ff390000 {
- 		compatible = "rockchip,px30-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff390000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index fa0d55f1a..116f1900e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -584,7 +584,7 @@
- 		status = "disabled";
- 	};
- 
--	sdmmc: dwmmc@ff480000 {
-+	sdmmc: mmc@ff480000 {
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff480000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-@@ -599,7 +599,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff490000 {
-+	emmc: mmc@ff490000 {
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff490000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-@@ -612,7 +612,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio: dwmmc@ff4a0000 {
-+	sdio: mmc@ff4a0000 {
- 		compatible = "rockchip,rk3308-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff4a0000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 91306ebed..acfaefdd3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -837,7 +837,7 @@
- 		};
- 	};
- 
--	sdmmc: dwmmc@ff500000 {
-+	sdmmc: mmc@ff500000 {
- 		compatible = "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff500000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-@@ -849,7 +849,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio: dwmmc@ff510000 {
-+	sdio: mmc@ff510000 {
- 		compatible = "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff510000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-@@ -861,7 +861,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff520000 {
-+	emmc: mmc@ff520000 {
- 		compatible = "rockchip,rk3328-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff520000 0x0 0x4000>;
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index fd8618801..a0df61c61 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -204,7 +204,7 @@
- 		#clock-cells = <0>;
- 	};
- 
--	sdmmc: dwmmc@ff0c0000 {
-+	sdmmc: mmc@ff0c0000 {
- 		compatible = "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff0c0000 0x0 0x4000>;
- 		max-frequency = <150000000>;
-@@ -218,7 +218,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio0: dwmmc@ff0d0000 {
-+	sdio0: mmc@ff0d0000 {
- 		compatible = "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff0d0000 0x0 0x4000>;
- 		max-frequency = <150000000>;
-@@ -232,7 +232,7 @@
- 		status = "disabled";
- 	};
- 
--	emmc: dwmmc@ff0f0000 {
-+	emmc: mmc@ff0f0000 {
- 		compatible = "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xff0f0000 0x0 0x4000>;
- 		max-frequency = <150000000>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index e62ea0e2b..ed654758c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -291,7 +291,7 @@
- 		status = "disabled";
- 	};
- 
--	sdio0: dwmmc@fe310000 {
-+	sdio0: mmc@fe310000 {
- 		compatible = "rockchip,rk3399-dw-mshc",
- 			     "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xfe310000 0x0 0x4000>;
-@@ -307,7 +307,7 @@
- 		status = "disabled";
- 	};
- 
--	sdmmc: dwmmc@fe320000 {
-+	sdmmc: mmc@fe320000 {
- 		compatible = "rockchip,rk3399-dw-mshc",
- 			     "rockchip,rk3288-dw-mshc";
- 		reg = <0x0 0xfe320000 0x0 0x4000>;
--- 
-2.11.0
+Series applied to mips-next.
 
+> MIPS: Ingenic: Add missing nodes for X1000 and CU1000-Neo.
+>   commit 0ba96b344a7f
+>   https://git.kernel.org/mips/c/0ba96b344a7f
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: CU1000-Neo: Refresh defconfig to support HWMON and WiFi.
+>   commit 1f33d9bcb995
+>   https://git.kernel.org/mips/c/1f33d9bcb995
+>   
+>   Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
