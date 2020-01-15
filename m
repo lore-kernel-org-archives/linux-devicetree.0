@@ -2,578 +2,265 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10388C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B409C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8E024655
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331FB222C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nyqyk/3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgAOJIn (ORCPT
+        id S1729253AbgAOJNr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:08:43 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42352 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729267AbgAOJIn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 04:08:43 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y4so17656880ljj.9;
-        Wed, 15 Jan 2020 01:08:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4bqoXBsefLkDbRazNZNIZAegcgyuN5XoFg/aLIm0wKA=;
-        b=MSoSE2l/OavK3DE57pevoN3bqnaidnpFIHQbc8W31UzZJaNxsa/Mk1Nawx0+5gMpjr
-         7wJTuz3JTl5rAf56WMJt5WvJCYHsQBmXfyTsNq03rU9SS1w28drDXMVXIF21yQvq6bBa
-         0+bOmdYFZxKLOdSzk1zk6GcFyOFEqbbuE47sbvgv97b3q86faDmb+6N50dl3NG5QFMYm
-         ybreA4uxNbIiJDJS+WDcGSGjZyPJ6oMallpCBPgd9x3mH67Zoo0kWl1rQ4L0i/Aqu+Hx
-         volEA4HC5kS1ONzxuMSj/nrlFUb/IPuyfoqB+HQag9B99MK49skKGjvU1KltCl5JXfuu
-         pAkA==
-X-Gm-Message-State: APjAAAXF95TYWzWmkpKVCePNF5yOyDT+JqUwc+fTZSN4Vb4OyCitImwi
-        82OLQoBiAyTWZFiCRZq9XjQ=
-X-Google-Smtp-Source: APXvYqztJ4qUjo2UODW8m2bDHTc0V/Pd1fMSSBzzaBpL8TP1bFfkBKaSgjw2iH3qi932r7Hy58d7Qw==
-X-Received: by 2002:a2e:571d:: with SMTP id l29mr1145208ljb.193.1579079319066;
-        Wed, 15 Jan 2020 01:08:39 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id d1sm10353674ljl.18.2020.01.15.01.08.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 01:08:38 -0800 (PST)
-Date:   Wed, 15 Jan 2020 11:08:26 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [RESEND PATCH v9 08/12] regulator: bd718x7: Split driver to common
- and bd718x7 specific parts
-Message-ID: <79f0683b8ef6497bbe40d73efd6a44748bbc7ff2.1579078681.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1579078681.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 15 Jan 2020 04:13:47 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:21760 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726472AbgAOJNr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:13:47 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F97uiE022040;
+        Wed, 15 Jan 2020 10:13:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=ni4sk7BmfFV8dBipKNtMBnDIMCa/YeRtyCHWq5PbRVY=;
+ b=nyqyk/3UYEGBTmtjj9ZyRvRRBgYzLcPz6UD5z6ZsZqucJM9tjqETmrh6h1jksBpRA2oR
+ W9CxkzD2oOQPzbkd1NQOYT0FgX6x+Y6p81YX/BzY/DH+zNIgmj7wFMlwXGKiu37hsan+
+ uS3L+HWaOu9kAop3iMliAUIVgxJ+hqWC7/ZSsR4IFWBSYf9tlIGNgwyjtxyiKoP23BCJ
+ IJZ9bNZjZnN11oRnp+JHzsC0/kcbfX75Ul/OjfqtLx0B8V+9m8G1cw35zVQo6BoP4etH
+ zaoWtuCgHFb/PysaluYxJ0XU9RtnI4VURiU5uzF+p85mEv2KFTaVbFoAMV/IxOx3zPvw 6Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf78saa4r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 10:13:21 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 34145100034;
+        Wed, 15 Jan 2020 10:13:21 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1534F21CA94;
+        Wed, 15 Jan 2020 10:13:21 +0100 (CET)
+Received: from [10.48.1.171] (10.75.127.44) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 Jan
+ 2020 10:13:20 +0100
+Subject: Re: [PATCH 4/6] i2c: i2c-stm32f7: add PM_SLEEP suspend/resume support
+To:     Alain Volmat <alain.volmat@st.com>, <wsa@the-dreams.de>,
+        <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1578317314-17197-1-git-send-email-alain.volmat@st.com>
+ <1578317314-17197-5-git-send-email-alain.volmat@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <5f930987-2a15-3a82-654d-2db8fd528876@st.com>
+Date:   Wed, 15 Jan 2020 10:13:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1579078681.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1578317314-17197-5-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_01:2020-01-15,2020-01-14 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Few ROHM PMICs allow setting the voltage states for different system states
-like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC specific
-mechanisms. bd718x7 driver implemented device-tree parsing functions for
-these state specific voltages. The parsing functions can be re-used by
-other ROHM chip drivers like bd71828. Split the generic functions from
-bd718x7-regulator.c to rohm-regulator.c and export them for other modules
-to use.
+Hi all,
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Mark Brown <broonie@kernel.org>
----
-Changes since v8:
- - add kerneldoc to dvs config struct
- - cleaned comment
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
- drivers/regulator/Kconfig             |   4 +
- drivers/regulator/Makefile            |   1 +
- drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------------
- drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
- include/linux/mfd/rohm-generic.h      |  66 ++++++++++
- 5 files changed, 221 insertions(+), 128 deletions(-)
- create mode 100644 drivers/regulator/rohm-regulator.c
+Regards
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 74eb5af7295f..a4897ae52f14 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -197,6 +197,7 @@ config REGULATOR_BD70528
- config REGULATOR_BD718XX
- 	tristate "ROHM BD71837 Power Regulator"
- 	depends on MFD_ROHM_BD718XX
-+	select REGULATOR_ROHM
- 	help
- 	  This driver supports voltage regulators on ROHM BD71837 PMIC.
- 	  This will enable support for the software controllable buck
-@@ -790,6 +791,9 @@ config REGULATOR_RN5T618
- 	  Say y here to support the regulators found on Ricoh RN5T567,
- 	  RN5T618 or RC5T619 PMIC.
- 
-+config REGULATOR_ROHM
-+	tristate
-+
- config REGULATOR_RT5033
- 	tristate "Richtek RT5033 Regulators"
- 	depends on MFD_RT5033
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 2210ba56f9bd..6bcab72c1fc7 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -99,6 +99,7 @@ obj-$(CONFIG_REGULATOR_PCF50633) += pcf50633-regulator.o
- obj-$(CONFIG_REGULATOR_RC5T583)  += rc5t583-regulator.o
- obj-$(CONFIG_REGULATOR_RK808)   += rk808-regulator.o
- obj-$(CONFIG_REGULATOR_RN5T618) += rn5t618-regulator.o
-+obj-$(CONFIG_REGULATOR_ROHM)	+= rohm-regulator.o
- obj-$(CONFIG_REGULATOR_RT5033)	+= rt5033-regulator.o
- obj-$(CONFIG_REGULATOR_S2MPA01) += s2mpa01.o
- obj-$(CONFIG_REGULATOR_S2MPS11) += s2mps11.o
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index 6beaf867d9cb..55decb58c777 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -318,6 +318,7 @@ struct reg_init {
- };
- struct bd718xx_regulator_data {
- 	struct regulator_desc desc;
-+	const struct rohm_dvs_config dvs;
- 	const struct reg_init init;
- 	const struct reg_init *additional_inits;
- 	int additional_init_amnt;
-@@ -349,133 +350,15 @@ static const struct reg_init bd71837_ldo6_inits[] = {
- 	},
- };
- 
--#define NUM_DVS_BUCKS 4
--
--struct of_dvs_setting {
--	const char *prop;
--	unsigned int reg;
--};
--
--static int set_dvs_levels(const struct of_dvs_setting *dvs,
--			  struct device_node *np,
--			  const struct regulator_desc *desc,
--			  struct regmap *regmap)
--{
--	int ret, i;
--	unsigned int uv;
--
--	ret = of_property_read_u32(np, dvs->prop, &uv);
--	if (ret) {
--		if (ret != -EINVAL)
--			return ret;
--		return 0;
--	}
--
--	for (i = 0; i < desc->n_voltages; i++) {
--		ret = regulator_desc_list_voltage_linear_range(desc, i);
--		if (ret < 0)
--			continue;
--		if (ret == uv) {
--			i <<= ffs(desc->vsel_mask) - 1;
--			ret = regmap_update_bits(regmap, dvs->reg,
--						 DVS_BUCK_RUN_MASK, i);
--			break;
--		}
--	}
--	return ret;
--}
--
--static int buck4_set_hw_dvs_levels(struct device_node *np,
-+static int buck_set_hw_dvs_levels(struct device_node *np,
- 			    const struct regulator_desc *desc,
- 			    struct regulator_config *cfg)
- {
--	int ret, i;
--	const struct of_dvs_setting dvs[] = {
--		{
--			.prop = "rohm,dvs-run-voltage",
--			.reg = BD71837_REG_BUCK4_VOLT_RUN,
--		},
--	};
-+	struct bd718xx_regulator_data *data;
- 
--	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
--		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
--		if (ret)
--			break;
--	}
--	return ret;
--}
--static int buck3_set_hw_dvs_levels(struct device_node *np,
--			    const struct regulator_desc *desc,
--			    struct regulator_config *cfg)
--{
--	int ret, i;
--	const struct of_dvs_setting dvs[] = {
--		{
--			.prop = "rohm,dvs-run-voltage",
--			.reg = BD71837_REG_BUCK3_VOLT_RUN,
--		},
--	};
-+	data = container_of(desc, struct bd718xx_regulator_data, desc);
- 
--	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
--		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
--		if (ret)
--			break;
--	}
--	return ret;
--}
--
--static int buck2_set_hw_dvs_levels(struct device_node *np,
--			    const struct regulator_desc *desc,
--			    struct regulator_config *cfg)
--{
--	int ret, i;
--	const struct of_dvs_setting dvs[] = {
--		{
--			.prop = "rohm,dvs-run-voltage",
--			.reg = BD718XX_REG_BUCK2_VOLT_RUN,
--		},
--		{
--			.prop = "rohm,dvs-idle-voltage",
--			.reg = BD718XX_REG_BUCK2_VOLT_IDLE,
--		},
--	};
--
--
--
--	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
--		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
--		if (ret)
--			break;
--	}
--	return ret;
--}
--
--static int buck1_set_hw_dvs_levels(struct device_node *np,
--			    const struct regulator_desc *desc,
--			    struct regulator_config *cfg)
--{
--	int ret, i;
--	const struct of_dvs_setting dvs[] = {
--		{
--			.prop = "rohm,dvs-run-voltage",
--			.reg = BD718XX_REG_BUCK1_VOLT_RUN,
--		},
--		{
--			.prop = "rohm,dvs-idle-voltage",
--			.reg = BD718XX_REG_BUCK1_VOLT_IDLE,
--		},
--		{
--			.prop = "rohm,dvs-suspend-voltage",
--			.reg = BD718XX_REG_BUCK1_VOLT_SUSP,
--		},
--	};
--
--	for (i = 0; i < ARRAY_SIZE(dvs); i++) {
--		ret = set_dvs_levels(&dvs[i], np, desc, cfg->regmap);
--		if (ret)
--			break;
--	}
--	return ret;
-+	return rohm_regulator_set_dvs_levels(&data->dvs, np, desc, cfg->regmap);
- }
- 
- static const struct bd718xx_regulator_data bd71847_regulators[] = {
-@@ -496,7 +379,17 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK1_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
--			.of_parse_cb = buck1_set_hw_dvs_levels,
-+			.of_parse_cb = buck_set_hw_dvs_levels,
-+		},
-+		.dvs = {
-+			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
-+				     ROHM_DVS_LEVEL_SUSPEND,
-+			.run_reg = BD718XX_REG_BUCK1_VOLT_RUN,
-+			.run_mask = DVS_BUCK_RUN_MASK,
-+			.idle_reg = BD718XX_REG_BUCK1_VOLT_IDLE,
-+			.idle_mask = DVS_BUCK_RUN_MASK,
-+			.suspend_reg = BD718XX_REG_BUCK1_VOLT_SUSP,
-+			.suspend_mask = DVS_BUCK_RUN_MASK,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK1_CTRL,
-@@ -520,7 +413,14 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK2_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
--			.of_parse_cb = buck2_set_hw_dvs_levels,
-+			.of_parse_cb = buck_set_hw_dvs_levels,
-+		},
-+		.dvs = {
-+			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE,
-+			.run_reg = BD718XX_REG_BUCK2_VOLT_RUN,
-+			.run_mask = DVS_BUCK_RUN_MASK,
-+			.idle_reg = BD718XX_REG_BUCK2_VOLT_IDLE,
-+			.idle_mask = DVS_BUCK_RUN_MASK,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK2_CTRL,
-@@ -792,7 +692,17 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK1_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
--			.of_parse_cb = buck1_set_hw_dvs_levels,
-+			.of_parse_cb = buck_set_hw_dvs_levels,
-+		},
-+		.dvs = {
-+			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE |
-+				     ROHM_DVS_LEVEL_SUSPEND,
-+			.run_reg = BD718XX_REG_BUCK1_VOLT_RUN,
-+			.run_mask = DVS_BUCK_RUN_MASK,
-+			.idle_reg = BD718XX_REG_BUCK1_VOLT_IDLE,
-+			.idle_mask = DVS_BUCK_RUN_MASK,
-+			.suspend_reg = BD718XX_REG_BUCK1_VOLT_SUSP,
-+			.suspend_mask = DVS_BUCK_RUN_MASK,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK1_CTRL,
-@@ -816,7 +726,14 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD718XX_REG_BUCK2_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
--			.of_parse_cb = buck2_set_hw_dvs_levels,
-+			.of_parse_cb = buck_set_hw_dvs_levels,
-+		},
-+		.dvs = {
-+			.level_map = ROHM_DVS_LEVEL_RUN | ROHM_DVS_LEVEL_IDLE,
-+			.run_reg = BD718XX_REG_BUCK2_VOLT_RUN,
-+			.run_mask = DVS_BUCK_RUN_MASK,
-+			.idle_reg = BD718XX_REG_BUCK2_VOLT_IDLE,
-+			.idle_mask = DVS_BUCK_RUN_MASK,
- 		},
- 		.init = {
- 			.reg = BD718XX_REG_BUCK2_CTRL,
-@@ -840,7 +757,12 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD71837_REG_BUCK3_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
--			.of_parse_cb = buck3_set_hw_dvs_levels,
-+			.of_parse_cb = buck_set_hw_dvs_levels,
-+		},
-+		.dvs = {
-+			.level_map = ROHM_DVS_LEVEL_RUN,
-+			.run_reg = BD71837_REG_BUCK3_VOLT_RUN,
-+			.run_mask = DVS_BUCK_RUN_MASK,
- 		},
- 		.init = {
- 			.reg = BD71837_REG_BUCK3_CTRL,
-@@ -864,7 +786,12 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.enable_reg = BD71837_REG_BUCK4_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
--			.of_parse_cb = buck4_set_hw_dvs_levels,
-+			.of_parse_cb = buck_set_hw_dvs_levels,
-+		},
-+		.dvs = {
-+			.level_map = ROHM_DVS_LEVEL_RUN,
-+			.run_reg = BD71837_REG_BUCK4_VOLT_RUN,
-+			.run_mask = DVS_BUCK_RUN_MASK,
- 		},
- 		.init = {
- 			.reg = BD71837_REG_BUCK4_CTRL,
-diff --git a/drivers/regulator/rohm-regulator.c b/drivers/regulator/rohm-regulator.c
-new file mode 100644
-index 000000000000..399002383b28
---- /dev/null
-+++ b/drivers/regulator/rohm-regulator.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2020 ROHM Semiconductors
-+
-+#include <linux/errno.h>
-+#include <linux/mfd/rohm-generic.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+
-+static int set_dvs_level(const struct regulator_desc *desc,
-+			 struct device_node *np, struct regmap *regmap,
-+			 char *prop, unsigned int reg, unsigned int mask,
-+			 unsigned int omask, unsigned int oreg)
-+{
-+	int ret, i;
-+	uint32_t uv;
-+
-+	ret = of_property_read_u32(np, prop, &uv);
-+	if (ret) {
-+		if (ret != -EINVAL)
-+			return ret;
-+		return 0;
-+	}
-+
-+	if (uv == 0) {
-+		if (omask)
-+			return regmap_update_bits(regmap, oreg, omask, 0);
-+	}
-+	for (i = 0; i < desc->n_voltages; i++) {
-+		ret = regulator_desc_list_voltage_linear_range(desc, i);
-+		if (ret < 0)
-+			continue;
-+		if (ret == uv) {
-+			i <<= ffs(desc->vsel_mask) - 1;
-+			ret = regmap_update_bits(regmap, reg, mask, i);
-+			if (omask && !ret)
-+				ret = regmap_update_bits(regmap, oreg, omask,
-+							 omask);
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
-+			  struct device_node *np,
-+			  const struct regulator_desc *desc,
-+			  struct regmap *regmap)
-+{
-+	int i, ret = 0;
-+	char *prop;
-+	unsigned int reg, mask, omask, oreg = desc->enable_reg;
-+
-+	for (i = 0; i < ROHM_DVS_LEVEL_MAX && !ret; i++) {
-+		if (dvs->level_map & (1 << i)) {
-+			switch (i + 1) {
-+			case ROHM_DVS_LEVEL_RUN:
-+				prop = "rohm,dvs-run-voltage";
-+				reg = dvs->run_reg;
-+				mask = dvs->run_mask;
-+				omask = dvs->run_on_mask;
-+				break;
-+			case ROHM_DVS_LEVEL_IDLE:
-+				prop = "rohm,dvs-idle-voltage";
-+				reg = dvs->idle_reg;
-+				mask = dvs->idle_mask;
-+				omask = dvs->idle_on_mask;
-+				break;
-+			case ROHM_DVS_LEVEL_SUSPEND:
-+				prop = "rohm,dvs-suspend-voltage";
-+				reg = dvs->suspend_reg;
-+				mask = dvs->suspend_mask;
-+				omask = dvs->suspend_on_mask;
-+				break;
-+			case ROHM_DVS_LEVEL_LPSR:
-+				prop = "rohm,dvs-lpsr-voltage";
-+				reg = dvs->lpsr_reg;
-+				mask = dvs->lpsr_mask;
-+				omask = dvs->lpsr_on_mask;
-+				break;
-+			default:
-+				return -EINVAL;
-+			}
-+			ret = set_dvs_level(desc, np, regmap, prop, reg, mask,
-+					    omask, oreg);
-+		}
-+	}
-+	return ret;
-+}
-+EXPORT_SYMBOL(rohm_regulator_set_dvs_levels);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("Generic helpers for ROHM PMIC regulator drivers");
-diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-generic.h
-index ff3dd7578fd3..6cc5a0819959 100644
---- a/include/linux/mfd/rohm-generic.h
-+++ b/include/linux/mfd/rohm-generic.h
-@@ -4,6 +4,9 @@
- #ifndef __LINUX_MFD_ROHM_H__
- #define __LINUX_MFD_ROHM_H__
- 
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+
- enum rohm_chip_type {
- 	ROHM_CHIP_TYPE_BD71837 = 0,
- 	ROHM_CHIP_TYPE_BD71847,
-@@ -17,4 +20,67 @@ struct rohm_regmap_dev {
- 	struct regmap *regmap;
- };
- 
-+enum {
-+	ROHM_DVS_LEVEL_UNKNOWN,
-+	ROHM_DVS_LEVEL_RUN,
-+	ROHM_DVS_LEVEL_IDLE,
-+	ROHM_DVS_LEVEL_SUSPEND,
-+	ROHM_DVS_LEVEL_LPSR,
-+#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
-+};
-+
-+/**
-+ * struct rohm_dvs_config - dynamic voltage scaling register descriptions
-+ *
-+ * @level_map:		bitmap representing supported run-levels for this
-+ *			regulator
-+ * @run_reg:		register address for regulator config at 'run' state
-+ * @run_mask:		value mask for regulator voltages at 'run' state
-+ * @run_on_mask:	enable mask for regulator at 'run' state
-+ * @idle_reg:		register address for regulator config at 'idle' state
-+ * @idle_mask:		value mask for regulator voltages at 'idle' state
-+ * @idle_on_mask:	enable mask for regulator at 'idle' state
-+ * @suspend_reg:	register address for regulator config at 'suspend' state
-+ * @suspend_mask:	value mask for regulator voltages at 'suspend' state
-+ * @suspend_on_mask:	enable mask for regulator at 'suspend' state
-+ * @lpsr_reg:		register address for regulator config at 'lpsr' state
-+ * @lpsr_mask:		value mask for regulator voltages at 'lpsr' state
-+ * @lpsr_on_mask:	enable mask for regulator at 'lpsr' state
-+ *
-+ * Description of ROHM PMICs voltage configuration registers for different
-+ * system states. This is used to correctly configure the PMIC at startup
-+ * based on values read from DT.
-+ */
-+struct rohm_dvs_config {
-+	uint64_t level_map;
-+	unsigned int run_reg;
-+	unsigned int run_mask;
-+	unsigned int run_on_mask;
-+	unsigned int idle_reg;
-+	unsigned int idle_mask;
-+	unsigned int idle_on_mask;
-+	unsigned int suspend_reg;
-+	unsigned int suspend_mask;
-+	unsigned int suspend_on_mask;
-+	unsigned int lpsr_reg;
-+	unsigned int lpsr_mask;
-+	unsigned int lpsr_on_mask;
-+};
-+
-+#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
-+int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
-+				  struct device_node *np,
-+				  const struct regulator_desc *desc,
-+				  struct regmap *regmap);
-+
-+#else
-+static inline int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config *dvs,
-+						struct device_node *np,
-+						const struct regulator_desc *desc,
-+						struct regmap *regmap)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+On 1/6/20 2:28 PM, Alain Volmat wrote:
+> Backup/restore I2C registers as part of the suspend/resume
+> handlers. The device is marked as suspended to ensure that
+> transfers are rejected during the suspended period.
+> 
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 117 +++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 113 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index b2634afe066d..5c3e8ac6ad92 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -169,6 +169,24 @@
+>  #define STM32F7_AUTOSUSPEND_DELAY		(HZ / 100)
+>  
+>  /**
+> + * struct stm32f7_i2c_regs - i2c f7 registers backup
+> + * @cr1: Control register 1
+> + * @cr2: Control register 2
+> + * @oar1: Own address 1 register
+> + * @oar2: Own address 2 register
+> + * @pecr: PEC register
+> + * @tmgr: Timing register
+> + */
+> +struct stm32f7_i2c_regs {
+> +	u32 cr1;
+> +	u32 cr2;
+> +	u32 oar1;
+> +	u32 oar2;
+> +	u32 pecr;
+> +	u32 tmgr;
+> +};
+> +
+> +/**
+>   * struct stm32f7_i2c_spec - private i2c specification timing
+>   * @rate: I2C bus speed (Hz)
+>   * @rate_min: 80% of I2C bus speed (Hz)
+> @@ -276,6 +294,7 @@ struct stm32f7_i2c_msg {
+>   * @timing: I2C computed timings
+>   * @slave: list of slave devices registered on the I2C bus
+>   * @slave_running: slave device currently used
+> + * @backup_regs: backup of i2c controller registers (for suspend/resume)
+>   * @slave_dir: transfer direction for the current slave device
+>   * @master_mode: boolean to know in which mode the I2C is running (master or
+>   * slave)
+> @@ -298,6 +317,7 @@ struct stm32f7_i2c_dev {
+>  	struct stm32f7_i2c_timings timing;
+>  	struct i2c_client *slave[STM32F7_I2C_MAX_SLAVE];
+>  	struct i2c_client *slave_running;
+> +	struct stm32f7_i2c_regs backup_regs;
+>  	u32 slave_dir;
+>  	bool master_mode;
+>  	struct stm32_i2c_dma *dma;
+> @@ -2027,8 +2047,7 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_PM
+> -static int stm32f7_i2c_runtime_suspend(struct device *dev)
+> +static int __maybe_unused stm32f7_i2c_runtime_suspend(struct device *dev)
+>  {
+>  	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>  
+> @@ -2038,7 +2057,7 @@ static int stm32f7_i2c_runtime_suspend(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int stm32f7_i2c_runtime_resume(struct device *dev)
+> +static int __maybe_unused stm32f7_i2c_runtime_resume(struct device *dev)
+>  {
+>  	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+>  	int ret;
+> @@ -2053,11 +2072,101 @@ static int stm32f7_i2c_runtime_resume(struct device *dev)
+>  
+>  	return 0;
+>  }
+> -#endif
+> +
+> +static int __maybe_unused
+> +stm32f7_i2c_regs_backup(struct stm32f7_i2c_dev *i2c_dev)
+> +{
+> +	int ret;
+> +	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
+> +
+> +	ret = pm_runtime_get_sync(i2c_dev->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	backup_regs->cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
+> +	backup_regs->cr2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR2);
+> +	backup_regs->oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
+> +	backup_regs->oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+> +	backup_regs->pecr = readl_relaxed(i2c_dev->base + STM32F7_I2C_PECR);
+> +	backup_regs->tmgr = readl_relaxed(i2c_dev->base + STM32F7_I2C_TIMINGR);
+> +
+> +	pm_runtime_put_sync(i2c_dev->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused
+> +stm32f7_i2c_regs_restore(struct stm32f7_i2c_dev *i2c_dev)
+> +{
+> +	u32 cr1;
+> +	int ret;
+> +	struct stm32f7_i2c_regs *backup_regs = &i2c_dev->backup_regs;
+> +
+> +	ret = pm_runtime_get_sync(i2c_dev->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	cr1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_CR1);
+> +	if (cr1 & STM32F7_I2C_CR1_PE)
+> +		stm32f7_i2c_clr_bits(i2c_dev->base + STM32F7_I2C_CR1,
+> +				     STM32F7_I2C_CR1_PE);
+> +
+> +	writel_relaxed(backup_regs->tmgr, i2c_dev->base + STM32F7_I2C_TIMINGR);
+> +	writel_relaxed(backup_regs->cr1 & ~STM32F7_I2C_CR1_PE,
+> +		       i2c_dev->base + STM32F7_I2C_CR1);
+> +	if (backup_regs->cr1 & STM32F7_I2C_CR1_PE)
+> +		stm32f7_i2c_set_bits(i2c_dev->base + STM32F7_I2C_CR1,
+> +				     STM32F7_I2C_CR1_PE);
+> +	writel_relaxed(backup_regs->cr2, i2c_dev->base + STM32F7_I2C_CR2);
+> +	writel_relaxed(backup_regs->oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+> +	writel_relaxed(backup_regs->oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+> +	writel_relaxed(backup_regs->pecr, i2c_dev->base + STM32F7_I2C_PECR);
+> +
+> +	pm_runtime_put_sync(i2c_dev->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int __maybe_unused stm32f7_i2c_suspend(struct device *dev)
+> +{
+> +	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	i2c_mark_adapter_suspended(&i2c_dev->adap);
+> +	ret = stm32f7_i2c_regs_backup(i2c_dev);
+> +	if (ret < 0) {
+> +		i2c_mark_adapter_resumed(&i2c_dev->adap);
+> +		return ret;
+> +	}
+> +
+> +	pinctrl_pm_select_sleep_state(dev);
+> +	pm_runtime_force_suspend(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused stm32f7_i2c_resume(struct device *dev)
+> +{
+> +	struct stm32f7_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = pm_runtime_force_resume(dev);
+> +	if (ret < 0)
+> +		return ret;
+> +	pinctrl_pm_select_default_state(dev);
+> +
+> +	ret = stm32f7_i2c_regs_restore(i2c_dev);
+> +	if (ret < 0)
+> +		return ret;
+> +	i2c_mark_adapter_resumed(&i2c_dev->adap);
+> +
+> +	return 0;
+> +}
+>  
+>  static const struct dev_pm_ops stm32f7_i2c_pm_ops = {
+>  	SET_RUNTIME_PM_OPS(stm32f7_i2c_runtime_suspend,
+>  			   stm32f7_i2c_runtime_resume, NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(stm32f7_i2c_suspend, stm32f7_i2c_resume)
+>  };
+>  
+>  static const struct of_device_id stm32f7_i2c_match[] = {
+> 
