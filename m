@@ -2,188 +2,172 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57D9C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94970C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 15:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5EA24671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA9F2465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 15:03:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kG/zZU/r"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ehvjUxlN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgAOO6y (ORCPT
+        id S1729016AbgAOPDw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:58:54 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50204 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgAOO6x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 09:58:53 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00FEwe9U021787;
-        Wed, 15 Jan 2020 08:58:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579100320;
-        bh=fWSrcpSzj20aW3TDNf5Jt1LxbNqKkNyt26cqC80J0uQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kG/zZU/rbLpu7MqpYK7jGOxKmi8Yw6a5ZgKSErKq9zptaIWRDNFyFdu5CaeeqHKZl
-         J2pi/RiQ0PiThSAUH/HbnQvX0W5ouX6rkHPhxIKbNR6mZ44YhzehKZvEUlemH3fbi7
-         lRTZvvJFUq1AKkGLtq8bRwoYAiTHGcXGyO1INHLs=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00FEweu0004078
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jan 2020 08:58:40 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
- Jan 2020 08:58:39 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 15 Jan 2020 08:58:39 -0600
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00FEwa9O020000;
-        Wed, 15 Jan 2020 08:58:37 -0600
-Subject: Re: [PATCH v6 4/5] drm/tidss: New driver for TI Keystone platform
- Display SubSystem
-To:     Sam Ravnborg <sam@ravnborg.org>
-CC:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
-        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <praneeth@ti.com>,
-        <yamonkar@cadence.com>, <sjakhade@cadence.com>, <maxime@cerno.tech>
-References: <cover.1579086894.git.jsarha@ti.com>
- <66c57bb30685920f040933ada9ccd4f5035d099f.1579086894.git.jsarha@ti.com>
- <20200115122253.GA22854@ravnborg.org>
- <848720ca-6062-8314-e874-3a36f8aee1da@ti.com>
- <20200115144309.GA20850@ravnborg.org>
-From:   Jyri Sarha <jsarha@ti.com>
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <b4f5d846-aa44-a759-1caa-70244dfabeb3@ti.com>
-Date:   Wed, 15 Jan 2020 16:58:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 10:03:52 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:35947 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726132AbgAOPDw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 10:03:52 -0500
+Received: from [IPv6:2001:420:44c1:2577:18d8:d5d6:4408:6200]
+ ([IPv6:2001:420:44c1:2577:18d8:d5d6:4408:6200])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id rkCwiF0uRT6sRrkCziahYK; Wed, 15 Jan 2020 16:03:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1579100629; bh=11i4n8lMpRQQ+iNfpGyMTy/9CCEdWTY8dDDaQE1zD3Q=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=ehvjUxlN9DHLZT26Nm8j/e9pTwnJ708Ao9NzFX7vTZZR+oFYavJXAVvt0uHI8TKLr
+         fYJ+3/hhOTRhwalGlqcgujswc4QOQJ981VVy56LvSjSM04relL8i+jkH2+64EICpz9
+         eC+DkY4ZTtJWKXoIZn6bq7y/JOCGfwqUETOBr4V4dYocxaQyw0Shn+GJ4zVCv7Dstx
+         oI2gbXPtg5stiw4iz0zls7XxweGscUhETyck6ulTHhe1IulMb7VhdlVR8xHj1OIU6u
+         Rkc8K2yKOyiq/uz4IeDsGqyLCP+/5AFQ+q/AFGJMJL4x8GkhhmtqvzxoptZYy1GLFc
+         iKAxVWZIe4EMQ==
+Subject: Re: [PATCH v4 04/12] v4l: Add source event change for bit-depth
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>, dikshita@codeaurora.org
+References: <20200106154929.4331-1-stanimir.varbanov@linaro.org>
+ <20200106154929.4331-5-stanimir.varbanov@linaro.org>
+ <c3b02589-1d7a-a476-7d33-7e555fbe276d@xs4all.nl>
+ <ae233eb1-69fc-6723-0224-0c1fcf786156@linaro.org>
+ <fb27b5cc-0eef-a7b4-f45b-a3986b77c4c9@xs4all.nl>
+ <988e49aa-469d-17a1-ca25-982c63536e6e@linaro.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <814252fe-6fa9-595b-92b3-8ef8ef4c0187@xs4all.nl>
+Date:   Wed, 15 Jan 2020 16:03:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200115144309.GA20850@ravnborg.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <988e49aa-469d-17a1-ca25-982c63536e6e@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBWwR3P3/GTdqy8WWZYktsN7pov0YuXInaQkeXKFTdtJjYB94dIrU79LS87bnBLAVaI17ogCLgl4PvIlVkJLVGDmgzFgE2nqWrzOxCfUBd2FWeI0i0B5
+ 5Gg9u3xLqg0nsuMtEXmT7feKF3uUcpzZAFB4PEKxjt5i3mQ6DCkN5ue7t7yKhil8Wy2Nx5I32oJ1/c8+kOJk26gDE+0BNkhepwCdTZ3CgamFwBHOlHy0nQwg
+ ipzeq3DZfq6cgyBEnjhnOOt592HwaZsP283Z0G6ZxRwpHLyq1uSlR7neQqaziq/TeSF230jCKg8yRVNzgilQ/LcvHGBHFiXZtDteK3POlhuJt7rC5iBVueUQ
+ Sl9sOzOgcJa9dD+rrETadFh/JqjRMaMOyYrn21MyYt5JW+LzWAGkAdXaOHjEN2siznRW7tjK0je9h27wEKyZjGdXVhfphTVoY0sMSkrHOCY/mwJcWf4Jyf/T
+ 0ns+7vFWLWTbByemKeaJcI2RG9iQXipUnNetoNCVFFKW7d0KraJcdVrUTkc=
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15/01/2020 16:43, Sam Ravnborg wrote:
-> Hi Jyri.
+On 1/10/20 11:54 AM, Stanimir Varbanov wrote:
+> Hi Hans,
 > 
+> On 1/9/20 10:57 AM, Hans Verkuil wrote:
+>> On 1/9/20 8:41 AM, Stanimir Varbanov wrote:
+>>> Hi Hans,
+>>>
+>>> On 1/8/20 6:09 PM, Hans Verkuil wrote:
+>>>> On 1/6/20 4:49 PM, Stanimir Varbanov wrote:
+>>>>> This event indicate that the source color bit-depth is changed
+>>>>> during run-time. The client must get the new format and re-allocate
+>>>>> buffers for it. This can usually happens with video decoder (encoders)
+>>>>> when the bit-stream color bit-depth is changed from 8 to 10bits
+>>>>> or vice versa.
+>>>>>
+>>>>> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>>> ---
+>>>>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 8 +++++++-
+>>>>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>>>>  include/uapi/linux/videodev2.h                  | 1 +
+>>>>>  3 files changed, 9 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>> index 42659a3d1705..fad853d440cf 100644
+>>>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>>> @@ -402,7 +402,13 @@ call.
+>>>>>  	that many Video Capture devices are not able to recover from a temporary
+>>>>>  	loss of signal and so restarting streaming I/O is required in order for
+>>>>>  	the hardware to synchronize to the video signal.
+>>>>> -
+>>>>> +    * - ``V4L2_EVENT_SRC_CH_COLOR_DEPTH``
+>>>>> +      - 0x0002
+>>>>> +      - This event gets triggered when color bit-depth change is detected
+>>>>> +	from a video decoder. Applications will have to query the new pixel
+>>>>> +	format and re-negotiate the queue. In most cases the streaming must be
+>>>>> +	stopped and restarted (:ref:`VIDIOC_STREAMOFF <VIDIOC_STREAMON>`
+>>>>> +	followed by :ref:`VIDIOC_STREAMON <VIDIOC_STREAMON>`).
 >>>>
->>> ...
->>>> v6: - Check CTM and gamma support from dispc_features when creating crtc
->>>>     - Implement CTM support for k2g and fix k3 CTM implementation
->>>>     - Remove gamma property persistence and always write color properties
->>>>       in a new modeset
+>>>> I think this is too specific for decoders. Something similar to the
+>>>> CH_RESOLUTION description would be more appropriate:
+>>>>
+>>>>       - This event gets triggered when a color bit-depth change (but not a
+>>>> 	resolution change!) is detected	at an input. This can come from an
 >>>
->>> I applied this, just to throw this throgh my build setup.
->>>
->>> checkpatch reported:
->>> total: 0 errors, 45 warnings, 46 checks, 4920 lines checked
->>>
->>> - space after cast
->>> - CamelCase
->>> - Macro argument
->>> - length warnings
->>> - alignment
->>>
->>> I would ignore the line length warnings for the coefficients, but fix the
->>> rest.
->>>
+>>> What you mean by "but not a resolution change" here? Resolution change
+>>> and bit-depth change cannot occur on the same time, or something else.
 >>
->> You are using --subjective, or are there new warnings turned on since I
->> rebased?
-> This was the warnigns that appearted when I did
-> cat patches | dim apply
+>> What I was trying to say is that a resolution change implies a possible bit-depth
+>> change as well, whereas V4L2_EVENT_SRC_CH_COLOR_DEPTH is only set if there is
+>> a bit-depth change but no resolution change.
+>>
+>> V4L2_EVENT_SRC_CH_RESOLUTION requires that userspace does a full resync to the
+>> new format, CH_COLOR_DEPTH implies that only the bit depth changed.
 > 
-> So the defaults in dim was used - which is:
-> -q --emacs --strict --show-types
+> CH_COLOR_DEPTH implies format re-negotiation as well. In Venus case
+> 8->10bit change will change the format of OPB buffers (now it is not
+> possible because of lack of v4l modifiers) and DPB buffers becomes
+> compressed raw buffers (to optimize bandwidth).
 > 
-
-Oh, I didn't know that dim uses --strict (= subjective). I have used dim
-but never for anything this big and all those smaller patches have been
-"strict"-clean, since I have not seen any warnings.
-
-Well, I'll bite the bullet then, and start mangling the code to the
-"strict" format.
-
-Thanks,
-Jyri
-
-> As dim is the tool used when applying patches to drm-misc-next then
-> whoever ends up applying the patches will see the same warnigns from
-> checkpatch.
+>>
+>> Which actually makes me wonder: is there a difference between the two change flags
+>> w.r.t. userspace behavior? If there is, then that should be carefully documented,
+>> if there isn't, then is this new flag really needed?
 > 
-> You can find more info on dim here:
-> https://drm.pages.freedesktop.org/maintainer-tools/dim.html
+> Looking into semantics of v4l events, CH_COLOR_DEPTH makes sense because
+> it describes what actually changed (similar to CH_RESOLUTION). I would
+> say that v4l2_event::type V4L2_EVENT_SOURCE_CHANGE implies format
+> re-negotiation and v4l2_event::src_change just informs userland what
+> exactly is changed.
 > 
-> As maintainer of this driver you will need to learn the basics.
-> 
-> My dim vocabulary are:
-> dim apply
-> dim fixes
-> dim push
-> dim update-branches
-> dim checkpatch
-> 
-> dim can do much more, but this is the ones that I use most.
-> In your case you would like to use "dim checkpatch HEAD~5"
-> 
-> 	Sam
+> I'll postpone this patch until we have clear vision what will be the
+> usage in user-space.
 > 
 
+My main problem regarding semantics is what should be done if you disconnect
+and reconnect an HDMI (for example) connector. You get a V4L2_EVENT_SOURCE_CHANGE
+when the new signal is detected, but should it just set V4L2_EVENT_SRC_CH_RESOLUTION
+(as it does today), or also V4L2_EVENT_SRC_CH_COLOR_DEPTH?
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+In my view V4L2_EVENT_SRC_CH_COLOR_DEPTH only makes sense if the resolution
+stays the same, but only the color depth changes.
+
+BTW, one thing that will be added here as well in the future is a
+V4L2_EVENT_SRC_CH_COLORIMETRY for when the colorspace etc. information changes,
+but nothing else. In that case there is no need to renegotiate the format etc.,
+it's just the interpretation of the video data that changes.
+
+An alternative approach is to define a V4L2_EVENT_SRC_CH_ALL bit mask, OR-ing
+all the V4L2_EVENT_SRC_CH_* defines, and change all drivers that use
+V4L2_EVENT_SRC_CH_RESOLUTION at the moment to use V4L2_EVENT_SRC_CH_ALL instead,
+and only drivers that detect that only one of these changes took place will
+use a specific V4L2_EVENT_SRC_CH_ flag. This will be primarily codec drivers,
+I believe.
+
+There aren't that many of those, so this shouldn't be too difficult to do.
+
+Perhaps this is the cleanest approach to this problem...
+
+Regards,
+
+	Hans
