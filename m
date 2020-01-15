@@ -2,158 +2,75 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577E3C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 176B4C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CD6214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE5CC24679
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgAORIJ (ORCPT
+        id S1729331AbgAOROE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:08:09 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:38839 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728982AbgAORIJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 12:08:09 -0500
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 00FGN4i7021584;
-        Wed, 15 Jan 2020 18:23:04 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-        id C265E60328; Wed, 15 Jan 2020 18:23:04 +0200 (IST)
-From:   Tomer Maimon <tmaimon77@gmail.com>
-To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com
-Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 4/4] spi: npcm-pspi: modify reset support
-Date:   Wed, 15 Jan 2020 18:23:01 +0200
-Message-Id: <20200115162301.235926-5-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200115162301.235926-1-tmaimon77@gmail.com>
-References: <20200115162301.235926-1-tmaimon77@gmail.com>
+        Wed, 15 Jan 2020 12:14:04 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:56466 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729320AbgAOROE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 12:14:04 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 7DC9A81200;
+        Wed, 15 Jan 2020 18:14:00 +0100 (CET)
+Date:   Wed, 15 Jan 2020 18:13:58 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Jyri Sarha <jsarha@ti.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com,
+        peter.ujfalusi@ti.com, bparrot@ti.com, praneeth@ti.com,
+        yamonkar@cadence.com, sjakhade@cadence.com, maxime@cerno.tech
+Subject: Re: [PATCH v6 4/5] drm/tidss: New driver for TI Keystone platform
+ Display SubSystem
+Message-ID: <20200115171358.GA23015@ravnborg.org>
+References: <cover.1579086894.git.jsarha@ti.com>
+ <66c57bb30685920f040933ada9ccd4f5035d099f.1579086894.git.jsarha@ti.com>
+ <20200115122253.GA22854@ravnborg.org>
+ <848720ca-6062-8314-e874-3a36f8aee1da@ti.com>
+ <20200115144309.GA20850@ravnborg.org>
+ <b4f5d846-aa44-a759-1caa-70244dfabeb3@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4f5d846-aa44-a759-1caa-70244dfabeb3@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=FBmygEOeIvoNrRZmZRsA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Modify NPCM perphiral SPI reset support from
-direct register access to reset controller support.
+Hi Jyri.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- drivers/spi/spi-npcm-pspi.c | 33 +++++++++++----------------------
- 1 file changed, 11 insertions(+), 22 deletions(-)
+> Well, I'll bite the bullet then, and start mangling the code to the
+> "strict" format.
 
-diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
-index eac7ba18b4b9..87cd0233c60b 100644
---- a/drivers/spi/spi-npcm-pspi.c
-+++ b/drivers/spi/spi-npcm-pspi.c
-@@ -12,6 +12,7 @@
- #include <linux/spi/spi.h>
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
-+#include <linux/reset.h>
- 
- #include <asm/unaligned.h>
- 
-@@ -20,7 +21,7 @@
- 
- struct npcm_pspi {
- 	struct completion xfer_done;
--	struct regmap *rst_regmap;
-+	struct reset_control *reset;
- 	struct spi_master *master;
- 	unsigned int tx_bytes;
- 	unsigned int rx_bytes;
-@@ -59,12 +60,6 @@ struct npcm_pspi {
- #define NPCM_PSPI_MIN_CLK_DIVIDER	4
- #define NPCM_PSPI_DEFAULT_CLK		25000000
- 
--/* reset register */
--#define NPCM7XX_IPSRST2_OFFSET	0x24
--
--#define NPCM7XX_PSPI1_RESET	BIT(22)
--#define NPCM7XX_PSPI2_RESET	BIT(23)
--
- static inline unsigned int bytes_per_word(unsigned int bits)
- {
- 	return bits <= 8 ? 1 : 2;
-@@ -293,9 +288,9 @@ static int npcm_pspi_unprepare_transfer_hardware(struct spi_master *master)
- 
- static void npcm_pspi_reset_hw(struct npcm_pspi *priv)
- {
--	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET,
--		     NPCM7XX_PSPI1_RESET << priv->id);
--	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET, 0x0);
-+	reset_control_assert(priv->reset);
-+	udelay(5);
-+	reset_control_deassert(priv->reset);
- }
- 
- static irqreturn_t npcm_pspi_handler(int irq, void *dev_id)
-@@ -359,10 +354,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	if (num_cs < 0)
- 		return num_cs;
- 
--	pdev->id = of_alias_get_id(np, "spi");
--	if (pdev->id < 0)
--		pdev->id = 0;
--
- 	master = spi_alloc_master(&pdev->dev, sizeof(*priv));
- 	if (!master)
- 		return -ENOMEM;
-@@ -372,7 +363,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	priv = spi_master_get_devdata(master);
- 	priv->master = master;
- 	priv->is_save_param = false;
--	priv->id = pdev->id;
- 
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
-@@ -397,11 +387,10 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 		goto out_disable_clk;
- 	}
- 
--	priv->rst_regmap =
--		syscon_regmap_lookup_by_compatible("nuvoton,npcm750-rst");
--	if (IS_ERR(priv->rst_regmap)) {
--		dev_err(&pdev->dev, "failed to find nuvoton,npcm750-rst\n");
--		return PTR_ERR(priv->rst_regmap);
-+	priv->reset = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->reset)) {
-+		ret = PTR_ERR(priv->reset);
-+		goto out_disable_clk;
- 	}
- 
- 	/* reset SPI-HW block */
-@@ -422,7 +411,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	master->min_speed_hz = DIV_ROUND_UP(clk_hz, NPCM_PSPI_MAX_CLK_DIVIDER);
- 	master->mode_bits = SPI_CPHA | SPI_CPOL;
- 	master->dev.of_node = pdev->dev.of_node;
--	master->bus_num = pdev->id;
-+	master->bus_num = -1;
- 	master->bits_per_word_mask = SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
- 	master->transfer_one = npcm_pspi_transfer_one;
- 	master->prepare_transfer_hardware =
-@@ -455,7 +444,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_disable_clk;
- 
--	pr_info("NPCM Peripheral SPI %d probed\n", pdev->id);
-+	pr_info("NPCM Peripheral SPI %d probed\n", master->bus_num);
- 
- 	return 0;
- 
--- 
-2.22.0
+While touching the code please consider moving all logging
+over to the new drm_{err,warn,info,dbg} functions.
+They give the nice "[drm]" marker.
+And they are a tad shorter as you do not have to dereference ddev->dev
+everywhere.
+And you then also gain support for controlling logging using
+drm.debug=0xxxx, os sysfs too.
 
+See drm_print.h in latest drm_misc_next
+
+With or without this change you can add my:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+	Sam
