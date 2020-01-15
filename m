@@ -2,162 +2,183 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA0CC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DC7C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997082081E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7A22214AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgAOHdr (ORCPT
+        id S1729122AbgAOHwu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:33:47 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44071 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgAOHdq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 02:33:46 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irdBK-0005vs-5b; Wed, 15 Jan 2020 08:33:38 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1irdBI-0005vT-Fk; Wed, 15 Jan 2020 08:33:36 +0100
-Date:   Wed, 15 Jan 2020 08:33:36 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200115073336.2bhlu22toua3vnuo@pengutronix.de>
-References: <1578271620-2159-1-git-send-email-jeff@labundy.com>
- <1578271620-2159-5-git-send-email-jeff@labundy.com>
- <20200114080828.vv7ilksklt27ysh3@pengutronix.de>
- <20200115032945.GA6229@labundy.com>
+        Wed, 15 Jan 2020 02:52:50 -0500
+Received: from mga04.intel.com ([192.55.52.120]:29079 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbgAOHwu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 02:52:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 23:52:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,321,1574150400"; 
+   d="scan'208";a="256654280"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jan 2020 23:52:49 -0800
+Received: from [10.226.39.11] (unknown [10.226.39.11])
+        by linux.intel.com (Postfix) with ESMTP id 405665802B0;
+        Tue, 14 Jan 2020 23:52:47 -0800 (PST)
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add YAML schemas for Intel Combo
+ phy
+To:     Rob Herring <robh@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <9f3df8c403bba3633391551fc601cbcd2f950959.1576824311.git.eswara.kota@linux.intel.com>
+ <20200108141855.GA14868@bogus>
+ <0e797d57-66a6-39ec-6388-5af47e9b0726@linux.intel.com>
+ <CAL_JsqLaiiYxaWjWRr3S7Q8j5YCxB_v2Lt_m5fwHnZU1e27MdA@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <bee95b99-027e-45eb-d2f2-bfa5bbfda9cd@linux.intel.com>
+Date:   Wed, 15 Jan 2020 15:52:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200115032945.GA6229@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <CAL_JsqLaiiYxaWjWRr3S7Q8j5YCxB_v2Lt_m5fwHnZU1e27MdA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Jeff,
 
-On Wed, Jan 15, 2020 at 03:29:52AM +0000, Jeff LaBundy wrote:
-> Thank you for your kind words and thorough review.
+On 1/14/2020 10:31 PM, Rob Herring wrote:
+> On Tue, Jan 14, 2020 at 3:18 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>>
+>> On 1/8/2020 10:18 PM, Rob Herring wrote:
+>>> On Fri, Dec 20, 2019 at 03:28:27PM +0800, Dilip Kota wrote:
+>>>> Combo phy subsystem provides PHY support to number of
+>>>> controllers, viz. PCIe, SATA and EMAC.
+>>>> Adding YAML schemas for the same.
+>>>>
+>>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>>> ---
+>>>>    .../devicetree/bindings/phy/intel,combo-phy.yaml   | 147 +++++++++++++++++++++
+>>>>    1 file changed, 147 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..fc9cbad9dd88
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>>>> @@ -0,0 +1,147 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Intel Combo phy Subsystem
+>>>> +
+>>>> +maintainers:
+>>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>>>> +
+>>>> +description: |
+>>>> +  Intel combo phy subsystem supports PHYs for PCIe, EMAC and SATA
+>>>> +  controllers. A single combo phy provides two PHY instances.
+>>>> +
+>>>> +properties:
+>>>> +  $nodename:
+>>>> +    pattern: "^combophy@[0-9]+$"
+>>>> +
+>>>> +  compatible:
+>>>> +    items:
+>>>> +      - const: intel,combo-phy
+>>>> +      - const: simple-bus
+>>> This will cause the schema to be applied to every 'simple-bus'. You need
+>>> a custom 'select' to prevent that. There's several examples in the tree.
+>> Ok, i will add as below:
+>>
+>> # We need a select here so we don't match all nodes with 'simple-bus'
+>> select:
+>>     properties:
+>>       compatible:
+>>         contains:
+>>           const: intel,combo-phy
+>>     required:
+>>       - compatible
+>>
+>>> Though I'm not sure you need child nodes here.
+>>>
+>>>> +
+>>>> +  cell-index:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: Index of Combo phy hardware instance.
+>>> Drop this. Not used for FDT.
+>> Ok, I will remove this and use the 'aliases' to get the hardware instance.
+>>>> +
+>>>> +  resets:
+>>>> +    maxItems: 2
+>>>> +
+>>>> +  reset-names:
+>>>> +    items:
+>>>> +      - const: phy
+>>>> +      - const: core
+>>>> +
+>>>> +  intel,syscfg:
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>> +    description: Chip configuration registers handle
+>>>> +
+>>>> +  intel,hsio:
+>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>> +    description: HSIO registers handle
+>>>> +
+>>>> +  intel,bid:
+>>>> +    description: Index of HSIO bus
+>>>> +    allOf:
+>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +      - minimum: 0
+>>>> +      - maximum: 1
+>>> If this is related to intel,hsio, just make it an args cell for
+>>> intel,hsio.
+>> No. Actually, this is specific to the combophy instance on the HSIO bus.
+>> I see , this can be removed and value can be derived from the hardware
+>> instance value mentioned through 'aliases'
+> Generally, 'aliases' should be optional. Why do you need an index?
+> What's the difference between the blocks?
+>
+> If it wasn't clear, I was suggesting doing:
+>
+> intel,hsio = <&hsio 1>;
+On the SoC, total 4 combophy (0,1,2 and 3) instances are present -> 
+'cell-index'
+2 instances (0,1) are present on the HSIOL NoC
+Other 2 instances (2,3) are present on the HSIOR NoC
+On the both HSIO NoCs, combophy instances are referred as 0 and 1 -> 'bid'
 
-Great my feedback is welcome.
+'bid' is required while accessing the registers in hsio block, to 
+configure the COMBOPHY mode and clock
+'cell-index' is required while accessing sysconfig registers to enable 
+the pcie phy pad ref clock.
 
-> On Tue, Jan 14, 2020 at 09:08:28AM +0100, Uwe Kleine-König wrote:
-> > On Mon, Jan 06, 2020 at 12:48:02AM +0000, Jeff LaBundy wrote:
-> > I thought we dicussed having a comment here, saying something like:
-> > 
-> > 	The device might reset when [...] and as a result looses it's
-> > 	configuration. So the registers must be rewritten when this
-> > 	happens to restore the expected operation.
-> > 
-> > Is it worth to issue a warning when this happens?
-> 
-> The detailed comments and an error message have always been in iqs62x_irq of the
-> parent MFD driver. The pwm is only one of up to three sub-devices that subscribe
-> to the chain and must update their locally owned registers after the MFD handles
-> the interrupt and restores the device's firmware. I opted to keep these comments
-> in the common MFD rather than repeating throughout the series.
+<&hsio 1>
+'bid' is specific to the combophy, not all the DT nodes using &hsio has 
+a need.
+I think it is better to pass the bid value as a entry of combophy DT node.
 
-That's fine then, a comment that the parent driver issues a message
-would be great then.
- 
-> > > +static int iqs620_pwm_notifier(struct notifier_block *notifier,
-> > > +			       unsigned long event_flags, void *context)
-> > > +{
-> > > +	struct iqs620_pwm_private *iqs620_pwm;
-> > > +	int ret;
-> > > +
-> > > +	iqs620_pwm = container_of(notifier, struct iqs620_pwm_private,
-> > > +				  notifier);
-> > > +
-> > > +	if (!completion_done(&iqs620_pwm->chip_ready) ||
-> > > +	    !(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
-> > > +		return NOTIFY_DONE;
-> > 
-> > Is here a (relevant?) race?  Consider the notifier triggers just when
-> > pwmchip_add returned, (maybe even a consumer configured the device) and
-> > before complete_all() is called. With my limited knowledge about
-> > notifiers I'd say waiting for the completion here might be reasonable
-> > and safe.
-> 
-> Great catch; this is theoretically possible. The problem with waiting, however,
-> is if the notifier is triggered right away during probe but probe returns early
-> due to an error (and completion never happens).
+I will add dt entry something like 'hw-instance-id' instead of 
+cell-index or aliases.
 
-OK, the error path would need to complete .chip_ready then and the
-notifier then check for this error. Indeed messy.
- 
-> At this point, I think the best option is to simply cache the values written to
-> IQS620_PWR_SETTINGS_PWM_OUT and IQS620_PWM_DUTY_CYCLE and restore them from the
-> notifier, which is essentially what is done for the IIO drivers in this series.
+Regards,
+Dilip
 
-Sounds good.
- 
-> > > +	ret = blocking_notifier_chain_unregister(&iqs620_pwm->iqs62x->nh,
-> > > +						 &iqs620_pwm->notifier);
-> > > +	if (ret)
-> > > +		dev_err(iqs620_pwm->chip.dev,
-> > > +			"Failed to unregister notifier: %d\n", ret);
-> > 
-> > 	dev_err(iqs620_pwm->chip.dev,
-> > 		"Failed to unregister notifier: %pe\n", ERR_PTR(ret));
-> > 
-> > gives a nicer output. (Also applies to other error messages of course.)
-> > 
-> 
-> I don't disagree, but this gives me some pause. If I made this change here, I'd
-> prefer to do so across the series for consistency. However, I am hesitant to do
-> so at this stage in the review since several patches are somewhat stable by now
-> (unless there was a compelling reason from a functional perspective).
-> 
-> Another reason is that there are many dev_err cases throughout this series, and
-> adopting this very recently introduced functionality would make the series even
-> harder to back port to the present lot of LTS kernels.
-> 
-> Unless this is a deal breaker, I'd like to pass on this for v4. However, please
-> let me know if you feel strongly about it. In the meantime, I'll get started on
-> the couple of other changes discussed here.
-
-OK, being able to backport is a valid excuse. Consistency over the whole
-series wouldn't be one of my reasons, your mileage obviously varies
-(which is OK).
-
-This can also be done later. Conversion to this is on my todo-list (not
-at the top though), but if you beat me to it, I won't be angry :-)
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+>
+> Rob
