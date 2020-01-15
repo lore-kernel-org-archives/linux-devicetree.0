@@ -2,66 +2,187 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C0FC33CB2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4E2C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D20124679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC8C24655
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 09:45:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IDC5rTxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgAOJpa (ORCPT
+        id S1729503AbgAOJpf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 04:45:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:33984 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbgAOJpa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:45:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6DCF31B;
-        Wed, 15 Jan 2020 01:45:29 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AB333F6C4;
-        Wed, 15 Jan 2020 01:45:27 -0800 (PST)
-Subject: Re: [PATCH v8 06/15] coresight: cti: Add device tree support for v8
- arch CTI
-To:     Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        coresight@lists.linaro.org, linux-doc@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
-        robh+dt@kernel.org, maxime@cerno.tech, liviu.dudau@arm.com,
-        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, agross@kernel.org,
-        corbet@lwn.net
-References: <20200113213149.25599-1-mike.leach@linaro.org>
- <20200113213149.25599-7-mike.leach@linaro.org>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <0a0c4326-598b-728d-e56b-3cf88efcec26@arm.com>
-Date:   Wed, 15 Jan 2020 09:45:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 04:45:35 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52435 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729545AbgAOJpf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 04:45:35 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so17102993wmc.2
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 01:45:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9wkd2dirzcLFMZe8FU543qaw7ijLSERXETdbeouxTnU=;
+        b=IDC5rTxOPsqytGko2kQMljlQZBwBuNt8KKgY8q6IVAW/ySemHw5OtVmZYZGFvfjk5l
+         GlWXT2vBGCuAa2XIepytG7BISG5MAAQp4FClvQ+7Gxplg445NhK4ii3kFHCOsiYlGxrU
+         A0ERCUq5C0NZDeEOmSipXTQkvujaqr4xuaaKREBVgZZJy16KyNEVMT81TD3kMfVjcAOQ
+         BQFv4WUk6iuqMyuL27FXeIOxm/zELox0Uo4Fk771+4DoDhhuNYKEaxHul726afcE1Z+w
+         7D2oyg9fcoJ5C8vJmJqnq6dIH9xPcEYIil5AL4CwSHtlP9I6O7Q/Ll2kfdeCGqGL66gx
+         6wMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9wkd2dirzcLFMZe8FU543qaw7ijLSERXETdbeouxTnU=;
+        b=kK81GbzKjiDiZqVyG3fkt6D8rbnFB/H3Tm4vo/JVPC8viW7ulNuzZe/9ELe+9EVR02
+         F8FTiJx+ncmdB3Uz99lBlcpOW0BeJCYcCWU7uftwpFs3bpWVnFImSsV6Ff+9s1Dge9g3
+         V4ziEAEbLvhZ2/Daa3yvwwW4IWOkn0D7WIu7osKSARnmGXQAl3nnUq6LhpUIIDO8/c7f
+         Oiamyf41xoD4NuebDquxi+I+/RCX+g2vtHfx6sVeC1VHeJPwXeEpYKzqoykyosrII8jk
+         wVe4rpkxY0RwAOi49yIZGNFV8f6ufhHCRY5ZHFv8MeqH6T42L+WPLMYDze7SuOxDSQvz
+         M58A==
+X-Gm-Message-State: APjAAAXpEfvt1cf1Exh9DrN9pay4s2l1dqeyXnTVmHlt4QupTkvmJNNo
+        xwfCsecpOoTK4cSOzpmuTjXYJQ==
+X-Google-Smtp-Source: APXvYqxR2npzUP0k42uJhm9Im1rL58AtIxFUtjkScu/sxkhhW7+4pJhKUdhG5rM9VQoJWl4fFZgc9A==
+X-Received: by 2002:a1c:488a:: with SMTP id v132mr31093095wma.153.1579081533150;
+        Wed, 15 Jan 2020 01:45:33 -0800 (PST)
+Received: from myrica ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id j2sm22908749wmk.23.2020.01.15.01.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 01:45:32 -0800 (PST)
+Date:   Wed, 15 Jan 2020 10:45:27 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v4 10/13] iommu/arm-smmu-v3: Add second level of context
+ descriptor table
+Message-ID: <20200115094527.GB32782@myrica>
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20191219163033.2608177-11-jean-philippe@linaro.org>
+ <20200114150435.GA2579@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200113213149.25599-7-mike.leach@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114150435.GA2579@willie-the-truck>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 13/01/2020 21:31, Mike Leach wrote:
-> The v8 architecture defines the relationship between a PE, its optional ETM
-> and a CTI. Unlike non-architectural CTIs which are implementation defined,
-> this has a fixed set of connections which can therefore be represented as a
-> simple tag in the device tree.
+On Tue, Jan 14, 2020 at 03:04:36PM +0000, Will Deacon wrote:
+> On Thu, Dec 19, 2019 at 05:30:30PM +0100, Jean-Philippe Brucker wrote:
+> > The SMMU can support up to 20 bits of SSID. Add a second level of page
+> > tables to accommodate this. Devices that support more than 1024 SSIDs now
+> > have a table of 1024 L1 entries (8kB), pointing to tables of 1024 context
+> > descriptors (64kB), allocated on demand.
+> > 
+> > Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> > ---
+> >  drivers/iommu/arm-smmu-v3.c | 154 +++++++++++++++++++++++++++++++++---
+> >  1 file changed, 144 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> > index b825a5639afc..bf106a7b53eb 100644
+> > --- a/drivers/iommu/arm-smmu-v3.c
+> > +++ b/drivers/iommu/arm-smmu-v3.c
+> > @@ -224,6 +224,7 @@
+> >  
+> >  #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
+> >  #define STRTAB_STE_0_S1FMT_LINEAR	0
+> > +#define STRTAB_STE_0_S1FMT_64K_L2	2
+> >  #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
+> >  #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
+> >  
+> > @@ -263,7 +264,20 @@
+> >  
+> >  #define STRTAB_STE_3_S2TTB_MASK		GENMASK_ULL(51, 4)
+> >  
+> > -/* Context descriptor (stage-1 only) */
+> > +/*
+> > + * Context descriptors.
+> > + *
+> > + * Linear: when less than 1024 SSIDs are supported
+> > + * 2lvl: at most 1024 L1 entries,
+> > + *       1024 lazy entries per table.
+> > + */
+> > +#define CTXDESC_SPLIT			10
+> > +#define CTXDESC_L2_ENTRIES		(1 << CTXDESC_SPLIT)
+> > +
+> > +#define CTXDESC_L1_DESC_DWORDS		1
+> > +#define CTXDESC_L1_DESC_VALID		1
 > 
-> This patch defines the tags needed to create an entry for this PE/ETM/CTI
-> relationship, and provides functionality to implement the connection model
-> in the CTI driver.
+> 	#define CTXDESC_L1_DESC_V	(1UL << 0)
 > 
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> fits better with the rest of the driver and also ensures that the thing
+> is unsigned (we should probably switch over the BIT macros, but that's a
+> separate cleanup patch).
+> 
+> > +#define CTXDESC_L1_DESC_L2PTR_MASK	GENMASK_ULL(51, 12)
+> > +
+> >  #define CTXDESC_CD_DWORDS		8
+> >  #define CTXDESC_CD_0_TCR_T0SZ		GENMASK_ULL(5, 0)
+> >  #define ARM64_TCR_T0SZ			GENMASK_ULL(5, 0)
+> > @@ -575,7 +589,12 @@ struct arm_smmu_cd_table {
+> >  };
+> >  
+> >  struct arm_smmu_s1_cfg {
+> > -	struct arm_smmu_cd_table	table;
+> > +	/* Leaf tables or linear table */
+> > +	struct arm_smmu_cd_table	*tables;
+> > +	size_t				num_tables;
+> > +	/* First level tables, when two levels are used */
+> > +	__le64				*l1ptr;
+> > +	dma_addr_t			l1ptr_dma;
+> 
+> It probably feels like a nit, but I think this is all a little hard to read
+> because it differs unnecessarily from the way the stream table is handled.
+> 
+> Could we align the two as follows? (I've commented things with what they
+> refer to in your patch):
+> 
+> 
+> struct arm_smmu_l1_ctx_desc {				// arm_smmu_cd_table
+> 	__le64				*l2ptr;		// ptr
+> 	dma_addr_t			l2ptr_dma;	// ptr_dma
+> };
+> 
+> struct arm_smmu_ctx_desc_cfg {
+> 	__le64				*cdtab;		// l1ptr
+> 	dma_addr_t			cdtab_dma;	// l1ptr_dma
+> 	struct arm_smmu_l1_ctx_desc	*l1_desc;	// tables
+> 	unsigned int			num_l1_ents;	// num_tables
+> };
+> 
+> struct arm_smmu_s1_cfg {
+> 	struct arm_smmu_ctx_desc_cfg	cdcfg;
+> 	struct arm_smmu_ctx_desc	cd;
+> 	u8				s1fmt;
+> 	u8				s1cdmax;
+> };
+> 
+> 
+> I don't know whether you'd then want to move s1fmt and s1cdmax into the
+> cdcfg, I'll leave that up to you. Similarly if you want any functions
+> to operate on arm_smmu_ctx_desc_cfg in preference to arm_smmu_s1_cfg.
+> 
+> Thoughts?
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+No problem, it looks cleaner overall.
+
+Thanks,
+Jean
+
