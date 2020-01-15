@@ -2,107 +2,66 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DEEC32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D734C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E678214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C6F214AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAORGh (ORCPT
+        id S1728946AbgAORHM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:06:37 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53687 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAORGh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 12:06:37 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irm7b-0000Jl-E9; Wed, 15 Jan 2020 18:06:23 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irm7Z-0005PA-37; Wed, 15 Jan 2020 18:06:21 +0100
-Date:   Wed, 15 Jan 2020 18:06:21 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        jacopo+renesas@jmondi.org, robh+dt@kernel.org,
-        laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org,
-        kernel@pengutronix.de, linux-media@vger.kernel.org
-Subject: Re: [PATCH v11 04/15] media: v4l2-fwnode: add initial connector
- parsing support
-Message-ID: <20200115170621.jszy2p3e4w3b3hpn@pengutronix.de>
-References: <20190930093900.16524-1-m.felsch@pengutronix.de>
- <20190930093900.16524-5-m.felsch@pengutronix.de>
- <20191115233439.GB2696@mara.localdomain>
+        Wed, 15 Jan 2020 12:07:12 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:38822 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728928AbgAORHM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 12:07:12 -0500
+X-Greylist: delayed 2606 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 12:07:11 EST
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 00FGN3te021572;
+        Wed, 15 Jan 2020 18:23:03 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id DB60D60328; Wed, 15 Jan 2020 18:23:02 +0200 (IST)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com
+Cc:     linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/4] spi: npcm-pspi: improve preformance modify reset and fix issue
+Date:   Wed, 15 Jan 2020 18:22:57 +0200
+Message-Id: <20200115162301.235926-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115233439.GB2696@mara.localdomain>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:35:42 up 61 days,  7:54, 54 users,  load average: 0.00, 0.01,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sakari,
+This patch set modify Perphiral SPI NPCM driver as follow:
+	
+	- Improve transfer performance.
+	- Fix 16 bit send and receive support.
+	- Modify dt-binding documentation to support reset controller driver.
+	- Modify reset support to use reset controller driver
+	  NPCM reset driver: https://lkml.org/lkml/2019/11/7/429.
 
-On 19-11-16 01:34, Sakari Ailus wrote:
-> Hi Marco,
-> 
-> On Mon, Sep 30, 2019 at 11:38:49AM +0200, Marco Felsch wrote:
+Tomer Maimon (4):
+  spi: npcm-pspi: fix 16 bit send and receive support
+  spi: npcm-pspi: improve spi transfer performance
+  dt-binding: spi: add NPCM PSPI reset binding
+  spi: npcm-pspi: modify reset support
 
-...
+ .../bindings/spi/nuvoton,npcm-pspi.txt        | 12 +---
+ drivers/spi/spi-npcm-pspi.c                   | 57 +++++++++----------
+ 2 files changed, 29 insertions(+), 40 deletions(-)
 
-Let me sum up our irc discussion about that kAPI.
+-- 
+2.22.0
 
-Our starting point is a fwnode based subdev which has connectors in
-front of there pins. Connectors are used to limit the subdev to some
-device limits e.g. if the device support only PAL-Input streams and the
-subdev has an buggy autodetect mechanism. In that case the connector can
-be used by the subdev to set the possible TV-Norms to PAL. Currently the
-tvp5150 is the only fwnode based subdev implementing connectors.
-
-Connectors have common and connector specific properties. All current
-provided connectors can be found here:
-Documentation/devicetree/bindings/display/connector/ .
-
-Parsing the properties is common to all _upcoming_ fwnode based subdevs
-so this should be done within the core. So lets move on to the parsing
-helper.
-
-> > +int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
-> > +				      struct v4l2_fwnode_connector *connector)
-> > +{
-
-This kAPI seems to fit all current use cases. The API is not responsible
-to alloc the 'struct v4l2_fwnode_connector' instead it is only used to
-fill this struct. The given 'struct fwnode_handle' should be the subdev
-local ep-fwnode because the user already has a reference to this ep.
-
-This helper has two use-cases:
-  1) Parsing the connector properties and add the initial (1st) link.
-  2) Add further n-links upon n-calls to an already parsed connector.
-
-Going this way we need to ensure that the caller init the 'struct
-v4l2_fwnode_connector' to '0' before call this helper. This can be
-documented within the kAPI doc.
-
-Regards,
-  Marco
