@@ -2,91 +2,156 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2B3C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90C1C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B24D222C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E7EB24671
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579091099;
+	bh=ahmB3AGmjfviPDPt7/xzlcU9opl/jgG4htJShn4RCHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H6MiYs8E7Zjqkuqp0zRhtL5kYFJ50YOspRTmS87JJFE3S93tbHQV/f1QG4uySAIVd
+	 oW+nV0pXZQQ/Yku+0ZBK+8fAZcGOo42m/d5/F7hHRX8JKWeneU6PJVWQugHvLGiC0V
+	 tYSR+tz++E1Ocz3p9lMLdkLq8SPnm+oQk5sdYz9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgAOMXA (ORCPT
+        id S1726310AbgAOMY4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:23:00 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:39916 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730283AbgAOMXA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 07:23:00 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Wed, 15 Jan 2020 07:24:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbgAOMY4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:24:56 -0500
+Received: from localhost (unknown [223.226.122.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id EEAE320366;
-        Wed, 15 Jan 2020 13:22:54 +0100 (CET)
-Date:   Wed, 15 Jan 2020 13:22:53 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jyri Sarha <jsarha@ti.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com,
-        peter.ujfalusi@ti.com, bparrot@ti.com, praneeth@ti.com,
-        yamonkar@cadence.com, sjakhade@cadence.com, maxime@cerno.tech
-Subject: Re: [PATCH v6 4/5] drm/tidss: New driver for TI Keystone platform
- Display SubSystem
-Message-ID: <20200115122253.GA22854@ravnborg.org>
-References: <cover.1579086894.git.jsarha@ti.com>
- <66c57bb30685920f040933ada9ccd4f5035d099f.1579086894.git.jsarha@ti.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 89A8C207E0;
+        Wed, 15 Jan 2020 12:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579091095;
+        bh=ahmB3AGmjfviPDPt7/xzlcU9opl/jgG4htJShn4RCHU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0vD+1T6TFbmLwi41Mk8DctL7OIhqe0KQdMWLSpWDtlMSdJi3XHfQUZjrupUJjDwC0
+         6kFS6WzZAgdrTU0m0auMbhuW+lGpXNuSNICfTLKfGn1en6bTVkuGERtea0KVYi+lMf
+         PHqhrB3PXofPJ54HXd2qi2jYCzxEE3pSmRAkwMEU=
+Date:   Wed, 15 Jan 2020 17:54:40 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        santosh.shilimkar@oracle.com
+Cc:     Sekhar Nori <nsekhar@ti.com>, robh+dt@kernel.org, nm@ti.com,
+        ssantosh@kernel.org, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
+        tony@atomide.com, j-keerthy@ti.com, vigneshr@ti.com,
+        frowand.list@gmail.com
+Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
+Message-ID: <20200115122440.GI2818@vkoul-mobl>
+References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+ <20191223110458.30766-3-peter.ujfalusi@ti.com>
+ <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
+ <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
+ <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
+ <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
+ <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
+ <2c933a6c-37c6-3ef6-7c37-ae36e8c49bf7@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <66c57bb30685920f040933ada9ccd4f5035d099f.1579086894.git.jsarha@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=WVcRL-gX3Aqz7jTcpKoA:9 a=_aDu49ajq4D_GkOu:21 a=UD8rQldCOfFGNFSc:21
-        a=CjuIK1q_8ugA:10
+In-Reply-To: <2c933a6c-37c6-3ef6-7c37-ae36e8c49bf7@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jyri.
-
-On Wed, Jan 15, 2020 at 01:45:38PM +0200, Jyri Sarha wrote:
-> This patch adds a new DRM driver for Texas Instruments DSS IPs used on
-> Texas Instruments Keystone K2G, AM65x, and J721e SoCs. The new DSS IP is
-> a major change to the older DSS IP versions, which are supported by
-> the omapdrm driver. While on higher level the Keystone DSS resembles
-> the older DSS versions, the registers are completely different and the
-> internal pipelines differ a lot.
+On 15-01-20, 11:44, Peter Ujfalusi wrote:
 > 
-> DSS IP found on K2G is an "ultra-light" version, and has only a single
-> plane and a single output. The K3 DSS IPs are found on AM65x and J721E
-> SoCs. AM65x DSS has two video ports, one full video plane, and another
-> "lite" plane without scaling support. J721E has 4 video ports, 2 video
-> planes and 2 lite planes. AM65x DSS has also an integrated OLDI (LVDS)
-> output.
 > 
-...
-> v6: - Check CTM and gamma support from dispc_features when creating crtc
->     - Implement CTM support for k2g and fix k3 CTM implementation
->     - Remove gamma property persistence and always write color properties
->       in a new modeset
+> On 14/01/2020 20.06, santosh.shilimkar@oracle.com wrote:
+> >>>>> Can you please giver your Acked-by for the ringacc patches if they are
+> >>>>> still OK from your point of view as you had offered to take them
+> >>>>> before
+> >>>>> I got comments from Lokesh.
+> >>>>>
+> >>>> Sure. But you really need to split the series so that dma engine and
+> >>>> soc driver patches can be applied independently.
+> >>>
+> >>> The ringacc is a build and runtime dependency for the DMA. I have hoped
+> >>> that all of them can go via DMAengine (hence asking for your ACK on the
+> >>> drivers/soc/ti/ patches) for 5.6.
+> >>>
+> >>>> Can you please do that?
+> >>>
+> >>> This late in the merge window that would really mean that I will miss
+> >>> another release for the KS3 DMA...
+> >>> I can live with that if you can pick the ringacc for 5.6 and if Vinod
+> >>> takes the DMAengine core changes as well.
+> >>>
+> >>> That would leave only the DMA drivers for 5.7 and we can also queue up
+> >>> changes for 5.7 which depends on the DMAengine API (ASoC changes, UART,
+> >>> sa2ul, etc).
+> >>>
+> >>> If they go independently and nothing makes it to 5.6 then 5.8 is the
+> >>> realistic target for the DMA support for the KS3 family of devices...
+> >>
+> >> Thats too many kernel versions to get this important piece in.
+> >>
+> >> Santosh, if you do not have anything else queued up that clashes with
+> >> this, can the whole series be picked up by Vinod with your ack on the
+> >> drivers/soc/ti/ pieces?
+> >>
+> > I would prefer driver patches to go via driver tree.
+> 
+> Not sure what you mean by 'driver patches'...
+> The series to enable DMA support on TI's K3 platform consists:
+> Patch 1-2: Ring Accelerator _driver_ (drivers/soc/ti/)
+> Patch 3-6: DMAengine core patches to add new features needed for k3-udma
+> Patch 7-11: DMA _driver_ patches for K3 (drivers/dma/ti/)
+> 
+> Patch 10 depends on the ringacc and the DMAengine core patches
+> Patch 11 depends on patch 10
+> 
+> I kept it as a single series in hope that they will go via one subsystem
+> tree to avoid build dependency issues and will have a good amount of
+> time in linux-next for testing.
+> 
+> >> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
+> >> with just the drivers/soc/ti parts applied so you can merge that branch
+> >> in case you end up having to send up anything that conflicts.
+> >>
+> > As suggested on other email to Peter, these DMA engine related patches
+> > should be queued up since they don't have any dependency. Based on
+> > the status of that patchset, will take care of pulling in the driver
+> > patches either for this merge window or early part of next merge window.
+> 
+> OK, I'll send the two patch for ringacc as a separate series.
+> 
+> Vinod: Would it be possible for you to pick up the DMAengine core
+> patches (patch 3-6)?
+> The UDMA driver patches have hard dependency on DMAengine core and
+> ringacc, not sure how they are going to go in...
 
-I applied this, just to throw this throgh my build setup.
+Since they have build dependency, the usual method for this is:
 
-checkpatch reported:
-total: 0 errors, 45 warnings, 46 checks, 4920 lines checked
+1. Santosh acks the dependent patches and I will apply the rest (nice
+and simple)
 
-- space after cast
-- CamelCase
-- Macro argument
-- length warnings
-- alignment
+2. Santosh picks up ring driver patches, provides a signed immutable tag
+which I will pull in and apply the rest, i.e., dmaengine updates and new
+dmaengine driver
 
-I would ignore the line length warnings for the coefficients, but fix the
-rest.
+That way we are all okay and changes get merged now.. there is a 3rd
+option
 
-	Sam
+3. Santosh picks ring driver patches, and Vinod picks rest after next
+rc1 (provided they make to linus in merge window)
+
+I would love to see either 1 or 2 whichever way folks are comfortable
+to deal with :)
+
+-- 
+~Vinod
