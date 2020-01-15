@@ -2,150 +2,114 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F90CC35247
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3229C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 13:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31495206D7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8843F2073A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 13:02:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GizgJV+N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p3MkQlYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAOMxm (ORCPT
+        id S1726187AbgAONCY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:53:42 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45004 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgAOMxm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 07:53:42 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q10so15623433wrm.11
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 04:53:40 -0800 (PST)
+        Wed, 15 Jan 2020 08:02:24 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36255 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726100AbgAONCY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 08:02:24 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so15673826wru.3;
+        Wed, 15 Jan 2020 05:02:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=C3g2nYTO2xQzb0GJuxY8N32scuZW4mZloVEmHa7VH1s=;
-        b=GizgJV+NAlkwmPStOaKeLJGVjuw+mNcVnRBGC3KOsPI8Ckz3NtzP81ZW0FXqyGTgmo
-         CQSBQ1i/367JhF2Hr9aOyBH7HhwOtRQxxhF1ER/yFhgBYGARKyuYZwnyUOM16f9ZkoHz
-         932OC6jTw3G1Yo73aVV7ol9jYuBydFvGU5nbMGRb8wnB/wZMPE3SbC9TXmYjWfC0Hj8w
-         toP68qIugnKqfeVmyqApFpJyXHnxypMTrAs0iJBxdz+LQ8B8jT0dBRDD7X39lECHCK9Y
-         lz9qLSHufNXYhKd+fOGRYzHa41Bh2IjLy2+y4DlRmvQ2I5XcgoOrSTzHbGvUrovuTt/X
-         3gmw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Dd/fpZjUl0bvpdYK2/HoiWMjO/ltnHe3ct+x9nyIfFk=;
+        b=p3MkQlYTQj+lULTBr6mWn5nKzLDUF5GJ9cat1feO+Q3nCwwmKt7aJRqL3jb8Xypk6t
+         5K3Zyc5pjjBItrPOQkjZpSi+P+SBB6aY9ZSoI7Dkwuczv7HnBk9NKnzWO91rxXupd4A1
+         ucnu3R3CAPXZQAGX0XU+Lt/U7EgARw1EwYbNZ8/cul9gYaEeW00ZQ5+lB3iIFdGO5wa8
+         zg+4xaiTNx+kSKfvHbOTyQhwokkdI1VaCx0nGVZcC6v/EJ3+8Q6YoTiur4K5TW8vWdV3
+         rHxz6NYn2z0u+1WamRmX0on1wJU/FN1ZzovgHY9f4qsArULVd2M/p6dKrDnfrgJFVjdD
+         OKyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=C3g2nYTO2xQzb0GJuxY8N32scuZW4mZloVEmHa7VH1s=;
-        b=sHkMKD6uzzjS8BfIue0Lsz6y3485gTXBs9LDRO5uU7C8VGNKDom1o4cD5j6feI+J9g
-         jTs2Lgsx3173e86WJ8euU0Lzq6tEIW5FdaFCaSs+RpYnKRJmaKkJb7ukgcsRtvHuUdic
-         Rz7W3W7T17gZqM/tL9ONzSROsJJub0qDBOlsZ+OMFEcGLAnEugFA+wjyJ35bvdzef9aR
-         iSp5YRLniiEC4KCuzKiJLRInsoltCFJlarWGK18qk7hPDE/Zo8pVYiHVHTeBv9H2ENF0
-         xwxvtvHgG7aQeSfJti3PIRbHbiUVHdqLkPNd7Fou2b75wQu3jaNKHzH20DxqSz6fweXl
-         FS9A==
-X-Gm-Message-State: APjAAAUa0XwQmM8sZ2zQAbPEcMTJ2PaJklE3gCXzLUgQ//9Md6/uKIK2
-        R0275ebduY7+xxx1XJnKsnP7QHF6WFg=
-X-Google-Smtp-Source: APXvYqwSGcbdAtd5+ica/pXHhp8VLPeN94EbbtkoRsRsPY47afNQboGMHUBtV30+2XDoEbdnJ8V8Ug==
-X-Received: by 2002:adf:e5cf:: with SMTP id a15mr11624781wrn.140.1579092820130;
-        Wed, 15 Jan 2020 04:53:40 -0800 (PST)
-Received: from localhost.localdomain ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id d12sm25196171wrp.62.2020.01.15.04.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 04:53:39 -0800 (PST)
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, will@kernel.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: [PATCH v5 11/13] iommu/arm-smmu-v3: Improve add_device() error handling
-Date:   Wed, 15 Jan 2020 13:52:37 +0100
-Message-Id: <20200115125239.136759-12-jean-philippe@linaro.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200115125239.136759-1-jean-philippe@linaro.org>
-References: <20200115125239.136759-1-jean-philippe@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Dd/fpZjUl0bvpdYK2/HoiWMjO/ltnHe3ct+x9nyIfFk=;
+        b=Qj+77oRXMMevL3Un4fornuls6pZkb7eTr3U47+jCbARTgnCziq7E01YplbXNs/1FrL
+         tkC5z/dbnqcdxBJ55WSmkwg0sWAep4lPcyCBcJ1LaOrE35jNzVSEEngmitK0oiq/nv6Y
+         QW8YVXxx8ixvlZVasPcwyBPpODqppdcKLHGCc0GWJpnTQ65tBeq4K24mI1QGRHZT6Fgy
+         KuuPir0tq849TMfZO3GT8oPjqFIJcFzPmDH5w850LlhKMwAvrb9NlbbPJOSIFevN7FE9
+         MVZmBchbEuPHZ5PgXa/3da9+Luf9Z1ZcCJDUxSjWELEs0ZbmB+z+OEygu2d/DpCG7FTb
+         QMew==
+X-Gm-Message-State: APjAAAU7npScLRJawNEYqU0Psjm2GMk2tFr9COrx62EmF2qTW2OZ4Ake
+        dzb6ocvOiTLSiljcmq+Y7VY=
+X-Google-Smtp-Source: APXvYqxcOwmlY+O6QGUZ/kxCeDj2gNn1kTWrnJRjeqw5YwD9D/edsH1lRUE34oPl6X1lmo7nvZDggA==
+X-Received: by 2002:adf:fa12:: with SMTP id m18mr30163062wrr.309.1579093342407;
+        Wed, 15 Jan 2020 05:02:22 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id p26sm22390808wmc.24.2020.01.15.05.02.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jan 2020 05:02:21 -0800 (PST)
+Subject: Re: [RFC PATCH v1 1/3] dt-bindings: mmc: combine common mmc and
+ dw-mshc properties
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+References: <20200114213809.27166-1-jbx6244@gmail.com>
+ <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <12bbbdbc-027e-90de-fd57-291013167b06@gmail.com>
+Date:   Wed, 15 Jan 2020 14:02:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+8X0oRykiQOKVyaxis4H0yO=nzUtnFF_BXdwBkuigr7g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Let add_device() clean up after itself. The iommu_bus_init() function
-does call remove_device() on error, but other sites (e.g. of_iommu) do
-not.
+Hi,
 
-Don't free level-2 stream tables because we'd have to track if we
-allocated each of them or if they are used by other endpoints. It's not
-worth the hassle since they are managed resources.
+Thank you for your explanation.
+I was not aware that was playing.
+So now we go from a 'simple' txt to yaml conversion to a complete
+'change your node name first' operation.
+Can you indicate if that common yaml file for dw-mshc and Rockchip
+is still a good idea?
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
----
- drivers/iommu/arm-smmu-v3.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+Thanks
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 04144b39c4ce..b2b7ba9c4e32 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2827,14 +2827,16 @@ static int arm_smmu_add_device(struct device *dev)
- 	for (i = 0; i < master->num_sids; i++) {
- 		u32 sid = master->sids[i];
- 
--		if (!arm_smmu_sid_in_range(smmu, sid))
--			return -ERANGE;
-+		if (!arm_smmu_sid_in_range(smmu, sid)) {
-+			ret = -ERANGE;
-+			goto err_free_master;
-+		}
- 
- 		/* Ensure l2 strtab is initialised */
- 		if (smmu->features & ARM_SMMU_FEAT_2_LVL_STRTAB) {
- 			ret = arm_smmu_init_l2_strtab(smmu, sid);
- 			if (ret)
--				return ret;
-+				goto err_free_master;
- 		}
- 	}
- 
-@@ -2844,13 +2846,25 @@ static int arm_smmu_add_device(struct device *dev)
- 		master->ssid_bits = min_t(u8, master->ssid_bits,
- 					  CTXDESC_LINEAR_CDMAX);
- 
-+	ret = iommu_device_link(&smmu->iommu, dev);
-+	if (ret)
-+		goto err_free_master;
-+
- 	group = iommu_group_get_for_dev(dev);
--	if (!IS_ERR(group)) {
--		iommu_group_put(group);
--		iommu_device_link(&smmu->iommu, dev);
-+	if (IS_ERR(group)) {
-+		ret = PTR_ERR(group);
-+		goto err_unlink;
- 	}
- 
--	return PTR_ERR_OR_ZERO(group);
-+	iommu_group_put(group);
-+	return 0;
-+
-+err_unlink:
-+	iommu_device_unlink(&smmu->iommu, dev);
-+err_free_master:
-+	kfree(master);
-+	fwspec->iommu_priv = NULL;
-+	return ret;
- }
- 
- static void arm_smmu_remove_device(struct device *dev)
--- 
-2.24.1
 
+On 1/14/20 11:06 PM, Rob Herring wrote:
+> On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
+>>
+>> Combine the common properties for mmc and dw-mshc in
+>> mmc-controller-common.yaml
+>
+> Commit messages should explain the why, not what.
+>
+> AFAICT, the only reason is to not have a node name of 'mmc'. That's
+> entirely the reason why it is defined. Fix your node names to use the
+> standard name.
+>
+>
+>
+> Rob
+>
