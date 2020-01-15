@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A55AC35248
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AA1C47409
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AF1207FF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689F6206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aMEN5de5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d82j4vm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAOMxk (ORCPT
+        id S1729028AbgAOMxg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:53:40 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51206 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgAOMxj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 07:53:39 -0500
-Received: by mail-wm1-f66.google.com with SMTP id d73so17740922wmd.1
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 04:53:38 -0800 (PST)
+        Wed, 15 Jan 2020 07:53:36 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53031 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728921AbgAOMxe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 07:53:34 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p9so17779632wmc.2
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 04:53:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ovlZEJ3MFxMFIeaWjeBxqpybO8xAZBGhmofvDyv09KM=;
-        b=aMEN5de52sUoibJjcgOb+6eTx1h6fTv2UQ6WOa5q3Q6KiJA4GEB9NVcvkjp5XTDpw0
-         jyrlMPEEviSdgsEwPxnn9Qz4ztTIX7m8d3wu8FrFmUwKiXL+nOjMqWUR5vGtLernKgVK
-         Q4R3z+oQjYLX0uQdMrVVaHa5dbQc3Tw0ln21IYTTubylIuPt2K9feenebb5Pze+7i3iH
-         72VB4jpBo6CPlpj9BX+uLH0Gq/t5k7z+IV0RzkE2TBQ3QZHc/sNDML1H9dU55iSMdK92
-         vuUczV5TEeoRgiZ9py79YvE0UIEZiXLTzJDRV+IIxn6fWVQr8YnXBCTycNdwBzUwU5eM
-         OJwA==
+        bh=SVox6K0aClSgQAj4ZePzlVYlKOAA5RM1JxWE0eeJ+CM=;
+        b=d82j4vm1o3BcAiDmH8LgzA/3vpHR0J1gWTn3QQfboZjYwEHmLjWkVdv0rRYfw8tFQD
+         ZuKg7Rqy6hIQuC+dEDXPSLfFBVh4xfBVaqbdgIL1DjHmr5YQ0g8aBzYy3Kb+GHOJFU4L
+         g6e/Md8hX8aJLbt7iWz2wb0JfPk+FA+VwfPFj8ARFZ/hHFjSIIJjUKBrW0X8Uw65/GFN
+         pCj8ovv/3UsaefxbgelPQ8wVEKeHfYhcTtN2E+f84GERI489oXoalINk//Ix2yee5SSF
+         +wfxiIYEG3WEI0GqJI+KNZVEJCgdOf8YjqzueruUlJfwuRyTHAExiMrKEJFJQ/Z+jnHY
+         DS1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ovlZEJ3MFxMFIeaWjeBxqpybO8xAZBGhmofvDyv09KM=;
-        b=X5tpWHhIg7Urv0T7aTXU28AQOBphNDIMZqifzUyWTbvZhDgjLeWLJPm5eS7ddVPe8Z
-         KZI1Kaq7Fw5ZDnPhAMWhYlbEF65RI0loR+gwODczyG8G5DM5aTN5i29KcAiWRe0DEGpH
-         upoFvAwCFN3wnCriUUHhUmmeeZw4wDmytVzLf3ZB0TYpS52bI7cMaLQGy+rusa+EH8lS
-         ble3VFghXjM3lYtHn3Nb+Mp2OonS+/WEDvig8ica7G7lFwUj/H7pHZHfDg99BVMjIglZ
-         KaLbyjESDcXZDXAJWcwJ5u2RaBBPTp9HCmFaLuo0EhOXDLcWbIX0ATI1hJ71SzFKtw1q
-         faiQ==
-X-Gm-Message-State: APjAAAVkH20nm+2zke5rxPeK1DT5JFkI5vnrTDrDgQZWxj1bwBLkiq6a
-        by14fkh8Oc+9PB6NVr+ypHxqQA==
-X-Google-Smtp-Source: APXvYqwvjgPB35BKDw3598B+f3tN02Oa/sBncf4ulCANAV1l9+FYbfBBXQvNAcGYK7F4agxMEERIfA==
-X-Received: by 2002:a7b:c4c5:: with SMTP id g5mr33782202wmk.85.1579092817895;
-        Wed, 15 Jan 2020 04:53:37 -0800 (PST)
+        bh=SVox6K0aClSgQAj4ZePzlVYlKOAA5RM1JxWE0eeJ+CM=;
+        b=LTZ2f+9L+3v22ru8n8LC5eo0S3U5YzN+dNPL98q8JPZihgfU8OP9iZH4jSIlHrm9wg
+         ZjhnRNUrb99oCHrIV7MgtRJZrwntcD9zJQY7PGEuhzqj9IfXDgJuDomEZPbm+Frx64nG
+         G5/i3SAw1C/v1jzaU60HdO+AszgXTbQXnYUh7+0lLBDlBuHBkd+RaI5Nn5R4PFHQq88q
+         IzpZfpdHrZW1Q8BwGX41egn18XfdexyIb0SD+gcwYOLPCXEs24szx6Sjm1SXxFoHg2io
+         iV2eR7lQykB51qGhoJs+jCceAx/IlrJnyaqCC5khljon2EOWuk6Xz3Qki7NrY5W84hdd
+         qxfQ==
+X-Gm-Message-State: APjAAAUYE5P5otYvVoTqZVoTRpO+y0nDsK4HvJ84EYOb9J68PPkbUGaG
+        9T4XRqDRI7kmOrbocj6vDCy5cw==
+X-Google-Smtp-Source: APXvYqzv6wpZNhXp0mYEPij61j3ANQSOgHf/a/RB8gE84eHpEFNB/mfELJUcr+OpmYAPFC/lrGboWA==
+X-Received: by 2002:a1c:3187:: with SMTP id x129mr33613992wmx.91.1579092812076;
+        Wed, 15 Jan 2020 04:53:32 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id d12sm25196171wrp.62.2020.01.15.04.53.36
+        by smtp.gmail.com with ESMTPSA id d12sm25196171wrp.62.2020.01.15.04.53.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 04:53:37 -0800 (PST)
+        Wed, 15 Jan 2020 04:53:31 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
         robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
         jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: [PATCH v5 09/13] iommu/arm-smmu-v3: Prepare for handling arm_smmu_write_ctx_desc() failure
-Date:   Wed, 15 Jan 2020 13:52:35 +0100
-Message-Id: <20200115125239.136759-10-jean-philippe@linaro.org>
+Subject: [PATCH v5 04/13] ACPI/IORT: Parse SSID property of named component node
+Date:   Wed, 15 Jan 2020 13:52:30 +0100
+Message-Id: <20200115125239.136759-5-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200115125239.136759-1-jean-philippe@linaro.org>
 References: <20200115125239.136759-1-jean-philippe@linaro.org>
@@ -77,48 +77,62 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Second-level context descriptor tables will be allocated lazily in
-arm_smmu_write_ctx_desc(). Help with handling allocation failure by
-moving the CD write into arm_smmu_domain_finalise_s1().
+Named component nodes in the IORT tables describe the number of
+Substream ID bits (aka. PASID) supported by the device. Propagate this
+value to the fwspec structure in order to enable PASID for platform
+devices.
 
+Acked-by: Hanjun Guo <guohanjun@huawei.com>
 Reviewed-by: Eric Auger <eric.auger@redhat.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/acpi/arm64/iort.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 7b7dea596f60..c35863073ab3 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2299,8 +2299,15 @@ static int arm_smmu_domain_finalise_s1(struct arm_smmu_domain *smmu_domain,
- 	cfg->cd.ttbr	= pgtbl_cfg->arm_lpae_s1_cfg.ttbr[0];
- 	cfg->cd.tcr	= pgtbl_cfg->arm_lpae_s1_cfg.tcr;
- 	cfg->cd.mair	= pgtbl_cfg->arm_lpae_s1_cfg.mair;
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 33f71983e001..39f389214ecf 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -11,6 +11,7 @@
+ #define pr_fmt(fmt)	"ACPI: IORT: " fmt
+ 
+ #include <linux/acpi_iort.h>
++#include <linux/bitfield.h>
+ #include <linux/iommu.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+@@ -924,6 +925,20 @@ static int iort_pci_iommu_init(struct pci_dev *pdev, u16 alias, void *data)
+ 	return iort_iommu_xlate(info->dev, parent, streamid);
+ }
+ 
++static void iort_named_component_init(struct device *dev,
++				      struct acpi_iort_node *node)
++{
++	struct acpi_iort_named_component *nc;
++	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
 +
-+	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &cfg->cd);
-+	if (ret)
-+		goto out_free_cd_tables;
++	if (!fwspec)
++		return;
 +
- 	return 0;
++	nc = (struct acpi_iort_named_component *)node->node_data;
++	fwspec->num_pasid_bits = FIELD_GET(ACPI_IORT_NC_PASID_BITS,
++					   nc->node_flags);
++}
++
+ /**
+  * iort_iommu_configure - Set-up IOMMU configuration for a device.
+  *
+@@ -978,6 +993,9 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
+ 			if (parent)
+ 				err = iort_iommu_xlate(dev, parent, streamid);
+ 		} while (parent && !err);
++
++		if (!err)
++			iort_named_component_init(dev, node);
+ 	}
  
-+out_free_cd_tables:
-+	arm_smmu_free_cd_tables(smmu_domain);
- out_free_asid:
- 	arm_smmu_bitmap_free(smmu->asid_map, asid);
- 	return ret;
-@@ -2567,10 +2574,6 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
- 	if (smmu_domain->stage != ARM_SMMU_DOMAIN_BYPASS)
- 		master->ats_enabled = arm_smmu_ats_supported(master);
- 
--	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1)
--		arm_smmu_write_ctx_desc(smmu_domain, 0,
--					&smmu_domain->s1_cfg.cd);
--
- 	arm_smmu_install_ste_for_dev(master);
- 
- 	spin_lock_irqsave(&smmu_domain->devices_lock, flags);
+ 	/*
 -- 
 2.24.1
 
