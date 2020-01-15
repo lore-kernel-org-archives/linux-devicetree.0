@@ -2,260 +2,115 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9112BC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 13:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BE9C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BF4207FF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 13:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F5E24684
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpKz3ov4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5cjwfek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgAONrO (ORCPT
+        id S1730304AbgAOON0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 08:47:14 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40499 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgAONrO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 08:47:14 -0500
-Received: by mail-pj1-f66.google.com with SMTP id bg7so7723314pjb.5;
-        Wed, 15 Jan 2020 05:47:14 -0800 (PST)
+        Wed, 15 Jan 2020 09:13:26 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54151 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730249AbgAOON0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 09:13:26 -0500
+Received: by mail-wm1-f67.google.com with SMTP id m24so18046138wmc.3
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 06:13:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qCxb07O3jS5MzDJ5KpEFySLAZYUkoV5oCpYOYUF2fuA=;
-        b=BpKz3ov4HpQHJOoXWclUr67slGzmMYVwSSgrOa57jr9BUR4E3B7OeMxkE75uSze3hR
-         Z0278JymCg/BE1nrzEdute+6kSsczp22VUmgzc5/YBSP0bv39/DQHrhCRwE02D5xlJJ3
-         IRJNCwrNr/a10bU+POKq0gQ8qeZ+BSYTCeGe2r9tgqMyHcm3/eG99rr3tXopHn5nFcsy
-         gEpMcfMW4aEOCUSCOcII2jaU3hCnOXDMK+4erGjJws8+FBxnxDLHHtY6zGi2y9kgHuCe
-         EBWpAi59dPYnY9XDodeluDZxo+BrvBhIkYsVrdOiBdgb9ejbt9tv5KxNdpjiLOL2P43R
-         iT4g==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1UUsfm6fOWyuTi0Eboq7gj4QxZv+6wLGX1zbgK1JIts=;
+        b=n5cjwfekoTs0bO7Gxvi12pv32MHjFchOy4wcgupRYkss/PEsjx3qEK66BQokfVb7Mg
+         TKJkJFAde6xt/JPDtBi3nowq2BrdCqSacHLXdNkPDtQn4sq9KsZ9F9OmPcUwx697FhJF
+         5s0lR6MeA5p6sBKpNb/t77MqWSmjLy3S6oQspuEk01/JWWnK93i7/fY0o80Kx0f/dAea
+         hqJ7M0m+3W3Cgsp1tjyMw+sZtOxPVfBHREC8P3YD0ED2Na36PFtNKqbhwoqlis8wzRLw
+         NI2DOtC9GOHyKpzbjZnaMdM9BuqxTthrTBcyFuqQyt0yDhFXkYGTspqouOpNmPVIbC1Y
+         58Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qCxb07O3jS5MzDJ5KpEFySLAZYUkoV5oCpYOYUF2fuA=;
-        b=Zg4j28IQ+4ZNzErCnVUfgppggSidjGsrb7nnYdHtuwALDTzLg0/Xs+TKsnuPI1AbkH
-         qUBKklFso0f/ryunpvfAjmyqOpmz47LAD23sdC+7z5sIv6zMZxMHunOc05IRKfAqlPuv
-         pWJHJO1jk+W8yHbYyplCJXCKLie40PjNXdbCdEHdDT+tc3e3yzQ1/FgkPwZZdOgRUX0A
-         ny8oP9+P5JF7e3t0g4l8nX7Zv3mVar+XhP0y5B1hy3//efZmzqMLA7unZco1S4H8DZTa
-         LvpJKCXV4toAtcR8Q/pdx9xB0mZu3gBeJHQzCBL4lCEBIO6Hp6pTHYULtwnGcJ/m+WGg
-         hhOA==
-X-Gm-Message-State: APjAAAWjHcZjyOAzeUaQ5Cdn8NgXp8XaHn+hD/z/D2Mt7Fjgs6Gvy7Ka
-        lX/cbGgGzvZzdephCldjNYA=
-X-Google-Smtp-Source: APXvYqwv7ezrYAKzSWltLFywSXn+1dKl9mNzVXU+ZOl+9ohEy1e+HVp1oNtxEnD4ZXIF0ibvfgE2KA==
-X-Received: by 2002:a17:902:a515:: with SMTP id s21mr19390176plq.177.1579096033818;
-        Wed, 15 Jan 2020 05:47:13 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d26sm20414077pgv.66.2020.01.15.05.47.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 05:47:13 -0800 (PST)
-Subject: Re: [PATCH v12 3/4] watchdog: mtk_wdt: mt8183: Add reset controller
-To:     Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org,
-        p.zabel@pengutronix.de, matthias.bgg@gmail.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com,
-        jiaxin.yu@mediatek.com
-Cc:     yingjoe.chen@mediatek.com, sboyd@kernel.org
-References: <20200115085828.27791-1-yong.liang@mediatek.com>
- <20200115085828.27791-4-yong.liang@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <18c3d0ca-a5d9-ede4-d13e-279b71272d44@roeck-us.net>
-Date:   Wed, 15 Jan 2020 05:47:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1UUsfm6fOWyuTi0Eboq7gj4QxZv+6wLGX1zbgK1JIts=;
+        b=PEbyVn/FUel5AC3ItwntDy+gNS6h0043lobC2oDaWbmU80bCPTqc2Ecs1TIURFIY4i
+         +JSxEMabansa6WKa5ssbO6rlsuQqoPKj8hHmPGMt3yVvsmYedeMt4hmBZQmQHNcJeh+B
+         Viefy4dkjJsakjvyZ1Z3suBc4OygIXVR6s9Jcf1+U7uJYhHMEPol8PGbM5RywripifJR
+         FjryuNTeg7WH8zjVjn0mbjJODgCIUI7tO3WcFt9HFTfCYT0oypDU8vjmLldnBQubRHnv
+         FgLbQyn1NMitVZn4Mry2SyTTaZQdmDv/V3HcEQRv9hUAoF/O6rV7GotGIoRcOw/xHB41
+         uURA==
+X-Gm-Message-State: APjAAAULpVYArlRtEGN2qRQ+ljm9Zf6zJElZn4xuU9V/rLzOhFozFmBw
+        kaIxEQqFi0mn6QG9LC8uUKaYuQ==
+X-Google-Smtp-Source: APXvYqyfm3VxeVbpM723JQEBDho1BTKeTG1rCAIcodpK1fXm1E5JFt7BimzeXmAV1Uoc+Vrw7qiSvg==
+X-Received: by 2002:a05:600c:10cd:: with SMTP id l13mr35273221wmd.102.1579097604577;
+        Wed, 15 Jan 2020 06:13:24 -0800 (PST)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id m21sm23730720wmi.27.2020.01.15.06.13.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 06:13:23 -0800 (PST)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH 14/19] arm64: dts: qcom: qcs404-evb: Define VBUS boost pin
+Date:   Wed, 15 Jan 2020 14:13:28 +0000
+Message-Id: <20200115141333.1222676-15-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
+References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200115085828.27791-4-yong.liang@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/15/20 12:58 AM, Yong Liang wrote:
-> From: "yong.liang" <yong.liang@mediatek.com>
-> 
-> Add reset controller API in watchdog driver.
-> Besides watchdog, MTK toprgu module alsa provide sub-system (eg, audio,
-> camera, codec and connectivity) software reset functionality.
-> 
-> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
-> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+An external regulator is used to trigger VBUS on/off via GPIO. This patch
+defines the relevant GPIO in the EVB dts.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> ---
->   drivers/watchdog/mtk_wdt.c | 99 +++++++++++++++++++++++++++++++++++++-
->   1 file changed, 98 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index 9c3d0033260d..e88aacb0404d 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -9,6 +9,8 @@
->    * Based on sunxi_wdt.c
->    */
->   
-> +#include <dt-bindings/reset-controller/mt8183-resets.h>
-> +#include <linux/delay.h>
->   #include <linux/err.h>
->   #include <linux/init.h>
->   #include <linux/io.h>
-> @@ -16,10 +18,11 @@
->   #include <linux/module.h>
->   #include <linux/moduleparam.h>
->   #include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
->   #include <linux/types.h>
->   #include <linux/watchdog.h>
-> -#include <linux/delay.h>
->   
->   #define WDT_MAX_TIMEOUT		31
->   #define WDT_MIN_TIMEOUT		1
-> @@ -44,6 +47,9 @@
->   #define WDT_SWRST		0x14
->   #define WDT_SWRST_KEY		0x1209
->   
-> +#define WDT_SWSYSRST		0x18U
-> +#define WDT_SWSYS_RST_KEY	0x88000000
-> +
->   #define DRV_NAME		"mtk-wdt"
->   #define DRV_VERSION		"1.0"
->   
-> @@ -53,8 +59,90 @@ static unsigned int timeout;
->   struct mtk_wdt_dev {
->   	struct watchdog_device wdt_dev;
->   	void __iomem *wdt_base;
-> +	spinlock_t lock; /* protects WDT_SWSYSRST reg */
-> +	struct reset_controller_dev rcdev;
-> +};
-> +
-> +struct mtk_wdt_data {
-> +	int toprgu_sw_rst_num;
->   };
->   
-> +static const struct mtk_wdt_data mt8183_data = {
-> +	.toprgu_sw_rst_num = MT8183_TOPRGU_SW_RST_NUM,
-> +};
-> +
-> +static int toprgu_reset_update(struct reset_controller_dev *rcdev,
-> +			       unsigned long id, bool assert)
-> +{
-> +	unsigned int tmp;
-> +	unsigned long flags;
-> +	struct mtk_wdt_dev *data =
-> +		 container_of(rcdev, struct mtk_wdt_dev, rcdev);
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	tmp = readl(data->wdt_base + WDT_SWSYSRST);
-> +	if (assert)
-> +		tmp |= BIT(id);
-> +	else
-> +		tmp &= ~BIT(id);
-> +	tmp |= WDT_SWSYS_RST_KEY;
-> +	writel(tmp, data->wdt_base + WDT_SWSYSRST);
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int toprgu_reset_assert(struct reset_controller_dev *rcdev,
-> +			       unsigned long id)
-> +{
-> +	return toprgu_reset_update(rcdev, id, true);
-> +}
-> +
-> +static int toprgu_reset_deassert(struct reset_controller_dev *rcdev,
-> +				 unsigned long id)
-> +{
-> +	return toprgu_reset_update(rcdev, id, false);
-> +}
-> +
-> +static int toprgu_reset(struct reset_controller_dev *rcdev,
-> +			unsigned long id)
-> +{
-> +	int ret;
-> +
-> +	ret = toprgu_reset_assert(rcdev, id);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return toprgu_reset_deassert(rcdev, id);
-> +}
-> +
-> +static const struct reset_control_ops toprgu_reset_ops = {
-> +	.assert = toprgu_reset_assert,
-> +	.deassert = toprgu_reset_deassert,
-> +	.reset = toprgu_reset,
-> +};
-> +
-> +static int toprgu_register_reset_controller(struct platform_device *pdev,
-> +					    int rst_num)
-> +{
-> +	int ret;
-> +	struct mtk_wdt_dev *mtk_wdt = platform_get_drvdata(pdev);
-> +
-> +	spin_lock_init(&mtk_wdt->lock);
-> +
-> +	mtk_wdt->rcdev.owner = THIS_MODULE;
-> +	mtk_wdt->rcdev.nr_resets = rst_num;
-> +	mtk_wdt->rcdev.ops = &toprgu_reset_ops;
-> +	mtk_wdt->rcdev.of_node = pdev->dev.of_node;
-> +	ret = devm_reset_controller_register(&pdev->dev, &mtk_wdt->rcdev);
-> +	if (ret != 0)
-> +		dev_err(&pdev->dev,
-> +			"couldn't register wdt reset controller: %d\n", ret);
-> +	return ret;
-> +}
-> +
->   static int mtk_wdt_restart(struct watchdog_device *wdt_dev,
->   			   unsigned long action, void *data)
->   {
-> @@ -155,6 +243,7 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct mtk_wdt_dev *mtk_wdt;
-> +	const struct mtk_wdt_data *wdt_data;
->   	int err;
->   
->   	mtk_wdt = devm_kzalloc(dev, sizeof(*mtk_wdt), GFP_KERNEL);
-> @@ -190,6 +279,13 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->   	dev_info(dev, "Watchdog enabled (timeout=%d sec, nowayout=%d)\n",
->   		 mtk_wdt->wdt_dev.timeout, nowayout);
->   
-> +	wdt_data = of_device_get_match_data(dev);
-> +	if (wdt_data) {
-> +		err = toprgu_register_reset_controller(pdev,
-> +						       wdt_data->toprgu_sw_rst_num);
-> +		if (err)
-> +			return err;
-> +	}
->   	return 0;
->   }
->   
-> @@ -219,6 +315,7 @@ static int mtk_wdt_resume(struct device *dev)
->   
->   static const struct of_device_id mtk_wdt_dt_ids[] = {
->   	{ .compatible = "mediatek,mt6589-wdt" },
-> +	{ .compatible = "mediatek,mt8183-wdt", .data = &mt8183_data },
->   	{ /* sentinel */ }
->   };
->   MODULE_DEVICE_TABLE(of, mtk_wdt_dt_ids);
-> 
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 6d53dc342f97..b6147b5ab5cb 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -273,6 +273,14 @@ rclk {
+ };
+ 
+ &pms405_gpios {
++	usb_vbus_boost_pin: usb-vbus-boost-pin {
++		pinconf {
++			pins = "gpio3";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			output-low;
++			power-source = <1>;
++		};
++	};
+ 	usb3_vbus_pin: usb3-vbus-pin {
+ 		pinconf {
+ 			pins = "gpio12";
+-- 
+2.24.0
 
