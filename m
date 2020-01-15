@@ -2,117 +2,89 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A73CC32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB14DC32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1337C2467C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JEN7pX6U"
+	by mail.kernel.org (Postfix) with ESMTP id 828B22467A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbgAOSaD (ORCPT
+        id S1729240AbgAOSqN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:30:03 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37817 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729043AbgAOSaD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 13:30:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id f129so1029293wmf.2
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 10:30:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vx9ZI/rGscUUGCBc0iWif4TA6oe6ecIt71Ef+bzf57U=;
-        b=JEN7pX6UGwBqBgRVeU46B89XGheqHUrF69+1A6TQGYjtGYTBLYkKWY2orOVSw8hS/V
-         yx7E/7T+8HwIqvdg6/rD8ch2BDnEbEBkwzGS0jNSiN7xOdZTWJCGNpH00b6FmjajImRM
-         Y0Cq723LUX5rNaaq68rFRJpBzri8ZTJCpfZZXzuZlACIyqy276ntAuLB5rebtF6KpuK0
-         VXsLW7MtFmYWfFQNZ8guFJVTMh0WdkoUrDalt/20pf7BJAKsa7gxBb/6aEtY5v52u+FS
-         rJOoE27gKx2D97bW1kHpVoBosfK/GPlAyGR5lt0nUOtflXGNm7+DRO/mgm/UQ7iD4uHu
-         TMyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vx9ZI/rGscUUGCBc0iWif4TA6oe6ecIt71Ef+bzf57U=;
-        b=S6tju4reM1FAR/lMDXEcq1qI+jGC24W+rKD1nFyiQ5lvqnqx+YwGdU4kHwccoCTrgq
-         m8/oq7zL2r0B95Pr2kqasJEaPSeDDBzUFlnuskKYgiYgzMJyZi+OQhexfXawz4E/Mnbn
-         +hgQSmrNJn+0J6YAYBTRdavmrzrClwQ8JTCXEG1+qq9drNXeik6T8KxX475/4NZkFI1N
-         ycZacrVs3ejhij6ftgeaaglQwCKB7wiXEcrIvi8G5DynSOaUElZKliYLDVRqlDTVTj3Y
-         8A1YyvQUftBfyvwdb6AWBw2tPRc/G9ObseC00Wj3xms8HoktDOsoc7u6mVOtDVDxYeVb
-         PFAw==
-X-Gm-Message-State: APjAAAX7/WatQv5Lf1Jaq+Vi4j7dnzeRZAZOqoNWPiC50UwYJtnE+54P
-        ZtKDeGVEmKtsQSyC0hxOcDD/PQ==
-X-Google-Smtp-Source: APXvYqy8nNtvTuOB8AddkrK/wK0uuvgD1wX9xlx2WFGLj57TQXbAf34VislU15LMhdhXKyk0wQaang==
-X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr1338398wmj.4.1579113001084;
-        Wed, 15 Jan 2020 10:30:01 -0800 (PST)
-Received: from myrica ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id u8sm913472wmm.15.2020.01.15.10.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 10:30:00 -0800 (PST)
-Date:   Wed, 15 Jan 2020 19:29:55 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
-        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
-        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
-        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: Re: [PATCH v5 00/13] iommu: Add PASID support to Arm SMMUv3
-Message-ID: <20200115182955.GA152753@myrica>
-References: <20200115125239.136759-1-jean-philippe@linaro.org>
- <20200115164255.GB30746@willie-the-truck>
+        Wed, 15 Jan 2020 13:46:13 -0500
+Received: from foss.arm.com ([217.140.110.172]:41216 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729019AbgAOSqM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 13:46:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04A51328;
+        Wed, 15 Jan 2020 10:46:12 -0800 (PST)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1AF53F6C4;
+        Wed, 15 Jan 2020 10:46:09 -0800 (PST)
+Subject: Re: [PATCH 0/2] Add EDAC support for Kryo CPU core caches
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-edac@vger.kernel.org, tsoni@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>, psodagud@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org, baicar@os.amperecomputing.com
+References: <0101016ed57a10a8-bd8fbdb9-a5cd-4460-bae6-c5c35f0eed88-000000@us-west-2.amazonses.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <0769b7cb-4e01-eb83-8ad4-b29b4fafafd4@arm.com>
+Date:   Wed, 15 Jan 2020 18:46:07 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200115164255.GB30746@willie-the-truck>
+In-Reply-To: <0101016ed57a10a8-bd8fbdb9-a5cd-4460-bae6-c5c35f0eed88-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 04:42:56PM +0000, Will Deacon wrote:
-> On Wed, Jan 15, 2020 at 01:52:26PM +0100, Jean-Philippe Brucker wrote:
-> > Since v4 [1] I addressed some of Will's comment.
-> 
-> Thanks! I've tentatively managed to queue all of this apart from the last
-> patch, since that relies on some pasid symbols being exported from the PCI
-> core when building the driver as a module with PCI_PASID=y.
-> 
-> Please can you look at the rest of things here?:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates
+Hi Sai,
 
-Sorry for the delay, I had to rebase and rework the SVA patchset a little
-in order to test. Your changes look good to me and run fine on the
-hisilicon KunPeng920 (although I haven't tried building as a module yet,
-I'll do that next).
+(CC: +Tyler)
+
+On 05/12/2019 09:52, Sai Prakash Ranjan wrote:
+> This series implements EDAC support for error reporting on
+> Kryo{3,4}XX CPU caches L1,L2, L3-SCU. All the cores(big.LITTLE)
+> in Kryo{3,4}XX CPUs implement RAS extensions and use interrupt
+> based ECC mechanism to report errors.
+> 
+> This series has been tested on SC7180, SDM845, SM8150 SoCs with
+> Kryo{3,4}XX CPU cores based on ARM Cortex-A55, Cortex-A75 and
+> Cortex-A76.
+> 
+> This implementation is platform specific in contrast to the
+> patch posted last time for generic error reporting on arm cortex
+> implementations with RAS extensions by Kyle Yan.
+>  - https://patchwork.kernel.org/patch/10161955/
+
+I think that series was dropped because it was too soc-specific and overlaps with the v8.2
+kernel first support. That series was superseded by:
+lore.kernel.org/r/1562086280-5351-1-git-send-email-baicar@os.amperecomputing.com
+
+Can you work with Tyler on a combined series? The combined support may need to look quite
+different. (DT and big/little being the obvious differences).
+
+I'm afraid this is the tip of the kernel-first-RAS iceberg.
+
 
 Thanks,
-Jean
 
-> 
-> > Still missing and will be submitted as follow-up patches:
-> > * write STE.V with WRITE_ONCE() (patch 7)
-> 
-> I've hacked that one up myself.
-> 
-> > * batch submission of CD invalidation (patch 7)
-> 
-> That can be 5.7 material.
-> 
-> > * Remove WARN_ON_ONCE() in add_device() (patch 13)
-> >   Pending Robin's input.
-> 
-> I've written that one too, but we'll see what Robin says. The question now
-> is which commit do I tag in the branch above :)
-> 
-> Will
+James
