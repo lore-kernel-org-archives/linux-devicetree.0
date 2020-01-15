@@ -2,77 +2,94 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3A4C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 23:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308A5C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 23:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3C222522
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 23:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033702075B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 23:40:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCmVuyT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgAOXLC (ORCPT
+        id S1730092AbgAOXkx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 18:11:02 -0500
-Received: from mailoutvs55.siol.net ([185.57.226.246]:57398 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729394AbgAOXLC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 18:11:02 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id 7ECF95229C0;
-        Thu, 16 Jan 2020 00:10:59 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id G8KZ7vYm0PJ9; Thu, 16 Jan 2020 00:10:59 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 2E8355229D0;
-        Thu, 16 Jan 2020 00:10:59 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id C0A525229C0;
-        Thu, 16 Jan 2020 00:10:58 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Wed, 15 Jan 2020 18:40:53 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34571 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729619AbgAOXkx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 18:40:53 -0500
+Received: by mail-pj1-f68.google.com with SMTP id s94so2420366pjc.1;
+        Wed, 15 Jan 2020 15:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=AzbtYII6ZVOKx6F0wY5VC0oFwSgB112mnSOGZkVBBbM=;
+        b=MCmVuyT4rQe2DIH3kN8C3aiPBlTcuRPbUqaB0AS6IkaQTDwQ851ULpadpoLfZEGZEI
+         rt55jt+QGD1Oho4uKmWmc4dxDMmBvb9AUySg7ruTAjoshyxoTNOFj3GkZyhojMuVHysy
+         bGyLReIheavsFYG9Uot0bLQUi5WOXaepzfz5EoJn183CPJrXVC3eTJUnuYx+8d4/nB5d
+         QBaTdvZuU3ERzdholPzl2tiNwnc/TI5rYx8VijpeKTua1cAp2F0tf21T35KEkDD6zABE
+         OyMdBv6rpQU9lNBZ6it5xXT4R5miXA2lrr0B8H6op+ZMKrGvn5E1AQHxzLGZeLoFcVu6
+         ij0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=AzbtYII6ZVOKx6F0wY5VC0oFwSgB112mnSOGZkVBBbM=;
+        b=Q+xZvhp++jPWieuNymYmQC5R9EXox9jITDwGDw/M9HlE+CGkIaa43Ha+8pGxb++TpD
+         AxmNoqhBkRnxWDM+JxN5QyKhgPh3EgqGXKa/JcW4gk6CNeQUfZZAKOOS3nFC2qcViKoX
+         4w8KyT8L7hRt1ap+9VHIbM7rfysMqQpFU+MY7A1HxHEJGY4KZg4GiVVgATS6gYbHSyg4
+         pVXvNVay8grnTZBjkUoRVkCH7vtxNk3U3E2AzHmbsXj3c7ncfBekCCA+JoLlNLS8PXCs
+         gIGItmliRsYVhnEgqhO35RNboC7bz0cTUj/nhrEyB74GGVh1sZTaLCZytgYgbU5Pdbzd
+         nT/A==
+X-Gm-Message-State: APjAAAV4M8QY2i5X8489K5HsKrfYmOB5MiA0Z4PtV6KOPhZm0aeKfp/D
+        K0LIq9R4xsBt7rrqtLdKlC0=
+X-Google-Smtp-Source: APXvYqzQJQYQH9DjDTHOiuAVrravKNL8ADSaJjt7EbkacKAEQPVfGrTVHybO0GiGnbz3t1G4TQUvVw==
+X-Received: by 2002:a17:90a:a409:: with SMTP id y9mr3020162pjp.119.1579131652518;
+        Wed, 15 Jan 2020 15:40:52 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s21sm22905918pfe.20.2020.01.15.15.40.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 15:40:51 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: add OrangePi 3 with eMMC
-Date:   Thu, 16 Jan 2020 00:10:58 +0100
-Message-ID: <4200557.LvFx2qVVIh@jernej-laptop>
-In-Reply-To: <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
-References: <20200115194216.173117-1-jernej.skrabec@siol.net> <20200115194216.173117-2-jernej.skrabec@siol.net> <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stefan Wahren <wahrenst@gmx.net>
+Cc:     phil@raspberrypi.org, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: bcm283x: Unify CMA configuration
+Date:   Wed, 15 Jan 2020 15:40:50 -0800
+Message-Id: <20200115234050.30408-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200110172935.19709-1-nsaenzjulienne@suse.de>
+References: <20200110172935.19709-1-nsaenzjulienne@suse.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi!
-
-Dne sreda, 15. januar 2020 ob 22:57:31 CET je Rob Herring napisal(a):
-> On Wed, Jan 15, 2020 at 1:42 PM Jernej Skrabec <jernej.skrabec@siol.net> 
-wrote:
-> > OrangePi 3 can optionally have eMMC. Add a compatible for it.
+On Fri, 10 Jan 2020 18:29:35 +0100, Nicolas Saenz Julienne <nsaenzjulienne@suse.de> wrote:
+> With the introduction of the Raspberry Pi 4 we were forced to explicitly
+> configure CMA's location, since arm64 defaults it into the ZONE_DMA32
+> memory area, which is not good enough to perform DMA operations on that
+> device. To bypass this limitation a dedicated CMA DT node was created,
+> explicitly indicating the acceptable memory range and size.
 > 
-> Is this just a population option or a different board layout? If the
-> former, I don't think you need a new compatible, just add/enable a
-> node for the eMMC.
+> That said, compatibility between boards is a must on the Raspberry Pi
+> ecosystem so this creates a common CMA DT node so as for DT overlays to
+> be able to update CMA's properties regardless of the board being used.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 
-I have only board with eMMC but I imagine it's the former. Even so, current 
-approach with Allwinner boards is to have two different board DT files, one for 
-each variant. This can be seen from Documentation/devicetree/bindings/arm/
-sunxi.yaml which has a lot of compatibles ending with "-emmc". I guess reason 
-for that is to avoid having MMC controller being powered on for no reason.
-
-Best regards,
-Jernej
-
-
-
-
+Applied to devicetree/next, thanks!
+--
+Florian
