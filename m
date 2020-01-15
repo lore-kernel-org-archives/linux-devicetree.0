@@ -2,160 +2,117 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C24C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A73CC32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A23F214AF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1337C2467C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 18:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eq16sBhr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JEN7pX6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgAOS06 (ORCPT
+        id S1729052AbgAOSaD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 13:26:58 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:37032 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgAOS05 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 13:26:57 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FIN5FU121958;
-        Wed, 15 Jan 2020 18:26:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=F6SQaCFi8PmmmsQylROI5thWFZ79H1A5nXmOx7Fhsqw=;
- b=eq16sBhr1nm2LAd1UoC2Ko1hyhCVTxJGFyyrkdx0g2/3AniqAFOfA2xaW5JZJa7GhOlL
- SjgttsTM7rmQSvWPBch+qegcifOmi15P72fO5zXBuBK3k3i98/fP/S3MLXnM5w1nlamd
- F8GApoOouXEsp1QpiCPTlR7Mxz8Y3BMcYOT+PbfpTI/FwwIM22gvZytazeDIxh8Hf3dG
- a+rUMGoA/TCEbbuG509sLVCn9Dc+8TNwlB5aNI8nAJOVOLR+C+7hBfUH6lbwYZvJ1YPD
- eDWNzm3y8OBkzUG3At4MoHzorh+zc1jWnuFwEO22dqOBGOnen/aMYbul4b0/gDLIqu9B oA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xf74sdw4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:26:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00FIOOOi072681;
-        Wed, 15 Jan 2020 18:26:41 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xj1aq9drw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 18:26:41 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00FIQdkm008377;
-        Wed, 15 Jan 2020 18:26:39 GMT
-Received: from dhcp-10-159-239-64.vpn.oracle.com (/10.159.239.64)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 Jan 2020 10:26:38 -0800
-Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, robh+dt@kernel.org, nm@ti.com,
-        ssantosh@kernel.org, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com,
-        tony@atomide.com, j-keerthy@ti.com, vigneshr@ti.com,
-        frowand.list@gmail.com
-References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
- <20191223110458.30766-3-peter.ujfalusi@ti.com>
- <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
- <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
- <ea6a87ae-b978-a786-27eb-db99483a82d9@ti.com>
- <f0230e88-bd9b-cd6d-433d-06d507cafcbd@ti.com>
- <9177657a-71c7-7bd0-a981-3ef1f736d4dc@oracle.com>
- <2c933a6c-37c6-3ef6-7c37-ae36e8c49bf7@ti.com>
- <20200115122440.GI2818@vkoul-mobl>
-From:   "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b1dba0ad-f7d6-607b-87f7-d3ca746d19ea@oracle.com>
-Date:   Wed, 15 Jan 2020 10:26:36 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Wed, 15 Jan 2020 13:30:03 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37817 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgAOSaD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 13:30:03 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so1029293wmf.2
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 10:30:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vx9ZI/rGscUUGCBc0iWif4TA6oe6ecIt71Ef+bzf57U=;
+        b=JEN7pX6UGwBqBgRVeU46B89XGheqHUrF69+1A6TQGYjtGYTBLYkKWY2orOVSw8hS/V
+         yx7E/7T+8HwIqvdg6/rD8ch2BDnEbEBkwzGS0jNSiN7xOdZTWJCGNpH00b6FmjajImRM
+         Y0Cq723LUX5rNaaq68rFRJpBzri8ZTJCpfZZXzuZlACIyqy276ntAuLB5rebtF6KpuK0
+         VXsLW7MtFmYWfFQNZ8guFJVTMh0WdkoUrDalt/20pf7BJAKsa7gxBb/6aEtY5v52u+FS
+         rJOoE27gKx2D97bW1kHpVoBosfK/GPlAyGR5lt0nUOtflXGNm7+DRO/mgm/UQ7iD4uHu
+         TMyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vx9ZI/rGscUUGCBc0iWif4TA6oe6ecIt71Ef+bzf57U=;
+        b=S6tju4reM1FAR/lMDXEcq1qI+jGC24W+rKD1nFyiQ5lvqnqx+YwGdU4kHwccoCTrgq
+         m8/oq7zL2r0B95Pr2kqasJEaPSeDDBzUFlnuskKYgiYgzMJyZi+OQhexfXawz4E/Mnbn
+         +hgQSmrNJn+0J6YAYBTRdavmrzrClwQ8JTCXEG1+qq9drNXeik6T8KxX475/4NZkFI1N
+         ycZacrVs3ejhij6ftgeaaglQwCKB7wiXEcrIvi8G5DynSOaUElZKliYLDVRqlDTVTj3Y
+         8A1YyvQUftBfyvwdb6AWBw2tPRc/G9ObseC00Wj3xms8HoktDOsoc7u6mVOtDVDxYeVb
+         PFAw==
+X-Gm-Message-State: APjAAAX7/WatQv5Lf1Jaq+Vi4j7dnzeRZAZOqoNWPiC50UwYJtnE+54P
+        ZtKDeGVEmKtsQSyC0hxOcDD/PQ==
+X-Google-Smtp-Source: APXvYqy8nNtvTuOB8AddkrK/wK0uuvgD1wX9xlx2WFGLj57TQXbAf34VislU15LMhdhXKyk0wQaang==
+X-Received: by 2002:a05:600c:21da:: with SMTP id x26mr1338398wmj.4.1579113001084;
+        Wed, 15 Jan 2020 10:30:01 -0800 (PST)
+Received: from myrica ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id u8sm913472wmm.15.2020.01.15.10.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 10:30:00 -0800 (PST)
+Date:   Wed, 15 Jan 2020 19:29:55 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+Subject: Re: [PATCH v5 00/13] iommu: Add PASID support to Arm SMMUv3
+Message-ID: <20200115182955.GA152753@myrica>
+References: <20200115125239.136759-1-jean-philippe@linaro.org>
+ <20200115164255.GB30746@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200115122440.GI2818@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001150141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9501 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001150141
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200115164255.GB30746@willie-the-truck>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-On 1/15/20 4:24 AM, Vinod Koul wrote:
-> On 15-01-20, 11:44, Peter Ujfalusi wrote:
->>
-
->>> I would prefer driver patches to go via driver tree.
->>
->> Not sure what you mean by 'driver patches'...
->> The series to enable DMA support on TI's K3 platform consists:
->> Patch 1-2: Ring Accelerator _driver_ (drivers/soc/ti/)
->> Patch 3-6: DMAengine core patches to add new features needed for k3-udma
->> Patch 7-11: DMA _driver_ patches for K3 (drivers/dma/ti/)
->>
->> Patch 10 depends on the ringacc and the DMAengine core patches
->> Patch 11 depends on patch 10
->>
->> I kept it as a single series in hope that they will go via one subsystem
->> tree to avoid build dependency issues and will have a good amount of
->> time in linux-next for testing.
->>
->>>> Vinod could also perhaps setup an immutable branch based on v5.5-rc1
->>>> with just the drivers/soc/ti parts applied so you can merge that branch
->>>> in case you end up having to send up anything that conflicts.
->>>>
->>> As suggested on other email to Peter, these DMA engine related patches
->>> should be queued up since they don't have any dependency. Based on
->>> the status of that patchset, will take care of pulling in the driver
->>> patches either for this merge window or early part of next merge window.
->>
->> OK, I'll send the two patch for ringacc as a separate series.
->>
->> Vinod: Would it be possible for you to pick up the DMAengine core
->> patches (patch 3-6)?
->> The UDMA driver patches have hard dependency on DMAengine core and
->> ringacc, not sure how they are going to go in...
+On Wed, Jan 15, 2020 at 04:42:56PM +0000, Will Deacon wrote:
+> On Wed, Jan 15, 2020 at 01:52:26PM +0100, Jean-Philippe Brucker wrote:
+> > Since v4 [1] I addressed some of Will's comment.
 > 
-> Since they have build dependency, the usual method for this is:
+> Thanks! I've tentatively managed to queue all of this apart from the last
+> patch, since that relies on some pasid symbols being exported from the PCI
+> core when building the driver as a module with PCI_PASID=y.
 > 
-[...]
+> Please can you look at the rest of things here?:
 > 
-> 2. Santosh picks up ring driver patches, provides a signed immutable tag
-> which I will pull in and apply the rest, i.e., dmaengine updates and new
-> dmaengine driver
+> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/updates
+
+Sorry for the delay, I had to rebase and rework the SVA patchset a little
+in order to test. Your changes look good to me and run fine on the
+hisilicon KunPeng920 (although I haven't tried building as a module yet,
+I'll do that next).
+
+Thanks,
+Jean
+
 > 
-I have pushed the ring driver changes with an immutable tag and also 
-pushed out to next. I will know if it breaks anything in a day.
-If all good, will send out the pull request to ARM soc folks.
-Since its already late, its not guaranteed that driver will get
-picked up for 5.6 but will request and copy you on pull request. Based
-on the state of the pull request, I suggest you decide to
-pull my tag and rest of the dma patches to your tree so that we
-can avoid any breakage in linus's tree. Feel free to add my ack
-for rest of the DMA patchset.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git 
-tags/drivers_soc_for_5.6
-
-Let me know if you have any concerns/questions.
-
-Regards,
-Santosh
+> > Still missing and will be submitted as follow-up patches:
+> > * write STE.V with WRITE_ONCE() (patch 7)
+> 
+> I've hacked that one up myself.
+> 
+> > * batch submission of CD invalidation (patch 7)
+> 
+> That can be 5.7 material.
+> 
+> > * Remove WARN_ON_ONCE() in add_device() (patch 13)
+> >   Pending Robin's input.
+> 
+> I've written that one too, but we'll see what Robin says. The question now
+> is which commit do I tag in the branch above :)
+> 
+> Will
