@@ -2,175 +2,176 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76D8C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8410C33CB2
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7FA2077B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GVPgqToK"
+	by mail.kernel.org (Postfix) with ESMTP id B86D9214AF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579099789;
+	bh=60sOzP0xSDoq3RuFeWje/iUxHpy096wz+O8EnFB9oyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tYNNzCc2ejvIyNEXKxe5d9u0cpfRITsc95IJAlX02kITDMoOO9JxvhkaF79/2GIUp
+	 rK0rjJdKV/1tYuI71mWx/Q9EhDDRPl3pQUv5TL28dTuYB0PJuYTNzdbroUH+GjtOBX
+	 LymdC5PKl7pzxHPhznZQdplrds7qmcnxxUnZrVZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgAOOqD (ORCPT
+        id S1729151AbgAOOtq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:46:03 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40513 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgAOOqC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 09:46:02 -0500
-Received: by mail-qv1-f66.google.com with SMTP id dp13so7439548qvb.7
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 06:46:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ko4hPD0/HEbdUKAawr5GytPY5+uuzohUC9C8Ie0pz5Y=;
-        b=GVPgqToKKsfItZLuncCcSCSiOOOzQELgjl02vuItdydovRi/jjLbd/JOQo1GG4/yi2
-         SeI9ZjprOgMKRIqo9huTpzNqF7fL+KVTS3i0LVMRcZWtFXsuoTH1d+mnp4oUwZ91znVL
-         2OHiDYrQRvpZehPTyzx8sm/zicwctaDhOyEpjsTmC1ZVASnj1enNLjgJ+9ZwbCs/4D2D
-         +7QHAEV4Bk/ilsjfNS3qd7c06P8I3Ddy+qX+z5amLDnZTN3DYFzIIG+dymoK+TGLTqT2
-         qLwosPpHMEipV0Z/Za3iUlyG7qll3GFOaCRZUqLUxD0FGhP7hiRZmQjf3rr8U1K2a5cg
-         QhZg==
+        Wed, 15 Jan 2020 09:49:46 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44530 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgAOOtq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 09:49:46 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h9so16252653otj.11
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 06:49:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ko4hPD0/HEbdUKAawr5GytPY5+uuzohUC9C8Ie0pz5Y=;
-        b=E1L12vBmKHAJRubWEyxEUv0HZ+2J0TxL+BRai9lfF8tcj06CeEUs9ctSGZEYhT4nau
-         DJI/1P8/A/Nz+rjyyAGvyT+DabOsfFLq2P7Wv1C37AtzRsNRtf+59NpzrO24vSqMd2bA
-         jHyGaybHyIOnreNtoKcwc8ym9mys/F0r6PRM8KzHZY/agY3vzyzQHzazIrv+7hje/3GH
-         rkvH7lhVLkitmkUoH1iUMiJ0SS28wG9GYgbt3CfWT2VlvK9ZpjIbEmzEdEa1qFqedQ72
-         8eDcx09zfwfIwWkDAFeFL+7MBzfKtIiSJfCxHfVsTXJSTMY4FlJ1E8CY1123vS3C5uS1
-         9GZQ==
-X-Gm-Message-State: APjAAAUJplT+lf+v/1xb4Ty5nnRZS/2dE4hSKn+9CYYs0ajDZrehs43C
-        56v+tF9YCGpODkWqomQaAwELYGSDBULz7nXKdCTUoQ==
-X-Google-Smtp-Source: APXvYqxgx6sXyHqoMMdfsNegXLpS1jy2niaBHXeY33uGOlo7Pj2t0SYiM0IhcMd7OZOMaoVhZLN3+9MglvL1EXIOjJc=
-X-Received: by 2002:a0c:ead1:: with SMTP id y17mr21437572qvp.210.1579099561838;
- Wed, 15 Jan 2020 06:46:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H1ze89BBE7QI+NzTkr8tdkM1RIqde14fHEiBxrkkmaI=;
+        b=oShSuLlkD3gMUeTQTAKsVAwCtvzeofNRvGlIODUHihnWQ5INoUqx9cbruOQcSBGp34
+         OcFgoTAOY9CR1inM6VthQ+hYvDQNfwGsBKjTrlP5vMdJqEkecmRmoNZt5icAHhhRaFbB
+         eNsFRtzE0TdsrxD7Xka8QJGTsxjKD/uETT9LmUcZ0oa6qyWfZM7UogfZA2317YTECtLB
+         hyrVjSe7DSFiHPSW59KUxTHyblfaXh70EBEyViyXrBXZaKEA2kSNtvpYSw70Tg+rrdR8
+         bFP2n5JCkt8PyOQoBJOcRD/YjXST0IUEJM0JbPuRS6dFGLOX4LmKBI/dgouYt2nvS82S
+         Hjzw==
+X-Gm-Message-State: APjAAAUaKKBlY6AEu+D7Lz+PqvSVpISMhFcx5/OJdFlo9J3qTSDX0/+q
+        MRRUvDi+yrAqbFa47HYdxKIAjpk=
+X-Google-Smtp-Source: APXvYqypduWZ0oRlrc3pAOb35dGu91jt5eLFMgyQOoC8JSYz9CIx1s93r2bJDz152BBSvGkdqfXAuw==
+X-Received: by 2002:a9d:7b4e:: with SMTP id f14mr2980599oto.355.1579099785402;
+        Wed, 15 Jan 2020 06:49:45 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t11sm6559963otk.50.2020.01.15.06.49.43
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2020 06:49:43 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220379
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Wed, 15 Jan 2020 08:49:42 -0600
+Date:   Wed, 15 Jan 2020 08:49:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     David Dai <daidavid1@codeaurora.org>
+Cc:     georgi.djakov@linaro.org, bjorn.andersson@linaro.org,
+        evgreen@google.com, sboyd@kernel.org, ilina@codeaurora.org,
+        seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] dt-bindings: interconnect: Update Qualcomm SDM845
+ DT bindings
+Message-ID: <20200115144942.GA15075@bogus>
+References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org>
+ <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
 MIME-Version: 1.0
-References: <20200109145333.12260-1-benjamin.gaignard@st.com>
- <20200109145333.12260-2-benjamin.gaignard@st.com> <20200115143521.GA15099@bogus>
-In-Reply-To: <20200115143521.GA15099@bogus>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 15 Jan 2020 15:45:51 +0100
-Message-ID: <CA+M3ks7FGZ9TMO0=yXrhZph1Cn1GQ+2-tM7SnDrRDXVoCjrTjA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: timer: Add STM32 Low Power Timer bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        pascal paillet <p.paillet@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578630784-962-4-git-send-email-daidavid1@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Le mer. 15 janv. 2020 =C3=A0 15:35, Rob Herring <robh@kernel.org> a =C3=A9c=
-rit :
->
-> On Thu, Jan 09, 2020 at 03:53:31PM +0100, Benjamin Gaignard wrote:
-> > Document STM32 Low Power bindings.
-> >
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > ---
-> >  .../bindings/timer/st,stm32-lp-timer.yaml          | 44 ++++++++++++++=
-++++++++
-> >  1 file changed, 44 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/st,stm32-lp=
--timer.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/st,stm32-lp-timer.=
-yaml b/Documentation/devicetree/bindings/timer/st,stm32-lp-timer.yaml
-> > new file mode 100644
-> > index 000000000000..ca040b96dc47
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/timer/st,stm32-lp-timer.yaml
->
-> Use the compatible for the filename.
+On Thu, Jan 09, 2020 at 08:33:01PM -0800, David Dai wrote:
+> Redefine the Network-on-Chip devices to more accurately describe
+> the interconnect topology on Qualcomm's SDM845 platform. Each
+> interconnect device can communicate with different instances of the
+> RPMh hardware which are described as RSCs(Resource State Coordinators).
+> 
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> ---
+>  .../bindings/interconnect/qcom,sdm845.yaml         | 49 ++++++++++++++++++----
+>  1 file changed, 40 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> index 61e0097..6741a12 100644
+> --- a/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,sdm845.yaml
+> @@ -13,21 +13,44 @@ description: |
+>     SDM845 interconnect providers support system bandwidth requirements through
+>     RPMh hardware accelerators known as Bus Clock Manager (BCM). The provider is
+>     able to communicate with the BCM through the Resource State Coordinator (RSC)
+> -   associated with each execution environment. Provider nodes must reside within
+> -   an RPMh device node pertaining to their RSC and each provider maps to a
+> -   single RPMh resource.
+> +   associated with each execution environment. Provider nodes must point to at
+> +   least one RPMh device child node pertaining to their RSC and each provider
+> +   can map to multiple RPMh resources.
+>   
+>  properties:
+> +  reg:
+> +    maxItems: 1
+> +
+>    compatible:
+>      enum:
+> -      - qcom,sdm845-rsc-hlos
+> +      - qcom,sdm845-aggre1-noc
+> +      - qcom,sdm845-aggre2-noc
+> +      - qcom,sdm845-config-noc
+> +      - qcom,sdm845-dc-noc
+> +      - qcom,sdm845-gladiator-noc
+> +      - qcom,sdm845-mem-noc
+> +      - qcom,sdm845-mmss-noc
+> +      - qcom,sdm845-system-noc
+>  
+>    '#interconnect-cells':
+>      const: 1
+>  
+> +  qcom,bcm-voter-names:
+> +    items:
+> +      - const: apps
+> +      - const: disp
 
-it will be in v2
+If these are always the names, why do you need them?
 
->
-> > @@ -0,0 +1,44 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/timer/st,stm32-lp-timer.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: STMicroelectronics STM32 Low Power 16 bits timers bindings
-> > +
-> > +maintainers:
-> > +  - Benjamin Gaignard <benjamin.gaignard@st.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: st,stm32-lptimer-clkevent
->
-> 'clkevent' is a h/w name? Seems redundant and abusing compatible to
-> bind to a specific Linux driver.
+> +
+> +  qcom,bcm-voters:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: |
+> +      List of phandles to qcom,bcm-voter nodes that are required by
+> +      this interconnect to send RPMh commands.
 
-No but st,stm32-lptimer compatible is already used for another driver
-The hardware block can implement multiple features but not all at the same =
-time
-so I try to distinguish them with the compatible.
-In this particular case I would like tag it as a clock event driver.
+Is the max length 2?
 
->
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> > +    clkevent: clkevent@40009000 {
->
-> timer@...
-
-OK
-
->
-> > +      compatible =3D "st,stm32-lptimer-clkevent";
-> > +      reg =3D <0x40009000 0x400>;
-> > +      clocks =3D <&rcc LPTIM1_K>;
-> > +      interrupts =3D <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.15.0
-> >
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +
+>  required:
+>    - compatible
+> +  - reg
+>    - '#interconnect-cells'
+> +  - qcom,bcm-voters
+>  
+>  additionalProperties: false
+>  
+> @@ -35,9 +58,17 @@ examples:
+>    - |
+>        #include <dt-bindings/interconnect/qcom,sdm845.h>
+>  
+> -      apps_rsc: rsc {
+> -              rsc_hlos: interconnect {
+> -                      compatible = "qcom,sdm845-rsc-hlos";
+> -                      #interconnect-cells = <1>;
+> -              };
+> +      mem_noc: interconnect@1380000 {
+> +             compatible = "qcom,sdm845-mem-noc";
+> +             reg = <0 0x01380000 0 0x27200>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voters = <&apps_bcm_voter>;
+> +      };
+> +
+> +      mmss_noc: interconnect@1740000 {
+> +             compatible = "qcom,sdm845-mmss-noc";
+> +             reg = <0 0x01740000 0 0x1c1000>;
+> +             #interconnect-cells = <1>;
+> +             qcom,bcm-voter-names = "apps", "disp";
+> +             qcom,bcm-voters = <&apps_bcm_voter>, <&disp_bcm_voter>;
+>        };
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
