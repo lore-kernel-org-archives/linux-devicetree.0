@@ -2,109 +2,84 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83239C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF38EC33CB3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5875124679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:01:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5252465A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 22:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tulUk7sZ"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oq0/uXf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgAOWA5 (ORCPT
+        id S1729661AbgAOWFq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 17:00:57 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:44606 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729959AbgAOWA4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 17:00:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1579125637; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oi4tThBuGksudZcJhgPfDegJg+rUgBw/w8H281SWb+E=;
-        b=tulUk7sZMgZ7EekU08yWMhNNs5Z/E6ip0NUVc3XM+e7RPK5M/J1zs5F+AgE8StvYWcS25i
-        zpk9xs1g0JaBCvra7krM2q5/nzNHbLBr2rLHemP3HR97q7Yv+V0pltoV1NiSxjpHNKxvZO
-        qJ6gnJH2tpVyV8fViOizXCKzDJFCXYw=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Bin Liu <b-liu@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 5/5] usb: musb: jz4740: Add support for the JZ4770
-Date:   Wed, 15 Jan 2020 19:00:08 -0300
-Message-Id: <20200115220008.91445-6-paul@crapouillou.net>
-In-Reply-To: <20200115220008.91445-1-paul@crapouillou.net>
-References: <20200115220008.91445-1-paul@crapouillou.net>
+        Wed, 15 Jan 2020 17:05:46 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:52918 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729103AbgAOWFq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 17:05:46 -0500
+Received: from zn.tnic (p200300EC2F0C7700F109D32638BACFBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:f109:d326:38ba:cfbd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2E3AA1EC0CD0;
+        Wed, 15 Jan 2020 23:05:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579125945;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=MmGvXr5GRjkQZp4Iw4Ch9p182qR2k7SqZ2G/xLDXwBo=;
+        b=oq0/uXf2idgYdzfGlQ3KEfTttmSUsgg70GJikYO+uemQKJfXRYhoOnWVeByujf9qGwlCAZ
+        tgwguH61/ogMoYgF2IRzjb6jASPEzF9AsWhaST7AtyNepRInweniwC3oM/xnISYBnNnWO2
+        DpUmsjuLSQ91s7XZ1iBjPcyULlbATvQ=
+Date:   Wed, 15 Jan 2020 23:05:35 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     sashal@kernel.org, James Morse <james.morse@arm.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        shji@microsoft.com, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+Message-ID: <20200115220436.GP20975@zn.tnic>
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+ <20200115213848.GO20975@zn.tnic>
+ <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add support for probing the jz4740-musb driver on the JZ4770 SoC.
+On Wed, Jan 15, 2020 at 01:49:56PM -0800, Shiping Ji wrote:
+> Lei will be the author of this driver in the git history. I could ask
+> her to send the patch again if that's the correct way to go. Please
+> confirm.
 
-The USB IP in the JZ4770 works the same Inventra IP as for the JZ4740,
-but it features more endpoints, and officially supports OTG.
+No need - you only have to send the patch with her From: at the
+beginning. Btw, you make her an author in git by doing:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/usb/musb/jz4740.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+git commit --amend --author="Lei Wang <leiwang_git@outlook.com>"
 
-diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
-index b6747bad4fb2..8c52a1fa6fbc 100644
---- a/drivers/usb/musb/jz4740.c
-+++ b/drivers/usb/musb/jz4740.c
-@@ -161,6 +161,33 @@ static const struct musb_hdrc_platform_data jz4740_musb_pdata = {
- 	.platform_ops	= &jz4740_musb_ops,
- };
- 
-+static struct musb_fifo_cfg jz4770_musb_fifo_cfg[] = {
-+	{ .hw_ep_num = 1, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 1, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 2, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 2, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 3, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 3, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 4, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 4, .style = FIFO_RX, .maxpacket = 512, },
-+	{ .hw_ep_num = 5, .style = FIFO_TX, .maxpacket = 512, },
-+	{ .hw_ep_num = 5, .style = FIFO_RX, .maxpacket = 512, },
-+};
-+
-+static struct musb_hdrc_config jz4770_musb_config = {
-+	.multipoint	= 1,
-+	.num_eps	= 11,
-+	.ram_bits	= 11,
-+	.fifo_cfg	= jz4770_musb_fifo_cfg,
-+	.fifo_cfg_size	= ARRAY_SIZE(jz4770_musb_fifo_cfg),
-+};
-+
-+static const struct musb_hdrc_platform_data jz4770_musb_pdata = {
-+	.mode		= MUSB_PERIPHERAL, /* TODO: support OTG */
-+	.config		= &jz4770_musb_config,
-+	.platform_ops	= &jz4740_musb_ops,
-+};
-+
- static int jz4740_probe(struct platform_device *pdev)
- {
- 	struct device			*dev = &pdev->dev;
-@@ -248,6 +275,7 @@ static int jz4740_remove(struct platform_device *pdev)
- 
- static const struct of_device_id jz4740_musb_of_match[] = {
- 	{ .compatible = "ingenic,jz4740-musb", .data = &jz4740_musb_pdata },
-+	{ .compatible = "ingenic,jz4770-musb", .data = &jz4770_musb_pdata },
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, jz4740_musb_of_match);
+But before you send again, let me take a look at the rest of the patch
+first, tomorrow most likely.
+
+Thx.
+
 -- 
-2.24.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
