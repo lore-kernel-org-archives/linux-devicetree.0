@@ -2,89 +2,105 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5800CC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD847C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3D72465A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 864C0222C3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JSk1F/Vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgAOVcr convert rfc822-to-8bit (ORCPT
+        id S1730061AbgAOVi7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:32:47 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:48441 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbgAOVcq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 16:32:46 -0500
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D197DCECF2;
-        Wed, 15 Jan 2020 22:42:02 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH v7 0/2] add support of interrupt for host wakeup from
- devicetree in BCM HCI driver
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200115101243.17094-1-glaroque@baylibre.com>
-Date:   Wed, 15 Jan 2020 22:32:44 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        johan@kernel.org, nsaenzjulienne@suse.de,
-        linux-kernel@vger.kernel.org, khilman@baylibre.com
-Content-Transfer-Encoding: 8BIT
-Message-Id: <8F9FC361-4CF3-48EE-A88B-D6429714C8BE@holtmann.org>
-References: <20200115101243.17094-1-glaroque@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Wed, 15 Jan 2020 16:38:59 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:48844 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgAOVi6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 16:38:58 -0500
+Received: from zn.tnic (p200300EC2F0C7700F109D32638BACFBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:f109:d326:38ba:cfbd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 36EDB1EC01AD;
+        Wed, 15 Jan 2020 22:38:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579124337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=LBMtE/WMICvJacbss6a6c+JL3sMqakCf7ajkvPVSGoo=;
+        b=JSk1F/Vcfrva9TnlLBIVasySWnMIdW/M+wVf3lz4G4ILhs9oEKcj0SIZ+hCC5rKyENug+m
+        ViBqPkNwMGLa10+B0A5/XUJxrMcu/PoyEVuUSbvM284vucuDOru9eBDD7mtgubw5OV09UP
+        qo71qnAvNtpRVfXCaiCXtWV2V7DNV5Y=
+Date:   Wed, 15 Jan 2020 22:38:48 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>, sashal@kernel.org
+Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
+        shji@microsoft.com, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+Message-ID: <20200115213848.GO20975@zn.tnic>
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guillaume,
+On Wed, Jan 15, 2020 at 06:32:33AM -0800, Shiping Ji wrote:
+> New driver supports error detection and correction on the devices with ARM
+> DMC-520 memory controller.
+> 
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-> add interrupts and interrupt-names properties to set host wakeup IRQ.
-> actually driver find this IRQ from host-wakeup-gpios propety
-> but some platforms are not supported gpiod_to_irq function.
-> so to have possibility to use interrupt mode we need to add interrupts
-> field in devicetree and support it in driver.
-> 
-> change sinve v6:
-> - depracate host-wakeup-gpios 
-> 
-> change sinve v5:
-> - add tags
-> 
-> change sinve v4 [1]:
-> - add patch to update Documentation
-> - use of_irq_get_byname to be more clear and move call in bcm_of_probe
-> - update commit message
-> 
-> change since v3:
-> - move on of_irq instead of platform_get_irq
-> 
-> change since v2:
-> - fix commit message
-> 
-> change since v1:
-> - rebase patch
-> 
-> [1] https://lore.kernel.org/linux-bluetooth/20191213105521.4290-1-glaroque@baylibre.com/
-> 
-> Guillaume La Roque (2):
->  dt-bindings: net: bluetooth: add interrupts properties
->  bluetooth: hci_bcm: enable IRQ capability from devicetree
-> 
-> .../devicetree/bindings/net/broadcom-bluetooth.txt         | 7 +++++--
-> drivers/bluetooth/hci_bcm.c                                | 3 +++
-> 2 files changed, 8 insertions(+), 2 deletions(-)
+This mail still has your From: because I guess you pasted the patch in
+the mail.
 
-both patches have been applied to bluetooth-next tree.
+But, if you look at what I wrote here:
 
-Regards
+https://lkml.kernel.org/r/20200107195606.GM29542@zn.tnic
 
-Marcel
+you'll see the
 
+From: Lei Wang <leiwang_git@outlook.com>
+
+which is the last From: in the mail and that is taken by git as the
+author of the patch.
+
+However, if I apply this mail of yours, it will make you the
+author. Because in git there can be only one author per patch
+and other authors can be additionally accredited with the
+Co-developed-by: tag from the same doc I was pointing at before:
+Documentation/process/submitting-patches.rst
+
+Looking at this driver, however, you have supplied three authors. And I
+think you guys need to discuss it amongst yourselves who is going to be
+the author of this driver in the git history.
+
+If there are more questions, I'm pretty sure Sasha would be glad to
+explain to you how the whole authorship thing works and what the
+implications are.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
