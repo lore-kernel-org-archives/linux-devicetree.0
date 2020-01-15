@@ -7,94 +7,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA9C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 15:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915B2C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 16:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263E12187F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 15:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600052187F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 16:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579103726;
-	bh=LO6jBHx0Qg0IGkxsz1n8OGdlToRNahtGS8nMe738bSU=;
+	s=default; t=1579104320;
+	bh=k4+2rcZsa73U1u6VMCpgUDA0iChm3TyHbBQes4nZI2U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GXugPa9xAB9reH5/AqqTQ+0EGSPvzejsOMTSbUHCFPXzItQUwiev3p3s47zPA+0jL
-	 6MYwsueLsUi+Nlg7DcTPvlge9Ngqg9/vme9kSszUno8v96ZbMCvVeu1wYEcu9kyleh
-	 nk7oiVlUrKqpQ3ZdFusTsLNlMI3hlrd3aws9QC5o=
+	b=fBOvmDpMcIYOpVokomMhh5fnF9kreV8KMR4lgShGEqC65IyOEPb19KQe5whNMRFuR
+	 mbVQbeaVDCQBGi0kpWjRAp+l+RxfKf+0y7ltZXi7odeV/1gkC1iJbk9ODP2zUXbJMp
+	 DjlZurv2J3cAjeTrcUckhZyXNvTIPTjV/6e33dpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAOPzZ (ORCPT
+        id S1728896AbgAOQFT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 10:55:25 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37645 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgAOPzZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 10:55:25 -0500
-Received: by mail-ot1-f65.google.com with SMTP id k14so16536029otn.4
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 07:55:25 -0800 (PST)
+        Wed, 15 Jan 2020 11:05:19 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35983 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbgAOQFT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 11:05:19 -0500
+Received: by mail-ot1-f66.google.com with SMTP id m2so11697643otq.3
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 08:05:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h8tviBIGxzG0M2SWVlzB/ZX7WYO/ibSFmw3TBS+98tw=;
-        b=qs2HJOgk8QuXdRQUXSZ2tXd8PnTr3in/5ZZCyPRaICNk28QO/89qxencw4/PTO/NZT
-         KKHXi1zXXjz3/6pfCAl0SP3kMmN3ObVtcjlxInyamAXa5rnuYNBhwi79LwW0PRy9w+Hs
-         hmmtwfRxlqAj8mSP2429tWOSok8LTK2ROTGgpxJV13I2zZqM0510FwFc/zvBP5NmZqX1
-         Y16d350L4fR364AIdfpZmD7MVvRCsRUwlz+zk8+k72D+T7wiMpvbtOKLhUKEQxov4ztI
-         1ENcY/EpVQtWj42S0/F+EodNcWs2JA9S79Imxas16BRFLPCsxryZTZ6yztKcVYpJECZN
-         aaXA==
-X-Gm-Message-State: APjAAAWihfwpJWoC+WIKlCcSyrsQ+zTtklqp+5/Nw9FifmkFcDRSoSff
-        6VoyeqJjBf0DwDEmTOFSvTgvD2U=
-X-Google-Smtp-Source: APXvYqzG6iAZEwiJaMz3VlyUmrQJiWZ7ejK5B0lUZUwY79qr7uw0lWfSAa3H6/XARN4nLhhAPPmhyA==
-X-Received: by 2002:a9d:74d8:: with SMTP id a24mr3328628otl.100.1579103724732;
-        Wed, 15 Jan 2020 07:55:24 -0800 (PST)
+        bh=AIn1O5GCmKw7dugKJey6e6TvKV2y4GDiW1xXQSe2Ay0=;
+        b=JkMdVe/1AhvzAI3X+J7CvmHyICvnMOxEwEMVzOqCs7BnbJJ6sgFzcZPuPuQLEvi648
+         U10iz7JS3IWsFyRjGPYAJHUTt7MFdXTlbXkJPZhca8wH3o9I9m6orsHbgUjw2XgidLc8
+         aO63hg3WzUd3+UAEi5JONvn3gA1yxFfJC+JWPWe6j207b+X4fhAxG42L/amzNVlKPsHc
+         fNqLdv/l4VmUhc004Z1EuBarKFqdX/mLhUdSXSglWnmAb/JeMQ+7vt4srPKeeq5+s5iI
+         oz1C9gm/uDY+49MF7OCTYrfLOy/+rRa+mzB6zHmzc3OPQDXwUrlc0m9ahqAqn9E18BrT
+         fueA==
+X-Gm-Message-State: APjAAAUsAjICtg/yvd3Glc3yjJdB+DX1hTDTIv97WToak7Hd4rIMj3mc
+        0t5J722VYKLQaaY2M5859mkAwL8=
+X-Google-Smtp-Source: APXvYqwq+HbRFJQDyMJ6Ag+3ga2Z+YSA0LFCf0umzYUGxV9XXqLw8jtoawm+Ez70AwRzGIokdb7Whg==
+X-Received: by 2002:a05:6830:2053:: with SMTP id f19mr3087830otp.193.1579104318396;
+        Wed, 15 Jan 2020 08:05:18 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 67sm5790954oid.30.2020.01.15.07.55.24
+        by smtp.gmail.com with ESMTPSA id a24sm5785650oic.10.2020.01.15.08.05.16
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 07:55:24 -0800 (PST)
+        Wed, 15 Jan 2020 08:05:17 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 220379
+        id 22040c
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Wed, 15 Jan 2020 09:40:22 -0600
-Date:   Wed, 15 Jan 2020 09:40:22 -0600
+        Wed, 15 Jan 2020 10:05:16 -0600
+Date:   Wed, 15 Jan 2020 10:05:16 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ulf.hansson@linaro.org,
-        srinivas.kandagatla@linaro.org, broonie@kernel.org,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        rjones@gateworks.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
-        richard.hu@technexion.com, angus@akkea.ca, cosmin.stoica@nxp.com,
-        l.stach@pengutronix.de, rabeeh@solid-run.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 1/7] dt-bindings: fsl-imx-sdma: Add
- i.MX8MM/i.MX8MN/i.MX8MP compatible string
-Message-ID: <20200115154022.GA10946@bogus>
-References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
+To:     JC Kuo <jckuo@nvidia.com>
+Cc:     gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        robh@kernel.org, jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-usb@vger.kernel.org, felipe.balbi@linux.intel.com,
+        JC Kuo <jckuo@nvidia.com>
+Subject: Re: [PATCH v1] dt-binding: usb: add "super-speed-plus"
+Message-ID: <20200115160516.GA18911@bogus>
+References: <20200113060046.14448-1-jckuo@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20200113060046.14448-1-jckuo@nvidia.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 13 Jan 2020 13:33:16 +0800, Anson Huang wrote:
-> Add imx8mm/imx8mn/imx8mp sdma support.
+On Mon, 13 Jan 2020 14:00:46 +0800, JC Kuo wrote:
+> This commit adds "super-speed-plus" to valid argument list of
+> "maximum-speed" property.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: JC Kuo <jckuo@nvidia.com>
 > ---
-> New patch
-> ---
->  Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/usb/generic.txt | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
