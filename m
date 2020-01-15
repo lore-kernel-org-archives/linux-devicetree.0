@@ -2,80 +2,75 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05B0C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 16:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA852C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 16:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5606206D7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 16:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97973206D7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 16:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAOQZy (ORCPT
+        id S1726562AbgAOQ3U (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 11:25:54 -0500
-Received: from jack.einval.com ([84.45.184.145]:37052 "EHLO mail.einval.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgAOQZy (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 11:25:54 -0500
-X-Greylist: delayed 1784 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 Jan 2020 11:25:53 EST
-Received: from steve by mail.einval.com with local (Exim 4.92)
-        (envelope-from <steve@einval.com>)
-        id 1irl1W-00082F-CF; Wed, 15 Jan 2020 15:56:02 +0000
-From:   Steve McIntyre <steve.mcintyre@linaro.org>
-To:     alexandre.torgue@st.com
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-In-Reply-To: <20200113181625.3130-1-alexandre.torgue@st.com>
-Cc:     <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-Message-Id: <E1irl1W-00082F-CF@mail.einval.com>
-Date:   Wed, 15 Jan 2020 15:56:02 +0000
+        Wed, 15 Jan 2020 11:29:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58223 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgAOQ3T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 11:29:19 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irlXg-0004mW-B5; Wed, 15 Jan 2020 17:29:16 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irlXf-0003Us-Nz; Wed, 15 Jan 2020 17:29:15 +0100
+Date:   Wed, 15 Jan 2020 17:29:15 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        Adam.Thomson.Opensource@diasemi.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
+Message-ID: <20200115162915.ccudevxvre3v5c3d@pengutronix.de>
+References: <20200108104746.1765-1-m.felsch@pengutronix.de>
+ <20200108104746.1765-4-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108104746.1765-4-m.felsch@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:28:40 up 61 days,  7:47, 54 users,  load average: 0.00, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alexandre!
+Hi Linus,
 
-alexandre.torgue@st.com wrote:
->
->The goal of this series is to add device tree build information in dtb.
->This information can be dtb build date, where devicetree files come from,
->who built the dtb ... Actually, same kind of information that you can find
->in the Linux banner which is printout during kernel boot. Having the same
->kind of information for device tree is useful for debugging and maintenance.
->
->To achieve that a new option "-B" (using an argument) is added to dtc. 
->The argument is a file containing a string with build information
->(e.g., From Linux 5.5.0-rc1 by alex the Mon Jan 13 18:25:38 CET 2020).
->DTC use it to append dts file with a new string property "Build-info".
->
->of/fdt.c is modified to printout "Build-info" property during Kernel boot and 
->scripts/Makefile.lib is modified to use dtc -B option during kernel make (this
->last part could be improved for sure).
->
->Regards
->Alex
->
->Alexandre Torgue (3):
->  dtc: Add dtb build information option
->  of: fdt: print dtb build information
->  scripts: Use -B dtc option to generate dtb build information.
->
-> drivers/of/fdt.c           |  9 +++++++
-> scripts/Makefile.lib       | 11 +++++---
-> scripts/dtc/dtc.c          | 55 +++++++++++++++++++++++++++++++++-----
-> scripts/gen_dtb_build_info | 11 ++++++++
-> 4 files changed, 76 insertions(+), 10 deletions(-)
-> create mode 100755 scripts/gen_dtb_build_info
+On 20-01-08 11:47, Marco Felsch wrote:
+> The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> be used as input, output or have a special use-case.
+> 
+> The patch adds the support for the normal input/output use-case.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Looks good to me in testing here:
+Is it possible to get this into 5.6?
 
-[    0.000000] OF: fdt: From Linux 5.5.0-rc6-00031-g95e20af9fb9c-dirty by stemci01 the Wed 15 Jan 14:33:25 GMT 2020.
+Regards,
+  Marco
 
-Tested-By: Steve McIntyre <steve.mcintyre@linaro.org>
-
--- 
-Steve McIntyre                                steve.mcintyre@linaro.org
-<http://www.linaro.org/> Linaro.org | Open source software for ARM SoCs
