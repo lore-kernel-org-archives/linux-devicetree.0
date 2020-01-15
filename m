@@ -2,181 +2,177 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F13C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 20:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E91CC32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 659352467C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 20:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579121459;
-	bh=IGaSv9YovIQR3MVH6A8i1W4/xbBl3F5OhDJks5gzi1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FpXXRESc8Fb6DF5/ZENRP3Qvb5kI2kGJ2DEqSdJWgUkcvyWvb+qU9l3wqiu2vzt6S
-	 kpjh12wI+ghE968UjyUmVdEU3+GoDPf+rcahwi66svYN3A+zd7+jEV1OE+PzRlMELP
-	 tNfghYjy0z+yGExhUKHJY1rUTC5Ak6a9ZACvFxbY=
+	by mail.kernel.org (Postfix) with ESMTP id 6F39C207FF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgAOUu6 (ORCPT
+        id S1729022AbgAOVBP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 15:50:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbgAOUu6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 15:50:58 -0500
-Received: from earth.universe (dyndsl-095-033-170-011.ewe-ip-backbone.de [95.33.170.11])
+        Wed, 15 Jan 2020 16:01:15 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:43378 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbgAOVBO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 16:01:14 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3852F2051A;
-        Wed, 15 Jan 2020 20:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579121457;
-        bh=IGaSv9YovIQR3MVH6A8i1W4/xbBl3F5OhDJks5gzi1c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1gc1bFTtZbRnHs0dFsDSkqdFh96xdHNLPC6Vm8IA70ltCpFlEh6A+WaeNajEOgGSo
-         zvhAj1bzqJAxov982IuLn/7Eot3OdgL3Xvf+MaNFmwmInuOjPi+5PHD4YseqUdh40J
-         yUzPqBsem7la16TnnSwPOaPwDdnXABXGjWr1jae8=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 8F46F3C0C7C; Wed, 15 Jan 2020 21:50:55 +0100 (CET)
-Date:   Wed, 15 Jan 2020 21:50:55 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Yauhen Kharuzhy <jekhor@gmail.com>
-Cc:     linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 684A8804C3;
+        Wed, 15 Jan 2020 22:01:06 +0100 (CET)
+Date:   Wed, 15 Jan 2020 22:01:04 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        David Lechner <david@lechnology.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] power: supply: bq25890_charger: Add support of
- BQ25892 and BQ25896 chips
-Message-ID: <20200115205055.f5dgjeenj3r2l2f4@earth.universe>
-References: <20200101224627.12093-1-jekhor@gmail.com>
- <20200102135335.GA13218@jeknote.loshitsa1.net>
+        Chris Brandt <chris.brandt@renesas.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: sitronix,st7735r: Convert
+ to DT schema
+Message-ID: <20200115210104.GA28904@ravnborg.org>
+References: <20200115124548.3951-1-geert+renesas@glider.be>
+ <20200115124548.3951-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wc3ztikgyf3eauw5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200102135335.GA13218@jeknote.loshitsa1.net>
+In-Reply-To: <20200115124548.3951-2-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=gEfo2CItAAAA:8
+        a=WZHNqt2aAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8 a=KKAkSRfTAAAA:8
+        a=o07Ec-Mc6pqL289OE5cA:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
+        a=CjuIK1q_8ugA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=PrHl9onO2p7xFKlKy1af:22
+        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=cvBusfyB2V15izCimMoJ:22 a=pHzHmUro8NiASowvMSCR:22
+        a=6VlIyEUom7LUIeUMNQJH:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Geert.
 
---wc3ztikgyf3eauw5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for doing the conversion to meta-schema.
 
-Hi,
+On Wed, Jan 15, 2020 at 01:45:44PM +0100, Geert Uytterhoeven wrote:
+> Convert the DT binding documentation for Sitronix ST7735R displays to DT
+> schema.
+> 
+> Add a reference to the Adafruit 1.8" LCD while at it.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
 
-Thanks, queued to power-supply's for-next branch.
+> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> new file mode 100644
+> index 0000000000000000..21bccc91f74255e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+Use (GPL-2.0-only OR BSD-2-Clause) for new binding files.
 
-On Thu, Jan 02, 2020 at 04:53:35PM +0300, Yauhen Kharuzhy wrote:
-> On Thu, Jan 02, 2020 at 01:46:25AM +0300, Yauhen Kharuzhy wrote:
-> > Support BQ25892 and BQ25896 chips by this driver. They shared one chip
-> > ID 0, so distinquish them by device revisions (2 for 25896 and 1 for
-> > 25892).
-> >=20
-> > Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
-> > ---
-> >  drivers/power/supply/bq25890_charger.c | 97 ++++++++++++++++++++------
-> >  1 file changed, 76 insertions(+), 21 deletions(-)
-> >=20
-> > diff --git a/drivers/power/supply/bq25890_charger.c b/drivers/power/sup=
-ply/bq25890_charger.c
-> > index 9d1ec8d677de..a3dcd4eb1287 100644
-> > --- a/drivers/power/supply/bq25890_charger.c
-> > +++ b/drivers/power/supply/bq25890_charger.c
-> > @@ -25,12 +25,20 @@
-> >  #define BQ25895_ID			7
-> >  #define BQ25896_ID			0
-> > =20
-> > +enum bq25890_chip_version {
-> > +	BQ25890,
-> > +	BQ25892,
-> > +	BQ25895,
-> > +	BQ25896,
-> > +};
-> > +
-> ...
-> > +static int bq25890_get_chip_version(struct bq25890_device *bq)
-> > +{
-> > +	int id, rev;
-> > +
-> > +	id =3D bq25890_field_read(bq, F_PN);
-> > +	if (id < 0) {
-> > +		dev_err(bq->dev, "Cannot read chip ID.\n");
-> > +		return id;
-> > +	}
-> > +
-> > +	rev =3D bq25890_field_read(bq, F_DEV_REV);
-> > +	if (rev < 0) {
-> > +		dev_err(bq->dev, "Cannot read chip revision.\n");
-> > +		return id;
-> > +	}
-> > +
-> > +	switch (id) {
-> > +	case BQ25890_ID:
-> > +		bq->chip_version =3D BQ25890;
-> > +		break;
-> > +
-> > +	/* BQ25892 and BQ25896 share same ID 0 */
-> > +	case BQ25896_ID:
-> > +		switch (rev) {
-> > +		case 0:
-> Sorry, typo here: should be 2 for 25896, I will fix this in v2.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/sitronix,st7735r.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sitronix ST7735R Display Panels Device Tree Bindings
+> +
+> +maintainers:
+> +  - David Lechner <david@lechnology.com>
+> +
+> +description:
+> +  This binding is for display panels using a Sitronix ST7735R controller in
+> +  SPI mode.
+> +
+> +allOf:
+> +  - $ref: panel/panel-common.yaml#
 
-I fixed this while applying.
+I am no binding expert so I do not know how to add it.
+But the old binding described that this MUST be a child of spi.
+This is missing here.
 
--- Sebastian
+Other panels using spi does not have it - so it is probarly OK.
 
-> > +			bq->chip_version =3D BQ25896;
-> > +			break;
-> > +		case 1:
-> > +			bq->chip_version =3D BQ25892;
-> > +			break;
-> > +		default:
-> > +			dev_err(bq->dev,
-> > +				"Unknown device revision %d, assume BQ25892\n",
-> > +				rev);
-> > +			bq->chip_version =3D BQ25892;
-> > +		}
-> > +		break;
-> > +
-> > +	case BQ25895_ID:
-> > +		bq->chip_version =3D BQ25895;
-> > +		break;
-> > +
-> > +	default:
-> > +		dev_err(bq->dev, "Unknown chip ID %d\n", id);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> ...
->=20
-> --=20
-> Yauhen Kharuzhy
+So with the license fixed:
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 
---wc3ztikgyf3eauw5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl4fey8ACgkQ2O7X88g7
-+ppMihAAlbu7Cj5kznupKUuThBs3gO5ztHxbvrKZFRByg+VOKZrlZiSsRBW4xiBP
-uRVBNauM9UIxTb3pCtIuC4goV2sL0v6vBW21+xChmvFXkk0y9DBTpuw5w7mNVPRt
-tGo6kdZ4qrbqUt0yzumysR3XA5OFgKwH4QeDuw/VciSUS15TFLEViC8kEc5PMhtr
-J8FGh1RPDVPKJ1plggE7aJBKWB2cXG1Z/BPISVc/eoDdUKUCF6dc4aF6x2l1E6BQ
-eiZCI0m/62dF7f9hXUxtHO+w3UL0SlF94Q2GjutD4WDLQp0tymtI7bZmlIJ6C8KA
-BirDA6DUzllAsjUuDvaLYzoqIG9VA2ew9OAreYadOxopZgTZgozLMt4Y181RxJ9R
-TMvzsJgZa0+aWcETPCzX9v1UNvdYFig5Fsd5OBM1ntV4ddqNkqleG01BjRCFi4zs
-KfpAZFCgl/n7VGR04NSjCq+7pXDawpkkme3K61Jf65zfoYmb3sedZWy7UuKArAep
-R3iWBHPp/+Z8Lw7cdurykYodwd8+9AN3N2YT3Efzmf+0JHwUvsgpzMcjF+jcS11x
-+RTYDvpuBxHoztwAhm03KBBbTmpTOe5O3BAaIC7zQRI0E/0d9QXX6KWVYVfNJvsD
-8oI/F7xnYqEs7/tZziiUAU1Arzt5XRFqedX2SMAs9NGXtpjmZUQ=
-=zGq6
------END PGP SIGNATURE-----
-
---wc3ztikgyf3eauw5--
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description:
+> +          Adafruit 1.8" 160x128 Color TFT LCD (Product ID 358 or 618)
+> +        items:
+> +          - enum:
+> +              - jianda,jd-t18003-t01
+> +          - const: sitronix,st7735r
+> +
+> +  spi-max-frequency:
+> +    maximum: 32000000
+> +
+> +  dc-gpios:
+> +    maxItems: 1
+> +    description: Display data/command selection (D/CX)
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - dc-gpios
+> +  - reset-gpios
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    backlight: backlight {
+> +            compatible = "gpio-backlight";
+> +            gpios = <&gpio 44 GPIO_ACTIVE_HIGH>;
+> +    };
+> +
+> +    spi {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            display@0{
+> +                    compatible = "jianda,jd-t18003-t01", "sitronix,st7735r";
+> +                    reg = <0>;
+> +                    spi-max-frequency = <32000000>;
+> +                    dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
+> +                    reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
+> +                    rotation = <270>;
+> +            };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ea8262509bdd21ac..3007f83bd504194a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5382,7 +5382,7 @@ M:	David Lechner <david@lechnology.com>
+>  T:	git git://anongit.freedesktop.org/drm/drm-misc
+>  S:	Maintained
+>  F:	drivers/gpu/drm/tiny/st7735r.c
+> -F:	Documentation/devicetree/bindings/display/sitronix,st7735r.txt
+> +F:	Documentation/devicetree/bindings/display/sitronix,st7735r.yaml
+>  
+>  DRM DRIVER FOR SONY ACX424AKP PANELS
+>  M:	Linus Walleij <linus.walleij@linaro.org>
+> -- 
+> 2.17.1
