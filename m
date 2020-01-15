@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E4DC3524E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571EEC35250
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D26206D7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1472467E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JLGOfJVf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rcRSOzLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgAOMxm (ORCPT
+        id S1729100AbgAOMxq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:53:42 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36345 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729039AbgAOMxk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 07:53:40 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so17749080wma.1
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 04:53:39 -0800 (PST)
+        Wed, 15 Jan 2020 07:53:46 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53067 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729057AbgAOMxo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 07:53:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so17780338wmc.2
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 04:53:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aAEmHGx6wUcbVA8TAXO2nZZ/b1/Tw4Vck92vCLfbzvg=;
-        b=JLGOfJVfCZ44waAp9ES2XMnJ00bXfA3EYiUqq8kLa3OCpmxQw3AhflUZtVHLNfWyqU
-         CDp8y73t1hrgePdaY1+LeQ1dZdrkCJASSVzij6xuzoT/eulPGnUBV3KrI45xXZI9f/iY
-         mPB4Ydz9bhzcOtKbnFZXbTEPCXeos6oRaFO8WnS7aOHwV8QCeC+VkfOfRMUhJjxn+X2d
-         PpaziJD94oQVA9V+1bt22VHuHVo3tS/ieruh+y1Gt7Bj+ddjfT8FY12nxiPl6cEzpMI8
-         cfEwi1VTcm2TrONZumVJ4OKVcrRqQffWfxb+W2jDZQf/uT51qtdiobD5IU/sdeKm5F/L
-         Yx/A==
+        bh=63OK7+WV2oSpfMtMv7dHdZjSmylnl4RI0WBIjRtCjGI=;
+        b=rcRSOzLbYMD9O+ISAliDx8MfCABkYI5R5TCmbME5A+HMyM0rj9pis2bt5k2K31Ush7
+         XTRWm+dGRYhisp4xEjHWBRvFocNJu2ERqbdgcL9Rvz+8hIXGrjQMHPwqrEd7BOsWRCfC
+         YLHxO7YHfZs/g0ogm/bk3CFCwm6vV2ACaeGUst6R0+FEeGaYnJ7e5fAqOa0T6GfnVINr
+         A3nev+evbG74sdaffLcpUhvBbE+hxMO4/bKLh6V2wkKSJQhYHzm9aZ+kcTtN0SuETkh5
+         ZaL3HLW68OJmCuxaDSRiCB07t6VeEz+2Nm70rAHxzRxaiEkjv5S9oIwct+NKKTfgdEgX
+         40uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aAEmHGx6wUcbVA8TAXO2nZZ/b1/Tw4Vck92vCLfbzvg=;
-        b=uac4xf8y1PwHw83uo+dIfnA1pQfVSLRuRUiXYGY392WryoGqsczjgKAq/ep8+mrDvg
-         2DIoByYgtUVB899W3Us4tIuZv+5hRB8xsRZ3VrIQGToKNDgrHgeSbdDylaz+PRyxuQlU
-         dauanohINp4g2gPss0wN4vnJk2yFmNL5C2Z635DwjnpVPpbSOqSb+BfouX2/iGbhkIAE
-         zjU4HFBjW7e7d22nX7dDWbIbQ0BLYVYpnJjs8LrtQ+IsTLZTD6xqzvf/GZrFQgFxVj+G
-         IlTU3/gPfFA9OP7kAQJHJ8k2PzHcR/DGnv0EcNR1WIt/2VzgR3mM8YJvwFOq6xWNKSAS
-         Q3mw==
-X-Gm-Message-State: APjAAAXU1/9cic+WCbJuGXd7IDhNl09qwErMcyHJ4nN33bNQ+ktoVvCw
-        JCTrZK+c3vWCRC1Hthcr/Fkwfw==
-X-Google-Smtp-Source: APXvYqytCcaOrer/7iQIE7Xhu4hBwGK2oRRuiNgcyKJchWET2/i8dI0GqIjnVnNvNNsYxpqPPQ/3Aw==
-X-Received: by 2002:a1c:2355:: with SMTP id j82mr34136253wmj.135.1579092819025;
-        Wed, 15 Jan 2020 04:53:39 -0800 (PST)
+        bh=63OK7+WV2oSpfMtMv7dHdZjSmylnl4RI0WBIjRtCjGI=;
+        b=ed1Wu0uBon2XhqjMFZyG+czW9DV9cB8CNWTZy4j2/GRHETGtvDDDTsnctLw5qYQywT
+         4Lxy/a4gIGgsjc8G6YrgrpUXCol6RMegieR5X4m7AXJ2GQssDXuCeWGaovUQqo/5OLd7
+         O4P+opfJOdOCjO93cN7g4Z/ropyQ7Cbz0eyJwt+rz8vVxPIU2k1nFgZVBr1bCAWfoMWE
+         blfW7dZN+xxRwcX9b/HnDFt07XnHYIfzexYHnt3E6mpOAq6zPSGoIHEnjjJhMAPkNoEH
+         9qWvKVteai7/aFSlSS6pOzrgzpz4UQ+A/4JhgVe7h0ObKdOlhVcsTMrUCzvEBlmpxorw
+         rrIg==
+X-Gm-Message-State: APjAAAU80marGevnN/yt8Qqy2eZg9x+0VRhGW3SAH3SnTgM/eYvmJQwZ
+        Tav8xNSsIyiV5R6CXaVUwTkHbA==
+X-Google-Smtp-Source: APXvYqy211rlSGA/7f48UPTxt4qHpuBdCqMG+TrJdyDkgkot1NRkPQy8mZvmt/WlxkEIur07ZirjyA==
+X-Received: by 2002:a7b:c151:: with SMTP id z17mr33478170wmi.137.1579092822380;
+        Wed, 15 Jan 2020 04:53:42 -0800 (PST)
 Received: from localhost.localdomain ([2001:171b:2266:ba60:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id d12sm25196171wrp.62.2020.01.15.04.53.37
+        by smtp.gmail.com with ESMTPSA id d12sm25196171wrp.62.2020.01.15.04.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 04:53:38 -0800 (PST)
+        Wed, 15 Jan 2020 04:53:41 -0800 (PST)
 From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
 To:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
         sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
         robin.murphy@arm.com, bhelgaas@google.com, eric.auger@redhat.com,
         jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
-Subject: [PATCH v5 10/13] iommu/arm-smmu-v3: Add second level of context descriptor table
-Date:   Wed, 15 Jan 2020 13:52:36 +0100
-Message-Id: <20200115125239.136759-11-jean-philippe@linaro.org>
+Subject: [PATCH v5 13/13] iommu/arm-smmu-v3: Add support for PCI PASID
+Date:   Wed, 15 Jan 2020 13:52:39 +0100
+Message-Id: <20200115125239.136759-14-jean-philippe@linaro.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200115125239.136759-1-jean-philippe@linaro.org>
 References: <20200115125239.136759-1-jean-philippe@linaro.org>
@@ -77,226 +77,116 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The SMMU can support up to 20 bits of SSID. Add a second level of page
-tables to accommodate this. Devices that support more than 1024 SSIDs now
-have a table of 1024 L1 entries (8kB), pointing to tables of 1024 context
-descriptors (64kB), allocated on demand.
+Enable PASID for PCI devices that support it. Initialize PASID early in
+add_device() because it must be enabled before ATS.
 
+Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 142 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 134 insertions(+), 8 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 62 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 61 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index c35863073ab3..04144b39c4ce 100644
+index b2b7ba9c4e32..f42454512e87 100644
 --- a/drivers/iommu/arm-smmu-v3.c
 +++ b/drivers/iommu/arm-smmu-v3.c
-@@ -224,6 +224,7 @@
- 
- #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
- #define STRTAB_STE_0_S1FMT_LINEAR	0
-+#define STRTAB_STE_0_S1FMT_64K_L2	2
- #define STRTAB_STE_0_S1CTXPTR_MASK	GENMASK_ULL(51, 6)
- #define STRTAB_STE_0_S1CDMAX		GENMASK_ULL(63, 59)
- 
-@@ -263,7 +264,20 @@
- 
- #define STRTAB_STE_3_S2TTB_MASK		GENMASK_ULL(51, 4)
- 
--/* Context descriptor (stage-1 only) */
-+/*
-+ * Context descriptors.
-+ *
-+ * Linear: when less than 1024 SSIDs are supported
-+ * 2lvl: at most 1024 L1 entries,
-+ *       1024 lazy entries per table.
-+ */
-+#define CTXDESC_SPLIT			10
-+#define CTXDESC_L2_ENTRIES		(1 << CTXDESC_SPLIT)
-+
-+#define CTXDESC_L1_DESC_DWORDS		1
-+#define CTXDESC_L1_DESC_V		(1UL << 0)
-+#define CTXDESC_L1_DESC_L2PTR_MASK	GENMASK_ULL(51, 12)
-+
- #define CTXDESC_CD_DWORDS		8
- #define CTXDESC_CD_0_TCR_T0SZ		GENMASK_ULL(5, 0)
- #define ARM64_TCR_T0SZ			GENMASK_ULL(5, 0)
-@@ -569,9 +583,15 @@ struct arm_smmu_ctx_desc {
- 	u64				mair;
- };
- 
-+struct arm_smmu_l1_ctx_desc {
-+	__le64				*l2ptr;
-+	dma_addr_t			l2ptr_dma;
-+};
-+
- struct arm_smmu_ctx_desc_cfg {
- 	__le64				*cdtab;
- 	dma_addr_t			cdtab_dma;
-+	struct arm_smmu_l1_ctx_desc	*l1_desc;
- 	unsigned int			num_l1_ents;
- };
- 
-@@ -1500,6 +1520,57 @@ static void arm_smmu_sync_cd(struct arm_smmu_domain *smmu_domain,
- 	arm_smmu_cmdq_issue_sync(smmu);
+@@ -2634,6 +2634,53 @@ static void arm_smmu_disable_ats(struct arm_smmu_master *master)
+ 	atomic_dec(&smmu_domain->nr_ats_masters);
  }
  
-+static int arm_smmu_alloc_cd_leaf_table(struct arm_smmu_device *smmu,
-+					struct arm_smmu_l1_ctx_desc *l1_desc)
++static int arm_smmu_enable_pasid(struct arm_smmu_master *master)
 +{
-+	size_t size = CTXDESC_L2_ENTRIES * (CTXDESC_CD_DWORDS << 3);
++	int ret;
++	int features;
++	int num_pasids;
++	struct pci_dev *pdev;
 +
-+	l1_desc->l2ptr = dmam_alloc_coherent(smmu->dev, size,
-+					     &l1_desc->l2ptr_dma, GFP_KERNEL);
-+	if (!l1_desc->l2ptr) {
-+		dev_warn(smmu->dev,
-+			 "failed to allocate context descriptor table\n");
-+		return -ENOMEM;
++	if (!dev_is_pci(master->dev))
++		return -ENODEV;
++
++	pdev = to_pci_dev(master->dev);
++
++	features = pci_pasid_features(pdev);
++	if (features < 0)
++		return features;
++
++	num_pasids = pci_max_pasids(pdev);
++	if (num_pasids <= 0)
++		return num_pasids;
++
++	ret = pci_enable_pasid(pdev, features);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to enable PASID\n");
++		return ret;
 +	}
++
++	master->ssid_bits = min_t(u8, ilog2(num_pasids),
++				  master->smmu->ssid_bits);
 +	return 0;
 +}
 +
-+static void arm_smmu_write_cd_l1_desc(__le64 *dst,
-+				      struct arm_smmu_l1_ctx_desc *l1_desc)
++static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
 +{
-+	u64 val = (l1_desc->l2ptr_dma & CTXDESC_L1_DESC_L2PTR_MASK) |
-+		  CTXDESC_L1_DESC_V;
++	struct pci_dev *pdev;
 +
-+	WRITE_ONCE(*dst, cpu_to_le64(val));
++	if (!dev_is_pci(master->dev))
++		return;
++
++	pdev = to_pci_dev(master->dev);
++
++	if (!pdev->pasid_enabled)
++		return;
++
++	master->ssid_bits = 0;
++	pci_disable_pasid(pdev);
 +}
 +
-+static __le64 *arm_smmu_get_cd_ptr(struct arm_smmu_domain *smmu_domain,
-+				   u32 ssid)
-+{
-+	__le64 *l1ptr;
-+	unsigned int idx;
-+	struct arm_smmu_l1_ctx_desc *l1_desc;
-+	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	struct arm_smmu_ctx_desc_cfg *cdcfg = &smmu_domain->s1_cfg.cdcfg;
-+
-+	if (smmu_domain->s1_cfg.s1fmt == STRTAB_STE_0_S1FMT_LINEAR)
-+		return cdcfg->cdtab + ssid * CTXDESC_CD_DWORDS;
-+
-+	idx = ssid >> CTXDESC_SPLIT;
-+	l1_desc = &cdcfg->l1_desc[idx];
-+	if (!l1_desc->l2ptr) {
-+		if (arm_smmu_alloc_cd_leaf_table(smmu, l1_desc))
-+			return NULL;
-+
-+		l1ptr = cdcfg->cdtab + idx * CTXDESC_L1_DESC_DWORDS;
-+		arm_smmu_write_cd_l1_desc(l1ptr, l1_desc);
-+		/* An invalid L1CD can be cached */
-+		arm_smmu_sync_cd(smmu_domain, ssid, false);
-+	}
-+	idx = ssid & (CTXDESC_L2_ENTRIES - 1);
-+	return l1_desc->l2ptr + idx * CTXDESC_CD_DWORDS;
-+}
-+
- static u64 arm_smmu_cpu_tcr_to_cd(u64 tcr)
+ static void arm_smmu_detach_dev(struct arm_smmu_master *master)
  {
- 	u64 val = 0;
-@@ -1531,9 +1602,15 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
- 	 */
- 	u64 val;
- 	bool cd_live;
-+	__le64 *cdptr;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
--	__le64 *cdptr = smmu_domain->s1_cfg.cdcfg.cdtab + ssid *
--			CTXDESC_CD_DWORDS;
-+
-+	if (WARN_ON(ssid >= (1 << smmu_domain->s1_cfg.s1cdmax)))
-+		return -E2BIG;
-+
-+	cdptr = arm_smmu_get_cd_ptr(smmu_domain, ssid);
-+	if (!cdptr)
-+		return -ENOMEM;
+ 	unsigned long flags;
+@@ -2842,13 +2889,23 @@ static int arm_smmu_add_device(struct device *dev)
  
- 	val = le64_to_cpu(cdptr[0]);
- 	cd_live = !!(val & CTXDESC_CD_0_V);
-@@ -1589,29 +1666,78 @@ static int arm_smmu_write_ctx_desc(struct arm_smmu_domain *smmu_domain,
+ 	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
  
- static int arm_smmu_alloc_cd_tables(struct arm_smmu_domain *smmu_domain)
- {
-+	int ret;
- 	size_t l1size;
-+	size_t max_contexts;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
- 	struct arm_smmu_ctx_desc_cfg *cdcfg = &cfg->cdcfg;
++	/*
++	 * Note that PASID must be enabled before, and disabled after ATS:
++	 * PCI Express Base 4.0r1.0 - 10.5.1.3 ATS Control Register
++	 *
++	 *   Behavior is undefined if this bit is Set and the value of the PASID
++	 *   Enable, Execute Requested Enable, or Privileged Mode Requested bits
++	 *   are changed.
++	 */
++	arm_smmu_enable_pasid(master);
++
+ 	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
+ 		master->ssid_bits = min_t(u8, master->ssid_bits,
+ 					  CTXDESC_LINEAR_CDMAX);
  
--	cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
-+	max_contexts = 1 << cfg->s1cdmax;
-+
-+	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB) ||
-+	    max_contexts <= CTXDESC_L2_ENTRIES) {
-+		cfg->s1fmt = STRTAB_STE_0_S1FMT_LINEAR;
-+		cdcfg->num_l1_ents = max_contexts;
-+
-+		l1size = max_contexts * (CTXDESC_CD_DWORDS << 3);
-+	} else {
-+		cfg->s1fmt = STRTAB_STE_0_S1FMT_64K_L2;
-+		cdcfg->num_l1_ents = DIV_ROUND_UP(max_contexts,
-+						  CTXDESC_L2_ENTRIES);
-+
-+		cdcfg->l1_desc = devm_kcalloc(smmu->dev, cdcfg->num_l1_ents,
-+					      sizeof(*cdcfg->l1_desc),
-+					      GFP_KERNEL);
-+		if (!cdcfg->l1_desc)
-+			return -ENOMEM;
-+
-+		l1size = cdcfg->num_l1_ents * (CTXDESC_L1_DESC_DWORDS << 3);
-+	}
+ 	ret = iommu_device_link(&smmu->iommu, dev);
+ 	if (ret)
+-		goto err_free_master;
++		goto err_disable_pasid;
  
--	cdcfg->num_l1_ents = 1UL << cfg->s1cdmax;
--	l1size = cdcfg->num_l1_ents * (CTXDESC_CD_DWORDS << 3);
- 	cdcfg->cdtab = dmam_alloc_coherent(smmu->dev, l1size, &cdcfg->cdtab_dma,
- 					   GFP_KERNEL);
- 	if (!cdcfg->cdtab) {
- 		dev_warn(smmu->dev, "failed to allocate context descriptor\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto err_free_l1;
- 	}
-+
- 	return 0;
-+
-+err_free_l1:
-+	if (cdcfg->l1_desc) {
-+		devm_kfree(smmu->dev, cdcfg->l1_desc);
-+		cdcfg->l1_desc = NULL;
-+	}
-+	return ret;
+ 	group = iommu_group_get_for_dev(dev);
+ 	if (IS_ERR(group)) {
+@@ -2861,6 +2918,8 @@ static int arm_smmu_add_device(struct device *dev)
+ 
+ err_unlink:
+ 	iommu_device_unlink(&smmu->iommu, dev);
++err_disable_pasid:
++	arm_smmu_disable_pasid(master);
+ err_free_master:
+ 	kfree(master);
+ 	fwspec->iommu_priv = NULL;
+@@ -2881,6 +2940,7 @@ static void arm_smmu_remove_device(struct device *dev)
+ 	arm_smmu_detach_dev(master);
+ 	iommu_group_remove_device(dev);
+ 	iommu_device_unlink(&smmu->iommu, dev);
++	arm_smmu_disable_pasid(master);
+ 	kfree(master);
+ 	iommu_fwspec_free(dev);
  }
- 
- static void arm_smmu_free_cd_tables(struct arm_smmu_domain *smmu_domain)
- {
-+	int i;
-+	size_t size, l1size;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
- 	struct arm_smmu_ctx_desc_cfg *cdcfg = &smmu_domain->s1_cfg.cdcfg;
--	size_t l1size = cdcfg->num_l1_ents * (CTXDESC_CD_DWORDS << 3);
-+
-+	if (cdcfg->l1_desc) {
-+		size = CTXDESC_L2_ENTRIES * (CTXDESC_CD_DWORDS << 3);
-+
-+		for (i = 0; i < cdcfg->num_l1_ents; i++) {
-+			if (!cdcfg->l1_desc[i].l2ptr)
-+				continue;
-+
-+			dmam_free_coherent(smmu->dev, size,
-+					   cdcfg->l1_desc[i].l2ptr,
-+					   cdcfg->l1_desc[i].l2ptr_dma);
-+		}
-+		devm_kfree(smmu->dev, cdcfg->l1_desc);
-+		cdcfg->l1_desc = NULL;
-+
-+		l1size = cdcfg->num_l1_ents * (CTXDESC_L1_DESC_DWORDS << 3);
-+	} else {
-+		l1size = cdcfg->num_l1_ents * (CTXDESC_CD_DWORDS << 3);
-+	}
- 
- 	dmam_free_coherent(smmu->dev, l1size, cdcfg->cdtab, cdcfg->cdtab_dma);
- 	cdcfg->cdtab_dma = 0;
 -- 
 2.24.1
 
