@@ -2,141 +2,105 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307D8C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33ECC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B0D2187F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F9A2187F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:58:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JdwsMlUg"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WKM4s8x7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgAOIzu (ORCPT
+        id S1729125AbgAOI6l (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:55:50 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50818 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAOIzu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 03:55:50 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00F8tYgN109707;
-        Wed, 15 Jan 2020 02:55:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579078534;
-        bh=oAu0uGBid0yAygrmck+chOzn+hR2qgaPhFP4hnfF6y0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JdwsMlUgQc+02EYqcXhsgBUxb/lPU4/R/57/+8anFdr7jNJkXMtnPJ+T+f0fOtq0P
-         00JObIx8tI3ATqe/aEg44p8NC0xHftviQzTQFxgJOvQZaKwGIE4iyek23/n4voS1fi
-         qDut4H+HwANsouH8abbEnn07Jb76+pJTokM9KOHg=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00F8tYwU080197
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 Jan 2020 02:55:34 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 15
- Jan 2020 02:55:33 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 15 Jan 2020 02:55:33 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00F8tUZS023564;
-        Wed, 15 Jan 2020 02:55:31 -0600
-Subject: Re: [PATCH] clk: ti: omap5: Add missing AESS clock
-To:     Tony Lindgren <tony@atomide.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Matthijs van Duin <matthijsvanduin@gmail.com>
-References: <20200114150607.18092-1-tony@atomide.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <23f9723b-cb9e-8737-92c5-4c20bed55cf5@ti.com>
-Date:   Wed, 15 Jan 2020 10:56:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jan 2020 03:58:41 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:17729 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729016AbgAOI6l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 03:58:41 -0500
+X-UUID: 96895815a59941749d5acafda371faf9-20200115
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=UunoMdrTa5yiW8ikAsKa+Kru5ZGQaRL2GDjuh52c1xM=;
+        b=WKM4s8x7uySODSryQ9BraD5Fba8+6UAiH/siwKu7CWdp2lUzmpVDAL5EF0qgqnEWngs8PACPwAnWfA3G+K25kULmS7oAIU3zYRfl/XZacNsDC89A2Fwx/leBinCcgMZgIXd/MDNeqhQAas1l3wG6+I4FS+yudMyfI5hy8ZI5EB4=;
+X-UUID: 96895815a59941749d5acafda371faf9-20200115
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <yong.liang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1759698765; Wed, 15 Jan 2020 16:58:37 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 15 Jan 2020 16:57:32 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 15 Jan 2020 16:58:42 +0800
+From:   Yong Liang <yong.liang@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>,
+        <jiaxin.yu@mediatek.com>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>
+Subject: [PATCH v12 0/4] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Wed, 15 Jan 2020 16:58:24 +0800
+Message-ID: <20200115085828.27791-1-yong.liang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200114150607.18092-1-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBzZXJp
+ZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzIGFuZCBNVDI3MTIsIGFu
+ZCBhdWRpbyB3aWxsIHVzZSBpdCBpbiANCm1hY2hpbmUgZHJpdmVyIGR1cmluZyBib290dXAsIHRo
+ZXkgZGVwZW5kIG9uIHRoZSBmb3ItbmV4dC4NCg0KdjEyIGNoYW5nZXM6DQoxLiBTcGxpdCBNVDI3
+MTIgZnJvbSBNVDgxODMgZm9yIG10ay13ZHQudHh0DQoNCnYxMSBjaGFuZ2VzOg0KMS4gQ3JlYXRl
+IGEgbmV3IHBhdGNoIGZvciBNVDI3MTIuDQoNCnYxMCBjaGFuZ2VzOg0KMS4gTW9kaWZ5IG10ay13
+ZHQudHh0IGR0LWJpbmRpbmdzLg0KDQp2OSBjaGFuZ2VzOg0KMS4gUmVtb3ZlIENoYW5nZS1JZC4N
+Cg0KdjggY2hhbmdlczoNCjEuIERlbGV0ZSBjYXN0OiAoc3RydWN0IG10a193ZHRfZGF0YSAqKQ0K
+DQp2NyBjaGFuZ2VzOg0KMS4gRGVsZXRlIG5vIHVzZSBjb2RlLg0KDQp2NiBjaGFuZ2VzOg0KMS4g
+U2ltcGxpZnkgdG9wcnVnX3Jlc2V0X2Fzc2VydCgpICYgdG9wcnVnX3Jlc2V0X2RlYXNzZXJ0KCku
+DQoyLiBBZGQgbWVtYmVycyBmb3IgbXQyNzEyX2RhdGEgJiBtdDgxODNfZGF0YS4NCg0KdjUgY2hh
+bmdlczoNCjEuIEFkZCBTaWduZWQtb2ZmLWJ5IHRhZyBhbmQgUmV2aWV3ZWQtYnkgdGFnLg0KDQp2
+NCBjaGFuZ2VzOg0KMS4gRml4ZWQgd3Jvbmcgc2lnbmVkLW9mZiBhcyBjb3JyZWN0IG1haWwgc3Vm
+Zml4Lg0KMi4gRml4ZWQgcGF0Y2ggc3ViamVjdCB0aGF0IGFkZCBwYXRjaCB2ZXJzaW9uLg0KDQp2
+MyBjaGFuZ2VzOg0KMS4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDI4
+My8gYW5kIA0KICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MzA1LyBo
+YXMgYmVlbiBtZXJnZWQuDQoyLiBDaGFuZ2UgdGhlIG5hbWUgb2YgbXRrX3dkdF9jb21wYXRpYmxl
+IHRvIG10a193ZHRfZGF0YS4NCjMuIFJlbW92ZSB0b3ByZ3VfcmVzZXQgc3RydWN0IGFuZCB1c2Ug
+bXRrX3dkdF9kZXYgaW5zdGVhZC4NCjQuIEdldCB0aGUgdmFsdWUgb2Ygc3dfcnN0X251bSBmcm9t
+IC5oIGZpbGUuDQo1LiBBZGRkZCBtdDI3MTItcmVzZXRzLmggZm9yIG10MjcxMi4NCjYuIEltcHJv
+dmUgY29tbWl0IG1lc3NhZ2UuDQoNCnYyIGNoYW5nZXM6DQoxLiByZW1vdmUgIldJUCIgdGhhdCBp
+biB0aGUgdGl0bGUgb2YgcGF0Y2hlcw0KMi4gYWRkIGh5cGVyIGxpbmsgZm9yIHRoZSBwYXRjaCB0
+aGF0IGRlcGVuZHMgb24NCjMuIHBhdGNod29yayBsaXN0Og0KaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9jb3Zlci8xMTE2NDI4NS8NCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
+Y2gvMTExNjQyOTUvDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0Mjk5
+Lw0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDI4My8NCmh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQzMDUvDQoNCnYxIGNoYW5nZXM6DQoxLiBw
+YXRjaHdvcmsgbGlzdDoNCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQx
+NzMvDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTgxLw0KaHR0cHM6
+Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDE4NS8NCmh0dHBzOi8vcGF0Y2h3b3Jr
+Lmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQxODcvDQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
+L3BhdGNoLzExMTY0MTc1Lw0KDQp5b25nLmxpYW5nICg0KToNCiAgZHQtYmluZGluZ3M6IG1lZGlh
+dGVrOiBtdDgxODM6IEFkZCAjcmVzZXQtY2VsbHMNCiAgZHQtYmluZGluZ3M6IG1lZGlhdGVrOiBt
+dDI3MTI6IEFkZCAjcmVzZXQtY2VsbHMNCiAgd2F0Y2hkb2c6IG10a193ZHQ6IG10ODE4MzogQWRk
+IHJlc2V0IGNvbnRyb2xsZXINCiAgd2F0Y2hkb2c6IG10a193ZHQ6IG10MjcxMjogQWRkIHJlc2V0
+IGNvbnRyb2xsZXINCg0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL210ay13ZHQu
+dHh0ICB8ICAxMSArLQ0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jICAgICAgICAgICAgICAg
+ICAgICB8IDEwNSArKysrKysrKysrKysrKysrKy0NCiAuLi4vcmVzZXQtY29udHJvbGxlci9tdDI3
+MTItcmVzZXRzLmggICAgICAgICAgfCAgMjIgKysrKw0KIC4uLi9yZXNldC1jb250cm9sbGVyL210
+ODE4My1yZXNldHMuaCAgICAgICAgICB8ICAxNyArKysNCiA0IGZpbGVzIGNoYW5nZWQsIDE1MSBp
+bnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
+L2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJlc2V0cy5oDQoNCi0tIA0KMi4x
+OC4wDQo=
 
-
-On 14/01/2020 17.06, Tony Lindgren wrote:
-> Looks like we're missing AESS clock for omap5. This is similar to what
-> omap4 has.
-
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: Matthijs van Duin <matthijsvanduin@gmail.com>
-> Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  drivers/clk/ti/clk-54xx.c         | 15 +++++++++++++++
->  include/dt-bindings/clock/omap5.h |  1 +
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/clk/ti/clk-54xx.c b/drivers/clk/ti/clk-54xx.c
-> --- a/drivers/clk/ti/clk-54xx.c
-> +++ b/drivers/clk/ti/clk-54xx.c
-> @@ -35,6 +35,20 @@ static const struct omap_clkctrl_reg_data omap5_dsp_clkctrl_regs[] __initconst =
->  	{ 0 },
->  };
->  
-> +static const char * const omap5_aess_fclk_parents[] __initconst = {
-> +	"abe_clk",
-> +	NULL,
-> +};
-> +
-> +static const struct omap_clkctrl_div_data omap5_aess_fclk_data __initconst = {
-> +	.max_div = 2,
-> +};
-> +
-> +static const struct omap_clkctrl_bit_data omap5_aess_bit_data[] __initconst = {
-> +	{ 24, TI_CLK_DIVIDER, omap5_aess_fclk_parents, &omap5_aess_fclk_data },
-> +	{ 0 },
-> +};
-> +
->  static const char * const omap5_dmic_gfclk_parents[] __initconst = {
->  	"abe_cm:clk:0018:26",
->  	"pad_clks_ck",
-> @@ -122,6 +136,7 @@ static const struct omap_clkctrl_bit_data omap5_timer8_bit_data[] __initconst =
->  
->  static const struct omap_clkctrl_reg_data omap5_abe_clkctrl_regs[] __initconst = {
->  	{ OMAP5_L4_ABE_CLKCTRL, NULL, 0, "abe_iclk" },
-> +	{ OMAP5_AESS_CLKCTRL, omap5_aess_bit_data, CLKF_SW_SUP, "abe_cm:clk:0008:24" },
->  	{ OMAP5_MCPDM_CLKCTRL, NULL, CLKF_SW_SUP, "pad_clks_ck" },
->  	{ OMAP5_DMIC_CLKCTRL, omap5_dmic_bit_data, CLKF_SW_SUP, "abe_cm:clk:0018:24" },
->  	{ OMAP5_MCBSP1_CLKCTRL, omap5_mcbsp1_bit_data, CLKF_SW_SUP, "abe_cm:clk:0028:24" },
-> diff --git a/include/dt-bindings/clock/omap5.h b/include/dt-bindings/clock/omap5.h
-> --- a/include/dt-bindings/clock/omap5.h
-> +++ b/include/dt-bindings/clock/omap5.h
-> @@ -16,6 +16,7 @@
->  
->  /* abe clocks */
->  #define OMAP5_L4_ABE_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x20)
-> +#define OMAP5_AESS_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x28)
->  #define OMAP5_MCPDM_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x30)
->  #define OMAP5_DMIC_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x38)
->  #define OMAP5_MCBSP1_CLKCTRL	OMAP5_CLKCTRL_INDEX(0x48)
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
