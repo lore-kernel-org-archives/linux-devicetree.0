@@ -2,130 +2,75 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493F5C32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ABDC32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAE4222C3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4tXtc1M"
+	by mail.kernel.org (Postfix) with ESMTP id 4EB3024679
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 21:57:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579125465;
+	bh=fqJ3cgdhflak8k+kX0Uut8rPPX0mIkcp3KI055/GYdU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ELF47U8rVDk26tzWDuTfh3HogQ+Zx7jHSJ+6wYp+ocFQdyWi47Wkd/95qp/097hYY
+	 TDmUoADdIn8TXrajzqtmX1Qb7OBIuSlyOL93VZC5SEDhJo43PCJZbN+cM2Zitk5PUe
+	 mh4XiUJEf7tp9ZdESE6BNiyFo8dZSZhYz+bBTilk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgAOVt7 (ORCPT
+        id S1730310AbgAOV5o (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 16:49:59 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46794 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729100AbgAOVt6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 16:49:58 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z124so8803613pgb.13;
-        Wed, 15 Jan 2020 13:49:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LLDRRS4nV7uStiCF7NJijm364cVs1q2+kbVX1Zspg38=;
-        b=a4tXtc1MsCd/AAzWT05JSh0STp4V5v5W99JdSxxo99mNSaIXM1by4ESzPtCgimSYtf
-         yc3f8FEAN+rUJOHgIEy+DQS+Sa4utJG00V1IOHvECTDTK7skX4jRZ/OUhe/01+hF5Ixe
-         lyeKKaoWQsvpmJ2VTwm/3aNFoihGj47IMsTWE/ZIFD05lm8Ci2/5aTKCFsZ8eM/BAyCs
-         Fu30t4D1017WOfYNAKXPw8iJjteKzY2JdnKAXAOMn5As4QOqq8ydLQNIqMp1tmTObzuX
-         LOHRSeigSiOYXWKbXxFrcQ8yJDx2FHyo0M1CxfEqKNdWl+ZWBR9hzi+Sq5VKxYiTak9f
-         gSIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LLDRRS4nV7uStiCF7NJijm364cVs1q2+kbVX1Zspg38=;
-        b=rgqIw+iH1DtTp9ZVxkSJcf3vMaiS8SA//n1KlZ1H9X6CqblbHGvNVNnWlCSVkTImyn
-         iWWNHNSuqhTJAnyltLnJPVPTwh5IN8cxocrsGIQ7NP1vF83DxfE+P9gq42B7PMgmp2NJ
-         ZjnyZc6OPkn9xH6fkc9xJlZsNoSk6HGwNhV2woKADdGa5vqSvPJkm+mynVftxb6H5lpI
-         bhoaO3kkcVUF0xci/T0ThYcQ28kfXrBNgoct28ptzN/nMb9Y5g4egrsUpTHTPt9n8dyj
-         /LixlCggYTO++ND8h9yhw1nV2ERr3pH5PTRh29YT1x06XgvMit0DP7CbvzpgOBv9rXIt
-         oR+A==
-X-Gm-Message-State: APjAAAXU7IFk4/Jf/oEP0qUqOEmQ2G1oQX3AlEAeqD6+jF15ADoKYtq/
-        fGJ/8BNKLNV75/QPxdmc9E8=
-X-Google-Smtp-Source: APXvYqw4tFFtqVWsYBb0+omdhX/b6+0lKkDeJt8gEEiG7Cy/SI84NzstJLCZb3wIXZ0ERZYaEEflqw==
-X-Received: by 2002:a65:6815:: with SMTP id l21mr34166607pgt.283.1579124998023;
-        Wed, 15 Jan 2020 13:49:58 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:acd4:5c73:b928:d080? ([2001:4898:80e8:f:2cdd:5c73:b928:d080])
-        by smtp.gmail.com with ESMTPSA id b65sm22584179pgc.18.2020.01.15.13.49.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jan 2020 13:49:57 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-To:     Borislav Petkov <bp@alien8.de>, sashal@kernel.org
-Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        hangl@microsoft.com, Lei Wang <lewan@microsoft.com>,
-        shji@microsoft.com, ruizhao@microsoft.com,
-        Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
-        wangglei@gmail.com
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
- <20200115213848.GO20975@zn.tnic>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <3f1f28fd-2abf-2e1c-ef46-1992058b7a1a@gmail.com>
-Date:   Wed, 15 Jan 2020 13:49:56 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 15 Jan 2020 16:57:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728896AbgAOV5o (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 16:57:44 -0500
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F4FA2467E;
+        Wed, 15 Jan 2020 21:57:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579125464;
+        bh=fqJ3cgdhflak8k+kX0Uut8rPPX0mIkcp3KI055/GYdU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tBOqUOCC/hxuRJ1teE4c6OYQxRpqB3ufp5uMDE1InjmLIpLR1EvdmWo8zC38v5uLX
+         qVfQbB4yQxgGV8QvVAxE0EB8pp2SafeFSZGtRkVHQbNXZbd42suZ4X3AEVEQhbaLcu
+         z4rG3SIDU07GiEeYxkIpEmEIW2PDWx7X5C7u+u+k=
+Received: by mail-qv1-f44.google.com with SMTP id z3so8152453qvn.0;
+        Wed, 15 Jan 2020 13:57:44 -0800 (PST)
+X-Gm-Message-State: APjAAAVqoQAE2sP4JxCiz+PovBMGuuiFEhfUdSUAMgw0lOEEtq+DhCBX
+        p4jE+sLF6ZBHJfrWl1u+KiywBe3LcIsENhsiVg==
+X-Google-Smtp-Source: APXvYqwAHtQlCQbeWq+CY8J9zcxqv2xb+B5FaW0KvQ7TuzjbZQrBiC5F7M17O44wnq6FJ6CZL3h2DX0j3QQwkVCVgsY=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr27776404qvo.20.1579125463304;
+ Wed, 15 Jan 2020 13:57:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200115213848.GO20975@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200115194216.173117-1-jernej.skrabec@siol.net> <20200115194216.173117-2-jernej.skrabec@siol.net>
+In-Reply-To: <20200115194216.173117-2-jernej.skrabec@siol.net>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 15 Jan 2020 15:57:31 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
+Message-ID: <CAL_JsqK-KBd9PF7nKK976vVYjRwfm-ZxJSnEbhiWC=X3AnvpeA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: add OrangePi 3 with eMMC
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/15/2020 1:38 PM, Borislav Petkov wrote:
-> On Wed, Jan 15, 2020 at 06:32:33AM -0800, Shiping Ji wrote:
->> New driver supports error detection and correction on the devices with ARM
->> DMC-520 memory controller.
->>
->> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
->> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
->> Reviewed-by: James Morse <james.morse@arm.com>
-> 
-> This mail still has your From: because I guess you pasted the patch in
-> the mail.
-> 
-> But, if you look at what I wrote here:
-> 
-> https://lkml.kernel.org/r/20200107195606.GM29542@zn.tnic
-> 
-> you'll see the
-> 
-> From: Lei Wang <leiwang_git@outlook.com>
-> 
-> which is the last From: in the mail and that is taken by git as the
-> author of the patch.
-> 
-> However, if I apply this mail of yours, it will make you the
-> author. Because in git there can be only one author per patch
-> and other authors can be additionally accredited with the
-> Co-developed-by: tag from the same doc I was pointing at before:
-> Documentation/process/submitting-patches.rst
+On Wed, Jan 15, 2020 at 1:42 PM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
 >
-> Looking at this driver, however, you have supplied three authors. And I
-> think you guys need to discuss it amongst yourselves who is going to be
-> the author of this driver in the git history.
+> OrangePi 3 can optionally have eMMC. Add a compatible for it.
 
-Lei will be the author of this driver in the git history. I could ask her to send the patch again if that's the correct way to go. Please confirm.
- 
-> If there are more questions, I'm pretty sure Sasha would be glad to
-> explain to you how the whole authorship thing works and what the
-> implications are.
+Is this just a population option or a different board layout? If the
+former, I don't think you need a new compatible, just add/enable a
+node for the eMMC.
 
-Thanks, Sasha is currently OOF until April 19th. 
-
---
-Best regards,
-Shiping Ji
+Rob
