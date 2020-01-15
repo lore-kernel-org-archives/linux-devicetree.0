@@ -2,149 +2,171 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC37FC32771
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77729C32771
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906472084D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHHYw9Cy"
+	by mail.kernel.org (Postfix) with ESMTP id 57DBF2077B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 17:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAOR3A (ORCPT
+        id S1728896AbgAORpC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 12:29:00 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46024 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgAOR3A (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 12:29:00 -0500
-Received: by mail-yw1-f66.google.com with SMTP id d7so11345817ywl.12;
-        Wed, 15 Jan 2020 09:28:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qwbs16xdiBNjEElqJn+QHHEW9fioQ11y+dP+/GhZWp4=;
-        b=eHHYw9CySXZVjpaZqsfXuv6AON37USbZfA6hLdb10Mzt0lEBQPaUVSAeg+MI/sApTW
-         sD2KZJhvQh05qsUgriPsqqZWcRI5YZIc8qjIxaeormuMNU93IkBU5cfXsX2kY9cSjVoB
-         sB5dAzKM1usG+NNK4xXb+gDoqRtu3WqTzj42jmpBh9+5MV7v4B7z2xiF/Ro7Eu6ag9c3
-         mvsx5EEfTuS3WZeH5qVGailqccZhGj6EMSv6q876u5nBBCxQzDnfQzs4hKVNonfS0ebe
-         WnkChNkY6QY++5ScPa0UUFPbjgg9+eesMuNUiTywALtL1r3dVgWgAJOgQMr8zL++rL2p
-         dVyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qwbs16xdiBNjEElqJn+QHHEW9fioQ11y+dP+/GhZWp4=;
-        b=mhGAgddPQ2Qu3axwJ4iAbqGvJwCegfdIE0OVRQYzuErDz9H7SlJtofikV7iSkOG/rv
-         plgWGul2vWFAixt8XYAvf+QlYdX8vkiBeCgD/0fktTcWmyuUTcpwkBJehWdpm9xNTQEw
-         IpUqwWTNWTCq4ZvEN5Q3/gAlZmqTlrqBP9wcpyry9TaZVJFiXFHjEnMWpPEba3xs98xk
-         nxMAqzNRYuMIl8X8S76vOIT/RMgET9j8CkU9eZ6KNa90OOPvDiiTGwWbh5xPU4+Qja7H
-         /GYmL8B/yD3USsOn5THYIeRtpTea+hwbqk01+Z6BM3TvDp2t4lwyC2m1CckCIllR1F/d
-         6PnA==
-X-Gm-Message-State: APjAAAUvGIgJ5BseOxP8DiMbuL/iwJ6uZcWPiGbYwA4yVUHRFjiMZzDX
-        be9FxDBxpYAXJra9Z1IMfifIQHJ4
-X-Google-Smtp-Source: APXvYqwhznZ95Fw+pvmzRn9MtLfJHhmzVACzcHW/mCWdzqiimVar1dGU4FYoDAr2AWJ6NhrAHgwonQ==
-X-Received: by 2002:a81:2847:: with SMTP id o68mr23476365ywo.245.1579109338893;
-        Wed, 15 Jan 2020 09:28:58 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id r64sm8530689ywg.84.2020.01.15.09.28.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jan 2020 09:28:58 -0800 (PST)
-Subject: Re: [RFC PATCH 0/2] of: unittest: add overlay gpio test to catch gpio
- hog problem
-From:   Frank Rowand <frowand.list@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        pantelis.antoniou@konsulko.com,
-        Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alan Tull <atull@kernel.org>
-References: <1579070828-18221-1-git-send-email-frowand.list@gmail.com>
-Message-ID: <578a2d41-e146-1f26-6bf4-30509ebe6941@gmail.com>
-Date:   Wed, 15 Jan 2020 11:28:57 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Wed, 15 Jan 2020 12:45:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:40618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgAORpB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 12:45:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBAAA328;
+        Wed, 15 Jan 2020 09:45:00 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E8643F6C4;
+        Wed, 15 Jan 2020 09:44:58 -0800 (PST)
+Subject: Re: [PATCH v4 11/13] iommu/arm-smmu-v3: Improve add_device() error
+ handling
+To:     Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, guohanjun@huawei.com,
+        sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        bhelgaas@google.com, eric.auger@redhat.com,
+        jonathan.cameron@huawei.com, zhangfei.gao@linaro.org
+References: <20191219163033.2608177-1-jean-philippe@linaro.org>
+ <20191219163033.2608177-12-jean-philippe@linaro.org>
+ <20200114152538.GB2579@willie-the-truck>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5287c59f-0331-4d2e-e8a0-292bf27683fb@arm.com>
+Date:   Wed, 15 Jan 2020 17:44:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1579070828-18221-1-git-send-email-frowand.list@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200114152538.GB2579@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/15/20 12:47 AM, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On 14/01/2020 3:25 pm, Will Deacon wrote:
+> On Thu, Dec 19, 2019 at 05:30:31PM +0100, Jean-Philippe Brucker wrote:
+>> Let add_device() clean up after itself. The iommu_bus_init() function
+>> does call remove_device() on error, but other sites (e.g. of_iommu) do
+>> not.
+>>
+>> Don't free level-2 stream tables because we'd have to track if we
+>> allocated each of them or if they are used by other endpoints. It's not
+>> worth the hassle since they are managed resources.
+>>
+>> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+>> ---
+>>   drivers/iommu/arm-smmu-v3.c | 28 +++++++++++++++++++++-------
+>>   1 file changed, 21 insertions(+), 7 deletions(-)
 > 
-> Geert reports that gpio hog nodes are not properly processed when
-> the gpio hog node is added via an overlay reply and provides an
-> RFC patch to fix the problem [1].
+> I think this is alright, with one caveat relating to:
 > 
-> Add a unittest that shows the problem.  Unittest will report "1 failed"
-> test before applying Geert's RFC patch and "0 failed" after applying
-> Geert's RFC patch.
 > 
-> I did not have a development system for which it would be easy to
-> experiment with applying an overlay containing a gpio hog, so I
-> instead created this unittest that uses a fake gpio node.
+> 	/*
+> 	 * We _can_ actually withstand dodgy bus code re-calling add_device()
+> 	 * without an intervening remove_device()/of_xlate() sequence, but
+> 	 * we're not going to do so quietly...
+> 	 */
+> 	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
+> 		master = fwspec->iommu_priv;
+> 		smmu = master->smmu;
+> 	} ...
 > 
-> This series is a work in progress and I have not properly reviewed
-> it yet myself.  The work behind the series has resulted in my
-> following several paths and distractions, resulting in more delay
-> than I would desire in continuing to review Geert's RFC patches.
-> I am thus releasing these patches as an RFC so that my work
-> behind the review is visible and available for Geert and other
-> reviewers of his patch.
 > 
-> The annotations added in patch 2/2 add a small amount of verbosity
-> to the console output.  I have created a proof of concept tool to
-> explore (1) how test harnesses could use the annotations and
-> (2) how to make the resulting console output easier to read and
-> understand as a human being.  The tool 'of_unittest_expect' is
-> available at https://github.com/frowand/dt_tools
-> 
+> which may be on shakey ground if the subsequent add_device() call can fail
+> and free stuff that the first one allocated. At least, I don't know what
+> we're trying to support with this, so it's hard to tell whether or not it
+> still works as intended after your change.
 
-I will reply to this email with examples of console boot message
-changes as a result of this patch series.
+Hmm, if add_device() ever did fail it should really be expected to 
+return the device back to an un-added state, so I don't believe that 
+particular concern should be significant regardless...
+> How is this supposed to work? I don't recall ever seeing that WARN fire,
+> so can we just remove this and bail instead? Robin?
 
-(1) boot before patches
-(2) boot after this patch series
-(3) messages from (2) processed by of_unittest_expect
-(4) meesages from boot after Geert's patches on top of this patch
-    series processed by of_unittest_expect
+However, I am inclined to agree that it's probably better to make it all 
+moot. Although it indeed should never happen, ISTR at the time there 
+appeared to be some possible path somewhere by which the notifier may 
+have been triggered a second time - possibly if some other device failed 
+or deferred after the first call, triggering the bus code to start all 
+over again. Since then, though, we've made a lot of changes to how 
+->add_device usually gets called, plus stuff like the 
+iommu_device_link() call has snuck in that might not stand up to a 
+replay anyway, so I don't see any problem with making this condition a 
+hard failure. It's certainly much easier to reason about.
 
--Frank
+In fact, there will already be a WARN from iommu_probe_device() now 
+(because the first call will have set the group), so I don't think we 
+need any additional diagnostic in the driver any more.
 
-> 
-> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
-> 
-> 
-> Frank Rowand (2):
->   of: unittest: add overlay gpio test to catch gpio hog problem
->   of: unittest: annotate warnings triggered by unittest
-> 
->  drivers/of/unittest-data/Makefile             |   8 +-
->  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +
->  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 +
->  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 +
->  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +
->  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 +
->  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 +
->  drivers/of/unittest.c                         | 632 ++++++++++++++++++++++++--
->  8 files changed, 719 insertions(+), 31 deletions(-)
->  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
->  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
->  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
->  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
->  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
->  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
-> 
+Robin.
 
+> Something like below before your changes...
+> 
+> Will
+> 
+> --->8
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index effe72eb89e7..6ae3df2f3495 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2534,28 +2534,23 @@ static int arm_smmu_add_device(struct device *dev)
+>   
+>   	if (!fwspec || fwspec->ops != &arm_smmu_ops)
+>   		return -ENODEV;
+> -	/*
+> -	 * We _can_ actually withstand dodgy bus code re-calling add_device()
+> -	 * without an intervening remove_device()/of_xlate() sequence, but
+> -	 * we're not going to do so quietly...
+> -	 */
+> -	if (WARN_ON_ONCE(fwspec->iommu_priv)) {
+> -		master = fwspec->iommu_priv;
+> -		smmu = master->smmu;
+> -	} else {
+> -		smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
+> -		if (!smmu)
+> -			return -ENODEV;
+> -		master = kzalloc(sizeof(*master), GFP_KERNEL);
+> -		if (!master)
+> -			return -ENOMEM;
+>   
+> -		master->dev = dev;
+> -		master->smmu = smmu;
+> -		master->sids = fwspec->ids;
+> -		master->num_sids = fwspec->num_ids;
+> -		fwspec->iommu_priv = master;
+> -	}
+> +	if (WARN_ON_ONCE(fwspec->iommu_priv))
+> +		return -EBUSY;
+> +
+> +	smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
+> +	if (!smmu)
+> +		return -ENODEV;
+> +
+> +	master = kzalloc(sizeof(*master), GFP_KERNEL);
+> +	if (!master)
+> +		return -ENOMEM;
+> +
+> +	master->dev = dev;
+> +	master->smmu = smmu;
+> +	master->sids = fwspec->ids;
+> +	master->num_sids = fwspec->num_ids;
+> +	fwspec->iommu_priv = master;
+>   
+>   	/* Check the SIDs are in range of the SMMU and our stream table */
+>   	for (i = 0; i < master->num_sids; i++) {
+> 
