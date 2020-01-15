@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BE9C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5862CC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F5E24684
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A74224656
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 14:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n5cjwfek"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wCQz6rlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgAOON0 (ORCPT
+        id S1730393AbgAOONc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 09:13:26 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54151 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730249AbgAOON0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 09:13:26 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m24so18046138wmc.3
-        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 06:13:25 -0800 (PST)
+        Wed, 15 Jan 2020 09:13:32 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44464 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730276AbgAOONb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 09:13:31 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so15890275wrm.11
+        for <devicetree@vger.kernel.org>; Wed, 15 Jan 2020 06:13:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1UUsfm6fOWyuTi0Eboq7gj4QxZv+6wLGX1zbgK1JIts=;
-        b=n5cjwfekoTs0bO7Gxvi12pv32MHjFchOy4wcgupRYkss/PEsjx3qEK66BQokfVb7Mg
-         TKJkJFAde6xt/JPDtBi3nowq2BrdCqSacHLXdNkPDtQn4sq9KsZ9F9OmPcUwx697FhJF
-         5s0lR6MeA5p6sBKpNb/t77MqWSmjLy3S6oQspuEk01/JWWnK93i7/fY0o80Kx0f/dAea
-         hqJ7M0m+3W3Cgsp1tjyMw+sZtOxPVfBHREC8P3YD0ED2Na36PFtNKqbhwoqlis8wzRLw
-         NI2DOtC9GOHyKpzbjZnaMdM9BuqxTthrTBcyFuqQyt0yDhFXkYGTspqouOpNmPVIbC1Y
-         58Mg==
+        bh=77YZKi21/UFq8ab0fDgwp8wX61rx924yS+pIUFv8pqU=;
+        b=wCQz6rlV/caolVVopEqfe57+az1sdm5RSdCHSFdWGeF4WYqBkG9XXDkH4HF8pgsJ+5
+         llOyCpeZIWYHO2nKQS9WOgJQqccwJC/cSYFhDjjJ000GH6McGos4apLez8qtzikjBV6C
+         tfRNjGjtvoHSx/VoE/x8iFT8uLHY6BQSa8EX2AQ3LNwL1BUhgRNb4Yt7JWwDZ6H8hssB
+         hbDU8pQmBQA3R33RahIPV1mSqNuBdyRWqQGj1v8iNp+FSxKSMt68XHu8N6xC4PjoKhQ5
+         JJZ7Gv9vs9jg9glxHvRVP3AyGVpV08yMolIZ3X3mRrQBnHr9UrInllWHXos+IBij/jvY
+         85Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1UUsfm6fOWyuTi0Eboq7gj4QxZv+6wLGX1zbgK1JIts=;
-        b=PEbyVn/FUel5AC3ItwntDy+gNS6h0043lobC2oDaWbmU80bCPTqc2Ecs1TIURFIY4i
-         +JSxEMabansa6WKa5ssbO6rlsuQqoPKj8hHmPGMt3yVvsmYedeMt4hmBZQmQHNcJeh+B
-         Viefy4dkjJsakjvyZ1Z3suBc4OygIXVR6s9Jcf1+U7uJYhHMEPol8PGbM5RywripifJR
-         FjryuNTeg7WH8zjVjn0mbjJODgCIUI7tO3WcFt9HFTfCYT0oypDU8vjmLldnBQubRHnv
-         FgLbQyn1NMitVZn4Mry2SyTTaZQdmDv/V3HcEQRv9hUAoF/O6rV7GotGIoRcOw/xHB41
-         uURA==
-X-Gm-Message-State: APjAAAULpVYArlRtEGN2qRQ+ljm9Zf6zJElZn4xuU9V/rLzOhFozFmBw
-        kaIxEQqFi0mn6QG9LC8uUKaYuQ==
-X-Google-Smtp-Source: APXvYqyfm3VxeVbpM723JQEBDho1BTKeTG1rCAIcodpK1fXm1E5JFt7BimzeXmAV1Uoc+Vrw7qiSvg==
-X-Received: by 2002:a05:600c:10cd:: with SMTP id l13mr35273221wmd.102.1579097604577;
-        Wed, 15 Jan 2020 06:13:24 -0800 (PST)
+        bh=77YZKi21/UFq8ab0fDgwp8wX61rx924yS+pIUFv8pqU=;
+        b=T9Cb/7mpfk49LltE8UBCttejEi+8CvqYfw38dzod/lrU7Z3pQowXvt35sWUWXCYI0S
+         gRiUdxLVP0WaNU5w2ExYZ6uovl+GIBKxu6BkVx4CYTjnKIj/nmhy6FEnzvusOnCdyZiA
+         wSpJeUNWVZHxe/00CFcYl1bcO0enqofNjIwSshTqwjuKkzAJi86cBsgofc7LSxaYh4w1
+         pCAhJvS5713vJYcBx96KLcbAKzFM6QLUgGE+aTF/wq308b4OfwtHGS4RLHJqu07rlHgK
+         gPiH7PV5hsK30ttWViPSeRbC1Yd9ZMNS3MBuXvSkXIhUtPRdciOJ9JEqCw4B5RIbkPiZ
+         wlbg==
+X-Gm-Message-State: APjAAAVFWUL9myG05W35TcDTesyI6jc1v8HsQLYj79hwiXEmqLSS8zmK
+        loEE3XTWNpwS3rCkDYdG9fn59A==
+X-Google-Smtp-Source: APXvYqyrN4dg5SAaK8uSWRpjXcMLagOgensqOz0vk3mNJsx/Gh/cXJYEd3RmoRtdbliIPlXHsKJ3Mg==
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr30586906wrn.124.1579097609430;
+        Wed, 15 Jan 2020 06:13:29 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id m21sm23730720wmi.27.2020.01.15.06.13.23
+        by smtp.gmail.com with ESMTPSA id m21sm23730720wmi.27.2020.01.15.06.13.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jan 2020 06:13:23 -0800 (PST)
+        Wed, 15 Jan 2020 06:13:28 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH 14/19] arm64: dts: qcom: qcs404-evb: Define VBUS boost pin
-Date:   Wed, 15 Jan 2020 14:13:28 +0000
-Message-Id: <20200115141333.1222676-15-bryan.odonoghue@linaro.org>
+Subject: [PATCH 18/19] arm64: dts: qcom: qcs404-evb: Enable secondary USB controller
+Date:   Wed, 15 Jan 2020 14:13:32 +0000
+Message-Id: <20200115141333.1222676-19-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
 References: <20200115141333.1222676-1-bryan.odonoghue@linaro.org>
@@ -77,8 +77,8 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-An external regulator is used to trigger VBUS on/off via GPIO. This patch
-defines the relevant GPIO in the EVB dts.
+This patch enables the second DWC3 controller which has one USB Hi-Speed
+PHY attached to it.
 
 Cc: Andy Gross <agross@kernel.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -89,28 +89,31 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 6d53dc342f97..b6147b5ab5cb 100644
+index 0fff50f755ef..07d6d793a922 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -273,6 +273,14 @@ rclk {
+@@ -318,6 +318,17 @@ pinconf {
+ 	};
  };
  
- &pms405_gpios {
-+	usb_vbus_boost_pin: usb-vbus-boost-pin {
-+		pinconf {
-+			pins = "gpio3";
-+			function = PMIC_GPIO_FUNC_NORMAL;
-+			output-low;
-+			power-source = <1>;
-+		};
-+	};
- 	usb3_vbus_pin: usb3-vbus-pin {
- 		pinconf {
- 			pins = "gpio12";
++&usb2 {
++	status = "okay";
++};
++
++&usb2_phy_sec {
++	vdd-supply = <&vreg_l4_1p2>;
++	vdda1p8-supply = <&vreg_l5_1p8>;
++	vdda3p3-supply = <&vreg_l12_3p3>;
++	status = "okay";
++};
++
+ &wifi {
+ 	status = "okay";
+ 	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
 -- 
 2.24.0
 
