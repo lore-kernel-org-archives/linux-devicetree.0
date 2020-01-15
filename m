@@ -2,59 +2,62 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBD0C33CB2
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA0CC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2F92084D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997082081E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 07:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgAOHSI (ORCPT
+        id S1726100AbgAOHdr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:18:08 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49783 "EHLO
+        Wed, 15 Jan 2020 02:33:47 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44071 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgAOHSI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 02:18:08 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        with ESMTP id S1726075AbgAOHdq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 02:33:46 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ircwC-0004eU-FT; Wed, 15 Jan 2020 08:18:00 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1ircw9-0007ei-NA; Wed, 15 Jan 2020 08:17:57 +0100
-Date:   Wed, 15 Jan 2020 08:17:57 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 2/3] dt-bindings: pinctrl: Convert i.MX8MM to
- json-schema
-Message-ID: <20200115071757.bmblie3skdswuj2r@pengutronix.de>
-References: <1579051845-30378-1-git-send-email-Anson.Huang@nxp.com>
- <1579051845-30378-2-git-send-email-Anson.Huang@nxp.com>
+        (envelope-from <ukl@pengutronix.de>)
+        id 1irdBK-0005vs-5b; Wed, 15 Jan 2020 08:33:38 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1irdBI-0005vT-Fk; Wed, 15 Jan 2020 08:33:36 +0100
+Date:   Wed, 15 Jan 2020 08:33:36 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 4/7] pwm: Add support for Azoteq IQS620A PWM generator
+Message-ID: <20200115073336.2bhlu22toua3vnuo@pengutronix.de>
+References: <1578271620-2159-1-git-send-email-jeff@labundy.com>
+ <1578271620-2159-5-git-send-email-jeff@labundy.com>
+ <20200114080828.vv7ilksklt27ysh3@pengutronix.de>
+ <20200115032945.GA6229@labundy.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1579051845-30378-2-git-send-email-Anson.Huang@nxp.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:16:59 up 60 days, 22:35, 54 users,  load average: 0.02, 0.06,
- 0.03
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200115032945.GA6229@labundy.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
@@ -62,154 +65,99 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anson,
+Hello Jeff,
 
-On 20-01-15 09:30, Anson Huang wrote:
-> Convert the i.MX8MM pinctrl binding to DT schema format using json-schema
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Change since V2:
-> 	- the lisence should be GPL-2.0
-> ---
->  .../bindings/pinctrl/fsl,imx8mm-pinctrl.txt        | 36 -----------
->  .../bindings/pinctrl/fsl,imx8mm-pinctrl.yaml       | 69 ++++++++++++++++++++++
->  2 files changed, 69 insertions(+), 36 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
-> deleted file mode 100644
-> index e4e01c0..0000000
-> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.txt
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -* Freescale IMX8MM IOMUX Controller
-> -
-> -Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-> -for common binding part and usage.
-> -
-> -Required properties:
-> -- compatible: "fsl,imx8mm-iomuxc"
-> -- reg: should contain the base physical address and size of the iomuxc
-> -  registers.
-> -
-> -Required properties in sub-nodes:
-> -- fsl,pins: each entry consists of 6 integers and represents the mux and config
-> -  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
-> -  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
-> -  <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last integer CONFIG is
-> -  the pad setting value like pull-up on this pin.  Please refer to i.MX8M Mini
-> -  Reference Manual for detailed CONFIG settings.
-> -
-> -Examples:
-> -
-> -&uart1 {
-> -       pinctrl-names = "default";
-> -       pinctrl-0 = <&pinctrl_uart1>;
-> -};
-> -
-> -iomuxc: pinctrl@30330000 {
-> -        compatible = "fsl,imx8mm-iomuxc";
-> -        reg = <0x0 0x30330000 0x0 0x10000>;
-> -
-> -        pinctrl_uart1: uart1grp {
-> -                fsl,pins = <
-> -                        MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX             0x140
-> -                        MX8MM_IOMUXC_UART1_TXD_UART1_DCE_TX             0x140
-> -                >;
-> -        };
-> -};
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
-> new file mode 100644
-> index 0000000..8b2de93
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mm-pinctrl.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mm-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale IMX8MM IOMUX Controller
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +description:
-> +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-> +  for common binding part and usage.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx8mm-iomuxc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +# Client device subnode's properties
-> +patternProperties:
-> +  'grp$':
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      fsl,pins:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          each entry consists of 6 integers and represents the mux and config
-> +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-> +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-> +          be found in <arch/arm64/boot/dts/freescale/imx8mm-pinfunc.h>. The last
-> +          integer CONFIG is the pad setting value like pull-up on this pin. Please
-> +          refer to i.MX8M Mini Reference Manual for detailed CONFIG settings.
-> +
-> +    required:
-> +      - fsl,pins
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    iomuxc: pinctrl@30330000 {
-> +        compatible = "fsl,imx8mm-iomuxc";
-> +        reg = <0x30330000 0x10000>;
-> +
-> +        pinctrl_uart2: uart2grp {
-> +            fsl,pins = <
-> +                0x23C 0x4A4 0x4FC 0x0 0x0	0x140
+On Wed, Jan 15, 2020 at 03:29:52AM +0000, Jeff LaBundy wrote:
+> Thank you for your kind words and thorough review.
 
-Why we can't use the pinctrl defines like
-MX8MM_IOMUXC_UART1_RXD_UART1_DCE_RX anymore?
+Great my feedback is welcome.
 
-Regards,
-  Marco
+> On Tue, Jan 14, 2020 at 09:08:28AM +0100, Uwe Kleine-König wrote:
+> > On Mon, Jan 06, 2020 at 12:48:02AM +0000, Jeff LaBundy wrote:
+> > I thought we dicussed having a comment here, saying something like:
+> > 
+> > 	The device might reset when [...] and as a result looses it's
+> > 	configuration. So the registers must be rewritten when this
+> > 	happens to restore the expected operation.
+> > 
+> > Is it worth to issue a warning when this happens?
+> 
+> The detailed comments and an error message have always been in iqs62x_irq of the
+> parent MFD driver. The pwm is only one of up to three sub-devices that subscribe
+> to the chain and must update their locally owned registers after the MFD handles
+> the interrupt and restores the device's firmware. I opted to keep these comments
+> in the common MFD rather than repeating throughout the series.
 
-> +                0x240 0x4A8 0x000 0x0 0x0	0x140
-> +            >;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
+That's fine then, a comment that the parent driver issues a message
+would be great then.
+ 
+> > > +static int iqs620_pwm_notifier(struct notifier_block *notifier,
+> > > +			       unsigned long event_flags, void *context)
+> > > +{
+> > > +	struct iqs620_pwm_private *iqs620_pwm;
+> > > +	int ret;
+> > > +
+> > > +	iqs620_pwm = container_of(notifier, struct iqs620_pwm_private,
+> > > +				  notifier);
+> > > +
+> > > +	if (!completion_done(&iqs620_pwm->chip_ready) ||
+> > > +	    !(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
+> > > +		return NOTIFY_DONE;
+> > 
+> > Is here a (relevant?) race?  Consider the notifier triggers just when
+> > pwmchip_add returned, (maybe even a consumer configured the device) and
+> > before complete_all() is called. With my limited knowledge about
+> > notifiers I'd say waiting for the completion here might be reasonable
+> > and safe.
 > 
+> Great catch; this is theoretically possible. The problem with waiting, however,
+> is if the notifier is triggered right away during probe but probe returns early
+> due to an error (and completion never happens).
+
+OK, the error path would need to complete .chip_ready then and the
+notifier then check for this error. Indeed messy.
+ 
+> At this point, I think the best option is to simply cache the values written to
+> IQS620_PWR_SETTINGS_PWM_OUT and IQS620_PWM_DUTY_CYCLE and restore them from the
+> notifier, which is essentially what is done for the IIO drivers in this series.
+
+Sounds good.
+ 
+> > > +	ret = blocking_notifier_chain_unregister(&iqs620_pwm->iqs62x->nh,
+> > > +						 &iqs620_pwm->notifier);
+> > > +	if (ret)
+> > > +		dev_err(iqs620_pwm->chip.dev,
+> > > +			"Failed to unregister notifier: %d\n", ret);
+> > 
+> > 	dev_err(iqs620_pwm->chip.dev,
+> > 		"Failed to unregister notifier: %pe\n", ERR_PTR(ret));
+> > 
+> > gives a nicer output. (Also applies to other error messages of course.)
+> > 
 > 
+> I don't disagree, but this gives me some pause. If I made this change here, I'd
+> prefer to do so across the series for consistency. However, I am hesitant to do
+> so at this stage in the review since several patches are somewhat stable by now
+> (unless there was a compelling reason from a functional perspective).
 > 
+> Another reason is that there are many dev_err cases throughout this series, and
+> adopting this very recently introduced functionality would make the series even
+> harder to back port to the present lot of LTS kernels.
+> 
+> Unless this is a deal breaker, I'd like to pass on this for v4. However, please
+> let me know if you feel strongly about it. In the meantime, I'll get started on
+> the couple of other changes discussed here.
+
+OK, being able to backport is a valid excuse. Consistency over the whole
+series wouldn't be one of my reasons, your mileage obviously varies
+(which is OK).
+
+This can also be done later. Conversion to this is on my todo-list (not
+at the top though), but if you beat me to it, I won't be angry :-)
+
+Best regards
+Uwe
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
