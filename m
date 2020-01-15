@@ -2,32 +2,32 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58B2C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EABC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4F62073A
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDB42073A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 08:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgAOImu (ORCPT
+        id S1729098AbgAOImv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 03:42:50 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:38978 "EHLO inva020.nxp.com"
+        Wed, 15 Jan 2020 03:42:51 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:39024 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726472AbgAOImt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 03:42:49 -0500
+        id S1728925AbgAOImu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 03:42:50 -0500
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F21961A05A6;
-        Wed, 15 Jan 2020 09:42:47 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B4FE61A05BB;
+        Wed, 15 Jan 2020 09:42:48 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E36091A0212;
-        Wed, 15 Jan 2020 09:42:47 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A7BD81A0028;
+        Wed, 15 Jan 2020 09:42:48 +0100 (CET)
 Received: from fsr-ub1864-014.ea.freescale.net (fsr-ub1864-014.ea.freescale.net [10.171.95.219])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0233920340;
-        Wed, 15 Jan 2020 09:42:46 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 0757220340;
+        Wed, 15 Jan 2020 09:42:47 +0100 (CET)
 From:   =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -42,10 +42,12 @@ Cc:     Mark Rutland <mark.rutland@arm.com>,
         Abel Vesa <abel.vesa@nxp.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] clk: imx8mn: add snvs clock
-Date:   Wed, 15 Jan 2020 10:42:22 +0200
-Message-Id: <20200115084225.30464-1-horia.geanta@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: clock: imx8mn: add SNVS clock
+Date:   Wed, 15 Jan 2020 10:42:23 +0200
+Message-Id: <20200115084225.30464-2-horia.geanta@nxp.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200115084225.30464-1-horia.geanta@nxp.com>
+References: <20200115084225.30464-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -55,20 +57,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch set adds the clock for snvs module on imx8mn.
-DT bindings, clk driver are updated accordingly.
-DT for imx8mn (snvs-rtc-lp node) is also updated.
+Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
+---
+ include/dt-bindings/clock/imx8mn-clock.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Horia Geantă (3):
-  dt-bindings: clock: imx8mn: add SNVS clock
-  clk: imx8mn: add SNVS clock to clock tree
-  arm64: dts: imx8mn: add clock for snvs rtc node
-
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 1 +
- drivers/clk/imx/clk-imx8mn.c              | 1 +
- include/dt-bindings/clock/imx8mn-clock.h  | 4 +++-
- 3 files changed, 5 insertions(+), 1 deletion(-)
-
+diff --git a/include/dt-bindings/clock/imx8mn-clock.h b/include/dt-bindings/clock/imx8mn-clock.h
+index 0f2b8423ce1d..43883fe65db5 100644
+--- a/include/dt-bindings/clock/imx8mn-clock.h
++++ b/include/dt-bindings/clock/imx8mn-clock.h
+@@ -228,6 +228,8 @@
+ #define IMX8MN_SYS_PLL2_333M_CG			209
+ #define IMX8MN_SYS_PLL2_500M_CG			210
+ 
+-#define IMX8MN_CLK_END				211
++#define IMX8MN_CLK_SNVS_ROOT			211
++
++#define IMX8MN_CLK_END				212
+ 
+ #endif
 -- 
 2.17.1
 
