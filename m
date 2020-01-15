@@ -2,235 +2,135 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA5DC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 10:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2D0C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9296624671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 10:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0A82467C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726071AbgAOK4K (ORCPT
+        id S1729968AbgAOLAB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 05:56:10 -0500
-Received: from mga02.intel.com ([134.134.136.20]:59093 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgAOK4J (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 05:56:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jan 2020 02:56:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,322,1574150400"; 
-   d="scan'208";a="397850410"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga005.jf.intel.com with ESMTP; 15 Jan 2020 02:56:05 -0800
-Subject: Re: [PATCH v4 02/11] mmc: sdhci: Factor out some operations set to
- their own functions
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Cc:     kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, tony@atomide.com
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
- <20200106110133.13791-3-faiz_abbas@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e5aaf19b-6f9d-c9f7-cc42-5948cafe1f2f@intel.com>
-Date:   Wed, 15 Jan 2020 12:55:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 15 Jan 2020 06:00:01 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:41261 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729548AbgAOLAB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 06:00:01 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 8KGwPGZq2hRHIOv1uIGByeTzBsNRTh82LLtl60f/DnDw6Y7tiqu2EOqUK4J4uvaAJi0GHx5X/o
+ /v1gNnZ6WAuu52BMUN5lmLWWmMzYAfNkaNHQchr9Oqxg93m8EBLNQiSnwiNVSTCh36Rd8GD8jE
+ 7ECFchoYCdDCiPoISXvZxeiuv+y7cFmmStMBHd23pZhjgST+e6u1oAEwZ1xzR1cO1e5hYiyYg5
+ A9yLVrnD7CGRE+XT8d6UtDme5KpuyZu9STeJpgotP+iXdFAHyFl0gXWlhc2F6WxmC8MrkIP+Ef
+ JkQ=
+X-IronPort-AV: E=Sophos;i="5.70,322,1574146800"; 
+   d="scan'208";a="63325742"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Jan 2020 04:00:00 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 15 Jan 2020 04:00:00 -0700
+Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 15 Jan 2020 03:59:56 -0700
+From:   Claudiu Beznea <claudiu.beznea@microchip.com>
+To:     <richard.genoud@gmail.com>, <radu_nicolae.pirea@upb.ro>,
+        <lee.jones@linaro.org>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <ludovic.desroches@microchip.com>,
+        <a.zummo@towertech.it>
+CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rtc@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v4 0/5] add device tree for SAM9X60 SoC and SAM9X60-EK board
+Date:   Wed, 15 Jan 2020 12:59:42 +0200
+Message-ID: <1579085987-13976-1-git-send-email-claudiu.beznea@microchip.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200106110133.13791-3-faiz_abbas@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 6/01/20 1:01 pm, Faiz Abbas wrote:
-> In preparation for adding external dma support, factor out data initialization,
-> block info and mrq_done to their own functions.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+This series add device tree for SAM9X60 SoC and SAM9X60-EK board.
+Allong with these, there are patches that documents some compatibles
+for SAM9X60's IPs.
 
-Minor changes below, otherwise:
+Changes in v4:
+- remove patches:
+	- dt-bindings: atmel-tcb: remove wildcard
+	- dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
+  since they were applied
+- address review comments
+- fix compatible list for dbug in sam9x60.dtsi
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Changes in v3:
+- remove applied patches from series
+- split patch "dt-bindings: atmel-tcb: add microchip,sam9x60-tcb" in two patches:
+	- dt-bindings: atmel-tcb: add microchip,sam9x60-tcb
+	- dt-bindings: atmel-tcb: remove wildcard
+- split patch "dt-bindings: atmel-usart: remove wildcard" in two patches:
+	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+	- dt-bindings: atmel-usart: remove wildcard
+  and adapt them as per review comments
+- collect acked-by tags
 
-> ---
->  drivers/mmc/host/sdhci.c | 96 +++++++++++++++++++++++-----------------
->  1 file changed, 55 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1b1c26da3fe0..f6999054abcf 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1025,18 +1025,9 @@ static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
->  	}
->  }
->  
-> -static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> +static void sdhci_initialize_data(struct sdhci_host *host,
-> +				  struct mmc_data *data)
->  {
-> -	struct mmc_data *data = cmd->data;
-> -
-> -	host->data_timeout = 0;
-> -
-> -	if (sdhci_data_line_cmd(cmd))
-> -		sdhci_set_timeout(host, cmd);
-> -
-> -	if (!data)
-> -		return;
-> -
->  	WARN_ON(host->data);
->  
->  	/* Sanity checks */
-> @@ -1048,6 +1039,36 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->  	host->data_early = 0;
->  	host->data->bytes_xfered = 0;
->  
+Changes in v2:
+- replace patch "dt-bindings: at_xdmac: add entry for microchip compatibles"
+  by patches:
+	- dt-bindings: at_xdmac: add microchip,sam9x60-dma
+	- dt-bindings: at_xdmac: remove wildcard.
+- replace patch "dt-bindings: atmel-usart: add microchip,<chip>-usart"
+  by patches:
+	- dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+	- dt-bindings: atmel-usart: remove wildcard
+- remove patch "dt-bindings: spi_atmel: add microchip,sam9x60-spi"
+  as it was accepted
+- collect reviewed-by tags
 
-Unnessary blank line
+Claudiu Beznea (4):
+  dt-bindings: atmel,at91rm9200-rtc: add microchip,sam9x60-rtc
+  dt-bindings: atmel-usart: remove wildcard
+  dt-bindings: atmel-usart: add microchip,sam9x60-{usart, dbgu}
+  ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B
 
-> +}
-> +
-> +static inline void sdhci_set_block_info(struct sdhci_host *host,
-> +					struct mmc_data *data)
-> +{
-> +
-> +	/* Set the DMA boundary value and block size */
-> +	sdhci_writew(host,
-> +		     SDHCI_MAKE_BLKSZ(host->sdma_boundary, host->data->blksz),
+Sandeep Sheriker Mallikarjun (1):
+  ARM: dts: at91: sam9x60: add device tree for soc and board
 
-host->data -> data
+ .../devicetree/bindings/mfd/atmel-usart.txt        |  11 +-
+ .../bindings/rtc/atmel,at91rm9200-rtc.txt          |   3 +-
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/at91-sam9x60ek.dts               | 647 +++++++++++++++++++
+ arch/arm/boot/dts/sam9x60.dtsi                     | 691 +++++++++++++++++++++
+ arch/arm/configs/at91_dt_defconfig                 |   4 +
+ 6 files changed, 1353 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
+ create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
 
-> +		     SDHCI_BLOCK_SIZE);
-> +	/*
-> +	 * For Version 4.10 onwards, if v4 mode is enabled, 32-bit Block Count
-> +	 * can be supported, in that case 16-bit block count register must be 0.
-> +	 */
-> +	if (host->version >= SDHCI_SPEC_410 && host->v4_mode &&
-> +	    (host->quirks2 & SDHCI_QUIRK2_USE_32BIT_BLK_CNT)) {
-> +		if (sdhci_readw(host, SDHCI_BLOCK_COUNT))
-> +			sdhci_writew(host, 0, SDHCI_BLOCK_COUNT);
-> +		sdhci_writew(host, host->data->blocks, SDHCI_32BIT_BLK_CNT);
-
-host->data -> data
-
-
-> +	} else {
-> +		sdhci_writew(host, host->data->blocks, SDHCI_BLOCK_COUNT);
-
-host->data -> data
-
-> +	}
-> +}
-> +
-> +static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
-> +{
-> +	struct mmc_data *data = cmd->data;
-> +
-> +	sdhci_initialize_data(host, data);
-> +
->  	if (host->flags & (SDHCI_USE_SDMA | SDHCI_USE_ADMA)) {
->  		struct scatterlist *sg;
->  		unsigned int length_mask, offset_mask;
-> @@ -1133,22 +1154,7 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->  
->  	sdhci_set_transfer_irqs(host);
->  
-> -	/* Set the DMA boundary value and block size */
-> -	sdhci_writew(host, SDHCI_MAKE_BLKSZ(host->sdma_boundary, data->blksz),
-> -		     SDHCI_BLOCK_SIZE);
-> -
-> -	/*
-> -	 * For Version 4.10 onwards, if v4 mode is enabled, 32-bit Block Count
-> -	 * can be supported, in that case 16-bit block count register must be 0.
-> -	 */
-> -	if (host->version >= SDHCI_SPEC_410 && host->v4_mode &&
-> -	    (host->quirks2 & SDHCI_QUIRK2_USE_32BIT_BLK_CNT)) {
-> -		if (sdhci_readw(host, SDHCI_BLOCK_COUNT))
-> -			sdhci_writew(host, 0, SDHCI_BLOCK_COUNT);
-> -		sdhci_writew(host, data->blocks, SDHCI_32BIT_BLK_CNT);
-> -	} else {
-> -		sdhci_writew(host, data->blocks, SDHCI_BLOCK_COUNT);
-> -	}
-> +	sdhci_set_block_info(host, data);
->  }
->  
->  static inline bool sdhci_auto_cmd12(struct sdhci_host *host,
-> @@ -1245,22 +1251,10 @@ static bool sdhci_needs_reset(struct sdhci_host *host, struct mmc_request *mrq)
->  		 (host->quirks & SDHCI_QUIRK_RESET_AFTER_REQUEST)));
->  }
->  
-> -static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
-> +static void sdhci_set_mrq_done(struct sdhci_host *host, struct mmc_request *mrq)
->  {
->  	int i;
->  
-> -	if (host->cmd && host->cmd->mrq == mrq)
-> -		host->cmd = NULL;
-> -
-> -	if (host->data_cmd && host->data_cmd->mrq == mrq)
-> -		host->data_cmd = NULL;
-> -
-> -	if (host->data && host->data->mrq == mrq)
-> -		host->data = NULL;
-> -
-> -	if (sdhci_needs_reset(host, mrq))
-> -		host->pending_reset = true;
-> -
->  	for (i = 0; i < SDHCI_MAX_MRQS; i++) {
->  		if (host->mrqs_done[i] == mrq) {
->  			WARN_ON(1);
-> @@ -1276,6 +1270,23 @@ static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
->  	}
->  
->  	WARN_ON(i >= SDHCI_MAX_MRQS);
-> +}
-> +
-> +static void __sdhci_finish_mrq(struct sdhci_host *host, struct mmc_request *mrq)
-> +{
-> +	if (host->cmd && host->cmd->mrq == mrq)
-> +		host->cmd = NULL;
-> +
-> +	if (host->data_cmd && host->data_cmd->mrq == mrq)
-> +		host->data_cmd = NULL;
-> +
-> +	if (host->data && host->data->mrq == mrq)
-> +		host->data = NULL;
-> +
-> +	if (sdhci_needs_reset(host, mrq))
-> +		host->pending_reset = true;
-> +
-> +	sdhci_set_mrq_done(host, mrq);
->  
->  	sdhci_del_timer(host, mrq);
->  
-> @@ -1390,12 +1401,15 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->  	}
->  
->  	host->cmd = cmd;
-> +	host->data_timeout = 0;
->  	if (sdhci_data_line_cmd(cmd)) {
->  		WARN_ON(host->data_cmd);
->  		host->data_cmd = cmd;
-> +		sdhci_set_timeout(host, cmd);
->  	}
->  
-> -	sdhci_prepare_data(host, cmd);
-> +	if (cmd->data)
-> +		sdhci_prepare_data(host, cmd);
->  
->  	sdhci_writel(host, cmd->arg, SDHCI_ARGUMENT);
->  
-> 
+-- 
+2.7.4
 
