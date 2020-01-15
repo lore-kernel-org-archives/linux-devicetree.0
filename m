@@ -2,154 +2,86 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3E2C33CB7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7333C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C40F20728
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F6C20728
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 12:48:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="a/dVzqYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgAOMqY (ORCPT
+        id S1726483AbgAOMsj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 07:46:24 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:56502 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729143AbgAOMqA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 07:46:00 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id qclq210075USYZQ01clqdC; Wed, 15 Jan 2020 13:45:57 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-0003z5-4W; Wed, 15 Jan 2020 13:45:50 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iri3S-00012d-3B; Wed, 15 Jan 2020 13:45:50 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/5] drm/mipi_dbi: Add support for display offsets
-Date:   Wed, 15 Jan 2020 13:45:46 +0100
-Message-Id: <20200115124548.3951-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200115124548.3951-1-geert+renesas@glider.be>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
+        Wed, 15 Jan 2020 07:48:39 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:47136 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726473AbgAOMsj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 07:48:39 -0500
+Received: from zn.tnic (p200300EC2F0C7700ACD7CA379FB916C9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7700:acd7:ca37:9fb9:16c9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7CE251EC02D2;
+        Wed, 15 Jan 2020 13:48:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579092517;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=RRzDcbrEYO6vPej3CmJAYWJu/0P03k1Uv077MCVlHV4=;
+        b=a/dVzqYYD8DzbPQzyqhPZ1jPExfj8MHtpPTKzMrw2VpflVtiiDPy1AOng2VBEQZoTPpVWE
+        LgAZ/HdZ6SW4Jpp5VT8VTsrcmKcRj8i7Awk9SJNVhPEyQUkjmr9b4Cg1U9EPZdWxFEXiVy
+        enp6KKhmT0Nyu++LB1vBrn6ARK6sDV8=
+Date:   Wed, 15 Jan 2020 13:48:33 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac@vger.kernel.org, sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com, shji@microsoft.com
+Subject: Re: [PATCH v8 2/2] EDAC: add EDAC driver for DMC520
+Message-ID: <20200115124833.GE20975@zn.tnic>
+References: <0cc7bcfe-0dee-b78a-a0fe-52cc48c00a44@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0cc7bcfe-0dee-b78a-a0fe-52cc48c00a44@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-If the resolution of the TFT display is smaller than the maximum
-resolution supported by the display controller, the display may be
-connected to the driver output arrays with a horizontal and/or vertical
-offset, leading to a shifted image.
+On Tue, Jan 14, 2020 at 03:52:23PM -0800, Shiping Ji wrote:
+> New driver supports error detection and correction on the devices with ARM
+> DMC-520 memory controller.
+> 
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-Add support for specifying these offsets.
+I don't think you've understood the whole SOB chain thing yet. Previous
+submissions had
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
-v2:
-  - Add Reviewed-by.
----
- drivers/gpu/drm/drm_mipi_dbi.c | 30 ++++++++++++++++++++----------
- include/drm/drm_mipi_dbi.h     | 12 ++++++++++++
- 2 files changed, 32 insertions(+), 10 deletions(-)
+Signed-off-by: Lei Wang <leiwang_git@outlook.com>
 
-diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-index 16bff1be4b8ac622..27fe81a53c88e338 100644
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -238,6 +238,23 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
- }
- EXPORT_SYMBOL(mipi_dbi_buf_copy);
- 
-+static void mipi_dbi_set_window_address(struct mipi_dbi_dev *dbidev,
-+					unsigned int xs, unsigned int xe,
-+					unsigned int ys, unsigned int ye)
-+{
-+	struct mipi_dbi *dbi = &dbidev->dbi;
-+
-+	xs += dbidev->left_offset;
-+	xe += dbidev->left_offset;
-+	ys += dbidev->top_offset;
-+	ye += dbidev->top_offset;
-+
-+	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, (xs >> 8) & 0xff,
-+			 xs & 0xff, (xe >> 8) & 0xff, xe & 0xff);
-+	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, (ys >> 8) & 0xff,
-+			 ys & 0xff, (ye >> 8) & 0xff, ye & 0xff);
-+}
-+
- static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
- {
- 	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
-@@ -271,12 +288,8 @@ static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
- 		tr = cma_obj->vaddr;
- 	}
- 
--	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS,
--			 (rect->x1 >> 8) & 0xff, rect->x1 & 0xff,
--			 ((rect->x2 - 1) >> 8) & 0xff, (rect->x2 - 1) & 0xff);
--	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS,
--			 (rect->y1 >> 8) & 0xff, rect->y1 & 0xff,
--			 ((rect->y2 - 1) >> 8) & 0xff, (rect->y2 - 1) & 0xff);
-+	mipi_dbi_set_window_address(dbidev, rect->x1, rect->x2 - 1, rect->y1,
-+				    rect->y2 - 1);
- 
- 	ret = mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START, tr,
- 				   width * height * 2);
-@@ -366,10 +379,7 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
- 
- 	memset(dbidev->tx_buf, 0, len);
- 
--	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
--			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
--	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
--			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
-+	mipi_dbi_set_window_address(dbidev, 0, width - 1, 0, height - 1);
- 	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
- 			     (u8 *)dbidev->tx_buf, len);
- 
-diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
-index 67c66f5ee591e80f..33f325f5af2b921f 100644
---- a/include/drm/drm_mipi_dbi.h
-+++ b/include/drm/drm_mipi_dbi.h
-@@ -109,6 +109,18 @@ struct mipi_dbi_dev {
- 	 */
- 	unsigned int rotation;
- 
-+	/**
-+	 * @left_offset: Horizontal offset of the display relative to the
-+	 *               controller's driver array
-+	 */
-+	unsigned int left_offset;
-+
-+	/**
-+	 * @top_offset: Vertical offset of the display relative to the
-+	 *              controller's driver array
-+	 */
-+	unsigned int top_offset;
-+
- 	/**
- 	 * @backlight: backlight device (optional)
- 	 */
+and her as author and you've completely removed those and made yourself
+an author because when I apply this patch, it would take the From:
+header from the mail and make it the author.
+
+But you can't simply remove her authorship... you need to read that doc
+again.
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
