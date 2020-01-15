@@ -2,141 +2,90 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C598C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62777C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB2A24671
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E3AA2467C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:43:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579052630;
+	bh=K1vdv555i7iJrBG3u0JkNMCNgm1k+yE+CLAdV/EOybM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=srhn0iOjspgEZgaHPijS+gGaojvUQQir+0nK2JWtu3WDEFD3Q9ZEWrN+Rs4f8x+bl
+	 fWdQvmFoaIb5TGpF11xfYv6HqTpkhkqgRBidZK9zrxJUGu48FlAwQMSGPjqOXMPgUq
+	 oBrVIzsCl02vPEgwypI4zIemNbdmm7i4+q4Tsw0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbgAOBnb (ORCPT
+        id S1728993AbgAOBnt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 20:43:31 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:55416 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbgAOBnb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 14 Jan 2020 20:43:31 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F238E1A0563;
-        Wed, 15 Jan 2020 02:43:28 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E69071A145E;
-        Wed, 15 Jan 2020 02:43:19 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 13ADE40285;
-        Wed, 15 Jan 2020 09:43:09 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        catalin.marinas@arm.com, will@kernel.org, abel.vesa@nxp.com,
-        bjorn.andersson@linaro.org, olof@lixom.net, maxime@cerno.tech,
-        leonard.crestez@nxp.com, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V9 1/3] dt-bindings: imx: Add pinctrl binding doc for i.MX8MP
-Date:   Wed, 15 Jan 2020 09:39:06 +0800
-Message-Id: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 14 Jan 2020 20:43:49 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44595 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728988AbgAOBnt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 20:43:49 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so13862150oia.11
+        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 17:43:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iLGTssc9FHCMcOGMTyr/UYKoEZZS9tYZ4rHOO35XpvA=;
+        b=aDLWixq+Nku26aEWiOTAvKMt5Bn805MkbO3TZz7iToTowy3xXr/WJNhAUZfnU8HIpD
+         9CaZ3CUhM2Zu/PEe6WKaF7a2UxE12HAiip7bRzKRenK3WrxiUZa0450cT1rmuhzrS8jx
+         kkquM6fB+cYsnYYSAc72eS2t3/QCO9WPv9ROpH76iNpk800Jnv+U9gMYXzrfbTkUCsEt
+         P/sWYXR4OJ5UzoERHQXt6kp9yQGJ5IqxHEVQM8VDpvo21/Q2slTBkB0EXJL5540nOqM8
+         PvUx8O6zSM017DJ1ggbc+68lUuU2DxQFzf1Ki+IGcrgXxaZqpe/9Rc30m/qhF5/tVWtm
+         +2Qw==
+X-Gm-Message-State: APjAAAXwRvBalFlJ50dFPy7fdyMJTGGAMPNWjMJa87Cugb/b89eXXPeN
+        R6Z3rEtvKZbY9SoV3RJXCe0kxWE=
+X-Google-Smtp-Source: APXvYqwdMuuhdr1Fw7XWYw42J3uYNkkT9I7f0IJMr70h+sduJSL8osiL1CUnBOmUvI7pRXKZ93h1gA==
+X-Received: by 2002:aca:cc87:: with SMTP id c129mr18551956oig.13.1579052628465;
+        Tue, 14 Jan 2020 17:43:48 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 26sm5276715oij.9.2020.01.14.17.43.47
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 17:43:47 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220a2e
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Tue, 14 Jan 2020 19:43:46 -0600
+Date:   Tue, 14 Jan 2020 19:43:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, linux@roeck-us.net,
+        robh+dt@kernel.org, lee.jones@linaro.org,
+        stwiss.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH 2/3] dt-bindings: watchdog: da9062: add suspend disable
+ option
+Message-ID: <20200115014346.GA20553@bogus>
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-3-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108095704.23233-3-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add binding doc for i.MX8MP pinctrl driver.
+On Wed,  8 Jan 2020 10:57:03 +0100, Marco Felsch wrote:
+> Document the watchdog disable option which can be used if the hardware
+> automatic suspend option is broken.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/watchdog/da9062-wdt.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since V8:
-	- the lisence should be GPL-2.0
----
- .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml       | 69 ++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-new file mode 100644
-index 0000000..2e31e12
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mp-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IMX8MP IOMUX Controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+description:
-+  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-+  for common binding part and usage.
-+
-+properties:
-+  compatible:
-+    const: fsl,imx8mp-iomuxc
-+
-+  reg:
-+    maxItems: 1
-+
-+# Client device subnode's properties
-+patternProperties:
-+  'grp$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      fsl,pins:
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          each entry consists of 6 integers and represents the mux and config
-+          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-+          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-+          be found in <arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>. The last
-+          integer CONFIG is the pad setting value like pull-up on this pin. Please
-+          refer to i.MX8M Plus Reference Manual for detailed CONFIG settings.
-+
-+    required:
-+      - fsl,pins
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    iomuxc: pinctrl@30330000 {
-+        compatible = "fsl,imx8mp-iomuxc";
-+        reg = <0x30330000 0x10000>;
-+
-+        pinctrl_uart2: uart2grp {
-+            fsl,pins = <
-+                0x228 0x488 0x5F0 0x0 0x6	0x49
-+                0x228 0x488 0x000 0x0 0x0	0x49
-+            >;
-+        };
-+    };
-+
-+...
--- 
-2.7.4
-
