@@ -2,89 +2,185 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AB9C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D7FC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6937524679
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4727722522
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 11:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgAOLak (ORCPT
+        id S1729952AbgAOLeS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 06:30:40 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:38651 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730009AbgAOLah (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 06:30:37 -0500
-Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 15 Jan 2020
- 19:31:03 +0800
-From:   Jianxin Pan <jianxin.pan@amlogic.com>
-To:     Kevin Hilman <khilman@baylibre.com>,
-        <linux-amlogic@lists.infradead.org>
-CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v6 1/4] firmware: meson_sm: Add secure power domain support
-Date:   Wed, 15 Jan 2020 19:30:28 +0800
-Message-ID: <1579087831-94965-2-git-send-email-jianxin.pan@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579087831-94965-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1579087831-94965-1-git-send-email-jianxin.pan@amlogic.com>
+        Wed, 15 Jan 2020 06:34:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:35458 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729758AbgAOLeS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 06:34:18 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B12131B;
+        Wed, 15 Jan 2020 03:34:15 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7826C3F6C4;
+        Wed, 15 Jan 2020 03:34:13 -0800 (PST)
+Subject: Re: [PATCH v8 09/15] coresight: cti: Add connection information to
+ sysfs
+To:     Mike Leach <mike.leach@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        coresight@lists.linaro.org, linux-doc@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, mathieu.poirier@linaro.org,
+        robh+dt@kernel.org, maxime@cerno.tech, liviu.dudau@arm.com,
+        sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, agross@kernel.org,
+        corbet@lwn.net
+References: <20200113213149.25599-1-mike.leach@linaro.org>
+ <20200113213149.25599-10-mike.leach@linaro.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <b09888f1-46fc-26af-0c5f-4a071c893397@arm.com>
+Date:   Wed, 15 Jan 2020 11:34:12 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [116.236.93.172]
+In-Reply-To: <20200113213149.25599-10-mike.leach@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The Amlogic Meson A1/C1 Secure Monitor implements calls to control power
-domain.
+On 13/01/2020 21:31, Mike Leach wrote:
+> Dynamically adds sysfs attributes for all connections defined in the CTI.
+> 
+> Each connection has a triggers<N> sub-directory with name, in_signals,
+> in_types, out_signals and out_types as read-only parameters in the
+> directory. in_ or out_ parameters may be omitted if there are no in or
+> out signals for the connection.
+> 
+> Additionally each device has a nr_cons in the connections sub-directory.
+> 
+> This allows clients to explore the connection and trigger signal details
+> without needing to refer to device tree or specification of the device.
+> 
+> Standardised type information is provided for certain common functions -
+> e.g. snk_full for a trigger from a sink indicating full. Otherwise type
+> defaults to genio.
+> 
+> Signed-off-by: Mike Leach <mike.leach@linaro.org>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>   .../hwtracing/coresight/coresight-cti-sysfs.c | 333 +++++++++++++++++-
+>   drivers/hwtracing/coresight/coresight-cti.c   |  10 +-
+>   drivers/hwtracing/coresight/coresight-cti.h   |   8 +
+>   3 files changed, 348 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> index 8af1986ed69f..db3395c46f51 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
+> @@ -8,6 +8,67 @@
+>   
+>   #include "coresight-cti.h"
+>   
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- drivers/firmware/meson/meson_sm.c       | 2 ++
- include/linux/firmware/meson/meson_sm.h | 2 ++
- 2 files changed, 4 insertions(+)
+> +/*
+> + * Declare the number of static declared attribute groups
+> + * Value includes groups + NULL value at end of table.
+> + */
+> +#define CORESIGHT_CTI_STATIC_GROUPS_MAX 5
+> +
 
-diff --git a/drivers/firmware/meson/meson_sm.c b/drivers/firmware/meson/meson_sm.c
-index 17fdd46..a17da5a 100644
---- a/drivers/firmware/meson/meson_sm.c
-+++ b/drivers/firmware/meson/meson_sm.c
-@@ -44,6 +44,8 @@ static const struct meson_sm_chip gxbb_chip = {
- 		CMD(SM_EFUSE_WRITE,	0x82000031),
- 		CMD(SM_EFUSE_USER_MAX,	0x82000033),
- 		CMD(SM_GET_CHIP_ID,	0x82000044),
-+		CMD(SM_A1_PWRC_SET,	0x82000093),
-+		CMD(SM_A1_PWRC_GET,	0x82000095),
- 		{ /* sentinel */ },
- 	},
- };
-diff --git a/include/linux/firmware/meson/meson_sm.h b/include/linux/firmware/meson/meson_sm.h
-index 6669e2a..95b0da2 100644
---- a/include/linux/firmware/meson/meson_sm.h
-+++ b/include/linux/firmware/meson/meson_sm.h
-@@ -12,6 +12,8 @@ enum {
- 	SM_EFUSE_WRITE,
- 	SM_EFUSE_USER_MAX,
- 	SM_GET_CHIP_ID,
-+	SM_A1_PWRC_SET,
-+	SM_A1_PWRC_GET,
- };
- 
- struct meson_sm_firmware;
--- 
-2.7.4
+minor nit: see below.
 
+> +static struct attribute_group *
+> +cti_create_con_sysfs_group(struct device *dev, struct cti_device *ctidev,
+> +			   int con_idx, struct cti_trig_con *tc)
+> +{
+> +	struct attribute_group *group = NULL;
+> +	int grp_idx;
+> +
+> +	group = devm_kzalloc(dev, sizeof(struct attribute_group), GFP_KERNEL);
+> +	if (!group)
+> +		return NULL;
+> +
+> +	group->name = devm_kasprintf(dev, GFP_KERNEL, "triggers%d", con_idx);
+> +	if (!group->name)
+> +		return NULL;
+> +
+> +	grp_idx = con_idx + CORESIGHT_CTI_STATIC_GROUPS_MAX - 1;
+> +	ctidev->con_groups[grp_idx] = group;
+> +	tc->attr_group = group;
+> +	return group;
+> +}
+> +
+
+> +	if (tc->con_out->nr_sigs > 0) {
+> +		err = cti_create_con_sysfs_attr(dev, tc,
+> +						CTI_CON_ATTR_TRIGOUT_SIG,
+> +						attr_idx++);
+> +		if (err)
+> +			return err;
+> +
+> +		err = cti_create_con_sysfs_attr(dev, tc,
+> +						CTI_CON_ATTR_TRIGOUT_TYPES,
+> +						attr_idx++);
+> +		if (err)
+> +			return err;
+> +	}
+> +	attr_group->attrs = tc->con_attrs;
+> +	return 0;
+> +}
+> +
+> +/* create the array of group pointers for the CTI sysfs groups */
+> +int cti_create_cons_groups(struct device *dev, struct cti_device *ctidev)
+> +{
+> +	int nr_groups;
+> +
+> +	/* nr groups - dynamic + static + NULL terminator */
+
+nit: nr_groups = ?
+
+> +	nr_groups = ctidev->nr_trig_con + CORESIGHT_CTI_STATIC_GROUPS_MAX;
+> +	ctidev->con_groups = devm_kcalloc(dev, nr_groups,
+> +					  sizeof(struct attribute_group *),
+> +					  GFP_KERNEL);
+> +	if (!ctidev->con_groups)
+> +		return -ENOMEM;
+> +	return 0;
+> +}
+
+
+> +/* attribute and group sysfs tables. */
+>   static const struct attribute_group coresight_cti_group = {
+>   	.attrs = coresight_cti_attrs,
+>   };
+> @@ -837,7 +1165,8 @@ static const struct attribute_group coresight_cti_channels_group = {
+>   	.name = "channels",
+>   };
+>   
+> -const struct attribute_group *coresight_cti_groups[] = {
+> +const struct attribute_group *
+> +coresight_cti_groups[CORESIGHT_CTI_STATIC_GROUPS_MAX] = {
+>   	&coresight_cti_group,
+>   	&coresight_cti_mgmt_group,
+>   	&coresight_cti_regs_group,
+
+minor nit: You may as well do :
+
+corsight_cti_groups[] = {
+   ...
+   ....
+}
+
+#define CORESIGHT_CTI_STATIC_GROUPS_MAX 	\
+		ARRAY_SIZE(coresight_cti_groups) + 1
+
+To avoid hard coding the number 5. Of course that would involve a
+forward declaration, so can ignore it for the time being.
+
+
+With the comment fixed, above:
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
