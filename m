@@ -2,90 +2,154 @@ Return-Path: <SRS0=kWYo=3E=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62777C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE40C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3AA2467C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00ACC24658
+	for <linux-devicetree@archiver.kernel.org>; Wed, 15 Jan 2020 01:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579052630;
-	bh=K1vdv555i7iJrBG3u0JkNMCNgm1k+yE+CLAdV/EOybM=;
+	s=default; t=1579052731;
+	bh=RXCqTAs9B9sfiSzDG+Hn4rEic0C5Kj+LfKOUrqaq63A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=srhn0iOjspgEZgaHPijS+gGaojvUQQir+0nK2JWtu3WDEFD3Q9ZEWrN+Rs4f8x+bl
-	 fWdQvmFoaIb5TGpF11xfYv6HqTpkhkqgRBidZK9zrxJUGu48FlAwQMSGPjqOXMPgUq
-	 oBrVIzsCl02vPEgwypI4zIemNbdmm7i4+q4Tsw0Y=
+	b=ZciTkEE8lrk0uSboHwDdpY9L8EXpyCZLLMWFAlcfe2dSRhVNMsKwLzn1oMFels6Nu
+	 VqUIanlkhllg8zHMcBHdlPnGtJdIfQr6yQqfhGrI2Hz+LEY70YmJRbhr07w4IxybZS
+	 6cbYL5c0AEl0B1DNXNZZrXCGmWNWtNoTw+Vyu0i8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgAOBnt (ORCPT
+        id S1728977AbgAOBpa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 14 Jan 2020 20:43:49 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44595 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgAOBnt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 20:43:49 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d62so13862150oia.11
-        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 17:43:49 -0800 (PST)
+        Tue, 14 Jan 2020 20:45:30 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38675 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728963AbgAOBp3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 14 Jan 2020 20:45:29 -0500
+Received: by mail-ot1-f65.google.com with SMTP id z9so12565888oth.5
+        for <devicetree@vger.kernel.org>; Tue, 14 Jan 2020 17:45:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iLGTssc9FHCMcOGMTyr/UYKoEZZS9tYZ4rHOO35XpvA=;
-        b=aDLWixq+Nku26aEWiOTAvKMt5Bn805MkbO3TZz7iToTowy3xXr/WJNhAUZfnU8HIpD
-         9CaZ3CUhM2Zu/PEe6WKaF7a2UxE12HAiip7bRzKRenK3WrxiUZa0450cT1rmuhzrS8jx
-         kkquM6fB+cYsnYYSAc72eS2t3/QCO9WPv9ROpH76iNpk800Jnv+U9gMYXzrfbTkUCsEt
-         P/sWYXR4OJ5UzoERHQXt6kp9yQGJ5IqxHEVQM8VDpvo21/Q2slTBkB0EXJL5540nOqM8
-         PvUx8O6zSM017DJ1ggbc+68lUuU2DxQFzf1Ki+IGcrgXxaZqpe/9Rc30m/qhF5/tVWtm
-         +2Qw==
-X-Gm-Message-State: APjAAAXwRvBalFlJ50dFPy7fdyMJTGGAMPNWjMJa87Cugb/b89eXXPeN
-        R6Z3rEtvKZbY9SoV3RJXCe0kxWE=
-X-Google-Smtp-Source: APXvYqwdMuuhdr1Fw7XWYw42J3uYNkkT9I7f0IJMr70h+sduJSL8osiL1CUnBOmUvI7pRXKZ93h1gA==
-X-Received: by 2002:aca:cc87:: with SMTP id c129mr18551956oig.13.1579052628465;
-        Tue, 14 Jan 2020 17:43:48 -0800 (PST)
+        bh=3bD/LT4C3MC6J/wcM/SaP9VxFISKGm7IY0gKpOMd0Pg=;
+        b=i0ZtPoxqbHkGBPfSWZH8W9IJGgvu656jHzsaT2eUjT6/5JxpeoXK+m42Lc62fAy5ud
+         nLJUQ8fJY3DKLO8/TX+9G7677HDX0Ee2EqEwHtUV8WYtn9FnZODkGqZPVPGVMR92W9jw
+         e7v0MR833H9jvfjMH02HeQiMPWB1ER1dc6mOhGDpnA6hlNKkIuhrfh1MOTfJOPzAFng1
+         f+oeeP+3bbwvd9wpVjkMEazrMtGkLoTbrxfXfej7j8RbnFdlHgQVMl1tYQake47oXXr0
+         qVeK3fXtD3M9hUKgT863OdxQzP3o+8zVN6hd5XdXui8VJd5i9FiqeT/28ikXEaPOVP3r
+         3zBQ==
+X-Gm-Message-State: APjAAAXGOorjR4fB10PIdOasZ1ZMRj1ss48Y4N7OD1TxV0/T9ZBehcix
+        Idj3UQKux09gvEO5WUOvMJSmPHw=
+X-Google-Smtp-Source: APXvYqw6aay13JnjIqelHI73ti12hW6Bx0O7Ec4v77z0DWvCK9lXMkfdIY5JeDqGu9Nk6uvW4dBDUw==
+X-Received: by 2002:a05:6830:147:: with SMTP id j7mr1080321otp.44.1579052728540;
+        Tue, 14 Jan 2020 17:45:28 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 26sm5276715oij.9.2020.01.14.17.43.47
+        by smtp.gmail.com with ESMTPSA id t13sm6016223otp.33.2020.01.14.17.45.27
         for <devicetree@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 17:43:47 -0800 (PST)
+        Tue, 14 Jan 2020 17:45:28 -0800 (PST)
 Received: from rob (uid 1000)
         (envelope-from rob@rob-hp-laptop)
-        id 220a2e
+        id 2209ae
         by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Tue, 14 Jan 2020 19:43:46 -0600
-Date:   Tue, 14 Jan 2020 19:43:46 -0600
+        Tue, 14 Jan 2020 19:40:26 -0600
+Date:   Tue, 14 Jan 2020 19:40:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, linux@roeck-us.net,
-        robh+dt@kernel.org, lee.jones@linaro.org,
-        stwiss.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 2/3] dt-bindings: watchdog: da9062: add suspend disable
- option
-Message-ID: <20200115014346.GA20553@bogus>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-3-m.felsch@pengutronix.de>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/7] dt-bindings: PCI: cadence: Add binding to specify
+ max virtual functions
+Message-ID: <20200115014026.GA10726@bogus>
+References: <20191231113534.30405-1-kishon@ti.com>
+ <20191231113534.30405-3-kishon@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200108095704.23233-3-m.felsch@pengutronix.de>
+In-Reply-To: <20191231113534.30405-3-kishon@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed,  8 Jan 2020 10:57:03 +0100, Marco Felsch wrote:
-> Document the watchdog disable option which can be used if the hardware
-> automatic suspend option is broken.
+On Tue, Dec 31, 2019 at 05:05:29PM +0530, Kishon Vijay Abraham I wrote:
+> Add binding to specify maximum number of virtual functions that can be
+> associated with each physical function.
 > 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  Documentation/devicetree/bindings/watchdog/da9062-wdt.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.txt         | 2 ++
+>  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml          | 8 ++++++++
+>  2 files changed, 10 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> index 4a0475e2ba7e..432578202733 100644
+> --- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+> @@ -9,6 +9,8 @@ Required properties:
+>  
+>  Optional properties:
+>  - max-functions: Maximum number of functions that can be configured (default 1).
+> +- max-virtual-functions: Maximum number of virtual functions that can be
+> +    associated with each physical function.
+>  - phys: From PHY bindings: List of Generic PHY phandles. One per lane if more
+>    than one in the list.  If only one PHY listed it must manage all lanes. 
+>  - phy-names:  List of names to identify the PHY.
+> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> index 4621c62016c7..1d4964ba494f 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> @@ -61,6 +61,12 @@ properties:
+>      minimum: 1
+>      maximum: 6
+>  
+> +  max-virtual-functions:
+> +    minItems: 1
+> +    maxItems: 6
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is there a PCIe spec limit to number of virtual functions per phy 
+function? Or 2^32 virtual functions is okay.
+
+> +    description: As defined in
+> +                 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
+
+I suspect this this be a common property.
+
+> +
+>    dma-coherent:
+>      description: Indicates that the PCIe IP block can ensure the coherency
+>  
+> @@ -85,6 +91,7 @@ required:
+>    - cdns,max-outbound-regions
+>    - dma-coherent
+>    - max-functions
+> +  - max-virtual-functions
+>    - phys
+>    - phy-names
+>  
+> @@ -107,6 +114,7 @@ examples:
+>              clock-names = "fck";
+>              cdns,max-outbound-regions = <16>;
+>              max-functions = /bits/ 8 <6>;
+> +            max-virtual-functions = /bits/ 16 <4 4 4 4 0 0>;
+>              dma-coherent;
+>              phys = <&serdes0_pcie_link>;
+>              phy-names = "pcie_phy";
+> -- 
+> 2.17.1
+> 
