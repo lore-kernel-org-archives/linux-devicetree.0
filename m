@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3436C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B352C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CC42077B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3674A2077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202287;
-	bh=MjlK7QQIMLtiwZMtfGCJVeq9TdAvUUqsvkIw//F19u4=;
+	s=default; t=1579202383;
+	bh=xvHqfVT/E2GqwmWVQb2umdeJqV6UyBgQpfwGOvbEd3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PqEXwVNRvIJCBK+h6JF/VVLvxN6ufywx7C9pzmhSXIRF1dJZ1Dyc2nyaSAAXGX4pZ
-	 2Jn67p1CeQdACQDQ1I+KLxC8yfwSZC4sCUF4mf1kUEYHOh6OrlkzI2ae1+k+mHneaA
-	 9s0xHEEBNShS1JGBe0legKdjuTT2QQWRENFHojQA=
+	b=aPE99BLVVzWbU7Odn++hPiUClIm2tverZzqTN4j7uHJD83HpVxPe5Zn9k9MdpzWT1
+	 jmPEpR8kPJP/7w8Qt1GKrp63BF2U1d5rRbHSnyv8SQ7GSAZGqTXqtV7fG853Rp2os9
+	 HEU58IosD/FaL806mPS6Z9yn0xTxPjw8+Y7RAX20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731035AbgAPQzI (ORCPT
+        id S1731091AbgAPTTm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40070 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:19:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730682AbgAPQzH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:07 -0500
+        id S1731636AbgAPQyN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5175824656;
-        Thu, 16 Jan 2020 16:55:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F4672464B;
+        Thu, 16 Jan 2020 16:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193707;
-        bh=MjlK7QQIMLtiwZMtfGCJVeq9TdAvUUqsvkIw//F19u4=;
+        s=default; t=1579193653;
+        bh=xvHqfVT/E2GqwmWVQb2umdeJqV6UyBgQpfwGOvbEd3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3M2P9jzaa7mcugPnfOPRFF9X8/u49Ud+/aiXknYZw7HKRJLJ4Ubrooxt1ae1U7zX
-         kgFPpNwxY4BN/6py4PNSBFXxHLfsZq+WXSRnK8ClU77BiG4fAlgcBj3kRmvvALmKuV
-         XVMIxe6TDo72wJxE4wGRZJTvexy2R+i9O2cxL7+A=
+        b=n0UbG5JE/BWHBPhtR5H3+H7bvvmReUWx8HE1n7Jfo7BXUD5SakYdZGkNVtlQ2R99S
+         JIZkxS2MtKCtHm2JByIBBouiqHhDsdQZkjbffslkHOcHNgM8N84HR0MMLYMqj49pHw
+         UWzBVw3kL+by12NegW9Ulc/JFuAwQfEIA22EzxY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Rosin <peda@axentia.se>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 003/671] ARM: dts: at91: nattis: make the SD-card slot work
-Date:   Thu, 16 Jan 2020 11:43:54 -0500
-Message-Id: <20200116165502.8838-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 182/205] Revert "arm64: dts: juno: add dma-ranges property"
+Date:   Thu, 16 Jan 2020 11:42:37 -0500
+Message-Id: <20200116164300.6705-182-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
-References: <20200116165502.8838-1-sashal@kernel.org>
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,34 +63,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit f52eb2067929d533babe106fbc131c88db3eff3d ]
+[ Upstream commit 54fb3fe0f211d4729a2551cf9497bd612189af9d ]
 
-The cd-gpios signal is assumed active-low by the driver, and the
-cd-inverted property is needed if it is, in fact, active-high. Fix
-this oversight.
+This reverts commit 193d00a2b35ee3353813b4006a18131122087205.
 
-Fixes: 0e4323899973 ("ARM: dts: at91: add devicetree for the Axentia Nattis with Natte power")
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Commit 951d48855d86 ("of: Make of_dma_get_range() work on bus nodes")
+reworked the logic such that of_dma_get_range() works correctly
+starting from a bus node containing "dma-ranges".
+
+Since on Juno we don't have a SoC level bus node and "dma-ranges" is
+present only in the root node, we get the following error:
+
+OF: translation of DMA address(0) to CPU address failed node(/sram@2e000000)
+OF: translation of DMA address(0) to CPU address failed node(/uart@7ff80000)
+...
+OF: translation of DMA address(0) to CPU address failed node(/mhu@2b1f0000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+
+So let's fix it by dropping the "dma-ranges" property for now. This
+should be fine since it doesn't represent any kind of device-visible
+restriction; it was only there for completeness, and we've since given
+in to the assumption that missing "dma-ranges" implies a 1:1 mapping
+anyway.
+
+We can add it later with a proper SoC bus node and moving all the
+devices that belong there along with the "dma-ranges" if required.
+
+Fixes: 193d00a2b35e ("arm64: dts: juno: add dma-ranges property")
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-index bfa5815a0721..4308a07b792e 100644
---- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-+++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
-@@ -221,6 +221,7 @@
- 		reg = <0>;
- 		bus-width = <4>;
- 		cd-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+		cd-inverted;
- 	};
- };
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 26a039a028b8..8c11660bbe40 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -6,7 +6,6 @@
+ 	/*
+ 	 *  Devices shared by all Juno boards
+ 	 */
+-	dma-ranges = <0 0 0 0 0x100 0>;
  
+ 	memtimer: timer@2a810000 {
+ 		compatible = "arm,armv7-timer-mem";
 -- 
 2.20.1
 
