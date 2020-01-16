@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDD3C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3436C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764492077C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2CC42077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202222;
-	bh=pe9gi9seQl7hcW9P43+6bjO+7AKVzu18za24nVIwzT4=;
+	s=default; t=1579202287;
+	bh=MjlK7QQIMLtiwZMtfGCJVeq9TdAvUUqsvkIw//F19u4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGH8Nq7xsrNVFD7rqnwSAsd38U34gSaVgAJ5Jexh8I2HOw3TmDnPuFV6tSE62dZIl
-	 RyRiYEh869zoWcR8I75+HxxCARXusVHCAgwv8Yv+sSFyABTWlCf1gGCi1CQIShwNHA
-	 8A7VVvp2cUPDYPBnM9qFld3vcgzrmFM9+1MI4Z3E=
+	b=PqEXwVNRvIJCBK+h6JF/VVLvxN6ufywx7C9pzmhSXIRF1dJZ1Dyc2nyaSAAXGX4pZ
+	 2Jn67p1CeQdACQDQ1I+KLxC8yfwSZC4sCUF4mf1kUEYHOh6OrlkzI2ae1+k+mHneaA
+	 9s0xHEEBNShS1JGBe0legKdjuTT2QQWRENFHojQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbgAPQzh (ORCPT
+        id S1731035AbgAPQzI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41046 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:55:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733073AbgAPQzh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:55:37 -0500
+        id S1730682AbgAPQzH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:55:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A787D214AF;
-        Thu, 16 Jan 2020 16:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5175824656;
+        Thu, 16 Jan 2020 16:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193736;
-        bh=pe9gi9seQl7hcW9P43+6bjO+7AKVzu18za24nVIwzT4=;
+        s=default; t=1579193707;
+        bh=MjlK7QQIMLtiwZMtfGCJVeq9TdAvUUqsvkIw//F19u4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCvTdUf1f5/rwoQlS+84xfCo1D18fieMfjhijJJGVWcW6Jd8cM1thiWv0a200kPam
-         /ZX9vAXXf+wbHUklEjNL5sBygk2y46e6yCFjTayhb0YO1uWxRYXk7ooyhp8sXGvIh2
-         fC33AezEgTMba1UG0pPtKvL/92QhId7PeJ4vlQTA=
+        b=t3M2P9jzaa7mcugPnfOPRFF9X8/u49Ud+/aiXknYZw7HKRJLJ4Ubrooxt1ae1U7zX
+         kgFPpNwxY4BN/6py4PNSBFXxHLfsZq+WXSRnK8ClU77BiG4fAlgcBj3kRmvvALmKuV
+         XVMIxe6TDo72wJxE4wGRZJTvexy2R+i9O2cxL7+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 028/671] of: Fix property name in of_node_get_device_type
-Date:   Thu, 16 Jan 2020 11:44:19 -0500
-Message-Id: <20200116165502.8838-28-sashal@kernel.org>
+Cc:     Peter Rosin <peda@axentia.se>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 003/671] ARM: dts: at91: nattis: make the SD-card slot work
+Date:   Thu, 16 Jan 2020 11:43:54 -0500
+Message-Id: <20200116165502.8838-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -59,36 +60,34 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Peter Rosin <peda@axentia.se>
 
-[ Upstream commit 5d5a0ab1a7918fce5ca5c0fb1871a3e2000f85de ]
+[ Upstream commit f52eb2067929d533babe106fbc131c88db3eff3d ]
 
-Commit 0413bedabc88 ("of: Add device_type access helper functions")
-added a new helper not yet used in preparation for some treewide clean
-up of accesses to 'device_type' properties. Unfortunately, there's an
-error and 'type' was used for the property name. Fix this.
+The cd-gpios signal is assumed active-low by the driver, and the
+cd-inverted property is needed if it is, in fact, active-high. Fix
+this oversight.
 
-Fixes: 0413bedabc88 ("of: Add device_type access helper functions")
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: 0e4323899973 ("ARM: dts: at91: add devicetree for the Axentia Nattis with Natte power")
+Signed-off-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/of.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d5a863c1ee39..dac0201eacef 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1001,7 +1001,7 @@ static inline struct device_node *of_find_matching_node(
+diff --git a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+index bfa5815a0721..4308a07b792e 100644
+--- a/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
++++ b/arch/arm/boot/dts/at91-nattis-2-natte-2.dts
+@@ -221,6 +221,7 @@
+ 		reg = <0>;
+ 		bus-width = <4>;
+ 		cd-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
++		cd-inverted;
+ 	};
+ };
  
- static inline const char *of_node_get_device_type(const struct device_node *np)
- {
--	return of_get_property(np, "type", NULL);
-+	return of_get_property(np, "device_type", NULL);
- }
- 
- static inline bool of_node_is_type(const struct device_node *np, const char *type)
 -- 
 2.20.1
 
