@@ -2,136 +2,80 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C24FC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73140C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEC12087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="U6P8jg0B"
+	by mail.kernel.org (Postfix) with ESMTP id 4E21C2073A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbgAPITx (ORCPT
+        id S1729858AbgAPItq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:19:53 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:60660 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729472AbgAPITw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 03:19:52 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G8J8WG007057;
-        Thu, 16 Jan 2020 09:19:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=VA1LsnuX6faMUJQvhZzy7LZ3v6e2+z9OibnTE+vdYBA=;
- b=U6P8jg0BIbNy7cmOlAkekIOtLTvBcQWP2OfQAz266SLdRno96feVCD7rFVSbtYBcmf9r
- /vkaOcoxV+sh5Ds8roj0Ewf9yQhAUnRdeMG1c3d5YBRYnYjEmOnDU2vtWSrq+8BfaE7L
- 2BFu4e0SJRxu986Wq+HbXyp6OvP/YCT0g8nZEbvlC2ox8MlJbsSiLTPBGPXqwxtzC1yp
- NGYl2k/sCVD8EjT2VXYXwwvHFtvbDovGotVvEv+lDfa3ojLtfykalS2Xq2GN65jGrkN5
- d7kZSTFe1rYgbfQIV6wu++Vm6/+qyHM9tl4cC2qoPVroNUWLkA6wq15iOzTsoMt8TtjS UQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf77b7qcr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 09:19:31 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 399A8100034;
-        Thu, 16 Jan 2020 09:19:23 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B786C21CA8C;
-        Thu, 16 Jan 2020 09:19:23 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 Jan
- 2020 09:19:23 +0100
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-To:     Frank Rowand <frowand.list@gmail.com>, <robh+dt@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        <david@gibson.dropbear.id.au>, <sjg@chromium.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kbuild@vger.kernel.org>,
-        <devicetree-compiler@vger.kernel.org>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
-Date:   Thu, 16 Jan 2020 09:19:22 +0100
+        Thu, 16 Jan 2020 03:49:46 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54644 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgAPItq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 03:49:46 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id F332F2938AD
+Subject: Re: [PATCH v3 2/3] arm64: dts: mt8173: add uart aliases
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Daniel Kurtz <djkurtz@chromium.org>
+References: <20200116051209.37970-1-hsinyi@chromium.org>
+ <20200116051209.37970-3-hsinyi@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <b53e1bab-2f0e-07f0-4540-810e34b81e48@collabora.com>
+Date:   Thu, 16 Jan 2020 09:49:40 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200116051209.37970-3-hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Franck,
+Hi Hsin-Yi,
 
-On 1/16/20 3:28 AM, Frank Rowand wrote:
-> On 1/13/20 12:16 PM, Alexandre Torgue wrote:
->> Hi,
->>
->> The goal of this series is to add device tree build information in dtb.
->> This information can be dtb build date, where devicetree files come from,
->> who built the dtb ... Actually, same kind of information that you can find
->> in the Linux banner which is printout during kernel boot. Having the same
->> kind of information for device tree is useful for debugging and maintenance.
->>
->> To achieve that a new option "-B" (using an argument) is added to dtc.
->> The argument is a file containing a string with build information
->> (e.g., From Linux 5.5.0-rc1 by alex the Mon Jan 13 18:25:38 CET 2020).
->> DTC use it to append dts file with a new string property "Build-info".
->>
->> of/fdt.c is modified to printout "Build-info" property during Kernel boot and
->> scripts/Makefile.lib is modified to use dtc -B option during kernel make (this
->> last part could be improved for sure).
+On 16/1/20 6:12, Hsin-Yi Wang wrote:
+> Add serial as uart aliases in mt8173.
 > 
-> Please read through the thread at:
-> 
->    https://lore.kernel.org/linux-arm-kernel/550A42AC.8060104@gmail.com/
-> 
-> which was my attempt to do something similar.
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 
-Yes the idea is the same: get build DTB information like build date, 
-"who built the DTB" ... The difference seems to be the way to do it. In 
-my case, I don't want to modify existing dts source files., but I "just" 
-append them by creating a new property with a string containing this 
-build information.
+Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Why your proposition has not been accepted ?
-
-Regards
-Alex
-
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> -Frank
-> 
->>
->> Regards
->> Alex
->>
->> Alexandre Torgue (3):
->>    dtc: Add dtb build information option
->>    of: fdt: print dtb build information
->>    scripts: Use -B dtc option to generate dtb build information.
->>
->>   drivers/of/fdt.c           |  9 +++++++
->>   scripts/Makefile.lib       | 11 +++++---
->>   scripts/dtc/dtc.c          | 55 +++++++++++++++++++++++++++++++++-----
->>   scripts/gen_dtb_build_info | 11 ++++++++
->>   4 files changed, 76 insertions(+), 10 deletions(-)
->>   create mode 100755 scripts/gen_dtb_build_info
->>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 8b4e806d5119..790cd64aa447 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -50,6 +50,10 @@ aliases {
+>  		mdp_wdma0 = &mdp_wdma0;
+>  		mdp_wrot0 = &mdp_wrot0;
+>  		mdp_wrot1 = &mdp_wrot1;
+> +		serial0 = &uart0;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +		serial3 = &uart3;
+>  	};
+>  
+>  	cluster0_opp: opp_table0 {
 > 
