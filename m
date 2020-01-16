@@ -2,53 +2,53 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90567C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DE3C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6797D207FF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94AF2087E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193378;
-	bh=xFQ1TY2O7jmGgWqGg6Fdp/3dyc3nfW0IkOm+JatatA4=;
+	s=default; t=1579193499;
+	bh=riCbW41Z9jUVS5yqALMdPXD9X7VSAfqTmqdQlmEHQ0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rViDa3NLD8bCcSfYdMrdDPDIhnP/jnO8+l7t0E9TxP901tE0WAP1kslaiQC+G4vn9
-	 E+l8sSVlmi7zlqeZa9x4csI6wx/+a5fPUeluCO7T0KsdwT23WO2+znbwOQG1q55usO
-	 nEgqG3Zv2e8H3P3yCz2vNPGbPzcNTWOIeOTMck/I=
+	b=nNTglN/JyXZAWtmc2223kUcmOQab18qFUEPGUPdC7HmLxN0c4yaBFrt5T352DIYk6
+	 Z/r7dHyNdZsp1BbWzdnM6BSnEFGZfxBrSGyHERA/gfhaftni6jyroBtKlnNhkAh29q
+	 F0n9KAf1CMsj2QuvZCTbJNBy+yaoj8okMYH/6WLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgAPQsV (ORCPT
+        id S1729262AbgAPQvf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:48:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58588 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:51:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729165AbgAPQsU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:48:20 -0500
+        id S1727005AbgAPQve (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:51:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F33242081E;
-        Thu, 16 Jan 2020 16:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63C8F205F4;
+        Thu, 16 Jan 2020 16:51:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193300;
-        bh=xFQ1TY2O7jmGgWqGg6Fdp/3dyc3nfW0IkOm+JatatA4=;
+        s=default; t=1579193493;
+        bh=riCbW41Z9jUVS5yqALMdPXD9X7VSAfqTmqdQlmEHQ0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bL7xFort8+3XdTHshSIfZ6mttOxwCDgLPlA8MS261EPR0YplPoQJqZWwcI8rlPy74
-         tnJK4LNo9UAjmNibvXTGx/4mqObYO2tXpYw90IrqYjr3CbJZSC8qvJRTgZT3tM6XJ7
-         R52hLM6nZbayrYw9w0/u2YCHiqiIg+HE6eX3Pu7c=
+        b=yBvwnYhWgEHv+AoHZHVTb1TgSccROuHUaA9GaIeMt0cEaetRnrg137eAVAvtkU2ls
+         bv4cyEliBqwYXoG6v2QTSMdZH8Bj1j2uj5wegWacSoHratAblWTyZIpQGUyZ4Tdjio
+         Q76RxGVFOcnK5zJcwHwDbNfUOZw66/MfmiKYYqWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>,
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 069/205] arm64: dts: qcom: sdm845-cheza: delete zap-shader
-Date:   Thu, 16 Jan 2020 11:40:44 -0500
-Message-Id: <20200116164300.6705-69-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 090/205] arm64: dts: qcom: msm8998: Disable coresight by default
+Date:   Thu, 16 Jan 2020 11:41:05 -0500
+Message-Id: <20200116164300.6705-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,58 +61,330 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-[ Upstream commit 43b0a4b482478aa4fe7240230be74a79dee95679 ]
+[ Upstream commit a636f93fcdb4a516e7cba6a365645ee8429602b2 ]
 
-This is unused on cheza.  Delete the node to get ride of the reserved-
-memory section, and to avoid the driver from attempting to load a zap
-shader that doesn't exist every time it powers up the GPU.
+Boot failure has been reported on MSM8998 based laptop when
+coresight is enabled. This is most likely due to lack of
+firmware support for coresight on production device when
+compared to debug device like MTP where this issue is not
+observed. So disable coresight by default for MSM8998 and
+enable it only for MSM8998 MTP.
 
-This also avoids a massive amount of dmesg spam about missing zap fw:
-  msm ae00000.mdss: [drm:adreno_request_fw] *ERROR* failed to load
-qcom/a630_zap.mdt: -2
-  adreno 5000000.gpu: [drm:adreno_zap_shader_load] *ERROR* Unable to
-load a630_zap.mdt
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Fixes: 3fdeaee951aa ("arm64: dts: sdm845: Add zap shader region for GPU")
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Andy Gross <agross@kernel.org>
+Reported-and-tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Fixes: 783abfa2249a ("arm64: dts: qcom: msm8998: Add Coresight support")
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 68 +++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi     | 51 +++++++++++------
+ 2 files changed, 102 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 34881c0113cb..99a28d64ee62 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -165,6 +165,8 @@
- /delete-node/ &venus_mem;
- /delete-node/ &cdsp_mem;
- /delete-node/ &cdsp_pas;
-+/delete-node/ &zap_shader;
-+/delete-node/ &gpu_mem;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 108667ce4f31..8d15572d18e6 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -27,6 +27,66 @@
+ 	status = "okay";
+ };
  
- /* Increase the size from 120 MB to 128 MB */
- &mpss_region {
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index f406a4340b05..2287354fef86 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2824,7 +2824,7 @@
++&etf {
++	status = "okay";
++};
++
++&etm1 {
++	status = "okay";
++};
++
++&etm2 {
++	status = "okay";
++};
++
++&etm3 {
++	status = "okay";
++};
++
++&etm4 {
++	status = "okay";
++};
++
++&etm5 {
++	status = "okay";
++};
++
++&etm6 {
++	status = "okay";
++};
++
++&etm7 {
++	status = "okay";
++};
++
++&etm8 {
++	status = "okay";
++};
++
++&etr {
++	status = "okay";
++};
++
++&funnel1 {
++	status = "okay";
++};
++
++&funnel2 {
++	status = "okay";
++};
++
++&funnel3 {
++	status = "okay";
++};
++
++&funnel4 {
++	status = "okay";
++};
++
++&funnel5 {
++	status = "okay";
++};
++
+ &pm8005_lsid1 {
+ 	pm8005-regulators {
+ 		compatible = "qcom,pm8005-regulators";
+@@ -51,6 +111,10 @@
+ 	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
+ };
  
- 			qcom,gmu = <&gmu>;
++&replicator1 {
++	status = "okay";
++};
++
+ &rpm_requests {
+ 	pm8998-regulators {
+ 		compatible = "qcom,rpm-pm8998-regulators";
+@@ -249,6 +313,10 @@
+ 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+ };
  
--			zap-shader {
-+			zap_shader: zap-shader {
- 				memory-region = <&gpu_mem>;
++&stm {
++	status = "okay";
++};
++
+ &ufshc {
+ 	vcc-supply = <&vreg_l20a_2p95>;
+ 	vccq-supply = <&vreg_l26a_1p2>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index c6f81431983e..ffb64fc239ee 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -998,11 +998,12 @@
+ 			#interrupt-cells = <0x2>;
+ 		};
+ 
+-		stm@6002000 {
++		stm: stm@6002000 {
+ 			compatible = "arm,coresight-stm", "arm,primecell";
+ 			reg = <0x06002000 0x1000>,
+ 			      <0x16280000 0x180000>;
+ 			reg-names = "stm-base", "stm-data-base";
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1016,9 +1017,10 @@
  			};
+ 		};
  
+-		funnel@6041000 {
++		funnel1: funnel@6041000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x06041000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1045,9 +1047,10 @@
+ 			};
+ 		};
+ 
+-		funnel@6042000 {
++		funnel2: funnel@6042000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x06042000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1075,9 +1078,10 @@
+ 			};
+ 		};
+ 
+-		funnel@6045000 {
++		funnel3: funnel@6045000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x06045000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1113,9 +1117,10 @@
+ 			};
+ 		};
+ 
+-		replicator@6046000 {
++		replicator1: replicator@6046000 {
+ 			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
+ 			reg = <0x06046000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1137,9 +1142,10 @@
+ 			};
+ 		};
+ 
+-		etf@6047000 {
++		etf: etf@6047000 {
+ 			compatible = "arm,coresight-tmc", "arm,primecell";
+ 			reg = <0x06047000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1163,9 +1169,10 @@
+ 			};
+ 		};
+ 
+-		etr@6048000 {
++		etr: etr@6048000 {
+ 			compatible = "arm,coresight-tmc", "arm,primecell";
+ 			reg = <0x06048000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1181,9 +1188,10 @@
+ 			};
+ 		};
+ 
+-		etm@7840000 {
++		etm1: etm@7840000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07840000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1200,9 +1208,10 @@
+ 			};
+ 		};
+ 
+-		etm@7940000 {
++		etm2: etm@7940000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07940000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1219,9 +1228,10 @@
+ 			};
+ 		};
+ 
+-		etm@7a40000 {
++		etm3: etm@7a40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07a40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1238,9 +1248,10 @@
+ 			};
+ 		};
+ 
+-		etm@7b40000 {
++		etm4: etm@7b40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07b40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1257,9 +1268,10 @@
+ 			};
+ 		};
+ 
+-		funnel@7b60000 { /* APSS Funnel */
++		funnel4: funnel@7b60000 { /* APSS Funnel */
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07b60000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1343,9 +1355,10 @@
+ 			};
+ 		};
+ 
+-		funnel@7b70000 {
++		funnel5: funnel@7b70000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x07b70000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1369,9 +1382,10 @@
+ 			};
+ 		};
+ 
+-		etm@7c40000 {
++		etm5: etm@7c40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07c40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1385,9 +1399,10 @@
+ 			};
+ 		};
+ 
+-		etm@7d40000 {
++		etm6: etm@7d40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07d40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1401,9 +1416,10 @@
+ 			};
+ 		};
+ 
+-		etm@7e40000 {
++		etm7: etm@7e40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07e40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1417,9 +1433,10 @@
+ 			};
+ 		};
+ 
+-		etm@7f40000 {
++		etm8: etm@7f40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07f40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
 -- 
 2.20.1
 
