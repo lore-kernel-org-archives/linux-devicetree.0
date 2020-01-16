@@ -2,196 +2,608 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07160C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E34C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2600214AF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFD621582
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:24:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UJXZDAdk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388411AbgAPSXr (ORCPT
+        id S2388439AbgAPSYh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:23:47 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:48191 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436593AbgAPSXp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 13:23:45 -0500
-Received: from [192.168.1.176] ([37.4.249.101]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N5G1T-1jbQrp2DRt-011Arw; Thu, 16 Jan 2020 19:23:24 +0100
-Subject: Re: [PATCH V5 1/4] dt-bindings: Add Broadcom AVS RO thermal
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Thu, 16 Jan 2020 13:24:37 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35791 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2395503AbgAPSXc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 13:23:32 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so4874770wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 10:23:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=4ihrV30co6zVazCYWQvCe6nMsZS0PmEOQQviJxE2B6s=;
+        b=UJXZDAdkk+CHcFYWj2M6HXmPTbpmNwO6Q89KrfFQBJQd3KsYE5ORvC3KXxZS1HhbZ0
+         vcSoOL3I4c7E0d4rTXzCSPfz+danjc9k8Qj99dt12OziIltpHqCTXSZm9tcYilmbJdxK
+         TPyq9sDXxfpiRA8s/E6c7FFoqFMAgtrpFFwah+LX480H9GkovAcDm8RZ/nFM5fyTMTGy
+         VP6cBAWNzSGJgcEWRUbrAhfOOGoFA8ALo9MRTMSzuJlniwn5v0aT1Ri/3vsZh0/oqmAG
+         9tpZyMoOKdeYwzIw8Us/71AFQLp0LrqNxh1f4PSvPgG4rzveFH6c5Aao8mg4Sz9pEjco
+         284w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=4ihrV30co6zVazCYWQvCe6nMsZS0PmEOQQviJxE2B6s=;
+        b=Y76f3zkPpN51cDcfqW7TJ9M9Lk3i7RPB5goZ9gHqhyEiZYDgZnpXyDNaP0VH2kyLvR
+         VtoRuvsyQM8p4e7HIEODv6ConVpNw182LlT3Jf7Le2fPKsfE2wosfH8U9CVEfj2eTTt3
+         NbU81D5ZN7zlE7+xhcYZOTHUkrRzGngUMOkHfaZhdYsOWcP+q3b5aPYuloId67lwx6uV
+         LIMxrN4/gjtmdCi1Zo+ERms0hC3cgXrBPIOe6Ze+7pv4q1dD2ceyhcR0PlR3W/Wv2nWZ
+         RkeMmj37rKTjC7b3BGdj6fdQLpTemJEnysrdeVnZFg+Y/Hw/KgqnjhognsBB8gflEGs6
+         Jgtw==
+X-Gm-Message-State: APjAAAVIi+7xeJ0GPLX7t1KcglKaCJJO3tlTJe0Cvp9zMbgow1RH14dP
+        AyL3bOl/RJcr+dl6w/e9X9Bbdw==
+X-Google-Smtp-Source: APXvYqwUkeGpIvMBC5nS3MBq8Yb6/WbOBB+xERgB4QOz6VIiDXS8a40oNLUe0PIkvHdFAPaYyhNKFw==
+X-Received: by 2002:a1c:dc85:: with SMTP id t127mr398659wmg.16.1579199009027;
+        Thu, 16 Jan 2020 10:23:29 -0800 (PST)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
+        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 10:23:28 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org
-References: <1578941778-23321-1-git-send-email-stefan.wahren@i2se.com>
- <1578941778-23321-2-git-send-email-stefan.wahren@i2se.com>
- <CAL_Jsq+w0KGE-=XkAwpdqh67pH=V34ETCy8X92L_u1=_8xuKCg@mail.gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- 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 AQ==
-Message-ID: <ca02714a-538e-3057-3fc6-70fb453b411c@i2se.com>
-Date:   Thu, 16 Jan 2020 19:23:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+w0KGE-=XkAwpdqh67pH=V34ETCy8X92L_u1=_8xuKCg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:9Vjz6FFurzI9PFAe4jG8EbOWh/kFLMdLh4diVZ9YcuDZWiR/lQp
- cLeVq5Kw9rn6HSENvz62R+cKi9K5rRo7dXKY0PvBHlUmO+mKa6MJDrHIWiMZo9xeyDtY815
- ueHWz9DCmP2Plt4VQLBgrC2cbwVVljKvh2fmb0jlfnMgw6Brsv4jlyUrtfU4IvuIwYjE1YL
- sW6FtJXPQ0XPg2jcfXtUw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:J4hVp3gooWA=:/holuA9SH0TcrEUOsjYe3v
- CI7/F7YCDkSMr1MiM81G0o6cxfw47kfS/wGz2if3jyPMVaNggWpwZWSPiLSnqK5pTE04tEqXK
- 0dTwHMll3onWKw6yPl/5nXMre5ailVWjKOR/uNPTTXB+hWa8H3ocMUUpuMSAa2Vd8h/0rkdb9
- ohLtdvsOulDSYS+VQV+aOFb7UDTPxa2uGvu7110lWkGuEaiIjjZ3Dtq5NJf35Jal76pO32L5y
- 0wWtjKvrgReeJtj1cFol25prc07OJ02BPfW1lHLkut4TwD3hNdG2XAqbHwJgcl3aBtrJ3vDxE
- 91lg44nZcGAtTIIUIbpi+QUCiwE8JhZxPpwrUZqh+KMjj79qurW4/FgaBdpXkVQcZQsRDTAyi
- iZ3FZL2XIP9T3+hMCq7bFNWaB3DM3stLeerT9ruFdVzNddMaT4U59gltFo6Nfd2lVz+S3Z8bn
- vg3VP03OzpYHTBaTdba1DsLRmu/2CxSNaZba23DgWU0xPYAgIvPHQE/oxPy7D3zn1n03oBJdv
- 9VLeKiF77PYiGs/J+8xZxFrBYQWmbFCWJZx2jbOeS8TsXC5YWuZAc1IpExiClNBN3yHeRfNnB
- 5rkTAmUu+mGKNeyyewXszQjZC6zzq3QZ2w6hyM+pru1g1OECtbMCOEsVnGFsi0Qd6GPPAbwlQ
- NXg/BXpaGCLrk9vNWfIdniCTS+n+eBxTbgIsuuP2EIPkGRFwbw89mBwuozkoJEkRQkV2xezYk
- RwG6Ji54AbpdR8NnhnwDgRV7jTofv1qLGtPJJJDsa10+eaJAipaAooFYU/AjDVvIJPcw+eFe3
- +PD+rZM/YX2XjwkQpSp1N14zAJ9j+ILHvGrgj++m4r4rUUIi1dUQmZUyCWq/iUnM2K0hn3573
- oAbeV7iBgEc4hc8n1y+BYqzY9pFzCcyhEInfdQbf8=
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Microchip
+        (AT91) SoC support)
+Subject: [PATCH 06/17] clocksource/drivers/timer-microchip-pit64b: Add Microchip PIT64B support
+Date:   Thu, 16 Jan 2020 19:22:53 +0100
+Message-Id: <20200116182304.4926-6-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200116182304.4926-1-daniel.lezcano@linaro.org>
+References: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
+ <20200116182304.4926-1-daniel.lezcano@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Am 16.01.20 um 18:33 schrieb Rob Herring:
-> On Mon, Jan 13, 2020 at 12:56 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
->> Since the BCM2711 doesn't have a AVS TMON block, the thermal information
->> must be retrieved from the AVS ring oscillator block. This block is part
->> of the AVS monitor which contains a bunch of raw sensors.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->> ---
->>  .../bindings/thermal/brcm,avs-ro-thermal.yaml      | 45 ++++++++++++++++++++++
->>  1 file changed, 45 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-> The example fails 'make dt_binding_check':
->
-> /builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.example.dt.yaml:
-> thermal: 'reg' is a required property
+Add driver for Microchip PIT64B timer. Timer could be used in continuous
+mode or oneshot mode. The hardware has 2x32 bit registers for period
+emulating a 64 bit timer. The LSB_PR and MSB_PR registers are used to
+set the period value (compare value). TLSB and TMSB keeps the current
+value of the counter. After a compare the TLSB and TMSB register resets.
+The driver uses PIT64B timer for clocksource or clockevent. First
+requested timer would be registered as clockevent, second one would be
+registered as clocksource. Individual PIT64B hardware resources were
+used for clocksource and clockevent to be able to support high resolution
+timers with this hardware implementation.
 
-can you please explain what is the reason for this? The example below
-has a reg property. I'm confused.
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/1576235962-30123-3-git-send-email-claudiu.beznea@microchip.com
+---
+ .../devicetree/bindings/arm/atmel-sysregs.txt |   6 +
+ drivers/clocksource/Kconfig                   |  10 +
+ drivers/clocksource/Makefile                  |   1 +
+ drivers/clocksource/timer-microchip-pit64b.c  | 449 ++++++++++++++++++
+ 4 files changed, 466 insertions(+)
+ create mode 100644 drivers/clocksource/timer-microchip-pit64b.c
 
-Best regards
-Stefan
+diff --git a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+index 9fbde401a090..e003a553b986 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-sysregs.txt
+@@ -10,6 +10,12 @@ PIT Timer required properties:
+ - interrupts: Should contain interrupt for the PIT which is the IRQ line
+   shared across all System Controller members.
+ 
++PIT64B Timer required properties:
++- compatible: Should be "microchip,sam9x60-pit64b"
++- reg: Should contain registers location and length
++- interrupts: Should contain interrupt for PIT64B timer
++- clocks: Should contain the available clock sources for PIT64B timer.
++
+ System Timer (ST) required properties:
+ - compatible: Should be "atmel,at91rm9200-st", "syscon", "simple-mfd"
+ - reg: Should contain registers location and length
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 94192fb0533e..cc909e465823 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -697,4 +697,14 @@ config INGENIC_TIMER
+ 	help
+ 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
+ 
++config MICROCHIP_PIT64B
++	bool "Microchip PIT64B support"
++	depends on OF || COMPILE_TEST
++	select CLKSRC_MMIO
++	help
++	  This option enables Microchip PIT64B timer for Atmel
++	  based system. It supports the oneshot, the periodic
++	  modes and high resolution. It is used as a clocksource
++	  and a clockevent.
++
+ endmenu
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 4dfe4225ece7..713686faa549 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -88,3 +88,4 @@ obj-$(CONFIG_RISCV_TIMER)		+= timer-riscv.o
+ obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
+ obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
+ obj-$(CONFIG_HYPERV_TIMER)		+= hyperv_timer.o
++obj-$(CONFIG_MICROCHIP_PIT64B)		+= timer-microchip-pit64b.o
+diff --git a/drivers/clocksource/timer-microchip-pit64b.c b/drivers/clocksource/timer-microchip-pit64b.c
+new file mode 100644
+index 000000000000..27a389a7e078
+--- /dev/null
++++ b/drivers/clocksource/timer-microchip-pit64b.c
+@@ -0,0 +1,449 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * 64-bit Periodic Interval Timer driver
++ *
++ * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries
++ *
++ * Author: Claudiu Beznea <claudiu.beznea@microchip.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/clockchips.h>
++#include <linux/interrupt.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/sched_clock.h>
++#include <linux/slab.h>
++
++#define MCHP_PIT64B_CR			0x00	/* Control Register */
++#define MCHP_PIT64B_CR_START		BIT(0)
++#define MCHP_PIT64B_CR_SWRST		BIT(8)
++
++#define MCHP_PIT64B_MR			0x04	/* Mode Register */
++#define MCHP_PIT64B_MR_CONT		BIT(0)
++#define MCHP_PIT64B_MR_ONE_SHOT		(0)
++#define MCHP_PIT64B_MR_SGCLK		BIT(3)
++#define MCHP_PIT64B_MR_PRES		GENMASK(11, 8)
++
++#define MCHP_PIT64B_LSB_PR		0x08	/* LSB Period Register */
++
++#define MCHP_PIT64B_MSB_PR		0x0C	/* MSB Period Register */
++
++#define MCHP_PIT64B_IER			0x10	/* Interrupt Enable Register */
++#define MCHP_PIT64B_IER_PERIOD		BIT(0)
++
++#define MCHP_PIT64B_ISR			0x1C	/* Interrupt Status Register */
++
++#define MCHP_PIT64B_TLSBR		0x20	/* Timer LSB Register */
++
++#define MCHP_PIT64B_TMSBR		0x24	/* Timer MSB Register */
++
++#define MCHP_PIT64B_PRES_MAX		0x10
++#define MCHP_PIT64B_LSBMASK		GENMASK_ULL(31, 0)
++#define MCHP_PIT64B_PRES_TO_MODE(p)	(MCHP_PIT64B_MR_PRES & ((p) << 8))
++#define MCHP_PIT64B_MODE_TO_PRES(m)	((MCHP_PIT64B_MR_PRES & (m)) >> 8)
++#define MCHP_PIT64B_DEF_CS_FREQ		5000000UL	/* 5 MHz */
++#define MCHP_PIT64B_DEF_CE_FREQ		32768		/* 32 KHz */
++
++#define MCHP_PIT64B_NAME		"pit64b"
++
++/**
++ * struct mchp_pit64b_timer - PIT64B timer data structure
++ * @base: base address of PIT64B hardware block
++ * @pclk: PIT64B's peripheral clock
++ * @gclk: PIT64B's generic clock
++ * @mode: precomputed value for mode register
++ */
++struct mchp_pit64b_timer {
++	void __iomem	*base;
++	struct clk	*pclk;
++	struct clk	*gclk;
++	u32		mode;
++};
++
++/**
++ * mchp_pit64b_clkevt - PIT64B clockevent data structure
++ * @timer: PIT64B timer
++ * @clkevt: clockevent
++ */
++struct mchp_pit64b_clkevt {
++	struct mchp_pit64b_timer	timer;
++	struct clock_event_device	clkevt;
++};
++
++#define to_mchp_pit64b_timer(x) \
++	((struct mchp_pit64b_timer *)container_of(x,\
++		struct mchp_pit64b_clkevt, clkevt))
++
++/* Base address for clocksource timer. */
++static void __iomem *mchp_pit64b_cs_base;
++/* Default cycles for clockevent timer. */
++static u64 mchp_pit64b_ce_cycles;
++
++static inline u64 mchp_pit64b_cnt_read(void __iomem *base)
++{
++	unsigned long	flags;
++	u32		low, high;
++
++	raw_local_irq_save(flags);
++
++	/*
++	 * When using a 64 bit period TLSB must be read first, followed by the
++	 * read of TMSB. This sequence generates an atomic read of the 64 bit
++	 * timer value whatever the lapse of time between the accesses.
++	 */
++	low = readl_relaxed(base + MCHP_PIT64B_TLSBR);
++	high = readl_relaxed(base + MCHP_PIT64B_TMSBR);
++
++	raw_local_irq_restore(flags);
++
++	return (((u64)high << 32) | low);
++}
++
++static inline void mchp_pit64b_reset(struct mchp_pit64b_timer *timer,
++				     u64 cycles, u32 mode, u32 irqs)
++{
++	u32 low, high;
++
++	low = cycles & MCHP_PIT64B_LSBMASK;
++	high = cycles >> 32;
++
++	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
++	writel_relaxed(mode | timer->mode, timer->base + MCHP_PIT64B_MR);
++	writel_relaxed(high, timer->base + MCHP_PIT64B_MSB_PR);
++	writel_relaxed(low, timer->base + MCHP_PIT64B_LSB_PR);
++	writel_relaxed(irqs, timer->base + MCHP_PIT64B_IER);
++	writel_relaxed(MCHP_PIT64B_CR_START, timer->base + MCHP_PIT64B_CR);
++}
++
++static u64 mchp_pit64b_clksrc_read(struct clocksource *cs)
++{
++	return mchp_pit64b_cnt_read(mchp_pit64b_cs_base);
++}
++
++static u64 mchp_pit64b_sched_read_clk(void)
++{
++	return mchp_pit64b_cnt_read(mchp_pit64b_cs_base);
++}
++
++static int mchp_pit64b_clkevt_shutdown(struct clock_event_device *cedev)
++{
++	struct mchp_pit64b_timer *timer = to_mchp_pit64b_timer(cedev);
++
++	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
++
++	return 0;
++}
++
++static int mchp_pit64b_clkevt_set_periodic(struct clock_event_device *cedev)
++{
++	struct mchp_pit64b_timer *timer = to_mchp_pit64b_timer(cedev);
++
++	mchp_pit64b_reset(timer, mchp_pit64b_ce_cycles, MCHP_PIT64B_MR_CONT,
++			  MCHP_PIT64B_IER_PERIOD);
++
++	return 0;
++}
++
++static int mchp_pit64b_clkevt_set_next_event(unsigned long evt,
++					     struct clock_event_device *cedev)
++{
++	struct mchp_pit64b_timer *timer = to_mchp_pit64b_timer(cedev);
++
++	mchp_pit64b_reset(timer, evt, MCHP_PIT64B_MR_ONE_SHOT,
++			  MCHP_PIT64B_IER_PERIOD);
++
++	return 0;
++}
++
++static void mchp_pit64b_clkevt_suspend(struct clock_event_device *cedev)
++{
++	struct mchp_pit64b_timer *timer = to_mchp_pit64b_timer(cedev);
++
++	writel_relaxed(MCHP_PIT64B_CR_SWRST, timer->base + MCHP_PIT64B_CR);
++	if (timer->mode & MCHP_PIT64B_MR_SGCLK)
++		clk_disable_unprepare(timer->gclk);
++	clk_disable_unprepare(timer->pclk);
++}
++
++static void mchp_pit64b_clkevt_resume(struct clock_event_device *cedev)
++{
++	struct mchp_pit64b_timer *timer = to_mchp_pit64b_timer(cedev);
++
++	clk_prepare_enable(timer->pclk);
++	if (timer->mode & MCHP_PIT64B_MR_SGCLK)
++		clk_prepare_enable(timer->gclk);
++}
++
++static irqreturn_t mchp_pit64b_interrupt(int irq, void *dev_id)
++{
++	struct mchp_pit64b_clkevt *irq_data = dev_id;
++
++	/* Need to clear the interrupt. */
++	readl_relaxed(irq_data->timer.base + MCHP_PIT64B_ISR);
++
++	irq_data->clkevt.event_handler(&irq_data->clkevt);
++
++	return IRQ_HANDLED;
++}
++
++static void __init mchp_pit64b_pres_compute(u32 *pres, u32 clk_rate,
++					    u32 max_rate)
++{
++	u32 tmp;
++
++	for (*pres = 0; *pres < MCHP_PIT64B_PRES_MAX; (*pres)++) {
++		tmp = clk_rate / (*pres + 1);
++		if (tmp <= max_rate)
++			break;
++	}
++
++	/* Use the bigest prescaler if we didn't match one. */
++	if (*pres == MCHP_PIT64B_PRES_MAX)
++		*pres = MCHP_PIT64B_PRES_MAX - 1;
++}
++
++/**
++ * mchp_pit64b_init_mode - prepare PIT64B mode register value to be used at
++ *			   runtime; this includes prescaler and SGCLK bit
++ *
++ * PIT64B timer may be fed by gclk or pclk. When gclk is used its rate has to
++ * be at least 3 times lower that pclk's rate. pclk rate is fixed, gclk rate
++ * could be changed via clock APIs. The chosen clock (pclk or gclk) could be
++ * divided by the internal PIT64B's divider.
++ *
++ * This function, first tries to use GCLK by requesting the desired rate from
++ * PMC and then using the internal PIT64B prescaler, if any, to reach the
++ * requested rate. If PCLK/GCLK < 3 (condition requested by PIT64B hardware)
++ * then the function falls back on using PCLK as clock source for PIT64B timer
++ * choosing the highest prescaler in case it doesn't locate one to match the
++ * requested frequency.
++ *
++ * Below is presented the PIT64B block in relation with PMC:
++ *
++ *                                PIT64B
++ *  PMC             +------------------------------------+
++ * +----+           |   +-----+                          |
++ * |    |-->gclk -->|-->|     |    +---------+  +-----+  |
++ * |    |           |   | MUX |--->| Divider |->|timer|  |
++ * |    |-->pclk -->|-->|     |    +---------+  +-----+  |
++ * +----+           |   +-----+                          |
++ *                  |      ^                             |
++ *                  |     sel                            |
++ *                  +------------------------------------+
++ *
++ * Where:
++ *	- gclk rate <= pclk rate/3
++ *	- gclk rate could be requested from PMC
++ *	- pclk rate is fixed (cannot be requested from PMC)
++ */
++static int __init mchp_pit64b_init_mode(struct mchp_pit64b_timer *timer,
++					unsigned long max_rate)
++{
++	unsigned long pclk_rate, diff = 0, best_diff = ULONG_MAX;
++	long gclk_round = 0;
++	u32 pres, best_pres = 0;
++
++	pclk_rate = clk_get_rate(timer->pclk);
++	if (!pclk_rate)
++		return -EINVAL;
++
++	/* Try using GCLK. */
++	gclk_round = clk_round_rate(timer->gclk, max_rate);
++	if (gclk_round < 0)
++		goto pclk;
++
++	if (pclk_rate / gclk_round < 3)
++		goto pclk;
++
++	mchp_pit64b_pres_compute(&pres, gclk_round, max_rate);
++	best_diff = abs(gclk_round / (pres + 1) - max_rate);
++	best_pres = pres;
++
++	if (!best_diff) {
++		timer->mode |= MCHP_PIT64B_MR_SGCLK;
++		goto done;
++	}
++
++pclk:
++	/* Check if requested rate could be obtained using PCLK. */
++	mchp_pit64b_pres_compute(&pres, pclk_rate, max_rate);
++	diff = abs(pclk_rate / (pres + 1) - max_rate);
++
++	if (best_diff > diff) {
++		/* Use PCLK. */
++		best_pres = pres;
++	} else {
++		/* Use GCLK. */
++		timer->mode |= MCHP_PIT64B_MR_SGCLK;
++		clk_set_rate(timer->gclk, gclk_round);
++	}
++
++done:
++	timer->mode |= MCHP_PIT64B_PRES_TO_MODE(best_pres);
++
++	pr_info("PIT64B: using clk=%s with prescaler %u, freq=%lu [Hz]\n",
++		timer->mode & MCHP_PIT64B_MR_SGCLK ? "gclk" : "pclk", best_pres,
++		timer->mode & MCHP_PIT64B_MR_SGCLK ?
++		gclk_round / (best_pres + 1) : pclk_rate / (best_pres + 1));
++
++	return 0;
++}
++
++static int __init mchp_pit64b_init_clksrc(struct mchp_pit64b_timer *timer,
++					  u32 clk_rate)
++{
++	int ret;
++
++	mchp_pit64b_reset(timer, ULLONG_MAX, MCHP_PIT64B_MR_CONT, 0);
++
++	mchp_pit64b_cs_base = timer->base;
++
++	ret = clocksource_mmio_init(timer->base, MCHP_PIT64B_NAME, clk_rate,
++				    210, 64, mchp_pit64b_clksrc_read);
++	if (ret) {
++		pr_debug("clksrc: Failed to register PIT64B clocksource!\n");
++
++		/* Stop timer. */
++		writel_relaxed(MCHP_PIT64B_CR_SWRST,
++			       timer->base + MCHP_PIT64B_CR);
++
++		return ret;
++	}
++
++	sched_clock_register(mchp_pit64b_sched_read_clk, 64, clk_rate);
++
++	return 0;
++}
++
++static int __init mchp_pit64b_init_clkevt(struct mchp_pit64b_timer *timer,
++					  u32 clk_rate, u32 irq)
++{
++	struct mchp_pit64b_clkevt *ce;
++	int ret;
++
++	ce = kzalloc(sizeof(*ce), GFP_KERNEL);
++	if (!ce)
++		return -ENOMEM;
++
++	mchp_pit64b_ce_cycles = DIV_ROUND_CLOSEST(clk_rate, HZ);
++
++	ce->timer.base = timer->base;
++	ce->timer.pclk = timer->pclk;
++	ce->timer.gclk = timer->gclk;
++	ce->timer.mode = timer->mode;
++	ce->clkevt.name = MCHP_PIT64B_NAME;
++	ce->clkevt.features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC;
++	ce->clkevt.rating = 150;
++	ce->clkevt.set_state_shutdown = mchp_pit64b_clkevt_shutdown;
++	ce->clkevt.set_state_periodic = mchp_pit64b_clkevt_set_periodic;
++	ce->clkevt.set_next_event = mchp_pit64b_clkevt_set_next_event;
++	ce->clkevt.suspend = mchp_pit64b_clkevt_suspend;
++	ce->clkevt.resume = mchp_pit64b_clkevt_resume;
++	ce->clkevt.cpumask = cpumask_of(0);
++	ce->clkevt.irq = irq;
++
++	ret = request_irq(irq, mchp_pit64b_interrupt, IRQF_TIMER,
++			  "pit64b_tick", ce);
++	if (ret) {
++		pr_debug("clkevt: Failed to setup PIT64B IRQ\n");
++		kfree(ce);
++		return ret;
++	}
++
++	clockevents_config_and_register(&ce->clkevt, clk_rate, 1, ULONG_MAX);
++
++	return 0;
++}
++
++static int __init mchp_pit64b_dt_init_timer(struct device_node *node,
++					    bool clkevt)
++{
++	u32 freq = clkevt ? MCHP_PIT64B_DEF_CE_FREQ : MCHP_PIT64B_DEF_CS_FREQ;
++	struct mchp_pit64b_timer timer = { 0 };
++	unsigned long clk_rate;
++	u32 irq = 0;
++	int ret;
++
++	/* Parse DT node. */
++	timer.pclk = of_clk_get_by_name(node, "pclk");
++	if (IS_ERR(timer.pclk))
++		return PTR_ERR(timer.pclk);
++
++	timer.gclk = of_clk_get_by_name(node, "gclk");
++	if (IS_ERR(timer.gclk))
++		return PTR_ERR(timer.gclk);
++
++	timer.base = of_iomap(node, 0);
++	if (!timer.base)
++		return -ENXIO;
++
++	if (clkevt) {
++		irq = irq_of_parse_and_map(node, 0);
++		if (!irq) {
++			ret = -ENODEV;
++			goto io_unmap;
++		}
++	}
++
++	/* Initialize mode (prescaler + SGCK bit). To be used at runtime. */
++	ret = mchp_pit64b_init_mode(&timer, freq);
++	if (ret)
++		goto irq_unmap;
++
++	ret = clk_prepare_enable(timer.pclk);
++	if (ret)
++		goto irq_unmap;
++
++	if (timer.mode & MCHP_PIT64B_MR_SGCLK) {
++		ret = clk_prepare_enable(timer.gclk);
++		if (ret)
++			goto pclk_unprepare;
++
++		clk_rate = clk_get_rate(timer.gclk);
++	} else {
++		clk_rate = clk_get_rate(timer.pclk);
++	}
++	clk_rate = clk_rate / (MCHP_PIT64B_MODE_TO_PRES(timer.mode) + 1);
++
++	if (clkevt)
++		ret = mchp_pit64b_init_clkevt(&timer, clk_rate, irq);
++	else
++		ret = mchp_pit64b_init_clksrc(&timer, clk_rate);
++
++	if (ret)
++		goto gclk_unprepare;
++
++	return 0;
++
++gclk_unprepare:
++	if (timer.mode & MCHP_PIT64B_MR_SGCLK)
++		clk_disable_unprepare(timer.gclk);
++pclk_unprepare:
++	clk_disable_unprepare(timer.pclk);
++irq_unmap:
++	irq_dispose_mapping(irq);
++io_unmap:
++	iounmap(timer.base);
++
++	return ret;
++}
++
++static int __init mchp_pit64b_dt_init(struct device_node *node)
++{
++	static int inits;
++
++	switch (inits++) {
++	case 0:
++		/* 1st request, register clockevent. */
++		return mchp_pit64b_dt_init_timer(node, true);
++	case 1:
++		/* 2nd request, register clocksource. */
++		return mchp_pit64b_dt_init_timer(node, false);
++	}
++
++	/* The rest, don't care. */
++	return -EINVAL;
++}
++
++TIMER_OF_DECLARE(mchp_pit64b, "microchip,sam9x60-pit64b", mchp_pit64b_dt_init);
+-- 
+2.17.1
 
->
->> diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
->> new file mode 100644
->> index 0000000..98e7b57
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/thermal/brcm,avs-ro-thermal.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Broadcom AVS ring oscillator thermal
->> +
->> +maintainers:
->> +  - Stefan Wahren <wahrenst@gmx.net>
->> +
->> +description: |+
->> +  The thermal node should be the child of a syscon node with the
->> +  required property:
->> +
->> +  - compatible: Should be one of the following:
->> +                "brcm,bcm2711-avs-monitor", "syscon", "simple-mfd"
->> +
->> +  Refer to the the bindings described in
->> +  Documentation/devicetree/bindings/mfd/syscon.txt
->> +
->> +properties:
->> +  compatible:
->> +    const: brcm,bcm2711-thermal
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +
->> +examples:
->> +  - |
->> +        avs-monitor@7d5d2000 {
->> +                compatible = "brcm,bcm2711-avs-monitor",
->> +                             "syscon", "simple-mfd";
->> +                reg = <0x7d5d2000 0xf00>;
->> +
->> +                thermal: thermal {
->> +                        compatible = "brcm,bcm2711-thermal";
->> +                        #thermal-sensor-cells = <0>;
-> Also this is not documented. That's not caught because
-> 'additionalProperties: false' is also needed.
->
-> Rob
