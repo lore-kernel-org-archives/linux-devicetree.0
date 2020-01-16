@@ -2,80 +2,90 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73140C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC92CC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E21C2073A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71C22073A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbgAPItq (ORCPT
+        id S1731455AbgAPIv2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:49:46 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54644 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgAPItq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 03:49:46 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id F332F2938AD
-Subject: Re: [PATCH v3 2/3] arm64: dts: mt8173: add uart aliases
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Daniel Kurtz <djkurtz@chromium.org>
-References: <20200116051209.37970-1-hsinyi@chromium.org>
- <20200116051209.37970-3-hsinyi@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <b53e1bab-2f0e-07f0-4540-810e34b81e48@collabora.com>
-Date:   Thu, 16 Jan 2020 09:49:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 16 Jan 2020 03:51:28 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44159 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731451AbgAPIv2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 03:51:28 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1is0s8-0005V5-8I; Thu, 16 Jan 2020 09:51:24 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1is0s7-0008Oo-Go; Thu, 16 Jan 2020 09:51:23 +0100
+Date:   Thu, 16 Jan 2020 09:51:23 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, stwiss.opensource@diasemi.com,
+        dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        Adam.Thomson.Opensource@diasemi.com
+Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] DA9063 Onkey Improvements and Fixes
+Message-ID: <20200116085123.dr2i42axmjezd4q3@pengutronix.de>
+References: <20191127132304.22924-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200116051209.37970-3-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191127132304.22924-1-m.felsch@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:49:19 up 62 days, 7 min, 53 users,  load average: 0.07, 0.10,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Hsin-Yi,
+Hi Dmitry,
 
-On 16/1/20 6:12, Hsin-Yi Wang wrote:
-> Add serial as uart aliases in mt8173.
+On 19-11-27 14:23, Marco Felsch wrote:
+> Hi,
 > 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> this is v2 contains all comments made on [1]. Please check the patch
+> based changelog for further information. Patch "Input: da9063 - fix
+> capability and drop KEY_SLEEP"  is already applied mainline.
+> 
+> [1] https://www.spinics.net/lists/devicetree/msg309431.html
+> 
+> Marco Felsch (3):
+>   dt-bindings: Input: da9062 - add key-opmode documentation
+>   input: misc: da9063_onkey: add mode change support
 
-Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Can we apply those patches.
 
-> ---
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
+>   dt-bindings: Input: da9062 - fix dlg,disable-key-power description
+
+This one can be dropped from this series.
+
+Regards,
+  Marco
+
+>  .../devicetree/bindings/input/da9062-onkey.txt   | 15 ++++++++++++---
+>  drivers/input/misc/da9063_onkey.c                | 16 ++++++++++++++++
+>  drivers/mfd/da9062-core.c                        |  1 +
+>  3 files changed, 29 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> index 8b4e806d5119..790cd64aa447 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-> @@ -50,6 +50,10 @@ aliases {
->  		mdp_wdma0 = &mdp_wdma0;
->  		mdp_wrot0 = &mdp_wrot0;
->  		mdp_wrot1 = &mdp_wrot1;
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +		serial3 = &uart3;
->  	};
->  
->  	cluster0_opp: opp_table0 {
-> 
+> -- 
+> 2.20.1
