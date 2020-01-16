@@ -2,240 +2,166 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04981C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 05:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE697C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 05:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7519207E0
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 05:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFCA2077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 05:50:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgAPFRT (ORCPT
+        id S1726369AbgAPFuA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 00:17:19 -0500
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:18103 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgAPFRT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 00:17:19 -0500
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 00:17:18 EST
-IronPort-SDR: OX6zJ95sovONRfQnTjo48l7mK51NATeL9LWJ4HdR/EqgorebtLgAc9bQIChkKdQgDB3Glq2PiD
- xOMdkaJje84Hm5Lr0kJh2qxG+uXnamP4t57G7T+A/qGv6chu2ts9ldYPs5T1WYAhUQEjl4/n2p
- 2F+nz8kU/RdCQXBoqePy1fQ0QYjma5O7Aq146nY4DbjDodD89jKlAK+aRh+VJzIqpNobEiJyjp
- GQrv5Q2aJKtNmNv5czH3+Nn0cYMezDWeteh7iEkaif5ZMk9R8tm52rV7TT8JyzG1QA0kjqnUcy
- P+Q=
-X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
-   d="scan'208";a="44969072"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 15 Jan 2020 21:10:10 -0800
-IronPort-SDR: CHHfjXsW/HCOjvakfqh9V09To9kzoQTZOG4Rcz17cazoVVdFgLqd3Hm7/2PrOdBpfxeRRbAU/a
- tyu49+9J2KA96RnqRs33qh5KKl3ZGAIhlW6qFvMSyJLtyTqKy/+emp9dROwp3CW8EpNe6ALtH0
- SARCIu3JMQjkMDnmMial2ExZ+SGnCclmQ57YnlJnQFubmsCxQCTv0aZdDgWmw0eXaiFs0NtnTV
- TpcfPnhsiFcu1Y3MKfOPf8c8sojt2X1/cucTpepI+k7iCGMoerw/G6jfPzaVLRe/MXAD4Ff9fQ
- Ac8=
-Subject: Re: [PATCH v3 4/7] dt-bindings: gpio: Add gpio-repeater bindings
-From:   Harish Jenny K N <harish_kandiga@mentor.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Rob Herring <robh@kernel.org>
-CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-References: <20191127084253.16356-1-geert+renesas@glider.be>
- <20191127084253.16356-5-geert+renesas@glider.be>
- <20191205210653.GA29969@bogus>
- <CAMuHMdXKPC7-XaezodwL1Dhvke6PUVSZEbvN-sm3Uh6T61qbhQ@mail.gmail.com>
- <CAL_JsqJLJPSYroX0mbBUpgWPV0oEvKEUNC-VZt4XFDF8tLuNFA@mail.gmail.com>
- <CAMuHMdXOJSZUDmn8aeTynN0TKCS5hJR+uMSinOmgbmA8YmsQjw@mail.gmail.com>
- <bb5fb539-0d0d-6356-35c2-8ba47cb9fcbf@mentor.com>
-Message-ID: <4dccaf48-c652-a5f4-49f3-ccc279d5548e@mentor.com>
-Date:   Thu, 16 Jan 2020 10:39:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 16 Jan 2020 00:50:00 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:10025 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbgAPFt7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 00:49:59 -0500
+Received: from [10.28.39.79] (10.28.39.79) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 16 Jan
+ 2020 13:50:25 +0800
+Subject: Re: [PATCH v5 1/5] dt-bindings: clock: meson: add A1 PLL clock
+ controller bindings
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Chandle Zou <chandle.zou@amlogic.com>,
+        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191227094606.143637-1-jian.hu@amlogic.com>
+ <20191227094606.143637-2-jian.hu@amlogic.com>
+ <1jftgnz5k5.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <cda0451f-a229-b0c1-ddc8-2a9524d7e135@amlogic.com>
+Date:   Thu, 16 Jan 2020 13:50:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <bb5fb539-0d0d-6356-35c2-8ba47cb9fcbf@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1jftgnz5k5.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
- svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.79]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus,
 
 
-On 07/01/20 2:52 PM, Harish Jenny K N wrote:
-> On 06/01/20 1:42 PM, Geert Uytterhoeven wrote:
->> Hi Rob,
+On 2020/1/10 23:36, Jerome Brunet wrote:
+> 
+> On Fri 27 Dec 2019 at 10:46, Jian Hu <jian.hu@amlogic.com> wrote:
+> 
+> Please read Documentation/devicetree/writing-schema.rst, run the test and
+> make the necessary correction.
+> 
+Yes, I had run the test before sending the V5.
+>> Add the documentation to support Amlogic A1 PLL clock driver,
+>> and add A1 PLL clock controller bindings.
 >>
->> On Fri, Dec 6, 2019 at 4:04 PM Rob Herring <robh@kernel.org> wrote:
->>> On Fri, Dec 6, 2019 at 3:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>> On Thu, Dec 5, 2019 at 10:06 PM Rob Herring <robh@kernel.org> wrote:
->>>>> On Wed, Nov 27, 2019 at 09:42:50AM +0100, Geert Uytterhoeven wrote:
->>>>>> Add Device Tree bindings for a GPIO repeater, with optional translation
->>>>>> of physical signal properties.  This is useful for describing explicitly
->>>>>> the presence of e.g. an inverter on a GPIO line, and was inspired by the
->>>>>> non-YAML gpio-inverter bindings by Harish Jenny K N
->>>>>> <harish_kandiga@mentor.com>[1].
->>>>>>
->>>>>> Note that this is different from a GPIO Nexus Node[2], which cannot do
->>>>>> physical signal property translation.
->>>>> It can't? Why not? The point of the passthru mask is to not do
->>>>> translation of flags, but without it you are always doing translation of
->>>>> cells.
->>>> Thanks for pushing me deeper into nexuses!
->>>> You're right, you can map from one type to another.
->>>> However, you cannot handle the "double inversion" of an ACTIVE_LOW
->>>> signal with a physical inverter added:
->>>>
->>>>         nexus: led-nexus {
->>>>                 #gpio-cells = <2>;
->>>>                 gpio-map = <0 0 &gpio2 19 GPIO_ACTIVE_LOW>,     // inverted
->>>>                            <1 0 &gpio2 20 GPIO_ACTIVE_HIGH>,    // noninverted
->>>>                            <2 0 &gpio2 21 GPIO_ACTIVE_LOW>;     // inverted
->>>>                 gpio-map-mask = <3 0>;
->>>>                 // default gpio-map-pass-thru = <0 0>;
->>>>         };
->>>>
->>>>         leds {
->>>>                 compatible = "gpio-leds";
->>>>                 led6-inverted {
->>>>                         gpios = <&nexus 0 GPIO_ACTIVE_HIGH>;
->>>>                 };
->>>>                 led7-noninverted {
->>>>                         gpios = <&nexus 1 GPIO_ACTIVE_HIGH>;
->>>>                 };
->>>>                 led8-double-inverted {  // FAILS: still inverted
->>>>                         gpios = <&nexus 2 GPIO_ACTIVE_LOW>;
->>>>                 };
->>>>         };
->>>>
->>>> It "works" if the last entry in gpio-map is changed to GPIO_ACTIVE_HIGH.
->>>> Still, the consumer would see the final translated polarity, and not the
->>>> actual one it needs to program the consumer for.
->>> I'm not really following. Why isn't a double inversion just the same
->>> as no inversion?
->> Because the nexus can only mask and/or substitute bits.
->> It cannot do a XOR operation on the GPIO flags.
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 54 +++++++++++++++++++
+>>   include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
+>>   2 files changed, 70 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>>   create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
 >>
->>>>>> While an inverter can be described implicitly by exchanging the
->>>>>> GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags, this has its limitations.
->>>>>> Each GPIO line has only a single GPIO_ACTIVE_* flag, but applies to both
->>>>>> th provider and consumer sides:
->>>>>>   1. The GPIO provider (controller) looks at the flags to know the
->>>>>>      polarity, so it can translate between logical (active/not active)
->>>>>>      and physical (high/low) signal levels.
->>>>>>   2. While the signal polarity is usually fixed on the GPIO consumer
->>>>>>      side (e.g. an LED is tied to either the supply voltage or GND),
->>>>>>      it may be configurable on some devices, and both sides need to
->>>>>>      agree.  Hence the GPIO_ACTIVE_* flag as seen by the consumer must
->>>>>>      match the actual polarity.
->>>>>>      There exists a similar issue with interrupt flags, where both the
->>>>>>      interrupt controller and the device generating the interrupt need
->>>>>>      to agree, which breaks in the presence of a physical inverter not
->>>>>>      described in DT (see e.g. [3]).
->>>>> Adding an inverted flag as I've suggested would also solve this issue.
->>>> As per your suggestion in "Re: [PATCH V4 2/2] gpio: inverter: document
->>>> the inverter bindings"?
->>>> https://lore.kernel.org/linux-devicetree/CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com/
->>>>
->>>> Oh, now I understand. I was misguided by Harish' interpretation
->>>> https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/
->>>> which assumed an "inverted" property, e.g.
->>>>
->>>>     inverted = /bits/ 8 <0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0>;
->>>>
->>>> But you actually meant a new GPIO_INVERTED flag, to be ORed into the 2nd
->>>> cell of a GPIO specifier? I.e. add to include/dt-bindings/gpio/gpio.h"
->>>>
->>>>     /* Bit 6 expresses the presence of a physical inverter */
->>>>     #define GPIO_INVERTED 64
->>> Exactly.
->> OK, makes sense.
->
-> The reason I went for "inverted" property is because, we can specify this for gpios at provider side.
->
-> The usecase needed to define the polarity which did not have kernel space consumer driver.
->
->
-> I am not sure how do we achieve this using GPIO_INVERTED flag. We need some sort of node/gpio-hog to specify these
->
-> type of properties? Otherwise gpio-pin will be held by kernel or the module using the hog property and the user space application will not be able to access pin.
->
->
-> or please let me know if I am missing something.
->
->
->>>> We need to be very careful in defining to which side the GPIO_ACTIVE_*
->>>> applies to (consumer?), and which side the GPIO_INVERTED flag (provider?).
->>>> Still, this doesn't help if e.g. a FET is used instead of a push-pull
->>>> inverter, as the former needs translation of other flags (which the
->>>> nexus can do, the caveats above still applies, though).
->>> Yes. Historically the cells values are meaningful to the provider and
->>> opaque to the consumer. Standardized cell values changes that
->>> somewhat. I think we want the active flag to be from the provider's
->>> prospective because the provider always needs to know. The consumer
->>> often doesn't need to know. That also means things work without the
->>> GPIO_INVERTED flag if the consumer doesn't care which is what we have
->>> today already and we can't go back in time.
->>>
-> Things will work without GPIO_INVERTED flag for consumers which can specify GPIO_ACTIVE_* flags.
->
->
->
->>>> Same for adding IRQ_TYPE_INVERTED.
->>> I suppose so, yes.
->>>
->>>> Related issue: how to handle physical inverters on SPI chip select lines,
->>>> if the SPI slave can be configured for both polarities?
->>> Good question. Perhaps in a different way because we have to handle
->>> both h/w controlled and gpio chip selects.
->>>
->>> However, how would one configure the polarity in the device in the
->>> first place? You have to assert the CS first to give a command to
->>> reprogram it.
->> That's indeed true for a simple SPI slave.
->> But if it is a smarter device (e.g. a generic micro controller), it may use the
->> system's DTB to configure itself.
->>
->> Gr{oetje,eeting}s,
->>
->>                         Geert
->>
-
-
-Can you please let me know your inputs on this ?
-
-
-Now that Geert has sent v4 patch of GPIO Aggregator by "Dropping controversial GPIO repeater", I do not see the above mentioned inverter usecase can be handled anymore.
-
-
-Is the observation/patch submitted in https://lore.kernel.org/linux-devicetree/dde73334-a26d-b53f-6b97-4101c1cdc185@mentor.com/ still not acceptable?
-
-
-
-Thanks,
-
-Harish
-
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> new file mode 100644
+>> index 000000000000..7a327bb174b8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-pll-clkc.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <narmstrong@baylibre.com>
+>> +  - Jerome Brunet <jbrunet@baylibre.com>
+>> +  - Jian Hu <jian.hu@jian.hu.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: amlogic,a1-pll-clkc
+>> +
+>> +  "#clock-cells":
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +clocks:
+>> +  maxItems: 2
+>> +  items:
+>> +   - description: Input xtal_fixpll
+>> +   - description: Input xtal_hifipll
+>> +
+>> +clock-names:
+>> +  maxItems: 2
+>> +  items:
+>> +     - const: xtal_fixpll
+>> +     - const: xtal_hifipll
+>> +
+>> +required:
+>> +  - compatible
+>> +  - "#clock-cells"
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    clkc_pll: pll-clock-controller@7c80 {
+>> +                compatible = "amlogic,a1-pll-clkc";
+>> +                reg = <0 0x7c80 0 0x18c>;
+>> +                #clock-cells = <1>;
+>> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
+>> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
+>> +                clock-names = "xtal_fixpll", "xtal_hifipll";
+>> +    };
+>> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
+>> new file mode 100644
+>> index 000000000000..58eae237e503
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
+>> @@ -0,0 +1,16 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __A1_PLL_CLKC_H
+>> +#define __A1_PLL_CLKC_H
+>> +
+>> +#define CLKID_FIXED_PLL				1
+>> +#define CLKID_FCLK_DIV2				6
+>> +#define CLKID_FCLK_DIV3				7
+>> +#define CLKID_FCLK_DIV5				8
+>> +#define CLKID_FCLK_DIV7				9
+>> +#define CLKID_HIFI_PLL				10
+>> +
+>> +#endif /* __A1_PLL_CLKC_H */
+> 
+> .
+> 
