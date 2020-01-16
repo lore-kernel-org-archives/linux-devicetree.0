@@ -2,128 +2,100 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3610C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7529FC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A7D2075B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3DB2075B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:35:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qvE1YVwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgAPNc0 (ORCPT
+        id S1726688AbgAPNfg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:32:26 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:50103 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgAPNcZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 08:32:25 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1is5G1-0003HQ-6w; Thu, 16 Jan 2020 14:32:21 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1is5Fz-0000kB-QS; Thu, 16 Jan 2020 14:32:19 +0100
-Date:   Thu, 16 Jan 2020 14:32:19 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     devicetree@vger.kernel.org, alexandre.belloni@bootlin.com,
-        simon.budig@kernelconcepts.de, mripard@kernel.org, bparrot@ti.com,
-        hdegoede@redhat.com, andy.shevchenko@gmail.com, robh+dt@kernel.org,
-        kernel@pengutronix.de, linux-input@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, shawnguo@kernel.org,
-        fcooper@ti.com
-Subject: Re: [PATCH v3 6/6] Input: edt-ft5x06 - improve power management
- operations
-Message-ID: <20200116133219.xtp3wkkcefbcumca@pengutronix.de>
-References: <20200108111050.19001-1-m.felsch@pengutronix.de>
- <20200108111050.19001-7-m.felsch@pengutronix.de>
- <20200110010957.GP8314@dtor-ws>
- <20200110071606.g42csvhgtriddqj4@pengutronix.de>
- <20200110071847.h5hqfb7ujnahuuus@pengutronix.de>
+        Thu, 16 Jan 2020 08:35:36 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50647 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgAPNfd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 08:35:33 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so3810614wmb.0
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 05:35:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ex5iQAOgOE6sJdpP0UDJP/wplcXOALsRuy3uUtlLaZk=;
+        b=qvE1YVwT35KAeibCSPNMT/6IWonjdnLnAq1kCZSEo2b6CAJEN9devCVU4H5nrBg2rO
+         v4d7PuV0IkaKNwVaPYX6jabBbx/jR9M39wGOm+HZHZNqIgGZN76fsJvUlDZufuLHPvOJ
+         HXr/9CHED1bnmgkT9sgFnuN1mKu7ErycVEgs83sk7SIZ2GoCxuZTB1LUP7Luz76nf7oe
+         +cfe3FbC79HZVuUG7Yj315LHG7QVX3BJoTY/1cLlNnHpW2KyYbDRQMYehIQ4UW/9qX+M
+         37YsSC5z93n/8D+dDEAGa0xl9vvuSt9ruOiCzeE2BTKLh6bs2lxvVksLKYBVwmUurDHz
+         CowQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ex5iQAOgOE6sJdpP0UDJP/wplcXOALsRuy3uUtlLaZk=;
+        b=P6wILwAlEfp8EkXjoipAJty/+AKEUCjggrUxl7AkBuLOs6LWk6aPQwHrnkIYK/GmfM
+         oc7SXfqCtvvPRmSH018HSIpY4kCZFFVZLQcor5IXNHLl7E+n7x4dfGMx7EJ92dH7xqLS
+         bkTRKlqMneiwGy4AGz5OAftVC0pkbmjWryZoj/ayhMgMXow1LCMtNIZPeETCyO3C0Btz
+         ship/KlXZV0b4vNJiIjyxYCAcb6y93OVWXuyuTHt8svUfOnQaYQPlPNRCCqg7k1HI34C
+         /IcajsExVA4Cm3OD6ZCAFEdoF+tGygN/3VL16CiVRoluXjCNJEemPzFZ9wgso45lwGqJ
+         2NBA==
+X-Gm-Message-State: APjAAAWagNncY2HYhPNRJUX3+Ag/oD4GYPevHBmYUg+7dTw8XmSZ90NL
+        cgLwpobx4EqmbMkurYWJ9NitBQ==
+X-Google-Smtp-Source: APXvYqzGsGr1esnWAtuowtgwjETYSUMAmmdt6JTJvoDok/p5abyr1h1lybNOYRUwc3ulCQlDtT9X5g==
+X-Received: by 2002:a7b:c957:: with SMTP id i23mr6217830wml.49.1579181730878;
+        Thu, 16 Jan 2020 05:35:30 -0800 (PST)
+Received: from dell ([2.27.35.221])
+        by smtp.gmail.com with ESMTPSA id u18sm28884904wrt.26.2020.01.16.05.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 05:35:30 -0800 (PST)
+Date:   Thu, 16 Jan 2020 13:35:46 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, linux@roeck-us.net,
+        robh+dt@kernel.org, stwiss.opensource@diasemi.com,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
+Message-ID: <20200116133546.GR325@dell>
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-2-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200110071847.h5hqfb7ujnahuuus@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 14:28:33 up 62 days,  4:47, 53 users,  load average: 0.01, 0.02,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200108095704.23233-2-m.felsch@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On Wed, 08 Jan 2020, Marco Felsch wrote:
 
-On 20-01-10 08:18, Marco Felsch wrote:
-> On 20-01-10 08:16, Marco Felsch wrote:
-> > Hi Dmitry,
-> > 
-> > On 20-01-09 17:09, Dmitry Torokhov wrote:
-> > > Hi Marco,
-> > > 
-> > > On Wed, Jan 08, 2020 at 12:10:50PM +0100, Marco Felsch wrote:
-> > > > +static int __maybe_unused edt_ft5x06_ts_resume(struct device *dev)
-> > > > +{
-> > > > +	struct i2c_client *client = to_i2c_client(dev);
-> > > > +	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
-> > > > +	int ret;
-> > > > +
-> > > > +	if (device_may_wakeup(dev))
-> > > > +		return 0;
-> > > > +
-> > > > +	ret = regulator_enable(tsdata->vcc);
-> > > > +	if (ret)
-> > > > +		dev_warn(dev, "Failed to enable vcc\n");
-> > > 
-> > > I wonder if we should not return error here instead of continuing. If
-> > > device is not powered up properly we'll have hard time communicating
-> > > with it.
-> > 
-> > That's a reasonable point.
-> > 
-> > > The same is for suspend: maybe we should abort if we can't switch off
-> > > regulator or write to the device.
-> > 
-> > I have no strong opinion about that case but IMHO it's okay to go further
-> > if we can't switch it off. Instead we should print a warning.
+> The watchdog driver compatible is "dlg,da9062-watchdog" and not
+> "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
+> fwnode. As result the watchdog driver can't parse the devicetree.
 > 
-> I just noticed that we do that already.. So the suspend case should be
-> okay.
+> Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> ---
+>  drivers/mfd/da9062-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Is it okay to check the return val for the resume case only? I want to
-prepare a v4 of this patch to get this done.
-
-Regards,
-  Marco
-
-> 
-> > Regards,
-> >   Marco
-> > 
-> > > Thanks.
-> > > 
-> > > -- 
-> > > Dmitry
-> > > 
-> 
-> 
+Applied, thanks.
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
