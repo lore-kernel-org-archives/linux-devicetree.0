@@ -2,146 +2,84 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DA5C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 00:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B81C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5582081E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 00:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28AFF2467A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAPAPB (ORCPT
+        id S1729025AbgAPA5M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:15:01 -0500
-Received: from lucky1.263xmail.com ([211.157.147.135]:54420 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbgAPAPA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 19:15:00 -0500
-Received: from localhost (unknown [192.168.167.70])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 5B2AC4FCF9;
-        Thu, 16 Jan 2020 08:14:57 +0800 (CST)
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.37] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P20733T140093645911808S1579133695560712_;
-        Thu, 16 Jan 2020 08:14:56 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4477a7a0a00c9b10bfd531bf21275836>
-X-RL-SENDER: shawn.lin@rock-chips.com
-X-SENDER: lintao@rock-chips.com
-X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: linux-rockchip@lists.infradead.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Cc:     shawn.lin@rock-chips.com, Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Wed, 15 Jan 2020 19:57:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:43776 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726310AbgAPA5M (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 19:57:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B0A131B;
+        Wed, 15 Jan 2020 16:57:12 -0800 (PST)
+Received: from localhost.localdomain (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 897F03F718;
+        Wed, 15 Jan 2020 16:57:10 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Icenowy Zheng <icenowy@aosc.xyz>,
+        Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, William Wu <william.wu@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20200115172430.GA180494@google.com>
-From:   Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <2facd747-2b42-c500-9c04-7fd06471415a@rock-chips.com>
-Date:   Thu, 16 Jan 2020 08:14:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <20200115172430.GA180494@google.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2 0/3] arm64: dts: sun50i: H6: Enable SPI controller
+Date:   Thu, 16 Jan 2020 00:56:51 +0000
+Message-Id: <20200116005654.27672-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.14.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Even though the SPI controller in the Allwinner H6 SoC is more advanced
+than in the previous generations (it supports 3-wire and 4-wire mode),
+the register set stays backwards-compatible. So we can use the existing
+driver to use the "normal" SPI mode, for instance to access the SPI
+flash soldered on the Pine H64 board.
 
-On 2020/1/16 1:24, Bjorn Helgaas wrote:
-> Follow subject line convention.
-> 
-> On Tue, Jan 14, 2020 at 03:25:01PM +0800, Shawn Lin wrote:
->> From: Simon Xue <xxm@rock-chips.com>
-> 
-> Needs a commit log.  Please describe the relationship with the
-> existing drivers/pci/controller/pcie-rockchip-host.c.  Are they for
-> different devices?  Does this supercede the other?
+These two patches allow this by adding the SPI controller nodes to the
+DT. The compatible strings include an H6 specific name, so that any
+future 4-wire enhancements for instance would be automatically usable
+once the driver learns this new trick. For now we use the H3 fallback
+name to bind the current driver.
 
-Yes, this PCIe controller is based on dwc IP, however pcie-rockchip* in
-drivers/pcie/controller is another IP. They are two different
-controllers totally. pcie-rockchip-host is end-of-life due to some
-defects, so AFAICT, it's *only* for RK3399 SoC. All the other follow-up
-SoCs should use this controller.
+This time I tested this actual branch  (on top of sunxi/dt-for-5.6),
+on a Pine H64, both the internal SPI flash as well with SPI flash
+connected to the other SPI controller available on the GPIO headers.
 
-> 
->> Signed-off-by: Simon Xue <xxm@rock-chips.com>
->> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->> ---
->>
->>   drivers/pci/controller/dwc/Kconfig            |   9 +
->>   drivers/pci/controller/dwc/Makefile           |   1 +
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 441 ++++++++++++++++++++++++++
->>   3 files changed, 451 insertions(+)
->>   create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
->>
->> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->> index 0830dfc..9160264 100644
->> --- a/drivers/pci/controller/dwc/Kconfig
->> +++ b/drivers/pci/controller/dwc/Kconfig
->> @@ -82,6 +82,15 @@ config PCIE_DW_PLAT_EP
->>   	  order to enable device-specific features PCI_DW_PLAT_EP must be
->>   	  selected.
->>   
->> +config PCIE_DW_ROCKCHIP
->> +	bool "Rockchip DesignWare PCIe controller"
->> +	select PCIE_DW
->> +	select PCIE_DW_HOST
->> +	depends on ARCH_ROCKCHIP
->> +	depends on OF
->> +	help
->> +	  Enables support for the DW PCIe controller in the Rockchip SoC.
-> 
-> A user needs to be able to tell whether to enable
-> CONFIG_PCIE_ROCKCHIP_HOST or CONFIG_PCIE_DW_ROCKCHIP.  Is there an
-> endpoint driver coming?  Should this be named PCIE_DW_ROCKCHIP_HOST?
+As the SPI0-CS0 pin clashes with the eMMC CMD pin, we keep this
+node disabled by default, to avoid losing the eMMC if it probes last.
+People (or U-Boot) can enable it if needed.
 
-Will add a description to tell users CONFIG_PCIE_ROCKCHIP_HOST is only
-for RK3399, so all other Rockchip platforms should use
-CONFIG_PCIE_DW_ROCKCHIP.
+Cheers,
+Andre.
 
-There is no plan to develop endponit driver recently, but
-PCIE_DW_ROCKCHIP_HOST looks sane.
+Changelog v1 ... v2:
+- comment on pinmux clash between eMMC and SPI
+- disable Pine H64 SPI flash node by default
+- add binding doc for the new compatible string
 
+Andre Przywara (3):
+  arm64: dts: sun50i: H6: Add SPI controllers nodes and pinmuxes
+  arm64: dts: allwinner: h6: Pine H64: Add SPI flash node
+  dt-bindings: spi: sunxi: Document new compatible strings
 
-> 
->> +	ret = rockchip_pcie_reset_grant_ctrl(rockchip, true);
->> +	if (ret)
->> +		goto deinit_clk;
->> +
->> +//	if (rockchip->mode == DW_PCIE_RC_TYPE)
->> +//		ret = rk_add_pcie_port(rockchip);
-> 
-> Remove commented-out code.  I do like an "if" statement better than
-> the complicated assignment/ternary thing below, though.
-> 
+ .../bindings/spi/allwinner,sun6i-a31-spi.yaml      | 12 +++--
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts      | 19 ++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi       | 55 ++++++++++++++++++++++
+ 3 files changed, 83 insertions(+), 3 deletions(-)
 
-My bad. Will fix it in V2.
-
->> +	ret = rockchip->mode == DW_PCIE_RC_TYPE ?
->> +		rk_add_pcie_port(rockchip) : -EINVAL;
->> +
->> +	if (ret)
->> +		goto deinit_clk;
-> 
-> 
-
+-- 
+2.14.5
 
