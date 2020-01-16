@@ -2,114 +2,173 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E5BC33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6254C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B5320728
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A7A206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HgJQIB6v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VXMxF6J4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgAPVG0 (ORCPT
+        id S1729305AbgAPVgI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:06:26 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41960 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388469AbgAPVGZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 16:06:25 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GL6IUU088314;
-        Thu, 16 Jan 2020 15:06:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579208778;
-        bh=vYA+wvvgu2+aVUd78cyvNM3+t7Cx6lfmscrZXxzmqic=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=HgJQIB6vAjWsATme2AAO6LWTC+t2gUwqcbJdA1zC2buTHZTrh/J+g1NaU0Yf4Hh5t
-         ENolx5RxS8WwBbaxfAeq8ygOFKC+BhSpaQfLSB7hHLUR7ar33bsXvG3HJ9kU8gcW4I
-         EgwradSgAzVerejY6ljsc3LwlBxxZUr7C6DzClEc=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GL6ISA050989;
-        Thu, 16 Jan 2020 15:06:18 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 15:06:17 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 15:06:16 -0600
-Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GL60ie107315;
-        Thu, 16 Jan 2020 15:06:14 -0600
-From:   Jyri Sarha <jsarha@ti.com>
-To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
-        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
-        <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
-        <sam@ravnborg.org>, <robh+dt@kernel.org>
-Subject: [PATCH v7 5/5] MAINTAINERS: add entry for tidss
-Date:   Thu, 16 Jan 2020 23:06:00 +0200
-Message-ID: <a8d5b5dfad831b780d6d2639bd291089c4c5b0a9.1579202260.git.jsarha@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1579202260.git.jsarha@ti.com>
-References: <cover.1579202260.git.jsarha@ti.com>
+        Thu, 16 Jan 2020 16:36:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39077 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgAPVgI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 16:36:08 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b137so10556187pga.6;
+        Thu, 16 Jan 2020 13:36:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=VvHjOr4ACw42b4kMyCv1bwkltuHZ5dV8Yk2HQjQZAlI=;
+        b=VXMxF6J4VZaz/Wz/4mgtW/q1blQp73b5J3ss4YXtK3xaICcRQ2TRvWJYSWTvfbf+x4
+         3JsuoCOm02lXPCiVipKd7lZ6zlcBYl5iJpeMZG6mmvQhc8fijS4jm7OeXiOyUFI4ZyTp
+         f2q2cRVF7yklkq/083axeifLLcevK4ZM19nRuhRLDaNEJX1PsllqFr8CEguV3Un01aZa
+         d9eL7YrGUJxW5iuIj6Oese/tY5+ijzsL3iWNXvSnstqIf9LcFPOGgTfi+wYoPQHZ4nGu
+         PaTKHQY0ff+/rjx04oBxocEGBXUDIL8zNXze+NH+Y8/GN9EMpn2w856KYdkpP2p6aYVD
+         bybQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=VvHjOr4ACw42b4kMyCv1bwkltuHZ5dV8Yk2HQjQZAlI=;
+        b=nw8gvnVs4nHYNulV8HcogCQwZXDurflFD8k+UlKXyGvGRQt/i8VQUBStDISYDZrzOQ
+         8Lr2j/Wq0T4EgGGCb+syPhhXQoDtMox1uU0x8qyDnGcKywMuidq74RgtZebUJB/XC7N9
+         7hHgbC9riNDxjAtDzVT45Lg2pgCYhnTcLKc7U7tLiV826udBRSrBHJBh0wQfwWloADX/
+         48GRI83D1Thf3kVMZW881IJqiInv6Ln5kuivyxLQn7zZmSRnCFZepxoXyGD1rYe5+pRs
+         9ptWuKxVrmp3T4UEBtXXcC7ajhO5Wt7I2rTeykdAWpfAqsKuHQ5seQ8c06/P1/J5z0vq
+         D9fA==
+X-Gm-Message-State: APjAAAVH3Hrqsi45S5aF3HDm4/mAOi8V4oGwoeSNgQICdC7hwM4zw8Bw
+        uVZYepsvcXkOCsYg8eZaMBk=
+X-Google-Smtp-Source: APXvYqxjr+BBlZeEcRR6QoKUFDGOvvBQdbcqg/tsq1gFgKlSEwc4bQlSKtnjEoU0a7Mq2ueap/gU1g==
+X-Received: by 2002:a63:554c:: with SMTP id f12mr42586847pgm.23.1579210567196;
+        Thu, 16 Jan 2020 13:36:07 -0800 (PST)
+Received: from SL2P216MB0105.KORP216.PROD.OUTLOOK.COM ([2603:1046:100:22::5])
+        by smtp.gmail.com with ESMTPSA id g2sm26555320pgn.59.2020.01.16.13.36.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 Jan 2020 13:36:06 -0800 (PST)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Shawn Lin <shawn.lin@rock-chips.com>
+CC:     Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        William Wu <william.wu@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
+Thread-Topic: [PATCH 5/6] PCI: rockchip: add DesignWare based PCIe controller
+Thread-Index: AQHVyqvWb/c4FgGoOUOrdcU9dWh4vqft1IkR
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Thu, 16 Jan 2020 21:36:00 +0000
+Message-ID: <SL2P216MB0105652DE83E7CBBDA2A370CAA360@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+References: <1578986580-71974-1-git-send-email-shawn.lin@rock-chips.com>
+ <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
+In-Reply-To: <1578986701-72072-1-git-send-email-shawn.lin@rock-chips.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add entry for tidss DRM driver.
+On 1/14/20, 2:25 AM, Shawn Lin wrote:
+>=20
+> From: Simon Xue <xxm@rock-chips.com>
+>
+> Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+>
+>  drivers/pci/controller/dwc/Kconfig            |   9 +
+>  drivers/pci/controller/dwc/Makefile           |   1 +
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 441 ++++++++++++++++++++=
+++++++
+>  3 files changed, 451 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
+dwc/Kconfig
+> index 0830dfc..9160264 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -82,6 +82,15 @@ config PCIE_DW_PLAT_EP
+>  	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>  	  selected.
+> =20
+> +config PCIE_DW_ROCKCHIP
+> +	bool "Rockchip DesignWare PCIe controller"
+> +	select PCIE_DW
+> +	select PCIE_DW_HOST
+> +	depends on ARCH_ROCKCHIP
+> +	depends on OF
+> +	help
+> +	  Enables support for the DW PCIe controller in the Rockchip SoC.
+> +
 
-Version history:
+The order is PCIE_DW, PCI_*, and PCIE_* as below.
 
-v2: no change
+1. Common Frameworks:
+    These options are used by other controller drivers.
+    e.g., PCIE_DW, PCIE_DW_HOST, PCIE_DW_EP.
 
-v3: - Move tidss entry after omapdrm
-    - Add "T:     git git://anongit.freedesktop.org/drm/drm-misc"
+2. PCI_* controller drivers:
+    PCI_* was used earlier than PCIE_*. If a chip vendor's controllers prov=
+ide
+    both conventional PCI and PCI Express, or only conventional PCI, PCI_* =
+can
+    be used.
 
-v4: no change
+3. PCIE_* controller drivers
+    If a controller can support only PCI Express, not conventional PCI,
+    PCIE_* is the proper naming.
 
-v5: no change
+Then, within PCI_* or PCIE_* categories, each controller option should be
+in an alphabetical order for the readability.
 
-v6: no change
+So, add 'PCIE_DW_ROCKCHIP' between 'PCIE_ARTPEC6_EP' and 'PCIE_KIRIN'.
 
-v7: no change
+>
+>  config PCI_EXYNOS
+>  	bool "Samsung Exynos PCIe controller"
+>  	depends on SOC_EXYNOS5440 || COMPILE_TEST
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller=
+/dwc/Makefile
+> index 8a637cf..cb4857f 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -19,6 +19,7 @@ obj-$(CONFIG_PCIE_HISI_STB) +=3D pcie-histb.o
+>  obj-$(CONFIG_PCI_MESON) +=3D pci-meson.o
+>  obj-$(CONFIG_PCIE_TEGRA194) +=3D pcie-tegra194.o
+>  obj-$(CONFIG_PCIE_UNIPHIER) +=3D pcie-uniphier.o
+> +obj-$(CONFIG_PCIE_DW_ROCKCHIP) +=3D pcie-dw-rockchip.o
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Ditto.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa9add598b7d..d8f65dc1dde8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5630,6 +5630,17 @@ S:	Maintained
- F:	drivers/gpu/drm/omapdrm/
- F:	Documentation/devicetree/bindings/display/ti/
- 
-+DRM DRIVERS FOR TI KEYSTONE
-+M:	Jyri Sarha <jsarha@ti.com>
-+M:	Tomi Valkeinen <tomi.valkeinen@ti.com>
-+L:	dri-devel@lists.freedesktop.org
-+S:	Maintained
-+F:	drivers/gpu/drm/tidss/
-+F:	Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
-+F:	Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+F:	Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
-+T:	git git://anongit.freedesktop.org/drm/drm-misc
-+
- DRM DRIVERS FOR V3D
- M:	Eric Anholt <eric@anholt.net>
- S:	Supported
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+[...]
+
+Best regards,
+Jingoo Han
 
