@@ -2,156 +2,176 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4C2C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F27C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 12:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E878320748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E380207FF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 12:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jy17ehUk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCzhhL1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726045AbgAPLle (ORCPT
+        id S1726574AbgAPMBA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:41:34 -0500
-Received: from mail-bn8nam12on2079.outbound.protection.outlook.com ([40.107.237.79]:2498
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725999AbgAPLle (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 06:41:34 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IDC6o+ecfcG3EA05Muid8ikkaYdj59fImLz8GFCmHlKslTGVYf7F4KW24bdrlaQ3AnR2TB1Dptx9C5hpwj8EkWUlPF8bwXUL2rFE0dk12hks180hmFZj3S6PhvHYRIETY/L/yAHBYemIHHz445pi1bSejrBoLj86IsfRXENmXp2RwJ24ntCOjnaDER1SxaSmnRxEBibkXQUFDH28oCE30KcZNCSkRjwr06t/u8uqaf2gJjaLC9dcvb0V9kYZwGkU/sFhMAcapkIHlkX8ny2G3oLo7IwOu+fS2j1b4ZYvCBE+bcEZGNts7ABpWLM8wf3pd6GJIUzLIxL+ppZpVHd8fA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SKup4/XUMY8qX58+CZySttIZaRAxOxZVoNjXFr4HkYM=;
- b=E/GDHHziwMenKKYY5PR8iDLLlnXZCDYjq15QaJvArjv728wQJflE+zLr9PVPAX1krLWD8cUaOFcuf8WLJqlQde0AqTVKRTWh5r02tmvgis+fktE4yzAXMr9thB0TdVOv59JSJiNdZZFHPveB/SOwEdCS4yx7rSbtd4sF0YAwhlQRtupz/h3APaziwlCzb/LviYCPsXqr79yseJKVpF5ElKgDHv3wAuBD9dKQts3xG63T9GL7cuvcjXfj4qvJugU15v/P/llYw0qP+cUfHcMET+Leo0BsKsYi8fsP7cBwabpSMvad4TIXVVXGAMNHvHfohkLR4OFS0fCDHSTkzhf2bw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Thu, 16 Jan 2020 07:01:00 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37789 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbgAPMBA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 07:01:00 -0500
+Received: by mail-wm1-f65.google.com with SMTP id f129so3513078wmf.2;
+        Thu, 16 Jan 2020 04:00:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SKup4/XUMY8qX58+CZySttIZaRAxOxZVoNjXFr4HkYM=;
- b=jy17ehUkCr0gnBD3NeNQGq0Cfwl3rnye/URvHDWO5/gcw7+gmBI4RF8079K/nXyYC95iIIQarEVFJDHzk47psE9dIn2l8DrzvPEoZoC4M6CHUsZs5/bf+YvGA+LB5J7kTuZOTnlsuAYysYvc8Ejn+Ei+i7osyobMSO0kmZ35mXo=
-Received: from BYAPR02MB4055.namprd02.prod.outlook.com (52.135.202.143) by
- BYAPR02MB5462.namprd02.prod.outlook.com (20.177.229.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.18; Thu, 16 Jan 2020 11:41:28 +0000
-Received: from BYAPR02MB4055.namprd02.prod.outlook.com
- ([fe80::f964:6ae7:834b:8fa7]) by BYAPR02MB4055.namprd02.prod.outlook.com
- ([fe80::f964:6ae7:834b:8fa7%5]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
- 11:41:28 +0000
-From:   Rajan Vaja <RAJANV@xilinx.com>
-To:     Michal Simek <michals@xilinx.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        Jolly Shah <JOLLYS@xilinx.com>,
-        "m.tretter@pengutronix.de" <m.tretter@pengutronix.de>,
-        "gustavo@embeddedor.com" <gustavo@embeddedor.com>,
-        Tejas Patel <TEJASP@xilinx.com>,
-        Nava kishore Manne <navam@xilinx.com>,
-        "mdf@kernel.org" <mdf@kernel.org>
-CC:     "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=K45x8SHvjhN/SqzbB8kaaG/ZwA6tE8xnF2TMFaLqgWo=;
+        b=qCzhhL1fyhuF4uJ30kAHFGAgukb2dvuIkZZpSFnV9Bvopy1uHd2JmGaTH/DeCT9jyv
+         zEUV7VfHwdLK6lkcDTsPPilyk7vBAk66Hv5ZqEtNm5rvhSmQFJNwXylpl/1Bzs0Imv54
+         Rql4Hhs2Qoq6nyXXVoyhzL+DHoBZKRWba01HL4UK/mcUTyOescWybJpHAQgDx/pXVWSy
+         sJYb4yzMCfKhh+CdyHvrc37xdZ2akspJyGCpvLnT7IdhY/SV04oZpEBReXF04SJJVP6x
+         J28UY9KUlAdKPgt5lH0M4MEw2dkG7DX7hH3Y0T5ZXy89bOP8Cr4xXFmOEGzUCW/onAH+
+         sjIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=K45x8SHvjhN/SqzbB8kaaG/ZwA6tE8xnF2TMFaLqgWo=;
+        b=IL5RZwnGKf5k5RqpSNUUj6fwEXdi3p/8leqEZtlTIYw5L/yKdUhCNaWXlF+NdiknrQ
+         3qqkeLcJSAt42pKIJwpGoSoQKsDMDToxuNJLDiUcXl3xxZ8HYIr1aaQkFPeZkffDo4zB
+         SGhZKljaYP2ucbidq7Zz1OJL50c0QsWZlM9aEYhjJKNKeij5OwcQ++GJcb8teYBNYPXs
+         INBjiSzCO41wD1iP2qTyNWOciFD1oMgPj6GBaWjJr1lUW9Tj2NRDkA9moREkxCeXPZCl
+         q7jhY2pZSYrq3DRJ85SR1is8lSfCqrxmlep8+xTUR2ro2Z3aIBSkJed7f5EGG9Nb8UzD
+         3djg==
+X-Gm-Message-State: APjAAAWKaNL9NS927ThJUawuLg/CbnUfFv/YDXnEUBvxSJIEGizrQCAo
+        3sc1ZuJbzWKEXosCmEMufbs=
+X-Google-Smtp-Source: APXvYqxSG6XX0qeAUXiXclajDgAqCIR4Vw2T5QnvgyIxq5EiuPtxzO1/xghNLthqCFKePTImdZDOOg==
+X-Received: by 2002:a7b:cb86:: with SMTP id m6mr5686130wmi.51.1579176057805;
+        Thu, 16 Jan 2020 04:00:57 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id n8sm28902799wrx.42.2020.01.16.04.00.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 04:00:57 -0800 (PST)
+Subject: Re: [RFC PATCH v1 2/3] dt-bindings: mmc: convert synopsys dw-mshc
+ bindings to yaml
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v3 0/6] clk: zynqmp: Extend and fix zynqmp clock driver
-Thread-Topic: [PATCH v3 0/6] clk: zynqmp: Extend and fix zynqmp clock driver
-Thread-Index: AQHVqzaKZfjuMgYuu0e5sIMWLWz5cqe2qOMAgDbD6rA=
-Date:   Thu, 16 Jan 2020 11:41:27 +0000
-Message-ID: <BYAPR02MB405593B79AB01004F0BB9101B7360@BYAPR02MB4055.namprd02.prod.outlook.com>
-References: <1574415814-19797-1-git-send-email-rajan.vaja@xilinx.com>
- <1575527759-26452-1-git-send-email-rajan.vaja@xilinx.com>
- <19c5f918-7e00-75e4-10d1-53f0a30748b2@xilinx.com>
-In-Reply-To: <19c5f918-7e00-75e4-10d1-53f0a30748b2@xilinx.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=RAJANV@xilinx.com; 
-x-originating-ip: [14.142.15.114]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 090fb488-c584-4c6a-bf1c-08d79a79061b
-x-ms-traffictypediagnostic: BYAPR02MB5462:|BYAPR02MB5462:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB5462D09D86D2F091F766E164B7360@BYAPR02MB5462.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 02843AA9E0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(376002)(346002)(189003)(199004)(66476007)(86362001)(8936002)(66946007)(33656002)(64756008)(52536014)(55016002)(76116006)(7696005)(66446008)(2906002)(478600001)(66556008)(7416002)(4326008)(6506007)(55236004)(54906003)(8676002)(26005)(110136005)(81166006)(316002)(186003)(53546011)(81156014)(9686003)(71200400001)(5660300002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5462;H:BYAPR02MB4055.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GGTMoTl5P4oXHqIvzz+N45d+gcNjCSN+sgYDN7NAMI1uHYTafGeqSdbTjH1gnhJnORv9zOak2FzYMOZsWA9wmPSp3y1lVO1T8E7UvczhmL1lQpWyUOcHceMxWj0cu6s+d9ICDTpClw4Wpm3dXY1Rv8NA7/X1AwVCyMjlvz8h96oIZSw/TU/J4nBSiiA0zsWCqnxuAF7hZchSJnTi51KQbQ3CQjhuFcii9EnBwX3YbM27rtA3q3MgoiM/INA6kGBagLswkThafm571SVUg8LoSwPwlouqyXpfiUkpiwdvufeWu3xVBa5taDh8z1cD3ixwgCzYJ1pzHsezlznnVEqndceWztWnBQKY37UQoUjigqL2aHrMPebGLEy9MvpaZ4QqXLAHfv2gLShRPcUPbf8tTSnY4hu2jdtp0+eYBWKIwXD3bZWGYUWBdT55cCyibeUpzJFKay7BeUHW93a9iYErMvcx5un0aRnKsDKAKru1orV5pgSyX17MpDQTnvVvaMJM
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+References: <20200114213809.27166-1-jbx6244@gmail.com>
+ <20200114213809.27166-2-jbx6244@gmail.com>
+ <CAL_JsqJ0QJ9uG9NY7vMGG00G4Jfk2mXS4OPdUzEaRVaCP++GzQ@mail.gmail.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <203e9217-9aa8-b65e-4411-2d9b23c1362a@gmail.com>
+Date:   Thu, 16 Jan 2020 13:00:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 090fb488-c584-4c6a-bf1c-08d79a79061b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 11:41:27.8447
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DpvNucDhAeCtij91AgK9dbSKS9Zg5LpDkGM7LAF+1/5Dbb3Q7EY6guvWdbJm0v8RP/i1YzUQvxjxcUJ96LrnBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5462
+In-Reply-To: <CAL_JsqJ0QJ9uG9NY7vMGG00G4Jfk2mXS4OPdUzEaRVaCP++GzQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgU3RlcGhlbiwNCg0KQ291bGQgcGxlYXNlIGxldCB1cyBrbm93IGlmIHlvdSBoYXZlIGNvbW1l
-bnQgb24gdGhpcyBwYXRjaCBzZXJpZXM/DQoNClRoYW5rcywNClJhamFuDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGls
-aW54LmNvbT4NCj4gU2VudDogMTIgRGVjZW1iZXIgMjAxOSAwODo1MCBQTQ0KPiBUbzogUmFqYW4g
-VmFqYSA8UkFKQU5WQHhpbGlueC5jb20+OyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsNCj4gc2Jv
-eWRAa2VybmVsLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsg
-TWljaGFsIFNpbWVrDQo+IDxtaWNoYWxzQHhpbGlueC5jb20+OyBKb2xseSBTaGFoIDxKT0xMWVNA
-eGlsaW54LmNvbT47DQo+IG0udHJldHRlckBwZW5ndXRyb25peC5kZTsgZ3VzdGF2b0BlbWJlZGRl
-ZG9yLmNvbTsgVGVqYXMgUGF0ZWwNCj4gPFRFSkFTUEB4aWxpbnguY29tPjsgTmF2YSBraXNob3Jl
-IE1hbm5lIDxuYXZhbUB4aWxpbnguY29tPjsgbWRmQGtlcm5lbC5vcmcNCj4gQ2M6IGxpbnV4LWNs
-a0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4g
-a2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMC82XSBjbGs6IHp5bnFtcDogRXh0ZW5kIGFu
-ZCBmaXggenlucW1wIGNsb2NrIGRyaXZlcg0KPiANCj4gT24gMDUuIDEyLiAxOSA3OjM1LCBSYWph
-biBWYWphIHdyb3RlOg0KPiA+IFp5bnFNUCBjbG9jayBkcml2ZXIgY2FuIGJlIHVzZWQgZm9yIFZl
-cnNhbCBwbGF0Zm9ybSBhbHNvLiBBZGQgc3VwcG9ydA0KPiA+IGZvciBWZXJzYWwgcGxhdGZvcm0g
-aW4gWnlucU1QIGNsb2NrIGRyaXZlci4NCj4gPg0KPiA+IEFsc28gdGhpcyBwYXRjaCBzZXJpZXMg
-Zml4ZXMgZGl2aWRlciBjYWxjdWxhdGlvbiBhbmQgYWRkcyBzdXBwb3J0IGZvciBnZXQNCj4gPiBt
-YXhpbXVtIGRpdmlkZXIsIGNsb2NrIHdpdGggQ0xLX0RJVklERVJfUE9XRVJfT0ZfVFdPIGZsYWcg
-YW5kIHdhcm4gdXNlcg0KPiBpZg0KPiA+IGNsb2NrIHVzZXJzIGFyZSBtb3JlIHRoYW4gYWxsb3dl
-ZC4NCj4gPg0KPiA+IFJhamFuIFZhamEgKDUpOg0KPiA+ICAgZHQtYmluZGluZ3M6IGNsb2NrOiBB
-ZGQgYmluZGluZ3MgZm9yIHZlcnNhbCBjbG9jayBkcml2ZXINCj4gPiAgIGNsazogenlucW1wOiBF
-eHRlbmQgZHJpdmVyIGZvciB2ZXJzYWwNCj4gPiAgIGNsazogenlucW1wOiBXYXJuIHVzZXIgaWYg
-Y2xvY2sgdXNlciBhcmUgbW9yZSB0aGFuIGFsbG93ZWQNCj4gPiAgIGNsazogenlucW1wOiBBZGQg
-c3VwcG9ydCBmb3IgZ2V0IG1heCBkaXZpZGVyDQo+ID4gICBjbGs6IHp5bnFtcDogRml4IGRpdmlk
-ZXIgY2FsY3VsYXRpb24NCj4gPg0KPiA+IFRlamFzIFBhdGVsICgxKToNCj4gPiAgIGNsazogenlu
-cW1wOiBBZGQgc3VwcG9ydCBmb3IgY2xvY2sgd2l0aCBDTEtfRElWSURFUl9QT1dFUl9PRl9UV08g
-ZmxhZw0KPiA+DQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3hsbngsdmVyc2Fs
-LWNsay55YW1sIHwgIDY0ICsrKysrKysrKysrDQo+ID4gIGRyaXZlcnMvY2xrL3p5bnFtcC9jbGtj
-LmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAzICstDQo+ID4gIGRyaXZlcnMvY2xrL3p5
-bnFtcC9kaXZpZGVyLmMgICAgICAgICAgICAgICAgICAgICAgIHwgMTE4ICsrKysrKysrKysrKysr
-KysrKystDQo+ID4gIGRyaXZlcnMvY2xrL3p5bnFtcC9wbGwuYyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgICA2ICstDQo+ID4gIGRyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFtcC5jICAg
-ICAgICAgICAgICAgICAgIHwgICAyICsNCj4gPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay94
-bG54LXZlcnNhbC1jbGsuaCAgICAgICAgfCAxMjMgKysrKysrKysrKysrKysrKysrKysrDQo+ID4g
-IGluY2x1ZGUvbGludXgvZmlybXdhcmUveGxueC16eW5xbXAuaCAgICAgICAgICAgICAgIHwgICAy
-ICsNCj4gPiAgNyBmaWxlcyBjaGFuZ2VkLCAzMTAgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMo
-LSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9jbG9jay94bG54LHZlcnNhbC0NCj4gY2xrLnlhbWwNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2sveGxueC12ZXJzYWwtY2xrLmgNCj4gPg0KPiAN
-Cj4gVGhhdCBmaXJtd2FyZSBjaGFuZ2VzIGxvb2tzIGdvb2QuIFRoYXQncyB3aHkgZmVlbCBmcmVl
-IHRvIGFkZCBteQ0KPiBBY2tlZC1ieTogTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54
-LmNvbT4NCj4gdG8gdGhhdCBwYXRjaGVzLg0KPiBJZiB5b3Ugd2FudCBtZSB0byB0YWtlIGl0IHZp
-YSBteSB0cmVlIHBsZWFzZSBsZXQgbWUga25vdy4NCj4gDQo+IFRoYW5rcywNCj4gTWljaGFsDQo=
+See below.
+
+On 1/15/20 4:18 PM, Rob Herring wrote:
+> On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
+>>
+
+> [...]
+> 
+>> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+>> new file mode 100644
+>> index 000000000..6f85a21d0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
+>> @@ -0,0 +1,88 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/mmc/synopsys-dw-mshc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Synopsys Designware Mobile Storage Host Controller Binding
+
+[..]
+
+>> +examples:
+>> +  # The MSHC controller node can be split into two portions, SoC specific and
+>> +  # board specific portions as listed below.
+> 
+
+
+> This split doesn't work because the examples are built and validated
+> now. It may happen to because all the props are optional, but the
+> board hunk goes unchecked. So please combine.
+> 
+
+Hi,
+
+I have no knowledge about this particular hardware to give a realistic
+example. Could someone advise here? Or should I just use the first
+example for now?
+
+Thanks
+
+>> +  - |
+>> +    dwmmc0@12200000 {
+>> +      compatible = "snps,dw-mshc";
+>> +      clocks = <&clock 351>, <&clock 132>;
+>> +      clock-names = "biu", "ciu";
+>> +      reg = <0x12200000 0x1000>;
+>> +      interrupts = <0 75 0>;
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +      data-addr = <0x200>;
+>> +      fifo-watermark-aligned;
+>> +      resets = <&rst 20>;
+>> +      reset-names = "reset";
+>> +    };
+>> +  # [board specific internal DMA resources]
+>> +  - |
+>> +    dwmmc0@12200000 {
+>> +      clock-frequency = <400000000>;
+>> +      clock-freq-min-max = <400000 200000000>;
+>> +      broken-cd;
+>> +      fifo-depth = <0x80>;
+>> +      card-detect-delay = <200>;
+>> +      vmmc-supply = <&buck8>;
+>> +      bus-width = <8>;
+>> +      cap-mmc-highspeed;
+>> +      cap-sd-highspeed;
+>> +    };
+>> +  # [board specific generic DMA request binding]
+>> +  - |
+>> +    dwmmc0@12200000 {
+>> +      clock-frequency = <400000000>;
+>> +      clock-freq-min-max = <400000 200000000>;
+>> +      broken-cd;
+>> +      fifo-depth = <0x80>;
+>> +      card-detect-delay = <200>;
+>> +      vmmc-supply = <&buck8>;
+>> +      bus-width = <8>;
+>> +      cap-mmc-highspeed;
+>> +      cap-sd-highspeed;
+>> +      dmas = <&pdma 12>;
+>> +      dma-names = "rx-tx";
+>> +    };
+>> --
+>> 2.11.0
+>>
+
