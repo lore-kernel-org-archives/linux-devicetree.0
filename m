@@ -2,50 +2,52 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCD2C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1BFC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2EF206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B19206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201833;
-	bh=3eSdQKBCKCZUZxrA8ohD1vqLNUjmacg3tdsdP3Ld41c=;
+	s=default; t=1579201907;
+	bh=NQPAdyaAP2EytZnPVR+ZjNCeYN6ANWeK/buvrcz58cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XenT06InZRZDLm1JjJ54S3rLOBKNE9piPJXbKsK5vufChACc++DiF5MlSm29EAl9h
-	 1Gskza+Ms9soMqGwx45KVFUJPYIrP5PFKu2Ne9qkjuP0/iLFpS2ATQLMXA7BJr6zyq
-	 2TsfVByxb96kxRsZswF91/XnuCGPm29xixCe+a5A=
+	b=1zoXxaKYNazYSc+yVOSGgdM1ad3V+79sRPRJZ3W+J6IsB90FDjcPhos1NKzR5D4fk
+	 zImyUCDYEfjiOhR/5OJbWyH372HMbWCrRTLs1n5LDmCig9QceMegARGz9bZ3Sq4qSo
+	 OAPCMdTUVVAEmpSz8hat4B1MG42Dzmpoj7Cc2qKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388895AbgAPTKR (ORCPT
+        id S2387482AbgAPTLm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:11:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387837AbgAPRAa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:30 -0500
+        id S2387692AbgAPRAM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 268842467C;
-        Thu, 16 Jan 2020 17:00:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 767A820728;
+        Thu, 16 Jan 2020 17:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194029;
-        bh=3eSdQKBCKCZUZxrA8ohD1vqLNUjmacg3tdsdP3Ld41c=;
+        s=default; t=1579194011;
+        bh=NQPAdyaAP2EytZnPVR+ZjNCeYN6ANWeK/buvrcz58cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjuTvFYeuxqI2R2WefEkXbdUzsg/JyYnCPp5ZXMgRh/xdfWFCA47U6cqE6T68Lhi+
-         WSkiqVTQLrUgWnuhn5oo6Fl1IvjEklhrVHqTW9mBKeXpQzLlfJWG+BCLZOwmeRu7CP
-         Z9Y7IR0Kv9hOfUdHdUPQ4JIVLPHo+T+HmcKDgKBA=
+        b=Id8BH3CTEFKri0EuSVhaY1q9FdPfmqfWpO3NgyOexQ6P2WAncm+HMA5ghb638hIMr
+         /emxQpeUqNA6R/EsZdZFgGb2dt/+pTZi2BVD5ABGoe5myiOwH3Rly98s25k0AjYK9Q
+         aKDkwgNJM+44uhoSkX+ncGtDiAqHHNK3Rsyqonro=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 149/671] ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller variant
-Date:   Thu, 16 Jan 2020 11:50:58 -0500
-Message-Id: <20200116165940.10720-32-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 135/671] arm64: dts: allwinner: h6: Move GIC device node fix base address ordering
+Date:   Thu, 16 Jan 2020 11:50:44 -0500
+Message-Id: <20200116165940.10720-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
 References: <20200116165940.10720-1-sashal@kernel.org>
@@ -58,34 +60,62 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 7a0790a4121cbcd111cc537cdc801c46ccb789ee ]
+[ Upstream commit 52d9bcb3d0de3fa1e07aff3800f857836d30410d ]
 
-ARM PrimeCell PL111 LCD controller is found on On NXP LPC3230
-and LPC3250 SoCs variants, the original reference in compatible
-property to an older one ARM PrimeCell PL110 is invalid.
+The GIC device node was placed out of order in the initial device tree
+submission. Move it so the nodes are correctly sorted by base address
+again.
 
-Fixes: e04920d9efcb3 ("ARM: LPC32xx: DTS files for device tree conversion")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Fixes: e54be32d0273 ("arm64: allwinner: h6: add the basical Allwinner H6 DTSI file")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 22 ++++++++++----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 4f8f671c3343..cfd422e7f774 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -139,7 +139,7 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index cfa5fffcf62b..72813e7aefb8 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -101,17 +101,6 @@
+ 			#reset-cells = <1>;
  		};
  
- 		clcd: clcd@31040000 {
--			compatible = "arm,pl110", "arm,primecell";
-+			compatible = "arm,pl111", "arm,primecell";
- 			reg = <0x31040000 0x1000>;
- 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clk LPC32XX_CLK_LCD>;
+-		gic: interrupt-controller@3021000 {
+-			compatible = "arm,gic-400";
+-			reg = <0x03021000 0x1000>,
+-			      <0x03022000 0x2000>,
+-			      <0x03024000 0x2000>,
+-			      <0x03026000 0x2000>;
+-			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+-			interrupt-controller;
+-			#interrupt-cells = <3>;
+-		};
+-
+ 		pio: pinctrl@300b000 {
+ 			compatible = "allwinner,sun50i-h6-pinctrl";
+ 			reg = <0x0300b000 0x400>;
+@@ -149,6 +138,17 @@
+ 			};
+ 		};
+ 
++		gic: interrupt-controller@3021000 {
++			compatible = "arm,gic-400";
++			reg = <0x03021000 0x1000>,
++			      <0x03022000 0x2000>,
++			      <0x03024000 0x2000>,
++			      <0x03026000 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
+ 		mmc0: mmc@4020000 {
+ 			compatible = "allwinner,sun50i-h6-mmc",
+ 				     "allwinner,sun50i-a64-mmc";
 -- 
 2.20.1
 
