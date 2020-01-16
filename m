@@ -2,104 +2,95 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAC9C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8ACC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F74C246BD
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60BE214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195159;
-	bh=yeSp0fGwJ/dgY0fFHiYhsov/EbuVK+ryQi59MzAqvno=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AtwhZ2AA4xnQYXrWhnYTfQm1WrybGqvpl4mXCwPhHZT4Rbk7pQQCm8XM5uBGlylGI
-	 ATjv5d6fakiiI1w0Ysw+aPCv41v6hy0r51ET6XA92+G9hzBWepGogm0SCQHqQuTzMU
-	 Y7b41QVWZC/iqYo5bSZbl/jXJT+nd9tciVEpgkTg=
+	s=default; t=1579195352;
+	bh=ndOS0f4Dtb1ODMTqk6eVUDdez0LhtfKzKRVYAhh27OU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mNaz++cbRx22Srko7X/YTrmNm1PH3wYN1fPpcP6pO7C9UrZ0wUxbHpt2MPzbx2iY3
+	 PXrtV71J07DHVk6UhDr1u/zOpnUmyPuE+kCv/9josKaQTjky99zmjU1CHsT+uI51ER
+	 4KEBTCiH454+JByo0xwmx2Xplo33i+xpoxLqkm+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390556AbgAPRTO (ORCPT
+        id S1729992AbgAPRWX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:19:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46116 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:22:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390022AbgAPRSa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:18:30 -0500
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        id S1733197AbgAPRNf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:35 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBBB9246CC;
-        Thu, 16 Jan 2020 17:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A16246AF;
+        Thu, 16 Jan 2020 17:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195109;
-        bh=yeSp0fGwJ/dgY0fFHiYhsov/EbuVK+ryQi59MzAqvno=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qN99BKR4uuYvaV0p7EkeJpD0n1G7OxycmMcmdYmyiwnqsT3GBQWRzT3SZeWjAUYn7
-         53YsrY1f4tOvKorJAq2KHbUBpxpwMPWFai4XnmBwLslwSXR201rnGSwV/ZRtnEoIJB
-         Ue/ErdA7tyXwktsjcmnKzM04KsD+AiEsFYg8kEIs=
-Received: by mail-qk1-f171.google.com with SMTP id d71so19861933qkc.0;
-        Thu, 16 Jan 2020 09:18:29 -0800 (PST)
-X-Gm-Message-State: APjAAAVTmKll/6bSKHZ5sqCaw3eQYKGmUEvxd7ZsGCLeeBnoZdIbr499
-        wrRZxDVWMH2/V1kfjqix5+W0/FIp5W7KR7wiwA==
-X-Google-Smtp-Source: APXvYqwFGJOr8mcO10BEbC3XUTOrgXEnY5Gd03lvreXKQUpv+wwI5MMwTMEmeMNDEkHT1VsOrGSSi3n3CwzN8ewQfCQ=
-X-Received: by 2002:a37:85c4:: with SMTP id h187mr34765113qkd.223.1579195108958;
- Thu, 16 Jan 2020 09:18:28 -0800 (PST)
+        s=default; t=1579194815;
+        bh=ndOS0f4Dtb1ODMTqk6eVUDdez0LhtfKzKRVYAhh27OU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eSZ4ys/iSvhKhx4jwv5ZwHy4yLgWuUQV20tb1Vv2dyMzMfilqVjdAoNMkLZHGtJ7O
+         EPa3DCFje15QHQrXBfXBZkZK+qka0yMFLj/DTlfLVOgYsCj+Sq7e+StakX6dlRSXtV
+         NMrxldOIaNjq/hSN/5wTp1pJnRS9q+DZF2/+zDvo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 621/671] arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
+Date:   Thu, 16 Jan 2020 12:04:19 -0500
+Message-Id: <20200116170509.12787-358-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20191219145843.3823-1-jbx6244@gmail.com> <20191228093059.2817-1-jbx6244@gmail.com>
- <20200104215524.GA28188@bogus> <CAPDyKFp5BvA7tKpBUh-bpn5X4xvg8b9HuMO7+fZVJEp78=ToRw@mail.gmail.com>
-In-Reply-To: <CAPDyKFp5BvA7tKpBUh-bpn5X4xvg8b9HuMO7+fZVJEp78=ToRw@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 16 Jan 2020 11:18:17 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+9w2wjwoOfnnKUBk9kOkZFcU6aWwyaw05ye-p3_WDcaQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+9w2wjwoOfnnKUBk9kOkZFcU6aWwyaw05ye-p3_WDcaQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: remove identical phrase in
- disable-wp text
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Johan Jonker <jbx6244@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 5:17 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Sat, 4 Jan 2020 at 22:55, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sat, 28 Dec 2019 10:30:58 +0100, Johan Jonker wrote:
-> > > There are two identical phrases in the disable-wp text,
-> > > so remove one of them.
-> > >
-> > > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > >
-> >
-> > Applied, thanks.
-> >
-> > Rob
->
-> Rob,
->
-> Normally I pick up the DT doc changes for mmc whenever you have acked
-> them (at least more non-trivial changes). I regards to the
-> mmc-controller.yaml file, I have no queued changes in my tree for this
-> cycle so this should be fine in regards to conflicts.
->
-> Going forward, do you prefer to pick the DT doc changes for mmc, or
-> can I consider this as a single occasion thingy?
+From: Loic Poulain <loic.poulain@linaro.org>
 
-I usually only pick up small changes if they are a binding only series
-and if they haven't been picked up already.
+[ Upstream commit e38161bd325ea541ef2f258d8e28281077dde524 ]
 
-Though I've been picking up a few schema conversions primarily so I
-can check that they validate. Hopefully that's temporary.
+In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
+VMMC, needs to be increased in order to prevent any voltage drop issues
+(due to limited current) happening with some SDCARDS or during specific
+operations (e.g. write).
 
-Rob
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 0ef90c6554a9..9b41d77aa39b 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -580,6 +580,8 @@
+ 				l21 {
+ 					regulator-min-microvolt = <2950000>;
+ 					regulator-max-microvolt = <2950000>;
++					regulator-allow-set-load;
++					regulator-system-load = <200000>;
+ 				};
+ 				l22 {
+ 					regulator-min-microvolt = <3300000>;
+-- 
+2.20.1
+
