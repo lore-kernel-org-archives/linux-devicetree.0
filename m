@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A072C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89300C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0A920728
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB4A20728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193909;
-	bh=fwthBG7OPOBCy/tV4b+0DKeAil7BDEj8I5zpXVs/SZM=;
+	s=default; t=1579193943;
+	bh=hEy+SEyJHy2Z+9dl0yeA1B7o61iCzX8WEsxkcrLp2wY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcB/gVPA5SHFJj8yCaaCir4f4Va0VbpFshv/oyBCRuJNYz5MR1I4iVc6aK0UiJLw4
-	 khQ1fCAKw2mV8uL24UHDUb4O83csvAyGUftOwwzerwVSGFq0b4j6efQ4Fth0qwxTx3
-	 xQzRe+JLHPlEeCHJHxtI6NOLm9O/OC17buOv9diA=
+	b=hZPAJzVzVBovJl9WvMZIhHM1r0KeqeIq81rswGHzjcetBlTFSjxla02iS1iqtn6xr
+	 xquW2/vmkZb0rR6vtvFIfKXczV/YzJC5n3ZAR3ozcD2Hmb/bQKifeUcuuspF0L7rQT
+	 zjsA21jq/vT3VjuRplH1S/bB97riu83zLn1+psbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733278AbgAPQ5s (ORCPT
+        id S1726925AbgAPQ66 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:57:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:58:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387544AbgAPQ5r (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:47 -0500
+        id S1732782AbgAPQ5e (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:57:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7113121D56;
-        Thu, 16 Jan 2020 16:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9444A24673;
+        Thu, 16 Jan 2020 16:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193866;
-        bh=fwthBG7OPOBCy/tV4b+0DKeAil7BDEj8I5zpXVs/SZM=;
+        s=default; t=1579193854;
+        bh=hEy+SEyJHy2Z+9dl0yeA1B7o61iCzX8WEsxkcrLp2wY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2dgpnEv0B8LZ+htCJjmls5koZV/N+3kVf3mgVajhcXwOkR00ELgSzZnFyNzdSBFYp
-         /Anl0MSOj0mii4TMLg+QEkszIXW5JTbo8q3CNsUS+2k9sgzY483+WKuJzQCvxwFOV5
-         oaCbB1EbRttQZxgr4NAUcThcqNkQJr4cFyO1LDbM=
+        b=oQ6e8xAgvu2uG3Q587sR8Wo96cfzcRdu2ZXlRjBX2/qql52MU8mSqKPfoyxkiSh+X
+         wI2zz9ovOez1hSLAPXUQp4yYk1qwm7B2DPl4q0G0DzoC36puipwbEvXk/fERX9PzhA
+         qGTeWuE+NUDNu4vHJ87dJlKja7hkR5cjWQuKnFaU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Manabu Igusa <migusa@arrowjapan.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 112/671] arm64: dts: apq8016-sbc: Increase load on l11 for SDCARD
-Date:   Thu, 16 Jan 2020 11:45:43 -0500
-Message-Id: <20200116165502.8838-112-sashal@kernel.org>
+Cc:     Biju Das <biju.das@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 104/671] ARM: dts: r8a7743: Fix sorting of rwdt node
+Date:   Thu, 16 Jan 2020 11:45:35 -0500
+Message-Id: <20200116165502.8838-104-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -62,40 +61,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Biju Das <biju.das@bp.renesas.com>
 
-[ Upstream commit af61bef513ba179559e56908b8c465e587bc3890 ]
+[ Upstream commit 383f6024981d32425fa453bf2e66b546fdbc1314 ]
 
-In the same way as for msm8974-hammerhead, l11 load, used for SDCARD
-VMMC, needs to be increased in order to prevent any voltage drop issues
-(due to limited current) happening with some SDCARDS or during specific
-operations (e.g. write).
+Watchdog node is incorrectly placed on r8a7743 SoC dtsi. This patch fixes
+the sorting order.
 
-Tested on Dragonboard-410c and DART-SD410 boards.
+Fixes: b5beb5d4c81c358f50a8310108 ("ARM: dts: r8a7743: Add watchdog support to SoC dtsi")
 
-Fixes: 4c7d53d16d77 (arm64: dts: apq8016-sbc: add regulators support)
-Reported-by: Manabu Igusa <migusa@arrowjapan.com>
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 78ce3979ef09..f38b815e696d 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -630,6 +630,8 @@
- 	l11 {
- 		regulator-min-microvolt = <1750000>;
- 		regulator-max-microvolt = <3337000>;
-+		regulator-allow-set-load;
-+		regulator-system-load = <200000>;
- 	};
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 5015e2273d82..fcc6d926991b 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -154,6 +154,16 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
- 	l12 {
++		rwdt: watchdog@e6020000 {
++			compatible = "renesas,r8a7743-wdt",
++				     "renesas,rcar-gen2-wdt";
++			reg = <0 0xe6020000 0 0x0c>;
++			clocks = <&cpg CPG_MOD 402>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 402>;
++			status = "disabled";
++		};
++
+ 		gpio0: gpio@e6050000 {
+ 			compatible = "renesas,gpio-r8a7743",
+ 				     "renesas,rcar-gen2-gpio";
+@@ -310,16 +320,6 @@
+ 			reg = <0 0xe6160000 0 0x100>;
+ 		};
+ 
+-		rwdt: watchdog@e6020000 {
+-			compatible = "renesas,r8a7743-wdt",
+-				     "renesas,rcar-gen2-wdt";
+-			reg = <0 0xe6020000 0 0x0c>;
+-			clocks = <&cpg CPG_MOD 402>;
+-			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+-			resets = <&cpg 402>;
+-			status = "disabled";
+-		};
+-
+ 		sysc: system-controller@e6180000 {
+ 			compatible = "renesas,r8a7743-sysc";
+ 			reg = <0 0xe6180000 0 0x200>;
 -- 
 2.20.1
 
