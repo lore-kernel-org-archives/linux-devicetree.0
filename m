@@ -2,147 +2,123 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F8C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD98DC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB8C217F4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850362081E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579193322;
+	bh=cEW1tkWwCZjtFHFuLDAR/CAkbHVDx+5KeZ9SbT1N4Lo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=R+YAVR3hJlDjHN2tua8MRbNDL/6SDBPPgQv0ddI3LUmtAkzS7mHAAqaWAvsnVz8Fh
+	 d4z83R+ynjFyUd7nxFXpZjrg41xvltXaHxsuQU93AiTm+P7sMSiLdoJhCxiY6G5m4L
+	 yk52193mdm7QhWOtoO3tnV3ndigh3aEklzQBYinw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbgAPQrR convert rfc822-to-8bit (ORCPT
+        id S1729332AbgAPQsi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:47:17 -0500
-Received: from mailoutvs28.siol.net ([185.57.226.219]:60633 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729878AbgAPQrQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 11:47:16 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 3256D522C71;
-        Thu, 16 Jan 2020 17:47:13 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yW5AjuuxMjwE; Thu, 16 Jan 2020 17:47:12 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id C28C9523561;
-        Thu, 16 Jan 2020 17:47:12 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 66D88522C71;
-        Thu, 16 Jan 2020 17:47:12 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] arm64: dts: allwinner: h6: tanix-tx6: Use internal oscillator
-Date:   Thu, 16 Jan 2020 17:47:12 +0100
-Message-ID: <20509747.EfDdHjke4D@jernej-laptop>
-In-Reply-To: <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
-References: <20200113180720.77461-1-jernej.skrabec@siol.net> <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
+        Thu, 16 Jan 2020 11:48:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728988AbgAPQsh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:48:37 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A3F2081E;
+        Thu, 16 Jan 2020 16:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193317;
+        bh=cEW1tkWwCZjtFHFuLDAR/CAkbHVDx+5KeZ9SbT1N4Lo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NrKM2Sqcs0wKI9HiP9vL4DTYjhO4dEBpj46MurcZPZQoTguxjw0QlMsKhOz7Q/9g1
+         5z+vzQVeGkW75kVIw7aWHPDE+dnMoMk4Vh9dj1w6otsN5HNH/UkZ7Bzy+thBum56Z8
+         dWRbm6dWkGZ7f782+HX7qr3Hr1HUY+hgnK0b/TUY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 073/205] arm64: dts: imx8mm-evk: Assigned clocks for audio plls
+Date:   Thu, 16 Jan 2020 11:40:48 -0500
+Message-Id: <20200116164300.6705-73-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi!
+From: "S.j. Wang" <shengjiu.wang@nxp.com>
 
-Dne četrtek, 16. januar 2020 ob 09:06:52 CET je Maxime Ripard napisal(a):
-> Hi Jernej,
-> 
-> On Mon, Jan 13, 2020 at 07:07:20PM +0100, Jernej Skrabec wrote:
-> > Tanix TX6 doesn't have external 32 kHz oscillator, so switch RTC clock
-> > to internal one.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> > While this patch gives one possible solution, I mainly want to start
-> > discussion why Allwinner SoC dtsi reference external 32 kHz crystal
-> > although some boards don't have it. My proposal would be to make clock
-> > property optional, based on the fact if external crystal is present or
-> > not. However, I'm not sure if that is possible at this point or not.
-> 
-> It's probably a bit of a dumb question but.. are you sure the crystal
-> is missing?
+[ Upstream commit e8b395b23643ca26e62a3081130d895e198c6154 ]
 
-Although I don't have schematic, I'm pretty sure. Without this patch or one at 
-[1], RTC gives a lot of errors in dmesg. I think that unpopulated XC2 pads 
-near SoC (see [2]) are probably reserved for crystal.
+Assign clocks and clock-rates for audio plls, that audio
+drivers can utilize them.
 
-With patch in [1], which enables automatic switching in case of error, I saw 
-that on this box RTC always switched to internal RC.
+Add dai-tdm-slot-num and dai-tdm-slot-width for sound-wm8524,
+that sai driver can generate correct bit clock.
 
-> 
-> The H6 datasheet mentions that the 32kHz crystal needs to be there,
-> and it's part of the power sequence, so I'd expect all boards to have
-> it.
+Fixes: 13f3b9fdef6c ("arm64: dts: imx8mm-evk: Enable audio codec wm8524")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 ++
+ arch/arm64/boot/dts/freescale/imx8mm.dtsi    | 8 ++++++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-Can you be more specific where it is stated that crystal is mandatory? 
-
-Note that schematic of some boards, like OrangePi PC2 (H5) or OrangePi Zero 
-(H3) don't even have 32K crystal in them.
-
-> 
-> > Driver also considers missing clock property as deprecated (old DT) [1],
-> > so this might complicate things even further.
-> > 
-> > What do you think?
-> 
-> I'm pretty sure (but that would need to be checked) that we never got
-> a node without the clocks property on the H6. If that's the case, then
-> we can add a check on the compatible.
-
-Yes, that would be nice solution. I can work something out if you agree that 
-this is the way.
-
-> 
-> > Best regards,
-> > Jernej
-> > 
-> > [1]
-> > https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L2
-> > 63> 
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts index
-> > 83e6cb0e59ce..af3aebda47bb 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > @@ -91,6 +91,12 @@ &r_ir {
-> > 
-> >  	status = "okay";
-> >  
-> >  };
-> > 
-> > +/* This board doesn't have external 32 kHz crystal. */
-> > +&rtc {
-> > +	assigned-clocks = <&rtc 0>;
-> > +	assigned-clock-parents = <&rtc 2>;
-> > +};
-> > +
-> 
-> This should be dealt with in the driver however.
-
-Sure, it is something to start discussion, I don't like tackling clocks in DT 
-either.
-
-Best regards,
-Jernej
-
-[1] https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Allwinner/
-devices/H6/patches/linux/15-RTC-workaround.patch
-[2] http://linux-sunxi.org/images/2/2e/Tanix_tx6_pcb_top.png
-
-
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index f7a15f3904c2..13137451b438 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -62,6 +62,8 @@
+ 
+ 		cpudai: simple-audio-card,cpu {
+ 			sound-dai = <&sai3>;
++			dai-tdm-slot-num = <2>;
++			dai-tdm-slot-width = <32>;
+ 		};
+ 
+ 		simple-audio-card,codec {
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+index 23c8fad7932b..0435c64c92c8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+@@ -479,14 +479,18 @@
+ 						<&clk IMX8MM_CLK_AUDIO_AHB>,
+ 						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
+ 						<&clk IMX8MM_SYS_PLL3>,
+-						<&clk IMX8MM_VIDEO_PLL1>;
++						<&clk IMX8MM_VIDEO_PLL1>,
++						<&clk IMX8MM_AUDIO_PLL1>,
++						<&clk IMX8MM_AUDIO_PLL2>;
+ 				assigned-clock-parents = <&clk IMX8MM_SYS_PLL3_OUT>,
+ 							 <&clk IMX8MM_SYS_PLL1_800M>;
+ 				assigned-clock-rates = <0>,
+ 							<400000000>,
+ 							<400000000>,
+ 							<750000000>,
+-							<594000000>;
++							<594000000>,
++							<393216000>,
++							<361267200>;
+ 			};
+ 
+ 			src: reset-controller@30390000 {
+-- 
+2.20.1
 
