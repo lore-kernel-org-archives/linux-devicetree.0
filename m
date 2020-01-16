@@ -2,90 +2,109 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC92CC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C010C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71C22073A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1052077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDcIm089"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731455AbgAPIv2 (ORCPT
+        id S1729427AbgAPIxE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:51:28 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44159 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731451AbgAPIv2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 03:51:28 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1is0s8-0005V5-8I; Thu, 16 Jan 2020 09:51:24 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1is0s7-0008Oo-Go; Thu, 16 Jan 2020 09:51:23 +0100
-Date:   Thu, 16 Jan 2020 09:51:23 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, stwiss.opensource@diasemi.com,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        Adam.Thomson.Opensource@diasemi.com
-Cc:     devicetree@vger.kernel.org, kernel@pengutronix.de,
-        linux-input@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] DA9063 Onkey Improvements and Fixes
-Message-ID: <20200116085123.dr2i42axmjezd4q3@pengutronix.de>
-References: <20191127132304.22924-1-m.felsch@pengutronix.de>
+        Thu, 16 Jan 2020 03:53:04 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:34544 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgAPIxE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 03:53:04 -0500
+Received: by mail-qv1-f65.google.com with SMTP id o18so8727524qvf.1;
+        Thu, 16 Jan 2020 00:53:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=801vaaIL76Zz7Eud3OqpJLc/Gt8+/1SS15pb9OLzY+A=;
+        b=YDcIm089ZaVsZlmcaV0S2s0Xpl5IOCRdXT5rzLU4HYKIUIDEIoWzEHSiXXoBexd7QB
+         xY+mixx4Y/9R7uBqqGwEKaW6lxDZGrMkVTqIhU6FevQPDy5Vbu2DP4CyXVb4UNAECC1E
+         hDd7kM7nytCdOvDGuCJpDoE8NW4r7PaRd0ws2G1KZZpraAQckV0DgPQifuWeZ6/uhdfP
+         2pF1Uw771J2o+6//8IctepMhogGj4zbo65kAm3d7pxRq/WIJNIJq3g/ad5totEJsZ6t5
+         Tppo+SqQuQc3e8haZbB2DZUb2e6uKyaRp4uWiJqZDT2v0DEg3JZ/VUfGzRZOa38Dtz5s
+         sYHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=801vaaIL76Zz7Eud3OqpJLc/Gt8+/1SS15pb9OLzY+A=;
+        b=qi5lcajG/+S0wRfFC1qDy9O3FoPlU1OyAl1ZWknxAewewvWKBwLD1csMkhnj0VV/QW
+         GUcFwuWKqmyYIt70UkKx0OBRokqbK9nOatwHWvSDLq4pIL8JUAH4mqt3lOM18SyuVYfX
+         0hR0NZD8+Zn+JBTbhmIk5+4XxTPuFDbECojLXjGDH8o3TIYiHRxCT/pW2NXFzw+rMS1Y
+         S8QJqesy7yWplCHQLMsTWmtkUs7g4xriMKBXbZgNh6vbsGDKqdyzipddyGfyW0FSjr9I
+         L0Z7oqx0QAj7tGO26WSe6NRwwhFIqzn1Bavz3YCEh0RdWfQiBQowyUKQxZm38R/TW5mK
+         /X5w==
+X-Gm-Message-State: APjAAAXSgIncqtta5TDM2MsQsGVUYAmlzGsWaeXMBCopv1Tkh4uzoHbR
+        NSUVZ2qlGPAI34TeaVvhLSw88XRb7WGocIYeYVM=
+X-Google-Smtp-Source: APXvYqyB1ED+E4BxrxPiN03JH5ZzF/hgDUCja6GKREeMJL/VnWAnIGR2fjYIWu7LWCYmmqcroz7FE/D0WOHqRzBea2M=
+X-Received: by 2002:a05:6214:4f2:: with SMTP id cl18mr1586167qvb.89.1579164783499;
+ Thu, 16 Jan 2020 00:53:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191127132304.22924-1-m.felsch@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:49:19 up 62 days, 7 min, 53 users,  load average: 0.07, 0.10,
- 0.04
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+References: <8d5358a67746b2aff5f6995cabd11d0d7c9e579e.1575978484.git.baolin.wang7@gmail.com>
+ <dd3303a956e7dd5c065ac2b92b1dea7ee5d1df17.1575978484.git.baolin.wang7@gmail.com>
+ <CADBw62o3vW_hdFwcMdQFJqx2HpNhCEHOxADQO9LztzpqCVQBpg@mail.gmail.com>
+ <547d91fa-66c5-e3bb-4028-2578f070695c@linaro.org> <CADBw62pcYZ_GR1OrS3VG-Y1T8CYOcL4pRzTwBt6of4ZmzhhNng@mail.gmail.com>
+In-Reply-To: <CADBw62pcYZ_GR1OrS3VG-Y1T8CYOcL4pRzTwBt6of4ZmzhhNng@mail.gmail.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 16 Jan 2020 16:52:52 +0800
+Message-ID: <CADBw62r5qBVt8LB+E5XoToB7FJJDH+exwzVqJ6+Eti-6eKtB-w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] thermal: sprd: Add Spreadtrum thermal driver support
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        amit.kucheria@verdurent.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>, freeman.liu@unisoc.com,
+        Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Hi Daniel,
 
-On 19-11-27 14:23, Marco Felsch wrote:
-> Hi,
-> 
-> this is v2 contains all comments made on [1]. Please check the patch
-> based changelog for further information. Patch "Input: da9063 - fix
-> capability and drop KEY_SLEEP"  is already applied mainline.
-> 
-> [1] https://www.spinics.net/lists/devicetree/msg309431.html
-> 
-> Marco Felsch (3):
->   dt-bindings: Input: da9062 - add key-opmode documentation
->   input: misc: da9063_onkey: add mode change support
+On Mon, Dec 23, 2019 at 3:48 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+>
+> Hi Daniel,
+>
+> On Mon, Dec 23, 2019 at 3:42 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+> >
+> >
+> > Hi Baolin,
+> >
+> > On 23/12/2019 07:31, Baolin Wang wrote:
+> > > Hi Rui and Daniel,
+> > >
+> > > On Tue, Dec 10, 2019 at 8:08 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
+> > >>
+> > >> From: Freeman Liu <freeman.liu@unisoc.com>
+> > >>
+> > >> This patch adds the support for Spreadtrum thermal sensor controller,
+> > >> which can support maximum 8 sensors.
+> > >>
+> > >> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
+> > >> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> > >> ---
+> > >> Changes from v1:
+> > >>  - None.
+> > >> ---
+> > >
+> > > Any comments for this patch? Thanks.
+> >
 
-Can we apply those patches.
-
->   dt-bindings: Input: da9062 - fix dlg,disable-key-power description
-
-This one can be dropped from this series.
-
-Regards,
-  Marco
-
->  .../devicetree/bindings/input/da9062-onkey.txt   | 15 ++++++++++++---
->  drivers/input/misc/da9063_onkey.c                | 16 ++++++++++++++++
->  drivers/mfd/da9062-core.c                        |  1 +
->  3 files changed, 29 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.20.1
+Sorry for reminding you again, could you have a look about this patch
+when you feel free? Thanks.
