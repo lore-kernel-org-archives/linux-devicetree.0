@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B352C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086FEC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3674A2077B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79FC2073A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202383;
-	bh=xvHqfVT/E2GqwmWVQb2umdeJqV6UyBgQpfwGOvbEd3w=;
+	s=default; t=1579202414;
+	bh=IsIQlCAKLjxmjSdijTYiULQA7efHkUvHXQUo4paPNIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aPE99BLVVzWbU7Odn++hPiUClIm2tverZzqTN4j7uHJD83HpVxPe5Zn9k9MdpzWT1
-	 jmPEpR8kPJP/7w8Qt1GKrp63BF2U1d5rRbHSnyv8SQ7GSAZGqTXqtV7fG853Rp2os9
-	 HEU58IosD/FaL806mPS6Z9yn0xTxPjw8+Y7RAX20=
+	b=i2Me1XF7yizkxRThugo4YAiqPgm7M34R1dmL/28zJU66u1k/LCa1pXijHSQXqsoL0
+	 ThhP5elRD2HdnO4JLEmV5/u4S3QhVvGJg9eDn2/P1QY8doGiQXhbpi2L5r7Hf14qyI
+	 QtuprD78IPY4QJDSprEKFWmR3B/GlbsfZN/LMSzA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbgAPTTm (ORCPT
+        id S1729130AbgAPTUO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:19:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38604 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:20:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731636AbgAPQyN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:54:13 -0500
+        id S1731467AbgAPQyD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:54:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F4672464B;
-        Thu, 16 Jan 2020 16:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617302176D;
+        Thu, 16 Jan 2020 16:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193653;
-        bh=xvHqfVT/E2GqwmWVQb2umdeJqV6UyBgQpfwGOvbEd3w=;
+        s=default; t=1579193643;
+        bh=IsIQlCAKLjxmjSdijTYiULQA7efHkUvHXQUo4paPNIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0UbG5JE/BWHBPhtR5H3+H7bvvmReUWx8HE1n7Jfo7BXUD5SakYdZGkNVtlQ2R99S
-         JIZkxS2MtKCtHm2JByIBBouiqHhDsdQZkjbffslkHOcHNgM8N84HR0MMLYMqj49pHw
-         UWzBVw3kL+by12NegW9Ulc/JFuAwQfEIA22EzxY8=
+        b=k4rVYZsjwRcUVsCzlVBmg2/DDC53Mp8ey7KAPmjzsMk8GIGyQt9+K6zc034q2pFDv
+         HHPTRefI/GFHs/7171zT2x74tL2iAzWUsAKSe1RxEDHuuVZk4nXY2nk8SsMun9FuDw
+         YrL6ev8PBTkKtXCt4C4Yagk00t7+vfUh9fWDPQy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     Andre Przywara <andre.przywara@arm.com>,
         Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 182/205] Revert "arm64: dts: juno: add dma-ranges property"
-Date:   Thu, 16 Jan 2020 11:42:37 -0500
-Message-Id: <20200116164300.6705-182-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 174/205] arm64: dts: juno: Fix UART frequency
+Date:   Thu, 16 Jan 2020 11:42:29 -0500
+Message-Id: <20200116164300.6705-174-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -63,59 +61,52 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 54fb3fe0f211d4729a2551cf9497bd612189af9d ]
+[ Upstream commit 39a1a8941b27c37f79508426e27a2ec29829d66c ]
 
-This reverts commit 193d00a2b35ee3353813b4006a18131122087205.
+Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
+source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
+correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
+our DT.
 
-Commit 951d48855d86 ("of: Make of_dma_get_range() work on bus nodes")
-reworked the logic such that of_dma_get_range() works correctly
-starting from a bus node containing "dma-ranges".
+Doing a prime factorisation, a modulo divide by 115200 and trying
+to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
+that the old value was actually a typo. The actual UART clock is driven
+by a PLL, configured via a parameter in some board.txt file in the
+firmware, which reads 7.37 MHz (sic!).
 
-Since on Juno we don't have a SoC level bus node and "dma-ranges" is
-present only in the root node, we get the following error:
+Fix this to correct the baud rate divisor calculation on the Juno board.
 
-OF: translation of DMA address(0) to CPU address failed node(/sram@2e000000)
-OF: translation of DMA address(0) to CPU address failed node(/uart@7ff80000)
-...
-OF: translation of DMA address(0) to CPU address failed node(/mhu@2b1f0000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
-OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
+[2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
 
-So let's fix it by dropping the "dma-ranges" property for now. This
-should be fine since it doesn't represent any kind of device-visible
-restriction; it was only there for completeness, and we've since given
-in to the assumption that missing "dma-ranges" implies a 1:1 mapping
-anyway.
-
-We can add it later with a proper SoC bus node and moving all the
-devices that belong there along with the "dma-ranges" if required.
-
-Fixes: 193d00a2b35e ("arm64: dts: juno: add dma-ranges property")
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Robin Murphy <robin.murphy@arm.com>
+Fixes: 71f867ec130e ("arm64: Add Juno board device tree.")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/arm/juno-base.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 26a039a028b8..8c11660bbe40 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -6,7 +6,6 @@
- 	/*
- 	 *  Devices shared by all Juno boards
- 	 */
--	dma-ranges = <0 0 0 0 0x100 0>;
+diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+index e5e265dfa902..2870b5eeb198 100644
+--- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
+@@ -8,10 +8,10 @@
+  */
+ / {
+ 	/* SoC fixed clocks */
+-	soc_uartclk: refclk7273800hz {
++	soc_uartclk: refclk7372800hz {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-		clock-frequency = <7273800>;
++		clock-frequency = <7372800>;
+ 		clock-output-names = "juno:uartclk";
+ 	};
  
- 	memtimer: timer@2a810000 {
- 		compatible = "arm,armv7-timer-mem";
 -- 
 2.20.1
 
