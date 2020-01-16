@@ -2,88 +2,93 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDDDC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FDEC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3742053B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0339720663
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201110;
-	bh=xQHaMmW5+OUanOpzT3F10iGg7VHntvomNgGXkgpU0/4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=klnquLVvFceuumgxbmkZ/G+tnV2+BVcFiXXSteT1RJxtq392h1Y8Bu+jdKcAsF5r5
-	 6KhRN97YKvFJ0kNvOttpeM2AnKPg8HNk3rpHC6FMmKnyrpzDZne8c0SuxCW5SJPktJ
-	 2yFeE5sVEQAV+Xiv+5bBc4i/Jh5onbP2w0EAMsvg=
+	s=default; t=1579201171;
+	bh=bUvZZaUpegoWYmOjzCX2yPSP3NEroF18G9mlAtBlWUo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=z/vEYydIYxQsEZwxYVu819ydPEwJYtOODJxaNDoHf4ZTC2yN1ZaNNTE8GFZLonwo9
+	 pM5b9LUFXcajeCumkNtI6MkULxN8BQgKCS6lzT4EffSCoRI9wpx0FD3oT1tHyAMZKc
+	 NyLChAgG6VJ9UbvGPLXTfVq90gd5bafPDVoB1Bs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390437AbgAPS62 (ORCPT
+        id S2388415AbgAPRGh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:58:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38264 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:06:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389538AbgAPS62 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:58:28 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+        id S2388959AbgAPRGg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:06:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83AE121D56;
-        Thu, 16 Jan 2020 18:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 066F92192A;
+        Thu, 16 Jan 2020 17:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579201107;
-        bh=xQHaMmW5+OUanOpzT3F10iGg7VHntvomNgGXkgpU0/4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pW1ad/mr9lv4mjG0KEHhw15B0zLcU7PWxrVIHtozNIlIefsGUj+3aY68lA0al2hhz
-         oWtE//Q1g1pAS6w0SBmCk64FIpGJjxgsQAswNY8yo9mAkJeDp4c/olz+VXoP3Kme05
-         TC1GjKQjhsUfwbm5bhgzsLb7A7y6H9uLiQgNebmM=
-Received: by mail-qk1-f174.google.com with SMTP id a203so20225382qkc.3;
-        Thu, 16 Jan 2020 10:58:27 -0800 (PST)
-X-Gm-Message-State: APjAAAX7EBSkaL+2UN0vHHUSOPaWAykL58uzba7Sdl55VtITmLMHVai7
-        7nddZv4d5aJCXwXX1c7AtfQlKWE22hP4xROPJw==
-X-Google-Smtp-Source: APXvYqz7Jds+/Z0T2jKmrW9vc4gPA0ja7tR3DL5ZNZX7bEiGSGPBQq4mA+KAyBwwQDFM1HxCAgDqUAjb3yEtcnqqaag=
-X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr35416430qkn.254.1579201106608;
- Thu, 16 Jan 2020 10:58:26 -0800 (PST)
+        s=default; t=1579194395;
+        bh=bUvZZaUpegoWYmOjzCX2yPSP3NEroF18G9mlAtBlWUo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=habCx89VjLI69vx5uWkpugiGmIe32HeQhepFWzyWwjVBg5tVv5V4kdio5fL2+IBg7
+         rNFzJwb5jUT5O1kL/19JRDai7pTJRcAtg0sHQNQMR1BSGU5xZjQOimteUpv+fN1CHp
+         x6RypGfx0aHwH0yIitQsVfFTAe4o++qBRFuxezF0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 322/671] ARM: dts: logicpd-som-lv: Fix MMC1 card detect
+Date:   Thu, 16 Jan 2020 11:59:20 -0500
+Message-Id: <20200116170509.12787-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1579200077-17496-1-git-send-email-stefan.wahren@i2se.com>
-In-Reply-To: <1579200077-17496-1-git-send-email-stefan.wahren@i2se.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 16 Jan 2020 12:58:15 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+51A_wKBzxwihkQd=eo_AEQ-wo4pK_GthO5b8WT=6oKw@mail.gmail.com>
-Message-ID: <CAL_Jsq+51A_wKBzxwihkQd=eo_AEQ-wo4pK_GthO5b8WT=6oKw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: brcm,avs-ro-thermal: Fix binding check issues
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 12:42 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
->
-> Drop the reg property since this only necessary for the parent and
-> add the missing thermal-sensor-cells property description.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Fixes: 3d4849897691 ("dt-bindings: Add Broadcom AVS RO thermal")
-> ---
->  .../devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml         | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+From: Adam Ford <aford173@gmail.com>
 
-Thanks for the quick fix.
+[ Upstream commit 6a38df676a0a06bfc7ff8607ac62ccd6d95969ad ]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The card detect pin was incorrectly using IRQ_TYPE_LEVEL_LOW
+instead of GPIO_ACTIVE_LOW when reading the state of the CD pin.
+
+This was previosly fixed on Torpedo, but missed on the SOM-LV
+
+Fixes: 5cb8b0fa55a9 ("ARM: dts: Move most of logicpd-som-lv-37xx-devkit.dts to logicpd-som-lv-baseboard.dtsi")
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
+index 4990ed90dcea..3e39b9a1f35d 100644
+--- a/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
++++ b/arch/arm/boot/dts/logicpd-som-lv-baseboard.dtsi
+@@ -153,7 +153,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	wp-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;		/* gpio_126 */
+-	cd-gpios = <&gpio4 14 IRQ_TYPE_LEVEL_LOW>;		/* gpio_110 */
++	cd-gpios = <&gpio4 14 GPIO_ACTIVE_LOW>;			/* gpio_110 */
+ 	vmmc-supply = <&vmmc1>;
+ 	bus-width = <4>;
+ 	cap-power-off-card;
+-- 
+2.20.1
+
