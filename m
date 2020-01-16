@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267F1C33CAF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E19CC33CB3
 	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0436824687
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63270208C3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1579198402;
-	bh=okBlYRU+qK/rpan1trzG4zDf6FeAwhV0O9O+nav5m4s=;
+	bh=RHq5KA6MrFQbSG6ghh22vQJQkUizlnq0ohvo2sidYYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IIciUqTPCoYLdJSyHmByXCAFMErUuEr1MtiDDjQO9VIsMidX6gvvRYic6T0nX3AOM
-	 6XUVc48wubDCpjCsmYhkTwO0cIq44lH85oyjlhjWq32scfTkI15j5kvhAvAvUu7crD
-	 1qfIhSVCzpE1706oaKUc+Zz/jjKyD7E6KzKYdrH8=
+	b=RLHQBtp7Zxy9rr6HSJHHOSdcS4wuJtkj5UiLWCGZAcdEARUOwGSMXifvbdAvlam87
+	 MwcOqNroSKAsTTOi7cUTnki3i76XZJB5OClZQAwGx7fffwysrpNGF8QuK+ASpdng4R
+	 ZvW1TooaUWJ/bxcO2iGj2EEwGkt7A9tgSJPK9ptE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395168AbgAPSNK (ORCPT
+        id S2405241AbgAPRg4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:13:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405244AbgAPRg4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
         Thu, 16 Jan 2020 12:36:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405237AbgAPRgz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:36:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 708B4246CE;
-        Thu, 16 Jan 2020 17:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C73E246CA;
+        Thu, 16 Jan 2020 17:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196216;
-        bh=okBlYRU+qK/rpan1trzG4zDf6FeAwhV0O9O+nav5m4s=;
+        s=default; t=1579196215;
+        bh=RHq5KA6MrFQbSG6ghh22vQJQkUizlnq0ohvo2sidYYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MjMOYnLSkSSNj1j5Zbjx+cbi1rDLpwuRU9XPLI7Ygzzxspk2UD5NWinP2wWu1poKw
-         2c3CscIuWvFSqQeoT700TOAOBsMMJ2pm4xlTnuHxgfwQP98Nd8m60hB/53ACNyw2gZ
-         BT63eAOo13p5hZG3FcU8v3bwQgvucTrmbO5H65BY=
+        b=tArmXpt4OgnTmI+3qpo2OGWbRZzt1+ZHb1IMgerFBLRtJa+8L4Jw9WBPnj8ESihhV
+         hMPzBxJUoYKSA6BGGa3axSl8/1nohbxeUePMrWvEiZVTNnwJ52pJb2xpNV4AWcNXrW
+         h3JBpNHH/YXa422v464ip1XJ7PmnftXxB9fTY1pU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 051/251] ARM: dts: lpc32xx: reparent keypad controller to SIC1
-Date:   Thu, 16 Jan 2020 12:33:20 -0500
-Message-Id: <20200116173641.22137-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 050/251] ARM: dts: lpc32xx: add required clocks property to keypad device node
+Date:   Thu, 16 Jan 2020 12:33:19 -0500
+Message-Id: <20200116173641.22137-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,39 +60,34 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit 489261c45f0ebbc1c2813f337bbdf858267f5033 ]
+[ Upstream commit 3e88bc38b9f6fe4b69cecf81badd3c19fde97f97 ]
 
-After switching to a new interrupt controller scheme by separating SIC1
-and SIC2 from MIC interrupt controller just one SoC keypad controller
-was not taken into account, fix it now:
+NXP LPC32xx keypad controller requires a clock property to be defined.
 
-  WARNING: CPU: 0 PID: 1 at kernel/irq/irqdomain.c:524 irq_domain_associate+0x50/0x1b0
-  error: hwirq 0x36 is too large for interrupt-controller@40008000
-  ...
-  lpc32xx_keys 40050000.key: failed to get platform irq
-  lpc32xx_keys: probe of 40050000.key failed with error -22
+The change fixes the driver initialization problem:
 
-Fixes: 9b8ad3fb81ae ("ARM: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC")
+  lpc32xx_keys 40050000.key: failed to get clock
+  lpc32xx_keys: probe of 40050000.key failed with error -2
+
+Fixes: 93898eb775e5 ("arm: dts: lpc32xx: add clock properties to device nodes")
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/lpc32xx.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index da375813afd0..6bd196457ccc 100644
+index 5fa3111731cb..da375813afd0 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -463,7 +463,8 @@
+@@ -462,6 +462,7 @@
+ 			key: key@40050000 {
  				compatible = "nxp,lpc3220-key";
  				reg = <0x40050000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_KEY>;
--				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clk LPC32XX_CLK_KEY>;
+ 				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
  				status = "disabled";
  			};
- 
 -- 
 2.20.1
 
