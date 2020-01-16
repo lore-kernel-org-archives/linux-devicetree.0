@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2439C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71BCC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF39246EE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89039246B6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195717;
-	bh=M6QDKkBnweTBN8PV3G31m4jegzT+8ZGFNXWqYrBwOFw=;
+	s=default; t=1579195914;
+	bh=pMzsxZqL7mnzlJsR54Z8Dv3VsMGRuTgcj/xJQ/YELWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dw9r7GHw/g0YA6QCfpIpiVZech1X2R/t5OiKrDOkDqJI1a8HqpiXqSESL2VNuOL69
-	 F8kIbiRCnAovcES/F44BJSADZelIqjQqHJmuVk+9ueX/G/u8699DOaHOf3qhL+XZY5
-	 WROJ4aAz/3+6jy7u+t+IPjKSiFFyOdKHSXr4/R78=
+	b=Acbwa7YUWqx7u4RvaYXNgtXAEWlxpzLqaRuD4MFapFq0i63Id8rwGFPk74u58EO4f
+	 G/YenOa4Lc4LuEZJym9dky5/eS/12DT37oajMuFP7SdT7cOmhbuNw6ocGUmmkPiju7
+	 KCgxXEP8sS9rJvDYQurv3ZLqhwwIEE79YiIUPB38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392607AbgAPR2g (ORCPT
+        id S1730692AbgAPRbx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:28:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39776 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:31:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392601AbgAPR2f (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:28:35 -0500
+        id S2390807AbgAPRbN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:31:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5472246F2;
-        Thu, 16 Jan 2020 17:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839C4246C0;
+        Thu, 16 Jan 2020 17:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195714;
-        bh=M6QDKkBnweTBN8PV3G31m4jegzT+8ZGFNXWqYrBwOFw=;
+        s=default; t=1579195872;
+        bh=pMzsxZqL7mnzlJsR54Z8Dv3VsMGRuTgcj/xJQ/YELWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NATr0SZz9P5IAVIAWG7Mgh6PE9RSTQDZGt5qGK37P3LlKUvU51poEhap8T/Be9k/n
-         QCAEMe+aUnCZ6sWKQzy81/wIgOLoRbXusvKl/A0+2Z1Bw1g8hUhFWxouxD3C2juTD5
-         7HY2Bz+H17ZL/oA5GzHvoUbZMyf9idMysTnThlyU=
+        b=Sj2PiqCUnFAnaunOeAvrjdGOv/aNSN6N9Uy6Y0FHf542k3fAKAZKf+DQ8nAzTsyFl
+         XlG3yf8s0v1D6VgWTPu/yd633jhCL7C9rUbQ2Gu4TShSDnS5OGkc/9fJNNH2WEOZbN
+         p6s85df7rCTlmkMIefgC66SP5ayItDHrE9ckpQtI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 259/371] ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
-Date:   Thu, 16 Jan 2020 12:22:11 -0500
-Message-Id: <20200116172403.18149-202-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 367/371] Revert "arm64: dts: juno: add dma-ranges property"
+Date:   Thu, 16 Jan 2020 12:23:59 -0500
+Message-Id: <20200116172403.18149-310-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
 References: <20200116172403.18149-1-sashal@kernel.org>
@@ -61,34 +63,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 493e84c5dc4d703d976b5875f5db22dae08a0782 ]
+[ Upstream commit 54fb3fe0f211d4729a2551cf9497bd612189af9d ]
 
-Add missing vdda-supply required by STM32 ADC.
+This reverts commit 193d00a2b35ee3353813b4006a18131122087205.
 
-Fixes: 090992a9ca54 ("ARM: dts: stm32: enable ADC on stm32h743i-eval
-board")
+Commit 951d48855d86 ("of: Make of_dma_get_range() work on bus nodes")
+reworked the logic such that of_dma_get_range() works correctly
+starting from a bus node containing "dma-ranges".
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Since on Juno we don't have a SoC level bus node and "dma-ranges" is
+present only in the root node, we get the following error:
+
+OF: translation of DMA address(0) to CPU address failed node(/sram@2e000000)
+OF: translation of DMA address(0) to CPU address failed node(/uart@7ff80000)
+...
+OF: translation of DMA address(0) to CPU address failed node(/mhu@2b1f0000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+OF: translation of DMA address(0) to CPU address failed node(/iommu@2b600000)
+
+So let's fix it by dropping the "dma-ranges" property for now. This
+should be fine since it doesn't represent any kind of device-visible
+restriction; it was only there for completeness, and we've since given
+in to the assumption that missing "dma-ranges" implies a 1:1 mapping
+anyway.
+
+We can add it later with a proper SoC bus node and moving all the
+devices that belong there along with the "dma-ranges" if required.
+
+Fixes: 193d00a2b35e ("arm64: dts: juno: add dma-ranges property")
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32h743i-eval.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index 6c07786e7ddb..0d98b2865bd7 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -71,6 +71,7 @@
- };
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index f165f04db0c9..13ee8ffa9bbf 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -5,7 +5,6 @@
+ 	/*
+ 	 *  Devices shared by all Juno boards
+ 	 */
+-	dma-ranges = <0 0 0 0 0x100 0>;
  
- &adc_12 {
-+	vdda-supply = <&vdda>;
- 	vref-supply = <&vdda>;
- 	status = "okay";
- 	adc1: adc@0 {
+ 	memtimer: timer@2a810000 {
+ 		compatible = "arm,armv7-timer-mem";
 -- 
 2.20.1
 
