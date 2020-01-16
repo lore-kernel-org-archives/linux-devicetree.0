@@ -2,97 +2,186 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0917C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB82DC33CB3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5184C246B3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579195473;
-	bh=f35ub2WSKi3z3HhdB+AJpKr5b+ByzQjqTniM2ad0uN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ht4LY9mVj1ufLyUlZJCSnDkXzrGBMAL9C1KJPICThqSZEEGcQqNGy3XYt0Gu3Wom/
-	 x0+Pay76ZHVmLLZ6NQGx9RmyRyXO6mlnKsQuqM/5uaBfIEJpa2QNGSDluV8d0Qvmbc
-	 GtH6VDCmznMJex4/9kifjvxPLo/5aD0mm/c2Ggh0=
+	by mail.kernel.org (Postfix) with ESMTP id A97D52468D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403763AbgAPRYb (ORCPT
+        id S2403844AbgAPRYy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:24:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391770AbgAPRYa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:24:30 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E5E424683;
-        Thu, 16 Jan 2020 17:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195469;
-        bh=f35ub2WSKi3z3HhdB+AJpKr5b+ByzQjqTniM2ad0uN0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoPO/9fXGoD9CJr3+YQOihtopIpxNOQDbGQTxStVs6bDWYU9ZbGfLsXCi17cjUtFH
-         5nP0pF61nJ3OtMvexvT90i8rBwzmI2mz07o1bmedeGLTiTFl6t1q12z4YhL6SdXHWD
-         NK86eWmFr+ZuKvZKAWUIPy1ElwRm3ZHUGYAijzXI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 076/371] ARM: dts: lpc32xx: reparent keypad controller to SIC1
-Date:   Thu, 16 Jan 2020 12:19:08 -0500
-Message-Id: <20200116172403.18149-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 12:24:54 -0500
+Received: from out28-53.mail.aliyun.com ([115.124.28.53]:42456 "EHLO
+        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391811AbgAPRYx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 12:24:53 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0745429|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.19843-0.0103649-0.791205;DS=CONTINUE|ham_system_inform|0.028472-0.000402336-0.971126;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07440;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GdEQRsw_1579195452;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GdEQRsw_1579195452)
+          by smtp.aliyun-inc.com(10.147.40.2);
+          Fri, 17 Jan 2020 01:24:26 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
+Subject: [PATCH v2 4/6] MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
+Date:   Fri, 17 Jan 2020 01:23:47 +0800
+Message-Id: <1579195429-59828-6-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Zapolskiy <vz@mleia.com>
+Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi
+and x1000.dtsi files.
 
-[ Upstream commit 489261c45f0ebbc1c2813f337bbdf858267f5033 ]
-
-After switching to a new interrupt controller scheme by separating SIC1
-and SIC2 from MIC interrupt controller just one SoC keypad controller
-was not taken into account, fix it now:
-
-  WARNING: CPU: 0 PID: 1 at kernel/irq/irqdomain.c:524 irq_domain_associate+0x50/0x1b0
-  error: hwirq 0x36 is too large for interrupt-controller@40008000
-  ...
-  lpc32xx_keys 40050000.key: failed to get platform irq
-  lpc32xx_keys: probe of 40050000.key failed with error -22
-
-Fixes: 9b8ad3fb81ae ("ARM: dts: lpc32xx: reparent SIC1 and SIC2 interrupts from MIC")
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 2ca881055ef0..9f9386c926d1 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -463,7 +463,8 @@
- 				compatible = "nxp,lpc3220-key";
- 				reg = <0x40050000 0x1000>;
- 				clocks = <&clk LPC32XX_CLK_KEY>;
--				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-parent = <&sic1>;
-+				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+Notes:
+    v1->v2:
+    No change.
+
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 14 ++++++++++++++
+ arch/mips/boot/dts/ingenic/jz4770.dtsi | 15 ++++++++++++++-
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
+ arch/mips/boot/dts/ingenic/x1000.dtsi  | 14 ++++++++++++++
+ 4 files changed, 65 insertions(+), 1 deletion(-)
+
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index 5accda2..9627d95 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -6,6 +6,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4740";
  
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst";
++			reg = <0>;
++
++			clocks = <&cgu JZ4740_CLK_CCLK>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+index 0bfb9ed..1b8114d 100644
+--- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-
+ #include <dt-bindings/clock/jz4770-cgu.h>
+ 
+ / {
+@@ -7,6 +6,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4770";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst";
++			reg = <0>;
++
++			clocks = <&cgu JZ4770_CLK_CCLK>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index f928329..93a0604 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -7,6 +7,29 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4780";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst";
++			reg = <0>;
++
++			clocks = <&cgu JZ4780_CLK_CPU>;
++			clock-names = "cpu";
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst";
++			reg = <1>;
++
++			clocks = <&cgu JZ4780_CLK_CORE1>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 61061a4..ea54263 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -7,6 +7,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,x1000", "ingenic,x1000e";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst";
++			reg = <0>;
++
++			clocks = <&cgu X1000_CLK_CPU>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
 -- 
-2.20.1
+2.7.4
 
