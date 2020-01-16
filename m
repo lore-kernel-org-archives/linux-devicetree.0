@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 121EAC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4D1C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D027E2081E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D0E2073A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193145;
-	bh=YNeujmfNV+rEZDZIwmdUZEfgfim5hYv0ejt1bkiSimE=;
+	s=default; t=1579193205;
+	bh=iZjxy8T/Nc73CHqNdlRJ7qSrCKOqpu8z/vE94Mm7m2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLu9h35e5o7gis8Z+UNer/KbWQ/Xh1XZncTXcBsksuEcKGVNY08wCNFfr88hRi+Ad
-	 zM7AmUbJXaSN9XqPred/jGqnxchgUvrZHtQiNp5+A1TvNiNdzxZP7zT/3jox07zmcs
-	 HqIFkWPPuxQijnjjDCwBrZfIs/QuTqF5HprPKgw0=
+	b=13xU6PpIDzQQw5yaoavTLmggSoZoMN8tIY1ZNxu1TuzxcBT7qwTc5deCnWpipWCJg
+	 uEsfRpbNfeayrr5E7z0B3kmBKTxdGFXpzCDzZlgzza42h+efxuwNZA8v50wAsX+PRP
+	 xbY3hqCVkvKaHDUV4LmqJ9HJwb1KTyuWH52Zwq+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbgAPQpo (ORCPT
+        id S1728978AbgAPQqK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:45:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54646 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:46:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbgAPQpn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:45:43 -0500
+        id S1729137AbgAPQqI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:46:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41F3D2176D;
-        Thu, 16 Jan 2020 16:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF1A9207FF;
+        Thu, 16 Jan 2020 16:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193142;
-        bh=YNeujmfNV+rEZDZIwmdUZEfgfim5hYv0ejt1bkiSimE=;
+        s=default; t=1579193168;
+        bh=iZjxy8T/Nc73CHqNdlRJ7qSrCKOqpu8z/vE94Mm7m2s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGAetJb63EfGDko/L7FxJwJ+WMUvhKCAvbT7vqU1bCQPlpajDmG57vuOx9xFpVkPw
-         FyW5S8yv1vbKraCPUj5R0RmrhQZF35fxoy7DhmPCx7xVnH51q8fYvGD3XlBENw2pl0
-         mB1uafE/a7WH/UPu2qV0ejNZzauXpNtLePhNXyD0=
+        b=avHEXF/+xSdvlwwZLUah2eZgAUWsfBO/a8ZgMpg5NrVprELnnr9JXO2ksWernHuvo
+         8WAujq2pyhDPsqyM9bt7tRGeZOwSokRhxxRAULen8aeZ0/2PvD4o3rvduxphM9lpuw
+         pbs0IyxhvsvCMkxeUYX+++hZiOeIbKa08qLFNfxQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 033/205] arm64: dts: marvell: Add AP806-dual missing CPU clocks
-Date:   Thu, 16 Jan 2020 11:40:08 -0500
-Message-Id: <20200116164300.6705-33-sashal@kernel.org>
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 038/205] arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
+Date:   Thu, 16 Jan 2020 11:40:13 -0500
+Message-Id: <20200116164300.6705-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,41 +60,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Loic Poulain <loic.poulain@linaro.org>
 
-[ Upstream commit e231c6d47cca4b5df51bcf72dec1af767e63feaf ]
+[ Upstream commit e38161bd325ea541ef2f258d8e28281077dde524 ]
 
-CPU clocks have been added to AP806-quad but not to the -dual
-variant.
+In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
+VMMC, needs to be increased in order to prevent any voltage drop issues
+(due to limited current) happening with some SDCARDS or during specific
+operations (e.g. write).
 
-Fixes: c00bc38354cf ("arm64: dts: marvell: Add cpu clock node on Armada 7K/8K")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
-index 9024a2d9db07..62ae016ee6aa 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
-@@ -21,6 +21,7 @@
- 			reg = <0x000>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-+			clocks = <&cpu_clk 0>;
- 		};
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
-@@ -28,6 +29,7 @@
- 			reg = <0x001>;
- 			enable-method = "psci";
- 			#cooling-cells = <2>;
-+			clocks = <&cpu_clk 0>;
- 		};
- 	};
- };
+diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+index 04ad2fb22b9a..dba3488492f1 100644
+--- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+@@ -623,6 +623,8 @@
+ 				l21 {
+ 					regulator-min-microvolt = <2950000>;
+ 					regulator-max-microvolt = <2950000>;
++					regulator-allow-set-load;
++					regulator-system-load = <200000>;
+ 				};
+ 				l22 {
+ 					regulator-min-microvolt = <3300000>;
 -- 
 2.20.1
 
