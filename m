@@ -2,83 +2,76 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAFBC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A14C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A5F20748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:43:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZDFPHK4K"
+	by mail.kernel.org (Postfix) with ESMTP id DD1C1207E0
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgAPNne (ORCPT
+        id S1726535AbgAPNwM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:43:34 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:41050 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbgAPNne (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:43:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=J0Fk1hDLs8lmcz1SLIOMMSz56qx4PBNGnuo2BZVSt8Q=; b=ZDFPHK4K8LTkfDLUymK77njYow
-        20pVJayBPmvwot7S0BfDRvzSqfM1YjmI/JKWjBgJ7TvgRksK/vuyhkRXQOmDKt+aVnfumkEpE7blM
-        W9tmm6tQmpq7A4A73RcQyMnLFtJ5CQQ8vOTSlML5fsbio/S2qbUO7YFQP6OLLI52mJyA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1is5Qo-0005Ct-CJ; Thu, 16 Jan 2020 14:43:30 +0100
-Date:   Thu, 16 Jan 2020 14:43:30 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Subject: Re: [PATCH 4/4] dt-bindings: net: adin: document 1588 TX/RX SOP
- bindings
-Message-ID: <20200116134330.GD19046@lunn.ch>
-References: <20200116091454.16032-1-alexandru.ardelean@analog.com>
- <20200116091454.16032-5-alexandru.ardelean@analog.com>
+        Thu, 16 Jan 2020 08:52:12 -0500
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:44655 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgAPNwM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 08:52:12 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D60D2C0019;
+        Thu, 16 Jan 2020 13:52:08 +0000 (UTC)
+Date:   Thu, 16 Jan 2020 14:52:08 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     richard.genoud@gmail.com, radu_nicolae.pirea@upb.ro,
+        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        a.zummo@towertech.it, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
+        Sandeep Sheriker Mallikarjun 
+        <sandeepsheriker.mallikarjun@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH v4 5/5] ARM: dts: at91: sam9x60: add device tree for soc
+ and board
+Message-ID: <20200116135208.GG100374@piout.net>
+References: <1579085987-13976-1-git-send-email-claudiu.beznea@microchip.com>
+ <1579085987-13976-6-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200116091454.16032-5-alexandru.ardelean@analog.com>
+In-Reply-To: <1579085987-13976-6-git-send-email-claudiu.beznea@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> +  adi,1588-rx-sop-delays-cycles:
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#definitions/uint8-array
-> +      - items:
-> +          - minItems: 3
-> +            maxItems: 3
-> +    description: |
-> +      Enables Start Packet detection (SOP) for received IEEE 1588 time stamp
-> +      controls, and configures the number of cycles (of the MII RX_CLK clock)
-> +      to delay the indication of RX SOP frames for 10/100/1000 BASE-T links.
-> +      The first element (in the array) configures the delay for 10BASE-T,
-> +      the second for 100BASE-T, and the third for 1000BASE-T.
+On 15/01/2020 12:59:47+0200, Claudiu Beznea wrote:
+> From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+> 
+> Add device tree files for SAM9X60 SoC and SAM9X60-EK board.
+> 
+> Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> ---
+>  arch/arm/boot/dts/Makefile           |   2 +
+>  arch/arm/boot/dts/at91-sam9x60ek.dts | 647 ++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/sam9x60.dtsi       | 691 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 1340 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/at91-sam9x60ek.dts
+>  create mode 100644 arch/arm/boot/dts/sam9x60.dtsi
+> 
+Applied, thanks.
 
-Do you know the clock frequency? It would be much better to express
-this in ns, as with adi,1588-tx-sop-delays-ns.
-
-> @@ -62,5 +116,11 @@ examples:
->              reg = <1>;
->  
->              adi,fifo-depth-bits = <16>;
-> +
-> +            adi,1588-rx-sop-delays-cycles = [ 00 00 00 ];
-> +            adi,1588-rx-sop-pin-name = "int_n";
-> +
-> +            adi,1588-tx-sop-delays-ns = [ 00 08 10 ];
-
-10 is not a multiple of 8!
-
-   Andrew
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
