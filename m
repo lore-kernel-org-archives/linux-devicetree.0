@@ -2,176 +2,86 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F27C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 12:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE76FC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 12:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E380207FF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 12:01:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCzhhL1f"
+	by mail.kernel.org (Postfix) with ESMTP id 867082087E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 12:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579177624;
+	bh=hRJQLOPnPVf/2ivPsnIuDnw9i76csHuBPFFx5CnsSco=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UdYC6j38+P++mZWgEo1C+qw4lPbzBmzefCdFdyVcX+wMWk9bXUcwTnXgfzQepCszh
+	 yWEnBTysWrqJylNpPyrLjA0L8GJiBsU0Y57Cp62o+/DaQuG1Bx9bSgaDeeDBbhXQd6
+	 mLQW1Y16t485IsD6xbhQTclT8wTuO7zkDAi0WIrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbgAPMBA (ORCPT
+        id S1726230AbgAPM1E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 07:01:00 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37789 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbgAPMBA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 07:01:00 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so3513078wmf.2;
-        Thu, 16 Jan 2020 04:00:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K45x8SHvjhN/SqzbB8kaaG/ZwA6tE8xnF2TMFaLqgWo=;
-        b=qCzhhL1fyhuF4uJ30kAHFGAgukb2dvuIkZZpSFnV9Bvopy1uHd2JmGaTH/DeCT9jyv
-         zEUV7VfHwdLK6lkcDTsPPilyk7vBAk66Hv5ZqEtNm5rvhSmQFJNwXylpl/1Bzs0Imv54
-         Rql4Hhs2Qoq6nyXXVoyhzL+DHoBZKRWba01HL4UK/mcUTyOescWybJpHAQgDx/pXVWSy
-         sJYb4yzMCfKhh+CdyHvrc37xdZ2akspJyGCpvLnT7IdhY/SV04oZpEBReXF04SJJVP6x
-         J28UY9KUlAdKPgt5lH0M4MEw2dkG7DX7hH3Y0T5ZXy89bOP8Cr4xXFmOEGzUCW/onAH+
-         sjIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K45x8SHvjhN/SqzbB8kaaG/ZwA6tE8xnF2TMFaLqgWo=;
-        b=IL5RZwnGKf5k5RqpSNUUj6fwEXdi3p/8leqEZtlTIYw5L/yKdUhCNaWXlF+NdiknrQ
-         3qqkeLcJSAt42pKIJwpGoSoQKsDMDToxuNJLDiUcXl3xxZ8HYIr1aaQkFPeZkffDo4zB
-         SGhZKljaYP2ucbidq7Zz1OJL50c0QsWZlM9aEYhjJKNKeij5OwcQ++GJcb8teYBNYPXs
-         INBjiSzCO41wD1iP2qTyNWOciFD1oMgPj6GBaWjJr1lUW9Tj2NRDkA9moREkxCeXPZCl
-         q7jhY2pZSYrq3DRJ85SR1is8lSfCqrxmlep8+xTUR2ro2Z3aIBSkJed7f5EGG9Nb8UzD
-         3djg==
-X-Gm-Message-State: APjAAAWKaNL9NS927ThJUawuLg/CbnUfFv/YDXnEUBvxSJIEGizrQCAo
-        3sc1ZuJbzWKEXosCmEMufbs=
-X-Google-Smtp-Source: APXvYqxSG6XX0qeAUXiXclajDgAqCIR4Vw2T5QnvgyIxq5EiuPtxzO1/xghNLthqCFKePTImdZDOOg==
-X-Received: by 2002:a7b:cb86:: with SMTP id m6mr5686130wmi.51.1579176057805;
-        Thu, 16 Jan 2020 04:00:57 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id n8sm28902799wrx.42.2020.01.16.04.00.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 04:00:57 -0800 (PST)
-Subject: Re: [RFC PATCH v1 2/3] dt-bindings: mmc: convert synopsys dw-mshc
- bindings to yaml
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-References: <20200114213809.27166-1-jbx6244@gmail.com>
- <20200114213809.27166-2-jbx6244@gmail.com>
- <CAL_JsqJ0QJ9uG9NY7vMGG00G4Jfk2mXS4OPdUzEaRVaCP++GzQ@mail.gmail.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <203e9217-9aa8-b65e-4411-2d9b23c1362a@gmail.com>
-Date:   Thu, 16 Jan 2020 13:00:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 16 Jan 2020 07:27:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38144 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726082AbgAPM1D (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:27:03 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7E2920748;
+        Thu, 16 Jan 2020 12:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579177623;
+        bh=hRJQLOPnPVf/2ivPsnIuDnw9i76csHuBPFFx5CnsSco=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aWZE+aaXhLkjD86rfTa/9opKEj0Uc9cyLFhmZff/7iMWkDj9IsHhOeXXjfbg6dg88
+         1DVaZHulML9LjANNOADwJkRbPuAEeAFznfmQp1RBQEUGlvHWiW+54HkLfIeMoMQLeu
+         RzoOWaKr0DWfDCJinWfilv7BYFQO+QGmsWWCYW5Y=
+Date:   Thu, 16 Jan 2020 13:27:00 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: allwinner: h6: tanix-tx6: enable emmc
+Message-ID: <20200116122700.2wy2wrgvmyvudj2t@gilmour.lan>
+References: <20200115193441.172902-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJ0QJ9uG9NY7vMGG00G4Jfk2mXS4OPdUzEaRVaCP++GzQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cgkvlw4sxymxgfmc"
+Content-Disposition: inline
+In-Reply-To: <20200115193441.172902-1-jernej.skrabec@siol.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-See below.
 
-On 1/15/20 4:18 PM, Rob Herring wrote:
-> On Tue, Jan 14, 2020 at 3:38 PM Johan Jonker <jbx6244@gmail.com> wrote:
->>
+--cgkvlw4sxymxgfmc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> [...]
-> 
->> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
->> new file mode 100644
->> index 000000000..6f85a21d0
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.yaml
->> @@ -0,0 +1,88 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/mmc/synopsys-dw-mshc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Synopsys Designware Mobile Storage Host Controller Binding
+Hi Jernej,
 
-[..]
+On Wed, Jan 15, 2020 at 08:34:41PM +0100, Jernej Skrabec wrote:
+> Tanix TX6 has 32 GiB eMMC. Add a node for it.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
->> +examples:
->> +  # The MSHC controller node can be split into two portions, SoC specific and
->> +  # board specific portions as listed below.
-> 
+Did you forget to send the other two patches?
 
+Maxime
 
-> This split doesn't work because the examples are built and validated
-> now. It may happen to because all the props are optional, but the
-> board hunk goes unchecked. So please combine.
-> 
+--cgkvlw4sxymxgfmc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Hi,
+-----BEGIN PGP SIGNATURE-----
 
-I have no knowledge about this particular hardware to give a realistic
-example. Could someone advise here? Or should I just use the first
-example for now?
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiBWlAAKCRDj7w1vZxhR
+xVlGAQD3brgXo3D11jUsw56mmFTRmlfMXqWKJQmp0FrlJWAUHgEAm9wCD/aZFlvh
+k3tke8kPmz0qp0TKQzSu2UBWG7KgZwI=
+=zeNt
+-----END PGP SIGNATURE-----
 
-Thanks
-
->> +  - |
->> +    dwmmc0@12200000 {
->> +      compatible = "snps,dw-mshc";
->> +      clocks = <&clock 351>, <&clock 132>;
->> +      clock-names = "biu", "ciu";
->> +      reg = <0x12200000 0x1000>;
->> +      interrupts = <0 75 0>;
->> +      #address-cells = <1>;
->> +      #size-cells = <0>;
->> +      data-addr = <0x200>;
->> +      fifo-watermark-aligned;
->> +      resets = <&rst 20>;
->> +      reset-names = "reset";
->> +    };
->> +  # [board specific internal DMA resources]
->> +  - |
->> +    dwmmc0@12200000 {
->> +      clock-frequency = <400000000>;
->> +      clock-freq-min-max = <400000 200000000>;
->> +      broken-cd;
->> +      fifo-depth = <0x80>;
->> +      card-detect-delay = <200>;
->> +      vmmc-supply = <&buck8>;
->> +      bus-width = <8>;
->> +      cap-mmc-highspeed;
->> +      cap-sd-highspeed;
->> +    };
->> +  # [board specific generic DMA request binding]
->> +  - |
->> +    dwmmc0@12200000 {
->> +      clock-frequency = <400000000>;
->> +      clock-freq-min-max = <400000 200000000>;
->> +      broken-cd;
->> +      fifo-depth = <0x80>;
->> +      card-detect-delay = <200>;
->> +      vmmc-supply = <&buck8>;
->> +      bus-width = <8>;
->> +      cap-mmc-highspeed;
->> +      cap-sd-highspeed;
->> +      dmas = <&pdma 12>;
->> +      dma-names = "rx-tx";
->> +    };
->> --
->> 2.11.0
->>
-
+--cgkvlw4sxymxgfmc--
