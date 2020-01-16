@@ -2,127 +2,101 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8E0C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F58C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111222072B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741CA2073A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lwcdtRWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbgAPLKw (ORCPT
+        id S1726100AbgAPLRK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 06:10:52 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:49835 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbgAPLKw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 06:10:52 -0500
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 41FD2E0017;
-        Thu, 16 Jan 2020 11:10:46 +0000 (UTC)
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH v5 3/7] dt-bindings: PCI: meson: Update PCIE bindings documentation
-Date:   Thu, 16 Jan 2020 12:18:46 +0100
-Message-Id: <20200116111850.23690-4-repk@triplefau.lt>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200116111850.23690-1-repk@triplefau.lt>
-References: <20200116111850.23690-1-repk@triplefau.lt>
+        Thu, 16 Jan 2020 06:17:10 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:35751 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgAPLRJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 06:17:09 -0500
+Received: by mail-ua1-f66.google.com with SMTP id y23so7485046ual.2
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 03:17:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F7tUdno7ArtPSiaOPdMNn5wVN9V2qtibzn63/OmNwzM=;
+        b=lwcdtRWLk0imKl7E0r3n6TJW8xeDU1FBZjrxdwbB1j1Ol8VLI6md87iF6Ei32CqstB
+         iZsxa6IJPvBFh4/KZIDh7uRZ4kCTldU8Hs1BMoPEFCwDTo7QdO9PKkKKeMCczAi+zG/4
+         JZfYXGg313YN4TZwuOTHONOstMiYv8zbow0CFVohUQbrYitLoSQqIkeDcuxGp6qNSXRF
+         MSkysZR6XwblHa8eMmPSQT/qJd8xv8W9O4E2ppMNt4Lo0lJZCGfmkzvlu2IAtDMnEnbB
+         1QjcmJa6xjbZVSVMx8kwvXsDZZBH7G6592G8of/U/0t0mCjvPQm1g4udNBlpI6gURr5r
+         am4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F7tUdno7ArtPSiaOPdMNn5wVN9V2qtibzn63/OmNwzM=;
+        b=cgE9L1pDXMnn/wssSWx0LH12LcVWFkS/Mr72u/j0NtwrFne0GINVn8l0XG+5qV8dF7
+         t2ketaGNwCzPHoK9YW/YEpfoUKuCGcf2/SHi2X/TG3ulbA6v3F8j2qx72sn8j7AIlUPO
+         JmTwf1BwcrX4+Q4BWGWGMTUaKkZgVNPsdA7mOKw+fqnZBZSt1DEyG0bRQ/wHjp0U5DYB
+         O1aoVznB11SRviBW9agA6Mj3k/kGFkxleq22iAH1zVjrZReMMEkHm7QRbmzDsOf7WeEH
+         lAEkJ5qlvuSEzHBiQ1VVJ9Dqj3rPck3XVpls9zDWDsgJ3kHRv4Kf0el4Wzk2UchAqbsB
+         hoLg==
+X-Gm-Message-State: APjAAAV+sAtO08ExTTEq6mBv9W4cjvCwG83z32u2e1gqXPf9XO0UiCoL
+        p1yhFfl80ES0BA0aiE+CyEwDWsePcdApgH0Y107MpQ==
+X-Google-Smtp-Source: APXvYqyiD7on53LJXj+IvnXLqg0ezI6WrramGC7O26YFNv+/TCtHx+KoDKnYfKLOvap+43EPQJV5R5WFI/gCOGKBRMA=
+X-Received: by 2002:ab0:20a:: with SMTP id 10mr17143795uas.19.1579173428886;
+ Thu, 16 Jan 2020 03:17:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191219145843.3823-1-jbx6244@gmail.com> <20191228093059.2817-1-jbx6244@gmail.com>
+ <20200104215524.GA28188@bogus>
+In-Reply-To: <20200104215524.GA28188@bogus>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 16 Jan 2020 12:16:32 +0100
+Message-ID: <CAPDyKFp5BvA7tKpBUh-bpn5X4xvg8b9HuMO7+fZVJEp78=ToRw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: mmc: remove identical phrase in
+ disable-wp text
+To:     Rob Herring <robh@kernel.org>
+Cc:     Johan Jonker <jbx6244@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that a new PHYs has been introduced for AXG SoC family, update
-dt bindings documentation.
+On Sat, 4 Jan 2020 at 22:55, Rob Herring <robh@kernel.org> wrote:
+>
+> On Sat, 28 Dec 2019 10:30:58 +0100, Johan Jonker wrote:
+> > There are two identical phrases in the disable-wp text,
+> > so remove one of them.
+> >
+> > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+>
+> Applied, thanks.
+>
+> Rob
 
-Please note that this breaks backward compatibility but as not a single
-devicetree uses that yet that seems ok.
+Rob,
 
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
----
- .../bindings/pci/amlogic,meson-pcie.txt       | 22 ++++++++-----------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+Normally I pick up the DT doc changes for mmc whenever you have acked
+them (at least more non-trivial changes). I regards to the
+mmc-controller.yaml file, I have no queued changes in my tree for this
+cycle so this should be fine in regards to conflicts.
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-index 84fdc422792e..b6acbe694ffb 100644
---- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-@@ -18,7 +18,6 @@ Required properties:
- - reg-names: Must be
- 	- "elbi"	External local bus interface registers
- 	- "cfg"		Meson specific registers
--	- "phy"		Meson PCIE PHY registers for AXG SoC Family
- 	- "config"	PCIe configuration space
- - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
- - clocks: Must contain an entry for each entry in clock-names.
-@@ -26,13 +25,13 @@ Required properties:
- 	- "pclk"       PCIe GEN 100M PLL clock
- 	- "port"       PCIe_x(A or B) RC clock gate
- 	- "general"    PCIe Phy clock
--	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
- - resets: phandle to the reset lines.
--- reset-names: must contain "phy" "port" and "apb"
--       - "phy"         Share PHY reset for AXG SoC Family
-+- reset-names: must contain "port" and "apb"
-        - "port"        Port A or B reset
-        - "apb"         Share APB reset
--- phys: should contain a phandle to the shared phy for G12A SoC Family
-+- phys: should contain a phandle to the PCIE phy
-+- phy-names: must contain "pcie"
-+
- - device_type:
- 	should be "pci". As specified in designware-pcie.txt
- 
-@@ -43,9 +42,8 @@ Example configuration:
- 			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
- 			reg = <0x0 0xf9800000 0x0 0x400000
- 					0x0 0xff646000 0x0 0x2000
--					0x0 0xff644000 0x0 0x2000
- 					0x0 0xf9f00000 0x0 0x100000>;
--			reg-names = "elbi", "cfg", "phy", "config";
-+			reg-names = "elbi", "cfg", "config";
- 			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
- 			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
- 			#interrupt-cells = <1>;
-@@ -58,17 +56,15 @@ Example configuration:
- 			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
- 
- 			clocks = <&clkc CLKID_USB
--					&clkc CLKID_MIPI_ENABLE
- 					&clkc CLKID_PCIE_A
- 					&clkc CLKID_PCIE_CML_EN0>;
- 			clock-names = "general",
--					"mipi",
- 					"pclk",
- 					"port";
--			resets = <&reset RESET_PCIE_PHY>,
--				<&reset RESET_PCIE_A>,
-+			resets = <&reset RESET_PCIE_A>,
- 				<&reset RESET_PCIE_APB>;
--			reset-names = "phy",
--					"port",
-+			reset-names = "port",
- 					"apb";
-+			phys = <&pcie_phy>;
-+			phy-names = "pcie";
- 	};
--- 
-2.24.1
+Going forward, do you prefer to pick the DT doc changes for mmc, or
+can I consider this as a single occasion thingy?
 
+Kind regards
+Uffe
