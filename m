@@ -2,146 +2,100 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C41C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF09C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664AE246A1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E412F246B8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579196023;
-	bh=2G0Ng8OaQXY0myuwsXjYgysTnAkfNx4yCUXz8txEl2Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Xe3wUlaMDc0qcbmN4GDv7/rhYakwQJZsWkarQqKfNPwGKSprtYcraqNFxmvaQWsi3
-	 l1+Nu0ZVbv9ImazORfpyghXPDcpZj0DvKa+vUxudfMYCW7R+SE/ODsT3ieyRoC1YkO
-	 a7qVmzKaGqXoFlFxy19foySvY8klpyYJSZMf62CE=
+	s=default; t=1579196153;
+	bh=yYjslUzdQq5c4r2jXilrCHJJ5+e34/2YaR56bnYZSbM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r5lEc5lDc5BTb0lAeUUz85GNvhc3dKbGGaLD+ZpfnNTtakiEulDuelIX2YxmR53il
+	 24xOfhagf6UF2OAmqzsjFppsTQvrr6yZcASX6bnuUGq2dKUdHLs1YcGlCUPvr2cyGF
+	 bUfFeHbL/SuAyYYYiMSdSeRFOm+ckHlhONYyJvJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404418AbgAPRdl (ORCPT
+        id S2404993AbgAPRfr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:33:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:35:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387875AbgAPRdl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:33:41 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+        id S2405175AbgAPRfi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:35:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45613246D8;
-        Thu, 16 Jan 2020 17:33:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B33F524713;
+        Thu, 16 Jan 2020 17:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196020;
-        bh=2G0Ng8OaQXY0myuwsXjYgysTnAkfNx4yCUXz8txEl2Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vd/D2dqhVkk/59pyEhm3YzDslAjdxWxnY8HVcflYPu9BYi5M2fluN/7qGED+/2x3q
-         FEqZtepLYPcur1TFx9cTTrpOQa+XAOiY74agLTBgaVPlHxKEc6VLGwSnfUWyzBngsS
-         F0k9PXMbe2fYpxERpAz/dVRnYfE/ibbxVX1YntZ8=
-Received: by mail-qk1-f169.google.com with SMTP id c16so19884519qko.6;
-        Thu, 16 Jan 2020 09:33:40 -0800 (PST)
-X-Gm-Message-State: APjAAAUNxCmxqLox94WRRfH/E86xRM0pSnahAV7aZPnShduhjumT/Wlp
-        QHvV2DP36Mt2igFg2cUNIBEyOcduN1K1WlvP1g==
-X-Google-Smtp-Source: APXvYqzp8zTCERQIV+x1zdU2FH8qa9LdLhrgMgX7M1lyS8XHlvveUMh4kI3m0RFeC5HMz+WfbUraLiUXsMQZdBiBvTg=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr31335279qkl.119.1579196019371;
- Thu, 16 Jan 2020 09:33:39 -0800 (PST)
+        s=default; t=1579196137;
+        bh=yYjslUzdQq5c4r2jXilrCHJJ5+e34/2YaR56bnYZSbM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JNFCoOx3gimaLILzzwwQnqCP/ObIMzZaqbLQ8mfIJP3AkfltIc5e9n9RYg3458sOA
+         DfhYaNQAL58mqbKofD8ArGLPLS5C2didkCPhKx9i1ROy4iA3e9bTqz4FvL5xqz7PxT
+         nuMw6DoLcXNBV8kjxUkcgo84GJLtMTSnSgqIbF18=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Loic Poulain <loic.poulain@linaro.org>,
+        Manabu Igusa <migusa@arrowjapan.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 039/251] arm64: dts: apq8016-sbc: Increase load on l11 for SDCARD
+Date:   Thu, 16 Jan 2020 12:31:13 -0500
+Message-Id: <20200116173445.21385-39-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116173445.21385-1-sashal@kernel.org>
+References: <20200116173445.21385-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1578941778-23321-1-git-send-email-stefan.wahren@i2se.com> <1578941778-23321-2-git-send-email-stefan.wahren@i2se.com>
-In-Reply-To: <1578941778-23321-2-git-send-email-stefan.wahren@i2se.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 16 Jan 2020 11:33:27 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+w0KGE-=XkAwpdqh67pH=V34ETCy8X92L_u1=_8xuKCg@mail.gmail.com>
-Message-ID: <CAL_Jsq+w0KGE-=XkAwpdqh67pH=V34ETCy8X92L_u1=_8xuKCg@mail.gmail.com>
-Subject: Re: [PATCH V5 1/4] dt-bindings: Add Broadcom AVS RO thermal
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 12:56 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
->
-> Since the BCM2711 doesn't have a AVS TMON block, the thermal information
-> must be retrieved from the AVS ring oscillator block. This block is part
-> of the AVS monitor which contains a bunch of raw sensors.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  .../bindings/thermal/brcm,avs-ro-thermal.yaml      | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+From: Loic Poulain <loic.poulain@linaro.org>
 
-The example fails 'make dt_binding_check':
+[ Upstream commit af61bef513ba179559e56908b8c465e587bc3890 ]
 
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.example.dt.yaml:
-thermal: 'reg' is a required property
+In the same way as for msm8974-hammerhead, l11 load, used for SDCARD
+VMMC, needs to be increased in order to prevent any voltage drop issues
+(due to limited current) happening with some SDCARDS or during specific
+operations (e.g. write).
 
-> diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-> new file mode 100644
-> index 0000000..98e7b57
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/thermal/brcm,avs-ro-thermal.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom AVS ring oscillator thermal
-> +
-> +maintainers:
-> +  - Stefan Wahren <wahrenst@gmx.net>
-> +
-> +description: |+
-> +  The thermal node should be the child of a syscon node with the
-> +  required property:
-> +
-> +  - compatible: Should be one of the following:
-> +                "brcm,bcm2711-avs-monitor", "syscon", "simple-mfd"
-> +
-> +  Refer to the the bindings described in
-> +  Documentation/devicetree/bindings/mfd/syscon.txt
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm2711-thermal
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +        avs-monitor@7d5d2000 {
-> +                compatible = "brcm,bcm2711-avs-monitor",
-> +                             "syscon", "simple-mfd";
-> +                reg = <0x7d5d2000 0xf00>;
-> +
-> +                thermal: thermal {
-> +                        compatible = "brcm,bcm2711-thermal";
-> +                        #thermal-sensor-cells = <0>;
+Tested on Dragonboard-410c and DART-SD410 boards.
 
-Also this is not documented. That's not caught because
-'additionalProperties: false' is also needed.
+Fixes: 4c7d53d16d77 (arm64: dts: apq8016-sbc: add regulators support)
+Reported-by: Manabu Igusa <migusa@arrowjapan.com>
+Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rob
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 601be6127628..948efff7d830 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -355,6 +355,8 @@
+ 	l11 {
+ 		regulator-min-microvolt = <1750000>;
+ 		regulator-max-microvolt = <3337000>;
++		regulator-allow-set-load;
++		regulator-system-load = <200000>;
+ 	};
+ 
+ 	l12 {
+-- 
+2.20.1
+
