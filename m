@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5187C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9276C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC732087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6959246AC
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579194220;
-	bh=hvOdQB70oGW+4a2MHmKuuy0kxWnbE2x6B9yaIRDsp8c=;
+	s=default; t=1579194816;
+	bh=MxaV68l1iyvzUPYvUZ38+nAcxYoouadMP8paClzaSmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBwOOyCAJ+JJUvBZ9t5gKrDLsYNj9O/WB2ADgcEoVtY/tFRnVtwAyfWeOma+tO/SQ
-	 Nml1BRlXNItmxyVQkLHibLU+xI8u6l9q9zu97C4CwfRqRwZKjrkJQpM6wOKf9ZJOxJ
-	 w8xPULrmZ8PY0vh9EW1SmjiWbFTaBelah0ZrTnAI=
+	b=ccnnXD4Fth1sE5PxWquBn8o9D6GLlGwdOkvoyzC77T/WuzJkR1r3xlmRxuuq0p6v8
+	 2x0MmZLvb4V0SP14vdkLH46+ZJan+YubiucXGgEXgzqLnPtkxAZYVpsIRKVhmZDwnY
+	 0Spp8bguAJj9aFjnAAMe0T1QHoh87JWHJ2ezmXqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbgAPRDF (ORCPT
+        id S2390773AbgAPRNd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:03:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:13:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388549AbgAPRDE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:03:04 -0500
+        id S2390088AbgAPRNd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:13:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 463FC2081E;
-        Thu, 16 Jan 2020 17:03:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 727A520684;
+        Thu, 16 Jan 2020 17:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194184;
-        bh=hvOdQB70oGW+4a2MHmKuuy0kxWnbE2x6B9yaIRDsp8c=;
+        s=default; t=1579194812;
+        bh=MxaV68l1iyvzUPYvUZ38+nAcxYoouadMP8paClzaSmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hXqJfpznLtDTyZ01bR0X8dUC7qzKYHF1wS/PU1B/PdrwnzQWo+83RhXU+yXGVXL+8
-         +2pyAAp/oRLzImjzTcmvLo5lIzCVxVcr8owQU38Du0JpT4u8vs/ejqwd6GT6Qrh+tW
-         sd2PBPj7cdwGTIbsE6S5OAYxrgOc5zak5Pq7y4aY=
+        b=XRQ3P7mQD+mHeVOy7N9ZWTvOyrtYy6g7+uTucAWUKIPZxuBlkxOkFb+ZuXlSwaKKx
+         i/VApS6SKn5ZtKP2KN0aw/2yoGjUoL1u7H/lXEhY8/pvBIwuEnZrOMsLsDhhHEn6ws
+         lpi/xWB+kCV81cZH+s703rlz33B12Z3nUsIlviVY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 257/671] ARM: dts: sun8i: a33: Reintroduce default pinctrl muxing
-Date:   Thu, 16 Jan 2020 11:52:46 -0500
-Message-Id: <20200116165940.10720-140-sashal@kernel.org>
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 619/671] arm64: dts: meson-gxl-s905x-khadas-vim: fix gpio-keys-polled node
+Date:   Thu, 16 Jan 2020 12:04:17 -0500
+Message-Id: <20200116170509.12787-356-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,37 +61,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-[ Upstream commit fa44328f4eb0b762a1fcb148809068e9646e7156 ]
+[ Upstream commit d5f6fa904ecbadbb8e9fa6302b0fc165bec0559a ]
 
-Commit d02752149759 ("ARM: dts: sun8i-a23-a33: Move NAND controller device
-node to sort by address") moved the NAND controller node around, but
-dropped the default muxing in the process.
+Fix DTC warnings:
 
-Reintroduce it.
+arch/arm/dts/meson-gxl-s905x-khadas-vim.dtb: Warning (avoid_unnecessary_addr_size):
+   /gpio-keys-polled: unnecessary #address-cells/#size-cells
+      without "ranges" or child "reg" property
 
-Fixes: d02752149759 ("ARM: dts: sun8i-a23-a33: Move NAND controller device node to sort by address")
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: e15d2774b8c0 ("ARM64: dts: meson-gxl: add support for the Khadas VIM board")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index a272a69519a2..1efad1a6bcfd 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -163,6 +163,8 @@
- 			clock-names = "ahb", "mod";
- 			resets = <&ccu RST_BUS_NAND>;
- 			reset-names = "ahb";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&nand_pins &nand_pins_cs0 &nand_pins_rb0>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+index a589547fc6e3..062e12aa4677 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+@@ -33,11 +33,9 @@
+ 
+ 	gpio-keys-polled {
+ 		compatible = "gpio-keys-polled";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+ 		poll-interval = <100>;
+ 
+-		button@0 {
++		power-button {
+ 			label = "power";
+ 			linux,code = <KEY_POWER>;
+ 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
 -- 
 2.20.1
 
