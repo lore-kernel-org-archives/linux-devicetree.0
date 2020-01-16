@@ -2,106 +2,88 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D5DC35240
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDDDC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1AA22464
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3742053B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201052;
-	bh=37O7uWLDFvAE5++PkVmEHgXh1ac3gvvlzmtoew19/60=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XptsMzBoBsmBaLmg9cAdidYMYvXtYD/neuNWLscgliwfDCSoU18r8mGZIFTbF47OD
-	 jPulqHk1POwg0PrXsUOqFLbio2PkThH+HR9e85XEj0tJRe0pABMIFW8XkaUFUFmpy6
-	 zN8UTIiL+3kSjxhRtuMvqtD2e+/YxcUZ5NTK1c1U=
+	s=default; t=1579201110;
+	bh=xQHaMmW5+OUanOpzT3F10iGg7VHntvomNgGXkgpU0/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=klnquLVvFceuumgxbmkZ/G+tnV2+BVcFiXXSteT1RJxtq392h1Y8Bu+jdKcAsF5r5
+	 6KhRN97YKvFJ0kNvOttpeM2AnKPg8HNk3rpHC6FMmKnyrpzDZne8c0SuxCW5SJPktJ
+	 2yFeE5sVEQAV+Xiv+5bBc4i/Jh5onbP2w0EAMsvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389189AbgAPRHf (ORCPT
+        id S2390437AbgAPS62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:07:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:58:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbgAPRHf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:07:35 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S2389538AbgAPS62 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 13:58:28 -0500
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FF27217F4;
-        Thu, 16 Jan 2020 17:07:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83AE121D56;
+        Thu, 16 Jan 2020 18:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194454;
-        bh=37O7uWLDFvAE5++PkVmEHgXh1ac3gvvlzmtoew19/60=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CS5oH4vWe4+2eAOlkS8wVdKig6N0ZLSFHUo2MO6HpU1ZnL1zbssORWkcN/BBGfgRT
-         93I5LvfFHmVFywHKbyUhG5vCRp/4UygPn8Q3w0U1j4nbKv6LoViH9izuiCLRk7op1A
-         NoJm8yVWVAjidPE+fcn2GdTV2Yc0ueJniJ2fXlkI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 364/671] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Date:   Thu, 16 Jan 2020 12:00:02 -0500
-Message-Id: <20200116170509.12787-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+        s=default; t=1579201107;
+        bh=xQHaMmW5+OUanOpzT3F10iGg7VHntvomNgGXkgpU0/4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pW1ad/mr9lv4mjG0KEHhw15B0zLcU7PWxrVIHtozNIlIefsGUj+3aY68lA0al2hhz
+         oWtE//Q1g1pAS6w0SBmCk64FIpGJjxgsQAswNY8yo9mAkJeDp4c/olz+VXoP3Kme05
+         TC1GjKQjhsUfwbm5bhgzsLb7A7y6H9uLiQgNebmM=
+Received: by mail-qk1-f174.google.com with SMTP id a203so20225382qkc.3;
+        Thu, 16 Jan 2020 10:58:27 -0800 (PST)
+X-Gm-Message-State: APjAAAX7EBSkaL+2UN0vHHUSOPaWAykL58uzba7Sdl55VtITmLMHVai7
+        7nddZv4d5aJCXwXX1c7AtfQlKWE22hP4xROPJw==
+X-Google-Smtp-Source: APXvYqz7Jds+/Z0T2jKmrW9vc4gPA0ja7tR3DL5ZNZX7bEiGSGPBQq4mA+KAyBwwQDFM1HxCAgDqUAjb3yEtcnqqaag=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr35416430qkn.254.1579201106608;
+ Thu, 16 Jan 2020 10:58:26 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1579200077-17496-1-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <1579200077-17496-1-git-send-email-stefan.wahren@i2se.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 16 Jan 2020 12:58:15 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+51A_wKBzxwihkQd=eo_AEQ-wo4pK_GthO5b8WT=6oKw@mail.gmail.com>
+Message-ID: <CAL_Jsq+51A_wKBzxwihkQd=eo_AEQ-wo4pK_GthO5b8WT=6oKw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: brcm,avs-ro-thermal: Fix binding check issues
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Thu, Jan 16, 2020 at 12:42 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>
+> Drop the reg property since this only necessary for the parent and
+> add the missing thermal-sensor-cells property description.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Fixes: 3d4849897691 ("dt-bindings: Add Broadcom AVS RO thermal")
+> ---
+>  .../devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml         | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 
-[ Upstream commit ca0961011db57e39880df0b5708df8aa3339dc6f ]
+Thanks for the quick fix.
 
-mmc1 node where wifi module is connected doesn't have properly defined
-power supplies so wifi module is never powered up. Fix that by
-specifying additional power supplies.
-
-Additionally, this STB may have either Realtek or Broadcom based wifi
-module. One based on Broadcom module also needs external clock to work
-properly. Fix that by adding clock property to wifi_pwrseq node.
-
-Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 25540b7694d5..6523d81dd9c4 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -90,6 +90,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
- 
- 	sound_spdif {
-@@ -155,6 +157,8 @@
- 
- &mmc1 {
- 	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
