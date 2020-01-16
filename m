@@ -7,79 +7,68 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD50C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E076AC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A233D2077C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD52D20728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qdQEY1n8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="liY6Cfcs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgAPQMC (ORCPT
+        id S1726867AbgAPQMx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:12:02 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53519 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726973AbgAPQL7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 11:11:59 -0500
-Received: by mail-wm1-f67.google.com with SMTP id m24so4343030wmc.3
-        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 08:11:58 -0800 (PST)
+        Thu, 16 Jan 2020 11:12:53 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45997 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbgAPQMt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 11:12:49 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j42so19705371wrj.12
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 08:12:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wq116TZAe0p40heVVDfMLRBuWEj6xKtwx1Np2GXHzlk=;
-        b=qdQEY1n8v+dLZaHvHfDyqgC04UQvFEYkL0iVEjWLFmsSkU3RdqM+lv6eJPlKsfZZJo
-         V2U5I8ZZfySoMK28rBSpL6Qi9hZ1hBksNdUKrrlpCgVLxMi5EXSi5jSaVoIKprkgosd5
-         tsDC/ZoH/IOGHUHa5cOqrpght5pR8sZ8tAU7KkBzmrV/NVIcLC4BYWkLn3qFk7vMY0dG
-         3cUuGjOTM7lrJfGCwT9DuQ2es9Hy/CCF+RThAtg047ML104Uh1CTu5cc9rYcPLtsT3GC
-         B/ZdafPWXHclyQ++k9xdn+0fxAl7T0KV1vSnNRH8BNknm6iXsf0sfW0O3mzquuFtLaDf
-         naeA==
+        bh=7fZAqN5KEgVxTr2KkYgc9fx+mk0Wbd58jdx1uS30Xdw=;
+        b=liY6CfcsfJL0P+wQagP5QniA+PPHRFMuMlCgyhDtqDYGxfkCvZCkcOqg1n36N5Wgrr
+         ZSh8yY85zSzJbZ5PUL4sTo16zuHvJT8AqY/sS94KwmCCyio9gjEOiTcmOFKcBevZFben
+         pMWo9YynKHp2sFp6EyCt69voSUiHc29y8mIkpGkfj9BatYM7lOSA6SMVKgmRALhztOF6
+         8qzjmVMYX9ieCTJd9tQDf3V1Qdp1mFf/JDMyyFZIhVZnbuo0f1QMet24SQd+UuyXEubd
+         Ro5+0fBhApwCgtjYfvmAN5oJ27q4knEOmc95dyTlP5eXvF6RXcBfsL3yWhyyJiDVDazr
+         hwNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=wq116TZAe0p40heVVDfMLRBuWEj6xKtwx1Np2GXHzlk=;
-        b=BvAXzuy/zX1T08i/g5jB7rrFWMP1q9diYsJSzFxBg+rAs8DR+IdzMbY+b3weL0ZeRh
-         X4Z4pMlC7Rug5ocy958RTQ548p5fsRxPxQ9iS/5B8yOep88LId7oMmJa+yR6djFXas7F
-         GUjftWRvyftG0zh1jJmj1kbosRMAlPXSvdSYapOhe4PnOSBEBJB3cC6/CCVZhVivtxTS
-         GQx5Dr+3dUoQwTIOZC3kfc7vtnPLN6qNodMr28DsWH7BxxzVpgLAtmmyBtt2AuWfkKMm
-         DWh2ri42aLJX1tElj2bnMa+8MHOs1mSOHHSoNLicQkjt9aH5MYUUDQZ413zzkmPqEkYQ
-         VWAQ==
-X-Gm-Message-State: APjAAAUb1LMKgpw5oY0l10gmc2Z5Z1Irlg9U7ij5x3rX+50jP1vdh5CL
-        D9RJ/tZTaXAqLTykFmItKzZphQ==
-X-Google-Smtp-Source: APXvYqxia/hYDamKXklRlZ4uVwwfWKaRzmR3+FORgkBCwOjEeD6jP03Gwc0fSu+Qsj8bDjor8a5sTA==
-X-Received: by 2002:a1c:a982:: with SMTP id s124mr6705085wme.132.1579191117317;
-        Thu, 16 Jan 2020 08:11:57 -0800 (PST)
+        bh=7fZAqN5KEgVxTr2KkYgc9fx+mk0Wbd58jdx1uS30Xdw=;
+        b=Tm2GS8hol+HTt4NIdxPh+nko/1EEwkJODrj4uO2iF6Nlsxng9R2yfNr6Z/vcwF28yT
+         1VBluK4BRehyJvAAeQo96c+GD9aZ2wwupdPdLSe8OjXW3+ugD8CJrENdqUVVzDqsNaI1
+         S0EDd0fWEHmz/OosHxZuVh4qy/2uHymMFg8ywE2GsZe+fZ0HHE8CL9s432dHFeonrmwU
+         cz6b3jtYuJRMVhZwObmiyIjPbI65UOs/8Jr6EKnHC3SbVUzoQCB8WJuTGdGglNtHmPMy
+         8FeOz0l9k2pTC88JbsJDFg6zOxIgYp3X4I+ua1knfI2+JOCynCNhCQQHMBCAcSOGxVWz
+         gdZw==
+X-Gm-Message-State: APjAAAUivzA0FV6nbKsfVbfoGkqp6/ZsstOSZdF+BmUDXwhx3YvTxBjZ
+        EXicxT3ZEjqF4vXzs+R7PZa6cg==
+X-Google-Smtp-Source: APXvYqxFXSVeTd6MII7M/k64oozzeRVBxDES1fjiCAVexMJ+HosvhmzTmZcaJg0TeW4ijQ3Shn1kPg==
+X-Received: by 2002:adf:e3c7:: with SMTP id k7mr4333353wrm.80.1579191167260;
+        Thu, 16 Jan 2020 08:12:47 -0800 (PST)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id i5sm30424978wrv.34.2020.01.16.08.11.54
+        by smtp.googlemail.com with ESMTPSA id s19sm5244564wmj.33.2020.01.16.08.12.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 Jan 2020 08:11:55 -0800 (PST)
-Subject: Re: [PATCH V2 3/7] dt-bindings: imx-ocotp: Add i.MX8MP compatible
-To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, vkoul@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        ulf.hansson@linaro.org, broonie@kernel.org,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        rjones@gateworks.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
-        richard.hu@technexion.com, angus@akkea.ca, cosmin.stoica@nxp.com,
-        l.stach@pengutronix.de, rabeeh@solid-run.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
- <1578893602-14395-3-git-send-email-Anson.Huang@nxp.com>
+        Thu, 16 Jan 2020 08:12:46 -0800 (PST)
+Subject: Re: [PATCH v5] dt-bindings: nvmem: add binding for QTI SPMI SDAM
+To:     Shyam Kumar Thella <sthella@codeaurora.org>, agross@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1578985692-20309-1-git-send-email-sthella@codeaurora.org>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <c2c3d925-a69a-d7f8-a58a-5f4abe46960b@linaro.org>
-Date:   Thu, 16 Jan 2020 16:11:54 +0000
+Message-ID: <74686c1a-6e23-7658-5d81-c1641556e4b9@linaro.org>
+Date:   Thu, 16 Jan 2020 16:12:45 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1578893602-14395-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1578985692-20309-1-git-send-email-sthella@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,10 +79,11 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 13/01/2020 05:33, Anson Huang wrote:
-> Add compatible and description for i.MX8MP.
+On 14/01/2020 07:08, Shyam Kumar Thella wrote:
+> QTI SDAM allows PMIC peripherals to access the shared memory that is
+> available on QTI PMICs. Add documentation for it.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
 
 Applied Thanks,
 
