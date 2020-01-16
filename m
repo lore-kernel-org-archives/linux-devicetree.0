@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CDDC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD7C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07A2420661
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830672064C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200397;
-	bh=7rQWqqy9vB7cmNBIyVXD5ebsvNXRbNqggHGF1w89Uj8=;
+	s=default; t=1579200409;
+	bh=PJJRRjvM01qG8A3jR/oqv9cop8TjjfoNmIAu3nk6O+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TprxNaMTpsPnxqroSAkK5GJbdjv7M7NpCCV11vFxS9KvMflTA8w/CPeSPN58wicw2
-	 IMtW+8bI9ALltiZczFCmEIu96THc65QoBNyOQTul1jPpcJj3C773g+zd4gvuyhofir
-	 e8UWpi3MsaFKeKS/08lBE/DfkKWlq9/klGdmb8Oc=
+	b=R7nw/YXjNMlJ32Ui3mgFQH/WUvjmdX/hvJoZP4ZrWAfFgDAnPqqNe/2KdcSLeGpLY
+	 kmxQDjX/9wcUV3k+qTB3/ctPLBnWmph3/ZrNP4M9ldAZc3b7Nr/xS5Tr1fBCC+e9qI
+	 rTGH+7KIlFa2eUxQPwCK6uPBFpZAxAQXs/9B+co0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389876AbgAPRKP (ORCPT
+        id S2389863AbgAPRKM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47880 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:10:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389874AbgAPRKO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:14 -0500
+        id S2389249AbgAPRKL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:10:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF972467E;
-        Thu, 16 Jan 2020 17:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EEC52081E;
+        Thu, 16 Jan 2020 17:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194614;
-        bh=7rQWqqy9vB7cmNBIyVXD5ebsvNXRbNqggHGF1w89Uj8=;
+        s=default; t=1579194611;
+        bh=PJJRRjvM01qG8A3jR/oqv9cop8TjjfoNmIAu3nk6O+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFX1nVxzB1GdDzOqBcP1Dee2bNRaL++j1QV0/8Z8XcXtQXOQBbdiWiDCWWgWCZPcs
-         AvGOffJlXwonQ06C4jqjRTOL43odLG5y1fQRTb86540ude3jiOYpo4o72qK5RSld92
-         9rhjZW4SUCpRCOLfNhphqSdEIfdf6v9QGfjOPqkI=
+        b=xe6Z4lUOjJ2u76kK3VCiCR5eUpQq+xuZ7mLUEoHKaU5afGPrVdNoKr6FwzUxlV5SN
+         38w6RBamJW4gps98uLRlXuD19C9haT3VW1IItoHlB8zEqPl7NOE5Af2eT/5kJpXVsE
+         MOMDdco1sIDEXpGQhZnZmybVAuOm2xfVqVXAm1wE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
+Cc:     Yoshihiro Kaneko <ykaneko0929@gmail.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 478/671] ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
-Date:   Thu, 16 Jan 2020 12:01:56 -0500
-Message-Id: <20200116170509.12787-215-sashal@kernel.org>
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 476/671] arm64: dts: renesas: r8a77995: Fix register range of display node
+Date:   Thu, 16 Jan 2020 12:01:54 -0500
+Message-Id: <20200116170509.12787-213-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,34 +61,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
 
-[ Upstream commit 493e84c5dc4d703d976b5875f5db22dae08a0782 ]
+[ Upstream commit 56d651e890f3befd616b6962a862f5ffa1a514fa ]
 
-Add missing vdda-supply required by STM32 ADC.
+Since the R8A77995 SoC uses DU{0,1}, the range from the base address to
+the 0x4000 address is used.
+This patch fixed it.
 
-Fixes: 090992a9ca54 ("ARM: dts: stm32: enable ADC on stm32h743i-eval
-board")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Fixes: 18f1a773e3f9e6d1 ("arm64: dts: renesas: r8a77995: add DU support")
+Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/stm32h743i-eval.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index 3f8e0c4a998d..5bf64e63cdf3 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -79,6 +79,7 @@
- };
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index fe77bc43c447..fb3ecb2c385d 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -938,7 +938,7 @@
  
- &adc_12 {
-+	vdda-supply = <&vdda>;
- 	vref-supply = <&vdda>;
- 	status = "okay";
- 	adc1: adc@0 {
+ 		du: display@feb00000 {
+ 			compatible = "renesas,du-r8a77995";
+-			reg = <0 0xfeb00000 0 0x80000>;
++			reg = <0 0xfeb00000 0 0x40000>;
+ 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 724>,
 -- 
 2.20.1
 
