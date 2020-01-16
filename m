@@ -2,85 +2,95 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C840C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2102C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3CD2053B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE7F2053B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200914;
+	bh=GASgO3943XMdqvSE6BOUqLZVlhdNiqCagP6RoEdfFtw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N3HlrlckF5LxA8xudy3GW1ctln+5aL2dqWzJ4fKnO1a+0dlhpRcjRdUXTuHsohXRY
+	 lxdvCQMZH9Qgmj4izZl3apYTuwye3Ai+187QcFNPqf0p+0gV90WgDX8Hb1JQ4UiYtB
+	 aJLsfEhgJHQI9YogZQbu+xU87/gw8+EZJMHyk2UQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389506AbgAPSwv (ORCPT
+        id S2389616AbgAPSzL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:52:51 -0500
-Received: from muru.com ([72.249.23.125]:51332 "EHLO muru.com"
+        Thu, 16 Jan 2020 13:55:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388673AbgAPSwu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:52:50 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 7722580FC;
-        Thu, 16 Jan 2020 18:53:31 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 10:52:46 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org,
-        Matthijs van Duin <matthijsvanduin@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] ARM: dts: Configure omap5 AESS
-Message-ID: <20200116185246.GV5885@atomide.com>
-References: <20200114150937.18304-1-tony@atomide.com>
- <52905C15-A2D1-4372-9781-D602D0B274B6@goldelico.com>
- <20200114164613.GR5885@atomide.com>
- <D51230C4-2642-4388-959F-313A3382AB99@goldelico.com>
- <20200114171634.GS5885@atomide.com>
- <632E66D6-47EF-44CF-BF02-B0F5A215D904@goldelico.com>
- <ACB71118-B121-4CF7-934D-A88654366E8F@goldelico.com>
- <20200114210039.GT5885@atomide.com>
- <5E0BF30D-2723-4724-89E1-449230758EE2@goldelico.com>
+        id S2388697AbgAPRHl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:07:41 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D95F520663;
+        Thu, 16 Jan 2020 17:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194460;
+        bh=GASgO3943XMdqvSE6BOUqLZVlhdNiqCagP6RoEdfFtw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cfw/UjWCiAxM/8s2XXp2h5j5zEiM4Wz4xwwuJWIOuzD+2uWjEFotfL9nGyi6964VT
+         xARNbwnvPT7FWvQCL5D1tuFK6C60KakJEqrGPjzmtm/I3Xa93FLBPlvDqDFQwbWi9K
+         i3cTZc97t2PFRBS7A+98n+Zj4Ug43yk9zR3b5cmk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 368/671] arm64: dts: meson: libretech-cc: set eMMC as removable
+Date:   Thu, 16 Jan 2020 12:00:06 -0500
+Message-Id: <20200116170509.12787-105-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5E0BF30D-2723-4724-89E1-449230758EE2@goldelico.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [200115 12:50]:
-> 
-> > Am 14.01.2020 um 22:00 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * H. Nikolaus Schaller <hns@goldelico.com> [200114 18:40]:
-> >> I have checked our tree and it is already built into a separate module with
-> >> 
-> >> sound/soc/ti/aess/omap-aess-core.c:	{ .compatible = "ti,omap4-aess", },
-> >> 
-> >> So
-> >> 
-> >>> target-module@f1000 {			/* 0x401f1000, ap 32 20.0 */
-> >>> 	...
-> >>> 	aess: aess {
-> >>> 		compatible = "ti,omap4-aess";
-> >>> 		status = "disabled";
-> >>> 	};
-> >>> };
-> >> 
-> >> would be what we will need.
-> > 
-> > OK good to hear.
-> 
-> I have cleaned up my working tree and added your patches and the one
-> above (without status = "disabled" and could
-> a) boot well
-> b) see that the (non-working) aess driver module is loaded through child node
-> 
-> So you can add my Tested-by: Nikolaus Schaller <hns@goldelico.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-OK good to hear, thanks for testing!
+[ Upstream commit 9f72e321d5506fe3e162a6308a4a295d7f10bb5d ]
 
-Tony
+The eMMC on this board is add-on module which is not mandatory. Removing
+'non-removable' property should prevent some errors when booting a board
+w/o an eMMC module present.
+
+Fixes: 72fb2c852188 ("ARM64: dts: meson-gxl-s905x-libretech-cc: fixup board definition")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Reviewed-by: Martin Blumenstingl<martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index db293440e4ca..daad007fac1f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -256,7 +256,6 @@
+ 	cap-mmc-highspeed;
+ 	mmc-ddr-3_3v;
+ 	max-frequency = <50000000>;
+-	non-removable;
+ 	disable-wp;
+ 
+ 	mmc-pwrseq = <&emmc_pwrseq>;
+-- 
+2.20.1
+
