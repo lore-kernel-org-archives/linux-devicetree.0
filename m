@@ -2,169 +2,134 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434FFC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3D1C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2391720748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9BB207FF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579162017;
+	bh=kmovhnOdTNZF+05ykgKH5WX6MCS0s6lAPI/WYzZejfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D4LuS356nPAJvLdT5Hfj+xtAc7n518oIbUc+h/nr2wjsWcoJ47K7FKN+x1aJBK3O/
+	 KKX67Z0eOkg5hyrvvtf6pTUC9WqzO3yAp1BjdDvOrm73lVhfIkUGema+04aKWCZh0p
+	 L9gXPywuYTUZBQo0Vs2e1OuxTMesWU9uQoCaJ5ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730707AbgAPIEu (ORCPT
+        id S1726410AbgAPIG4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:04:50 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:32981 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730627AbgAPIEr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 03:04:47 -0500
-Received: from droid15-sz.amlogic.com (10.28.8.25) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 16 Jan 2020
- 16:05:11 +0800
-From:   Jian Hu <jian.hu@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v6 2/5] clk: meson: add support for A1 PLL clock ops
-Date:   Thu, 16 Jan 2020 16:04:37 +0800
-Message-ID: <20200116080440.118679-3-jian.hu@amlogic.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200116080440.118679-1-jian.hu@amlogic.com>
-References: <20200116080440.118679-1-jian.hu@amlogic.com>
+        Thu, 16 Jan 2020 03:06:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbgAPIG4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 03:06:56 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5D1E2077B;
+        Thu, 16 Jan 2020 08:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579162015;
+        bh=kmovhnOdTNZF+05ykgKH5WX6MCS0s6lAPI/WYzZejfo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hCEXiojqof9qt7912bwlCFqbdFjcEVrnU04HWRVU8DZuzR9+zWv2GufSGeRf3NNPY
+         wLsrUqw3CbnAn/rbF4fNE2C2VdgWy9FzamqLtF6I1PXrfNa6W8q8wSefQyQcBgRtsH
+         fRvonWTSB+5Vz+tdIZOcvJuglJZgx5bwdOapkMek=
+Date:   Thu, 16 Jan 2020 09:06:52 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: tanix-tx6: Use internal
+ oscillator
+Message-ID: <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
+References: <20200113180720.77461-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.28.8.25]
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3pzc2q6hpze4pego"
+Content-Disposition: inline
+In-Reply-To: <20200113180720.77461-1-jernej.skrabec@siol.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Compared with the previous SoCs, self-adaption current module
-is newly added for A1, and there is no reset parm except the
-fixed pll. In A1 PLL, the PLL enable sequence is different, using
-the new power-on sequence to enable the PLL.
 
-Signed-off-by: Jian Hu <jian.hu@amlogic.com>
----
- drivers/clk/meson/clk-pll.c | 47 +++++++++++++++++++++++++++++++------
- drivers/clk/meson/clk-pll.h |  2 ++
- 2 files changed, 42 insertions(+), 7 deletions(-)
+--3pzc2q6hpze4pego
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
-index ddb1e5634739..10926291440f 100644
---- a/drivers/clk/meson/clk-pll.c
-+++ b/drivers/clk/meson/clk-pll.c
-@@ -283,10 +283,14 @@ static void meson_clk_pll_init(struct clk_hw *hw)
- 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
- 
- 	if (pll->init_count) {
--		meson_parm_write(clk->map, &pll->rst, 1);
-+		if (MESON_PARM_APPLICABLE(&pll->rst))
-+			meson_parm_write(clk->map, &pll->rst, 1);
-+
- 		regmap_multi_reg_write(clk->map, pll->init_regs,
- 				       pll->init_count);
--		meson_parm_write(clk->map, &pll->rst, 0);
-+
-+		if (MESON_PARM_APPLICABLE(&pll->rst))
-+			meson_parm_write(clk->map, &pll->rst, 0);
- 	}
- }
- 
-@@ -295,8 +299,11 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
- 	struct clk_regmap *clk = to_clk_regmap(hw);
- 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
- 
--	if (meson_parm_read(clk->map, &pll->rst) ||
--	    !meson_parm_read(clk->map, &pll->en) ||
-+	if (MESON_PARM_APPLICABLE(&pll->rst) &&
-+	    meson_parm_read(clk->map, &pll->rst))
-+		return 0;
-+
-+	if (!meson_parm_read(clk->map, &pll->en) ||
- 	    !meson_parm_read(clk->map, &pll->l))
- 		return 0;
- 
-@@ -323,13 +330,34 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
- 		return 0;
- 
- 	/* Make sure the pll is in reset */
--	meson_parm_write(clk->map, &pll->rst, 1);
-+	if (MESON_PARM_APPLICABLE(&pll->rst))
-+		meson_parm_write(clk->map, &pll->rst, 1);
- 
- 	/* Enable the pll */
- 	meson_parm_write(clk->map, &pll->en, 1);
- 
- 	/* Take the pll out reset */
--	meson_parm_write(clk->map, &pll->rst, 0);
-+	if (MESON_PARM_APPLICABLE(&pll->rst))
-+		meson_parm_write(clk->map, &pll->rst, 0);
-+
-+	/*
-+	 * Compared with the previous SoCs, self-adaption current module
-+	 * is newly added for A1, keep the new power-on sequence to enable the
-+	 * PLL. The sequence is:
-+	 * 1. enable the pll, delay for 10us
-+	 * 2. enable the pll self-adaption current module, delay for 40us
-+	 * 3. enable the lock detect module
-+	 */
-+	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
-+		udelay(10);
-+		meson_parm_write(clk->map, &pll->current_en, 1);
-+		udelay(40);
-+	};
-+
-+	if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
-+		meson_parm_write(clk->map, &pll->l_detect, 1);
-+		meson_parm_write(clk->map, &pll->l_detect, 0);
-+	}
- 
- 	if (meson_clk_pll_wait_lock(hw))
- 		return -EIO;
-@@ -343,10 +371,15 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
- 	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
- 
- 	/* Put the pll is in reset */
--	meson_parm_write(clk->map, &pll->rst, 1);
-+	if (MESON_PARM_APPLICABLE(&pll->rst))
-+		meson_parm_write(clk->map, &pll->rst, 1);
- 
- 	/* Disable the pll */
- 	meson_parm_write(clk->map, &pll->en, 0);
-+
-+	/* Disable PLL internal self-adaption current module */
-+	if (MESON_PARM_APPLICABLE(&pll->current_en))
-+		meson_parm_write(clk->map, &pll->current_en, 0);
- }
- 
- static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
-diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
-index 367efd0f6410..a2228c0fdce5 100644
---- a/drivers/clk/meson/clk-pll.h
-+++ b/drivers/clk/meson/clk-pll.h
-@@ -36,6 +36,8 @@ struct meson_clk_pll_data {
- 	struct parm frac;
- 	struct parm l;
- 	struct parm rst;
-+	struct parm current_en;
-+	struct parm l_detect;
- 	const struct reg_sequence *init_regs;
- 	unsigned int init_count;
- 	const struct pll_params_table *table;
--- 
-2.24.0
+Hi Jernej,
 
+On Mon, Jan 13, 2020 at 07:07:20PM +0100, Jernej Skrabec wrote:
+> Tanix TX6 doesn't have external 32 kHz oscillator, so switch RTC clock
+> to internal one.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>
+> While this patch gives one possible solution, I mainly want to start
+> discussion why Allwinner SoC dtsi reference external 32 kHz crystal
+> although some boards don't have it. My proposal would be to make clock
+> property optional, based on the fact if external crystal is present or
+> not. However, I'm not sure if that is possible at this point or not.
+
+It's probably a bit of a dumb question but.. are you sure the crystal
+is missing?
+
+The H6 datasheet mentions that the 32kHz crystal needs to be there,
+and it's part of the power sequence, so I'd expect all boards to have
+it.
+
+> Driver also considers missing clock property as deprecated (old DT) [1],
+> so this might complicate things even further.
+>
+> What do you think?
+
+I'm pretty sure (but that would need to be checked) that we never got
+a node without the clocks property on the H6. If that's the case, then
+we can add a check on the compatible.
+
+> Best regards,
+> Jernej
+>
+> [1] https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L263
+>
+>  arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> index 83e6cb0e59ce..af3aebda47bb 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> @@ -91,6 +91,12 @@ &r_ir {
+>  	status = "okay";
+>  };
+>
+> +/* This board doesn't have external 32 kHz crystal. */
+> +&rtc {
+> +	assigned-clocks = <&rtc 0>;
+> +	assigned-clock-parents = <&rtc 2>;
+> +};
+> +
+
+This should be dealt with in the driver however.
+
+Maxime
+
+--3pzc2q6hpze4pego
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiAZnAAKCRDj7w1vZxhR
+xfp9AQCqNNEBQxQevPB260RWbeeZq1fZKNeOc5q4PJQniM8vxQD/T0iCbunuJWB3
+Af65fnaGfBRmzV4wO0oHexIh7gFK6g4=
+=C6EU
+-----END PGP SIGNATURE-----
+
+--3pzc2q6hpze4pego--
