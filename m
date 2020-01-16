@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1649C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35190C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8AB206D7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E3E02053B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201246;
-	bh=ytr1jqxcGQfSHeYVEAxStVB/R5aVTSPwptwvqK57Oqs=;
+	s=default; t=1579201345;
+	bh=CQDizk1U+ffUTXTTxGwiQ2zeRMUYVg5Zx3vc70w1Lho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t5BFXR9rpuDzZFWq8WbxKsMkdlLEhDsAF+uLrwDQQjC5vfQDYo5BwHbEDktY4SwlN
-	 RiTXRgcqC7ivwxmpf76h04FEYxbWP6NwZLXKHQYTIiLMs0emiJA9ckMuSat4Cf9Vkv
-	 YMIObUD/Bb6t40+/44UYN+kfBcN/r4N5kQ3Ywrv4=
+	b=2C7t7MhKeMHjWnNzOyOGYDG+U7IfdrYk/0Vw7JAb0Qv3Ughszk6lsDTwm/JAlbaDH
+	 4G1gWEntqVtBoMWqGL75FL4lO89s2V8mYEZ9W0yRt9v0T1/uAnPEVlPy80DJb/BKG2
+	 HO49X3cxl9xwB0xXQuDS3VLK5ASyqrjsJeWFf/C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388871AbgAPRGN (ORCPT
+        id S2437275AbgAPTCS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:06:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36120 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:02:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388866AbgAPRGN (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:06:13 -0500
+        id S2388777AbgAPRFk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:05:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B66A22522;
-        Thu, 16 Jan 2020 17:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9739F20730;
+        Thu, 16 Jan 2020 17:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194372;
-        bh=ytr1jqxcGQfSHeYVEAxStVB/R5aVTSPwptwvqK57Oqs=;
+        s=default; t=1579194339;
+        bh=CQDizk1U+ffUTXTTxGwiQ2zeRMUYVg5Zx3vc70w1Lho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLoBr0/dv7JFKrmGrIYgQfiUF+O1+jxamFGwZjnWfQd3QIc/5Q22KDqZGaFdBxieV
-         MgkQwSaCe0Z5FP2xjuXIpvFpL8K4JwDOl0kmWKMNE5d3GJ9+9I+sFy+1zPc/J0R6j1
-         T+gFFLEFOdcmUZNiUerBuoJIDQgSmh43C4oTNOJc=
+        b=zL2+wOr13bF4UK83Hcm6buSj1c9T2b6L8Fo8ROt2y6xgwlVDtwghSWOfHJXPaPkpR
+         Wnpx3/Y6tgEHJAZsXTkI9L6YGfbevbZMfdwAh9E4y/HhG3dV3AE+GPLaA225uppWjJ
+         h+8MeVTUNroync9/qB56Qq0/iEwVaOQSmvcdYva8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 305/671] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-Date:   Thu, 16 Jan 2020 11:59:03 -0500
-Message-Id: <20200116170509.12787-42-sashal@kernel.org>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Frank Rowand <frank.rowand@sony.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 283/671] of: use correct function prototype for of_overlay_fdt_apply()
+Date:   Thu, 16 Jan 2020 11:58:41 -0500
+Message-Id: <20200116170509.12787-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,93 +60,38 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
+[ Upstream commit ecb0abc1d8528015957fbd034be8bfe760363b3b ]
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+When CONFIG_OF_OVERLAY is not enabled the fallback stub for
+of_overlay_fdt_apply() does not match the prototype for the case when
+CONFIG_OF_OVERLAY is enabled. Update the stub to use the correct
+function prototype.
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
-
-Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
-mdio1 device.
-
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Acked-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 39a751a4cb7e ("of: change overlay apply input data from unflattened to FDT")
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a-twr.dts |  9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 11 ++++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ include/linux/of.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index f0c949d74833..ec5afad3efd8 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -143,7 +143,7 @@
- };
+diff --git a/include/linux/of.h b/include/linux/of.h
+index dac0201eacef..d4f14b0302b6 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1425,7 +1425,8 @@ int of_overlay_notifier_unregister(struct notifier_block *nb);
  
- &enet0 {
--	tbi-handle = <&tbi1>;
-+	tbi-handle = <&tbi0>;
- 	phy-handle = <&sgmii_phy2>;
- 	phy-connection-type = "sgmii";
- 	status = "okay";
-@@ -222,6 +222,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg = <0x1f>;
- 		device_type = "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index f18490548c78..7e22309bccac 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -584,7 +584,7 @@
- 		};
+ #else
  
- 		mdio0: mdio@2d24000 {
--			compatible = "gianfar";
-+			compatible = "fsl,etsec2-mdio";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -592,6 +592,15 @@
- 			      <0x0 0x2d10030 0x0 0x4>;
- 		};
- 
-+		mdio1: mdio@2d64000 {
-+			compatible = "fsl,etsec2-mdio";
-+			device_type = "mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible = "fsl,etsec-ptp";
- 			reg = <0x0 0x2d10e00 0x0 0xb0>;
+-static inline int of_overlay_fdt_apply(void *overlay_fdt, int *ovcs_id)
++static inline int of_overlay_fdt_apply(void *overlay_fdt, u32 overlay_fdt_size,
++				       int *ovcs_id)
+ {
+ 	return -ENOTSUPP;
+ }
 -- 
 2.20.1
 
