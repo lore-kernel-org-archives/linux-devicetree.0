@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85411C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E10C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F792192A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A9B220684
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198141;
-	bh=T2kMicl6xKuZY0QTFG6niykeQgQfYg8pAv4viD++HJo=;
+	s=default; t=1579198388;
+	bh=UvvU2ACvuYDR0k0CFkDRQnXCIO/igM/KM/2IdQE1i8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nkmrwTKqH9/uN8ekHEG5xR7vjDwFiWOaGnuzw/Ru3mfzExXb+/uorwxOzLNHaMgoy
-	 oqWzdH1+oILRmw0/OkSR78sFwhWSIRqIku2On2C9xmK7vg1M88HdvtQXuwfhaDf0sx
-	 Tcqlvrz+u1DgHuxa8k4SeD59/z6oFExeYpLl9QEs=
+	b=hBt5LNWUhHdrpSQxzNg2Ec7xatISkYMA5rdA/Ji7Sf3uGqTxxWRUCrZNOYwxl/edV
+	 UiJdxBiRUqfRD6Gs7DFBKzJtpb4IP9P1WUSgDSC9iDIDIL3slAXQyTiYh5ywqdF1Yb
+	 ZBHmfrSlPyimravSLoen7X7UVfKmhucltlj2wlYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405042AbgAPRic (ORCPT
+        id S2405260AbgAPRhA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:38:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54452 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:37:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393214AbgAPRib (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:38:31 -0500
+        id S2405255AbgAPRhA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:37:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04DA6246DB;
-        Thu, 16 Jan 2020 17:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0BD6246BA;
+        Thu, 16 Jan 2020 17:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196311;
-        bh=T2kMicl6xKuZY0QTFG6niykeQgQfYg8pAv4viD++HJo=;
+        s=default; t=1579196219;
+        bh=UvvU2ACvuYDR0k0CFkDRQnXCIO/igM/KM/2IdQE1i8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mg3HPLYLCatZkf2B0QzZWPjwS7Ob7esUKdF/jOeUzP2j0w3sgnv2+QQgznS3T6RbA
-         f72YSSWGfkfHiZDz0RDgIDKbpTvbHyH1qTY0aIkN5CTud+z7Ff1EvmC/Pvu4BRV30b
-         kK+Omzr5BTn6nUKzEsPH4VWzl4RwCji+X+xpSw30=
+        b=ROBap01PvHQouCXsF0Wlabbi4pMK30Mqnqkzaqpm8jGwVJwLPQrSPbHa8W3kTz41t
+         AmU2vegVAFTOd1E63N6YdGse6DeFrZsEmvgC1/L4x91Hg9bOLjnXvT8rOz/nAtrova
+         BykAzUraE9HtM+4aeLiObJeJthZQ7zjeMetyXako=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 118/251] ARM: dts: ls1021: Fix SGMII PCS link remaining down after PHY disconnect
-Date:   Thu, 16 Jan 2020 12:34:27 -0500
-Message-Id: <20200116173641.22137-78-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 054/251] ARM: dts: lpc32xx: phy3250: fix SD card regulator voltage
+Date:   Thu, 16 Jan 2020 12:33:23 -0500
+Message-Id: <20200116173641.22137-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -61,92 +58,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit c7861adbe37f576931650ad8ef805e0c47564b9a ]
+[ Upstream commit dc141b99fc36cf910a1d8d5ee30f43f2442fd1bd ]
 
-Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
-But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
-are pointing towards the same internal PCS. Therefore nobody is
-controlling the internal PCS of eTSEC0.
+The fixed voltage regulator on Phytec phyCORE-LPC3250 board, which
+supplies SD/MMC card's power, has a constant output voltage level
+of either 3.15V or 3.3V, the actual value depends on JP4 position,
+the power rail is referenced as VCC_SDIO in the board hardware manual.
 
-Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
-initialization. But upon an ifdown/ifup sequence, the code path from
-ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
-the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
-link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
-failure condition, the PHY driver keeps printing
-'803x_aneg_done: SGMII link is not ok'.
-
-Also, it changes compatible of mdio0 to "fsl,etsec2-mdio" to match
-mdio1 device.
-
-Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
-Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Acked-by: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: d06670e96267 ("arm: dts: phy3250: add SD fixed regulator")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a-twr.dts |  9 ++++++++-
- arch/arm/boot/dts/ls1021a.dtsi    | 11 ++++++++++-
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/lpc3250-phy3250.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index 44715c8ef756..72a3fc63d0ec 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -143,7 +143,7 @@
- };
- 
- &enet0 {
--	tbi-handle = <&tbi1>;
-+	tbi-handle = <&tbi0>;
- 	phy-handle = <&sgmii_phy2>;
- 	phy-connection-type = "sgmii";
- 	status = "okay";
-@@ -222,6 +222,13 @@
- 	sgmii_phy2: ethernet-phy@2 {
- 		reg = <0x2>;
- 	};
-+	tbi0: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&mdio1 {
- 	tbi1: tbi-phy@1f {
- 		reg = <0x1f>;
- 		device_type = "tbi-phy";
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 825f6eae3d1c..27133c3a4b12 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -505,13 +505,22 @@
+diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
+index b7bd3a110a8d..dd0bdf765599 100644
+--- a/arch/arm/boot/dts/lpc3250-phy3250.dts
++++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
+@@ -49,8 +49,8 @@
+ 		sd_reg: regulator@2 {
+ 			compatible = "regulator-fixed";
+ 			regulator-name = "sd_reg";
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
+ 			gpio = <&gpio 5 5 0>;
+ 			enable-active-high;
  		};
- 
- 		mdio0: mdio@2d24000 {
--			compatible = "gianfar";
-+			compatible = "fsl,etsec2-mdio";
- 			device_type = "mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x2d24000 0x0 0x4000>;
- 		};
- 
-+		mdio1: mdio@2d64000 {
-+			compatible = "fsl,etsec2-mdio";
-+			device_type = "mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2d64000 0x0 0x4000>,
-+			      <0x0 0x2d50030 0x0 0x4>;
-+		};
-+
- 		ptp_clock@2d10e00 {
- 			compatible = "fsl,etsec-ptp";
- 			reg = <0x0 0x2d10e00 0x0 0xb0>;
 -- 
 2.20.1
 
