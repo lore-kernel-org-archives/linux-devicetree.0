@@ -2,247 +2,127 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269FBC32771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE7EC3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 01:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA2D24679
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 00:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ECEA2084D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 01:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="ZPeO/qK4"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hQg5p9/2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgAPA5w (ORCPT
+        id S1729399AbgAPBdF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 19:57:52 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33349 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726310AbgAPA5w (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 15 Jan 2020 19:57:52 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 47ym581jzNz9sR0; Thu, 16 Jan 2020 11:57:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1579136268;
-        bh=NFWvXfvHC7UESUpRUwyZiWw9YmMUD96laMG2kvm+8QA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZPeO/qK4XhPI8W819KTOvE+cwkwGFXZK4tJT8MyspF3I/AB1QWDzu4z25p+iMtF/S
-         m0rwJw5FHXlbWQUiXE5EfCQuDDhNkY0vnsrXqqdm+DwlKOLkZTHPhha5u2IUT+I4rZ
-         dgMbeYHBGonofYnUPAFRMZltYelNKcHTNbmsnHX0=
-Date:   Thu, 16 Jan 2020 10:57:41 +1000
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     robh+dt@kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>, sjg@chromium.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-Message-ID: <20200116005741.GB54439@umbus>
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com>
+        Wed, 15 Jan 2020 20:33:05 -0500
+Received: from mail-eopbgr80041.outbound.protection.outlook.com ([40.107.8.41]:6222
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729195AbgAPBdF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 20:33:05 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H6zQ33Rg6Rv3ayYWidfNJU45xlkVy4icJa0Msc+sFyQoWmCttuVDsTLfSnrAnlKWrfAWIByTaujeoL1zGxCY0ZOY7TOsUqt0m9Dv0SIOUE8QryuUNa71d0Wk2UJ5/8h3TGJvOkSUSjhM4Y6ujHU+dF0QGCPMkb/1e/4TKbOKZiYwOjdcGRoQFmh//erbl052I+ZfeKeo4d2nn2Ce/Y7yYn4k/5TE1Qus2/1zA7UnKABCOYoYHs4jflFYCGzsQZ7qEbmTUknuL2byu7PZYgD+QtGtZNgRVbyqIyd8ndG/XsF6vQM1rQeZGs6SG99O+1osdgYQVE1H9egFU94q9NZOeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMSBFlOH0fsUfj7zAMm0D7mMUFuSTeHL2UwKWlhtTfA=;
+ b=nmd97X9zXEzfgtHfObuqYjeiGnhFAgkKXyF0x7jmHqBedCnq8Lbo98lB7IS296Gye7d8Mx5mNn29lETtJUqi6Rrl2TwjKmT803SXK2b8QFKR7wieEcKWVoXALqBSPBZF0bPbJnMULbOU2xwdhwlaNQLMQcAJ1NsAP0PuS1ikNQEg8miyq1qz6ZiG3aqKbPl90UWPjldPDRFNTIHb9ZquvV9nyPSU/amVY1YSmkMycMLsvyqojeHQgiCBjidWh3wc+MJ+//4yFVaY/SmFVUQPjcSZ6FkuhrY9U83xjK/O6hTwd/L3RjfhSICWwVLIM4vodvzI0YtSL2H0KznrR7O6zA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RMSBFlOH0fsUfj7zAMm0D7mMUFuSTeHL2UwKWlhtTfA=;
+ b=hQg5p9/2lneadGpfXluhO3oZJ7OnQ5RM8/cmW28buxH7ncrEi8mxXou5ikcIfckIGhVgWlzHS6WZTg5eudBO3wOInNQ+5ORBt1Yp8SYJo3LLRsWyu/NAYLQUXmJYyIRCcj010Fkq28KxFV0mbDDwQv3NwgBHUwnuv1LpbdgSMH8=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3868.eurprd04.prod.outlook.com (52.134.71.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Thu, 16 Jan 2020 01:33:00 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2644.015; Thu, 16 Jan 2020
+ 01:33:00 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver
+ support
+Thread-Topic: [PATCH V9 2/3] pinctrl: freescale: Add i.MX8MP pinctrl driver
+ support
+Thread-Index: AQHVy0Ux+F+v2aX9K0CMnw3y4zKppKfrt2AAgADLt/A=
+Date:   Thu, 16 Jan 2020 01:33:00 +0000
+Message-ID: <DB3PR0402MB3916602246D133980D508DBCF5360@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
+ <1579052348-32167-2-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdYakDK0Zp_StJ+J5UV7PRjHEnWPmZGpGpeXMZyPtUmv1g@mail.gmail.com>
+In-Reply-To: <CACRpkdYakDK0Zp_StJ+J5UV7PRjHEnWPmZGpGpeXMZyPtUmv1g@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6d940190-46c6-49a3-825b-08d79a2405df
+x-ms-traffictypediagnostic: DB3PR0402MB3868:|DB3PR0402MB3868:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB38682FE6AAE02E0C4A67B058F5360@DB3PR0402MB3868.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(346002)(366004)(376002)(199004)(189003)(33656002)(7416002)(186003)(4326008)(478600001)(76116006)(81166006)(66946007)(66446008)(8676002)(6506007)(81156014)(4744005)(26005)(53546011)(66476007)(64756008)(71200400001)(66556008)(6916009)(86362001)(55016002)(2906002)(7696005)(5660300002)(316002)(44832011)(54906003)(8936002)(52536014)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3868;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vP0tgw8ADr48z3YvpbTzrxzXehYie7E/yshKabtkvDFeH6E1d92FTzsUv5egA5IN4AVgovlBxrb+UGUzwTsbOIx7XJ+jyg7l+Pg6v1EvMdn2gF5ETwxI4uTR3tBenqMIjiLAFWUEf3dJk5yAMoXt5fxtXImAwKJ8pzbuicQtW+bYcqEybek4XMyvijT7Ib38AcddFUFuDVXblb+SNPDo/MV/ckTLtIGxqN3lRLMV/ABWHTh2/VQtL53WvcDTHYTLg9SWXA1GEM4RR8v1KhLPXqQB+DW2tGotaal8rSZ8S6HZWiPB6R4GRnN4IGzqU8XFQEuZa1IlleXWSF7j559uNfvqh2xoCz0lRg8qZOVdgeWChlRWD7DubLtGQ9S9gqhRXb8b5IoMLzHnjNiWFfI+njqJYWm58zlRc1IrbLwuiWjLIO3Dgq1pJzQBFvDbUWSc
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
-Content-Disposition: inline
-In-Reply-To: <20200113181625.3130-2-alexandre.torgue@st.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d940190-46c6-49a3-825b-08d79a2405df
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 01:33:00.2969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hr4ru+UJHELNhHgVLbKL0IEHgWTjksRcjWFAud6MulvOOybGYdy9Hnqn+9PjSroVl9V4lwGfHjybLtKSspD2QQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3868
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---gj572EiMnwbLXET9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
-> This commit adds the possibility to add build information for a DTB.
-> Build information can be: build date, DTS version, "who built the DTB"
-> (same kind of information that we get in Linux with the Linux banner).
->=20
-> To do this, an extra option "-B" using an information file as argument
-> has been added. If this option is used, input device tree is appended with
-> a new string property "Build-info". This property is built with informati=
-on
-> found in information file given as argument. This file has to be generated
-> by user and shouldn't exceed 256 bytes.
->=20
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-
-At the very least, this patch of the series will need to be sent to
-upstream dtc first.
-
-I'm also not terribly clear on what you're trying to accomplish here,
-and why it's useful.
-
-Since you're doing this specifically for use with dtbs built in the
-kernel build, could you just use a:
-	Build-info =3D /incbin/ "build-info.txt";
-in each of the in-kernel .dts files?
-
-Altough you probably shouldn't use "Build-info" since it doesn't match
-device tree property naming conventions.  My suggestion would be
-"linux,build-info".
-
-> diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
-> index bdb3f5945699..294828bac20b 100644
-> --- a/scripts/dtc/dtc.c
-> +++ b/scripts/dtc/dtc.c
-> @@ -18,6 +18,7 @@ int padsize;		/* Additional padding to blob */
->  int alignsize;		/* Additional padding to blob accroding to the alignsize=
- */
->  int phandle_format =3D PHANDLE_EPAPR;	/* Use linux,phandle or phandle pr=
-operties */
->  int generate_symbols;	/* enable symbols & fixup support */
-> +int generate_build_info;	/* Add build information: time, source version =
-=2E.. */
->  int generate_fixups;		/* suppress generation of fixups on symbol support=
- */
->  int auto_label_aliases;		/* auto generate labels -> aliases */
->  int annotate;		/* Level of annotation: 1 for input source location
-> @@ -45,9 +46,42 @@ static void fill_fullpaths(struct node *tree, const ch=
-ar *prefix)
->  		fill_fullpaths(child, tree->fullpath);
->  }
-> =20
-> +static void fill_build_info(struct node *tree, const char *fname)
-> +{
-> +	struct data d =3D empty_data;
-> +	char *tmp;
-> +	FILE *f;
-> +	int len;
-> +
-> +	tmp =3D xmalloc(sizeof(char) * 256);
-> +
-> +	f =3D fopen(fname, "r");
-> +	if (!f) {
-> +		printf("Can't open file %s\n", fname);
-> +		return;
-> +	}
-> +
-> +	len =3D fread(tmp, sizeof(char), 256, f);
-> +	if (!len) {
-> +		printf("Can't read file %s\n", fname);
-> +		fclose(f);
-> +		free(tmp);
-> +	}
-> +	fclose(f);
-
-You have no useful error reporting if the file is larger than the limit.
-
-> +
-> +	tmp[len - 1] =3D '\0';
-> +
-> +	d =3D data_add_marker(d, TYPE_STRING, tmp);
-> +	d =3D data_append_data(d, tmp, len);
-
-You can essentially do this better with data_copy_file().
-
-> +
-> +	add_property(tree, build_property("Build-info", d, NULL));
-> +
-> +	free(tmp);
-> +}
-> +
->  /* Usage related data. */
->  static const char usage_synopsis[] =3D "dtc [options] <input file>";
-> -static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E=
-:@AThv";
-> +static const char usage_short_opts[] =3D "qI:O:o:V:d:R:S:p:a:fb:i:H:sW:E=
-:@AT:B:hv";
->  static struct option const usage_long_opts[] =3D {
->  	{"quiet",            no_argument, NULL, 'q'},
->  	{"in-format",         a_argument, NULL, 'I'},
-> @@ -69,6 +103,7 @@ static struct option const usage_long_opts[] =3D {
->  	{"symbols",	     no_argument, NULL, '@'},
->  	{"auto-alias",       no_argument, NULL, 'A'},
->  	{"annotate",         no_argument, NULL, 'T'},
-> +	{"build-info",	      a_argument, NULL, 'B'},
->  	{"help",             no_argument, NULL, 'h'},
->  	{"version",          no_argument, NULL, 'v'},
->  	{NULL,               no_argument, NULL, 0x0},
-> @@ -106,6 +141,7 @@ static const char * const usage_opts_help[] =3D {
->  	"\n\tEnable generation of symbols",
->  	"\n\tEnable auto-alias of labels",
->  	"\n\tAnnotate output .dts with input source file and line (-T -T for mo=
-re details)",
-> +	"\n\tAdd build information (date, version, ...) in the blob",
->  	"\n\tPrint this help and exit",
->  	"\n\tPrint version and exit",
->  	NULL,
-> @@ -164,6 +200,7 @@ int main(int argc, char *argv[])
->  	const char *outform =3D NULL;
->  	const char *outname =3D "-";
->  	const char *depname =3D NULL;
-> +	const char *version =3D NULL;
->  	bool force =3D false, sort =3D false;
->  	const char *arg;
->  	int opt;
-> @@ -256,9 +293,12 @@ int main(int argc, char *argv[])
->  		case 'T':
->  			annotate++;
->  			break;
-> -
->  		case 'h':
->  			usage(NULL);
-> +		case 'B':
-> +			version =3D optarg;
-> +			generate_build_info =3D 1;
-> +			break;
->  		default:
->  			usage("unknown option");
->  		}
-> @@ -296,14 +336,17 @@ int main(int argc, char *argv[])
->  	}
->  	if (annotate && (!streq(inform, "dts") || !streq(outform, "dts")))
->  		die("--annotate requires -I dts -O dts\n");
-> -	if (streq(inform, "dts"))
-> +	if (streq(inform, "dts")) {
->  		dti =3D dt_from_source(arg);
-> -	else if (streq(inform, "fs"))
-> +		if (generate_build_info)
-> +			fill_build_info(dti->dt, version);
-> +	} else if (streq(inform, "fs")) {
->  		dti =3D dt_from_fs(arg);
-> -	else if(streq(inform, "dtb"))
-> +	} else if (streq(inform, "dtb")) {
->  		dti =3D dt_from_blob(arg);
-> -	else
-> +	} else {
->  		die("Unknown input format \"%s\"\n", inform);
-> +	}
-> =20
->  	dti->outname =3D outname;
-> =20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---gj572EiMnwbLXET9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl4ftQIACgkQbDjKyiDZ
-s5KzNhAA4xu6t0uG6xcZ/G1wNX3HVW1UGJ7aleePRrxOTUFMG3568GE/Cnbj3RmG
-Y8Is7j9vRJb53GgE4EFPxgneVXzKviAXP7R8cy8AEBzM3esnmleq8WC3bUCQY4AC
-mVHpsRk1GuAjYdsoXF+k1CSA5agjt5RUlsv/pNFPFfISKck1AuYz+yLt24INAzZH
-yH+aJMohYZbGq6PYZUPtK/CHZEo7KFP+YdMq214JU4P/zrMc0tQ+auuYDwVBwBBP
-7WsuO/agnc+wklSlhjdGXFj48X2ALThqxJzYwYZSPXA0waWngdqDOvHVaufw454K
-CMm0ISit01OEszGWN6Mh7HZmco2b3w4rrN3Gxvg/BChGBkBEkZw8VqetVHWiEIPi
-JgjaB3FZQ4vkdOGZQ38OO/gcfkSYn9n9Aq8pVg1YhHcggL3jHqEbRXOe9TK1tU8B
-QzDbrpYdfGpctnR2aO9bY3znUNNZ4F4UGObX5JBSHR7TnFed2mxC4SN/j/8wRlE4
-gH3BhM+4Kbjy9C6q9fcSb+6AaJrg5yTzeJLLiyvdVIhaF0iGNeydE1F9GjdnOhwr
-bhSaaBqB97qsAszfuN+Moxr4BrVuZePxl+oEy/QdOt+U4MB1cSLQxGl9xlz+J53d
-V5PF3y2VyfcJrX7I28GY2sGpu2ocWPsXP+7to/G/lxZargPS5/0=
-=4txu
------END PGP SIGNATURE-----
-
---gj572EiMnwbLXET9--
+SGksIExpbnVzDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWOSAyLzNdIHBpbmN0cmw6IGZyZWVz
+Y2FsZTogQWRkIGkuTVg4TVAgcGluY3RybCBkcml2ZXINCj4gc3VwcG9ydA0KPiANCj4gSGkgQW5z
+b24sDQo+IA0KPiBPbiBXZWQsIEphbiAxNSwgMjAyMCBhdCAyOjQzIEFNIEFuc29uIEh1YW5nIDxB
+bnNvbi5IdWFuZ0BueHAuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+IEFkZCB0aGUgcGluY3RybCBk
+cml2ZXIgc3VwcG9ydCBmb3IgaS5NWDhNUC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29u
+IEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBBYmVsIFZlc2Eg
+PGFiZWwudmVzYUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IE5vIGNoYW5nZS4NCj4gDQo+IENhbiB0
+aGlzIHBhdGNoIGJlIGFwcGxpZWQgaW5kZXBlbmRlbnRseSBvZiB0aGUgcmVzdCBvZiB0aGUgcGF0
+Y2hlcz8NCg0KSSB0aGluayBzby4NCg0KVGhhbmtzLA0KQW5zb24NCg0K
