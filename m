@@ -2,191 +2,259 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D080C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 20:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE21C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51EE32075B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 20:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579207701;
-	bh=sovqMoJzNJbW/wMTxoZfJ3ui+9xtKfhoHmYs/tyDV68=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SZGhmUBW18dpkc5xYoS9pyZ02mzbbCiChCszFlneC7EBkBHSbP4JKDdVqadbsi1Sr
-	 IsOaMQh5fZvZXL8vffTn64CeEmvERBWvUPfceq0dqezcWeqXtRZFgJ5MA9TFlAYogk
-	 ou54Utlikp8TKhaCLP38kJ8vfUkViT7GA01e2Ltw=
+	by mail.kernel.org (Postfix) with ESMTP id 30B272077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xo/u23k+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgAPUsU (ORCPT
+        id S1727040AbgAPVGR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 15:48:20 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42058 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgAPUsU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 15:48:20 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so20650830otd.9;
-        Thu, 16 Jan 2020 12:48:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BKpDxkPQvhaYwq0BM0j0+4RX+8L/FqW/tD6hcJ/WZ8Y=;
-        b=ulOidGdKRiRdlY8VOZszJhyjAauTrxAXsdD7IE4cuJrJ30QApKjd0bvId4BtV+JP3p
-         UK4SbWHOqIgCWrxlej3LAP8DDdskftp9FTDtjHt98ieN1anyVCLBv2Ix6d2GChWkxL/t
-         BguuPl2HoetxwtUrcIRYT8SMLu9QM+/Lb9quMWrpMDXRIipIB5bZPBhASej64roO4s31
-         81Yu38XbJ96LgWTI/hq6Fo7DqI+eCLr+J/CerJCYILQasRaVJ1ikJECgdZollcXOS9VU
-         xd4LrQHJDHkCos37jQC1hY9x+lne9zXQxyOynoNq5Avf14doJl+CFCtrQvOU9syb8lxs
-         AyUw==
-X-Gm-Message-State: APjAAAUtsY1rsIF5Qn88rUTH41kodMdWHXq++ACf8NwxWt8CrCuiUqP3
-        VeyLo0eUM4qscGlDjUjS/g==
-X-Google-Smtp-Source: APXvYqwElUK+YujhdGIIl9hNxkKGMyK9dGJUHl9hNmGbi/q+K5ZFvapHlfm9AC50/8wXvJNavkLnjQ==
-X-Received: by 2002:a9d:6e03:: with SMTP id e3mr3614892otr.46.1579207699487;
-        Thu, 16 Jan 2020 12:48:19 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a17sm8039507otp.66.2020.01.16.12.48.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 12:48:18 -0800 (PST)
-Received: (nullmailer pid 14099 invoked by uid 1000);
-        Thu, 16 Jan 2020 20:48:17 -0000
-Date:   Thu, 16 Jan 2020 14:48:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jian Hu <jian.hu@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] dt-bindings: clock: meson: add A1 PLL clock
- controller bindings
-Message-ID: <20200116204817.GA9529@bogus>
-References: <20200116080440.118679-1-jian.hu@amlogic.com>
- <20200116080440.118679-2-jian.hu@amlogic.com>
+        Thu, 16 Jan 2020 16:06:17 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42984 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729188AbgAPVGR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 16:06:17 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GL69Uf067529;
+        Thu, 16 Jan 2020 15:06:09 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579208769;
+        bh=922yJgsJKBx9svnXIFx1v9VwYyajsHYDy+RmL+22EL4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=xo/u23k+eUKYDch2lBUEuwdQ6GPFhYKsB5mmhqX/Rta81FGYQjhYB984yK04AjCZJ
+         fKz0vV2ZuQY9ryi4vcOZSlv2q0FjJfdj9T0cvAJ9ODhfffFLkWyefSfTy+0nItV23L
+         hfypE7Kn4HAIa0G2OuA/mDBJ0peeVpkJXuYVNvj8=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GL68tW083106
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 15:06:09 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 15:06:08 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 15:06:08 -0600
+Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GL60ib107315;
+        Thu, 16 Jan 2020 15:06:06 -0600
+From:   Jyri Sarha <jsarha@ti.com>
+To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
+CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
+        <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
+        <sam@ravnborg.org>, <robh+dt@kernel.org>
+Subject: [PATCH v7 2/5] dt-bindings: display: ti,am65x-dss: Add dt-schema yaml binding
+Date:   Thu, 16 Jan 2020 23:05:57 +0200
+Message-ID: <f92c442a7d988420fef6b4aa9e03112c9a99dc07.1579202260.git.jsarha@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1579202260.git.jsarha@ti.com>
+References: <cover.1579202260.git.jsarha@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200116080440.118679-2-jian.hu@amlogic.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 04:04:36PM +0800, Jian Hu wrote:
-> Add the documentation to support Amlogic A1 PLL clock driver,
-> and add A1 PLL clock controller bindings.
-> 
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> ---
->  .../bindings/clock/amlogic,a1-pll-clkc.yaml   | 54 +++++++++++++++++++
->  include/dt-bindings/clock/a1-pll-clkc.h       | 16 ++++++
->  2 files changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-pll-clkc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> new file mode 100644
-> index 000000000000..071240b65e70
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/amlogic,a1-pll-clkc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson A/C serials PLL Clock Control Unit Device Tree Bindings
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +  - Jian Hu <jian.hu@jian.hu.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: amlogic,a1-pll-clkc
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 2
+Add dt-schema yaml bindig for AM65x DSS, AM65x version TI Keystone
+Display SubSystem.
 
-Not necessary, so drop. Implied by the length of 'items'.
+Version history:
 
-> +    items:
-> +     - description: input xtal_fixpll
-> +     - description: input xtal_hifipll
-> +
-> +  clock-names:
-> +    maxItems: 2
+v2: no change
 
-Same here.
+v3: - Add ports node
+    - use allOf in ti,am65x-oldi-io-ctrl to add both $ref and maxItems
+    - Add includes to dts example
+    - reindent dts example
 
-> +    items:
-> +      - const: xtal_fixpll
-> +      - const: xtal_hifipll
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    clkc_pll: pll-clock-controller@7c80 {
-> +                compatible = "amlogic,a1-pll-clkc";
-> +                reg = <0 0x7c80 0 0x18c>;
-> +                #clock-cells = <1>;
-> +                clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
-> +                         <&clkc_periphs CLKID_XTAL_HIFIPLL>;
+v4: - Add descriptions to reg and clocks properties
+    - Remove minItems when its value is the same as maxItems value
 
-The example will fail to build because these aren't defined.
+v5: - itemize reg and clocks properties' descriptions
 
-Run 'make dt_binding_check'.
+v6: - Add Reviewed-by: from Rob Herring <robh@kernel.org> and
+      Benoit Parrot <bparrot@ti.com>
 
-> +                clock-names = "xtal_fixpll", "xtal_hifipll";
-> +    };
-> diff --git a/include/dt-bindings/clock/a1-pll-clkc.h b/include/dt-bindings/clock/a1-pll-clkc.h
-> new file mode 100644
-> index 000000000000..58eae237e503
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/a1-pll-clkc.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef __A1_PLL_CLKC_H
-> +#define __A1_PLL_CLKC_H
-> +
-> +#define CLKID_FIXED_PLL				1
-> +#define CLKID_FCLK_DIV2				6
-> +#define CLKID_FCLK_DIV3				7
-> +#define CLKID_FCLK_DIV5				8
-> +#define CLKID_FCLK_DIV7				9
-> +#define CLKID_HIFI_PLL				10
-> +
-> +#endif /* __A1_PLL_CLKC_H */
-> -- 
-> 2.24.0
-> 
+v7: no change
+
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Benoit Parrot <bparrot@ti.com>
+---
+ .../bindings/display/ti/ti,am65x-dss.yaml     | 152 ++++++++++++++++++
+ 1 file changed, 152 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+new file mode 100644
+index 000000000000..cac61a998203
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
+@@ -0,0 +1,152 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/ti/ti,am65x-dss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments AM65x Display Subsystem
++
++maintainers:
++  - Jyri Sarha <jsarha@ti.com>
++  - Tomi Valkeinen <tomi.valkeinen@ti.com>
++
++description: |
++  The AM65x TI Keystone Display SubSystem with two output ports and
++  two video planes. The first video port supports OLDI and the second
++  supports DPI format. The fist plane is full video plane with all
++  features and the second is a "lite plane" without scaling support.
++
++properties:
++  compatible:
++    const: ti,am65x-dss
++
++  reg:
++    description:
++      Addresses to each DSS memory region described in the SoC's TRM.
++    items:
++      - description: common DSS register area
++      - description: VIDL1 light video plane
++      - description: VID video plane
++      - description: OVR1 overlay manager for vp1
++      - description: OVR2 overlay manager for vp2
++      - description: VP1 video port 1
++      - description: VP2 video port 2
++
++  reg-names:
++    items:
++      - const: common
++      - const: vidl1
++      - const: vid
++      - const: ovr1
++      - const: ovr2
++      - const: vp1
++      - const: vp2
++
++  clocks:
++    items:
++      - description: fck DSS functional clock
++      - description: vp1 Video Port 1 pixel clock
++      - description: vp2 Video Port 2 pixel clock
++
++  clock-names:
++    items:
++      - const: fck
++      - const: vp1
++      - const: vp2
++
++  interrupts:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++    description: phandle to the associated power domain
++
++  ports:
++    type: object
++    description:
++      Ports as described in Documentation/devictree/bindings/graph.txt
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description:
++          The DSS OLDI output port node form video port 1
++
++      port@1:
++        type: object
++        description:
++          The DSS DPI output port node from video port 2
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++
++  ti,am65x-oldi-io-ctrl:
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
++      - maxItems: 1
++    description:
++      phandle to syscon device node mapping OLDI IO_CTRL registers.
++      The mapped range should point to OLDI_DAT0_IO_CTRL, map it and
++      following OLDI_DAT1_IO_CTRL, OLDI_DAT2_IO_CTRL, OLDI_DAT3_IO_CTRL,
++      and OLDI_CLK_IO_CTRL registers. This property is needed for OLDI
++      interface to work.
++
++  max-memory-bandwidth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Input memory (from main memory to dispc) bandwidth limit in
++      bytes per second
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/soc/ti,sci_pm_domain.h>
++
++    dss: dss@04a00000 {
++            compatible = "ti,am65x-dss";
++            reg =   <0x0 0x04a00000 0x0 0x1000>, /* common */
++                    <0x0 0x04a02000 0x0 0x1000>, /* vidl1 */
++                    <0x0 0x04a06000 0x0 0x1000>, /* vid */
++                    <0x0 0x04a07000 0x0 0x1000>, /* ovr1 */
++                    <0x0 0x04a08000 0x0 0x1000>, /* ovr2 */
++                    <0x0 0x04a0a000 0x0 0x1000>, /* vp1 */
++                    <0x0 0x04a0b000 0x0 0x1000>; /* vp2 */
++            reg-names = "common", "vidl1", "vid",
++                    "ovr1", "ovr2", "vp1", "vp2";
++            ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
++            power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
++            clocks =        <&k3_clks 67 1>,
++                            <&k3_clks 216 1>,
++                            <&k3_clks 67 2>;
++            clock-names = "fck", "vp1", "vp2";
++            interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
++            ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    port@0 {
++                            reg = <0>;
++                            oldi_out0: endpoint {
++                                    remote-endpoint = <&lcd_in0>;
++                            };
++                    };
++            };
++    };
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
