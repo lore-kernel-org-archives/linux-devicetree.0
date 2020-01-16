@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD7C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A8C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830672064C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC5F2064C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200409;
-	bh=PJJRRjvM01qG8A3jR/oqv9cop8TjjfoNmIAu3nk6O+w=;
+	s=default; t=1579200640;
+	bh=Nj6XKZCEDxGaXQwinQLQ2eXpL34/hG9ANdGyJ2pmAbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R7nw/YXjNMlJ32Ui3mgFQH/WUvjmdX/hvJoZP4ZrWAfFgDAnPqqNe/2KdcSLeGpLY
-	 kmxQDjX/9wcUV3k+qTB3/ctPLBnWmph3/ZrNP4M9ldAZc3b7Nr/xS5Tr1fBCC+e9qI
-	 rTGH+7KIlFa2eUxQPwCK6uPBFpZAxAQXs/9B+co0=
+	b=uFukmZ3+VL7nXaaM1Ei5UjQFk2/ayLYpOwmmCkanmbT3R9KGqhcjGUarUueRpNvVU
+	 LuoOsPfBd33vgRZ17MZuZEAl0HLUVqgI5imbaRO5YMyeOxNl2j/DqsmpqAElIK5Chv
+	 YDATVB8agHnetGI1EZiMkGZmlv4nRs245idXoFiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389863AbgAPRKM (ORCPT
+        id S2389566AbgAPRJC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:09:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389249AbgAPRKL (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:10:11 -0500
+        id S2388255AbgAPRJB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:09:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EEC52081E;
-        Thu, 16 Jan 2020 17:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2334C2192A;
+        Thu, 16 Jan 2020 17:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194611;
-        bh=PJJRRjvM01qG8A3jR/oqv9cop8TjjfoNmIAu3nk6O+w=;
+        s=default; t=1579194541;
+        bh=Nj6XKZCEDxGaXQwinQLQ2eXpL34/hG9ANdGyJ2pmAbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xe6Z4lUOjJ2u76kK3VCiCR5eUpQq+xuZ7mLUEoHKaU5afGPrVdNoKr6FwzUxlV5SN
-         38w6RBamJW4gps98uLRlXuD19C9haT3VW1IItoHlB8zEqPl7NOE5Af2eT/5kJpXVsE
-         MOMDdco1sIDEXpGQhZnZmybVAuOm2xfVqVXAm1wE=
+        b=jHuT7nlb+bZjAcA83Lp4WdzTSY9ABMLEFOk9j24pyRCMDkwFXBbjxt+VjaNCsKuBM
+         1X2upgN3c0140osOHm5e/5ElfWt998xOYaIC/VPohYJnKd1BnX9B+hY7d6MMJ89Q6Q
+         /J21zszYgn8gOCJrHfJbcKvK5xj6KcmyTNRe17mE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yoshihiro Kaneko <ykaneko0929@gmail.com>,
+Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
         Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>,
         linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 476/671] arm64: dts: renesas: r8a77995: Fix register range of display node
-Date:   Thu, 16 Jan 2020 12:01:54 -0500
-Message-Id: <20200116170509.12787-213-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 427/671] ARM: dts: iwg20d-q7-common: Fix SDHI1 VccQ regularor
+Date:   Thu, 16 Jan 2020 12:01:05 -0500
+Message-Id: <20200116170509.12787-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -61,36 +60,40 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-[ Upstream commit 56d651e890f3befd616b6962a862f5ffa1a514fa ]
+[ Upstream commit d211650a87edc7f4130651c0ccbc0a4583fd72d3 ]
 
-Since the R8A77995 SoC uses DU{0,1}, the range from the base address to
-the 0x4000 address is used.
-This patch fixed it.
+SDR50 isn't working anymore because the GPIO regulator
+driver is using descriptors since
+commit d6cd33ad7102 ("regulator: gpio: Convert to use descriptors")
+which in turn causes the system to use the polarity of the
+GPIOs (as specified in the DT) for selecting the states,
+but the polarity specified in the DT is wrong.
+This patch fixes the regulator DT definition, and that fixes
+SDR50.
 
-Fixes: 18f1a773e3f9e6d1 ("arm64: dts: renesas: r8a77995: add DU support")
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 029efb3a03c5 ("ARM: dts: iwg20d-q7: Add SDHI1 support")
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 2 +-
+ arch/arm/boot/dts/iwg20d-q7-common.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index fe77bc43c447..fb3ecb2c385d 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -938,7 +938,7 @@
+diff --git a/arch/arm/boot/dts/iwg20d-q7-common.dtsi b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+index 5cae74eb6cdd..a2c9a1e88c1a 100644
+--- a/arch/arm/boot/dts/iwg20d-q7-common.dtsi
++++ b/arch/arm/boot/dts/iwg20d-q7-common.dtsi
+@@ -87,7 +87,7 @@
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <3300000>;
  
- 		du: display@feb00000 {
- 			compatible = "renesas,du-r8a77995";
--			reg = <0 0xfeb00000 0 0x80000>;
-+			reg = <0 0xfeb00000 0 0x40000>;
- 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 724>,
+-		gpios = <&gpio2 30 GPIO_ACTIVE_LOW>;
++		gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
+ 		gpios-states = <1>;
+ 		states = <3300000 1
+ 			  1800000 0>;
 -- 
 2.20.1
 
