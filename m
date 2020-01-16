@@ -2,123 +2,119 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526ECC32771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 02:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD615C32771
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 02:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE852465A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 02:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F5F2467E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 02:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eHvGxNYj"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ovFVlxwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgAPC2N (ORCPT
+        id S1729066AbgAPC4m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:28:13 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:43013 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgAPC2M (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 21:28:12 -0500
-Received: by mail-yb1-f194.google.com with SMTP id k15so3889183ybd.10;
-        Wed, 15 Jan 2020 18:28:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gwQsFePft3MfAfTwN78fKEDrEk3xpT6VkZlinejpxg8=;
-        b=eHvGxNYjkklmWwDAF0QtjAfJ0ddV5IbvTQmBmdI8EAMRg48lNG1u019SMzE0mJlGAz
-         95n8fNW/9/oAV6yYv6wPThFbTJ+f2826FSYvtqQ19HeRQfFqG0Xn9zsdPAZO9Y36XzFZ
-         GCr5vz918v/S90GwjGBGYwHx07RUTeZUk0qXZTKrgZKl+3ZZNAU/VM5CTVVRSDHxjW23
-         gZbeJp7HECVH7LCMnzgjt7uoMMNa0GUu3pLRtfhc3NTwaNmmNQ/AqfiJAYbGzdVadQFD
-         HmTzKx9uGHhOdLVXA+k57KMmGBD7y2sdd+q+76j9cCPsCRTNYpyJIX3z5kprP1WZV7Y5
-         PE7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gwQsFePft3MfAfTwN78fKEDrEk3xpT6VkZlinejpxg8=;
-        b=plfuW1OokFYegOVXm7fKOb8t/7TvkKPO03aEkDIRZXwG+lKmf7SSd4phfmkC9tB2+n
-         DuXBAZSynI37RUFCyzxOHHf4sNOzqVGz7dhAfPCuIs9gFBUjgDXoHX/zOA2YMH0ligGE
-         JISndXfOAGFLoalQwosyAhMqmBNNcU+Rt4QVN6/Vwiynj3URjOUBGyKqt47hB75psKYO
-         6ixmSCVMQq9tcWhu88B8gTG6ISYM1J/sBTs04V0mE96wX03mYmvXfsunJaUFXNU2nTt1
-         XO80iXSZh3zqB6MfvL2xhLMCe2KW6zD4vxJGK8+gV1SEUZHEWw/JSTIEIw6yFWVaPVhJ
-         9qKQ==
-X-Gm-Message-State: APjAAAWWHceIpvHA4s5V6KKJ/hqsRQUcUrMAKLgug/+EiuhM384YxN84
-        gJg8NN4Wv+7eNV/Nq4ekjqU=
-X-Google-Smtp-Source: APXvYqxXKXxVNGaAMW2cQS8aucaHhLtqF3hShj71i8iQx2Pa6JsI4eab9wqzgth1S0qy77qcHwC8yA==
-X-Received: by 2002:a25:e00c:: with SMTP id x12mr2216572ybg.224.1579141691642;
-        Wed, 15 Jan 2020 18:28:11 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id y66sm9038746ywf.79.2020.01.15.18.28.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Jan 2020 18:28:11 -0800 (PST)
-Subject: Re: [RFC PATCH 0/3] Add device tree build information
-To:     Alexandre Torgue <alexandre.torgue@st.com>, robh+dt@kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        david@gibson.dropbear.id.au, sjg@chromium.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, devicetree-compiler@vger.kernel.org
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
-Date:   Wed, 15 Jan 2020 20:28:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 15 Jan 2020 21:56:42 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56859 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728901AbgAPC4m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 21:56:42 -0500
+X-UUID: 126ce06ae2334d8bbdb17346fed09442-20200116
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=LtjPNUgsXNGW2XU98MsD/otonEB6WtDiyz4/NVSxDTI=;
+        b=ovFVlxwCPFkO0/32sCWG1QgOn0QOHvis/UneWiTsXtQP+AJjQOCCGEacv6t36LY4ge7RdjWHjUuiqWIR1nPfmvasr9SsKA+6WsIKkmAKchBaEEV3C6bYvJCtBG1QGRBpGd+rPvpsAAoCpRBfQkXK9AI6miDL6GfFPx3HbexHCK4=;
+X-UUID: 126ce06ae2334d8bbdb17346fed09442-20200116
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 705813892; Thu, 16 Jan 2020 10:56:39 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 16 Jan 2020 10:56:02 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 16 Jan 2020 10:57:26 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        <linux-i2c@vger.kernel.org>
+CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
+        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v10 3/4] misc: eeprom: at24: support pm_runtime control
+Date:   Thu, 16 Jan 2020 10:56:36 +0800
+Message-ID: <20200116025637.3524-4-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
+References: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200113181625.3130-1-alexandre.torgue@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/13/20 12:16 PM, Alexandre Torgue wrote:
-> Hi,
-> 
-> The goal of this series is to add device tree build information in dtb.
-> This information can be dtb build date, where devicetree files come from,
-> who built the dtb ... Actually, same kind of information that you can find
-> in the Linux banner which is printout during kernel boot. Having the same
-> kind of information for device tree is useful for debugging and maintenance.
-> 
-> To achieve that a new option "-B" (using an argument) is added to dtc. 
-> The argument is a file containing a string with build information
-> (e.g., From Linux 5.5.0-rc1 by alex the Mon Jan 13 18:25:38 CET 2020).
-> DTC use it to append dts file with a new string property "Build-info".
-> 
-> of/fdt.c is modified to printout "Build-info" property during Kernel boot and 
-> scripts/Makefile.lib is modified to use dtc -B option during kernel make (this
-> last part could be improved for sure).
-
-Please read through the thread at:
-
-  https://lore.kernel.org/linux-arm-kernel/550A42AC.8060104@gmail.com/
-
-which was my attempt to do something similar.
-
--Frank
-
-> 
-> Regards
-> Alex
-> 
-> Alexandre Torgue (3):
->   dtc: Add dtb build information option
->   of: fdt: print dtb build information
->   scripts: Use -B dtc option to generate dtb build information.
-> 
->  drivers/of/fdt.c           |  9 +++++++
->  scripts/Makefile.lib       | 11 +++++---
->  scripts/dtc/dtc.c          | 55 +++++++++++++++++++++++++++++++++-----
->  scripts/gen_dtb_build_info | 11 ++++++++
->  4 files changed, 76 insertions(+), 10 deletions(-)
->  create mode 100755 scripts/gen_dtb_build_info
-> 
+QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgcG93ZXIgb2YgZWVwcm9tIGFyZSBh
+bHdheQ0Kb24sIHNvbWUgcGxhdGZvcm1zIGRpc2FibGUgdGhlIGVlcHJvbSBwb3dlciBpbiBvcmRl
+ciB0byBtZWV0DQpsb3cgcG93ZXIgcmVxdWVzdC4gVGhpcyBwYXRjaCBhZGQgdGhlIHBtX3J1bnRp
+bWUgb3BzIHRvIGNvbnRyb2wNCnBvd2VyIHRvIHN1cHBvcnQgYWxsIHBsYXRmb3Jtcy4NCg0KU2ln
+bmVkLW9mZi1ieTogQmliYnkgSHNpZWggPGJpYmJ5LmhzaWVoQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
+IGRyaXZlcnMvbWlzYy9lZXByb20vYXQyNC5jIHwgNDAgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNDAgaW5zZXJ0aW9ucygrKQ0KDQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMgYi9kcml2ZXJzL21pc2MvZWVwcm9t
+L2F0MjQuYw0KaW5kZXggMDY4MWQ1ZmRkNTM4Li4yZmUxYjVlMGUwMzQgMTAwNjQ0DQotLS0gYS9k
+cml2ZXJzL21pc2MvZWVwcm9tL2F0MjQuYw0KKysrIGIvZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0
+LmMNCkBAIC0yMiw2ICsyMiw3IEBADQogI2luY2x1ZGUgPGxpbnV4L252bWVtLXByb3ZpZGVyLmg+
+DQogI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0KICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1l
+Lmg+DQorI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KICNpbmNsdWRlIDxs
+aW51eC9ncGlvL2NvbnN1bWVyLmg+DQogDQogLyogQWRkcmVzcyBwb2ludGVyIGlzIDE2IGJpdC4g
+Ki8NCkBAIC05MSw2ICs5Miw3IEBAIHN0cnVjdCBhdDI0X2RhdGEgew0KIA0KIAlzdHJ1Y3QgZ3Bp
+b19kZXNjICp3cF9ncGlvOw0KIA0KKwlzdHJ1Y3QgcmVndWxhdG9yICp2Y2NfcmVnOw0KIAkvKg0K
+IAkgKiBTb21lIGNoaXBzIHRpZSB1cCBtdWx0aXBsZSBJMkMgYWRkcmVzc2VzOyBkdW1teSBkZXZp
+Y2VzIHJlc2VydmUNCiAJICogdGhlbSBmb3IgdXMsIGFuZCB3ZSdsbCB1c2UgdGhlbSB3aXRoIFNN
+QnVzIGNhbGxzLg0KQEAgLTY2Miw2ICs2NjQsMTAgQEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0
+cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogCWF0MjQtPmNsaWVudFswXS5jbGllbnQgPSBjbGll
+bnQ7DQogCWF0MjQtPmNsaWVudFswXS5yZWdtYXAgPSByZWdtYXA7DQogDQorCWF0MjQtPnZjY19y
+ZWcgPSBkZXZtX3JlZ3VsYXRvcl9nZXQoZGV2LCAidmNjIik7DQorCWlmIChJU19FUlIoYXQyNC0+
+dmNjX3JlZykpDQorCQlyZXR1cm4gUFRSX0VSUihhdDI0LT52Y2NfcmVnKTsNCisNCiAJYXQyNC0+
+d3BfZ3BpbyA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgIndwIiwgR1BJT0RfT1VUX0hJ
+R0gpOw0KIAlpZiAoSVNfRVJSKGF0MjQtPndwX2dwaW8pKQ0KIAkJcmV0dXJuIFBUUl9FUlIoYXQy
+NC0+d3BfZ3Bpbyk7DQpAQCAtNzAxLDYgKzcwNywxMiBAQCBzdGF0aWMgaW50IGF0MjRfcHJvYmUo
+c3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCiANCiAJaTJjX3NldF9jbGllbnRkYXRhKGNsaWVu
+dCwgYXQyNCk7DQogDQorCWVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYXQyNC0+dmNjX3JlZyk7DQor
+CWlmIChlcnIpIHsNCisJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSB2Y2MgcmVndWxh
+dG9yXG4iKTsNCisJCXJldHVybiBlcnI7DQorCX0NCisNCiAJLyogZW5hYmxlIHJ1bnRpbWUgcG0g
+Ki8NCiAJcG1fcnVudGltZV9zZXRfYWN0aXZlKGRldik7DQogCXBtX3J1bnRpbWVfZW5hYmxlKGRl
+dik7DQpAQCAtNzEzLDYgKzcyNSw3IEBAIHN0YXRpYyBpbnQgYXQyNF9wcm9iZShzdHJ1Y3QgaTJj
+X2NsaWVudCAqY2xpZW50KQ0KIAlwbV9ydW50aW1lX2lkbGUoZGV2KTsNCiAJaWYgKGVycikgew0K
+IAkJcG1fcnVudGltZV9kaXNhYmxlKGRldik7DQorCQlyZWd1bGF0b3JfZGlzYWJsZShhdDI0LT52
+Y2NfcmVnKTsNCiAJCXJldHVybiAtRU5PREVWOw0KIAl9DQogDQpAQCAtNzI4LDE1ICs3NDEsNDIg
+QEAgc3RhdGljIGludCBhdDI0X3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpDQogDQog
+c3RhdGljIGludCBhdDI0X3JlbW92ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KIHsNCisJ
+c3RydWN0IGF0MjRfZGF0YSAqYXQyNCA9IGkyY19nZXRfY2xpZW50ZGF0YShjbGllbnQpOw0KKw0K
+IAlwbV9ydW50aW1lX2Rpc2FibGUoJmNsaWVudC0+ZGV2KTsNCisJaWYgKCFwbV9ydW50aW1lX3N0
+YXR1c19zdXNwZW5kZWQoJmNsaWVudC0+ZGV2KSkNCisJCXJlZ3VsYXRvcl9kaXNhYmxlKGF0MjQt
+PnZjY19yZWcpOw0KIAlwbV9ydW50aW1lX3NldF9zdXNwZW5kZWQoJmNsaWVudC0+ZGV2KTsNCiAN
+CiAJcmV0dXJuIDA7DQogfQ0KIA0KK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXQyNF9zdXNw
+ZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQg
+PSB0b19pMmNfY2xpZW50KGRldik7DQorCXN0cnVjdCBhdDI0X2RhdGEgKmF0MjQgPSBpMmNfZ2V0
+X2NsaWVudGRhdGEoY2xpZW50KTsNCisNCisJcmV0dXJuIHJlZ3VsYXRvcl9kaXNhYmxlKGF0MjQt
+PnZjY19yZWcpOw0KK30NCisNCitzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGF0MjRfcmVzdW1l
+KHN0cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSB0
+b19pMmNfY2xpZW50KGRldik7DQorCXN0cnVjdCBhdDI0X2RhdGEgKmF0MjQgPSBpMmNfZ2V0X2Ns
+aWVudGRhdGEoY2xpZW50KTsNCisNCisJcmV0dXJuIHJlZ3VsYXRvcl9lbmFibGUoYXQyNC0+dmNj
+X3JlZyk7DQorfQ0KKw0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBhdDI0X3BtX29w
+cyA9IHsNCisJU0VUX1NZU1RFTV9TTEVFUF9QTV9PUFMocG1fcnVudGltZV9mb3JjZV9zdXNwZW5k
+LA0KKwkJCQlwbV9ydW50aW1lX2ZvcmNlX3Jlc3VtZSkNCisJU0VUX1JVTlRJTUVfUE1fT1BTKGF0
+MjRfc3VzcGVuZCwgYXQyNF9yZXN1bWUsIE5VTEwpDQorfTsNCisNCiBzdGF0aWMgc3RydWN0IGky
+Y19kcml2ZXIgYXQyNF9kcml2ZXIgPSB7DQogCS5kcml2ZXIgPSB7DQogCQkubmFtZSA9ICJhdDI0
+IiwNCisJCS5wbSA9ICZhdDI0X3BtX29wcywNCiAJCS5vZl9tYXRjaF90YWJsZSA9IGF0MjRfb2Zf
+bWF0Y2gsDQogCQkuYWNwaV9tYXRjaF90YWJsZSA9IEFDUElfUFRSKGF0MjRfYWNwaV9pZHMpLA0K
+IAl9LA0KLS0gDQoyLjE4LjANCg==
 
