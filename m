@@ -2,257 +2,103 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6830CC33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 23:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD0FC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 265F320684
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 23:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579216685;
-	bh=sRgzjZ104YRB9uSBtj2YBeetB98wSDi6XX2e4P7sNt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FZI4XpKWK2UqofDHFh/GpsevDCgwg2l7ZxZFa4NHcaJDqgyI1eceVCsbHMlQSpH30
-	 h8RMHiMkwBxsZU0qyeUepSPkcgygFLrMDFzIQY/0JNf7anz9C79l2RvZQIfnzHAXzc
-	 tjaurq/wBZ3uDbHTtmL5vZvuYbdVKebKnTSHzmTQ=
+	by mail.kernel.org (Postfix) with ESMTP id CF1EE2072E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 23:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YPQzpgi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgAPXSE (ORCPT
+        id S2387588AbgAPXjy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:18:04 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42300 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729300AbgAPXSE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 18:18:04 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so20514355oin.9;
-        Thu, 16 Jan 2020 15:18:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AxYTHo1xbvVXlE9BL422q+BMWDP33NtgDNx+D8mvMAI=;
-        b=O91BqJMeQT3mV6q10+/UUIWBGYsyiwRTXSaQHGeXSy3uoBIy0f2+f4mtV7/iwy9h6O
-         kN16XniGJ2Wh1nYDmLN2ywBZdLRw7vSOeX5Gm8giQk0FU9Hai7YfCTbv6drNXtW7dE31
-         S/aruiY1VPxC/B8tH/TFw4aOP9m/aT+03MY+FkMF4+YZEiVjC1I9BiVE4vJWWRtlDXfL
-         yvoaZUSk7T+EodgUV6lMP/pFQK8BEL4VVHeOLpmT7J3MqWj02XLbPRcp85ebywYzPOOI
-         ti6dCcdJxVvYMxuL0E/vuMd/bcxjkBfjuNuWELjdngM5hjL6if5Z55CjdeIXa/jB7ieB
-         4Z8g==
-X-Gm-Message-State: APjAAAUHLcUUxk5kAX1+gqUdkk7dko+LFs0we4M7DCSJtscw7Nb1jJB+
-        vsfd6OwaRZ/bJE8XpP/gTw==
-X-Google-Smtp-Source: APXvYqzZJygX0GSguvTQM81bKzfOop6LBjuapSvKPn1gt2ZgNjWt9VE/fJhIO05KbnfYneSZhP3g+A==
-X-Received: by 2002:aca:c386:: with SMTP id t128mr1347117oif.32.1579216683166;
-        Thu, 16 Jan 2020 15:18:03 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e21sm7211797oib.16.2020.01.16.15.18.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2020 15:18:02 -0800 (PST)
-Received: (nullmailer pid 30679 invoked by uid 1000);
-        Thu, 16 Jan 2020 23:18:01 -0000
-Date:   Thu, 16 Jan 2020 17:18:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: dt-bindings: stm32: convert spdfirx to
- json-schema
-Message-ID: <20200116231801.GA18958@bogus>
-References: <20200116105244.13485-1-olivier.moysan@st.com>
+        Thu, 16 Jan 2020 18:39:54 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:36242 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391259AbgAPXjx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 18:39:53 -0500
+Received: from zn.tnic (p200300EC2F0B23005181490C10C27842.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:2300:5181:490c:10c2:7842])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 604831EC0391;
+        Fri, 17 Jan 2020 00:39:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1579217991;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=XdVmCwBwt//oBCkhqjb8tTmVc8IASboW33NxVb/IAfY=;
+        b=YPQzpgi+jN4kZUdorP3ZJjH+er8RY33Mgz3mEO1/YW2ZWPSDNgpTJlvsWjrCMAitTl9XT/
+        S0Sq0petU47LCGnEwBKNo3nt10UVJmhSlpFpqCG/VG6kxtes4xbGlY6i3y5+6I8hMtx03k
+        7U+lqdV/g+LomdBjPT+bN37wjTKpVAY=
+Date:   Fri, 17 Jan 2020 00:39:39 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, ruizhao@microsoft.com,
+        shji@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
+        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
+        wangglei@gmail.com
+Subject: Re: [PATCH v9 1/2] dt-bindings: edac: arm-dmc520.txt
+Message-ID: <20200116233939.GI27148@zn.tnic>
+References: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200116105244.13485-1-olivier.moysan@st.com>
+In-Reply-To: <4fbf026a-4878-cd65-55f7-7d992782b331@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 11:52:44AM +0100, Olivier Moysan wrote:
-> Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
+On Wed, Jan 15, 2020 at 06:32:27AM -0800, Shiping Ji wrote:
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
 > 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
-> Changes in v2:
-> - Add "additionalProperties: false"
-> - Also change minItems to 2 for dmas property, as both DMAs are required.
-> ---
->  .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
->  .../bindings/sound/st,stm32-spdifrx.yaml      | 84 +++++++++++++++++++
->  2 files changed, 84 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-> deleted file mode 100644
-> index 33826f2459fa..000000000000
-> --- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
-> -
-> -The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
-> -IEC-60958 and IEC-61937.
-> -
-> -Required properties:
-> -  - compatible: should be "st,stm32h7-spdifrx"
-> -  - reg: cpu DAI IP base address and size
-> -  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
-> -  - clock-names: must contain "kclk"
-> -  - interrupts: cpu DAI interrupt line
-> -  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
-> -    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
-> -  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
-> -
-> -Optional properties:
-> -  - resets: Reference to a reset controller asserting the SPDIFRX
-> -
-> -The device node should contain one 'port' child node with one child 'endpoint'
-> -node, according to the bindings defined in Documentation/devicetree/bindings/
-> -graph.txt.
-> -
-> -Example:
-> -spdifrx: spdifrx@40004000 {
-> -	compatible = "st,stm32h7-spdifrx";
-> -	reg = <0x40004000 0x400>;
-> -	clocks = <&rcc SPDIFRX_CK>;
-> -	clock-names = "kclk";
-> -	interrupts = <97>;
-> -	dmas = <&dmamux1 2 93 0x400 0x0>,
-> -	       <&dmamux1 3 94 0x400 0x0>;
-> -	dma-names = "rx", "rx-ctrl";
-> -	pinctrl-0 = <&spdifrx_pins>;
-> -	pinctrl-names = "default";
-> -
-> -	spdifrx_port: port {
-> -		cpu_endpoint: endpoint {
-> -			remote-endpoint = <&codec_endpoint>;
-> -		};
-> -	};
-> -};
-> -
-> -spdif_in: spdif-in {
-> -	compatible = "linux,spdif-dir";
-> -
-> -	codec_port: port {
-> -		codec_endpoint: endpoint {
-> -			remote-endpoint = <&cpu_endpoint>;
-> -		};
-> -	};
-> -};
-> -
-> -soundcard {
-> -	compatible = "audio-graph-card";
-> -	dais = <&spdifrx_port>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-> new file mode 100644
-> index 000000000000..e19313e7a552
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
-> +
-> +maintainers:
-> +  - Olivier Moysan <olivier.moysan@st.com>
-> +
-> +description: |
-> +  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
-> +  IEC-60958 and IEC-61937.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32h7-spdifrx
-> +
-> +  "#sound-dai-cells":
-> +    const: 0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: kclk
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    description: |
-> +      Two DMA channel specifiers are requested:
-> +      - audio data capture DMA
-> +      - IEC status bits capture DMA
-> +      See STM32 DMA bindings /bindings/dma/stm32-dma.txt.
-> +    minItems: 2
-> +    maxItems: 2
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-dmas:
-  items:
-    - description: audio data capture DMA
-    - description: IEC status bits capture DMA
+So for this patch, v2 had Rui Zhao as an author:
 
-And minItems/maxItems aren't necessary.
+https://lkml.kernel.org/r/BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com
 
-I'd probably just drop 'See STM32 DMA bindings 
-/bindings/dma/stm32-dma.txt' too, so we don't have to update this when 
-that file is converted to schema.
+v3 got Lei as an author:
 
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +      - const: rx-ctrl
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - "#sound-dai-cells"
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +  - dmas
-> +  - dma-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    spdifrx: spdifrx@40004000 {
-> +        compatible = "st,stm32h7-spdifrx";
-> +        #sound-dai-cells = <0>;
-> +        reg = <0x40004000 0x400>;
-> +        clocks = <&rcc SPDIF_K>;
-> +        clock-names = "kclk";
-> +        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-> +        dmas = <&dmamux1 2 93 0x400 0x0>,
-> +               <&dmamux1 3 94 0x400 0x0>;
-> +        dma-names = "rx", "rx-ctrl";
-> +        pinctrl-0 = <&spdifrx_pins>;
-> +        pinctrl-names = "default";
-> +    };
-> +
-> +...
-> -- 
-> 2.17.1
-> 
+https://lkml.kernel.org/r/CY1PR0401MB1244062C1738B09D6100F202860A0@CY1PR0401MB1244.namprd04.prod.outlook.com
+
+and now it is you.
+
+So when you send next time, think about who's going to be the author.
+
+> +     line numbers. The valid interrupt names are the followings:
+
+WARNING: 'followings' may be misspelled - perhaps 'following'?
+#51: FILE: Documentation/devicetree/bindings/edac/arm-dmc520.txt:10:
++     line numbers. The valid interrupt names are the followings:
+
+Please integrate scripts/checkpatch.pl into your patch creation
+workflow. Some of the warnings/errors *actually* make sense.
+
+Also, this patch throws this other checkpatch warning:
+
+WARNING: DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst
+
+but since Rob reviewed it, I'm going to assume checkpatch is wrong here.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
