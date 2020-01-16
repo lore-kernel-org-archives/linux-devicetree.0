@@ -2,106 +2,104 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A49C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A6FC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BDD2073A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579198988;
-	bh=E6QfXuqdB2fniCwvMGrbCsdwpbrf1m2W5G3PDH8jzcw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cybAhqVDzfyaYYgbYhidZWuuzrMiobp/lytc1WsPVQoefxdQwppIsW8qKXnkNiBfe
-	 40mJtYcGzQOq46ONqLbGb0jS4wARLN+4weG2fXbTtGe+Y1oRkQy6uvbC7WA0mE+sLJ
-	 SORDU62gb96tLx1Pevz4dszYUc5pEJTM5wohd2to=
+	by mail.kernel.org (Postfix) with ESMTP id 6401B2051A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:23:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XS5Gnet0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394499AbgAPSXC (ORCPT
+        id S2392073AbgAPSXY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:23:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392178AbgAPR1U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:20 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7262C246D0;
-        Thu, 16 Jan 2020 17:27:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195640;
-        bh=E6QfXuqdB2fniCwvMGrbCsdwpbrf1m2W5G3PDH8jzcw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuf7NisuGM8wSNO5UfPj/3vHj1zwrA3j2LsR95DYn4Yo29SWPDiuwdf5FPu3VRasq
-         HMk7Nkfbuys9m+GHw80jnYWiRUJGmGbNQXq7UEq9ASzCDM4MVG82AfifzrVabx7IV0
-         ejutiJfY/tjKHh/YgUWW0pZmgeQtLU3cXLjWugfA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 205/371] ARM: dts: sun8i-h3: Fix wifi in Beelink X2 DT
-Date:   Thu, 16 Jan 2020 12:21:17 -0500
-Message-Id: <20200116172403.18149-148-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Thu, 16 Jan 2020 13:23:24 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37642 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405291AbgAPSXX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 13:23:23 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so4859287wmf.2
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 10:23:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bKzyTMx/EE6hYfa6xT4QOtv7PoRTzC4cnmE6saFEzZ8=;
+        b=XS5Gnet0V1x9yQqCMC2ffevRg1STQIoU0YZrQ0LLNDqr8VKtEDV2LmxCv8U5G1IlH0
+         LiJ0b9/G4Ce9rw04C7dbsDRgIXk09Mf4S1ETN8x9ktGh8+GEv4VvQdxqt4Kz62fDOMrv
+         vigDSD76YL/ic+myUUSEDRW2X7g/qP/gFEvkA8jUwZnKOcRq7XtYtTaBmDbBpxtnPoqT
+         UKK75TwQfc1HzNnj1SX6SeV2C/VAUzmbZbSxt8acPzT6nkctmkFHffvi/botExJI/1k7
+         kOXozBk422Ly/CezpH8RyWit2nLwtj2PKoKMSWO9L/l9FhB30au1JF5tYzP3s7M7KoBn
+         R/Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bKzyTMx/EE6hYfa6xT4QOtv7PoRTzC4cnmE6saFEzZ8=;
+        b=iRNJPTTd9BzfVvSmWkmbImHZojKX2plQzB4TfYnVqEhb5wlEQAZ7UQwkBzxXOLgZIz
+         H1QCZlyIn3dmZeq6A+hchB2SVG7HxZkhDI6BBKRHNKnkJP+29lmpqyie3uPAIIAC1f7f
+         IlOacTHP19JyA39yqwif2tZHpQkoaToDbYGEiEnpopK+UIYUV8cZ7OQHaf3G+C5OC6Vu
+         2PAKSRNlM5p1dMPxM2E0QDj835W675ZT2AcvAanBiOKt0NM5v0/QG5ONVl077qCQbxgM
+         j3cDW2h8FxVZIJ6McnBt97d8jkDMUZ5Gvoy8kh4pg5escB6B/Lj25I5Se53Y0wSUH59P
+         3zYQ==
+X-Gm-Message-State: APjAAAX+/eYOC0NyXQipuXEr/HX7G9QutE+w/D3U/sei995udNad34bI
+        1AC8SP7tgpgznzEhzodWX936rg==
+X-Google-Smtp-Source: APXvYqxsdQKMHzHde+rNzloenzO/Yx4EXE3hDkjCTmoJvF84QCCFWJ1LmS1W89NN6PHrcRYRQq2ymg==
+X-Received: by 2002:a05:600c:48a:: with SMTP id d10mr315293wme.87.1579199000823;
+        Thu, 16 Jan 2020 10:23:20 -0800 (PST)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:6c63:1b50:1156:7f0f])
+        by smtp.gmail.com with ESMTPSA id b137sm1087920wme.26.2020.01.16.10.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 10:23:20 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH 03/17] dt-bindings: timer: renesas, cmt: Document r8a774b1 CMT support
+Date:   Thu, 16 Jan 2020 19:22:50 +0100
+Message-Id: <20200116182304.4926-3-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200116182304.4926-1-daniel.lezcano@linaro.org>
+References: <74bf7170-401f-2962-ea5a-1e21431a9349@linaro.org>
+ <20200116182304.4926-1-daniel.lezcano@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Biju Das <biju.das@bp.renesas.com>
 
-[ Upstream commit ca0961011db57e39880df0b5708df8aa3339dc6f ]
+Document SoC specific bindings for RZ/G2N (r8a774b1) SoC.
 
-mmc1 node where wifi module is connected doesn't have properly defined
-power supplies so wifi module is never powered up. Fix that by
-specifying additional power supplies.
-
-Additionally, this STB may have either Realtek or Broadcom based wifi
-module. One based on Broadcom module also needs external clock to work
-properly. Fix that by adding clock property to wifi_pwrseq node.
-
-Fixes: e582b47a9252 ("ARM: dts: sun8i-h3: Add dts for the Beelink X2 STB")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/1570104229-59144-1-git-send-email-biju.das@bp.renesas.com
 ---
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 10da56e86ab8..21b38c386f1b 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -79,6 +79,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-+		clocks = <&rtc 1>;
-+		clock-names = "ext_clock";
- 	};
- 
- 	sound_spdif {
-@@ -128,6 +130,8 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins_a>;
- 	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+index a444cfc5852a..a747fabab7d3 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+@@ -29,6 +29,8 @@ Required Properties:
+     - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
+     - "renesas,r8a774a1-cmt0" for the 32-bit CMT0 device included in r8a774a1.
+     - "renesas,r8a774a1-cmt1" for the 48-bit CMT devices included in r8a774a1.
++    - "renesas,r8a774b1-cmt0" for the 32-bit CMT0 device included in r8a774b1.
++    - "renesas,r8a774b1-cmt1" for the 48-bit CMT devices included in r8a774b1.
+     - "renesas,r8a774c0-cmt0" for the 32-bit CMT0 device included in r8a774c0.
+     - "renesas,r8a774c0-cmt1" for the 48-bit CMT devices included in r8a774c0.
+     - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
 -- 
-2.20.1
+2.17.1
 
