@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD98DC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90567C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850362081E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:48:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6797D207FF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193322;
-	bh=cEW1tkWwCZjtFHFuLDAR/CAkbHVDx+5KeZ9SbT1N4Lo=;
+	s=default; t=1579193378;
+	bh=xFQ1TY2O7jmGgWqGg6Fdp/3dyc3nfW0IkOm+JatatA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+YAVR3hJlDjHN2tua8MRbNDL/6SDBPPgQv0ddI3LUmtAkzS7mHAAqaWAvsnVz8Fh
-	 d4z83R+ynjFyUd7nxFXpZjrg41xvltXaHxsuQU93AiTm+P7sMSiLdoJhCxiY6G5m4L
-	 yk52193mdm7QhWOtoO3tnV3ndigh3aEklzQBYinw=
+	b=rViDa3NLD8bCcSfYdMrdDPDIhnP/jnO8+l7t0E9TxP901tE0WAP1kslaiQC+G4vn9
+	 E+l8sSVlmi7zlqeZa9x4csI6wx/+a5fPUeluCO7T0KsdwT23WO2+znbwOQG1q55usO
+	 nEgqG3Zv2e8H3P3yCz2vNPGbPzcNTWOIeOTMck/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgAPQsi (ORCPT
+        id S1729308AbgAPQsV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:48:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58990 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:48:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728988AbgAPQsh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:48:37 -0500
+        id S1729165AbgAPQsU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:48:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18A3F2081E;
-        Thu, 16 Jan 2020 16:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33242081E;
+        Thu, 16 Jan 2020 16:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193317;
-        bh=cEW1tkWwCZjtFHFuLDAR/CAkbHVDx+5KeZ9SbT1N4Lo=;
+        s=default; t=1579193300;
+        bh=xFQ1TY2O7jmGgWqGg6Fdp/3dyc3nfW0IkOm+JatatA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrKM2Sqcs0wKI9HiP9vL4DTYjhO4dEBpj46MurcZPZQoTguxjw0QlMsKhOz7Q/9g1
-         5z+vzQVeGkW75kVIw7aWHPDE+dnMoMk4Vh9dj1w6otsN5HNH/UkZ7Bzy+thBum56Z8
-         dWRbm6dWkGZ7f782+HX7qr3Hr1HUY+hgnK0b/TUY=
+        b=bL7xFort8+3XdTHshSIfZ6mttOxwCDgLPlA8MS261EPR0YplPoQJqZWwcI8rlPy74
+         tnJK4LNo9UAjmNibvXTGx/4mqObYO2tXpYw90IrqYjr3CbJZSC8qvJRTgZT3tM6XJ7
+         R52hLM6nZbayrYw9w0/u2YCHiqiIg+HE6eX3Pu7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 073/205] arm64: dts: imx8mm-evk: Assigned clocks for audio plls
-Date:   Thu, 16 Jan 2020 11:40:48 -0500
-Message-Id: <20200116164300.6705-73-sashal@kernel.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 069/205] arm64: dts: qcom: sdm845-cheza: delete zap-shader
+Date:   Thu, 16 Jan 2020 11:40:44 -0500
+Message-Id: <20200116164300.6705-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -61,64 +61,58 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "S.j. Wang" <shengjiu.wang@nxp.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit e8b395b23643ca26e62a3081130d895e198c6154 ]
+[ Upstream commit 43b0a4b482478aa4fe7240230be74a79dee95679 ]
 
-Assign clocks and clock-rates for audio plls, that audio
-drivers can utilize them.
+This is unused on cheza.  Delete the node to get ride of the reserved-
+memory section, and to avoid the driver from attempting to load a zap
+shader that doesn't exist every time it powers up the GPU.
 
-Add dai-tdm-slot-num and dai-tdm-slot-width for sound-wm8524,
-that sai driver can generate correct bit clock.
+This also avoids a massive amount of dmesg spam about missing zap fw:
+  msm ae00000.mdss: [drm:adreno_request_fw] *ERROR* failed to load
+qcom/a630_zap.mdt: -2
+  adreno 5000000.gpu: [drm:adreno_zap_shader_load] *ERROR* Unable to
+load a630_zap.mdt
 
-Fixes: 13f3b9fdef6c ("arm64: dts: imx8mm-evk: Enable audio codec wm8524")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Fixes: 3fdeaee951aa ("arm64: dts: sdm845: Add zap shader region for GPU")
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Andy Gross <agross@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 ++
- arch/arm64/boot/dts/freescale/imx8mm.dtsi    | 8 ++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 2 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-index f7a15f3904c2..13137451b438 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -62,6 +62,8 @@
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 34881c0113cb..99a28d64ee62 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -165,6 +165,8 @@
+ /delete-node/ &venus_mem;
+ /delete-node/ &cdsp_mem;
+ /delete-node/ &cdsp_pas;
++/delete-node/ &zap_shader;
++/delete-node/ &gpu_mem;
  
- 		cpudai: simple-audio-card,cpu {
- 			sound-dai = <&sai3>;
-+			dai-tdm-slot-num = <2>;
-+			dai-tdm-slot-width = <32>;
- 		};
+ /* Increase the size from 120 MB to 128 MB */
+ &mpss_region {
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index f406a4340b05..2287354fef86 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -2824,7 +2824,7 @@
  
- 		simple-audio-card,codec {
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 23c8fad7932b..0435c64c92c8 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -479,14 +479,18 @@
- 						<&clk IMX8MM_CLK_AUDIO_AHB>,
- 						<&clk IMX8MM_CLK_IPG_AUDIO_ROOT>,
- 						<&clk IMX8MM_SYS_PLL3>,
--						<&clk IMX8MM_VIDEO_PLL1>;
-+						<&clk IMX8MM_VIDEO_PLL1>,
-+						<&clk IMX8MM_AUDIO_PLL1>,
-+						<&clk IMX8MM_AUDIO_PLL2>;
- 				assigned-clock-parents = <&clk IMX8MM_SYS_PLL3_OUT>,
- 							 <&clk IMX8MM_SYS_PLL1_800M>;
- 				assigned-clock-rates = <0>,
- 							<400000000>,
- 							<400000000>,
- 							<750000000>,
--							<594000000>;
-+							<594000000>,
-+							<393216000>,
-+							<361267200>;
+ 			qcom,gmu = <&gmu>;
+ 
+-			zap-shader {
++			zap_shader: zap-shader {
+ 				memory-region = <&gpu_mem>;
  			};
  
- 			src: reset-controller@30390000 {
 -- 
 2.20.1
 
