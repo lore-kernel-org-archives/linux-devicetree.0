@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7082BC33CB7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50390C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413DB21D56
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283A620661
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202482;
-	bh=rNQrhZDV21oaKlrh7C5bTvuE3dr16hMZ8aHHmoo8iyM=;
+	s=default; t=1579202704;
+	bh=ih2gnmgItQFLMhY5RSN4tZvX7fs5Sa/mH/Wd0Wfpllc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SWEan2OzAtL4xdqhioGyw1mJ4F2QS/vh9H+/OpoZzlteu1JdOPWIqWkmjA5LP7v4i
-	 DZ1QGi7B+05soc1e5YxXFW+O7yezcgghGqsKgTQoEZCPKOEuWyGblklzWNrvjPo4x3
-	 X4crPEZy1emF/kaWCk6pYbrbZGV2Q1bi51emu2KY=
+	b=HqCezBLsA4Pc+Ja+0TKXm7LwEX7KWVGpzAsQDOUblsgH8OmTjCBR2g3mXNca87sFx
+	 ytE8n7EIEWb0wbF+vwFhNxHY1Vx508ZX9+uH+gIgCRUfOspQQg/vHAKGmm9Ioeo3g1
+	 /U2c1GWJtYJk8R2ybMf+n4EIsGH4cRg/npv4KLa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbgAPTVF (ORCPT
+        id S1730996AbgAPTZC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:21:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37790 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:25:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731176AbgAPQxq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:53:46 -0500
+        id S1730101AbgAPQwi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:52:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565EF22522;
-        Thu, 16 Jan 2020 16:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20D7E2073A;
+        Thu, 16 Jan 2020 16:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193626;
-        bh=rNQrhZDV21oaKlrh7C5bTvuE3dr16hMZ8aHHmoo8iyM=;
+        s=default; t=1579193557;
+        bh=ih2gnmgItQFLMhY5RSN4tZvX7fs5Sa/mH/Wd0Wfpllc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFuTxxkkcTmZdz0Kk+ANFoJY5juN+8C4teZVz22RHadpfKI7je8YyQ+FLDaJn3Lxg
-         At4oNwISSIhDEswMxxO7K+nBUCExtIyf9K/XAIJUClST3oT4bhMqkeGKksUY1l5USp
-         a3qxAXquhxfamSl9IbPUBG1AUwc4sFaQzliAnMt4=
+        b=nB22gdPyqHxHYRqkwwRIuOmfi9ATMWO0XJZ4d2KcQI+tDdXkO2CmRGlO46ZllRY0W
+         bsUPGuFc16YKEBUIXxMiaKf0sLiQpvAjh9GhBVRIhkR9Ig5Irhi1EDE+lx/eibMmZg
+         eGuYVCt52363fRo9bkJ95xPzkVUIjOhANCvLuFaw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 160/205] ARM: dts: dra7: fix cpsw mdio fck clock
-Date:   Thu, 16 Jan 2020 11:42:15 -0500
-Message-Id: <20200116164300.6705-160-sashal@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 103/205] arm64: dts: allwinner: a64: Re-add PMU node
+Date:   Thu, 16 Jan 2020 11:41:18 -0500
+Message-Id: <20200116164300.6705-103-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
 References: <20200116164300.6705-1-sashal@kernel.org>
@@ -60,36 +60,59 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Andre Przywara <andre.przywara@arm.com>
 
-[ Upstream commit 6af0a549c25e0d02366aa95507bfe3cad2f7b68b ]
+[ Upstream commit 6b832a148717f1718f57805a9a4aa7f092582d15 ]
 
-The DRA7 CPSW MDIO functional clock (gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0)
-is specified incorrectly, which is caused incorrect MDIO bus clock
-configuration MDCLK. The correct CPSW MDIO functional clock is
-gmac_main_clk (125MHz), which is the same as CPSW fck. Hence fix it.
+As it was found recently, the Performance Monitoring Unit (PMU) on the
+Allwinner A64 SoC was not generating (the right) interrupts. With the
+SPI numbers from the manual the kernel did not receive any overflow
+interrupts, so perf was not happy at all.
+It turns out that the numbers were just off by 4, so the PMU interrupts
+are from 148 to 151, not from 152 to 155 as the manual describes.
 
-Fixes: 1faa415c9c6e ("ARM: dts: Add fck for cpsw mdio for omap variants")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+This was found by playing around with U-Boot, which typically does not
+use interrupts, so the GIC is fully available for experimentation:
+With *every* PPI and SPI enabled, an overflowing PMU cycle counter was
+found to set a bit in one of the GICD_ISPENDR registers, with careful
+counting this was determined to be number 148.
+
+Tested with perf record and perf top on a Pine64-LTS. Also tested with
+tasksetting to every core to confirm the assignment between IRQs and
+cores.
+
+This somewhat "revert-fixes" commit ed3e9406bcbc ("arm64: dts: allwinner:
+a64: Drop PMU node").
+
+Fixes: 34a97fcc71c2 ("arm64: dts: allwinner: a64: Add PMU node")
+Fixes: ed3e9406bcbc ("arm64: dts: allwinner: a64: Drop PMU node")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra7-l4.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 5cac2dd58241..c3954e34835b 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -3059,7 +3059,7 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 70f4cce6be43..ba41c1b85887 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -142,6 +142,15 @@
+ 		clock-output-names = "ext-osc32k";
+ 	};
  
- 				davinci_mdio: mdio@1000 {
- 					compatible = "ti,cpsw-mdio","ti,davinci_mdio";
--					clocks = <&gmac_clkctrl DRA7_GMAC_GMAC_CLKCTRL 0>;
-+					clocks = <&gmac_main_clk>;
- 					clock-names = "fck";
- 					#address-cells = <1>;
- 					#size-cells = <0>;
++	pmu {
++		compatible = "arm,cortex-a53-pmu";
++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-0.2";
+ 		method = "smc";
 -- 
 2.20.1
 
