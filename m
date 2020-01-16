@@ -2,82 +2,111 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008FBC33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EE6C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA010206D7
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270BC206D7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200747;
+	bh=vfF6f5qFBpWrlErlaHJrIdGtbl0HGlLI/J4HrYXA4vI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CmXBBmj+UnqRFSVed9akBLniu61m4fc6TolEbbkS7/UOG8yeBHWQCDCBOPfZPMPkM
+	 SwVR0esOADOVQw9nwvLqjTVjj23ZJkDZ4ZgANY9bBcQj9b67xpwd7KG6fnhC2lOaA3
+	 7ErPLoqU9Yfw8qf69GBlGaZFyDxPg9Q7fcPVdhJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437089AbgAPSwV (ORCPT
+        id S2389607AbgAPSwU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:52:21 -0500
-Received: from muru.com ([72.249.23.125]:51316 "EHLO muru.com"
+        Thu, 16 Jan 2020 13:52:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389427AbgAPSwV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 13:52:21 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8115980FC;
-        Thu, 16 Jan 2020 18:53:02 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 10:52:17 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-omap@vger.kernel.org,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        devicetree@vger.kernel.org,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Matthijs van Duin <matthijsvanduin@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] ARM: dts: Configure omap5 AESS
-Message-ID: <20200116185217.GU5885@atomide.com>
-References: <20200114150937.18304-1-tony@atomide.com>
- <202001162346.4yVlrA8l%lkp@intel.com>
+        id S2389424AbgAPRIa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:08:30 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F05BA21D56;
+        Thu, 16 Jan 2020 17:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194510;
+        bh=vfF6f5qFBpWrlErlaHJrIdGtbl0HGlLI/J4HrYXA4vI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wWFMUkkqH9zIp7zewbfJC3ylawusw4CmwValZ+rzoTZBLS0WHzFeQJ/EVosp10rYn
+         j2aS/bXyWSV4/t30UPIk6t2+jNDHJ5Qs+jPBJXkQNtg2dwiwEdtEI0dvtdW8Rwk9Rv
+         i9dACDiN+/2FN316LLcMYqhoN+sSMey44BKXuS58=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 404/671] arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support
+Date:   Thu, 16 Jan 2020 12:00:42 -0500
+Message-Id: <20200116170509.12787-141-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202001162346.4yVlrA8l%lkp@intel.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-* kbuild test robot <lkp@intel.com> [200116 15:55]:
-> Hi Tony,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on robh/for-next]
-> [also build test ERROR on omap/for-next balbi-usb/next v5.5-rc6 next-20200115]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Tony-Lindgren/ARM-dts-Configure-omap5-AESS/20200115-114737
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-> config: arm-defconfig (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> Error: arch/arm/boot/dts/omap5-l4-abe.dtsi:447.27-28 syntax error
->    FATAL ERROR: Unable to parse input tree
+From: Christian Hewitt <christianshewitt@gmail.com>
 
-This patch has a dependency to a clock related patch as described in the
-original patch email so this error can be ignored.
+[ Upstream commit 33344e2111a3a07097a66f339ad213b047ccdfd2 ]
 
-Regards,
+- Remove serial1 alias
+- Add support for uart_A rts/cts
+- Add bluetooth uart_A subnode qith shutdown gpio
 
-Tony
+Fixes: b8b74dda3908 ("ARM64: dts: meson-gxm: Add support for Khadas VIM2")
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index bfd3a510ff16..785240733d94 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -18,7 +18,6 @@
+ 
+ 	aliases {
+ 		serial0 = &uart_AO;
+-		serial1 = &uart_A;
+ 		serial2 = &uart_AO_B;
+ 	};
+ 
+@@ -407,8 +406,14 @@
+ /* This one is connected to the Bluetooth module */
+ &uart_A {
+ 	status = "okay";
+-	pinctrl-0 = <&uart_a_pins>;
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+ 	pinctrl-names = "default";
++	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ /* This is brought out on the Linux_RX (18) and Linux_TX (19) pins: */
+-- 
+2.20.1
 
