@@ -2,242 +2,114 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8DBC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E044EC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2897520748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ezra2HVM"
+	by mail.kernel.org (Postfix) with ESMTP id BC94A2072B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 11:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725999AbgAPK4O (ORCPT
+        id S1726084AbgAPLKa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:56:14 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:15408 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbgAPK4O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 05:56:14 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GArDEK015410;
-        Thu, 16 Jan 2020 11:53:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=FJhGdmI22PlzIP0rf9aoCbEMHmoRGzoHUIfTd1NB+Ks=;
- b=Ezra2HVMwUC9n9znb9TonHuOKEUJsV4SDn2frdUGkV2KoNpH/1QyyHziJFWEiJ8G7tJv
- nkovaGWcA3TcFzRUvsMxM81PT5hRu/yLtxy+c/Iu4I3um8I2qIs4Tyspfa5wTPKHNQSZ
- DTygHpKi40Y9SQ1+i5Ke5XZNcM8bARRrwF3Hu3DkpT2iecSvFg2HdcHmww7dQNfHIaMm
- xsveDYg4ZyeiyA8iIMW+dWhYgT6E3fx8KormqVZByu5aLdm7i3dlyUmrRtjbR6u6OCVW
- eU5djocsKhmTqZbvmG+nFEb9uaAQfzSgQJS3HgRefyBj1O/0ZdqddoeOZdvDkfRZgakI uw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf77b8k1y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 11:53:13 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 37F3A10002A;
-        Thu, 16 Jan 2020 11:53:11 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A6C5A2AD9ED;
-        Thu, 16 Jan 2020 11:53:11 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 Jan 2020 11:53:11
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <robh@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
-Subject: [PATCH v2] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
-Date:   Thu, 16 Jan 2020 11:52:44 +0100
-Message-ID: <20200116105244.13485-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 16 Jan 2020 06:10:30 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:52725 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbgAPLKa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 06:10:30 -0500
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 03BA0240004;
+        Thu, 16 Jan 2020 11:10:26 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v5 0/7] PCI: amlogic: Make PCIe working reliably on AXG platforms
+Date:   Thu, 16 Jan 2020 12:18:43 +0100
+Message-Id: <20200116111850.23690-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_03:2020-01-16,2020-01-15 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
+PCIe device probing failures have been seen on AXG platforms and were
+due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+in MIPI's PHY registers solved the problem. This bit controls band gap
+reference.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
-Changes in v2:
-- Add "additionalProperties: false"
-- Also change minItems to 2 for dmas property, as both DMAs are required.
----
- .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
- .../bindings/sound/st,stm32-spdifrx.yaml      | 84 +++++++++++++++++++
- 2 files changed, 84 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+a PHY driver to control this bit instead, as well as setting the band
+gap one in order to get reliable PCIE communication.
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-deleted file mode 100644
-index 33826f2459fa..000000000000
---- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
--
--The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
--IEC-60958 and IEC-61937.
--
--Required properties:
--  - compatible: should be "st,stm32h7-spdifrx"
--  - reg: cpu DAI IP base address and size
--  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
--  - clock-names: must contain "kclk"
--  - interrupts: cpu DAI interrupt line
--  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
--    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
--  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
--
--Optional properties:
--  - resets: Reference to a reset controller asserting the SPDIFRX
--
--The device node should contain one 'port' child node with one child 'endpoint'
--node, according to the bindings defined in Documentation/devicetree/bindings/
--graph.txt.
--
--Example:
--spdifrx: spdifrx@40004000 {
--	compatible = "st,stm32h7-spdifrx";
--	reg = <0x40004000 0x400>;
--	clocks = <&rcc SPDIFRX_CK>;
--	clock-names = "kclk";
--	interrupts = <97>;
--	dmas = <&dmamux1 2 93 0x400 0x0>,
--	       <&dmamux1 3 94 0x400 0x0>;
--	dma-names = "rx", "rx-ctrl";
--	pinctrl-0 = <&spdifrx_pins>;
--	pinctrl-names = "default";
--
--	spdifrx_port: port {
--		cpu_endpoint: endpoint {
--			remote-endpoint = <&codec_endpoint>;
--		};
--	};
--};
--
--spdif_in: spdif-in {
--	compatible = "linux,spdif-dir";
--
--	codec_port: port {
--		codec_endpoint: endpoint {
--			remote-endpoint = <&cpu_endpoint>;
--		};
--	};
--};
--
--soundcard {
--	compatible = "audio-graph-card";
--	dais = <&spdifrx_port>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-new file mode 100644
-index 000000000000..e19313e7a552
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
-+
-+maintainers:
-+  - Olivier Moysan <olivier.moysan@st.com>
-+
-+description: |
-+  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
-+  IEC-60958 and IEC-61937.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32h7-spdifrx
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: kclk
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    description: |
-+      Two DMA channel specifiers are requested:
-+      - audio data capture DMA
-+      - IEC status bits capture DMA
-+      See STM32 DMA bindings /bindings/dma/stm32-dma.txt.
-+    minItems: 2
-+    maxItems: 2
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: rx-ctrl
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - "#sound-dai-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    spdifrx: spdifrx@40004000 {
-+        compatible = "st,stm32h7-spdifrx";
-+        #sound-dai-cells = <0>;
-+        reg = <0x40004000 0x400>;
-+        clocks = <&rcc SPDIF_K>;
-+        clock-names = "kclk";
-+        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&dmamux1 2 93 0x400 0x0>,
-+               <&dmamux1 3 94 0x400 0x0>;
-+        dma-names = "rx", "rx-ctrl";
-+        pinctrl-0 = <&spdifrx_pins>;
-+        pinctrl-names = "default";
-+    };
-+
-+...
+While at it add another PHY driver to control PCIE only PHY registers,
+making AXG code more similar to G12A platform thus allowing to remove
+some specific platform handling in pci-meson driver.
+
+Please note that CLKID_MIPI_ENABLE removable will be done in a different
+serie.
+
+Changes since v4:
+ - Rename the shared MIPI/PCIe PHY to analog
+ - Chain the MIPI/PCIe PHY to the PCIe one
+
+Changes since v3:
+ - Go back to the shared MIPI/PCIe phy driver solution from v2
+ - Remove syscon usage
+ - Add all dt-bindings documentation
+
+Changes since v2:
+ - Remove shared MIPI/PCIE device driver and use syscon to access register
+   in PCIE only driver instead
+ - Include devicetree documentation
+
+Changes sinve v1:
+ - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+ - Add a PHY driver for PCIE_PHY registers
+ - Modify pci-meson.c to make use of both PHYs and remove specific
+   handling for AXG and G12A
+
+[1] https://lkml.org/lkml/2019/12/16/119
+
+Remi Pommarel (7):
+  dt-bindings: Add AXG PCIE PHY bindings
+  dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+  dt-bindings: PCI: meson: Update PCIE bindings documentation
+  arm64: dts: meson-axg: Add PCIE PHY nodes
+  phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+  phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+  PCI: amlogic: Use AXG PCIE
+
+ .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+ .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  33 +++
+ .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  48 +++++
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+ drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+ drivers/phy/amlogic/Kconfig                   |  22 ++
+ drivers/phy/amlogic/Makefile                  |  12 +-
+ .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+ drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+ 9 files changed, 537 insertions(+), 112 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+ create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+ create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+ create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+
 -- 
-2.17.1
+2.24.1
 
