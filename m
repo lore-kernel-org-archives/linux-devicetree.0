@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08E4C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E462C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5852077B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09BF2077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579200142;
-	bh=+qEBv/qj5NR0yvM89ByvmOjMvkZ0exdTfbA9IyJZN70=;
+	s=default; t=1579200188;
+	bh=d7cXhq7vMyyCAAxT+hk59hpaupWElbvnm/AH3qUW6Ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tKEZ629PWaSmXGBwuSEPRCGMaBv5Vm4J4SeLkQvA4RRTP1lRc5B2CFyi17nKHxgSH
-	 NwYUxTKCJK+4ygl17F1af4sswyWKEGOTALGi/kP9PDdPWfkUenmREBZv7A0EfvF5UW
-	 Tb+IhACYgc1By0swCVtJfVMr9rZgcYiv+B4jTU7I=
+	b=QborVCGFnRB5b3gHAm4MaNuQ8aw5Gx+p20yUhaSsw2ob4Y2Ax/fBx54wNpqMTUijX
+	 2l0p4cUGIC5FJNH7uWcX7PnpbwO0NsortUbxO3m/aNse6zgjbb6TmQ0npbxRMgfRah
+	 A3dujZCVAS0ltcaUJPtw17YpIagmwGMrmlb+Wyjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390300AbgAPSmV (ORCPT
+        id S2390274AbgAPSmk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:42:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:42:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390274AbgAPRLf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:11:35 -0500
+        id S2390230AbgAPRLY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EEFE24690;
-        Thu, 16 Jan 2020 17:11:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4173D24684;
+        Thu, 16 Jan 2020 17:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194694;
-        bh=+qEBv/qj5NR0yvM89ByvmOjMvkZ0exdTfbA9IyJZN70=;
+        s=default; t=1579194684;
+        bh=d7cXhq7vMyyCAAxT+hk59hpaupWElbvnm/AH3qUW6Ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yeerLhz2+Ulf+WexaQeXoGSMe3PWljxR2rNz9K6W0LWL7jF7v2mg3dGNXZrudxCJ
-         Agv0dE9gx1ah1ao/Qy4pCrnzHlWMStoGxIzEvrKh6E84EgTCVl1vaYmfP2JkcrhSds
-         S2i5KBrFog1nK4RAkgVXlOoHtGdWEM42M/aF3sSg=
+        b=xVtVq4AWHj4KytdFdXivzbIo9YtovVFkcJoROAvLjn6RDuS0/Fimtz49Ol2/PgsmW
+         Lq1ZLeUED+WFaDyOCPCbuWTYwthVdQ2LlKFZ5h/mHW9LRT0hMzkApBbMEt8s8ea08A
+         sgqCpwfOfV0+tUcP4x3hALsZC7dHWq/9VEpWqTeA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 535/671] ARM: dts: logicpd-som-lv: Fix i2c2 and i2c3 Pin mux
-Date:   Thu, 16 Jan 2020 12:02:53 -0500
-Message-Id: <20200116170509.12787-272-sashal@kernel.org>
+Cc:     Oscar A Perez <linux@neuralgames.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 528/671] ARM: dts: aspeed-g5: Fixe gpio-ranges upper limit
+Date:   Thu, 16 Jan 2020 12:02:46 -0500
+Message-Id: <20200116170509.12787-265-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
 References: <20200116170509.12787-1-sashal@kernel.org>
@@ -59,76 +61,39 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Oscar A Perez <linux@neuralgames.com>
 
-[ Upstream commit a932b77b4d1939ad173f18be87da409427fb705c ]
+[ Upstream commit 89b97c429e2e77d695b5133572ca12ec256a4ea4 ]
 
-When the pinmux configuration was added, it was accidentally placed into
-the omap3_pmx_wkup node  when it should have been placed into the
-omap3_pmx_core.  This error was accidentally propagated to stable by
-me when I blindly requested the pull after seeing I2C issues without
-actually reviewing the content of the pinout.  Since the bootloader
-previously muxed these correctly in the past, was a hidden error.
+According to the AST2500/AST2520 specs, these SoCs support up to 228 GPIO
+pins. However, 'gpio-ranges' value in 'aspeed-g5.dtsi' file is currently
+setting the upper limit to 220 which isn't allowing access to all their
+GPIOs. The correct upper limit value is 232 (actual number is 228 plus a
+4-GPIO hole in GPIOAB). Without this patch, GPIOs AC5 and AC6 do not work
+correctly on a AST2500 BMC running Linux Kernel v4.19
 
-This patch moves the i2c2_pins and i2c3_pins to the correct node
-which should eliminate i2c bus errors and timeouts due to the fact
-the bootloader uses the save device tree that no longer properly
-assigns these pins.
-
-Fixes: 5fe3c0fa0d54 ("ARM: dts: Add pinmuxing for i2c2 and i2c3
-for LogicPD SOM-LV") #4.9+
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 2039f90d136c ("ARM: dts: aspeed-g5: Add gpio controller to devicetree")
+Signed-off-by: Oscar A Perez <linux@neuralgames.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/logicpd-som-lv.dtsi | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/aspeed-g5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/logicpd-som-lv.dtsi b/arch/arm/boot/dts/logicpd-som-lv.dtsi
-index 98b682a8080c..c5d54c4d3747 100644
---- a/arch/arm/boot/dts/logicpd-som-lv.dtsi
-+++ b/arch/arm/boot/dts/logicpd-som-lv.dtsi
-@@ -232,6 +232,20 @@
- 		>;
- 	};
- 
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21be, PIN_INPUT | MUX_MODE0)	/* i2c2_scl */
-+			OMAP3_CORE1_IOPAD(0x21c0, PIN_INPUT | MUX_MODE0)	/* i2c2_sda */
-+		>;
-+	};
-+
-+	i2c3_pins: pinmux_i2c3_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21c2, PIN_INPUT | MUX_MODE0)	/* i2c3_scl */
-+			OMAP3_CORE1_IOPAD(0x21c4, PIN_INPUT | MUX_MODE0)	/* i2c3_sda */
-+		>;
-+	};
-+
- 	tsc2004_pins: pinmux_tsc2004_pins {
- 		pinctrl-single,pins = <
- 			OMAP3_CORE1_IOPAD(0x2186, PIN_INPUT | MUX_MODE4)	/* mcbsp4_dr.gpio_153 */
-@@ -253,18 +267,6 @@
- 			OMAP3_WKUP_IOPAD(0x2a0c, PIN_OUTPUT | MUX_MODE4)	/* sys_boot1.gpio_3 */
- 		>;
- 	};
--	i2c2_pins: pinmux_i2c2_pins {
--		pinctrl-single,pins = <
--			OMAP3_CORE1_IOPAD(0x21be, PIN_INPUT | MUX_MODE0)	/* i2c2_scl */
--			OMAP3_CORE1_IOPAD(0x21c0, PIN_INPUT | MUX_MODE0)	/* i2c2_sda */
--		>;
--	};
--	i2c3_pins: pinmux_i2c3_pins {
--		pinctrl-single,pins = <
--			OMAP3_CORE1_IOPAD(0x21c2, PIN_INPUT | MUX_MODE0)	/* i2c3_scl */
--			OMAP3_CORE1_IOPAD(0x21c4, PIN_INPUT | MUX_MODE0)	/* i2c3_sda */
--		>;
--	};
- };
- 
- &omap3_pmx_core2 {
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index d107459fc0f8..f2e1015d75ab 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -247,7 +247,7 @@
+ 				compatible = "aspeed,ast2500-gpio";
+ 				reg = <0x1e780000 0x1000>;
+ 				interrupts = <20>;
+-				gpio-ranges = <&pinctrl 0 0 220>;
++				gpio-ranges = <&pinctrl 0 0 232>;
+ 				clocks = <&syscon ASPEED_CLK_APB>;
+ 				interrupt-controller;
+ 			};
 -- 
 2.20.1
 
