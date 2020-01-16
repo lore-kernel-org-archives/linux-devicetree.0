@@ -2,154 +2,247 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BA3C32771
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 02:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9342DC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 03:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969362467C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 02:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54274206B7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 03:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="skbTP87n"
+	dkim=pass (1024-bit key) header.d=NETORG5796793.onmicrosoft.com header.i=@NETORG5796793.onmicrosoft.com header.b="OhdDfGjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgAPC4r (ORCPT
+        id S1729186AbgAPDeN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 15 Jan 2020 21:56:47 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:22993 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729274AbgAPC4q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 15 Jan 2020 21:56:46 -0500
-X-UUID: 00945ec16c45493482df239c5d5cddd1-20200116
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Dndcsd5tlSGVB1znTJcds0eLsHRPvv+LCRBkyUFsTwQ=;
-        b=skbTP87na6SzTlHNKVXSZBrC5uD/KbiRDmXP+vP3yScVD6FSQpC7J4JRkHIG26LYHEkNJiqbp1fAz0fadKsPqr6pGqUByQqoLl2IAZo80FcvafEsAWJeb3avswUzSDOwxs0ugpaYhv0rq3EI44gYdfqhoD4cTvqBKrbggnluzTM=;
-X-UUID: 00945ec16c45493482df239c5d5cddd1-20200116
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2125257112; Thu, 16 Jan 2020 10:56:40 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 16 Jan 2020 10:56:11 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 16 Jan 2020 10:57:26 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        <linux-i2c@vger.kernel.org>
-CC:     <tfiga@chromium.org>, <drinkcat@chromium.org>,
-        <srv_heupstream@mediatek.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v10 4/4] i2c: core: support bus regulator controlling in adapter
-Date:   Thu, 16 Jan 2020 10:56:37 +0800
-Message-ID: <20200116025637.3524-5-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
-References: <20200116025637.3524-1-bibby.hsieh@mediatek.com>
+        Wed, 15 Jan 2020 22:34:13 -0500
+Received: from mail-bn7nam10on2040.outbound.protection.outlook.com ([40.107.92.40]:6059
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728899AbgAPDeM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 15 Jan 2020 22:34:12 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ktpwi7XtPSpF8SZWXfq+BhKXXE/um50wkDPfNJlYBtZTtzS+WQGzMVPNuZnA7+PaSsrk0inosAvJq7F4cdhiGl9B5vfsivm0dInpsjb0oJloruZVh0HVrpxWuwJwgbVHr4OMJW5AWND5qwIW5NvyHY9A6TXPNItJvy1vwgpK5JSsDT8eeWNlhnhwXy13g45Ufy40CmcT84CWWoVDX82iYL4tBZ8lDjhpoI86fsmUu50fWXvxr0Vd9R++Nta3ecytkQoWEx9ETiWsK1+TtJj5cAgENKtwKvxsvkTuZx45iWzkCzjF+xifWxDSh+vJZJV/K2+L6o7YL1oQBr76Uhr6pA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=342qBdhy1xLnhw+3+MmWh2y8qR9o6dZ/vjJqGb9/4P4=;
+ b=cdVV9Ghdrv9HByn0i0z/A4RbBzHm5N+FfT8Cki3zER+XLr6XDg36sAJeyoTE2YFEK7ROcnvX455Tfo3Rg5ZhIKwAxXOjAUGQOpI2rThXeyekX563SD0As2R04d9vRNpS7kuMEf8Q/VTpu0ZggYQuCGyxP9DhseLtg+FA7bRNhBgD9LNrJdhmBTE5s4Ro+/Pk23fska/2EGckTOMr08HZrXNH9i/DkSuZdMA5jykVds3TKqO9pJPMX07RAsFdli2YUh9SUYEbYjKaxShkoh2ddvrA0wSKil8t15A7O0Qtl6QoHbLWudfM7qUuWdmFgIQOVR0SsDeBP2Z/GjlFUraUDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=labundy.com; dmarc=pass action=none header.from=labundy.com;
+ dkim=pass header.d=labundy.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NETORG5796793.onmicrosoft.com; s=selector1-NETORG5796793-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=342qBdhy1xLnhw+3+MmWh2y8qR9o6dZ/vjJqGb9/4P4=;
+ b=OhdDfGjmW4GA83kJrMGepsbIRmxKsaP9sKEVu++jfEUKf5DY8+XzyacweVOQjRNQqEKWRGVKvtKp5UVrX9RYNczfGLuSEVHKGAQhkfI+tbr9nrr61RWSHvDGQA0lNvdrUcv+NOB3IKCX7+/f+DvyJCO1IWMlGP+tN00PuJqI/zM=
+Received: from SN6PR08MB5053.namprd08.prod.outlook.com (52.135.107.153) by
+ SN6PR08MB5646.namprd08.prod.outlook.com (20.178.6.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Thu, 16 Jan 2020 03:34:05 +0000
+Received: from SN6PR08MB5053.namprd08.prod.outlook.com
+ ([fe80::7c80:2b62:5d9a:2139]) by SN6PR08MB5053.namprd08.prod.outlook.com
+ ([fe80::7c80:2b62:5d9a:2139%4]) with mapi id 15.20.2623.018; Thu, 16 Jan 2020
+ 03:34:04 +0000
+Received: from labundy.com (136.49.227.119) by SN6PR04CA0104.namprd04.prod.outlook.com (2603:10b6:805:f2::45) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.13 via Frontend Transport; Thu, 16 Jan 2020 03:34:01 +0000
+From:   Jeff LaBundy <jeff@labundy.com>
+To:     =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 4/7] pwm: Add support for Azoteq IQS620A PWM generator
+Thread-Topic: [PATCH v3 4/7] pwm: Add support for Azoteq IQS620A PWM generator
+Thread-Index: AQHVxCrzh4C7ONAGT0GQryJS4hKCGKfp20QAgAFEdoCAAEQhAIABT16A
+Date:   Thu, 16 Jan 2020 03:34:04 +0000
+Message-ID: <20200116033355.GA8974@labundy.com>
+References: <1578271620-2159-1-git-send-email-jeff@labundy.com>
+ <1578271620-2159-5-git-send-email-jeff@labundy.com>
+ <20200114080828.vv7ilksklt27ysh3@pengutronix.de>
+ <20200115032945.GA6229@labundy.com>
+ <20200115073336.2bhlu22toua3vnuo@pengutronix.de>
+In-Reply-To: <20200115073336.2bhlu22toua3vnuo@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR04CA0104.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::45) To SN6PR08MB5053.namprd08.prod.outlook.com
+ (2603:10b6:805:78::25)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jeff@labundy.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [136.49.227.119]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19544122-e621-430e-5856-08d79a34ef6a
+x-ms-traffictypediagnostic: SN6PR08MB5646:
+x-microsoft-antispam-prvs: <SN6PR08MB5646157A25F41D3E60D9F277D3360@SN6PR08MB5646.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 02843AA9E0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(34096005)(136003)(39830400003)(396003)(366004)(199004)(189003)(55674003)(1076003)(66476007)(64756008)(8886007)(55016002)(66446008)(7416002)(66574012)(71200400001)(508600001)(81166006)(81156014)(36756003)(16526019)(52116002)(6916009)(8936002)(26005)(2906002)(316002)(4326008)(5660300002)(956004)(7696005)(33656002)(86362001)(66556008)(2616005)(966005)(54906003)(186003)(66946007)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR08MB5646;H:SN6PR08MB5053.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: labundy.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3LjhGHUkZFupe5K6etXOmhlLkr56c9Rf2Vn0z1PvgXbMv6nwrmfnaAQErKPd4opYsM1saSFCv4e7fqtHVW9AhRaeexamxV2ZMlcJo7Jc2wVaA2sVGLsSnvsEf7/R075N+oe1z96Vz9489TanRsdB4jCg7eJlHuguRCMmzUznx0TVi1AQurJIuweVccIM8NcC86UfJYqeG0ovDFbs+udP5qMP829bVx78J1y38iRqJ5abJr10uXkVrL5F48w2JiPRQUo90IPfjh1Walk/7PsSHUfU2wZncrcxFzx08+A9/+1PQi1+mNtU036QiACDmMvd8p1X+FmaFZhOdp2MskO5o8Xx4Tf48so0SbzLsYyh/NQjGJaJh8xvpJ1DXZ63ht6wEoNDjTtRBv1kp1PKxlSC+Ubo7KkBZw73M1+sJYrBQRnF3ifPQg8v7hS8BaqgFTXPAr/opeMP6neUjxcjCs7/lUNoZKxVBmR2hcvJqGW3qC8VYi4NUi+wYCnFVHdW3G8nG9APUeObwrRlAaGmrZyFF7V3W2Ez8aQIL1sinULPlzc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <E4497FD73A2BB84A8389E2B8F49D925D@namprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-OriginatorOrg: labundy.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19544122-e621-430e-5856-08d79a34ef6a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jan 2020 03:34:04.7202
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 00b69d09-acab-4585-aca7-8fb7c6323e6f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: S0D7MFUWqC1dtEo56Xet2LveqNwb2Fa4B6HIjqrpovm6I7ndeHVzOQd0oQiOl8sdtRPyUR1Til79PZfmnsiT0w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR08MB5646
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWx0aG91Z2ggaW4gdGhlIG1vc3QgcGxhdGZvcm1zLCB0aGUgYnVzIHBvd2VyIG9mIGkyYw0KYXJl
-IGFsd2F5IG9uLCBzb21lIHBsYXRmb3JtcyBkaXNhYmxlIHRoZSBpMmMgYnVzIHBvd2VyDQppbiBv
-cmRlciB0byBtZWV0IGxvdyBwb3dlciByZXF1ZXN0Lg0KDQpXZSBnZXQgYW5kIGVuYWJsZSBidWxr
-IHJlZ3VsYXRvciBpbiBpMmMgYWRhcHRlciBkZXZpY2UuDQoNClNpZ25lZC1vZmYtYnk6IEJpYmJ5
-IEhzaWVoIDxiaWJieS5oc2llaEBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2kyYy9pMmMt
-Y29yZS1iYXNlLmMgfCA4MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQog
-aW5jbHVkZS9saW51eC9pMmMuaCAgICAgICAgIHwgIDMgKysNCiAyIGZpbGVzIGNoYW5nZWQsIDg0
-IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2Uu
-YyBiL2RyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYw0KaW5kZXggOTMzM2M4NjVkNGE5Li45Yjll
-OTZiMDk0Y2EgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9pMmMtY29yZS1iYXNlLmMNCisrKyBi
-L2RyaXZlcnMvaTJjL2kyYy1jb3JlLWJhc2UuYw0KQEAgLTMwNiw2ICszMDYsNyBAQCBzdGF0aWMg
-aW50IGkyY19zbWJ1c19ob3N0X25vdGlmeV90b19pcnEoY29uc3Qgc3RydWN0IGkyY19jbGllbnQg
-KmNsaWVudCkNCiBzdGF0aWMgaW50IGkyY19kZXZpY2VfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2
-KQ0KIHsNCiAJc3RydWN0IGkyY19jbGllbnQJKmNsaWVudCA9IGkyY192ZXJpZnlfY2xpZW50KGRl
-dik7DQorCXN0cnVjdCBpMmNfYWRhcHRlcgkqYWRhcCA9IGNsaWVudC0+YWRhcHRlcjsNCiAJc3Ry
-dWN0IGkyY19kcml2ZXIJKmRyaXZlcjsNCiAJaW50IHN0YXR1czsNCiANCkBAIC0zNzEsNiArMzcy
-LDEyIEBAIHN0YXRpYyBpbnQgaTJjX2RldmljZV9wcm9iZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQog
-DQogCWRldl9kYmcoZGV2LCAicHJvYmVcbiIpOw0KIA0KKwlzdGF0dXMgPSByZWd1bGF0b3JfZW5h
-YmxlKGFkYXAtPmJ1c19yZWcpOw0KKwlpZiAoc3RhdHVzICE9IDApIHsNCisJCWRldl9lcnIoJmFk
-YXAtPmRldiwgIkZhaWxlZCB0byBlbmFibGUgcG93ZXIgcmVndWxhdG9yXG4iKTsNCisJCWdvdG8g
-ZXJyX2NsZWFyX3dha2V1cF9pcnE7DQorCX0NCisNCiAJc3RhdHVzID0gb2ZfY2xrX3NldF9kZWZh
-dWx0cyhkZXYtPm9mX25vZGUsIGZhbHNlKTsNCiAJaWYgKHN0YXR1cyA8IDApDQogCQlnb3RvIGVy
-cl9jbGVhcl93YWtldXBfaXJxOw0KQEAgLTQwNyw2ICs0MTQsNyBAQCBzdGF0aWMgaW50IGkyY19k
-ZXZpY2VfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2KQ0KIHN0YXRpYyBpbnQgaTJjX2RldmljZV9y
-ZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KQ0KIHsNCiAJc3RydWN0IGkyY19jbGllbnQJKmNsaWVu
-dCA9IGkyY192ZXJpZnlfY2xpZW50KGRldik7DQorCXN0cnVjdCBpMmNfYWRhcHRlciAgICAgICph
-ZGFwID0gY2xpZW50LT5hZGFwdGVyOw0KIAlzdHJ1Y3QgaTJjX2RyaXZlcgkqZHJpdmVyOw0KIAlp
-bnQgc3RhdHVzID0gMDsNCiANCkBAIC00MjAsNiArNDI4LDggQEAgc3RhdGljIGludCBpMmNfZGV2
-aWNlX3JlbW92ZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQogCX0NCiANCiAJZGV2X3BtX2RvbWFpbl9k
-ZXRhY2goJmNsaWVudC0+ZGV2LCB0cnVlKTsNCisJaWYgKCFwbV9ydW50aW1lX3N0YXR1c19zdXNw
-ZW5kZWQoJmFkYXAtPmRldikpDQorCQlyZWd1bGF0b3JfZGlzYWJsZShhZGFwLT5idXNfcmVnKTsN
-CiANCiAJZGV2X3BtX2NsZWFyX3dha2VfaXJxKCZjbGllbnQtPmRldik7DQogCWRldmljZV9pbml0
-X3dha2V1cCgmY2xpZW50LT5kZXYsIGZhbHNlKTsNCkBAIC00MzEsNiArNDQxLDcxIEBAIHN0YXRp
-YyBpbnQgaTJjX2RldmljZV9yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAlyZXR1cm4gc3Rh
-dHVzOw0KIH0NCiANCisjaWZkZWYgQ09ORklHX1BNX1NMRUVQDQorc3RhdGljIGludCBpMmNfcmVz
-dW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCit7DQorCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQg
-PSBpMmNfdmVyaWZ5X2NsaWVudChkZXYpOw0KKwlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXAgPSBj
-bGllbnQtPmFkYXB0ZXI7DQorCWludCBlcnI7DQorDQorCWlmIChwbV9ydW50aW1lX3N0YXR1c19z
-dXNwZW5kZWQoJmFkYXAtPmRldikpIHsNCisJCWVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYWRhcC0+
-YnVzX3JlZyk7DQorCQlpZiAoZXJyKQ0KKwkJCXJldHVybiBlcnI7DQorCX0NCisNCisJcmV0dXJu
-IHBtX2dlbmVyaWNfcmVzdW1lKGRldik7DQorfQ0KKw0KK3N0YXRpYyBpbnQgaTJjX3N1c3BlbmQo
-c3RydWN0IGRldmljZSAqZGV2KQ0KK3sNCisJc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCA9IGky
-Y192ZXJpZnlfY2xpZW50KGRldik7DQorCXN0cnVjdCBpMmNfYWRhcHRlciAqYWRhcCA9IGNsaWVu
-dC0+YWRhcHRlcjsNCisJaW50IGVycjsNCisNCisJaWYgKCFwbV9ydW50aW1lX3N0YXR1c19zdXNw
-ZW5kZWQoJmFkYXAtPmRldikpIHsNCisJCWVyciA9IHJlZ3VsYXRvcl9kaXNhYmxlKGFkYXAtPmJ1
-c19yZWcpOw0KKwkJaWYgKGVycikNCisJCQlyZXR1cm4gZXJyOw0KKwl9DQorDQorCXJldHVybiBw
-bV9nZW5lcmljX3N1c3BlbmQoZGV2KTsNCit9DQorI2VuZGlmDQorDQorI2lmZGVmIENPTkZJR19Q
-TQ0KK3N0YXRpYyBpbnQgaTJjX3J1bnRpbWVfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCit7
-DQorCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSBpMmNfdmVyaWZ5X2NsaWVudChkZXYpOw0K
-KwlzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXAgPSBjbGllbnQtPmFkYXB0ZXI7DQorCWludCBlcnI7
-DQorDQorCWVyciA9IHJlZ3VsYXRvcl9lbmFibGUoYWRhcC0+YnVzX3JlZyk7DQorCWlmIChlcnIp
-DQorCQlyZXR1cm4gZXJyOw0KKw0KKwlyZXR1cm4gcG1fZ2VuZXJpY19ydW50aW1lX3Jlc3VtZShk
-ZXYpOw0KK30NCisNCitzdGF0aWMgaW50IGkyY19ydW50aW1lX3N1c3BlbmQoc3RydWN0IGRldmlj
-ZSAqZGV2KQ0KK3sNCisJc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCA9IGkyY192ZXJpZnlfY2xp
-ZW50KGRldik7DQorCXN0cnVjdCBpMmNfYWRhcHRlciAqYWRhcCA9IGNsaWVudC0+YWRhcHRlcjsN
-CisJaW50IGVycjsNCisNCisJZXJyID0gcG1fZ2VuZXJpY19ydW50aW1lX3N1c3BlbmQoZGV2KTsN
-CisJaWYgKGVycikNCisJCXJldHVybiBlcnI7DQorDQorCXJldHVybiByZWd1bGF0b3JfZGlzYWJs
-ZShhZGFwLT5idXNfcmVnKTsNCit9DQorI2VuZGlmDQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBk
-ZXZfcG1fb3BzIGkyY19kZXZpY2VfcG0gPSB7DQorCVNFVF9TWVNURU1fU0xFRVBfUE1fT1BTKGky
-Y19zdXNwZW5kLCBpMmNfcmVzdW1lKQ0KKwlTRVRfUlVOVElNRV9QTV9PUFMoaTJjX3J1bnRpbWVf
-c3VzcGVuZCwgaTJjX3J1bnRpbWVfcmVzdW1lLCBOVUxMKQ0KK307DQorDQogc3RhdGljIHZvaWQg
-aTJjX2RldmljZV9zaHV0ZG93bihzdHJ1Y3QgZGV2aWNlICpkZXYpDQogew0KIAlzdHJ1Y3QgaTJj
-X2NsaWVudCAqY2xpZW50ID0gaTJjX3ZlcmlmeV9jbGllbnQoZGV2KTsNCkBAIC00ODgsNiArNTYz
-LDcgQEAgc3RydWN0IGJ1c190eXBlIGkyY19idXNfdHlwZSA9IHsNCiAJLnByb2JlCQk9IGkyY19k
-ZXZpY2VfcHJvYmUsDQogCS5yZW1vdmUJCT0gaTJjX2RldmljZV9yZW1vdmUsDQogCS5zaHV0ZG93
-bgk9IGkyY19kZXZpY2Vfc2h1dGRvd24sDQorCS5wbQkJPSAmaTJjX2RldmljZV9wbSwNCiB9Ow0K
-IEVYUE9SVF9TWU1CT0xfR1BMKGkyY19idXNfdHlwZSk7DQogDQpAQCAtMTM1MSw2ICsxNDI3LDEx
-IEBAIHN0YXRpYyBpbnQgaTJjX3JlZ2lzdGVyX2FkYXB0ZXIoc3RydWN0IGkyY19hZGFwdGVyICph
-ZGFwKQ0KIAkJZ290byBvdXRfcmVnOw0KIA0KIAlkZXZfZGJnKCZhZGFwLT5kZXYsICJhZGFwdGVy
-IFslc10gcmVnaXN0ZXJlZFxuIiwgYWRhcC0+bmFtZSk7DQorCWFkYXAtPmJ1c19yZWcgPSBkZXZt
-X3JlZ3VsYXRvcl9nZXQoJmFkYXAtPmRldiwgImJ1cyIpOw0KKwlpZiAoSVNfRVJSKGFkYXAtPmJ1
-c19yZWcpKSB7DQorCQlyZXMgPSBQVFJfRVJSKGFkYXAtPmJ1c19yZWcpOw0KKwkJZ290byBvdXRf
-cmVnOw0KKwl9DQogDQogCXBtX3J1bnRpbWVfbm9fY2FsbGJhY2tzKCZhZGFwLT5kZXYpOw0KIAlw
-bV9zdXNwZW5kX2lnbm9yZV9jaGlsZHJlbigmYWRhcC0+ZGV2LCB0cnVlKTsNCmRpZmYgLS1naXQg
-YS9pbmNsdWRlL2xpbnV4L2kyYy5oIGIvaW5jbHVkZS9saW51eC9pMmMuaA0KaW5kZXggZDJmNzg2
-NzA2NjU3Li44MzNiODFhNjgwZGEgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2xpbnV4L2kyYy5oDQor
-KysgYi9pbmNsdWRlL2xpbnV4L2kyYy5oDQpAQCAtMTUsNiArMTUsNyBAQA0KICNpbmNsdWRlIDxs
-aW51eC9kZXZpY2UuaD4JLyogZm9yIHN0cnVjdCBkZXZpY2UgKi8NCiAjaW5jbHVkZSA8bGludXgv
-c2NoZWQuaD4JLyogZm9yIGNvbXBsZXRpb24gKi8NCiAjaW5jbHVkZSA8bGludXgvbXV0ZXguaD4N
-CisjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+DQogI2luY2x1ZGUgPGxpbnV4
-L3J0bXV0ZXguaD4NCiAjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+CQkvKiBmb3IgSG9zdCBO
-b3RpZnkgSVJRICovDQogI2luY2x1ZGUgPGxpbnV4L29mLmg+CQkvKiBmb3Igc3RydWN0IGRldmlj
-ZV9ub2RlICovDQpAQCAtMzMwLDYgKzMzMSw3IEBAIHN0cnVjdCBpMmNfY2xpZW50IHsNCiAJaW50
-IGluaXRfaXJxOwkJCS8qIGlycSBzZXQgYXQgaW5pdGlhbGl6YXRpb24JKi8NCiAJaW50IGlycTsJ
-CQkvKiBpcnEgaXNzdWVkIGJ5IGRldmljZQkJKi8NCiAJc3RydWN0IGxpc3RfaGVhZCBkZXRlY3Rl
-ZDsNCisNCiAjaWYgSVNfRU5BQkxFRChDT05GSUdfSTJDX1NMQVZFKQ0KIAlpMmNfc2xhdmVfY2Jf
-dCBzbGF2ZV9jYjsJLyogY2FsbGJhY2sgZm9yIHNsYXZlIG1vZGUJKi8NCiAjZW5kaWYNCkBAIC03
-MjMsNiArNzI1LDcgQEAgc3RydWN0IGkyY19hZGFwdGVyIHsNCiAJY29uc3Qgc3RydWN0IGkyY19h
-ZGFwdGVyX3F1aXJrcyAqcXVpcmtzOw0KIA0KIAlzdHJ1Y3QgaXJxX2RvbWFpbiAqaG9zdF9ub3Rp
-ZnlfZG9tYWluOw0KKwlzdHJ1Y3QgcmVndWxhdG9yICpidXNfcmVnOw0KIH07DQogI2RlZmluZSB0
-b19pMmNfYWRhcHRlcihkKSBjb250YWluZXJfb2YoZCwgc3RydWN0IGkyY19hZGFwdGVyLCBkZXYp
-DQogDQotLSANCjIuMTguMA0K
+Hi Uwe,
 
+On Wed, Jan 15, 2020 at 08:33:36AM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello Jeff,
+>=20
+> On Wed, Jan 15, 2020 at 03:29:52AM +0000, Jeff LaBundy wrote:
+> > Thank you for your kind words and thorough review.
+>=20
+> Great my feedback is welcome.
+>=20
+> > On Tue, Jan 14, 2020 at 09:08:28AM +0100, Uwe Kleine-K=F6nig wrote:
+> > > On Mon, Jan 06, 2020 at 12:48:02AM +0000, Jeff LaBundy wrote:
+> > > I thought we dicussed having a comment here, saying something like:
+> > >=20
+> > > 	The device might reset when [...] and as a result looses it's
+> > > 	configuration. So the registers must be rewritten when this
+> > > 	happens to restore the expected operation.
+> > >=20
+> > > Is it worth to issue a warning when this happens?
+> >=20
+> > The detailed comments and an error message have always been in iqs62x_i=
+rq of the
+> > parent MFD driver. The pwm is only one of up to three sub-devices that =
+subscribe
+> > to the chain and must update their locally owned registers after the MF=
+D handles
+> > the interrupt and restores the device's firmware. I opted to keep these=
+ comments
+> > in the common MFD rather than repeating throughout the series.
+>=20
+> That's fine then, a comment that the parent driver issues a message
+> would be great then.
+
+Sure thing, will do.
+
+> =20
+> > > > +static int iqs620_pwm_notifier(struct notifier_block *notifier,
+> > > > +			       unsigned long event_flags, void *context)
+> > > > +{
+> > > > +	struct iqs620_pwm_private *iqs620_pwm;
+> > > > +	int ret;
+> > > > +
+> > > > +	iqs620_pwm =3D container_of(notifier, struct iqs620_pwm_private,
+> > > > +				  notifier);
+> > > > +
+> > > > +	if (!completion_done(&iqs620_pwm->chip_ready) ||
+> > > > +	    !(event_flags & BIT(IQS62X_EVENT_SYS_RESET)))
+> > > > +		return NOTIFY_DONE;
+> > >=20
+> > > Is here a (relevant?) race?  Consider the notifier triggers just when
+> > > pwmchip_add returned, (maybe even a consumer configured the device) a=
+nd
+> > > before complete_all() is called. With my limited knowledge about
+> > > notifiers I'd say waiting for the completion here might be reasonable
+> > > and safe.
+> >=20
+> > Great catch; this is theoretically possible. The problem with waiting, =
+however,
+> > is if the notifier is triggered right away during probe but probe retur=
+ns early
+> > due to an error (and completion never happens).
+>=20
+> OK, the error path would need to complete .chip_ready then and the
+> notifier then check for this error. Indeed messy.
+> =20
+> > At this point, I think the best option is to simply cache the values wr=
+itten to
+> > IQS620_PWR_SETTINGS_PWM_OUT and IQS620_PWM_DUTY_CYCLE and restore them =
+from the
+> > notifier, which is essentially what is done for the IIO drivers in this=
+ series.
+>=20
+> Sounds good.
+> =20
+> > > > +	ret =3D blocking_notifier_chain_unregister(&iqs620_pwm->iqs62x->n=
+h,
+> > > > +						 &iqs620_pwm->notifier);
+> > > > +	if (ret)
+> > > > +		dev_err(iqs620_pwm->chip.dev,
+> > > > +			"Failed to unregister notifier: %d\n", ret);
+> > >=20
+> > > 	dev_err(iqs620_pwm->chip.dev,
+> > > 		"Failed to unregister notifier: %pe\n", ERR_PTR(ret));
+> > >=20
+> > > gives a nicer output. (Also applies to other error messages of course=
+.)
+> > >=20
+> >=20
+> > I don't disagree, but this gives me some pause. If I made this change h=
+ere, I'd
+> > prefer to do so across the series for consistency. However, I am hesita=
+nt to do
+> > so at this stage in the review since several patches are somewhat stabl=
+e by now
+> > (unless there was a compelling reason from a functional perspective).
+> >=20
+> > Another reason is that there are many dev_err cases throughout this ser=
+ies, and
+> > adopting this very recently introduced functionality would make the ser=
+ies even
+> > harder to back port to the present lot of LTS kernels.
+> >=20
+> > Unless this is a deal breaker, I'd like to pass on this for v4. However=
+, please
+> > let me know if you feel strongly about it. In the meantime, I'll get st=
+arted on
+> > the couple of other changes discussed here.
+>=20
+> OK, being able to backport is a valid excuse. Consistency over the whole
+> series wouldn't be one of my reasons, your mileage obviously varies
+> (which is OK).
+>=20
+> This can also be done later. Conversion to this is on my todo-list (not
+> at the top though), but if you beat me to it, I won't be angry :-)
+>=20
+
+Thank you for your understanding.
+
+> Best regards
+> Uwe
+>=20
+> --=20
+> Pengutronix e.K.                           | Uwe Kleine-K=F6nig          =
+  |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
+
+I'll send out v4 in the next day or so after I finish some testing.
+
+Kind regards,
+Jeff LaBundy
