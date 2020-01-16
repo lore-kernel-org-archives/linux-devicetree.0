@@ -2,96 +2,97 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A76C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76026C3F68F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EF2206D9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428312081E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579193020;
+	bh=sa5E/tzsppxLkY47m1pt/tdrVso35PLdcOSPFrUAZ48=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MkjL7ulcFSPj+bFbuNBbAGddvKlEBjbGhWZ/znNfDGrobZEPU9KfxWpZFXIIjbklB
+	 mv1luNvIkZhgvpJADyljsazFcxPjej9so7hOQnXHNmucjZNbTvugmb3MISJHr7uo8X
+	 BONj8cVQfojwWClUrbaWYSM2MKna2QxYskuqjCI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726343AbgAPQds convert rfc822-to-8bit (ORCPT
+        id S1729058AbgAPQng (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:33:48 -0500
-Received: from mailoutvs21.siol.net ([185.57.226.212]:54468 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726151AbgAPQds (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 11:33:48 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 20B0F523B22;
-        Thu, 16 Jan 2020 17:33:46 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 5RtdmHMpsPgp; Thu, 16 Jan 2020 17:33:45 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id C6669523B46;
-        Thu, 16 Jan 2020 17:33:45 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 808C9523B22;
-        Thu, 16 Jan 2020 17:33:45 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: sunxi: add OrangePi 3 with eMMC
-Date:   Thu, 16 Jan 2020 17:33:45 +0100
-Message-ID: <12435330.uLZWGnKmhe@jernej-laptop>
-In-Reply-To: <20200116122944.sgl2fgxf5mrg6i52@gilmour.lan>
-References: <20200115194216.173117-1-jernej.skrabec@siol.net> <4200557.LvFx2qVVIh@jernej-laptop> <20200116122944.sgl2fgxf5mrg6i52@gilmour.lan>
+        Thu, 16 Jan 2020 11:43:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbgAPQng (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:43:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79377208C3;
+        Thu, 16 Jan 2020 16:43:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579193015;
+        bh=sa5E/tzsppxLkY47m1pt/tdrVso35PLdcOSPFrUAZ48=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GmSObJds9TckzT2QuHw15X0ZUO0zfwvIo2OkixqyPuC2yXSHLUKPfuLlYFkXKuQ8R
+         2cwdiJUcR7EvDtJnlcJQL7ttuGUP1hUu9dy3B5HR1gVZXW+4zBsUcsP9il13eWZxwN
+         rTtOYsCl4BbFXzRfs3k6EaDu91rEj/6dpIA0GiYc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 007/205] arm64: dts: renesas: r8a77970: Fix PWM3
+Date:   Thu, 16 Jan 2020 11:39:42 -0500
+Message-Id: <20200116164300.6705-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dne četrtek, 16. januar 2020 ob 13:29:44 CET je Maxime Ripard napisal(a):
-> On Thu, Jan 16, 2020 at 12:10:58AM +0100, Jernej Škrabec wrote:
-> > Hi!
-> > 
-> > Dne sreda, 15. januar 2020 ob 22:57:31 CET je Rob Herring napisal(a):
-> > > On Wed, Jan 15, 2020 at 1:42 PM Jernej Skrabec <jernej.skrabec@siol.net>
-> > 
-> > wrote:
-> > > > OrangePi 3 can optionally have eMMC. Add a compatible for it.
-> > > 
-> > > Is this just a population option or a different board layout? If the
-> > > former, I don't think you need a new compatible, just add/enable a
-> > > node for the eMMC.
-> > 
-> > I have only board with eMMC but I imagine it's the former. Even so,
-> > current
-> > approach with Allwinner boards is to have two different board DT files,
-> > one for each variant. This can be seen from
-> > Documentation/devicetree/bindings/arm/ sunxi.yaml which has a lot of
-> > compatibles ending with "-emmc". I guess reason for that is to avoid
-> > having MMC controller being powered on for no reason.
-> The main reason for that is that those populating options can be
-> conflicting. For example, last week we discussed an issue about the
-> eMMC being on the same pin set than an SPI flash, both options being
-> available.
-> 
-> The solution Andre suggested then was to let the eMMC be disabled, and
-> have the bootloader probe the emmc, and if found, enable
-> it. Otherwise, it means that you have a SPI flash (and enable it).
-> 
-> I guess a similar solution would apply here.
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-From what I can tell from schematic, pins are dedicated for eMMC.
+[ Upstream commit 28a1b34c00dad4be91108369ca25ef8dc8bf850d ]
 
-So what solution do you suggest? Put eMMC node in original OrangePi 3 DT and 
-set status to disabled?
+The pwm3 was incorrectly added with a compatible reference to the
+renesas,pwm-r8a7790 (H2) due to a single characther ommision.
 
-Best regards,
-Jernej
+Fix the compatible string.
 
+Fixes: de625477c632 ("arm64: dts: renesas: r8a779{7|8}0: add PWM support")
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Link: https://lore.kernel.org/r/20190912103143.985-1-kieran.bingham+renesas@ideasonboard.com
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+index 0cd3b376635d..4952981bb6ba 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -652,7 +652,7 @@
+ 		};
+ 
+ 		pwm3: pwm@e6e33000 {
+-			compatible = "renesas,pwm-r8a7790", "renesas,pwm-rcar";
++			compatible = "renesas,pwm-r8a77970", "renesas,pwm-rcar";
+ 			reg = <0 0xe6e33000 0 8>;
+ 			#pwm-cells = <2>;
+ 			clocks = <&cpg CPG_MOD 523>;
+-- 
+2.20.1
 
