@@ -2,95 +2,147 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4D1C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1F8C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D0E2073A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193205;
-	bh=iZjxy8T/Nc73CHqNdlRJ7qSrCKOqpu8z/vE94Mm7m2s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13xU6PpIDzQQw5yaoavTLmggSoZoMN8tIY1ZNxu1TuzxcBT7qwTc5deCnWpipWCJg
-	 uEsfRpbNfeayrr5E7z0B3kmBKTxdGFXpzCDzZlgzza42h+efxuwNZA8v50wAsX+PRP
-	 xbY3hqCVkvKaHDUV4LmqJ9HJwb1KTyuWH52Zwq+s=
+	by mail.kernel.org (Postfix) with ESMTP id BCB8C217F4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:47:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgAPQqK (ORCPT
+        id S1729400AbgAPQrR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:46:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbgAPQqI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:46:08 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF1A9207FF;
-        Thu, 16 Jan 2020 16:46:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193168;
-        bh=iZjxy8T/Nc73CHqNdlRJ7qSrCKOqpu8z/vE94Mm7m2s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avHEXF/+xSdvlwwZLUah2eZgAUWsfBO/a8ZgMpg5NrVprELnnr9JXO2ksWernHuvo
-         8WAujq2pyhDPsqyM9bt7tRGeZOwSokRhxxRAULen8aeZ0/2PvD4o3rvduxphM9lpuw
-         pbs0IyxhvsvCMkxeUYX+++hZiOeIbKa08qLFNfxQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Loic Poulain <loic.poulain@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 038/205] arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
-Date:   Thu, 16 Jan 2020 11:40:13 -0500
-Message-Id: <20200116164300.6705-38-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
-References: <20200116164300.6705-1-sashal@kernel.org>
+        Thu, 16 Jan 2020 11:47:17 -0500
+Received: from mailoutvs28.siol.net ([185.57.226.219]:60633 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729878AbgAPQrQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 11:47:16 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 3256D522C71;
+        Thu, 16 Jan 2020 17:47:13 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id yW5AjuuxMjwE; Thu, 16 Jan 2020 17:47:12 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id C28C9523561;
+        Thu, 16 Jan 2020 17:47:12 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 66D88522C71;
+        Thu, 16 Jan 2020 17:47:12 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: tanix-tx6: Use internal oscillator
+Date:   Thu, 16 Jan 2020 17:47:12 +0100
+Message-ID: <20509747.EfDdHjke4D@jernej-laptop>
+In-Reply-To: <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
+References: <20200113180720.77461-1-jernej.skrabec@siol.net> <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+Hi!
 
-[ Upstream commit e38161bd325ea541ef2f258d8e28281077dde524 ]
+Dne četrtek, 16. januar 2020 ob 09:06:52 CET je Maxime Ripard napisal(a):
+> Hi Jernej,
+> 
+> On Mon, Jan 13, 2020 at 07:07:20PM +0100, Jernej Skrabec wrote:
+> > Tanix TX6 doesn't have external 32 kHz oscillator, so switch RTC clock
+> > to internal one.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> > While this patch gives one possible solution, I mainly want to start
+> > discussion why Allwinner SoC dtsi reference external 32 kHz crystal
+> > although some boards don't have it. My proposal would be to make clock
+> > property optional, based on the fact if external crystal is present or
+> > not. However, I'm not sure if that is possible at this point or not.
+> 
+> It's probably a bit of a dumb question but.. are you sure the crystal
+> is missing?
 
-In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
-VMMC, needs to be increased in order to prevent any voltage drop issues
-(due to limited current) happening with some SDCARDS or during specific
-operations (e.g. write).
+Although I don't have schematic, I'm pretty sure. Without this patch or one at 
+[1], RTC gives a lot of errors in dmesg. I think that unpopulated XC2 pads 
+near SoC (see [2]) are probably reserved for crystal.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+With patch in [1], which enables automatic switching in case of error, I saw 
+that on this box RTC always switched to internal RC.
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 04ad2fb22b9a..dba3488492f1 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -623,6 +623,8 @@
- 				l21 {
- 					regulator-min-microvolt = <2950000>;
- 					regulator-max-microvolt = <2950000>;
-+					regulator-allow-set-load;
-+					regulator-system-load = <200000>;
- 				};
- 				l22 {
- 					regulator-min-microvolt = <3300000>;
--- 
-2.20.1
+> 
+> The H6 datasheet mentions that the 32kHz crystal needs to be there,
+> and it's part of the power sequence, so I'd expect all boards to have
+> it.
+
+Can you be more specific where it is stated that crystal is mandatory? 
+
+Note that schematic of some boards, like OrangePi PC2 (H5) or OrangePi Zero 
+(H3) don't even have 32K crystal in them.
+
+> 
+> > Driver also considers missing clock property as deprecated (old DT) [1],
+> > so this might complicate things even further.
+> > 
+> > What do you think?
+> 
+> I'm pretty sure (but that would need to be checked) that we never got
+> a node without the clocks property on the H6. If that's the case, then
+> we can add a check on the compatible.
+
+Yes, that would be nice solution. I can work something out if you agree that 
+this is the way.
+
+> 
+> > Best regards,
+> > Jernej
+> > 
+> > [1]
+> > https://elixir.bootlin.com/linux/latest/source/drivers/rtc/rtc-sun6i.c#L2
+> > 63> 
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts index
+> > 83e6cb0e59ce..af3aebda47bb 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> > @@ -91,6 +91,12 @@ &r_ir {
+> > 
+> >  	status = "okay";
+> >  
+> >  };
+> > 
+> > +/* This board doesn't have external 32 kHz crystal. */
+> > +&rtc {
+> > +	assigned-clocks = <&rtc 0>;
+> > +	assigned-clock-parents = <&rtc 2>;
+> > +};
+> > +
+> 
+> This should be dealt with in the driver however.
+
+Sure, it is something to start discussion, I don't like tackling clocks in DT 
+either.
+
+Best regards,
+Jernej
+
+[1] https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Allwinner/
+devices/H6/patches/linux/15-RTC-workaround.patch
+[2] http://linux-sunxi.org/images/2/2e/Tanix_tx6_pcb_top.png
+
+
+
 
