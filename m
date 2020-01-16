@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD8EC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18319C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 438AA206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3190206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u4ARFZp4"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JcdhHgxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgAPKvI (ORCPT
+        id S1728992AbgAPKvX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 05:51:08 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44882 "EHLO
+        Thu, 16 Jan 2020 05:51:23 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44892 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgAPKvD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 05:51:03 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GAolLC050198;
-        Thu, 16 Jan 2020 04:50:47 -0600
+        with ESMTP id S1726513AbgAPKvI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 05:51:08 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GAp10K050263;
+        Thu, 16 Jan 2020 04:51:01 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579171848;
-        bh=4g/35Gsgc1IREjTOLyGG4YbzvNoV+ijmSZyUxwM03Z0=;
+        s=ti-com-17Q1; t=1579171861;
+        bh=T3h+Fu6ytCpvSGafi/xfB4tD7d0LWp5ziadK1cgAJQo=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=u4ARFZp4e1m8hyy7+T81vvJexrQf9YQWzX1RjMvXCHzaQR61mN65wQzGx8xn5tTR5
-         ytIGyDpE9bhT8RWHLdRZlYiSxuCWujv7LKFsp1gOgy9PrvstHFLssOy8xSbwNFnG/9
-         prBF01SyuUqBFs9MuaqGy7XZi/M8RKW1FZZ8C8RU=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GAolb5088306
+        b=JcdhHgxgHU8Yl9zfU/0N3piCMwGTC8K6u3Eyb3pTJ62DE7gsbEpoZnVrU2M4oBHMH
+         aP8PzR8IBFQB9NdOn+UTpXMwnH9HsMzT7vQxopSWj4+9s3lAfC/wUV/OSp6Z17R9nb
+         ncU7HZKAGrvdar//KoX/a2FcofTnpLLVh8g2hBIU=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GAp1n8016974
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 04:50:47 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 16 Jan 2020 04:51:01 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 04:50:47 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 04:51:01 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 04:50:47 -0600
+ Frontend Transport; Thu, 16 Jan 2020 04:51:01 -0600
 Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GAoRdX000589;
-        Thu, 16 Jan 2020 04:50:44 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GAoRdb000589;
+        Thu, 16 Jan 2020 04:50:58 -0600
 From:   Faiz Abbas <faiz_abbas@ti.com>
 To:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-mmc@vger.kernel.org>
 CC:     <adrian.hunter@intel.com>, <kishon@ti.com>, <mark.rutland@arm.com>,
         <robh+dt@kernel.org>, <ulf.hansson@linaro.org>,
         <faiz_abbas@ti.com>, <tony@atomide.com>
-Subject: [PATCH v5 05/10] mmc: sdhci: Convert sdhci_set_timeout_irq() to non-static
-Date:   Thu, 16 Jan 2020 16:21:49 +0530
-Message-ID: <20200116105154.7685-6-faiz_abbas@ti.com>
+Subject: [PATCH v5 09/10] mmc: sdhci-omap: Add am335x and am437x specific compatibles
+Date:   Thu, 16 Jan 2020 16:21:53 +0530
+Message-ID: <20200116105154.7685-10-faiz_abbas@ti.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20200116105154.7685-1-faiz_abbas@ti.com>
 References: <20200116105154.7685-1-faiz_abbas@ti.com>
@@ -68,47 +68,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Export sdhci_set_timeout_irq() so that it is accessible from platform drivers.
+Add support for new compatible for TI's am335x and am437x devices.
 
 Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/mmc/host/sdhci.c | 3 ++-
- drivers/mmc/host/sdhci.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-omap.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 4d48129de5e4..37561333fda4 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -993,7 +993,7 @@ static void sdhci_set_transfer_irqs(struct sdhci_host *host)
- 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
- }
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index 1f05c8e98d62..5433c9e6ac10 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -898,6 +898,14 @@ static const struct sdhci_omap_data k2g_data = {
+ 	.offset = 0x200,
+ };
  
--static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
-+void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
- {
- 	if (enable)
- 		host->ier |= SDHCI_INT_DATA_TIMEOUT;
-@@ -1002,6 +1002,7 @@ static void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
- 	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
- 	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
- }
-+EXPORT_SYMBOL_GPL(sdhci_set_data_timeout_irq);
- 
- static void sdhci_set_timeout(struct sdhci_host *host, struct mmc_command *cmd)
- {
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 3166b3ecef89..928c6f35fcad 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -803,5 +803,6 @@ void sdhci_reset_tuning(struct sdhci_host *host);
- void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
- void sdhci_abort_tuning(struct sdhci_host *host, u32 opcode);
- void sdhci_switch_external_dma(struct sdhci_host *host, bool en);
-+void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable);
- 
- #endif /* __SDHCI_HW_H */
++static const struct sdhci_omap_data am335_data = {
++	.offset = 0x200,
++};
++
++static const struct sdhci_omap_data am437_data = {
++	.offset = 0x200,
++};
++
+ static const struct sdhci_omap_data dra7_data = {
+ 	.offset = 0x200,
+ 	.flags	= SDHCI_OMAP_REQUIRE_IODELAY,
+@@ -906,6 +914,8 @@ static const struct sdhci_omap_data dra7_data = {
+ static const struct of_device_id omap_sdhci_match[] = {
+ 	{ .compatible = "ti,dra7-sdhci", .data = &dra7_data },
+ 	{ .compatible = "ti,k2g-sdhci", .data = &k2g_data },
++	{ .compatible = "ti,am335-sdhci", .data = &am335_data },
++	{ .compatible = "ti,am437-sdhci", .data = &am437_data },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, omap_sdhci_match);
 -- 
 2.19.2
 
