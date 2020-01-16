@@ -2,61 +2,63 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23593C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041B7C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD5DE20728
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAD3220728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 21:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GNYeC7l9"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CaaK76JJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388416AbgAPVGR (ORCPT
+        id S2388465AbgAPVGT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 16:06:17 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33974 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgAPVGR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 16:06:17 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GL64LH086897;
-        Thu, 16 Jan 2020 15:06:04 -0600
+        Thu, 16 Jan 2020 16:06:19 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42990 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729188AbgAPVGT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 16:06:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GL66A2067507;
+        Thu, 16 Jan 2020 15:06:06 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579208764;
-        bh=Kihek3GVeQ/3lGAf1d3JBSrQsZoXyUUc67GHwTaD20M=;
-        h=From:To:CC:Subject:Date;
-        b=GNYeC7l9I4t6KkxfMT+qpowjDvwyW7REeES+t4vyt2ZT2ApJYWoELIsenYlcdOBQU
-         IlyTgvyXewuqAYP8Keewip/EY2OIfW8x0pOpDV6fVKZnmjCygOqbKAhfD/CKXrBOFN
-         W7OcXs9Vowr14ArzNz1K/CY6HxMgYy1yqhLPb+U8=
+        s=ti-com-17Q1; t=1579208766;
+        bh=WAx7Gqz0TinyhatdEU8j/0mHWKwtf55yIbOiHBhiK3o=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=CaaK76JJBauGJeWqv+U1lrSd7cQxYMdpz0w6Ob0zxnpxLGNPUeFatAQbDLMbrpc3x
+         +Pi1UgBTmoBT7YftNhefq++f6ZIMomq48iyEl/JDHw7pR5qTgn+S0SPzBPCFIv2Y/2
+         MCtjgxXtzNLyZr6rlWe1i0kd2JSAd86Ohb437Dbs=
 Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GL64A1095172
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GL66lY082977
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 15:06:04 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+        Thu, 16 Jan 2020 15:06:06 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE100.ent.ti.com
  (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
- Jan 2020 15:06:03 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 15:06:06 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 16 Jan 2020 15:06:03 -0600
+ Frontend Transport; Thu, 16 Jan 2020 15:06:05 -0600
 Received: from jadmar.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GL60iZ107315;
-        Thu, 16 Jan 2020 15:06:00 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GL60ia107315;
+        Thu, 16 Jan 2020 15:06:03 -0600
 From:   Jyri Sarha <jsarha@ti.com>
 To:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>
 CC:     <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
         <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <subhajit_paul@ti.com>,
         <praneeth@ti.com>, <yamonkar@cadence.com>, <sjakhade@cadence.com>,
         <sam@ravnborg.org>, <robh+dt@kernel.org>
-Subject: [PATCH v7 0/5] drm/tidss: New driver for TI Keystone platform Display SubSystem
-Date:   Thu, 16 Jan 2020 23:05:55 +0200
-Message-ID: <cover.1579202260.git.jsarha@ti.com>
+Subject: [PATCH v7 1/5] dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
+Date:   Thu, 16 Jan 2020 23:05:56 +0200
+Message-ID: <c1d1c073f054e58e638155ea0e203cdc6045dbdd.1579202260.git.jsarha@ti.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1579202260.git.jsarha@ti.com>
+References: <cover.1579202260.git.jsarha@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -65,128 +67,151 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changes since v6:
-- Rebase on top of drm-misc-next-2020-01-10
-- Fix all checkpatch.pl -q --emacs --strict --show-types issues
-  - all issues but these have been fixed:
-    - over 80 char lines in scale coefficients found in tidss_scale_coefs.c
-    - Co-developed-by and Signed-off-by: name/email do not match
-    - added, moved or deleted file(s), does MAINTAINERS need updating
-- Add Acked-by: Sam Ravnborg <sam@ravnborg.org> to "drm/tidss: New driver ..."
+Add dt-schema yaml bindig for K2G DSS, an ultra-light version of TI
+Keystone Display SubSystem.
 
-Changes since v5:
-- Add Add Reviewed-by: from Rob Herring <robh@kernel.org> and
-  Benoit Parrot <bparrot@ti.com> to binding patches
-- Color property changes and fixes to the driver implementation patch
-  - Check CTM and gamma support from dispc_features when creating crtc
-  - Implement CTM support for k2g and fix k3 CTM implementation
-  - Remove gamma property persistence and always write color properties
-    in a new modeset
+Version history:
 
-Changes since v4:
-- itemize named resource property descriptions in dt binding
-- fix wp to wb in the ti,j721e-dss reg property description
-- remove fifo underflow irq handling, it is not an error and
-  it should be used for debug purposes only
-- memory tuning, prefetch plane fifo up to high-threshold value to
-  minimize possibility of underflows.
+v2: no change
 
-Changes since v3:
-- Add descriptions some yaml binding properites
-- Remove redundant minItems directives from yaml bindings
-- Remove ports node from ti,k2g-dss yaml binding
-- no change to MAINTAINERS or to the driver code
+v3: - Add ports node
+    - Add includes to dts example
+    - reindent dts example
 
-Changes since v2:
-- Add version history to commit messages
-- Fix yaml bindings now that got dt_binding_check dtbs_check working propery
-- Move tidss entry in MAINTAINERS after omapdrm and add "T: git
-  git://anongit.freedesktop.org/drm/drm-misc"
-- no change to driver code
+v4: - Add descriptions to reg and clocks properties
+    - Remove minItems when its value is the same as maxItems value
+    - Remove ports node
 
-Changes since the first version of the patch series [2]:
-- "drm/tidss: New driver for TI Keystone platform Display SubSystem"
- - rebased on top of drm-next-2019-11-27
- - sort all include lines in all files
- - remove all include <drm/drmP.h>
- - remove select "select VIDEOMODE_HELPERS"
- - call dispc_vp_setup() later in tidss_crtc_atomic_flush() (there is no
-   to call it in new modeset case as it is also called in vp_enable())
- - change probe sequence and drm_device allocation (follow example in drm_drv.c)
- - use __maybe_unused instead of #ifdef for pm functions
- - remove "struct drm_fbdev_cma *fbdev;" from driver data
- - check panel connector type before connecting it
-- No change to binding or MAINTAINERS patches
+v5: - itemize reg and clocks properties' descriptions
 
-There was couple of attempts upstream an earlier version of this
-driver about a year ago [1]. Back then I needed to stop my efforts to
-implement support for next Keystone DSS version, so now the driver
-supports three different Keystone DSS version on three different SoCs.
+v6: - Add Reviewed-by: from Rob Herring <robh@kernel.org> and
+      Benoit Parrot <bparrot@ti.com>
 
-I am starting the patch series versioning from the beginning because it
-has been over a year since the previous patch set and the structure of
-the driver has evolved quite a bit. However, all the earlier comments
-should be addressed in this series.
+v7: no change
 
-[1] https://patchwork.freedesktop.org/series/44947/
-[2] https://lists.freedesktop.org/archives/dri-devel/2019-November/246542.html
-
-Jyri Sarha (5):
-  dt-bindings: display: ti,k2g-dss: Add dt-schema yaml binding
-  dt-bindings: display: ti,am65x-dss: Add dt-schema yaml binding
-  dt-bindings: display: ti,j721e-dss: Add dt-schema yaml binding
-  drm/tidss: New driver for TI Keystone platform Display SubSystem
-  MAINTAINERS: add entry for tidss
-
- .../bindings/display/ti/ti,am65x-dss.yaml     |  152 +
- .../bindings/display/ti/ti,j721e-dss.yaml     |  208 ++
- .../bindings/display/ti/ti,k2g-dss.yaml       |  109 +
- MAINTAINERS                                   |   11 +
- drivers/gpu/drm/Kconfig                       |    2 +
- drivers/gpu/drm/Makefile                      |    1 +
- drivers/gpu/drm/tidss/Kconfig                 |   14 +
- drivers/gpu/drm/tidss/Makefile                |   12 +
- drivers/gpu/drm/tidss/tidss_crtc.c            |  377 +++
- drivers/gpu/drm/tidss/tidss_crtc.h            |   46 +
- drivers/gpu/drm/tidss/tidss_dispc.c           | 2774 +++++++++++++++++
- drivers/gpu/drm/tidss/tidss_dispc.h           |  132 +
- drivers/gpu/drm/tidss/tidss_dispc_regs.h      |  243 ++
- drivers/gpu/drm/tidss/tidss_drv.c             |  285 ++
- drivers/gpu/drm/tidss/tidss_drv.h             |   39 +
- drivers/gpu/drm/tidss/tidss_encoder.c         |   88 +
- drivers/gpu/drm/tidss/tidss_encoder.h         |   17 +
- drivers/gpu/drm/tidss/tidss_irq.c             |  146 +
- drivers/gpu/drm/tidss/tidss_irq.h             |   77 +
- drivers/gpu/drm/tidss/tidss_kms.c             |  249 ++
- drivers/gpu/drm/tidss/tidss_kms.h             |   15 +
- drivers/gpu/drm/tidss/tidss_plane.c           |  217 ++
- drivers/gpu/drm/tidss/tidss_plane.h           |   25 +
- drivers/gpu/drm/tidss/tidss_scale_coefs.c     |  202 ++
- drivers/gpu/drm/tidss/tidss_scale_coefs.h     |   22 +
- 25 files changed, 5463 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,j721e-dss.yaml
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Benoit Parrot <bparrot@ti.com>
+---
+ .../bindings/display/ti/ti,k2g-dss.yaml       | 109 ++++++++++++++++++
+ 1 file changed, 109 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
- create mode 100644 drivers/gpu/drm/tidss/Kconfig
- create mode 100644 drivers/gpu/drm/tidss/Makefile
- create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_crtc.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_dispc.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_dispc_regs.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_drv.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_drv.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_encoder.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_irq.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_irq.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_kms.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_kms.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_plane.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_plane.h
- create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.c
- create mode 100644 drivers/gpu/drm/tidss/tidss_scale_coefs.h
 
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+new file mode 100644
+index 000000000000..532bb4794968
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/ti/ti,k2g-dss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Texas Instruments K2G Display Subsystem
++
++maintainers:
++  - Jyri Sarha <jsarha@ti.com>
++  - Tomi Valkeinen <tomi.valkeinen@ti.com>
++
++description: |
++  The K2G DSS is an ultra-light version of TI Keystone Display
++  SubSystem. It has only one output port and video plane. The
++  output is DPI.
++
++properties:
++  compatible:
++    const: ti,k2g-dss
++
++  reg:
++    items:
++      - description: cfg DSS top level
++      - description: common DISPC common
++      - description: VID1 video plane 1
++      - description: OVR1 overlay manager for vp1
++      - description: VP1 video port 1
++
++  reg-names:
++    items:
++      - const: cfg
++      - const: common
++      - const: vid1
++      - const: ovr1
++      - const: vp1
++
++  clocks:
++    items:
++      - description: fck DSS functional clock
++      - description: vp1 Video Port 1 pixel clock
++
++  clock-names:
++    items:
++      - const: fck
++      - const: vp1
++
++  interrupts:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++    description: phandle to the associated power domain
++
++  port:
++    type: object
++    description:
++      Port as described in Documentation/devictree/bindings/graph.txt.
++      The DSS DPI output port node
++
++  max-memory-bandwidth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Input memory (from main memory to dispc) bandwidth limit in
++      bytes per second
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++  - port
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    dss: dss@02540000 {
++            compatible = "ti,k2g-dss";
++            reg =   <0x02540000 0x400>,
++                    <0x02550000 0x1000>,
++                    <0x02557000 0x1000>,
++                    <0x0255a800 0x100>,
++                    <0x0255ac00 0x100>;
++            reg-names = "cfg", "common", "vid1", "ovr1", "vp1";
++            clocks =        <&k2g_clks 0x2 0>,
++                            <&k2g_clks 0x2 1>;
++            clock-names = "fck", "vp1";
++            interrupts = <GIC_SPI 247 IRQ_TYPE_EDGE_RISING>;
++
++            power-domains = <&k2g_pds 0x2>;
++
++            max-memory-bandwidth = <230000000>;
++            ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    port@0 {
++                            dpi_out: endpoint {
++                                    remote-endpoint = <&sii9022_in>;
++                            };
++                    };
++            };
++    };
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
