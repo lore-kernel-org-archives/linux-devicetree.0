@@ -2,137 +2,210 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDE3C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 09:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E63C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329382075B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 09:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="LMueDRVN"
+	by mail.kernel.org (Postfix) with ESMTP id 13210206B7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 10:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgAPJVV (ORCPT
+        id S1726410AbgAPKHn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 04:21:21 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35560 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726684AbgAPJVV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 04:21:21 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G9CnvH019865;
-        Thu, 16 Jan 2020 10:21:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=oXdqzOpECkceymNrXiBm0gzyy2jK6pABw4YC8ToVezU=;
- b=LMueDRVNZKKBRk7fSc5+0a3lqbIPoJPBRTNrEgkh4C1ln5yOoQPN+tqH2sPOEu2EGXX7
- lRHlD9VVCTqquV6qsTeLW3QbpLkk2UxWKBtLOtZ2L1iqzSFXSZvyLsRFVdujE7J08L5I
- tQdLg9dbTxjs8mWkym5Y3Nqo49WhML66pez9GPL0cqdNSuAcDBLqMV6La8GbLAtfI+/u
- aTgHKn+fe5ebXVHPS5+8jOPZNnkwQMVzuEhX8r/ruGCpD5DbAV6KLFigrnZo9gN+CMta
- 20YLGfb5MbuGarnghgi6Uxqje3JdGYOU8rDJ8dU+cPokjeAKr3gPWWM43LnU2KxCHwXI yg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf7jpr5pd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 10:21:03 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DF267100034;
-        Thu, 16 Jan 2020 10:20:58 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CB8B62A900B;
-        Thu, 16 Jan 2020 10:20:58 +0100 (CET)
-Received: from lmecxl0923.lme.st.com (10.75.127.46) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 Jan
- 2020 10:20:58 +0100
-Subject: Re: [PATCH 5/9] dt-bindings: mmc: mmci: add delay block base register
- for sdmmc
+        Thu, 16 Jan 2020 05:07:43 -0500
+Received: from mga01.intel.com ([192.55.52.88]:59282 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbgAPKHn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 05:07:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jan 2020 02:07:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,325,1574150400"; 
+   d="scan'208";a="220320640"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Jan 2020 02:07:42 -0800
+Received: from [10.226.39.11] (unknown [10.226.39.11])
+        by linux.intel.com (Postfix) with ESMTP id B42475805A3;
+        Thu, 16 Jan 2020 02:07:40 -0800 (PST)
+Subject: Re: [PATCH 1/2] dt-bindings: phy: Add YAML schemas for Intel Combo
+ phy
 To:     Rob Herring <robh@kernel.org>
-CC:     Ulf Hansson <ulf.hansson@linaro.org>,
-        <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200110134823.14882-1-ludovic.barre@st.com>
- <20200110134823.14882-6-ludovic.barre@st.com> <20200115145645.GA599@bogus>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <2ce63f11-8b0c-8261-63fa-cd19e874c537@st.com>
-Date:   Thu, 16 Jan 2020 10:20:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com
+References: <9f3df8c403bba3633391551fc601cbcd2f950959.1576824311.git.eswara.kota@linux.intel.com>
+ <20200108141855.GA14868@bogus>
+ <0e797d57-66a6-39ec-6388-5af47e9b0726@linux.intel.com>
+ <CAL_JsqLaiiYxaWjWRr3S7Q8j5YCxB_v2Lt_m5fwHnZU1e27MdA@mail.gmail.com>
+ <bee95b99-027e-45eb-d2f2-bfa5bbfda9cd@linux.intel.com>
+ <CAL_JsqK9_EKsrkd3anmwZ062+a0sEmVTwKa1EZRpeLjmfwi7zg@mail.gmail.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <b27e9c8e-8959-95ae-1c4b-45ae8cd5d949@linux.intel.com>
+Date:   Thu, 16 Jan 2020 18:07:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200115145645.GA599@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
+In-Reply-To: <CAL_JsqK9_EKsrkd3anmwZ062+a0sEmVTwKa1EZRpeLjmfwi7zg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob
 
-Le 1/15/20 à 3:56 PM, Rob Herring a écrit :
-> On Fri, Jan 10, 2020 at 02:48:19PM +0100, Ludovic Barre wrote:
->> To support the sdr104 mode, the sdmmc variant has a
->> hardware delay block to manage the clock phase when sampling
->> data received by the card.
+On 1/16/2020 3:51 AM, Rob Herring wrote:
+> On Wed, Jan 15, 2020 at 1:52 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
 >>
->> This patch adds a second base register (optional) for
->> sdmmc delay block.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->> index 6d3c626e017d..4ec921e4bf34 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->> @@ -28,6 +28,8 @@ specific for ux500 variant:
->>   - st,sig-pin-fbclk       : feedback clock signal pin used.
->>   
->>   specific for sdmmc variant:
->> +- reg			 : a second base register may be defined if a delay
->> +                           block is present and used for tuning.
-> 
-> Which compatibles have a 2nd reg entry?
+>> On 1/14/2020 10:31 PM, Rob Herring wrote:
+>>> On Tue, Jan 14, 2020 at 3:18 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>>>> On 1/8/2020 10:18 PM, Rob Herring wrote:
+>>>>> On Fri, Dec 20, 2019 at 03:28:27PM +0800, Dilip Kota wrote:
+>>>>>> Combo phy subsystem provides PHY support to number of
+>>>>>> controllers, viz. PCIe, SATA and EMAC.
+>>>>>> Adding YAML schemas for the same.
+>>>>>>
+>>>>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>>>>> ---
+>>>>>>     .../devicetree/bindings/phy/intel,combo-phy.yaml   | 147 +++++++++++++++++++++
+>>>>>>     1 file changed, 147 insertions(+)
+>>>>>>     create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..fc9cbad9dd88
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+>>>>>> @@ -0,0 +1,147 @@
+>>>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>>>> +%YAML 1.2
+>>>>>> +---
+>>>>>> +$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
+>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>> +
+>>>>>> +title: Intel Combo phy Subsystem
+>>>>>> +
+>>>>>> +maintainers:
+>>>>>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>>>>>> +
+>>>>>> +description: |
+>>>>>> +  Intel combo phy subsystem supports PHYs for PCIe, EMAC and SATA
+>>>>>> +  controllers. A single combo phy provides two PHY instances.
+>>>>>> +
+>>>>>> +properties:
+>>>>>> +  $nodename:
+>>>>>> +    pattern: "^combophy@[0-9]+$"
+>>>>>> +
+>>>>>> +  compatible:
+>>>>>> +    items:
+>>>>>> +      - const: intel,combo-phy
+>>>>>> +      - const: simple-bus
+>>>>> This will cause the schema to be applied to every 'simple-bus'. You need
+>>>>> a custom 'select' to prevent that. There's several examples in the tree.
+>>>> Ok, i will add as below:
+>>>>
+>>>> # We need a select here so we don't match all nodes with 'simple-bus'
+>>>> select:
+>>>>      properties:
+>>>>        compatible:
+>>>>          contains:
+>>>>            const: intel,combo-phy
+>>>>      required:
+>>>>        - compatible
+>>>>
+>>>>> Though I'm not sure you need child nodes here.
+>>>>>
+>>>>>> +
+>>>>>> +  cell-index:
+>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>> +    description: Index of Combo phy hardware instance.
+>>>>> Drop this. Not used for FDT.
+>>>> Ok, I will remove this and use the 'aliases' to get the hardware instance.
+>>>>>> +
+>>>>>> +  resets:
+>>>>>> +    maxItems: 2
+>>>>>> +
+>>>>>> +  reset-names:
+>>>>>> +    items:
+>>>>>> +      - const: phy
+>>>>>> +      - const: core
+>>>>>> +
+>>>>>> +  intel,syscfg:
+>>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>>>> +    description: Chip configuration registers handle
+>>>>>> +
+>>>>>> +  intel,hsio:
+>>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>>>> +    description: HSIO registers handle
+>>>>>> +
+>>>>>> +  intel,bid:
+>>>>>> +    description: Index of HSIO bus
+>>>>>> +    allOf:
+>>>>>> +      - $ref: /schemas/types.yaml#/definitions/uint32
+>>>>>> +      - minimum: 0
+>>>>>> +      - maximum: 1
+>>>>> If this is related to intel,hsio, just make it an args cell for
+>>>>> intel,hsio.
+>>>> No. Actually, this is specific to the combophy instance on the HSIO bus.
+>>>> I see , this can be removed and value can be derived from the hardware
+>>>> instance value mentioned through 'aliases'
+>>> Generally, 'aliases' should be optional. Why do you need an index?
+>>> What's the difference between the blocks?
+>>>
+>>> If it wasn't clear, I was suggesting doing:
+>>>
+>>> intel,hsio = <&hsio 1>;
+>> On the SoC, total 4 combophy (0,1,2 and 3) instances are present ->
+>> 'cell-index'
+>> 2 instances (0,1) are present on the HSIOL NoC
+>> Other 2 instances (2,3) are present on the HSIOR NoC
+>> On the both HSIO NoCs, combophy instances are referred as 0 and 1 -> 'bid'
+> So you would have:
+>
+> <&hsiol 0>
+> <&hsiol 1>
+> <&hsior 0>
+> <&hsior 1>
+>
+> However, if HSIO is a bus and the combo phys are not on any other bus,
+> then perhaps you should be describing the buses in DT and then this
+> property goes away as these would be child nodes of the bus and
+> whatever addressing identifiers there are would go in 'reg'.
+>
+>> 'bid' is required while accessing the registers in hsio block, to
+>> configure the COMBOPHY mode and clock
+>> 'cell-index' is required while accessing sysconfig registers to enable
+>> the pcie phy pad ref clock.
+> Do the same thing for the sysconfig handle:
+>
+> <&sysconfig 0|1>
+>
+> This is the common pattern for these types of properties with misc
+> extra register bits to go configure. Though more typically the cell
+> value is a register offset and bit position.
+>
+>> <&hsio 1>
+>> 'bid' is specific to the combophy, not all the DT nodes using &hsio has
+>> a need.
+>> I think it is better to pass the bid value as a entry of combophy DT node.
+> intel,hsio is an entry in the combo phy. The meaning of any arg cells
+> is defined by the combo phy binding (and driver).
+>
+>> I will add dt entry something like 'hw-instance-id' instead of
+>> cell-index or aliases.
+> As I said, we don't do h/w index properties.
 
-In fact, mmci driver is ARM Amba driver (arm,primecell) and has only one
-compatible "arm,pl18x".
-The variants are identified by primecell-periphid property
-(discovered at runtime with HW block register or defined by
-device tree property "arm,primecell-periphid").
+Ok, then i will pass it as you suggested -> <&hsiol 1>
 
-The defaults "arm,pl18x" variants have only one base register,
-but the SDMMC need a second base register for these
-delay block registers.
+Regards,
+Dilip
 
-example of sdmmc node:
-	sdmmc1: sdmmc@58005000 {
-		compatible = "arm,pl18x", "arm,primecell";
-		arm,primecell-periphid = <0x00253180>;
-		reg = <0x58005000 0x1000>, <0x58006000 0x1000>;
-	};
-
-what do you advise?
-
-> 
->>   - st,sig-dir             : signal direction polarity used for cmd, dat0 dat123.
->>   - st,neg-edge            : data & command phase relation, generated on
->>                              sd clock falling edge.
->> -- 
->> 2.17.1
->>
+>
+> Rob
