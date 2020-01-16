@@ -2,118 +2,136 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98322C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C24FC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750042077B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEC12087E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 08:19:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="U6P8jg0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgAPIJF (ORCPT
+        id S1730354AbgAPITx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 03:09:05 -0500
-Received: from twhmllg4.macronix.com ([211.75.127.132]:37183 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbgAPIJE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 03:09:04 -0500
-Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id 00G88t5X001519;
-        Thu, 16 Jan 2020 16:08:55 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id C7E8CD0B9083E6CB0B56;
-        Thu, 16 Jan 2020 16:08:55 +0800 (CST)
-In-Reply-To: <20200109175107.57566c18@xps13>
-References: <1571902807-10388-1-git-send-email-masonccyang@mxic.com.tw> <1571902807-10388-2-git-send-email-masonccyang@mxic.com.tw> <20200109175107.57566c18@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        mark.rutland@arm.com, richard@nod.at, robh+dt@kernel.org,
-        vigneshr@ti.com
-Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add support for Macronix NAND randomizer
+        Thu, 16 Jan 2020 03:19:53 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:60660 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729472AbgAPITw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 03:19:52 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00G8J8WG007057;
+        Thu, 16 Jan 2020 09:19:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=VA1LsnuX6faMUJQvhZzy7LZ3v6e2+z9OibnTE+vdYBA=;
+ b=U6P8jg0BIbNy7cmOlAkekIOtLTvBcQWP2OfQAz266SLdRno96feVCD7rFVSbtYBcmf9r
+ /vkaOcoxV+sh5Ds8roj0Ewf9yQhAUnRdeMG1c3d5YBRYnYjEmOnDU2vtWSrq+8BfaE7L
+ 2BFu4e0SJRxu986Wq+HbXyp6OvP/YCT0g8nZEbvlC2ox8MlJbsSiLTPBGPXqwxtzC1yp
+ NGYl2k/sCVD8EjT2VXYXwwvHFtvbDovGotVvEv+lDfa3ojLtfykalS2Xq2GN65jGrkN5
+ d7kZSTFe1rYgbfQIV6wu++Vm6/+qyHM9tl4cC2qoPVroNUWLkA6wq15iOzTsoMt8TtjS UQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf77b7qcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Jan 2020 09:19:31 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 399A8100034;
+        Thu, 16 Jan 2020 09:19:23 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B786C21CA8C;
+        Thu, 16 Jan 2020 09:19:23 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 Jan
+ 2020 09:19:23 +0100
+Subject: Re: [RFC PATCH 0/3] Add device tree build information
+To:     Frank Rowand <frowand.list@gmail.com>, <robh+dt@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        <david@gibson.dropbear.id.au>, <sjg@chromium.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kbuild@vger.kernel.org>,
+        <devicetree-compiler@vger.kernel.org>
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <233e0a5f-d38f-908c-5ca7-66ee87d0fcae@st.com>
+Date:   Thu, 16 Jan 2020 09:19:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-KeepSent: 1A1B3ABF:C0D61D76-482584F1:002C75E4;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF1A1B3ABF.C0D61D76-ON482584F1.002C75E4-482584F1.002CC310@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Thu, 16 Jan 2020 16:08:56 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2020/01/16 PM 04:08:55,
-        Serialize complete at 2020/01/16 PM 04:08:55
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com 00G88t5X001519
+In-Reply-To: <f21ad44d-f119-2035-b4ee-16b3619879af@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_02:2020-01-16,2020-01-15 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Franck,
 
-Hi Miquel,
-
-
-> >  drivers/mtd/nand/raw/nand_macronix.c | 69 
-++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 69 insertions(+)
-> > 
-> > diff --git a/drivers/mtd/nand/raw/nand_macronix.c 
-b/drivers/mtd/nand/raw/
-> nand_macronix.c
-> > index 58511ae..89101fa 100644
-> > --- a/drivers/mtd/nand/raw/nand_macronix.c
-> > +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> > @@ -11,6 +11,14 @@
-> >  #define MACRONIX_READ_RETRY_BIT BIT(0)
-> >  #define MACRONIX_NUM_READ_RETRY_MODES 6
-> > 
-> > +#define MACRONIX_RANDOMIZER_BIT BIT(1)
-> > +#define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
-> > +#define ENPGM BIT(0)
-> > +#define RANDEN BIT(1)
-> > +#define RANDOPT BIT(2)
+On 1/16/20 3:28 AM, Frank Rowand wrote:
+> On 1/13/20 12:16 PM, Alexandre Torgue wrote:
+>> Hi,
+>>
+>> The goal of this series is to add device tree build information in dtb.
+>> This information can be dtb build date, where devicetree files come from,
+>> who built the dtb ... Actually, same kind of information that you can find
+>> in the Linux banner which is printout during kernel boot. Having the same
+>> kind of information for device tree is useful for debugging and maintenance.
+>>
+>> To achieve that a new option "-B" (using an argument) is added to dtc.
+>> The argument is a file containing a string with build information
+>> (e.g., From Linux 5.5.0-rc1 by alex the Mon Jan 13 18:25:38 CET 2020).
+>> DTC use it to append dts file with a new string property "Build-info".
+>>
+>> of/fdt.c is modified to printout "Build-info" property during Kernel boot and
+>> scripts/Makefile.lib is modified to use dtc -B option during kernel make (this
+>> last part could be improved for sure).
 > 
-> I forgot: please be consistent with the naming.
+> Please read through the thread at:
+> 
+>    https://lore.kernel.org/linux-arm-kernel/550A42AC.8060104@gmail.com/
+> 
+> which was my attempt to do something similar.
 
-okay, will fix them to
+Yes the idea is the same: get build DTB information like build date, 
+"who built the DTB" ... The difference seems to be the way to do it. In 
+my case, I don't want to modify existing dts source files., but I "just" 
+append them by creating a new property with a string containing this 
+build information.
 
-#define MACRONIX_RANDOMIZER_ENPGM BIT(0)
-#define MACRONIX_RANDOMIZER_RANDEN BIT(1)
-#define MACRONIX_RANDOMIZER_RANDOPT BIT(2)
+Why your proposition has not been accepted ?
 
-thanks for your time & comments.
-Mason
+Regards
+Alex
 
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+> 
+> -Frank
+> 
+>>
+>> Regards
+>> Alex
+>>
+>> Alexandre Torgue (3):
+>>    dtc: Add dtb build information option
+>>    of: fdt: print dtb build information
+>>    scripts: Use -B dtc option to generate dtb build information.
+>>
+>>   drivers/of/fdt.c           |  9 +++++++
+>>   scripts/Makefile.lib       | 11 +++++---
+>>   scripts/dtc/dtc.c          | 55 +++++++++++++++++++++++++++++++++-----
+>>   scripts/gen_dtb_build_info | 11 ++++++++
+>>   4 files changed, 76 insertions(+), 10 deletions(-)
+>>   create mode 100755 scripts/gen_dtb_build_info
+>>
+> 
