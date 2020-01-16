@@ -2,148 +2,157 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC4AC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE9FC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8340620748
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8727C206D5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:16:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="FRPVaXlJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OjFF7ADc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbgAPNJz (ORCPT
+        id S1726574AbgAPNQT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:09:55 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:57682 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726018AbgAPNJz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 08:09:55 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GD8e8f013810;
-        Thu, 16 Jan 2020 08:09:53 -0500
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2171.outbound.protection.outlook.com [104.47.57.171])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xfc59nf67-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 16 Jan 2020 08:09:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RR7ZkHrS+nipbwFufwScnn6KxK2dJ5ja3NGtdt7d3cAWdh4d+5IWwylmT22bb6YGWJLK5SAogXxxI1PDHxd5W4N9StDsQiX/1LqYW2CPigdXytXMjQx1tVIDQzw9pmWqTwvgM5ytlCpuIfmjAC6TdEchJnQl0mHUPjPRPey1t8MH+ZBSekweqUAWtlcupdmXeuqP1wS5z0CnNScoS2GA1u8xCBkhsrkqvA4SalQoaz+jmphe/AR0bLhYeB7ZlksK8b7RspSYxn57jal29I5wvwRYGqfyWhBs6D+aHL/RZ96HnB3ibEIS2Im6pOAkli3aKiu0r32Un5KHCmVtfiJz5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LIY91KhqebyKLQ2zSBXKUQXnBpSjkTYUPFPhmR7uTQY=;
- b=Bv3lleGWbEY4HHqHJbEza5LfrkhMyP6hhuZ9wsdAok/TrtT/OCM+h9hlp/AzmWCZ7PEj3Oae9WOIMQFQPJgbVHgBBnJlU5wVWWiPSs5qRpz1b8ImJ8+0yp/Jsyj+qzFEeszZiYA351Zf4lYQVv6T52IHx9LI8ZYopMalT5WmdhA6sgj0ir+JrUtG8bgw69a0jeIIZ1sWf6K/WAPWbQ2OGSE/I4AbTVPoVinXTycDlyuVvzdRcGiAbktN4K5mWOOynAWBQ0Va0Rj/37rREwoUDlYewhd73OjywZahiqDNklomDkOeLBYf69cKkElwuAxWh1KIN6QkPtChkDYnBsxT1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LIY91KhqebyKLQ2zSBXKUQXnBpSjkTYUPFPhmR7uTQY=;
- b=FRPVaXlJNxP7bSsldv+f6wf2djJRJYQq/Ycr6Ob/MDwlFLwAlMv1ArTKNEb6YFIpN8sPWaJsj/yFWEvL9dx8aNKvAMkboDPd2bavsSKCBLevTKNskk1A/++XPRUjxZY4BOJjY9GaUNL8+2PvrDIdbSRrxfmOBZumJiCp9ZEG5LA=
-Received: from DM6PR03CA0047.namprd03.prod.outlook.com (2603:10b6:5:100::24)
- by DM6PR03MB4794.namprd03.prod.outlook.com (2603:10b6:5:186::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.18; Thu, 16 Jan
- 2020 13:09:52 +0000
-Received: from CY1NAM02FT057.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::200) by DM6PR03CA0047.outlook.office365.com
- (2603:10b6:5:100::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2644.19 via Frontend
- Transport; Thu, 16 Jan 2020 13:09:52 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT057.mail.protection.outlook.com (10.152.75.110) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2644.19
- via Frontend Transport; Thu, 16 Jan 2020 13:09:51 +0000
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id 00GD9b4Y022001
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 16 Jan 2020 05:09:38 -0800
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 16 Jan
- 2020 05:09:48 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 16 Jan 2020 08:09:48 -0500
-Received: from saturn.ad.analog.com ([10.48.65.124])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00GD9gVC024849;
-        Thu, 16 Jan 2020 08:09:45 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 2/2] dt-bindings: iio: adis16480: add compatible entry for ADIS16490
-Date:   Thu, 16 Jan 2020 15:11:48 +0200
-Message-ID: <20200116131148.18149-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116131148.18149-1-alexandru.ardelean@analog.com>
-References: <20200116131148.18149-1-alexandru.ardelean@analog.com>
+        Thu, 16 Jan 2020 08:16:19 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:59990 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbgAPNQT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 08:16:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GDG6uj093155;
+        Thu, 16 Jan 2020 07:16:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579180566;
+        bh=tvKscGA3l5CX2UOqeAPYCq9i4n/Efb6vpavfVQXUlxo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OjFF7ADczfwFHRBHHeEqf6BDZ6ilIv2H8qgdedM46HCH8TNq9WfFP+QAZG25hoUV4
+         Vqxg9mXo0RzmbcoxB9tyd54OwErd2BWvoNEOGq1TI+Dib91JS+dVpm1rU6hKZ4OshY
+         dOMaYzUgP3Pe2kMzBz4CXiKZMmIUIBtcCV+23YxE=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GDG6dt028877
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 07:16:06 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 07:16:05 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 07:16:05 -0600
+Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GDG3W7017169;
+        Thu, 16 Jan 2020 07:16:03 -0600
+Subject: Re: [PATCH v6 4/5] drm/tidss: New driver for TI Keystone platform
+ Display SubSystem
+To:     Sam Ravnborg <sam@ravnborg.org>
+CC:     <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <tomi.valkeinen@ti.com>, <laurent.pinchart@ideasonboard.com>,
+        <peter.ujfalusi@ti.com>, <bparrot@ti.com>, <praneeth@ti.com>,
+        <yamonkar@cadence.com>, <sjakhade@cadence.com>, <maxime@cerno.tech>
+References: <cover.1579086894.git.jsarha@ti.com>
+ <66c57bb30685920f040933ada9ccd4f5035d099f.1579086894.git.jsarha@ti.com>
+ <20200115122253.GA22854@ravnborg.org>
+ <848720ca-6062-8314-e874-3a36f8aee1da@ti.com>
+ <20200115144309.GA20850@ravnborg.org>
+ <b4f5d846-aa44-a759-1caa-70244dfabeb3@ti.com>
+ <20200115171358.GA23015@ravnborg.org>
+From:   Jyri Sarha <jsarha@ti.com>
+Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8714a7be-ef32-2e46-a736-0433398b15de@ti.com>
+Date:   Thu, 16 Jan 2020 15:16:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200115171358.GA23015@ravnborg.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(346002)(39860400002)(376002)(136003)(199004)(189003)(478600001)(8676002)(54906003)(336012)(26005)(7636002)(107886003)(70206006)(36756003)(246002)(44832011)(356004)(5660300002)(2906002)(70586007)(2616005)(316002)(7696005)(86362001)(4326008)(4744005)(1076003)(426003)(110136005)(186003)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4794;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ecddb91d-81eb-46bc-6434-08d79a855f44
-X-MS-TrafficTypeDiagnostic: DM6PR03MB4794:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB4794BFAE3BC89E2F93FFE81BF9360@DM6PR03MB4794.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-Forefront-PRVS: 02843AA9E0
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZsZ9nsmFe4vnERWlx2p2dyuIol7RPeLfitFk5VD2THDTxDGEFud9uguLznT/3y6+8YeOcIuuhme9ifaTOGefMM8NpjczD96t5uDsKU0dIjnTpMBqoeYmnnrqJ/ixLJ9rK6ByehZ/6col758z6sHSREscU/0ZqrO2CM+TEswLsrEzSqAhhFWSAM3UWiiw3PcXkRp0YzLHsfGPcMB5aikmc8TE7n9gyexFAmKRiRObmc6gHHK3MJ72J+ZkYMqxEQDQ+HHeUKI4276rtsmkqKdNM2ApOxk118S3wnJF6olr7CJcs43gxvVmZheDI9jwBhN22njJJLxwbxhAOKKjUtNgH19pHHZIE2ZvRTsSmwYaM78zpkBquRIm1haiEMwmWlHH6U5irJ7hArh6aPFjrGtTFVx8SRKAEvE5KOb8fyxtQ9f9bajJ0Oc+VIgW5Xx0zmJ1
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jan 2020 13:09:51.4428
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecddb91d-81eb-46bc-6434-08d79a855f44
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4794
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-16_04:2020-01-16,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=889 malwarescore=0 suspectscore=0 bulkscore=0 clxscore=1015
- mlxscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001160111
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This change adds an entry for ADIS16490 in the list of compatible devices
-defined in the dt-bindings of the adis16480 driver.
+On 15/01/2020 19:13, Sam Ravnborg wrote:
+> Hi Jyri.
+> 
+>> Well, I'll bite the bullet then, and start mangling the code to the
+>> "strict" format.
+> 
+> While touching the code please consider moving all logging
+> over to the new drm_{err,warn,info,dbg} functions.
+> They give the nice "[drm]" marker.
+> And they are a tad shorter as you do not have to dereference ddev->dev
+> everywhere.
+> And you then also gain support for controlling logging using
+> drm.debug=0xxxx, os sysfs too.
+> 
+> See drm_print.h in latest drm_misc_next
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt | 1 +
- 1 file changed, 1 insertion(+)
+After checking out the drm_print.h, I don't think I am willing to do the
+switch at least at this time. The drm print functions do not offer much
+over the dev_* functions for individual driver debug, and since there is
+no 1-to-1 relation from dev_* print functions to drm_* functions I would
+have to rethink each print separately. And worst of all the drm prints
+do not show in <debugfs>/dynamic_debug/control (requires
+CONFIG_DYNAMIC_DEBUG=y).
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-index ed7783f45233..cd903a1d880d 100644
---- a/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/adi,adis16480.txt
-@@ -8,6 +8,7 @@ Required properties for the ADIS16480:
- 	* "adi,adis16480"
- 	* "adi,adis16485"
- 	* "adi,adis16488"
-+	* "adi,adis16490"
- 	* "adi,adis16495-1"
- 	* "adi,adis16495-2"
- 	* "adi,adis16495-3"
+> 
+> With or without this change you can add my:
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> 	Sam
+> 
+
+Thanks,
+Jyri
+
 -- 
-2.20.1
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
