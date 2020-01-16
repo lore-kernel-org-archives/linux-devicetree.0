@@ -6,126 +6,125 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6870BC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 14:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AE0C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 14:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398F52087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 14:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8C62051A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 14:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579184585;
-	bh=cKTUtAai+F3kwsCgiV5+gcSXb75k6M9kqJPe1f1yhys=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xWTUqkgekzV6M2TCuPCvU6VSuekxa6G4d0THA08j7XpoiyrSDE3742lmHRlvDzO+K
-	 gLHh/QPyw/Qk2X6XA6iod+AgHCW11xY5IdTUFOz6iDT3fXHKMJJe1mJIRVQWOhvHUX
-	 0pYuN5xfNpbBWnThQqTCnag/n1TRp/lZqGqC+u94=
+	s=default; t=1579185224;
+	bh=zCTzRzpxW45hf9zhu97cl/HH/TkaKoXKxG33ubUlcis=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rVzxdEIseKmRDT/Y872TzeEeRSgx9o58DFZ9KxdVpAWHi7lhGCE5In2YrssdfgpF/
+	 RGrA11033cTWVx0/9Cgvug2mIfuxoJtAfmdn1+Tpb7Mz1mKHdVtLSmGtKSfsrjX5hb
+	 Gc28tpgXeagYyIGEh/qxkCdUa1xpHAU4yTn8L3Wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbgAPOXE (ORCPT
+        id S1726706AbgAPOdo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 09:23:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49822 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 09:33:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbgAPOXE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 09:23:04 -0500
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726084AbgAPOdo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 09:33:44 -0500
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5F3A20748;
-        Thu, 16 Jan 2020 14:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 197A62051A;
+        Thu, 16 Jan 2020 14:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579184584;
-        bh=cKTUtAai+F3kwsCgiV5+gcSXb75k6M9kqJPe1f1yhys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KNcjSTjqpkciihCkSGiSg3Qpg2MI1znaP2oRwTnHBuLDK0/y9OQDLcx1r3TIAFIpC
-         kDnaweSlGbk4XiR9KHFbpNmCvx4DeLbO/NoKlNzkeejECdZTYwpHNejyP4T6D14gdz
-         xEfoN6XswDHd8P7ChKjjKol0OT/RLp3ML4+/4JP0=
-Date:   Thu, 16 Jan 2020 15:23:01 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Icenowy Zheng <icenowy@aosc.xyz>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: spi: sunxi: Document new compatible
- strings
-Message-ID: <20200116142301.w2t4o6pg3dapp3g6@gilmour.lan>
-References: <20200116005654.27672-1-andre.przywara@arm.com>
- <20200116005654.27672-4-andre.przywara@arm.com>
+        s=default; t=1579185223;
+        bh=zCTzRzpxW45hf9zhu97cl/HH/TkaKoXKxG33ubUlcis=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lzvmVPxC0YoX1GCXF9xUvPrjSs4rABccejlMEYJBJejJBHBYBFbLHbl9I1uSYPV0s
+         3EY+xd0XAuDU9RZq3eOwaUXPY3w86rI2ei6fInbAhyjKcskoR3Ss6JG1AD0V/OTu72
+         nbcIyHgK5xQvFUJjrWjxwTqxbhEM7tjwPVQtLOqo=
+Received: by mail-qv1-f46.google.com with SMTP id z3so9148661qvn.0;
+        Thu, 16 Jan 2020 06:33:43 -0800 (PST)
+X-Gm-Message-State: APjAAAUZf5JvTMUXWA4g4UdcXB4lVoK+7DPigTkv2Py4mEspQFKkbJ/2
+        P/VVfo4mqlhpeHtKffVLuqg6aioAepSjzS66vQ==
+X-Google-Smtp-Source: APXvYqxpzOz30rqleYyMHf6/FcDEmshzxEl/xINJJW+FtV85eSNgGaPEZdKTK/HozyW+hT6davB/mrOR0U63bbSIPFg=
+X-Received: by 2002:ad4:450a:: with SMTP id k10mr2710244qvu.136.1579185222222;
+ Thu, 16 Jan 2020 06:33:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dtp4obhou6ga2i2o"
-Content-Disposition: inline
-In-Reply-To: <20200116005654.27672-4-andre.przywara@arm.com>
+References: <20200110134823.14882-1-ludovic.barre@st.com> <20200110134823.14882-6-ludovic.barre@st.com>
+ <20200115145645.GA599@bogus> <2ce63f11-8b0c-8261-63fa-cd19e874c537@st.com>
+In-Reply-To: <2ce63f11-8b0c-8261-63fa-cd19e874c537@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 16 Jan 2020 08:33:30 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJMGY-n07e81iAsj+P7wPHFojBerNnjx8vtvqLTDA7yEw@mail.gmail.com>
+Message-ID: <CAL_JsqJMGY-n07e81iAsj+P7wPHFojBerNnjx8vtvqLTDA7yEw@mail.gmail.com>
+Subject: Re: [PATCH 5/9] dt-bindings: mmc: mmci: add delay block base register
+ for sdmmc
+To:     Ludovic BARRE <ludovic.barre@st.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
---dtp4obhou6ga2i2o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi,
-
-On Thu, Jan 16, 2020 at 12:56:54AM +0000, Andre Przywara wrote:
-> The Allwinner H6 SPI controller has advanced features over the H3
-> version, but remains compatible with it.
-> Document the usual "specific", "fallback" compatible string pair.
-> Also add the R40 version while at it.
+On Thu, Jan 16, 2020 at 3:21 AM Ludovic BARRE <ludovic.barre@st.com> wrote:
 >
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  .../devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml     | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
+> Hi Rob
 >
-> diff --git a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-> index f36c46d236d7..c19dfbe42d90 100644
-> --- a/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/allwinner,sun6i-a31-spi.yaml
-> @@ -18,9 +18,15 @@ properties:
->    "#size-cells": true
+> Le 1/15/20 =C3=A0 3:56 PM, Rob Herring a =C3=A9crit :
+> > On Fri, Jan 10, 2020 at 02:48:19PM +0100, Ludovic Barre wrote:
+> >> To support the sdr104 mode, the sdmmc variant has a
+> >> hardware delay block to manage the clock phase when sampling
+> >> data received by the card.
+> >>
+> >> This patch adds a second base register (optional) for
+> >> sdmmc delay block.
+> >>
+> >> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
+> >>   1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Document=
+ation/devicetree/bindings/mmc/mmci.txt
+> >> index 6d3c626e017d..4ec921e4bf34 100644
+> >> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
+> >> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
+> >> @@ -28,6 +28,8 @@ specific for ux500 variant:
+> >>   - st,sig-pin-fbclk       : feedback clock signal pin used.
+> >>
+> >>   specific for sdmmc variant:
+> >> +- reg                        : a second base register may be defined =
+if a delay
+> >> +                           block is present and used for tuning.
+> >
+> > Which compatibles have a 2nd reg entry?
 >
->    compatible:
-> -    enum:
-> -      - allwinner,sun6i-a31-spi
-> -      - allwinner,sun8i-h3-spi
-> +    oneOf:
-> +      - const: allwinner,sun6i-a31-spi
-> +      - const: allwinner,sun8i-h3-spi
-> +      - items:
-> +          - const: allwinner,sun8i-r40-spi
-> +          - const: allwinner,sun8i-h3-spi
-> +      - items:
-> +          - const: allwinner,sun50i-h6-spi
-> +          - const: allwinner,sun8i-h3-spi
+> In fact, mmci driver is ARM Amba driver (arm,primecell) and has only one
+> compatible "arm,pl18x".
+> The variants are identified by primecell-periphid property
+> (discovered at runtime with HW block register or defined by
+> device tree property "arm,primecell-periphid").
+>
+> The defaults "arm,pl18x" variants have only one base register,
+> but the SDMMC need a second base register for these
+> delay block registers.
+>
+> example of sdmmc node:
+>         sdmmc1: sdmmc@58005000 {
+>                 compatible =3D "arm,pl18x", "arm,primecell";
+>                 arm,primecell-periphid =3D <0x00253180>;
+>                 reg =3D <0x58005000 0x1000>, <0x58006000 0x1000>;
+>         };
+>
+> what do you advise?
 
-Having
+I missed that this is a primecell block. Just give some indication
+which variants have this 2nd range.
 
-oneOf:
-  - const: allwinner,sun6i-a31-spi
-  - const: allwinner,sun8i-h3-spi
-  - items:
-    - enum:
-      - allwinner,sun8i-r40-spi
-      - allwinner,sun50i-h6-spi
-    - const: allwinner,sun8i-h3-spi
-
-Will be easier to maintain in the long run
-
-Maxime
-
---dtp4obhou6ga2i2o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiBxxQAKCRDj7w1vZxhR
-xRUZAQDisZVXdmeqha8atHLsAl78/m8TbSfhS0431utHf0z35AEArNAvTTDGJZT3
-fIwJSFWfYpI4H2JuT4OzXW9UJtlNUQ0=
-=tA6x
------END PGP SIGNATURE-----
-
---dtp4obhou6ga2i2o--
+Rob
