@@ -2,62 +2,168 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E75C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FAFC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 14:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADE62075B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 13:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE772077C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 14:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SvPv2bfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbgAPN7Q (ORCPT
+        id S1728982AbgAPOAP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 08:59:16 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:48083 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726343AbgAPN7Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 08:59:16 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 94863240019;
-        Thu, 16 Jan 2020 13:59:12 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 14:59:12 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     richard.genoud@gmail.com, radu_nicolae.pirea@upb.ro,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
-        a.zummo@towertech.it, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v4 4/5] ARM: at91/defconfig: enable MMC_SDHCI_OF_AT91 and
- MICROCHIP_PIT64B
-Message-ID: <20200116135912.GH100374@piout.net>
-References: <1579085987-13976-1-git-send-email-claudiu.beznea@microchip.com>
- <1579085987-13976-5-git-send-email-claudiu.beznea@microchip.com>
+        Thu, 16 Jan 2020 09:00:15 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36926 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728931AbgAPOAP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 09:00:15 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00GE0Dsg107367;
+        Thu, 16 Jan 2020 08:00:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579183213;
+        bh=NTqfS5sg3qR7NGf7hi8wt6YM0bTdrvxo4J0eeuaTUDY=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=SvPv2bfAXk5qNECkzp6FgJVXH85hJ75RGdiqgfQWV0z26MDcuL0N7K4e3oU9okd5a
+         nQk2wRI3w9vwOZuPFYEWJzF34BeVm5k0pcBCTMZgVA9J8xVotEtuf476MQQelMmA93
+         f6cbwIbg0hl78JS+Vub975zBsBZMTDk71sfK+SOQ=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00GE0Dqq030954
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Jan 2020 08:00:13 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 16
+ Jan 2020 08:00:12 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 16 Jan 2020 08:00:12 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00GE0AtA029619;
+        Thu, 16 Jan 2020 08:00:10 -0600
+Subject: Re: [RESEND PATCHv4 01/14] dt-bindings: remoteproc: Add OMAP
+ remoteproc bindings
+From:   Tero Kristo <t-kristo@ti.com>
+To:     Suman Anna <s-anna@ti.com>, <bjorn.andersson@linaro.org>,
+        <ohad@wizery.com>, <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <mathieu.poirier@linaro.org>,
+        <linux-omap@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20200102131845.12992-2-t-kristo@ti.com>
+ <20200102132512.13248-1-t-kristo@ti.com>
+ <f4ac066a-e5ee-f888-42bb-3f6d444747ee@ti.com>
+ <1d4597f7-9e28-8b16-7679-c8abd291346d@ti.com>
+Message-ID: <47ece31c-53d5-2ec8-8047-86f6ad532c37@ti.com>
+Date:   Thu, 16 Jan 2020 16:00:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579085987-13976-5-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1d4597f7-9e28-8b16-7679-c8abd291346d@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 15/01/2020 12:59:46+0200, Claudiu Beznea wrote:
-> Enable MMC_SDHCI_OF_AT91 and MICROCHIP_PIT64B. These are necessary
-> for SAM9X60.
+On 16/01/2020 09:51, Tero Kristo wrote:
+> On 08/01/2020 18:49, Suman Anna wrote:
+>> Hi Tero,
+>>
+>> On 1/2/20 7:25 AM, Tero Kristo wrote:
+>>> From: Suman Anna <s-anna@ti.com>
+>>>
+>>> Add the device tree bindings document for the IPU and DSP
+>>> remote processor devices on OMAP4+ SoCs.
+>>>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> [t-kristo@ti.com: converted to schema]
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> ---
+>>> v4: added ti,bootreg-shift and ti,autosuspend-delay properties
+>>
+>> You missed out on my v3 comment on the firmware-name on Example 2. Can
+>> you please address it when you post the next version?
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> ---
->  arch/arm/configs/at91_dt_defconfig | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-Applied, thanks.
+> I don't think I missed it, but you never told what is the actual name to 
+> use there. Firmware name generally does not matter, as user can provide 
+> whatever he wants via DT now.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Just to close on this, so the issue was file extension for the firmware 
+name being .xem when it should have been .xem4. Fixed in v5 now.
+
+-Tero
+
+> 
+>>
+>>>
+>>>   .../remoteproc/ti,omap-remoteproc.yaml        | 329 ++++++++++++++++++
+>>>   1 file changed, 329 insertions(+)
+>>>   create mode 100644 
+>>> Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml 
+>>>
+>>> new file mode 100644
+>>> index 000000000000..f53d58efaae3
+>>> --- /dev/null
+>>> +++ 
+>>> b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.yaml
+>>
+>> [snip]
+>>
+>>> +  - |+
+>>> +
+>>> +    //Example 2: OMAP5 IPU
+>>> +
+>>> +    /* IPU Reserved Memory node */
+>>> +    #include <dt-bindings/clock/omap5.h>
+>>> +    reserved-memory {
+>>> +        #address-cells = <2>;
+>>> +        #size-cells = <2>;
+>>> +
+>>> +        ipu_memory_region: ipu-memory@95800000 {
+>>> +            compatible = "shared-dma-pool";
+>>> +            reg = <0 0x95800000 0 0x3800000>;
+>>> +            reusable;
+>>> +        };
+>>> +    };
+>>> +
+>>> +    /* IPU node */
+>>> +    ocp {
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <1>;
+>>> +
+>>> +        ipu: ipu@55020000 {
+>>> +            compatible = "ti,omap5-ipu";
+>>> +            reg = <0x55020000 0x10000>;
+>>> +            reg-names = "l2ram";
+>>> +            iommus = <&mmu_ipu>;
+>>> +            mboxes = <&mailbox &mbox_ipu>;
+>>> +            memory-region = <&ipu_memory_region>;
+>>> +            ti,timers = <&timer3>, <&timer4>;
+>>> +            ti,watchdog-timers = <&timer9>, <&timer11>;
+>>> +            clocks = <&ipu_clkctrl OMAP5_MMU_IPU_CLKCTRL 0>;
+>>> +            resets = <&prm_core 2>;
+>>> +            firmware-name = "omap5-ipu-fw.xem";
+>>> +        };
+>>> +    };
+>>
+>> regards
+>> Suman
+>>
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
