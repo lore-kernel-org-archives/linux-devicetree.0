@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559CAC33CAF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DA1C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3013D206E6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D985F206E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579202098;
-	bh=pRkhybkngEnr4gOAuE3FOmVM9pUynr3Wp6eubVhRKl0=;
+	s=default; t=1579202113;
+	bh=hNy3boOg+1eisdfY1RLRrbaW7xZyuFkEyITg3X1ViSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sI0A4BdRCNXGTYvmqNWW95pWmzSD4i94qGJsRSPaD/Q5BGutrXRv1IsVJqZATiCVi
-	 gUg6WskHROreVNZUaRcz7/MwCr60zm3GmBpKHAPqkEtqxSk2amGvfVBEEa0v6OyANp
-	 cnUQnJp12/4iQTzNQwmD1TeviiUHeWNkJIwz/Q1s=
+	b=K/ilFgbuklzxbKs+Xmle4H8LLUKUdGOzhNFb9FHu9LtPKO2sgRn5jOxkKPlc+F9Jb
+	 SN0EZ0UW7zTvEn7872WZh8qwi7/uX1Nt0ZauSVPB8dl+OMxXZXJfi4VTC1uDvOd6Z4
+	 QtclSyym68v5o6Gtqg78eRWgE7Gbng9r4RCz8KGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387403AbgAPTOu (ORCPT
+        id S1733164AbgAPQ4I (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 14:14:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42538 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 11:56:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733207AbgAPQ4S (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:56:18 -0500
+        id S1731212AbgAPQ4H (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402FD24687;
-        Thu, 16 Jan 2020 16:56:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 708E92467C;
+        Thu, 16 Jan 2020 16:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193777;
-        bh=pRkhybkngEnr4gOAuE3FOmVM9pUynr3Wp6eubVhRKl0=;
+        s=default; t=1579193766;
+        bh=hNy3boOg+1eisdfY1RLRrbaW7xZyuFkEyITg3X1ViSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=owHF4+pZgP2xm8he0tnCNYc8vYSXD9fi3zT5/06oLHat48aomyUhv+b48bXnayEvu
-         Axs4P59TsIw53E5EGutBV8bToWh3zRsW9YMMyo/LTZcSyNU0Tyy3/rKo0qZFzmF+ym
-         LEfMcT9NNRxUNqSMT6B0O/qBZSBdRceqIuwbgM3Q=
+        b=yRHKbo4+2MVWl2OmhxQD8t1k8J07ZQb+6u1op+xPU0UIT/dJZFZJLGSWc4Uujhl/Y
+         Vo07d0VySvh/gWt223ueBIkwUFL4IH99bJvcNlXb/wSYLnV9JAowI1h09CAVDfUkUa
+         XymizwCLPbF1rv1LAO5ceTr1oZZvTZLf56V3LhVA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 058/671] arm64: dts: renesas: r8a7795-es1: Add missing power domains to IPMMU nodes
-Date:   Thu, 16 Jan 2020 11:44:49 -0500
-Message-Id: <20200116165502.8838-58-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 051/671] bus: ti-sysc: Add mcasp optional clocks flag
+Date:   Thu, 16 Jan 2020 11:44:42 -0500
+Message-Id: <20200116165502.8838-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
 References: <20200116165502.8838-1-sashal@kernel.org>
@@ -60,42 +61,69 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 41e30b515a003a90e336b7a456c7c82d8c3aa6a7 ]
+[ Upstream commit 2c63a833e4500b341a62bf97e67488909ae12086 ]
 
-While commit 3b7e7848f0e88b36 ("arm64: dts: renesas: r8a7795: Add IPMMU
-device nodes") for R-Car H3 ES2.0 did include power-domains properties,
-they were forgotten in the counterpart for older R-Car H3 ES1.x SoCs.
+We have OPT_CLKS_NEEDED in legacy platform data, but it's missing
+from the ti-sysc driver for device tree based configuration.
 
-Fixes: e4b9a493df45075b ("arm64: dts: renesas: r8a7795-es1: Add IPMMU device nodes")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+In order to pass OPT_CLKS_NEEDED quirk flag we need to update omap4 module
+data and add a new compatible for dra7 as the module layout is different
+from sysc_regbits_omap4_mcasp.
+
+Fixes: 70a65240efb1 ("bus: ti-sysc: Add register bits for interconnect
+target modules")
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/bus/ti-sysc.txt |  1 +
+ drivers/bus/ti-sysc.c                             | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-index 7b2fbaec9aef..3dc61b7e1d08 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-@@ -28,6 +28,7 @@
- 		compatible = "renesas,ipmmu-r8a7795";
- 		reg = <0 0xec680000 0 0x1000>;
- 		renesas,ipmmu-main = <&ipmmu_mm 5>;
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 		#iommu-cells = <1>;
- 	};
+diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.txt b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+index 91dc2333af01..85a23f551f02 100644
+--- a/Documentation/devicetree/bindings/bus/ti-sysc.txt
++++ b/Documentation/devicetree/bindings/bus/ti-sysc.txt
+@@ -35,6 +35,7 @@ Required standard properties:
+ 		"ti,sysc-omap3-sham"
+ 		"ti,sysc-omap-aes"
+ 		"ti,sysc-mcasp"
++		"ti,sysc-dra7-mcasp"
+ 		"ti,sysc-usb-host-fs"
+ 		"ti,sysc-dra7-mcan"
  
-@@ -35,6 +36,7 @@
- 		compatible = "renesas,ipmmu-r8a7795";
- 		reg = <0 0xe7730000 0 0x1000>;
- 		renesas,ipmmu-main = <&ipmmu_mm 8>;
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
- 		#iommu-cells = <1>;
- 	};
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index b6f63e762021..926c83398b27 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1593,6 +1593,16 @@ static const struct sysc_regbits sysc_regbits_omap4_mcasp = {
+ static const struct sysc_capabilities sysc_omap4_mcasp = {
+ 	.type = TI_SYSC_OMAP4_MCASP,
+ 	.regbits = &sysc_regbits_omap4_mcasp,
++	.mod_quirks = SYSC_QUIRK_OPT_CLKS_NEEDED,
++};
++
++/*
++ * McASP found on dra7 and later
++ */
++static const struct sysc_capabilities sysc_dra7_mcasp = {
++	.type = TI_SYSC_OMAP4_SIMPLE,
++	.regbits = &sysc_regbits_omap4_simple,
++	.mod_quirks = SYSC_QUIRK_OPT_CLKS_NEEDED,
+ };
  
+ /*
+@@ -1821,6 +1831,7 @@ static const struct of_device_id sysc_match[] = {
+ 	{ .compatible = "ti,sysc-omap3-sham", .data = &sysc_omap3_sham, },
+ 	{ .compatible = "ti,sysc-omap-aes", .data = &sysc_omap3_aes, },
+ 	{ .compatible = "ti,sysc-mcasp", .data = &sysc_omap4_mcasp, },
++	{ .compatible = "ti,sysc-dra7-mcasp", .data = &sysc_dra7_mcasp, },
+ 	{ .compatible = "ti,sysc-usb-host-fs",
+ 	  .data = &sysc_omap4_usb_host_fs, },
+ 	{ .compatible = "ti,sysc-dra7-mcan", .data = &sysc_dra7_mcan, },
 -- 
 2.20.1
 
