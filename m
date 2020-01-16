@@ -2,98 +2,133 @@ Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47B7C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08E4C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AB5214AF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5852077B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579200142;
+	bh=+qEBv/qj5NR0yvM89ByvmOjMvkZ0exdTfbA9IyJZN70=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tKEZ629PWaSmXGBwuSEPRCGMaBv5Vm4J4SeLkQvA4RRTP1lRc5B2CFyi17nKHxgSH
+	 NwYUxTKCJK+4ygl17F1af4sswyWKEGOTALGi/kP9PDdPWfkUenmREBZv7A0EfvF5UW
+	 Tb+IhACYgc1By0swCVtJfVMr9rZgcYiv+B4jTU7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390316AbgAPSmT (ORCPT
+        id S2390300AbgAPSmV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 13:42:19 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:38257 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390300AbgAPSmS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 13:42:18 -0500
-Received: from localhost.localdomain ([37.4.249.101]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Mleo0-1jIw7L3qrK-00ioZF; Thu, 16 Jan 2020 19:41:50 +0100
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH] dt-bindings: brcm,avs-ro-thermal: Fix binding check issues
-Date:   Thu, 16 Jan 2020 19:41:17 +0100
-Message-Id: <1579200077-17496-1-git-send-email-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.7.4
-X-Provags-ID: V03:K1:+sPxTCFhphlG3yB/Vx1rT4zv4v7XQNBXEsZUG8nOQTMLN/8oNU1
- cIQrMr4QLHa06BxUeULkTm8FrfWFhdn3mPaqN4tH3TBTXUdVufXlCUcTyj/PHhw6sgBcMTA
- mZx6vCFItqhZnVkuio0WoafXGl9Rs68tikhSvXXdLUXjSDmuepTiEJYCEWJUZh7wwxSA0wr
- w0LTrbo+7cE9tmdYbr1wQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+jcCjposBx0=:yyC7jsIe/of8jUKuHeITgu
- aXK8OBpK/gxv+jhxC/xLDqrj+EQsV55PYLfzhgtNyOzU8bAqhW2KJj69StMrp/PPIExIcljYA
- /NKnN584ptFLAUPLEZIJhzRTWYKErS7Qyy11PUlxJlAGWN4d9xpyU78LaeZIkzENnShU5gFP2
- ABEV0+TqsHRWN9wRs4hW5b5Vr5JTsDMk59PpXMryJlxq1pAd+jXXbkAisQA0p692SObeeE2ZA
- JCgwNiSoVO65Embq7fzXx206TuS1T6Ni1qYLdcnz2t6d540k0EX4Uznciz+quVmEOFIwpEje4
- 5HYf1zDbeXdiQD2lElEQx3kiPDJIv3zUpGbvlEhG1aTm5yGYU+/gq3VrmhWHBIqRWVyyU8lqE
- CKux+OgG9+C0CW/Ubh4Q6DJk0SDf+snQVYqBDj/i08YTK7XT9lB5YDbnLUF4+LMOF90pH2n4k
- 5SJCuvNRluII63acZiMwR2R8JtD4MV1YcH+2saetnTwzVlOiwxrzjX8hF6fiOGJFS1Zq02HlD
- 7AR7JfLd8mpG+8d/Fo+ysomcsyOekC72hYrcpXKCCEezDML1QXz+kyjpOUKBjtmbs7z/EEhZH
- s0cZo5ImMqzAznfg55k0Dr9DqsEq27GiVRU2n3mjX3n2Zcn+FZWW8vZCIfFs6zpQn6dIKv1vN
- dZbtEiCoNjvSG24HGs0lICT3VZrlSIkN073iDLF1p4ylHpgTeiX0fO+qo+9ccGUyW2sSa3PIV
- a15ftUAtAGstL4K/uJ9V4E2VyDuLC3ZGp+FvsQrocWUUkI+lzqnEPEiY0oHcsFfers/JbzOSm
- ygFJhwQotapC0SFx5vQjLaJboailcGKVIn9VXiHryFv8+GfLX4xyDm0LI+cjiAT7tiRmn8zFa
- +cHIfWHSP0PRHTBAuWw3BAY62wsz7dl4364I1V+cs=
+        Thu, 16 Jan 2020 13:42:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390274AbgAPRLf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:11:35 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EEFE24690;
+        Thu, 16 Jan 2020 17:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579194694;
+        bh=+qEBv/qj5NR0yvM89ByvmOjMvkZ0exdTfbA9IyJZN70=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0yeerLhz2+Ulf+WexaQeXoGSMe3PWljxR2rNz9K6W0LWL7jF7v2mg3dGNXZrudxCJ
+         Agv0dE9gx1ah1ao/Qy4pCrnzHlWMStoGxIzEvrKh6E84EgTCVl1vaYmfP2JkcrhSds
+         S2i5KBrFog1nK4RAkgVXlOoHtGdWEM42M/aF3sSg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Adam Ford <aford173@gmail.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 535/671] ARM: dts: logicpd-som-lv: Fix i2c2 and i2c3 Pin mux
+Date:   Thu, 16 Jan 2020 12:02:53 -0500
+Message-Id: <20200116170509.12787-272-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
+References: <20200116170509.12787-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Drop the reg property since this only necessary for the parent and
-add the missing thermal-sensor-cells property description.
+From: Adam Ford <aford173@gmail.com>
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Fixes: 3d4849897691 ("dt-bindings: Add Broadcom AVS RO thermal")
+[ Upstream commit a932b77b4d1939ad173f18be87da409427fb705c ]
+
+When the pinmux configuration was added, it was accidentally placed into
+the omap3_pmx_wkup node  when it should have been placed into the
+omap3_pmx_core.  This error was accidentally propagated to stable by
+me when I blindly requested the pull after seeing I2C issues without
+actually reviewing the content of the pinout.  Since the bootloader
+previously muxed these correctly in the past, was a hidden error.
+
+This patch moves the i2c2_pins and i2c3_pins to the correct node
+which should eliminate i2c bus errors and timeouts due to the fact
+the bootloader uses the save device tree that no longer properly
+assigns these pins.
+
+Fixes: 5fe3c0fa0d54 ("ARM: dts: Add pinmuxing for i2c2 and i2c3
+for LogicPD SOM-LV") #4.9+
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml         | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/logicpd-som-lv.dtsi | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-index 98e7b57..d9fdf48 100644
---- a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
-@@ -23,12 +23,15 @@ properties:
-   compatible:
-     const: brcm,bcm2711-thermal
+diff --git a/arch/arm/boot/dts/logicpd-som-lv.dtsi b/arch/arm/boot/dts/logicpd-som-lv.dtsi
+index 98b682a8080c..c5d54c4d3747 100644
+--- a/arch/arm/boot/dts/logicpd-som-lv.dtsi
++++ b/arch/arm/boot/dts/logicpd-som-lv.dtsi
+@@ -232,6 +232,20 @@
+ 		>;
+ 	};
  
--  reg:
--    maxItems: 1
-+  # See ./thermal.txt for details
-+  "#thermal-sensor-cells":
-+    const: 0
- 
- required:
-   - compatible
--  - reg
-+  - '#thermal-sensor-cells'
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x21be, PIN_INPUT | MUX_MODE0)	/* i2c2_scl */
++			OMAP3_CORE1_IOPAD(0x21c0, PIN_INPUT | MUX_MODE0)	/* i2c2_sda */
++		>;
++	};
 +
-+additionalProperties: false
++	i2c3_pins: pinmux_i2c3_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x21c2, PIN_INPUT | MUX_MODE0)	/* i2c3_scl */
++			OMAP3_CORE1_IOPAD(0x21c4, PIN_INPUT | MUX_MODE0)	/* i2c3_sda */
++		>;
++	};
++
+ 	tsc2004_pins: pinmux_tsc2004_pins {
+ 		pinctrl-single,pins = <
+ 			OMAP3_CORE1_IOPAD(0x2186, PIN_INPUT | MUX_MODE4)	/* mcbsp4_dr.gpio_153 */
+@@ -253,18 +267,6 @@
+ 			OMAP3_WKUP_IOPAD(0x2a0c, PIN_OUTPUT | MUX_MODE4)	/* sys_boot1.gpio_3 */
+ 		>;
+ 	};
+-	i2c2_pins: pinmux_i2c2_pins {
+-		pinctrl-single,pins = <
+-			OMAP3_CORE1_IOPAD(0x21be, PIN_INPUT | MUX_MODE0)	/* i2c2_scl */
+-			OMAP3_CORE1_IOPAD(0x21c0, PIN_INPUT | MUX_MODE0)	/* i2c2_sda */
+-		>;
+-	};
+-	i2c3_pins: pinmux_i2c3_pins {
+-		pinctrl-single,pins = <
+-			OMAP3_CORE1_IOPAD(0x21c2, PIN_INPUT | MUX_MODE0)	/* i2c3_scl */
+-			OMAP3_CORE1_IOPAD(0x21c4, PIN_INPUT | MUX_MODE0)	/* i2c3_sda */
+-		>;
+-	};
+ };
  
- examples:
-   - |
+ &omap3_pmx_core2 {
 -- 
-2.7.4
+2.20.1
 
