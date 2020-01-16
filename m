@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E27C4741C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93374C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D17F20730
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 16:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B84F20728
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 17:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579193945;
-	bh=yYct/yvcXDrlEgA0LcQIaaTkGaXswQCQAppwQZKXnE0=;
+	s=default; t=1579194034;
+	bh=6Ug92YadfEZxVr0FlvxM6ejPmYEO8+O6flfaEHVSANM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqPlmgcUR1VAhv+jxuEuPruuAkZs5CJn2OLAmGVRsvp54ZfxiXDNezFRRGobgPKZj
-	 ehcArlzFMLA8qrTxMZ+bLhLEidTA6Ga8zZGV6q9l7NoTc21bzx024BH7lqpHgf4pSs
-	 VsOgG8ysowu2lgm1ud9Dec8SuRwMNQaH0NHmcBIk=
+	b=CltaWXEfg6L5fG8chyJEoR/EjDuSbXQ9JQ6w1XIm3f0I0xgpw33bYQS/PJUyBuJRi
+	 SeFMfbkiJ/iZmpeJhVU+LfG8V/NrtifwTT4cPFCIag/BFOZbNmDIZ82PYu4v5pD24E
+	 K2NTIw8PyVwlwjne2EL0d1hn4fKvqCPAWa1jJYWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387512AbgAPQ5d (ORCPT
+        id S1729521AbgAPRAd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 11:57:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44802 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 12:00:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387510AbgAPQ5c (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 11:57:32 -0500
+        id S2387847AbgAPRAc (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:00:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA12D24656;
-        Thu, 16 Jan 2020 16:57:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4984C21D56;
+        Thu, 16 Jan 2020 17:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579193852;
-        bh=yYct/yvcXDrlEgA0LcQIaaTkGaXswQCQAppwQZKXnE0=;
+        s=default; t=1579194032;
+        bh=6Ug92YadfEZxVr0FlvxM6ejPmYEO8+O6flfaEHVSANM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IfvXmm5gDbIqmNdpdcCtjEDZpFfioCTqpj/iR2eutdW8u50lJggOl18t9O+zRjxGN
-         2bA+kOfjMDZ4ec/5w6BIXaEtNioYrCSiSwxsxdVkvdBkZi9PI0aZI1+vxyNw+HwkaV
-         GUYnfuMXBKiGiyboTaPNmtl4Mi5g/gEaLrgaoC8A=
+        b=n5KE6iQYgCQbYSXgX/M6CalYswcD/lgI3R0RbSs+ppcTISRNPQUgSRzylDLbIkFzL
+         6n+szvxBfwY8MMesK1uIdLWxAzBXhvHAJHcEx+JGAdC2/xUW7E0VoJ5VjzfWPYXF5u
+         I+jYtLSknQgIN/V+1WQV81aW4ROjXHwK0hQmxa1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Biju Das <biju.das@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 103/671] ARM: dts: r8a7743: Remove generic compatible string from iic3
-Date:   Thu, 16 Jan 2020 11:45:34 -0500
-Message-Id: <20200116165502.8838-103-sashal@kernel.org>
+Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 151/671] ARM: dts: lpc32xx: phy3250: fix SD card regulator voltage
+Date:   Thu, 16 Jan 2020 11:51:00 -0500
+Message-Id: <20200116165940.10720-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
-References: <20200116165502.8838-1-sashal@kernel.org>
+In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
+References: <20200116165940.10720-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,37 +58,37 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Biju Das <biju.das@bp.renesas.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit 072b817589b17660ef19c31d89f7b981dbed3fd2 ]
+[ Upstream commit dc141b99fc36cf910a1d8d5ee30f43f2442fd1bd ]
 
-The iic3 block on RZ/G1M does not support automatic transmission, unlike
-other R-Car SoC's. So dropping the compatibility with the generic version.
+The fixed voltage regulator on Phytec phyCORE-LPC3250 board, which
+supplies SD/MMC card's power, has a constant output voltage level
+of either 3.15V or 3.3V, the actual value depends on JP4 position,
+the power rail is referenced as VCC_SDIO in the board hardware manual.
 
-Fixes: f523405f2a22cc0c307 ("ARM: dts: r8a7743: Add IIC cores to dtsi")
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: d06670e96267 ("arm: dts: phy3250: add SD fixed regulator")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7743.dtsi | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm/boot/dts/lpc3250-phy3250.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 24715f74ae08..5015e2273d82 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -565,9 +565,7 @@
- 			/* doesn't need pinmux */
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--			compatible = "renesas,iic-r8a7743",
--				     "renesas,rcar-gen2-iic",
--				     "renesas,rmobile-iic";
-+			compatible = "renesas,iic-r8a7743";
- 			reg = <0 0xe60b0000 0 0x425>;
- 			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 926>;
+diff --git a/arch/arm/boot/dts/lpc3250-phy3250.dts b/arch/arm/boot/dts/lpc3250-phy3250.dts
+index 1e1c2f517a82..ffcf78631b22 100644
+--- a/arch/arm/boot/dts/lpc3250-phy3250.dts
++++ b/arch/arm/boot/dts/lpc3250-phy3250.dts
+@@ -49,8 +49,8 @@
+ 		sd_reg: regulator@2 {
+ 			compatible = "regulator-fixed";
+ 			regulator-name = "sd_reg";
+-			regulator-min-microvolt = <1800000>;
+-			regulator-max-microvolt = <1800000>;
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
+ 			gpio = <&gpio 5 5 0>;
+ 			enable-active-high;
+ 		};
 -- 
 2.20.1
 
