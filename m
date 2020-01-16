@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B90C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FA0C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525062075B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33F45214AF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 19:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579201925;
-	bh=fTzTZdTov7HcnpdU0NW4Y0flZWYpEd2gLH97U0joLbM=;
+	s=default; t=1579202091;
+	bh=HImsYo00iEBDH0Z+BM6tQN60avxaq86ypvUaQwkal7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mJ0yKqRsvihKjrH2mzo4BRh2RWMNFi+II8sGGEeART4AJDR/9VP+Heo8dbafQ/Bwv
-	 zTYTD0Qv4YbfKgH9Ayn0G1MCzBO2wcFvTjutjLfa21f2hIeaZZKWbKoCUKkxP750CQ
-	 vQIytlfmX76pPVKw5bmvIVrj/RWinPMsiVu2M3qA=
+	b=h0g16r9eQQHdSwGsAN/BCuy0b0Vd0t1x8Zicn6oc3Mi3BWlF6XKuFJ5AqNqQC48+9
+	 CkAwmyMfTAc8oCVMgSs+39kQo38yXxxAW9ouvMFdUJp9gypMMbebX/55eSCA7iSDVG
+	 Cdxe4w5oZKktLBuYUTd4Nrd6wfe65ke+UCFLIijQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387656AbgAPRAG (ORCPT
+        id S2393630AbgAPTOu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:00:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 14:14:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732846AbgAPRAE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:00:04 -0500
+        id S1733203AbgAPQ4Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:56:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EAFA2468E;
-        Thu, 16 Jan 2020 17:00:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85D952467C;
+        Thu, 16 Jan 2020 16:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194003;
-        bh=fTzTZdTov7HcnpdU0NW4Y0flZWYpEd2gLH97U0joLbM=;
+        s=default; t=1579193775;
+        bh=HImsYo00iEBDH0Z+BM6tQN60avxaq86ypvUaQwkal7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M170uZ5gz+lMwYn/1B4sbCI4vfEIqqJHoQsnjbQcu7qoaid2VYQuZVzEkH6ppCSDW
-         olbU8y0MOLqaDYihd22ykzclfqv3gLhQEyo7/FzwKqAjHD8jupvKbC58wftYlocE17
-         itBqqpWumvw6q1XkcRnqSFygrHPScZBH3D55nzy0=
+        b=fUp/cW2nru3pjOEz6cIUp2Ly5GuovPg8x+f9UX3OMW8rcNyknOtwzdrNguR0RH5pn
+         eUkK/GLN3/prpVe2RHdXv4EBDa4NhO9nbcU9a70+d3LIQD41qqanKcHBGUOTWkoRyL
+         5xffejyinPaD12KA4tZeUMz5PS8ReCMBw549sbC4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 130/671] ARM: dts: sun8i-a23-a33: Move NAND controller device node to sort by address
-Date:   Thu, 16 Jan 2020 11:50:39 -0500
-Message-Id: <20200116165940.10720-13-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 057/671] arm64: dts: meson-gx: Add hdmi_5v regulator as hdmi tx supply
+Date:   Thu, 16 Jan 2020 11:44:48 -0500
+Message-Id: <20200116165502.8838-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116165940.10720-1-sashal@kernel.org>
-References: <20200116165940.10720-1-sashal@kernel.org>
+In-Reply-To: <20200116165502.8838-1-sashal@kernel.org>
+References: <20200116165502.8838-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,69 +61,85 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit d027521497592773cd23d016d36975574d3452db ]
+[ Upstream commit e1f2163deac059ad39f07aba9e314ebe605d5a7a ]
 
-The NAND controller device node was inserted into the wrong position,
-probably due to a rebase or merge, as the file's structure does not
-provide enough context for git to accurately match the previous device
-node block.
+The hdmi_5v regulator must be enabled to provide power to the physical HDMI
+PHY and enables the HDMI 5V presence loopback for the monitor.
 
-Fixes: d7b843df13ea ("ARM: dts: sun8i: add NAND controller node for A23/A33")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: b409f625a6d5 ("ARM64: dts: meson-gx: Add HDMI_5V regulator on selected boards")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi          | 1 +
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts   | 1 +
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 1 +
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts         | 1 +
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts        | 1 +
+ 5 files changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index c16ffcc4db7d..a272a69519a2 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -155,6 +155,19 @@
- 			#dma-cells = <1>;
- 		};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+index 765247bc4f24..e14e0ce7e89f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+@@ -125,6 +125,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+ 	pinctrl-names = "default";
++	hdmi-supply = <&hdmi_5v>;
+ };
  
-+		nfc: nand@1c03000 {
-+			compatible = "allwinner,sun4i-a10-nand";
-+			reg = <0x01c03000 0x1000>;
-+			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_NAND>, <&ccu CLK_NAND>;
-+			clock-names = "ahb", "mod";
-+			resets = <&ccu RST_BUS_NAND>;
-+			reset-names = "ahb";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
- 		mmc0: mmc@1c0f000 {
- 			compatible = "allwinner,sun7i-a20-mmc";
- 			reg = <0x01c0f000 0x1000>;
-@@ -212,21 +225,6 @@
- 			#size-cells = <0>;
- 		};
+ &hdmi_tx_tmds_port {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+index 864ef0111b01..a589547fc6e3 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+@@ -78,6 +78,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+ 	pinctrl-names = "default";
++	hdmi-supply = <&hdmi_5v>;
+ };
  
--		nfc: nand@1c03000 {
--			compatible = "allwinner,sun4i-a10-nand";
--			reg = <0x01c03000 0x1000>;
--			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_NAND>, <&ccu CLK_NAND>;
--			clock-names = "ahb", "mod";
--			resets = <&ccu RST_BUS_NAND>;
--			reset-names = "ahb";
--			pinctrl-names = "default";
--			pinctrl-0 = <&nand_pins &nand_pins_cs0 &nand_pins_rb0>;
--			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <0>;
--		};
--
- 		usb_otg: usb@1c19000 {
- 			/* compatible gets set in SoC specific dtsi file */
- 			reg = <0x01c19000 0x0400>;
+ &hdmi_tx_tmds_port {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index b4dfb9afdef8..db293440e4ca 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -155,6 +155,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+ 	pinctrl-names = "default";
++	hdmi-supply = <&hdmi_5v>;
+ };
+ 
+ &hdmi_tx_tmds_port {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+index 5896e8a5d86b..2602940c2077 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
+@@ -51,6 +51,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+ 	pinctrl-names = "default";
++	hdmi-supply = <&hdmi_5v>;
+ };
+ 
+ &hdmi_tx_tmds_port {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index 313f88f8759e..782e9edac805 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -271,6 +271,7 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+ 	pinctrl-names = "default";
++	hdmi-supply = <&hdmi_5v>;
+ };
+ 
+ &hdmi_tx_tmds_port {
 -- 
 2.20.1
 
