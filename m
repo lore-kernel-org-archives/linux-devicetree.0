@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E19CC33CB3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C131EC33CB7
 	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63270208C3
+	by mail.kernel.org (Postfix) with ESMTP id 975D324687
 	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 18:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1579198402;
-	bh=RHq5KA6MrFQbSG6ghh22vQJQkUizlnq0ohvo2sidYYU=;
+	bh=9u0eXpBkwqV5PC/UoUroJZ4c7kC3ibEt3Lw5Fw1TC9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RLHQBtp7Zxy9rr6HSJHHOSdcS4wuJtkj5UiLWCGZAcdEARUOwGSMXifvbdAvlam87
-	 MwcOqNroSKAsTTOi7cUTnki3i76XZJB5OClZQAwGx7fffwysrpNGF8QuK+ASpdng4R
-	 ZvW1TooaUWJ/bxcO2iGj2EEwGkt7A9tgSJPK9ptE=
+	b=dsb0/iZPhd6Gw6k3ZYwV3LH4cOER8e/tIWHLTRNFcsBqSMbi6o6lBORXI8TXE2My/
+	 EO6nv9PUWsuDdjL9OD9tykPl6QBih+6OB/+SI16pTEAqASw6ctjKXlFF4WuJB0O6go
+	 8YY9NkL6Lt3dJUwdo2sNo4SzyzxL57lYlRGsosVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405241AbgAPRg4 (ORCPT
+        id S2395127AbgAPSNJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 12:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51896 "EHLO mail.kernel.org"
+        Thu, 16 Jan 2020 13:13:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405237AbgAPRgz (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:36:55 -0500
+        id S2405248AbgAPRg5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:36:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C73E246CA;
-        Thu, 16 Jan 2020 17:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B249F20730;
+        Thu, 16 Jan 2020 17:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579196215;
-        bh=RHq5KA6MrFQbSG6ghh22vQJQkUizlnq0ohvo2sidYYU=;
+        s=default; t=1579196217;
+        bh=9u0eXpBkwqV5PC/UoUroJZ4c7kC3ibEt3Lw5Fw1TC9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tArmXpt4OgnTmI+3qpo2OGWbRZzt1+ZHb1IMgerFBLRtJa+8L4Jw9WBPnj8ESihhV
-         hMPzBxJUoYKSA6BGGa3axSl8/1nohbxeUePMrWvEiZVTNnwJ52pJb2xpNV4AWcNXrW
-         h3JBpNHH/YXa422v464ip1XJ7PmnftXxB9fTY1pU=
+        b=Ul2J8HR91p0EDOaxwLgT/pwMvCMAN0MmJlmTwMHoJVvuOlYTX2oiQWB076Zftdvxa
+         dAqOX2Gn7Y/+M5JPYmn4DPrBDRZA9mKuRIWvarbGh+dr8mSsPSRyvTOk0ooeMbaKOX
+         S0xg7s264t1/H3lH7ycKJRTjxLZu9jxtXXu+O+34=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vladimir Zapolskiy <vz@mleia.com>, Sasha Levin <sashal@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 050/251] ARM: dts: lpc32xx: add required clocks property to keypad device node
-Date:   Thu, 16 Jan 2020 12:33:19 -0500
-Message-Id: <20200116173641.22137-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 052/251] ARM: dts: lpc32xx: fix ARM PrimeCell LCD controller variant
+Date:   Thu, 16 Jan 2020 12:33:21 -0500
+Message-Id: <20200116173641.22137-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
 References: <20200116173641.22137-1-sashal@kernel.org>
@@ -60,34 +60,32 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 From: Vladimir Zapolskiy <vz@mleia.com>
 
-[ Upstream commit 3e88bc38b9f6fe4b69cecf81badd3c19fde97f97 ]
+[ Upstream commit 7a0790a4121cbcd111cc537cdc801c46ccb789ee ]
 
-NXP LPC32xx keypad controller requires a clock property to be defined.
+ARM PrimeCell PL111 LCD controller is found on On NXP LPC3230
+and LPC3250 SoCs variants, the original reference in compatible
+property to an older one ARM PrimeCell PL110 is invalid.
 
-The change fixes the driver initialization problem:
-
-  lpc32xx_keys 40050000.key: failed to get clock
-  lpc32xx_keys: probe of 40050000.key failed with error -2
-
-Fixes: 93898eb775e5 ("arm: dts: lpc32xx: add clock properties to device nodes")
+Fixes: e04920d9efcb3 ("ARM: LPC32xx: DTS files for device tree conversion")
 Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/lpc32xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 5fa3111731cb..da375813afd0 100644
+index 6bd196457ccc..3adbbaff7971 100644
 --- a/arch/arm/boot/dts/lpc32xx.dtsi
 +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -462,6 +462,7 @@
- 			key: key@40050000 {
- 				compatible = "nxp,lpc3220-key";
- 				reg = <0x40050000 0x1000>;
-+				clocks = <&clk LPC32XX_CLK_KEY>;
- 				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+@@ -139,7 +139,7 @@
+ 		};
+ 
+ 		clcd: clcd@31040000 {
+-			compatible = "arm,pl110", "arm,primecell";
++			compatible = "arm,pl111", "arm,primecell";
+ 			reg = <0x31040000 0x1000>;
+ 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk LPC32XX_CLK_LCD>;
 -- 
 2.20.1
 
