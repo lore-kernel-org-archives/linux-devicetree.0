@@ -2,241 +2,382 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA11C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 17:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99015C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 17:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01ACD2083E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 17:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="W3mHfGce"
+	by mail.kernel.org (Postfix) with ESMTP id 65BB82072B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 17:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgAQREc (ORCPT
+        id S1726973AbgAQRRZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 12:04:32 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37942 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726559AbgAQREc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jan 2020 12:04:32 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HH2uJ1009670;
-        Fri, 17 Jan 2020 18:04:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=2SUWeiNhV6oNErDN+s1Xmml+Kuc8NdnwiZ6aj9UFf4U=;
- b=W3mHfGceOea4n98Lrzj+LiyDzCa5aICL0+rhY58p2pPGmoqJmfPKKcMB5xhmUchZv7iq
- gFaq0hzj99NyKri4GS2528mFiW276I63t3w/afiKtkJQIdksHayrbQoQpNW1ICPDXpLd
- rTesoHPFq4t7UeBbP2/Ze+0rYfcdYH0IksMbLKUGRbZBNcErU1LWRWWzsqz3BkPzNmyR
- IStn8Ya2fQwQikP3SOxe9NUgsiXSPHWxyFibcXiZq+xgJ+p+mhHPDPnclzLM3o+9Px4z
- xIRgfX2YW3WuZn/iX5aYidKR1LbsX754+/b1MMwYOmzU8LpW9dCutLHP4c7JVQKSmjkN gA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xk0qy4kcs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jan 2020 18:04:04 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7C198100038;
-        Fri, 17 Jan 2020 18:04:02 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C93BE22168E;
-        Fri, 17 Jan 2020 18:04:02 +0100 (CET)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE2.st.com (10.75.127.17)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jan 2020 18:04:02
- +0100
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
-        <robh@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
-Subject: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
-Date:   Fri, 17 Jan 2020 18:03:52 +0100
-Message-ID: <20200117170352.16040-1-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jan 2020 12:17:25 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2279 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726684AbgAQRRZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 12:17:25 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 4177884F9168D7895625;
+        Fri, 17 Jan 2020 17:17:23 +0000 (GMT)
+Received: from lhreml710-chm.china.huawei.com (10.201.108.61) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 17 Jan 2020 17:17:22 +0000
+Received: from localhost (10.202.226.57) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Fri, 17 Jan
+ 2020 17:17:22 +0000
+Date:   Fri, 17 Jan 2020 17:17:21 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>,
+        Artur Rojek <contact@artur-rojek.eu>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/5] IIO: Ingenic JZ47xx: Add touchscreen mode.
+Message-ID: <20200117171721.000052d2@Huawei.com>
+In-Reply-To: <1578927540.3.0@crapouillou.net>
+References: <20200105001639.142061-1-contact@artur-rojek.eu>
+        <20200105001639.142061-3-contact@artur-rojek.eu>
+        <20200111114609.1979a8ff@archlinux>
+        <1578927540.3.0@crapouillou.net>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_04:2020-01-16,2020-01-17 signatures=0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.226.57]
+X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
+On Mon, 13 Jan 2020 11:59:00 -0300
+Paul Cercueil <paul@crapouillou.net> wrote:
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
-Changes in v2:
-- Add "additionalProperties: false"
-- Also change minItems to 2 for dmas property, as both DMAs are required.
+> Hi Jonathan,
+> 
+> 
+> Le sam., janv. 11, 2020 at 11:46, Jonathan Cameron 
+> <jic23@jic23.retrosnub.co.uk> a écrit :
+> > On Sun,  5 Jan 2020 01:16:37 +0100
+> > Artur Rojek <contact@artur-rojek.eu> wrote:
+> >   
+> >>  Implement support for the touchscreen mode found in JZ47xx SoCs ADC.  
+> > This needs more description.
+> > 
+> > Looks like it enables a kfifo and also selects the callback buffer
+> > stuff to run with a generic touchscreen iio-> input driver.
+> > 
+> > A few other bits inline, but basically fine.
+> > 
+> > I've never really thought about whether we support a CB buffer
+> > without anything on the IIO side.   That should be possible,
+> > but I'm not sure what odd corner cases will turn up.  I'm guessing
+> > there are some, or you'd not have bothered exposing it here?  
+> 
+> I'm sorry, what do you mean by "nothing on the IIO side"?
 
-Changes in v3:
-- Drop minItems/maxItems for dmas property, remove ref to stm32-dma.txt.
----
- .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
- .../bindings/sound/st,stm32-spdifrx.yaml      | 80 +++++++++++++++++++
- 2 files changed, 80 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+If these channels are only used for touchscreen, why expose them
+as an IIO Kfifo?
 
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-deleted file mode 100644
-index 33826f2459fa..000000000000
---- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-+++ /dev/null
-@@ -1,56 +0,0 @@
--STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
--
--The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
--IEC-60958 and IEC-61937.
--
--Required properties:
--  - compatible: should be "st,stm32h7-spdifrx"
--  - reg: cpu DAI IP base address and size
--  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
--  - clock-names: must contain "kclk"
--  - interrupts: cpu DAI interrupt line
--  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
--    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
--  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
--
--Optional properties:
--  - resets: Reference to a reset controller asserting the SPDIFRX
--
--The device node should contain one 'port' child node with one child 'endpoint'
--node, according to the bindings defined in Documentation/devicetree/bindings/
--graph.txt.
--
--Example:
--spdifrx: spdifrx@40004000 {
--	compatible = "st,stm32h7-spdifrx";
--	reg = <0x40004000 0x400>;
--	clocks = <&rcc SPDIFRX_CK>;
--	clock-names = "kclk";
--	interrupts = <97>;
--	dmas = <&dmamux1 2 93 0x400 0x0>,
--	       <&dmamux1 3 94 0x400 0x0>;
--	dma-names = "rx", "rx-ctrl";
--	pinctrl-0 = <&spdifrx_pins>;
--	pinctrl-names = "default";
--
--	spdifrx_port: port {
--		cpu_endpoint: endpoint {
--			remote-endpoint = <&codec_endpoint>;
--		};
--	};
--};
--
--spdif_in: spdif-in {
--	compatible = "linux,spdif-dir";
--
--	codec_port: port {
--		codec_endpoint: endpoint {
--			remote-endpoint = <&cpu_endpoint>;
--		};
--	};
--};
--
--soundcard {
--	compatible = "audio-graph-card";
--	dais = <&spdifrx_port>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-new file mode 100644
-index 000000000000..b7f7dc452231
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
-+
-+maintainers:
-+  - Olivier Moysan <olivier.moysan@st.com>
-+
-+description: |
-+  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
-+  IEC-60958 and IEC-61937.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,stm32h7-spdifrx
-+
-+  "#sound-dai-cells":
-+    const: 0
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: kclk
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: audio data capture DMA
-+      - description: IEC status bits capture DMA
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: rx-ctrl
-+
-+  resets:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - "#sound-dai-cells"
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - dmas
-+  - dma-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    spdifrx: spdifrx@40004000 {
-+        compatible = "st,stm32h7-spdifrx";
-+        #sound-dai-cells = <0>;
-+        reg = <0x40004000 0x400>;
-+        clocks = <&rcc SPDIF_K>;
-+        clock-names = "kclk";
-+        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+        dmas = <&dmamux1 2 93 0x400 0x0>,
-+               <&dmamux1 3 94 0x400 0x0>;
-+        dma-names = "rx", "rx-ctrl";
-+        pinctrl-0 = <&spdifrx_pins>;
-+        pinctrl-names = "default";
-+    };
-+
-+...
--- 
-2.17.1
+That's the IIO userspace interface, but you really just want them
+to be available via the cb buffer (which isn't actually a buffer,
+it calls the function without any buffering).
+
+J
+> 
+> 
+> > 
+> > Thanks
+> > 
+> > Jonathan
+> > 
+> >   
+> >> 
+> >>  Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+> >>  Tested-by: Paul Cercueil <paul@crapouillou.net>
+> >>  ---
+> >>   drivers/iio/adc/Kconfig       |   3 +
+> >>   drivers/iio/adc/ingenic-adc.c | 120 
+> >> +++++++++++++++++++++++++++++++++-
+> >>   2 files changed, 121 insertions(+), 2 deletions(-)
+> >> 
+> >>  diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> >>  index 5d8540b7b427..dabbf15032af 100644
+> >>  --- a/drivers/iio/adc/Kconfig
+> >>  +++ b/drivers/iio/adc/Kconfig
+> >>  @@ -446,6 +446,9 @@ config INA2XX_ADC
+> >>   config INGENIC_ADC
+> >>   	tristate "Ingenic JZ47xx SoCs ADC driver"
+> >>   	depends on MIPS || COMPILE_TEST
+> >>  +	select IIO_BUFFER
+> >>  +	select IIO_BUFFER_CB  
+> > 
+> > Feels like IIO_BUFFER_CB should be selected by the driver that
+> > uses that functionality rather than this one.
+> >   
+> >>  +	select IIO_KFIFO_BUF
+> >>   	help
+> >>   	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC 
+> >> unit.
+> >> 
+> >>  diff --git a/drivers/iio/adc/ingenic-adc.c 
+> >> b/drivers/iio/adc/ingenic-adc.c
+> >>  index 7a24bc1dabe1..4dbf15fdd95d 100644
+> >>  --- a/drivers/iio/adc/ingenic-adc.c
+> >>  +++ b/drivers/iio/adc/ingenic-adc.c
+> >>  @@ -8,7 +8,10 @@
+> >> 
+> >>   #include <dt-bindings/iio/adc/ingenic,adc.h>
+> >>   #include <linux/clk.h>
+> >>  +#include <linux/iio/buffer.h>
+> >>   #include <linux/iio/iio.h>
+> >>  +#include <linux/iio/kfifo_buf.h>
+> >>  +#include <linux/interrupt.h>
+> >>   #include <linux/io.h>
+> >>   #include <linux/iopoll.h>
+> >>   #include <linux/kernel.h>
+> >>  @@ -20,6 +23,8 @@
+> >>   #define JZ_ADC_REG_CFG			0x04
+> >>   #define JZ_ADC_REG_CTRL			0x08
+> >>   #define JZ_ADC_REG_STATUS		0x0c
+> >>  +#define JZ_ADC_REG_ADSAME		0x10
+> >>  +#define JZ_ADC_REG_ADWAIT		0x14
+> >>   #define JZ_ADC_REG_ADTCH		0x18
+> >>   #define JZ_ADC_REG_ADBDAT		0x1c
+> >>   #define JZ_ADC_REG_ADSDAT		0x20
+> >>  @@ -28,6 +33,9 @@
+> >>   #define JZ_ADC_REG_ENABLE_PD		BIT(7)
+> >>   #define JZ_ADC_REG_CFG_AUX_MD		(BIT(0) | BIT(1))
+> >>   #define JZ_ADC_REG_CFG_BAT_MD		BIT(4)
+> >>  +#define JZ_ADC_REG_CFG_PULL_UP(n)	((n) << 16)
+> >>  +#define JZ_ADC_REG_CFG_SAMPLE_NUM(n)	((n) << 10)
+> >>  +#define JZ_ADC_REG_CFG_TOUCH_OPS_MASK	(BIT(31) | GENMASK(23, 10))
+> >>   #define JZ_ADC_REG_ADCLK_CLKDIV_LSB	0
+> >>   #define JZ4725B_ADC_REG_ADCLK_CLKDIV10US_LSB	16
+> >>   #define JZ4770_ADC_REG_ADCLK_CLKDIV10US_LSB	8
+> >>  @@ -44,6 +52,14 @@
+> >>   #define JZ4770_ADC_BATTERY_VREF			6600
+> >>   #define JZ4770_ADC_BATTERY_VREF_BITS		12
+> >> 
+> >>  +#define JZ_ADC_IRQ_AUX			BIT(0)
+> >>  +#define JZ_ADC_IRQ_BATTERY		BIT(1)
+> >>  +#define JZ_ADC_IRQ_TOUCH		BIT(2)
+> >>  +#define JZ_ADC_IRQ_PEN_DOWN		BIT(3)
+> >>  +#define JZ_ADC_IRQ_PEN_UP		BIT(4)
+> >>  +#define JZ_ADC_IRQ_PEN_DOWN_SLEEP	BIT(5)
+> >>  +#define JZ_ADC_IRQ_SLEEP		BIT(7)
+> >>  +
+> >>   struct ingenic_adc;
+> >> 
+> >>   struct ingenic_adc_soc_data {
+> >>  @@ -411,6 +427,30 @@ static const struct iio_info ingenic_adc_info 
+> >> = {
+> >>   };
+> >> 
+> >>   static const struct iio_chan_spec ingenic_channels[] = {
+> >>  +	{
+> >>  +		.extend_name = "touchscreen_xp",  
+> > 
+> > Note that adding extended names:
+> > 
+> > 1) Needs documenting as it create ABI - so something in
+> > Documentation/ABI/testing/sysfs-bus-iio-*
+> > 
+> > 2) Breaks any generic userspace application.
+> > 
+> > Why can't we use modified and an axis to identify this?  
+> 
+> I'm in a good place to know that extended names are bad. The problem 
+> here is that Xn/Yn channels will be added later (we have a board that 
+> has one joystick connected to Xp/Yp, and a second joystick connected to 
+> Xn/Yn). I assume that it is not possible to have two channels with the 
+> same type and modifier?
+> 
+> Alternatively I believe we could also have the first two channels as 
+> X/Y single-ended, and then two channels as X/Y differential, and do 
+> some easy math in the joystick driver, but that would make it pretty 
+> hardware-specific.
+> 
+> Cheers,
+> -Paul
+> 
+> >   
+> >>  +		.type = IIO_POSITIONRELATIVE,
+> >>  +		.indexed = 1,
+> >>  +		.channel = INGENIC_ADC_TOUCH_XP,
+> >>  +		.scan_index = 0,
+> >>  +		.scan_type = {
+> >>  +			.sign = 'u',
+> >>  +			.realbits = 12,
+> >>  +			.storagebits = 16
+> >>  +		},
+> >>  +	},
+> >>  +	{
+> >>  +		.extend_name = "touchscreen_yp",
+> >>  +		.type = IIO_POSITIONRELATIVE,
+> >>  +		.indexed = 1,
+> >>  +		.channel = INGENIC_ADC_TOUCH_YP,
+> >>  +		.scan_index = 1,
+> >>  +		.scan_type = {
+> >>  +			.sign = 'u',
+> >>  +			.realbits = 12,
+> >>  +			.storagebits = 16
+> >>  +		},
+> >>  +	},
+> >>   	{
+> >>   		.extend_name = "aux",
+> >>   		.type = IIO_VOLTAGE,
+> >>  @@ -418,6 +458,7 @@ static const struct iio_chan_spec 
+> >> ingenic_channels[] = {
+> >>   				      BIT(IIO_CHAN_INFO_SCALE),
+> >>   		.indexed = 1,
+> >>   		.channel = INGENIC_ADC_AUX,
+> >>  +		.scan_index = -1
+> >>   	},
+> >>   	{
+> >>   		.extend_name = "battery",
+> >>  @@ -428,6 +469,7 @@ static const struct iio_chan_spec 
+> >> ingenic_channels[] = {
+> >>   						BIT(IIO_CHAN_INFO_SCALE),
+> >>   		.indexed = 1,
+> >>   		.channel = INGENIC_ADC_BATTERY,
+> >>  +		.scan_index = -1
+> >>   	},
+> >>   	{ /* Must always be last in the array. */
+> >>   		.extend_name = "aux2",
+> >>  @@ -436,16 +478,70 @@ static const struct iio_chan_spec 
+> >> ingenic_channels[] = {
+> >>   				      BIT(IIO_CHAN_INFO_SCALE),
+> >>   		.indexed = 1,
+> >>   		.channel = INGENIC_ADC_AUX2,
+> >>  +		.scan_index = -1
+> >>   	},
+> >>   };
+> >> 
+> >>  +static int ingenic_adc_buffer_enable(struct iio_dev *iio_dev)
+> >>  +{
+> >>  +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> >>  +
+> >>  +	clk_enable(adc->clk);
+> >>  +	/* It takes significant time for the touchscreen hw to stabilize. 
+> >> */
+> >>  +	msleep(50);
+> >>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK,
+> >>  +			       JZ_ADC_REG_CFG_SAMPLE_NUM(4) |
+> >>  +			       JZ_ADC_REG_CFG_PULL_UP(4));
+> >>  +	writew(80, adc->base + JZ_ADC_REG_ADWAIT);
+> >>  +	writew(2, adc->base + JZ_ADC_REG_ADSAME);
+> >>  +	writeb((u8)~JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_CTRL);
+> >>  +	writel(0, adc->base + JZ_ADC_REG_ADTCH);
+> >>  +	ingenic_adc_enable(adc, 2, true);
+> >>  +
+> >>  +	return 0;
+> >>  +}
+> >>  +
+> >>  +static int ingenic_adc_buffer_disable(struct iio_dev *iio_dev)
+> >>  +{
+> >>  +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> >>  +
+> >>  +	ingenic_adc_enable(adc, 2, false);
+> >>  +	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
+> >>  +	writeb(0xff, adc->base + JZ_ADC_REG_STATUS);
+> >>  +	ingenic_adc_set_config(adc, JZ_ADC_REG_CFG_TOUCH_OPS_MASK, 0);
+> >>  +	writew(0, adc->base + JZ_ADC_REG_ADSAME);
+> >>  +	writew(0, adc->base + JZ_ADC_REG_ADWAIT);
+> >>  +	clk_disable(adc->clk);
+> >>  +
+> >>  +	return 0;
+> >>  +}
+> >>  +
+> >>  +static const struct iio_buffer_setup_ops ingenic_buffer_setup_ops 
+> >> = {
+> >>  +	.postenable = &ingenic_adc_buffer_enable,
+> >>  +	.predisable = &ingenic_adc_buffer_disable
+> >>  +};
+> >>  +
+> >>  +static irqreturn_t ingenic_adc_irq(int irq, void *data)
+> >>  +{
+> >>  +	struct iio_dev *iio_dev = data;
+> >>  +	struct ingenic_adc *adc = iio_priv(iio_dev);
+> >>  +	u32 tdat;
+> >>  +
+> >>  +	tdat = readl(adc->base + JZ_ADC_REG_ADTCH);
+> >>  +	iio_push_to_buffers(iio_dev, &tdat);
+> >>  +	writeb(JZ_ADC_IRQ_TOUCH, adc->base + JZ_ADC_REG_STATUS);
+> >>  +
+> >>  +	return IRQ_HANDLED;
+> >>  +}
+> >>  +
+> >>   static int ingenic_adc_probe(struct platform_device *pdev)
+> >>   {
+> >>   	struct device *dev = &pdev->dev;
+> >>   	struct iio_dev *iio_dev;
+> >>   	struct ingenic_adc *adc;
+> >>   	const struct ingenic_adc_soc_data *soc_data;
+> >>  -	int ret;
+> >>  +	struct iio_buffer *buffer;
+> >>  +	int irq, ret;
+> >> 
+> >>   	soc_data = device_get_match_data(dev);
+> >>   	if (!soc_data)
+> >>  @@ -460,6 +556,18 @@ static int ingenic_adc_probe(struct 
+> >> platform_device *pdev)
+> >>   	mutex_init(&adc->aux_lock);
+> >>   	adc->soc_data = soc_data;
+> >> 
+> >>  +	irq = platform_get_irq(pdev, 0);
+> >>  +	if (irq < 0) {
+> >>  +		dev_err(dev, "Failed to get irq: %d\n", irq);
+> >>  +		return irq;
+> >>  +	}
+> >>  +	ret = devm_request_irq(dev, irq, ingenic_adc_irq, 0,
+> >>  +			       dev_name(dev), iio_dev);
+> >>  +	if (ret < 0) {
+> >>  +		dev_err(dev, "Failed to request irq: %d\n", ret);
+> >>  +		return ret;
+> >>  +	}
+> >>  +
+> >>   	adc->base = devm_platform_ioremap_resource(pdev, 0);
+> >>   	if (IS_ERR(adc->base))
+> >>   		return PTR_ERR(adc->base);
+> >>  @@ -499,7 +607,8 @@ static int ingenic_adc_probe(struct 
+> >> platform_device *pdev)
+> >> 
+> >>   	iio_dev->dev.parent = dev;
+> >>   	iio_dev->name = "jz-adc";
+> >>  -	iio_dev->modes = INDIO_DIRECT_MODE;
+> >>  +	iio_dev->modes = INDIO_DIRECT_MODE | INDIO_BUFFER_SOFTWARE;
+> >>  +	iio_dev->setup_ops = &ingenic_buffer_setup_ops;
+> >>   	iio_dev->channels = ingenic_channels;
+> >>   	iio_dev->num_channels = ARRAY_SIZE(ingenic_channels);
+> >>   	/* Remove AUX2 from the list of supported channels. */
+> >>  @@ -507,6 +616,13 @@ static int ingenic_adc_probe(struct 
+> >> platform_device *pdev)
+> >>   		iio_dev->num_channels -= 1;
+> >>   	iio_dev->info = &ingenic_adc_info;
+> >> 
+> >>  +	buffer = devm_iio_kfifo_allocate(dev);
+> >>  +	if (!buffer) {
+> >>  +		dev_err(dev, "Unable to add IIO buffer\n");
+> >>  +		return -ENOMEM;
+> >>  +	}
+> >>  +	iio_device_attach_buffer(iio_dev, buffer);
+> >>  +
+> >>   	ret = devm_iio_device_register(dev, iio_dev);
+> >>   	if (ret)
+> >>   		dev_err(dev, "Unable to register IIO device\n");  
+> >   
+> 
+> 
+
 
