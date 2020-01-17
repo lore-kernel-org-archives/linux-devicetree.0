@@ -2,59 +2,51 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4153BC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FC1C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADCA20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B23720748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgAQIpI (ORCPT
+        id S1729021AbgAQIrA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:45:08 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57517 "EHLO
+        Fri, 17 Jan 2020 03:47:00 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41475 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729219AbgAQIpI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 03:45:08 -0500
+        with ESMTP id S1728901AbgAQIrA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 03:47:00 -0500
 Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
         by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1isNFY-0004Ep-AO; Fri, 17 Jan 2020 09:45:04 +0100
+        id 1isNHM-0004XR-RC; Fri, 17 Jan 2020 09:46:56 +0100
 Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
         (envelope-from <mfe@pengutronix.de>)
-        id 1isNFX-0003wZ-EE; Fri, 17 Jan 2020 09:45:03 +0100
-Date:   Fri, 17 Jan 2020 09:45:03 +0100
+        id 1isNHM-00043o-GH; Fri, 17 Jan 2020 09:46:56 +0100
+Date:   Fri, 17 Jan 2020 09:46:56 +0100
 From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
-Message-ID: <20200117084503.hysueo4rkxhfhrei@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org,
+        Adam.Thomson.Opensource@diasemi.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] Add DA9062 GPIO support
+Message-ID: <20200117084656.f466wygv2bvn4kqc@pengutronix.de>
 References: <20200108104746.1765-1-m.felsch@pengutronix.de>
- <20200108104746.1765-4-m.felsch@pengutronix.de>
- <20200115162915.ccudevxvre3v5c3d@pengutronix.de>
- <CACRpkdbwuaA6CnUW_s1i=cf1ix_jHrqGoZZENXdAG-VXcAd_Mw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbwuaA6CnUW_s1i=cf1ix_jHrqGoZZENXdAG-VXcAd_Mw@mail.gmail.com>
+In-Reply-To: <20200108104746.1765-1-m.felsch@pengutronix.de>
 X-Sent-From: Pengutronix Hildesheim
 X-URL:  http://www.pengutronix.de/
 X-IRC:  #ptxdist @freenode
 X-Accept-Language: de,en
 X-Accept-Content-Type: text/plain
-X-Uptime: 09:43:39 up 63 days, 2 min, 56 users,  load average: 0.02, 0.03,
+X-Uptime: 09:45:05 up 63 days, 3 min, 56 users,  load average: 0.06, 0.04,
  0.00
 User-Agent: NeoMutt/20170113 (1.7.2)
 X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
@@ -66,29 +58,57 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-01-17 09:16, Linus Walleij wrote:
-> On Wed, Jan 15, 2020 at 5:29 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> 
-> > Hi Linus,
-> >
-> > On 20-01-08 11:47, Marco Felsch wrote:
-> > > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
-> > > be used as input, output or have a special use-case.
-> > >
-> > > The patch adds the support for the normal input/output use-case.
-> > >
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> >
-> > Is it possible to get this into 5.6?
-> 
-> It's patch 3/3 and patch 2/3 which makes it useful is not merged?
-> 
-> If you are convinced that 2/3 will be merged I can apply it.
+Hi,
 
-I will ping the MFD Guys to.
+gentle ping..
+
+On 20-01-08 11:47, Marco Felsch wrote:
+> Hi,
+> 
+> this v4 adds the missing PIN_CONFIG_BIAS_DISABLE support so
+> pull-ups/-downs can be disconnected. I also added all git-tag already
+> made on my v3 [1].
+> 
+> @Lee
+> checkpatch complains about the "Acked-for-MFD-by" tag. I kept it but is
+> this behaviour on purpose?
+> 
+> Regards,
+>   Marco
+> 
+> [1] https://lkml.org/lkml/2019/12/12/601
+> 
+> Marco Felsch (3):
+>   dt-bindings: mfd: da9062: add gpio bindings
+>   mfd: da9062: add support for the DA9062 GPIOs in the core
+
+@Lee
+Can you apply those if everything is okay?
+
+>   pinctrl: da9062: add driver support
+
+This one is for Linus.
 
 Regards,
   Marco
 
-> Yours,
-> Linus Walleij
+>  .../devicetree/bindings/mfd/da9062.txt        |  10 +
+>  MAINTAINERS                                   |   1 +
+>  drivers/mfd/da9062-core.c                     |  16 +-
+>  drivers/pinctrl/Kconfig                       |  12 +
+>  drivers/pinctrl/Makefile                      |   1 +
+>  drivers/pinctrl/pinctrl-da9062.c              | 300 ++++++++++++++++++
+>  6 files changed, 339 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pinctrl/pinctrl-da9062.c
+> 
+> -- 
+> 2.20.1
+> 
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
