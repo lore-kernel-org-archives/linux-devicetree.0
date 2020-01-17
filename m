@@ -2,174 +2,150 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C57C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD23C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB6AD2087E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C64A21582
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579272218;
+	bh=l9dNkpy42xWo2MvF+JA9gM6i4jvOvRUbfjb3y1NTJ4Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S2krX2vCh7B6777IF4Ts8xivLs5g4f1p1bCJiahz76k4NNFlnFPtxlRYosleP0XsR
+	 2RMLOsUAqukZ3D85O3JiqVw3yLyleJW3U8DvUWjoqEcGx85rO2fZwNm3lk2LWOM0tB
+	 J905oTGxr2ON994NU964uttAttDI/n9xVzVV5qno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgAQOXN (ORCPT
+        id S1727691AbgAQOnh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:23:13 -0500
-Received: from mga14.intel.com ([192.55.52.115]:56284 "EHLO mga14.intel.com"
+        Fri, 17 Jan 2020 09:43:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbgAQOXJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:23:09 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 06:23:09 -0800
-X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
-   d="scan'208";a="373663006"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 06:23:06 -0800
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 4965C20836; Fri, 17 Jan 2020 16:23:04 +0200 (EET)
-Date:   Fri, 17 Jan 2020 16:23:04 +0200
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v9 09/12] lib/vsprintf: Make use of fwnode API to obtain
- node names and separators
-Message-ID: <20200117142304.GQ5440@paasikivi.fi.intel.com>
-References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
- <20191003123219.11237-10-sakari.ailus@linux.intel.com>
- <20200102222041.GA29067@roeck-us.net>
- <20200103112145.GM19828@paasikivi.fi.intel.com>
- <20200103144253.y6fnw44oe7asyniz@pathway.suse.cz>
- <20200103183555.GA28369@roeck-us.net>
- <20200113091751.d63u7jbyh6p2rj23@pathway.suse.cz>
+        id S1727040AbgAQOnh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:43:37 -0500
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC7621582;
+        Fri, 17 Jan 2020 14:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579272215;
+        bh=l9dNkpy42xWo2MvF+JA9gM6i4jvOvRUbfjb3y1NTJ4Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m321RqFtUFJMgNkG+s8ex5ThgxIMpwaC62Yfe8crlUBqb9cl52m6bOP1DIpBll05b
+         BFCUTk38T937s2LUbQ/bDuwRqQoGQTQu5jqMnWbW3s2fseQxRK6jMVgkFwQBrgJGv5
+         5AmYGZNtE6yKpyZtc+p1vS01TPGwrZSX3uBNyqio=
+Received: by mail-qt1-f174.google.com with SMTP id w30so21872964qtd.12;
+        Fri, 17 Jan 2020 06:43:35 -0800 (PST)
+X-Gm-Message-State: APjAAAW3Jp4b59heWbfClBim6t3V8m6Ppz651dysuAxt3CpSKhkcdwLI
+        GWPbTv/CnYJqmhuV6YlCp4sc258Dx2bCPX82nw==
+X-Google-Smtp-Source: APXvYqxEVbHzmpE4xONFjszFZpsuqS3YBUpF7tWlys7E6wSsvdHOS4H0qRXHF0jQ0zFp5mHDccmIf9qS92ljgYLITlY=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr7774293qtg.110.1579272214805;
+ Fri, 17 Jan 2020 06:43:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113091751.d63u7jbyh6p2rj23@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200113181625.3130-1-alexandre.torgue@st.com>
+ <20200113181625.3130-2-alexandre.torgue@st.com> <20200116005741.GB54439@umbus>
+ <d2594b79-a45d-dcac-3642-90016a1408b8@st.com> <20200117090937.GU54439@umbus>
+In-Reply-To: <20200117090937.GU54439@umbus>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 17 Jan 2020 08:43:23 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+Message-ID: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        Steve McIntyre <steve.mcintyre@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Petr,
+On Fri, Jan 17, 2020 at 6:26 AM David Gibson
+<david@gibson.dropbear.id.au> wrote:
+>
+> On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
+> > Hi David
+> >
+> > On 1/16/20 1:57 AM, David Gibson wrote:
+> > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
+> > > > This commit adds the possibility to add build information for a DTB.
+> > > > Build information can be: build date, DTS version, "who built the DTB"
+> > > > (same kind of information that we get in Linux with the Linux banner).
+> > > >
+> > > > To do this, an extra option "-B" using an information file as argument
+> > > > has been added. If this option is used, input device tree is appended with
+> > > > a new string property "Build-info". This property is built with information
+> > > > found in information file given as argument. This file has to be generated
+> > > > by user and shouldn't exceed 256 bytes.
+> > > >
+> > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> > >
+> > > At the very least, this patch of the series will need to be sent to
+> > > upstream dtc first.
+> >
+> > Ok sorry. I thought that sending all the series would give more
+> > information.
+>
+> That's fair enough, but in order to merge, you'll need to post against
+> upstream dtc.
+>
+> > > I'm also not terribly clear on what you're trying to accomplish here,
+> > > and why it's useful.
+> >
+> > Let's take Kernel boot at example (but could be extend to other DTB "users"
+> > like U-Boot). When Linux kernel booting we get a log that gives useful
+> > information about kernel image: source version, build date, people who built
+> > the kernel image, compiler version. This information is useful for debug and
+> > support. The aim is to get same kind of information but for the DTB.
+> >
+> > > Since you're doing this specifically for use with dtbs built in the
+> > > kernel build, could you just use a:
+> > >     Build-info = /incbin/ "build-info.txt";
+> > > in each of the in-kernel .dts files?
+> >
+> > My first idea was to not modify all existing .dts files. Adding an extra
+> > option in dtc is (for me) the softer way to do it. I mean, compile
+> > information should come through compiler without modify .dts files outside
+> > from dtc. In this way it will be easy to everybody using dtc (inside our
+> > outside Linux tree) to add dtb build info (even if they don't how to write a
+> > dts file).
+>
+> But you're not really having this information coming from the
+> compiler.  Instead you're adding a compiler option that just force
+> includes another file into the generated tree, and it's up to your
+> build scripts to put something useful into that file.
+>
+> I don't really see that as preferable to modifying the .dts files.
+>
+> I also dislike the fact that the option as proposed is much more
+> general than the name suggests, but also very similar too, but much
+> more specific than the existing /incbin/ option.
+>
+> What might be better would be to have a dtc option which force appends
+> an extra .dts to the mail .dts compiled.  You can then put an overlay
+> template in that file, something like:
+>
+> &{/} {
+>         linux,build-info = /incbin/ "build-info.txt;
+> }
 
-On Mon, Jan 13, 2020 at 10:17:51AM +0100, Petr Mladek wrote:
-> On Fri 2020-01-03 10:35:55, Guenter Roeck wrote:
-> > On Fri, Jan 03, 2020 at 03:42:53PM +0100, Petr Mladek wrote:
-> > > On Fri 2020-01-03 13:21:45, Sakari Ailus wrote:
-> > > > Hi Guenter,
-> > > > 
-> > > > On Thu, Jan 02, 2020 at 02:20:41PM -0800, Guenter Roeck wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On Thu, Oct 03, 2019 at 03:32:16PM +0300, Sakari Ailus wrote:
-> > > > > > Instead of implementing our own means of discovering parent nodes, node
-> > > > > > names or counting how many parents a node has, use the newly added
-> > > > > > functions in the fwnode API to obtain that information.
-> > > > > > 
-> > > > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > > > > > ---
-> > > > > 
-> > > > > This patch results in a lockdep splat when running one of my qemu
-> > > > > emulations. See below for log and bisect results. A complete log
-> > > > > is available at
-> > > > > https://kerneltests.org/builders/qemu-arm-master/builds/1408/steps/qemubuildcommand/logs/stdio
-> > > > > 
-> > > > > Guenter
-> > > > 
-> > > > Thank you for reporting this.
-> > > > 
-> > > > I looked into the issue, and indeed I can conform the patch introduces this
-> > > > as it takes the devtree_lock for printing the name of the fwnode. There is
-> > > 
-> > > I guess that you meant "is not".
+I like this suggestion either as an include another dts file or an
+overlay. The latter could be useful as a way to maintain current dtb
+files while splitting the source files into base and overlay dts
+files.
 
-Right, that's what I meant. Sometimes small words can make a big
-difference. :-)
+But no, let's not prepend this with 'linux'. It's not a property
+specific for Linux to consume.
 
-> > > 
-> > > 
-> > > > however chance of a deadlock in practice as the code in mm/slub.c does not
-> > > > deal with fwnodes (in which case acquiring devtree_lock could be possible),
-> > > > maybe for other reasons as well. The patch however introduces an unpleasant
-> > > > source of such warnings.
-> > > 
-> > > I agree that it is a false positive. alloc/free is called in OF code
-> > > under devtree_lock. But OF code is not called from alloc/free (slub.c)
-> > > and it should not happen.
-> > > 
-> > 
-> > Assuming that memory allocation is indeed called from code holding
-> > devtree_lock: The problem, as I see it, is that the order of acquiring
-> > locks is different. In OF code, the order is
-> > 	devtree_lock
-> > 	(&n->list_lock)->rlock
-> 
-> Yes, this happens when alloc is called in OF code under devtree_lock.
-> 
-> > Elsewhere, in %pOF print sequences, it is
-> > 	(&n->list_lock)->rlock
-> > 	devtree_lock
-> 
-> I believe that this order does not exist in reality. lockep "just"
-> connected this the two locks via logbuf_lock. When printk() is
-> called in the allocator:
-> 
-> 	(&n->list_lock)->rlock
-> 	logbuf_lock
-> 
-> and when %pOF is used in printk():
-> 
-> 	logbuf_lock
-> 	devtree_lock
-> 
-> From this two lockdep assumes that it might be possible to
-> use %pOF in printk() from allocator code:
-> 
-> 	(&n->list_lock)->rlock
-> 	logbuf_lock
-> 	devtree_lock
-> 
-> But I believe that this does not make sense and never happen reality.
-> 
-> That said, I would still prefer when %pOF could be implemented
-> without the lock. It would make it usable anywhere without any
-> risk of deadlock.
-> 
-> Sakari, what is your opinion, please?
-
-The reason taking that lock is to be able to traverse the device tree data
-structure to find the names of the nodes upto the root node. This happens
-only when the full node name is printed.
-
-Traversing the tree takes place through the fwnode framework, and currently
-the framework uses only the name of the fwnode itself to print the full
-path. It *could* use the full name directly, but that way removing the
-full_name field (taking up some memory right now) would not be possible.
-That said, I don't know if there are plans to do so. A quick look at one
-system tells the size of this memory is around 20 kB.
-
-ACPI does not use such locks in traversing to the tree, but it might do
-that in the future, and avoiding the lock there would also require copying
-the full node name to each node in the system.
-
-If there are plans to avoid having logbuf_lock, then the problem disappears
-with that.
-
-How about disabling the lockdep warning now, and if it seems we're not
-getting rid of the logbuf_lock in a reasonable timeframe, then look at the
-alternatives, such as using the full_name in printing node names instead?
-
--- 
-Kind regards,
-
-Sakari Ailus
+Rob
