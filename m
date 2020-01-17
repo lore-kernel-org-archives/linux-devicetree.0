@@ -2,133 +2,174 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043D8C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C57C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4672192A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pt6oV5Oe"
+	by mail.kernel.org (Postfix) with ESMTP id DB6AD2087E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgAQOQF (ORCPT
+        id S1727580AbgAQOXN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:16:05 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:56638 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQOQE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 09:16:04 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00HEG19M015368;
-        Fri, 17 Jan 2020 08:16:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579270561;
-        bh=19u9Xw6BWk5rmFuzu35uo/8szOm4shzG97TLnJNpWUA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Pt6oV5Oe7HGCOpI2ZubTlMb3Va/OanaLMgY2A4PsJNSv2oSsudiFTnH7uUHTzfjFi
-         2cAgIcAZ4e0xDiqdIJMWSkMUih1R+oIPrEJ8s4AaTSJnDOAX/Mk2YnbGKpR4zsXw/W
-         XHF4kYsg9p5CP7Mk2Ec9CfdpUPKi5lGsDb1obetw=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00HEG1aY085701
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jan 2020 08:16:01 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Jan 2020 08:16:00 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Jan 2020 08:16:00 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00HEFvIN024800;
-        Fri, 17 Jan 2020 08:15:58 -0600
-Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
-To:     Tony Lindgren <tony@atomide.com>, Benoit Parrot <bparrot@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191211140720.10539-1-bparrot@ti.com>
- <20191212174123.GF35479@atomide.com>
- <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
- <20191213152938.GK35479@atomide.com> <20200113165413.i6nbi2i7xyue4fti@ti.com>
- <20200114160422.GQ5885@atomide.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <e72f8de3-fd30-a216-8e6e-934a05259ed6@ti.com>
-Date:   Fri, 17 Jan 2020 16:15:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 17 Jan 2020 09:23:13 -0500
+Received: from mga14.intel.com ([192.55.52.115]:56284 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbgAQOXJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 09:23:09 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 06:23:09 -0800
+X-IronPort-AV: E=Sophos;i="5.70,330,1574150400"; 
+   d="scan'208";a="373663006"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jan 2020 06:23:06 -0800
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 4965C20836; Fri, 17 Jan 2020 16:23:04 +0200 (EET)
+Date:   Fri, 17 Jan 2020 16:23:04 +0200
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v9 09/12] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Message-ID: <20200117142304.GQ5440@paasikivi.fi.intel.com>
+References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+ <20191003123219.11237-10-sakari.ailus@linux.intel.com>
+ <20200102222041.GA29067@roeck-us.net>
+ <20200103112145.GM19828@paasikivi.fi.intel.com>
+ <20200103144253.y6fnw44oe7asyniz@pathway.suse.cz>
+ <20200103183555.GA28369@roeck-us.net>
+ <20200113091751.d63u7jbyh6p2rj23@pathway.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200114160422.GQ5885@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113091751.d63u7jbyh6p2rj23@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 14/01/2020 18:04, Tony Lindgren wrote:
-> * Benoit Parrot <bparrot@ti.com> [200113 16:51]:
->> Tony Lindgren <tony@atomide.com> wrote on Fri [2019-Dec-13 07:29:38 -0800]:
->>> * Tero Kristo <t-kristo@ti.com> [191213 07:43]:
->>>> On 12/12/2019 19:41, Tony Lindgren wrote:
->>>>> * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
->>>>>> This patch series adds the missing camera endpoint (ov2659) as well as
->>>>>> the required source clocks nodes for the sensor.
->>>>>>
->>>>>> On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
->>>>>> clock nodes/tree was removed as it was unsed at the time, we are
->>>>>> re-adding the needed clock nodes here.
->>>>>
->>>>> Tero, it seems I can already pick this series?
->>>>
->>>> I believe it is ready if you approve the clkout1 clock patch.
->>>
->>> OK yeah looks fine.
->>>
->>>>> Or ou want to queue the changes to am43xx-clocks.dtsi along with all
->>>>> your other clock patches?
->>>>
->>>> Well, I have actually never queued any omap2+ dts patches myself, and I
->>>> don't think there would be too many of those coming for next merge either.
->>>
->>> OK will queue this series then. For the other ones from Benoit
->>> looks like we need an immutable clock branch before I can apply
->>> anything.
->>
->> Tony, Tero,
->>
->> Are these merged anyware now?
->> I still don't see any of these on linux-next?
-> 
-> Tero any news on getting some immutable clock changes branch done?
-> Looks like there are quite a few pending clock patches right now,
-> probably best to set them all into a branch that I can also merge
-> in.
+Hi Petr,
 
-Working on that now, have been forced to prioritize work lately. I can 
-probably get the branch set-up on Monday and send a pull-req out 
-assuming it is not too late for 5.6 already.
+On Mon, Jan 13, 2020 at 10:17:51AM +0100, Petr Mladek wrote:
+> On Fri 2020-01-03 10:35:55, Guenter Roeck wrote:
+> > On Fri, Jan 03, 2020 at 03:42:53PM +0100, Petr Mladek wrote:
+> > > On Fri 2020-01-03 13:21:45, Sakari Ailus wrote:
+> > > > Hi Guenter,
+> > > > 
+> > > > On Thu, Jan 02, 2020 at 02:20:41PM -0800, Guenter Roeck wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On Thu, Oct 03, 2019 at 03:32:16PM +0300, Sakari Ailus wrote:
+> > > > > > Instead of implementing our own means of discovering parent nodes, node
+> > > > > > names or counting how many parents a node has, use the newly added
+> > > > > > functions in the fwnode API to obtain that information.
+> > > > > > 
+> > > > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > > > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > > > > > ---
+> > > > > 
+> > > > > This patch results in a lockdep splat when running one of my qemu
+> > > > > emulations. See below for log and bisect results. A complete log
+> > > > > is available at
+> > > > > https://kerneltests.org/builders/qemu-arm-master/builds/1408/steps/qemubuildcommand/logs/stdio
+> > > > > 
+> > > > > Guenter
+> > > > 
+> > > > Thank you for reporting this.
+> > > > 
+> > > > I looked into the issue, and indeed I can conform the patch introduces this
+> > > > as it takes the devtree_lock for printing the name of the fwnode. There is
+> > > 
+> > > I guess that you meant "is not".
 
--Tero
+Right, that's what I meant. Sometimes small words can make a big
+difference. :-)
 
+> > > 
+> > > 
+> > > > however chance of a deadlock in practice as the code in mm/slub.c does not
+> > > > deal with fwnodes (in which case acquiring devtree_lock could be possible),
+> > > > maybe for other reasons as well. The patch however introduces an unpleasant
+> > > > source of such warnings.
+> > > 
+> > > I agree that it is a false positive. alloc/free is called in OF code
+> > > under devtree_lock. But OF code is not called from alloc/free (slub.c)
+> > > and it should not happen.
+> > > 
+> > 
+> > Assuming that memory allocation is indeed called from code holding
+> > devtree_lock: The problem, as I see it, is that the order of acquiring
+> > locks is different. In OF code, the order is
+> > 	devtree_lock
+> > 	(&n->list_lock)->rlock
 > 
->> And by "these" I mean this one and both
->>   ARM: dts: dra7: add vpe nodes
->>   ARM: dts: dra7: add cal nodes
+> Yes, this happens when alloc is called in OF code under devtree_lock.
 > 
-> Yeah looks good to me other than the clock dependency.
+> > Elsewhere, in %pOF print sequences, it is
+> > 	(&n->list_lock)->rlock
+> > 	devtree_lock
 > 
-> Regards,
+> I believe that this order does not exist in reality. lockep "just"
+> connected this the two locks via logbuf_lock. When printk() is
+> called in the allocator:
 > 
-> Tony
+> 	(&n->list_lock)->rlock
+> 	logbuf_lock
 > 
+> and when %pOF is used in printk():
+> 
+> 	logbuf_lock
+> 	devtree_lock
+> 
+> From this two lockdep assumes that it might be possible to
+> use %pOF in printk() from allocator code:
+> 
+> 	(&n->list_lock)->rlock
+> 	logbuf_lock
+> 	devtree_lock
+> 
+> But I believe that this does not make sense and never happen reality.
+> 
+> That said, I would still prefer when %pOF could be implemented
+> without the lock. It would make it usable anywhere without any
+> risk of deadlock.
+> 
+> Sakari, what is your opinion, please?
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The reason taking that lock is to be able to traverse the device tree data
+structure to find the names of the nodes upto the root node. This happens
+only when the full node name is printed.
+
+Traversing the tree takes place through the fwnode framework, and currently
+the framework uses only the name of the fwnode itself to print the full
+path. It *could* use the full name directly, but that way removing the
+full_name field (taking up some memory right now) would not be possible.
+That said, I don't know if there are plans to do so. A quick look at one
+system tells the size of this memory is around 20 kB.
+
+ACPI does not use such locks in traversing to the tree, but it might do
+that in the future, and avoiding the lock there would also require copying
+the full node name to each node in the system.
+
+If there are plans to avoid having logbuf_lock, then the problem disappears
+with that.
+
+How about disabling the lockdep warning now, and if it seems we're not
+getting rid of the logbuf_lock in a reasonable timeframe, then look at the
+alternatives, such as using the full_name in printing node names instead?
+
+-- 
+Kind regards,
+
+Sakari Ailus
