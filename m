@@ -2,150 +2,119 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD23C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE040C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C64A21582
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C442073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579272218;
-	bh=l9dNkpy42xWo2MvF+JA9gM6i4jvOvRUbfjb3y1NTJ4Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S2krX2vCh7B6777IF4Ts8xivLs5g4f1p1bCJiahz76k4NNFlnFPtxlRYosleP0XsR
-	 2RMLOsUAqukZ3D85O3JiqVw3yLyleJW3U8DvUWjoqEcGx85rO2fZwNm3lk2LWOM0tB
-	 J905oTGxr2ON994NU964uttAttDI/n9xVzVV5qno=
+	s=default; t=1579272520;
+	bh=YYIc8ncjw9IAf4/GDADFxUHjnSxt8C1GJ/RrzEV40ag=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jGK1sh24zduLWKgv6aGFTTXtV3yLb2tsOVV5gAYXWuOBvxJoxQahuSSPsKqeoR9zv
+	 5C4LDvbZyJULBGbE8BWCRGZ1ncVwnvzfKKHPW7hbeMfMd1n9B3yTboKQxDu4BqttD4
+	 AfJT+JvUhoLxnfii8DwjjXn2m8/ypGekB5KGP2ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgAQOnh (ORCPT
+        id S1728775AbgAQOsk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 09:43:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbgAQOnh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jan 2020 09:43:37 -0500
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDC7621582;
-        Fri, 17 Jan 2020 14:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579272215;
-        bh=l9dNkpy42xWo2MvF+JA9gM6i4jvOvRUbfjb3y1NTJ4Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m321RqFtUFJMgNkG+s8ex5ThgxIMpwaC62Yfe8crlUBqb9cl52m6bOP1DIpBll05b
-         BFCUTk38T937s2LUbQ/bDuwRqQoGQTQu5jqMnWbW3s2fseQxRK6jMVgkFwQBrgJGv5
-         5AmYGZNtE6yKpyZtc+p1vS01TPGwrZSX3uBNyqio=
-Received: by mail-qt1-f174.google.com with SMTP id w30so21872964qtd.12;
-        Fri, 17 Jan 2020 06:43:35 -0800 (PST)
-X-Gm-Message-State: APjAAAW3Jp4b59heWbfClBim6t3V8m6Ppz651dysuAxt3CpSKhkcdwLI
-        GWPbTv/CnYJqmhuV6YlCp4sc258Dx2bCPX82nw==
-X-Google-Smtp-Source: APXvYqxEVbHzmpE4xONFjszFZpsuqS3YBUpF7tWlys7E6wSsvdHOS4H0qRXHF0jQ0zFp5mHDccmIf9qS92ljgYLITlY=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr7774293qtg.110.1579272214805;
- Fri, 17 Jan 2020 06:43:34 -0800 (PST)
+        Fri, 17 Jan 2020 09:48:40 -0500
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:45233 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbgAQOsk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 09:48:40 -0500
+Received: by mail-oi1-f169.google.com with SMTP id n16so22370939oie.12;
+        Fri, 17 Jan 2020 06:48:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dyE4NzvdMsyKga26H8tQKOSJjEOPcWYAXtxjXIGSauM=;
+        b=uRDdYi242KUktL5GwKg/yethULGwGsgG72YBU8OfsSl6uZii0ON+vs5BSfkqTtK8up
+         Ut088jFxshpuWlJvJ4D4qBOPJk2QnfRB3QBuN+269Lzyc7pcif41z24xyGK95BsqWtXm
+         yutrVRymJSxhLMeUb+sPnnsTIJ8YF9pimsYYMGYx5Zb3JPRGeqjrmvhVhVw/1drkCTvQ
+         1zn6qmRMYbTUiBF5Z19HTi0nuMG4dkNjVUni7D7TWg79vteUQHypyTjhTPgazwGcXKdW
+         C/Q5Neb8JIGZmIWWe8HeHtnNlqiAy08MYAuuSwAaqu5c6DDKim3fM3UKK6i+klSljeQI
+         kQWg==
+X-Gm-Message-State: APjAAAXxi4ytemILCi2Pi5vi6qApJaPcy4s6rZQn4twUFKMeR9xwCDwY
+        XMBR6lmGvI4PyZlIU+xt1lCqEow=
+X-Google-Smtp-Source: APXvYqyABfMThOmRvFNhbdQGFqiqtT+906MusSLrADtaBvi+FGDgJmdep6F7xH8DXrsB8rHtfy/eFA==
+X-Received: by 2002:a54:4117:: with SMTP id l23mr3541405oic.140.1579272518846;
+        Fri, 17 Jan 2020 06:48:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id f4sm7824851oij.25.2020.01.17.06.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 06:48:38 -0800 (PST)
+Received: (nullmailer pid 13001 invoked by uid 1000);
+        Fri, 17 Jan 2020 14:48:37 -0000
+Date:   Fri, 17 Jan 2020 08:48:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCHv2 1/2] dt-bindings: usb: dwc2: add support for STM32MP15
+ SoCs USB OTG HS and FS
+Message-ID: <20200117144837.GA27455@bogus>
+References: <20200116144524.16070-1-amelie.delaunay@st.com>
+ <20200116144524.16070-2-amelie.delaunay@st.com>
 MIME-Version: 1.0
-References: <20200113181625.3130-1-alexandre.torgue@st.com>
- <20200113181625.3130-2-alexandre.torgue@st.com> <20200116005741.GB54439@umbus>
- <d2594b79-a45d-dcac-3642-90016a1408b8@st.com> <20200117090937.GU54439@umbus>
-In-Reply-To: <20200117090937.GU54439@umbus>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 17 Jan 2020 08:43:23 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
-Message-ID: <CAL_JsqKTsX9efYDMjGahFDxj0cEfzozeNrY1Nq1bECzgOZGqdQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dtc: Add dtb build information option
-To:     David Gibson <david@gibson.dropbear.id.au>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Simon Glass <sjg@chromium.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
-        Steve McIntyre <steve.mcintyre@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200116144524.16070-2-amelie.delaunay@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 6:26 AM David Gibson
-<david@gibson.dropbear.id.au> wrote:
->
-> On Thu, Jan 16, 2020 at 09:58:23AM +0100, Alexandre Torgue wrote:
-> > Hi David
-> >
-> > On 1/16/20 1:57 AM, David Gibson wrote:
-> > > On Mon, Jan 13, 2020 at 07:16:23PM +0100, Alexandre Torgue wrote:
-> > > > This commit adds the possibility to add build information for a DTB.
-> > > > Build information can be: build date, DTS version, "who built the DTB"
-> > > > (same kind of information that we get in Linux with the Linux banner).
-> > > >
-> > > > To do this, an extra option "-B" using an information file as argument
-> > > > has been added. If this option is used, input device tree is appended with
-> > > > a new string property "Build-info". This property is built with information
-> > > > found in information file given as argument. This file has to be generated
-> > > > by user and shouldn't exceed 256 bytes.
-> > > >
-> > > > Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> > >
-> > > At the very least, this patch of the series will need to be sent to
-> > > upstream dtc first.
-> >
-> > Ok sorry. I thought that sending all the series would give more
-> > information.
->
-> That's fair enough, but in order to merge, you'll need to post against
-> upstream dtc.
->
-> > > I'm also not terribly clear on what you're trying to accomplish here,
-> > > and why it's useful.
-> >
-> > Let's take Kernel boot at example (but could be extend to other DTB "users"
-> > like U-Boot). When Linux kernel booting we get a log that gives useful
-> > information about kernel image: source version, build date, people who built
-> > the kernel image, compiler version. This information is useful for debug and
-> > support. The aim is to get same kind of information but for the DTB.
-> >
-> > > Since you're doing this specifically for use with dtbs built in the
-> > > kernel build, could you just use a:
-> > >     Build-info = /incbin/ "build-info.txt";
-> > > in each of the in-kernel .dts files?
-> >
-> > My first idea was to not modify all existing .dts files. Adding an extra
-> > option in dtc is (for me) the softer way to do it. I mean, compile
-> > information should come through compiler without modify .dts files outside
-> > from dtc. In this way it will be easy to everybody using dtc (inside our
-> > outside Linux tree) to add dtb build info (even if they don't how to write a
-> > dts file).
->
-> But you're not really having this information coming from the
-> compiler.  Instead you're adding a compiler option that just force
-> includes another file into the generated tree, and it's up to your
-> build scripts to put something useful into that file.
->
-> I don't really see that as preferable to modifying the .dts files.
->
-> I also dislike the fact that the option as proposed is much more
-> general than the name suggests, but also very similar too, but much
-> more specific than the existing /incbin/ option.
->
-> What might be better would be to have a dtc option which force appends
-> an extra .dts to the mail .dts compiled.  You can then put an overlay
-> template in that file, something like:
->
-> &{/} {
->         linux,build-info = /incbin/ "build-info.txt;
-> }
+On Thu, Jan 16, 2020 at 03:45:23PM +0100, Amelie Delaunay wrote:
+> Add the specific compatible string for the DWC2 IP found in the STM32MP15
+> SoCs.
+> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
+> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
+> sensing comparators.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc2.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
+> index 71cf7ba32237..0b86250b97a9 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.yaml
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
+> @@ -58,6 +58,8 @@ properties:
+>        - const: st,stm32f4x9-fsotg
+>        - const: st,stm32f4x9-hsotg
+>        - const: st,stm32f7-hsotg
+> +      - const: st,stm32mp15-fsotg
+> +      - const: st,stm32mp15-hsotg
+>        - const: samsung,s3c6400-hsotg
+>  
+>    reg:
+> @@ -103,6 +105,10 @@ properties:
+>    vusb_a-supply:
+>      description: phandle to voltage regulator of analog section.
+>  
+> +  vusb33d_supply:
 
-I like this suggestion either as an include another dts file or an
-overlay. The latter could be useful as a way to maintain current dtb
-files while splitting the source files into base and overlay dts
-files.
+Not a valid regulator property.
 
-But no, let's not prepend this with 'linux'. It's not a property
-specific for Linux to consume.
+> +    description: reference to the external VBUS and ID sensing comparators, in
+> +      order to perform OTG operation, used on STM32MP15 SoCs.
+
+Are they external or part of the SoC? When we have Vbus sense and ID 
+GPIOs, those go in the connector node, so this probably should too if 
+these are board components.
 
 Rob
