@@ -2,102 +2,106 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81514C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8A5C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1E220748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743F220748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="sfIxgB7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbgAQJWu (ORCPT
+        id S1726371AbgAQJc7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:22:50 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:35348 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgAQJWt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 04:22:49 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id A1F90803D1;
-        Fri, 17 Jan 2020 10:22:40 +0100 (CET)
-Date:   Fri, 17 Jan 2020 10:22:39 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Fri, 17 Jan 2020 04:32:59 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38186 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQJcv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 04:32:51 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so25784964ljh.5
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 01:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FlrrQ/nssXV3OvXK75kddNho6rYCmJKAPSJyNmFq/w0=;
+        b=sfIxgB7U1bB9LTHv0aHc7+QPCc3l8aYtittaJhGCf65F4xYxO3R+NyNy7CBNHdyLGp
+         uMwnKyb0dIEMTY7wxolA0Reylx3j0aNQDjR5xJdjPg0xM/WiO27fLuMH/GkWsLvSI+DN
+         iXoFD3iOr9AcURuzFrX3i3T/lG9a6+XXG9VJfSX1VT5+4j76mU+al5u048Crn9z26bbt
+         KWdiosskdzObfWZYDQ5ckAF7/hPZ7OLqLW3+q+3sl+grqKpCTrus8UssWJ8X/ilZp2Yj
+         lT+OZNAbPsUpJfmqA9JaeSgVDb4PL0+EUdbH8znbwp8c0STIJvyAD7iVTTy98f/myk1O
+         fbfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FlrrQ/nssXV3OvXK75kddNho6rYCmJKAPSJyNmFq/w0=;
+        b=dhtEQdTlKAxdHuBGktmLDL7M4fajW/naRVmo07pmzIo1gMokXsa6+/SV40y8LviLsR
+         /YoklJGd+7ZOx4sSxZS0WS5998AoOzu1vVkD1CtD9OHqkTjaA/lOvJD18o4mXSPZqqEo
+         tOW/drhMCoj/Zi2HRui9x+pc6Ib25A2p0PjE/Xc+d3vkDwJNPyoF3+3YuI99JHp6aok2
+         u8abvnQt3qdqYn/mQIauDWB5kCpCzZIrMAbTnyQCWt2/vv4AN3h9kVQoNowwz87vtawl
+         f8xxV7nVFFihvmuPdAxANW1Jnlg3xWkhepdyMNhnMF1Y0q6qpIM+G74UPpTkcbwB5bre
+         y2yQ==
+X-Gm-Message-State: APjAAAVWYoLgnm8CHdfhb4WeqKXiXkP5ZBUTrS9h6lhpc6s3NF6beR20
+        Ymg+gpCvqkbVGUk9ZZ9lraQijwrr36lgxg==
+X-Google-Smtp-Source: APXvYqzgGR4ExJ+km0xQAR1IChwYbjGAZZkFrIRdRT9Cl7m98qU9fIismOpqDd/0unVYDWccrg14LQ==
+X-Received: by 2002:a2e:858b:: with SMTP id b11mr4984229lji.135.1579253569462;
+        Fri, 17 Jan 2020 01:32:49 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:671:f22f:7825:2eb6:5778:a5ff? ([2a00:1fa0:671:f22f:7825:2eb6:5778:a5ff])
+        by smtp.gmail.com with ESMTPSA id h19sm12050355ljl.57.2020.01.17.01.32.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 01:32:48 -0800 (PST)
+Subject: Re: [PATCH AUTOSEL 4.19 104/671] ARM: dts: r8a7743: Fix sorting of
+ rwdt node
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Biju Das <biju.das@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Subject: Re: [PATCH v6 0/6] Add dual-LVDS panel support to EK874
-Message-ID: <20200117092239.GA2769@ravnborg.org>
-References: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <20191217231326.GG4874@pendragon.ideasonboard.com>
- <CAMuHMdWaZBfsHi9E57B8Mr6QSCATVxpdRtg=9_H-urBaK_iRJw@mail.gmail.com>
+        Simon Horman <horms+renesas@verge.net.au>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200116165502.8838-1-sashal@kernel.org>
+ <20200116165502.8838-104-sashal@kernel.org>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <3a84e4dc-1d2a-3809-ffac-33d75eb73351@cogentembedded.com>
+Date:   Fri, 17 Jan 2020 12:32:21 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWaZBfsHi9E57B8Mr6QSCATVxpdRtg=9_H-urBaK_iRJw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=P1BnusSwAAAA:8
-        a=NcFk6D9gAAAA:8 a=VwQbUJbxAAAA:8 a=AnT9JTkVX5hdcftoDygA:9
-        a=CjuIK1q_8ugA:10 a=gDps05xe3HUA:10 a=-FEs8UIgK8oA:10 a=CojVow1nldcA:10
-        a=NWVoK91CQyQA:10 a=D0XLA9XvdZm18NrgonBM:22 a=dT0RXAwTRpxWjiziVLXF:22
-        a=AjGcO6oz07-iQ99wixmX:22
+In-Reply-To: <20200116165502.8838-104-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabrizio/Laurent/Geert.
+Hello!
 
-(Thanks Geert, I recall I never replied to this mail).
+On 16.01.2020 19:45, Sasha Levin wrote:
 
-On Fri, Jan 17, 2020 at 09:47:22AM +0100, Geert Uytterhoeven wrote:
-> Hi Laurent,
+> From: Biju Das <biju.das@bp.renesas.com>
 > 
-> (woops, forgot to press sent)
+> [ Upstream commit 383f6024981d32425fa453bf2e66b546fdbc1314 ]
 > 
-> On Wed, Dec 18, 2019 at 12:13 AM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> > On Tue, Dec 17, 2019 at 01:45:55PM +0000, Fabrizio Castro wrote:
-> > > this series adds support for dual-LVDS panel IDK-2121WR
-> > > from Advantech:
-> > > https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
-> > >
-> > > V6 reworks patch "drm: rcar-du: lvds: Allow for even and odd pixels swap",
-> > > and rebases the series on top of patch:
-> > > https://patchwork.kernel.org/patch/11295991/
-> >
-> > I've taken patch 1/6 to 4/6 in my tree. I expect Geert to take 6/6. For
-> > 5/6, I'll give Rob a chance to review the patch. Sam, could you handle
-> > it afterwards ?
-Rob had comments to the 5/6 patch - and I have missed if a new version was
-sent.
+> Watchdog node is incorrectly placed on r8a7743 SoC dtsi. This patch fixes
+> the sorting order.
+> 
+> Fixes: b5beb5d4c81c358f50a8310108 ("ARM: dts: r8a7743: Add watchdog support to SoC dtsi")
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>   arch/arm/boot/dts/r8a7743.dtsi | 20 ++++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
 
-	Sam
+    I doubt that the DT node reordering is worth merging into the -stable 
+kernels...
+
+MBR, Sergei
