@@ -2,182 +2,151 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C18AEC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B372C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 04:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975A42053B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2932072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 04:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="0I1ifQad"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BlS6NIK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729406AbgAQDvJ (ORCPT
+        id S1730177AbgAQEpD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:51:09 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:56328 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730688AbgAQDvH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 22:51:07 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id B4CDD891AF;
-        Fri, 17 Jan 2020 16:51:05 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1579233065;
-        bh=fRH1fOtTq3nwhWeBJY9OSVBx1/bx+wOXC/1lsHlEf+Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=0I1ifQadS3Jx1N6SMXLWI8wK6VaBbmMKKLM45B+DcWd0FXtm91Feeqo3YIKGr+D3j
-         27OuYHT3y5n2Zd9EYwp8vVb6WB3d8Q3dV5D6BSWzzRWehz0LDgRPoLJpNUQ7jwA/0M
-         ZXTWp6abAq6YJsYYR7n7eo4vDzwwISDvnRnjGSuHdKjCPavcNY/oIlCzQtco4tfs/d
-         74sRlE8VesA/oyIhIpSAMWHzJk2fTWQTcjPTr9RARw4Zc35NpUZUQrq3zBzIdK9QQ+
-         nXpT3115tOX3YihKHxSt7w+ggSVUiChYnNGGbAjI2/XpShUu8soo1WMsroTMGw12ja
-         6Zm3FP6AE1Opg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e212f290001>; Fri, 17 Jan 2020 16:51:05 +1300
-Received: from logans-dl.ws.atlnz.lc (logans-dl.ws.atlnz.lc [10.33.25.61])
-        by smtp (Postfix) with ESMTP id DD91E13EEFE;
-        Fri, 17 Jan 2020 16:51:04 +1300 (NZDT)
-Received: by logans-dl.ws.atlnz.lc (Postfix, from userid 1820)
-        id 5DBE1C1A8B; Fri, 17 Jan 2020 16:51:05 +1300 (NZDT)
-From:   Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-To:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
-        Chris.Packham@alliedtelesis.co.nz, logan.shaw@alliedtelesis.co.nz
-Subject: [PATCH v3 2/2] hwmon: (adt7475) Added attenuator bypass support
-Date:   Fri, 17 Jan 2020 16:50:18 +1300
-Message-Id: <20200117035018.11985-3-logan.shaw@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200117035018.11985-1-logan.shaw@alliedtelesis.co.nz>
-References: <20200117035018.11985-1-logan.shaw@alliedtelesis.co.nz>
+        Thu, 16 Jan 2020 23:45:03 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39654 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgAQEpD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 23:45:03 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b137so11036966pga.6
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 20:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MokgjokDaau9PgXyah9t7meHx+Hp5LMTUHDw4uxid9Q=;
+        b=BlS6NIK15PEm+eGSVYgfuya7QskELbcfjwOh1z3Jdu1JKvJY+x77K34YboZBqXLnpu
+         ukSggBDcAIlckCCzX59yCIqp51vum22WZ5LHagb2zwzDAiqTqL9TtTP8rO4fZAOdTQvD
+         rbuR4N2BQf6SeOtFecPN+cI7EorQsbcIB0tOM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MokgjokDaau9PgXyah9t7meHx+Hp5LMTUHDw4uxid9Q=;
+        b=tkOo8H0lFigrAQ9c4tVgN7oHVqano2937HYc3ysRdzAijTTSIBlX+iGXqOHOJngtbG
+         03uhkHsaaFWdjvt6zAeEjeDnSTqumFLf9cUir91zh+JqEJl0zyu+E1dmDsGLMEotxp25
+         70C1h81kmAVAhoO/VMV+8qzLWRCJyl3HPu11gXeQRNA1FcyKYXRXbBjHQPsoPLUG94qF
+         PxiSiaFYaNKalvgE2S8ahe/KjrVcK6gSFNFuBhdE0B4h4GplH0E+xPJeCXwBs2wncago
+         ypy/M+NHtVcoUK6MLNuCw11oNG1aFzhyVmoShChH9UNxv6jgSsiNNtvUbTkt0FG8cSwT
+         ND0A==
+X-Gm-Message-State: APjAAAUvloKkGcDvyQwGxbNk/3Xfz3YTnUKOlHOZZY4Fq6z59C9z8Oxp
+        K45WZF4oCRLA6F9JhzwWZSZq49pYQGlj+R+8n4EeCE4txJahPffKqeH8WyG7oYandpaRwutJYQq
+        MIIz3eqaTD+mNUmyiHqBSl+JM90XGwVUPJZ2AI9AKlof2moh7kiyzPgxnswtNkV/9ohVg0PiQ46
+        K09cbgJRA=
+X-Google-Smtp-Source: APXvYqwUdDO5bNxgzt6V8gz6Oa/ENBV9pGGLK7LI4eMh6x+tGOBXjL92+yPMhVTxDrc87pkEz8Fwyw==
+X-Received: by 2002:a63:6c82:: with SMTP id h124mr43082388pgc.328.1579236301832;
+        Thu, 16 Jan 2020 20:45:01 -0800 (PST)
+Received: from [10.230.24.186] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id c17sm26857376pfi.104.2020.01.16.20.44.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 20:45:00 -0800 (PST)
+Subject: Re: [PATCH v3 0/3] ata: ahci_brcm: Follow-up changes for BCM7216
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20200107183022.26224-1-f.fainelli@gmail.com>
+ <d32d1c1e6f32eeed811fa00e1b5d8ca121eea70f.camel@pengutronix.de>
+From:   Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
+ xAQQAQgArgUCXJvPrRcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
+ Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
+ LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
+ AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoE4DB/9JySDRt/ArjeOHOwGA2sLR1DV6
+ Mv6RuStiefNvJ14BRfMkt9EV/dBp9CsI+slwj9/ZlBotQXlAoGr4uivZvcnQ9dWDjTExXsRJ
+ WcBwUlSUPYJc/kPWFnTxF8JFBNMIQSZSR2dBrDqRP0UWYJ5XaiTbVRpd8nka9BQu4QB8d/Bx
+ VcEJEth3JF42LSF9DPZlyKUTHOj4l1iZ/Gy3AiP9jxN50qol9OT37adOJXGEbix8zxoCAn2W
+ +grt1ickvUo95hYDxE6TSj4b8+b0N/XT5j3ds1wDd/B5ZzL9fgBjNCRzp8McBLM5tXIeTYu9
+ mJ1F5OW89WvDTwUXtT19P1r+qRqKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
+ C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
+ vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
+ q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
+ W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
+ 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
+ AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
+ e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
+ hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
+ Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
+ MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
+ 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
+ Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
+ sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
+ rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
+ pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
+ Q3up0ArDSP1L
+Message-ID: <33d3589b-accf-04c2-5527-5a0f9c632d0b@broadcom.com>
+Date:   Thu, 16 Jan 2020 20:44:58 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <d32d1c1e6f32eeed811fa00e1b5d8ca121eea70f.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added a new file documenting the adt7475 devicetree and added the four
-new properties to it.
 
-Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
----
----
- .../devicetree/bindings/hwmon/adt7475.yaml    | 90 +++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Docum=
-entation/devicetree/bindings/hwmon/adt7475.yaml
-new file mode 100644
-index 000000000000..e201948beb35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-@@ -0,0 +1,90 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/adt7475.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ADT7475 hwmon sensor
-+
-+maintainers:
-+  - Jean Delvare <jdelvare@suse.com>
-+
-+description: |
-+  The ADT7473, ADT7475, ADT7476, and ADT7490 are thermal monitors and mu=
-ltiple
-+  PWN fan controllers.
-+
-+  They support monitoring and controlling up to four fans (the ADT7490 c=
-an only
-+  control up to three). They support reading a single on chip temperatur=
-e
-+  sensor and two off chip temperature sensors (the ADT7490 additionally
-+  supports measuring up to three current external temperature sensors wi=
-th
-+  series resistance cancellation (SRC)).
-+
-+  Datasheets:
-+  https://www.onsemi.com/pub/Collateral/ADT7473-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7475-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7476-D.PDF
-+  https://www.onsemi.com/pub/Collateral/ADT7490-D.PDF
-+
-+  Description taken from omsemiconductors specification sheets, with min=
-or
-+  rephrasing.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,adt7473
-+      - adi,adt7475
-+      - adi,adt7476
-+      - adi,adt7490
-+
-+  reg:
-+    maxItems: 1
-+
-+  bypass-attenuator-in0:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in0. This is supported on the ADT7476 and ADT7490.
-+      If set to a non-zero integer the attenuator is bypassed, if set to
-+      zero the attenuator is not bypassed. If the property is absent the=
-n
-+      the config register is not modified.
-+    maxItems: 1
-+
-+  bypass-attenuator-in1:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in1. This is supported on the ADT7473, ADT7475,
-+      ADT7476 and ADT7490. If set to a non-zero integer the attenuator
-+      is bypassed, if set to zero the attenuator is not bypassed. If the
-+      property is absent then the config register is not modified.
-+    maxItems: 1
-+
-+  bypass-attenuator-in3:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in3. This is supported on the ADT7476 and ADT7490.
-+      If set to a non-zero integer the attenuator is bypassed, if set to
-+      zero the attenuator is not bypassed. If the property is absent the=
-n
-+      the config register is not modified.
-+    maxItems: 1
-+
-+  bypass-attenuator-in4:
-+    description: |
-+      Configures bypassing the individual voltage input
-+      attenuator, on in4. This is supported on the ADT7476 and ADT7490.
-+      If set to a non-zero integer the attenuator is bypassed, if set to
-+      zero the attenuator is not bypassed. If the property is absent the=
-n
-+      the config register is not modified.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    hwmon@2e {
-+      compatible =3D "adi,adt7476";
-+      reg =3D <0x2e>;
-+      bypass-attenuator-in1 =3D <1>;
-+      bypass-attenuator-in1 =3D <0>;
-+    };
-+...
---=20
-2.25.0
+On 1/8/2020 1:25 AM, Philipp Zabel wrote:
+> Hi Florian,
+> 
+> On Tue, 2020-01-07 at 10:30 -0800, Florian Fainelli wrote:
+>> Hi Jens, Philipp,
+>>
+>> These three patches are a follow-up to my previous series titled: ata:
+>> ahci_brcm: Fixes and new device support.
+>>
+>> After submitting the BCM7216 RESCAL reset driver, Philipp the reset
+>> controller maintained indicated that the reset line should be self
+>> de-asserting and so reset_control_reset() should be used instead.
+>>
+>> These three patches update the driver in that regard. It would be great if
+>> you could apply those and get them queued up for 5.6 since they are
+>> directly related to the previous series.
+>>
+>> Changes in v3:
+>> - introduced a preliminary patch making use of the proper reset control
+>>   API in order to manage the optional reset controller line
+>> - updated patches after introducing that preliminary patch
+> 
+> The third patch could be simplified by storing the rescal reset control
+> in a separate struct member and relying on the optional reset control
+> API more. This is just a suggestion though, the series looks fine as-is.
+> 
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
+Thanks! Jens is that good for you?
+-- 
+Florian
