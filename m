@@ -2,102 +2,192 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986E3C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 07:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AADC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731C12072B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 07:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10BC2082F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:04:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbgAQHef (ORCPT
+        id S1729267AbgAQIEz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 02:34:35 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45371 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbgAQHee (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 02:34:34 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1isM9F-0005gR-I7; Fri, 17 Jan 2020 08:34:29 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1isM9D-00028c-L9; Fri, 17 Jan 2020 08:34:27 +0100
-Date:   Fri, 17 Jan 2020 08:34:27 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 4/7] pwm: Add support for Azoteq IQS620A PWM generator
-Message-ID: <20200117073427.ufrduwagvppeasgr@pengutronix.de>
-References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
- <1579228475-6681-5-git-send-email-jeff@labundy.com>
+        Fri, 17 Jan 2020 03:04:55 -0500
+Received: from twhmllg4.macronix.com ([122.147.135.202]:58498 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbgAQIEz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 03:04:55 -0500
+X-Greylist: delayed 614 seconds by postgrey-1.27 at vger.kernel.org; Fri, 17 Jan 2020 03:04:54 EST
+Received: from TWHMLLG4.macronix.com (localhost [127.0.0.2] (may be forged))
+        by TWHMLLG4.macronix.com with ESMTP id 00H7sdMO089179
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 15:54:39 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id 00H7sWnD089113;
+        Fri, 17 Jan 2020 15:54:32 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 09849F090BB977A1CEE9;
+        Fri, 17 Jan 2020 15:54:33 +0800 (CST)
+In-Reply-To: <20200109172816.6c1d7be7@xps13>
+References: <1571902807-10388-1-git-send-email-masonccyang@mxic.com.tw> <1571902807-10388-2-git-send-email-masonccyang@mxic.com.tw> <20200109172816.6c1d7be7@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
+        mark.rutland@arm.com, richard@nod.at, robh+dt@kernel.org,
+        vigneshr@ti.com
+Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add support for Macronix NAND randomizer
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1579228475-6681-5-git-send-email-jeff@labundy.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+X-KeepSent: ECBDB130:03AD44B7-482584F2:002B40F2;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFECBDB130.03AD44B7-ON482584F2.002B40F2-482584F2.002B720F@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Fri, 17 Jan 2020 15:54:33 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/01/17 PM 03:54:33,
+        Serialize complete at 2020/01/17 PM 03:54:33
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-MAIL: TWHMLLG4.macronix.com 00H7sWnD089113
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 02:35:57AM +0000, Jeff LaBundy wrote:
-> +static void iqs620_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				 struct pwm_state *state)
-> +{
-> +	struct iqs620_pwm_private *iqs620_pwm;
-> +
-> +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
-> +
-> +	mutex_lock(&iqs620_pwm->lock);
-> +
-> +	/*
-> +	 * Since the device cannot generate a 0% duty cycle, requests to do so
-> +	 * cause subsequent calls to iqs620_pwm_get_state to report the output
-> +	 * as disabled with duty cycle equal to that which was in use prior to
-> +	 * the request. This is not ideal, but is the best compromise based on
-> +	 * the capabilities of the device.
-> +	 */
-> +	state->enabled = iqs620_pwm->out_en;
 
-Hmm, when .get_state is called first (before the first invokation of
-.apply) .out_en doesn't represent the hardware's state but is false
-unconditionally. This makes it hard to take over a running PWM setup by
-the bootloader.
+Hi Miquel,
 
-Best regards
-Uwe
+ 
+> > +static int macronix_nand_randomizer_check_enable(struct nand_chip 
+*chip)
+> > +{
+> > +   u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
+> > +   int ret;
+> > +
+> > +   ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> > +            feature);
+> > +   if (ret < 0)
+> > +      return ret;
+> > +
+> > +   if (feature[0])
+> > +      return feature[0];
+> > +
+> > +   feature[0] = MACRONIX_RANDOMIZER_MODE_ENTER;
+> > +   ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> > +            feature);
+> > +   if (ret < 0)
+> > +      return ret;
+> > +
+> > +   /* RANDEN and RANDOPT OTP bits are programmed */
+> > +   feature[0] = 0x0;
+> > +   ret = nand_prog_page_op(chip, 0, 0, feature, 1);
+> > +   if (ret < 0)
+> > +      return ret;
+> > +
+> > +   ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> > +            feature);
+> > +   if (ret < 0)
+> > +      return ret;
+> > +
+> > +   feature[0] &= MACRONIX_RANDOMIZER_MODE_EXIT;
+> > +   ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
+> > +            feature);
+> > +   if (ret < 0)
+> > +      return ret;
+> > +
+> > +   return feature[0];
+> 
+> Can feature[0] be != 0 ? I don't think so, in this case I prefer a:
+> return 0;
+> 
 
-> +	state->duty_cycle = DIV_ROUND_UP((iqs620_pwm->duty_val + 1) *
-> +					 IQS620_PWM_PERIOD_NS, 256);
-> +
-> +	mutex_unlock(&iqs620_pwm->lock);
-> +
-> +	state->period = IQS620_PWM_PERIOD_NS;
-> +}
+okay, will fix it.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> > +}
+> > +
+> >  static void macronix_nand_onfi_init(struct nand_chip *chip)
+> >  {
+> >     struct nand_parameters *p = &chip->parameters;
+> >     struct nand_onfi_vendor_macronix *mxic;
+> > +   struct device_node *dn = nand_get_flash_node(chip);
+> > +   int rand_otp = 0;
+> > +   int ret;
+> > 
+> >     if (!p->onfi)
+> >        return;
+> > 
+> > +   if (of_find_property(dn, "mxic,enable-randomizer-otp", NULL))
+> > +      rand_otp = 1;
+> > +
+> >     mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
+> > +   /* Subpage write is prohibited in randomizer operatoin */
+> 
+>                                        with          operation
+> 
+> > +   if (rand_otp && chip->options & NAND_NO_SUBPAGE_WRITE &&
+> > +       mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
+> > +      if (p->supports_set_get_features) {
+> > +         bitmap_set(p->set_feature_list,
+> > +               ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
+> > +         bitmap_set(p->get_feature_list,
+> > +               ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
+> > +         ret = macronix_nand_randomizer_check_enable(chip);
+> > +         if (ret < 0)
+> > +            pr_info("Macronix NAND randomizer failed\n");
+> > +         else
+> > +            pr_info("Macronix NAND randomizer enabled\n");
+> 
+> Maybe we should update the bitmaps only if it succeeds?
+
+okay, will drop pr_info();
+
+> 
+> > +      }
+> > +   }
+> > +
+> >     if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
+> >        return;
+> > 
+> 
+> With the above fixed,
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> 
+> Thanks,
+> Miquèl
+
+thanks for your time & comments.
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
