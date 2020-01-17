@@ -2,169 +2,523 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A02C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FB7C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F6820748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB3332072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoPFcDUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgAQVMZ (ORCPT
+        id S1727029AbgAQVdf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:12:25 -0500
-Received: from asavdk4.altibox.net ([109.247.116.15]:43254 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgAQVMZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 16:12:25 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id E0FCA803CD;
-        Fri, 17 Jan 2020 22:12:18 +0100 (CET)
-Date:   Fri, 17 Jan 2020 22:12:17 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc:     Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        David Lechner <david@lechnology.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] drm/mipi_dbi: Add support for display offsets
-Message-ID: <20200117211217.GA28658@ravnborg.org>
-References: <20200115124548.3951-1-geert+renesas@glider.be>
- <20200115124548.3951-4-geert+renesas@glider.be>
+        Fri, 17 Jan 2020 16:33:35 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40822 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQVde (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 16:33:34 -0500
+Received: by mail-pl1-f195.google.com with SMTP id s21so10359767plr.7;
+        Fri, 17 Jan 2020 13:33:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wdp6cLJwlGdaiNgVZ7Oq+Sray4WTuyHCCJRXgdtyBAc=;
+        b=GoPFcDUCxQafzsGDZGpN0UaUZxqmsRvqy9i3YmdfLB961xfWifkd6LXSzLEG8zr1or
+         Gp8uDzjg+1sivte+xusXPCR2peQWTEV6MWAOCSNALFrZgCvZAiQYCjlSFDDrb4c5tPup
+         XaMvVGAFR8SG7YspVUByfvC3NpM0dPXCAJrySwBGYySjm/gRiALLY8aS65U68XzGf776
+         Sml/BlVEEdoDo1DmOU2iv92Hz6X0lIl9FRPPdnncOAXn3/HkUWtQBSdHcTaJZbNoKFmi
+         EkQMugyjul3ZOeUBoLndXcYLr2/COC4K/6yjQ69C+2gGgolzDu/NBJ1/6UNENXtvCEDz
+         7x/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wdp6cLJwlGdaiNgVZ7Oq+Sray4WTuyHCCJRXgdtyBAc=;
+        b=t3PthZ6gfO0E1LO+b1ChilkWM0JVK6ht2K/xL+W8gJn7llADq0dg8bZzkZIZlW+xl7
+         atXkZHZ67mZKVdoL2P+yU78LzTacT9PKpi6LParxVeKRbCZL1bnpFn6B6X/plnD1Whx4
+         sxDkfpiSbzB5nCRYG+dta6A89WBlE/MhJIit4gZDhFc6wkIjWP6+h3p5c+v90QwTJap6
+         DHrC3N2YC5kcFV+oMrh5xuXsE2RPOx2Ko03Ck8/nQ8S5wqWZX7lbxtoCCNH08iAxmQu+
+         67qsekinRYtU7ZzsJjaaxaibQ+c0OAia6A3ZsVcTBfSrHSthtncM/WfSsmYngJeoOH/u
+         1tLw==
+X-Gm-Message-State: APjAAAUs9LKm6XUpLrjFXLTxR9ZVLDd9CAHqIKZdw3LW0c/5Pr2I0Yac
+        YiZGpkMmt2wL/LHlCNUov0U=
+X-Google-Smtp-Source: APXvYqyGEg2C78QqJ9gcxuqqLXXe62GWDIUUzySWaO4mU2ow0kPF8/uwMwqim2J74vrsUuWPDSwoyQ==
+X-Received: by 2002:a17:902:7613:: with SMTP id k19mr1360737pll.7.1579296813676;
+        Fri, 17 Jan 2020 13:33:33 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y203sm31409362pfb.65.2020.01.17.13.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Jan 2020 13:33:32 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:33:30 -0800
+From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 3/7] input: keyboard: Add support for Azoteq
+ IQS620A/621/622/624/625
+Message-ID: <20200117213330.GF47797@dtor-ws>
+References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
+ <1579228475-6681-4-git-send-email-jeff@labundy.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200115124548.3951-4-geert+renesas@glider.be>
+In-Reply-To: <1579228475-6681-4-git-send-email-jeff@labundy.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=3or2sDVh_ekwW7J8m1sA:9 a=WLNlSafAV1l-oZNU:21 a=aATE8E100ZN-Va1G:21
-        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=pHzHmUro8NiASowvMSCR:22
-        a=xoEH_sTeL_Rfw54TyV31:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Noralf.
+Hi Jeff,
 
-If you could find time to review this patch it would be great.
-I am reluctant to apply it until you have acked/reviewed it.
-
-Thanks in advance,
-
-	Sam
-
-On Wed, Jan 15, 2020 at 01:45:46PM +0100, Geert Uytterhoeven wrote:
-> If the resolution of the TFT display is smaller than the maximum
-> resolution supported by the display controller, the display may be
-> connected to the driver output arrays with a horizontal and/or vertical
-> offset, leading to a shifted image.
+On Fri, Jan 17, 2020 at 02:35:46AM +0000, Jeff LaBundy wrote:
+> This patch adds key and switch support for the Azoteq IQS620A,
+> IQS621, IQS622, IQS624 and IQS625 multi-function sensors.
 > 
-> Add support for specifying these offsets.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
 > ---
-> v2:
->   - Add Reviewed-by.
-> ---
->  drivers/gpu/drm/drm_mipi_dbi.c | 30 ++++++++++++++++++++----------
->  include/drm/drm_mipi_dbi.h     | 12 ++++++++++++
->  2 files changed, 32 insertions(+), 10 deletions(-)
+> Changes in v4:
+>   - None
 > 
-> diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-> index 16bff1be4b8ac622..27fe81a53c88e338 100644
-> --- a/drivers/gpu/drm/drm_mipi_dbi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dbi.c
-> @@ -238,6 +238,23 @@ int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
->  }
->  EXPORT_SYMBOL(mipi_dbi_buf_copy);
->  
-> +static void mipi_dbi_set_window_address(struct mipi_dbi_dev *dbidev,
-> +					unsigned int xs, unsigned int xe,
-> +					unsigned int ys, unsigned int ye)
+> Changes in v3:
+>   - None
+> 
+> Changes in v2:
+>   - Merged 'Copyright' and 'Author' lines into one in introductory comments
+>   - Replaced 'error' with 'ret' throughout
+>   - Updated iqs62x_keys_parse_prop to use unified device property interface
+>   - Clarified the comment in iqs62x_keys_notifier to state that wheel up or
+>     down events elicit an emulated release cycle
+>   - Eliminated tabbed alignment of platform_driver struct members
+> 
+>  drivers/input/keyboard/Kconfig       |  10 ++
+>  drivers/input/keyboard/Makefile      |   1 +
+>  drivers/input/keyboard/iqs62x-keys.c | 340 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 351 insertions(+)
+>  create mode 100644 drivers/input/keyboard/iqs62x-keys.c
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 4706ff0..28de965 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -663,6 +663,16 @@ config KEYBOARD_IPAQ_MICRO
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called ipaq-micro-keys.
+> 
+> +config KEYBOARD_IQS62X
+> +	tristate "Azoteq IQS620A/621/622/624/625 keys and switches"
+> +	depends on MFD_IQS62X
+> +	help
+> +	  Say Y here to enable key and switch support for the Azoteq IQS620A,
+> +	  IQS621, IQS622, IQS624 and IQS625 multi-function sensors.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called iqs62x-keys.
+> +
+>  config KEYBOARD_OMAP
+>  	tristate "TI OMAP keypad support"
+>  	depends on ARCH_OMAP1
+> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+> index f5b1752..1d689fd 100644
+> --- a/drivers/input/keyboard/Makefile
+> +++ b/drivers/input/keyboard/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_KEYBOARD_TCA8418)		+= tca8418_keypad.o
+>  obj-$(CONFIG_KEYBOARD_HIL)		+= hil_kbd.o
+>  obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
+>  obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
+> +obj-$(CONFIG_KEYBOARD_IQS62X)		+= iqs62x-keys.o
+>  obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
+>  obj-$(CONFIG_KEYBOARD_IMX_SC_KEY)	+= imx_sc_key.o
+>  obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
+> diff --git a/drivers/input/keyboard/iqs62x-keys.c b/drivers/input/keyboard/iqs62x-keys.c
+> new file mode 100644
+> index 0000000..b477334
+> --- /dev/null
+> +++ b/drivers/input/keyboard/iqs62x-keys.c
+> @@ -0,0 +1,340 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Azoteq IQS620A/621/622/624/625 Keys and Switches
+> + *
+> + * Copyright (C) 2019 Jeff LaBundy <jeff@labundy.com>
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/input.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/iqs62x.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +enum {
+> +	IQS62X_SW_HALL_N,
+> +	IQS62X_SW_HALL_S,
+> +};
+> +
+> +static const char * const iqs62x_switch_names[] = {
+> +	[IQS62X_SW_HALL_N] = "hall-switch-north",
+> +	[IQS62X_SW_HALL_S] = "hall-switch-south",
+> +};
+> +
+> +struct iqs62x_switch_desc {
+> +	enum iqs62x_event_flag flag;
+> +	unsigned int code;
+> +	bool enabled;
+> +};
+> +
+> +struct iqs62x_keys_private {
+> +	struct iqs62x_core *iqs62x;
+> +	struct input_dev *input;
+> +	struct notifier_block notifier;
+> +	struct iqs62x_switch_desc switches[ARRAY_SIZE(iqs62x_switch_names)];
+> +	unsigned int keycode[IQS62X_NUM_KEYS];
+> +	unsigned int keycodemax;
+> +	u8 interval;
+> +};
+> +
+> +static int iqs62x_keys_parse_prop(struct platform_device *pdev,
+> +				  struct iqs62x_keys_private *iqs62x_keys)
 > +{
-> +	struct mipi_dbi *dbi = &dbidev->dbi;
+> +	struct fwnode_handle *child;
+> +	unsigned int val;
+> +	int ret, i;
 > +
-> +	xs += dbidev->left_offset;
-> +	xe += dbidev->left_offset;
-> +	ys += dbidev->top_offset;
-> +	ye += dbidev->top_offset;
+> +	ret = device_property_read_u32_array(&pdev->dev, "linux,keycodes",
+> +					     NULL, 0);
+
+You can use device_property_count_u32().
+
+> +	if (ret > IQS62X_NUM_KEYS) {
+> +		dev_err(&pdev->dev, "Too many keycodes present\n");
+> +		return -EINVAL;
+> +	} else if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to count keycodes: %d\n", ret);
+> +		return ret;
+> +	}
+> +	iqs62x_keys->keycodemax = ret;
 > +
-> +	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, (xs >> 8) & 0xff,
-> +			 xs & 0xff, (xe >> 8) & 0xff, xe & 0xff);
-> +	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, (ys >> 8) & 0xff,
-> +			 ys & 0xff, (ye >> 8) & 0xff, ye & 0xff);
+> +	ret = device_property_read_u32_array(&pdev->dev, "linux,keycodes",
+> +					     iqs62x_keys->keycode,
+> +					     iqs62x_keys->keycodemax);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to read keycodes: %d\n", ret);
+> +		return ret;
+> +	}
+
+I wonder why you can't simply use
+
+	error = device_property_read_u32_array(&pdev->dev, "linux,keycodes",
+						iqs62x_keys->keycode,
+						IQS62X_NUM_KEYS);
+
+Are you concerned with someone trying to set up keys that are not
+actually exposed later via EVOCSKEYCODES and that is why you are
+limiting keycodemax?
+
+> +
+> +	for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++) {
+> +		child = device_get_named_child_node(&pdev->dev,
+> +						    iqs62x_switch_names[i]);
+> +		if (!child)
+> +			continue;
+> +
+> +		ret = fwnode_property_read_u32(child, "linux,code", &val);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Failed to read switch code: %d\n",
+> +				ret);
+> +			return ret;
+> +		}
+> +		iqs62x_keys->switches[i].code = val;
+> +		iqs62x_keys->switches[i].enabled = true;
+> +
+> +		if (fwnode_property_present(child, "azoteq,use-prox"))
+> +			iqs62x_keys->switches[i].flag = (i == IQS62X_SW_HALL_N ?
+> +							 IQS62X_EVENT_HALL_N_P :
+> +							 IQS62X_EVENT_HALL_S_P);
+> +		else
+> +			iqs62x_keys->switches[i].flag = (i == IQS62X_SW_HALL_N ?
+> +							 IQS62X_EVENT_HALL_N_T :
+> +							 IQS62X_EVENT_HALL_S_T);
+> +	}
+> +
+> +	return 0;
 > +}
 > +
->  static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
->  {
->  	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
-> @@ -271,12 +288,8 @@ static void mipi_dbi_fb_dirty(struct drm_framebuffer *fb, struct drm_rect *rect)
->  		tr = cma_obj->vaddr;
->  	}
->  
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS,
-> -			 (rect->x1 >> 8) & 0xff, rect->x1 & 0xff,
-> -			 ((rect->x2 - 1) >> 8) & 0xff, (rect->x2 - 1) & 0xff);
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS,
-> -			 (rect->y1 >> 8) & 0xff, rect->y1 & 0xff,
-> -			 ((rect->y2 - 1) >> 8) & 0xff, (rect->y2 - 1) & 0xff);
-> +	mipi_dbi_set_window_address(dbidev, rect->x1, rect->x2 - 1, rect->y1,
-> +				    rect->y2 - 1);
->  
->  	ret = mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START, tr,
->  				   width * height * 2);
-> @@ -366,10 +379,7 @@ static void mipi_dbi_blank(struct mipi_dbi_dev *dbidev)
->  
->  	memset(dbidev->tx_buf, 0, len);
->  
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
-> -			 ((width - 1) >> 8) & 0xFF, (width - 1) & 0xFF);
-> -	mipi_dbi_command(dbi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
-> -			 ((height - 1) >> 8) & 0xFF, (height - 1) & 0xFF);
-> +	mipi_dbi_set_window_address(dbidev, 0, width - 1, 0, height - 1);
->  	mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START,
->  			     (u8 *)dbidev->tx_buf, len);
->  
-> diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
-> index 67c66f5ee591e80f..33f325f5af2b921f 100644
-> --- a/include/drm/drm_mipi_dbi.h
-> +++ b/include/drm/drm_mipi_dbi.h
-> @@ -109,6 +109,18 @@ struct mipi_dbi_dev {
->  	 */
->  	unsigned int rotation;
->  
-> +	/**
-> +	 * @left_offset: Horizontal offset of the display relative to the
-> +	 *               controller's driver array
-> +	 */
-> +	unsigned int left_offset;
+> +static int iqs62x_keys_init(struct iqs62x_keys_private *iqs62x_keys)
+> +{
+> +	struct iqs62x_core *iqs62x = iqs62x_keys->iqs62x;
+> +	enum iqs62x_event_flag flag;
+> +	unsigned int event_mask_reg;
+> +	unsigned int event_mask = 0;
+> +	unsigned int val;
+> +	int ret, i;
 > +
-> +	/**
-> +	 * @top_offset: Vertical offset of the display relative to the
-> +	 *              controller's driver array
-> +	 */
-> +	unsigned int top_offset;
+> +	switch (iqs62x->dev_desc->prod_num) {
+> +	case IQS620_PROD_NUM:
+> +	case IQS621_PROD_NUM:
+> +	case IQS622_PROD_NUM:
+> +		event_mask_reg = IQS620_GLBL_EVENT_MASK;
 > +
->  	/**
->  	 * @backlight: backlight device (optional)
->  	 */
-> -- 
-> 2.17.1
+> +		/*
+> +		 * Discreet button, hysteresis and SAR UI flags represent keys
+> +		 * and are unmasked if mapped to a valid keycode.
+> +		 */
+> +		for (i = 0; i < iqs62x_keys->keycodemax; i++) {
+> +			if (iqs62x_keys->keycode[i] == KEY_RESERVED)
+> +				continue;
+> +
+> +			if (iqs62x_events[i].reg == IQS62X_EVENT_PROX)
+> +				event_mask |= iqs62x->dev_desc->prox_mask;
+> +			else if (iqs62x_events[i].reg == IQS62X_EVENT_HYST)
+> +				event_mask |= (iqs62x->dev_desc->hyst_mask |
+> +					       iqs62x->dev_desc->sar_mask);
+> +		}
+> +
+> +		ret = regmap_read(iqs62x->map, iqs62x->dev_desc->hall_flags,
+> +				  &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/*
+> +		 * Hall UI flags represent switches and are unmasked if their
+> +		 * corresponding child nodes are present.
+> +		 */
+> +		for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++) {
+> +			if (!(iqs62x_keys->switches[i].enabled))
+> +				continue;
+> +
+> +			flag = iqs62x_keys->switches[i].flag;
+> +
+> +			if (iqs62x_events[flag].reg != IQS62X_EVENT_HALL)
+> +				continue;
+> +
+> +			event_mask |= iqs62x->dev_desc->hall_mask;
+> +
+> +			input_report_switch(iqs62x_keys->input,
+> +					    iqs62x_keys->switches[i].code,
+> +					    (val & iqs62x_events[flag].mask) ==
+> +					    iqs62x_events[flag].val);
+> +		}
+> +
+> +		input_sync(iqs62x_keys->input);
+> +		break;
+> +
+> +	case IQS624_PROD_NUM:
+> +		event_mask_reg = IQS624_HALL_UI;
+> +
+> +		/*
+> +		 * Interval change events represent keys and are unmasked if
+> +		 * either wheel movement flag is mapped to a valid keycode.
+> +		 */
+> +		if (iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_UP] != KEY_RESERVED)
+> +			event_mask |= IQS624_HALL_UI_INT_EVENT;
+> +
+> +		if (iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_DN] != KEY_RESERVED)
+> +			event_mask |= IQS624_HALL_UI_INT_EVENT;
+> +
+> +		ret = regmap_read(iqs62x->map, iqs62x->dev_desc->interval,
+> +				  &val);
+> +		if (ret)
+> +			return ret;
+> +
+> +		iqs62x_keys->interval = val;
+> +		break;
+> +
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	return regmap_update_bits(iqs62x->map, event_mask_reg, event_mask, 0);
+> +}
+> +
+> +static int iqs62x_keys_notifier(struct notifier_block *notifier,
+> +				unsigned long event_flags, void *context)
+> +{
+> +	struct iqs62x_event_data *event_data = context;
+> +	struct iqs62x_keys_private *iqs62x_keys;
+> +	int ret, i;
+> +
+> +	iqs62x_keys = container_of(notifier, struct iqs62x_keys_private,
+> +				   notifier);
+> +
+> +	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
+> +		ret = iqs62x_keys_init(iqs62x_keys);
+> +		if (ret) {
+> +			dev_err(iqs62x_keys->input->dev.parent,
+> +				"Failed to re-initialize device: %d\n", ret);
+> +			return NOTIFY_BAD;
+> +		}
+> +
+> +		return NOTIFY_OK;
+> +	}
+> +
+> +	for (i = 0; i < iqs62x_keys->keycodemax; i++) {
+> +		if (iqs62x_events[i].reg == IQS62X_EVENT_WHEEL &&
+> +		    event_data->interval == iqs62x_keys->interval)
+> +			continue;
+> +
+> +		input_report_key(iqs62x_keys->input, iqs62x_keys->keycode[i],
+> +				 event_flags & BIT(i));
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++)
+> +		if (iqs62x_keys->switches[i].enabled)
+> +			input_report_switch(iqs62x_keys->input,
+> +					    iqs62x_keys->switches[i].code,
+> +					    event_flags &
+> +					    BIT(iqs62x_keys->switches[i].flag));
+> +
+> +	input_sync(iqs62x_keys->input);
+> +
+> +	if (event_data->interval == iqs62x_keys->interval)
+> +		return NOTIFY_OK;
+> +
+> +	/*
+> +	 * Each frame contains at most one wheel event (up or down), in which
+> +	 * case a complementary release cycle is emulated.
+> +	 */
+> +	if (event_flags & BIT(IQS62X_EVENT_WHEEL_UP)) {
+> +		input_report_key(iqs62x_keys->input,
+> +				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_UP],
+> +				 0);
+> +		input_sync(iqs62x_keys->input);
+> +	} else if (event_flags & BIT(IQS62X_EVENT_WHEEL_DN)) {
+> +		input_report_key(iqs62x_keys->input,
+> +				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_DN],
+> +				 0);
+> +		input_sync(iqs62x_keys->input);
+> +	}
+> +
+> +	iqs62x_keys->interval = event_data->interval;
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static int iqs62x_keys_probe(struct platform_device *pdev)
+> +{
+> +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
+> +	struct iqs62x_keys_private *iqs62x_keys;
+> +	struct input_dev *input;
+> +	int ret, i;
+> +
+> +	iqs62x_keys = devm_kzalloc(&pdev->dev, sizeof(*iqs62x_keys),
+> +				   GFP_KERNEL);
+> +	if (!iqs62x_keys)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, iqs62x_keys);
+> +
+> +	ret = iqs62x_keys_parse_prop(pdev, iqs62x_keys);
+> +	if (ret)
+> +		return ret;
+> +
+> +	input = devm_input_allocate_device(&pdev->dev);
+> +	if (!input)
+> +		return -ENOMEM;
+> +
+> +	input->keycodemax = iqs62x_keys->keycodemax;
+> +	input->keycode = iqs62x_keys->keycode;
+> +	input->keycodesize = sizeof(*iqs62x_keys->keycode);
+> +
+> +	input->name = iqs62x->dev_desc->dev_name;
+> +	input->id.bustype = BUS_I2C;
+> +
+> +	__set_bit(EV_KEY, input->evbit);
+> +
+> +	for (i = 0; i < iqs62x_keys->keycodemax; i++)
+> +		__set_bit(iqs62x_keys->keycode[i], input->keybit);
+> +
+> +	__clear_bit(KEY_RESERVED, input->keybit);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++)
+> +		if (iqs62x_keys->switches[i].enabled) {
+> +			__set_bit(EV_SW, input->evbit);
+> +			__set_bit(iqs62x_keys->switches[i].code, input->swbit);
+
+input_set_capability(input, EV_SW, iqs62x_keys->switches[i].code)
+
+> +		}
+> +
+> +	iqs62x_keys->iqs62x = iqs62x;
+> +	iqs62x_keys->input = input;
+> +
+> +	ret = iqs62x_keys_init(iqs62x_keys);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to initialize device: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = input_register_device(iqs62x_keys->input);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to register device: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	iqs62x_keys->notifier.notifier_call = iqs62x_keys_notifier;
+> +	ret = blocking_notifier_chain_register(&iqs62x_keys->iqs62x->nh,
+> +					       &iqs62x_keys->notifier);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int iqs62x_keys_remove(struct platform_device *pdev)
+> +{
+> +	struct iqs62x_keys_private *iqs62x_keys = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	ret = blocking_notifier_chain_unregister(&iqs62x_keys->iqs62x->nh,
+> +						 &iqs62x_keys->notifier);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Failed to unregister notifier: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver iqs62x_keys_platform_driver = {
+> +	.driver = {
+> +		.name = IQS62X_DRV_NAME_KEYS,
+> +	},
+> +	.probe = iqs62x_keys_probe,
+> +	.remove = iqs62x_keys_remove,
+> +};
+> +module_platform_driver(iqs62x_keys_platform_driver);
+> +
+> +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
+> +MODULE_DESCRIPTION("Azoteq IQS620A/621/622/624/625 Keys and Switches");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:" IQS62X_DRV_NAME_KEYS);
+
+Otherwise
+
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+I suppose it will be merged through MFD?
+
+Thanks.
+
+-- 
+Dmitry
