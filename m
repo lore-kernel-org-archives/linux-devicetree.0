@@ -2,116 +2,158 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D715CC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8616C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF1F20717
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC1822464
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWvhVXgy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kRqauqv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbgAQXx3 (ORCPT
+        id S1730260AbgAQXyg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 18:53:29 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43889 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730117AbgAQXx3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 18:53:29 -0500
-Received: by mail-pf1-f193.google.com with SMTP id x6so12650482pfo.10;
-        Fri, 17 Jan 2020 15:53:28 -0800 (PST)
+        Fri, 17 Jan 2020 18:54:36 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:44285 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730258AbgAQXyg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 18:54:36 -0500
+Received: by mail-vs1-f65.google.com with SMTP id p6so15895316vsj.11
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 15:54:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DOZb8sQcyGgXJspGB8IQi9vf/tsFT10FEUhfYyxLnNM=;
-        b=KWvhVXgytu4/KOVTp6IHZul0HVA7fS4XjwIUmRNUqjCOm2FBzsSt7G1T+ZaIM914Cs
-         YwbS3p7Ow/LZJhI15eUS/n1CAOY/a9djfIlPQ+hiIVURU9ESQouVscicV1Vcr5UOvxpa
-         sS2F53lEpbdcPASP92BBJudtV5CG60SfxyH69RvWYOMfAbMW0Cs3lEMsCB8Nc0XWr/Qo
-         gYvXVWPD7PSGpK3R4jU7+vfPZfDbF6lTekeoR7QX/PBk3mQNTKisCtjHRKtA2j8NFDcr
-         PwytNWS+UshpAwizs8xBhA+PeRsl69q3uB+eshSSdkdlh3qQIFatCS3TgG0QMEGtfMf9
-         vocQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E8NH+1a7F0WHIbRqp4rgZ//dPF83s70QZVUublxQDJk=;
+        b=kRqauqv0A8IJZAnyv/N+3xLExXjs4/9vSzOBDDgFPTLxjwCoi5V2OvsBTILHRr5vCN
+         aIQ1emXkFTxcYZvD49A44J5vujNjZb1lKdhrsljJEk/+IPYGQvgyuhPgiu6Nww9oc0Nh
+         Phel0bF23O4QoXZ2j4pca1GgKWaMFNdLBmXWk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DOZb8sQcyGgXJspGB8IQi9vf/tsFT10FEUhfYyxLnNM=;
-        b=LfBQrII3uBevnBm3YF/r2K6ZgAtgixccu+mC87g8gS8RlK6UXwWwPJRBYUchaMpm4j
-         Twlzx93x6hXQfq4jSzuqj4IUHMnJ4R8XL+6TL3o6eHYpIj18A8QYjiguNb79aD3Rn3g2
-         oACO/8Il34BQ1rzzAbTiP+duLqjXuWrtVMvjy89AHgkcQfSbge6aUTmUmOKETdMegGgP
-         yHJbYP0Y1wbBJhgseJwz4ziP+Z83Xkk/ExjyNZhvwTySdsOjB2Ne29ClDRzcE67i8XB6
-         OQsHlW0ZBfPWMLLe5qYOUTjKbf9Xcsft538P2w/Mxl6VG8MogBXexYMVJPbitKUsjDBW
-         HR3g==
-X-Gm-Message-State: APjAAAVuE+rQhXntt9/fwY5TIZ+fmNKMjwrEs+Ye0wSV93B9q4TkqgLD
-        IEmG4u4odxcaBtxcbE1LQZGxPMaW
-X-Google-Smtp-Source: APXvYqyDw8DNy4dZkpYb6sJ9TskExfUpzX/UHnbXiUHSbosoyV52Ksm4i+qjsK8bBakyzOkhstf8RQ==
-X-Received: by 2002:a63:5920:: with SMTP id n32mr47258104pgb.443.1579305207989;
-        Fri, 17 Jan 2020 15:53:27 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m19sm7544146pjv.10.2020.01.17.15.53.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 15:53:27 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E8NH+1a7F0WHIbRqp4rgZ//dPF83s70QZVUublxQDJk=;
+        b=e6A40jAo9K5O9hxlUMSQ2+YZs+D3eKU+WyBdWuYruB3U4bgvbKuxgFBV7naa6pIzRF
+         Rx71mwQgT6ot/E2EgqLkD3gwxbVxhnNsf8BMo/etV1poqW0lkJsKIKkqqd9QzIkHdPyu
+         PpilsMYkpUWyToULdw6+4qTlOCFH5+XuR+1jq90Hsn1qXZPNyumuGfjaWAutL7c/0Dxt
+         3PzIEGbfLyikRPCbHm8yS2klVtNzp4ttTaG/af19lQMTLlKBYrshnKe3bmJNZfNQe8PB
+         a5fCG6KvYKfvt5bYz9J+B2pglbAq2DID8mlID1EI7SrxtxGg+SIWeEMBAxOybQzoqNQy
+         75fA==
+X-Gm-Message-State: APjAAAVSJ744rfJNWIyomj/S7u9S4mkz7r+eGbXjHMaMYSCAKTDg1hm0
+        wXNjkAnDEuj8iHzGWWBSG1NPcaQ9Lwg=
+X-Google-Smtp-Source: APXvYqxJhPV0Ve2rxXhhIPk5T7x0OPe4kivNRngtGbMP0uswjcGeC6UXQumIiwGkbl4G9eNNrLgWaQ==
+X-Received: by 2002:a67:89c4:: with SMTP id l187mr3793466vsd.31.1579305274318;
+        Fri, 17 Jan 2020 15:54:34 -0800 (PST)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id w62sm7719383vkw.35.2020.01.17.15.54.33
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 15:54:33 -0800 (PST)
+Received: by mail-ua1-f47.google.com with SMTP id 1so9599597uao.1
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 15:54:33 -0800 (PST)
+X-Received: by 2002:ab0:2006:: with SMTP id v6mr24170327uak.22.1579305272950;
+ Fri, 17 Jan 2020 15:54:32 -0800 (PST)
+MIME-Version: 1.0
+References: <20200117155001.v2.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid>
+In-Reply-To: <20200117155001.v2.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 17 Jan 2020 15:54:19 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Wg3gpLXz1+xxL_6Ki404+oXyma6NB33eps_Gs8R4LX4Q@mail.gmail.com>
+Message-ID: <CAD=FV=Wg3gpLXz1+xxL_6Ki404+oXyma6NB33eps_Gs8R4LX4Q@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: timer: Use non-empty ranges in example
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Mark Rutland <mark.rutland@arm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH v4 0/2] ata: ahci_brcm: Follow-up changes for BCM7216
-Date:   Fri, 17 Jan 2020 15:53:11 -0800
-Message-Id: <20200117235313.14202-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jens,
+Hi,
 
-These three patches are a follow-up to my previous series titled: ata:
-ahci_brcm: Fixes and new device support.
+On Fri, Jan 17, 2020 at 3:50 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> On many arm64 qcom device trees, running `make dtbs_check` yells:
+>
+>   timer@17c20000: #size-cells:0:0: 1 was expected
+>
+> It appears that someone was trying to assert the fact that sub-nodes
+> describing frames would never have a size that's more than 32-bits
+> big.  That does indeed appear to be true for all cases I could find.
+>
+> Currently many arm64 qcom device tree files have a #address-cells and
+> about in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase
+> address and size cells for soc").  That means the only way we can
+> shrink them down is to use a non-empty ranges.
+>
+> Since forever it has said in "writing-bindings.txt" to "DO use
+> non-empty 'ranges' to limit the size of child buses/devices".  I guess
+> we should start listening to it.
+>
+> I believe (but am not certain) that this also means that we should use
+> "ranges" to simplify the "reg" of our sub devices by specifying an
+> offset.  Let's update the example in the bindings to make this
+> obvious.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> See:
+>   https://lore.kernel.org/r/20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid
+>
+> ...for the patch that sparked this change.
+>
+> Changes in v2:
+> - Fixed my typo 0xf0000000 => 0xf0001000
+>
+>  .../devicetree/bindings/timer/arm,arch_timer_mmio.yaml | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> index b3f0fe96ff0d..b92d958d7541 100644
+> --- a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> +++ b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
+> @@ -99,22 +99,22 @@ examples:
+>        compatible = "arm,armv7-timer-mem";
+>        #address-cells = <1>;
+>        #size-cells = <1>;
+> -      ranges;
+> +      ranges = <0 0xf0001000 0x1000>;
+>        reg = <0xf0000000 0x1000>;
+>        clock-frequency = <50000000>;
+>
+> -      frame@f0001000 {
+> +      frame@0 {
+>          frame-number = <0>;
+>          interrupts = <0 13 0x8>,
+>                 <0 14 0x8>;
+> -        reg = <0xf0001000 0x1000>,
+> -              <0xf0002000 0x1000>;
+> +        reg = <0x0000 0x1000>,
+> +              <0x1000 0x1000>;
+>        };
+>
+>        frame@f0003000 {
+>          frame-number = <1>;
+>          interrupts = <0 15 0x8>;
+> -        reg = <0xf0003000 0x1000>;
+> +        reg = <0x2000 0x1000>;
 
-After submitting the BCM7216 RESCAL reset driver, Philipp the reset
-controller maintained indicated that the reset line should be self
-de-asserting and so reset_control_reset() should be used instead.
+Wow, how many stupid mistakes can I make in one small change?  :(  I
+forgot to change the node name.  v3 is now at:
 
-These three patches update the driver in that regard. It would be great if
-you could apply those and get them queued up for 5.6 since they are
-directly related to the previous series.
+https://lore.kernel.org/r/20200117155303.v3.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid
 
-Changes in v4:
-
-- rebase against latest ata/for-next which included some fixes from
-  Arnd that corrected the reset consumer API
-- dropped patch #1
-- did not add Reviewed-by tags since the patches changed a bit from last
-  submission
-
-Changes in v3:
-- introduced a preliminary patch making use of the proper reset control
-  API in order to manage the optional reset controller line
-- updated patches after introducing that preliminary patch
-
-Changes in v2:
-- updated error path after moving the reset line control
-
-Thanks!
-
-Florian Fainelli (2):
-  ata: ahci_brcm: Perform reset after obtaining resources
-  ata: ahci_brcm: BCM7216 reset is self de-asserting
-
- drivers/ata/ahci_brcm.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
-
--- 
-2.17.1
-
+-Doug
