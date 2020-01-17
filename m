@@ -2,132 +2,101 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0C8C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A10C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A98620748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B8921582
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NG/bBZ9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgAQSTD (ORCPT
+        id S1727519AbgAQSYM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:19:03 -0500
-Received: from mailoutvs11.siol.net ([185.57.226.202]:49903 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726970AbgAQSTD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 13:19:03 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 3B8B7523E9F;
-        Fri, 17 Jan 2020 19:19:00 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KYaxS-gW__TX; Fri, 17 Jan 2020 19:18:59 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id DB642523E5B;
-        Fri, 17 Jan 2020 19:18:59 +0100 (CET)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id F2837523EA2;
-        Fri, 17 Jan 2020 19:18:58 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: allwinner: h6: tanix-tx6: enable emmc
-Date:   Fri, 17 Jan 2020 19:18:58 +0100
-Message-ID: <3332569.R56niFO833@jernej-laptop>
-In-Reply-To: <20200117181427.hy7qsyxwomsl3v2q@gilmour.lan>
-References: <20200115193441.172902-1-jernej.skrabec@siol.net> <20200117181427.hy7qsyxwomsl3v2q@gilmour.lan>
+        Fri, 17 Jan 2020 13:24:12 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43330 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgAQSYM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 13:24:12 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x6so12309629pfo.10;
+        Fri, 17 Jan 2020 10:24:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dZq4930H9HujJy04y88tu8oZfEIDfkU1+0+vk4EgxTk=;
+        b=NG/bBZ9xt5g9xcqgnyHR4u+N+LkBsrI+BB+q+EzgjQFYNsPWuGmYkwmAWpvfFhxU3G
+         hdQMFqfOLdO3y3NvlwAQaic7RwMAhfIf/Ar1LAeJOjxvB1UhpEDNYR2mkek1zAEqa5cR
+         c6mzvmoG0Xl4rncgYPfA3xyx1YxZnckNwJbCL2ommLHjUfLYxL1TPdbjiaK/I2S7CctC
+         NvbTyHnpS7U5XIhdI3+4cV9y4ePt/CPHDqCHhcVaxSbwPeLQUJqFR/vcZzUQG0O15ddP
+         g41Nv3n9k4dFlpPuPK5RdAhYWSiKtMQBtJIJlBGDJi5jzQqeriLfjO+D5sSV+ixV8Q5D
+         JO/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dZq4930H9HujJy04y88tu8oZfEIDfkU1+0+vk4EgxTk=;
+        b=afralLiHjqmzN8qSILru28pepTnCIffwDE4OAhW00RbBY1b3Ry1o5dph7Xd+8PJ6DX
+         F4CXo6xnjp56z9Ljo4sGNsW+CMMFmDoNXjtljH0aR6tEl4C30+vH8s9LYBneeQ0JkLOi
+         KeWucy53zJ+uEDwmNFSzbRjlmFbSo7orc56VYQGHcNNoPdXdbW/py3e9EknirZPI4lFd
+         t/4gRDpwwpMRO3MAHIv9YVrQFfZ2eRq7Pm1ZSdlLb0OSQo8xfzefJvsEUY48oO1Pp4+3
+         WEUUA5vRK1XgJMH8ZTADmG+oBeEIaPBav3xX6qyDkE1e8OfZR65kZjf+zEdS4vSpTH2p
+         uHQg==
+X-Gm-Message-State: APjAAAXjxqnggnXkVkjlLok7v71gMU78p7TCJhNhwcI1KW4f5nr6pwc4
+        oJwWkVR9jr0I3q5GyFSwkdc=
+X-Google-Smtp-Source: APXvYqwqwtjiy/0ADuAQYaj/8wr83Ow+Ynf/qWks0ep1fuSe0WQLg9Hb44mfoLAT+0d/JXjA/BTNug==
+X-Received: by 2002:a63:fc57:: with SMTP id r23mr45446402pgk.71.1579285451964;
+        Fri, 17 Jan 2020 10:24:11 -0800 (PST)
+Received: from ?IPv6:2001:4898:d8:28:a811:24b6:1823:a6d9? ([2001:4898:80e8:8:2821:24b6:1823:a6d9])
+        by smtp.gmail.com with ESMTPSA id s18sm30103344pfh.179.2020.01.17.10.24.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 10:24:11 -0800 (PST)
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Borislav Petkov <bp@alien8.de>,
+        James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, shji@microsoft.com,
+        ruizhao@microsoft.com, Yuqing Shen <yuqing.shen@broadcom.com>,
+        ray.jui@broadcom.com, wangglei@gmail.com
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+ <aa80b8a5-5297-91c6-6410-99e43b53bd20@broadcom.com>
+From:   Shiping Ji <shiping.linux@gmail.com>
+Message-ID: <d05f6394-e076-6c99-965a-28444c0f24f9@gmail.com>
+Date:   Fri, 17 Jan 2020 10:24:10 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <aa80b8a5-5297-91c6-6410-99e43b53bd20@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dne petek, 17. januar 2020 ob 19:14:27 CET je Maxime Ripard napisal(a):
-> On Wed, Jan 15, 2020 at 08:34:41PM +0100, Jernej Skrabec wrote:
-> > Tanix TX6 has 32 GiB eMMC. Add a node for it.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     | 20 +++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts index
-> > 83e6cb0e59ce..8cbf4e4a761e 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
-> > @@ -31,6 +31,13 @@ hdmi_con_in: endpoint {
-> > 
-> >  		};
-> >  	
-> >  	};
-> > 
-> > +	reg_vcc1v8: vcc1v8 {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "vcc1v8";
-> > +		regulator-min-microvolt = <1800000>;
-> > +		regulator-max-microvolt = <1800000>;
-> > +	};
-> > +
-> > 
-> >  	reg_vcc3v3: vcc3v3 {
-> >  	
-> >  		compatible = "regulator-fixed";
-> >  		regulator-name = "vcc3v3";
-> > 
-> > @@ -78,6 +85,15 @@ &mmc0 {
-> > 
-> >  	status = "okay";
-> >  
-> >  };
-> > 
-> > +&mmc2 {
-> > +	vmmc-supply = <&reg_vcc3v3>;
-> > +	vqmmc-supply = <&reg_vcc1v8>;
-> > +	non-removable;
-> > +	cap-mmc-hw-reset;
-> > +	bus-width = <8>;
-> > +	status = "okay";
-> > +};
-> > +
-> > 
-> >  &ohci0 {
-> >  
-> >  	status = "okay";
-> >  
-> >  };
-> > 
-> > @@ -86,6 +102,10 @@ &ohci3 {
-> > 
-> >  	status = "okay";
-> >  
-> >  };
-> > 
-> > +&pio {
-> > +	vcc-pc-supply = <&reg_vcc1v8>;
-> > +};
-> > +
+On 1/16/2020 4:31 PM, Scott Branden wrote:
+> Hi Shiping,
 > 
-> Can you list all of the regulators for the H6 while you're at it (in a
-> preliminary patch, ideally)?
+> Here is another small change to cleanup.
+>> +    } else {
+>> +        memset(info, 0, sizeof(struct ecc_error_info));
+> This should be sizeof(*info), not sizeof(struct ecc_error_info)
+> for better programming to allow info to change type in the future
+> without the code changing.
 
-Not sure what you mean. This box has only fixed regulators. I deducted above 
-from the fact that port C is mostly dedicated to eMMC, so it has to use same 
-regulator as vqmmc. Other than that, I don't know.
+Yes, two occurrences will be replaced in the next patch, thanks!
 
+-- 
 Best regards,
-Jernej
-
-
-
-
+Shiping Ji
