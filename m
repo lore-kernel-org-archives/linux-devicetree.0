@@ -2,163 +2,133 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609F8C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 13:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043D8C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3752D20661
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 13:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4672192A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 14:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zceCobLh"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Pt6oV5Oe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgAQNoQ (ORCPT
+        id S1726936AbgAQOQF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:44:16 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46079 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgAQNoQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 08:44:16 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j42so22728028wrj.12
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 05:44:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=LhpCR5vDcuxmC13Hf7ge2eVs5JUiFOiL0U5Ba9egRMw=;
-        b=zceCobLh0fkMReC9xfFdXwldcPtVuv28toduajHElpblXk9BO8nsAonZJU4d4ZYwys
-         /jAk1UpPld0R+1uL1xkA85I5lfqc60s0ccLfjIWBz8kZUMUxTDfcOATaEzJmNElqL6uZ
-         PdGim4iiP/O9ixXknzFJu8o2V5T3elLHj0HTdovMQi1TLRvHYUZdYLN4QjvJKz8tHgyR
-         rl0n3Qu6eat1AqcvapQfUbpu9jgvixKlq99w26Q3cl57QLclNJbC7ON4reh1enfe6VGE
-         ZiE4TP+DXXMHrOBpwjdNTY/QELGcU9jHKkyyIXyj9X64yyjD2CSiqjFYDmDKCQpA3Sa6
-         elUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LhpCR5vDcuxmC13Hf7ge2eVs5JUiFOiL0U5Ba9egRMw=;
-        b=ZQNQ3x3iY+Pqa7NkjvZ7S5pKwvunmpxTh4/TucBfGYdKUVdPWxX6VYE/ByHrRTgl/k
-         GPGuv93522MjULIam+yNxIZkb1IZmouBpKpKgJzmwUXALEC98D4AJ2PlAWwzR4U/PWG7
-         ixpgjttLURY2GOWzu/lxWRVzxiCnprJu7o8hnhE5aFgHz7aBFkmhcDC11FIlcmLrPcH2
-         T4MlpYDHHNDxjNXcw9StuoFJop2aBUJhu/v/lfRYqbX0IDL7qQkaUnL/fIKOyHD+Kvoh
-         HXeOIGOcDkky3o+m1H3mh06XxEEFLB1/fvK0gBVB7/9WsVAmv1m3r672TG53vsWcDjJT
-         HkVA==
-X-Gm-Message-State: APjAAAUHUzr+07RN6ToHopJAFIp3xGJh60gLzxlG5u+u55ddakgvbiAY
-        EeN13CbN7pYz1K69IJl1EaFNBg==
-X-Google-Smtp-Source: APXvYqyTu5Tky5NAfYjiXymO2Th58H5BnDHWlmZTL0ub+zBth+sD7V3P+A22iVD9kpySPXrScKf+VA==
-X-Received: by 2002:adf:ee88:: with SMTP id b8mr3261159wro.249.1579268654624;
-        Fri, 17 Jan 2020 05:44:14 -0800 (PST)
-Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id t1sm9338897wma.43.2020.01.17.05.44.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:44:14 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:44:32 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v10 00/13] Support ROHM BD71828 PMIC
-Message-ID: <20200117134432.GO15507@dell>
-References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <20200117103000.GG15507@dell>
- <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
+        Fri, 17 Jan 2020 09:16:05 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56638 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQOQE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 09:16:04 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00HEG19M015368;
+        Fri, 17 Jan 2020 08:16:01 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579270561;
+        bh=19u9Xw6BWk5rmFuzu35uo/8szOm4shzG97TLnJNpWUA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Pt6oV5Oe7HGCOpI2ZubTlMb3Va/OanaLMgY2A4PsJNSv2oSsudiFTnH7uUHTzfjFi
+         2cAgIcAZ4e0xDiqdIJMWSkMUih1R+oIPrEJ8s4AaTSJnDOAX/Mk2YnbGKpR4zsXw/W
+         XHF4kYsg9p5CP7Mk2Ec9CfdpUPKi5lGsDb1obetw=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00HEG1aY085701
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 17 Jan 2020 08:16:01 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
+ Jan 2020 08:16:00 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 17 Jan 2020 08:16:00 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00HEFvIN024800;
+        Fri, 17 Jan 2020 08:15:58 -0600
+Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
+To:     Tony Lindgren <tony@atomide.com>, Benoit Parrot <bparrot@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191211140720.10539-1-bparrot@ti.com>
+ <20191212174123.GF35479@atomide.com>
+ <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
+ <20191213152938.GK35479@atomide.com> <20200113165413.i6nbi2i7xyue4fti@ti.com>
+ <20200114160422.GQ5885@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <e72f8de3-fd30-a216-8e6e-934a05259ed6@ti.com>
+Date:   Fri, 17 Jan 2020 16:15:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9785531484b32da487a6016f5c32bf2e9bc45985.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200114160422.GQ5885@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 17 Jan 2020, Vaittinen, Matti wrote:
+On 14/01/2020 18:04, Tony Lindgren wrote:
+> * Benoit Parrot <bparrot@ti.com> [200113 16:51]:
+>> Tony Lindgren <tony@atomide.com> wrote on Fri [2019-Dec-13 07:29:38 -0800]:
+>>> * Tero Kristo <t-kristo@ti.com> [191213 07:43]:
+>>>> On 12/12/2019 19:41, Tony Lindgren wrote:
+>>>>> * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
+>>>>>> This patch series adds the missing camera endpoint (ov2659) as well as
+>>>>>> the required source clocks nodes for the sensor.
+>>>>>>
+>>>>>> On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
+>>>>>> clock nodes/tree was removed as it was unsed at the time, we are
+>>>>>> re-adding the needed clock nodes here.
+>>>>>
+>>>>> Tero, it seems I can already pick this series?
+>>>>
+>>>> I believe it is ready if you approve the clkout1 clock patch.
+>>>
+>>> OK yeah looks fine.
+>>>
+>>>>> Or ou want to queue the changes to am43xx-clocks.dtsi along with all
+>>>>> your other clock patches?
+>>>>
+>>>> Well, I have actually never queued any omap2+ dts patches myself, and I
+>>>> don't think there would be too many of those coming for next merge either.
+>>>
+>>> OK will queue this series then. For the other ones from Benoit
+>>> looks like we need an immutable clock branch before I can apply
+>>> anything.
+>>
+>> Tony, Tero,
+>>
+>> Are these merged anyware now?
+>> I still don't see any of these on linux-next?
+> 
+> Tero any news on getting some immutable clock changes branch done?
+> Looks like there are quite a few pending clock patches right now,
+> probably best to set them all into a branch that I can also merge
+> in.
+
+Working on that now, have been forced to prioritize work lately. I can 
+probably get the branch set-up on Monday and send a pull-req out 
+assuming it is not too late for 5.6 already.
+
+-Tero
 
 > 
-> On Fri, 2020-01-17 at 10:30 +0000, Lee Jones wrote:
-> > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
-> > 
-> > > Patch series introducing support for ROHM BD71828 PMIC
-> > > 
-> > > ROHM BD71828 is a power management IC containing 7 bucks and 7
-> > > LDOs. All
-> > > regulators can be controlled individually via I2C. Bucks 1,2,6 and
-> > > 7 can also be assigned to a "regulator group" controlled by run-
-> > > levels.
-> > > Eg. Run level specific voltages and enable/disable statuses for
-> > > each of
-> > > these bucks can be set via register interface. The buck run-level
-> > > group
-> > > assignment (selection if buck is to be controlled individually or
-> > > via
-> > > run-levels) can be changed at run-time via I2C.
-> > > 
-> > > This patch series brings only the basic support for controlling
-> > > regulators individually via I2C.
-> > > 
-> > > In addition to the bucks and LDOs there are:
-> > > 
-> > > - The usual clk gate
-> > > - 4 IO pins (mostly usable as GPO or tied to specific purpose)
-> > > - power button support
-> > > - RTC
-> > > - two LEDs
-> > > - battery charger
-> > > - HALL sensor input
-> > > 
-> > > This patch series adds support to regulators, clk, RTC, GPIOs and
-> > > LEDs.
-> > > 
-> > > Power-supply driver for charger is not included in this series.
-> > > 
-> > > The series also adds LED DT-node lookup based on node name or given
-> > > property name/value pair in LED core. It also adds generic default-
-> > > state
-> > > and default-trigger property handling to LED core. Follow-up
-> > > patches
-> > > simplifying few other LED drivers should follow.
-> > > 
-> > > Changelog v10:
-> > >   - Split RTC patch to a BD70528 fix (which hopefully goes to 5.4)
-> > > and to
-> > >     BD71828 support
-> > 
-> > Still missing LED Acks.
-> > 
+>> And by "these" I mean this one and both
+>>   ARM: dts: dra7: add vpe nodes
+>>   ARM: dts: dra7: add cal nodes
 > 
-> Yep. I know. I haven't heard from Pavel recently and the patch 12
-> definitely requires his ack. Can you take the other patches in and
-> leave 12 and 13 out for now? I can continue work on LEDs with Pavel but
-> I would really like to have the regulators working and BD70528 RTC
-> fixed in next release...
+> Yeah looks good to me other than the clock dependency.
+> 
+> Regards,
+> 
+> Tony
+> 
 
-Sure.  Give me a few days though.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
