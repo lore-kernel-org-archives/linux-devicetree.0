@@ -2,148 +2,124 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA77C33CB6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2E0C33CB7
 	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F95C22464
+	by mail.kernel.org (Postfix) with ESMTP id B526820717
 	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 23:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iWSB9WXc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CP4YQAdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbgAQXxh (ORCPT
+        id S1730378AbgAQXxb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 18:53:37 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39292 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730377AbgAQXxh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 18:53:37 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so12654431pfs.6
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 15:53:36 -0800 (PST)
+        Fri, 17 Jan 2020 18:53:31 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:47093 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730117AbgAQXxa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 18:53:30 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so10474847pll.13;
+        Fri, 17 Jan 2020 15:53:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LI745qyhfC24gzXUC8Xnl8TDVqe/BweZFfeh/F4qgX8=;
-        b=iWSB9WXctOtQvLtA/1Z6XcpzXS2vBNhlFGNoTKDSXf4sSuJHBqCc6hgW/Ofgh4AEaL
-         JvlOO5pGnMvrlJCvA2wLe7Kh9eZkIbVemqI7UEOEhIiYz/IWzP0L1/IHZQ0AzKwnbP1j
-         5NiPQJ7nLoOv3P5wp9XQZO0ZIb9kz4ozi6Wtg=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=PG/DpwgudfX9+wNQUUHhUWviyLZbkMRXOAK/nS3Dn8k=;
+        b=CP4YQAdzrfFAhTYl0zjvup0HQhSkzf00ZY4Qpwm14ReJ2bsiieb4MnwKpb+J8TcmTE
+         IbyxOa7WI+CjoeIyauvu/fBo5KA/sntsumqIHpemUo6vzlMZA4vz8juREvlfTAQ4Dzeh
+         3MchTzOPeFIICgM/++z9KB0jW2QJtrlPRA2zgSpkeWHgVqMG6z3x8FwwMiGIM4fAmwqp
+         wVp3DOzmNvY+BjVlwE1mbMzgLIkw+LKHOjbC5t2CbjUhuF34xWALeE+koolSB10LBvNh
+         oB1EXQmMPQZFIkSZJsejm/ehBacV4uiQlPLQY/4Cpn6gahiDqhaXY5Ffy7DksdJ8lqxf
+         EjCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LI745qyhfC24gzXUC8Xnl8TDVqe/BweZFfeh/F4qgX8=;
-        b=D6bSJ7KHq2UFHJfVmBlh393nPd7v4DgdwPrXv4/3qwNiDZ48I5CYFh/R7z5mfWGMhR
-         n/5RqdUfWCrvDTEpDfthnLKHxiXuYTwXrlTUOGDKRfrs9yafXVu0ToMzPb+xpHVsHKdN
-         hV12LyZscX/z1+FQd2XmVAe99epVYOU0yn099yQgai0m9THcCBM/4oUS3LALve4J0DTw
-         d7kqc337rPl6L4Kqei4ywBrUW2DzGej151RKpOxynuvLWdALny27U78vhDRHaAr8EzzC
-         4y7rKQl/ZSXLdNuRi7ioG8kvaYGgEYJzbrVECg4aVr03DE30pQaBrh6xQzr2Y+3Zscs6
-         o44w==
-X-Gm-Message-State: APjAAAXqtJ9cw3tK4C61tzJgx0bSKQP0p9t73FnhMaBGpTibzI4u6dwg
-        epUfU1jHcBidVYo6O4CihWfxoQ==
-X-Google-Smtp-Source: APXvYqwjkCD5j5Pvhce9ZTqoVwIBg5agZtC0F3r1I2MXKvuT7W8zYAZz8j21fgSSJnRtECpB3DEiVA==
-X-Received: by 2002:a62:53c3:: with SMTP id h186mr5563105pfb.118.1579305216492;
-        Fri, 17 Jan 2020 15:53:36 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id e1sm30865105pfl.98.2020.01.17.15.53.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=PG/DpwgudfX9+wNQUUHhUWviyLZbkMRXOAK/nS3Dn8k=;
+        b=mbkx6zDk4v+8VsedwhbI6u3F00DfbME0HVGqUztMp9nXk+NhU/qKeaV/qWuhz3Y5cI
+         MAcdqES2GygzW+iT+PoJJsXTO7LdSLolq3tvLppEupQ17tK7TFzVrFXgxCwkhlfDmIx8
+         2bQuEaLMM1j81oBiXDN/QIF648KTCC6Aib4MLUKancy3ZoA22cH+FTk53EQEzHJz9/wU
+         R8tlah2xo8tMtH2fjh97HpuXnL+U2fJ8U22o6gqbOHzHfmCuW4mxuwrhXUThbgxPNa2N
+         CTGLbv94SkGeaE1MDz+oDSF+MTOglOmfwtFgbAm4NgOMaxPyf1QUdlmYvsHckovno0H2
+         THLg==
+X-Gm-Message-State: APjAAAUDBKWpuDOVQC1M/e2OCwIfR1eYfBYLhp8KvoIKY7528eBjpGqt
+        g1r9loesn9rRsv7hN/uI4v/07gTX
+X-Google-Smtp-Source: APXvYqz9K5vPWxghUnYWKbeptqEVQx8Bvkbr27YW3j8GAaY6Xvoys9kGd0wX6fuLVmFCyBekVbDUxg==
+X-Received: by 2002:a17:902:ff07:: with SMTP id f7mr2005872plj.12.1579305209199;
+        Fri, 17 Jan 2020 15:53:29 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id m19sm7544146pjv.10.2020.01.17.15.53.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 15:53:36 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, mka@chromium.org,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 17 Jan 2020 15:53:28 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH v3] dt-bindings: timer: Use non-empty ranges in example
-Date:   Fri, 17 Jan 2020 15:53:26 -0800
-Message-Id: <20200117155303.v3.1.I7dbd712cfe0bdf7b53d9ef9791072b7e9c6d3c33@changeid>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Hans de Goede <hdegoede@redhat.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Tejun Heo <tj@kernel.org>, Jaedon Shin <jaedon.shin@gmail.com>,
+        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
+        Parallel ATA drivers)),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH v4 1/2] ata: ahci_brcm: Perform reset after obtaining resources
+Date:   Fri, 17 Jan 2020 15:53:12 -0800
+Message-Id: <20200117235313.14202-2-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200117235313.14202-1-f.fainelli@gmail.com>
+References: <20200117235313.14202-1-f.fainelli@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On many arm64 qcom device trees, running `make dtbs_check` yells:
+Resources such as clocks, PHYs, regulators are likely to get a probe
+deferral return code, which could lead to the AHCI controller being
+reset a few times until it gets successfully probed. Since this is
+typically the most time consuming operation, move it after the resources
+have been acquired.
 
-  timer@17c20000: #size-cells:0:0: 1 was expected
-
-It appears that someone was trying to assert the fact that sub-nodes
-describing frames would never have a size that's more than 32-bits
-big.  That does indeed appear to be true for all cases I could find.
-
-Currently many arm64 qcom device tree files have a #address-cells and
-about in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase
-address and size cells for soc").  That means the only way we can
-shrink them down is to use a non-empty ranges.
-
-Since forever it has said in "writing-bindings.txt" to "DO use
-non-empty 'ranges' to limit the size of child buses/devices".  I guess
-we should start listening to it.
-
-I believe (but am not certain) that this also means that we should use
-"ranges" to simplify the "reg" of our sub devices by specifying an
-offset.  Let's update the example in the bindings to make this
-obvious.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-See:
-  https://lore.kernel.org/r/20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid
-
-...for the patch that sparked this change.
-
-Changes in v3:
-- Fixed my typo frame@f0003000 => frame@2000
-
-Changes in v2:
-- Fixed my typo 0xf0000000 => 0xf0001000
-
- .../bindings/timer/arm,arch_timer_mmio.yaml          | 12 ++++++------
+ drivers/ata/ahci_brcm.c | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-index b3f0fe96ff0d..102f319833d9 100644
---- a/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-+++ b/Documentation/devicetree/bindings/timer/arm,arch_timer_mmio.yaml
-@@ -99,22 +99,22 @@ examples:
-       compatible = "arm,armv7-timer-mem";
-       #address-cells = <1>;
-       #size-cells = <1>;
--      ranges;
-+      ranges = <0 0xf0001000 0x1000>;
-       reg = <0xf0000000 0x1000>;
-       clock-frequency = <50000000>;
+diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+index 7ac1141c6ad0..e32c8fe729ff 100644
+--- a/drivers/ata/ahci_brcm.c
++++ b/drivers/ata/ahci_brcm.c
+@@ -456,13 +456,9 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->rcdev))
+ 		return PTR_ERR(priv->rcdev);
  
--      frame@f0001000 {
-+      frame@0 {
-         frame-number = <0>;
-         interrupts = <0 13 0x8>,
-                <0 14 0x8>;
--        reg = <0xf0001000 0x1000>,
--              <0xf0002000 0x1000>;
-+        reg = <0x0000 0x1000>,
-+              <0x1000 0x1000>;
-       };
+-	reset_control_deassert(priv->rcdev);
+-
+ 	hpriv = ahci_platform_get_resources(pdev, 0);
+-	if (IS_ERR(hpriv)) {
+-		ret = PTR_ERR(hpriv);
+-		goto out_reset;
+-	}
++	if (IS_ERR(hpriv))
++		return PTR_ERR(hpriv);
  
--      frame@f0003000 {
-+      frame@2000 {
-         frame-number = <1>;
-         interrupts = <0 15 0x8>;
--        reg = <0xf0003000 0x1000>;
-+        reg = <0x2000 0x1000>;
-       };
-     };
+ 	hpriv->plat_data = priv;
+ 	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP | AHCI_HFLAG_NO_WRITE_TO_RO;
+@@ -479,6 +475,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+ 		break;
+ 	}
  
++	ret = reset_control_deassert(priv->rcdev);
++	if (ret)
++		return ret;
++
+ 	ret = ahci_platform_enable_clks(hpriv);
+ 	if (ret)
+ 		goto out_reset;
 -- 
-2.25.0.341.g760bfbb309-goog
+2.17.1
 
