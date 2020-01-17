@@ -2,113 +2,241 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5B5C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA11C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 17:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEF9217F4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01ACD2083E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 17:04:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=essensium.com header.i=@essensium.com header.b="hDmTmSeG"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="W3mHfGce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgAQQnt (ORCPT
+        id S1726901AbgAQREc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:43:49 -0500
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:37920 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbgAQQnt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 11:43:49 -0500
-Received: by mail-ed1-f54.google.com with SMTP id i16so22842784edr.5
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 08:43:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=essensium.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tEv3CQeWt5hgTO0fdyyZhcvyQnL+294XMDPWLhPD0R4=;
-        b=hDmTmSeGz2AEdx2fauiQrkNs/vfYmqXUd6vAQpGvQL6aQIssTqCtwRKhDg3Z+UclUN
-         mEGuyAoqb1GD8AKuVkDua7bAuUWXyTz6dild8D1VsN9kAC2h5oml0r97KYMVstotWxZm
-         7bqoAuy7YAspCTGECzK/781du1Z69kyzJQ8BxNe/p43Y7EfLiJUhofA7yQdyiY8o0Xew
-         8ffP2RZboZO94zKS3LMf2nsmqYO6OWr/G38PTtrzP860bRc0TQP/sjaZgivocuXV6kZz
-         J3QXABMd3sVzqoEhWrJ2/kIRC14Oo2TXq5ZMVBJNUUPVDDcu7KgN6qrWMRAS2en9vJoC
-         jt9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tEv3CQeWt5hgTO0fdyyZhcvyQnL+294XMDPWLhPD0R4=;
-        b=GPjqKLs40XS46CSxyG+uYCT7Q/J9i5NNGOgWZws3Z9LREHYxwRtlfo7ED5ygL1bUmh
-         esfGfaREqZhjDb3MjhlswdaqkoK2Zy0z9I/ZYqWO0bv3u3O4S0jzKhyXRnncQRUHMueN
-         dziG5eytd7ehINXgsPGW53Q86NziyZRxSK0EBYKP9J+7iB3flnFaJD8idXfZcCCXXUg8
-         3YmlW+pT4fKwrIAbiVMiINjrKEW2xbSUMCGvCIqz8kL7XU8IoLPSLmPRz6B1gEFjPbqW
-         Zf2iDPSDP5ef1MD+LWBNzF/itygaBYKvPeEF0KMx0adzZ23FwJ3YgD1CUuP4a9rkgtZC
-         pgiQ==
-X-Gm-Message-State: APjAAAWWn5Khcdtxphxdr1zMfhDHQqf7D+55BmxYMxwFc5I8hHdhxEKY
-        apiHvwO5fi8lpgpt4HFSr2XkOQ==
-X-Google-Smtp-Source: APXvYqyakRpTIi59mOROuo3NU+eFqkh+xuVDpfObMLe+BjR9X4R6Ly0Vz2pXLAr2oOFCxUThCmh9ng==
-X-Received: by 2002:aa7:db04:: with SMTP id t4mr4655603eds.122.1579279427334;
-        Fri, 17 Jan 2020 08:43:47 -0800 (PST)
-Received: from localhost.localdomain (10.20-136-217.adsl-dyn.isp.belgacom.be. [217.136.20.10])
-        by smtp.googlemail.com with ESMTPSA id b4sm868622ejb.37.2020.01.17.08.43.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:43:46 -0800 (PST)
-From:   Charles-Antoine Couret <charles-antoine.couret@essensium.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Charles-Antoine Couret <charles-antoine.couret@essensium.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/2] ASoC: tas5756m: Add DT binding document
-Date:   Fri, 17 Jan 2020 17:43:31 +0100
-Message-Id: <20200117164331.87442-2-charles-antoine.couret@essensium.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200117164331.87442-1-charles-antoine.couret@essensium.com>
-References: <20200117164331.87442-1-charles-antoine.couret@essensium.com>
+        Fri, 17 Jan 2020 12:04:32 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:37942 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726559AbgAQREc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 12:04:32 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HH2uJ1009670;
+        Fri, 17 Jan 2020 18:04:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=2SUWeiNhV6oNErDN+s1Xmml+Kuc8NdnwiZ6aj9UFf4U=;
+ b=W3mHfGceOea4n98Lrzj+LiyDzCa5aICL0+rhY58p2pPGmoqJmfPKKcMB5xhmUchZv7iq
+ gFaq0hzj99NyKri4GS2528mFiW276I63t3w/afiKtkJQIdksHayrbQoQpNW1ICPDXpLd
+ rTesoHPFq4t7UeBbP2/Ze+0rYfcdYH0IksMbLKUGRbZBNcErU1LWRWWzsqz3BkPzNmyR
+ IStn8Ya2fQwQikP3SOxe9NUgsiXSPHWxyFibcXiZq+xgJ+p+mhHPDPnclzLM3o+9Px4z
+ xIRgfX2YW3WuZn/iX5aYidKR1LbsX754+/b1MMwYOmzU8LpW9dCutLHP4c7JVQKSmjkN gA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xk0qy4kcs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Jan 2020 18:04:04 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7C198100038;
+        Fri, 17 Jan 2020 18:04:02 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C93BE22168E;
+        Fri, 17 Jan 2020 18:04:02 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jan 2020 18:04:02
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <robh@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>
+Subject: [PATCH v3] ASoC: dt-bindings: stm32: convert spdfirx to json-schema
+Date:   Fri, 17 Jan 2020 18:03:52 +0100
+Message-ID: <20200117170352.16040-1-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_04:2020-01-16,2020-01-17 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document the bindings for the tas5756m driver.
----
- .../devicetree/bindings/sound/tas5756m.txt    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tas5756m.txt
+Convert the STM32 SPDIFRX bindings to DT schema format using json-schema.
 
-diff --git a/Documentation/devicetree/bindings/sound/tas5756m.txt b/Documentation/devicetree/bindings/sound/tas5756m.txt
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+Changes in v2:
+- Add "additionalProperties: false"
+- Also change minItems to 2 for dmas property, as both DMAs are required.
+
+Changes in v3:
+- Drop minItems/maxItems for dmas property, remove ref to stm32-dma.txt.
+---
+ .../bindings/sound/st,stm32-spdifrx.txt       | 56 -------------
+ .../bindings/sound/st,stm32-spdifrx.yaml      | 80 +++++++++++++++++++
+ 2 files changed, 80 insertions(+), 56 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+deleted file mode 100644
+index 33826f2459fa..000000000000
+--- a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
++++ /dev/null
+@@ -1,56 +0,0 @@
+-STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
+-
+-The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+-IEC-60958 and IEC-61937.
+-
+-Required properties:
+-  - compatible: should be "st,stm32h7-spdifrx"
+-  - reg: cpu DAI IP base address and size
+-  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
+-  - clock-names: must contain "kclk"
+-  - interrupts: cpu DAI interrupt line
+-  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
+-    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
+-  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
+-
+-Optional properties:
+-  - resets: Reference to a reset controller asserting the SPDIFRX
+-
+-The device node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in Documentation/devicetree/bindings/
+-graph.txt.
+-
+-Example:
+-spdifrx: spdifrx@40004000 {
+-	compatible = "st,stm32h7-spdifrx";
+-	reg = <0x40004000 0x400>;
+-	clocks = <&rcc SPDIFRX_CK>;
+-	clock-names = "kclk";
+-	interrupts = <97>;
+-	dmas = <&dmamux1 2 93 0x400 0x0>,
+-	       <&dmamux1 3 94 0x400 0x0>;
+-	dma-names = "rx", "rx-ctrl";
+-	pinctrl-0 = <&spdifrx_pins>;
+-	pinctrl-names = "default";
+-
+-	spdifrx_port: port {
+-		cpu_endpoint: endpoint {
+-			remote-endpoint = <&codec_endpoint>;
+-		};
+-	};
+-};
+-
+-spdif_in: spdif-in {
+-	compatible = "linux,spdif-dir";
+-
+-	codec_port: port {
+-		codec_endpoint: endpoint {
+-			remote-endpoint = <&cpu_endpoint>;
+-		};
+-	};
+-};
+-
+-soundcard {
+-	compatible = "audio-graph-card";
+-	dais = <&spdifrx_port>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
 new file mode 100644
-index 000000000000..293eaf20d008
+index 000000000000..b7f7dc452231
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tas5756m.txt
-@@ -0,0 +1,25 @@
-+TAS5756M audio CODEC
++++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.yaml
+@@ -0,0 +1,80 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/st,stm32-spdifrx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+Required properties:
++title: STMicroelectronics STM32 S/PDIF receiver (SPDIFRX)
 +
-+  - compatible: should be one of the following:
-+    - "ti,tas5756m"
-+    - "ti,tas5754m"
-+  - reg: the I2C address of the device for I2C.
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
 +
-+Optional properties:
++description: |
++  The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
++  IEC-60958 and IEC-61937.
 +
-+  - mute-gpio : GPIO wired to the mute pin.
-+  - hybridflow : an integer between 1 and 9 to select the HybridFlow program.
-+      if not supplied default DSP program is used.
++properties:
++  compatible:
++    enum:
++      - st,stm32h7-spdifrx
 +
-+Example:
++  "#sound-dai-cells":
++    const: 0
 +
-+	tas5756m: tas5756m@4c {
-+		compatible = "ti,tas5756m";
-+		reg = <0x4c>;
-+		#sound-dai-cells = <0>;
++  reg:
++    maxItems: 1
 +
-+		hybridflow = <6>;
-+		mute-gpio = <&gpio1 11 GPIO_ACTIVE_LOW>;
-+	};
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: kclk
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: audio data capture DMA
++      - description: IEC status bits capture DMA
++
++  dma-names:
++    items:
++      - const: rx
++      - const: rx-ctrl
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - "#sound-dai-cells"
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    spdifrx: spdifrx@40004000 {
++        compatible = "st,stm32h7-spdifrx";
++        #sound-dai-cells = <0>;
++        reg = <0x40004000 0x400>;
++        clocks = <&rcc SPDIF_K>;
++        clock-names = "kclk";
++        interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dmamux1 2 93 0x400 0x0>,
++               <&dmamux1 3 94 0x400 0x0>;
++        dma-names = "rx", "rx-ctrl";
++        pinctrl-0 = <&spdifrx_pins>;
++        pinctrl-names = "default";
++    };
++
++...
 -- 
-2.24.1
+2.17.1
 
