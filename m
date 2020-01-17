@@ -2,145 +2,208 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55D4C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DAFC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9907F2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:25:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="j8vTRWms"
+	by mail.kernel.org (Postfix) with ESMTP id 25A272072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579275897;
+	bh=0G8EWTv2WuTcDjwZy69pwthwaxDtpeabMGIUbPuAWjc=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=Y7ngngK4cZrMBifpxntk7ArOZs7bawFIGNebUDZuYb6dhrSpH+UEWVzWEN44/Gilx
+	 xB/w+PkAxz+JCSt3Tq+1D98wcHD2zFpTnm4OarepmpZl0pGY1F5oPpnlo09uyH75jO
+	 3PHjWNzK4fjrCYNAcuk+/TlnNLP+kRgWTt1edCrA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgAQPZD (ORCPT
+        id S1729281AbgAQPov (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:25:03 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27626 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728780AbgAQPZD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jan 2020 10:25:03 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00HFMOt4010203;
-        Fri, 17 Jan 2020 16:24:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=CJb3tob82/wP4pbaxou0kNBLJitRDfQp4z4aVDs/O7o=;
- b=j8vTRWms+edgNbGbpLlYd5xXj9xcYsGwu1eXYUayEEhuBGjRCMK2XmfQXbrWrxAEX44a
- ejNgmfJ1YVBLYxI/2PTzjtvBoJEdKrxGydRlYhvjphd5ojveOlQe91dSZ2vL4+k/4u4g
- ZlBsHHWvRo885uaTxUCophDiXcgKpoJ+b5qqGo3VLi/38UkD2/cSIGAAG1/3QqpWI9Mz
- fRelayznU5yA2zL3gkbhjWnll8wORSWKd4FE1E9urpSFs7f3HGrehTMpIdilWaME2fi9
- 2IkbZ/Vm8ZJUT04YRVMJFZnFnQ43wPmft+jn/1LujJx9VcKPmHtZV8BMPMG1MIhdqL2A Pg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xk0rkc6hr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Jan 2020 16:24:54 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D9F6910002A;
-        Fri, 17 Jan 2020 16:24:50 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A97962C38DA;
-        Fri, 17 Jan 2020 16:24:50 +0100 (CET)
-Received: from lmecxl0995.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 Jan
- 2020 16:24:50 +0100
-Subject: Re: [PATCHv2 1/2] dt-bindings: usb: dwc2: add support for STM32MP15
- SoCs USB OTG HS and FS
-To:     Rob Herring <robh@kernel.org>
-CC:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-References: <20200116144524.16070-1-amelie.delaunay@st.com>
- <20200116144524.16070-2-amelie.delaunay@st.com>
- <20200117144837.GA27455@bogus>
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-Message-ID: <5eca6d14-27d8-0ac9-5c4f-9e0bc40d7f93@st.com>
-Date:   Fri, 17 Jan 2020 16:24:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200117144837.GA27455@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_03:2020-01-16,2020-01-17 signatures=0
+        Fri, 17 Jan 2020 10:44:51 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54014 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729219AbgAQPoa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 10:44:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=bubYcWmZxkJa2g3LCd3hNT3lwv8r6SjJCmZojEtnG3c=; b=V5YjMQHfnfmP
+        49ldVECEShgmWIeHNu+ZEfaUf0TNij3yOEwtWN07SOSMlK8lerypiOaPMkl+/CzXDTVJ6/bMVEVIv
+        weYofuBZr41MJsclYXvzS/fmkxkIu5XGQoIz77DWVtlD/VMJYywlGLQB9yYTg0XTUpc0kUuIqb7sN
+        /6sk8=;
+Received: from fw-tnat-cam4.arm.com ([217.140.106.52] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1isTnM-0006uV-8B; Fri, 17 Jan 2020 15:44:24 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id D6370D02A2A; Fri, 17 Jan 2020 15:44:23 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     avifishman70@gmail.com, benjaminfair@google.com,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        openbmc@lists.ozlabs.org, robh+dt@kernel.org,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com
+Subject: Applied "spi: npcm-pspi: modify reset support" to the spi tree
+In-Reply-To: <20200115162301.235926-5-tmaimon77@gmail.com>
+Message-Id: <applied-20200115162301.235926-5-tmaimon77@gmail.com>
+X-Patchwork-Hint: ignore
+Date:   Fri, 17 Jan 2020 15:44:23 +0000 (GMT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/17/20 3:48 PM, Rob Herring wrote:
-> On Thu, Jan 16, 2020 at 03:45:23PM +0100, Amelie Delaunay wrote:
->> Add the specific compatible string for the DWC2 IP found in the STM32MP15
->> SoCs.
->> STM32MP15 SoCs uses sensing comparators to detect Vbus valid levels and
->> ID pin state. usb33d-supply described the regulator supplying Vbus and ID
->> sensing comparators.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->> ---
->>   Documentation/devicetree/bindings/usb/dwc2.yaml | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
->> index 71cf7ba32237..0b86250b97a9 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.yaml
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
->> @@ -58,6 +58,8 @@ properties:
->>         - const: st,stm32f4x9-fsotg
->>         - const: st,stm32f4x9-hsotg
->>         - const: st,stm32f7-hsotg
->> +      - const: st,stm32mp15-fsotg
->> +      - const: st,stm32mp15-hsotg
->>         - const: samsung,s3c6400-hsotg
->>   
->>     reg:
->> @@ -103,6 +105,10 @@ properties:
->>     vusb_a-supply:
->>       description: phandle to voltage regulator of analog section.
->>   
->> +  vusb33d_supply:
-> 
-> Not a valid regulator property.
-> 
+The patch
 
-arrgh, was ok in the v1 in .txt. Will send a v3 fixing it with 
-vusb33d-supply instead.
+   spi: npcm-pspi: modify reset support
 
->> +    description: reference to the external VBUS and ID sensing comparators, in
->> +      order to perform OTG operation, used on STM32MP15 SoCs.
-> 
-> Are they external or part of the SoC? When we have Vbus sense and ID
-> GPIOs, those go in the connector node, so this probably should too if
-> these are board components.
-> 
+has been applied to the spi tree at
 
-Yes, they are part of the SoC but external of the DWC2 IP. You can find 
-them in the box "3V3 USB Detector" of PWR block diagram of STM32MP15x 
-[1]. In OTG block diagram also, it corresponds to "OTG detection" box.
-Behind this vusb33d supply, it is a regulator provided by PWR regulator 
-driver. Maybe I should say "reference to the VBUS and ID sensing 
-comparators *supply*.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
 
-[1] 
-https://www.st.com/content/ccc/resource/technical/document/reference_manual/group0/51/ba/9e/5e/78/5b/4b/dd/DM00327659/files/DM00327659.pdf/jcr:content/translations/en.DM00327659.pdf
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Regards,
-Amelie
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> Rob
-> 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From b5df0b2ee2ee6b5bdeb55d76c17f695a1aa5388f Mon Sep 17 00:00:00 2001
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Wed, 15 Jan 2020 18:23:01 +0200
+Subject: [PATCH] spi: npcm-pspi: modify reset support
+
+Modify NPCM perphiral SPI reset support from
+direct register access to reset controller support.
+
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Link: https://lore.kernel.org/r/20200115162301.235926-5-tmaimon77@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-npcm-pspi.c | 33 +++++++++++----------------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
+index d224aa63dbce..7e9e747b5626 100644
+--- a/drivers/spi/spi-npcm-pspi.c
++++ b/drivers/spi/spi-npcm-pspi.c
+@@ -12,6 +12,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/gpio.h>
+ #include <linux/of_gpio.h>
++#include <linux/reset.h>
+ 
+ #include <asm/unaligned.h>
+ 
+@@ -20,7 +21,7 @@
+ 
+ struct npcm_pspi {
+ 	struct completion xfer_done;
+-	struct regmap *rst_regmap;
++	struct reset_control *reset;
+ 	struct spi_master *master;
+ 	unsigned int tx_bytes;
+ 	unsigned int rx_bytes;
+@@ -59,12 +60,6 @@ struct npcm_pspi {
+ #define NPCM_PSPI_MIN_CLK_DIVIDER	4
+ #define NPCM_PSPI_DEFAULT_CLK		25000000
+ 
+-/* reset register */
+-#define NPCM7XX_IPSRST2_OFFSET	0x24
+-
+-#define NPCM7XX_PSPI1_RESET	BIT(22)
+-#define NPCM7XX_PSPI2_RESET	BIT(23)
+-
+ static inline unsigned int bytes_per_word(unsigned int bits)
+ {
+ 	return bits <= 8 ? 1 : 2;
+@@ -292,9 +287,9 @@ static int npcm_pspi_unprepare_transfer_hardware(struct spi_master *master)
+ 
+ static void npcm_pspi_reset_hw(struct npcm_pspi *priv)
+ {
+-	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET,
+-		     NPCM7XX_PSPI1_RESET << priv->id);
+-	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET, 0x0);
++	reset_control_assert(priv->reset);
++	udelay(5);
++	reset_control_deassert(priv->reset);
+ }
+ 
+ static irqreturn_t npcm_pspi_handler(int irq, void *dev_id)
+@@ -358,10 +353,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	if (num_cs < 0)
+ 		return num_cs;
+ 
+-	pdev->id = of_alias_get_id(np, "spi");
+-	if (pdev->id < 0)
+-		pdev->id = 0;
+-
+ 	master = spi_alloc_master(&pdev->dev, sizeof(*priv));
+ 	if (!master)
+ 		return -ENOMEM;
+@@ -371,7 +362,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	priv = spi_master_get_devdata(master);
+ 	priv->master = master;
+ 	priv->is_save_param = false;
+-	priv->id = pdev->id;
+ 
+ 	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+@@ -396,11 +386,10 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 		goto out_disable_clk;
+ 	}
+ 
+-	priv->rst_regmap =
+-		syscon_regmap_lookup_by_compatible("nuvoton,npcm750-rst");
+-	if (IS_ERR(priv->rst_regmap)) {
+-		dev_err(&pdev->dev, "failed to find nuvoton,npcm750-rst\n");
+-		return PTR_ERR(priv->rst_regmap);
++	priv->reset = devm_reset_control_get(&pdev->dev, NULL);
++	if (IS_ERR(priv->reset)) {
++		ret = PTR_ERR(priv->reset);
++		goto out_disable_clk;
+ 	}
+ 
+ 	/* reset SPI-HW block */
+@@ -421,7 +410,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	master->min_speed_hz = DIV_ROUND_UP(clk_hz, NPCM_PSPI_MAX_CLK_DIVIDER);
+ 	master->mode_bits = SPI_CPHA | SPI_CPOL;
+ 	master->dev.of_node = pdev->dev.of_node;
+-	master->bus_num = pdev->id;
++	master->bus_num = -1;
+ 	master->bits_per_word_mask = SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
+ 	master->transfer_one = npcm_pspi_transfer_one;
+ 	master->prepare_transfer_hardware =
+@@ -454,7 +443,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out_disable_clk;
+ 
+-	pr_info("NPCM Peripheral SPI %d probed\n", pdev->id);
++	pr_info("NPCM Peripheral SPI %d probed\n", master->bus_num);
+ 
+ 	return 0;
+ 
+-- 
+2.20.1
+
