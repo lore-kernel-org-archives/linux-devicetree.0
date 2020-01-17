@@ -2,91 +2,210 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980BFC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 13:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E2AC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDD32082F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 13:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE44220728
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 13:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nhcwFQHx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="poWzvnim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgAQNe1 (ORCPT
+        id S1726908AbgAQNkW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 08:34:27 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45061 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbgAQNe1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 08:34:27 -0500
-Received: by mail-wr1-f65.google.com with SMTP id j42so22697243wrj.12
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 05:34:26 -0800 (PST)
+        Fri, 17 Jan 2020 08:40:22 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54841 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgAQNkO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 08:40:14 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b19so7462000wmj.4
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 05:40:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=vjAqTiagiAJuIt+I855EK59Bh9rAY4+VmlbULB7XjBU=;
-        b=nhcwFQHxSnz+dV9GprwXcD4oiIVNjDaE6b4Z1gVtwnuMdXgy9wBTv4mdfd5R+4O5C5
-         TAo7O/1EJo74ic9WeT/gzYaFf82RYCFD+QK5oLiM0pNOQ1pIT2V+QduYScl63zLxQ76z
-         SaNfuojAetepaWOS6Dsv/Pq0DGjxLzwnzJejxEN1mX/+kqoqPopYtjvGmXSew3k+ZovI
-         I2RfdMwx/ybbZDKeMJyZ+BTFcNlBzqdO3/bllaE0SsOp154uL+uFClwqUtx2vIXQOpEN
-         AWmk422EV226QO5mnUPx/bOGO3VBNW6O4os+r1vNboWXx6moiX80S2+YHNxweFTEFdkd
-         5axw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
+        b=poWzvnimT8QTMy+z+ojdYjNwWKCfVW89Yxmci6IP1hOwVnknCtXaCr8i8dPxqfj1c6
+         6NHh9Vy22UuVjsdvRslMJxmzZ2r72OldpIzBGyTPzKMTdk2Z9oSf67RccUHaMNaQhd+k
+         lm/c63jSCsXUx2RU7tiHMS5C5Y2FizJpTWV+bQFZk8UuOie9JPNvsSkh5+vGRPhAp0aq
+         HK0OQ1Srf/D3qXPwbVceBBawRHCIp88uRHmu2HP+uHbb1PD3am4Blq1K6Lz24AmMxi2p
+         OWYnjJ/q+UHi4g8eny5q5ITFQpVAiYSQZTcj7rH44ZY1d2LCEmOKY9qNl6Wk1issBSPO
+         JpLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vjAqTiagiAJuIt+I855EK59Bh9rAY4+VmlbULB7XjBU=;
-        b=kYqINXrIbiaOhJ4OKsK3zcUbx56ivmxO7FPZQ4s7fPQ5GbNl1XxkEvCshI+0Cf1KqQ
-         i7XdtEIwLACs0NL7xKl7/xaD+XQTFVko1zWTDjyXcSpvRDQMAYhN9T8WgMwqBTrP1cO2
-         G2liSB5nCOFij9ia1TxKyRKNRgQ29gdNfpdZlGDbsxC2Of1m9Co/nZgVdlZ6mrJKP/6U
-         S6R3P5hI9EgSTxKGYx3VCSBOn6W4UAM/NGOMBVTIFRdqMDbBvFHZsWi3nprihvOyZ96c
-         UzUSN+44A2UoiSxZWTZ+kLnMKO2GbmRPLUlrs2wDz7D8o6eDbalEKFOi3uWduDH4QJdB
-         GL3Q==
-X-Gm-Message-State: APjAAAWe5L0BZM/vZmLe/BkJ6ogQ7C4gh7yuLmLc4sxRNhKaCn+56Hex
-        z2xai2nZOjwZozwv/U7OywwD+rR4MhA=
-X-Google-Smtp-Source: APXvYqxOLm+eEqyeR6CqcWIOgeXx2VIKnDcC4O+hh0rHWaq9NA0R4QfRWROMPXD9EnXM5xbkRw2jog==
-X-Received: by 2002:adf:f411:: with SMTP id g17mr2965001wro.89.1579268065504;
-        Fri, 17 Jan 2020 05:34:25 -0800 (PST)
-Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o1sm33875961wrn.84.2020.01.17.05.34.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=x0v+Cpelm9h83Fd8YoEOutozcn/2jODQn8Ym6ta3pDI=;
+        b=cww0j9sFt8WTDIJGwnUhtYb4KWYZzC7vcyuPlkmvvS6qIlHimvhX+Xwz8mJKg+8iMD
+         zB+34ajisAmCA5k72/3Q1WTJFo6FD2TPdg2NFCW6yyEjRDa9xdwD/NqT+RvxhIAMtadE
+         /A3dw7aSum6mLgvozlzKj2fxjpHWRS+g8Re/Vn4eMT93U2ZyrSy0xlaCEQz5mMzh7nD2
+         aSkxCYNRkSK4ZJIp+BJK7wlDgo5J/20MyKWPjmTrtfyt793s9gnv6/p9SLff3CkTULGT
+         gbGFofoHY4uV/2/VmY8VS/UKxmyUmm3oI1BbZQozLZ/YabJB0YVCBwiiNHNskSoffJHs
+         TM8g==
+X-Gm-Message-State: APjAAAU6GkOrrcyN0GWH4J+N+XvXUDyxt7tnO4NVdL5eRsMEtPNPNtw6
+        FOkr9QBnQGLUrt2KSua3MQqg6w==
+X-Google-Smtp-Source: APXvYqxGyR41SDvj5mCeLz1WXPpVshSUQyPXa3ccVTn3jG4GO+EYu0SQxB8cs1Dtg2CXlW/4Esj78Q==
+X-Received: by 2002:a7b:c764:: with SMTP id x4mr4598002wmk.116.1579268411354;
+        Fri, 17 Jan 2020 05:40:11 -0800 (PST)
+Received: from dell ([2.27.35.221])
+        by smtp.gmail.com with ESMTPSA id s8sm32993260wrt.57.2020.01.17.05.40.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 05:34:24 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     khilman@baylibre.com, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH] arm64: dts: meson-sm1-sei610: add missing interrupt-names
-Date:   Fri, 17 Jan 2020 14:34:23 +0100
-Message-Id: <20200117133423.22602-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 Jan 2020 05:40:10 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:40:26 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v10 08/13] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200117134026.GM15507@dell>
+References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <def409ab024717e6cd917c488e62fe04ad66bd52.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200117102854.GF15507@dell>
+ <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4bd035fb2c78e96f18006f06c5d8d9d2f1a1b70d.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-add missing "host-wakeup interrupt names
+On Fri, 17 Jan 2020, Vaittinen, Matti wrote:
 
-Fixes: 30388cc07572 ("arm64: dts: meson-sm1-sei610: add gpio bluetooth interrupt")
+> Hello Lee,
+> 
+> On Fri, 2020-01-17 at 10:28 +0000, Lee Jones wrote:
+> > On Fri, 17 Jan 2020, Matti Vaittinen wrote:
+> > 
+> > > Few ROHM PMICs allow setting the voltage states for different
+> > > system states
+> > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC
+> > > specific
+> > > mechanisms. bd718x7 driver implemented device-tree parsing
+> > > functions for
+> > > these state specific voltages. The parsing functions can be re-used 
+> > > by
+> > > other ROHM chip drivers like bd71828. Split the generic functions
+> > > from
+> > > bd718x7-regulator.c to rohm-regulator.c and export them for other
+> > > modules
+> > > to use.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > ---
+> > > no changes since v9
+> > > 
+> > >  drivers/regulator/Kconfig             |   4 +
+> > >  drivers/regulator/Makefile            |   1 +
+> > >  drivers/regulator/bd718x7-regulator.c | 183 ++++++++------------
+> > > ------
+> > >  drivers/regulator/rohm-regulator.c    |  95 +++++++++++++
+> > >  include/linux/mfd/rohm-generic.h      |  66 ++++++++++
+> > >  5 files changed, 221 insertions(+), 128 deletions(-)
+> > >  create mode 100644 drivers/regulator/rohm-regulator.c
+> > 
+> > [...]
+> > 
+> > > diff --git a/include/linux/mfd/rohm-generic.h
+> > > b/include/linux/mfd/rohm-generic.h
+> > > index ff3dd7578fd3..6cc5a0819959 100644
+> > > --- a/include/linux/mfd/rohm-generic.h
+> > > +++ b/include/linux/mfd/rohm-generic.h
+> > > @@ -4,6 +4,9 @@
+> > >  #ifndef __LINUX_MFD_ROHM_H__
+> > >  #define __LINUX_MFD_ROHM_H__
+> > >  
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/regulator/driver.h>
+> > > +
+> > >  enum rohm_chip_type {
+> > >  	ROHM_CHIP_TYPE_BD71837 = 0,
+> > >  	ROHM_CHIP_TYPE_BD71847,
+> > > @@ -17,4 +20,67 @@ struct rohm_regmap_dev {
+> > >  	struct regmap *regmap;
+> > >  };
+> > >  
+> > > +enum {
+> > > +	ROHM_DVS_LEVEL_UNKNOWN,
+> > > +	ROHM_DVS_LEVEL_RUN,
+> > > +	ROHM_DVS_LEVEL_IDLE,
+> > > +	ROHM_DVS_LEVEL_SUSPEND,
+> > > +	ROHM_DVS_LEVEL_LPSR,
+> > > +#define ROHM_DVS_LEVEL_MAX ROHM_DVS_LEVEL_LPSR
+> > 
+> > Haven't seen this before.  Is it legit?
+> > 
+> 
+> I don't know why it wouldn't be :) I kind of grew used to that when I
+> still did some networking stuff.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts | 1 +
- 1 file changed, 1 insertion(+)
+Networking it not a good example.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-index a8bb3fa9fec9..cb1b48f5b8b1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
-@@ -593,6 +593,7 @@
- 		compatible = "brcm,bcm43438-bt";
- 		interrupt-parent = <&gpio_intc>;
- 		interrupts = <95 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "host-wakeup";
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
- 		max-speed = <2000000>;
- 		clocks = <&wifi32k>;
+It's full of odd little quirks to the standard styling.
+
+> It doesn't really matter in this case but for example the netlink
+> headers do:
+> 
+> enum {
+>    foo,
+> #define foo foo
+>    bar,
+> #define bar bar
+> ...
+> };
+> 
+> https://elixir.bootlin.com/linux/v5.5-rc6/source/include/uapi/linux/rtnetlink.h
+> 
+> What is the good here is that this allows one to nicely exclude
+> unsupported stuff using preprocessor:
+> 
+> #include <header_with_or_without_foo_dependng_on_version.h>
+> 
+> #ifdef foo
+> use_foo(foo);
+> #endif
+> 
+> What about:
+> > 
+> >      ROHM_DVS_LEVEL_MAX = ROHM_DVS_LEVEL_LPSR
+> 
+> Anyways, I don't see why define wouldn't be Ok here - but sure it can
+> be changed if you insist ;) Just let me know if you can accept the
+> define or not :)
+
+Let's go for not in this instance. :D
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
