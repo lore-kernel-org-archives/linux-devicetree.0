@@ -2,134 +2,340 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28966C3F68F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24B0C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1C92176D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7eATrCS"
+	by mail.kernel.org (Postfix) with ESMTP id A5BBB20748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgAQIXG (ORCPT
+        id S1729447AbgAQIkB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:23:06 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44034 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgAQIXF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 03:23:05 -0500
-Received: by mail-wr1-f65.google.com with SMTP id q10so21746225wrm.11;
-        Fri, 17 Jan 2020 00:23:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fUSs0EsfkQm4mYmzDjaRdaKR/Kgrp8H6zh/MaOdy+jo=;
-        b=N7eATrCSbI76C1TS7ve9xxuJbIToFETnuLOaLgsv5KDeBQq9tVSlM7YISkI24LOs0h
-         Y1SBbW6JbvHf3o5M/zO1rZY/Ot40TVbRDAkmo1W1B0Lcr9Jy6rCZ44tvlAEK47TLLAbj
-         dC5AxeD4ZhAo8xyb8Utfu+GVOlWPUzm8dYav28oTeUrAwFcuzwqbjh3Y1rHPav90hIWG
-         32yQ22iH1xj5OpZTCpDh8/qmYT2DymqEqa85/zLjB//0S2r4syb7v9Q3guKUJh4zYKnj
-         Z2YNTcdtwbfo5A7PqHc3uTS9+xZi1EMc891Xfoz/nQlkplYN/msR6ro+AhSzsxxizlx9
-         /Kng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fUSs0EsfkQm4mYmzDjaRdaKR/Kgrp8H6zh/MaOdy+jo=;
-        b=Y6B3V+cDCjhlmGIxyiMY0CSy2CqLDsDBiGgt2NbtI8YMBZcIEftHT/6pVxe+d98LTs
-         e6+vlXcMtnTSyRNKPatuLk+FkFlRMelOIkx5cgz8e3JFCWIQMm5ai0FLntRkaNGXbYvO
-         ebJNwPfNh8vwDKxz8hi4i2D8kKCHLM9N5nXfpjbntR//KNCgkF11iAFAJeOA5baUW9sL
-         m+FIwJu6PVvchbNkNFvPcmFX07btsFR58nX+tTOerO/hjdtFK69i7Jk1lIgA4tGp9Mht
-         hNetrO55OuYp8WqD9YEnSJQIQvtEXWgW7CdoMBY3QhOl0wiRsiVK1hQeTlG+drGgZeUC
-         jN7g==
-X-Gm-Message-State: APjAAAWeVKVjRnkxcb9QyI4/AufkeUou03RBm5twGfv/uDUp4rMIPIjb
-        J2axZtJpQ/ytCVLTshVvNi4NkcsfN9gB8kFa4DdLwWnn
-X-Google-Smtp-Source: APXvYqy74lCYML2O2IJyen/bXWr0/b/xMIholfFw9/Wbi+EVQLNVVoPq5k2Tz5phcAAjtdgiq+Dyz89gvNiHEhBI0Uw=
-X-Received: by 2002:a5d:484d:: with SMTP id n13mr1724822wrs.420.1579249383710;
- Fri, 17 Jan 2020 00:23:03 -0800 (PST)
+        Fri, 17 Jan 2020 03:40:01 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:60810 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729255AbgAQIkB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 03:40:01 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 725CC634C8A;
+        Fri, 17 Jan 2020 10:39:50 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1isNAV-0000Q9-4v; Fri, 17 Jan 2020 10:39:51 +0200
+Date:   Fri, 17 Jan 2020 10:39:51 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        peter.griffin@linaro.org, ezequiel@collabora.com,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v2 2/2] media: i2c: Add driver for Sony IMX219 sensor
+Message-ID: <20200117083951.GF793@valkosipuli.retiisi.org.uk>
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+ <20191227122114.23075-3-andrey.konovalov@linaro.org>
+ <20191227145547.GE861@valkosipuli.retiisi.org.uk>
+ <d3f1591b-1a98-e876-b977-96e1210e9c49@linaro.org>
 MIME-Version: 1.0
-References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
- <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
- <CAAfSe-tx+S_tc1y0c5wobQy2xygNr01b3LOqQ4FQtHoDNhHNeA@mail.gmail.com>
- <CAOesGMhNxkyAYMeHSRAuxzR51-5eHZ278LLVYe-3jaS7EKa-jw@mail.gmail.com> <CAOesGMi=1uKK=rCyD+d5yTE3O+HpNXTntNghLaWXt86z+GaKhg@mail.gmail.com>
-In-Reply-To: <CAOesGMi=1uKK=rCyD+d5yTE3O+HpNXTntNghLaWXt86z+GaKhg@mail.gmail.com>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Fri, 17 Jan 2020 16:22:27 +0800
-Message-ID: <CAAfSe-tDDdCix3=C0-BARqeBCMDqM7XUCc_S5kZTEswtK5-ZvA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
-To:     Olof Johansson <olof@lixom.net>
-Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3f1591b-1a98-e876-b977-96e1210e9c49@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 17 Jan 2020 at 08:57, Olof Johansson <olof@lixom.net> wrote:
->
-> On Thu, Jan 16, 2020 at 4:56 PM Olof Johansson <olof@lixom.net> wrote:
-> >
-> > On Sun, Jan 12, 2020 at 5:44 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > >
-> > > On Sat, 11 Jan 2020 at 01:41, Olof Johansson <olof@lixom.net> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > > > >
-> > > > > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > > >
-> > > > > Add basic DT to support Unisoc's SC9863A, with this patch,
-> > > > > the board sp9863a-1h10 can run into console.
-> > > > >
-> > > > > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > > >
-> > > > You reposting a patch that we have already applied, and there's also
-> > > > no changelog for it in the description.
-> > >
-> > > Oh, I have to explain a bit.
-> > >
-> > > I was expecting an email which inform me that the patch was got merged.
-> > > That's the reason I resent this patchset.
-> >
-> > Ah, yes -- me too. This was a combination of two things:
-> >
-> > 1) The patch was originally sent to arm@kernel.org, not soc@kernel.org
-> > 2) I bounced it to there to apply it using PatchWork
-> >
-> > ... but, it seems that the bot won't reply to patches that have been
-> > bounced, only those who were originally sent there.
-> >
-> > In this case, I should have made a manual reply -- I've gotten too
-> > used to the bot and relied on it doing it.
-> >
-> > > About the changelog, this new patchset actually had a cover-letter[1]
-> > > in which I documented a little changes (which was not important now).
-> >
-> > Not sure why, but I seem to have missed it. Maybe because it was 3
-> > patches on v5, and I didn't notice that one was now a cover letter.
-> > Anyway, all good.
-> >
-> > I'll also apply 1/2 shortly.
->
-> I'm ahead of myself, it's already applied as well.
->
+Hi Andrey,
 
-Thank you very much!
-Chunyan
+On Mon, Jan 13, 2020 at 10:16:21PM +0300, Andrey Konovalov wrote:
+> Hi Sakari,
+> 
+> Sorry for delayed reply..
+> (your email got into a wrong folder, and I might not find it there if Ezequiel
+> did not warn me that I didn't address the comments from your review)
 
+No worries.
 
-FYI:
-The patchset v5 seems also NOT sent to arm@kernel.org, it was
-accurately sent to soc@kernel.org :-)
-https://patchwork.ozlabs.org/cover/1214863/
+> 
+> On 27.12.2019 17:55, Sakari Ailus wrote:
+> > Hi Andrey,
+> > 
+> > On Fri, Dec 27, 2019 at 03:21:14PM +0300, Andrey Konovalov wrote:
+> > > From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > > 
+> > > Adds a driver for the 8MPix Sony IMX219 CSI2 sensor.
+> > > Whilst the sensor supports 2 or 4 CSI2 data lanes, this driver
+> > > currently only supports 2 lanes.
+> > > 8MPix @ 15fps, 1080P @ 30fps (cropped FOV), and 1640x1232 (2x2 binned)
+> > > @ 30fps are currently supported.
+> > > 
+> > > Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > > Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+> > > ---
+> > >   drivers/media/i2c/Kconfig  |   12 +
+> > >   drivers/media/i2c/Makefile |    1 +
+> > >   drivers/media/i2c/imx219.c | 1240 ++++++++++++++++++++++++++++++++++++
+> > >   3 files changed, 1253 insertions(+)
+> > >   create mode 100644 drivers/media/i2c/imx219.c
+> 
+> <snip>
+> 
+> > > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> > > new file mode 100644
+> > > index 000000000000..28b55c61cd77
+> > > --- /dev/null
+> > > +++ b/drivers/media/i2c/imx219.c
+> 
+> <snip>
+> 
+> > > +/* Power/clock management functions */
+> > > +static int imx219_power_on(struct device *dev)
+> > > +{
+> > > +	struct i2c_client *client = to_i2c_client(dev);
+> > > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > > +	struct imx219 *imx219 = to_imx219(sd);
+> > > +	int ret;
+> > > +
+> > > +	ret = regulator_bulk_enable(IMX219_NUM_SUPPLIES,
+> > > +				    imx219->supplies);
+> > > +	if (ret) {
+> > > +		dev_err(&client->dev, "%s: failed to enable regulators\n",
+> > > +			__func__);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = clk_prepare_enable(imx219->xclk);
+> > > +	if (ret) {
+> > > +		dev_err(&client->dev, "%s: failed to enable clock\n",
+> > > +			__func__);
+> > > +		goto reg_off;
+> > > +	}
+> > > +
+> > > +	gpiod_set_value_cansleep(imx219->xclr_gpio, 1);
+> > > +	msleep(IMX219_XCLR_DELAY_MS);
+> > 
+> > I guess 10 ms is ok albeit it'd be nicer if you calculated the required
+> > delay instead.
+> 
+> I think this 10 ms delay actually serves two purposes here. It is
+> not only the delay after XCLR pin is set high (reset de-asserted),
+> but it also lets the camera power supplies voltages to settle after
+> regulator_bulk_enable() called few lines above.
+> 
+> So I would make the delay a sum of 1) the value which depends on
+> input clock frequency (the driver currently supports 24MHz only)
+> and 2) a fixed value of 8 ms or so to account for the power supplies
+> settle time. So that the sum would be the same 10 ms for 24MHz input
+> clock.
+> Does it makes sense?
+
+It does, agreed.
+
+> 
+> <snip>
+> 
+> > > +static int imx219_probe(struct i2c_client *client,
+> > > +			const struct i2c_device_id *id)
+> > > +{
+> > > +	struct device *dev = &client->dev;
+> > > +	struct fwnode_handle *endpoint;
+> > > +	struct imx219 *imx219;
+> > > +	int ret;
+> > > +
+> > > +	imx219 = devm_kzalloc(&client->dev, sizeof(*imx219), GFP_KERNEL);
+> > > +	if (!imx219)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	imx219->dev = dev;
+> > 
+> > Instead of putting a dev field to struct imx219, you can find the device in
+> > struct i2c_client.dev, which you can get by:
+> > 
+> > 	v4l2_get_subdevdata(imx219->sd)
+> > 
+> > > +
+> > > +	v4l2_i2c_subdev_init(&imx219->sd, client, &imx219_subdev_ops);
+> > > +
+> > > +	/* Get CSI2 bus config */
+> > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> > > +						  NULL);
+> > > +	if (!endpoint) {
+> > > +		dev_err(dev, "endpoint node not found\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &imx219->ep);
+> > > +	fwnode_handle_put(endpoint);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Could not parse endpoint\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	/* Get system clock (xclk) */
+> > > +	imx219->xclk = devm_clk_get(dev, "xclk");
+> > > +	if (IS_ERR(imx219->xclk)) {
+> > > +		dev_err(dev, "failed to get xclk\n");
+> > > +		return PTR_ERR(imx219->xclk);
+> > > +	}
+> > > +
+> > > +	imx219->xclk_freq = clk_get_rate(imx219->xclk);
+> > > +	if (imx219->xclk_freq != IMX219_XCLK_FREQ) {
+> > > +		dev_err(dev, "xclk frequency not supported: %d Hz\n",
+> > > +			imx219->xclk_freq);
+> > > +		return -EINVAL;
+> > > +	}
+> > 
+> > Could you also check the link frequencies (the link-frequencies property
+> > that also should be added to DT bindings) matches with what is possible
+> > with the given xclk frequency? Please see e.g. imx319 driver for an
+> > example.
+> 
+> The driver only supports single xclk frequency and single link-frequency
+> (hardcoded in the registers value tables). So the check will be more like
+> the one in imx290 driver (error out if the link-frequency property isn't
+> equal to the pre#define-d default value).
+
+Right. The frequencies don't seem to be in DT bindings either; they should
+be added there. The sensor supports multiple frequencies as in practice
+every other sensor does.
+
+The driver does not necessarily need to check for them if it supports a
+single one only.
+
+> 
+> > > +
+> > > +	ret = imx219_get_regulators(imx219);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	/* Request optional enable pin */
+> > > +	imx219->xclr_gpio = devm_gpiod_get_optional(dev, "xclr",
+> > > +						    GPIOD_OUT_HIGH);
+> > > +
+> > > +	/*
+> > > +	 * The sensor must be powered for imx219_identify_module()
+> > > +	 * to be able to read the CHIP_ID register
+> > > +	 */
+> > > +	ret = imx219_power_on(dev);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = imx219_identify_module(imx219);
+> > > +	if (ret)
+> > > +		goto error_power_off;
+> > > +
+> > > +	/* Set default mode to max resolution */
+> > > +	imx219->mode = &supported_modes[0];
+> > > +
+> > > +	ret = imx219_init_controls(imx219);
+> > > +	if (ret)
+> > > +		goto error_power_off;
+> > > +
+> > > +	/* Initialize subdev */
+> > > +	imx219->sd.internal_ops = &imx219_internal_ops;
+> > > +	imx219->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> > > +	imx219->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> > > +
+> > > +	/* Initialize source pad */
+> > > +	imx219->pad.flags = MEDIA_PAD_FL_SOURCE;
+> > > +
+> > > +	ret = media_entity_pads_init(&imx219->sd.entity, 1, &imx219->pad);
+> > > +	if (ret)
+> > > +		goto error_handler_free;
+> > > +
+> > > +	ret = v4l2_async_register_subdev_sensor_common(&imx219->sd);
+> > > +	if (ret < 0)
+> > > +		goto error_media_entity;
+> > > +
+> > > +	/* Enable runtime PM and turn off the device */
+> > > +	pm_runtime_set_active(dev);
+> > > +	pm_runtime_enable(dev);
+> > > +	pm_runtime_idle(dev);
+> > > +
+> > > +	return 0;
+> > > +
+> > > +error_media_entity:
+> > > +	media_entity_cleanup(&imx219->sd.entity);
+> > > +
+> > > +error_handler_free:
+> > > +	imx219_free_controls(imx219);
+> > > +
+> > > +error_power_off:
+> > > +	imx219_power_off(dev);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int imx219_remove(struct i2c_client *client)
+> > > +{
+> > > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > > +	struct imx219 *imx219 = to_imx219(sd);
+> > > +
+> > > +	v4l2_async_unregister_subdev(sd);
+> > > +	media_entity_cleanup(&sd->entity);
+> > > +	imx219_free_controls(imx219);
+> > > +
+> > > +	pm_runtime_disable(&client->dev);
+> > > +	pm_runtime_set_suspended(&client->dev);
+> > 
+> > imx219_power_off(), if the sensor is powered on here. Please see e.g. the
+> > smiapp driver regarding this.
+> 
+> It should be powered off here.
+> 
+> The sensor is powered on when streaming is started, and is powered off when
+> it is stopped: if the enable argument is false, imx219_set_stream() calls
+> pm_runtime_put().
+> IOW, it follows the imx319 driver as the example of power management.
+
+Well, yes, or rather maybe.
+
+If you have a non-ACPI system and runtime PM is disabled, then the sensor
+is powered on here.
+
+The imx319 driver only works on ACPI based systems so it's not something
+you can compare to directly. Check e.g. the smiapp driver which works on
+both DT and ACPI systems.
+
+> 
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id imx219_dt_ids[] = {
+> > > +	{ .compatible = "sony,imx219" },
+> > > +	{ /* sentinel */ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, imx219_dt_ids);
+> > > +
+> > > +static const struct dev_pm_ops imx219_pm_ops = {
+> > > +	SET_SYSTEM_SLEEP_PM_OPS(imx219_suspend, imx219_resume)
+> > > +	SET_RUNTIME_PM_OPS(imx219_power_off, imx219_power_on, NULL)
+> > > +};
+> > > +
+> > > +static struct i2c_driver imx219_i2c_driver = {
+> > > +	.driver = {
+> > > +		.name = "imx219",
+> > > +		.of_match_table	= imx219_dt_ids,
+> > > +		.pm = &imx219_pm_ops,
+> > > +	},
+> > > +	.probe = imx219_probe,
+> > 
+> > Could you use .probe_new, and remove the i2c_device_id argument?
+> 
+> I'll fix this and all the other issues I didn't comment on in this email
+> in the v4 of the patch set.
+
+Thanks!
+
+-- 
+Kind regards,
+
+Sakari Ailus
