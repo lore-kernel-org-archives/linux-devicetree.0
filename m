@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362CFC33CB3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F539C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B5C2072B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EF520842
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 10:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cd4EHkuZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uWT/LKHF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgAQKVN (ORCPT
+        id S1726513AbgAQKVp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 05:21:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33269 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727665AbgAQKVN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 05:21:13 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b6so22167540wrq.0
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 02:21:11 -0800 (PST)
+        Fri, 17 Jan 2020 05:21:45 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56293 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgAQKVm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 05:21:42 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so6851078wmj.5
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 02:21:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=mZtLP4TF2DQa4kM6aWD8dXahaAIco0BNSoaIocAnb5A=;
-        b=Cd4EHkuZG/hB65hooW72qjpibWL8vCibrANu3y0wxb4ne8tJYxzzGXhWRsSr14VVgW
-         s47dP0HN/s6CpLzXIT/H4sWazukfC5WmPNB8s6Nbi+/mP9EtUcflQ/m0BcUQ+y0lmZWJ
-         2lndVQ0FbWMHCpjYO/LJxfxwpDDCEACulCfnDNHg+aCD86QuJlAqSBJN0MlBnIIcStnR
-         gubRP0kOgxTKVOzdfEq8OuT7LoaeMmYPl/cl7Sy1ndbwDEXuwaLAix2Z9ezMc+VxYaNq
-         uznP5Fd5AdP74eKcYYQglPaI8TUTHPm4ufdRVW5heAmr8vvabPtIfCsxMhWEJ31KnnYv
-         6AHw==
+        bh=oIMnoa3sbVn/rSlDZkNhieTQX0bAIPs2g8BvjBAAJYw=;
+        b=uWT/LKHFB9KJAzcvqgQA2YPyMRp+0vG3uJZJyC3ZOr8OoMycE8q+vQ3sCqK9hRMWk8
+         CfPK8HfmmypEvmovpHkBAuOmFommCtZrSL3YGxaKtIy3C3wGjROaOrRNZRZF/IbwZ6/N
+         uFv0OCYryACBEzIU3GMggHYVxRB8XhctMuMY3RQ8xEyZFJ+Gu+v8KtV0SrU0pAbLQKw9
+         aBK0/A/HOC8i4J4FHvzXI7LIUlYeWICcyQgPkVOMFQpN/HRBb9n7nDdCMeaD06aXcIHA
+         pbdfSXj7+3zrtJ7O9sTCzn6iP4wsSNRAQDeSozArMrOTT3pTX/KgJkrI/TVLv78bVqaz
+         +I9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=mZtLP4TF2DQa4kM6aWD8dXahaAIco0BNSoaIocAnb5A=;
-        b=k33zV22s/E8kpGsIFUd0/x48ZR6MZux5Uc/lvTgO4lcd3vz3GpNP2uWXSw9i1vaU5f
-         rzcT50p5T8FP/mC1esFOQw/9hzQkQ7pp5PUr7/PrscBjhurLGtYHtCBxxNKH4AwI1kyQ
-         NwStGbcuzXnY9Kq1nl1xTS/gaxeiI3NzWlqygsmIWcIxXXJjqj/UglJA5HPVI9+F0zgt
-         xr93dqrJCo7iKhGDjqL2PdIMxCBnMjztTUx+uxeW6WZN+eUQbjmjzj4xQ2yGvzqHyWMc
-         FnsYYzGYdatSg04FFwM4vu0Q10u4KmB2HQJwU99oAqnlpe2TqNMNnFb71fpvv37YIF56
-         3ntQ==
-X-Gm-Message-State: APjAAAWnowd2gL+LZ3LqdB1KvFowSqE7BRUFYEkXni7JzRhK4RmkyXMW
-        EUDUD54auVqWLrBa5sDC6VUQYQ==
-X-Google-Smtp-Source: APXvYqyVa2FGtDblyP5Np3GyAl5Q+tTxMbe2sQTuTQwaCp7lmF6Cq26++iwlzp5gif2p7MajB+J13A==
-X-Received: by 2002:adf:e290:: with SMTP id v16mr2368769wri.16.1579256471100;
-        Fri, 17 Jan 2020 02:21:11 -0800 (PST)
+        bh=oIMnoa3sbVn/rSlDZkNhieTQX0bAIPs2g8BvjBAAJYw=;
+        b=YewM7foHsSFiBfEgt2HC79D0Cb4R5yDMcoBWUU1nWhH6P4fxo+nEZtggM3n5AB72cM
+         Z08yOknPZlAFq/XHIQt/QWewTGf4vROTd2ZHI4iyuu1wW7D3eK77cBKBpYaYXztAb1kg
+         HJcCEOwoZi/9p4OFWlsWLrj2nb/4iWyWSwwsn1+SxjtvjkyT3nz0aWNq+T6Ts4KJnRg8
+         KPH53SErJx6oIfRfipGVSuJ5K1oaNDpbXYVMGT5mT8DXT4U6Hp8GO7aZdnxjZQdVCcX5
+         ZlCbSTWtkguyUZydwSH3Is62NaRNuCi2LStZvHGPKKUBMDu683Ym8sBfH+DHDgvP4Kgn
+         /vzQ==
+X-Gm-Message-State: APjAAAWOwwSBcwNr6Nn7Amq4fibwsCUaClEGmsPrGJBTzEVW0q1T50Md
+        Xd2lMPDr7/0Yj3RpX8oYnZovRw==
+X-Google-Smtp-Source: APXvYqyjoao5W4ukyHmbDLvlRKQ3NULe0P7hwKt2aT/kXMKOsmfbWd9tvncJKeQZdv+1I5pJSDFudA==
+X-Received: by 2002:a05:600c:2c50:: with SMTP id r16mr3747778wmg.74.1579256500001;
+        Fri, 17 Jan 2020 02:21:40 -0800 (PST)
 Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id t5sm32760070wrr.35.2020.01.17.02.21.09
+        by smtp.gmail.com with ESMTPSA id h66sm9780563wme.41.2020.01.17.02.21.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 02:21:10 -0800 (PST)
-Date:   Fri, 17 Jan 2020 10:21:27 +0000
+        Fri, 17 Jan 2020 02:21:39 -0800 (PST)
+Date:   Fri, 17 Jan 2020 10:21:57 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 Cc:     mazziesaccount@gmail.com,
@@ -76,16 +76,15 @@ Cc:     mazziesaccount@gmail.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v10 11/13] gpio: bd71828: Initial support for ROHM
- BD71828 PMIC GPIOs
-Message-ID: <20200117102127.GD15507@dell>
+Subject: Re: [PATCH v10 09/13] mfd: bd70528: Fix hour register mask
+Message-ID: <20200117102157.GE15507@dell>
 References: <cover.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
- <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+ <8609d42822a6ce3755e2166b8c1246b3b04eeb78.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c8ed62a1efa0c6fde93a8a08fe6bc74a450a34f3.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <8609d42822a6ce3755e2166b8c1246b3b04eeb78.1579249511.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -94,38 +93,23 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Fri, 17 Jan 2020, Matti Vaittinen wrote:
 
-> ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
-> to be used for general purposes. First 3 can be used as outputs
-> and 4.th pin can be used as input. Allow them to be controlled
-> via GPIO framework.
+> When RTC is used in 24H mode (and it is by this driver) the maximum
+> hour value is 24 in BCD. This occupies bits [5:0] - which means
+> correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
 > 
-> The driver assumes all of the pins are configured as GPIOs and
-> trusts that the reserved pins in other OTP configurations are
-> excluded from control using "gpio-reserved-ranges" device tree
-> property (or left untouched by GPIO users).
-> 
-> Typical use for 4.th pin (input) is to use it as HALL sensor
-> input so that this pin state is toggled when HALL sensor detects
-> LID position change (from close to open or open to close). PMIC
-> HW implements some extra logic which allows PMIC to power-up the
-> system when this pin is toggled. Please see the data sheet for
-> details of GPIO options which can be selected by OTP settings.
+> Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
 > 
 > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Linus, Is that an Ack?
-
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 > ---
-> no changes since v9
+> Changes: Splitted this fix into separate patch which can be applied to
+> 5.4 too
 > 
->  drivers/gpio/Kconfig        |  12 +++
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-bd71828.c | 159 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 172 insertions(+)
->  create mode 100644 drivers/gpio/gpio-bd71828.c
+>  include/linux/mfd/rohm-bd70528.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
 Lee Jones [李琼斯]
