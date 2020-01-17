@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D3C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 12:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B834C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 12:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE1C2073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 12:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27022082F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 12:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wgYOwaSX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JGztN/0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgAQM51 (ORCPT
+        id S1726329AbgAQM6b (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 07:57:27 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45022 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgAQM51 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 07:57:27 -0500
+        Fri, 17 Jan 2020 07:58:31 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:32802 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgAQM6b (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 07:58:31 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00HCvJ5b114796;
-        Fri, 17 Jan 2020 06:57:19 -0600
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00HCwNE1128076;
+        Fri, 17 Jan 2020 06:58:23 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579265839;
-        bh=7f+i2QNUwMnAL6WTdKrrzAfyZ02OqWeNHk0Vudo0eYM=;
+        s=ti-com-17Q1; t=1579265903;
+        bh=E1dOnxVQIjpeR6bOLipZZbcFgOSQLVZ7wpbIxUxOI0E=;
         h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wgYOwaSXw8xgh4vQUH/BXjRbkULW0IZWht1MGI2VrftJ7mEHmKlrv4/z1HASCmdN1
-         qxMaGxA8RzMwI/GjBhY+TNI6sUGvuNlfdsxm8B5VPVbrtm65ru47/Ej7P2A2edqe0o
-         5mMhBnAy84vEKVr00EWSRZWhJCxUpaBV8SyRPy8E=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00HCvJbg093236
+        b=JGztN/0gAyyp+QPZtCFIfV6L73s556m11QLrYi8t3D07CZG02r1z2qh0w4V3S8n0U
+         mc9E78qTvrT2P4ab4RxAro4Cxu/YQWGn1A3Uoaz1L1WQYt3U3C2k93P62RXoGPuwEB
+         xUPOvm80Pz+pj/XPtOAnsPxgdid1wj7WltNKvscI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00HCwNdM094446
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jan 2020 06:57:19 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 17 Jan 2020 06:58:23 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Jan 2020 06:57:18 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 06:58:23 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Jan 2020 06:57:18 -0600
+ Frontend Transport; Fri, 17 Jan 2020 06:58:23 -0600
 Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00HCvGTs044775;
-        Fri, 17 Jan 2020 06:57:16 -0600
-Subject: Re: [PATCH] arm64: dts: ti: k3-am65-mcu: add system control module
- node
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20191216193933.31429-1-grygorii.strashko@ti.com>
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00HCwLe6046135;
+        Fri, 17 Jan 2020 06:58:21 -0600
+Subject: Re: [PATCH] arm64: dts: ti: k3-j721e-main: Add missing power-domains
+ for smmu
+To:     Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>
+References: <20191122100356.20622-1-lokeshvutla@ti.com>
+ <14a3898b-f91b-861e-0091-7e445c087ec0@ti.com>
 From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <48f203a7-4010-c434-6046-0089811c442f@ti.com>
-Date:   Fri, 17 Jan 2020 14:57:16 +0200
+Message-ID: <a2c6841a-4e30-bcb2-1bfa-6a603af44d4e@ti.com>
+Date:   Fri, 17 Jan 2020 14:58:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191216193933.31429-1-grygorii.strashko@ti.com>
+In-Reply-To: <14a3898b-f91b-861e-0091-7e445c087ec0@ti.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,61 +72,48 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16/12/2019 21:39, Grygorii Strashko wrote:
-> The MCU System control module support is added to the device tree to allow
-> drivers to access to their System control module registers.
+On 06/01/2020 06:00, Lokesh Vutla wrote:
+> H Tero,
 > 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> On 22/11/19 3:33 PM, Lokesh Vutla wrote:
+>> Add power-domains entry for smmu, so that the it is accessible as long
+>> as the driver is active. Without this device shutdown is throwing the
+>> below warning:
+>> "[   44.736348] arm-smmu-v3 36600000.smmu: failed to clear cr0"
+>>
+>> Reported-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> 
+> Any comments on this patch? If there are no objections, can this be picked?
 
-Queued up for 5.6, thanks!
+Sorry for delay, I've been engulfed with various other pieces of work 
+and handling upstream has been quite slow.
+
+Anyways, for this patch, queued up for 5.6, thanks!
 
 -Tero
 
-> ---
->   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 8 ++++++++
->   arch/arm64/boot/dts/ti/k3-am65.dtsi     | 2 ++
->   2 files changed, 10 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> index 27fc73f94cf9..3f76c2120b95 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-> @@ -6,6 +6,14 @@
->    */
->   
->   &cbass_mcu {
-> +	mcu_conf: scm_conf@40f00000 {
-> +		compatible = "syscon", "simple-mfd";
-> +		reg = <0x0 0x40f00000 0x0 0x20000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x40f00000 0x20000>;
-> +	};
-> +
->   	mcu_uart0: serial@40a00000 {
->   		compatible = "ti,am654-uart";
->   			reg = <0x00 0x40a00000 0x00 0x100>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-> index 6dfccd5d56c8..0923e71f663a 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-> @@ -74,6 +74,7 @@
->   			 /* MCUSS Range */
->   			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
->   			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
-> +			 <0x00 0x40f00000 0x00 0x40f00000 0x00 0x00020000>, /* CTRL_MMR0 */
->   			 <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>,
->   			 <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>,
->   			 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>,
-> @@ -88,6 +89,7 @@
->   			#size-cells = <2>;
->   			ranges = <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>, /* MCU NAVSS*/
->   				 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>, /* First peripheral window */
-> +				 <0x00 0x40f00000 0x00 0x40f00000 0x00 0x00020000>, /* CTRL_MMR0 */
->   				 <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>, /* MCU R5F Core0 */
->   				 <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>, /* MCU R5F Core1 */
->   				 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00080000>, /* MCU SRAM */
+> Thanks and regards,
+> Lokesh
 > 
+>> ---
+>>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> index 698ef9a1d5b7..96445111e398 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+>> @@ -43,6 +43,7 @@
+>>   	smmu0: smmu@36600000 {
+>>   		compatible = "arm,smmu-v3";
+>>   		reg = <0x0 0x36600000 0x0 0x100000>;
+>> +		power-domains = <&k3_pds 229 TI_SCI_PD_EXCLUSIVE>;
+>>   		interrupt-parent = <&gic500>;
+>>   		interrupts = <GIC_SPI 772 IRQ_TYPE_EDGE_RISING>,
+>>   			     <GIC_SPI 768 IRQ_TYPE_EDGE_RISING>;
+>>
 
 --
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
