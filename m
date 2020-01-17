@@ -4,76 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A2EC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37508C33CB3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68EC2082F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 067DB20730
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:45:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SiiK9OBC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AU3Q0YFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgAQJpS (ORCPT
+        id S1728982AbgAQJph (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:45:18 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45578 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbgAQJpR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 04:45:17 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so21968495wrj.12
-        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 01:45:16 -0800 (PST)
+        Fri, 17 Jan 2020 04:45:37 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32935 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726587AbgAQJph (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 04:45:37 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b6so22043762wrq.0
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 01:45:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=6JQdJ/Z+v9/vjiZPLWiEeVG/ezp4htSKwWzwxjsSWBY=;
-        b=SiiK9OBCwsjczoZlFB2/PbwNzt65xXxwp/2hl7vVy8q1P15e9nwVJOriZ3rt0vu/qk
-         ANr7muK6mj79J7aTxzA9hT1uExPNqHVYmvmysFg2FuWEESIUy+VwvZCgW01kwD6FkWd2
-         Wk/fEr8phJJCBqm2ojpU4ia4vYW2GLbAsR+jEt5+Uzqa32WFXwRCzxucl6lUBzM9mQDF
-         fu6q71nwuUmVqQfkQh3DvFtvX7MtNouyOZbbQ9QfdfACDbyC1VYMBR3nNC1LqoUi7rEf
-         O2RB2yyoVHSO5jlmx9Mo39RNV+mZMQ2EDJ4XEBPju+SHhg9afGmpKwCIAjThGhEevGcG
-         BZMg==
+        bh=w7L79aO9Rjvj7e/M8+iEMEEveQjjR2gbYrDBVwpUq9o=;
+        b=AU3Q0YFzNGFnPl2im0TCXiz0kZFmI4e+nD/ve/eF7yLahrW8d++UrxFPzBjRAJPjAt
+         3CleXkagBfSe7EGUCZPhWUbiShEnyyHrPrus7owRa1tZOvc4X4kaNjIm53FBH32vCdwG
+         25tPQ1kvVoexoNpJIaRWvNg2uWqNNyPXCJuNqfxeDLC7kgMcjtExtrbn461hmX6o18eR
+         z/ueZhZev7ROxyx9EbAymf9GEFAhzTK4nHniaUpDbfhIByHXJ0hyrft9qnPcpy5p2FMG
+         74m+7xkanZFcxFe402+tUM6mHCxZylTOvv/7KMCQ/A0R9+xhf7ycwKJU7FApZShjHLm4
+         ee7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=6JQdJ/Z+v9/vjiZPLWiEeVG/ezp4htSKwWzwxjsSWBY=;
-        b=PBXIJdU19KLebY61SMMKdUJqDdXQL8gajcHxG660BHuxUsSBqps5pJu4fCg8eWHTYJ
-         uiGdkxbKEQqXIEVFuMz5q+UWYzHVVcyBS9MzNkjvrq8DV8F/W2jqrRW90lVzaFT+s5Ba
-         UdUXlNZllGzmdhGI2bpRz0k2E17i7yq78OYPt5Xa/cM06Zi7b8rNWa//u6pcbu4ScGaV
-         17wrEQ09ovYV6wa56PcZ1mqTwa6KdmjY19VrwUiaUVByNgJhP27FwzMxfIrZMqdmQPQC
-         SAbDavqcCthsQO5jQTlLtOSdhoTw+nioudaFcEe42AMEoFG2iiRB3cn/ntNWiEAk7A5q
-         IsFA==
-X-Gm-Message-State: APjAAAUSGnkPiUFAMzKiovP0V/alju+anU35zd3djaM+lAxvOQTLihf+
-        b2DbCnkBLnz7LYjYql937OGBfA==
-X-Google-Smtp-Source: APXvYqyEk2ExDz5kQ4m2E2esP3TuVG1PMbfYAl7TrlI8nt7Maqc1sYLr4kN4JskI44nke/OUXtlSEw==
-X-Received: by 2002:a5d:630c:: with SMTP id i12mr2159617wru.350.1579254315991;
-        Fri, 17 Jan 2020 01:45:15 -0800 (PST)
+        bh=w7L79aO9Rjvj7e/M8+iEMEEveQjjR2gbYrDBVwpUq9o=;
+        b=Z4cCiGyvobUN6PAq7fpoksmT2BxGx9+rNJgQzd5gla1xI2iD1ZLWpQROi2ban1iLxj
+         vUaDbeOFX/EKuzLYzdbVJvbFLaUosLLP+efHHRt672uk75UsfW81eylE5D3X5thUaamH
+         nE+1GXbqlB/9CuCJcfp530NWsvMzTchHpV0QTvSmKVyCr2Z9Rf/mG878nF/gJWzwV7So
+         3ylIngng67828f/WIoMLYBTZu+H+GgEHJcrgXk1HDCJsode4a8TPlynqhbv8GMCK/lRd
+         ZwgOwfywFiQqX5vpYtEzADdc/sMTS9Wf3RkQ9vXYuY04ch1EZMojR2WMZON90T7DDEEo
+         lnYA==
+X-Gm-Message-State: APjAAAVKr7UNIbkTpO+TsxeANSDxmxU6zy46COqAeuwKalv19jXX0yol
+        AAd88CrCnphDZZzqCIg7g6tv+w==
+X-Google-Smtp-Source: APXvYqy+oGT4r2HmL/m9cMbiZkerRGNi6pZOIoPtR3pUfPUq2DITG2EHd/C0t3kP+W5BHPUU07E6Wg==
+X-Received: by 2002:adf:f3cd:: with SMTP id g13mr2177501wrp.54.1579254335984;
+        Fri, 17 Jan 2020 01:45:35 -0800 (PST)
 Received: from dell ([2.27.35.221])
-        by smtp.gmail.com with ESMTPSA id i5sm8814345wml.31.2020.01.17.01.45.14
+        by smtp.gmail.com with ESMTPSA id u1sm3606795wmc.5.2020.01.17.01.45.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 01:45:14 -0800 (PST)
-Date:   Fri, 17 Jan 2020 09:45:33 +0000
+        Fri, 17 Jan 2020 01:45:35 -0800 (PST)
+Date:   Fri, 17 Jan 2020 09:45:54 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Marco Felsch <m.felsch@pengutronix.de>
 Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
         linus.walleij@linaro.org, Adam.Thomson.Opensource@diasemi.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-gpio@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mfd: da9062: add gpio bindings
-Message-ID: <20200117094533.GA15507@dell>
+        kernel@pengutronix.de, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] mfd: da9062: add support for the DA9062 GPIOs in
+ the core
+Message-ID: <20200117094554.GB15507@dell>
 References: <20200108104746.1765-1-m.felsch@pengutronix.de>
- <20200108104746.1765-2-m.felsch@pengutronix.de>
+ <20200108104746.1765-3-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200108104746.1765-2-m.felsch@pengutronix.de>
+In-Reply-To: <20200108104746.1765-3-m.felsch@pengutronix.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
@@ -82,22 +82,18 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Wed, 08 Jan 2020, Marco Felsch wrote:
 
-> Add gpio device documentation to make the da9062 gpios available for
-> users.
+> Currently the da9062 GPIO's aren't available. The patch adds the support
+> to make these available by adding a gpio device with the corresponding
+> irq resources. Furthermore the patch fixes a minor style issue for the
+> onkey device.
 > 
 > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > ---
-> Changelog:
-> 
-> v2:
-> - remove sub-node documentation
-> - squash gpio properties into mfd documentation
-> ---
->  Documentation/devicetree/bindings/mfd/da9062.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/mfd/da9062-core.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
 
 Applied, thanks.
 
