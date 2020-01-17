@@ -2,523 +2,172 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FB7C33CB3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B841C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3332072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BB22083E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 21:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GoPFcDUC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NS/EhPCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgAQVdf (ORCPT
+        id S1726587AbgAQVrC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 16:33:35 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40822 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726587AbgAQVde (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 16:33:34 -0500
-Received: by mail-pl1-f195.google.com with SMTP id s21so10359767plr.7;
-        Fri, 17 Jan 2020 13:33:34 -0800 (PST)
+        Fri, 17 Jan 2020 16:47:02 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46763 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbgAQVrC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 16:47:02 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so10365070pll.13
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 13:47:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=wdp6cLJwlGdaiNgVZ7Oq+Sray4WTuyHCCJRXgdtyBAc=;
-        b=GoPFcDUCxQafzsGDZGpN0UaUZxqmsRvqy9i3YmdfLB961xfWifkd6LXSzLEG8zr1or
-         Gp8uDzjg+1sivte+xusXPCR2peQWTEV6MWAOCSNALFrZgCvZAiQYCjlSFDDrb4c5tPup
-         XaMvVGAFR8SG7YspVUByfvC3NpM0dPXCAJrySwBGYySjm/gRiALLY8aS65U68XzGf776
-         Sml/BlVEEdoDo1DmOU2iv92Hz6X0lIl9FRPPdnncOAXn3/HkUWtQBSdHcTaJZbNoKFmi
-         EkQMugyjul3ZOeUBoLndXcYLr2/COC4K/6yjQ69C+2gGgolzDu/NBJ1/6UNENXtvCEDz
-         7x/Q==
+        bh=lpIgyl5NCXKJtlVfY6LDVr/laVruYd1wjo/GE/EvpJk=;
+        b=NS/EhPCspDc9BrYLxCDbQc6HGbciz//NMH4L/3A+Fp+eNZn38j6WuZ+ZZUud6V4CBL
+         hv6R4IebxYsKRgwAr6BF5zxIvj6gLzdVCboFtdIXId4AIuc0ro5IJBGobecYx6XvfEL2
+         IpYFTISZskx1s5EmflFSZiHCz1YhmswzGbSFY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wdp6cLJwlGdaiNgVZ7Oq+Sray4WTuyHCCJRXgdtyBAc=;
-        b=t3PthZ6gfO0E1LO+b1ChilkWM0JVK6ht2K/xL+W8gJn7llADq0dg8bZzkZIZlW+xl7
-         atXkZHZ67mZKVdoL2P+yU78LzTacT9PKpi6LParxVeKRbCZL1bnpFn6B6X/plnD1Whx4
-         sxDkfpiSbzB5nCRYG+dta6A89WBlE/MhJIit4gZDhFc6wkIjWP6+h3p5c+v90QwTJap6
-         DHrC3N2YC5kcFV+oMrh5xuXsE2RPOx2Ko03Ck8/nQ8S5wqWZX7lbxtoCCNH08iAxmQu+
-         67qsekinRYtU7ZzsJjaaxaibQ+c0OAia6A3ZsVcTBfSrHSthtncM/WfSsmYngJeoOH/u
-         1tLw==
-X-Gm-Message-State: APjAAAUs9LKm6XUpLrjFXLTxR9ZVLDd9CAHqIKZdw3LW0c/5Pr2I0Yac
-        YiZGpkMmt2wL/LHlCNUov0U=
-X-Google-Smtp-Source: APXvYqyGEg2C78QqJ9gcxuqqLXXe62GWDIUUzySWaO4mU2ow0kPF8/uwMwqim2J74vrsUuWPDSwoyQ==
-X-Received: by 2002:a17:902:7613:: with SMTP id k19mr1360737pll.7.1579296813676;
-        Fri, 17 Jan 2020 13:33:33 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id y203sm31409362pfb.65.2020.01.17.13.33.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 13:33:32 -0800 (PST)
-Date:   Fri, 17 Jan 2020 13:33:30 -0800
-From:   "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 3/7] input: keyboard: Add support for Azoteq
- IQS620A/621/622/624/625
-Message-ID: <20200117213330.GF47797@dtor-ws>
-References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
- <1579228475-6681-4-git-send-email-jeff@labundy.com>
+        bh=lpIgyl5NCXKJtlVfY6LDVr/laVruYd1wjo/GE/EvpJk=;
+        b=KHQ9fNqIX6tixzafVYX0Yh2m/ZZOeTZXim/wRi1Czms+0+lMX+pkqTwHg3v2yupjBp
+         Pshstasx6kLK5M2PElzz0D683oibKHinvI3Rqca7B0jsrTa0cfd1ihNUcBTB3TIyeBdx
+         IHZxKwfR+lJtry85y1GhVNwgnCjAXskIwyyueyOFSDVDJAObQ7pRSHhSdjMkvcvber4V
+         yyzH90rdzypcLQEORDRspjQ2jPA3xO6wcToZ3QXwkUWL5MpW/6OINehvBH1GE45rNivh
+         jh70UZcnJZ5YflB4jLZ+ronY0DQumAk1zP+eBANZFtu0YM2Xv7sW0e4Bmdl6/0LWacA+
+         pWhA==
+X-Gm-Message-State: APjAAAWHwEET9nZerFNbMrqrP+/Pjt8PBnRXPAtt+61xYcAnLVstK0C5
+        eRpbMpVVqtMgcTZ5TK+JzPNnNA==
+X-Google-Smtp-Source: APXvYqx9BLen4IIYmuKFE1qPi9xL0KYuRvk3pdIuKyhIfjRLB6W+fgmMd+3jUJonjejco6dc9E68ug==
+X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr8497823pji.114.1579297621658;
+        Fri, 17 Jan 2020 13:47:01 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id j8sm287874pjb.4.2020.01.17.13.47.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2020 13:47:01 -0800 (PST)
+Date:   Fri, 17 Jan 2020 13:46:59 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 4/5] phy: qcom-qusb2: Add support for overriding
+ tuning parameters in QUSB2 V2 PHY
+Message-ID: <20200117214659.GR89495@google.com>
+References: <1578658699-30458-1-git-send-email-sanm@codeaurora.org>
+ <1578658699-30458-5-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1579228475-6681-4-git-send-email-jeff@labundy.com>
+In-Reply-To: <1578658699-30458-5-git-send-email-sanm@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jeff,
+Hi,
 
-On Fri, Jan 17, 2020 at 02:35:46AM +0000, Jeff LaBundy wrote:
-> This patch adds key and switch support for the Azoteq IQS620A,
-> IQS621, IQS622, IQS624 and IQS625 multi-function sensors.
+On Fri, Jan 10, 2020 at 05:48:18PM +0530, Sandeep Maheswaram wrote:
+> Add support for overriding tuning parameters in QUSB2 V2 PHY
+> bias-ctrl-value,charge-ctrl-value and hsdisc-trim-value.
 > 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 > ---
-> Changes in v4:
->   - None
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c | 51 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 > 
-> Changes in v3:
->   - None
-> 
-> Changes in v2:
->   - Merged 'Copyright' and 'Author' lines into one in introductory comments
->   - Replaced 'error' with 'ret' throughout
->   - Updated iqs62x_keys_parse_prop to use unified device property interface
->   - Clarified the comment in iqs62x_keys_notifier to state that wheel up or
->     down events elicit an emulated release cycle
->   - Eliminated tabbed alignment of platform_driver struct members
-> 
->  drivers/input/keyboard/Kconfig       |  10 ++
->  drivers/input/keyboard/Makefile      |   1 +
->  drivers/input/keyboard/iqs62x-keys.c | 340 +++++++++++++++++++++++++++++++++++
->  3 files changed, 351 insertions(+)
->  create mode 100644 drivers/input/keyboard/iqs62x-keys.c
-> 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 4706ff0..28de965 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -663,6 +663,16 @@ config KEYBOARD_IPAQ_MICRO
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ipaq-micro-keys.
-> 
-> +config KEYBOARD_IQS62X
-> +	tristate "Azoteq IQS620A/621/622/624/625 keys and switches"
-> +	depends on MFD_IQS62X
-> +	help
-> +	  Say Y here to enable key and switch support for the Azoteq IQS620A,
-> +	  IQS621, IQS622, IQS624 and IQS625 multi-function sensors.
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+> index db4ae26..d8bed13 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+> @@ -66,6 +66,14 @@
+>  #define IMP_RES_OFFSET_MASK			GENMASK(5, 0)
+>  #define IMP_RES_OFFSET_SHIFT			0x0
+>  
+> +/* QUSB2PHY_PLL_BIAS_CONTROL_2 register bits */
+> +#define BIAS_CTRL2_RES_OFFSET_MASK		GENMASK(5, 0)
+> +#define BIAS_CTRL2_RES_OFFSET_SHIFT		0x0
 > +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called iqs62x-keys.
+> +/* QUSB2PHY_CHG_CONTROL_2 register bits */
+> +#define CHG_CTRL2_OFFSET_MASK			GENMASK(5, 4)
+> +#define CHG_CTRL2_OFFSET_SHIFT			0x4
 > +
->  config KEYBOARD_OMAP
->  	tristate "TI OMAP keypad support"
->  	depends on ARCH_OMAP1
-> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-> index f5b1752..1d689fd 100644
-> --- a/drivers/input/keyboard/Makefile
-> +++ b/drivers/input/keyboard/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_KEYBOARD_TCA8418)		+= tca8418_keypad.o
->  obj-$(CONFIG_KEYBOARD_HIL)		+= hil_kbd.o
->  obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
->  obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
-> +obj-$(CONFIG_KEYBOARD_IQS62X)		+= iqs62x-keys.o
->  obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
->  obj-$(CONFIG_KEYBOARD_IMX_SC_KEY)	+= imx_sc_key.o
->  obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
-> diff --git a/drivers/input/keyboard/iqs62x-keys.c b/drivers/input/keyboard/iqs62x-keys.c
-> new file mode 100644
-> index 0000000..b477334
-> --- /dev/null
-> +++ b/drivers/input/keyboard/iqs62x-keys.c
-> @@ -0,0 +1,340 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Azoteq IQS620A/621/622/624/625 Keys and Switches
-> + *
-> + * Copyright (C) 2019 Jeff LaBundy <jeff@labundy.com>
-> + */
+>  /* QUSB2PHY_PORT_TUNE1 register bits */
+>  #define HSTX_TRIM_MASK				GENMASK(7, 4)
+>  #define HSTX_TRIM_SHIFT				0x4
+> @@ -73,6 +81,10 @@
+>  #define PREEMPHASIS_EN_MASK			GENMASK(1, 0)
+>  #define PREEMPHASIS_EN_SHIFT			0x0
+>  
+> +/* QUSB2PHY_PORT_TUNE2 register bits */
+> +#define HSDISC_TRIM_MASK			GENMASK(1, 0)
+> +#define HSDISC_TRIM_SHIFT			0x0
 > +
-> +#include <linux/device.h>
-> +#include <linux/input.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/iqs62x.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/regmap.h>
-> +#include <linux/slab.h>
-> +
-> +enum {
-> +	IQS62X_SW_HALL_N,
-> +	IQS62X_SW_HALL_S,
-> +};
-> +
-> +static const char * const iqs62x_switch_names[] = {
-> +	[IQS62X_SW_HALL_N] = "hall-switch-north",
-> +	[IQS62X_SW_HALL_S] = "hall-switch-south",
-> +};
-> +
-> +struct iqs62x_switch_desc {
-> +	enum iqs62x_event_flag flag;
-> +	unsigned int code;
-> +	bool enabled;
-> +};
-> +
-> +struct iqs62x_keys_private {
-> +	struct iqs62x_core *iqs62x;
-> +	struct input_dev *input;
-> +	struct notifier_block notifier;
-> +	struct iqs62x_switch_desc switches[ARRAY_SIZE(iqs62x_switch_names)];
-> +	unsigned int keycode[IQS62X_NUM_KEYS];
-> +	unsigned int keycodemax;
-> +	u8 interval;
-> +};
-> +
-> +static int iqs62x_keys_parse_prop(struct platform_device *pdev,
-> +				  struct iqs62x_keys_private *iqs62x_keys)
-> +{
-> +	struct fwnode_handle *child;
-> +	unsigned int val;
-> +	int ret, i;
-> +
-> +	ret = device_property_read_u32_array(&pdev->dev, "linux,keycodes",
-> +					     NULL, 0);
+>  #define QUSB2PHY_PLL_ANALOG_CONTROLS_TWO	0x04
+>  #define QUSB2PHY_PLL_CLOCK_INVERTERS		0x18c
+>  #define QUSB2PHY_PLL_CMODE			0x2c
+> @@ -327,6 +339,12 @@ struct qusb2_phy {
+>  	u8 preemphasis_level;
+>  	bool override_preemphasis_width;
+>  	u8 preemphasis_width;
+> +	bool override_bias_ctrl;
+> +	u8 bias_ctrl_value;
+> +	bool override_charge_ctrl;
+> +	u8 charge_ctrl_value;
+> +	bool override_hsdisc_trim;
+> +	u8 hsdisc_trim_value;
 
-You can use device_property_count_u32().
+Documentation for the new struct members is missing.
 
-> +	if (ret > IQS62X_NUM_KEYS) {
-> +		dev_err(&pdev->dev, "Too many keycodes present\n");
-> +		return -EINVAL;
-> +	} else if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to count keycodes: %d\n", ret);
-> +		return ret;
-> +	}
-> +	iqs62x_keys->keycodemax = ret;
-> +
-> +	ret = device_property_read_u32_array(&pdev->dev, "linux,keycodes",
-> +					     iqs62x_keys->keycode,
-> +					     iqs62x_keys->keycodemax);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to read keycodes: %d\n", ret);
-> +		return ret;
-> +	}
+Given the increasing numbers of overrides you could consider to organize
+them in a struct, instead of adding a 'override_' and '_value' to qusb2_phy
+for every param. E.g.:
 
-I wonder why you can't simply use
+struct override_param {
+        bool override;
+        u8 value;
+};
 
-	error = device_property_read_u32_array(&pdev->dev, "linux,keycodes",
-						iqs62x_keys->keycode,
-						IQS62X_NUM_KEYS);
+struct override_params {
+        struct override_param imp_res_offset;
+        struct override_param hstx_trim;
+        ...
+};
 
-Are you concerned with someone trying to set up keys that are not
-actually exposed later via EVOCSKEYCODES and that is why you are
-limiting keycodemax?
+struct qusb2_phy {
+        struct override_params overrides;
+};
 
-> +
-> +	for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++) {
-> +		child = device_get_named_child_node(&pdev->dev,
-> +						    iqs62x_switch_names[i]);
-> +		if (!child)
-> +			continue;
-> +
-> +		ret = fwnode_property_read_u32(child, "linux,code", &val);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Failed to read switch code: %d\n",
-> +				ret);
-> +			return ret;
-> +		}
-> +		iqs62x_keys->switches[i].code = val;
-> +		iqs62x_keys->switches[i].enabled = true;
-> +
-> +		if (fwnode_property_present(child, "azoteq,use-prox"))
-> +			iqs62x_keys->switches[i].flag = (i == IQS62X_SW_HALL_N ?
-> +							 IQS62X_EVENT_HALL_N_P :
-> +							 IQS62X_EVENT_HALL_S_P);
-> +		else
-> +			iqs62x_keys->switches[i].flag = (i == IQS62X_SW_HALL_N ?
-> +							 IQS62X_EVENT_HALL_N_T :
-> +							 IQS62X_EVENT_HALL_S_T);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int iqs62x_keys_init(struct iqs62x_keys_private *iqs62x_keys)
-> +{
-> +	struct iqs62x_core *iqs62x = iqs62x_keys->iqs62x;
-> +	enum iqs62x_event_flag flag;
-> +	unsigned int event_mask_reg;
-> +	unsigned int event_mask = 0;
-> +	unsigned int val;
-> +	int ret, i;
-> +
-> +	switch (iqs62x->dev_desc->prod_num) {
-> +	case IQS620_PROD_NUM:
-> +	case IQS621_PROD_NUM:
-> +	case IQS622_PROD_NUM:
-> +		event_mask_reg = IQS620_GLBL_EVENT_MASK;
-> +
-> +		/*
-> +		 * Discreet button, hysteresis and SAR UI flags represent keys
-> +		 * and are unmasked if mapped to a valid keycode.
-> +		 */
-> +		for (i = 0; i < iqs62x_keys->keycodemax; i++) {
-> +			if (iqs62x_keys->keycode[i] == KEY_RESERVED)
-> +				continue;
-> +
-> +			if (iqs62x_events[i].reg == IQS62X_EVENT_PROX)
-> +				event_mask |= iqs62x->dev_desc->prox_mask;
-> +			else if (iqs62x_events[i].reg == IQS62X_EVENT_HYST)
-> +				event_mask |= (iqs62x->dev_desc->hyst_mask |
-> +					       iqs62x->dev_desc->sar_mask);
-> +		}
-> +
-> +		ret = regmap_read(iqs62x->map, iqs62x->dev_desc->hall_flags,
-> +				  &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/*
-> +		 * Hall UI flags represent switches and are unmasked if their
-> +		 * corresponding child nodes are present.
-> +		 */
-> +		for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++) {
-> +			if (!(iqs62x_keys->switches[i].enabled))
-> +				continue;
-> +
-> +			flag = iqs62x_keys->switches[i].flag;
-> +
-> +			if (iqs62x_events[flag].reg != IQS62X_EVENT_HALL)
-> +				continue;
-> +
-> +			event_mask |= iqs62x->dev_desc->hall_mask;
-> +
-> +			input_report_switch(iqs62x_keys->input,
-> +					    iqs62x_keys->switches[i].code,
-> +					    (val & iqs62x_events[flag].mask) ==
-> +					    iqs62x_events[flag].val);
-> +		}
-> +
-> +		input_sync(iqs62x_keys->input);
-> +		break;
-> +
-> +	case IQS624_PROD_NUM:
-> +		event_mask_reg = IQS624_HALL_UI;
-> +
-> +		/*
-> +		 * Interval change events represent keys and are unmasked if
-> +		 * either wheel movement flag is mapped to a valid keycode.
-> +		 */
-> +		if (iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_UP] != KEY_RESERVED)
-> +			event_mask |= IQS624_HALL_UI_INT_EVENT;
-> +
-> +		if (iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_DN] != KEY_RESERVED)
-> +			event_mask |= IQS624_HALL_UI_INT_EVENT;
-> +
-> +		ret = regmap_read(iqs62x->map, iqs62x->dev_desc->interval,
-> +				  &val);
-> +		if (ret)
-> +			return ret;
-> +
-> +		iqs62x_keys->interval = val;
-> +		break;
-> +
-> +	default:
-> +		return 0;
-> +	}
-> +
-> +	return regmap_update_bits(iqs62x->map, event_mask_reg, event_mask, 0);
-> +}
-> +
-> +static int iqs62x_keys_notifier(struct notifier_block *notifier,
-> +				unsigned long event_flags, void *context)
-> +{
-> +	struct iqs62x_event_data *event_data = context;
-> +	struct iqs62x_keys_private *iqs62x_keys;
-> +	int ret, i;
-> +
-> +	iqs62x_keys = container_of(notifier, struct iqs62x_keys_private,
-> +				   notifier);
-> +
-> +	if (event_flags & BIT(IQS62X_EVENT_SYS_RESET)) {
-> +		ret = iqs62x_keys_init(iqs62x_keys);
-> +		if (ret) {
-> +			dev_err(iqs62x_keys->input->dev.parent,
-> +				"Failed to re-initialize device: %d\n", ret);
-> +			return NOTIFY_BAD;
-> +		}
-> +
-> +		return NOTIFY_OK;
-> +	}
-> +
-> +	for (i = 0; i < iqs62x_keys->keycodemax; i++) {
-> +		if (iqs62x_events[i].reg == IQS62X_EVENT_WHEEL &&
-> +		    event_data->interval == iqs62x_keys->interval)
-> +			continue;
-> +
-> +		input_report_key(iqs62x_keys->input, iqs62x_keys->keycode[i],
-> +				 event_flags & BIT(i));
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++)
-> +		if (iqs62x_keys->switches[i].enabled)
-> +			input_report_switch(iqs62x_keys->input,
-> +					    iqs62x_keys->switches[i].code,
-> +					    event_flags &
-> +					    BIT(iqs62x_keys->switches[i].flag));
-> +
-> +	input_sync(iqs62x_keys->input);
-> +
-> +	if (event_data->interval == iqs62x_keys->interval)
-> +		return NOTIFY_OK;
-> +
-> +	/*
-> +	 * Each frame contains at most one wheel event (up or down), in which
-> +	 * case a complementary release cycle is emulated.
-> +	 */
-> +	if (event_flags & BIT(IQS62X_EVENT_WHEEL_UP)) {
-> +		input_report_key(iqs62x_keys->input,
-> +				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_UP],
-> +				 0);
-> +		input_sync(iqs62x_keys->input);
-> +	} else if (event_flags & BIT(IQS62X_EVENT_WHEEL_DN)) {
-> +		input_report_key(iqs62x_keys->input,
-> +				 iqs62x_keys->keycode[IQS62X_EVENT_WHEEL_DN],
-> +				 0);
-> +		input_sync(iqs62x_keys->input);
-> +	}
-> +
-> +	iqs62x_keys->interval = event_data->interval;
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int iqs62x_keys_probe(struct platform_device *pdev)
-> +{
-> +	struct iqs62x_core *iqs62x = dev_get_drvdata(pdev->dev.parent);
-> +	struct iqs62x_keys_private *iqs62x_keys;
-> +	struct input_dev *input;
-> +	int ret, i;
-> +
-> +	iqs62x_keys = devm_kzalloc(&pdev->dev, sizeof(*iqs62x_keys),
-> +				   GFP_KERNEL);
-> +	if (!iqs62x_keys)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, iqs62x_keys);
-> +
-> +	ret = iqs62x_keys_parse_prop(pdev, iqs62x_keys);
-> +	if (ret)
-> +		return ret;
-> +
-> +	input = devm_input_allocate_device(&pdev->dev);
-> +	if (!input)
-> +		return -ENOMEM;
-> +
-> +	input->keycodemax = iqs62x_keys->keycodemax;
-> +	input->keycode = iqs62x_keys->keycode;
-> +	input->keycodesize = sizeof(*iqs62x_keys->keycode);
-> +
-> +	input->name = iqs62x->dev_desc->dev_name;
-> +	input->id.bustype = BUS_I2C;
-> +
-> +	__set_bit(EV_KEY, input->evbit);
-> +
-> +	for (i = 0; i < iqs62x_keys->keycodemax; i++)
-> +		__set_bit(iqs62x_keys->keycode[i], input->keybit);
-> +
-> +	__clear_bit(KEY_RESERVED, input->keybit);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(iqs62x_keys->switches); i++)
-> +		if (iqs62x_keys->switches[i].enabled) {
-> +			__set_bit(EV_SW, input->evbit);
-> +			__set_bit(iqs62x_keys->switches[i].code, input->swbit);
 
-input_set_capability(input, EV_SW, iqs62x_keys->switches[i].code)
+Or - if you want to take it even further - something along these lines:
 
-> +		}
-> +
-> +	iqs62x_keys->iqs62x = iqs62x;
-> +	iqs62x_keys->input = input;
-> +
-> +	ret = iqs62x_keys_init(iqs62x_keys);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to initialize device: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = input_register_device(iqs62x_keys->input);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register device: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	iqs62x_keys->notifier.notifier_call = iqs62x_keys_notifier;
-> +	ret = blocking_notifier_chain_register(&iqs62x_keys->iqs62x->nh,
-> +					       &iqs62x_keys->notifier);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "Failed to register notifier: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int iqs62x_keys_remove(struct platform_device *pdev)
-> +{
-> +	struct iqs62x_keys_private *iqs62x_keys = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = blocking_notifier_chain_unregister(&iqs62x_keys->iqs62x->nh,
-> +						 &iqs62x_keys->notifier);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "Failed to unregister notifier: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static struct platform_driver iqs62x_keys_platform_driver = {
-> +	.driver = {
-> +		.name = IQS62X_DRV_NAME_KEYS,
-> +	},
-> +	.probe = iqs62x_keys_probe,
-> +	.remove = iqs62x_keys_remove,
-> +};
-> +module_platform_driver(iqs62x_keys_platform_driver);
-> +
-> +MODULE_AUTHOR("Jeff LaBundy <jeff@labundy.com>");
-> +MODULE_DESCRIPTION("Azoteq IQS620A/621/622/624/625 Keys and Switches");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:" IQS62X_DRV_NAME_KEYS);
+struct override_param {
+        const char *dt_property;
+        u32 offset;
+        u8 shift;
+        u8 mask;
 
-Otherwise
+        // separate struct, since these are not constant?
+        bool override;
+        u8 value;
+};
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-I suppose it will be merged through MFD?
-
-Thanks.
-
--- 
-Dmitry
+struct override_param params[] = {
+        { "qcom,bias-ctrl-value", QUSB2PHY_PLL_BIAS_CONTROL_2, GENMASK(5, 0), 0 },
+        { "qcom,charge-ctrl-value", QUSB2PHY_CHG_CTRL2, GENMASK(5, 4), 4 },
+        ...
+};
