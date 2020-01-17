@@ -4,91 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E07DC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3161EC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFF32083E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06DC6214AF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579277114;
-	bh=lDKQ2AQPRq4K4hFm0dMBjmiFhOE9RKHqe9cSg8y0tww=;
+	s=default; t=1579278723;
+	bh=ogEjb6p5bkBX+oGGwniYG3pY9B0OIU1oA1FR3jbA75s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bfnqx8XUxlNFPVUzcTix9qwvnSlsvao7OVLbOi12w/zbHwlVWn/48IhTp3v3C2azX
-	 2J7o2utkKi/pqHd/+zqe1fgRN0lfzlJ3WPzJXh1eg2Ols6RqJrGEvDh76K/XpKHmkM
-	 ertiom8qCxKDsIiOyWheoFpxjbG/Ywezc+4G8CQ8=
+	b=t4KhM2tUeWzA3uRYOS1AdYjMIw9HJEmnkXAHRJCeQ/mGqJwX/pPzLMqsR42KMCLym
+	 dqm8qDMMBnsfi9QkHIOzezS0OcJT9KIKbI/v/HmDlCYPSLSSS1FYyZrh2om0Zg88AU
+	 8XdpcUw0HK/6ubsVSxnQe35QqgP0jeFA5rP4jVgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729238AbgAQQFO (ORCPT
+        id S1726566AbgAQQb7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:05:14 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45813 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727043AbgAQQFN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 11:05:13 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so22924956otp.12;
-        Fri, 17 Jan 2020 08:05:13 -0800 (PST)
+        Fri, 17 Jan 2020 11:31:59 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42165 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726506AbgAQQb7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 11:31:59 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 18so22695123oin.9;
+        Fri, 17 Jan 2020 08:31:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=09pIPN9VJnVoMEohnpzoMe9Wz3LLI11Byu6hcubzbxA=;
-        b=d5g16M1UuIpwgKHug1N93pZ7b1hkNbDydtqoLq08kh6roLqWPapMXqeuV2sIS0w0oF
-         8RLj8qlxx8hojKuB6d9+4Ea+8F5U0+Bfkf10BHtw7VdKDZwqw+QS3+wdw4Hueh5gvYE2
-         Aw6/raAl+qW28Nu7XjR7mg4jEHLR4H0gY9lumxcBHp2aW1bOMaP2WhrzxUx9OhnWvhG/
-         39gNsohdd2+OoyCv5KDS6FqjwZbNTuwKJvk76hVlwjQEU8SnU5TmigfXzcs42fJQEtje
-         At8D3Qh0XfKpELJefKiGI5rlvyImmaIKndiB9GM0tMwdFL/FmwRdj5GGbkvOH+93aPza
-         ZxAg==
-X-Gm-Message-State: APjAAAWPfdBbvFmnzaIadZkQ8jEJX5C3MMS2Wq/3ww+1jZ7RhbyENdHI
-        //nEFgMWK+rsHqfGUdJaMA==
-X-Google-Smtp-Source: APXvYqzQt3oAnIJ07HK2ThTZ7fZk/cAWmEqZh1TV2aFPYhVvNicW/VMaIbgMHihgXroZfWA+uWkxRg==
-X-Received: by 2002:a9d:811:: with SMTP id 17mr6752321oty.369.1579277112497;
-        Fri, 17 Jan 2020 08:05:12 -0800 (PST)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=5gj1/chJ9sV8kpdyataWFH+xbqAvecJvMET5S/FO4BY=;
+        b=KrQHPGEKwzzDNTU84uZNuV3KRKyhW7T0CMRw3iN7rG1VTQ5qmiAZnMkNLfgcFJz56T
+         8ZwIol13oaHidE4d9eeB9Dh3mzYvkZ06w4oeitVQjKwdPDA3raalGz6wJpV8NoTcN2aF
+         toVNlNjnKJCb/gP0MEmyUgRfr+dNAtlY+AkNGKD7X9nt53iVKTbJxmwgLaHmDhuPqfgw
+         soS91F9P5nba+fb/WYKMzR69T47peb5VtxsC/t4OiNS9nRWJ2TCdFdvC7AO2uWjUQTkJ
+         q12kP1EgQRB1uPsEA4/C6yWdvHjOQ4PuJN4WnB+GBdBDg4VTtfRwrzxxQTrc6ZxvtsfQ
+         VZfw==
+X-Gm-Message-State: APjAAAVhaFjZ3FMr3mU8ZWQSqb8Cnzek4rqy0OW5UVIvcs4byKmVAoea
+        98UOpJilbTJ+PpsNaz1NFw==
+X-Google-Smtp-Source: APXvYqxs5kEVxVAuMPNxBDE0jWIqvD8uzgfpnztY5yy6y+7ElSVcbkmwv+bYZcJhO8bAItMve31emQ==
+X-Received: by 2002:aca:fcd1:: with SMTP id a200mr3911032oii.74.1579278718422;
+        Fri, 17 Jan 2020 08:31:58 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n17sm8969227otq.46.2020.01.17.08.05.11
+        by smtp.gmail.com with ESMTPSA id a24sm7933178oic.10.2020.01.17.08.31.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:05:11 -0800 (PST)
-Received: (nullmailer pid 17750 invoked by uid 1000);
-        Fri, 17 Jan 2020 16:05:10 -0000
-Date:   Fri, 17 Jan 2020 10:05:10 -0600
+        Fri, 17 Jan 2020 08:31:57 -0800 (PST)
+Received: (nullmailer pid 25438 invoked by uid 1000);
+        Fri, 17 Jan 2020 16:31:56 -0000
+Date:   Fri, 17 Jan 2020 10:31:56 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Remi Pommarel <repk@triplefau.lt>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
-Subject: Re: [PATCH v5 3/7] dt-bindings: PCI: meson: Update PCIE bindings
- documentation
-Message-ID: <20200117160510.GA17695@bogus>
-References: <20200116111850.23690-1-repk@triplefau.lt>
- <20200116111850.23690-4-repk@triplefau.lt>
+To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, mips-creator-ci20-dev@googlegroups.com,
+        robh+dt@kernel.org, paul.burton@mips.com, paulburton@kernel.org,
+        jhogan@kernel.org, mark.rutland@arm.com, syq@debian.org,
+        ralf@linux-mips.org, rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
+Subject: Re: [PATCH v2 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Message-ID: <20200117163156.GA24497@bogus>
+References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1579195429-59828-5-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200116111850.23690-4-repk@triplefau.lt>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1579195429-59828-5-git-send-email-zhouyanjie@wanyeetech.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 16 Jan 2020 12:18:46 +0100, Remi Pommarel wrote:
-> Now that a new PHYs has been introduced for AXG SoC family, update
-> dt bindings documentation.
+On Fri, 17 Jan 2020 01:23:46 +0800, =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= wrote:
+> Document the available properties for the SoC root node and the
+> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 > 
-> Please note that this breaks backward compatibility but as not a single
-> devicetree uses that yet that seems ok.
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 > ---
->  .../bindings/pci/amlogic,meson-pcie.txt       | 22 ++++++++-----------
->  1 file changed, 9 insertions(+), 13 deletions(-)
+> 
+> Notes:
+>     v1->v2:
+>     Change the two Document from txt to yaml.
+> 
+>  .../bindings/mips/ingenic/ingenic,cpu.yaml         | 53 ++++++++++++++++++++++
+>  .../bindings/mips/ingenic/ingenic,soc,yaml         | 35 ++++++++++++++
+>  2 files changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,yaml
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml:  while parsing a block collection
+  in "<unicode string>", line 17, column 7
+did not find expected '-' indicator
+  in "<unicode string>", line 17, column 25
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.example.dts] Error 1
+Makefile:1263: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1224371
+Please check and re-submit.
