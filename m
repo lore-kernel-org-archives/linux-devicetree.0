@@ -2,101 +2,103 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A10C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61962C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B8921582
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NG/bBZ9x"
+	by mail.kernel.org (Postfix) with ESMTP id 3CB64206D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579285462;
+	bh=Unt+nafP7Qqep3NX+AoYqjNBQr2Z3oLcX0vA4oFHUas=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w0DSPmd11/3TFc6qTQbkM4+JuofLKG5Hd+L6ms9ctoqpaIBZqJ+d1JM7r6y74HckF
+	 nxyfqoiP++D7y9QHwnci9bJZIZlUnYHhOrVaHwknK8Xfs2YaKuw5V8Qusqc1yR/Lgv
+	 jIg0ITUagnt91MzR0zdbtZUqgSsVbbjsda1uyXdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgAQSYM (ORCPT
+        id S1726970AbgAQSYU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:24:12 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43330 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgAQSYM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 13:24:12 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x6so12309629pfo.10;
-        Fri, 17 Jan 2020 10:24:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dZq4930H9HujJy04y88tu8oZfEIDfkU1+0+vk4EgxTk=;
-        b=NG/bBZ9xt5g9xcqgnyHR4u+N+LkBsrI+BB+q+EzgjQFYNsPWuGmYkwmAWpvfFhxU3G
-         hdQMFqfOLdO3y3NvlwAQaic7RwMAhfIf/Ar1LAeJOjxvB1UhpEDNYR2mkek1zAEqa5cR
-         c6mzvmoG0Xl4rncgYPfA3xyx1YxZnckNwJbCL2ommLHjUfLYxL1TPdbjiaK/I2S7CctC
-         NvbTyHnpS7U5XIhdI3+4cV9y4ePt/CPHDqCHhcVaxSbwPeLQUJqFR/vcZzUQG0O15ddP
-         g41Nv3n9k4dFlpPuPK5RdAhYWSiKtMQBtJIJlBGDJi5jzQqeriLfjO+D5sSV+ixV8Q5D
-         JO/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dZq4930H9HujJy04y88tu8oZfEIDfkU1+0+vk4EgxTk=;
-        b=afralLiHjqmzN8qSILru28pepTnCIffwDE4OAhW00RbBY1b3Ry1o5dph7Xd+8PJ6DX
-         F4CXo6xnjp56z9Ljo4sGNsW+CMMFmDoNXjtljH0aR6tEl4C30+vH8s9LYBneeQ0JkLOi
-         KeWucy53zJ+uEDwmNFSzbRjlmFbSo7orc56VYQGHcNNoPdXdbW/py3e9EknirZPI4lFd
-         t/4gRDpwwpMRO3MAHIv9YVrQFfZ2eRq7Pm1ZSdlLb0OSQo8xfzefJvsEUY48oO1Pp4+3
-         WEUUA5vRK1XgJMH8ZTADmG+oBeEIaPBav3xX6qyDkE1e8OfZR65kZjf+zEdS4vSpTH2p
-         uHQg==
-X-Gm-Message-State: APjAAAXjxqnggnXkVkjlLok7v71gMU78p7TCJhNhwcI1KW4f5nr6pwc4
-        oJwWkVR9jr0I3q5GyFSwkdc=
-X-Google-Smtp-Source: APXvYqwqwtjiy/0ADuAQYaj/8wr83Ow+Ynf/qWks0ep1fuSe0WQLg9Hb44mfoLAT+0d/JXjA/BTNug==
-X-Received: by 2002:a63:fc57:: with SMTP id r23mr45446402pgk.71.1579285451964;
-        Fri, 17 Jan 2020 10:24:11 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:a811:24b6:1823:a6d9? ([2001:4898:80e8:8:2821:24b6:1823:a6d9])
-        by smtp.gmail.com with ESMTPSA id s18sm30103344pfh.179.2020.01.17.10.24.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 10:24:11 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sashal@kernel.org, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, shji@microsoft.com,
-        ruizhao@microsoft.com, Yuqing Shen <yuqing.shen@broadcom.com>,
-        ray.jui@broadcom.com, wangglei@gmail.com
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
- <aa80b8a5-5297-91c6-6410-99e43b53bd20@broadcom.com>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <d05f6394-e076-6c99-965a-28444c0f24f9@gmail.com>
-Date:   Fri, 17 Jan 2020 10:24:10 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 17 Jan 2020 13:24:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729252AbgAQSYT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:24:19 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C404206D5;
+        Fri, 17 Jan 2020 18:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579285458;
+        bh=Unt+nafP7Qqep3NX+AoYqjNBQr2Z3oLcX0vA4oFHUas=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2cdPrlAA3Lqqp2RL/BJ7338PEXZWeq/hEckJ/ruf6Wnmq8ndU08a1aMRKS1VDYmT2
+         kOuP3zy3s0A8VFqjypssRBFkv7agDt2wxflpVirVaMwjy5zDHwrWyCPMuKq2z6d76m
+         WTIg5mQbT1QicvoRXz7TASuX0EC8/v7KdX3wArxM=
+Date:   Fri, 17 Jan 2020 19:24:16 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Icenowy Zheng <icenowy@aosc.xyz>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] arm64: dts: sun50i: H6: Enable SPI controller
+Message-ID: <20200117182416.5y57aa6nwulztcot@gilmour.lan>
+References: <20200116231148.1490-1-andre.przywara@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <aa80b8a5-5297-91c6-6410-99e43b53bd20@broadcom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zxgtfc54oobnuhf2"
+Content-Disposition: inline
+In-Reply-To: <20200116231148.1490-1-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/16/2020 4:31 PM, Scott Branden wrote:
-> Hi Shiping,
-> 
-> Here is another small change to cleanup.
->> +    } else {
->> +        memset(info, 0, sizeof(struct ecc_error_info));
-> This should be sizeof(*info), not sizeof(struct ecc_error_info)
-> for better programming to allow info to change type in the future
-> without the code changing.
 
-Yes, two occurrences will be replaced in the next patch, thanks!
+--zxgtfc54oobnuhf2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Best regards,
-Shiping Ji
+On Thu, Jan 16, 2020 at 11:11:45PM +0000, Andre Przywara wrote:
+> Even though the SPI controller in the Allwinner H6 SoC is more advanced
+> than in the previous generations (it supports 3-wire and 4-wire mode),
+> the register set stays backwards-compatible. So we can use the existing
+> driver to use the "normal" SPI mode, for instance to access the SPI
+> flash soldered on the Pine H64 board.
+>
+> These two patches allow this by adding the SPI controller nodes to the
+> DT. The compatible strings include an H6 specific name, so that any
+> future 4-wire enhancements for instance would be automatically usable
+> once the driver learns this new trick. For now we use the H3 fallback
+> name to bind the current driver.
+>
+> This time I tested this actual branch  (on top of sunxi/dt-for-5.6),
+> on a Pine H64, both the internal SPI flash as well with SPI flash
+> connected to the other SPI controller available on the GPIO headers.
+>
+> As the SPI0-CS0 pin clashes with the eMMC CMD pin, we keep this
+> node disabled by default, to avoid losing the eMMC if it probes last.
+> People (or U-Boot) can enable it if needed.
+
+Queued all three for 5.7, thanks!
+Maxime
+
+--zxgtfc54oobnuhf2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiH70AAKCRDj7w1vZxhR
+xTmeAP49nHNJa9zeo1OlCPzyy2qZK3R+gWNkj4KPdU33ab/+rQEA85fkrRDtIImN
+woli9GP6PWrVOowW3vnovD0xbmYbDgc=
+=/XyN
+-----END PGP SIGNATURE-----
+
+--zxgtfc54oobnuhf2--
