@@ -2,128 +2,101 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA61C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5848AC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10F220684
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2697B20748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="kWipAHvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgAQDUe (ORCPT
+        id S1729019AbgAQDgX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:20:34 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38345 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbgAQDUd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 22:20:33 -0500
-Received: by mail-ed1-f67.google.com with SMTP id i16so20935775edr.5;
-        Thu, 16 Jan 2020 19:20:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DuXdQ+iDwsOn6z/f7z3i1gI0wBVfOZJt0yf4ZaQCnGI=;
-        b=ta75JDSwrGE+3vIHY2yb3jGezBeeANZoDjP1q28rvdcmb/asOQ/Mn0EM0/nOgJE0eu
-         kq6uI4PgFq9alixNz/wJhLqpWu6SYr5u3Qsryz5fAwYW8OhyMY1deEUVEeKDwOSS3pK+
-         Gu6NTMjY4jx4/oby4WtWagRqDKLsI5rMppePNo5EH3BHRkuNy5vlevKRl4kIJQKvZzrq
-         bxSG6e9LpdZ2ohFGqjG894MdOry5yJiabamMQnGH/k9/wmGAO+PXh50TnrQXgMgII3RZ
-         SSf7tGtd4PlKvyXBUfGh4CnumeUSAXDUxAzvGhkhJRTZEW1pBid6vw4pThBcABn7sTrd
-         IXKw==
-X-Gm-Message-State: APjAAAVF00t8IXheYI4i7yInQwf/2HObdGfLU2b6jb1skjNtiLXNWXEa
-        E+O/7zemomo2bPs/YuKejfyCXlOGGJo=
-X-Google-Smtp-Source: APXvYqyyg9x5N4zkjGEZFbPB6VW7lW6dlhN0XNk/AN4XlkpaxJ+WPoRBTWa64Zo0JFqbjF/1tW3CkQ==
-X-Received: by 2002:a17:906:aad0:: with SMTP id kt16mr5935122ejb.223.1579231231598;
-        Thu, 16 Jan 2020 19:20:31 -0800 (PST)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com. [209.85.221.47])
-        by smtp.gmail.com with ESMTPSA id u29sm901153edb.22.2020.01.16.19.20.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Jan 2020 19:20:31 -0800 (PST)
-Received: by mail-wr1-f47.google.com with SMTP id b6so21299066wrq.0;
-        Thu, 16 Jan 2020 19:20:31 -0800 (PST)
-X-Received: by 2002:a5d:44cd:: with SMTP id z13mr661642wrr.104.1579231230948;
- Thu, 16 Jan 2020 19:20:30 -0800 (PST)
+        Thu, 16 Jan 2020 22:36:23 -0500
+Received: from forward103j.mail.yandex.net ([5.45.198.246]:57347 "EHLO
+        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726366AbgAQDgX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 16 Jan 2020 22:36:23 -0500
+Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
+        by forward103j.mail.yandex.net (Yandex) with ESMTP id 66D146740FD7;
+        Fri, 17 Jan 2020 06:36:19 +0300 (MSK)
+Received: from mxback12q.mail.yandex.net (mxback12q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b3:0:640:3818:d096])
+        by forward100q.mail.yandex.net (Yandex) with ESMTP id 5F53D7080002;
+        Fri, 17 Jan 2020 06:36:19 +0300 (MSK)
+Received: from vla5-e763f15c6769.qloud-c.yandex.net (vla5-e763f15c6769.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:e763:f15c])
+        by mxback12q.mail.yandex.net (mxback/Yandex) with ESMTP id a1MeNzqhuk-aHdai45h;
+        Fri, 17 Jan 2020 06:36:19 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579232179;
+        bh=o7C7QSp1tNndF9dhHqVnBtCm952xn76Pe6J9wt1IgLE=;
+        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
+        b=kWipAHvojJC7ky63S86/CHCuZ2KWqiyYeY++7GTfxJ0qvWhfFKmtX9M61/QKW4/3V
+         QAPvjKGK5U8s8JOW2X3m48uxn//nthBXZWM51Mmo98jszuS3mV7jWZHh7/cvhHLhvv
+         nRKQcMCsg4aU3n4Aldzd3JPkOQNEXv4NtfVTAGMU=
+Authentication-Results: mxback12q.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by vla5-e763f15c6769.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id BHG1m4ySsO-aEW427WJ;
+        Fri, 17 Jan 2020 06:36:15 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Date:   Fri, 17 Jan 2020 11:36:04 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com> <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-References: <20200116194658.78893-1-manu@freebsd.org>
-In-Reply-To: <20200116194658.78893-1-manu@freebsd.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 17 Jan 2020 11:20:21 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67U6qjNf0PPMOm191UZDQvJTGZNNREc22ZsDW61KqaUEA@mail.gmail.com>
-Message-ID: <CAGb2v67U6qjNf0PPMOm191UZDQvJTGZNNREc22ZsDW61KqaUEA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add gpio bank supply for A64-Olinuxino
-To:     Emmanuel Vadot <manu@freebsd.org>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/6] MIPS: JZ4780: Introduce SMP support.
+To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
+        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        paul@crapouillou.net, prasannatsmkumar@gmail.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <D9108DBE-BA95-47C6-81B3-74FBC44E04FE@flygoat.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jan 17, 2020 at 3:47 AM Emmanuel Vadot <manu@freebsd.org> wrote:
->
-> Add the regulators for each bank on this boards.
->
-> Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
-> ---
->  .../boot/dts/allwinner/sun50i-a64-olinuxino.dts   | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> index 01a9a52edae4..1a25abf6065c 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-> @@ -163,6 +163,17 @@ &ohci1 {
->         status = "okay";
->  };
->
-> +&pio {
-> +       vcc-pa-supply = <&reg_dcdc1>;
-> +       vcc-pb-supply = <&reg_dcdc1>;
-> +       vcc-pc-supply = <&reg_dcdc1>;
-> +       vcc-pd-supply = <&reg_dcdc1>;
-> +       vcc-pe-supply = <&reg_aldo1>;
-> +       vcc-pf-supply = <&reg_dcdc1>;
-> +       vcc-pg-supply = <&reg_dldo4>;
-> +       vcc-ph-supply = <&reg_dcdc1>;
-> +};
-> +
->  &r_rsb {
->         status = "okay";
->
-> @@ -175,6 +186,10 @@ axp803: pmic@3a3 {
->         };
->  };
->
-> +&r_pio {
-> +       vcc-pl-supply = <&reg_aldo2>;
 
-This is likely going to cause a circular dependency, because the RSB
-interface that is used to talk to the PMIC is also on the PL pins.
 
-(How does FreeBSD deal with this?)
-
-Instead, just add a comment describing what is really used, and set
-the regulator to always-on, which should already be the case.
-
-ChenYu
-
-> +};
-> +
->  #include "axp803.dtsi"
+=E4=BA=8E 2020=E5=B9=B41=E6=9C=8817=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+:23:44, "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)" <zhouyanjie@wanyeetech=
+=2Ecom> =E5=86=99=E5=88=B0:
+>Forward port smp support from kernel 3=2E18=2E3 of CI20_linux
+>to upstream kernel 5=2E5=2E
 >
->  &ac_power_supply {
-> --
-> 2.24.1
+>Tested-by: H=2E Nikolaus Schaller <hns@goldelico=2Ecom>
+>Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech=2Ecom>
+
+Btw: I'm not clear with others attitude but personally I think we should a=
+void non-ASCII
+characters in kernel=2E
+
+Many people work on kernel with command line tools and a lot of terminals =
+didn't
+configured to display CJK characters properly=2E
+
+Pinyin or Wade=E2=80=93Giles of your name is enough for others to recogniz=
+e or
+credit you=2E
+
+Thanks=2E
+
+>---
 >
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--=20
+Jiaxun Yang
