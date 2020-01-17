@@ -4,112 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA131C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C39C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCAE02087E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C69B2087E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 16:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579278742;
-	bh=D3vQQxHg4XNKooiW9TyvC5MoYy6ZrAxKoQUsPSjJyDM=;
+	s=default; t=1579278778;
+	bh=FO48zQEQwocB6lV87keX2zJT4La31Mc5wcHkp/4iBLc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bGrT/xuVN6jXTp0tjYPSZviE91TKCYyiDSu/hPJZlqwI4bQ0w1gNYz5buKv1fs8tz
-	 fTTUU4arOJ4xtZNMNduf1rQo3ZWg4Xsn3oOxNVc4RU13b6YbtPu7tY/vHV3xp4i0DM
-	 vL06ZmuOOOXd3tWQcj0efdolEN+sJ7EyB05m2j/I=
+	b=KV9sK25GLEImnzW9uNEVBl+1/miIV9WzUXbgT4frocIACp2vkHudCw6RNGCpfgiON
+	 rVtUK96NZiGNEauym1vIV2YBP9wnRfk1MVnwVHfSzLNcl2KewTqMAxuIxywGlP4O82
+	 SQtnkJFU1PN1sy8mvk9Sg1dtIsGMNxEkyLEBA4FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgAQQcW (ORCPT
+        id S1726559AbgAQQcy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 11:32:22 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33780 "EHLO
+        Fri, 17 Jan 2020 11:32:54 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37196 "EHLO
         mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726506AbgAQQcW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 11:32:22 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b18so23065320otp.0;
-        Fri, 17 Jan 2020 08:32:21 -0800 (PST)
+        with ESMTP id S1726506AbgAQQcy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 11:32:54 -0500
+Received: by mail-ot1-f65.google.com with SMTP id k14so23059608otn.4;
+        Fri, 17 Jan 2020 08:32:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/iHqFPp4gfD5oSMGWpTJjMZQbTl3nDjXtKJqZJn6JG8=;
-        b=iC0E/w9lEWn7CiltqNv46rE1vzbRbLmUo0F1SLLxsQsTSAOuFoV4GjQGYzSmzGblIf
-         JGf4cqZt4WGmYLBz31Nqdpbo4H6y8KNgFtW9Ice3n2CfA/cCgqqhMOpeJY2JmXYY3YTP
-         YUKaWQd7UGEis76uvE6CM7sJQnEoG1PtFp0gvuB0KpSxiNBT+yEofXdG4fctusIpxJwj
-         EkaLPgekKMkXvX2mvlYSfhGBOp+OzbJO8fy+DeRbR0ZKjfcZ/Yisi/miBUfLrzshctp/
-         06YmOCl3P654e0V1MNU4DCll9dgAjXC7DDKrLlE5N6Xoyy45Mz7wtGecGuNjPpOXNeF6
-         myRA==
-X-Gm-Message-State: APjAAAWUtXcJOJxeGI4ITxkMn5JyaTwxKuleJHa6Tma0POOdhNelG52H
-        eYpq8bSQmevfKz9McUmg0w==
-X-Google-Smtp-Source: APXvYqxVhhZJDntpTYO8RXp+1uUVt/4zWCDaLKGWVf9eFo48zxLv0olgodVWAXp81LRL5u91AiObWw==
-X-Received: by 2002:a9d:68cc:: with SMTP id i12mr6668144oto.207.1579278741150;
-        Fri, 17 Jan 2020 08:32:21 -0800 (PST)
+        bh=q77MY408jGCmYpI+zv//3ZdL+CvYzoBq5oPF0P9Vlwk=;
+        b=KMU2Wmv73EQhLnPelUTP+9Q3zTS3vvCwWJn0Y9kyftaa2441K8Kn9jHq5fbkcEG8GW
+         DvAikaTWMWahywX4sVO1w44JPq92GigsXfji1FWrxd4lsjyopJg7EzPKJJeZQe9bDxDB
+         gZzCA5Vep9Yke6Y7ynlO7arAAxiXJIrJC57kgl2uEQQiMBWceb9izMQHkXgzmQtCbUf/
+         zDyUErzrQtPCqV8sc864ZXtj+xkX2pBDtWlMGRurjk/9D1VmYUd4QKqq2++4uSAkeGMW
+         +zjA1DU7YBpUVW1EPF0ZzF37Ke9I9NNiYkiN4s/lkYQBWQ0QLT/y38Ygnx+5srA4mDHp
+         oM1w==
+X-Gm-Message-State: APjAAAV9CnpvyXHxtWOFD8zKYhEQj/TLXLLxJAbSUEPMdbl5r+t09g9j
+        zh1FF1ZiHmsycJqq7nt+eQ==
+X-Google-Smtp-Source: APXvYqxYC/6JwXiUv+1TD0mNMzTSSYbrWFU8g5c8PonVdmTsLzmIkAEwVjI/lxj7VYnLmqTCG1kosg==
+X-Received: by 2002:a9d:402:: with SMTP id 2mr6152888otc.357.1579278773544;
+        Fri, 17 Jan 2020 08:32:53 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d7sm7928734oic.46.2020.01.17.08.32.19
+        by smtp.gmail.com with ESMTPSA id p65sm7957935oif.47.2020.01.17.08.32.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2020 08:32:20 -0800 (PST)
-Received: (nullmailer pid 26008 invoked by uid 1000);
-        Fri, 17 Jan 2020 16:32:19 -0000
-Date:   Fri, 17 Jan 2020 10:32:19 -0600
+        Fri, 17 Jan 2020 08:32:53 -0800 (PST)
+Received: (nullmailer pid 26849 invoked by uid 1000);
+        Fri, 17 Jan 2020 16:32:52 -0000
+Date:   Fri, 17 Jan 2020 10:32:52 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Hanjie Lin <hanjie.lin@amlogic.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v6 2/6] dt-bindings: usb: dwc3: Add the Amlogic A1 Family
- DWC3 Glue Bindings
-Message-ID: <20200117163219.GA25603@bogus>
-References: <1579220504-110067-1-git-send-email-hanjie.lin@amlogic.com>
- <1579220504-110067-3-git-send-email-hanjie.lin@amlogic.com>
+To:     Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+Cc:     linux@roeck-us.net, jdelvare@suse.com, robh+dt@kernel.org,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Joshua.Scott@alliedtelesis.co.nz,
+        Chris.Packham@alliedtelesis.co.nz, logan.shaw@alliedtelesis.co.nz
+Subject: Re: [PATCH v3 2/2] hwmon: (adt7475) Added attenuator bypass support
+Message-ID: <20200117163252.GA26187@bogus>
+References: <20200117035018.11985-1-logan.shaw@alliedtelesis.co.nz>
+ <20200117035018.11985-3-logan.shaw@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1579220504-110067-3-git-send-email-hanjie.lin@amlogic.com>
+In-Reply-To: <20200117035018.11985-3-logan.shaw@alliedtelesis.co.nz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 17 Jan 2020 08:21:40 +0800, Hanjie Lin wrote:
-> The Amlogic A1 SoC Family embeds 1 USB Controllers:
->  - a DWC3 IP configured as Host for USB2 and USB3
+On Fri, 17 Jan 2020 16:50:18 +1300, Logan Shaw wrote:
 > 
-> A glue connects the controllers to the USB2 PHY of A1 SoC.
+> Added a new file documenting the adt7475 devicetree and added the four
+> new properties to it.
 > 
-> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
+> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
 > ---
->  .../bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml  | 38 ++++++++++++++++++++--
->  1 file changed, 35 insertions(+), 3 deletions(-)
+> ---
+>  .../devicetree/bindings/hwmon/adt7475.yaml    | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/adt7475.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml:  while parsing a block mapping
-  in "<unicode string>", line 107, column 7
-did not find expected key
-  in "<unicode string>", line 111, column 8
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.example.dts] Error 1
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+Documentation/devicetree/bindings/hwmon/adt7475.example.dts:20.11-39: ERROR (duplicate_property_names): /example-0/hwmon@2e:bypass-attenuator-in1: Duplicate property name
+ERROR: Input tree has errors, aborting (use -f to force output)
+scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/hwmon/adt7475.example.dt.yaml] Error 2
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1224563
+See https://patchwork.ozlabs.org/patch/1224608
 Please check and re-submit.
