@@ -1,110 +1,96 @@
-Return-Path: <SRS0=HSwc=3F=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AEAC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BB2C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3FC72064C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 16 Jan 2020 23:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C825D206E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YYJ8Rl1T"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="pU3O/TGz";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sOzSyMqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389017AbgAPXlA (ORCPT
+        id S1726857AbgAQABw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 18:41:00 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:23168 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391736AbgAPXkP (ORCPT
+        Thu, 16 Jan 2020 19:01:52 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:34347 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726088AbgAQABw (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 18:40:15 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579218015; h=Message-Id: Date: Subject: To: From: Sender;
- bh=woslbLm1gjtzm5ew1VVzOuguIL3JLQBdJQJckmH6FtA=; b=YYJ8Rl1TEK4Bx7+OBETfLOgLYxHrxiP2mmx6yMLnwnMSl2DoBUhEkFXZ8U2x2x4FvkG4gdrT
- UqZoZwNGjGD8xlJLDF4VGec8gVfWVL00jOyipReD2Y7N1+w1zVfbbUToVMuIkWP+bU++cFV/
- uOchxIXu2SQwXlpoFGgd13zqGUk=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e20f45b.7f257e987f80-smtp-out-n03;
- Thu, 16 Jan 2020 23:40:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 78724C433CB; Thu, 16 Jan 2020 23:40:11 +0000 (UTC)
-Received: from vgutta-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vgutta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB611C43383;
-        Thu, 16 Jan 2020 23:40:09 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB611C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vnkgutta@codeaurora.org
-From:   Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, vinod.koul@linaro.org,
-        psodagud@codeaurora.org, tsoni@codeaurora.org,
-        jshriram@codeaurora.org, tdas@codeaurora.org,
-        vnkgutta@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7] Add device tree and clock drivers for SM8250 SoC
-Date:   Thu, 16 Jan 2020 15:39:47 -0800
-Message-Id: <1579217994-22219-1-git-send-email-vnkgutta@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 16 Jan 2020 19:01:52 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 50F0D22077;
+        Thu, 16 Jan 2020 19:01:51 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 16 Jan 2020 19:01:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=+4d46nAg69apB++QN888O8Q+rlJqDsK
+        iGI/rETf8CM4=; b=pU3O/TGzgUZ3cp3Ae/Qw15GIvIjIhv/92V3RUdmVj6lSds/
+        pXL0Z7/YbEl3E0cFfDuhfUm0ckwZwa6rxViF7OcVTGxni6emI4oQ2LLu5bswSN8l
+        kZkhu81p1sWyemLn6DViC0DKSGaE39pcIzvK8ffh+7VE6Vl0o65OEtJy//REukeb
+        tfGWPjc037eNB0SvKApmpr4rlcLNaIs3kxHCQbt/We8haJm600Li3uDmgU7hVlX8
+        knBTLQ1X54GMJMpeGBOca1nMU2MPEGX91VPIOvtiqtxxc67osNpieHi0XjfT5VwZ
+        dBSKTyp+awkXY5/upHAG3sOhdIzNmoj3V6dm30w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=+4d46n
+        Ag69apB++QN888O8Q+rlJqDsKiGI/rETf8CM4=; b=sOzSyMqvMQhD65VKHv+Mg2
+        pj1KC1HwCxPjpA+4oJr6HoWgigppLMyvZp51ONbGdaW4aLv+BxC+cXgeOO0f8tJs
+        M+bA2zaqxHEOnEuguEWztQSxkn76/XN7r6Ju27Ti/o95F2JWH5d23Nmu7qFe+JcJ
+        Q6LUSdj3elIlkPKnLfNEHq03PbgiHIOMbykFZRn7fyiYlm1oqzlWvGTH4AL8zgV3
+        mzuc8nj0DQEoWbhGl1P5LH0jOiNXDl4ep8cSV4HUtrjYrdI0Ow3BVyeJSiIoKghD
+        fJlI9w/q4O5btBE+JtblN0+Ghe8V0hH72S5epN/hS4HUHO1wR83yy3MbRztZhtzw
+        ==
+X-ME-Sender: <xms:bvkgXrwp2O7KjDadKYhXFxuD_ExIQbhRvZrHICMXQhVuzo6jm8X_CQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdeigddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:bvkgXlrTSkyde1d1nfqk5OXTTD2kEYACVJ1253A8zSxeDrdMRZKduQ>
+    <xmx:bvkgXunaSZJfs2iTREwtxands2Y9uFDPHpdw4J7KZX1ze64THoavXA>
+    <xmx:bvkgXoo2rAyhshiNGu-So5CQPpZawZ0EOO1diF6-5V1YCLlWB7TtAg>
+    <xmx:b_kgXmn2xVH8CBc3Khf_qc91iCtNFOjCWCY0rnCuspTEJHtAa-pfeg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 7DCD5E00A2; Thu, 16 Jan 2020 19:01:50 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-754-g09d1619-fmstable-20200113v1
+Mime-Version: 1.0
+Message-Id: <9007a9db-5250-4ad7-b436-da26d6e1b620@www.fastmail.com>
+In-Reply-To: <1579123790-6894-6-git-send-email-eajames@linux.ibm.com>
+References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
+ <1579123790-6894-6-git-send-email-eajames@linux.ibm.com>
+Date:   Fri, 17 Jan 2020 10:31:30 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>,
+        linux-aspeed@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com, "Jason Cooper" <jason@lakedaemon.net>,
+        "Marc Zyngier" <maz@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
+        "Joel Stanley" <joel@jms.id.au>
+Subject: Re: [PATCH v6 05/12] dt-bindings: soc: Add Aspeed XDMA Engine
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This series adds device tree support and clock drivers support
-for SM8250 SoC.
-As part of the device tree, the sm8250 dts file has basic nodes
-like CPU, PSCI, intc, timer and clock controller.
 
-Required clock controller driver and RPMH cloks are added to
-support peripherals like USB.
 
-All this configuration is added to support SM8250 to boot up to the
-serial console.
+On Thu, 16 Jan 2020, at 07:59, Eddie James wrote:
+> Document the bindings for the Aspeed AST25XX and AST26XX XDMA engine.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-This patchset depends on one of the RPMH clock driver fix
-https://patchwork.kernel.org/patch/11318949/
-
-Taniya Das (6):
-  dt-bindings: clock: Add RPMHCC bindings for SM8250
-  clk: qcom: rpmh: Add support for RPMH clocks on SM8250
-  clk: qcom: clk-alpha-pll: Refactor and cleanup trion PLL
-  clk: qcom: clk-alpha-pll: Add support for controlling Lucid PLLs
-  dt-bindings: clock: Add SM8250 GCC clock bindings
-  clk: qcom: gcc: Add global clock controller driver for SM8250
-
-Venkata Narendra Kumar Gutta (1):
-  arm64: dts: qcom: sm8250: Add sm8250 dts file
-
- .../devicetree/bindings/clock/qcom,gcc.yaml        |    1 +
- .../devicetree/bindings/clock/qcom,rpmhcc.yaml     |    1 +
- arch/arm64/boot/dts/qcom/Makefile                  |    1 +
- arch/arm64/boot/dts/qcom/sm8250-mtp.dts            |   29 +
- arch/arm64/boot/dts/qcom/sm8250.dtsi               |  450 +++
- drivers/clk/qcom/Kconfig                           |    7 +
- drivers/clk/qcom/Makefile                          |    1 +
- drivers/clk/qcom/clk-alpha-pll.c                   |  259 +-
- drivers/clk/qcom/clk-alpha-pll.h                   |   12 +
- drivers/clk/qcom/clk-rpmh.c                        |   25 +-
- drivers/clk/qcom/gcc-sm8250.c                      | 3720 ++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-sm8250.h        |  271 ++
- include/dt-bindings/clock/qcom,rpmh.h              |    4 +-
- 13 files changed, 4731 insertions(+), 50 deletions(-)
- create mode 100644 arch/arm64/boot/dts/qcom/sm8250-mtp.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sm8250.dtsi
- create mode 100644 drivers/clk/qcom/gcc-sm8250.c
- create mode 100644 include/dt-bindings/clock/qcom,gcc-sm8250.h
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
