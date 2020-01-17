@@ -2,126 +2,123 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B75C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F18CC33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BEF2087E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C20C20748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbgAQIrg (ORCPT
+        id S1729274AbgAQItZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:47:36 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41380 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgAQIrf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 03:47:35 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so21900856otc.8;
-        Fri, 17 Jan 2020 00:47:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pz6+/xs8T4dEEblCt+UUKFDi8/LXzdFKEsZrzO5UHGk=;
-        b=r6/+skgijbZCUz4LRc7ea9ZAOslUAfkeAdLGC92NNlGGxNk9Kt6oS/9BS5x6F0Lcaq
-         bmPc5GiaoR4t5M/ZMBMWjID73WQgrtI3I+OQUGjPWJrawJ+gbZiEIbCr7aK4DYLxp2CR
-         JNnNmoxobr6RfLGSSlruAOOEMllmmmU63gwZARHwSnSglHa2zw2l+94gRpHELDALk8qm
-         Ei/OWprX6mNTl+hQevKPFOXH4iy4muLatj9P4U5unkFxHcb/hdZmO4fFxShrxthqePKG
-         Vyubc41WmC5Nx1kA7UTgRvVDRxKbqXNf92zS6Mm90WpiPblGiHucHkOuf7aueW/p4H1Q
-         O/wQ==
-X-Gm-Message-State: APjAAAUdxaDOrroi8M+FDpCajkb9Q7WHiVBlrLKXMnC2YcgFJTTm6Wcj
-        mSAsoUmNF4qPKR8e9yWA4a7WuyeUUQzPIIVDyro=
-X-Google-Smtp-Source: APXvYqwPm6MtbyAOSCi9UiBhMZ4PpzpzXrNfcsnaLGfKDZqdHNnurHqn4SJJX9I9yrPnM/Q7dnOgZvD5f79Eq6Wg3as=
-X-Received: by 2002:a05:6830:2141:: with SMTP id r1mr5358243otd.39.1579250854871;
- Fri, 17 Jan 2020 00:47:34 -0800 (PST)
+        Fri, 17 Jan 2020 03:49:25 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:60856 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729121AbgAQItZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 03:49:25 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 46630634C8A;
+        Fri, 17 Jan 2020 10:49:15 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1isNJc-0000QH-1R; Fri, 17 Jan 2020 10:49:16 +0200
+Date:   Fri, 17 Jan 2020 10:49:16 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     Andrey Konovalov <andrey.konovalov@linaro.org>, mchehab@kernel.org,
+        robh+dt@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Peter Griffin <peter.griffin@linaro.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v2 2/2] media: i2c: Add driver for Sony IMX219 sensor
+Message-ID: <20200117084915.GG793@valkosipuli.retiisi.org.uk>
+References: <20191227122114.23075-1-andrey.konovalov@linaro.org>
+ <20191227122114.23075-3-andrey.konovalov@linaro.org>
+ <20191227145547.GE861@valkosipuli.retiisi.org.uk>
+ <d3f1591b-1a98-e876-b977-96e1210e9c49@linaro.org>
+ <CAPY8ntCwh6KXpx-tMhjVwF97hqayLRKVC8BC6DCZ0hqvkU-boA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com> <20191217231326.GG4874@pendragon.ideasonboard.com>
-In-Reply-To: <20191217231326.GG4874@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 Jan 2020 09:47:22 +0100
-Message-ID: <CAMuHMdWaZBfsHi9E57B8Mr6QSCATVxpdRtg=9_H-urBaK_iRJw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/6] Add dual-LVDS panel support to EK874
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        ebiharaml@si-linux.co.jp
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPY8ntCwh6KXpx-tMhjVwF97hqayLRKVC8BC6DCZ0hqvkU-boA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Dave,
 
-(woops, forgot to press sent)
+On Tue, Jan 14, 2020 at 11:34:46AM +0000, Dave Stevenson wrote:
 
-On Wed, Dec 18, 2019 at 12:13 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Tue, Dec 17, 2019 at 01:45:55PM +0000, Fabrizio Castro wrote:
-> > this series adds support for dual-LVDS panel IDK-2121WR
-> > from Advantech:
-> > https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+...
+
+> > >> +    msleep(IMX219_XCLR_DELAY_MS);
+> > >
+> > > I guess 10 ms is ok albeit it'd be nicer if you calculated the required
+> > > delay instead.
 > >
-> > V6 reworks patch "drm: rcar-du: lvds: Allow for even and odd pixels swap",
-> > and rebases the series on top of patch:
-> > https://patchwork.kernel.org/patch/11295991/
->
-> I've taken patch 1/6 to 4/6 in my tree. I expect Geert to take 6/6. For
-> 5/6, I'll give Rob a chance to review the patch. Sam, could you handle
-> it afterwards ?
-
-Queuing 6/6 in renesas-devel for v5.6.
-
-> > Fabrizio Castro (6):
-> >   drm: of: Add drm_of_lvds_get_dual_link_pixel_order
-> >   drm: rcar-du: lvds: Improve identification of panels
-> >   drm: rcar-du: lvds: Get dual link configuration from DT
-> >   drm: rcar-du: lvds: Allow for even and odd pixels swap
-> >   dt-bindings: display: Add idk-2121wr binding
-> >   arm64: dts: renesas: Add EK874 board with idk-2121wr display support
+> > I think this 10 ms delay actually serves two purposes here. It is
+> > not only the delay after XCLR pin is set high (reset de-asserted),
+> > but it also lets the camera power supplies voltages to settle after
+> > regulator_bulk_enable() called few lines above.
 > >
-> >  .../display/panel/advantech,idk-2121wr.yaml        | 128 +++++++++++++++
-> >  arch/arm64/boot/dts/renesas/Makefile               |   3 +-
-> >  .../boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts | 116 +++++++++++++
-> >  drivers/gpu/drm/drm_of.c                           | 116 +++++++++++++
-> >  drivers/gpu/drm/rcar-du/rcar_lvds.c                | 180 ++++++++++++---------
-> >  include/drm/drm_of.h                               |  20 +++
-> >  6 files changed, 483 insertions(+), 80 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-2121wr.yaml
-> >  create mode 100644 arch/arm64/boot/dts/renesas/r8a774c0-ek874-idk-2121wr.dts
+> > So I would make the delay a sum of 1) the value which depends on
+> > input clock frequency (the driver currently supports 24MHz only)
+> > and 2) a fixed value of 8 ms or so to account for the power supplies
+> > settle time. So that the sum would be the same 10 ms for 24MHz input
+> > clock.
+> > Does it makes sense?
+> 
+> Regulator settling times shouldn't really be included here - that
+> should be taken care of via the regulator framework (in the case of DT
+> for regulator-fixed you define the startup-delay-us property).
+> 
+> What level do you end up computing it to?
+> 
+> This delay covers t4, t5 and t6 from figure 38 on page 77 of the datasheet[1]
+> t4 is max 200usecs.
+> t5 is 6ms.
+> t6 is 32000 cycles of INCK. As you say INCK=24MHz is the only
+> supported clock frequency at present, so 1.3ms. Minimum clock is 6MHz
+> which will make this 5.3ms.
 
-Gr{oetje,eeting}s,
+It's nicer to calculate that still. Someone may well add support for other
+frequencies and it's easy to miss changing this.
 
-                        Geert
+> 
+> t6 is in parallel with t5, but it is smaller than t5 even at the
+> minimum clock frequency.
+> Yes we can be programming the sensor over I2C after t5 but before t6,
+> but you'd now want to be computing the number of I2C writes required,
+> the speed of the I2C bus, and probably a few other parameters to
+> ensure you don't violate t5. The sensor supports 1MHz CCI if INCK is
+> >11.4MHz. A quick check says we have around 60 register writes to
+> initialise the sensor. 38 clocks (4 * (8 data bits + ACK) + start +
+> end) to write each register, which I make 2.4ms. It is therefore
+> possible to violate t5.
+> 
+> Is it worth that level of computation, or do you just take t4+t5 at 6.2ms?
 
+I'd just ignore the I²C part and wait for long enough. This is not *that*
+much time after all. Of course, if someone feels like optimising this, why
+not, but it looks like something that doesn't really pay off.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> I have been a bit naughty up until now in not setting startup-delay-us
+> on the regulator definition and relying on this delay instead. The
+> driver ought to do the right thing though and I'll fix my
+> configuration.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Agreed.
+
+-- 
+Sakari Ailus
