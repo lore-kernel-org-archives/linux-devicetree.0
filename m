@@ -2,226 +2,102 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED252C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 07:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986E3C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 07:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FE12073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 07:11:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lK/A5QUc"
+	by mail.kernel.org (Postfix) with ESMTP id 731C12072B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 07:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAQHLR (ORCPT
+        id S1729138AbgAQHef (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 02:11:17 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43925 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbgAQHLR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 02:11:17 -0500
-Received: by mail-qk1-f196.google.com with SMTP id t129so21764579qke.10;
-        Thu, 16 Jan 2020 23:11:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dD+bqe0OboIvDe7Tfhggx1v6hI7fKblqWVn9MXd+wok=;
-        b=lK/A5QUcLvbmKiyXEH4Kgl3BRQ0Bkz311hk3/Hmc5ukQy/WYQLXsiyxcpola18hAcv
-         tWWhk96wVTGiHmv7M8lX2JVfMkU72C9/VsKywzEfMgtIXPixPNRB5tYrwmJNd/m9PKx2
-         t3sC3KkpG4fU79UK3gnN+BJ3miybwpjHv0mbl2Yt8rWbLcxOocN8RqumOk9xx5NPYW/n
-         vSumxTygoymB2HvT6vaA11GglQlXbKc4WLF5LxpkxUeUk6tyjM50Wa5S1bORS2kknIsm
-         1zwitC4hg7oRXqvj9fao+OsaExHr9o78IDI+hEl90ND2xDWUbFC+2lBpQdRjvWOpPxyh
-         X9HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dD+bqe0OboIvDe7Tfhggx1v6hI7fKblqWVn9MXd+wok=;
-        b=FEBueSU/62My0th6I5uMbWzrS+R1eea4K9wsMWLs6o6G7PCuW7VvhJAi3CzoJAxQ/0
-         t9IqW5VEcxpjmdw45De6uFVxt1FzjxRBqJ/DTCnMsUkAh2taOqBFDsS++7d6eAZFw3vJ
-         gPfQgLwxWez9tVq7+EYlSdre6I72shWIPnfZ9gZmRC7dT+7r/ONc9XM2I106J0n26boC
-         spocvZANNclK77M8XpWLZSl4X2c6yaSlIXaPQdDu1vmqMoo9Yjjckx7XPcvtPJGOkOF/
-         Jh2lUPbLWZwlyKYeET/kJMV0aa9QTyVl87fZVhlFVl7vd6aDVlaF3w/BOpEWTYhxpOKB
-         qJWQ==
-X-Gm-Message-State: APjAAAUiWPyJFkW6gDU8mW9mLhl993xy2K1SfnnTwm43BVFm75TT2+nM
-        2og60ShrSKKS6NhTLydsfGpryskyqSsrU92A8yk=
-X-Google-Smtp-Source: APXvYqyjRZTGLo6wmcBob/iiFfwd3I+O6iRUPciXoph4+LN6FFWL7ri4y46ZvGr8nD5GWauJEepPSlWLvsegq97lPm4=
-X-Received: by 2002:a05:620a:166a:: with SMTP id d10mr36014901qko.37.1579245075683;
- Thu, 16 Jan 2020 23:11:15 -0800 (PST)
+        Fri, 17 Jan 2020 02:34:35 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45371 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbgAQHee (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 02:34:34 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1isM9F-0005gR-I7; Fri, 17 Jan 2020 08:34:29 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1isM9D-00028c-L9; Fri, 17 Jan 2020 08:34:27 +0100
+Date:   Fri, 17 Jan 2020 08:34:27 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jeff LaBundy <jeff@labundy.com>
+Cc:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 4/7] pwm: Add support for Azoteq IQS620A PWM generator
+Message-ID: <20200117073427.ufrduwagvppeasgr@pengutronix.de>
+References: <1579228475-6681-1-git-send-email-jeff@labundy.com>
+ <1579228475-6681-5-git-send-email-jeff@labundy.com>
 MIME-Version: 1.0
-References: <cover.1569493933.git.shengjiu.wang@nxp.com> <d728f65194e9978cbec4132b522d4fed420d704a.1569493933.git.shengjiu.wang@nxp.com>
- <CANcMJZBy=yH+4YgZWwphiE-PO6d4hzhFK3XFtpN677ZAv_N4WQ@mail.gmail.com> <CANcMJZCuU_-Xii=YT5Rp5DAyxboptJCrpp51jForuYUpeMuhmQ@mail.gmail.com>
-In-Reply-To: <CANcMJZCuU_-Xii=YT5Rp5DAyxboptJCrpp51jForuYUpeMuhmQ@mail.gmail.com>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Fri, 17 Jan 2020 15:11:04 +0800
-Message-ID: <CAA+D8AP39bo6EsHvWhVXvAYAho_xMnWmePPAK6dBsOh5wsz48Q@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH V6 3/4] ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>, lars@metafoo.de,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1579228475-6681-5-git-send-email-jeff@labundy.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi
+On Fri, Jan 17, 2020 at 02:35:57AM +0000, Jeff LaBundy wrote:
+> +static void iqs620_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+> +				 struct pwm_state *state)
+> +{
+> +	struct iqs620_pwm_private *iqs620_pwm;
+> +
+> +	iqs620_pwm = container_of(chip, struct iqs620_pwm_private, chip);
+> +
+> +	mutex_lock(&iqs620_pwm->lock);
+> +
+> +	/*
+> +	 * Since the device cannot generate a 0% duty cycle, requests to do so
+> +	 * cause subsequent calls to iqs620_pwm_get_state to report the output
+> +	 * as disabled with duty cycle equal to that which was in use prior to
+> +	 * the request. This is not ideal, but is the best compromise based on
+> +	 * the capabilities of the device.
+> +	 */
+> +	state->enabled = iqs620_pwm->out_en;
 
-On Thu, Jan 16, 2020 at 1:56 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Wed, Jan 8, 2020 at 8:58 PM John Stultz <john.stultz@linaro.org> wrote:
-> > On Thu, Sep 26, 2019 at 6:50 PM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
-> > >
-> > > When set the runtime hardware parameters, we may need to query
-> > > the capability of DMA to complete the parameters.
-> > >
-> > > This patch is to Extract this operation from
-> > > dmaengine_pcm_set_runtime_hwparams function to a separate function
-> > > snd_dmaengine_pcm_refine_runtime_hwparams, that other components
-> > > which need this feature can call this function.
-> > >
-> > > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > > Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> >
-> > As a heads up, this patch seems to be causing a regression on the HiKey board.
-> >
-> > On boot up I'm seeing:
-> > [   17.721424] hi6210_i2s f7118000.i2s: ASoC: can't open component
-> > f7118000.i2s: -6
-> >
-> > And HDMI audio isn't working. With this patch reverted, audio works again.
-> >
-> >
-> > > diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
-> > > index 89a05926ac73..5749a8a49784 100644
-> > > --- a/sound/core/pcm_dmaengine.c
-> > > +++ b/sound/core/pcm_dmaengine.c
-> > > @@ -369,4 +369,87 @@ int snd_dmaengine_pcm_close_release_chan(struct snd_pcm_substream *substream)
-> > ...
-> > > +       ret = dma_get_slave_caps(chan, &dma_caps);
-> > > +       if (ret == 0) {
-> > > +               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
-> > > +                       hw->info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
-> > > +               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
-> > > +                       hw->info |= SNDRV_PCM_INFO_BATCH;
-> > > +
-> > > +               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> > > +                       addr_widths = dma_caps.dst_addr_widths;
-> > > +               else
-> > > +                       addr_widths = dma_caps.src_addr_widths;
-> > > +       }
-> >
-> > It seems a failing ret from dma_get_slave_caps() here is being returned...
-> >
-> > > +
-> > > +       /*
-> > > +        * If SND_DMAENGINE_PCM_DAI_FLAG_PACK is set keep
-> > > +        * hw.formats set to 0, meaning no restrictions are in place.
-> > > +        * In this case it's the responsibility of the DAI driver to
-> > > +        * provide the supported format information.
-> > > +        */
-> > > +       if (!(dma_data->flags & SND_DMAENGINE_PCM_DAI_FLAG_PACK))
-> > > +               /*
-> > > +                * Prepare formats mask for valid/allowed sample types. If the
-> > > +                * dma does not have support for the given physical word size,
-> > > +                * it needs to be masked out so user space can not use the
-> > > +                * format which produces corrupted audio.
-> > > +                * In case the dma driver does not implement the slave_caps the
-> > > +                * default assumption is that it supports 1, 2 and 4 bytes
-> > > +                * widths.
-> > > +                */
-> > > +               for (i = SNDRV_PCM_FORMAT_FIRST; i <= SNDRV_PCM_FORMAT_LAST; i++) {
-> > > +                       int bits = snd_pcm_format_physical_width(i);
-> > > +
-> > > +                       /*
-> > > +                        * Enable only samples with DMA supported physical
-> > > +                        * widths
-> > > +                        */
-> > > +                       switch (bits) {
-> > > +                       case 8:
-> > > +                       case 16:
-> > > +                       case 24:
-> > > +                       case 32:
-> > > +                       case 64:
-> > > +                               if (addr_widths & (1 << (bits / 8)))
-> > > +                                       hw->formats |= pcm_format_to_bits(i);
-> > > +                               break;
-> > > +                       default:
-> > > +                               /* Unsupported types */
-> > > +                               break;
-> > > +                       }
-> > > +               }
-> > > +
-> > > +       return ret;
-> >
-> > ... down here.
-> >
-> > Where as in the old code...
-> >
-> > > diff --git a/sound/soc/soc-generic-dmaengine-pcm.c b/sound/soc/soc-generic-dmaengine-pcm.c
-> > > index 748f5f641002..b9f147eaf7c4 100644
-> > > --- a/sound/soc/soc-generic-dmaengine-pcm.c
-> > > +++ b/sound/soc/soc-generic-dmaengine-pcm.c
-> >
-> > > @@ -145,56 +140,12 @@ static int dmaengine_pcm_set_runtime_hwparams(struct snd_pcm_substream *substrea
-> > >         if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
-> > >                 hw.info |= SNDRV_PCM_INFO_BATCH;
-> > >
-> > > -       ret = dma_get_slave_caps(chan, &dma_caps);
-> > > -       if (ret == 0) {
-> > > -               if (dma_caps.cmd_pause && dma_caps.cmd_resume)
-> > > -                       hw.info |= SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME;
-> > > -               if (dma_caps.residue_granularity <= DMA_RESIDUE_GRANULARITY_SEGMENT)
-> > > -                       hw.info |= SNDRV_PCM_INFO_BATCH;
-> > > -
-> > > -               if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> > > -                       addr_widths = dma_caps.dst_addr_widths;
-> > > -               else
-> > > -                       addr_widths = dma_caps.src_addr_widths;
-> > > -       }
-> >
-> > ...the ret from dma_get_slave_caps()  checked above, but is not
-> > actually returned.
-> >
-> > Suggestions on how to sort this out?
->
-> Just wanted to check in on this, as I'm still seeing this regression with -rc6.
->
-Compare with the old code. it seems that we shouldn't check the return value.
-
-Could you help to test below changes?
-
---- a/sound/soc/soc-generic-dmaengine-pcm.c
-+++ b/sound/soc/soc-generic-dmaengine-pcm.c
-@@ -138,12 +138,10 @@ dmaengine_pcm_set_runtime_hwparams(struct
-snd_soc_component *component,
-        if (pcm->flags & SND_DMAENGINE_PCM_FLAG_NO_RESIDUE)
-                hw.info |= SNDRV_PCM_INFO_BATCH;
-
--       ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-+       snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-                                                        dma_data,
-                                                        &hw,
-                                                        chan);
--       if (ret)
--               return ret;
-
-        return snd_soc_set_runtime_hwparams(substream, &hw);
- }
+Hmm, when .get_state is called first (before the first invokation of
+.apply) .out_en doesn't represent the hardware's state but is false
+unconditionally. This makes it hard to take over a running PWM setup by
+the bootloader.
 
 Best regards
-Shengjiu Wang
+Uwe
+
+> +	state->duty_cycle = DIV_ROUND_UP((iqs620_pwm->duty_val + 1) *
+> +					 IQS620_PWM_PERIOD_NS, 256);
+> +
+> +	mutex_unlock(&iqs620_pwm->lock);
+> +
+> +	state->period = IQS620_PWM_PERIOD_NS;
+> +}
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
