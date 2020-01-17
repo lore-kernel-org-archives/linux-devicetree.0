@@ -2,93 +2,132 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE04C33C9E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631B4C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8558F2082F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF822082F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579284744;
-	bh=IdyrMy2nrlmfkVGDIpnIS4HjWOBUiobj0MXhdDTQd80=;
+	s=default; t=1579284871;
+	bh=1r92zzD8XWpIGYHwCR61Uj+YCjejOaMCX1TbdsNW94c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yKXWVKHxAoPeL6MkIMtDxB1qksmL0a6ab5TPkaKeHYcHsp2Qd45ZUpMTIKPAR9SrF
-	 movIhws9jt6MNNpV2blMr4VAmIL/0j02QmYaSc5vKaciTO0soIMv6GthfnwoXU9hNO
-	 Hbok43/UnSjIwyyPUGBBQQknR8UQyfnvBlD7uTUA=
+	b=Uaf2OgUFBCR7kPMrIDDEWQU5M6zoKtUswV2GRuZ23FX8/daNJuj2y//FDy7ab2NLi
+	 5w2fwfbc4wcoQhJUO4lkbu9BTq92y1R/eaaHsuJDSaH8DEY3wDDWjHhk2xARTHAgFx
+	 +PtqeHFooKF8eQWv1aBEp+h/Le2AtOWqX9xoWNhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726973AbgAQSMY (ORCPT
+        id S1729123AbgAQSOa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:12:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47388 "EHLO mail.kernel.org"
+        Fri, 17 Jan 2020 13:14:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726603AbgAQSMX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 17 Jan 2020 13:12:23 -0500
+        id S1727573AbgAQSOa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:14:30 -0500
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE02220748;
-        Fri, 17 Jan 2020 18:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2981620748;
+        Fri, 17 Jan 2020 18:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579284743;
-        bh=IdyrMy2nrlmfkVGDIpnIS4HjWOBUiobj0MXhdDTQd80=;
+        s=default; t=1579284869;
+        bh=1r92zzD8XWpIGYHwCR61Uj+YCjejOaMCX1TbdsNW94c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qn8SJYF+AS+5NobYCLPOms9TMfbOAaRLKRT/vF9O3TGrTA/TSz2xio4FkapxEPz75
-         ddlusE4o2/5Y5ESlOgi6OjeXsjycbBuHKF0v1wIePlD9F9K4cLQ30MncZqSa7pMBI2
-         naGnJwDelSv6i33seCm+qy64/LRjP4yCKeXIGxo0=
-Date:   Fri, 17 Jan 2020 19:12:20 +0100
+        b=o90IHGwWDzmgjs2UOwYCFlu/eT5jmUkchRD2VpUdmHw05PF5YZZXaUIrkVSDm6ZIL
+         jgO15hnCyLC3L1DKQZAXSgt2Hsve/p3+/Oms6nRlG/5fFXq/sBTQ3uXOuL81hBTWVV
+         +MtoTJVakZT8hdU7GLMvaaD9Rwxx8So843ysjPow=
+Date:   Fri, 17 Jan 2020 19:14:27 +0100
 From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: sun8i: a83t: Fix incorrect clk and reset
- macros for EMAC device
-Message-ID: <20200117181220.biryjou5zvqfxdnt@gilmour.lan>
-References: <20200114094252.8908-1-wens@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] arm64: dts: allwinner: h6: tanix-tx6: enable emmc
+Message-ID: <20200117181427.hy7qsyxwomsl3v2q@gilmour.lan>
+References: <20200115193441.172902-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bzobas6k7fsnitoh"
+        protocol="application/pgp-signature"; boundary="f3cltcqsa3lajhg5"
 Content-Disposition: inline
-In-Reply-To: <20200114094252.8908-1-wens@kernel.org>
+In-Reply-To: <20200115193441.172902-1-jernej.skrabec@siol.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---bzobas6k7fsnitoh
+--f3cltcqsa3lajhg5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jan 14, 2020 at 05:42:52PM +0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
+On Wed, Jan 15, 2020 at 08:34:41PM +0100, Jernej Skrabec wrote:
+> Tanix TX6 has 32 GiB eMMC. Add a node for it.
 >
-> When the raw numbers used for clk and reset indices in the EMAC device
-> node were converted to the new macros, the order of the clk and reset
-> properties was overlooked, and thus the incorrect macros were used.
-> This results in the EMAC being non-responsive, as well as an oops due
-> to incorrect usage of the reset control.
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  .../dts/allwinner/sun50i-h6-tanix-tx6.dts     | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 >
-> Correct the macro types, and also reorder the clk and reset properties
-> to match all the other device nodes.
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> index 83e6cb0e59ce..8cbf4e4a761e 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-tanix-tx6.dts
+> @@ -31,6 +31,13 @@ hdmi_con_in: endpoint {
+>  		};
+>  	};
 >
-> Fixes: 765866edb16a ("ARM: dts: sunxi: Use macros for references to CCU clocks")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> +	reg_vcc1v8: vcc1v8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc1v8";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+>  	reg_vcc3v3: vcc3v3 {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "vcc3v3";
+> @@ -78,6 +85,15 @@ &mmc0 {
+>  	status = "okay";
+>  };
+>
+> +&mmc2 {
+> +	vmmc-supply = <&reg_vcc3v3>;
+> +	vqmmc-supply = <&reg_vcc1v8>;
+> +	non-removable;
+> +	cap-mmc-hw-reset;
+> +	bus-width = <8>;
+> +	status = "okay";
+> +};
+> +
+>  &ohci0 {
+>  	status = "okay";
+>  };
+> @@ -86,6 +102,10 @@ &ohci3 {
+>  	status = "okay";
+>  };
+>
+> +&pio {
+> +	vcc-pc-supply = <&reg_vcc1v8>;
+> +};
+> +
 
-Queued as a fix for 5.6, thanks!
+Can you list all of the regulators for the H6 while you're at it (in a
+preliminary patch, ideally)?
+
+Thanks!
 Maxime
 
---bzobas6k7fsnitoh
+--f3cltcqsa3lajhg5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiH5BAAKCRDj7w1vZxhR
-xaaXAQDsG2aEO1qdNIVRhFZfwLaBsqA68VlRWQyNaM9q4IclmgEApgHG16xb1DWI
-RSmavsHC0ZQmsOTVpBI4SiaME4t3qw0=
-=cMS9
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiH5gwAKCRDj7w1vZxhR
+xSStAP9vFRUXKGi1EuMs8pb4/YHRNScqQrchGDt874B7pjrD1AD+PUlqtp134Y+C
+7bsxe4hKGX8rhUf/fZ/H9oGhJ6/YJQM=
+=gOtr
 -----END PGP SIGNATURE-----
 
---bzobas6k7fsnitoh--
+--f3cltcqsa3lajhg5--
