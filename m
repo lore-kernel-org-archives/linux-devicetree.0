@@ -2,119 +2,95 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA0BC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5333C33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF03E2072B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B2422082F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 08:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZBBjk6Rv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gal77Kdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbgAQIIk (ORCPT
+        id S1729317AbgAQIRC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 03:08:40 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58740 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbgAQIIk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 03:08:40 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00H88Tu3019621;
-        Fri, 17 Jan 2020 02:08:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1579248509;
-        bh=h04PjAMDL1FtVudgz/Df4dwDowqI3YAr79xF/WspK4g=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZBBjk6Rve2UPz25W/dSwPh/q1PllomFVILWHvh1uHVpp7IpeW8yRUKO7YjGO2vEFF
-         zVhwxLq5CHrvun2rUcSiFPg/MUcvUuFOLse+Njw/H+ewHZ21TM4SrX/VzJ8O8AiUXc
-         EK+TEqgPwSsaQv/4dl3NipafMwGZ2CVF4XoDv3S8=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00H88Tt6052815
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Jan 2020 02:08:29 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 17
- Jan 2020 02:08:29 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 17 Jan 2020 02:08:29 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00H88QTL071044;
-        Fri, 17 Jan 2020 02:08:27 -0600
-Subject: Re: [PATCH] arm: dts: ti: k3-am654-main: Update otap-del-sel values
-To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <nm@ti.com>
-References: <20200109085152.10573-1-faiz_abbas@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <5dc0bca0-502d-01b8-554b-4c4bc06688a8@ti.com>
-Date:   Fri, 17 Jan 2020 10:08:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 17 Jan 2020 03:17:02 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44669 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729334AbgAQIQ7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 03:16:59 -0500
+Received: by mail-lj1-f195.google.com with SMTP id q8so1739276ljj.11
+        for <devicetree@vger.kernel.org>; Fri, 17 Jan 2020 00:16:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eumIjdkn82CgKdbcA/3L7gfEiqOIGScZ7l1uaCLBeSY=;
+        b=gal77KdrDv3aXpDleCBEPdV9VFlP7JmkBx4mWLLkT4B46bDGdyb+kQi3cNEwt4xJyB
+         Nrz8CcOL9BTCfRv/NLKQRkdgWbD6Rm+1meXS6L2Nv51LEYKE/c+x36aOTA7IE6jHzjdP
+         Wsj6jAshXygjrcwdUdAxl1vYQxp/lmwD3kmOTXGdY2Gjf3zWpMnl/S/B9P8LorCdPKQY
+         N9KybhzW90peNVcdU3m+WxHReT2EOOzOviSh+W1lPEJ4N/hJ5lOx+wSBuvoDkO8VDvI1
+         SI5S8IaHHUPl6rKh+SjWYBcoT8CnMJtSnKY4tClzU/ozrm8w2A7KuiSZfMuPIThf/PjS
+         TJVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eumIjdkn82CgKdbcA/3L7gfEiqOIGScZ7l1uaCLBeSY=;
+        b=WDRqjSFxOC06HiBkZXKUQJr9qVNIHZlROoLUsi2cZwxKZ0edEppxJa0lE3bKfUPUDb
+         Kej7w3NEbW8IPVkerXjXfOEQmKAYoZSlj3OnEYnU9gWLtkpA0U2qv13T3xsM/nx8eF86
+         3D61EMpbf3BWWCdWULohYGiijjOs5w8trXpHeO8p4UuJS123K2b52uweFATjvge6UTlm
+         B8LmSEWXeM1Y75ISPi+lWiiUzVUD525B4NH0Fp4xBrC3gAHzvPaExxnpEaFYlv3Spu/t
+         yEUXKTJ/CanNwKC5ciJWc5T7uXtoNfS2Vddh2zIDpZHjUGh6Us6dISvYMOn7kfcvFFXW
+         cY+w==
+X-Gm-Message-State: APjAAAVdBQv66vPRYDlUy8Gu1cG9T0wrrL0xG4wT2Cmv6riDRQTJvRF5
+        mVZVoSv02Xcu4JPGSzINY5jR/1snbTnNi23vR4wk+w==
+X-Google-Smtp-Source: APXvYqynZ3geNnXUWrPvbN90CBox0dC1N8R3nvFQWoXv6XPzU9ZIleOfyLNCPNG+wfshRvylkCa3nZEtkNjMjJIcpVM=
+X-Received: by 2002:a2e:98c4:: with SMTP id s4mr4927401ljj.102.1579249017305;
+ Fri, 17 Jan 2020 00:16:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200109085152.10573-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200108104746.1765-1-m.felsch@pengutronix.de>
+ <20200108104746.1765-4-m.felsch@pengutronix.de> <20200115162915.ccudevxvre3v5c3d@pengutronix.de>
+In-Reply-To: <20200115162915.ccudevxvre3v5c3d@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 17 Jan 2020 09:16:46 +0100
+Message-ID: <CACRpkdbwuaA6CnUW_s1i=cf1ix_jHrqGoZZENXdAG-VXcAd_Mw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Support Opensource <support.opensource@diasemi.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 09/01/2020 10:51, Faiz Abbas wrote:
-> According to the latest AM65x Data Manual[1], a different output tap
-> delay value is optimum for a given speed mode. Update these values.
-> 
-> [1] http://www.ti.com/lit/gpn/am6526
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+On Wed, Jan 15, 2020 at 5:29 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-I believe this patch is going to be updated, as the dt binding has 
-received comments. As such, going to ignore this for now.
+> Hi Linus,
+>
+> On 20-01-08 11:47, Marco Felsch wrote:
+> > The DA9062 is a mfd pmic device which supports 5 GPIOs. The GPIOs can
+> > be used as input, output or have a special use-case.
+> >
+> > The patch adds the support for the normal input/output use-case.
+> >
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+>
+> Is it possible to get this into 5.6?
 
--Tero
+It's patch 3/3 and patch 2/3 which makes it useful is not merged?
 
-> ---
-> 
-> This patch depends on my two kernel series posted here:
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=225425
-> https://patchwork.kernel.org/project/linux-mmc/list/?series=225459
-> 
->   arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 +++++++++++-
->   1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> index efb24579922c..c8d812fdfa0a 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -253,7 +253,17 @@
->   		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
->   		mmc-ddr-1_8v;
->   		mmc-hs200-1_8v;
-> -		ti,otap-del-sel = <0x2>;
-> +		ti,otap-del-sel-legacy = <0x0>;
-> +		ti,otap-del-sel-mmc-hs = <0x0>;
-> +		ti,otap-del-sel-sd-hs = <0x0>;
-> +		ti,otap-del-sel-sdr12 = <0x0>;
-> +		ti,otap-del-sel-sdr25 = <0x0>;
-> +		ti,otap-del-sel-sdr50 = <0x8>;
-> +		ti,otap-del-sel-sdr104 = <0x5>;
-> +		ti,otap-del-sel-ddr50 = <0x5>;
-> +		ti,otap-del-sel-ddr52 = <0x5>;
-> +		ti,otap-del-sel-hs200 = <0x5>;
-> +		ti,otap-del-sel-hs400 = <0x0>;
->   		ti,trm-icp = <0x8>;
->   		dma-coherent;
->   	};
-> 
+If you are convinced that 2/3 will be merged I can apply it.
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Yours,
+Linus Walleij
