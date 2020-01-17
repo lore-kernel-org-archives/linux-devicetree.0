@@ -6,70 +6,70 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F97C33CAF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028C8C33CAF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8BC2072B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13EC20684
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:14:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="q8t1Qzsn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mQPMWpAl"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="UEHhzXj2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bgq+qKxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbgAQAMY (ORCPT
+        id S1729174AbgAQAOD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:12:24 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:33397 "EHLO
+        Thu, 16 Jan 2020 19:14:03 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:36659 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726684AbgAQAMY (ORCPT
+        by vger.kernel.org with ESMTP id S1726088AbgAQAOC (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 19:12:24 -0500
+        Thu, 16 Jan 2020 19:14:02 -0500
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7F77D21DC7;
-        Thu, 16 Jan 2020 19:12:23 -0500 (EST)
+        by mailout.nyi.internal (Postfix) with ESMTP id D3BE121FE9;
+        Thu, 16 Jan 2020 19:14:01 -0500 (EST)
 Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 16 Jan 2020 19:12:23 -0500
+  by compute4.internal (MEProxy); Thu, 16 Jan 2020 19:14:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
         mime-version:message-id:in-reply-to:references:date:from:to:cc
         :subject:content-type; s=fm1; bh=eMruiSYqr1FxGghMIkkwNO55AX7K0Cr
-        Pd/V2d5+JeQI=; b=q8t1QzsnN7aoHs5/oaQCUpnRKJOrTZLBriRrb4klqqVpPSZ
-        Um6oV+3SNMrOy5PwmT2iO8D49u0osrdZV1+HklG93xUe/fBWpHyOu081AKDm0fRQ
-        +1nPn2Li+Sah1hFEN/UdBUyPF4Plf0d9whgGbQfd/gIYKSiSnTzv6TUt7OD5PN1w
-        of3G4rlAGfwtOIEY3rELHVsQ0enyuW3QNfzbgsO7g+ZtE6r0c3Bhn0aZEyZ47bKb
-        SJ/8A3uTqKm3DvS/BbbVQgEvEYKJ8+M26b0+zPmDD+AtVVjQKHOnEGE25FjKkZP1
-        0PrEeLF/34UtmHjK7wOOxiT1XoLoWW/VgKlRXSQ==
+        Pd/V2d5+JeQI=; b=UEHhzXj2olimoLouYY7utL2wHRT8JpBd69l/8SlnTrf79In
+        rm8jn6XKrlsXrM+gjhdMSc/pSSkEwxj01QNES67eSFmd1yact93kuDrhYwvCf2XW
+        C+RPgHEYu0DS2NWiNHNf3v4cY6z5eJXqxAkv7lF69FT8Dxps1b4j0qaIg0zueJ06
+        KyLaQcvzRmiRKzAbEYzTfSKaI0fj8JCa7fQUXYFq4IMwa20uVfbibDI1eW5l70WP
+        gfGsJrwgGVFqmFCEdZ0CuOERSXbBbFmeb5iA6ozuFz7Bg+EUBT1g0I90VuBUunJw
+        NXPAYxqUUEqtyNXlG899EQae+a9hwS1ka1D73ww==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
         :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=eMruiS
-        Yqr1FxGghMIkkwNO55AX7K0CrPd/V2d5+JeQI=; b=mQPMWpAlloFNUnR5IaRTbz
-        WdQoKVt9dpOpUidCoEVs6KgiV0wPrBcRfl+mDZG465t8vgF2+5+F9uI/hDmuhblN
-        TEl49/Hp7z2tIeqlwTyiafnYAgIIE3Y8cbM6c0dM1ceqaYOwVPktC6iWWt3lJJwI
-        kydBy6wI8Fj5ccfORDItCKOxScXrHF+KJiVUjYcS5D2KgQpWb7vLXGCviLcgur9v
-        USy6Mhbyh05iW+KZNZpt3pd0EL5W2BmdBkIbJBht5X6Ajzklx1BnNzYiHFKx+MKr
-        KOOK7riLtnwM2JQdj3t3XpOnaokIhxNEx7h7r2wM81u7WiYMwkHX3a1/qbV28hJg
+        Yqr1FxGghMIkkwNO55AX7K0CrPd/V2d5+JeQI=; b=bgq+qKxIfYKvCxKG/hbX+5
+        Z0ejB/RtYAQS7ZmDSdYYcimVWQ0psXs/gUadU+cBrPHDCqxiToRt2MKj8rFFYZzv
+        yPO28OIiX3ZBVb6Q1yalH97PjWyLIHEMF8rLmn4T4SucYE7pEqQCUQUnuqeUBKsS
+        DI9yrXG/hrIY68gBTDPw5Gtyi3XDG7A2T2A8jGU8Nqi/xBA8orfUZokiqrgVMcqD
+        jZJLv1mCWObFOaT1Ar+KhKKCpA4TKmGONyPP7LY7n2zxUVGTzdqIxBIZzoEKjtrt
+        I4amtndKfMk3tVZPDpOjzBp/JPrXOq9AjqFI3qS6Orp89zyTLCsbG3FvBYZVxYlQ
         ==
-X-ME-Sender: <xms:5vsgXjPzPjmGNbOzl4qF9YjQTapJv4O9SJallQc1HaM_QJgJhSG6Pg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdeigdduiecutefuodetggdotefrodftvf
+X-ME-Sender: <xms:SPwgXmP1zPPyT3WOAqwU2-vcYRGThHldOuR2wnOpkI5I_TCsXFNXBQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrtdeigddujecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderreejnecuhfhrohhmpedftehnughr
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
     vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
     hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
     ufhiiigvpedt
-X-ME-Proxy: <xmx:5vsgXgmeRu9HhKIjdjSruKcatVe0gdyjRb7JNz0ODcPz6CFIVAiMKg>
-    <xmx:5vsgXhwOcysow1b8KHTly5xqI4h-RYe0sHsVXxEa_L3jzAf1YC4LMw>
-    <xmx:5vsgXpAdANiWGGbUoQttkFtotnlniLBxl9ZrwVPqsLOQ0dNjI2IcgQ>
-    <xmx:5_sgXtTQWzT_4-a6aFplwFF-MdBakhV7uAYIxsQEB0uwdnxxa8WMjw>
+X-ME-Proxy: <xmx:SPwgXk6uYAN_J-BlCFwdDIGgyK__-V9pwiBZ7lctTS9rTqgeTYewWg>
+    <xmx:SPwgXo1prbAADo23zUD7Ta9PJheSGx76nBB_ao8fHoYPnEeE3bZPzA>
+    <xmx:SPwgXrrzbveudwt-xIPRdYVgPsEYKvzneM4VS1r88naBCCV-YrTaMg>
+    <xmx:SfwgXoYcOGbfCS6lSrZHqm6xYoho6QYWcKUKA7emjUwiWmV6fUV1aA>
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 96D2BE00A2; Thu, 16 Jan 2020 19:12:22 -0500 (EST)
+        id CE957E00A2; Thu, 16 Jan 2020 19:14:00 -0500 (EST)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.1.7-754-g09d1619-fmstable-20200113v1
 Mime-Version: 1.0
-Message-Id: <2ebf5f23-66dc-40c5-9812-f635f70b5245@www.fastmail.com>
-In-Reply-To: <1579123790-6894-12-git-send-email-eajames@linux.ibm.com>
+Message-Id: <17a4475c-e8e4-4514-88e4-4efe7fd8dc8a@www.fastmail.com>
+In-Reply-To: <1579123790-6894-13-git-send-email-eajames@linux.ibm.com>
 References: <1579123790-6894-1-git-send-email-eajames@linux.ibm.com>
- <1579123790-6894-12-git-send-email-eajames@linux.ibm.com>
-Date:   Fri, 17 Jan 2020 10:42:01 +1030
+ <1579123790-6894-13-git-send-email-eajames@linux.ibm.com>
+Date:   Fri, 17 Jan 2020 10:43:40 +1030
 From:   "Andrew Jeffery" <andrew@aj.id.au>
 To:     "Eddie James" <eajames@linux.ibm.com>,
         linux-aspeed@lists.ozlabs.org
@@ -78,8 +78,7 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         "Marc Zyngier" <maz@kernel.org>,
         "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
         "Joel Stanley" <joel@jms.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_v6_11/12]_ARM:_dts:_aspeed:_witherspoon:_Enable_XDM?=
- =?UTF-8?Q?A_Engine?=
+Subject: Re: [PATCH v6 12/12] ARM: dts: aspeed: tacoma: Enable XDMA engine
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
