@@ -3,98 +3,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04589C33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81514C33CB1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D652082F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1E220748
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 09:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgAQJNv convert rfc822-to-8bit (ORCPT
+        id S1728916AbgAQJWu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 04:13:51 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:52479 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgAQJNv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 04:13:51 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 0B6A9FF80F;
-        Fri, 17 Jan 2020 09:13:46 +0000 (UTC)
-Date:   Fri, 17 Jan 2020 10:13:46 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        mark.rutland@arm.com, richard@nod.at, robh+dt@kernel.org,
-        vigneshr@ti.com
-Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add support for Macronix NAND
- randomizer
-Message-ID: <20200117101346.3611dc0a@xps13>
-In-Reply-To: <OFECBDB130.03AD44B7-ON482584F2.002B40F2-482584F2.002B720F@mxic.com.tw>
-References: <1571902807-10388-1-git-send-email-masonccyang@mxic.com.tw>
-        <1571902807-10388-2-git-send-email-masonccyang@mxic.com.tw>
-        <20200109172816.6c1d7be7@xps13>
-        <OFECBDB130.03AD44B7-ON482584F2.002B40F2-482584F2.002B720F@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 17 Jan 2020 04:22:50 -0500
+Received: from asavdk4.altibox.net ([109.247.116.15]:35348 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbgAQJWt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 04:22:49 -0500
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id A1F90803D1;
+        Fri, 17 Jan 2020 10:22:40 +0100 (CET)
+Date:   Fri, 17 Jan 2020 10:22:39 +0100
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        ebiharaml@si-linux.co.jp
+Subject: Re: [PATCH v6 0/6] Add dual-LVDS panel support to EK874
+Message-ID: <20200117092239.GA2769@ravnborg.org>
+References: <1576590361-28244-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20191217231326.GG4874@pendragon.ideasonboard.com>
+ <CAMuHMdWaZBfsHi9E57B8Mr6QSCATVxpdRtg=9_H-urBaK_iRJw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWaZBfsHi9E57B8Mr6QSCATVxpdRtg=9_H-urBaK_iRJw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=P1BnusSwAAAA:8
+        a=NcFk6D9gAAAA:8 a=VwQbUJbxAAAA:8 a=AnT9JTkVX5hdcftoDygA:9
+        a=CjuIK1q_8ugA:10 a=gDps05xe3HUA:10 a=-FEs8UIgK8oA:10 a=CojVow1nldcA:10
+        a=NWVoK91CQyQA:10 a=D0XLA9XvdZm18NrgonBM:22 a=dT0RXAwTRpxWjiziVLXF:22
+        a=AjGcO6oz07-iQ99wixmX:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mason,
+Hi Fabrizio/Laurent/Geert.
 
-> > > +}
-> > > +
-> > >  static void macronix_nand_onfi_init(struct nand_chip *chip)
-> > >  {
-> > >     struct nand_parameters *p = &chip->parameters;
-> > >     struct nand_onfi_vendor_macronix *mxic;
-> > > +   struct device_node *dn = nand_get_flash_node(chip);
-> > > +   int rand_otp = 0;
-> > > +   int ret;
-> > > 
-> > >     if (!p->onfi)
-> > >        return;
-> > > 
-> > > +   if (of_find_property(dn, "mxic,enable-randomizer-otp", NULL))
-> > > +      rand_otp = 1;
-> > > +
-> > >     mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-> > > +   /* Subpage write is prohibited in randomizer operatoin */  
-> > 
-> >                                        with          operation
-> >   
-> > > +   if (rand_otp && chip->options & NAND_NO_SUBPAGE_WRITE &&
-> > > +       mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
-> > > +      if (p->supports_set_get_features) {
-> > > +         bitmap_set(p->set_feature_list,
-> > > +               ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-> > > +         bitmap_set(p->get_feature_list,
-> > > +               ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-> > > +         ret = macronix_nand_randomizer_check_enable(chip);
-> > > +         if (ret < 0)
-> > > +            pr_info("Macronix NAND randomizer failed\n");
-> > > +         else
-> > > +            pr_info("Macronix NAND randomizer enabled\n");  
-> > 
-> > Maybe we should update the bitmaps only if it succeeds?  
+(Thanks Geert, I recall I never replied to this mail).
+
+On Fri, Jan 17, 2020 at 09:47:22AM +0100, Geert Uytterhoeven wrote:
+> Hi Laurent,
 > 
-> okay, will drop pr_info();
+> (woops, forgot to press sent)
+> 
+> On Wed, Dec 18, 2019 at 12:13 AM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Tue, Dec 17, 2019 at 01:45:55PM +0000, Fabrizio Castro wrote:
+> > > this series adds support for dual-LVDS panel IDK-2121WR
+> > > from Advantech:
+> > > https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
+> > >
+> > > V6 reworks patch "drm: rcar-du: lvds: Allow for even and odd pixels swap",
+> > > and rebases the series on top of patch:
+> > > https://patchwork.kernel.org/patch/11295991/
+> >
+> > I've taken patch 1/6 to 4/6 in my tree. I expect Geert to take 6/6. For
+> > 5/6, I'll give Rob a chance to review the patch. Sam, could you handle
+> > it afterwards ?
+Rob had comments to the 5/6 patch - and I have missed if a new version was
+sent.
 
-It's not my point, you can keep the pr_info, I just say that you should
-check ret before updating the bitmap maybe? Otherwise if
-macronix_nand_randomizer_check_enable() fails, you end up without the
-feature but with its bit set in the bitmap.
-
-Thanks,
-Miquèl
+	Sam
