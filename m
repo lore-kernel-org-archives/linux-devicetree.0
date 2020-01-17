@@ -2,119 +2,139 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E793C33CB6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFFEC33CAF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D922073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB3121582
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 00:31:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PdZtFhwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbgAQAWS (ORCPT
+        id S1730692AbgAQAbc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 19:22:18 -0500
-Received: from mail-sh.amlogic.com ([58.32.228.43]:52681 "EHLO
-        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728963AbgAQAWR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 19:22:17 -0500
-Received: from droid10.amlogic.com (10.18.11.213) by mail-sh.amlogic.com
- (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Fri, 17 Jan 2020
- 08:22:33 +0800
-From:   Hanjie Lin <hanjie.lin@amlogic.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Kevin Hilman <khilman@baylibre.com>
-CC:     Hanjie Lin <hanjie.lin@amlogic.com>,
-        Yue Wang <yue.wang@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Liang Yang <liang.yang@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jian Hu <jian.hu@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: [PATCH v6 6/6] arm64: dts: meson: a1: Enable DWC3 controller
-Date:   Fri, 17 Jan 2020 08:21:44 +0800
-Message-ID: <1579220504-110067-7-git-send-email-hanjie.lin@amlogic.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1579220504-110067-1-git-send-email-hanjie.lin@amlogic.com>
-References: <1579220504-110067-1-git-send-email-hanjie.lin@amlogic.com>
+        Thu, 16 Jan 2020 19:31:32 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46621 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730663AbgAQAbc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 19:31:32 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so9081812pll.13
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 16:31:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=M9PfMDqq4mrgdJjoCxlePmryw2dwKhdtVpwo2rQpPHI=;
+        b=PdZtFhwcbZoGTyRB0YT1AXckQK03oRubwCEsjPBt6hG1EbNxYH0Fjv9cfZuk8BKwLr
+         Nfun0qpKSn16G4otglGI+BJlfh1NXbJLnUz19wnEiuyifT2ZaGyJeQdcvzWBZB99x0iT
+         nUmD1tc7SEfkKKIGJXLVJXhYzFHw02R8UDDoM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=M9PfMDqq4mrgdJjoCxlePmryw2dwKhdtVpwo2rQpPHI=;
+        b=q5/woM+nXQB8FFevxKvz5mkKlODv9Udo+JHdKd6EQbxIp5CLbs8LGaD/jsr7hxI2vO
+         G5iOkzp3wp2WEEVEl/e6+Cv4dpIe2PQRckvs626JT979ey8q5g1C2vERZkI+dNHXzrHQ
+         IaAY3i1hbAozQv/7dPWpF8x2GDksVblruBd2jN5yAoB/Vt4QM1F8Hv6y7MbE9HzX8g4O
+         QAkjSoPmJN/vk284984Zgd5jHdS0NDWmrCR6nfO6NBdev+rTkK2MLh24YdVarZh7IsLJ
+         7b9KGPa8C1MSPw6egwvZhxVYac2KWVEfR4NtgESU/oX7WX6xWEdWTiqAvhksm6E7cyRM
+         oQPA==
+X-Gm-Message-State: APjAAAUGnlHYzCHS3rM8FoQoX29hWo85JuMtAvk4RgM/Xf4fMH5cQggj
+        lKTc0hE8+tEfTE1OjNC466tcGQ==
+X-Google-Smtp-Source: APXvYqykX9ESNeqte195/89wDGbzWuoGsUmrWe5z97ksNmWfJhf/Ojx/maDjljtSLn2zv692HKkdeA==
+X-Received: by 2002:a17:90a:17e3:: with SMTP id q90mr2334122pja.139.1579221092047;
+        Thu, 16 Jan 2020 16:31:32 -0800 (PST)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id r20sm25529366pgu.89.2020.01.16.16.31.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2020 16:31:31 -0800 (PST)
+Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
+To:     Shiping Ji <shiping.linux@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        James Morse <james.morse@arm.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-edac@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sashal@kernel.org, hangl@microsoft.com,
+        Lei Wang <lewan@microsoft.com>, shji@microsoft.com,
+        ruizhao@microsoft.com, Yuqing Shen <yuqing.shen@broadcom.com>,
+        ray.jui@broadcom.com, wangglei@gmail.com
+References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <aa80b8a5-5297-91c6-6410-99e43b53bd20@broadcom.com>
+Date:   Thu, 16 Jan 2020 16:31:27 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.18.11.213]
+In-Reply-To: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable DWC3 controller for Meson A1 SoC.
+Hi Shiping,
 
-Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Here is another small change to cleanup.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index fb0ba85..9077ffa 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -7,6 +7,8 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/meson-a1-power.h>
- #include <dt-bindings/reset/amlogic,meson-a1-reset.h>
-+#include <dt-bindings/clock/a1-pll-clkc.h>
-+#include <dt-bindings/clock/a1-clkc.h>
- 
- / {
- 	compatible = "amlogic,a1";
-@@ -127,6 +129,35 @@
- 			#interrupt-cells = <3>;
- 			#address-cells = <0>;
- 		};
-+
-+		usb: usb@ffe09000 {
-+			status = "okay";
-+			compatible = "amlogic,meson-a1-usb-ctrl";
-+			reg = <0x0 0xffe09000 0x0 0xa0>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+
-+			clocks = <&clkc_periphs CLKID_USB_CTRL>,
-+				 <&clkc_periphs CLKID_USB_BUS>,
-+				 <&clkc_periphs CLKID_XTAL_USB_CTRL>;
-+			clock-names = "usb_ctrl", "usb_bus", "xtal_usb_ctrl";
-+			resets = <&reset RESET_USBCTRL>;
-+
-+			dr_mode = "host";
-+
-+			phys = <&usb2_phy1>;
-+			phy-names = "usb2-phy1";
-+
-+			dwc3: usb@ff400000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0 0xff400000 0x0 0x100000>;
-+				interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
-+				dr_mode = "host";
-+				snps,dis_u2_susphy_quirk;
-+				snps,quirk-frame-length-adjustment = <0x20>;
-+			};
-+		};
- 	};
- 
- 	timer {
--- 
-2.7.4
+On 2020-01-15 6:32 a.m., Shiping Ji wrote:
+> New driver supports error detection and correction on the devices with ARM
+> DMC-520 memory controller.
+>
+> Signed-off-by: Shiping Ji <shiping.linux@gmail.com>
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+>
+> ---
+>       Changes in v9:
+>           - Removed interrupt-config and replaced with an interrupt map where names and masks are predefined
+>           - Only one ISR function is defined, mask is retrieved from the interrupt map
+>           - "dram_ecc_errc" and "dram_ecc_errd" are implemented
+>
+> ---
+> +static void dmc520_get_dram_ecc_error_info(struct dmc520_edac *edac,
+> +					   bool is_ce,
+> +					   struct ecc_error_info *info)
+> +{
+> +	u32 reg_offset_low, reg_offset_high;
+> +	u32 reg_val_low, reg_val_high;
+> +	bool valid;
+> +
+> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
+> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
+> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
+> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
+> +
+> +	reg_val_low = dmc520_read_reg(edac, reg_offset_low);
+> +	reg_val_high = dmc520_read_reg(edac, reg_offset_high);
+> +
+> +	valid = (FIELD_GET(REG_FIELD_ERR_INFO_LOW_VALID, reg_val_low) != 0) &&
+> +		(FIELD_GET(REG_FIELD_ERR_INFO_HIGH_VALID, reg_val_high) != 0);
+> +
+> +	if (valid) {
+> +		info->col =
+> +			FIELD_GET(REG_FIELD_ERR_INFO_LOW_COL, reg_val_low);
+> +		info->row =
+> +			FIELD_GET(REG_FIELD_ERR_INFO_LOW_ROW, reg_val_low);
+> +		info->rank =
+> +			FIELD_GET(REG_FIELD_ERR_INFO_LOW_RANK, reg_val_low);
+> +		info->bank =
+> +			FIELD_GET(REG_FIELD_ERR_INFO_HIGH_BANK, reg_val_high);
+> +	} else {
+> +		memset(info, 0, sizeof(struct ecc_error_info));
+This should be sizeof(*info), not sizeof(struct ecc_error_info)
+for better programming to allow info to change type in the future
+without the code changing.
+> +	}
+> +}
+> +
+>
 
