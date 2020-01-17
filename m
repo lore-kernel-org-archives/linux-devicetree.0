@@ -2,101 +2,118 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5848AC33C9E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0A7C33C9E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2697B20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80DBF206D7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 03:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="kWipAHvo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S93imiwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgAQDgX (ORCPT
+        id S1729762AbgAQDh4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 16 Jan 2020 22:36:23 -0500
-Received: from forward103j.mail.yandex.net ([5.45.198.246]:57347 "EHLO
-        forward103j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726366AbgAQDgX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 16 Jan 2020 22:36:23 -0500
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-        by forward103j.mail.yandex.net (Yandex) with ESMTP id 66D146740FD7;
-        Fri, 17 Jan 2020 06:36:19 +0300 (MSK)
-Received: from mxback12q.mail.yandex.net (mxback12q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b3:0:640:3818:d096])
-        by forward100q.mail.yandex.net (Yandex) with ESMTP id 5F53D7080002;
-        Fri, 17 Jan 2020 06:36:19 +0300 (MSK)
-Received: from vla5-e763f15c6769.qloud-c.yandex.net (vla5-e763f15c6769.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:e763:f15c])
-        by mxback12q.mail.yandex.net (mxback/Yandex) with ESMTP id a1MeNzqhuk-aHdai45h;
-        Fri, 17 Jan 2020 06:36:19 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1579232179;
-        bh=o7C7QSp1tNndF9dhHqVnBtCm952xn76Pe6J9wt1IgLE=;
-        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
-        b=kWipAHvojJC7ky63S86/CHCuZ2KWqiyYeY++7GTfxJ0qvWhfFKmtX9M61/QKW4/3V
-         QAPvjKGK5U8s8JOW2X3m48uxn//nthBXZWM51Mmo98jszuS3mV7jWZHh7/cvhHLhvv
-         nRKQcMCsg4aU3n4Aldzd3JPkOQNEXv4NtfVTAGMU=
-Authentication-Results: mxback12q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla5-e763f15c6769.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id BHG1m4ySsO-aEW427WJ;
-        Fri, 17 Jan 2020 06:36:15 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Date:   Fri, 17 Jan 2020 11:36:04 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1579195429-59828-1-git-send-email-zhouyanjie@wanyeetech.com> <1579195429-59828-3-git-send-email-zhouyanjie@wanyeetech.com>
+        Thu, 16 Jan 2020 22:37:56 -0500
+Received: from mail-pj1-f42.google.com ([209.85.216.42]:36585 "EHLO
+        mail-pj1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729710AbgAQDhz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 16 Jan 2020 22:37:55 -0500
+Received: by mail-pj1-f42.google.com with SMTP id n59so2650423pjb.1
+        for <devicetree@vger.kernel.org>; Thu, 16 Jan 2020 19:37:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W3ZrmALb04VJvJYJRFDnB2xc6oarHSelUabhN5PENno=;
+        b=S93imiwqTJgV9ntX1fa1Q4p88MPfMvVD6Z0uhgELxYfARwZGOCZkDu3BcPpqKPVcDm
+         /rV0AiXUemaxpZro3ZodBQeZi8D7mKx54Z3yC6A5IjlE5ul5gU2e++Jo1EGMPQcxUB5b
+         dTHjUYrKitks66CvR3LLUvGzMPibI3EBQvY4M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=W3ZrmALb04VJvJYJRFDnB2xc6oarHSelUabhN5PENno=;
+        b=bIilaCuL9L1IamRrsHefXERj3YJt2XkdPTcKD0A8tOJJtBllswHkj777HPzp+1tua4
+         Fx/HODu0HrsYr7YwqSj5S0Zl7UZHwr+wC2+/EQt1CkgTSaellt9dKL0+znAhpXU0/l0Y
+         FPT0jT4HfLCR2byj8LA1xvEicuxc3isY7TU8DOPaErVPDakiydSYqAGDctuFNRU+MvS2
+         F6lX63NBuD9Qs0xC9r5q1RT4oXcC5upBHRm53hWCLHJm6jJx3eKFT+9961S+beTPo73+
+         ATNrqnZP7KOaena90jSoLqmDE0Hg48XokMwsLiM72x8P03wEpdG69gHDj3+gGxsz18ol
+         pg4w==
+X-Gm-Message-State: APjAAAWiPjmJeKQfzaxtJKHxHeadnnVKvyW+gt1gBNMSFVXipclj78kh
+        Lqp0fexoplMywrfcaHckKcoWmg==
+X-Google-Smtp-Source: APXvYqz8oNglxNkmhRqIcnk3Hs0gldj3Lgjt+22dbA0S2qnTnMZGFb0p0ixnztKYQ0yeztInjhjuxA==
+X-Received: by 2002:a17:90a:d986:: with SMTP id d6mr3245192pjv.78.1579232275097;
+        Thu, 16 Jan 2020 19:37:55 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id j38sm25940259pgj.27.2020.01.16.19.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jan 2020 19:37:54 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Subject: [PATCH v4 0/3] Add mt8173 elm and hana board
+Date:   Fri, 17 Jan 2020 11:37:46 +0800
+Message-Id: <20200117033749.137420-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/6] MIPS: JZ4780: Introduce SMP support.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org
-CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mips-creator-ci20-dev@googlegroups.com, robh+dt@kernel.org,
-        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
-        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
-        rick.tyliu@ingenic.com, jason@lakedaemon.net,
-        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
-        paul@crapouillou.net, prasannatsmkumar@gmail.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        ebiederm@xmission.com, hns@goldelico.com, paul@boddie.org.uk
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <D9108DBE-BA95-47C6-81B3-74FBC44E04FE@flygoat.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This series adds devicetree and binding document for Acer Chromebook R13 (elm)
+and Lenovo Chromebook (hana), which are using mt8173 as SoC.
+
+Changes in v4:
+- fix dtbs_check errors on cros-ec-keyboard
+- add comments for second source touchscreen and trackpad
+
+Changes in v3:
+- address comments in v2, major changes include:
+  * move uart aliases from mt8173-elm.dtsi to mt8173.dtsi
+  * remove brightness-levels in backlight
+  * add interrupt for da9211
+  * move pinmux for sdio_fixed_3v3 from mmc3_pins_default
+  * remove some non upstream property
+  * checked on schematic, cd-gpio in mmc1 should be GPIO_ACTIVE_LOW
+
+Changes in v2:
+- fix mediatek.yaml
+- fixup some nodes and remove unused nodes in dts
 
 
-=E4=BA=8E 2020=E5=B9=B41=E6=9C=8817=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-:23:44, "=E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)" <zhouyanjie@wanyeetech=
-=2Ecom> =E5=86=99=E5=88=B0:
->Forward port smp support from kernel 3=2E18=2E3 of CI20_linux
->to upstream kernel 5=2E5=2E
->
->Tested-by: H=2E Nikolaus Schaller <hns@goldelico=2Ecom>
->Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech=2Ecom>
+Hsin-Yi Wang (3):
+  dt-bindings: arm64: dts: mediatek: Add mt8173 elm and hana
+  arm64: dts: mt8173: add uart aliases
+  arm64: dts: mediatek: add mt8173 elm and hana board
 
-Btw: I'm not clear with others attitude but personally I think we should a=
-void non-ASCII
-characters in kernel=2E
+ .../devicetree/bindings/arm/mediatek.yaml     |   22 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    3 +
+ .../dts/mediatek/mt8173-elm-hana-rev7.dts     |   27 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dts     |   14 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   70 ++
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dts   |   14 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  | 1029 +++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi      |    5 +-
+ 8 files changed, 1183 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
 
-Many people work on kernel with command line tools and a lot of terminals =
-didn't
-configured to display CJK characters properly=2E
+-- 
+2.25.0.rc1.283.g88dfdc4193-goog
 
-Pinyin or Wade=E2=80=93Giles of your name is enough for others to recogniz=
-e or
-credit you=2E
-
-Thanks=2E
-
->---
->
->
---=20
-Jiaxun Yang
