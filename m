@@ -2,119 +2,162 @@ Return-Path: <SRS0=d5cD=3G=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A58DC33CB6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F1CC33C9E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EEB2083E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TU26B/fi"
+	by mail.kernel.org (Postfix) with ESMTP id B6D682082F
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 18:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579286345;
+	bh=6rm5uepdIyjw+aZoxr4SzBFKL0Tg5MKu9jhMt9uBjGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CFtJAFdIHmZWECbXKA3G42Hb7WsKTcl0XoyuwT/+ztdQqdmKV2X4JHX8mB2enfKe/
+	 OUmazcpansej2+qi8+ySeSr2Av6Nw6FjCVVELRruHtv88ztQD1pHZeYfgIPejZXVtu
+	 4ra8uLfZS3wPnTloSQYvo7pTwF7tI1ee0pfOJTbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgAQSbU (ORCPT
+        id S1726897AbgAQSjF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 13:31:20 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55236 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgAQSbU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 13:31:20 -0500
-Received: by mail-pj1-f65.google.com with SMTP id kx11so3509656pjb.4;
-        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8I536fgsZI1/zevVyUJAawaRzvWEK86euedntV25fzo=;
-        b=TU26B/fi+c45Ik85BE26c4cduIA5MPcBVhtczQDSk8MA+5XfAwrcK/Nycl4djR5xfo
-         +ywLdtk7ooCoZqLfFMElnAhBbJAxZ5lWTRjMHyilDY4buULBGysf5kJjqyuMZNEmSqjq
-         L0RotQJQBFAhlUIWfsC2VS+qwmMaeQrix0tyv+4XsLFg449r+OcXx/cbKVaSAt5AQjCv
-         7DUpyi9S1cekgRBBlA1fMTlSDHHvv2Al+J1YC5jvEckkTKzSs+rMGBzwgYkzX2e4YO7N
-         QcRtVdHpCerXDyNxqQBKv7tjMt/ZBRP+b5mv4VvBV2SDl3aPCYyxigk69nViAUmaEITk
-         9F5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8I536fgsZI1/zevVyUJAawaRzvWEK86euedntV25fzo=;
-        b=LjTkxRT3kbk01GLZTsqlttjLNtkyYnf+rDnzwSnJ2ckO7+udpWuC82xes4j0C/3Gyq
-         2xm2lK8P5/6xLYcQU+e0EN0B1r0pSmOpVHV9vLil7UiZNySPgdGhfHmhVSYV60L4ZiSO
-         7DrBLhqzIG0VcVIRhmtLUbCpNBWYWmXnCPupurkiiuqhwoE15TW+V68JGR90WoUz9dFb
-         k9+xosn0ckqeKlw3LX6FU+yM92jU01zQYw3LzLt/fYaVUPUnwhuwGGgFngdBhAqoVBAB
-         7AEnAnrOELZD6vrYG8VIruG1jVp5/2h14geYEv6uyeHPbukWKkV3ljZH9iS29Ivebo+l
-         +zbw==
-X-Gm-Message-State: APjAAAUlF/8YYdj2g+VPt0ZzT+leiCSHmFN8tQCK0Q68ev2ncbCBVAxX
-        03WVms0Gva/2nYVh/MP63tc=
-X-Google-Smtp-Source: APXvYqwQNLBotUtvThCp2G5pHQ8X9Ogb0cXYW6p5Yq8vsBdWs6t5kI2rZC/ismEXobuIx42s8mdKfA==
-X-Received: by 2002:a17:90a:2763:: with SMTP id o90mr7048740pje.110.1579285879585;
-        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
-Received: from ?IPv6:2001:4898:d8:28:a811:24b6:1823:a6d9? ([2001:4898:80e8:2:2827:24b6:1823:a6d9])
-        by smtp.gmail.com with ESMTPSA id j8sm29771828pfe.182.2020.01.17.10.31.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Jan 2020 10:31:19 -0800 (PST)
-Subject: Re: [PATCH v9 2/2] EDAC: add EDAC driver for DMC520
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     James Morse <james.morse@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sashal@kernel.org, hangl@microsoft.com,
-        Lei Wang <lewan@microsoft.com>, shji@microsoft.com,
-        ruizhao@microsoft.com, Scott Branden <scott.branden@broadcom.com>,
-        Yuqing Shen <yuqing.shen@broadcom.com>, ray.jui@broadcom.com,
-        wangglei@gmail.com
-References: <6a462190-0af2-094a-daa8-f480d54a1fbf@gmail.com>
- <20200117001843.GJ27148@zn.tnic>
-From:   Shiping Ji <shiping.linux@gmail.com>
-Message-ID: <d5989a4c-8173-2f03-7d20-6fdd32d19591@gmail.com>
-Date:   Fri, 17 Jan 2020 10:31:18 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 17 Jan 2020 13:39:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726603AbgAQSjF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 17 Jan 2020 13:39:05 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5B122072B;
+        Fri, 17 Jan 2020 18:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579286344;
+        bh=6rm5uepdIyjw+aZoxr4SzBFKL0Tg5MKu9jhMt9uBjGk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mWzHbgtEjfc9srjAIxQV6fbaWdY6wToG6L4lKDAdWOKc8scRm4r13SqQpktEw0axz
+         xxGlxYZFS6YL+bi0X/wE/Hw/Ns1pw1l4zJbygQhCfBsGRgt/kWhVj33wMHi+AzumNR
+         IrpnQ4XJpt9NhT2AC/ztRfkeRDYphvHxlvRf6zyc=
+Date:   Fri, 17 Jan 2020 19:39:01 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH] arm64: dts: allwinner: h6: tanix-tx6: Use internal
+ oscillator
+Message-ID: <20200117183901.lkieha3hu6nz2hoj@gilmour.lan>
+References: <20200113180720.77461-1-jernej.skrabec@siol.net>
+ <20200116080652.mp5z7dtrtj3nyhpq@gilmour.lan>
+ <20509747.EfDdHjke4D@jernej-laptop>
 MIME-Version: 1.0
-In-Reply-To: <20200117001843.GJ27148@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pymbu5lgw5irb6p6"
+Content-Disposition: inline
+In-Reply-To: <20509747.EfDdHjke4D@jernej-laptop>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 1/16/2020 4:18 PM, Borislav Petkov wrote:
 
->> +/* The EDAC driver private data */
->> +struct dmc520_edac {
->> +	void __iomem *reg_base;
->> +	spinlock_t ecc_lock;
-> 
-> What does that spinlock protect? Also, its name is not very optimal.
+--pymbu5lgw5irb6p6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is to protect concurrent writes to the mci->error_desc as suggested by James when reviewing the patch v3.
- 
->> +	reg_offset_low = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_31_00 :
->> +				 REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_31_00;
->> +	reg_offset_high = is_ce ? REG_OFFSET_DRAM_ECC_ERRC_INT_INFO_63_32 :
->> +				  REG_OFFSET_DRAM_ECC_ERRD_INT_INFO_63_32;
-> 
-> Those define names could be shorter.
+Hi,
 
-I'm trying to find a good scheme to make them shorter, at the moment they are named according to the TRM.
- 
->> +		if (irq >= 0) {
->> +			ret = devm_request_irq(&pdev->dev, irq,
->> +							dmc520_isr, IRQF_SHARED,
->> +							dev_name(&pdev->dev), mci);
-> 
-> Align arguments on the opening brace.
+On Thu, Jan 16, 2020 at 05:47:12PM +0100, Jernej =C5=A0krabec wrote:
+> Dne =C4=8Detrtek, 16. januar 2020 ob 09:06:52 CET je Maxime Ripard napisa=
+l(a):
+> > Hi Jernej,
+> >
+> > On Mon, Jan 13, 2020 at 07:07:20PM +0100, Jernej Skrabec wrote:
+> > > Tanix TX6 doesn't have external 32 kHz oscillator, so switch RTC clock
+> > > to internal one.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > >
+> > > While this patch gives one possible solution, I mainly want to start
+> > > discussion why Allwinner SoC dtsi reference external 32 kHz crystal
+> > > although some boards don't have it. My proposal would be to make clock
+> > > property optional, based on the fact if external crystal is present or
+> > > not. However, I'm not sure if that is possible at this point or not.
+> >
+> > It's probably a bit of a dumb question but.. are you sure the crystal
+> > is missing?
+>
+> Although I don't have schematic, I'm pretty sure. Without this patch or o=
+ne at
+> [1], RTC gives a lot of errors in dmesg. I think that unpopulated XC2 pads
+> near SoC (see [2]) are probably reserved for crystal.
+>
+> With patch in [1], which enables automatic switching in case of error, I =
+saw
+> that on this box RTC always switched to internal RC.
+>
+> >
+> > The H6 datasheet mentions that the 32kHz crystal needs to be there,
+> > and it's part of the power sequence, so I'd expect all boards to have
+> > it.
+>
+> Can you be more specific where it is stated that crystal is mandatory?
 
-I'm not sure how this can be done perfectly with tabs only :)
+I was mostly referring to the power sequence mentionned in the H6
+Datasheet (not the user manual, the smaller one).
 
-All other comments have been addressed in the next patch, many thanks!
+https://linux-sunxi.org/images/5/5c/Allwinner_H6_V200_Datasheet_V1.1.pdf
 
--- 
-Best regards,
-Shiping Ji
+Page 74
+
+> Note that schematic of some boards, like OrangePi PC2 (H5) or OrangePi Ze=
+ro
+> (H3) don't even have 32K crystal in them.
+
+And we can't use the compatible for these..
+
+> >
+> > > Driver also considers missing clock property as deprecated (old DT) [=
+1],
+> > > so this might complicate things even further.
+> > >
+> > > What do you think?
+> >
+> > I'm pretty sure (but that would need to be checked) that we never got
+> > a node without the clocks property on the H6. If that's the case, then
+> > we can add a check on the compatible.
+>
+> Yes, that would be nice solution. I can work something out if you agree t=
+hat
+> this is the way.
+
+So if we want to have something that works for the H3 too, then I
+guess we need to revert the patch that switches the 32kHz clock source
+to the external one all the time, and do it only if we have a clock
+provided.
+
+If we don't, we would run from the internal oscillator (which would
+work for both the H3 and H6 boards you have I guess?) and if we do we
+will still use the better, more accurate, clock.
+
+That would change a bit the behaviour of the old DTs again and revert
+to the old behaviour we had, but we didn't hear anything the first
+time we did, so I wouldn't be overly concerned.
+
+Does that make sense?
+Maxime
+
+--pymbu5lgw5irb6p6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXiH/RQAKCRDj7w1vZxhR
+xbfcAP9i1ZlK+Y2jyWhOcBVCr7LdqTqBFTaqpH+3E3F0/+TWaAD/bYjxs8/lrxo+
+1KQCUUoscHHEne5JK4ivcaQbvqiZ4gw=
+=bHvI
+-----END PGP SIGNATURE-----
+
+--pymbu5lgw5irb6p6--
