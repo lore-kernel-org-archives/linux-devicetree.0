@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DAFC33CB1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA9FC33CB6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A272072E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042FE2072E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 17 Jan 2020 15:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579275897;
-	bh=0G8EWTv2WuTcDjwZy69pwthwaxDtpeabMGIUbPuAWjc=;
+	s=default; t=1579275898;
+	bh=rWC9Z2vfXvulKPqHYc4Y6XjVOtFe2wD1tdbL3jOkEJY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Y7ngngK4cZrMBifpxntk7ArOZs7bawFIGNebUDZuYb6dhrSpH+UEWVzWEN44/Gilx
-	 xB/w+PkAxz+JCSt3Tq+1D98wcHD2zFpTnm4OarepmpZl0pGY1F5oPpnlo09uyH75jO
-	 3PHjWNzK4fjrCYNAcuk+/TlnNLP+kRgWTt1edCrA=
+	b=yEQnksG7HuqbIthp8MuqUeOlzW84gjiOK1niLWpqsfdDyGtXdcVlIXUvvmqrf/zkG
+	 okBFAPCXAegLUTmpDCog1Emg6Ivs25TsjagThvENm7y25lbSfuBdHEnImwZQgBMw8a
+	 bl1PFVzYO5qHHAksKy5RRu3yD2zSOftPs5j4JTRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgAQPov (ORCPT
+        id S1729397AbgAQPo5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 17 Jan 2020 10:44:51 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54014 "EHLO
+        Fri, 17 Jan 2020 10:44:57 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53974 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729219AbgAQPoa (ORCPT
+        with ESMTP id S1729207AbgAQPoa (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Fri, 17 Jan 2020 10:44:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
@@ -33,17 +33,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=bubYcWmZxkJa2g3LCd3hNT3lwv8r6SjJCmZojEtnG3c=; b=V5YjMQHfnfmP
-        49ldVECEShgmWIeHNu+ZEfaUf0TNij3yOEwtWN07SOSMlK8lerypiOaPMkl+/CzXDTVJ6/bMVEVIv
-        weYofuBZr41MJsclYXvzS/fmkxkIu5XGQoIz77DWVtlD/VMJYywlGLQB9yYTg0XTUpc0kUuIqb7sN
-        /6sk8=;
+        List-Archive; bh=YZm/5f9wodQfID90hCH6kdu/JpRhW+QGeHbLTu7g0DM=; b=Wu4Px26QUDJX
+        9BBVnJdZiujoKJDRPmgP7URAGeeMyS/2vWCDgNjtat6R+Jn/iNX6uDYsbaQoX2FpFED4ivBh0ykiy
+        gWthDXylaQc0TVOl5Co7tjBTBLMpbclsVxl9c6jd3o8B7cq+SFdcTwtX8Hix9hiS2VevtxOixKqYe
+        /084o=;
 Received: from fw-tnat-cam4.arm.com ([217.140.106.52] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1isTnM-0006uV-8B; Fri, 17 Jan 2020 15:44:24 +0000
+        id 1isTnM-0006ua-JB; Fri, 17 Jan 2020 15:44:24 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id D6370D02A2A; Fri, 17 Jan 2020 15:44:23 +0000 (GMT)
+        id 4C87BD02A2A; Fri, 17 Jan 2020 15:44:24 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Tomer Maimon <tmaimon77@gmail.com>
 Cc:     avifishman70@gmail.com, benjaminfair@google.com,
@@ -52,11 +52,11 @@ Cc:     avifishman70@gmail.com, benjaminfair@google.com,
         Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
         openbmc@lists.ozlabs.org, robh+dt@kernel.org,
         tali.perry1@gmail.com, venture@google.com, yuenn@google.com
-Subject: Applied "spi: npcm-pspi: modify reset support" to the spi tree
-In-Reply-To: <20200115162301.235926-5-tmaimon77@gmail.com>
-Message-Id: <applied-20200115162301.235926-5-tmaimon77@gmail.com>
+Subject: Applied "spi: npcm-pspi: fix 16 bit send and receive support" to the spi tree
+In-Reply-To: <20200115162301.235926-2-tmaimon77@gmail.com>
+Message-Id: <applied-20200115162301.235926-2-tmaimon77@gmail.com>
 X-Patchwork-Hint: ignore
-Date:   Fri, 17 Jan 2020 15:44:23 +0000 (GMT)
+Date:   Fri, 17 Jan 2020 15:44:24 +0000 (GMT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -64,11 +64,11 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 The patch
 
-   spi: npcm-pspi: modify reset support
+   spi: npcm-pspi: fix 16 bit send and receive support
 
 has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,121 +89,79 @@ to this mail.
 Thanks,
 Mark
 
-From b5df0b2ee2ee6b5bdeb55d76c17f695a1aa5388f Mon Sep 17 00:00:00 2001
+From 47416a5f27be0a0e815ef5f9f2f06618ae5e0470 Mon Sep 17 00:00:00 2001
 From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Wed, 15 Jan 2020 18:23:01 +0200
-Subject: [PATCH] spi: npcm-pspi: modify reset support
+Date: Wed, 15 Jan 2020 18:22:58 +0200
+Subject: [PATCH] spi: npcm-pspi: fix 16 bit send and receive support
 
-Modify NPCM perphiral SPI reset support from
-direct register access to reset controller support.
+Fixing NPCM BMC Peripheral SPI controller 16 bit
+send and receive support by writing and reading
+the SPI data in the right order.
 
 Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-Link: https://lore.kernel.org/r/20200115162301.235926-5-tmaimon77@gmail.com
+Link: https://lore.kernel.org/r/20200115162301.235926-2-tmaimon77@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-npcm-pspi.c | 33 +++++++++++----------------------
- 1 file changed, 11 insertions(+), 22 deletions(-)
+ drivers/spi/spi-npcm-pspi.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/spi/spi-npcm-pspi.c b/drivers/spi/spi-npcm-pspi.c
-index d224aa63dbce..7e9e747b5626 100644
+index fe624731c74c..c74611abe2a9 100644
 --- a/drivers/spi/spi-npcm-pspi.c
 +++ b/drivers/spi/spi-npcm-pspi.c
-@@ -12,6 +12,7 @@
- #include <linux/spi/spi.h>
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
-+#include <linux/reset.h>
- 
- #include <asm/unaligned.h>
- 
-@@ -20,7 +21,7 @@
- 
- struct npcm_pspi {
- 	struct completion xfer_done;
--	struct regmap *rst_regmap;
-+	struct reset_control *reset;
- 	struct spi_master *master;
- 	unsigned int tx_bytes;
- 	unsigned int rx_bytes;
-@@ -59,12 +60,6 @@ struct npcm_pspi {
- #define NPCM_PSPI_MIN_CLK_DIVIDER	4
- #define NPCM_PSPI_DEFAULT_CLK		25000000
- 
--/* reset register */
--#define NPCM7XX_IPSRST2_OFFSET	0x24
--
--#define NPCM7XX_PSPI1_RESET	BIT(22)
--#define NPCM7XX_PSPI2_RESET	BIT(23)
--
- static inline unsigned int bytes_per_word(unsigned int bits)
+@@ -195,6 +195,7 @@ static void npcm_pspi_setup_transfer(struct spi_device *spi,
+ static void npcm_pspi_send(struct npcm_pspi *priv)
  {
- 	return bits <= 8 ? 1 : 2;
-@@ -292,9 +287,9 @@ static int npcm_pspi_unprepare_transfer_hardware(struct spi_master *master)
+ 	int wsize;
++	u16 val;
  
- static void npcm_pspi_reset_hw(struct npcm_pspi *priv)
- {
--	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET,
--		     NPCM7XX_PSPI1_RESET << priv->id);
--	regmap_write(priv->rst_regmap, NPCM7XX_IPSRST2_OFFSET, 0x0);
-+	reset_control_assert(priv->reset);
-+	udelay(5);
-+	reset_control_deassert(priv->reset);
+ 	wsize = min(bytes_per_word(priv->bits_per_word), priv->tx_bytes);
+ 	priv->tx_bytes -= wsize;
+@@ -204,17 +205,18 @@ static void npcm_pspi_send(struct npcm_pspi *priv)
+ 
+ 	switch (wsize) {
+ 	case 1:
+-		iowrite8(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
++		val = *priv->tx_buf++;
++		iowrite8(val, NPCM_PSPI_DATA + priv->base);
+ 		break;
+ 	case 2:
+-		iowrite16(*priv->tx_buf, NPCM_PSPI_DATA + priv->base);
++		val = *priv->tx_buf++;
++		val = *priv->tx_buf++ | (val << 8);
++		iowrite16(val, NPCM_PSPI_DATA + priv->base);
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		return;
+ 	}
+-
+-	priv->tx_buf += wsize;
  }
  
- static irqreturn_t npcm_pspi_handler(int irq, void *dev_id)
-@@ -358,10 +353,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	if (num_cs < 0)
- 		return num_cs;
+ static void npcm_pspi_recv(struct npcm_pspi *priv)
+@@ -230,18 +232,17 @@ static void npcm_pspi_recv(struct npcm_pspi *priv)
  
--	pdev->id = of_alias_get_id(np, "spi");
--	if (pdev->id < 0)
--		pdev->id = 0;
+ 	switch (rsize) {
+ 	case 1:
+-		val = ioread8(priv->base + NPCM_PSPI_DATA);
++		*priv->rx_buf++ = ioread8(priv->base + NPCM_PSPI_DATA);
+ 		break;
+ 	case 2:
+ 		val = ioread16(priv->base + NPCM_PSPI_DATA);
++		*priv->rx_buf++ = (val >> 8);
++		*priv->rx_buf++ = val & 0xff;
+ 		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		return;
+ 	}
 -
- 	master = spi_alloc_master(&pdev->dev, sizeof(*priv));
- 	if (!master)
- 		return -ENOMEM;
-@@ -371,7 +362,6 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	priv = spi_master_get_devdata(master);
- 	priv->master = master;
- 	priv->is_save_param = false;
--	priv->id = pdev->id;
+-	*priv->rx_buf = val;
+-	priv->rx_buf += rsize;
+ }
  
- 	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
-@@ -396,11 +386,10 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 		goto out_disable_clk;
- 	}
- 
--	priv->rst_regmap =
--		syscon_regmap_lookup_by_compatible("nuvoton,npcm750-rst");
--	if (IS_ERR(priv->rst_regmap)) {
--		dev_err(&pdev->dev, "failed to find nuvoton,npcm750-rst\n");
--		return PTR_ERR(priv->rst_regmap);
-+	priv->reset = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->reset)) {
-+		ret = PTR_ERR(priv->reset);
-+		goto out_disable_clk;
- 	}
- 
- 	/* reset SPI-HW block */
-@@ -421,7 +410,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	master->min_speed_hz = DIV_ROUND_UP(clk_hz, NPCM_PSPI_MAX_CLK_DIVIDER);
- 	master->mode_bits = SPI_CPHA | SPI_CPOL;
- 	master->dev.of_node = pdev->dev.of_node;
--	master->bus_num = pdev->id;
-+	master->bus_num = -1;
- 	master->bits_per_word_mask = SPI_BPW_MASK(8) | SPI_BPW_MASK(16);
- 	master->transfer_one = npcm_pspi_transfer_one;
- 	master->prepare_transfer_hardware =
-@@ -454,7 +443,7 @@ static int npcm_pspi_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_disable_clk;
- 
--	pr_info("NPCM Peripheral SPI %d probed\n", pdev->id);
-+	pr_info("NPCM Peripheral SPI %d probed\n", master->bus_num);
- 
- 	return 0;
- 
+ static int npcm_pspi_transfer_one(struct spi_master *master,
 -- 
 2.20.1
 
